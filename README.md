@@ -1,0 +1,230 @@
+# Grammar of Observability local lab
+
+For the end-to-end design, start with the [architecture and process diagrams](docs/ARCHITECTURE_DIAGRAMS.md):
+source validation and weaving → application OTel SDKs → collector/ClickStack capture
+→ goo package planning and evidence-based investigations. Implemented local paths
+and illustrative production patterns are labelled separately.
+The [architecture guide](docs/ARCHITECTURE.md) describes component boundaries;
+the [implementation plan](docs/IMPLEMENTATION_PLAN.md) tracks remaining work.
+
+
+The [Go aggregate compiler pilot](docs/PORTABLE_COMPILER.md) now validates a small
+declarative measurement model, evaluates prepared facts, and emits ClickHouse
+SQL or Databricks metric-view YAML. See [project direction](PROJECT_DIRECTION.md)
+for Go/Rust and YAML+CEL/KCL preferences. The Python lab below remains the
+reference prototype; bounded Go HTTP/operation packages now serve its investigation
+UI, while the original reservation SLO preview remains separate.
+
+The [lifecycle preparer](docs/LIFECYCLE_PREPARATION.md) now turns normalized
+business events into frozen subject facts and evidence receipts. Explore the
+[executable user storyboards](docs/journeys/README.md),
+[Hegel/Quint verification](verification/README.md), and
+[bitemporal design note](docs/BITEMPORALITY.md).
+
+A runnable prototype over ClickStack-shaped OTel data: HTTP gateway → gRPC reservation service → Redis Streams → inventory consumer → OTel collector → ClickHouse. A small browser UI edits a validated JSON query expression and shows its compiled SQL, completion cohorts, gRPC latency, logs, spans and links, and exported metric points.
+
+The [visualization slice](docs/VISUALIZATIONS.md) adds trace waterfalls with span
+inspection and async-link navigation, plus a raw-duration heatmap whose cells
+open matching spans. The [fourth browser storyboard](docs/journeys/README.md)
+executes this path through the actual sample services.
+[Guided investigations](docs/INVESTIGATION_WORKFLOWS.md) provide outcome, retry,
+RED and USE entry points, with explicit instrumentation gaps.
+
+The [semantic package foundation](docs/SEMANTIC_PACKAGES.md) recognizes versioned
+OTel contracts in Go and proposes reusable measures/views/recipes, with explicit
+missing requirements. `go run ./cmd/goo catalog` lists the ten current profiles;
+`goo discover -inventory ...` checks supplied metadata. These proposals are not
+auto-installed dashboards or objectives. The [worker/queue adapter](docs/QUEUE_TELEMETRY.md)
+now supplies real lag, pending, worker utilization and observed wait evidence to USE.
+
+The [HTTP package expansion](docs/PACKAGE_EXPANSION.md) now turns an explicit
+binding into shared measurement/view/recipe artifacts and both backend plans.
+`goo prepare-http` classifies normalized selected server requests under that
+policy. The live adapter below also renders these descriptors;
+`scripts/check_packages.py` executes the offline CLI parity storyboard.
+
+The [live HTTP package adapter](docs/LIVE_HTTP_PACKAGE.md) now reads real OTel
+spans in Go and renders the expansion's shared aggregate descriptor in the UI.
+The [instrumentation direction](docs/INSTRUMENTATION.md) covers library discovery
+and opt-in Orchestrion/quintgo model observations at goo's semantic seams.
+
+The [goo annotation slice](docs/GOO_ANNOTATIONS.md) adds `//goo:operation`,
+`//goo:event`, source-contract manifests and opt-in `goo weave` test builds.
+Woven OTel emission and active-operation state/swarm checks are executable;
+aggregate policy stays in packages.
+
+## Continue in Codex
+
+Open this folder as the project root. Start with [START_HERE.md](START_HERE.md) and give Codex [CODEX_HANDOFF.md](CODEX_HANDOFF.md). [AGENTS.md](AGENTS.md) contains repository working guidance. No prior chat history is required.
+
+The runnable source is the current Python prototype. The RFCs describe the proposed next implementation; their EDN and richer expression syntax are not accepted by the current API. The handoff bundles the earlier design draft, current limitations, staged tasks, acceptance criteria, and source references.
+
+| Document | Purpose |
+| --- | --- |
+| [START_HERE.md](START_HERE.md) | Project orientation and reading order |
+| [CODEX_HANDOFF.md](CODEX_HANDOFF.md) | Ready-to-use continuation task |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Current components and target boundaries |
+| [Architecture diagrams](docs/ARCHITECTURE_DIAGRAMS.md) | Build, production telemetry flow, investigations and backend portability |
+| [Fleet coverage](docs/FLEET_COVERAGE.md) | Declared membership, supported intervals, guarded exact totals and missing-member storyboard |
+| [Operation error ratios](docs/OPERATION_ERROR_RATIOS.md) | Aligned exact calls/errors, explicit unknown/idle intervals and guided trace investigation |
+| [Native histogram semantics](docs/NATIVE_HISTOGRAMS.md) | Exact bucket deltas, aligned explicit merging, heatmap and bucket-bounded P95 |
+| [Native counter semantics](docs/NATIVE_COUNTERS.md) | Reset/gap-aware rates, evidence limits and executable storyboard |
+| [docs/IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md) | Ordered milestones and completion criteria |
+| [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md) | Specific defects, limitations, and validation gaps |
+| [docs/rfcs/0001-observability-language.md](docs/rfcs/0001-observability-language.md) | Language and resource model proposal |
+| [docs/rfcs/0002-measurement-semantics.md](docs/rfcs/0002-measurement-semantics.md) | Population, time, counting, and evidence rules |
+| [docs/design-draft.md](docs/design-draft.md) | Portable copy of the original worked design |
+| [docs/SOURCES.md](docs/SOURCES.md) | Reading list and what each source contributes |
+| [VALIDATION.md](VALIDATION.md) | Actual checks and unverified environment behavior |
+
+The core stack uses ClickHouse and the upstream OTel ClickHouse exporter with the same baseline table shape used by ClickStack. HyperDX is optional, in the `hyperdx` profile. This is a small exploratory implementation of the design, not a complete grammar interpreter or production SLO service.
+
+## Start
+
+Install Docker Engine/Desktop with Compose v2. Allow roughly 4 GB of memory and a few GB of disk for images. On Linux, ClickHouse may require `sudo sysctl -w vm.max_map_count=262144` if its startup log asks for it. Intel/AMD Linux is the primary target; image support on other architectures has not been tested.
+
+```sh
+docker compose up --build -d
+docker compose logs -f collector reservations consumer
+```
+
+Open **http://localhost:8088**. Traffic starts automatically. Wait 20–40 seconds, then select **Run query**. Services bind host ports only to loopback; credentials in this project are disposable local credentials.
+
+```sh
+python3 scripts/smoke.py
+```
+
+The smoke script waits for startup, creates a successful reservation, waits for its mature completion, and checks that logs, spans, latency results, and native metrics have arrived through the collector.
+
+## Explore
+
+1. Query **Completion SLO**, grouped by release or scenario. Good and retried requests usually finish on v1; the v2 cohort contains late, missing, and rejected work.
+2. Click a reservation ID to inspect its processing spans. The consumer deliberately starts a separate trace linked to the producer span, so business identity works across trace IDs.
+3. Change to **Logs** to inspect events for that selected reservation. Clear the selection to return to the full population.
+4. Inspect **Latency heatmap**, click a populated cell, select a span, then open its reservation waterfall. **gRPC latency** also shows percentile summaries. Fast synchronous acceptance can coexist with failed asynchronous completion.
+5. Inspect **Native metric points**. These are cumulative exported counter points; the UI does not sum them or claim they are rates.
+6. Edit the JSON query and run it. Unknown operations, invalid dimensions, and unsupported metric filters are rejected. Expand the compiled SQL panel to inspect parameters.
+
+The application-owned definition is `definitions/reservations.json`. Edit it and rebuild the application images to change the deadline, target, allowed views, or grouping dimensions. The current JSON subset is designed for portable data authoring; EDN parsing and the full package resource model are not yet implemented.
+
+Example query:
+
+```json
+{"view":"completion","minutes":30,"groupBy":"region","scenario":"missing"}
+```
+
+Create a chosen scenario manually:
+
+```sh
+curl -s http://localhost:8081/reserve \
+  -H 'Content-Type: application/json' \
+  -d '{"scenario":"retry"}'
+```
+
+The gRPC service uses a real unary gRPC method `/lab.Reservations/Create` with an explicit JSON codec, avoiding generated protobuf application code in the minimal sample. OTel signals use standard protobuf OTLP/HTTP.
+
+| Scenario | Behavior |
+| --- | --- |
+| good | Confirmation after about 0.3 seconds |
+| retry | One failed processing attempt, then confirmation |
+| late | Confirmation after about 14 seconds |
+| missing | Accepted but deliberately never completed |
+| reject | Terminal rejection |
+
+The demo deadline is 10 seconds with 3 seconds of ingestion allowance. The fixed traffic mix is intentionally unhealthy and has a 95% target to make comparisons visible quickly. It is not a realistic workload or recommended target.
+
+## Optional HyperDX
+
+```sh
+docker compose --profile hyperdx up --build -d
+```
+
+Open **http://localhost:8080**, create a local account, and use the preconfigured **Lab** ClickHouse connection. If not prepopulated, use host `http://clickhouse:8123`, user `lab`, password `lab-local`. Add log and trace sources for database `default`, tables `otel_logs` and `otel_traces`; accept the detected mappings. Add a metrics source for the `otel_metrics_*` tables if your HyperDX setup asks for one.
+
+HyperDX 2.41.0 is specified explicitly. The optional profile needs MongoDB and extra memory. The upstream collector is deliberately kept independent of HyperDX authentication/OpAMP. These are baseline exporter schemas, without newer HyperDX-specific materialized views, session replay, or PromQL tables.
+
+## Ports and services
+
+| Port | Purpose |
+| --- | --- |
+| 8088 | Grammar UI and query API |
+| 8081 | Sample HTTP endpoint `POST /reserve` |
+| 8123 | ClickHouse HTTP, local credentials required |
+| 4318 | Collector OTLP/HTTP |
+| 8080 / 8000 | Optional HyperDX UI / API |
+
+The gRPC service and Redis stay internal to Compose. All application roles share one small Python image. ClickHouse and Redis use named volumes. No kind cluster is required.
+
+## Query and evidence semantics
+
+`grammar.py` validates a small expression and compiles it to fixed-source ClickHouse SQL with typed value parameters. Record counts collapse by tenant and reservation ID. Duplicate event deliveries do not multiply subject counts. Mature subjects are classified as good, bad, or unknown; recent acceptance remains pending. A missing completion becomes bad only as a demo assumption. Conflicting terminal decisions and negative durations become unknown.
+
+The initial UI shows a bounded lookback anchored on exported event Timestamp values, with recent subjects pending until the deadline plus allowance passes. It is not the fully shifted mature acceptance window from the design document. Completion summaries cover at most the latest 1000 returned subjects; row limits are exposed. Each query captures one evaluation time. The backend is read-only for queries and uses bounded result and execution limits.
+
+**Evidence is always labelled `demo-unverified`.** There is no reconciled acceptance ledger, durable outbox, sampling estimator, or coverage proof. The sample intentionally exposes the limitations of counting telemetry events. Do not promote its success percentage to a production SLO.
+
+The alarm is a single-window **preview computed on demand**. There is no scheduler, multiwindow policy, persisted alarm state, notification delivery, or IaC reconciler in this version. Source mappings are fixed to the pinned exporter’s baseline schema. The UI supports grouping and subject navigation, not automatic statistical cohort discovery or a complete trace waterfall.
+
+Redis Streams are real in Compose, but the sample consumer has no pending-entry reclamation after crashes. Data can remain pending after a restart. Use a volume reset for a clean demo. Terminal telemetry and queue acknowledgement are not transactional. All traces are retained by the sample SDK; there is no collector sampling processor.
+
+## Development checks
+
+```sh
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements-dev.txt
+python -m unittest discover -s tests -v
+python tests/local_flow.py
+```
+
+The unit suite checks validation, parameter handling, no-data/unknown behavior, and real compiled SQL in embedded ClickHouse (`chdb`, bundled engine 24.8). The local flow test runs real HTTP and gRPC services against a fake Redis TCP server and decodes emitted protobuf OTLP logs, traces, and metrics. It needs free localhost ports 8081 and 50051.
+
+`scripts/smoke.py` is the separate full-stack acceptance check for the real Redis, collector/exporter, and ClickHouse 25.3 containers. Run it after Compose startup. See `VALIDATION.md` for checks performed when this package was created.
+
+## Stop and reset
+
+```sh
+docker compose --profile hyperdx down
+# Explicitly discard demo data for a clean start:
+docker compose --profile hyperdx down -v
+```
+
+## References
+
+- [ClickStack Compose deployment](https://clickhouse.com/docs/clickstack/deployment/docker-compose)
+- [ClickStack table shapes](https://clickhouse.com/docs/clickstack/ingesting-data/schemas)
+- [Pinned upstream ClickHouse exporter configuration](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/v0.123.0/exporter/clickhouseexporter)
+- [OTel messaging spans and links](https://opentelemetry.io/docs/specs/semconv/messaging/messaging-spans/)
+
+[Observed operation conformance and executable developer journey](docs/OPERATION_CONFORMANCE.md)
+connect source manifests to actual woven SDK spans and invocation overviews.
+
+[Live woven Go operations](docs/LIVE_OPERATIONS.md) now reach the collector,
+ClickHouse and the investigation UI, with an executable browser storyboard.
+
+[Operation heatmaps and trace drilldown](docs/OPERATION_DRILLDOWN.md) retain the
+selected evidence through error counts, duration cells and trace waterfalls.
+
+[Scoped subject navigation](docs/SUBJECT_NAVIGATION.md) follows declared span
+events across related traces while separating tenant and identity namespaces.
+
+[Declarative operation packages](docs/OPERATION_PACKAGES.md) now drive shared CLI/UI
+bindings and views for both checkout and a separate report-generator application.
+
+[Architecture and process diagrams](docs/ARCHITECTURE_DIAGRAMS.md) follow source/build
+contracts through standard OTel capture into package-based investigation, and show
+the separate portable measurement compiler boundary.
+
+[Native counter rates](docs/NATIVE_COUNTERS.md) add reset/gap-aware Go evaluation
+and YAML-driven live rate charts, with explicit unknown boundaries.
+
+[Native duration histograms](docs/NATIVE_HISTOGRAMS.md) add exact bucket deltas,
+per-stream heatmaps, P95 bucket bounds and explicit aligned merging in Go/CLI.
+Journey 14 captures real telemetry and contextual span navigation.
+
+[Operation error ratios](docs/OPERATION_ERROR_RATIOS.md) derive calls/errors from
+one aligned counter result and guide contextual span/trace investigation.
+
+[Declared fleet membership](docs/FLEET_COVERAGE.md) now exposes missing-member
+coverage explicitly. Exact fleet totals require compatible aligned intervals
+from every expected instance; the local example intentionally has an absent peer.

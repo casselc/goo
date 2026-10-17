@@ -1,0 +1,32 @@
+{
+  "apiVersion": "observability/v0",
+  "id": "commerce/reservations",
+  "subject": "reservation",
+  "identity": [
+    "tenant",
+    "reservation_id"
+  ],
+  "deadlineSeconds": 10,
+  "ingestionAllowanceSeconds": 3,
+  "target": 0.95,
+  "windowMinutes": 30,
+  "evidencePolicy": "demo-unverified",
+  "alarm": {
+    "kind": "burn-preview",
+    "threshold": 2
+  },
+  "views": [
+    "completion",
+    "latency",
+    "logs",
+    "traces",
+    "metrics",
+    "heatmap",
+    "queue"
+  ],
+  "groupBy": [
+    "release",
+    "region",
+    "scenario"
+  ]
+}

@@ -1,0 +1,7 @@
+spec: preparation.qnt
+module: preparation
+constants: {MIN_REQUESTS: '0'}
+invariants: [safety]
+actions:
+  prepare_http:
+    args: {n: '{{.obs.selected}}', f: '{{.obs.facts}}'}

@@ -1,0 +1,13 @@
+spec: counter.qnt
+module: counter
+constants: {INITIAL: '5'}
+invariants: [safety]
+actions:
+  increase:
+    expect: 'known == {{.obs.known}} and delta == {{.obs.delta}}'
+  restart:
+    expect: 'known == {{.obs.known}} and delta == {{.obs.delta}}'
+  gap:
+    expect: 'known == {{.obs.known}} and delta == {{.obs.delta}}'
+  late_repair:
+    expect: 'known == {{.obs.known}} and delta == {{.obs.delta}}'

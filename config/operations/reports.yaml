@@ -1,0 +1,25 @@
+apiVersion: goo/operation-package/v1alpha1
+name: reports
+title: Report generator operations
+sourceDirectory: ../../examples/report-app
+adapter: clickhouse.otel-traces/v1
+resource:
+  service: lab-go-reports
+  environment: local
+  instance: reports-demo
+instrumentation:
+  name: github.com/casselc/goo/instrumentation
+  version: 0.1.0
+  schemaURL: goo://instrumentation/v1
+operations:
+  - {name: report.generate, role: server}
+subjects:
+  namespace: report
+  events: [report.ready]
+  identity: [environment, service, namespace, tenant, id]
+# This application opts out of the heatmap; the same renderer honors its package.
+views: [operation-overview, trace-waterfall, subject-events]
+evidence:
+  sampling: unverified
+  completeness: unverified
+  schema: declared

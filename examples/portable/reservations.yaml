@@ -1,0 +1,45 @@
+apiVersion: goo/v1alpha1
+name: reservation_metrics
+source:
+  kind: subject-facts
+  subjectKey: [environment, tenant_id, reservation_id]
+  fields:
+    evaluation_id: string
+    environment: string
+    tenant_id: string
+    reservation_id: string
+    service_name: string
+    release: string
+    classification: string
+    quality_impaired: bool
+    is_mature: bool
+  enums:
+    classification: [good, bad, unknown, pending]
+  bindings:
+    clickhouse: reservation_subject_facts
+    databricks: telemetry.semantic.reservation_subject_facts
+population: {field: is_mature, eq: true}
+dimensions:
+  environment: environment
+  tenant: tenant_id
+  service: service_name
+  release: release
+measures:
+  eligible: {op: count}
+  good:
+    op: count
+    where: {field: classification, eq: good}
+  bad:
+    op: count
+    where: {field: classification, eq: bad}
+  unknown:
+    op: count
+    where: {field: classification, eq: unknown}
+  impaired:
+    op: count
+    where: {field: quality_impaired, eq: true}
+  success:
+    op: ratio
+    numerator: good
+    denominator: eligible
+    unknownWhen: [unknown, impaired]

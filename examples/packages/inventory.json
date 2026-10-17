@@ -1,0 +1,1 @@
+{"apiVersion":"goo/inventory/v1alpha1","basis":"illustrative-http-contract-v1","scopes":[{"id":"checkout-a","resource":{"service.name":"checkout","service.instance.id":"a"},"signals":[{"kind":"span/server","name":"POST /checkout","unit":"ns","schemaURL":"https://opentelemetry.io/schemas/1.37.0","attributes":["http.request.method","http.route","http.response.status_code"]}]}]}

@@ -1,0 +1,4 @@
+-r requirements.txt
+chdb==3.3.0
+fakeredis==2.28.1
+PyYAML==6.0.2

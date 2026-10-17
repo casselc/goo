@@ -1,0 +1,56 @@
+apiVersion: goo/operation-package/v1alpha1
+name: checkout
+title: Checkout operations
+sourceDirectory: ../../examples/operation-app
+adapter: clickhouse.otel-traces/v1
+resource:
+  service: lab-go-checkout
+  environment: local
+  instance: woven-demo
+instrumentation:
+  name: github.com/casselc/goo/instrumentation
+  version: 0.1.0
+  schemaURL: goo://instrumentation/v1
+operations:
+  - {name: checkout.reserve, role: server}
+  - {name: checkout.stock, role: internal}
+  - {name: checkout.panic, role: internal}
+subjects:
+  namespace: reservation
+  events: [reservation.accepted, reservation.terminal]
+  identity: [environment, service, namespace, tenant, id]
+rates:
+  - name: calls
+    metric: goo.operation.calls
+    unit: '{invocation}'
+    temporality: cumulative
+    maxGap: 10s
+    outcomes: [ok, error, panic]
+  - name: errors
+    metric: goo.operation.calls
+    unit: '{invocation}'
+    temporality: cumulative
+    maxGap: 10s
+    outcomes: [error, panic]
+ratios:
+  - name: operation-errors
+    totalRate: calls
+    errorOutcomes: [error, panic]
+fleet:
+  name: checkout-coverage
+  description: "This local coverage example expects woven-peer; the default lab deploys only woven-demo. An undeployed expected member is not zero traffic."
+  ratio: operation-errors
+  members: [woven-demo, woven-peer]
+histograms:
+  - name: duration
+    metric: goo.operation.duration
+    unit: s
+    temporality: cumulative
+    maxGap: 10s
+    outcomes: [ok, error, panic]
+    bounds: [0, 0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 30]
+views: [operation-overview, duration-heatmap, trace-waterfall, subject-events, counter-rates, histogram-heatmap, error-ratios, fleet-coverage]
+evidence:
+  sampling: unverified
+  completeness: unverified
+  schema: declared

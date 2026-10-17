@@ -1,0 +1,19 @@
+spec: lifecycle.qnt
+module: lifecycle
+constants: {MAX_SNAPSHOTS: '3'}
+invariants: [safety]
+actions:
+  accept:
+    expect: 'eligible == {{.obs.eligible}} and good == {{.obs.good}} and bad == {{.obs.bad}} and unknown == {{.obs.unknown}}'
+  terminal:
+    expect: 'eligible == {{.obs.eligible}} and good == {{.obs.good}} and bad == {{.obs.bad}} and unknown == {{.obs.unknown}}'
+  duplicate:
+    expect: 'eligible == {{.obs.eligible}} and good == {{.obs.good}} and bad == {{.obs.bad}} and unknown == {{.obs.unknown}}'
+  advance95:
+    expect: 'basis == {{.obs.basis}} and good == {{.obs.good}} and unknown == {{.obs.unknown}}'
+  advance96:
+    expect: 'basis == {{.obs.basis}} and good == {{.obs.good}} and unknown == {{.obs.unknown}}'
+  advance100:
+    expect: 'basis == {{.obs.basis}} and good == {{.obs.good}} and unknown == {{.obs.unknown}}'
+  snapshot:
+    expect: 'snapshots.length() == {{.obs.snapshots}} and good == {{.obs.good}}'

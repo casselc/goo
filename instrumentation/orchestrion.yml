@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=https://datadoghq.dev/orchestrion/schema.json
+meta:
+  name: github.com/casselc/goo/instrumentation
+  description: Opt-in goo operation and subject-event observations; run goo manifest before weaving.
+aspects:
+  - id: goo-operation
+    join-point:
+      function-body:
+        directive: 'goo:operation'
+    advice:
+      - prepend-statements:
+          imports:
+            gooHooks: github.com/casselc/goo/instrumentation
+          template: |-
+            {{- $ctx := .Function.ArgumentOfType "context.Context" -}}
+            {{- $err := .Function.ResultOfType "error" -}}
+            {{- $name := "" -}}
+            {{- $role := "" -}}
+            {{- range .DirectiveArgs "goo:operation" -}}
+              {{- if eq .Key "name" -}}{{- $name = .Value -}}{{- end -}}
+              {{- if eq .Key "role" -}}{{- $role = .Value -}}{{- end -}}
+            {{- end }}
+            var gooFinish func(error, bool)
+            {{ $ctx }}, gooFinish = gooHooks.Operation({{ $ctx }}, {{ printf "%q" $name }}, {{ printf "%q" $role }})
+            defer func() {
+              if p := recover(); p != nil {
+                gooFinish(nil, true)
+                panic(p)
+              }
+              gooFinish({{ if ne $err "" }}{{ $err }}{{ else }}nil{{ end }}, false)
+            }()
+  - id: goo-event
+    join-point:
+      function-body:
+        directive: 'goo:event'
+    advice:
+      - prepend-statements:
+          imports:
+            gooHooks: github.com/casselc/goo/instrumentation
+          template: |-
+            {{- $ctx := .Function.ArgumentOfType "context.Context" -}}
+            {{- $err := .Function.ResultOfType "error" -}}
+            {{- $name := "" -}}
+            {{- $subject := "" -}}
+            {{- $outcome := "" -}}
+            {{- range .DirectiveArgs "goo:event" -}}
+              {{- if eq .Key "name" -}}{{- $name = .Value -}}{{- end -}}
+              {{- if eq .Key "subject" -}}{{- $subject = .Value -}}{{- end -}}
+              {{- if eq .Key "outcome" -}}{{- $outcome = .Value -}}{{- end -}}
+            {{- end }}
+            defer func() {
+              if p := recover(); p != nil { panic(p) }
+              {{- if ne $err "" }}
+              if {{ $err }} != nil { return }
+              {{- end }}
+              gooHooks.Event({{ $ctx }}, {{ printf "%q" $name }},
+                func() string { return {{ $subject }} },
+                func() string { return {{ if ne $outcome "" }}{{ $outcome }}{{ else }}""{{ end }} })
+            }()

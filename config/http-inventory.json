@@ -1,0 +1,1 @@
+{"apiVersion":"goo/inventory/v1alpha1","basis":"declared-goo-http-sample-0.1.0","scopes":[{"id":"lab-web-local","resource":{"service.name":"lab-web","deployment.environment.name":"local"},"signals":[{"kind":"span/server","unit":"ns","schemaURL":"https://opentelemetry.io/schemas/1.37.0","attributes":["http.request.method","http.route","http.response.status_code"]}]}]}

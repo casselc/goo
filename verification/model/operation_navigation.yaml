@@ -1,0 +1,15 @@
+spec: operation_navigation.qnt
+module: operation_navigation
+constants: {BASIS: '1'}
+invariants: [safety]
+actions:
+  select_errors:
+    expect: 'selected == {{.obs.selected}} and basis == {{.obs.basis}}'
+  select_cell:
+    expect: 'selected == {{.obs.selected}} and basis == {{.obs.basis}}'
+  open_trace:
+    expect: 'selected == {{.obs.selected}} and basis == {{.obs.basis}}'
+  follow_subject:
+    expect: 'selected == {{.obs.selected}} and basis == {{.obs.basis}}'
+  reset:
+    expect: 'selected == {{.obs.selected}} and basis == {{.obs.basis}}'

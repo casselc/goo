@@ -1,0 +1,15 @@
+spec: fleet.qnt
+module: fleet
+constants: {INITIAL: '-1'}
+invariants: [safety]
+actions:
+  aligned:
+    expect: 'state == {{.obs.state}} and calls == {{.obs.calls}} and errors == {{.obs.errors}} and supported == {{.obs.supported}}'
+  missing:
+    expect: 'state == {{.obs.state}} and calls == {{.obs.calls}} and errors == {{.obs.errors}} and supported == {{.obs.supported}}'
+  skew:
+    expect: 'state == {{.obs.state}} and calls == {{.obs.calls}} and errors == {{.obs.errors}} and supported == {{.obs.supported}}'
+  reset:
+    expect: 'state == {{.obs.state}} and calls == {{.obs.calls}} and errors == {{.obs.errors}} and supported == {{.obs.supported}}'
+  idle:
+    expect: 'state == {{.obs.state}} and calls == {{.obs.calls}} and errors == {{.obs.errors}} and supported == {{.obs.supported}}'

@@ -1,0 +1,13 @@
+{
+  "apiVersion": "goo/inventory/v1alpha1",
+  "basis": "illustrative-contract-not-a-live-scan",
+  "scopes": [{
+    "id": "checkout-instance-a",
+    "resource": {"service.name": "checkout", "service.instance.id": "a"},
+    "signals": [{
+      "kind": "histogram", "name": "http.server.request.duration", "unit": "s",
+      "schemaURL": "https://opentelemetry.io/schemas/1.37.0",
+      "attributes": ["http.request.method", "http.route", "http.response.status_code"]
+    }]
+  }]
+}

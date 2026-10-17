@@ -1,0 +1,17 @@
+spec: histogram.qnt
+module: histogram
+constants: {INITIAL: '-1'}
+invariants: [safety]
+actions:
+  increase:
+    expect: 'known == {{.obs.known}} and count == {{.obs.count}}'
+  restart:
+    expect: 'known == {{.obs.known}} and count == {{.obs.count}}'
+  gap:
+    expect: 'known == {{.obs.known}} and count == {{.obs.count}}'
+  late_repair:
+    expect: 'known == {{.obs.known}} and count == {{.obs.count}}'
+  merge:
+    expect: 'known == {{.obs.known}} and count == {{.obs.count}}'
+  bad_merge:
+    expect: 'known == {{.obs.known}} and count == {{.obs.count}}'

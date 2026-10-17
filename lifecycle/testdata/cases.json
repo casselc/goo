@@ -1,0 +1,199 @@
+{
+  "description": "Independent normalized-event fixtures. Decimal nanoseconds are deliberately small for readable endpoint arithmetic; separate tests cover real epoch precision. Event defaults are transport fixture shorthand, not preparation rules.",
+  "policy": {
+    "apiVersion": "goo/lifecycle/v1alpha1",
+    "evaluationId": "basis-1",
+    "definitionRevision": "reservations/v1",
+    "sourceRevision": "normalized-events/v1",
+    "evidenceBasis": "fixture-ledger-v1",
+    "custodyClock": "fixture-durable-receipt",
+    "evaluationTimeNs": "100",
+    "evidenceCutoffNs": "100",
+    "deadlineNs": "10",
+    "allowanceNs": "3",
+    "windowNs": "30",
+    "subjectField": "reservation_id",
+    "successOutcome": "confirmed",
+    "terminalOutcomes": ["confirmed", "rejected"],
+    "scopes": [{"environment": "test", "tenantId": "a", "serviceName": "reservations", "coverage": "complete", "evidenceRef": "synthetic-fixture-ledger"}]
+  },
+  "eventDefaults": {"environment": "test", "tenant_id": "a", "service_name": "reservations", "release": "v1", "received_time_ns": "99"},
+  "cases": [
+    {
+      "name": "deadline_and_cohort_boundaries",
+      "events": [
+        {"event_id": "start-a", "kind": "accepted", "subject_id": "start", "event_time_ns": "57"},
+        {"event_id": "start-t", "kind": "terminal", "subject_id": "start", "event_time_ns": "67", "outcome": "confirmed"},
+        {"event_id": "old-a", "kind": "accepted", "subject_id": "old", "event_time_ns": "56"},
+        {"event_id": "old-t", "kind": "terminal", "subject_id": "old", "event_time_ns": "66", "outcome": "confirmed"},
+        {"event_id": "end-a", "kind": "accepted", "subject_id": "end", "event_time_ns": "86"},
+        {"event_id": "end-t", "kind": "terminal", "subject_id": "end", "event_time_ns": "96", "outcome": "confirmed"},
+        {"event_id": "upper-a", "kind": "accepted", "subject_id": "upper", "event_time_ns": "87"},
+        {"event_id": "upper-t", "kind": "terminal", "subject_id": "upper", "event_time_ns": "97", "outcome": "confirmed"},
+        {"event_id": "pending-a", "kind": "accepted", "subject_id": "pending", "event_time_ns": "88"},
+        {"event_id": "before-a", "kind": "accepted", "subject_id": "before", "event_time_ns": "60"},
+        {"event_id": "before-t", "kind": "terminal", "subject_id": "before", "event_time_ns": "69", "outcome": "confirmed"},
+        {"event_id": "at-a", "kind": "accepted", "subject_id": "at", "event_time_ns": "61"},
+        {"event_id": "at-t", "kind": "terminal", "subject_id": "at", "event_time_ns": "71", "outcome": "confirmed"},
+        {"event_id": "after-a", "kind": "accepted", "subject_id": "after", "event_time_ns": "62"},
+        {"event_id": "after-t", "kind": "terminal", "subject_id": "after", "event_time_ns": "73", "outcome": "confirmed"}
+      ],
+      "counts": {"eligible": 5, "good": 4, "bad": 1, "unknown": 0, "pending": 1},
+      "state": "ok", "subjectCount": 7, "ratio": 0.8,
+      "subjects": {
+        "a/start": ["good", "completed_on_time", true, true],
+        "a/end": ["good", "completed_on_time", true, true],
+        "a/upper": ["good", "completed_on_time", false, true],
+        "a/pending": ["pending", "not_mature", false, false],
+        "a/before": ["good", "completed_on_time", true, true],
+        "a/at": ["good", "completed_on_time", true, true],
+        "a/after": ["bad", "completed_late", true, true]
+      }
+    },
+    {
+      "name": "duplicates_and_retry_do_not_multiply_subjects",
+      "events": [
+        {"event_id": "a", "kind": "accepted", "subject_id": "one", "event_time_ns": "60", "received_time_ns": "80"},
+        {"event_id": "a", "kind": "accepted", "subject_id": "one", "event_time_ns": "60"},
+        {"event_id": "a-again", "kind": "accepted", "subject_id": "one", "event_time_ns": "60"},
+        {"event_id": "retry", "kind": "retry", "subject_id": "one", "event_time_ns": "64"},
+        {"event_id": "t", "kind": "terminal", "subject_id": "one", "event_time_ns": "70", "received_time_ns": "90", "outcome": "confirmed"},
+        {"event_id": "t", "kind": "terminal", "subject_id": "one", "event_time_ns": "70", "outcome": "confirmed"}
+      ],
+      "counts": {"eligible": 1, "good": 1, "bad": 0, "unknown": 0, "pending": 0},
+      "state": "ok", "subjectCount": 1, "ratio": 1.0, "duplicates": 2,
+      "subjects": {"a/one": ["good", "completed_on_time", true, true]}
+    },
+    {
+      "name": "missing_failure_and_negative_duration",
+      "events": [
+        {"event_id": "missing-a", "kind": "accepted", "subject_id": "missing", "event_time_ns": "60"},
+        {"event_id": "failed-a", "kind": "accepted", "subject_id": "failed", "event_time_ns": "61"},
+        {"event_id": "failed-t", "kind": "terminal", "subject_id": "failed", "event_time_ns": "65", "outcome": "rejected"},
+        {"event_id": "negative-a", "kind": "accepted", "subject_id": "negative", "event_time_ns": "62"},
+        {"event_id": "negative-t", "kind": "terminal", "subject_id": "negative", "event_time_ns": "61", "outcome": "confirmed"}
+      ],
+      "counts": {"eligible": 3, "good": 0, "bad": 2, "unknown": 1, "pending": 0},
+      "state": "unknown", "subjectCount": 3, "ratio": null,
+      "subjects": {
+        "a/missing": ["bad", "no_completion", true, true],
+        "a/failed": ["bad", "terminal_failure", true, true],
+        "a/negative": ["unknown", "negative_duration", true, true]
+      }
+    },
+    {
+      "name": "conflicting_immutable_facts",
+      "events": [
+        {"event_id": "conflict-a1", "kind": "accepted", "subject_id": "accept-conflict", "event_time_ns": "60"},
+        {"event_id": "conflict-a2", "kind": "accepted", "subject_id": "accept-conflict", "event_time_ns": "61", "release": "v2"},
+        {"event_id": "terminal-a", "kind": "accepted", "subject_id": "terminal-conflict", "event_time_ns": "60"},
+        {"event_id": "terminal-t1", "kind": "terminal", "subject_id": "terminal-conflict", "event_time_ns": "65", "outcome": "confirmed"},
+        {"event_id": "terminal-t2", "kind": "terminal", "subject_id": "terminal-conflict", "event_time_ns": "66", "outcome": "rejected"},
+        {"event_id": "collision", "kind": "accepted", "subject_id": "left", "event_time_ns": "60"},
+        {"event_id": "collision", "kind": "accepted", "subject_id": "right", "event_time_ns": "60"}
+      ],
+      "counts": {"eligible": 4, "good": 0, "bad": 0, "unknown": 4, "pending": 0},
+      "state": "unknown", "subjectCount": 4, "ratio": null, "eventConflicts": 1,
+      "subjects": {
+        "a/accept-conflict": ["unknown", "conflicting_acceptance", true, true],
+        "a/terminal-conflict": ["unknown", "conflicting_terminal", true, true],
+        "a/left": ["unknown", "invalid_or_conflicting_event", true, true],
+        "a/right": ["unknown", "invalid_or_conflicting_event", true, true]
+      }
+    },
+    {
+      "name": "invalid_records_are_not_zero_or_healthy",
+      "events": [
+        {"event_id": "good-a", "kind": "accepted", "subject_id": "good", "event_time_ns": "60"},
+        {"event_id": "good-t", "kind": "terminal", "subject_id": "good", "event_time_ns": "65", "outcome": "confirmed"},
+        {"event_id": "bad-a", "kind": "accepted", "subject_id": "invalid", "event_time_ns": "70"},
+        {"event_id": "bad-t", "kind": "terminal", "subject_id": "invalid", "event_time_ns": "not-a-time", "outcome": "confirmed"},
+        {"event_id": "no-id", "kind": "accepted", "subject_id": "", "event_time_ns": "70"},
+        {"event_id": "future-clock", "kind": "accepted", "subject_id": "future", "event_time_ns": "101"},
+        {"event_id": "not-visible", "kind": "accepted", "event_time_ns": "malformed", "received_time_ns": "101"}
+      ],
+      "counts": {"eligible": 2, "good": 1, "bad": 0, "unknown": 1, "pending": 0},
+      "state": "unknown", "subjectCount": 2, "ratio": null, "invalid": 3, "afterCutoff": 1,
+      "subjects": {
+        "a/good": ["good", "completed_on_time", true, true],
+        "a/invalid": ["unknown", "invalid_or_conflicting_event", true, true]
+      }
+    },
+    {
+      "name": "orphan_terminal_impairs_empty_scope",
+      "events": [{"event_id": "orphan", "kind": "terminal", "subject_id": "missing-acceptance", "event_time_ns": "65", "outcome": "confirmed"}],
+      "counts": {"eligible": 0, "good": 0, "bad": 0, "unknown": 0, "pending": 0},
+      "state": "unknown", "subjectCount": 0, "ratio": null, "subjects": {}
+    },
+    {
+      "name": "original_snapshot_before_late_delivery",
+      "policy": {"evidenceCutoffNs": "80"},
+      "events": [
+        {"event_id": "a", "kind": "accepted", "subject_id": "late-arrival", "event_time_ns": "60", "received_time_ns": "60"},
+        {"event_id": "t", "kind": "terminal", "subject_id": "late-arrival", "event_time_ns": "70", "received_time_ns": "95", "outcome": "confirmed"}
+      ],
+      "counts": {"eligible": 1, "good": 0, "bad": 1, "unknown": 0, "pending": 0},
+      "state": "ok", "subjectCount": 1, "ratio": 0.0, "afterCutoff": 1,
+      "subjects": {"a/late-arrival": ["bad", "no_completion", true, true]}
+    },
+    {
+      "name": "corrected_snapshot_after_late_delivery",
+      "previousCase": "original_snapshot_before_late_delivery",
+      "policy": {"evaluationId": "basis-2", "evidenceBasis": "fixture-ledger-v2", "supersedesEvaluationId": "basis-1"},
+      "events": [
+        {"event_id": "a", "kind": "accepted", "subject_id": "late-arrival", "event_time_ns": "60", "received_time_ns": "60"},
+        {"event_id": "t", "kind": "terminal", "subject_id": "late-arrival", "event_time_ns": "70", "received_time_ns": "95", "outcome": "confirmed"}
+      ],
+      "counts": {"eligible": 1, "good": 1, "bad": 0, "unknown": 0, "pending": 0},
+      "state": "ok", "subjectCount": 1, "ratio": 1.0,
+      "subjects": {"a/late-arrival": ["good", "completed_on_time", true, true]}
+    },
+    {
+      "name": "evidence_basis_too_early_for_absence",
+      "policy": {"evidenceCutoffNs": "65"},
+      "events": [{"event_id": "a", "kind": "accepted", "subject_id": "unsettled", "event_time_ns": "60", "received_time_ns": "60"}],
+      "counts": {"eligible": 1, "good": 0, "bad": 0, "unknown": 1, "pending": 0},
+      "state": "unknown", "subjectCount": 1, "ratio": null,
+      "subjects": {"a/unsettled": ["unknown", "absence_not_established", true, true]}
+    },
+    {
+      "name": "cross_tenant_identity_and_explicit_scope",
+      "policy": {"scopes": [
+        {"environment": "test", "tenantId": "a", "serviceName": "reservations", "coverage": "complete", "evidenceRef": "synthetic-ledger-a"},
+        {"environment": "test", "tenantId": "b", "serviceName": "reservations", "coverage": "complete", "evidenceRef": "synthetic-ledger-b"}
+      ]},
+      "events": [
+        {"event_id": "a", "kind": "accepted", "subject_id": "shared", "event_time_ns": "60"},
+        {"event_id": "t", "kind": "terminal", "subject_id": "shared", "event_time_ns": "65", "outcome": "confirmed"},
+        {"event_id": "a", "kind": "accepted", "subject_id": "shared", "event_time_ns": "61", "tenant_id": "b"},
+        {"event_id": "t", "kind": "terminal", "subject_id": "shared", "event_time_ns": "66", "tenant_id": "b", "outcome": "rejected"},
+        {"event_id": "outside", "kind": "accepted", "subject_id": "outside", "event_time_ns": "bad-time", "tenant_id": "c"}
+      ],
+      "counts": {"eligible": 2, "good": 1, "bad": 1, "unknown": 0, "pending": 0},
+      "state": "ok", "subjectCount": 2, "ratio": 0.5, "outsideScope": 1,
+      "subjects": {"a/shared": ["good", "completed_on_time", true, true], "b/shared": ["bad", "terminal_failure", true, true]}
+    },
+    {
+      "name": "empty_complete_scope_is_no_data",
+      "events": [],
+      "counts": {"eligible": 0, "good": 0, "bad": 0, "unknown": 0, "pending": 0},
+      "state": "no_data", "subjectCount": 0, "ratio": null, "subjects": {}
+    },
+    {
+      "name": "empty_unverified_scope_is_unknown",
+      "policy": {"scopes": [{"environment": "test", "tenantId": "a", "serviceName": "reservations", "coverage": "unverified"}]},
+      "events": [],
+      "counts": {"eligible": 0, "good": 0, "bad": 0, "unknown": 0, "pending": 0},
+      "state": "unknown", "subjectCount": 0, "ratio": null, "subjects": {}
+    },
+    {
+      "name": "more_than_1000_raw_lifecycles",
+      "events": [
+        {"repeat": 1001, "event_id": "a-{i}", "kind": "accepted", "subject_id": "bulk-{i}", "event_time_ns": "60"},
+        {"repeat": 1001, "event_id": "t-{i}", "kind": "terminal", "subject_id": "bulk-{i}", "event_time_ns": "70", "outcome": "confirmed"}
+      ],
+      "counts": {"eligible": 1001, "good": 1001, "bad": 0, "unknown": 0, "pending": 0},
+      "state": "ok", "subjectCount": 1001, "ratio": 1.0
+    }
+  ]
+}

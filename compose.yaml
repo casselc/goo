@@ -1,0 +1,130 @@
+name: grammar-observability
+x-app: &app
+  build: .
+  restart: unless-stopped
+  environment: &env
+    OTEL_EXPORTER_OTLP_ENDPOINT: http://collector:4318
+    REDIS_URL: redis://redis:6379/0
+    GRPC_TARGET: reservations:50051
+    PACKAGES_URL: http://packages:8089
+    CLICKHOUSE_URL: http://clickhouse:8123
+    CLICKHOUSE_USER: lab
+    CLICKHOUSE_PASSWORD: lab-local
+    # Container service traffic stays on the local Compose network. Preserve
+    # the environment's proxy for external HTTPS destinations.
+    NO_PROXY: clickhouse,collector,redis,reservations,web,query,packages,operation-app,report-app,localhost,127.0.0.1
+    no_proxy: clickhouse,collector,redis,reservations,web,query,packages,operation-app,report-app,localhost,127.0.0.1
+  depends_on:
+    collector: {condition: service_started}
+    redis: {condition: service_healthy}
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:25.3
+    environment:
+      CLICKHOUSE_USER: lab
+      CLICKHOUSE_PASSWORD: lab-local
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: '1'
+    ports: ['127.0.0.1:8123:8123']
+    volumes: ['clickhouse:/var/lib/clickhouse']
+    healthcheck:
+      test: ['CMD', 'clickhouse-client', '--user', 'lab', '--password', 'lab-local', '--query', 'SELECT 1']
+      interval: 3s
+      timeout: 3s
+      retries: 40
+    ulimits:
+      nofile: {soft: 262144, hard: 262144}
+  collector:
+    image: otel/opentelemetry-collector-contrib:0.123.0
+    command: ['--config=/etc/otelcol/config.yaml']
+    volumes: ['./config/collector.yaml:/etc/otelcol/config.yaml:ro']
+    ports: ['127.0.0.1:4318:4318']
+    depends_on:
+      clickhouse: {condition: service_healthy}
+    restart: unless-stopped
+  redis:
+    image: redis:7.4-alpine
+    command: ['redis-server', '--appendonly', 'yes']
+    volumes: ['redis:/data']
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  reservations:
+    <<: *app
+    command: ['python', 'sample.py', 'grpc']
+  consumer:
+    <<: *app
+    command: ['python', 'sample.py', 'consumer']
+  web:
+    <<: *app
+    command: ['python', 'sample.py', 'web']
+    ports: ['127.0.0.1:8081:8081']
+    depends_on:
+      reservations: {condition: service_started}
+      collector: {condition: service_started}
+      redis: {condition: service_healthy}
+  traffic:
+    <<: *app
+    command: ['python', 'sample.py', 'traffic']
+    depends_on:
+      web: {condition: service_started}
+  packages:
+    <<: *app
+    command: ['goo', 'serve-http', '-operation-package', 'config/operations/checkout.yaml', '-operation-package', 'config/operations/reports.yaml', '-binding', 'config/http-package.yaml', '-inventory', 'config/http-inventory.json', '-scope-name', 'goo.http-sample', '-scope-version', '0.1.0', '-listen', ':8089']
+    ports: ['127.0.0.1:8089:8089']
+  operation-app:
+    build:
+      context: .
+      dockerfile: examples/operation-app/Dockerfile
+    command: ['operation-app']
+    restart: unless-stopped
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://collector:4318
+      NO_PROXY: collector,localhost,127.0.0.1
+      no_proxy: collector,localhost,127.0.0.1
+    ports: ['127.0.0.1:8090:8090']
+    depends_on:
+      collector: {condition: service_started}
+  report-app:
+    build:
+      context: .
+      dockerfile: examples/report-app/Dockerfile
+    command: ['report-app']
+    restart: unless-stopped
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://collector:4318
+      NO_PROXY: collector,localhost,127.0.0.1
+      no_proxy: collector,localhost,127.0.0.1
+    ports: ['127.0.0.1:8091:8091']
+    depends_on:
+      collector: {condition: service_started}
+  query:
+    <<: *app
+    command: ['python', 'server.py']
+    ports: ['127.0.0.1:8088:8088']
+    depends_on:
+      clickhouse: {condition: service_healthy}
+  mongo:
+    image: mongo:7.0
+    profiles: ['hyperdx']
+    volumes: ['mongo:/data/db']
+  hyperdx:
+    image: docker.hyperdx.io/hyperdx/hyperdx:2.41.0
+    profiles: ['hyperdx']
+    ports: ['127.0.0.1:8080:8080', '127.0.0.1:8000:8000']
+    environment:
+      MONGO_URI: mongodb://mongo:27017/hyperdx
+      HYPERDX_APP_URL: http://localhost
+      HYPERDX_APP_PORT: '8080'
+      HYPERDX_API_PORT: '8000'
+      FRONTEND_URL: http://localhost:8080
+      SERVER_URL: http://127.0.0.1:8000
+      OPAMP_PORT: '4320'
+      USAGE_STATS_ENABLED: 'false'
+      DEFAULT_CONNECTIONS: '[{"name":"Lab","host":"http://clickhouse:8123","username":"lab","password":"lab-local"}]'
+    depends_on: [mongo, clickhouse]
+volumes:
+  clickhouse:
+  redis:
+  mongo:

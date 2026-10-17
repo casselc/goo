@@ -1,0 +1,70 @@
+{
+  "fromNS": "10000000000",
+  "toNS": "30000000000",
+  "maxGapNS": "10000000000",
+  "points": [
+    {
+      "stream": {
+        "resource": {
+          "service.name": "example",
+          "service.instance.id": "one"
+        },
+        "scope": "goo",
+        "version": "1",
+        "schemaURL": "goo://example/v1",
+        "name": "calls",
+        "unit": "{invocation}",
+        "attributes": {
+          "outcome": "ok"
+        }
+      },
+      "temporality": "cumulative",
+      "monotonic": true,
+      "startNS": "1000000000",
+      "endNS": "10000000000",
+      "value": "5"
+    },
+    {
+      "stream": {
+        "resource": {
+          "service.name": "example",
+          "service.instance.id": "one"
+        },
+        "scope": "goo",
+        "version": "1",
+        "schemaURL": "goo://example/v1",
+        "name": "calls",
+        "unit": "{invocation}",
+        "attributes": {
+          "outcome": "ok"
+        }
+      },
+      "temporality": "cumulative",
+      "monotonic": true,
+      "startNS": "1000000000",
+      "endNS": "20000000000",
+      "value": "8"
+    },
+    {
+      "stream": {
+        "resource": {
+          "service.name": "example",
+          "service.instance.id": "one"
+        },
+        "scope": "goo",
+        "version": "1",
+        "schemaURL": "goo://example/v1",
+        "name": "calls",
+        "unit": "{invocation}",
+        "attributes": {
+          "outcome": "ok"
+        }
+      },
+      "temporality": "cumulative",
+      "monotonic": true,
+      "startNS": "1000000000",
+      "endNS": "30000000000",
+      "value": "12"
+    }
+  ]
+}

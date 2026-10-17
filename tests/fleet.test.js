@@ -1,0 +1,2 @@
+const {test}=require('node:test');const assert=require('node:assert/strict');const {coverageLabel}=require('../ui/fleet.js');
+test('fleet coverage labels count supported members without claiming ingestion completeness',()=>{assert.equal(coverageLabel({supported:1,expected:2}),'1/2 members support this exact interval');assert.equal(coverageLabel({supported:0,expected:2}),'0/2 members support this exact interval');});

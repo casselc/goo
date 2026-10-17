@@ -1,0 +1,5 @@
+[
+  {"event_id":"accept-1","kind":"accepted","environment":"demo","tenant_id":"demo","service_name":"reservations","subject_id":"r1","release":"v1","event_time_ns":"1700000000000000060","received_time_ns":"1700000000000000061"},
+  {"event_id":"terminal-1","kind":"terminal","environment":"demo","tenant_id":"demo","service_name":"reservations","subject_id":"r1","event_time_ns":"1700000000000000070","received_time_ns":"1700000000000000071","outcome":"confirmed"},
+  {"event_id":"accept-2","kind":"accepted","environment":"demo","tenant_id":"demo","service_name":"reservations","subject_id":"r2","release":"v2","event_time_ns":"1700000000000000061","received_time_ns":"1700000000000000062"}
+]

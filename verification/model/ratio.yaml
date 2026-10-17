@@ -1,0 +1,17 @@
+spec: ratio.qnt
+module: ratio
+constants: {INITIAL: '-1'}
+invariants: [safety]
+actions:
+  traffic:
+    expect: 'state == {{.obs.state}} and calls == {{.obs.calls}} and errors == {{.obs.errors}}'
+  missing:
+    expect: 'state == {{.obs.state}} and calls == {{.obs.calls}} and errors == {{.obs.errors}}'
+  idle:
+    expect: 'state == {{.obs.state}} and calls == {{.obs.calls}} and errors == {{.obs.errors}}'
+  reset:
+    expect: 'state == {{.obs.state}} and calls == {{.obs.calls}} and errors == {{.obs.errors}}'
+  gap:
+    expect: 'state == {{.obs.state}} and calls == {{.obs.calls}} and errors == {{.obs.errors}}'
+  repair:
+    expect: 'state == {{.obs.state}} and calls == {{.obs.calls}} and errors == {{.obs.errors}}'

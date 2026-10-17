@@ -1,0 +1,19 @@
+apiVersion: goo/lifecycle/v1alpha1
+evaluationId: demo-lifecycle-basis
+definitionRevision: reservations/v1
+sourceRevision: normalized-events/v1
+evidenceBasis: demo-input-file-v1
+custodyClock: demo-normalized-received-time
+evaluationTimeNs: "1700000000000000100"
+evidenceCutoffNs: "1700000000000000100"
+deadlineNs: "10"
+allowanceNs: "3"
+windowNs: "30"
+subjectField: reservation_id
+successOutcome: confirmed
+terminalOutcomes: [confirmed, rejected]
+scopes:
+  - environment: demo
+    tenantId: demo
+    serviceName: reservations
+    coverage: unverified

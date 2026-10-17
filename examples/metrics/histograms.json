@@ -1,0 +1,61 @@
+{
+  "fromNS": "10",
+  "toNS": "20",
+  "maxGapNS": "10",
+  "points": [
+    {
+      "stream": {
+        "resource": {
+          "service.name": "demo",
+          "service.instance.id": "one"
+        },
+        "scope": "demo",
+        "version": "1",
+        "schemaURL": "https://opentelemetry.io/schemas/1.30.0",
+        "name": "goo.operation.duration",
+        "unit": "s",
+        "attributes": {}
+      },
+      "temporality": "cumulative",
+      "startNS": "1",
+      "endNS": "10",
+      "bounds": [
+        0.01,
+        0.1
+      ],
+      "bucketCounts": [
+        "1",
+        "1",
+        "0"
+      ],
+      "count": "2"
+    },
+    {
+      "stream": {
+        "resource": {
+          "service.name": "demo",
+          "service.instance.id": "one"
+        },
+        "scope": "demo",
+        "version": "1",
+        "schemaURL": "https://opentelemetry.io/schemas/1.30.0",
+        "name": "goo.operation.duration",
+        "unit": "s",
+        "attributes": {}
+      },
+      "temporality": "cumulative",
+      "startNS": "1",
+      "endNS": "20",
+      "bounds": [
+        0.01,
+        0.1
+      ],
+      "bucketCounts": [
+        "2",
+        "3",
+        "1"
+      ],
+      "count": "6"
+    }
+  ]
+}

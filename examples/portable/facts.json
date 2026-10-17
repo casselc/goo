@@ -1,0 +1,24 @@
+[
+  {
+    "evaluation_id": "demo-basis",
+    "environment": "demo",
+    "tenant_id": "demo",
+    "reservation_id": "r1",
+    "service_name": "reservations",
+    "release": "v1",
+    "classification": "good",
+    "quality_impaired": false,
+    "is_mature": true
+  },
+  {
+    "evaluation_id": "demo-basis",
+    "environment": "demo",
+    "tenant_id": "demo",
+    "reservation_id": "r2",
+    "service_name": "reservations",
+    "release": "v2",
+    "classification": "bad",
+    "quality_impaired": false,
+    "is_mature": true
+  }
+]

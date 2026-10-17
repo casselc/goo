@@ -1,0 +1,50 @@
+[
+  {
+    "resource": {
+      "service.name": "checkout",
+      "service.instance.id": "a"
+    },
+    "traceId": "t1",
+    "spanId": "s1",
+    "route": "/checkout",
+    "method": "POST",
+    "status": 200,
+    "kind": "server"
+  },
+  {
+    "resource": {
+      "service.name": "checkout",
+      "service.instance.id": "a"
+    },
+    "traceId": "t2",
+    "spanId": "s2",
+    "route": "/checkout",
+    "method": "POST",
+    "status": 503,
+    "kind": "server"
+  },
+  {
+    "resource": {
+      "service.name": "checkout",
+      "service.instance.id": "a"
+    },
+    "traceId": "t3",
+    "spanId": "s3",
+    "route": "/checkout",
+    "method": "POST",
+    "status": null,
+    "kind": "server"
+  },
+  {
+    "resource": {
+      "service.name": "checkout",
+      "service.instance.id": "a"
+    },
+    "traceId": "t4",
+    "spanId": "s4",
+    "route": "",
+    "method": "GET",
+    "status": 404,
+    "kind": "server"
+  }
+]

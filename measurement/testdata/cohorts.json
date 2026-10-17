@@ -1,0 +1,57 @@
+{
+  "description": "Prepared-fact fixtures, not raw-event lifecycle tests. Each block expands to count independently keyed subjects. Expected counts and ratio components are authored independently of either evaluator.",
+  "cases": [
+    {
+      "name": "weighted_more_than_1000",
+      "blocks": [
+        {"count": 1000, "id": "good", "classification": "good", "release": "v1"},
+        {"count": 1, "id": "bad", "classification": "bad", "release": "v2"},
+        {"count": 3, "id": "other", "classification": "bad", "release": "v2", "evaluation_id": "basis-2"},
+        {"count": 1, "id": "pending", "classification": "pending", "release": "v2", "is_mature": false}
+      ],
+      "total": {"eligible": 1001, "good": 1000, "bad": 1, "unknown": 0, "impaired": 0, "state": "ok", "ratio_parts": [1000, 1001]},
+      "by_release": {
+        "v1": {"eligible": 1000, "good": 1000, "bad": 0, "unknown": 0, "impaired": 0, "state": "ok", "ratio_parts": [1, 1]},
+        "v2": {"eligible": 1, "good": 0, "bad": 1, "unknown": 0, "impaired": 0, "state": "ok", "ratio_parts": [0, 1]}
+      }
+    },
+    {
+      "name": "unknown_is_not_success",
+      "blocks": [
+        {"count": 2, "id": "good", "classification": "good", "release": "v1"},
+        {"count": 1, "id": "unknown", "classification": "unknown", "release": "v1"}
+      ],
+      "total": {"eligible": 3, "good": 2, "bad": 0, "unknown": 1, "impaired": 0, "state": "unknown", "ratio_parts": null},
+      "by_release": {
+        "v1": {"eligible": 3, "good": 2, "bad": 0, "unknown": 1, "impaired": 0, "state": "unknown", "ratio_parts": null}
+      }
+    },
+    {
+      "name": "scope_quality_blocks_good_outcome",
+      "blocks": [
+        {"count": 1, "id": "good", "classification": "good", "release": "v1", "quality_impaired": true}
+      ],
+      "total": {"eligible": 1, "good": 1, "bad": 0, "unknown": 0, "impaired": 1, "state": "unknown", "ratio_parts": null},
+      "by_release": {
+        "v1": {"eligible": 1, "good": 1, "bad": 0, "unknown": 0, "impaired": 1, "state": "unknown", "ratio_parts": null}
+      }
+    },
+    {
+      "name": "cross_tenant_identity",
+      "blocks": [
+        {"count": 1, "id": "same", "classification": "good", "release": "v1", "tenant_id": "a"},
+        {"count": 1, "id": "same", "classification": "bad", "release": "v1", "tenant_id": "b"}
+      ],
+      "total": {"eligible": 2, "good": 1, "bad": 1, "unknown": 0, "impaired": 0, "state": "ok", "ratio_parts": [1, 2]},
+      "by_release": {
+        "v1": {"eligible": 2, "good": 1, "bad": 1, "unknown": 0, "impaired": 0, "state": "ok", "ratio_parts": [1, 2]}
+      }
+    },
+    {
+      "name": "zero_traffic",
+      "blocks": [],
+      "total": {"eligible": 0, "good": 0, "bad": 0, "unknown": 0, "impaired": 0, "state": "no_data", "ratio_parts": null},
+      "by_release": {}
+    }
+  ]
+}

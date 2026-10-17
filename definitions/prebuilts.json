@@ -1,0 +1,516 @@
+{
+  "apiVersion": "goo/prebuilts/v1alpha1",
+  "profiles": [
+    {
+      "id": "otel.http.server",
+      "description": "Route-level request volume/duration, error-policy wizard, and slow-request investigation.",
+      "stability": "semconv-v1.37.0-http-stable",
+      "resources": [
+        "service.name"
+      ],
+      "requirements": [
+        {
+          "id": "request-distribution",
+          "anyOf": [
+            {
+              "kind": "histogram",
+              "name": "http.server.request.duration",
+              "unit": "s",
+              "schemaURL": "https://opentelemetry.io/schemas/1.37.0",
+              "attributes": [
+                "http.request.method",
+                "http.route",
+                "http.response.status_code"
+              ]
+            }
+          ]
+        }
+      ],
+      "features": [
+        {
+          "id": "route-overview",
+          "kind": "visualization",
+          "implementation": "proposed"
+        },
+        {
+          "id": "request-error-policy",
+          "kind": "wizard",
+          "implementation": "proposed"
+        },
+        {
+          "id": "slow-route-to-trace",
+          "kind": "investigation",
+          "implementation": "proposed"
+        }
+      ],
+      "caveats": [
+        "Route is a low-cardinality template, never the raw URL. Missing routes need a separate unknown bucket.",
+        "Client and server errors have different policies; choose an error policy before publishing an objective.",
+        "Metric histograms require temporality, reset and bucket compatibility checks before merging or calculating rates."
+      ]
+    },
+    {
+      "id": "otel.rpc.server.legacy",
+      "description": "Service/method request distribution with explicit legacy millisecond binding.",
+      "stability": "semconv-v1.37.0-rpc-development",
+      "resources": [
+        "service.name"
+      ],
+      "requirements": [
+        {
+          "id": "rpc-distribution",
+          "anyOf": [
+            {
+              "kind": "histogram",
+              "name": "rpc.server.duration",
+              "unit": "ms",
+              "schemaURL": "https://opentelemetry.io/schemas/1.37.0",
+              "attributes": [
+                "rpc.system",
+                "rpc.service",
+                "rpc.method"
+              ]
+            }
+          ]
+        }
+      ],
+      "features": [
+        {
+          "id": "rpc-method-overview",
+          "kind": "visualization",
+          "implementation": "proposed"
+        },
+        {
+          "id": "rpc-status-policy",
+          "kind": "wizard",
+          "implementation": "proposed"
+        }
+      ],
+      "caveats": [
+        "Legacy names and millisecond units are explicit; newer convention versions need a separate profile or migration binding.",
+        "Protocol status policies differ; an RPC failure does not automatically mean the business operation failed."
+      ]
+    },
+    {
+      "id": "otel.messaging.process",
+      "description": "Processing distributions by messaging destination with an asynchronous investigation recipe.",
+      "stability": "semconv-v1.37.0-development",
+      "resources": [
+        "service.name"
+      ],
+      "requirements": [
+        {
+          "id": "processing-distribution",
+          "anyOf": [
+            {
+              "kind": "histogram",
+              "name": "messaging.process.duration",
+              "unit": "s",
+              "schemaURL": "https://opentelemetry.io/schemas/1.37.0",
+              "attributes": [
+                "messaging.system",
+                "messaging.destination.name"
+              ]
+            }
+          ]
+        }
+      ],
+      "features": [
+        {
+          "id": "destination-overview",
+          "kind": "visualization",
+          "implementation": "proposed"
+        },
+        {
+          "id": "producer-consumer-links",
+          "kind": "relation",
+          "implementation": "proposed"
+        }
+      ],
+      "caveats": [
+        "Processing time is not queue waiting time; backlog, lag and redelivery require broker-specific adapters.",
+        "Producer-consumer relations require actual trace links or explicitly scoped message identity; matching destination and time is contextual only."
+      ]
+    },
+    {
+      "id": "otel.host.cpu",
+      "description": "Host CPU utilization split by state and correlated with service symptoms.",
+      "stability": "semconv-v1.37.0-development",
+      "resources": [
+        "host.id"
+      ],
+      "requirements": [
+        {
+          "id": "utilization",
+          "anyOf": [
+            {
+              "kind": "gauge",
+              "name": "system.cpu.utilization",
+              "unit": "1",
+              "schemaURL": "https://opentelemetry.io/schemas/1.37.0",
+              "attributes": [
+                "cpu.mode"
+              ]
+            }
+          ]
+        }
+      ],
+      "features": [
+        {
+          "id": "host-use",
+          "kind": "investigation",
+          "implementation": "proposed"
+        }
+      ],
+      "caveats": [
+        "Do not sum utilization across cores or assume a host measurement identifies the causal service.",
+        "CPU utilization does not establish runnable queue saturation or memory pressure."
+      ]
+    },
+    {
+      "id": "goo.worker-queue",
+      "description": "Broker lag/pending, local worker utilization, and observed enqueue-to-start delay.",
+      "stability": "goo-demo-v1-custom",
+      "resources": [
+        "service.name",
+        "service.instance.id"
+      ],
+      "requirements": [
+        {
+          "id": "undelivered-depth",
+          "anyOf": [
+            {
+              "kind": "gauge",
+              "name": "lab.queue.depth",
+              "unit": "{message}",
+              "schemaURL": "goo://demo/queue/v1",
+              "attributes": [
+                "messaging.system",
+                "messaging.destination.name",
+                "messaging.consumer.group.name"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "utilization",
+          "anyOf": [
+            {
+              "kind": "gauge",
+              "name": "lab.worker.utilization",
+              "unit": "1",
+              "schemaURL": "goo://demo/queue/v1",
+              "attributes": [
+                "messaging.system",
+                "messaging.destination.name",
+                "messaging.consumer.group.name"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "pending",
+          "anyOf": [
+            {
+              "kind": "gauge",
+              "name": "lab.queue.pending",
+              "unit": "{message}",
+              "schemaURL": "goo://demo/queue/v1",
+              "attributes": [
+                "messaging.system",
+                "messaging.destination.name",
+                "messaging.consumer.group.name"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "active",
+          "anyOf": [
+            {
+              "kind": "gauge",
+              "name": "lab.worker.active",
+              "unit": "{worker}",
+              "schemaURL": "goo://demo/queue/v1",
+              "attributes": [
+                "messaging.system",
+                "messaging.destination.name",
+                "messaging.consumer.group.name"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "capacity",
+          "anyOf": [
+            {
+              "kind": "gauge",
+              "name": "lab.worker.capacity",
+              "unit": "{worker}",
+              "schemaURL": "goo://demo/queue/v1",
+              "attributes": [
+                "messaging.system",
+                "messaging.destination.name",
+                "messaging.consumer.group.name"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "wait",
+          "anyOf": [
+            {
+              "kind": "histogram",
+              "name": "lab.queue.wait",
+              "unit": "s",
+              "schemaURL": "goo://demo/queue/v1",
+              "attributes": [
+                "messaging.system",
+                "messaging.destination.name",
+                "messaging.consumer.group.name"
+              ]
+            }
+          ]
+        }
+      ],
+      "features": [
+        {
+          "id": "queue-use",
+          "kind": "visualization",
+          "implementation": "reference-lab"
+        }
+      ],
+      "caveats": [
+        "Custom instruments are not OTel standard metric names. Redis adapter semantics must be bound explicitly.",
+        "Registry compatibility is metadata shape only, not evidence completeness, freshness, or deployment readiness."
+      ]
+    },
+    {
+      "id": "otel.database.client",
+      "description": "Database operation latency and a query-shape investigation entry point.",
+      "stability": "semconv-v1.37.0-operation-metric-stable",
+      "resources": [
+        "service.name"
+      ],
+      "requirements": [
+        {
+          "id": "operation-distribution",
+          "anyOf": [
+            {
+              "kind": "histogram",
+              "name": "db.client.operation.duration",
+              "unit": "s",
+              "schemaURL": "https://opentelemetry.io/schemas/1.37.0",
+              "attributes": [
+                "db.system.name"
+              ]
+            }
+          ]
+        }
+      ],
+      "features": [
+        {
+          "id": "database-operations",
+          "kind": "visualization",
+          "implementation": "proposed"
+        },
+        {
+          "id": "dependency-latency",
+          "kind": "investigation",
+          "implementation": "proposed"
+        }
+      ],
+      "caveats": [
+        "Query text is optional and sensitive; use sanitized low-cardinality operation or query summaries where available.",
+        "Operation duration alone does not establish pool wait or server-side contention."
+      ]
+    },
+    {
+      "id": "otel.database.pool",
+      "description": "Pool state and wait-time views bound to an explicit named pool.",
+      "stability": "semconv-v1.37.0-development",
+      "resources": [
+        "service.name",
+        "service.instance.id"
+      ],
+      "requirements": [
+        {
+          "id": "connections",
+          "anyOf": [
+            {
+              "kind": "updowncounter",
+              "name": "db.client.connection.count",
+              "unit": "{connection}",
+              "schemaURL": "https://opentelemetry.io/schemas/1.37.0",
+              "attributes": [
+                "db.client.connection.pool.name",
+                "db.client.connection.state"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "wait",
+          "anyOf": [
+            {
+              "kind": "histogram",
+              "name": "db.client.connection.wait_time",
+              "unit": "s",
+              "schemaURL": "https://opentelemetry.io/schemas/1.37.0",
+              "attributes": [
+                "db.client.connection.pool.name"
+              ]
+            }
+          ]
+        }
+      ],
+      "features": [
+        {
+          "id": "pool-use",
+          "kind": "investigation",
+          "implementation": "proposed"
+        },
+        {
+          "id": "pool-capacity-binding",
+          "kind": "wizard",
+          "implementation": "proposed"
+        }
+      ],
+      "caveats": [
+        "Bind the same pool attribute value and capacity before deriving utilization. Presence of an attribute key is not a value-level join proof.",
+        "Do not merge instances or equate open connections with busy connections."
+      ]
+    },
+    {
+      "id": "otel.go.runtime",
+      "description": "Per-instance memory and goroutine trends leading to runtime-pressure investigation.",
+      "stability": "semconv-v1.37.0-development",
+      "resources": [
+        "service.name",
+        "service.instance.id"
+      ],
+      "requirements": [
+        {
+          "id": "memory",
+          "anyOf": [
+            {
+              "kind": "updowncounter",
+              "name": "go.memory.used",
+              "unit": "By",
+              "schemaURL": "https://opentelemetry.io/schemas/1.37.0",
+              "attributes": []
+            }
+          ]
+        },
+        {
+          "id": "goroutines",
+          "anyOf": [
+            {
+              "kind": "updowncounter",
+              "name": "go.goroutine.count",
+              "unit": "{goroutine}",
+              "schemaURL": "https://opentelemetry.io/schemas/1.37.0",
+              "attributes": []
+            }
+          ]
+        }
+      ],
+      "features": [
+        {
+          "id": "runtime-pressure",
+          "kind": "investigation",
+          "implementation": "proposed"
+        }
+      ],
+      "caveats": [
+        "A goroutine count is not a leak diagnosis; correlate trends with traffic and runtime evidence.",
+        "Memory utilization requires a valid limit or capacity; memory usage alone has no percentage denominator."
+      ]
+    },
+    {
+      "id": "otel.http.server.spans",
+      "description": "Request investigations and route distributions when standard server spans are available.",
+      "stability": "semconv-v1.37.0-http-stable",
+      "resources": [
+        "service.name"
+      ],
+      "requirements": [
+        {
+          "id": "request-spans",
+          "anyOf": [
+            {
+              "kind": "span/server",
+              "name": "",
+              "unit": "ns",
+              "schemaURL": "https://opentelemetry.io/schemas/1.37.0",
+              "attributes": [
+                "http.request.method",
+                "http.route",
+                "http.response.status_code"
+              ]
+            }
+          ]
+        }
+      ],
+      "features": [
+        {
+          "id": "route-latency-heatmap",
+          "kind": "visualization",
+          "implementation": "proposed"
+        },
+        {
+          "id": "request-waterfall",
+          "kind": "investigation",
+          "implementation": "proposed"
+        }
+      ],
+      "caveats": [
+        "Span names may vary; classification uses kind and attributes instead of a library-specific span name.",
+        "Sampling affects counts and observed distributions. Span-derived request volume is not assumed to be full traffic.",
+        "Nanoseconds here are the normalized source adapter's duration unit, not an OTel semantic metric unit."
+      ]
+    },
+    {
+      "id": "otel.messaging.consumer.spans",
+      "description": "Destination and consumer-group investigations across asynchronous trace links.",
+      "stability": "semconv-v1.37.0-development",
+      "resources": [
+        "service.name"
+      ],
+      "requirements": [
+        {
+          "id": "consumer-spans",
+          "anyOf": [
+            {
+              "kind": "span/consumer",
+              "name": "",
+              "unit": "ns",
+              "schemaURL": "https://opentelemetry.io/schemas/1.37.0",
+              "attributes": [
+                "messaging.system",
+                "messaging.destination.name",
+                "messaging.operation.type"
+              ]
+            }
+          ]
+        }
+      ],
+      "features": [
+        {
+          "id": "async-processing-waterfall",
+          "kind": "visualization",
+          "implementation": "proposed"
+        },
+        {
+          "id": "retry-versus-subject",
+          "kind": "wizard",
+          "implementation": "proposed"
+        }
+      ],
+      "caveats": [
+        "Message attempts cannot define business success without an application-defined subject key and terminal outcome contract.",
+        "Trace links establish references; destination/time similarity alone is contextual evidence."
+      ]
+    }
+  ]
+}

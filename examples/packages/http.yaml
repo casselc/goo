@@ -1,0 +1,12 @@
+apiVersion: goo/binding/v1alpha1
+name: checkout_http
+profile: otel.http.server.spans
+scope: checkout-a
+preparedTables:
+  clickhouse: prepared_http
+  databricks: main.observability.prepared_http
+policy:
+  failureStatusRanges:
+    - {min: 500, max: 599}
+  missingStatus: unknown
+  missingRoute: unknown-bucket
