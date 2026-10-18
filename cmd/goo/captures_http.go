@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strconv"
 	"time"
 )
 
@@ -41,6 +42,32 @@ func registerCaptures(mux *http.ServeMux, client *http.Client, dir string) {
 		result, e := store.List(after)
 		if e != nil {
 			fail(w, 500, e)
+			return
+		}
+		reply(w, 200, result)
+	})
+	mux.HandleFunc("GET /captures/{id}/followups", func(w http.ResponseWriter, r *http.Request) {
+		row := 0
+		for key, values := range r.URL.Query() {
+			if key != "row" || len(values) != 1 {
+				fail(w, 400, fmt.Errorf("only one retained row index supported"))
+				return
+			}
+			n, e := strconv.Atoi(values[0])
+			if e != nil || strconv.Itoa(n) != values[0] {
+				fail(w, 400, fmt.Errorf("canonical row index required"))
+				return
+			}
+			row = n
+		}
+		c, e := store.Load(r.PathValue("id"))
+		if e != nil {
+			fail(w, 404, e)
+			return
+		}
+		result, e := c.Followups(row)
+		if e != nil {
+			fail(w, 400, e)
 			return
 		}
 		reply(w, 200, result)

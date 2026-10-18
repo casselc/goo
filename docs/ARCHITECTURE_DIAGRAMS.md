@@ -914,3 +914,23 @@ Capture and document publication are separate; attachment failure retains the
 capture. A delayed attachment may publish its authorized child revision, but cannot
 replace an unrelated or changed draft. Old capture and investigation IDs remain
 exact; new evidence never silently advances an earlier citation.
+
+### Evidence-led follow-up questions
+
+```mermaid
+flowchart LR
+  Capture[Verified immutable capture] -->|stored read only| Planner[Go contextual question planner]
+  Planner --> Preview[Relationship / preserved and changed scope]
+  Preview -->|explicit run| Records[Explore traces / logs / reported status]
+  Preview -->|source-free open| Metrics[Fixed-window instrument discovery]
+  Metrics -->|explicit discover and measure| Evidence[New evidence]
+  Records --> Evidence
+  Evidence --> Investigation[Capture and cite in investigation]
+  Preview -->|authored question / no source read| Gap[Missing evidence in draft brief]
+  Gap --> Investigation
+```
+
+The planner derives IDs/services from retained evidence and validates generated
+queries through existing compilers. Exact reported IDs and service/time context
+are distinct relationships. No suggestion changes the original capture or asserts
+a cause; all source execution remains an explicit user action.

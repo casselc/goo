@@ -1,0 +1,19 @@
+spec: followups.qnt
+module: followups
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  preview:
+    expect: 'coherent == {{.obs.coherent}}'
+  duration:
+    expect: 'coherent == {{.obs.coherent}}'
+  trace:
+    expect: 'coherent == {{.obs.coherent}}'
+  logs:
+    expect: 'coherent == {{.obs.coherent}}'
+  resources:
+    expect: 'coherent == {{.obs.coherent}}'
+  gap:
+    expect: 'coherent == {{.obs.coherent}}'
+  reopen:
+    expect: 'coherent == {{.obs.coherent}}'

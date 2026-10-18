@@ -360,3 +360,13 @@ metadata names evidence scope and metric definition identity without a telemetry
 read. Existing dirty drafts and old receipts remain intact. Storyboard 41 follows
 two application services, logs and an independent native counter through handoff
 and fresh definition reuse. Production shared editing/authorization remains future.
+
+### Implemented: evidence-led next questions
+
+A bounded Go planner derives follow-up questions from verified stored captures.
+Evidence cards preview preserved/replaced scope before explicit record execution,
+fixed measurement preview or fixed-window resource discovery. Reported IDs and
+service/time context have different labels; absent/invalid IDs do not create links.
+An evidence-gap action appends an exact-citation open question to the draft.
+Storyboard 42 follows competing explanations through a real delayed operation,
+trace/log evidence and resource instrumentation without automatic causal claims.

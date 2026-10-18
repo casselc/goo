@@ -163,3 +163,9 @@ remain future work.
 `scripts/independent_metrics.py` is an ordinary Python OTel SDK producer with no
 goo manifest and no scope version/schema. Storyboard 39 exercises its actual
 collector → ClickHouse → discovery → package → capture → notes path.
+
+
+Contextual investigation follow-ups can now pin metric discovery to an evidence
+capture's original fixed window and carry it into generated package preview.
+The workbench displays the fixed bounds; manual service/environment edits reset
+discovery to its fresh two-minute default. See INVESTIGATION_FOLLOWUPS.md.

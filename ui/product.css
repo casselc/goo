@@ -1061,3 +1061,12 @@ td details {
 #documentCards .evidence-note {overflow-wrap:anywhere;border-left:2px solid var(--accent);padding-left:12px}
 #captureDraftInvestigation {width:100%}
 @media(max-width:700px){.investigation-brief{grid-template-columns:1fr}.active-investigation{align-items:stretch;flex-direction:column;padding:12px;gap:8px}}
+
+.investigate-further {margin-top:16px;border-top:1px solid var(--border);padding-top:12px}
+.investigate-further > summary {color:var(--accent);font-weight:600}
+.followup-choices {display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.followup-choices button {text-align:left}
+.followup-preview:not(:empty) {padding:16px;border:1px solid var(--border);border-radius:8px;background:var(--surface-raised);margin-bottom:12px}
+.followup-preview p,.followup-preview li {overflow-wrap:anywhere}
+.followup-gap textarea {width:100%;font:inherit;min-height:90px;margin:8px 0}
+.investigate-further select {width:100%}

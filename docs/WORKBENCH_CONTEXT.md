@@ -169,3 +169,12 @@ remain readable and branchable.
 Storyboard 41 follows real checkout/report spans, report logs and an independent
 OTel counter through capture, investigation handoff and fresh reuse. The same
 workflow supports arbitrary bounded record and measurement questions.
+
+## Contextual next questions
+
+Evidence cards now offer **Investigate further**. Stored-only planning, explicit
+scope previews and user-triggered execution connect duration/status summaries,
+reported outcome attributes, exact trace/log IDs and fixed-window resource
+instrument discovery. **Record missing evidence or instrumentation** appends an
+authored question with the origin capture ID to the existing open-question brief;
+it remains an unsaved draft until explicitly saved. See INVESTIGATION_FOLLOWUPS.md.

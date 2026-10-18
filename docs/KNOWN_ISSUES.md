@@ -200,8 +200,8 @@ are accepted as exact identities. See MEASUREMENT_PACKAGES.md.
 
 [PRODUCT_ESSENCE.md](PRODUCT_ESSENCE.md) is the organizing direction. Definitions
 now exposes searchable record and measurement package revisions, but the two
-schemas retain separate editors/catalog sections. Discovery still uses an explicit
-two-minute service window; measurement lookback/fixed bounds are separate. Full
+schemas retain separate editors/catalog sections. Discovery defaults to an explicit
+two-minute service window; contextual evidence follow-ups can pin original bounds; measurement lookback/fixed bounds are separate. Full
 workspace-session persistence, a unified cross-family authoring schema and
 production multi-user collaboration remain future work.
 
@@ -214,3 +214,13 @@ or production authorization. Capture and document publication are separate, so
 attachment failure retains a saved capture for retry. Drafts are page-local until
 saved. Capture-card scope reads validate the stored capture and return only receipt
 metadata; local disk integrity checks still read its bounded stored evidence.
+
+
+## Contextual question boundaries
+
+Evidence-card follow-ups now preserve or explicitly replace scope. Trace/log
+relationships use exact reported IDs; resource discovery is service/time context.
+The observation chooser covers the first 100 retained records. Inventory and
+comparison captures require opening an underlying supported capture. Automatic
+causal ranking, cross-signal attribute translation and completeness inference are
+not implemented. See INVESTIGATION_FOLLOWUPS.md.

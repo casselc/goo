@@ -5,6 +5,41 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Contextual investigation follow-ups (2026-10-18)
+
+Evidence cards now propose source-free questions from verified captures, with
+explicit preserved and changed scope. Go compiles generated record/measurement
+questions; exact trace/span IDs remain distinct from service/time resource
+context. Discovery retains the original fixed window through package preview.
+Authored evidence gaps cite the originating capture and remain unsaved drafts.
+See [the contract](docs/INVESTIGATION_FOLLOWUPS.md) and storyboard 42.
+
+Passed: full root Go suite, exploration/HTTP race tests, root vet, 32 frontend
+checks, Python compilation and Hegel state/swarm (100 requested sequences, 25
+steps). Hegel exposed shared predicate trees between returned actions; each
+query now owns an independent deep copy, with a unit regression and passing
+property rerun. Stored capture immutability is checked separately.
+
+The focused real-stack journey passed in 1.4 minutes: reproduced delayed sample
+work, compared duration/status over the same matching population, followed exact
+trace/log IDs, explicitly discovered instruments in the original window and
+saved a finding with an origin-cited instrumentation question. It does not infer
+resource causality. Its quint-go ledger passed and rejected seven altered ledgers;
+the new Bombadil source-free preview campaign passed. The initial attempt failed
+only a textarea assertion using text content instead of value; corrected assertions
+passed. Initial artifacts remain in `artifacts/followups-initial-failure/`.
+
+Evidence: `artifacts/followups-{go,race,vet,node,hegel}.log`,
+`artifacts/followups-journey-final.log`, and
+`artifacts/followups/7cc4cfd1/`. Final image `77be6b447ade`: all six affected browser journeys passed in 5.5
+minutes, with no skips: coherence 40, context notes 36, follow-ups 42,
+investigation workspace 41, measurements 38 and metric discovery 39. All five
+enabled Bombadil campaigns and associated live Quint/negative controls passed.
+The expanded mobile preview passed containment and source-free checks. Affected
+screenshots were regenerated. Final ledger: `artifacts/followups/aec68658/`;
+regression log: `artifacts/followups-regression.log`. The wrapper restored owned
+traffic and preserved existing telemetry volumes and five stale pending entries.
+
 ## Question-first investigation workspace (2026-10-18)
 
 Investigations now retain a question, current finding, open questions and ordered

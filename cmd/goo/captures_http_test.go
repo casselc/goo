@@ -74,6 +74,16 @@ func TestCaptureHTTPServerCustodyAndSourceFreePaging(t *testing.T) {
 	if reads.Load() != oldReads {
 		t.Fatal("metadata read queried telemetry")
 	}
+	followups := call("GET", "/captures/"+first.Receipt.ID+"/followups", "")
+	var next exploration.FollowupSet
+	if followups.Code != 200 || json.Unmarshal(followups.Body.Bytes(), &next) != nil || next.Origin != first.Receipt.ID || reads.Load() != oldReads {
+		t.Fatal("follow-up planning queried source", followups.Body.String())
+	}
+	for _, suffix := range []string{"?row=100", "?row=-1", "?row=00", "?trace=forged", "?row=0&row=1"} {
+		if call("GET", "/captures/"+first.Receipt.ID+"/followups"+suffix, "").Code != 400 {
+			t.Fatal("unchecked follow-up selector", suffix)
+		}
+	}
 	for _, path := range []string{"/captures", "/captures/" + first.Receipt.ID, "/captures/" + first.Receipt.ID + "?cursor=" + first.NextCursor} {
 		w := call("GET", path, "")
 		if w.Code != 200 || w.Header().Get("Cache-Control") != "no-store" {

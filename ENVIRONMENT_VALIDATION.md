@@ -868,3 +868,17 @@ passed. Storyboard 41's real application/OTel workflow also verifies fresh reuse
 exact handoffs and dirty-draft preservation. All evidence is linked from
 VALIDATION.md. Owned traffic was restored; existing telemetry volumes and the
 five stale pending entries remain intact.
+
+## Contextual investigation follow-ups (2026-10-18)
+
+Existing cloud tooling and the running lab were reused; no environment setup
+configuration changed. Offline image `77be6b447ade` serves the Go follow-up
+planner and connected UI. Root Go tests, affected race tests, vet, 32 frontend
+checks, Python compilation and Hegel state/swarm passed. The new real-stack
+journey passed with seven rejecting Quint controls and its Bombadil campaign;
+details and final regression evidence are recorded in VALIDATION.md.
+
+Final browser regression passed all six affected journeys in 5.5 minutes, including
+five enabled Bombadil campaigns and live Quint/negative controls. Desktop/mobile
+storyboards were regenerated. The wrapper restored traffic and preserved existing
+telemetry volumes and all five pre-existing stale pending entries.

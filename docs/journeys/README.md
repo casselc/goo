@@ -751,3 +751,19 @@ new evidence and a child investigation while the earlier handoff remains unchang
 - [Mobile investigation handoff](screenshots/41c-mobile-investigation-handoff.png)
 - Executable: `journeys/investigation-workspace.spec.js`; optional draft exploration:
   `GOO_INVESTIGATION_BOMBADIL=1`.
+
+### 42 · From a slow operation to a supported finding
+
+A real delayed operation raises competing error-path, delayed-work and resource
+hypotheses. An engineer previews scope changes without a source read, compares
+recorded duration/status in the original population, follows a reported trace and
+its exact logs, then discovers worker instruments in the same fixed window. They
+capture supporting evidence, record a missing-instrumentation question and save
+a finding that distinguishes reproduced delay from production causal attribution.
+
+- [Explicit preserved and changed scope](screenshots/42a-explicit-follow-up-scope.png)
+- [Trace and exact log inspection](screenshots/42b-trace-and-exact-log-context.png)
+- [Evidence gap and supported finding](screenshots/42c-evidence-gap-and-supported-finding.png)
+- [Mobile investigation handoff](screenshots/42d-mobile-guided-investigation.png)
+- Executable: `journeys/followups.spec.js`; optional source-free browser exploration:
+  `GOO_FOLLOWUPS_BOMBADIL=1`.

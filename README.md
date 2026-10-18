@@ -17,6 +17,11 @@ Capture directly into an investigation draft or a new child of a saved revision;
 reopen the handoff without telemetry reads, or reuse its definition against fresh
 data while retaining the original evidence.
 
+[Contextual follow-ups](docs/INVESTIGATION_FOLLOWUPS.md) connect saved evidence to
+another explicit question: duration/status breakdowns, exact trace/log links,
+fixed-window resource discovery, or a recorded evidence gap. Each preview names
+which population and time scope it keeps or replaces before any source read.
+
 The [investigation workspace](docs/PRODUCT_WORKSPACE.md) brings Explore, Services, Operations,
 Saved investigations and Definitions into one interface. Explore includes captured
 attribute distributions, pinned baseline comparisons and a trace/log inspector.
