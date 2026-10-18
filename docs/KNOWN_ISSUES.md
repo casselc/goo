@@ -97,11 +97,11 @@ Fixed declared fleet membership and exact compatible interval totals are now sup
 
 ## Saved investigation limits
 
-Local server-captured immutable revisions and fixed-question refresh now exist. No multi-user authorization, capture listing, retention/quota, general query-session persistence or raw-metric-input replay exists. See SAVED_INVESTIGATIONS.md and PRODUCT_GAPS.md.
+Local server-captured immutable revisions and fixed-question refresh now exist. A general capture catalog now exists separately. No multi-user authorization, operation-capture catalog, retention/quota, full query-session persistence or raw-metric-input replay exists. See SAVED_INVESTIGATIONS.md and PRODUCT_GAPS.md.
 
 ## General exploration boundaries
 
-A bounded Go span/log AST, captured-record counts/groups, discovered keys and paged cross-service trace/exact-log navigation now exist. Reads are not transactional, offset pages are not frozen, trace completeness is unknown, numeric-looking attributes remain strings, and general explorations/expanded context are not archived by operation captures. One-field distributions and fixed-window descriptive cohort comparison now exist. General chart algebra, arbitrary-field numeric casts, complete trace accumulation, live tail and production tenancy remain absent. See EXPLORATION_DESIGN.md.
+A bounded Go span/log AST, captured-record counts/groups, discovered keys and paged cross-service trace/exact-log navigation now exist. Reads are not transactional, ordinary live offset pages are not frozen, trace completeness is unknown, numeric-looking attributes remain strings, and general explorations/expanded context are not archived by operation captures. One-field distributions and fixed-window descriptive cohort comparison now exist. General chart algebra, arbitrary-field numeric casts, complete trace accumulation, live tail and production tenancy remain absent. See EXPLORATION_DESIGN.md.
 
 - Explore baselines are volatile browser-held captures, not durable saved operation
   receipts. Comparison checks accounting/scope, not caller-supplied provenance;
@@ -127,7 +127,7 @@ separately documented retry, export-loss and late-evidence scenarios.
 Log discovery now includes literal message/service/severity controls, readable
 messages and independently scoped surrounding logs. Reported trace-ID groups and
 fixed full-population span-duration buckets are implemented. These do not supply
-root/trace latency, unique invocation counts, stable cursors, live tail or complete
+root/trace latency, unique invocation counts, stable live cursors, live tail or complete
 capture. Quick search adds visible AND filters rather than silently replacing
 existing predicates. Context highlights compare captured fields; identical duplicate
 logs have no unique event identity. See the discovery section of EXPLORATION_DESIGN.md.
@@ -135,4 +135,12 @@ logs have no unique event identity. See the discovery section of EXPLORATION_DES
 Observed service/span-name inventory now exists, bounded to 1000 pairs and one
 environment/window. It excludes log-only services and does not infer fleet
 membership, health, dependencies, request rate or declared business operations.
-General inventory/Explore evidence remains volatile. See [contract](SERVICE_INVENTORY.md).
+General inventory/Explore evidence can now be saved as immutable bounded receipts;
+expanded live context and browser baseline pairs remain volatile. See [contract](SERVICE_INVENTORY.md).
+
+General captures now retain full supported aggregates and up to 1,000 inspection
+records with stable stored pages. Ordinary live offsets still change with arrival
+and retention. Catalog listing is bounded and uses ID seek order, not a frozen
+catalog snapshot; quotas/indexing and team authorization remain future. Refresh
+requires the same fixed question and compiled plan; old receipts remain reopenable
+when that plan is unavailable. See [GENERAL_CAPTURES.md](GENERAL_CAPTURES.md).

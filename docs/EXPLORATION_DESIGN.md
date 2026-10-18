@@ -234,3 +234,12 @@ for a bounded single-read aggregate, then opens a separate exact service/name
 Explore question in the same environment and fixed bounds. Capture totals remain
 independent of local search and the Explore record page. See
 [SERVICE_INVENTORY.md](SERVICE_INVENTORY.md) for semantics, budgets and limitations.
+
+## Durable general captures and stable stored paging
+
+Explore span/log questions and service inventories now have their own immutable
+capture path, separate from operation receipts. Full counts/groups and at most
+1,000 ordered inspection records are retained; cursor pages read only the stored
+bank. Reopen is source-free, while fixed-question/plan refresh creates a successor.
+Ordinary live offsets remain mutable. Expanded context and browser baseline pairs
+are not automatically stored. See [the complete contract](GENERAL_CAPTURES.md).

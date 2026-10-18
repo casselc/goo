@@ -604,3 +604,39 @@ contracts. Counts describe spans, not unique requests or healthy fleet members.
 The [inventory contract](SERVICE_INVENTORY.md) and
 [journey 31](journeys/README.md#31-from-observed-services-to-a-reusable-question)
 cover drilldown, local filtering, preview and scope invalidation.
+
+## 19. Capture a question, page frozen evidence and refresh explicitly
+
+```mermaid
+sequenceDiagram
+    participant U as Investigator
+    participant UI as Shared live and read-only UI
+    participant G as Go capture API
+    participant CH as ClickHouse source
+    participant S as Local immutable capture volume
+    U->>UI: Capture Explore question or inventory
+    UI->>G: Title and typed fixed question, no supplied evidence
+    G->>CH: Full supported aggregates and bounded ordered row bank
+    CH-->>G: Actual data, state, warnings and source plan
+    G->>S: Sync and publish hashed receipt
+    G-->>UI: Receipt and first stored page
+    U->>UI: Reopen link or next saved page
+    UI->>G: Receipt ID and bound cursor
+    G->>S: Load and verify immutable evidence
+    G-->>UI: Stable page, unchanged aggregate basis
+    U->>UI: Refresh fixed question
+    UI->>G: Predecessor ID
+    G->>S: Load original question and source plan
+    G->>CH: Reread same question if current plan matches
+    G->>S: Publish successor, retain predecessor
+    G-->>UI: New receipt and evidence basis
+```
+
+Implemented locally. Up to 1,000 inspection records are retained; aggregate totals
+are independent of that bound. Counts/rows/groups are not a transactional source
+snapshot. Expanded context is a separate live read; saved pages themselves never
+query the source. Current workspace source identity is assumed, not a production
+multi-tenant custody guarantee. [Contract](GENERAL_CAPTURES.md),
+[journey 32](journeys/README.md#32-preserve-general-evidence-and-page-a-stored-record-bank)
+and [collaboration research](COLLABORATIVE_INVESTIGATIONS_RESEARCH.md) connect this
+foundation to proposed investigation cards and later shared editing.

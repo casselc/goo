@@ -5,6 +5,42 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## General evidence captures and stable saved paging (2026-10-18)
+
+[General captures](docs/GENERAL_CAPTURES.md) now persist manifest-free span/log
+questions and service inventory in the existing investigations volume. Reopen and
+paging read verified local evidence; refresh creates a successor with the same
+normalized fixed question and compiled source plan. Explore captures retain up to
+1,000 records, shown in pages of 100, while full supported aggregates retain their
+own counts and source states. These bounded records do not claim source completeness.
+
+Passed: root Go race suite and vet; focused race checks after final normalization;
+19 Python tests and 21 Node checks. Native HTTP tests reopen with the source closed,
+reject client-supplied evidence and cross-revision cursors, and preserve predecessors
+on failed refresh. Hegel state/swarm passed 60 sequences of up to 15 steps against
+final code (12.939 s), including arrivals, source resets, captures and branching
+refreshes. Quint validates actual browser capture/page/refresh/reopen observations,
+with four rejecting controls for old-count, page-basis, question and cursor drift.
+
+Journey 32 covers 1,205 matching spans, a 1,000-record retained bank, stable pages
+after late arrival, a 1,206-span successor, source-free browser reopening after
+process restart, explicit live handoff, inventory, logs, narrow screens and stale
+response isolation. Six new storyboard frames accompany diagram 19. Expanded trace
+and log context remains a separate fresh read; saved baseline pairs, team access
+control and collaborative editing remain future work.
+
+The initial default suite had 29 passes, two opt-in skips and one outdated wording
+assertion in journey 22. That assertion now matches the general “saved captures”
+disclaimer; its semantic checks remain and focused journeys 19 and 22 passed.
+Final capture/Bombadil and both opt-in campaigns passed (three tests, 3.5 minutes); all 32 distinct journeys passed across these runs. The capture actor recorded 367 trace records through all eight stages. All 102 storyboard images were refreshed; detailed evidence paths are in the cloud record.
+An initial final-test selector matched no tests, and one retry lacked workspace Go
+cache variables; both invocation issues were corrected before final verification.
+
+The agent's [collaboration research](docs/COLLABORATIVE_INVESTIGATIONS_RESEARCH.md)
+distinguishes verified Honeycomb Boards and Datadog multiplayer Notebooks from an
+unverified Honeycomb whiteboard identification. It proposes ordered investigation
+cards before authorized collaboration/presence; no multiplayer feature is claimed.
+
 ## Observed service inventory
 
 Implemented: single-read full-population service/span-name counts, OTel Error

@@ -172,3 +172,10 @@ observe/reset accounting. Journey 31 always invokes `TestQuintInventoryLiveLedge
 with actual browser questions and three rejecting controls. See
 [service inventory](../docs/SERVICE_INVENTORY.md); the optional Bombadil campaign
 checks read-only UI actions and source-derived invariants over the same fixture.
+
+General capture continuity: `go test -run TestHegelCaptureStateSwarm -v .` explores
+60 sequences of up to 15 capture/refresh/source-change steps and verifies old
+receipts and all retained pages. Journey 32 always invokes
+`TestQuintCaptureLiveLedger` with actual receipt/page/successor/reopen data and four
+negative controls. `npm run test:captures-campaign` adds read-only Bombadil paging
+and inspection with data-aware invariants. See [the contract](../docs/GENERAL_CAPTURES.md).

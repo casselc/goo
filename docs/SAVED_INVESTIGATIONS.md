@@ -57,7 +57,7 @@ provenance proof. Capture time is local server receipt time, not event time or
 immutable source ingestion custody. Completeness/sampling remain unverified.
 Stored errors/bases preserve uncertainty. A local filesystem cannot protect
 against an administrator rewriting both files and references. There is no
-multi-user authorization, inventory/listing, deletion/retention/total-disk quota,
+multi-user authorization, operation-capture listing, deletion/retention/total-disk quota,
 encryption/key management, backup service, collaboration or portable export UI.
 Use this shared loopback lab accordingly. The named volume survives service
 restart/recreation; it is not a backup and is removed by explicit volume deletion.
@@ -78,3 +78,11 @@ observed save/reopen/refresh/reject transitions, with negative controls for chan
 original evidence or question. See VALIDATION.md for actual run results.
 
 Operation waterfalls can now explicitly expand into [general live trace/log context](EXPLORATION_DESIGN.md). This creates independent live evidence; it is not part of the stored operation capture and does not alter its receipt.
+
+## General span/log and inventory captures
+
+The operation-specific format above remains supported. Manifest-free Explore and
+inventory evidence now use a separate typed receipt, local catalog and bounded
+stored record bank under the same volume. See [GENERAL_CAPTURES.md](GENERAL_CAPTURES.md)
+for stable paging, fixed-plan refresh, link semantics and limits. Neither format
+automatically archives independently expanded context or a browser baseline pair.

@@ -506,3 +506,39 @@ The shared workspace Bombadil actor now includes Services. A final 20-second
 navigation smoke passed 174 records and reached all five primary destinations,
 checking that selected navigation and the visible panel agree. Its coverage is
 retained in `artifacts/inventory/workspace-services-final/`.
+
+## 2026-10-18 — general captures and collaboration research
+
+Go owns immutable capture creation, verification, bounded storage, catalog and
+receipt-bound paging. Python remains the HTTP/static proxy. The UI reuses existing
+record/distribution/inventory inspectors in a read-only saved view. The final local
+query/packages image is `e4d63a3295a5`; only these services were recreated.
+
+Final native validation and browser evidence are described in
+[VALIDATION.md](VALIDATION.md). Test wrappers pause and restore only demo traffic;
+the five previously stale pending Redis entries and telemetry volumes are retained.
+VFS disk pressure was resolved by removing 16 unused untagged goo query images and
+pruning build cache, without deleting running/tagged images, containers or volumes.
+Build/cleanup logs remain in ignored `artifacts/captures-*.log`.
+
+The final capture journey passed in 1.1 minutes, including the real ledger's
+Quint validation (7.05 s), four rejecting controls, and a 35-second read-only
+Bombadil exploration: 367 trace records through all eight stages, including the
+required complete prefix. Evidence: `artifacts/captures/capture-968a089abf/`.
+Focused journeys 19 and 22 passed on the final runtime. The final Hegel rerun
+passed in 12.939 s; focused Go race checks and vet passed again.
+
+The generated fault campaign (journey 28) also passed on this runtime in 1.3
+minutes, retaining its actual-browser/Quint retry, rejection and missing-terminal
+checks. Its three documentation frames were regenerated.
+
+The final serialized capture/fault/generated-success run passed all three tests
+in 3.5 minutes; journey 27 passed in 1.1 minutes. Success evidence:
+`artifacts/bombadil/campaigns/432b83ac-cc94-4266-ad9a-c97531f1c910/`;
+fault evidence: `artifacts/bombadil/fault-campaigns/0e501301-6e99-4bc3-b6eb-d360f0afe089/`.
+Together with the default suite and focused corrected assertion, all 32 distinct
+journeys passed across these runs. All 101 PNG frames and the generated-campaign
+JPEG were refreshed after this round's initial runtime build. The final mobile
+saved-investigation frame was visually reviewed; local links and Markdown fences
+were checked (no rendered Mermaid validation is claimed). All 21 Node checks
+passed again. Demo traffic was restored after each wrapper invocation.

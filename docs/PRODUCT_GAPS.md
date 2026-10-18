@@ -16,7 +16,7 @@ not a replacement for HyperDX or Honeycomb.
 | Full distributed traces | Cross-service exact-trace paging now exists within original environment/time bounds; no complete-trace guarantee or window widening | Fetch a selected trace across services with bounded pagination, explicit missing-parent/partial status; preserve async links. Keep original question scope separate from expanded context. |
 | Correlated logs | Exact trace/span scopes, literal message/service/severity controls and bounded same-service surrounding logs now exist; no live tail or broader search language | Exact trace/span IDs first; declared scoped business identity next; time context separately labelled. Search/tail/pagination and log-to-trace navigation. |
 | Comparative debugging | Pinned fixed-window cohort distributions plus interval/member context; no significance tests | Selected vs baseline populations, attribute distributions, sample sizes, missing fields, sampling/coverage caveats and ranked differences. BubbleUp-like differences are leads, not causal attribution. |
-| Reusable workspaces | Local immutable operation captures plus reusable telemetry-package definitions/import/export | Named saved queries, boards, annotations, deployment markers, history, team sharing and export. Separate live board definitions from frozen evidence snapshots. |
+| Reusable workspaces | Local immutable operation and general Explore/inventory captures, stable stored record pages, catalog and reusable telemetry-package definitions/import/export | Personal saved questions, ordered investigation cards, annotations, deployment markers, history, authorized team sharing and export. Separate live board definitions from frozen evidence snapshots. |
 | APM and resource discovery | Observed service/span-name inventory with full counts, Error statuses and duration buckets; declared membership and bounded OTel profile recognition | Dependencies, log-only services, kind/scope distinctions, DB/cache/queue conventions; activation windows and freshness. Do not infer healthy membership from observed-only discovery. |
 | SLOs and alerting | Legacy preview; separate typed lifecycle pilots | Full-population SLI execution; scheduler, durable evaluations, multiwindow burn rates, unknown/no-data policies, dedup/silence/routing, notifications and audit. |
 | Metrics | Strict supported counter/histogram contracts | Gauges, up/down sums, exemplars, wider native metric exploration, dynamic membership and explicit common-window policies. Never average scalar percentiles. |
@@ -26,8 +26,8 @@ not a replacement for HyperDX or Honeycomb.
 
 The first general exploration and trace/log expansion slice is implemented; see
 [its design and limits](EXPLORATION_DESIGN.md). Fixed-window distribution comparison and the [cohesive workspace](PRODUCT_WORKSPACE.md)
-are implemented locally. Next: stable capture/paging, persisted general exploration
-questions/baselines and reusable boards.
+are implemented locally. General captures and stable stored paging now exist. Next: personal reusable
+questions, persisted baseline pairs and ordered investigation documents.
 Production authorization and query budgets must precede shared deployment;
 durable SLO/notification workflows are their own milestone. RUM/replay can remain
 an integration with the existing observability platform until justified.
@@ -62,5 +62,9 @@ raw repository documents were used. Optional local HyperDX remains unvalidated.
 
 Ad hoc [telemetry packages](TELEMETRY_PACKAGES.md) now support existing telemetry
 without application manifests, fresh reuse and optional instrumentation templates.
-Typed measures, explicit source promotion and persisted general evidence remain
+Typed measures, explicit source promotion and richer investigation documents remain
 separate next increments; saving a definition does not save its preview.
+
+See [collaborative investigation research](COLLABORATIVE_INVESTIGATIONS_RESEARCH.md)
+for verified Honeycomb/Grafana/Datadog patterns and an ordered plan beyond the
+[current capture foundation](GENERAL_CAPTURES.md).

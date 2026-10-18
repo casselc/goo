@@ -39,9 +39,10 @@ uses its own rolling lookback and does not archive the inventory or its evidence
 
 Changing environment/lookback clears inventory evidence and invalidates pending
 responses; refresh clears the old result before requesting new evidence. Navigating
-between destinations preserves an unchanged capture. Inventory and general Explore
-captures are browser-held, without persistence, stable cursors, multi-user tenancy,
-service dependencies, log-only service discovery or fleet activation windows.
+between destinations preserves an unchanged capture. Inventory and general Explore evidence can now be persisted through
+[general captures](GENERAL_CAPTURES.md). Stored inspection cursors are stable within
+a receipt. Multi-user tenancy, service dependencies, log-only service discovery
+and fleet activation windows remain separate work.
 
 [Journey 31](journeys/README.md#31-from-observed-services-to-a-reusable-question)
 uses labelled OTLP fixtures through the real collector/ClickHouse path and an

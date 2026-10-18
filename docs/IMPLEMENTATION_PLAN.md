@@ -230,5 +230,25 @@ Observed service/span-name inventory now provides single-read full-population
 counts, Error statuses and duration buckets with fixed-window Explore/package
 navigation. See [contract](SERVICE_INVENTORY.md) and journey 31.
 Next: explicit trace-level/root measures,
-persisted general investigation captures and stable paging. Live tail, statistical
+personal questions and investigation documents. General captures and stable stored
+paging are implemented below. Live tail, statistical
 inference and production authorization remain separate work.
+
+## Durable general investigation evidence
+
+Implemented: named span/log/inventory captures, server-only evidence custody,
+complete bounded aggregate preservation, 1,000-record inspection retention, receipt-
+bound stable paging, source-free reopen, fixed-question/plan successor refresh,
+local catalog and copyable receipt links. Shared read-only components distinguish
+saved evidence from fresh trace/log context and explicit live-question branches.
+[Contract](GENERAL_CAPTURES.md), architecture flow 19 and journey 32 describe the
+limits and verification. Ordinary live offsets remain mutable; comparison baseline
+pairs and expanded context are not automatically archived.
+
+Next: personal saved questions and an accessible ordered investigation document
+that pins exact captures, hypotheses and external links. Then reviewed package
+promotion, authorized versioned sharing/conflict handling, annotations/history and
+optional presence or spatial canvas. Follow the evidence/definition/document
+separation in [the vendor research](COLLABORATIVE_INVESTIGATIONS_RESEARCH.md).
+Do not equate a query link, live graph, document revision or cursor with a source
+snapshot, nor add a separate expression language for collaboration.

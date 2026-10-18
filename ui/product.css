@@ -554,7 +554,7 @@ td details {
 .comparison-negative {
   color:#8ddbc7;
 }
-#exploreContext {
+:is(#exploreContext,#savedexploreContext) {
   position:fixed;
   right:0;
   top:62px;
@@ -581,18 +581,18 @@ td details {
   padding:10px 0;
   z-index:2;
 }
-#exploreContext>p {
+:is(#exploreContext,#savedexploreContext)>p {
   font-size:11px;
   line-height:1.7;
 }
-#exploreContext .waterfall-row {
+:is(#exploreContext,#savedexploreContext) .waterfall-row {
   grid-template-columns:minmax(130px,40%) 1fr 100px;
   font-size:10px;
 }
-#exploreContext .waterfall-row .span-label {
+:is(#exploreContext,#savedexploreContext) .waterfall-row .span-label {
   font-size:10px;
 }
-#exploreContext h3 {
+:is(#exploreContext,#savedexploreContext) h3 {
   margin:0;
 }
 #operations>p {
@@ -615,7 +615,7 @@ td details {
   border-radius:8px;
   background:#141b25;
 }
-#status,#operationStatus,#captureStatus,#exploreStatus {
+#status,#operationStatus,#captureStatus,:is(#exploreStatus,#savedexploreStatus) {
   font-size:12px;
   line-height:1.7;
 }
@@ -651,7 +651,7 @@ td details {
   .source-tag {
     display:none;
   }
-  #exploreContext {
+  :is(#exploreContext,#savedexploreContext) {
     width:calc(100vw - 190px);
   }
 }
@@ -736,13 +736,13 @@ td details {
   .span-track {
     min-height:24px;
   }
-  #exploreContext {
+  :is(#exploreContext,#savedexploreContext) {
     inset:0;
     width:100vw;
     border-width:0;
     padding:20px;
   }
-  #exploreContext .waterfall-row {
+  :is(#exploreContext,#savedexploreContext) .waterfall-row {
     grid-template-columns:1fr;
   }
   .inspector-heading {
@@ -810,8 +810,8 @@ td details {
 
 /* Investigation controls and structured record inspection share one vocabulary. */
 .exploration-scope {padding-bottom:18px;border-bottom:1px solid var(--border)}
-.exploration-scope #exploreCreatePackage {margin-left:auto}
-.exploration-scope #exploreNext {font-size:12px}
+.exploration-scope :is(#exploreCreatePackage,#savedexploreCreatePackage) {margin-left:auto}
+.exploration-scope :is(#exploreNext,#savedexploreNext) {font-size:12px}
 #exploreBuilder {border:1px solid var(--border);border-radius:8px;padding:16px;background:#141b25}
 .filter-heading,.filter-tools {display:flex;align-items:center;gap:12px;justify-content:space-between}
 .filter-heading h3 {margin:0;font-size:13px}
@@ -874,8 +874,8 @@ td details {
 .raw-record {margin-top:12px;padding-top:8px}
 .raw-record pre {max-height:260px}
 .waterfall-row[aria-pressed=true] {border-color:var(--accent);background:#1d3838;box-shadow:inset 3px 0 var(--accent)}
-#exploreContext .waterfall-row,#exploreContext .waterfall-row .span-label {font-size:12px}
-#exploreContext>details.context-evidence {font-size:11px;margin:8px 0 16px}
+:is(#exploreContext,#savedexploreContext) .waterfall-row,:is(#exploreContext,#savedexploreContext) .waterfall-row .span-label {font-size:12px}
+:is(#exploreContext,#savedexploreContext)>details.context-evidence {font-size:11px;margin:8px 0 16px}
 @media(max-width:1100px){
  .filter-composer {grid-template-columns:1fr 1fr}
  .attribute-row {grid-template-columns:minmax(110px,30%) minmax(0,1fr)}
@@ -883,7 +883,7 @@ td details {
  .breakdown-note {flex-basis:100%}
 }
 @media(max-width:700px){
- .exploration-scope #exploreCreatePackage {margin-left:0}
+ .exploration-scope :is(#exploreCreatePackage,#savedexploreCreatePackage) {margin-left:0}
  .filter-heading {align-items:start;gap:8px;flex-wrap:wrap}
  .filter-tools {flex-wrap:wrap;justify-content:start}
  .filter-tools label {min-width:0}
@@ -939,9 +939,9 @@ td details {
 .telemetry-table .record-row>td:last-child button {display:block;margin:4px 0;max-width:100%}
 .trace-discovery-row {grid-template-columns:minmax(180px,35%) minmax(0,1fr) 120px auto}
 .trace-discovery-row>button:last-child {font-size:12px;background:transparent;white-space:nowrap}
-#surroundingContext {position:fixed;right:0;top:62px;bottom:0;width:min(850px,calc(100vw - 230px));max-width:100%;z-index:30;overflow:auto;margin:0;border-radius:0;border-width:0 0 0 1px;box-shadow:-15px 0 50px #0005;background:#151e2b;padding:24px}
-#surroundingStatus {font-size:12px;color:var(--muted)}
-#surroundingRows {max-height:none}
+:is(#surroundingContext,#savedsurroundingContext) {position:fixed;right:0;top:62px;bottom:0;width:min(850px,calc(100vw - 230px));max-width:100%;z-index:30;overflow:auto;margin:0;border-radius:0;border-width:0 0 0 1px;box-shadow:-15px 0 50px #0005;background:#151e2b;padding:24px}
+:is(#surroundingStatus,#savedsurroundingStatus) {font-size:12px;color:var(--muted)}
+:is(#surroundingRows,#savedsurroundingRows) {max-height:none}
 .log-anchor {background:#193632}
 .anchor-badge {display:block;margin-top:8px;color:var(--accent);font-size:10px}
 @media(max-width:1100px){.trace-discovery-row {grid-template-columns:minmax(150px,35%) minmax(0,1fr) 100px}.trace-discovery-row>button:last-child{grid-column:1/-1;justify-self:start}}
@@ -950,7 +950,7 @@ td details {
  .discovery-controls>label {flex:auto;width:100%}
  .discovery-controls .checkbox-label {padding-bottom:0}
  .discovery-suggestions button {min-height:40px}
- #surroundingContext {width:100%;top:0;padding:16px}
+ :is(#surroundingContext,#savedsurroundingContext) {width:100%;top:0;padding:16px}
  .trace-discovery-row {grid-template-columns:minmax(0,1fr) 80px;gap:8px}
  .trace-discovery-row .distribution-label {grid-column:1/-1}
  .telemetry-table .record-row>td:last-child {min-width:0}
@@ -973,3 +973,5 @@ td details {
  .inventory-table tbody td:first-child,.inventory-table tbody td:nth-child(4),.inventory-table tbody td:last-child{grid-column:1/-1;max-width:none}
  .inventory-table button{min-height:40px}
 }
+
+.capture-catalog{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin:14px 0}.capture-card{background:var(--surface-raised);border:1px solid var(--border);border-radius:9px;padding:13px}.capture-card button{font-weight:600;text-align:left;overflow-wrap:anywhere;max-width:100%}.capture-card p{font-size:12px;margin:8px 0 0}.capture-catalog:empty{display:none}#generalCaptureWorkspace>details{margin:12px 0}#captureDialog{color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:12px;width:min(560px,90vw);padding:24px}#captureDialog::backdrop{background:#070b12b8}#captureDialog label{display:grid;gap:6px}#captureDialog input{width:100%}#generalCaptureWorkspace>.section-heading{align-items:flex-start;flex-wrap:wrap}#generalCaptureWorkspace>.section-heading .controls{flex-wrap:wrap}#captureGeneralReceipt{max-height:300px;overflow:auto}

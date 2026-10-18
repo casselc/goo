@@ -1,0 +1,13 @@
+spec: captures.qnt
+module: captures
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  save:
+    expect: 'coherent == {{.obs.coherent}}'
+  page:
+    expect: 'coherent == {{.obs.coherent}}'
+  refresh:
+    expect: 'coherent == {{.obs.coherent}}'
+  reopen:
+    expect: 'coherent == {{.obs.coherent}}'

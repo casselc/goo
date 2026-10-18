@@ -380,3 +380,16 @@ state/swarm checks run separately in the native verification module.
 
 The shared workspace-navigation actor also includes Services. Its existing
 selected-navigation/visible-panel invariant applies to all five destinations.
+
+## Immutable general capture inspection
+
+`npm run test:captures-campaign` adds the dedicated read-only
+`verification/bombadil/captures.ts` actor to journey 32. Its required prefix reaches
+next/previous stored pages, complete distributions and structured record search.
+Invariants check fixed question/basis, retained-row page arithmetic, replayed first
+page, disabled query editing and distinct component IDs. Paging has an explicit
+view busy state independent of catalog loading. The driver checks actual receipt
+lineage, restart persistence, late insertion and source-free browser reopen;
+its ledger always passes through Quint with four rejecting controls. Hegel
+state/swarm separately explores capture/refresh/arrival interactions. The actor
+publishes no captures and initiates no source refresh or workload.

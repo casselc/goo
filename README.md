@@ -25,6 +25,12 @@ Suggested breakdowns feed directly into reusable packages. See
 with full captured counts, error statuses and duration buckets. Open a fixed-window
 Explore question, then build a reusable package without a source manifest.
 
+[Investigation captures](docs/GENERAL_CAPTURES.md) preserve Explore and inventory
+questions with full aggregates and bounded stored records. Reopen without source
+queries, page immutable evidence, or refresh the same fixed question into a new
+revision. [Collaboration research](docs/COLLABORATIVE_INVESTIGATIONS_RESEARCH.md)
+compares boards, notebooks and investigation handoffs across observability tools.
+
 [Ad hoc telemetry packages](docs/TELEMETRY_PACKAGES.md) turn an Explore question
 into validated YAML, a live preview and an immutable reusable definition. They work
 over existing OTel telemetry from any language without an application manifest;

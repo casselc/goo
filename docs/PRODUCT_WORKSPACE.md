@@ -8,7 +8,7 @@ one navigation rail, visual system and evidence vocabulary:
 | Explore | Search captured spans/logs; inspect records, distributions and cohort differences; expand traces and linked logs in a side inspector. |
 | Services | Discover observed service/span-name pairs with captured counts, error statuses and duration buckets; open fixed-window Explore questions. |
 | Operations | Run declared application packages; inspect operation, metric, fleet and subject evidence; explicitly save an investigation. |
-| Saved investigations | Open immutable operation receipts and compare fixed-question revisions. The evidence badge distinguishes saved receipts from a currently loaded operation query. |
+| Saved investigations | Browse general captures, reopen immutable Explore/inventory evidence with stable pages, refresh fixed questions, or open operation receipts. |
 | Definitions | Build/import/preview/save telemetry packages over existing data; inspect application contracts, the HTTP package and proposed capabilities. |
 
 **Examples** is a secondary destination for the original reservation workflows,
@@ -37,8 +37,9 @@ administration or a complete accessibility certification.
    both populations' counts and shares. Populations may overlap. These are
    descriptive investigation leads, not significance tests or causal attribution.
 4. Scope changes (signal, environment, lookback or breakdown) clear the baseline.
-   Navigation alone preserves it. Reload loses it: general exploration captures
-   and baselines are **not** persisted by the saved operation receipt service.
+   Navigation alone preserves the browser baseline; reload loses it. General
+   captures persist individual questions/evidence, but neither capture format
+   automatically stores a comparison baseline pair or its browser layout.
 
 `POST /api/compare` proxies to Go `/compare`. It accepts two bounded client-held
 cohort captures. Both must use the same signal, environment, fixed window and
@@ -148,3 +149,17 @@ Services provides a discovery entry point for unfamiliar telemetry. Local search
 retains captured totals; a row opens a separate Explore read of the same environment
 and fixed window. Its span-name vocabulary remains separate from application-owned
 operation contracts and declared fleet membership. See [inventory contract](SERVICE_INVENTORY.md).
+
+## General captured evidence
+
+Explore and Services offer named capture actions. Saving rereads the chosen fixed
+question and opens a read-only instance of the same record/distribution or inventory
+components. Saved mode separates frozen evidence from explicitly expanded live
+context. The catalog collapses while reading a capture, keeping the receipt,
+question window and inspection controls prominent. Refresh creates a successor;
+Open as live question branches into the ordinary editor. See
+[storage, paging and scope contract](GENERAL_CAPTURES.md).
+
+The [collaboration research](COLLABORATIVE_INVESTIGATIONS_RESEARCH.md) proposes
+ordered investigation cards over these receipts before shared editing or a spatial
+canvas. These collaborative document capabilities are not implemented yet.

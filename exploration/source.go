@@ -113,8 +113,15 @@ func (s Source) read(ctx context.Context, sql string, params map[string]string) 
 	}
 	return rows, scan.Err()
 }
-func (s Source) Fetch(ctx context.Context, q Query) (*Result, error) {
-	plan, e := Compile(q)
+func (s Source) Fetch(ctx context.Context, q Query) (*Result, error) { return s.fetch(ctx, q, q.Limit) }
+
+// captureRows reads one bounded row bank; its counts/groups retain full scope.
+func (s Source) captureRows(ctx context.Context, q Query) (*Result, error) {
+	return s.fetch(ctx, q, CaptureRowLimit)
+}
+
+func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, error) {
+	plan, e := compile(q, rowLimit)
 	if e != nil {
 		return nil, e
 	}
@@ -141,17 +148,17 @@ func (s Source) Fetch(ctx context.Context, q Query) (*Result, error) {
 	if e != nil {
 		return nil, e
 	}
-	if len(rows) > q.Limit+1 {
+	if len(rows) > rowLimit+1 {
 		return nil, fmt.Errorf("source exceeded page budget")
 	}
-	r.HasMore = len(rows) > q.Limit
+	r.HasMore = len(rows) > rowLimit
 	if r.HasMore {
-		rows = rows[:q.Limit]
+		rows = rows[:rowLimit]
 	}
 	r.Rows = rows
 	totalValue, _ := new(big.Int).SetString(r.Count, 10)
 	observedMinimum := new(big.Int).SetInt64(int64(q.Offset + len(rows)))
-	if len(rows) > 0 && totalValue.Cmp(observedMinimum) < 0 || r.HasMore && totalValue.Cmp(new(big.Int).SetInt64(int64(q.Offset+q.Limit))) <= 0 {
+	if len(rows) > 0 && totalValue.Cmp(observedMinimum) < 0 || r.HasMore && totalValue.Cmp(new(big.Int).SetInt64(int64(q.Offset+rowLimit))) <= 0 {
 		r.State = "changed_between_reads"
 	}
 	for _, raw := range rows {

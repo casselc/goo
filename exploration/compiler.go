@@ -84,7 +84,9 @@ func (c *compiler) source(q Query) (string, string) {
 	where := "Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND " + c.predicate(q.Where)
 	return " FROM " + table + " WHERE " + where, attrs
 }
-func Compile(q Query) (Plan, error) {
+func Compile(q Query) (Plan, error) { return compile(q, q.Limit) }
+
+func compile(q Query, rowLimit int) (Plan, error) {
 	if e := q.Validate(); e != nil {
 		return Plan{}, e
 	}
@@ -97,7 +99,7 @@ func Compile(q Query) (Plan, error) {
 		selectRows = common + ", Body, SeverityText"
 		order = "Timestamp, TraceId, SpanId, ServiceName, Body, SeverityText, toString(ResourceAttributes), toString(LogAttributes)"
 	}
-	p := Plan{Rows: "SELECT " + selectRows + base + " ORDER BY " + order + fmt.Sprintf(" LIMIT %d OFFSET %d FORMAT JSONEachRow", q.Limit+1, q.Offset), Count: "SELECT toString(count()) AS count" + base + " FORMAT JSONEachRow"}
+	p := Plan{Rows: "SELECT " + selectRows + base + " ORDER BY " + order + fmt.Sprintf(" LIMIT %d OFFSET %d FORMAT JSONEachRow", rowLimit+1, q.Offset), Count: "SELECT toString(count()) AS count" + base + " FORMAT JSONEachRow"}
 	if len(q.GroupBy) > 0 {
 		dims := []string{}
 		aliases := []string{}

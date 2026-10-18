@@ -557,3 +557,38 @@ observe/reset accounting. `npm run test:inventory-campaign` adds a read-only
 Bombadil actor with a required discovery/filter/clear/open prefix and independent
 accounting/rendered-count/scope/stale-evidence invariants; it saves no definitions.
 Permanent ignored ledgers, coverage and actor traces live under `artifacts/inventory/`.
+
+## 32. Preserve general evidence and page a stored record bank
+
+`journeys/captures.spec.js` sends a labelled OTLP fixture through the real collector
+and ClickHouse: 1,205 edge spans, five worker spans and 107 ordinary log records.
+An independent source query checks the edge count. The test then inserts a late
+span before the existing sort position. This is a captured-path fixture, not a
+claim about SDK completeness, unique invocations or production custody.
+
+| Frame | User journey |
+| --- | --- |
+| [Saved full population](screenshots/32a-saved-question-full-population.png) | Capture a named question with 1,205 matching spans, complete groups and 1,000 stored inspection records. |
+| [Stable record page](screenshots/32b-stable-stored-record-page.png) | Page within immutable stored evidence while preserving count and basis. |
+| [Successor revision](screenshots/32c-fixed-question-successor.png) | Refresh the same fixed question to see the late span without altering the predecessor. |
+| [Saved inventory](screenshots/32d-saved-inventory-local-search.png) | Preserve the bounded inventory and locally search without changing its totals. |
+| [Saved logs](screenshots/32e-saved-log-inspection.png) | Inspect structured log attributes on the second stored page. |
+| [Mobile capture](screenshots/32f-mobile-saved-investigation.png) | Read the receipt and captured evidence on a narrow screen. |
+
+Assertions cover exact row replay after late insertion, cross-revision cursor
+rejection, actual volume persistence across a packages-service restart, a fresh
+browser reopening/paging without live-query requests, copied deep link, explicit
+fresh live branch, span/log/inventory component isolation, stale open guards,
+full-count versus retained/page accounting and mobile containment. Go HTTP tests
+also close the source entirely before reopening and paging, and reject attempts
+to submit evidence or change refresh scope. Source-plan changes block refresh.
+
+The actual save/page/refresh/reopen ledger is always checked through quint-go,
+with four rejecting controls: changed old counts, changed page basis, changed
+refresh scope and acceptance of a cross-revision cursor. Hegel state/swarm explores
+arrivals, source changes, captures, branching refreshes and stable row banks.
+`npm run test:captures-campaign` adds a read-only Bombadil actor with a required
+page-forward/back, distribution and attribute-inspection prefix. It checks count,
+retention, scope, basis, replay, read-only controls and unique component identities;
+it never saves, refreshes or emits workload. Evidence lives in ignored
+`artifacts/captures/<fixture environment>/` directories.
