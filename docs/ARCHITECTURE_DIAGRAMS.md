@@ -934,3 +934,21 @@ The planner derives IDs/services from retained evidence and validates generated
 queries through existing compilers. Exact reported IDs and service/time context
 are distinct relationships. No suggestion changes the original capture or asserts
 a cause; all source execution remains an explicit user action.
+
+### Shared scope and question transforms
+
+```mermaid
+flowchart LR
+  Typed[Existing typed questions] --> Scope[Detached semantic scope]
+  Typed --> Transform[Recipe or capture-owned follow-up]
+  Transform --> Check[Validate relationship and compute changes]
+  Scope --> Check
+  Check --> Preview[Shared source-free preview]
+  Preview -->|explicit execution| Source[Existing source adapter and kernels]
+  Source --> Capture[Existing immutable capture format]
+```
+
+Scope retains exact OTel/custom selectors and declared bindings; unknown schema or
+convention metadata stays unknown. Inspection paging/aggregation presentation is
+outside record population scope. Descriptors are planning metadata only; persisted
+capture formats and hashes are unchanged. See QUESTION_SCOPE.md for boundaries.

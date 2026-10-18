@@ -24,6 +24,17 @@ func (m *followupMachine) RulePlan(tc hegel.TestCase) {
 	}
 	q := m.capture.Question.Explore
 	for _, a := range p.Actions {
+		if a.Transform == nil {
+			panic("missing checked transform")
+		}
+		if a.Transform.Origin.Environment != q.Environment || a.Transform.Target.FromMS != q.FromMS || a.Transform.Target.ToMS != q.ToMS {
+			panic("descriptor scope drift")
+		}
+		if a.Transform.Relation == "same-population" && !reflect.DeepEqual(a.Transform.Origin, a.Transform.Target) {
+			panic("false population claim")
+		}
+	}
+	for _, a := range p.Actions {
 		if a.Query != nil {
 			next := a.Query
 			if next.Environment != q.Environment || next.FromMS != q.FromMS || next.ToMS != q.ToMS || next.Offset != 0 || next.Limit != 100 {

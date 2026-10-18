@@ -51,6 +51,10 @@ func TestQuintFollowupsLiveLedger(t *testing.T) {
 			l.Final.OpenQuestions = "no citation"
 		case 6:
 			l.Reopened.Finding = "changed"
+		case 7:
+			l.Plans.Actions[0].Transform.Target.Grain = "root-request"
+		case 8:
+			l.Plans.Actions[0].Transform.Relation = "service-time"
 		}
 		sink := &qobs.MemorySink{}
 		rec := qobs.NewRecorder(sink)
@@ -60,7 +64,8 @@ func TestQuintFollowupsLiveLedger(t *testing.T) {
 			actions[a.ID] = a
 		}
 		q := l.Origin.Receipt.Question.Explore
-		record("preview", l.Plans.Origin == l.Origin.Receipt.ID && l.BeforePreview == l.AfterPreview && q != nil)
+		expected, e := (exploration.SavedCapture{CaptureReceipt: l.Origin.Receipt, Explore: l.Origin.Explore}).Followups(0)
+		record("preview", e == nil && reflect.DeepEqual(expected, &l.Plans) && l.Plans.Origin == l.Origin.Receipt.ID && l.BeforePreview == l.AfterPreview && q != nil)
 		record("duration", reflect.DeepEqual(actions["duration-status"].Query, &l.Duration.Question) && reflect.DeepEqual(l.Duration.Question.Where, q.Where) && l.Duration.Count == l.Origin.Explore.Count && l.Duration.SpanStatus != nil)
 		record("trace", reflect.DeepEqual(actions["trace"].Query, &l.Trace.Question) && l.Trace.Question.Where != nil && l.Trace.Question.Where.Value == l.Plans.Observations[0].TraceID)
 		record("logs", reflect.DeepEqual(actions["trace-logs"].Query, &l.Logs.Question) && l.Logs.Count != "0" && reflect.DeepEqual(l.LogCapture.Receipt.Question.Explore, &l.Logs.Question))
@@ -90,7 +95,7 @@ func TestQuintFollowupsLiveLedger(t *testing.T) {
 	if !check(-1) {
 		t.Fatal("actual follow-up ledger rejected")
 	}
-	for i := 0; i < 7; i++ {
+	for i := 0; i < 9; i++ {
 		if check(i) {
 			t.Fatal("mutated follow-up ledger accepted", i)
 		}

@@ -882,3 +882,18 @@ Final browser regression passed all six affected journeys in 5.5 minutes, includ
 five enabled Bombadil campaigns and live Quint/negative controls. Desktop/mobile
 storyboards were regenerated. The wrapper restored traffic and preserved existing
 telemetry volumes and all five pre-existing stale pending entries.
+
+## Shared scope and transforms (2026-10-18)
+
+Existing toolchains and lab reused. Offline image `15330826a024` adds source-free
+shared scope/transform planning and the existing preview UI. Root Go tests,
+affected race tests, vet, 32 frontend checks, Python compilation and expanded
+Hegel state/swarm checks passed. Hegel uses the existing workspace XDG cache;
+no environment setup configuration changed. See VALIDATION.md for final browser
+and model evidence.
+
+Initial integration passed three affected journeys (3.7 minutes); the final-image
+recipe/follow-up rerun passed both cases (2.4 minutes), including enabled Bombadil
+campaigns and live Quint checks with rejecting controls. Desktop/mobile frames
+were regenerated. Twelve Compose services are running, traffic was restored and
+existing telemetry volumes/five stale pending entries were retained.

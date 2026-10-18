@@ -224,3 +224,14 @@ The observation chooser covers the first 100 retained records. Inventory and
 comparison captures require opening an underlying supported capture. Automatic
 causal ranking, cross-signal attribute translation and completeness inference are
 not implemented. See INVESTIGATION_FOLLOWUPS.md.
+
+
+## Shared scope planning boundaries
+
+Recipes and follow-ups now share checked scope/transform metadata; persisted
+question and capture formats remain unchanged. OTel/custom selectors retain their
+namespaces and native bindings retain declared schema identity. Automatic convention
+profile resolution, record schema-URL projection, cross-signal attribute mapping,
+typed general measures and backend capability negotiation remain future work.
+Comparison scopes retain separate members; automatic comparison transforms are
+rejected. See [QUESTION_SCOPE.md](QUESTION_SCOPE.md).

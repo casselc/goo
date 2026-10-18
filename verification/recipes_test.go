@@ -29,6 +29,20 @@ func (m *recipeMachine) RuleRecipe(tc hegel.TestCase) {
 	if string(before) != string(after) || !reflect.DeepEqual(m.q.Where, p.Question.Where) || m.q.FromMS != p.Question.FromMS || m.q.ToMS != p.Question.ToMS || m.q.Environment != p.Question.Environment || p.Question.Offset != 0 {
 		panic("population changed")
 	}
+	if p.Transform == nil || p.Transform.Relation != "same-population" || !reflect.DeepEqual(p.Transform.Origin, p.Transform.Target) {
+		panic("scope transform drift")
+	}
+	expected, _ := (exploration.CaptureQuestion{Kind: "explore", Explore: &m.q}).Scope()
+	if !reflect.DeepEqual(expected, p.Transform.Origin) {
+		panic("scope descriptor differs")
+	}
+	if p.Transform.Target.Selector != nil {
+		p.Transform.Target.Selector.Value = "edited derived metadata"
+	}
+	fresh, _ := (exploration.CaptureQuestion{Kind: "explore", Explore: &m.q}).Scope()
+	if !reflect.DeepEqual(expected, fresh) {
+		panic("descriptor aliases origin")
+	}
 	m.q = p.Question
 }
 func (m *recipeMachine) RuleScope(tc hegel.TestCase) {
@@ -43,7 +57,7 @@ func (m *recipeMachine) RuleSignal(tc hegel.TestCase) {
 	m.q.GroupBy = nil
 }
 func (m *recipeMachine) RulePredicate(tc hegel.TestCase) {
-	f := exploration.Field{Kind: "attribute", Key: "tenant.id"}
+	f := exploration.Field{Kind: "attribute", Key: []string{"tenant.id", "http.route", "rpc.method", "messaging.destination.name", "db.operation.name", "custom.key"}[hegel.Draw(tc, hegel.Integers(0, 5))]}
 	m.q.Where = &exploration.Predicate{Any: []exploration.Predicate{{Field: &f, Op: "eq", Value: []string{"a", "雪", "' OR 1=1"}[hegel.Draw(tc, hegel.Integers(0, 2))]}, {Field: &f, Op: "missing"}}}
 }
 func (m *recipeMachine) InvariantValid(tc hegel.TestCase) {

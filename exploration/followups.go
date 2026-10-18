@@ -11,6 +11,7 @@ import (
 // Followups are source-free questions over a verified stored capture. They are
 // navigation suggestions, never causal attribution or telemetry completeness.
 type Followup struct {
+	Transform   *QuestionTransform              `json:"transform,omitempty"`
 	ID          string                          `json:"id"`
 	Title       string                          `json:"title"`
 	Why         string                          `json:"why"`
@@ -54,30 +55,25 @@ func (c SavedCapture) Followups(row int) (*FollowupSet, error) {
 	var origin CaptureQuestion
 	json.Unmarshal(raw, &origin)
 	out := &FollowupSet{Origin: c.ID, Row: row, Observations: []FollowupObservation{}, Actions: []Followup{}, Warnings: []string{"Suggestions are questions, not findings. Source reads require explicit execution; old evidence stays fixed.", "Observation choices cover at most the first 100 retained records and never define aggregate totals. Missing records are not proof of absence."}}
-	fixed := []string{"Original environment", "Original fixed question window"}
-	addQuery := func(id, title, why, relation string, q Query, changes ...string) {
+	addQuery := func(id, title, why, relation string, q Query) {
 		b, _ := json.Marshal(q)
 		var detached Query
 		json.Unmarshal(b, &detached)
 		q = detached
 		q.Limit = 100
 		q.Offset = 0
-		keeps := append([]string{}, fixed...)
-		if strings.HasPrefix(relation, "Same matching") {
-			keeps = append(keeps, "Complete original record predicate")
-		}
-		out.Actions = append(out.Actions, Followup{ID: id, Title: title, Why: why, Relation: relation, Preserves: keeps, Changes: changes, Query: &q})
+		out.Actions = append(out.Actions, Followup{ID: id, Title: title, Why: why, Relation: relation, Query: &q})
 	}
 	addDiscovery := func(service string, from, to int64, environment string) {
 		d := measurements.DiscoveryQuestion{Environment: environment, Service: service, FromMS: from, ToMS: to}
 		if d.Validate() != nil {
 			return
 		}
-		out.Actions = append(out.Actions, Followup{ID: "resources-" + service, Title: "Discover resource instruments for " + service, Why: "Look for observed instruments before choosing a resource-pressure measurement. Instrument presence alone does not establish saturation or a causal link.", Relation: "Service/time context only", Preserves: append([]string{}, fixed...), Changes: []string{"Select this service's metric observations; replace original signal, record predicates and groupings", "Discovery lists observed metadata, not resource health or a complete instrument inventory"}, Discovery: &d})
+		out.Actions = append(out.Actions, Followup{ID: "resources-" + service, Title: "Discover resource instruments for " + service, Why: "Look for observed instruments before choosing a resource-pressure measurement. Instrument presence alone does not establish saturation or a causal link.", Relation: "Service/time context only", Discovery: &d})
 	}
 	if origin.Measurement != nil {
 		q := *origin.Measurement
-		out.Actions = append(out.Actions, Followup{ID: "measurement", Title: "Rerun the same fixed measurement", Why: "Read later-arriving evidence for the exact same definition and window. Capture separately if useful.", Relation: "Same typed question", Preserves: append(append([]string{}, fixed...), "Complete measurement definition and selectors"), Changes: []string{"Fresh source read; original capture remains unchanged"}, Measurement: &q})
+		out.Actions = append(out.Actions, Followup{ID: "measurement", Title: "Rerun the same fixed measurement", Why: "Read later-arriving evidence for the exact same definition and window. Capture separately if useful.", Relation: "Same typed question", Measurement: &q})
 		for _, service := range q.Definition.Source.Services {
 			addDiscovery(service, q.FromMS, q.ToMS, q.Definition.Environment)
 		}
@@ -89,7 +85,7 @@ func (c SavedCapture) Followups(row int) (*FollowupSet, error) {
 			derived.SpanStatus = true
 			derived.BucketMS = 0
 			derived.GroupBy = []Field{{Kind: "column", Key: "service"}, {Kind: "column", Key: "status_class"}}
-			addQuery("duration-status", "Compare duration and recorded status by service", "Test whether latency and recorded error status differ within the original matching span population. Recorded status is not a business-outcome policy.", "Same matching span population", derived, "Replace grouping with service and recorded-status class; include duration/status summaries; reset inspection page")
+			addQuery("duration-status", "Compare duration and recorded status by service", "Test whether latency and recorded error status differ within the original matching span population. Recorded status is not a business-outcome policy.", "Same matching span population", derived)
 		}
 		for i, b := range c.Explore.Rows {
 			if i >= 100 {
@@ -117,19 +113,19 @@ func (c SavedCapture) Followups(row int) (*FollowupSet, error) {
 						derived.Summary = ""
 						derived.SpanStatus = false
 						derived.BucketMS = 0
-						addQuery("reported-"+key, "Break down reported "+key, "Inspect literal reported values, including missing and empty values in the matching population. A reported attribute does not establish an exhaustive outcome policy.", "Same matching span population", derived, "Replace grouping with observed attribute "+key+"; reset inspection page")
+						addQuery("reported-"+key, "Break down reported "+key, "Inspect literal reported values, including missing and empty values in the matching population. A reported attribute does not establish an exhaustive outcome policy.", "Same matching span population", derived)
 					}
 				}
 			}
 			if followupTrace.MatchString(r.Trace) && r.Trace != strings.Repeat("0", 32) {
 				trace := Query{Signal: "spans", Environment: q.Environment, FromMS: q.FromMS, ToMS: q.ToMS, Where: ptrPredicate(followupEqual("trace_id", r.Trace))}
-				addQuery("trace", "Follow this trace across services", "Inspect spans reporting this exact trace ID within the original window. Sampling and out-of-window parents remain unknown.", "Exact reported trace ID", trace, "Replace all original record predicates with the selected trace ID; allow all services; reset grouping/page")
+				addQuery("trace", "Follow this trace across services", "Inspect spans reporting this exact trace ID within the original window. Sampling and out-of-window parents remain unknown.", "Exact reported trace ID", trace)
 				logs := trace
 				logs.Signal = "logs"
-				addQuery("trace-logs", "Inspect logs for this trace", "Check logs carrying the same reported trace ID. Missing logs do not prove that no logging occurred.", "Exact reported trace ID", logs, "Switch to logs; replace all original predicates with the selected trace ID; allow all services; reset grouping/page")
+				addQuery("trace-logs", "Inspect logs for this trace", "Check logs carrying the same reported trace ID. Missing logs do not prove that no logging occurred.", "Exact reported trace ID", logs)
 				if followupSpan.MatchString(r.Span) && r.Span != strings.Repeat("0", 16) {
 					logs.Where = &Predicate{All: []Predicate{followupEqual("trace_id", r.Trace), followupEqual("span_id", r.Span)}}
-					addQuery("span-logs", "Inspect logs for this span", "Narrow to logs reporting both selected IDs. This is exact ID correlation, not temporal proximity.", "Exact reported trace and span IDs", logs, "Switch to logs; replace original predicates with selected trace/span IDs; reset grouping/page")
+					addQuery("span-logs", "Inspect logs for this span", "Narrow to logs reporting both selected IDs. This is exact ID correlation, not temporal proximity.", "Exact reported trace and span IDs", logs)
 				}
 			}
 			if r.Service != "" {
@@ -140,7 +136,31 @@ func (c SavedCapture) Followups(row int) (*FollowupSet, error) {
 			return nil, fmt.Errorf("retained observation unavailable")
 		}
 	}
-	for _, a := range out.Actions {
+	for i := range out.Actions {
+		a := &out.Actions[i]
+		var transform *QuestionTransform
+		var err error
+		if a.Query != nil {
+			relation := "same-population"
+			if a.ID == "trace" || a.ID == "trace-logs" {
+				relation = "exact-trace"
+			}
+			if a.ID == "span-logs" {
+				relation = "exact-span"
+			}
+			transform, err = DescribeTransform(c.Question, CaptureQuestion{Kind: "explore", Explore: a.Query}, relation)
+		} else if a.Measurement != nil {
+			transform, err = DescribeTransform(c.Question, CaptureQuestion{Kind: "measurement", Measurement: a.Measurement}, "same-question")
+		} else if a.Discovery != nil {
+			transform, err = DescribeDiscoveryTransform(c.Question, *a.Discovery)
+		}
+		if err != nil {
+			return nil, err
+		}
+		a.Transform = transform
+		a.Preserves = transform.Preserves
+		a.Changes = transform.Replaces
+
 		if a.Query != nil {
 			if _, e := Compile(*a.Query); e != nil {
 				return nil, e

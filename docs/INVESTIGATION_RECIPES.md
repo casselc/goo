@@ -10,6 +10,9 @@ half-open fixed time bounds, full predicate tree and chart interval. It replaces
 breakdown and measure settings and resets inspection to offset 0 / limit 100.
 Preview is source-free; Run this question explicitly performs a fresh source read.
 Wrong-signal recipes are rejected rather than translating filters across signals.
+The shared [scope/transform contract](QUESTION_SCOPE.md) now derives keeps/changes
+from actual question fields and checks same-population claims. Previews display
+population grain and disclose unbound convention/schema metadata explicitly.
 Edits, a new execution or navigation invalidate pending previews. The UI requires
 another applied question after draft changes; stale responses cannot reopen a plan.
 

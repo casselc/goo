@@ -5,6 +5,40 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Shared question scope and checked transforms (2026-10-18)
+
+Recipes and capture-derived follow-ups now use shared detached Go planning metadata.
+Same-population/same-question and exact-ID relationship claims are checked against
+actual typed questions; grouping/measure/chart/page changes are computed. Record
+scope excludes presentation paging and retains complete typed OTel/custom selectors.
+Native measurement bindings retain declared schema/library/instrument identity;
+unknown record schema or convention profile remains explicit. Inventory and
+comparison adapters retain underlying grain and separate member windows.
+
+Passed: full root Go suite; exploration/HTTP race tests; root vet; 32 frontend
+checks; Python compilation; expanded Hegel recipe and follow-up state/swarm
+(100 requested sequences each, 25 steps). Checks cover detached ownership,
+OTel/custom namespaces, record/package/wire scope roundtrips, native binding
+identity, false-claim rejection and unchanged capture serialization. The first
+Hegel invocation used the unwritable default cache; rerunning with the existing
+workspace XDG cache passed. No environment configuration change was required.
+
+Artifacts: `artifacts/scope-{go,race,vet,node,hegel}.log`. The deployed offline
+image is `15330826a024`. Initial image `b501ce099b8c` passed all three affected
+browser journeys in 3.7 minutes, with all enabled Bombadil and live Quint checks.
+Final review separated metric signal from gauge/counter/histogram measurement kind;
+root/race/vet/Hegel checks passed again after that correction. Final image passed both planning journeys again (2.4 minutes), with no skips,
+including both Bombadil campaigns and live Quint checks. Follow-up replay rejected
+all nine mutated ledgers; recipe replay checked the full shared transform plan.
+Final evidence: `artifacts/scope-final-journeys.log`,
+`artifacts/followups/47900071/`, `artifacts/recipes/c1bc9301/`. The earlier broader
+run is `artifacts/scope-journeys.log`. Desktop/mobile screenshots were regenerated;
+the desktop follow-up preview was inspected. Traffic was restored after both
+wrappers; existing telemetry volumes and all five stale pending entries remain.
+The [contract](docs/QUESTION_SCOPE.md), diagrams, planning docs and existing
+storyboards describe this bounded slice. General typed measures, convention-profile
+resolution and full backend capability negotiation remain future work.
+
 ## Core primitives review (2026-10-18)
 
 Reviewed the implemented question/package/capture, workflow/recipe/follow-up and

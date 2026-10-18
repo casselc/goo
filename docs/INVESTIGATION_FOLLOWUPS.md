@@ -63,3 +63,22 @@ statistical hypothesis ranking and complete-trace collection remain future work.
 [Storyboard 42](journeys/README.md#42--from-a-slow-operation-to-a-supported-finding)
 reproduces a real delayed sample operation, tests competing explanations, follows
 exact IDs, inspects resource instruments and preserves uncertainty in the handoff.
+
+## Shared checked scope
+
+Recipes and follow-ups now use the same Go `QuestionScope`/`QuestionTransform`
+contract. Each action returns derived origin/target scope and field-level
+preserved/replaced changes. Same-population and same-question claims are validated;
+exact-ID questions require valid structural ID predicates. Discovery is explicitly
+service/time context. IDs/services are still selected by the capture-owned planner.
+The UI renders computed keeps/changes and population grain, with source/OTel
+metadata under progressive disclosure. Read planning metadata separately from
+stored receipts: no capture format, ID or evidence bank is rewritten.
+
+Record predicates retain resource, attribute and physical-column namespaces,
+including explicit OTel resource/scope constraints. The current record adapter
+cannot bind schema URLs or convention profiles, so these are labelled unavailable/
+unbound. Native measurement scope retains its exact declared binding (including
+scope library version and schema URL) and definition revision; a library version
+never becomes a semantic-convention version. Custom telemetry remains supported.
+See [the implementation boundary](QUESTION_SCOPE.md).

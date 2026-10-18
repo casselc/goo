@@ -23,7 +23,9 @@ recipes/follow-ups, then typed measures and capability-aware planning. Preserve
 existing wire formats, immutable receipts and specialized metric/lifecycle kernels.
 OTel semantic-convention profiles are a first-class input across all six primitives,
 with explicit version/unit/identity bindings and generic fallback for custom data.
-This is proposed work; the review defines a bounded next slice and acceptance checks.
+The first [scope/transform slice](QUESTION_SCOPE.md) now supplies checked shared
+planning metadata for recipes/follow-ups, with adapters for typed capture questions.
+Typed measures and convention-profile resolution remain subsequent work.
 
 ## Earlier plan and milestone history
 

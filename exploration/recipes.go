@@ -25,9 +25,10 @@ func Recipes() []Recipe {
 }
 
 type RecipePlan struct {
-	Recipe   Recipe `json:"recipe"`
-	Question Query  `json:"question"`
-	Plan     Plan   `json:"plan"`
+	Transform *QuestionTransform `json:"transform"`
+	Recipe    Recipe             `json:"recipe"`
+	Question  Query              `json:"question"`
+	Plan      Plan               `json:"plan"`
 }
 
 // PlanRecipe preserves signal, environment, fixed bounds and the entire predicate
@@ -75,5 +76,9 @@ func PlanRecipe(id string, q Query) (*RecipePlan, error) {
 	if e != nil {
 		return nil, e
 	}
-	return &RecipePlan{recipe, next, plan}, nil
+	transform, e := DescribeTransform(CaptureQuestion{Kind: "explore", Explore: &q}, CaptureQuestion{Kind: "explore", Explore: &next}, "same-population")
+	if e != nil {
+		return nil, e
+	}
+	return &RecipePlan{Recipe: recipe, Question: next, Plan: plan, Transform: transform}, nil
 }

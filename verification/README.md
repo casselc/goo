@@ -249,3 +249,13 @@ Storyboard 42 supplies `GOO_FOLLOWUPS_LEDGER` for `TestQuintFollowupsLiveLedger`
 preview → duration/status → trace → logs → resources → gap → reopen. Seven mutated
 ledgers must be rejected. `verification/bombadil/followups.ts` explores source-free
 question previews while retaining exact references and explicit scope explanations.
+
+
+Scope consolidation: the existing recipe/follow-up Hegel state/swarm checks now
+validate shared descriptors, composed transforms and independent metadata, using
+OTel/custom attribute names. The live follow-up ledger rederives the complete plan
+and rejects nine mutations, including false population grain and relationship
+metadata. Recipe replay compares the full shared plan. Bombadil follow-up invariants
+require a checked same-population preview with explicit unbound convention metadata.
+The existing model protocol is retained; these are stronger observed-value checks,
+not a new proof of all telemetry semantics. See docs/QUESTION_SCOPE.md and VALIDATION.md.

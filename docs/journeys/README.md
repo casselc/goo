@@ -767,3 +767,9 @@ a finding that distinguishes reproduced delay from production causal attribution
 - [Mobile investigation handoff](screenshots/42d-mobile-guided-investigation.png)
 - Executable: `journeys/followups.spec.js`; optional source-free browser exploration:
   `GOO_FOLLOWUPS_BOMBADIL=1`.
+
+Scope consolidation: journeys 37 and 42 now assert the shared checked transform
+relationship and render computed population/grain changes. Their refreshed frames
+include progressive disclosure for source binding and unbound OTel semantics.
+The source reads remain explicit; this does not demonstrate automatic convention
+profile resolution. See [the shared contract](../QUESTION_SCOPE.md).

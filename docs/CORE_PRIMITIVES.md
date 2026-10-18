@@ -1,7 +1,9 @@
 # Core primitives review
 
 Reviewed 2026-10-18 against the implemented Go models and current workbench.
-This is a proposed consolidation plan, not a claim of implemented capabilities.
+This is a consolidation plan. The first [scope/transform slice](QUESTION_SCOPE.md)
+is now implemented for recipes and capture-derived follow-ups; broader capabilities
+below remain proposed.
 
 The most useful next work is to make the same question retain its meaning across
 Explore, measurement packages, recipes, captures and backend compilation. More
@@ -208,14 +210,15 @@ prove the claim. This supports competing hypotheses and a later successor compar
 without inventing automatic causality or silently moving old references. A spatial
 board or real-time collaboration can reuse these objects later.
 
-## Next implementation slice and acceptance
+## First implementation slice and acceptance
 
-Implement a source-free scope/transform contract for existing record recipes and
-follow-ups, with adapters for the current capture question types. Expose source,
-grain, fixed bounds and structured changes in their existing previews. No new
-navigation destination or saved-object family is needed.
+The source-free scope/transform contract is now implemented for existing record
+recipes and follow-ups, with adapters for current capture question types. Existing
+previews expose source, grain, fixed bounds and structured changes. No new
+navigation destination or saved-object family was added. Convention profile
+resolution remains unbound and record schema metadata unavailable; the descriptor
+states these limits explicitly. Acceptance and regression expectations:
 
-Acceptance:
 
 1. The same applied question yields the same normalized semantic scope through
    recipe preview, package round-trip and capture/reopen; page changes do not alter it.
