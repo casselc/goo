@@ -118,9 +118,6 @@ func (d Definition) Validate() error {
 		}
 	}
 	if d.Kind != "lifecycle" {
-		if (d.Kind == "counter" || d.Kind == "histogram") && (d.Source.Scope == "" || d.Source.Version == "" || d.Source.SchemaURL == "") {
-			return fmt.Errorf("native interval kernels require explicit instrumentation scope, version and schema")
-		}
 		if d.Lifecycle != nil || d.Source.Scope == "" || d.Source.Metric == "" || !text(d.Source.Metric, 256) || d.Source.Unit == "" || !text(d.Source.Unit, 64) || d.Grain == "subject" {
 			return fmt.Errorf("require typed metric/unit binding")
 		}

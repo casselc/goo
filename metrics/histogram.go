@@ -179,7 +179,7 @@ func EvaluateHistograms(request HistogramRequest) (*HistogramResult, error) {
 	groups := map[string][]histogramPoint{}
 	for _, p := range request.Points {
 		s := p.Stream
-		if s.Resource["service.name"] == "" || s.Resource["service.instance.id"] == "" || s.Scope == "" || s.Version == "" || s.SchemaURL == "" || s.Name == "" || (s.Unit != "s" && s.Unit != "ms") {
+		if s.Resource["service.name"] == "" || s.Resource["service.instance.id"] == "" || s.Scope == "" || s.Name == "" || (s.Unit != "s" && s.Unit != "ms") {
 			return nil, fmt.Errorf("require scoped duration histogram identity and s/ms unit")
 		}
 		if p.Temporality != "cumulative" && p.Temporality != "delta" {
@@ -386,7 +386,7 @@ func MergeAlignedHistograms(input []HistogramMember) (*HistogramMerge, error) {
 	total := uint64(0)
 	for i, m := range members {
 		s := cloneStream(m.Stream)
-		if s.Resource["service.name"] == "" || s.Resource["service.instance.id"] == "" || s.Scope == "" || s.Version == "" || s.SchemaURL == "" || s.Name == "" || (s.Unit != "s" && s.Unit != "ms") {
+		if s.Resource["service.name"] == "" || s.Resource["service.instance.id"] == "" || s.Scope == "" || s.Name == "" || (s.Unit != "s" && s.Unit != "ms") {
 			return nil, fmt.Errorf("invalid histogram member identity")
 		}
 

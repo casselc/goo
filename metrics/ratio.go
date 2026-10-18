@@ -93,7 +93,7 @@ func EvaluateErrorRatios(input CounterResult, policy RatioPolicy) (*RatioResult,
 	groups := map[string]*group{}
 	points := 0
 	for _, s := range input.Series {
-		if s.Stream.Unit != "{invocation}" || s.Stream.Resource["service.name"] == "" || s.Stream.Resource["service.instance.id"] == "" || s.Stream.Scope == "" || s.Stream.Version == "" || s.Stream.SchemaURL == "" || s.Stream.Name == "" {
+		if s.Stream.Unit != "{invocation}" || s.Stream.Resource["service.name"] == "" || s.Stream.Resource["service.instance.id"] == "" || s.Stream.Scope == "" || s.Stream.Name == "" {
 			return nil, fmt.Errorf("ratio requires a complete invocation stream identity")
 		}
 		o := s.Stream.Attributes["goo.operation.outcome"]

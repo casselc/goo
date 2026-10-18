@@ -187,3 +187,11 @@ first Goo observation is not warehouse ingestion. The original compatibility lab
 has different preview assumptions and is not retroactively rewritten. Package
 revision catalogs have a 256-file bound; persistent custody storage currently has
 no quota/garbage collection. Source data and custody reads are not transactional.
+
+
+Metric discovery is now implemented for a named service/environment over a
+bounded two-minute observation window. It is not fleet membership discovery or a
+complete instrument inventory. Dimension-value cardinality, exemplar navigation,
+exponential histograms, omitted metric units and missing resource-instance IDs
+remain unsupported by the package workflow. Empty optional scope version/schema
+are accepted as exact identities. See MEASUREMENT_PACKAGES.md.

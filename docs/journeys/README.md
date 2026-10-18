@@ -709,3 +709,16 @@ production delivery or completeness guarantee.
 | [38e](screenshots/38e-measurement-capture-in-notes.png) | Cite a frozen typed capture in the common investigation narrative. |
 | [38f](screenshots/38f-mobile-measurement-editor.png) | Edit and validate a reusable definition on a narrow screen. |
 | [38g](screenshots/38g-fixed-record-package-workflow.png) | Preview a record package without a read, then explicitly run its fixed workflow window. |
+
+
+### 39 · Ordinary OTel metric discovery
+
+An engineer starts with an independently instrumented application with no goo
+manifest. They discover its `jobs.completed` instrument and dimensions, build and
+save an editable package, run it, distinguish outcomes in stream labels, capture
+it, reopen the retained evidence and cite it in notes.
+
+- [Discover observed instrument metadata](screenshots/39a-metric-discovery.png)
+- [Evaluate independent metric streams](screenshots/39b-discovered-measurement.png)
+- Executable: `journeys/metric-discovery.spec.js`; optional exploration invariants:
+  `GOO_METRIC_DISCOVERY_BOMBADIL=1`.

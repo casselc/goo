@@ -67,7 +67,7 @@ rejected. Custom package revisions use the same schema as built-ins.
 
 Stream identity includes resource schema, full resource map, instrumentation scope,
 version/schema, metric name/unit and all point attributes. Native counter/histogram
-packages require explicit scope/version/schema metadata. Missing metadata is a
+packages require an explicit scope name; version and schema may be empty and remain exact stream identity values. Missing required metadata is a
 validation failure, not invented identity. Gauge grain documents intended resource
 meaning; it does not authorize aggregating repeated consumer-group observations
 from several workers. Worker utilization is recorded per instance. Lag is
@@ -131,3 +131,35 @@ contracts remain future. The existing aggregate compiler can emit Databricks
 metric-view definitions over prepared facts; these live measurement adapters do
 not yet lower raw OTel gauges/lifecycles into Databricks preparation tables.
 No Databricks instance is needed for current execution or verification.
+
+
+## Discover instruments without a goo manifest
+
+In Explore → Measurements, expand **Discover metrics from an application**,
+enter its `service.name` and deployment environment, and discover the last two
+minutes of observations. The source adapter scans gauges, sums and explicit
+histograms together, capped at 10,000 records, 8 MiB response, 256 MiB source
+read and a 15-second request deadline. Overflow fails without a partial catalog.
+The catalog describes observed identities and dimension **names**, not dimension
+value cardinality, instrument completeness or healthy coverage. It uses no goo
+annotations, manifest or service-specific attribute conventions.
+
+**Build measurement package** opens a proposed editable definition using exact
+observed scope/name/unit/version/schema bindings. The initial two-minute lookback
+and 60-second gap are authoring defaults to review. Empty optional version/schema
+values match empty values; they never act as wildcards. Separate versions and
+schemas remain separate streams. Supported sums are monotonic counters;
+histograms currently support explicit nonnegative duration distributions in
+seconds/milliseconds. Actual values, resource-instance identity and interval
+quality are validated when run. Unsupported metadata remains visible.
+
+Preview does not read telemetry. Run explicitly, save a package revision, capture
+the fixed question and cite it in notes through the existing shared controls.
+Native stream summaries now show up to six sorted dimensions; full identity is
+available in attribute disclosure. Discovery is intentionally service-scoped;
+fleet inventory, dimension-value selection and automatic freshness recommendations
+remain future work.
+
+`scripts/independent_metrics.py` is an ordinary Python OTel SDK producer with no
+goo manifest and no scope version/schema. Storyboard 39 exercises its actual
+collector → ClickHouse → discovery → package → capture → notes path.

@@ -223,3 +223,12 @@ This protocol model checks the declared observations, not arbitrary distributed
 scheduling. Existing lifecycle MBT covers the preparer separately. Optional
 `GOO_MEASUREMENTS_BOMBADIL=1 bash scripts/run_journeys.sh journeys/measurements.spec.js`
 checks source-free package preview/edit guards through a real browser.
+
+
+Metric discovery: `metric_discovery_test.go` uses Hegel to preserve empty optional
+version/schema metadata and distinguish versioned streams.
+`metric_discovery_live_test.go` validates the real SDK → discovery → definition →
+evaluation ledger against `model/metric_discovery.{qnt,yaml}` and rejects mutated
+service, definition and evidence-basis ledgers. Storyboard 39 supplies the ledger;
+`GOO_METRIC_DISCOVERY_BOMBADIL=1` also exercises discovery/scope-invalidation UI
+invariants without evaluating or capturing measurements.

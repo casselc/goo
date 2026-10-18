@@ -1,0 +1,11 @@
+spec: metric_discovery.qnt
+module: metric_discovery
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  discover:
+    expect: 'coherent == {{.obs.coherent}}'
+  build:
+    expect: 'coherent == {{.obs.coherent}}'
+  execute:
+    expect: 'coherent == {{.obs.coherent}}'

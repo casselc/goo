@@ -332,3 +332,13 @@ explicit disclosure rather than the default example experience.
 Next: explicit capture-successor comparison within ordered narratives; richer
 capability-backed recipes and migration of specialized lifecycle contracts remain
 separate.
+
+
+### Implemented: observed metric package authoring
+
+Bounded service/environment discovery over ordinary OTel gauge/sum/explicit
+histogram observations proposes editable measurement definitions. Optional empty
+scope version/schema are preserved, and stream summaries expose dimensions.
+Storyboard 39 covers a separate Python SDK producer without a goo manifest.
+Future work: dimension-value selection, user-selected discovery horizons, service
+picker integration, and explicit freshness recommendations.

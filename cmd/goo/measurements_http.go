@@ -205,6 +205,29 @@ func registerMeasurements(mux *http.ServeMux, client *http.Client, dir string) {
 		}
 		send(w, 201, item(d))
 	})
+	mux.HandleFunc("POST /metric-discovery", func(w http.ResponseWriter, r *http.Request) {
+		var q measurements.DiscoveryQuestion
+		if !decode(w, r, &q) {
+			return
+		}
+		if e := q.Validate(); e != nil {
+			fail(w, e)
+			return
+		}
+		endpoint := os.Getenv("CLICKHOUSE_URL")
+		if endpoint == "" {
+			endpoint = "http://localhost:8123"
+		}
+		source := measurements.Source{Endpoint: endpoint, User: os.Getenv("CLICKHOUSE_USER"), Password: os.Getenv("CLICKHOUSE_PASSWORD"), Client: client}
+		ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
+		defer cancel()
+		result, e := source.Discover(ctx, q)
+		if e != nil {
+			send(w, 502, map[string]string{"error": e.Error()})
+			return
+		}
+		send(w, 200, result)
+	})
 	mux.HandleFunc("POST /measurements", func(w http.ResponseWriter, r *http.Request) {
 		var q measurements.Question
 		if !decode(w, r, &q) {

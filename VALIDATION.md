@@ -5,6 +5,32 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Ordinary OTel metric discovery (2026-10-18)
+
+Bounded service/environment discovery now proposes editable typed packages over
+ordinary gauge/sum/explicit-histogram observations. Optional scope version/schema
+remain exact identity values, including empty values. No invented identity or
+implicit fleet aggregation. Stream summaries expose sorted dimensions.
+
+Passed: root Go suite; race checks for measurements/metrics/HTTP; root vet;
+32 frontend checks; Hegel optional-identity properties and existing measurement
+state/swarm checks. The independent Python OTel SDK producer has no goo manifest
+and omits scope version/schema. The initial live discovery/package/save/run/
+capture/reopen storyboard passed (21.1 s). The expanded run passed both affected
+journeys (3.1 minutes): measurement storyboard 38 and discovery storyboard 39,
+including notes, package saving, capture reopening and native dimension labels.
+Bombadil recorded 440 measurement and 248 discovery observations with zero
+violations. The shared measurement Quint ledger passed with seven rejected
+mutations. Nine affected storyboard images were refreshed.
+The final discovery-only rerun passed (22.5 s), including its dedicated Quint
+ledger with three rejected mutations: wrong service, missing proposed definition
+and tampered evidence basis. Traffic was restored and stale pending data retained.
+
+Artifacts: `artifacts/metric-discovery-{go,race,vet,node,hegel}.log`,
+`artifacts/metric-discovery-final-journeys.log`,
+`artifacts/metric-discovery-model-journey.log`, and
+`artifacts/metric-discovery/ledger.json`.
+
 ## Typed measurement packages and standardized examples (2026-10-18)
 
 [Contract](docs/MEASUREMENT_PACKAGES.md): twelve YAML packages bind actual queue

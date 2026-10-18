@@ -831,3 +831,18 @@ Dockerfiles also include the new `measurements` package. Default telemetry volum
 and five pre-existing stale pending Redis entries were retained. Journey wrappers
 pause/drain/restore only the owned traffic generator. New storyboard frames 38a–g
 and shared measurement architecture diagrams describe actual implemented paths.
+
+## Metric discovery round (2026-10-18)
+
+The existing cloud toolchains and running lab were reused. The SDK-only Python
+producer exports through the real collector; discovery and typed evaluation read
+actual ClickHouse tables. Both affected browser journeys passed, including both
+Bombadil specifications. Root Go tests, affected race tests, vet, 32 frontend
+checks and Hegel optional-identity/state checks passed. Updated verification and
+storyboard details are in VALIDATION.md.
+
+The offline image build exhausted disk space. Regenerable Go cache and unused
+Docker image/build cache were cleaned, preserving all running application data
+and telemetry volumes. Sandbox startup and build/test operations recovered;
+free space returned to approximately 14 GiB. The traffic wrapper retained all
+five pre-existing stale pending entries. No environment draft change was needed.

@@ -855,3 +855,22 @@ Lifecycle refresh retains business evaluation T and advances local knowledge
 cutoff under an explicit policy. It may reveal past events; it never moves the
 business question or licenses future events. Coverage stays unverified, so missing
 terminal events remain unknown. See [measurement contract](MEASUREMENT_PACKAGES.md).
+
+
+### Observed metrics to reusable packages
+
+```mermaid
+flowchart LR
+  SDK[Ordinary OTel SDK / no goo manifest] --> Collector
+  Collector --> CH[ClickHouse metric tables]
+  CH --> Discover[Bounded service and environment discovery]
+  Discover --> Draft[Observed identity → editable package]
+  Draft --> Preview[Source-free typed preview]
+  Preview --> Run[Explicit fixed-window measurement]
+  Run --> Capture[Immutable capture]
+  Capture --> Notes[Investigation notes]
+  Draft --> Library[Saved YAML revision]
+```
+
+Discovery reports observed metadata only; omitted scope version/schema remain
+empty exact identity values. It never computes measurements or creates evidence.

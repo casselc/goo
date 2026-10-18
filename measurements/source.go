@@ -91,6 +91,13 @@ func (s Source) Run(ctx context.Context, q Question, previous *Result) (*Result,
 	if e != nil {
 		return nil, e
 	}
+	rows, e := s.read(ctx, plan)
+	if e != nil {
+		return nil, e
+	}
+	return Evaluate(q, rows, time.Now().UTC(), s.CustodyDir, previous)
+}
+func (s Source) read(ctx context.Context, plan Plan) ([]json.RawMessage, error) {
 	u, e := url.Parse(s.Endpoint)
 	if e != nil {
 		return nil, e
@@ -137,7 +144,7 @@ func (s Source) Run(ctx context.Context, q Question, previous *Result) (*Result,
 	if e = scanner.Err(); e != nil {
 		return nil, e
 	}
-	return Evaluate(q, rows, time.Now().UTC(), s.CustodyDir, previous)
+	return rows, nil
 }
 
 type metricRow struct {

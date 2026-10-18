@@ -112,7 +112,7 @@ func EvaluateCounters(request CounterRequest) (*CounterResult, error) {
 	}
 	groups := map[string][]parsedPoint{}
 	for _, p := range request.Points {
-		if p.Stream.Resource["service.name"] == "" || p.Stream.Resource["service.instance.id"] == "" || p.Stream.Scope == "" || p.Stream.Version == "" || p.Stream.SchemaURL == "" || p.Stream.Name == "" || p.Stream.Unit == "" {
+		if p.Stream.Resource["service.name"] == "" || p.Stream.Resource["service.instance.id"] == "" || p.Stream.Scope == "" || p.Stream.Name == "" || p.Stream.Unit == "" {
 			return nil, fmt.Errorf("require explicit resource instance and instrumentation/name/unit identity")
 		}
 		if !p.Monotonic || (p.Temporality != "cumulative" && p.Temporality != "delta") {
