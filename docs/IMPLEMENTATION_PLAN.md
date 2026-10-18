@@ -195,7 +195,8 @@ Implemented: bounded Bombadil workspace exploration, a real report-app/ClickHous
 coordinator with rendered-evidence checks and retained ledger, and opt-in quint-go
 observed-trace validation with rejecting protocol controls. See
 [testing design](BOMBADIL_TESTING.md) and [journey 26](journeys/README.md).
-Next: model-generated semantic checkpoints and application-side Bombadil action
-generators, followed by explicit retry/late-capture/fault campaigns. The current
-model covers one successful report and independent navigation; it does not model
-browser scheduling or establish telemetry completeness.
+The next opt-in campaign now uses Quint-generated issue/inspect/revisit checkpoints,
+application-side Bombadil submissions, simultaneous goo navigation and live ITF
+poststate replay. It covers three successful reports and two evidence revisits.
+Next: explicit retry/late-capture/fault campaigns and longer-lived independent
+actors. The models do not establish browser scheduling or telemetry completeness.

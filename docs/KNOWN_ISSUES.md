@@ -113,3 +113,13 @@ A bounded Go span/log AST, captured-record counts/groups, discovered keys and pa
   compiler. Source promotion is an optional Go template, not automatic function
   inference or patching. General metrics, calculations and warehouse lowering of
   this package kind remain future; see [contract](TELEMETRY_PACKAGES.md).
+
+## Exploratory UI testing boundaries
+
+The opt-in Quint/Bombadil campaign exercises three successful report requests and
+two evidence revisits with independent source checks. Generated schedule replay
+checks observed handler effects; it does not establish deterministic browser
+scheduling, business durability or telemetry completeness. Application-side retries,
+faults and long-lived independent actors remain unimplemented in this campaign.
+See [testing contract](BOMBADIL_TESTING.md); existing curated journeys cover their
+separately documented retry, export-loss and late-evidence scenarios.

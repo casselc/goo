@@ -210,3 +210,44 @@ Playwright forced-color output before the optional Quint subprocess (quint-go
 parses plain verdicts), and launches the pinned native Bombadil binary so SIGINT
 cancellation reaches its cleanup handler. Application-side generated exploration,
 model-generated browser actions, retries and fault campaigns remain future work.
+
+## Generated browser campaigns and two Bombadil actors (2026-10-18)
+
+Implemented `npm run test:generated-campaign`: quint-go `connect.Generate` creates
+a seeded nine-checkpoint schedule; Bombadil submits three real report requests
+in fresh profiles while another Bombadil browser explores goo navigation. The
+Playwright observer performs three inspections and two generated revisits through
+normal UI controls, comparing actual rendered members/counts with independent
+read-only ClickHouse facts over each exact frozen question. `connect.Driver`
+then validates the observed handler effects against the generated ITF poststates.
+
+The original journey 26 passed after extracting its source/UI checks into the
+shared test adapter (37.6 seconds). The generated journey passed with seed 99,
+including all five optional qobs/quint-go inspection checks; the two-test run took
+2.0 minutes. A final archive-validation run with seed 2026 also passed in about
+1.3 minutes: three captured result identities, nine completed checkpoints, five
+source/UI comparisons, five passing qobs reports and 526 goo navigation actions.
+No application outcomes, telemetry records or UI responses were mocked.
+
+Eight model traces generated with seed 2026 covered six distinct complete schedules
+and passed projection replay. The generator's negative controls reject changed
+counts/targets, reordered steps and truncation. Three Node artifact-reader tests
+passed, including rejection of absent/duplicate submissions and unstable result
+identity. Quint typechecking, verification-module vet, JavaScript syntax, Markdown
+local links and whitespace checks passed. Unchanged runtime suites and the full
+browser suite were not repeated for this test-only increment.
+
+An initial exploratory run was interrupted after exposing the driver's incorrect
+assumption that navigating to the same hash resets an open inspector. The shared
+driver now closes that inspector and clears the prior filters through actual UI
+controls before a fresh selection; both live validations above exercise revisits.
+
+The generated campaign is explicitly opt-in; its normal-suite skip was verified.
+Its archive now lives at `artifacts/bombadil/campaigns/<run-id>/`, outside normal
+Playwright cleanup. After the final passing run, another ordinary Playwright
+invocation skipped the campaign and the complete archive, all four actors' traces
+and all five inspection reports remained present. The source app screenshot is
+copied unchanged from Bombadil's own capture. Journey 27, three new documentary
+frames, refreshed journey 26 frames, diagram 14 and design/planning/issue docs were
+updated. This campaign remains bounded to successful reports and fresh evidence
+revisits; retry/fault generation and long-lived independent actors remain future work.

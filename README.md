@@ -39,7 +39,8 @@ business events into frozen subject facts and evidence receipts. Explore the
 The [Bombadil coordinator](docs/BOMBADIL_TESTING.md) correlates a real sample-app
 request with independently captured telemetry and goo's rendered trace while a
 second browser explores navigation. Optional Quint validation checks the observed
-cross-app checkpoints; model-generated browser checkpoints remain proposed.
+cross-app checkpoints. An opt-in generated campaign uses Quint MBT schedules to
+drive Bombadil app submissions and goo evidence inspections/revisits.
 
 The reference reservation example emits ClickStack-shaped OTel data: HTTP gateway → gRPC reservation service → Redis Streams → inventory consumer → OTel collector → ClickHouse. Its Examples workspace edits a validated JSON query expression and shows its compiled SQL, completion cohorts, gRPC latency, logs, spans and links, and exported metric points.
 

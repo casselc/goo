@@ -9,21 +9,7 @@ const goo = process.env.GOO_QUERY_URL || 'http://127.0.0.1:8088';
 const app = process.env.GOO_REPORT_URL || 'http://127.0.0.1:8091';
 const frames = path.resolve('docs/journeys/screenshots');
 
-// This test adapter owns physical ClickHouse columns. It deliberately does not
-// use goo's generated SQL or API to establish what the source captured.
-async function source(request, sql, parameters) {
-  const url = new URL(process.env.GOO_TEST_CLICKHOUSE_URL || 'http://127.0.0.1:8123');
-  for (const [key, value] of Object.entries({ readonly: 1, max_execution_time: 5,
-    max_result_rows: 101, result_overflow_mode: 'throw', max_bytes_to_read: 268435456,
-    read_overflow_mode: 'throw', ...parameters })) url.searchParams.set(key, String(value));
-  const user = process.env.GOO_TEST_CLICKHOUSE_USER || 'lab';
-  const password = process.env.GOO_TEST_CLICKHOUSE_PASSWORD || 'lab-local';
-  const response = await request.post(url.href, { data: sql,
-    headers: { Authorization: 'Basic ' + Buffer.from(user + ':' + password).toString('base64') } });
-  expect(response.ok(), 'independent source query failed: HTTP ' + response.status()).toBe(true);
-  const text = (await response.text()).trim();
-  return text ? text.split('\n').map(line => JSON.parse(line)) : [];
-}
+const { inspectReport } = require('./support/cross-app');
 
 test('26 correlate a real report with goo while Bombadil explores, optionally checking Quint', async ({ page, request }, testInfo) => {
   const run = randomUUID(), dir = testInfo.outputPath('cross-app');
@@ -65,74 +51,7 @@ test('26 correlate a real report with goo while Bombadil explores, optionally ch
     record('accepted', { actor: 'application', subject: report.id });
     await page.screenshot({ path: path.join(frames, '26a-correlated-real-report.png'), fullPage: true });
 
-    const discoverySQL = `SELECT TraceId, SpanId, arrayFirst(a -> a['goo.subject.id'] = {subject:String}, \`Events.Attributes\`)['goo.subject.id'] AS subject
-      FROM default.otel_traces WHERE ServiceName = {service:String}
-      AND Timestamp >= fromUnixTimestamp64Milli({from:Int64})
-      AND ResourceAttributes['deployment.environment.name'] = {environment:String}
-      AND arrayExists(a -> a['goo.subject.id'] = {subject:String}
-        AND a['goo.subject.namespace'] = 'report' AND a['goo.subject.tenant'] = 'demo', \`Events.Attributes\`)
-      ORDER BY SpanId LIMIT 100 FORMAT JSONEachRow`;
-    const discoveryParameters = { param_subject: report.id, param_service: 'lab-go-reports',
-      param_environment: 'local', param_from: ledger.workloadStartedAt - 60000 };
-    let discovery;
-    await expect.poll(async () => {
-      discovery = await source(request, discoverySQL, discoveryParameters);
-      return discovery.length;
-    }, { timeout: 60000, intervals: [1000] }).toBeGreaterThan(0);
-    const trace = discovery[0].TraceId;
-    expect(trace).toMatch(/^[a-f0-9]{32}$/);
-    expect(discovery.every(row => row.TraceId === trace && row.subject === report.id)).toBe(true);
-    ledger.discovery = { sql: discoverySQL, parameters: discoveryParameters, rows: discovery };
-
-    // Use ordinary UI controls; observe the actual frozen question sent by goo.
-    await page.goto(goo + '/#explore');
-    await page.locator('#minutes').fill('5');
-    await page.locator('#exploreField').selectOption(JSON.stringify({ kind: 'column', key: 'trace_id' }));
-    await page.locator('#exploreValue').fill(trace);
-    await page.locator('#exploreAdd').click();
-    const responsePromise = page.waitForResponse(r => r.url().endsWith('/api/explore') && r.request().method() === 'POST');
-    await page.locator('#exploreRun').click();
-    const response = await responsePromise;
-    expect(response.ok()).toBe(true);
-    const question = response.request().postDataJSON(), result = await response.json();
-    expect(question.signal).toBe('spans');
-    expect(question.environment).toBe('local');
-    expect(question.where).toEqual({ all: [{ field: { kind: 'column', key: 'trace_id' }, op: 'eq', value: trace }] });
-    const sql = `SELECT TraceId, SpanId, ResourceAttributes['deployment.environment.name'] AS environment
-      FROM default.otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64})
-      AND Timestamp < fromUnixTimestamp64Milli({to:Int64})
-      AND mapContains(ResourceAttributes, 'deployment.environment.name')
-      AND ResourceAttributes['deployment.environment.name'] = {environment:String}
-      AND TraceId = {trace:String} ORDER BY SpanId LIMIT 101 FORMAT JSONEachRow`;
-    const parameters = { param_trace: trace, param_environment: question.environment,
-      param_from: question.fromMs, param_to: question.toMs };
-    const rows = await source(request, sql, parameters);
-    expect(rows.length).toBeGreaterThan(0);
-    expect(rows.length).toBeLessThanOrEqual(100);
-    const members = rows.map(row => row.SpanId).sort().join(',');
-    const evidence = { subject: discovery[0].subject, trace, environment: question.environment,
-      fromMs: question.fromMs, toMs: question.toMs, count: rows.length, members };
-    record('source_ready', { actor: 'source-oracle', ...evidence });
-    ledger.oracle = { sql, parameters, rows };
-
-    expect(result.state).toBe('observed');
-    expect(result.count).toBe(String(rows.length));
-    expect({ ...result.question, groupBy: result.question.groupBy || [] }).toEqual(question);
-    expect(result.rows.map(row => row.SpanId).sort().join(',')).toBe(members);
-    await expect(page.locator('#exploreStatus')).toContainText(`${rows.length} matching captured spans`);
-    // Check rendered records, not just the response used to populate them.
-    const rendered = await page.locator('#exploreRows details pre').allTextContents();
-    expect(rendered.map(text => JSON.parse(text).SpanId).sort().join(',')).toBe(members);
-    expect(rendered.map(text => JSON.parse(text).TraceId)).toEqual(rows.map(() => trace));
-    const displayedQuestion = JSON.parse(await page.locator('#exploreExplain').textContent()).question;
-    expect(displayedQuestion).toEqual(question);
-    record('displayed', { actor: 'goo-observer', ...evidence, count: rendered.length,
-      members: rendered.map(text => JSON.parse(text).SpanId).sort().join(','), basis: result.basis });
-    ledger.question = question;
-    await page.locator('#exploreRows').getByRole('button', { name: 'Expand trace ' + trace, exact: true }).first().click();
-    await expect(page.locator('#exploreContextStatus')).toContainText('across all services');
-    await expect(page.locator('#exploreTrace .waterfall-row')).toHaveCount(rows.length);
-    await page.screenshot({ path: path.join(frames, '26b-correlated-goo-trace.png'), fullPage: true });
+    await inspectReport({ page, request, report, ledger, record, frameName: '26b-correlated-goo-trace.png' });
 
     const outcome = await finished;
     const navigationActions = stripVTControlCharacters(logs.join('')).match(/goo\.navigate\(/g)?.length || 0;

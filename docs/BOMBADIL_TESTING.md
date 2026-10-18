@@ -47,6 +47,57 @@ Bombadil trace/screenshots/log and action count. With Quint enabled this also
 includes its report, native qobs steps and ITF trace. Documentation screenshots
 and the human walkthrough are in [journey 26](journeys/README.md#26-correlate-a-real-application-with-goo-during-generated-ui-exploration).
 
+## Generated workload and two browser actors
+
+The opt-in [generated campaign](../journeys/generated-campaign.spec.js) now drives
+real application requests with Bombadil as well as exploring goo navigation.
+The [Quint schedule model](../verification/model/browser_campaign.qnt) generates
+three issue/inspect pairs, two revisits and a finish checkpoint. Nondeterministic
+choices vary where revisits occur and which already inspected result they target.
+The coordinator binds each abstract report index to a real returned ID; model
+values never substitute for application outcomes or source records.
+
+```sh
+# Requires the running lab, Go, and the sibling observability/quintgo module.
+npm run test:generated-campaign
+GOO_CAMPAIGN_SEED=99 GOO_CROSS_APP_QUINT=1 npm run test:generated-campaign
+npm run test:campaign-adapters
+```
+
+This uses quint-go `connect.Generate` (`quint run --mbt`) with a positive recorded
+seed (default 42). The nine-step generated ITF trace becomes an explicit plan.
+Each `issue` launches a fresh six-second Bombadil app actor, whose bounded
+[specification](../verification/bombadil/report.ts) submits through the real button
+and waits for a ready result. The artifact reader independently requires exactly
+one generated submission and one stable captured result ID. It cannot pass on an
+unresolved eventual property, an unexecuted action or multiple requests.
+
+A separate goo actor explores navigation for 60 seconds; it must still be active
+at every application request. The Playwright observer executes each model-selected
+inspection/revisit through normal controls and compares rendered evidence with the
+same direct source adapter as journey 26. Revisits close the existing inspector
+and clear the prior selection explicitly; navigating to an unchanged hash alone
+does not reset UI state. They perform fresh reads, not immutable receipt reopens.
+
+After each completed handler, the driver records actual issued/checked/revisited
+counts. `connect.Driver` replays those observations against the original generated
+ITF states, rejecting mismatched targets, state projections, order or incomplete
+campaigns. This replay is always part of the opt-in generated campaign.
+`GOO_CROSS_APP_QUINT=1` additionally runs qobs observed-trace conformance for all five
+individual evidence inspections using the existing cross-app model.
+
+Artifacts under `artifacts/bombadil/campaigns/<run-id>/` retain `plan.json`,
+seed, generated ITF, partial or complete `observations.json`, each app actor's
+trace/screenshots/log, goo's exploration trace, and direct source questions/results.
+Optional qobs validation retains a separate ledger/report/ITF per inspection.
+The generated campaign archive survives normal Playwright output cleanup.
+The documentary application frame is copied unchanged from Bombadil's captured
+screenshot; no extra request is made to stage it. See [journey 27](journeys/README.md#27-follow-a-generated-workload-and-revisit-captured-evidence).
+
+The normal browser suite skips this explicitly opt-in campaign, preserving its
+existing optional Go verification dependency. This bounded successful-report
+campaign does not yet generate retries, faults or arbitrary application behavior.
+
 With the lab running and Chromium installed:
 
 ```sh
@@ -126,11 +177,11 @@ tabs without attaching to them. URL allowlists support navigating multiple origi
 that is not a built-in scheduler for two simultaneously controlled applications.
 Custom actions execute within the current page and its origin restrictions.
 
-The implemented coordinator owns the workload page and ledger while one Bombadil
-process explores goo. Its Playwright observer checks the correlated UI evidence;
-Bombadil currently explores navigation, not that specific trace. Next, two
-separate Bombadil processes can explore the app and goo concurrently, coordinated
-through a test-only service that holds the ledger and independent source oracle.
+Journey 26 owns the workload page and ledger while one Bombadil process explores
+goo. Journey 27 runs separate Bombadil app and goo processes under a model-driven
+coordinator. Its Playwright observer checks the correlated UI evidence; the goo
+Bombadil actor currently explores navigation, not that specific trace. A shared
+test-only coordinator service for longer-lived independent actors remains future work.
 Use separate browser profiles and bounded action vocabularies. Shared-data races
 must be intentional; give isolated runs unique identifiers instead of clearing
 ClickHouse or Redis. Do not import Node APIs into Bombadil's limited specification
@@ -152,7 +203,7 @@ remain responsible for broad semantic input/state exploration.
 
 ## Optional Quint connection
 
-There are two independent directions, with the first now implemented as an opt-in:
+There are two independent directions, both now implemented in bounded campaigns:
 
 1. **Observed-trace validation:** project completed semantic events from the
    ledger into `qobs` records and use `validate.NewChecker` plus an explicit binding
@@ -164,11 +215,11 @@ There are two independent directions, with the first now implemented as an opt-i
    and [binding](../verification/model/cross_app.yaml) require the same subject,
    trace identity, environment, frozen window, count and span membership at display.
    A completeness gate rejects partial/empty/mixed-run ledgers before model checking.
-2. **Model-based generation (proposed):** use the existing `connect.Generate` path to obtain
-   seeded model traces. A coordinator maps each enabled abstract action to a real
-   application or goo interaction, then checks observed postconditions. Bombadil
-   can explore UI variations between these semantic checkpoints. Its random choices
-   are not themselves a claim that the generated model action executed.
+2. **Model-based generation:** journey 27 uses `connect.Generate` to obtain a
+   seeded schedule, maps its actions to actual app submissions and goo evidence
+   checks, and uses `connect.Driver` to compare observed handler effects with model
+   poststates. Bombadil explores goo navigation concurrently. Its random choices
+   are not themselves a claim that a semantic checkpoint executed.
 
 The first model covers accepted → source_ready → displayed → explored for one
 successful request. The coordinator enforces wall-clock readiness and actual actor
@@ -195,6 +246,6 @@ and the installed 0.7.9 CLI on 2026-10-18:
 - [Browser target attachment](https://github.com/antithesishq/bombadil/blob/41f94f51aff970382b0af1cca7439d36790ecd2b/lib/bombadil-browser/src/browser.rs)
 - [CLI options and best-effort shrink](https://github.com/antithesishq/bombadil/blob/41f94f51aff970382b0af1cca7439d36790ecd2b/lib/bombadil-cli/src/browser.rs)
 
-The real-app coordinator and optional observed-trace check are implemented. Two
-Bombadil actors, semantic-action generation from Quint and broader fault campaigns
-remain proposals.
+The real-app coordinator, two Bombadil actors, generated schedules and optional
+qobs observed-trace checks are implemented for the bounded successful-report
+campaign. Broader fault campaigns and longer-lived independent actors remain future work.

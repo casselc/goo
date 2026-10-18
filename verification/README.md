@@ -6,7 +6,11 @@ root validates a real report → source readiness → goo display → exploratio
 through qobs/quint-go. `go test -run TestQuintCrossAppProtocolRejectsMutations`
 checks a labelled protocol fixture and twelve rejecting controls without a running
 lab. The live-ledger test explicitly skips unless `GOO_CROSS_APP_LEDGER` is supplied.
-Quint-generated browser checkpoints remain proposed.
+`npm run test:generated-campaign` now uses `connect.Generate` to produce a seeded
+nine-step schedule and `connect.Driver` to check the actual browser handler effects
+against its ITF poststates. It requires the running lab and is opt-in; model/projection
+fixtures run with `go test -run TestQuintGenerateBrowserCampaign` without browsers.
+The live observation test skips unless `GOO_CAMPAIGN_OBSERVATIONS` is supplied.
 
 This separate Go module keeps Hegel's native loader/development dependencies out
 of the runtime module. It uses hegel-go **0.9.8** (embedded libhegel 0.43.4), Quint

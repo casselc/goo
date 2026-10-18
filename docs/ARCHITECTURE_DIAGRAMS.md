@@ -443,6 +443,45 @@ The first campaign covers one successful report request. Its four coordinator
 checkpoints retain acceptance, source readiness, displayed evidence and completed
 exploration. The model checks identity/scope/window/membership and order, with an
 explicit complete-ledger gate. It does not model browser scheduling or prove
-telemetry completeness. Application-side Bombadil generators and model-generated
-browser checkpoints are future work. See [testing contract](BOMBADIL_TESTING.md)
+telemetry completeness. The opt-in generated extension is shown next. See [testing contract](BOMBADIL_TESTING.md)
 and [executable storyboard](journeys/README.md#26-correlate-a-real-application-with-goo-during-generated-ui-exploration).
+
+## 14. Quint-generated checkpoints and two Bombadil actors
+
+Implemented opt-in, bounded to successful reports and evidence revisits.
+
+```mermaid
+sequenceDiagram
+ participant Q as Quint / quint-go connect.Generate
+ participant C as Browser coordinator
+ participant A as Bombadil app actor
+ participant N as Bombadil goo navigation actor
+ participant O as Independent source oracle
+ participant G as Playwright goo observer
+ Q->>C: Seeded nine-step ITF schedule
+ C->>N: Explore goo concurrently for 60 seconds
+ loop Model-selected issue / inspect / revisit
+  alt issue
+   C->>A: Submit once through actual app button
+   A-->>C: Captured result identity and action trace
+  else inspect or revisit
+   C->>O: Find actual subject / captured trace
+   C->>G: Select that trace through UI controls
+   G-->>C: Rendered records and frozen question
+   C->>O: Independent read over identical fixed bounds
+   O-->>C: Captured members and count
+   C->>C: Compare source facts with rendered evidence
+  end
+  C->>C: Record actual handler effects and observed counts
+ end
+ C->>Q: connect.Driver replay of observed effects against generated ITF
+ opt Extra qobs conformance
+  C->>Q: Validate each inspection's identity / scope / window / members
+ end
+```
+
+The model varies revisits and their targets. Fresh app profiles prevent a prior
+result from satisfying a new request; an artifact gate requires exactly one real
+submission and one returned identity per issue. Capture failure or missing
+checkpoints fail the campaign. The schedule models test coordination, not business
+durability, random browser scheduling or production capture completeness.

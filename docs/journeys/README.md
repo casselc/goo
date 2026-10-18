@@ -414,3 +414,32 @@ Bombadil's bounded action vocabulary currently covers navigation only. It does n
 generate application requests or check the selected trace itself; the Playwright
 observer does those checks. This exercises concurrent independent browsers, not a
 claim of deterministic distributed scheduling or complete telemetry capture.
+
+## 27. Follow a generated workload and revisit captured evidence
+
+Run `npm run test:generated-campaign` with the lab and Go/quint-go available.
+`GOO_CAMPAIGN_SEED=99` chooses another recorded schedule;
+`GOO_CROSS_APP_QUINT=1` additionally checks every evidence ledger with qobs.
+The ordinary browser suite skips this opt-in journey.
+
+The model schedules three actual report submissions, an inspection for each,
+two revisits of already inspected results, and completion. Bombadil submits through
+the app button in fresh browser profiles while another Bombadil actor explores goo.
+Returned IDs come from actual captured DOM states. The Playwright observer then
+selects the corresponding trace and compares rendered members/counts against an
+independent ClickHouse query over exactly the UI's frozen time bounds.
+
+| Frame | Action and evidence |
+| --- | --- |
+| [Bombadil's application frame](screenshots/27c-bombadil-application.jpeg) | Unchanged screenshot captured by the app actor after its real request. No second request was staged for documentation. |
+| [Generated inspection](screenshots/27a-generated-inspection.png) | A model-selected report index resolves to its actual returned identity and captured trace. |
+| [Generated revisit](screenshots/27b-generated-revisit.png) | Close the prior inspector, clear filters, and inspect a previously checked report in a fresh read. The generated seed determines ordering and target. |
+
+The driver records effects only after real handlers succeed, then quint-go
+`connect.Driver` compares all nine observed checkpoints with the generated ITF
+poststates. A complete schedule and positive workload/source/UI exercise are
+required. The artifact reader rejects missing/duplicate submissions and unstable
+identities; projection tests reject changed counts/targets, reordered and truncated
+campaigns. Plans, seed, partial observations, actor traces and evidence checks stay
+in ignored runtime artifacts. The model does not infer business outcomes, verify
+durability or claim deterministic scheduling; retries/fault campaigns remain future work.
