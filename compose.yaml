@@ -71,6 +71,7 @@ services:
       web: {condition: service_started}
   packages:
     <<: *app
+    volumes: ['investigations:/app/artifacts/investigations']
     command: ['goo', 'serve-http', '-operation-package', 'config/operations/checkout.yaml', '-operation-package', 'config/operations/reports.yaml', '-binding', 'config/http-package.yaml', '-inventory', 'config/http-inventory.json', '-scope-name', 'goo.http-sample', '-scope-version', '0.1.0', '-listen', ':8089']
     ports: ['127.0.0.1:8089:8089']
   operation-app:
@@ -139,6 +140,7 @@ services:
       DEFAULT_CONNECTIONS: '[{"name":"Lab","host":"http://clickhouse:8123","username":"lab","password":"lab-local"}]'
     depends_on: [mongo, clickhouse]
 volumes:
+  investigations:
   clickhouse:
   redis:
   mongo:

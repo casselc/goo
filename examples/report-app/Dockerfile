@@ -7,6 +7,7 @@ COPY metrics ./metrics
 COPY measurement ./measurement
 COPY lifecycle ./lifecycle
 COPY prebuilt ./prebuilt
+COPY investigations ./investigations
 COPY cmd ./cmd
 COPY instrumentation ./instrumentation
 COPY examples/report-app ./examples/report-app

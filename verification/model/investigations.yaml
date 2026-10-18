@@ -1,0 +1,13 @@
+spec: investigations.qnt
+module: investigations
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  save:
+    expect: 'revisions == {{.obs.revisions}} and original == {{.obs.original}} and fixed == {{.obs.fixed}}'
+  reopen:
+    expect: 'revisions == {{.obs.revisions}} and original == {{.obs.original}} and fixed == {{.obs.fixed}}'
+  refresh:
+    expect: 'revisions == {{.obs.revisions}} and original == {{.obs.original}} and fixed == {{.obs.fixed}}'
+  reject:
+    expect: 'revisions == {{.obs.revisions}} and original == {{.obs.original}} and fixed == {{.obs.fixed}}'

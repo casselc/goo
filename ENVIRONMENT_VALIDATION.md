@@ -99,3 +99,24 @@ Stage current ui/fleet.js, ui/index.html, checkout YAML and sample source before
 building. `docker compose up -d --no-build` includes the peer. No new dependency
 or credential is needed. Exact totals remain strict; comparison tolerance does
 not shift timestamps or invent a common population. See FLEET_COMPARISONS.md.
+
+## Saved investigation storage
+
+The packages service now mounts the dedicated Compose `investigations` named
+volume at `/app/artifacts/investigations`; the Go service owns bounded capture,
+immutable publication and read-time verification. Default lab service count stays
+12. Journey 19 restarts only the local packages service and verifies receipt
+persistence and reopening without source reads. The collector receives a labelled
+late test span for fixed-window refresh validation; existing queues/volumes remain.
+Host-staged builds include the updated `goo` binary, Python proxy, `ui/index.html`,
+`ui/operations.js`, `ui/ratios.js`, `ui/fleet.js` and `ui/investigations.js`.
+Only query/packages are recreated for this change. The root and both woven-sample Dockerfiles now
+copy the new Go `investigations` package because each compiles the root CLI; their networked multistage builds remain
+unverified here, while the offline staged-image build succeeds.
+
+Isolated first-stage COPY contexts for all three Dockerfiles compile the root CLI
+successfully with `go build -buildvcs=false ./cmd/goo`. VCS stamping was disabled
+for these temporary contexts because the sandbox's ancestor Git metadata caused
+an unrelated status failure. Both sample manifests also build from the real tree.
+These checks establish local compilation inputs, not a full networked Docker build
+or an Orchestrion toolchain rebuild for this milestone.

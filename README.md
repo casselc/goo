@@ -233,3 +233,5 @@ from every expected instance; the default lab now runs two instances and separat
 The second checkout instance runs at loopback **8092**. See
 [live fleet comparisons](docs/FLEET_COMPARISONS.md) for explicit tolerance and
 metric-export loss/restart controls. Exact totals retain strict boundaries.
+
+Saved operation evidence can now be reopened and refreshed as immutable revisions: [Saved investigations](docs/SAVED_INVESTIGATIONS.md). See the [general observability feature gaps and proposed order](docs/PRODUCT_GAPS.md) for the path toward broader HyperDX/Honeycomb-style exploration.

@@ -30,12 +30,12 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == '/api/package': self.json_response(200, PACKAGE)
-        elif self.path.startswith(('/api/http-package', '/api/operations', '/api/operation-packages', '/api/counter-rates', '/api/histograms')):
+        elif self.path.startswith(('/api/http-package', '/api/operations', '/api/operation-packages', '/api/counter-rates', '/api/histograms', '/api/investigations')):
             try:
                 parsed = urllib.parse.urlsplit(self.path)
-                if parsed.path not in ('/api/http-package', '/api/operations', '/api/operation-packages', '/api/counter-rates', '/api/histograms'): self.send_error(404); return
+                if not (parsed.path.startswith('/api/investigations/') or parsed.path in ('/api/http-package', '/api/operations', '/api/operation-packages', '/api/counter-rates', '/api/histograms')): self.send_error(404); return
                 endpoint = os.getenv('PACKAGES_URL', 'http://localhost:8089') + parsed.path.removeprefix('/api')
-                with urllib.request.urlopen(endpoint + ('?' + parsed.query if parsed.query else ''), timeout=20) as response:
+                with urllib.request.urlopen(endpoint + ('?' + parsed.query if parsed.query else ''), timeout=90) as response:
                     self.json_response(200, json.load(response))
             except urllib.error.HTTPError as exc:
                 self.json_response(exc.code, json.loads(exc.read()))
@@ -50,12 +50,24 @@ class Handler(BaseHTTPRequestHandler):
         elif self.path in ('/', '/index.html'):
             self.send_response(200); self.send_header('Content-Type', 'text/html; charset=utf-8'); self.end_headers()
             self.wfile.write((Path(__file__).parent / 'ui/index.html').read_bytes())
-        elif self.path in ('/visualizations.js', '/workflows.js', '/operations.js', '/histograms.js', '/ratios.js', '/fleet.js'):
+        elif self.path in ('/visualizations.js', '/workflows.js', '/operations.js', '/histograms.js', '/ratios.js', '/fleet.js', '/investigations.js'):
             self.send_response(200); self.send_header('Content-Type', 'application/javascript; charset=utf-8'); self.end_headers()
             self.wfile.write((Path(__file__).parent / 'ui' / self.path[1:]).read_bytes())
         else: self.send_error(404)
 
     def do_POST(self):
+        if self.path == '/api/investigations':
+            try:
+                length = int(self.headers.get('Content-Length', 0))
+                if not 0 < length <= 16384: raise ValueError('Expected JSON body, maximum 16 KiB')
+                endpoint = os.getenv('PACKAGES_URL', 'http://localhost:8089') + '/investigations'
+                request = urllib.request.Request(endpoint, data=self.rfile.read(length), headers={'Content-Type': 'application/json'})
+                with urllib.request.urlopen(request, timeout=90) as response:
+                    self.json_response(response.status, json.load(response))
+            except urllib.error.HTTPError as exc: self.json_response(exc.code, json.loads(exc.read()))
+            except ValueError as exc: self.json_response(400, {'error': str(exc)})
+            except Exception as exc: self.json_response(502, {'error': str(exc)})
+            return
         if self.path not in ('/api/query', '/api/explain'): self.send_error(404); return
         try:
             length = int(self.headers.get('Content-Length', 0))

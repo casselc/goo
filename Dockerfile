@@ -7,6 +7,7 @@ COPY metrics ./metrics
 COPY measurement ./measurement
 COPY lifecycle ./lifecycle
 COPY prebuilt ./prebuilt
+COPY investigations ./investigations
 COPY cmd ./cmd
 RUN CGO_ENABLED=0 go build -o /out/goo ./cmd/goo
 

@@ -49,12 +49,13 @@
   const selectedNote=node('p');selectedNote.id='operationEvidenceStatus';
   heading.hidden=!enabled.has('duration-heatmap');heat.hidden=heading.hidden;subjects.hidden=!enabled.has('subject-events');
   container.append(clear,heading,selection,heat,selectedNote,inspection,waterfall,subjects);
-  let current={};
+  let current={},selectedFilter={},navigation={};
   function subjectButton(subject){
    const b=node('button',`Follow subject ${subject.tenant}/${subject.namespace}/${subject.id}`);
    b.onclick=()=>showSubject(subject);return b;
   }
   function openTrace(traceID){
+   navigation={traceID};
    waterfall.replaceChildren(node('h3','Trace '+traceID));
    const trace=select(snapshot,{traceID});
    global.GooVisuals.waterfall(waterfall,waterfallRows(trace,data.source.service),false,undefined,'operationSpanDetails');
@@ -65,6 +66,7 @@
    waterfall.scrollIntoView({block:'nearest'});
   }
   function showSubject(subject){
+   navigation={subject};
    const events=subjectEvents(snapshot,subject),spans=subjectSpans(snapshot,subject),traceIDs=new Set(spans.map(s=>s.traceID));
    subjects.replaceChildren(node('h3',`Subject ${subject.tenant}/${subject.namespace}/${subject.id}`));
    const note=node('p',`${events.length} observed event${events.length===1?'':'s'} · ${spans.length} event-bearing invocation${spans.length===1?'':'s'} · ${traceIDs.size} trace${traceIDs.size===1?'':'s'}. Scope: ${subject.environment}/${subject.service}/${subject.namespace}/${subject.tenant}. Same captured evidence and span-start window. Matching subject identity is a declared relation, not a parent edge or proof of retry, commit or durable completion.`);note.id='operationSubjectStatus';subjects.append(note);
@@ -73,6 +75,7 @@
    subjects.append(table);subjects.scrollIntoView({block:'nearest'});
   }
   function showMatches(filter){
+   selectedFilter={...filter};navigation={};
    const matches=select(snapshot,filter);inspection.replaceChildren();waterfall.replaceChildren();subjects.replaceChildren();
    selectedNote.textContent=`${matches.length} matching completed spans · same captured evidence · ${new Date(data.fromMs).toISOString()} to ${new Date(data.toMs).toISOString()} · ${data.source.service}/${data.source.environment}/${data.source.instance}. Trace completeness unknown; spans outside this operation scope/window are not fetched.`;
    if(!matches.length){inspection.append(node('p','No observed spans in this selection; absence is not proof of health.'));return;}
@@ -93,7 +96,7 @@
     if(cell){for(const key of ['fromNS','toNS','minNS','maxNS'])if(cell[key]!==undefined)button.dataset[key]=cell[key];button.style.background=`rgba(57,201,173,${0.18+0.82*Math.log1p(cell.count)/Math.log1p(max)})`;button.onclick=()=>{const filter={...current,fromNS:cell.fromNS,toNS:cell.toNS,minNS:cell.minNS,...(cell.maxNS?{maxNS:cell.maxNS}:{})};selection.textContent=`${current.operation||'All operations'}${current.outcome?' · '+current.outcome:''} · ${labels[band]} · ${new Date(Number(BigInt(cell.fromNS)/1000000n)).toISOString()} (half-open cell)`;showMatches(filter);};}td.append(button);row.append(td);}grid.append(row);}
    const scroll=node('div');scroll.className='heatmap-scroll';scroll.append(grid);heat.append(scroll);showMatches(current);
   }
-  clear.onclick=()=>choose({});container.dataset.basis=basis;choose({});return{choose};
+  clear.onclick=()=>choose({});container.dataset.basis=basis;choose({});return{choose,getState:()=>({filter:{...selectedFilter},...navigation}),restore:state=>{choose(state?.filter||{});if(state?.subject)showSubject(state.subject);if(state?.traceID)openTrace(state.traceID)}};
  }
  function renderRates(container,data,choose){
   container.hidden=false;container.replaceChildren(node('summary','Native counter rates'));

@@ -156,3 +156,7 @@ Operation error ratios now support exhaustive denominator contracts, explicit SD
 Declared fleet slice: 2–4 expected instances, same-bound-source queries, peer-failure isolation, exact aligned population sums and coverage explanations are implemented. Journey16 now uses two observed replicas. Bounded comparisons are implemented separately; exact multi-replica common-window alignment and deployment discovery remain future work.
 
 Live two-instance slice: operation-peer has distinct identity and loopback8092. An explicit bounded-skew policy compares actual valid windows without forming approximate fleet totals. Journey17 covers imbalance, export loss, gap and restart; dynamic membership and common-window fleet aggregation remain future work. See FLEET_COMPARISONS.md.
+
+## Local saved investigation milestone
+
+Implemented: immutable bounded server captures, package-revision/fixed-window refresh, stored trace/filter/subject and ratio/member explanation navigation, separate component bases, local named-volume persistence and revision comparison. See [contract](SAVED_INVESTIGATIONS.md). Next proposed: [general exploration, full traces/logs, then cohort comparison](PRODUCT_GAPS.md). General workspaces and production collaboration remain future.

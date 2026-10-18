@@ -305,3 +305,33 @@ Comparisons never shift timestamps or create a common-window population. Host
 clock accuracy remains unverified. Journey 17 exercises traffic imbalance,
 metric-export loss, recovery and a controlled peer restart. See
 [comparison semantics](FLEET_COMPARISONS.md).
+
+## 9. Captured investigations and explicit refresh
+
+```mermaid
+sequenceDiagram
+ participant U as Investigator
+ participant UI as Goo UI
+ participant G as Go packages service
+ participant CH as ClickHouse
+ participant S as Local capture volume
+ U->>UI: Select fixed operation window and context
+ UI->>G: Capture question, package revision and selection
+ G->>CH: Read operations, metrics and histograms separately
+ CH-->>G: Results with separate bases or optional source errors
+ G->>S: Publish immutable hashed receipt
+ G-->>UI: Display precisely the saved evidence
+ U->>UI: Reopen capture ID or link
+ UI->>G: Read ID
+ G->>S: Load and verify receipt
+ G-->>UI: Stored evidence without telemetry queries
+ U->>UI: Refresh saved evidence
+ UI->>G: Parent ID
+ G->>CH: Repeat same fixed question and package revision
+ G->>S: New immutable successor; retain parent
+ G-->>UI: Compare component bases and span identities
+```
+
+Capture time is server receipt time, not ingestion custody. Reads are not a
+transactional source snapshot. This supports reproducible inspection; raw metric
+inputs, renderer versions and evaluator re-execution are not archived.

@@ -274,3 +274,21 @@ See [comparison semantics](../FLEET_COMPARISONS.md) and diagram8.
 Test `18 late initial…` delays delivery of a real upstream response, not its data.
 This guards the shared control race found by the loss journey; source limits stay
 unchanged and excess rows still reject rather than becoming partial success.
+
+## 19. Save, reopen, refresh and compare
+
+An investigator selects checkout errors and a trace, captures a fixed window,
+and retains the receipt for handoff. The packages process restarts to demonstrate
+volume persistence. The journey ingests a labelled late fixture span via real
+OTLP in the old event window; reopening still shows the original capture/trace.
+Refreshing makes a successor with the same question and selection, includes the
+late observation and compares separate bases. The old receipt stays unchanged.
+No browser operation/metric fetches are permitted during reopen.
+
+- [Saved receipt](screenshots/19a-saved-fixed-evidence-receipt.png)
+- [Reopened trace context](screenshots/19b-reopened-trace-context.png)
+- [Late-evidence revision comparison](screenshots/19c-late-evidence-successor-comparison.png)
+
+This test controls only the local Compose packages service and collector. It
+adds explicitly labelled test telemetry; no real business completion is invented.
+See [capture contract and limitations](../SAVED_INVESTIGATIONS.md).

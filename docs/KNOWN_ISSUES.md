@@ -20,7 +20,7 @@ This list describes the current code at handoff. Items are observations or missi
 
 grammar.py still uses view-specific query branches. Grouping fields and map bindings are hardcoded. definitions/reservations.json is a small demo config and has no complete resource schema or version resolver. The original EDN package and deadline-outcome syntax are illustrative. Separate [Go aggregate](PORTABLE_COMPILER.md) and [lifecycle](LIFECYCLE_PREPARATION.md) pilots now implement a bounded typed model, normalized-event preparation, reference evaluation, and aggregate backend compilation. They are not integrated into the Python API and do not implement real-exporter source adapters, generated SQL preparation, template expansion, durable immutable publication, CLI plan/apply, or an IaC provider.
 
-No scheduler, durable alarm state, multiwindow SLO evaluation, notification delivery, or historical correction store exists. The UI is an initial query interface, not a complete investigation workbench: an initial bounded waterfall and raw-duration heatmap are implemented (see VISUALIZATIONS.md), but saved sessions, paginated full traces, general selection algebra, and statistical cohort comparison remain absent.
+No scheduler, durable alarm state, multiwindow SLO evaluation, notification delivery, or historical correction store exists. The UI is an initial query interface, not a complete investigation workbench: an initial bounded waterfall and raw-duration heatmap are implemented (see VISUALIZATIONS.md), but general saved workspaces, paginated full traces, general selection algebra, and statistical cohort comparison remain absent.
 
 The new raw-span heatmap aggregates the full matching span population; its cell
 inspection remains bounded at 200 spans. Trace completeness is unknown. Guided
@@ -72,7 +72,7 @@ Operation heatmaps and trace drilldown now share a captured, validated source
 response (OPERATION_DRILLDOWN.md). Trace inspection contains only operation spans
 in the selected resource/library/start-time window; it is not a complete
 distributed trace fetch. Empty cells do not prove health, and late-data reruns
-can change results. Saved durable investigations, cross-service trace expansion,
+can change results. Local immutable operation captures now exist (SAVED_INVESTIGATIONS.md); cross-service trace expansion,
 general business subject evaluation remain absent. Native histogram intervals are now supported separately.
 
 Bounded scoped subject navigation now follows declared events across traces in
@@ -94,3 +94,7 @@ unknown reset/gap/boundary intervals, late-input revisions and per-stream scope
 tested. Automatic fleet aggregation and metric exemplars remain unsupported. Operation error ratios now use exhaustive aligned same-basis outcome counts (OPERATION_ERROR_RATIOS.md); missing members remain unknown and zero traffic is no data. Explicit aligned histogram merging is available through the Go core/CLI; it does not discover fleet membership. Counter-to-span links are time-based context only.
 
 Fixed declared fleet membership and exact compatible interval totals are now supported (FLEET_COVERAGE.md). Source observation is not completeness. The live lab now deploys both expected instances. Bounded-skew comparison is supported without shifting timestamps or asserting exact totals; automatic discovery, membership activation windows and common-window aggregation remain absent. See FLEET_COMPARISONS.md.
+
+## Saved investigation limits
+
+Local server-captured immutable revisions and fixed-question refresh now exist. No multi-user authorization, capture listing, retention/quota, general query-session persistence or raw-metric-input replay exists. See SAVED_INVESTIGATIONS.md and PRODUCT_GAPS.md.

@@ -4,6 +4,56 @@ Current additions: see the [cloud baseline](ENVIRONMENT_VALIDATION.md) for the
 successful default Compose run in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Saved fixed-window investigations
+
+Implemented: bounded server-captured immutable operation evidence; local named
+volume; package revision/fixed-window successor refresh; reopen without telemetry
+queries; stored operation/filter/trace/subject and ratio/member explanation state;
+component error preservation and comparison of independent evidence bases.
+See [contract](docs/SAVED_INVESTIGATIONS.md),
+[architecture diagram 9](docs/ARCHITECTURE_DIAGRAMS.md#9-captured-investigations-and-explicit-refresh)
+and [journey 19](docs/journeys/README.md#19-save-reopen-refresh-and-compare).
+The capture is an explicit fresh read when saving, not a silent claim to freeze
+the prior UI response. It archives normalized results, not all raw metric inputs
+or renderer/evaluator binaries. No production collaboration is claimed.
+
+Passed: root Go race tests/vet, 19 Python checks and 11 Node checks. HTTP fixtures
+verify trusted source capture, optional metric failures, offline reopening,
+package/question conflicts, invalid selections and original survival after a
+failed refresh. Store tests cover process-independent reload, exact JSON integer
+preservation, concurrent publication, historical retention and corruption rejection.
+Hegel state/swarm passes 100 sequences of up to 25 steps; Quint validates five
+observed save/reopen/refresh/reject/reopen transitions and rejects two controls
+mutating original integrity or the fixed question. Complete nested verification
+suite passes (75.3 seconds); log in ignored
+`artifacts/verification/investigations-full-suite.log`. An initial model adapter
+parse failure with a parameterless module was corrected by declaring its initial
+state constant; the final observed checks pass.
+
+Root and both sample Dockerfile first-stage COPY contexts compile the root CLI
+with VCS stamping disabled for temporary sandbox contexts; sample manifests pass.
+Full networked multistage image builds are still unverified.
+
+Targeted live journey 19 passed twice (21.2 and 24.5 seconds), including actual
+packages-service restart, unchanged receipt reopening, real collector ingestion
+of a labelled late test span, and successor retention of the fixed question and
+trace selection. The second pass also verifies ratio/member explanation state.
+All 19 browser journeys passed in two full runs (3.9 minutes each). The final
+run follows the heatmap selection-state correction and includes saved cell-bound
+restoration, ratio/member explanations, real late arrival, restart persistence
+and a delayed real saved response discarded after a newer package selection.
+All 57 documentation frames were regenerated; the three new saved-investigation
+frames were visually inspected. A final test-only refinement scopes saved ratio
+and comparison explanations to checkout (rather than whichever operation appears
+first). Focused journey 19 then passed (16.2 seconds), regenerated its three
+frames and asserted both selected stream identities. No application code changed
+after the final full 19-journey pass. All 12 default services are running, metric
+export is enabled, and the owned traffic generator was restored. No queues or
+volumes were cleared. Documentation source links resolve; Mermaid is documented
+without a claim of local rendering. General observability gaps and sequencing are recorded in
+[PRODUCT_GAPS.md](docs/PRODUCT_GAPS.md), with reviewed public research sources and
+explicit limits.
+
 ## Live peer and bounded-skew comparisons
 
 Implemented: two actual woven checkout instances with distinct resource identity

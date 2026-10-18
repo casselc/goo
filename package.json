@@ -5,7 +5,7 @@
     "test:journeys": "bash scripts/run_journeys.sh",
     "model:check": "quint typecheck verification/model/lifecycle.qnt",
     "model:test": "quint run verification/model/lifecycle.qnt --main=lifecycleInstance --backend=typescript --max-samples=100 --max-steps=30 --invariant=safety --seed=42 --verbosity=1",
-    "test:visualizations": "node --test tests/visualizations.test.js tests/operations.test.js tests/histograms.test.js tests/ratios.test.js tests/fleet.test.js"
+    "test:visualizations": "node --test tests/visualizations.test.js tests/operations.test.js tests/histograms.test.js tests/ratios.test.js tests/fleet.test.js tests/investigations.test.js"
   },
   "devDependencies": {
     "@playwright/test": "1.56.1",

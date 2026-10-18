@@ -19,6 +19,7 @@ func serveHTTP(args []string) error {
 	binding := fs.String("binding", "", "package binding YAML")
 	inventory := fs.String("inventory", "", "declared versioned inventory JSON")
 	listen := fs.String("listen", "127.0.0.1:8089", "listen address")
+	captureDir := fs.String("investigations-dir", "artifacts/investigations", "immutable capture directory")
 	scope := fs.String("scope-name", "", "explicit instrumentation library")
 	version := fs.String("scope-version", "", "explicit instrumentation version")
 	if err := fs.Parse(args); err != nil {
@@ -205,6 +206,7 @@ func serveHTTP(args []string) error {
 		}
 		json.NewEncoder(w).Encode(result)
 	})
-	server := &http.Server{Addr: *listen, Handler: mux, ReadHeaderTimeout: 5 * time.Second, WriteTimeout: 35 * time.Second}
+	registerInvestigations(mux, plans, client, *captureDir)
+	server := &http.Server{Addr: *listen, Handler: mux, ReadHeaderTimeout: 5 * time.Second, WriteTimeout: 90 * time.Second}
 	return server.ListenAndServe()
 }
