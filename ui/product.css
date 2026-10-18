@@ -1052,3 +1052,12 @@ td details {
 #measureScope:empty {display:none}
 .inventory-table td:last-child button {margin:3px}
 @media(max-width:600px){.measurement-steps{grid-template-columns:1fr;gap:8px}.measurement-steps li{padding:10px 12px}#measurementDefinitionSearch{min-width:0;width:100%}}
+
+.investigation-brief {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:18px 0}
+.investigation-brief textarea {width:100%;min-height:110px;resize:vertical}
+.active-investigation {display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 20px;background:var(--accent-dark);border-bottom:1px solid var(--border);overflow-wrap:anywhere}
+.active-investigation p {margin:4px 0 0;max-width:75ch;white-space:pre-wrap;font-size:12px;max-height:5em;overflow:auto}
+.active-investigation button {flex-shrink:0}
+#documentCards .evidence-note {overflow-wrap:anywhere;border-left:2px solid var(--accent);padding-left:12px}
+#captureDraftInvestigation {width:100%}
+@media(max-width:700px){.investigation-brief{grid-template-columns:1fr}.active-investigation{align-items:stretch;flex-direction:column;padding:12px;gap:8px}}

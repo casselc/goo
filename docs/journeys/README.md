@@ -736,3 +736,18 @@ three-stage flow that fits the mobile viewport.
 - [Question to evidence](screenshots/40b-question-to-evidence.png)
 - [Mobile measurement flow](screenshots/40c-mobile-measurement-flow.png)
 - Executable: `journeys/coherence.spec.js`.
+
+### 41 · A cross-service, cross-signal investigation handoff
+
+An engineer starts with a question before evidence exists. They gather checkout
+and report spans, report logs and an independent OTel job counter. Capture-dialog
+destinations attach evidence to the current draft or an exact saved revision.
+The handoff preserves findings, uncertainty, time/population scope and reusable
+metric identity. It reopens without telemetry reads; fresh metric execution creates
+new evidence and a child investigation while the earlier handoff remains unchanged.
+
+- [Question, findings and evidence](screenshots/41a-cross-signal-investigation.png)
+- [Fresh reuse with preserved citations](screenshots/41b-reuse-with-preserved-evidence.png)
+- [Mobile investigation handoff](screenshots/41c-mobile-investigation-handoff.png)
+- Executable: `journeys/investigation-workspace.spec.js`; optional draft exploration:
+  `GOO_INVESTIGATION_BOMBADIL=1`.

@@ -232,3 +232,11 @@ evaluation ledger against `model/metric_discovery.{qnt,yaml}` and rejects mutate
 service, definition and evidence-basis ledgers. Storyboard 39 supplies the ledger;
 `GOO_METRIC_DISCOVERY_BOMBADIL=1` also exercises discovery/scope-invalidation UI
 invariants without evaluating or capturing measurements.
+
+Investigation workspace: storyboard 41 supplies `GOO_INVESTIGATION_LEDGER` for
+`TestQuintInvestigationWorkspaceLedger`. The quint-go model validates question-first
+creation, exact span/log/metric citations, preserved parent/root lineage, fresh
+reuse of the same definition and source-free reopening. Six mutated ledgers must
+be rejected. Hegel's existing context state/swarm now mutates and forks the complete
+question/finding/open-question brief and checks stored history. The new Bombadil
+specification edits/reverts the brief while checking exact evidence references.

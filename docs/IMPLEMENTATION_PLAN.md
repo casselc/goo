@@ -350,3 +350,13 @@ selection criteria. This pass connects service scope to explicit metric discover
 places measurement revisions in Definitions, adds local library search, exposes
 canonical YAML and distinct time scopes, and cancels abandoned discovery reads
 on navigation/mode changes. Storyboard 40 exercises the connected flow.
+
+### Implemented: question-first investigation handoffs
+
+Investigations now retain a question, current finding, open questions and ordered
+exact evidence references. Explore capture destinations append to an active draft
+or create a child of an explicitly selected saved revision. Stored receipt-only
+metadata names evidence scope and metric definition identity without a telemetry
+read. Existing dirty drafts and old receipts remain intact. Storyboard 41 follows
+two application services, logs and an independent native counter through handoff
+and fresh definition reuse. Production shared editing/authorization remains future.

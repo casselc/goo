@@ -857,3 +857,14 @@ ledgers/negative controls. All 32 frontend checks passed. The new image
 five pre-existing stale pending entries were preserved. The owned traffic generator
 was restored after both wrappers. Details and diagnosed harness failures are in
 VALIDATION.md. The product brief is docs/PRODUCT_ESSENCE.md.
+
+## Question-first investigations (2026-10-18)
+
+The existing cloud toolchains/lab were reused; no setup configuration changed.
+The final offline image `d13fcbdbce4a` passed four browser journeys with all four
+optional Bombadil campaigns and live Quint checks enabled. Root Go tests,
+affected race tests, vet, 32 frontend checks and expanded Hegel state/swarm checks
+passed. Storyboard 41's real application/OTel workflow also verifies fresh reuse,
+exact handoffs and dirty-draft preservation. All evidence is linked from
+VALIDATION.md. Owned traffic was restored; existing telemetry volumes and the
+five stale pending entries remain intact.

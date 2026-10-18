@@ -204,3 +204,13 @@ schemas retain separate editors/catalog sections. Discovery still uses an explic
 two-minute service window; measurement lookback/fixed bounds are separate. Full
 workspace-session persistence, a unified cross-family authoring schema and
 production multi-user collaboration remain future work.
+
+## Investigation workspace boundaries
+
+Question-first briefs and direct capture destinations now exist. A selected saved
+revision receives an immutable child; current drafts require an explicit save.
+There is still no mutable latest head, automatic branch merge, multi-user presence
+or production authorization. Capture and document publication are separate, so
+attachment failure retains a saved capture for retry. Drafts are page-local until
+saved. Capture-card scope reads validate the stored capture and return only receipt
+metadata; local disk integrity checks still read its bounded stored evidence.

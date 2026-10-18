@@ -131,3 +131,41 @@ controls. The opt-in Bombadil actor types, applies, reorders and reverts local
 unsaved drafts; it never publishes notes, writes deployments or queries telemetry.
 These are bounded verification results, not universal scheduling or collaboration
 proofs. See [validation](../VALIDATION.md).
+
+## Question-first investigation workspace
+
+An investigation can now start with a title and question before evidence exists.
+Its brief keeps **Question**, **Current finding** and **Open questions** together;
+these are authored interpretations, not computed health claims. The active
+investigation's title/question remain visible when navigating into Explore.
+Return to investigation restores the current in-page draft without executing a
+query. Drafts still require explicit saving to survive a reload.
+
+The capture dialog offers **Capture only**, **Current investigation draft**, and
+paged saved investigation revisions. Choosing the current draft appends an exact
+capture reference; the investigation must then be saved explicitly. Choosing a
+saved revision appends the reference in a new immutable child revision, preserving
+its question, finding, open questions, cards and parent. The picker identifies
+exact revisions; it does not infer a mutable latest head. An unrelated dirty draft
+is retained. If attachment fails, the capture remains saved and can be added again.
+Capture and document publication are separate operations, not a transaction.
+
+Capture cards display fixed environment/time scope and capture time. Native
+measurements show their source services, selectors and exact definition revision;
+record captures show their predicate population. An ad hoc question does not gain
+an invented package identity. Metadata uses `GET /api/captures/{id}/receipt`, which
+validates the stored capture and returns its receipt/definition revision without
+returning its record bank or querying telemetry. Full stored evidence opens through
+the existing capture tools. Refresh and fresh-definition execution remain explicit
+reads and cannot change an earlier citation.
+
+`question`, `finding` and `openQuestions` are optional fields on document inputs,
+limited to 4,000 UTF-8 bytes each. A revision requires a question or at least one
+card, with at most 32 cards; the shared 128 KiB document bound remains. Empty fields
+are omitted from canonical JSON, preserving old version-1 document hashes. New
+question-only writes normalize omitted cards to an empty array. Earlier revisions
+remain readable and branchable.
+
+Storyboard 41 follows real checkout/report spans, report logs and an independent
+OTel counter through capture, investigation handoff and fresh reuse. The same
+workflow supports arbitrary bounded record and measurement questions.

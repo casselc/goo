@@ -1,0 +1,17 @@
+spec: investigation_workspace.qnt
+module: investigation_workspace
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  begin:
+    expect: 'coherent == {{.obs.coherent}}'
+  spans:
+    expect: 'coherent == {{.obs.coherent}}'
+  logs:
+    expect: 'coherent == {{.obs.coherent}}'
+  metrics:
+    expect: 'coherent == {{.obs.coherent}}'
+  reuse:
+    expect: 'coherent == {{.obs.coherent}}'
+  reopen:
+    expect: 'coherent == {{.obs.coherent}}'

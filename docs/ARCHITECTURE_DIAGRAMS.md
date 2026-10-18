@@ -893,3 +893,24 @@ The product centers definitions, evidence and explanations. Traces, logs, native
 metric streams and lifecycle subjects provide different inspection tools within
 that loop. UI navigation cancels abandoned measurement/discovery work; it does
 not run a source question or mutate a capture.
+
+### Question-first investigations and exact evidence attachments
+
+```mermaid
+flowchart LR
+  Question[Question / finding / open questions] --> Draft[Investigation draft]
+  Draft -->|explicit save| Revision[Immutable investigation revision]
+  Revision --> Explore[Explore records or measurements]
+  Explore -->|explicit source read| Capture[Immutable capture]
+  Capture -->|add to current draft| Draft
+  Capture -->|append to selected saved revision| Child[New child revision]
+  Revision -->|explicit parent| Child
+  Child -->|receipt metadata / no telemetry read| Handoff[Cross-signal handoff]
+  Capture -->|reuse definition / new live read| Fresh[New capture]
+  Fresh --> Child
+```
+
+Capture and document publication are separate; attachment failure retains the
+capture. A delayed attachment may publish its authorized child revision, but cannot
+replace an unrelated or changed draft. Old capture and investigation IDs remain
+exact; new evidence never silently advances an earlier citation.

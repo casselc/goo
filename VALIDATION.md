@@ -5,6 +5,42 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Question-first investigation workspace (2026-10-18)
+
+Investigations now retain a question, current finding, open questions and ordered
+cross-signal evidence. An active title/question context follows navigation.
+Explore's capture dialog can preserve only the capture, append to the current
+investigation draft, or publish a child of an explicitly selected saved revision.
+Unrelated dirty drafts remain intact; capture and attachment publication are
+separate, and attachment failure leaves the capture available. Cards show stored
+receipt scope and native definition identity through a receipt-only API, without
+returning record banks or querying telemetry.
+
+Passed: full root Go suite; affected workbench/HTTP race suites; root vet; all
+32 frontend checks; expanded Hegel context state/swarm (60 requested sequences,
+15 steps) covering complete brief mutation, fork and preserved history. Explicit
+storage tests preserve the pre-brief version-1 hash/JSON shape, normalize omitted
+question-only card lists and reject oversized summaries. The receipt HTTP test
+runs with its telemetry source closed and verifies that no source read occurs.
+
+Initial storyboard 41 passed (1.2 minutes) with real checkout/report spans, report
+logs and an independent ordinary OTel counter. Its dedicated quint-go ledger
+passed and rejected six mutated ledgers. Final deployed image `d13fcbdbce4a`:
+all four browser journeys passed, with no skips, including captures 32, context/
+notes 36, investigation workspace 41 and measurements 38. All four enabled
+Bombadil campaigns and the associated live Quint/negative-control checks passed.
+The final new journey additionally creates a saved branch while retaining an
+unrelated dirty question draft, with no telemetry read. Fresh metric definition
+reuse adds a capture/child revision while the prior capture and handoff reopen
+unchanged. Desktop/mobile containment and screenshots cover the connected flow.
+
+Artifacts: `artifacts/investigation-{core-go,core-node,race,vet,hegel}.log`,
+`artifacts/investigation-workspace-journey.log`,
+`artifacts/investigation-final-journeys.log`, and
+`artifacts/investigation-workspace/3d3506c8/`. The diagrams, contract, planning docs,
+README and affected storyboards were updated. No telemetry volumes were reset;
+the five pre-existing stale pending entries were retained and traffic restored.
+
 ## Product essence and connected investigation flow (2026-10-18)
 
 [Product brief](docs/PRODUCT_ESSENCE.md): definitions describe meaning, captures

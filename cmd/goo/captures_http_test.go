@@ -64,6 +64,16 @@ func TestCaptureHTTPServerCustodyAndSourceFreePaging(t *testing.T) {
 	// New handler/store instance simulates process restart; source is now unavailable.
 	mux = http.NewServeMux()
 	registerCaptures(mux, source.Client(), dir)
+	metadata := call("GET", "/captures/"+first.Receipt.ID+"/receipt", "")
+	var brief struct {
+		Receipt exploration.CaptureReceipt `json:"receipt"`
+	}
+	if metadata.Code != 200 || json.Unmarshal(metadata.Body.Bytes(), &brief) != nil || brief.Receipt.ID != first.Receipt.ID || strings.Contains(metadata.Body.String(), `"rows"`) {
+		t.Fatal("invalid receipt-only response", metadata.Body.String())
+	}
+	if reads.Load() != oldReads {
+		t.Fatal("metadata read queried telemetry")
+	}
 	for _, path := range []string{"/captures", "/captures/" + first.Receipt.ID, "/captures/" + first.Receipt.ID + "?cursor=" + first.NextCursor} {
 		w := call("GET", path, "")
 		if w.Code != 200 || w.Header().Get("Cache-Control") != "no-store" {

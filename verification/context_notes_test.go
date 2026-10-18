@@ -33,6 +33,12 @@ func (m *notesContextMachine) RuleNote(tc hegel.TestCase) {
 		m.draft.Cards = append(m.draft.Cards, workbench.Card{Kind: "note", Role: "finding", Text: fmt.Sprintf("%d 雪\n<literal>", hegel.Draw(tc, hegel.Integers(0, 100000)))})
 	}
 }
+func (m *notesContextMachine) RuleBrief(tc hegel.TestCase) {
+	n := hegel.Draw(tc, hegel.Integers(0, 1000))
+	m.draft.Question = fmt.Sprintf("Which outcome? %d", n)
+	m.draft.Finding = fmt.Sprintf("Observed evidence %d", n)
+	m.draft.OpenQuestions = fmt.Sprintf("Remaining uncertainty %d", n)
+}
 func (m *notesContextMachine) RuleOrder(tc hegel.TestCase) {
 	if len(m.draft.Cards) > 1 {
 		a := hegel.Draw(tc, hegel.Integers(0, len(m.draft.Cards)-1))
@@ -45,7 +51,7 @@ func (m *notesContextMachine) RuleSave(tc hegel.TestCase) {
 	if e != nil {
 		panic(e)
 	}
-	if d.Parent != m.parent || !reflect.DeepEqual(d.Cards, m.draft.Cards) {
+	if d.Parent != m.parent || !reflect.DeepEqual(d.DocumentInput, m.draft) {
 		panic("changed ordered draft")
 	}
 	m.revisions[d.ID] = *d
@@ -58,7 +64,8 @@ func (m *notesContextMachine) RuleFork(tc hegel.TestCase) {
 	}
 	id := m.ids[hegel.Draw(tc, hegel.Integers(0, len(m.ids)-1))]
 	d := m.revisions[id]
-	m.draft = workbench.DocumentInput{Title: d.Title, Cards: append([]workbench.Card(nil), d.Cards...)}
+	m.draft = d.DocumentInput
+	m.draft.Cards = append([]workbench.Card(nil), d.Cards...)
 	m.parent = id
 }
 func (m *notesContextMachine) RuleDeploy(tc hegel.TestCase) {

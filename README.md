@@ -11,6 +11,12 @@ criteria for keeping the workbench coherent.
 This repository currently runs as a local lab. Reservation, checkout and report
 services exercise general-purpose contracts.
 
+[Question-first investigations](docs/WORKBENCH_CONTEXT.md#question-first-investigation-workspace)
+bring the question, finding, open questions and cross-signal evidence together.
+Capture directly into an investigation draft or a new child of a saved revision;
+reopen the handoff without telemetry reads, or reuse its definition against fresh
+data while retaining the original evidence.
+
 The [investigation workspace](docs/PRODUCT_WORKSPACE.md) brings Explore, Services, Operations,
 Saved investigations and Definitions into one interface. Explore includes captured
 attribute distributions, pinned baseline comparisons and a trace/log inspector.

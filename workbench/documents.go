@@ -2,6 +2,7 @@ package workbench
 
 import (
 	"errors"
+	"strings"
 	"time"
 )
 
@@ -30,13 +31,16 @@ func (c Card) Validate() error {
 }
 
 type DocumentInput struct {
-	Title string `json:"title"`
-	Cards []Card `json:"cards"`
+	Title         string `json:"title"`
+	Question      string `json:"question,omitempty"`
+	Finding       string `json:"finding,omitempty"`
+	OpenQuestions string `json:"openQuestions,omitempty"`
+	Cards         []Card `json:"cards"`
 }
 
 func (d DocumentInput) Validate() error {
-	if !text(d.Title, 120, true, false) || len(d.Cards) < 1 || len(d.Cards) > 32 {
-		return errors.New("document requires title and 1..32 ordered cards")
+	if !text(d.Title, 120, true, false) || (len(d.Cards) < 1 && strings.TrimSpace(d.Question) == "") || len(d.Cards) > 32 || !text(d.Question, 4000, false, true) || !text(d.Finding, 4000, false, true) || !text(d.OpenQuestions, 4000, false, true) {
+		return errors.New("document requires title, a question or 1..32 ordered cards, and bounded investigation summaries")
 	}
 	for _, c := range d.Cards {
 		if e := c.Validate(); e != nil {
@@ -58,6 +62,9 @@ type Document struct {
 // Revisions deliberately branch from an explicit parent; there is no mutable
 // latest head and no silent last-write-wins update. References never requery a source.
 func (s Store) CreateDocument(in DocumentInput, parent string, checkCapture func(string) error) (*Document, error) {
+	if in.Cards == nil {
+		in.Cards = []Card{}
+	}
 	if e := in.Validate(); e != nil {
 		return nil, e
 	}
