@@ -123,3 +123,11 @@ scheduling, business durability or telemetry completeness. Resource/export-loss/
 late-capture generation and long-lived independent actors remain unimplemented.
 See [testing contract](BOMBADIL_TESTING.md); existing curated journeys cover their
 separately documented retry, export-loss and late-evidence scenarios.
+
+Log discovery now includes literal message/service/severity controls, readable
+messages and independently scoped surrounding logs. Reported trace-ID groups and
+fixed full-population span-duration buckets are implemented. These do not supply
+root/trace latency, unique invocation counts, stable cursors, live tail or complete
+capture. Quick search adds visible AND filters rather than silently replacing
+existing predicates. Context highlights compare captured fields; identical duplicate
+logs have no unique event identity. See the discovery section of EXPLORATION_DESIGN.md.

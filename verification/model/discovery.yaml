@@ -1,0 +1,11 @@
+spec: discovery.qnt
+module: discovery
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  surround:
+    expect: 'bounded == {{.obs.bounded}} and reusable == {{.obs.reusable}}'
+  trace:
+    expect: 'bounded == {{.obs.bounded}} and reusable == {{.obs.reusable}}'
+  save:
+    expect: 'bounded == {{.obs.bounded}} and reusable == {{.obs.reusable}}'

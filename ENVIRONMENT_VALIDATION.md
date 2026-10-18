@@ -358,3 +358,102 @@ A final focused journey 29 passed on the rebuilt image (9.1 seconds), regenerati
 its four frames after documentation framing adjustments. Desktop attribute scopes,
 selected trace context and mobile layout were visually inspected. All 12 services
 are running after validation.
+
+## Log and trace discovery (2026-10-18)
+
+Implemented generic quick search and readable log messages/severity, a separate
+same-service surrounding-log inspector, trace-ID discovery over full matching span
+groups, fixed Go-defined duration buckets and field-guided package reuse. The
+same typed AST/compiler handles source queries, filters and saved configuration.
+Time context omits identity/search/package predicates and clips to the original
+environment/window. Rows clear during radius changes; late replies cannot reopen
+closed context or replace the original question. Duplicate identical logs cannot
+be uniquely identified by anchor highlighting.
+
+Passed: root Go race suite and vet, 19 Python tests, 19 Node helper checks, focused
+exploration/CLI Go tests and syntax/Compose checks. Go boundary tests include all
+bucket edges and max UInt64; real collector/ClickHouse assertions check all eight
+interval populations. Hegel context state/swarm passes 100 sequences of 30 steps,
+with 200 partition property samples. These are captured span distributions, not
+native histogram or trace-latency aggregation.
+
+The new browser journey passed in 22.3 seconds with its live-ledger Quint checks:
+literal message matching, 108 logs versus a 100-row context page, other-service/
+environment exclusion, exact-field anchor highlighting, long multiline/HTML-like
+text, close/focus isolation, trace discovery and reusable package preview/save/use.
+The Go references validate the browser's actual context/trace/package questions;
+negative controls reject changed context bounds, trace environment and grouping.
+The first test run had an incorrect expected save-status string; the second exposed
+qobs' empty-constant import syntax. Correcting the assertion and adding the model's
+INITIAL constant produced a passing run. No UI/backend data was mocked.
+
+A 30-second read-only Bombadil inspection run passed: 231 trace records, including
+34 signal changes, 40 queries, eight time-context opens, 15 trace opens and two span
+selections. It checked one context inspector at a time and explicit attribute counts,
+plus browser errors/rejections. Radius stale-read behavior is deterministically
+asserted in journey 30; this bounded random run did not select the radius action.
+Evidence lives under ignored `artifacts/bombadil/discovery-inspection` and
+`artifacts/discovery/`. This does not establish completeness or liveness guarantees.
+
+The updated live ledger from the default journey was independently rechecked with
+Quint, plus the existing exploration model and Hegel exploration state/swarm:
+all passed together in 12.9 seconds, including rejecting context/package negative
+controls. Permanent ledger queries are sufficient to reproduce these checks;
+final focused runs also retain conformance summaries beside their ledger.
+
+The complete default browser suite passed: 28 journeys in 4.9 minutes; the two
+explicit opt-in campaigns were skipped. Existing operation, native metric/fleet,
+immutable receipt, ad hoc authoring and cross-service context regressions passed.
+Traffic was restored and the five pre-existing stale pending stream entries/data
+volumes were retained. README, query/workspace contracts, known issues, architecture
+flow 17, plan and storyboard were synchronized. Markdown targets/fences and diff
+checks passed; Mermaid rendering is not claimed.
+
+Visual review identified a narrow-screen grid issue that placed log messages and
+second context actions in the label column. Children now align in the value column,
+with new geometry assertions. Re-anchoring additionally retains initial search
+scope/basis separately from the new anchor's own source question/basis. Focused
+journeys cover these refinements after the full-suite run.
+
+Following the request for Bombadil coverage of the new workflows, added a dedicated
+actor with a required discovery prefix plus free exploration. The first fixture
+campaign passed in 1.4 minutes: all 19 prefix states were reached, with duration
+populations beyond the record-page limit (113 versus 100). The actor exercises
+query/search, reported-trace opening/paging, duration groups, package draft/
+preview/reuse, log search, context paging/radius/re-anchoring. Nine data invariants
+cover population sums, interval order, bounded context/anchor provenance, AND
+search, preserved definitions, independent previews, invalidated controls, context
+exclusivity/selection and parseable evidence, plus readiness/prefix deadlines and
+browser errors/rejections. A fresh package draft now clears old preview/plan/handoff.
+The generic inspection actor's trace action was also corrected to explicitly choose
+Expand trace rather than the first row action, which can now be Surrounding logs.
+Earlier trace-labelled action counts describe requested actions, not proof that
+every one opened a trace. The new actor records actual questions and reached states.
+
+The final dedicated discovery campaign passed (1.5 minutes) on the rebuilt image.
+It retained 737 Bombadil trace records, reached all 19 prefix states and observed
+113 grouped span records against a 100-row page. Free exploration included 29 quick
+searches, 16 duration breakdowns, 12 trace breakdowns, 38 draft actions, 18 builds,
+nine previews, four uses, six edits and three validations. Prefix actions also
+covered trace/context paging, radius and unlinked-log re-anchoring. Both the
+Playwright ledger and a second ledger built from Bombadil's actual captured
+questions passed qobs/quint-go conformance plus all three negative controls.
+Evidence: `artifacts/discovery/discovery-0db3caecbc/`, including coverage JSON,
+raw trace/screenshots and `bombadil-model/` summaries. The actor performs no saves.
+
+Focused authoring/UI journeys 24, 25 and 29 passed together in 20.5 seconds after
+the final runtime changes. The explicit generated success campaign also passed
+(1.4 minutes), retaining its usual generated schedule/live replay evidence.
+
+The explicit retry/rejection/stalled fault campaign passed (1.4 minutes), with nine
+checkpoints, five evidence inspections and five fault-ledger model validations.
+Together with the default suite and explicit success campaign, all 30 distinct
+journeys passed in this round. All 91 documentation frames were regenerated,
+including the six discovery frames; architecture/process sources and storyboards
+were updated with them. The owned traffic generator was restored, and all 12
+services are running with existing data and stale pending entries retained.
+
+Final focused journey 30 passed again (20.8 seconds), including the second-draft
+four-to-thirteen-span preview isolation assertion, empty-OR quick-search AND
+semantics, unlinked-log re-anchoring, mobile geometry and its Quint negative
+controls. Its six frames were regenerated once more from the final running image.

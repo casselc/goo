@@ -1,7 +1,7 @@
 /* Structured record inspection. Telemetry is always rendered as text, never HTML. */
 (function(global){
  const maps=new Set(['ResourceAttributes','Attributes','SpanAttributes','LogAttributes']);
- const columns={ServiceName:'service',SpanName:'name',TraceId:'trace_id',SpanId:'span_id',ScopeName:'scope',ScopeVersion:'scope_version',StatusCode:'status',SpanKind:'kind',duration_ns:'duration_ns',Body:'body',SeverityText:'severity'};
+ const columns={ServiceName:'service',SpanName:'name',TraceId:'trace_id',SpanId:'span_id',ScopeName:'scope',ScopeVersion:'scope_version',StatusCode:'status',SpanKind:'kind',duration_ns:'duration_ns',duration_bucket:'duration_bucket',Body:'body',SeverityText:'severity'};
  const node=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n};
  function type(value){return value===null?'null':Array.isArray(value)?'array':typeof value}
  function text(value){return typeof value==='string'?value:JSON.stringify(value)}

@@ -151,3 +151,18 @@ round trips and immutable prior revisions. Quint observes draft/save/edit/reopen
 apply and rejects both a mutated stored definition and time/page leakage into
 reusable semantics. Generated Go templates also pass the real annotation scanner
 in root HTTP tests. These checks do not certify source coverage or source equivalence.
+
+Discovery verification: `go test -run 'TestHegel(DiscoveryContextStateSwarm|DurationBucketPartition)$' -count=1 .`
+checks clipped same-service context, page-independent counts and a complete disjoint
+span-duration partition. With the real lab, run `GOO_DISCOVERY_QUINT=1 npx playwright test journeys/discovery.spec.js`
+from the repository root. The browser ledger feeds `TestQuintDiscoveryLiveLedger`
+through `model/discovery.yaml`; Go references validate the actual captured questions,
+and negative controls alter context bounds, trace environment and saved grouping.
+The model validates this bounded protocol, not ingestion completeness or causality.
+
+`npm run test:discovery-campaign` from the root additionally runs the dedicated
+Bombadil discovery actor for 60 seconds over the same isolated fixture. A required
+prefix reaches trace/context paging, quick search, duration groups and package
+preview/reuse before random actions. The driver requires full duration counts
+beyond the record-page limit and passes the actor's own captured questions through
+the discovery model, with negative controls and artifacts beside the browser trace.

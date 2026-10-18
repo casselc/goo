@@ -15,6 +15,12 @@ copying and secondary raw evidence. Scoped filter chips and searchable facets
 carry investigations from a captured value into a fixed-window breakdown. See
 [the inspection storyboard](docs/journeys/README.md#29-structured-inspection-and-filter-composition).
 
+Log discovery adds literal message/service/severity search and a separately scoped
+surrounding-log inspector. Trace discovery opens reported trace IDs from full
+matching span groups and shows fixed, full-population span-duration buckets.
+Suggested breakdowns feed directly into reusable packages. See
+[the discovery storyboard](docs/journeys/README.md#30-from-log-search-to-reusable-span-distributions).
+
 [Ad hoc telemetry packages](docs/TELEMETRY_PACKAGES.md) turn an Explore question
 into validated YAML, a live preview and an immutable reusable definition. They work
 over existing OTel telemetry from any language without an application manifest;

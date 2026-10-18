@@ -548,3 +548,32 @@ breakdown actions against the span question. Trace scope and limitations remain
 expandable. [Journey 29](journeys/README.md#29-structured-inspection-and-filter-composition)
 executes this path against collector-ingested records, including keyboard/mobile
 checks; the diagram does not claim snapshot consistency or complete capture.
+
+## 17. Discover logs and spans, then reuse the question
+
+```mermaid
+flowchart LR
+    Search[Quick search or attribute filters] --> AST[Bounded Go query AST]
+    AST --> Adapter[ClickHouse adapter]
+    Adapter --> Logs[Readable captured log records]
+    Logs --> Exact[Exact reported trace ID]
+    Logs --> Time[Same-service time context]
+    Time --> Clip[Clip radius to original environment and window]
+    Clip --> Separate[Separate fresh query and evidence basis]
+    Adapter --> Groups[Full matching span groups]
+    Groups --> IDs[Reported trace IDs and matching span counts]
+    IDs --> Exact
+    Exact --> Trace[Fresh cross-service trace read in fixed bounds]
+    Groups --> Buckets[Fixed Go-defined span-duration buckets]
+    Buckets --> Package[Preview and save reusable question]
+    Package --> AST
+    Observed[Browser ledger and Go reference] --> Quint[Quint conformance and negative controls]
+    Properties[Hegel context state swarm and partition properties] --> Observed
+```
+
+Implemented locally. Time context omits original identity/search/package predicates
+and does not assert causality. Duration groups count captured spans, including
+retries/duplicates; they are not root latency or native histogram streams. Suggested
+breakdowns and saved packages use the same logical field/compiler contract.
+[Journey 30](journeys/README.md#30-from-log-search-to-reusable-span-distributions)
+provides executable frames and live-ledger validation.

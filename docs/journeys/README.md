@@ -494,3 +494,43 @@ ALL/ANY populations, missing-value controls, duration-only ordering, selected-sp
 state, Escape focus restoration and mobile layout. Pure helper tests additionally
 cover nested value types and literal searches. Counts always describe captured
 records; the fixture does not establish production completeness or sampling guarantees.
+
+## 30. From log search to reusable span distributions
+
+`journeys/discovery.spec.js` publishes a labelled OTLP documentation fixture to the
+real collector: 13 spans with exact bucket-boundary durations, 108 same-service
+logs, plus other-service/environment controls. This proves the captured query/UI
+path, not SDK instrumentation or production completeness.
+
+| Frame | User journey |
+| --- | --- |
+| [Literal log search](screenshots/30a-literal-log-search.png) | Find exact service/severity and a literal message containing regex punctuation; inspect readable messages and visible filter chips. |
+| [Surrounding logs](screenshots/30b-independent-surrounding-logs.png) | Read nearby same-service logs with different messages/severities/trace IDs in a separate bounded time context. |
+| [Matching traces](screenshots/30c-matching-traces-and-expanded-evidence.png) | Four matching error spans lead to seven captured spans across services; original filters do not silently constrain expanded context. |
+| [Duration distribution](screenshots/30d-full-population-span-duration-buckets.png) | Inspect complete matching-span counts in fixed half-open duration intervals. |
+| [Reusable package](screenshots/30e-reusable-discovery-package.png) | Build, preview, save and reuse the selected filters/duration grouping without a source manifest. |
+| [Mobile discovery](screenshots/30f-mobile-log-discovery.png) | Search logs with narrow-screen controls and no horizontal page overflow. |
+
+Assertions cover literal search, severity, full context count versus its 100-row
+page, next-page count stability, service/environment exclusion, exact anchor fields,
+escaped multiline/long messages, focus return and late-read isolation. An independent
+fixture expectation checks all eight duration intervals, including exact boundaries.
+The package retains filters/grouping across fresh reuse; it saves configuration,
+not evidence. Time context is not causal correlation, and matching-span counts
+are not complete trace/root-latency measures.
+
+With `GOO_DISCOVERY_QUINT=1`, the journey writes a permanent ignored ledger under
+`artifacts/discovery/` and checks its actual context, trace and package questions
+against Go references through qobs/quint-go. Three negative controls reject widened
+context, a different trace environment and lost package grouping. Hegel state/swarm
+separately explores context anchors/radii/pages; partition properties and Go unit
+checks cover half-open buckets and UInt64 limits.
+
+`npm run test:discovery-campaign` also adds 100 worker spans in this isolated
+fixture after the deterministic assertions, then runs the dedicated Bombadil
+actor. It must reach every prefix stage and observe 113 matching duration-group
+members while the row page displays 100. Its actions include quick search from
+an empty OR composer, trace/context paging, radius changes, re-anchoring, duration
+breakdowns and package draft/edit/validate/preview/use. Data invariants and a
+second actor-derived Quint ledger complement the deterministic journey. The actor
+publishes no definitions; its fixture driver retains the earlier saved package.

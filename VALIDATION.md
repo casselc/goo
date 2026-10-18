@@ -741,3 +741,14 @@ The first application-flow run exposed inherited trace sampling that discarded d
 The handoff adds repository guidance, a continuation task, architecture, two proposed RFCs, an implementation plan, known issues, source references, and a portable snapshot of the original design Page. No application behavior changed during this packaging step.
 
 The twelve unit/API/embedded ClickHouse tests and Compose configuration validation were rerun successfully. Local Markdown links and fenced code blocks were checked. The archive excludes caches, environments, downloaded runtime binaries, and database volumes, and includes SHA256SUMS for its source and documentation files. Full container startup and browser rendering remain unverified as noted above.
+
+## Log and trace discovery
+
+Implemented readable literal log search, independently scoped surrounding logs,
+matching reported trace-ID groups, fixed full-population span-duration buckets and
+available-field suggestions feeding reusable packages. See the
+[discovery contract](docs/EXPLORATION_DESIGN.md#log-discovery-time-context-and-span-duration-buckets),
+[journey 30](docs/journeys/README.md#30-from-log-search-to-reusable-span-distributions)
+and the current detailed results in [ENVIRONMENT_VALIDATION.md](ENVIRONMENT_VALIDATION.md).
+This is a captured-record investigation workflow; it does not establish complete
+traces, root latency, live tail or production readiness.

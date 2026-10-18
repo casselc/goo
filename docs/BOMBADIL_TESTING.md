@@ -324,3 +324,42 @@ workload. This complements the deterministic [journey 29](journeys/README.md#29-
 clipboard, filter population, linked-log action and mobile assertions. It is not
 a liveness or capture-completeness guarantee; an empty source limits reachable
 inspection actions. Use `CHROME=/usr/bin/chromium` where browser discovery needs it.
+
+The inspection actor now alternates span/log signals, opens same-service time
+context, changes its radius and closes it. A new invariant requires at most one
+of the trace and surrounding-log inspectors to be visible. These remain read-only
+source queries and local actions. Deterministic journey 30 additionally holds a
+radius read in flight to assert that old rows disappear before the new scope is
+shown, and holds a closed read to verify stale-response isolation.
+
+## Dedicated discovery actions and invariants
+
+`npm run test:discovery-campaign` runs journey 30 with both the dedicated
+[discovery actor](../verification/bombadil/discovery.ts) and live-ledger Quint
+validation. The driver publishes an isolated, labelled OTLP fixture; the actor
+only queries and drafts/validates/previews/uses definitions, without saving,
+exporting or issuing workload. Its 50-second required prefix reaches the new
+workflows before free exploration; a 60-second run cannot silently pass without
+reaching them. The driver additionally requires a duration population of 113
+captured spans with only 100 record rows displayed.
+
+| Actions | Invariant |
+| --- | --- |
+| Quick search, including an initially empty OR composer | Explicit AND semantics retain every requested predicate. |
+| Matching trace groups, trace opening/paging/selection | At most one selected span and one visible context inspector. |
+| Duration breakdowns | Complete rendered group counts sum to the population, and bins follow the fixed disjoint interval order. |
+| Surrounding logs, paging, radius and unlinked-log re-anchoring | Exact same-service predicate; clipped original environment/window; separate anchor selection question/basis; at most 100 displayed rows. |
+| Create/build/edit/validate drafts | Captured filters/grouping survive; invalidated drafts disable preview/save/use. |
+| Preview and fresh use | Preview question matches its plan with a separate evidence basis; reuse preserves the definition while allowing a fresh window. |
+| All actions | Parseable evidence plus no uncaught exceptions or rejected promises. |
+
+The actor's captured context, trace, duration and package questions are assembled
+into a second ledger and validated through the Go reference/qobs/quint-go path.
+Negative controls reject changed context bounds, trace environment and grouping.
+This is optional model integration over actual Bombadil observations, alongside
+the Playwright ledger. Prefix coverage, raw trace/screenshots, ledgers and model
+summaries are retained together under `artifacts/discovery/<run>/`.
+
+Opening a fresh package draft clears the prior preview/plan/handoff before the
+new definition is built. The deterministic journey checks a four-span preview
+followed by a different thirteen-span draft; stale evidence cannot carry across.

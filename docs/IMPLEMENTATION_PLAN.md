@@ -216,3 +216,16 @@ and [journey 29](journeys/README.md#29-structured-inspection-and-filter-composit
 describe the implementation and tests. Cross-signal linked records do not silently
 change the active query. Future work may explicitly open a separate log question;
 automatic signal switching and a complete accessibility audit are not implemented.
+
+## Discovery over unfamiliar OTel data
+
+Implemented: literal message/service/severity search and readable log rows;
+independently scoped surrounding logs with bounded paging and stale-read guards;
+reported-trace discovery from full matching span groups; Go-defined fixed duration
+buckets; available-field suggestions leading to reusable package preview/save/use.
+Journey 30 exercises the real collector/ClickHouse path, including a source
+population larger than the record page. Hegel context state/swarm and bucket
+properties complement live-ledger Quint checks and rejecting negative controls.
+Next: structured service/operation inventory, explicit trace-level/root measures,
+persisted general investigation captures and stable paging. Live tail, statistical
+inference and production authorization remain separate work.

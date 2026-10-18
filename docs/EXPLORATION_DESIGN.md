@@ -164,3 +164,65 @@ General cohorts remain browser-held, separate from durable operation receipts.
 source manifests. They store selectors/grain/views, separate from preview bounds,
 pages and data bases. Applying one preserves imported nested predicates/two-field
 groups and allows local refinements without mutating the saved definition.
+
+## Log discovery, time context and span-duration buckets
+
+Implemented: message/service/severity search adds visible AND leaves to the same
+query AST. Body matching is literal and case-sensitive; severity is an exact
+captured string. Colour is only a display aid, not a replacement severity mapping.
+Messages preserve whitespace and render as text; long messages expand on demand.
+The attribute composer remains available behind a disclosure after quick search.
+
+**Surrounding logs** is a separate, cancellable read around a selected log. It
+retains environment, restricts to the same captured service name, and intersects
+±30 seconds / ±1 minute / ±5 minutes with the original half-open question window.
+The anchor's millisecond is included in full; its exact nanosecond value remains
+in evidence. Original trace/span IDs, package, body, severity and attribute filters
+are omitted explicitly. This is time context, not exact correlation or causality.
+A fresh question/basis/count is retained separately; paging does not redefine its
+denominator. Identical captured records cannot be uniquely distinguished, so the
+anchor highlight says its fields match. It does not invent an event identity.
+The Go reference `SurroundingQuestion` validates the live browser's composed AST;
+Hegel state/swarm checks scope, clipping and count/page separation.
+
+Trace discovery groups the full matching captured span population by `trace_id`.
+Valid reported IDs can open the existing independent cross-service trace read in
+original fixed bounds. Counts describe matching spans; roots, end-to-end latency
+and complete trace capture are not inferred. Invalid/zero IDs remain visible but
+cannot open a trace. The existing 1,000-group budget fails rather than truncates.
+
+The spans-only logical field `column:duration_bucket` is a fixed string-valued
+partition over UInt64 `duration_ns`. The Go reference and ClickHouse adapter use:
+
+| Bucket (ms) | Lower bound inclusive (ns) | Upper bound exclusive (ns) |
+| --- | ---: | ---: |
+| `[0,1) ms` | 0 | 1000000 |
+| `[1,5) ms` | 1000000 | 5000000 |
+| `[5,10) ms` | 5000000 | 10000000 |
+| `[10,50) ms` | 10000000 | 50000000 |
+| `[50,100) ms` | 50000000 | 100000000 |
+| `[100,500) ms` | 100000000 | 500000000 |
+| `[500,1000) ms` | 500000000 | 1000000000 |
+| `[1000,+inf) ms` | 1000000000 | unbounded within UInt64 |
+
+Grouping and equality filters use this same field. Bars use complete captured
+groups, never the displayed row page. The UI orders buckets by their intervals.
+Minimum duration input converts decimal milliseconds to exact nanoseconds with
+at most six fractional places, without floating-point multiplication. These are
+span-record distributions, not native histogram metrics or trace latency.
+
+Suggested breakdowns use available logical fields (services, status/severity,
+trace IDs, duration buckets and observed exception type). They are user-selected
+investigation leads, not inferred business semantics. Create package retains the
+captured filters/grouping; preview and fresh reuse share the Go compiler. No
+new wizard language, automatic annotations or Databricks lowering is implied.
+See [journey 30](journeys/README.md#30-from-log-search-to-reusable-span-distributions).
+
+The duration bucket bounds are part of this logical field's fixed contract.
+Changing them requires a new/versioned contract rather than silently reinterpreting
+saved definitions. Captured evidence bases include the actual compiled plan.
+
+Re-anchoring on a nearby record retains the initial search window/basis while
+recording the anchor's own selection question and evidence basis separately.
+A neighbor need not satisfy the original message/severity filters, so its provenance
+must not be attributed to that initial filtered capture.

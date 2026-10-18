@@ -26,6 +26,9 @@ func (c *compiler) param(value, typ string) string {
 func (c *compiler) field(f Field) (value, present string) {
 	if f.Kind == "column" {
 		mapping := map[string]string{"service": "ServiceName", "trace_id": "TraceId", "span_id": "SpanId", "scope": "ScopeName", "scope_version": "ScopeVersion", "name": "SpanName", "kind": "SpanKind", "status": "StatusCode", "duration_ns": "Duration", "body": "Body", "severity": "SeverityText"}
+		if f.Key == "duration_bucket" {
+			return durationBucketSQL(), "1"
+		}
 		return mapping[f.Key], "1"
 	}
 	column := "ResourceAttributes"
@@ -85,7 +88,7 @@ func Compile(q Query) (Plan, error) {
 	where := "Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND " + c.predicate(q.Where)
 	base := " FROM " + table + " WHERE " + where
 	common := "toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, " + attrs + " AS Attributes"
-	selectRows := common + ", SpanName, SpanKind, ParentSpanId, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans"
+	selectRows := common + ", SpanName, SpanKind, ParentSpanId, " + durationBucketSQL() + " AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans"
 	order := "Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration"
 	if q.Signal == "logs" {
 		selectRows = common + ", Body, SeverityText"

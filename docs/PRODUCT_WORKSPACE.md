@@ -114,3 +114,29 @@ The trace inspector summarizes scope before its expandable evidence limitations;
 selected spans are visible and keyboard Escape/Close returns focus to the opener.
 On narrow screens, record cells and attribute rows stack while retaining labels.
 See [journey 29](journeys/README.md#29-structured-inspection-and-filter-composition).
+
+## Finding unfamiliar telemetry
+
+Explore's quick search adds visible filters for service, literal log message and
+exact severity, or minimum span duration and error status. It then offers relevant
+breakdowns from available fields. The attribute composer collapses after quick
+search while its filter chips and grouping remain visible. It can be reopened to
+add arbitrary retained attributes. Search fields add AND predicates; changing an
+input does not silently replace existing chips.
+
+Log rows use severity badges and readable, expandable message text. Surrounding
+logs opens its own inspector, with same-service time context clipped to the
+original question. Scope/radius, separate evidence and paging are visible. It
+never presents nearby logs as trace-linked evidence. Close/Escape returns focus;
+late reads cannot reopen a closed inspector or overwrite the original results.
+
+Find matching traces opens reported IDs from complete matching-span groups.
+Span latency distribution uses Go-defined fixed duration buckets over that same
+population. Selecting either suggestion captures a new breakdown; Create package
+then previews, saves and reuses the same filters and grouping. See the
+[discovery contract](EXPLORATION_DESIGN.md#log-discovery-time-context-and-span-duration-buckets)
+and [storyboard](journeys/README.md#30-from-log-search-to-reusable-span-distributions).
+
+The [dedicated Bombadil discovery campaign](BOMBADIL_TESTING.md#dedicated-discovery-actions-and-invariants)
+checks the new exploration/package workflows with a required prefix, data
+invariants and optional validation of actual actor questions through Quint.

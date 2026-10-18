@@ -53,7 +53,7 @@ class Handler(BaseHTTPRequestHandler):
         elif self.path == '/product.css':
             self.send_response(200); self.send_header('Content-Type', 'text/css; charset=utf-8'); self.end_headers()
             self.wfile.write((Path(__file__).parent / 'ui/product.css').read_bytes())
-        elif self.path in ('/workspace.js', '/attributes.js', '/visualizations.js', '/workflows.js', '/operations.js', '/histograms.js', '/ratios.js', '/fleet.js', '/investigations.js', '/exploration.js', '/distributions.js', '/telemetry-packages.js'):
+        elif self.path in ('/workspace.js', '/attributes.js', '/discovery.js', '/visualizations.js', '/workflows.js', '/operations.js', '/histograms.js', '/ratios.js', '/fleet.js', '/investigations.js', '/exploration.js', '/distributions.js', '/telemetry-packages.js'):
             self.send_response(200); self.send_header('Content-Type', 'application/javascript; charset=utf-8'); self.end_headers()
             self.wfile.write((Path(__file__).parent / 'ui' / self.path[1:]).read_bytes())
         else: self.send_error(404)

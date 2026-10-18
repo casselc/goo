@@ -32,12 +32,12 @@ type Query struct {
 	Offset      int        `json:"offset" yaml:"offset"`
 }
 
-var columns = map[string]string{"service": "string", "trace_id": "string", "span_id": "string", "scope": "string", "scope_version": "string", "name": "string", "kind": "string", "status": "string", "duration_ns": "uint64", "body": "string", "severity": "string"}
+var columns = map[string]string{"service": "string", "trace_id": "string", "span_id": "string", "scope": "string", "scope_version": "string", "name": "string", "kind": "string", "status": "string", "duration_ns": "uint64", "duration_bucket": "string", "body": "string", "severity": "string"}
 
 func (f Field) Type(signal string) (string, error) {
 	if f.Kind == "column" {
 		typ, ok := columns[f.Key]
-		if !ok || signal == "logs" && (f.Key == "name" || f.Key == "kind" || f.Key == "status" || f.Key == "duration_ns") || signal == "spans" && (f.Key == "body" || f.Key == "severity") {
+		if !ok || signal == "logs" && (f.Key == "name" || f.Key == "kind" || f.Key == "status" || f.Key == "duration_ns" || f.Key == "duration_bucket") || signal == "spans" && (f.Key == "body" || f.Key == "severity") {
 			return "", fmt.Errorf("unsupported %s field %s", signal, f.Key)
 		}
 		return typ, nil
