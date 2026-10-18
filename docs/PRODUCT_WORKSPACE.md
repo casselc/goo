@@ -189,3 +189,23 @@ cards and scrollable group tables serve live/saved views and package previews.
 The [shared examples and scoped recipes](INVESTIGATION_RECIPES.md) now use the
 normal Explore/package/capture/notes workflow. The original reservation lab is
 explicitly collapsed; opening Examples does not execute its legacy query.
+
+## Coherence around the product loop
+
+The [product essence](PRODUCT_ESSENCE.md) organizes the workspace around asking,
+investigating, preserving evidence and reusing definitions. Definitions now lists
+the same measurement revisions used in Explore, with local search and source-free
+preview. Record-package search similarly filters saved revisions without reading
+telemetry. Service inventory offers a metric-discovery handoff that carries the
+selected environment/service and waits for an explicit read.
+
+Measurements separates definition selection, source-free preview and evidence
+execution. Validated authoring is displayed as canonical YAML. Package lookback,
+fixed measurement bounds and the separate two-minute discovery window are named
+explicitly. Discovery cards and the measurement stages share the existing visual
+language. Canceling, changing scope, navigating away or switching to captured
+records prevents an abandoned discovery response from publishing a catalog.
+
+Storyboard 40 documents these paths, including a delayed actual source response
+and a mobile layout. This pass does not merge the versioned record/measurement
+schemas or change their evidence semantics.

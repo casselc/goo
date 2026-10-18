@@ -342,3 +342,11 @@ scope version/schema are preserved, and stream summaries expose dimensions.
 Storyboard 39 covers a separate Python SDK producer without a goo manifest.
 Future work: dimension-value selection, user-selected discovery horizons, service
 picker integration, and explicit freshness recommendations.
+
+### Product coherence: definitions, evidence and explanations
+
+The [product essence](PRODUCT_ESSENCE.md) defines the common loop and feature
+selection criteria. This pass connects service scope to explicit metric discovery,
+places measurement revisions in Definitions, adds local library search, exposes
+canonical YAML and distinct time scopes, and cancels abandoned discovery reads
+on navigation/mode changes. Storyboard 40 exercises the connected flow.

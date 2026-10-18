@@ -846,3 +846,14 @@ Docker image/build cache were cleaned, preserving all running application data
 and telemetry volumes. Sandbox startup and build/test operations recovered;
 free space returned to approximately 14 GiB. The traffic wrapper retained all
 five pre-existing stale pending entries. No environment draft change was needed.
+
+## Coherence pass (2026-10-18)
+
+Existing tooling/lab reused; no environment configuration change required.
+Five affected browser journeys were verified across the initial run and corrected
+focused rerun, including three Bombadil campaigns and the existing live Quint
+ledgers/negative controls. All 32 frontend checks passed. The new image
+`11a6f58b5951` was built from the existing offline context; telemetry volumes and
+five pre-existing stale pending entries were preserved. The owned traffic generator
+was restored after both wrappers. Details and diagnosed harness failures are in
+VALIDATION.md. The product brief is docs/PRODUCT_ESSENCE.md.

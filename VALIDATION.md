@@ -5,6 +5,39 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Product essence and connected investigation flow (2026-10-18)
+
+[Product brief](docs/PRODUCT_ESSENCE.md): definitions describe meaning, captures
+preserve fixed evidence, and investigations explain it. The README now leads with
+this loop. Definitions exposes the same measurement revisions as Explore, with
+local search; saved record packages also have local search. Service inventory
+carries explicit service/environment into metric discovery without automatically
+reading telemetry. Measurement stages, canonical YAML, named time scopes and
+consistent cards make authoring/execution boundaries visible. Discovery supports
+explicit cancellation and suppresses publication after navigation or mode changes.
+
+Passed: 32 frontend checks and all five affected browser journeys across the
+initial run and focused rerun: coherence 40, inventory 31, measurements 38, metric
+discovery 39 and attribute/facet polish 29. The initial run had three passes and
+two harness failures: an inventory selector assumed one button per row, and
+Bombadil refused an existing output path. The selector now uses the intended
+Explore action's accessible name; discovery campaigns use unique output paths.
+The corrected inventory/discovery rerun passed both cases (1.7 minutes).
+Original failure artifacts are retained under `artifacts/coherence-initial-failures`.
+
+The new journey passed its delayed **actual source response** abandonment check,
+source-free definition preview, service handoff, canonical authoring and mobile
+containment. Measurement, inventory and discovery Quint ledgers/negative controls
+and all three enabled Bombadil campaigns passed. Discovery exploration includes
+abandon/retry and scope-change invariants. Twenty storyboard images were generated
+or refreshed, including three new frames for journey 40; desktop/mobile frames
+were inspected. No measurement kernel or source query semantics changed.
+
+Evidence: `artifacts/coherence-node.log`, `artifacts/coherence-journeys.log`,
+`artifacts/coherence-final-journeys.log`, and `artifacts/metric-discovery/`.
+The query/packages image is `11a6f58b5951`. Traffic was restored and the five
+pre-existing stale pending entries and telemetry volumes were retained.
+
 ## Ordinary OTel metric discovery (2026-10-18)
 
 Bounded service/environment discovery now proposes editable typed packages over

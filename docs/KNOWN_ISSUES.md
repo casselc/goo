@@ -195,3 +195,12 @@ complete instrument inventory. Dimension-value cardinality, exemplar navigation,
 exponential histograms, omitted metric units and missing resource-instance IDs
 remain unsupported by the package workflow. Empty optional scope version/schema
 are accepted as exact identities. See MEASUREMENT_PACKAGES.md.
+
+## Product coherence boundaries
+
+[PRODUCT_ESSENCE.md](PRODUCT_ESSENCE.md) is the organizing direction. Definitions
+now exposes searchable record and measurement package revisions, but the two
+schemas retain separate editors/catalog sections. Discovery still uses an explicit
+two-minute service window; measurement lookback/fixed bounds are separate. Full
+workspace-session persistence, a unified cross-family authoring schema and
+production multi-user collaboration remain future work.

@@ -1,0 +1,19 @@
+const {test,expect}=require('@playwright/test');
+const {execFileSync}=require('node:child_process');
+const base='http://127.0.0.1:8088';
+test('40 question evidence reuse: definitions, service handoff and abandoned reads',async({page,request})=>{
+ test.setTimeout(150000);const errors=[];page.on('pageerror',e=>errors.push(e.message));let reads=0;page.on('request',r=>{if(r.method()==='POST'&&['/api/metric-discovery','/api/measurements','/api/explore'].some(p=>r.url().endsWith(p)))reads++});
+ execFileSync('/workspace/.venvs/goo/bin/python',['scripts/independent_metrics.py']);await request.post('http://127.0.0.1:8081/reserve',{data:{scenario:'good'}});
+ await page.goto(base+'/#definitions');await expect(page.locator('#measurementDefinitions article')).not.toHaveCount(0);const before=reads;
+ const catalog=await (await request.get(base+'/api/measurement-packages')).json();const builtin=catalog.find(p=>p.builtin&&p.definition.name==='worker-utilization');await page.locator('#measurementDefinitionSearch').fill(builtin.revision);await expect(page.locator('#measurementDefinitions article')).toHaveCount(1);
+ await page.screenshot({path:'docs/journeys/screenshots/40a-shared-definitions.png',fullPage:true});
+ await page.locator('#measurementDefinitions button').click();await expect(page.locator('#measureStatus')).toContainText('Question validated');expect(reads).toBe(before);await expect(page.locator('#measureYAML')).toHaveValue(/^apiVersion:/);await expect(page.locator('.measurement-steps')).toBeVisible();
+ await page.locator('[data-workspace="services"]').click();await page.locator('#inventoryRun').click();await expect(page.locator('#inventoryRows')).toContainText('lab-grpc');const handoff=reads;await page.getByRole('button',{name:'Discover metrics for lab-grpc',exact:true}).first().click();await expect(page.locator('#metricService')).toHaveValue('lab-grpc');await expect(page.locator('#metricEnvironment')).toHaveValue('local');expect(reads).toBe(handoff);await expect(page.locator('#metricDiscoveryStatus')).toContainText('Discover explicitly');
+ await page.locator('#metricService').fill('independent-metrics');
+ // Delay a real server response to verify abandoned reads cannot publish a catalog.
+ let release;const gate=new Promise(r=>release=r);let reached;const fetched=new Promise(r=>reached=r);
+ await page.route('**/api/metric-discovery',async route=>{const response=await route.fetch();reached();await gate;try{await route.fulfill({response})}catch{}});
+ await page.locator('#metricDiscover').click();await fetched;await expect(page.locator('#metricDiscoveryCancel')).toBeVisible();await page.getByRole('tab',{name:'Captured records',exact:true}).click();release();await page.unroute('**/api/metric-discovery');await page.getByRole('tab',{name:'Measurements',exact:true}).click();await expect(page.locator('#metricInstruments')).toBeEmpty();await expect(page.locator('#metricDiscoveryStatus')).toContainText('canceled by navigation');await expect(page.locator('#metricDiscover')).toBeEnabled();
+ await page.locator('#metricDiscover').click();await expect(page.locator('#metricInstruments')).toContainText('jobs.completed');await page.getByRole('button',{name:'Build measurement package',exact:true}).click();await expect(page.locator('#measureStatus')).toContainText('Question validated');await expect(page.locator('#measureYAML')).toHaveValue(/^apiVersion:/);await page.locator('#measureRun').click();await expect(page.locator('#measureStatus')).toContainText('source records');await page.screenshot({path:'docs/journeys/screenshots/40b-question-to-evidence.png',fullPage:true});
+ await page.setViewportSize({width:390,height:844});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'docs/journeys/screenshots/40c-mobile-measurement-flow.png',fullPage:true});expect(errors).toEqual([]);
+});

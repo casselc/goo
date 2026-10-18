@@ -722,3 +722,17 @@ it, reopen the retained evidence and cite it in notes.
 - [Evaluate independent metric streams](screenshots/39b-discovered-measurement.png)
 - Executable: `journeys/metric-discovery.spec.js`; optional exploration invariants:
   `GOO_METRIC_DISCOVERY_BOMBADIL=1`.
+
+### 40 · One investigation loop
+
+An engineer finds a reusable measurement in Definitions, previews it without a
+source read, selects a service in inventory and carries its scope into metric
+discovery. They abandon a delayed actual discovery response by switching modes,
+confirm that it cannot publish stale results, then explicitly discover and run an
+ordinary OTel metric package. The authoring surface shows canonical YAML and a
+three-stage flow that fits the mobile viewport.
+
+- [Shared searchable definitions](screenshots/40a-shared-definitions.png)
+- [Question to evidence](screenshots/40b-question-to-evidence.png)
+- [Mobile measurement flow](screenshots/40c-mobile-measurement-flow.png)
+- Executable: `journeys/coherence.spec.js`.

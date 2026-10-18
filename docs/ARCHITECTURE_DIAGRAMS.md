@@ -874,3 +874,22 @@ flowchart LR
 
 Discovery reports observed metadata only; omitted scope version/schema remain
 empty exact identity values. It never computes measurements or creates evidence.
+
+### One product loop, shared evidence
+
+```mermaid
+flowchart LR
+  Services[Observed service] -->|environment + service / no read| Discovery[Instrument discovery]
+  Discovery -->|explicit bounded read| Draft[Reusable definition]
+  Library[Definitions catalog] -->|source-free preview| Draft
+  Draft -->|explicit fixed-window run| Evidence[Investigate evidence]
+  Evidence --> Capture[Immutable capture]
+  Capture --> Notes[Explain in investigation notes]
+  Draft -->|save revision| Library
+  Capture -->|fresh question / old evidence retained| Draft
+```
+
+The product centers definitions, evidence and explanations. Traces, logs, native
+metric streams and lifecycle subjects provide different inspection tools within
+that loop. UI navigation cancels abandoned measurement/discovery work; it does
+not run a source question or mutate a capture.

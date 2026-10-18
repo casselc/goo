@@ -1,9 +1,15 @@
 # goo — Grammar of Observability
 
-Goo is a general-purpose observability workbench over OpenTelemetry data, with
-inspectable definitions shared between code and interactive investigation. This
-repository currently runs as a local lab; reservation, checkout and report services
-are examples used to exercise its contracts.
+**Turn telemetry into shared definitions of system behavior, and investigate what
+happened with evidence you can inspect and preserve.**
+
+Ask a question → inspect its evidence → capture and explain it → reuse the
+definition. Start from instrumented code or unfamiliar OpenTelemetry data.
+[The product essence](docs/PRODUCT_ESSENCE.md) describes this common loop and the
+criteria for keeping the workbench coherent.
+
+This repository currently runs as a local lab. Reservation, checkout and report
+services exercise general-purpose contracts.
 
 The [investigation workspace](docs/PRODUCT_WORKSPACE.md) brings Explore, Services, Operations,
 Saved investigations and Definitions into one interface. Explore includes captured
