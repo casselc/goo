@@ -22,7 +22,10 @@ fixture verifies peer failure preserves selected-instance rates. Targeted live
 journey 16 passed with three generated frames. Dynamic membership, automatic
 alignment and live multi-replica aggregation remain unvalidated/unimplemented.
 The complete nested verification module also passed (70.8 seconds).
-Full browser regression refresh is recorded separately after completion.
+All 16 live browser journeys passed in one full run (2.8 minutes), refreshing
+49 documentation screenshots. Fleet coverage frames were visually inspected and
+updated documentation file links resolve. The default lab retains eleven services;
+no second replica or automatic alignment is claimed.
 
 ## Operation error ratios and guided contextual investigation
 

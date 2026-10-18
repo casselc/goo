@@ -65,3 +65,20 @@ collector/consumer restarting. Existing services were restored with Compose,
 without volume resets. Five pre-existing stale pending entries were retained by
 the journey wrapper. See VALIDATION.md for actual suite results and
 [ratio semantics](docs/OPERATION_ERROR_RATIOS.md) for supported behavior.
+
+
+## Declared fleet coverage and repository milestones
+
+The default checkout package now declares `woven-demo` and expected `woven-peer`.
+Only woven-demo is deployed by the default lab; missing-peer coverage is deliberate.
+The counter endpoint concurrently queries at most four explicitly bound instances,
+keeps selected-instance results when a peer fails, and returns `fleet` coverage.
+Refresh `ui/fleet.js`, checkout YAML and the Go executable when rebuilding the
+retained query/packages images. No new service, port or dependency was added.
+See [fleet semantics](docs/FLEET_COVERAGE.md) for fixed-window membership and
+exact-alignment limits. The complete verification module passed; the targeted live
+fleet journey generated three frames.
+
+The initially unborn goo checkout now has its first committed milestone on `work`.
+Older onboarding notes about leaving all imported files untracked are superseded.
+Commit validated milestones and report their hashes as required by AGENTS.md.
