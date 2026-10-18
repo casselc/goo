@@ -8,6 +8,14 @@ record grouping and independent trace/log expansion now extend beyond packages.
 This is still an investigation lab,
 not a replacement for HyperDX or Honeycomb.
 
+## Current architectural priority
+
+The [core primitives review](CORE_PRIMITIVES.md) identifies the shared contracts
+behind the feature gaps: scope/transforms, typed measures, capabilities, relations,
+evidence metadata and structured investigation links. Its ordered next slice takes
+precedence over the historical feature ordering below. The review is a proposal,
+not an implemented unified compiler or a new query language.
+
 ## Gaps and recommended order
 
 | Capability | Current Goo boundary | Next useful behavior |

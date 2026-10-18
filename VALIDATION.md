@@ -5,6 +5,14 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Core primitives review (2026-10-18)
+
+Reviewed the implemented question/package/capture, workflow/recipe/follow-up and
+investigation models. [The consolidation plan](docs/CORE_PRIMITIVES.md) records
+missing shared contracts, migration boundaries and next-slice acceptance criteria.
+Documentation only: changed-file local links and `git diff --check` passed; no
+runtime changes, new browser claims or application test reruns in this review.
+
 ## Contextual investigation follow-ups (2026-10-18)
 
 Evidence cards now propose source-free questions from verified captures, with

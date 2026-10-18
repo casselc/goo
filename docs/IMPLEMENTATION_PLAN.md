@@ -15,6 +15,14 @@ coverage contracts. Raw-source preparation/lowering to Databricks is still futur
 Historical milestones below retain their original scope; they are not a claim
 that these remaining integrations are complete.
 
+## Current consolidation priority
+
+The [core primitives review](CORE_PRIMITIVES.md) supersedes feature-by-feature
+ordering above: first unify resolved scope and checked question transforms across
+recipes/follow-ups, then typed measures and capability-aware planning. Preserve
+existing wire formats, immutable receipts and specialized metric/lifecycle kernels.
+This is proposed work; the review defines a bounded next slice and acceptance checks.
+
 ## Earlier plan and milestone history
 
 Use the [architecture/process diagrams](ARCHITECTURE_DIAGRAMS.md) to connect build,

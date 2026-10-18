@@ -6,7 +6,8 @@ happened with evidence you can inspect and preserve.**
 Ask a question → inspect its evidence → capture and explain it → reuse the
 definition. Start from instrumented code or unfamiliar OpenTelemetry data.
 [The product essence](docs/PRODUCT_ESSENCE.md) describes this common loop and the
-criteria for keeping the workbench coherent.
+criteria for keeping the workbench coherent. The [core primitives review](docs/CORE_PRIMITIVES.md)
+sets the next consolidation priorities.
 
 This repository currently runs as a local lab. Reservation, checkout and report
 services exercise general-purpose contracts.
