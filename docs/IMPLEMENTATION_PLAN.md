@@ -288,3 +288,17 @@ source-free pair reopening, real browser/mobile evidence, Hegel state/swarm,
 Quint ledger rejection controls and saved-only Bombadil measure exploration.
 Next: deployment markers and ordered investigation notes, alongside broader typed
 measures/native metrics. Statistical/causal attribution remains unimplemented.
+
+
+## Deployment context and ordered investigation notes
+
+Implemented locally: immutable authored deployment receipts with separate event
+and custody times; explicit fresh context alongside fixed-time charts; ordered
+plain-text narrative cards referencing exact capture/marker IDs; edit/reorder,
+immutable revision forests, parent/deep-link navigation and retained dirty drafts.
+Concurrent saves preserve branches; no mutable latest head or last-write-wins
+update is introduced. [Contract](WORKBENCH_CONTEXT.md), flow 23 and journey 36
+separate narrative, deployment context and captured telemetry evidence.
+Next: scoped investigation recipes and explicit capture-successor comparison in
+narrative workflows. Authenticated shared editing, CI provenance, marker correction
+policies and retention/indexing remain separate work.

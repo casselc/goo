@@ -117,3 +117,5 @@ Opt-in [core measures and time charts](CORE_WORKBENCH.md) are retained in new Ex
 captures and stay fixed across pages. Older captures without these optional fields
 remain reopenable; adding a measure is a new live question, not a mutation of old
 evidence. Summary/chart component counts retain independent-read disagreement.
+
+[Investigation notes](WORKBENCH_CONTEXT.md) can now cite an exact general capture or comparison ID. Notes preserve their own ordered revision history; they neither refresh nor rewrite cited evidence. Deployment context in a saved Explore view is an explicit fresh local read, with marker receipts separately pinnable into notes.

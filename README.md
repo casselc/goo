@@ -286,3 +286,4 @@ Saved operation evidence can now be reopened and refreshed as immutable revision
 
 [Duration breakdowns](docs/GROUPED_MEASURES.md) rank full-population latency by service or attribute and retain it with saved investigations.
 [Error and latency comparisons](docs/ERROR_COMPARISONS.md) compare fixed windows, follow changed groups into traces/logs and save both populations.
+[Deployment context and investigation notes](docs/WORKBENCH_CONTEXT.md) preserve event/custody times, ordered hypotheses and exact references to saved evidence.

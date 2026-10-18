@@ -183,3 +183,5 @@ cards and scrollable group tables serve live/saved views and package previews.
 [Contract](GROUPED_MEASURES.md) and journey 34 define the implemented boundary.
 
 [Error and latency comparisons](ERROR_COMPARISONS.md) add status accounting, prior-window comparisons, exact change ranking, current-population drilldown and explicit immutable pair captures. Journey 35 and architecture flow 22 document the workflow.
+
+[Deployment context and notes](WORKBENCH_CONTEXT.md) now live within Explore and Saved investigations. Deployment receipts are explicitly loaded local context with separate event/custody times; ordered note revisions cite exact capture/marker IDs. Saving preserves parents and branches. Draft editing/navigation guards and source-free reference opening keep interpretation separate from telemetry execution.

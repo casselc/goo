@@ -645,3 +645,23 @@ measure changes with immutable evidence and exact known-result invariants.
 | [35c](screenshots/35c-saved-population-comparison.png) | Reopen the server-reread pair with links to both record captures. |
 | [35d](screenshots/35d-mobile-comparison.png) | Inspect the same comparison on a narrow screen. |
 | [35e](screenshots/35e-changed-route-to-trace-and-logs.png) | Follow a changed route to explicit trace and log context. |
+
+
+## 36. Deployment context and ordered notes
+
+`journeys/context-notes.spec.js` generates a real report in the Go sample, finds
+its OTel trace through independent ClickHouse evidence, and opens a fixed Explore
+question. The user records a manual deployment claim, pins it with frozen evidence,
+edits/reorders hypotheses, saves immutable successor/branch revisions, retains an
+unapplied draft and opens exact stored evidence without telemetry execution.
+The deployment marker is authored context; the test does not deploy a new sample
+version. Quint checks actual observations with six rejecting controls.
+`GOO_CONTEXT_BOMBADIL=1` explores local draft operations without publishing them.
+
+| Frame | User journey |
+| --- | --- |
+| [36a](screenshots/36a-deployment-context-on-captured-time.png) | Read separate event/custody times alongside the captured time chart. |
+| [36b](screenshots/36b-ordered-hypothesis-and-frozen-references.png) | Preserve ordered hypotheses with exact capture and deployment references. |
+| [36c](screenshots/36c-narrative-revision-and-preserved-parent.png) | Save findings as a new narrative revision with an exact parent. |
+| [36d](screenshots/36d-follow-frozen-evidence-without-rerunning.png) | Open a cited capture without rerunning telemetry. |
+| [36e](screenshots/36e-mobile-investigation-notes.png) | Continue the same ordered investigation on a narrow screen. |

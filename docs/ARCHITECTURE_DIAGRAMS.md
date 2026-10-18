@@ -733,3 +733,34 @@ sequenceDiagram
 [Contract](ERROR_COMPARISONS.md) and journey 35 distinguish captured-span error
 fractions from application SLIs. Publication is sequential, not an atomic
 multi-object transaction; failed pairs can leave valid child captures.
+
+
+## 23. Deployment context, notes and frozen evidence
+
+```mermaid
+flowchart LR
+    APP[Running application] --> OTEL[OTel collector]
+    OTEL --> CH[ClickHouse telemetry]
+    UI[Explore fixed question] --> CORE[Go source adapter]
+    CORE --> CH
+    CORE --> CAP[Immutable general capture]
+    HUMAN[Authored deployment claim] --> MARK[Go local deployment store]
+    MARK --> TIMES[Event time plus server custody time]
+    UI -->|explicit context read| CONTEXT[Window-scoped local markers]
+    MARK --> CONTEXT
+    CAP -->|exact capture ID| NOTES[Ordered narrative draft]
+    CONTEXT -->|exact marker ID| NOTES
+    NOTES --> SAVE[Immutable document revision]
+    SAVE -->|explicit parent| CHILD[Successor revision]
+    SAVE -->|another explicit parent save| BRANCH[Preserved branch]
+    CHILD -->|open exact reference| CAP
+    CHILD -->|open exact reference| MARK
+    CAP -->|explicit live expansion only| CORE
+```
+
+[Contract](WORKBENCH_CONTEXT.md): marker context never changes captured aggregates
+or proves causality. Document/capture/deployment histories are distinct. Opening a
+narrative or its stored reference does not execute telemetry; live expansion is
+explicit. This slice has a local immutable revision forest, not shared editing or
+automatic CI provenance. Journey 36 executes the authored-context workflow over
+real sample-app telemetry and generates its storyboard frames.

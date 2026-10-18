@@ -680,3 +680,68 @@ A fresh CGO-disabled Go build matched the staged runtime binary byte for byte;
 all UI files matched the staged runtime assets. All 12 services were running after
 the wrapper restored traffic. Changed-doc relative links and Markdown fences were
 checked; rendered Mermaid diagrams were not separately browser-validated.
+
+
+## Deployment context and ordered investigation notes — 2026-10-18
+
+Added local Go workbench storage/routes and UI modules without new services,
+ports or dependencies. All three CLI-building Dockerfiles now include the
+`workbench` package. The existing host-staged offline image path preserves CA/proxy
+configuration. Initial image `a5c89ff38465` is in `artifacts/context-build.log`;
+UI iteration used explicit copies into the owned query container. Reviewed image
+`8b0b37f85790` (`artifacts/context-reviewed-build.log`) restaged those assets and is
+the basis of the broad regression. Only query/packages were recreated; telemetry
+volumes and pre-existing Redis entries were retained.
+
+Native evidence: `artifacts/context-go.log` (root race/vet), `context-python.log`
+(19 tests), `context-node.log` (26 checks), `context-hegel-reviewed.log` (60 Hegel
+sequences of 15 state/swarm steps, 0.38 s) and `context-correlation-replay.log`
+(strengthened six-control Quint ledger replay, 19.97 s). The original verification
+attempt collided with an existing `contextMachine` type; renaming the new model
+fixed the build. `artifacts/context-journey.log` records that initial verifier
+failure after successful UI steps; the captured ledger replay passed afterward.
+
+The first complete new-feature campaign (`artifacts/context-campaign.log`) passed
+journey 36 in about one minute. Its actual sample-app/notes ledger is
+`artifacts/context-notes/8901ddb9/`, with five rejecting Quint controls (11.71 s)
+and 383 Bombadil records through all seven draft-prefix stages. The broad run's
+new-feature ledger is `artifacts/context-notes/9df68764/`: journey 36 passed in
+51.8 s with five rejecting controls (9.76 s), 361 Bombadil records and all seven
+stages. A subsequent replay added explicit scoped report-ready correlation and
+the sixth rejecting incorrect-subject control. Markers in this journey are authored
+claims; the test generates reports but does not deploy a new service version.
+
+The broad log is `artifacts/context-full-journeys.log`, with generated workload,
+fault and cross-app Quint campaigns enabled. Keyboard focus and delayed-navigation
+guards found during review are checked separately on the final staged build.
+
+
+The broad run passed **all 36 journeys in 12.6 minutes, with no skips**. All 120
+storyboard images (119 PNG / one JPEG) were regenerated after the reviewed build.
+The final keyboard/navigation image `8d8c93e8f37f`
+(`artifacts/context-final-build.log`) passed capture continuity, notes and
+structured inspection together (`artifacts/context-final-journeys.log`, three
+passes in 2.0 minutes). Its notes ledger is
+`artifacts/context-notes/eb9730e6/`, with six rejecting Quint controls (13.16 s)
+and 406 Bombadil records through all seven stages. Assertions cover keyboard
+reorder/removal focus, exact cited-capture heading focus and a genuinely delayed
+stored-revision response after workspace navigation.
+
+Final visual inspection found a stale loading message left by the canceled read.
+The corrected reviewed image is `0b90e3545d60`
+(`artifacts/context-final-status-build.log`). The final journey passed in
+1.2 minutes (`artifacts/context-final-status-journey.log`), including the new
+status assertion. Its complete ledger/coverage is
+`artifacts/context-notes/07a93eea/`: six rejecting Quint controls (17.15 s),
+310 Bombadil records and all seven required stages. The final mobile frame was
+visually reviewed. Runtime UI assets and Python proxy matched the staged sources;
+a fresh Go build was compared against the staged executable. All 12 services were
+running after traffic restoration; the five stale pending entries and all volumes
+were retained.
+
+Before final staging, unused Docker builder cache was reclaimed without deleting
+volumes or running services (`artifacts/context-builder-prune.log`); the separate
+dangling-image prune reclaimed zero bytes. Changed-document relative links and
+Markdown fences were checked; Mermaid rendering was not separately browser-tested.
+Full networked multistage Dockerfile builds were not rerun; the three COPY updates
+were reviewed and the actual CLI was built/staged and exercised in the offline lab.

@@ -1,6 +1,6 @@
 # Collaborative investigations: research and proposed direction
 
-Research date: **2026-10-18**. This document proposes future work; it does not
+Research date: **2026-10-18**. Implementation update: local [ordered notes and deployment context](WORKBENCH_CONTEXT.md) now implement a bounded subset of slice 2 below; shared editing/presence remain proposals. This document proposes future work; it does not
 claim that goo currently has boards, team accounts or multiplayer editing.
 The implementation boundary is described in [Saved investigations](SAVED_INVESTIGATIONS.md)
 and [Product gaps](PRODUCT_GAPS.md). General captures and stable saved paging now implement the

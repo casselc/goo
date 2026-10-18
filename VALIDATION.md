@@ -5,6 +5,46 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Deployment context and ordered notes (2026-10-18)
+
+[Contract](docs/WORKBENCH_CONTEXT.md): authored deployment receipts preserve event
+and server custody times; explicit fresh local context accompanies fixed-time
+Explore charts without modifying telemetry receipts. Ordered plain-text narrative
+cards cite exact general-capture or deployment IDs. Saving creates immutable
+parent/root revision branches, preserving older evidence and interpretations.
+Dirty/unapplied drafts are retained; no mutable latest head or shared-author claim
+is introduced.
+
+Passed: root Go race suite/vet, 19 Python tests and 26 frontend checks. Native
+checks cover half-open environment scope, separate custody time, unsafe URLs,
+integrity, marker/card/catalog limits, reference validation, pagination and
+concurrent branch preservation. Hegel state/swarm passed 60 sequences of 15 steps
+(0.38 s reviewed), including Unicode note content, save/fork/order/history,
+deployment arrivals and scope/window changes.
+
+The initial browser flow completed its UI assertions but failed verification due
+to a test type name colliding with an existing discovery model. Renaming it fixed
+the verification build; the captured ledger replay then passed. Journey 36 next
+passed with observed evidence/narrative transitions and a seven-stage Bombadil draft prefix
+(383 records), including real report-app work, independent ClickHouse trace
+discovery, marker boundary/environment exclusions, literal-text safety, ordered
+reference editing, immutable revisions/branches, unapplied-draft retention,
+source-free capture opening and mobile containment. Quint originally used five
+rejecting controls; the strengthened adapter also checks the report's scoped
+ready event and rejects a sixth incorrect-subject control (19.97 s replay).
+Five new storyboard frames and architecture flow 23 document this slice.
+
+All 36 journeys passed in one broad run (12.6 minutes), with both generated
+campaigns and cross-app Quint enabled and no skips. All 120 storyboard images
+(119 PNG and one JPEG) were refreshed. Final keyboard/capture-navigation guards
+passed three focused journeys (2.0 minutes), including keyboard reorder/remove
+focus, cited-evidence focus and delayed-revision isolation. Screenshot inspection
+then caught an obsolete loading message after a canceled read; a final status
+fix passed journey 36 again on the reviewed image (1.2 minutes), with six rejecting
+Quint controls (17.15 s) and 310 Bombadil records through all seven stages.
+The final narrow-screen frame was visually inspected. Evidence and image hashes
+are in [the environment record](ENVIRONMENT_VALIDATION.md).
+
 ## Error and latency comparisons (2026-10-18)
 
 [Contract](docs/ERROR_COMPARISONS.md): exhaustive captured span-status categories,

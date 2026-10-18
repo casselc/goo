@@ -1,0 +1,15 @@
+spec: context_notes.qnt
+module: context_notes
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  observe:
+    expect: 'coherent == {{.obs.coherent}}'
+  draft:
+    expect: 'coherent == {{.obs.coherent}}'
+  revise:
+    expect: 'coherent == {{.obs.coherent}}'
+  branch:
+    expect: 'coherent == {{.obs.coherent}}'
+  reopen:
+    expect: 'coherent == {{.obs.coherent}}'

@@ -1004,3 +1004,20 @@ td details {
 
 #packagePreviewResult{overflow-x:auto;}
 .distribution-label:disabled {opacity:1;color:var(--ink);}
+
+.document-cards,.deployment-items { padding:0;list-style:none;display:grid;gap:14px; }
+.document-card,.deployment-card { padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--surface);min-width:0; }
+.document-card .section-heading { gap:10px;flex-wrap:wrap; }
+.document-card button,.deployment-card button { margin-top:8px; }
+.note-text { white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65; }
+.reference-id { overflow-wrap:anywhere;font-size:12px; }
+.note-composer { border-top:1px solid var(--border);padding-top:16px; }
+.note-composer textarea { min-height:110px; }
+#documentTitle,#documentText,#documentSearch { width:100%;box-sizing:border-box; }
+.deployment-context { margin-top:14px; }
+.deployment-lane { display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:3px;margin:16px 0; }
+.deployment-lane button { min-width:0;padding:4px 0;color:var(--accent);border-color:var(--accent);font-size:11px; }
+.deployment-lane span { text-align:center;color:var(--muted); }
+@media(max-width:600px){.document-card,.deployment-card{padding:12px}.document-card .controls{gap:6px}.document-card .controls button{font-size:11px;padding:7px}.note-composer .controls{align-items:stretch}}
+
+#captureSavedTitle {scroll-margin-top:90px}

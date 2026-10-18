@@ -101,3 +101,5 @@ wrong denominators, wrong p95 changes, window drift and modified saved evidence.
 The opt-in Bombadil actor changes saved comparison measures while checking
 accounting, display and immutable evidence. These are bounded observed checks,
 not a proof of telemetry completeness or universal browser scheduling.
+
+Saved comparison pairs can now be added to [ordered investigation notes](WORKBENCH_CONTEXT.md). The narrative cites the exact pair ID and retains its own revision history. Authored deployment receipts provide separate context rather than changing either comparison population.
