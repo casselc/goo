@@ -98,3 +98,9 @@ The bounded general exploration AST, reference predicates and ClickHouse compile
 
 Application-specific examples and general-purpose product boundaries are documented
 in [the workspace contract](PRODUCT_WORKSPACE.md#general-purpose-boundary).
+
+The shared Explore Go query now includes optional duration summaries/time buckets;
+`query_budget.go` bounds general execution/cancellation, while service discovery
+keeps event age and reported-parent uncertainty explicit. See
+[core workbench](CORE_WORKBENCH.md) and architecture flow 20 for code contracts
+and remaining production boundaries.

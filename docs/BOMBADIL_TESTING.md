@@ -393,3 +393,23 @@ lineage, restart persistence, late insertion and source-free browser reopen;
 its ledger always passes through Quint with four rejecting controls. Hegel
 state/swarm separately explores capture/refresh/arrival interactions. The actor
 publishes no captures and initiates no source refresh or workload.
+
+## Core measures and charts
+
+`verification/bombadil/core-basics.ts` explores an existing saved duration capture.
+It selects a time bar, visits the next stored record page, returns, and inspects
+records/distributions. Invariants retain full-population count/sum/p95, fixed
+half-open intervals, zero/no-data meaning and the same summary/time-series basis
+across pages. It does not save, refresh or generate application work. Run journey
+33 with `GOO_CORE_BOMBADIL=1`; its required prefix must complete and the trace is
+retained under `artifacts/core-basics/<environment>/`. Native HTTP tests establish
+query admission/cancellation, while the journey verifies the proxy cancellation
+endpoint; browser navigation alone cannot establish backend query termination.
+
+The companion `core-workflows.ts` actor performs the read-only live handoff, finds
+and runs a saved question, discovers signals/dependencies, then cancels a discovery
+read. Its invariants preserve the fixed handoff bounds, reused environment/measure
+settings, event-time bounds, unique reported edge versus ambiguous/unresolved
+parents, cleared cancelled evidence and coherent workspace navigation. Journey 33
+with the same opt-in runs both actors, retaining each trace and required prefix.
+No definitions/captures or application workloads are written by either actor.

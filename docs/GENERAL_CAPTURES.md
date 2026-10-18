@@ -110,3 +110,8 @@ personal saved questions and ordered investigation cards next, with explicit
 frozen-evidence versus live-question references. Shared editing, permissions,
 conflict handling, comments and ephemeral presence follow as separate capabilities;
 a freeform multiplayer canvas is not implemented by this milestone.
+
+Opt-in [core measures and time charts](CORE_WORKBENCH.md) are retained in new Explore
+captures and stay fixed across pages. Older captures without these optional fields
+remain reopenable; adding a measure is a new live question, not a mutation of old
+evidence. Summary/chart component counts retain independent-read disagreement.

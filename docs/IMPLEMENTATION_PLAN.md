@@ -245,10 +245,22 @@ saved evidence from fresh trace/log context and explicit live-question branches.
 limits and verification. Ordinary live offsets remain mutable; comparison baseline
 pairs and expanded context are not automatically archived.
 
-Next: personal saved questions and an accessible ordered investigation document
+Reusable questions now use saved telemetry-package revisions (see the core milestone below). Next: an accessible ordered investigation document
 that pins exact captures, hypotheses and external links. Then reviewed package
 promotion, authorized versioned sharing/conflict handling, annotations/history and
 optional presence or spatial canvas. Follow the evidence/definition/document
 separation in [the vendor research](COLLABORATIVE_INVESTIGATIONS_RESEARCH.md).
 Do not equate a query link, live graph, document revision or cursor with a source
 snapshot, nor add a separate expression language for collaboration.
+
+## Core workbench before collaboration
+
+Implemented: opt-in full-population exact span-duration summaries, bounded fixed
+record-count time charts (including per-interval durations), archived measures,
+versioned reusable questions through telemetry packages, observed span/log service
+activity/event age and reported parent-service links. General live query admission
+limits and cancellation are implemented locally; these are not production auth or
+distributed quotas. See [contract](CORE_WORKBENCH.md), architecture flow 20 and
+journey 33. Next: broader typed aggregates/native metrics, actual collector
+ingestion-health inputs and explicit identity/authorization design. Ordered cards
+and collaboration remain their own milestones.

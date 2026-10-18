@@ -975,3 +975,23 @@ td details {
 }
 
 .capture-catalog{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin:14px 0}.capture-card{background:var(--surface-raised);border:1px solid var(--border);border-radius:9px;padding:13px}.capture-card button{font-weight:600;text-align:left;overflow-wrap:anywhere;max-width:100%}.capture-card p{font-size:12px;margin:8px 0 0}.capture-catalog:empty{display:none}#generalCaptureWorkspace>details{margin:12px 0}#captureDialog{color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:12px;width:min(560px,90vw);padding:24px}#captureDialog::backdrop{background:#070b12b8}#captureDialog label{display:grid;gap:6px}#captureDialog input{width:100%}#generalCaptureWorkspace>.section-heading{align-items:flex-start;flex-wrap:wrap}#generalCaptureWorkspace>.section-heading .controls{flex-wrap:wrap}#captureGeneralReceipt{max-height:300px;overflow:auto}
+
+.span-summary-control {display:flex;align-items:center;gap:.6rem;grid-column:1/-1;flex-direction:row;}
+.span-summary-control input {width:auto;}
+.duration-summary {border:1px solid var(--border);border-radius:10px;padding:1rem;margin:1rem 0;}
+.duration-summary h3 {margin-top:0;}
+.duration-summary p {color:var(--muted);font-size:.85rem;line-height:1.5;}
+.duration-stat-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;}
+.duration-stat-grid dt {color:var(--muted);font-size:.85rem;}
+.duration-stat-grid dd {margin:.25rem 0 0;font-size:1.2rem;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;}
+@media(min-width:1000px){.duration-stat-grid{grid-template-columns:repeat(6,minmax(0,1fr));}}
+
+.time-chart {margin:1rem 0;padding:1rem;border:1px solid var(--border);border-radius:10px;}
+.time-chart h3 {margin-top:0;}
+.time-chart p {font-size:.85rem;color:var(--muted);line-height:1.5;}
+.time-bars {display:flex;height:100px;gap:2px;align-items:stretch;border-bottom:1px solid var(--border);}
+.time-bar {flex:1;min-width:0;padding:0;border:0;border-radius:2px 2px 0 0;position:relative;background:transparent;}
+.time-bar::after {content:'';position:absolute;bottom:0;left:0;right:0;min-height:2px;height:var(--bar-height);background:var(--accent);border-radius:2px 2px 0 0;}
+.time-bar:focus-visible {outline:2px solid var(--ink);outline-offset:1px;}
+
+.time-axis{display:flex;justify-content:space-between;gap:1rem;color:var(--muted);font-size:.75rem;overflow-wrap:anywhere;}

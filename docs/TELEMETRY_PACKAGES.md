@@ -130,3 +130,13 @@ pilot and is not claimed for these raw-record packages.
 
 See [journeys 24–25](journeys/README.md#24-build-a-package-over-existing-python-telemetry)
 and [architecture diagram 12](ARCHITECTURE_DIAGRAMS.md#12-ad-hoc-telemetry-packages-and-optional-instrumentation).
+
+## Reusable core measures
+
+Packages now retain optional `summary: span-duration` and `bucketMs` settings from
+Explore. The same package revisions appear in Explore's Reusable questions picker,
+where running resolves a fresh default-lookback window. Summary/chart semantics
+and supported widths are in [core basics](CORE_WORKBENCH.md). Definition validation
+rejects log-duration summaries and default lookbacks exceeding 240 chart intervals.
+Saving a package still stores configuration; new general captures separately retain
+the resulting measures and chart points.

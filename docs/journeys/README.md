@@ -592,3 +592,20 @@ page-forward/back, distribution and attribute-inspection prefix. It checks count
 retention, scope, basis, replay, read-only controls and unique component identities;
 it never saves, refreshes or emits workload. Evidence lives in ignored
 `artifacts/captures/<fixture environment>/` directories.
+
+## 33. Core measures, reuse and service discovery
+
+Executable: `journeys/core-basics.spec.js`. Real OTLP spans/logs verify 205 matching
+spans versus 100 records displayed, exact upper p95 195 ms, saved-page stability,
+empty intervals/no-data, reusable YAML question with a fresh window, log-only
+services, reported `api → worker`, ambiguous/unresolved parents, source cancellation
+request and mobile containment. Native cancellation tests separately establish Go
+context propagation/admission. Optional `GOO_CORE_BOMBADIL=1` runs saved-measure/time-bar and live reuse/discovery/cancellation actors without changing source data. Quint validates the live ledger
+and rejects five corrupted variants; Hegel exercises duration state/swarm.
+
+| Frame | User action / asserted meaning |
+| --- | --- |
+| [33a](screenshots/33a-full-population-measures-and-time.png) | Inspect full-population duration measures and fixed count intervals. |
+| [33b](screenshots/33b-reusable-question-fresh-window.png) | Run a saved package question in a fresh source window. |
+| [33c](screenshots/33c-service-signals-and-reported-dependencies.png) | Discover span/log services and parent-link diagnostics; event age is not ingestion lag. |
+| [33d](screenshots/33d-mobile-saved-measures.png) | Reopen archived measures/chart on a narrow screen with stable values. |

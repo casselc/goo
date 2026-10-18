@@ -1,0 +1,15 @@
+spec: core_basics.qnt
+module: core_basics
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  measure:
+    expect: 'coherent == {{.obs.coherent}}'
+  save:
+    expect: 'coherent == {{.obs.coherent}}'
+  reuse:
+    expect: 'coherent == {{.obs.coherent}}'
+  discover:
+    expect: 'coherent == {{.obs.coherent}}'
+  cancel:
+    expect: 'coherent == {{.obs.coherent}}'

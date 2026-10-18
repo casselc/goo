@@ -71,6 +71,42 @@ func registerExploration(mux *http.ServeMux, client *http.Client) {
 		}
 		json.NewEncoder(w).Encode(result)
 	})
+	mux.HandleFunc("POST /discovery", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Cache-Control", "no-store")
+		fail := func(code int, e error) {
+			w.WriteHeader(code)
+			json.NewEncoder(w).Encode(map[string]string{"error": e.Error()})
+		}
+		var q exploration.InventoryQuestion
+		d := json.NewDecoder(http.MaxBytesReader(w, r.Body, 16384))
+		d.DisallowUnknownFields()
+		if e := d.Decode(&q); e != nil {
+			fail(400, e)
+			return
+		}
+		if d.Decode(new(any)) != io.EOF {
+			fail(400, fmt.Errorf("expected one JSON object"))
+			return
+		}
+		if e := q.Query().Validate(); e != nil {
+			fail(400, e)
+			return
+		}
+		endpoint := os.Getenv("CLICKHOUSE_URL")
+		if endpoint == "" {
+			endpoint = "http://localhost:8123"
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
+		defer cancel()
+		source := exploration.Source{Endpoint: endpoint, User: os.Getenv("CLICKHOUSE_USER"), Password: os.Getenv("CLICKHOUSE_PASSWORD"), Client: client}
+		result, e := source.DiscoverServices(ctx, q)
+		if e != nil {
+			fail(502, e)
+			return
+		}
+		json.NewEncoder(w).Encode(result)
+	})
 
 	mux.HandleFunc("POST /explore", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")

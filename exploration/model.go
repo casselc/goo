@@ -22,6 +22,8 @@ type Predicate struct {
 	Value string      `json:"value,omitempty" yaml:"value,omitempty"`
 }
 type Query struct {
+	BucketMS    int64      `json:"bucketMs,omitempty" yaml:"bucketMs,omitempty"`
+	Summary     string     `json:"summary,omitempty" yaml:"summary,omitempty"`
 	Signal      string     `json:"signal" yaml:"signal"`
 	Environment string     `json:"environment" yaml:"environment"`
 	FromMS      int64      `json:"fromMs" yaml:"fromMs"`
@@ -48,6 +50,18 @@ func (f Field) Type(signal string) (string, error) {
 	return "string", nil
 }
 func (q Query) Validate() error {
+	if q.BucketMS != 0 {
+		if q.BucketMS != 1000 && q.BucketMS != 10000 && q.BucketMS != 60000 && q.BucketMS != 300000 {
+			return fmt.Errorf("bucketMs must be 1000, 10000, 60000 or 300000")
+		}
+		if q.ToMS > q.FromMS && (q.ToMS-q.FromMS+q.BucketMS-1)/q.BucketMS > 240 {
+			return fmt.Errorf("time chart exceeds 240 intervals; increase bucket width or narrow window")
+		}
+	}
+
+	if q.Summary != "" && (q.Summary != "span-duration" || q.Signal != "spans") {
+		return fmt.Errorf("summary must be span-duration over spans")
+	}
 	if q.Signal != "spans" && q.Signal != "logs" {
 		return fmt.Errorf("signal must be spans or logs")
 	}

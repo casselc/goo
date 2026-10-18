@@ -211,6 +211,6 @@ func serveHTTP(args []string) error {
 	registerExploration(mux, client)
 	registerCaptures(mux, client, *captureDir)
 	registerTelemetryPackages(mux, filepath.Join(*captureDir, "telemetry-packages"))
-	server := &http.Server{Addr: *listen, Handler: mux, ReadHeaderTimeout: 5 * time.Second, WriteTimeout: 90 * time.Second}
+	server := &http.Server{Addr: *listen, Handler: newQueryBudget(mux, 4), ReadHeaderTimeout: 5 * time.Second, WriteTimeout: 90 * time.Second}
 	return server.ListenAndServe()
 }

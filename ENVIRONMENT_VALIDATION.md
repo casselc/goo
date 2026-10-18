@@ -542,3 +542,52 @@ JPEG were refreshed after this round's initial runtime build. The final mobile
 saved-investigation frame was visually reviewed; local links and Markdown fences
 were checked (no rendered Mermaid validation is claimed). All 21 Node checks
 passed again. Demo traffic was restored after each wrapper invocation.
+
+## 2026-10-18 — core workbench basics
+
+Implemented and documented in [core workbench](docs/CORE_WORKBENCH.md): optional
+exact span measures/time charts, package-backed reusable questions, observed
+span/log service signals/parent relationships, local general-query admission and
+explicit cancellation. The final query/packages image is `b8a1e38a13af`; only those
+two services were recreated for this increment. Source reads use the verified
+ClickHouse 25.3 setting `cancel_http_readonly_queries_on_client_close=1`.
+
+Root Go race tests/vet passed after the final semantic changes; 19 Python tests
+and 22 Node checks passed. The first real journey passed in 18.9 s; focused
+capture/core/inventory checks passed in 2.3 minutes. Focused core evidence:
+`artifacts/core-basics/basics-5c2b58cc/`, including 187 Bombadil records, six
+required stages and actual-ledger Quint validation plus four negative controls.
+The final ledger checker adds a fifth negative control for reused environment
+scope. Hegel duration state/swarm passed 100 sequences, up to 30 steps (0.248 s).
+Local links and fences passed across 41 documents. The new desktop summary frame
+was visually reviewed; final narrow-screen and screenshot freshness checks follow
+the comprehensive run. No production identity or ingestion-health claim is made.
+
+The final core journey passed in 1.0 minute, including five rejecting Quint
+controls (10.72 s), reused-environment preservation, the actual Python cancellation
+endpoint and a 30-second Bombadil run. The actor recorded 195 trace records through
+all six prefix stages. Evidence: `artifacts/core-basics/basics-a594217a/`. The final
+mobile saved-measures frame was visually reviewed and passed document-width checks.
+
+The comprehensive final runtime run passed **all 33 journeys in 11.9 minutes**,
+including both generated success/fault campaigns, actual application/ClickHouse
+observations, native counter/histogram/fleet journeys and UI polish. No tests were
+skipped in this run. All 105 PNG storyboard frames and the generated-campaign
+JPEG (106 images total) were regenerated after the final image build.
+Forty-three documentation files passed local-link and fence checks.
+
+Native focused race checks passed again after adding cancellation-before-admission
+and summary-versus-time-read disagreement tests. Source disagreement remains
+explicit rather than converting an empty chart to zero duration. The final
+focused browser rerun adds a companion live workflow Bombadil actor and strengthens
+Quint controls to use plausible-but-wrong p95/sum values.
+
+The final expanded journey 33 passed again in 2.0 minutes (2.1-minute wrapper),
+including both read-only Bombadil actors and five strengthened Quint controls.
+Saved-measure actor: 216 records / 6 prefix stages.
+Live workflow actor: 181 records / 10 prefix stages, including
+fixed handoff, saved question reuse, service signal/parent-link diagnostics and
+cancellation. Final evidence: `artifacts/core-basics/basics-197824e0/`; live workflow
+trace/coverage lives in its `workflows/` directory. Neither actor saves resources
+or emits application workload. All 12 services were restored/running; the five
+pre-existing stale pending entries and telemetry volumes were retained.

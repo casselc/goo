@@ -179,3 +179,11 @@ receipts and all retained pages. Journey 32 always invokes
 `TestQuintCaptureLiveLedger` with actual receipt/page/successor/reopen data and four
 negative controls. `npm run test:captures-campaign` adds read-only Bombadil paging
 and inspection with data-aware invariants. See [the contract](../docs/GENERAL_CAPTURES.md).
+
+Core workbench checks: `go test . -run TestHegelDurationSummaryStateSwarm` runs
+100 state/swarm sequences up to 30 steps (append/reset/reverse, uint64 extremes,
+exact sums, permutation and record-page independence). Journey 33 invokes
+`TestQuintCoreBasicsLiveLedger` over actual measure/save/reuse/discover/cancel
+observations. Five rejecting controls corrupt p95, archived sum, ambiguous parent
+classification, cancellation observation and reused environment. This is observed-trace conformance;
+it does not establish source completeness or all browser/database scheduling.

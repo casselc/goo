@@ -144,3 +144,13 @@ and retention. Catalog listing is bounded and uses ID seek order, not a frozen
 catalog snapshot; quotas/indexing and team authorization remain future. Refresh
 requires the same fixed question and compiled plan; old receipts remain reopenable
 when that plan is unavailable. See [GENERAL_CAPTURES.md](GENERAL_CAPTURES.md).
+
+## Core workbench boundaries
+
+[Core basics](CORE_WORKBENCH.md) now provide full-population span-duration summaries,
+fixed record-count time charts, reusable package questions, span/log service event
+activity and reported parent links. Arbitrary numeric measures, general native
+metrics, ingestion lag/drop evidence and production authorization remain absent.
+Per-process query limits/cancellation cover general routes, not all legacy routes
+or cross-replica/per-tenant quotas. Service discovery is a separate live read and
+is not archived by saved inventory. Event age does not establish pipeline health.

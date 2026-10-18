@@ -640,3 +640,32 @@ multi-tenant custody guarantee. [Contract](GENERAL_CAPTURES.md),
 [journey 32](journeys/README.md#32-preserve-general-evidence-and-page-a-stored-record-bank)
 and [collaboration research](COLLABORATIVE_INVESTIGATIONS_RESEARCH.md) connect this
 foundation to proposed investigation cards and later shared editing.
+
+## 20. Core measures, reusable questions and execution controls
+
+```mermaid
+flowchart TD
+  UI[Explore: filters / measures / time width] --> AST[Shared Go Query AST]
+  PKG[Saved package revision] -->|fresh resolved window| AST
+  AST --> GATE[Four-request local admission gate]
+  CANCEL[Browser cancellation UUID] -->|proxy forwards cancel| CTX[Bounded Go context]
+  GATE --> CTX
+  CTX --> PLAN[Parameterized ClickHouse plan]
+  PLAN --> TOTAL[Full count + exact duration summary]
+  PLAN --> TIME[Separate full-population time aggregate]
+  PLAN --> ROWS[Bounded records and discovery]
+  TOTAL --> RESULT[Scoped result and evidence basis]
+  TIME --> RESULT
+  ROWS --> RESULT
+  RESULT --> SAVED[Immutable capture + stable stored pages]
+  RESULT --> UI
+  SERVICES[Services discovery] --> GATE
+  SERVICES --> SIGNAL[Span/log event activity]
+  SERVICES --> LINKS[Reported parent identities]
+  SIGNAL --> UNKNOWN[Event age: ingestion health unknown]
+  LINKS --> DIAGNOSTICS[Edges / ambiguous / unresolved / invalid]
+```
+
+Implemented local behavior and limits: [core contract](CORE_WORKBENCH.md). Read
+components are not a database snapshot. Cancellation is best effort, and local
+request IDs/admission do not provide authentication or distributed tenant quotas.

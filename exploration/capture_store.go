@@ -167,6 +167,18 @@ func validateCapture(c *SavedCapture) error {
 		return errors.New("invalid capture parent")
 	}
 	if c.Question.Kind == "explore" {
+		if c.Explore != nil {
+			if e := ValidateTimeSeries(*c.Question.Explore, c.Explore.TimeSeries); e != nil {
+				return e
+			}
+			if c.Question.Explore.Summary == "span-duration" {
+				if c.Explore.Duration == nil || c.Explore.Duration.Count != c.Explore.Count || c.Explore.Duration.Validate() != nil {
+					return errors.New("invalid saved duration summary")
+				}
+			} else if c.Explore.Duration != nil {
+				return errors.New("unexpected saved duration summary")
+			}
+		}
 		if c.Explore == nil || c.Inventory != nil || !reflect.DeepEqual(c.Explore.Question, *c.Question.Explore) || len(c.Explore.Rows) > CaptureRowLimit || !regexpRevision.MatchString(c.Explore.Basis) {
 			return errors.New("invalid saved exploration")
 		}

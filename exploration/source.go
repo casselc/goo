@@ -19,6 +19,8 @@ import (
 )
 
 type Result struct {
+	TimeSeries    []TimePoint       `json:"timeSeries,omitempty"`
+	Duration      *DurationSummary  `json:"duration,omitempty"`
 	Question      Query             `json:"question"`
 	CapturedAt    string            `json:"capturedAt"`
 	Basis         string            `json:"basis"`
@@ -60,6 +62,7 @@ func (s Source) read(ctx context.Context, sql string, params map[string]string) 
 	}
 	v := endpoint.Query()
 	v.Set("readonly", "1")
+	v.Set("cancel_http_readonly_queries_on_client_close", "1")
 	v.Set("max_execution_time", "10")
 	v.Set("max_result_rows", "1002")
 	v.Set("result_overflow_mode", "throw")
@@ -140,6 +143,12 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 		return nil, fmt.Errorf("invalid count")
 	}
 	r.Count = total.Count
+	if q.Summary == "span-duration" {
+		r.Duration, e = DecodeDurationSummary(count[0])
+		if e != nil {
+			return nil, e
+		}
+	}
 	r.State = "observed"
 	if r.Count == "0" {
 		r.State = "no_data"
@@ -261,6 +270,24 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 			continue
 		}
 		r.Fields = append(r.Fields, f)
+	}
+	if q.BucketMS != 0 {
+		series, err := s.read(ctx, plan.TimeSeries, plan.Parameters)
+		if err != nil {
+			return nil, err
+		}
+		r.TimeSeries, err = DecodeTimeSeries(q, series)
+		if err != nil {
+			return nil, err
+		}
+		sum := new(big.Int)
+		for _, point := range r.TimeSeries {
+			n, _ := new(big.Int).SetString(point.Count, 10)
+			sum.Add(sum, n)
+		}
+		if sum.Cmp(totalValue) != 0 {
+			r.State = "changed_between_reads"
+		}
 	}
 	if r.State == "changed_between_reads" {
 		r.Warnings = append(r.Warnings, "Source reads disagree; do not treat count, groups and page as one population snapshot. Rerun to capture new evidence.")

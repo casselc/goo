@@ -7,6 +7,7 @@ import (
 )
 
 type Plan struct {
+	TimeSeries string            `json:"timeSeries,omitempty"`
 	Rows       string            `json:"rows"`
 	Count      string            `json:"count"`
 	Groups     string            `json:"groups,omitempty"`
@@ -100,6 +101,15 @@ func compile(q Query, rowLimit int) (Plan, error) {
 		order = "Timestamp, TraceId, SpanId, ServiceName, Body, SeverityText, toString(ResourceAttributes), toString(LogAttributes)"
 	}
 	p := Plan{Rows: "SELECT " + selectRows + base + " ORDER BY " + order + fmt.Sprintf(" LIMIT %d OFFSET %d FORMAT JSONEachRow", rowLimit+1, q.Offset), Count: "SELECT toString(count()) AS count" + base + " FORMAT JSONEachRow"}
+	aggregate := "toString(count()) AS count"
+	if q.Summary == "span-duration" {
+		aggregate += ", toString(sum(toUInt128(Duration))) AS sum_ns, toString(min(Duration)) AS min_ns, toString(max(Duration)) AS max_ns, arrayMap(x -> toString(x), quantilesExactHigh(0.50, 0.95, 0.99)(Duration)) AS quantiles_ns"
+		p.Count = "SELECT " + aggregate + base + " FORMAT JSONEachRow"
+	}
+	if q.BucketMS != 0 {
+		c.params["bucketMs"] = strconv.FormatInt(q.BucketMS, 10)
+		p.TimeSeries = "SELECT toString({from:Int64} + intDiv(toUnixTimestamp64Milli(Timestamp) - {from:Int64}, {bucketMs:Int64}) * {bucketMs:Int64}) AS from_ms, " + aggregate + base + " GROUP BY from_ms ORDER BY toInt64(from_ms) LIMIT 241 FORMAT JSONEachRow"
+	}
 	if len(q.GroupBy) > 0 {
 		dims := []string{}
 		aliases := []string{}

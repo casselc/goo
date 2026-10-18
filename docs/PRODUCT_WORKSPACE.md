@@ -163,3 +163,15 @@ Open as live question branches into the ordinary editor. See
 The [collaboration research](COLLABORATIVE_INVESTIGATIONS_RESEARCH.md) proposes
 ordered investigation cards over these receipts before shared editing or a spatial
 canvas. These collaborative document capabilities are not implemented yet.
+
+## Core measures and question reuse
+
+Explore adds optional full-population span-duration measures and fixed record-count
+time charts. The same read-only saved view preserves these across record pages.
+Reusable questions select existing versioned package definitions and resolve a
+fresh window; no second question language/store is added. Services exposes a
+separate discovery disclosure for span/log activity and reported parent links.
+Main Explore/Services reads can be cancelled; scope edits invalidate measures and
+request upstream cancellation. [Core contract](CORE_WORKBENCH.md) describes exact
+arithmetic, interval/no-data meaning, independent source reads and local query
+budgets. Identity/access control and actual ingestion-health signals remain future.

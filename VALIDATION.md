@@ -5,6 +5,28 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Core workbench basics (2026-10-18)
+
+[Contract](docs/CORE_WORKBENCH.md): opt-in full-population span-duration summaries
+(count/exact sum/min/max/upper p50/p95/p99), fixed count-over-time intervals with
+per-interval durations, immutable capture retention, reusable versioned questions,
+span/log service activity and reported parent links. General query admission and
+explicit cancellation reach the Go context through the Python proxy. This remains
+a local lab; event age is not ingestion lag, and query IDs are not authorization.
+
+Passed: root Go race suite and vet, 19 Python tests, 22 frontend checks, Compose
+configuration, Hegel duration state/swarm (100 sequences up to 30 steps). Native
+HTTP tests exercise saturated admission, source-free local access, cancellation
+propagation and delayed-request tombstones. Source tests reject malformed/missing
+summary fields, invalid partitions/bounds and ambiguous dimensions; exact sums
+cover values beyond uint64 and JavaScript integer precision.
+
+The first deterministic journey 33 passed in 18.9 s. The strengthened focused
+capture/core/inventory run passed all three journeys in 2.3 minutes, including
+187 Bombadil records through all six core prefix stages and actual-ledger Quint
+validation (13.26 s) with four rejecting controls. Five controls now check plausible-but-wrong p95/sum, ambiguous-link classification, cancellation and reused environment scope. All 33 journeys passed in one comprehensive run (11.9 minutes), with both generated campaigns enabled and no skips. All 106 storyboard images were refreshed. The expanded final campaign passed again with both Bombadil actors (216 saved-measure records plus 181 live-workflow records), all required stages and five strengthened rejecting controls. Artifact paths are in [the environment record](ENVIRONMENT_VALIDATION.md). Architecture flow 20 and four
+new screenshot storyboards document this increment.
+
 ## General evidence captures and stable saved paging (2026-10-18)
 
 [General captures](docs/GENERAL_CAPTURES.md) now persist manifest-free span/log

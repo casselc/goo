@@ -53,19 +53,19 @@ class Handler(BaseHTTPRequestHandler):
         elif self.path == '/product.css':
             self.send_response(200); self.send_header('Content-Type', 'text/css; charset=utf-8'); self.end_headers()
             self.wfile.write((Path(__file__).parent / 'ui/product.css').read_bytes())
-        elif self.path in ('/namespace.js', '/captures.js', '/inventory.js', '/workspace.js', '/attributes.js', '/discovery.js', '/visualizations.js', '/workflows.js', '/operations.js', '/histograms.js', '/ratios.js', '/fleet.js', '/investigations.js', '/exploration.js', '/distributions.js', '/telemetry-packages.js'):
+        elif self.path in ('/queries.js', '/namespace.js', '/captures.js', '/inventory.js', '/workspace.js', '/attributes.js', '/discovery.js', '/visualizations.js', '/workflows.js', '/operations.js', '/histograms.js', '/ratios.js', '/fleet.js', '/investigations.js', '/exploration.js', '/distributions.js', '/telemetry-packages.js'):
             self.send_response(200); self.send_header('Content-Type', 'application/javascript; charset=utf-8'); self.end_headers()
             self.wfile.write((Path(__file__).parent / 'ui' / self.path[1:]).read_bytes())
         else: self.send_error(404)
 
     def do_POST(self):
-        if self.path in ('/api/captures','/api/investigations','/api/explore','/api/inventory','/api/compare','/api/telemetry-packages','/api/telemetry-packages/draft','/api/telemetry-packages/plan'):
+        if self.path.startswith('/api/queries/') or self.path in ('/api/captures','/api/investigations','/api/explore','/api/inventory', '/api/discovery','/api/compare','/api/telemetry-packages','/api/telemetry-packages/draft','/api/telemetry-packages/plan'):
             try:
                 length = int(self.headers.get('Content-Length', 0))
                 limit = 1048576 if self.path == '/api/compare' else 65536 if self.path.startswith('/api/telemetry-packages') else 16384
                 if not 0 < length <= limit: raise ValueError('JSON request exceeds size limit')
                 endpoint = os.getenv('PACKAGES_URL', 'http://localhost:8089') + self.path.removeprefix('/api')
-                request = urllib.request.Request(endpoint, data=self.rfile.read(length), headers={'Content-Type': 'application/json'})
+                request = urllib.request.Request(endpoint, data=self.rfile.read(length), headers={'Content-Type': 'application/json', 'X-Goo-Query-ID': self.headers.get('X-Goo-Query-ID', '')})
                 with urllib.request.urlopen(request, timeout=90) as response:
                     self.json_response(response.status, json.load(response))
             except urllib.error.HTTPError as exc: self.json_response(exc.code, json.loads(exc.read()))
