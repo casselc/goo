@@ -388,3 +388,31 @@ Navigation does not query or mutate evidence. Baselines are volatile client-held
 captures; comparison hashes their supplied contents without authenticating source
 provenance. Saved operation receipts remain a separate server-side persistence
 path. See [workspace contract](PRODUCT_WORKSPACE.md) and journey 23.
+
+## 12. Ad hoc telemetry packages and optional instrumentation
+
+```mermaid
+flowchart TB
+ Existing["Existing OTel spans or logs: any application language"] --> CH["Collector / ClickHouse exporter schema"]
+ CH --> Explore["Explore: captured question, count and breakdowns"]
+ Explore --> Draft["Create package: explicit name/title/default lookback"]
+ Draft --> YAML["Reusable telemetry package YAML: selector, grain, views"]
+ Import["Import YAML / source control"] --> YAML
+ YAML --> Validate["Go schema validation / shared query AST compiler"]
+ Validate --> Preview["Fixed-window live preview: separate evidence basis"]
+ CH --> Preview
+ Validate --> Store["Immutable local definition revision: no raw evidence"]
+ Store --> Reuse["Use in Explore: fresh window; local refinements"]
+ Reuse --> CH
+ Store --> Export["Export YAML for review and reuse"]
+ Validate --> Fields["Referenced logical telemetry fields and explicit caveats"]
+ Fields --> NonGo["Use existing telemetry in place; no annotations required"]
+ Fields --> Go["Optional explicit operation name/role: Go annotation template"]
+ Go --> Review["Manual source selection, attribute binding, validation and weave"]
+```
+
+The application needs no goo manifest for this path. Definition revision, preview
+evidence basis and optional source instrumentation remain distinct. The generated
+Go template is scanner-validated; automatic source editing/promotion, new native
+metric contracts and Databricks lowering of this package kind remain future work.
+See [authoring contract](TELEMETRY_PACKAGES.md).

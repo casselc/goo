@@ -147,3 +147,17 @@ bodies up to 1 MiB. General exploration baselines live only in browser memory.
 The named capture volume continues to store operation receipts, not those baselines.
 Host-staged offline image builds and the existing managed Docker daemon were used;
 no daemon, credentials, volumes or queues were replaced. See current [checks](VALIDATION.md).
+
+## Ad hoc telemetry packages
+
+The existing Go packages service now serves `/telemetry-packages` authoring/list/
+lookup and pure draft/plan routes. Saved definitions live in the existing named
+investigations volume's `telemetry-packages` subdirectory, separate from evidence
+receipts. Query images include `ui/telemetry-packages.js` and updated UI/proxy assets.
+No new dependencies, services, ports or application annotations are required.
+
+Repeated VFS image builds exhausted the 32 GiB workspace during query-service
+recreation. Read-only disk diagnostics confirmed full bytes, not inodes. Removing
+dangling unused images and unused builder cache recovered roughly 19 GiB free;
+running containers and all data volumes were preserved, and recreation succeeded.
+No Docker daemon/authentication configuration or storage driver was changed.

@@ -4,6 +4,59 @@ Current additions: see the [cloud baseline](ENVIRONMENT_VALIDATION.md) for the
 successful default Compose run in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Manifest-free ad hoc telemetry packages
+
+Implemented: captured Explore question → named telemetry package YAML → shared Go
+query plan → separate live preview → immutable local configuration revision → fresh
+Explore reuse. Import/export, nested predicates/two-field breakdown preservation,
+local refinements and optional downloadable Go annotation templates are included.
+No target application manifest is loaded. See [contract](docs/TELEMETRY_PACKAGES.md),
+[diagram 12](docs/ARCHITECTURE_DIAGRAMS.md#12-ad-hoc-telemetry-packages-and-optional-instrumentation)
+and [journeys 24–25](docs/journeys/README.md#24-build-a-package-over-existing-python-telemetry).
+
+Passed: root Go race suite/vet, 19 Python tests, 14 Node checks and Compose config.
+New Go fixtures check strict bounded YAML, unknown fields/aliases/multiple documents,
+unsupported grains/adapters/roles, time/page separation, stable YAML round trips,
+concurrent idempotent publication, immutable old revisions, path validation and
+corruption detection. HTTP tests pass generated Go code through the actual source
+annotation scanner. No generated template is patched or deployed into an app.
+
+Hegel state/swarm passes 100 sequences of up to 30 edit/save/window steps; Quint
+observes draft/save/edit/reopen/apply and rejects mutated-original and nonreusable
+negative controls. Focused verification passed (5.1 seconds); the complete nested
+verification suite passed (95.5 seconds), with ignored log
+`artifacts/verification/telemetry-packages-full-suite.log`.
+
+The first actual Python SDK authoring journey passed (9.4 seconds). After preview
+and handoff presentation improvements, journeys 24/25 passed together (14.0 seconds):
+ordinary SDK spans without goo attributes/manifests, collector ingestion, exact
+preview counts, save/export/import, service-restart persistence, fresh reuse,
+local refinements, preserved nested log/two-field selectors, no-data preview and
+stale-validation isolation. The Node-style log workload is a labelled OTLP fixture,
+not a claim that a Node SDK service ran. The generated Go template is scanner-tested,
+not source-equivalence, weaving, deployment or coverage proof.
+
+VFS build history exhausted workspace bytes during recreation; unused dangling
+images/build cache were reclaimed, retaining running containers, all telemetry
+volumes and existing stale pending entries. Recreation then succeeded. No daemon,
+proxy, credentials or storage-driver settings were changed.
+
+This package kind supports captured-record counts and existing views, not arbitrary
+measures, inferred SLOs/business semantics, automatic source patches, source authenticity,
+production collaboration or Databricks lowering. Saved definitions do not archive
+preview evidence. Mermaid source/fences and local links are checked without claiming
+rendered Mermaid validation.
+
+All 25 real browser journeys passed together (4.1 minutes), including the new
+Python SDK and imported-log paths, native metric/fleet regressions, saved receipts
+and baseline comparison. All 74 documentation frames were regenerated. Preview
+tables, readable handoff code and mobile authoring were visually inspected. Final
+editor-focus and metadata/navigation generation guards are covered by a focused
+rerun of the two affected authoring journeys, which passed together (16.7 seconds).
+Their six new frames were regenerated again after those refinements. All 12 services
+are running, traffic is restored, and the five pre-existing stale pending stream
+entries and all data volumes remain intact.
+
 ## Cohesive general-purpose workspace and cohort distributions
 
 Implemented locally: Explore/Operations/Saved investigations/Definitions navigation,

@@ -1,0 +1,15 @@
+spec: telemetry_packages.qnt
+module: telemetry_packages
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  draft:
+    expect: 'reusable == {{.obs.reusable}} and immutable == {{.obs.immutable}}'
+  save:
+    expect: 'reusable == {{.obs.reusable}} and immutable == {{.obs.immutable}}'
+  edit:
+    expect: 'reusable == {{.obs.reusable}} and immutable == {{.obs.immutable}}'
+  reopen:
+    expect: 'reusable == {{.obs.reusable}} and immutable == {{.obs.immutable}}'
+  apply:
+    expect: 'reusable == {{.obs.reusable}} and immutable == {{.obs.immutable}}'

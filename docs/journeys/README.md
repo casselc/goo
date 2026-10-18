@@ -357,3 +357,41 @@ reference workflows live under Examples. See [workspace contract](../PRODUCT_WOR
 
 Journey 11 also expands the real report application into the generic trace inspector,
 with report-specific attributes and no reservation-specific action.
+
+## 24. Build a package over existing Python telemetry
+
+A small real Python OTel SDK process emits six `index.refresh` spans through the
+collector. Set `GOO_PYTHON` to a Python interpreter with the project requirements
+installed; the managed-cloud default is `/workspace/.venvs/goo/bin/python`. It has no goo attributes, annotation or source manifest. This is a
+controlled SDK documentation workload, not a production business outcome. The user
+filters its cohort, groups region (including one missing key), creates a package
+and previews the same six records in the original fixed window. The saved package
+has a reusable lookback and no page offset or absolute evaluation timestamp.
+
+| Frame | Action and evidence |
+| --- | --- |
+| [Author and preview](screenshots/24a-author-existing-python-telemetry.png) | Build a definition from captured data; preview counts/groups with separate basis. |
+| [Instrumentation handoff](screenshots/24b-optional-instrumentation-handoff.png) | Choose an explicit Go operation name/role and review the optional template. |
+| [Reuse in place](screenshots/24c-reuse-package-without-source-manifest.png) | Restart the Go packages process, reopen the persisted package and explore the unchanged Python telemetry in a fresh window. |
+| [Import and revise](screenshots/24d-import-and-revise-definition.png) | Export/import YAML and save an edited revision while retaining the original. |
+| [Mobile authoring](screenshots/24e-mobile-package-authoring.png) | Author the same definition on a 390px viewport without document overflow. |
+
+The executable journey also verifies that local query refinements preserve the
+base selector without mutating the saved revision, and that delayed genuine draft/validation
+responses cannot replace edited metadata or enable saving newer, unvalidated YAML.
+The Create action reveals the editor and focuses its name field. Generated Go source is
+separately passed through the actual annotation scanner in Go tests; the browser
+does not modify the application. See [package contract](../TELEMETRY_PACKAGES.md).
+
+## 25. Import a nested log package without a source manifest
+
+A labelled OTLP log fixture represents a Node-style job logger with four records,
+ERROR/INFO severities and present/missing queue attributes. These are controlled
+collector records, not a claim that a Node SDK/service was executed. The user
+imports nested AND/OR YAML directly in Definitions, applies it to logs, and adds
+a severity refinement. Both imported breakdowns and the original selector remain
+intact; records without valid trace IDs remain unlinked. A preview of an absent
+selection returns `no_data`, without invented successes. A delayed genuine package
+apply response cannot replace a newer environment selection after leaving Definitions.
+
+- [Nested log package and two breakdowns](screenshots/25a-nested-log-package-and-two-breakdowns.png)

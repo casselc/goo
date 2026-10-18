@@ -10,6 +10,11 @@ Saved investigations and Definitions into one interface. Explore includes captur
 attribute distributions, pinned baseline comparisons and a trace/log inspector.
 Reference reservation workflows remain available under Examples.
 
+[Ad hoc telemetry packages](docs/TELEMETRY_PACKAGES.md) turn an Explore question
+into validated YAML, a live preview and an immutable reusable definition. They work
+over existing OTel telemetry from any language without an application manifest;
+optional Go annotation templates are reviewable exports.
+
 For the end-to-end design, start with the [architecture and process diagrams](docs/ARCHITECTURE_DIAGRAMS.md):
 source validation and weaving → application OTel SDKs → collector/ClickStack capture
 → goo package planning and evidence-based investigations. Implemented local paths

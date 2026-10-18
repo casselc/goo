@@ -107,3 +107,9 @@ A bounded Go span/log AST, captured-record counts/groups, discovered keys and pa
   receipts. Comparison checks accounting/scope, not caller-supplied provenance;
   it provides descriptive differences without statistical/causal claims. See
   [workspace contract](PRODUCT_WORKSPACE.md).
+
+- Manifest-free telemetry packages now persist reusable selectors and captured-record
+  counts, but do not yet share all typed measure contracts with the aggregate
+  compiler. Source promotion is an optional Go template, not automatic function
+  inference or patching. General metrics, calculations and warehouse lowering of
+  this package kind remain future; see [contract](TELEMETRY_PACKAGES.md).

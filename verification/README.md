@@ -123,3 +123,10 @@ source disagreement and scope drift, plus Quint observed pin/selection/empty/cha
 scope-change validation with three negative controls. `cohorts_test.go` exercises
 the actual Go comparison kernel; it does not claim verification of the browser or
 source authenticity.
+
+Telemetry-package verification adds Hegel state/swarm edits, save/reopen and window
+changes over real pure/compiler/store functions, including adversarial string
+round trips and immutable prior revisions. Quint observes draft/save/edit/reopen/
+apply and rejects both a mutated stored definition and time/page leakage into
+reusable semantics. Generated Go templates also pass the real annotation scanner
+in root HTTP tests. These checks do not certify source coverage or source equivalence.

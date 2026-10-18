@@ -8,6 +8,7 @@ import (
 	"github.com/casselc/goo/prebuilt"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"time"
 )
@@ -208,6 +209,7 @@ func serveHTTP(args []string) error {
 	})
 	registerInvestigations(mux, plans, client, *captureDir)
 	registerExploration(mux, client)
+	registerTelemetryPackages(mux, filepath.Join(*captureDir, "telemetry-packages"))
 	server := &http.Server{Addr: *listen, Handler: mux, ReadHeaderTimeout: 5 * time.Second, WriteTimeout: 90 * time.Second}
 	return server.ListenAndServe()
 }

@@ -797,3 +797,13 @@ td details {
     flex-shrink:0;
   }
 }
+.section-heading {display:flex;justify-content:space-between;align-items:center;gap:16px}
+#packageEditor {border-top:1px solid var(--border);margin-top:24px;padding-top:20px}
+#packageYAML {min-height:270px;font-size:12px}
+#packagePreviewResult pre {max-height:260px}
+#packageDraftSetup .controls>label {flex:1 1 160px}
+#telemetryPackageLibrary {max-height:360px;overflow:auto;padding-right:4px}
+#packageHandoffResult p {font-size:12px}
+#packageGoTemplate {border:1px solid var(--border);border-radius:7px;padding:16px;background:var(--bg)}
+.evidence-note,#packageStatus {overflow-wrap:anywhere}
+.definition-card {min-width:0;overflow-wrap:anywhere}

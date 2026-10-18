@@ -10,7 +10,7 @@
 </div></div>
 <div class="workspace-panel" data-workspace-panel="investigations" hidden><section id="savedInvestigations"><h2>Saved investigations</h2><p>Open a capture to continue an investigation with the same evidence. Refresh creates a new revision and keeps the original available.</p><div class="controls"><label>Capture ID<input id="captureID" size="36" aria-label="Capture ID"></label><button id="captureOpen">Reopen saved investigation</button><button id="captureRefresh" disabled>Refresh saved evidence</button></div><p id="captureStatus" role="status">Open a capture by ID, or save one from Operations. Captures are stored in this local workspace.</p><details><summary>Saved receipt and component bases</summary><pre id="captureReceipt"></pre></details><details id="captureDiff"><summary>Revision comparison</summary><p id="captureComparisonSummary"></p><pre id="captureComparison"></pre></details></section>
 <div id="savedEvidenceHost"></div></div>
-<div class="workspace-panel" data-workspace-panel="definitions" hidden><section><h2>Application definitions</h2><p>Shared contracts connect instrumentation, measures, and investigation views.</p><div id="definitionCatalog" class="definition-grid"></div></section><section id="httpPackage"><h2>Bound HTTP package · Go</h2><p>Evaluate observed HTTP server spans using the shared package binding and view descriptor. Sampling and completeness remain unverified.</p><button id="runHttpPackage">Evaluate HTTP package</button><p id="httpPackageStatus" role="status"></p><div id="httpPackageView"></div><details><summary>HTTP package source, revision and diagnostics</summary><pre id="httpPackageExplain"></pre></details></section>
+<div class="workspace-panel" data-workspace-panel="definitions" hidden><section id="telemetryPackages"></section><section><h2>Application definitions</h2><p>Shared contracts connect instrumentation, measures, and investigation views.</p><div id="definitionCatalog" class="definition-grid"></div></section><section id="httpPackage"><h2>Bound HTTP package · Go</h2><p>Evaluate observed HTTP server spans using the shared package binding and view descriptor. Sampling and completeness remain unverified.</p><button id="runHttpPackage">Evaluate HTTP package</button><p id="httpPackageStatus" role="status"></p><div id="httpPackageView"></div><details><summary>HTTP package source, revision and diagnostics</summary><pre id="httpPackageExplain"></pre></details></section>
 <details><summary>OTel prebuilt library · capability proposals</summary><p>Versioned contract recognition in Go; most views below are proposals, not installed dashboards. Missing evidence or bindings must be resolved before use.</p><div id="prebuilts"></div></details>
 <details><summary>Application-owned package</summary><pre id="package"></pre></details>
 </div>
@@ -40,7 +40,7 @@
 <script src="/fleet.js"></script>
 <script src="/investigations.js"></script>
 <script src="/distributions.js"></script>
-<script src="/exploration.js"></script>
+<script src="/exploration.js"></script><script src="/telemetry-packages.js"></script>
 <script>
 const el=id=>document.getElementById(id);let selected='';let spanFilter;
 let controlRevision=0,queryGeneration=0;
@@ -129,6 +129,8 @@ const workflow=GooWorkflows.mount(el('workflows'),run,controls);
 fetch('/api/prebuilts').then(r=>r.json()).then(catalog=>{for(const profile of catalog.profiles){const d=document.createElement('details');d.append(textNode('summary',profile.id+' · '+profile.stability));d.append(textNode('p',profile.description));d.append(textNode('pre',JSON.stringify({requirements:profile.requirements,features:profile.features,caveats:profile.caveats},null,2)));el('prebuilts').append(d)}});
 let examplesStarted=false;const appWorkspace=GooWorkspace.mount({onExamples:()=>{if(!examplesStarted){examplesStarted=true;run(initial)}}});
 GooExploration.mount(el('exploration'));
+globalThis.addEventListener('goo:draft-telemetry-package',()=>appWorkspace.navigate('definitions'));
+GooTelemetryPackages.mount(el('telemetryPackages'));
 globalThis.addEventListener('goo:navigate-explore',()=>appWorkspace.navigate('explore'));
 GooInvestigations.mount({generation:()=>operationGeneration,question:()=>activeOperation?{package:activeOperation.package.definition.name,packageRevision:activeOperation.package.revision,fromMs:activeOperation.fromMs,toMs:activeOperation.toMs}:null,selection:()=>({...activeExplorer?.getState(),...(activeRatio?.getState()?{ratio:activeRatio.getState()}:{}),...(activeComparison?.getState()?{comparison:activeComparison.getState()}: {})}),show:showSavedCapture});
 fetch('/api/package').then(r=>r.json()).then(p=>el('package').textContent=JSON.stringify(p,null,2));el('expression').value=JSON.stringify(initial,null,2);

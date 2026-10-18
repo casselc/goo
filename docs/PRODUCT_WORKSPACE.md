@@ -8,7 +8,7 @@ one navigation rail, visual system and evidence vocabulary:
 | Explore | Search captured spans/logs; inspect records, distributions and cohort differences; expand traces and linked logs in a side inspector. |
 | Operations | Run declared application packages; inspect operation, metric, fleet and subject evidence; explicitly save an investigation. |
 | Saved investigations | Open immutable operation receipts and compare fixed-question revisions. The evidence badge distinguishes saved receipts from a currently loaded operation query. |
-| Definitions | Inspect application contracts, the HTTP package and proposed semantic-convention capabilities. |
+| Definitions | Build/import/preview/save telemetry packages over existing data; inspect application contracts, the HTTP package and proposed capabilities. |
 
 **Examples** is a secondary destination for the original reservation workflows,
 JSON editor and preview SLOs. Entering Examples starts its initial query lazily.
@@ -83,3 +83,10 @@ targets the pinned OTel exporter schema; native gauges, broader metric explorati
 configurable source onboarding and a shared typed measurement/query expression
 layer remain unfinished. The existence of a generic shell does not imply those
 backend capabilities are complete.
+
+## Ad hoc package authoring
+
+Explore now offers **Create package** after a captured result. The Definitions
+workspace owns naming, YAML editing, validation, preview, immutable publication,
+import/export and optional instrumentation handoff. The same package can run over
+non-Go services without manifests. See [the contract](TELEMETRY_PACKAGES.md).

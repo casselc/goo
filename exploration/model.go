@@ -11,25 +11,25 @@ import (
 )
 
 type Field struct {
-	Kind string `json:"kind"`
-	Key  string `json:"key"`
+	Kind string `json:"kind" yaml:"kind"`
+	Key  string `json:"key" yaml:"key"`
 }
 type Predicate struct {
-	All   []Predicate `json:"all,omitempty"`
-	Any   []Predicate `json:"any,omitempty"`
-	Field *Field      `json:"field,omitempty"`
-	Op    string      `json:"op,omitempty"`
-	Value string      `json:"value,omitempty"`
+	All   []Predicate `json:"all,omitempty" yaml:"all,omitempty"`
+	Any   []Predicate `json:"any,omitempty" yaml:"any,omitempty"`
+	Field *Field      `json:"field,omitempty" yaml:"field,omitempty"`
+	Op    string      `json:"op,omitempty" yaml:"op,omitempty"`
+	Value string      `json:"value,omitempty" yaml:"value,omitempty"`
 }
 type Query struct {
-	Signal      string     `json:"signal"`
-	Environment string     `json:"environment"`
-	FromMS      int64      `json:"fromMs"`
-	ToMS        int64      `json:"toMs"`
-	Where       *Predicate `json:"where,omitempty"`
-	GroupBy     []Field    `json:"groupBy,omitempty"`
-	Limit       int        `json:"limit"`
-	Offset      int        `json:"offset"`
+	Signal      string     `json:"signal" yaml:"signal"`
+	Environment string     `json:"environment" yaml:"environment"`
+	FromMS      int64      `json:"fromMs" yaml:"fromMs"`
+	ToMS        int64      `json:"toMs" yaml:"toMs"`
+	Where       *Predicate `json:"where,omitempty" yaml:"where,omitempty"`
+	GroupBy     []Field    `json:"groupBy,omitempty" yaml:"groupBy,omitempty"`
+	Limit       int        `json:"limit" yaml:"limit"`
+	Offset      int        `json:"offset" yaml:"offset"`
 }
 
 var columns = map[string]string{"service": "string", "trace_id": "string", "span_id": "string", "scope": "string", "scope_version": "string", "name": "string", "kind": "string", "status": "string", "duration_ns": "uint64", "body": "string", "severity": "string"}

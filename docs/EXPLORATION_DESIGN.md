@@ -157,3 +157,10 @@ provides literal text search, not an indexed/full-text search language.
 The [product workspace contract](PRODUCT_WORKSPACE.md) defines implemented result
 tabs, fixed-window baselines, comparison arithmetic and responsive trace inspection.
 General cohorts remain browser-held, separate from durable operation receipts.
+
+## Reusable definitions from captured questions
+
+[Telemetry packages](TELEMETRY_PACKAGES.md) now reuse the same query AST without
+source manifests. They store selectors/grain/views, separate from preview bounds,
+pages and data bases. Applying one preserves imported nested predicates/two-field
+groups and allows local refinements without mutating the saved definition.

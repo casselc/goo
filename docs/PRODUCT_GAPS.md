@@ -16,13 +16,13 @@ not a replacement for HyperDX or Honeycomb.
 | Full distributed traces | Cross-service exact-trace paging now exists within original environment/time bounds; no complete-trace guarantee or window widening | Fetch a selected trace across services with bounded pagination, explicit missing-parent/partial status; preserve async links. Keep original question scope separate from expanded context. |
 | Correlated logs | Exact trace/span log scopes and literal body search now exist; no live tail or broader search language | Exact trace/span IDs first; declared scoped business identity next; time context separately labelled. Search/tail/pagination and log-to-trace navigation. |
 | Comparative debugging | Pinned fixed-window cohort distributions plus interval/member context; no significance tests | Selected vs baseline populations, attribute distributions, sample sizes, missing fields, sampling/coverage caveats and ranked differences. BubbleUp-like differences are leads, not causal attribution. |
-| Reusable workspaces | Local immutable captures by ID and URL fragment | Named saved queries, boards, annotations, deployment markers, history, team sharing and export. Separate live board definitions from frozen evidence snapshots. |
+| Reusable workspaces | Local immutable operation captures plus reusable telemetry-package definitions/import/export | Named saved queries, boards, annotations, deployment markers, history, team sharing and export. Separate live board definitions from frozen evidence snapshots. |
 | APM and resource discovery | Declared membership and bounded OTel profile recognition | Service/operation inventory, dependencies, DB/cache/queue conventions; activation windows and freshness. Do not infer healthy membership from observed-only discovery. |
 | SLOs and alerting | Legacy preview; separate typed lifecycle pilots | Full-population SLI execution; scheduler, durable evaluations, multiwindow burn rates, unknown/no-data policies, dedup/silence/routing, notifications and audit. |
 | Metrics | Strict supported counter/histogram contracts | Gauges, up/down sums, exemplars, wider native metric exploration, dynamic membership and explicit common-window policies. Never average scalar percentiles. |
 | Browser and exception workflows | Executable documentation journeys only | Optional RUM/web vitals, errors/stack grouping and session replay. Needs collection, privacy/redaction and storage work; browser tests are not product RUM. |
 | Production operation | Loopback shared lab, bounded queries, local named volume | Authentication, RBAC/tenancy, scoped read credentials, ingestion lag/drop/sampling health, retention/quotas, cancellation/concurrency budgets, audit and backups. |
-| Portable authoring | Local YAML packages; separate ClickHouse/Databricks aggregate compiler pilot | Versioned resources, shared interactive/IaC AST, plan/apply, migration and backend capability diagnostics. Live operation queries do not yet lower to Databricks metric views. |
+| Portable authoring | UI-authored manifest-free telemetry packages and local source-bound operation YAML; separate aggregate compiler pilot | Versioned resources, shared interactive/IaC AST, plan/apply, migration and backend capability diagnostics. Live operation queries do not yet lower to Databricks metric views. |
 
 The first general exploration and trace/log expansion slice is implemented; see
 [its design and limits](EXPLORATION_DESIGN.md). Fixed-window distribution comparison and the [cohesive workspace](PRODUCT_WORKSPACE.md)
@@ -59,3 +59,8 @@ parity audit. BubbleUp-style cohort comparison is a design reference based on th
 known product workflow; its current UI was not exercised. Honeycomb's full hosted
 documentation was not fetched; a GitHub API attempt was proxy-denied, so public
 raw repository documents were used. Optional local HyperDX remains unvalidated.
+
+Ad hoc [telemetry packages](TELEMETRY_PACKAGES.md) now support existing telemetry
+without application manifests, fresh reuse and optional instrumentation templates.
+Typed measures, explicit source promotion and persisted general evidence remain
+separate next increments; saving a definition does not save its preview.

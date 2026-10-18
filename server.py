@@ -30,10 +30,10 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == '/api/package': self.json_response(200, PACKAGE)
-        elif self.path.startswith(('/api/http-package', '/api/operations', '/api/operation-packages', '/api/counter-rates', '/api/histograms', '/api/investigations')):
+        elif self.path.startswith(('/api/http-package', '/api/operations', '/api/operation-packages', '/api/counter-rates', '/api/histograms', '/api/investigations', '/api/telemetry-packages')):
             try:
                 parsed = urllib.parse.urlsplit(self.path)
-                if not (parsed.path.startswith('/api/investigations/') or parsed.path in ('/api/http-package', '/api/operations', '/api/operation-packages', '/api/counter-rates', '/api/histograms')): self.send_error(404); return
+                if not (parsed.path.startswith('/api/investigations/') or parsed.path.startswith('/api/telemetry-packages/') or parsed.path in ('/api/http-package', '/api/operations', '/api/operation-packages', '/api/counter-rates', '/api/histograms', '/api/telemetry-packages')): self.send_error(404); return
                 endpoint = os.getenv('PACKAGES_URL', 'http://localhost:8089') + parsed.path.removeprefix('/api')
                 with urllib.request.urlopen(endpoint + ('?' + parsed.query if parsed.query else ''), timeout=90) as response:
                     self.json_response(200, json.load(response))
@@ -53,16 +53,16 @@ class Handler(BaseHTTPRequestHandler):
         elif self.path == '/product.css':
             self.send_response(200); self.send_header('Content-Type', 'text/css; charset=utf-8'); self.end_headers()
             self.wfile.write((Path(__file__).parent / 'ui/product.css').read_bytes())
-        elif self.path in ('/workspace.js', '/visualizations.js', '/workflows.js', '/operations.js', '/histograms.js', '/ratios.js', '/fleet.js', '/investigations.js', '/exploration.js', '/distributions.js'):
+        elif self.path in ('/workspace.js', '/visualizations.js', '/workflows.js', '/operations.js', '/histograms.js', '/ratios.js', '/fleet.js', '/investigations.js', '/exploration.js', '/distributions.js', '/telemetry-packages.js'):
             self.send_response(200); self.send_header('Content-Type', 'application/javascript; charset=utf-8'); self.end_headers()
             self.wfile.write((Path(__file__).parent / 'ui' / self.path[1:]).read_bytes())
         else: self.send_error(404)
 
     def do_POST(self):
-        if self.path in ('/api/investigations','/api/explore','/api/compare'):
+        if self.path in ('/api/investigations','/api/explore','/api/compare','/api/telemetry-packages','/api/telemetry-packages/draft','/api/telemetry-packages/plan'):
             try:
                 length = int(self.headers.get('Content-Length', 0))
-                limit = 1048576 if self.path == '/api/compare' else 16384
+                limit = 1048576 if self.path == '/api/compare' else 65536 if self.path.startswith('/api/telemetry-packages') else 16384
                 if not 0 < length <= limit: raise ValueError('JSON request exceeds size limit')
                 endpoint = os.getenv('PACKAGES_URL', 'http://localhost:8089') + self.path.removeprefix('/api')
                 request = urllib.request.Request(endpoint, data=self.rfile.read(length), headers={'Content-Type': 'application/json'})

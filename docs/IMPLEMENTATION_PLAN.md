@@ -179,3 +179,12 @@ General-purpose direction: use service-neutral signal/source onboarding and
 capability-driven OTel recipes across independent applications as acceptance criteria.
 Keep sample identities and business assumptions in example packages/adapters;
 shared views consume declared fields, units, grain and relation contracts.
+
+## Manifest-free ad hoc telemetry packages
+
+Implemented: Explore question → named strict YAML definition → shared Go query plan
+→ separate live preview → immutable local definition revision → fresh Explore reuse.
+Import/export and optional scanner-validated Go annotation templates coexist with
+in-place use of ordinary non-Go telemetry. This is captured-record-count only;
+configuration revisions do not archive evidence or infer outcomes. See
+[contract and next typed-measure/promotion work](TELEMETRY_PACKAGES.md).
