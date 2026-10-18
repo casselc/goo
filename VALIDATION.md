@@ -30,6 +30,12 @@ documentation screenshots. New member-window and loss frames were visually
 inspected; updated documentation file links resolve. All twelve services are
 running and the peer metric-export gate is enabled. Mermaid source is documented
 without claiming a local Mermaid render or production deployment validation.
+A focused post-run storyboard check scoped same-timestamp rows to checkout
+and asserted the displayed reset cause. Gap/restart checks also require timestamps
+from the current injected fault, avoiding matches against older retained telemetry.
+The final focused journey17 rerun passed (36.7 seconds), including fresh-fault
+timestamp guards and operation-scoped screenshot/assertion selection. No
+application code changed after the successful full18-journey run.
 
 ## Historical declared fleet membership milestone
 
