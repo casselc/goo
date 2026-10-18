@@ -15,7 +15,7 @@
 <details><summary>OTel prebuilt library · capability proposals</summary><p>Versioned contract recognition in Go; most views below are proposals, not installed dashboards. Missing evidence or bindings must be resolved before use.</p><div id="prebuilts"></div></details>
 <details><summary>Application-owned package</summary><pre id="package"></pre></details>
 </div>
-<div class="workspace-panel" data-workspace-panel="examples" hidden><div class="warning">Demo evidence is unverified. SLO and alarm values are previews over returned rows. No notifications are sent. Deadline: 10 seconds + 3 seconds ingestion allowance.</div>
+<div class="workspace-panel" data-workspace-panel="examples" hidden><section id="exampleQuestions"></section><details id="legacyExamples"><summary>Specialized reservation lifecycle and resource lab</summary><p>The original lab retains deadline/outcome and queue contracts that captured-record recipes do not implement.</p><div class="warning">Demo evidence is unverified. SLO and alarm values are previews over returned rows. No notifications are sent. Deadline: 10 seconds + 3 seconds ingestion allowance.</div>
 <details id="guided" open><summary>Guided investigations · choose a question</summary><div id="workflows"></div></details>
 <div class="controls">
 <label>View<select id="view"><option value="completion">Completion SLO</option><option value="queue">Queue and workers (USE)</option><option value="heatmap">Latency heatmap</option><option value="latency">gRPC latency</option><option value="logs">Logs</option><option value="traces">Spans and links</option><option value="metrics">Native metric points</option></select></label>
@@ -30,18 +30,18 @@
 <section><h2 id="resultsTitle">Evidence</h2><div id="results" class="scroll"></div></section>
 <section><h2>Query expression</h2><p>Edit the JSON or use the controls. The server validates source and operation choices.</p><textarea id="expression" aria-label="Query expression"></textarea><button id="runExpression">Run expression</button></section>
 <details><summary>Compiled ClickHouse SQL and parameters</summary><pre id="explain"></pre></details>
-</div>
+</details></div>
 </div><footer class="app-footer">Captured records are evidence, not a guarantee of coverage. Inspect the source and scope behind each result.</footer></main>
 <dialog id="captureDialog" aria-labelledby="captureDraftHeading"><h2 id="captureDraftHeading">Capture investigation</h2><label>Capture title<input id="captureDraftTitle" maxlength="120"></label><p id="captureDraftStatus" role="status"></p><div class="controls"><button id="captureDraftConfirm">Save capture</button><button id="captureDraftCancel">Cancel</button></div></dialog><script src="/queries.js"></script><script src="/namespace.js"></script><script src="/workspace.js"></script>
 <script src="/attributes.js"></script>
 <script src="/visualizations.js"></script>
-<script src="/workflows.js"></script>
+<script src="/example-questions.js"></script><script src="/workflows.js"></script>
 <script src="/operations.js"></script>
 <script src="/histograms.js"></script>
 <script src="/ratios.js"></script>
 <script src="/fleet.js"></script>
 <script src="/investigations.js"></script>
-<script src="/documents.js"></script><script src="/deployments.js"></script><script src="/distributions.js"></script>
+<script src="/recipes.js"></script><script src="/documents.js"></script><script src="/deployments.js"></script><script src="/distributions.js"></script>
 <script src="/discovery.js"></script>
 <script src="/captures.js"></script><script src="/inventory.js"></script><script src="/exploration.js"></script><script src="/telemetry-packages.js"></script>
 <script>
@@ -131,7 +131,8 @@ el('clear').onclick=()=>{selected='';spanFilter=undefined;el('selection').textCo
 el('view').onchange=()=>{spanFilter=undefined;if(['metrics','queue'].includes(el('view').value)){selected='';el('scenario').value='';el('selection').textContent=''}};
 const workflow=GooWorkflows.mount(el('workflows'),run,controls);
 fetch('/api/prebuilts').then(r=>r.json()).then(catalog=>{for(const profile of catalog.profiles){const d=document.createElement('details');d.append(textNode('summary',profile.id+' · '+profile.stability));d.append(textNode('p',profile.description));d.append(textNode('pre',JSON.stringify({requirements:profile.requirements,features:profile.features,caveats:profile.caveats},null,2)));el('prebuilts').append(d)}});
-let examplesStarted=false;const appWorkspace=GooWorkspace.mount({onExamples:()=>{if(!examplesStarted){examplesStarted=true;run(initial)}}});
+let examplesStarted=false;el('legacyExamples').addEventListener('toggle',()=>{if(el('legacyExamples').open&&!examplesStarted){examplesStarted=true;run(initial)}});const appWorkspace=GooWorkspace.mount();
+GooExampleQuestions.mount(el('exampleQuestions'));
 const liveExploration=GooExploration.mount(el('exploration'));
 const liveInventory=GooInventory.mount(el('serviceInventory'));
 globalThis.addEventListener('goo:draft-telemetry-package',()=>appWorkspace.navigate('definitions'));

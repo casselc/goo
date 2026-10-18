@@ -286,8 +286,8 @@ See [contract](ERROR_COMPARISONS.md), journey 35 and architecture flow 22.
 Acceptance uses full-population denominators, missing/unknown preservation,
 source-free pair reopening, real browser/mobile evidence, Hegel state/swarm,
 Quint ledger rejection controls and saved-only Bombadil measure exploration.
-Next: deployment markers and ordered investigation notes, alongside broader typed
-measures/native metrics. Statistical/causal attribution remains unimplemented.
+Deployment markers and ordered notes are implemented in the milestone below.
+Broader typed measures/native metrics remain separate. Statistical/causal attribution remains unimplemented.
 
 
 ## Deployment context and ordered investigation notes
@@ -299,6 +299,19 @@ immutable revision forests, parent/deep-link navigation and retained dirty draft
 Concurrent saves preserve branches; no mutable latest head or last-write-wins
 update is introduced. [Contract](WORKBENCH_CONTEXT.md), flow 23 and journey 36
 separate narrative, deployment context and captured telemetry evidence.
-Next: scoped investigation recipes and explicit capture-successor comparison in
-narrative workflows. Authenticated shared editing, CI provenance, marker correction
+Scoped recipes are implemented below. Explicit capture-successor comparison in
+narrative workflows remains next. Authenticated shared editing, CI provenance, marker correction
 policies and retention/indexing remain separate work.
+
+
+## Scoped recipes and sample workflow migration
+
+Implemented: three source-free Go recipe transforms inside Reusable questions,
+explicit preview/run and hypothesis-only notes handoff. Six ordinary example
+telemetry packages bring reservation, checkout and report spans/logs into the
+shared Explore/package/capture/notes flow. The original specialized lab is an
+explicit disclosure rather than the default example experience.
+[Contract](INVESTIGATION_RECIPES.md), architecture flow 24 and journey 37.
+Next: explicit capture-successor comparison within ordered narratives; richer
+capability-backed recipes and migration of specialized lifecycle contracts remain
+separate.

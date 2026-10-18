@@ -423,3 +423,11 @@ It never saves or reads live telemetry. Journey 34 retains coverage/trace artifa
 `npm run test:error-comparison-campaign` runs journey 35 with the saved-only `verification/bombadil/error-comparison.ts` actor. Its required prefix visits remember/errors/latency/mean/share, then varies all five comparison measures. Invariants retain exact population/status accounting, +13.63 pp errors, +90 ms p95 and immutable comparison evidence. No source queries or capture writes are actor actions.
 
 `npm run test:context-campaign` runs journey 36 and the saved-document `verification/bombadil/context-notes.ts` actor. Its prefix remembers exact revision/references, types/applies an unsaved note, reorders and reverts. Invariants retain the stored base/reference IDs and disallow saving unapplied text. Actor actions never save revisions, create deployments or execute telemetry queries.
+
+`verification/bombadil/recipes.ts` explores recipe selection and preview attempts
+without an applied question. Invariants prohibit an executable preview or invented
+telemetry evidence. Its required prefix attempts all three recipe selections against the
+no-population guard; randomized tail actions repeat these source-free previews. It neither runs source queries nor saves documents.
+Journey 37 separately covers real applied populations, explicit execution,
+wrong-signal rejection, stale-response isolation, captures and narrative handoff.
+Run with `GOO_RECIPES_BOMBADIL=1` and `journeys/recipes.spec.js` through the wrapper.

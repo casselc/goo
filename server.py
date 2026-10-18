@@ -30,16 +30,18 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == '/api/package': self.json_response(200, PACKAGE)
-        elif self.path.startswith(('/api/http-package', '/api/operations', '/api/operation-packages', '/api/counter-rates', '/api/histograms', '/api/investigations', '/api/captures', '/api/telemetry-packages', '/api/documents', '/api/deployments')):
+        elif self.path.startswith(('/api/http-package', '/api/operations', '/api/operation-packages', '/api/counter-rates', '/api/histograms', '/api/investigations', '/api/captures', '/api/telemetry-packages', '/api/recipes', '/api/documents', '/api/deployments')):
             try:
                 parsed = urllib.parse.urlsplit(self.path)
-                if not (parsed.path.startswith('/api/documents/') or parsed.path.startswith('/api/deployments/') or parsed.path.startswith('/api/captures/') or parsed.path.startswith('/api/investigations/') or parsed.path.startswith('/api/telemetry-packages/') or parsed.path in ('/api/http-package', '/api/operations', '/api/operation-packages', '/api/counter-rates', '/api/histograms', '/api/captures', '/api/telemetry-packages', '/api/documents', '/api/deployments')): self.send_error(404); return
+                if not (parsed.path.startswith('/api/documents/') or parsed.path.startswith('/api/deployments/') or parsed.path.startswith('/api/captures/') or parsed.path.startswith('/api/investigations/') or parsed.path.startswith('/api/telemetry-packages/') or parsed.path in ('/api/http-package', '/api/operations', '/api/operation-packages', '/api/counter-rates', '/api/histograms', '/api/captures', '/api/telemetry-packages', '/api/recipes', '/api/documents', '/api/deployments')): self.send_error(404); return
                 endpoint = os.getenv('PACKAGES_URL', 'http://localhost:8089') + parsed.path.removeprefix('/api')
                 with urllib.request.urlopen(endpoint + ('?' + parsed.query if parsed.query else ''), timeout=90) as response:
                     self.json_response(200, json.load(response))
             except urllib.error.HTTPError as exc:
                 self.json_response(exc.code, json.loads(exc.read()))
             except Exception as exc: self.json_response(502, {'error': str(exc)})
+        elif self.path == '/api/example-questions':
+            self.json_response(200, [{'name':p.stem, 'yaml':p.read_text()} for p in sorted((Path(__file__).parent / 'examples/telemetry').glob('*.yaml'))])
         elif self.path == '/api/prebuilts':
             self.json_response(200, json.loads((Path(__file__).parent / 'definitions/prebuilts.json').read_text()))
         elif self.path == '/health':
@@ -53,13 +55,13 @@ class Handler(BaseHTTPRequestHandler):
         elif self.path == '/product.css':
             self.send_response(200); self.send_header('Content-Type', 'text/css; charset=utf-8'); self.end_headers()
             self.wfile.write((Path(__file__).parent / 'ui/product.css').read_bytes())
-        elif self.path in ('/documents.js', '/deployments.js', '/queries.js', '/namespace.js', '/captures.js', '/inventory.js', '/workspace.js', '/attributes.js', '/discovery.js', '/visualizations.js', '/workflows.js', '/operations.js', '/histograms.js', '/ratios.js', '/fleet.js', '/investigations.js', '/exploration.js', '/distributions.js', '/telemetry-packages.js'):
+        elif self.path in ('/example-questions.js', '/recipes.js', '/documents.js', '/deployments.js', '/queries.js', '/namespace.js', '/captures.js', '/inventory.js', '/workspace.js', '/attributes.js', '/discovery.js', '/visualizations.js', '/workflows.js', '/operations.js', '/histograms.js', '/ratios.js', '/fleet.js', '/investigations.js', '/exploration.js', '/distributions.js', '/telemetry-packages.js'):
             self.send_response(200); self.send_header('Content-Type', 'application/javascript; charset=utf-8'); self.end_headers()
             self.wfile.write((Path(__file__).parent / 'ui' / self.path[1:]).read_bytes())
         else: self.send_error(404)
 
     def do_POST(self):
-        if self.path.startswith('/api/queries/') or self.path in ('/api/documents','/api/deployments','/api/captures','/api/investigations','/api/explore','/api/inventory', '/api/discovery','/api/compare','/api/telemetry-packages','/api/telemetry-packages/draft','/api/telemetry-packages/plan'):
+        if self.path.startswith('/api/queries/') or self.path in ('/api/recipes','/api/documents','/api/deployments','/api/captures','/api/investigations','/api/explore','/api/inventory', '/api/discovery','/api/compare','/api/telemetry-packages','/api/telemetry-packages/draft','/api/telemetry-packages/plan'):
             try:
                 length = int(self.headers.get('Content-Length', 0))
                 limit = 131072 if self.path == '/api/documents' else 1048576 if self.path == '/api/compare' else 65536 if self.path.startswith('/api/telemetry-packages') else 16384

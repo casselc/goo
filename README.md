@@ -8,7 +8,11 @@ are examples used to exercise its contracts.
 The [investigation workspace](docs/PRODUCT_WORKSPACE.md) brings Explore, Services, Operations,
 Saved investigations and Definitions into one interface. Explore includes captured
 attribute distributions, pinned baseline comparisons and a trace/log inspector.
-Reference reservation workflows remain available under Examples.
+[Examples now use ordinary telemetry packages](docs/INVESTIGATION_RECIPES.md) for
+reservations, Go checkout and Go reports. Scoped recipes retain the applied
+population while exploring duration, recorded errors or log severity. Save the
+question as a package, or capture evidence and cite it in ordered notes. The
+specialized reservation lifecycle/resource lab remains explicitly available.
 
 Explore and trace inspection share searchable, typed attribute rows, exact-value
 copying and secondary raw evidence. Scoped filter chips and searchable facets
@@ -65,7 +69,7 @@ drive Bombadil app submissions and goo evidence inspections/revisits.
 The fault campaign adds Python retry, rejection and stalled-work evidence, with
 Hegel state/swarm properties and Quint checks that preserve unknown outcomes.
 
-The reference reservation example emits ClickStack-shaped OTel data: HTTP gateway → gRPC reservation service → Redis Streams → inventory consumer → OTel collector → ClickHouse. Its Examples workspace edits a validated JSON query expression and shows its compiled SQL, completion cohorts, gRPC latency, logs, spans and links, and exported metric points.
+The reference reservation example emits ClickStack-shaped OTel data: HTTP gateway → gRPC reservation service → Redis Streams → inventory consumer → OTel collector → ClickHouse. Its optional specialized reservation lab under Examples edits a validated JSON query expression and shows its compiled SQL, completion cohorts, gRPC latency, logs, spans and links, and exported metric points.
 
 The [visualization slice](docs/VISUALIZATIONS.md) adds trace waterfalls with span
 inspection and async-link navigation, plus a raw-duration heatmap whose cells

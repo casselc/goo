@@ -5,6 +5,44 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Scoped recipes and shared sample investigations (2026-10-18)
+
+[Contract](docs/INVESTIGATION_RECIPES.md): three Go recipe transforms preserve the
+applied population and fixed bounds, with source-free preview and explicit
+execution. Six ordinary YAML packages move sample investigations onto shared
+Explore/package/capture/notes workflows. The specialized lifecycle/resource lab
+starts only when opened. Opening a derived recipe question now clears the previous package banner.
+
+Passed native checks: root Go race suite and vet, 19 Python tests and 27 frontend
+checks. Native cases cover OR/filter preservation, immutable inputs, parameterized
+selectors, wrong-signal rejection, strict HTTP bodies and all six example packages.
+Hegel state/swarm passed 100 sequences of 25 recipe/signal/scope/predicate steps
+(0.19 s reviewed).
+
+Initial browser harness failures were corrected for the actual save message and
+retained disclosure state on same-document navigation. A reserved Quint action
+name was renamed. The conformance check then correctly rejected a capture taken
+after package reuse changed the time bounds; the journey now verifies the fresh
+reuse separately and captures the original fixed question before deriving
+a reusable definition from that stored capture. This distinction is part of the documented contract, not a change to
+package semantics.
+
+Final browser evidence: the broad 37-journey run completed with 36 passes and
+one legacy-sidebar harness timeout (14.8 minutes); that missing disclosure action
+was corrected. A final focused run passed both the corrected definition/invalid-
+query journey and the strengthened recipe journey (2 passes, 1.2 minutes). The
+latter uses ordinary UI filters, captures/cites the fixed question first, then
+creates and freshly runs a package from its stored capture. No skips occurred in
+the broad run; generated/fault campaigns and cross-app Quint were enabled.
+
+The final recipe ledger passed Quint with six rejecting controls (13.04 s).
+Bombadil recorded 467 observations through all four required stages and all three
+recipe choices. Wrong-signal rejection, delayed-preview isolation, source-free
+notes/preview, literal query preservation and mobile containment were checked.
+All 125 storyboard images were refreshed. Five new frames and architecture flow
+24 document the slice; new desktop/mobile frames were visually reviewed.
+See [environment evidence](ENVIRONMENT_VALIDATION.md) for image and artifact paths.
+
 ## Deployment context and ordered notes (2026-10-18)
 
 [Contract](docs/WORKBENCH_CONTEXT.md): authored deployment receipts preserve event

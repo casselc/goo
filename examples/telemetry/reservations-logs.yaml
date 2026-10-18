@@ -1,0 +1,36 @@
+apiVersion: goo/telemetry-package/v1alpha1
+name: reservations-logs
+title: Reservation pipeline logs
+description: Captured records only. Retries, sampling and completeness remain unknown.
+  This package does not infer business outcomes.
+source:
+  adapter: clickhouse.otel/v1
+  signal: logs
+  environment: local
+where:
+  any:
+  - field:
+      kind: column
+      key: service
+    op: eq
+    value: lab-web
+  - field:
+      kind: column
+      key: service
+    op: eq
+    value: lab-grpc
+  - field:
+      kind: column
+      key: service
+    op: eq
+    value: lab-consumer
+groupBy:
+- kind: column
+  key: severity
+measure: captured-record-count
+lookbackMinutes: 5
+views:
+- records
+- distribution
+- trace-context
+bucketMs: 10000

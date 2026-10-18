@@ -104,3 +104,8 @@ The shared Explore Go query now includes optional duration summaries/time bucket
 keeps event age and reported-parent uncertainty explicit. See
 [core workbench](CORE_WORKBENCH.md) and architecture flow 20 for code contracts
 and remaining production boundaries.
+
+Built-in recipes are pure transforms in `exploration/recipes.go` followed by the
+same source compiler. Sample investigation entry points now consume ordinary
+telemetry packages rather than adding example-specific query branches. See
+[the contract](INVESTIGATION_RECIPES.md) and architecture flow 24.

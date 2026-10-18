@@ -665,3 +665,21 @@ version. Quint checks actual observations with six rejecting controls.
 | [36c](screenshots/36c-narrative-revision-and-preserved-parent.png) | Save findings as a new narrative revision with an exact parent. |
 | [36d](screenshots/36d-follow-frozen-evidence-without-rerunning.png) | Open a cited capture without rerunning telemetry. |
 | [36e](screenshots/36e-mobile-investigation-notes.png) | Continue the same ordered investigation on a narrow screen. |
+
+## 37. Shared examples and scoped investigation recipes
+
+`journeys/recipes.spec.js` generates real report work and independently locates its
+scoped ready event in ClickHouse. The primary example gallery runs ordinary
+packages through Explore. A trace-scoped recipe preserves fixed bounds/selectors;
+preview and narrative actions do not read telemetry. The journey freezes evidence,
+saves an exact narrative reference, then derives/reuses a package; wrong-signal and delayed
+preview guards and mobile containment are checked. Quint has six rejecting
+controls. `GOO_RECIPES_BOMBADIL=1` exercises source-free preview guards.
+
+| Frame | User journey |
+| --- | --- |
+| [37a](screenshots/37a-shared-example-packages.png) | Choose a sample application package in the shared product workflow. |
+| [37b](screenshots/37b-fixed-scope-recipe-preview.png) | Review prerequisites, retained population and limits before a source read. |
+| [37c](screenshots/37c-recipe-operation-distribution.png) | Inspect complete operation duration groups from the recipe. |
+| [37d](screenshots/37d-recipe-hypothesis-and-evidence.png) | Keep the hypothesis separate from an exact frozen evidence citation. |
+| [37e](screenshots/37e-mobile-log-recipe.png) | Preview the same generic log recipe on a narrow screen. |

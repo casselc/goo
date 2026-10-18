@@ -1021,3 +1021,7 @@ td details {
 @media(max-width:600px){.document-card,.deployment-card{padding:12px}.document-card .controls{gap:6px}.document-card .controls button{font-size:11px;padding:7px}.note-composer .controls{align-items:stretch}}
 
 #captureSavedTitle {scroll-margin-top:90px}
+.reusable-questions h3 { margin-top: .75rem; }
+#recipePlan { border-left: 3px solid var(--accent, #5479dc); padding: .2rem 1rem; margin: 1rem 0; }
+#exampleQuestions { margin-bottom: 1.5rem; }
+#legacyExamples > summary { font-weight: 600; padding: 1rem 0; }

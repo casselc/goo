@@ -764,3 +764,31 @@ narrative or its stored reference does not execute telemetry; live expansion is
 explicit. This slice has a local immutable revision forest, not shared editing or
 automatic CI provenance. Journey 36 executes the authored-context workflow over
 real sample-app telemetry and generates its storyboard frames.
+
+## 24. Shared example packages and scoped recipe planning
+
+Implemented local paths; built-in recipes are question transforms, not an
+independent measurement language. Instrumentation prerequisites remain declared.
+
+```mermaid
+flowchart LR
+  Samples[Reservation / Go checkout / Go reports] --> OTEL[OTel collector and ClickHouse]
+  YAML[Ordinary example telemetry packages] --> Package[Existing package planner]
+  Package --> Applied[Applied Explore question]
+  Applied --> Preview[Go recipe transform and source compiler]
+  Preview --> Explicit[Explicit Run this question]
+  Explicit --> OTEL
+  OTEL --> Result[Full aggregates and bounded records]
+  Preview --> Hypothesis[Plain-text hypothesis without evidence]
+  Result --> Save[Server reread and immutable capture]
+  Save --> Ref[Exact capture ID]
+  Ref --> Notes[Ordered investigation notes]
+  Hypothesis --> Notes
+  Result --> Definition[Create reusable package revision]
+  Save --> Definition
+```
+
+Preview retains environment, fixed half-open window and the entire predicate;
+execution replaces breakdown/measures only and resets record paging. Saving a
+capture is another source read. The legacy lifecycle/resource lab is explicit;
+its specialized semantics have not been replaced by span/log counts.

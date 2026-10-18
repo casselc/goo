@@ -198,3 +198,10 @@ and missing/empty values. This is observed conformance, not proof of completenes
 `error_comparison_test.go` adds 100 Hegel state/swarm sequences of 25 steps for changing counts, source disagreement, environment and fixed windows. Journey 35 writes the real `GOO_ERROR_COMPARISON_LEDGER`; its Quint adapter validates measure/compare/save/reopen and rejects four corrupted ledgers. The saved-only Bombadil actor exercises all comparison measures. See [contract](../docs/ERROR_COMPARISONS.md).
 
 `context_notes_test.go` adds 60 Hegel sequences of 15 state/swarm steps over actual local notes/marker storage, including preserved branches/history and half-open environment/window context. Journey 36 writes `GOO_CONTEXT_LEDGER`; Quint checks observed draft/revision/branch/reopen operations and six rejecting controls. See [contract](../docs/WORKBENCH_CONTEXT.md).
+
+Scoped recipes: `go test -run TestHegelRecipeStateSwarm -count=1 -v .` checks
+100 sequences of 25 recipe/signal/scope/predicate steps. The live journey writes a
+ledger consumed by `TestQuintRecipesLiveLedger` (set `GOO_RECIPES_LEDGER`); its
+preview/run/capture/narrative/reuse conformance checks have six rejecting controls.
+`GOO_RECIPES_BOMBADIL=1 bash scripts/run_journeys.sh journeys/recipes.spec.js`
+from the repository root includes the preview-only browser guard campaign.

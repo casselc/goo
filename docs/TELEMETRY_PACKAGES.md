@@ -140,3 +140,9 @@ and supported widths are in [core basics](CORE_WORKBENCH.md). Definition validat
 rejects log-duration summaries and default lookbacks exceeding 240 chart intervals.
 Saving a package still stores configuration; new general captures separately retain
 the resulting measures and chart points.
+
+The primary Examples gallery now loads six ordinary definitions from
+`examples/telemetry`. These run through the same package planner and Explore;
+[scoped recipe transforms](INVESTIGATION_RECIPES.md) can refine their breakdowns
+and measures before saving another reusable revision. No example-specific query
+evaluator is introduced.

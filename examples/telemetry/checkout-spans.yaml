@@ -1,0 +1,27 @@
+apiVersion: goo/telemetry-package/v1alpha1
+name: checkout-spans
+title: Go checkout spans
+description: Captured records only. Retries, sampling and completeness remain unknown.
+  This package does not infer business outcomes.
+source:
+  adapter: clickhouse.otel/v1
+  signal: spans
+  environment: local
+where:
+  field:
+    kind: column
+    key: service
+  op: eq
+  value: lab-go-checkout
+groupBy:
+- kind: column
+  key: name
+measure: captured-record-count
+lookbackMinutes: 5
+views:
+- records
+- distribution
+- trace-context
+bucketMs: 10000
+summary: span-duration
+spanStatus: true

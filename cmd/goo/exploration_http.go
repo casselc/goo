@@ -12,6 +12,7 @@ import (
 )
 
 func registerExploration(mux *http.ServeMux, client *http.Client) {
+	registerRecipes(mux)
 	mux.HandleFunc("POST /compare", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Cache-Control", "no-store")

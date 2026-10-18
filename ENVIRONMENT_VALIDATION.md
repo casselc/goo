@@ -745,3 +745,66 @@ dangling-image prune reclaimed zero bytes. Changed-document relative links and
 Markdown fences were checked; Mermaid rendering was not separately browser-tested.
 Full networked multistage Dockerfile builds were not rerun; the three COPY updates
 were reviewed and the actual CLI was built/staged and exercised in the offline lab.
+
+
+## Shared sample investigations and scoped recipes — 2026-10-18
+
+Baseline: `5c66e1148d157fdc6f04e8c2ce2a8f2d4a05eff7`. Three pure Go recipe
+transforms share the existing Explore compiler; six ordinary YAML definitions
+move sample investigation entry points into Explore/packages/captures/notes.
+The original lifecycle/resource lab is explicitly opened rather than queried on
+Examples navigation. A derived question clears the previous package banner.
+[Contract](docs/INVESTIGATION_RECIPES.md), architecture flow 24 and storyboard 37.
+
+Verified in this instance:
+
+- Root Go race suite and vet: `artifacts/recipes-go.log`, `recipes-vet.log`.
+  Input isolation, full OR/predicate preservation, typed SQL, signal guards,
+  strict HTTP and all six package definitions are covered; readable YAML was
+  separately validated in `recipes-examples.log`.
+- 19 Python checks (`recipes-python.log`), 27 Node checks
+  (`recipes-node-final.log`). Hegel state/swarm: 100 sequences of 25 steps,
+  reviewed pass 0.19 s (`recipes-verification.log`; the standalone live-ledger
+  opt-in is skipped there, then executed by the real browser journey).
+- Broad run: `artifacts/recipes-full-journeys.log`, 37 executed / 36 passed /
+  one harness failure in 14.8 minutes, no skips. Generated/fault campaigns and
+  cross-app Quint enabled. The sidebar-driven legacy test needed the same
+  explicit disclosure action as direct-navigation tests. Its old hidden-control
+  timeout is retained as evidence, not reported as a passing run.
+- Final focused run: `artifacts/recipes-final-focused.log`, two passes in
+  1.2 minutes, including the corrected legacy test and current recipe flow.
+  Real report work is independently located in ClickHouse; UI filters narrow it;
+  recipe preview/run preserves that population; capture and notes precede deriving
+  and freshly running its package. Source-free preview/notes, wrong-signal and
+  delayed-result guards, mobile containment and all six sample definitions pass.
+- Final ledger: `artifacts/recipes/933a4f7b/ledger.json`. Quint positive replay and
+  six rejecting controls pass in 13.04 s. The model is bounded observed conformance,
+  not exhaustive browser verification. Bombadil records 467 observations through
+  initial/latency/errors/complete, with all three recipe choices; see `coverage.json`
+  and `bombadil/trace.jsonl` in that directory.
+- All 125 storyboard files (124 PNG, one JPEG) refreshed since the broad run;
+  the focused run refreshes the corrected definition frames and latest recipe
+  frames. Desktop gallery/preview/notes and mobile recipe frames were inspected.
+  Markdown local links/fences checked; Mermaid rendering was not separately run.
+
+Initial harness/model failures for save wording, disclosure state and a reserved
+Quint action name were corrected. The model then rejected treating a fresh package
+window as the original fixed hypothesis; the current UI journey captures first
+and derives the reusable definition from that stored question. Captures may
+include later arrivals than live results; the model checks exact question scope,
+not equality of two separate-read counts.
+
+Retained query/packages image:
+`sha256:007a33fef1e368313bacd99755b6947af689559a8dc53542f6dd074bdd4fb656`.
+Offline build log: `artifacts/recipes-reviewed-build.log`; runtime UI/Python/example
+inputs match the staged source, and a fresh CGO-disabled Go build matches its
+binary byte-for-byte. This is a precommit build with parent-revision/dirty metadata.
+The networked multistage Dockerfiles were not rerun. Compose configuration passed;
+all 12 services run after the wrapper restores traffic. Existing volumes and five
+stale Redis pending entries were retained; no resets were used.
+
+No environment initialization or dependency changes were required. The retained
+startup instructions and local Docker/toolchain setup still apply. Declared recipe
+prerequisites are not verified coverage; the specialized lifecycle/Redis contracts,
+production authorization/storage and general user-authored workflows remain
+separate work.

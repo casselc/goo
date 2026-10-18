@@ -160,3 +160,11 @@ is not archived by saved inventory. Event age does not establish pipeline health
 [Error/latency comparison boundaries](ERROR_COMPARISONS.md): span status is exporter status, not request/business outcome policy; captured-error percentages include Unset/unknown in the denominator. Different fixed windows and saved server-read pairs now exist. Statistical attribution and custom outcome policies remain future work. Local [deployment context and ordered notes](WORKBENCH_CONTEXT.md) now exist, with explicit authored provenance, immutable branches and exact evidence references.
 
 Investigation documents currently reference general captures and local deployment receipts; legacy operation receipts and live-question cards are not supported. Marker corrections/retractions, automatic CI ingestion, verified authorship and team authorization remain future work. Drafts persist only in the current page until saved. See [contract](WORKBENCH_CONTEXT.md).
+
+## Scoped recipes and examples
+
+Three [built-in recipes](INVESTIGATION_RECIPES.md) preserve an applied population,
+with explicit source-free preview and live execution. Six example packages use
+the shared product flow. Prerequisites are declared, not automatically verified;
+user-authored multistep recipes and general lifecycle lowering remain absent.
+The specialized reservation/Redis lab remains an explicit legacy section.

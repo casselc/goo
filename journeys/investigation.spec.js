@@ -49,8 +49,8 @@ test.beforeAll(async ({ request }) => {
 test('01 retry success crosses the async trace boundary', async ({ page, request }) => {
   const id = await create(page, 'retry');
   await frame(page, '01a-create-retry');
-  await page.goto(investigation+'/#examples');
-  await expect(page.locator('.warning')).toContainText('unverified');
+  await page.goto(investigation+'/#examples');await page.locator('#legacyExamples > summary').click();
+  await expect(page.locator('#legacyExamples > .warning')).toContainText('unverified');
   await expect.poll(async () => (await query(request, { view: 'completion', reservationId: id }))
     .rows[0]?.classification, { timeout: 100_000, intervals: [1500] }).toBe('good');
   const completion = await render(page, { view: 'completion', reservationId: id, groupBy: 'release' });
@@ -76,7 +76,7 @@ test('01 retry success crosses the async trace boundary', async ({ page, request
 test('02 compare good, late, missing and rejected outcomes', async ({ page, request }) => {
   const ids = {};
   for (const scenario of ['good', 'late', 'missing', 'reject']) ids[scenario] = await create(page, scenario);
-  await page.goto(investigation+'/#examples');
+  await page.goto(investigation+'/#examples');await page.locator('#legacyExamples > summary').click();
   for (const scenario of ['good', 'late', 'missing', 'reject']) {
     const want = scenario === 'good' ? 'good' : 'bad';
     await expect.poll(async () => (await query(request, { view: 'completion', reservationId: ids[scenario] }))
@@ -96,7 +96,7 @@ test('03 inspect the definition, reject invalid queries, and distinguish metric 
   await page.getByText('Application-owned package', { exact: true }).click();
   await expect(page.locator('#package')).toContainText('reservations');
   await frame(page, '03a-owned-definition');
-  await page.getByRole('button',{name:'Examples',exact:true}).click();
+  await page.getByRole('button',{name:'Examples',exact:true}).click();await page.locator('#legacyExamples > summary').click();
   await page.locator('#expression').fill(JSON.stringify({ view: 'arbitrary-sql', sql: 'DROP TABLE otel_logs' }));
   await page.getByRole('button', { name: 'Run expression', exact: true }).click();
   await expect(page.locator('#status')).toContainText(/unsupported|unknown|view/i);
@@ -116,7 +116,7 @@ test('04 heatmap cell opens raw spans and the linked reservation waterfall', asy
     const data=await query(request,{view:'traces',reservationId:id});
     return data.rows.some(r=>r.SpanName==='inventory process');
   },{timeout:100_000,intervals:[1500]}).toBeTruthy();
-  await page.goto(investigation+'/#examples');
+  await page.goto(investigation+'/#examples');await page.locator('#legacyExamples > summary').click();
   const heat=await render(page,{view:'heatmap',reservationId:id,minutes:5});
   expect(heat.possiblyTruncated).toBe(false);
   const total=heat.rows.reduce((n,r)=>n+Number(r.calls),0);
@@ -160,7 +160,7 @@ test('05 guided questions preserve a subject and expose USE measurement gaps',as
   const id=await create(page,'retry');
   await expect.poll(async()=>(await query(request,{view:'traces',reservationId:id})).rows.length,
     {timeout:100_000,intervals:[1500]}).toBeGreaterThan(0);
-  await page.goto(investigation+'/#examples');
+  await page.goto(investigation+'/#examples');await page.locator('#legacyExamples > summary').click();
   await render(page,{view:'traces',reservationId:id,scenario:'retry'});
   await page.locator('#workflow').selectOption('retry');
   await expect(page.locator('#workflowCoverage')).toContainText('different denominators');
@@ -191,7 +191,7 @@ test('06 real queue pressure and a discoverable semantic package library',async(
     const data=await query(request,{view:'queue',minutes:5});
     return data.rows.some(r=>r.metric==='lab.worker.active'&&Number(r.value)>0);
   },{timeout:15_000,intervals:[500]}).toBeTruthy();
-  await page.goto(investigation+'/#examples');
+  await page.goto(investigation+'/#examples');await page.locator('#legacyExamples > summary').click();
   const data=await render(page,{view:'queue',minutes:5});
   const metrics=new Set(data.rows.map(r=>r.metric));
   for(const metric of ['lab.queue.depth','lab.queue.pending','lab.worker.active','lab.worker.capacity','lab.worker.utilization','lab.queue.wait.p95'])expect(metrics.has(metric)).toBeTruthy();
@@ -519,7 +519,7 @@ test('17 live peer imbalance telemetry loss and restart retain honest comparison
 test('18 late initial query preserves edited operation lookback',async({page})=>{
  let captured,release;const fetched=new Promise(r=>captured=r),gate=new Promise(r=>release=r);
  await page.route('**/api/query',async route=>{const response=await route.fetch();captured();await gate;await route.fulfill({response})});
- await page.goto(investigation+'/#examples');await fetched;await page.getByRole('button',{name:'Operations',exact:true}).click();await page.locator('#minutes').fill('2');release();await expect(page.locator('#run')).toBeEnabled();await expect(page.locator('#minutes')).toHaveValue('2');
+ await page.goto(investigation+'/#examples');await page.locator('#legacyExamples > summary').click();await fetched;await page.getByRole('button',{name:'Operations',exact:true}).click();await page.locator('#minutes').fill('2');release();await expect(page.locator('#run')).toBeEnabled();await expect(page.locator('#minutes')).toHaveValue('2');
  await expect(page.locator('#operationPackage option')).toHaveCount(2);const response=page.waitForResponse(r=>r.url().includes('/api/operations?'));await page.getByRole('button',{name:'Inspect operations',exact:true}).click();const result=await(await response).json();expect(result.toMs-result.fromMs).toBe(120000);await expect(page.locator('#runOperations')).toBeEnabled();await expect(page.locator('#minutes')).toHaveValue('2');await frame(page,'18a-edited-lookback-survives-late-response');
 });
 
