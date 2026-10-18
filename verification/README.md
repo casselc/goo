@@ -194,3 +194,5 @@ populations including uint64 extremes; sums/counts conserve across disjoint grou
 with rejecting controls for wrong total p95, omitted saved group and altered page
 group. Typed comparisons ignore JSON indentation while preserving exact integers
 and missing/empty values. This is observed conformance, not proof of completeness.
+
+`error_comparison_test.go` adds 100 Hegel state/swarm sequences of 25 steps for changing counts, source disagreement, environment and fixed windows. Journey 35 writes the real `GOO_ERROR_COMPARISON_LEDGER`; its Quint adapter validates measure/compare/save/reopen and rejects four corrupted ledgers. The saved-only Bombadil actor exercises all comparison measures. See [contract](../docs/ERROR_COMPARISONS.md).

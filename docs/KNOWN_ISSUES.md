@@ -136,7 +136,7 @@ Observed service/span-name inventory now exists, bounded to 1000 pairs and one
 environment/window. It excludes log-only services and does not infer fleet
 membership, health, dependencies, request rate or declared business operations.
 General inventory/Explore evidence can now be saved as immutable bounded receipts;
-expanded live context and browser baseline pairs remain volatile. See [contract](SERVICE_INVENTORY.md).
+expanded live context and unsaved browser baselines remain volatile. Explicit comparison-pair captures now exist (ERROR_COMPARISONS.md). See [contract](SERVICE_INVENTORY.md).
 
 General captures now retain full supported aggregates and up to 1,000 inspection
 records with stable stored pages. Ordinary live offsets still change with arrival
@@ -156,3 +156,5 @@ or cross-replica/per-tenant quotas. Service discovery is a separate live read an
 is not archived by saved inventory. Event age does not establish pipeline health.
 
 [Grouped span-duration measures](GROUPED_MEASURES.md) now support complete per-group summaries/ranking. Arbitrary numeric measures and grouped time-series remain absent. Old summary+group capture plans may require explicit new live evidence rather than refresh; count-only groups are not retroactively upgraded.
+
+[Error/latency comparison boundaries](ERROR_COMPARISONS.md): span status is exporter status, not request/business outcome policy; captured-error percentages include Unset/unknown in the denominator. Different fixed windows and saved server-read pairs now exist. Statistical attribution, custom outcome policies, deploy markers and ordered investigation notes remain future work.

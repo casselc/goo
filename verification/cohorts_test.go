@@ -40,7 +40,7 @@ func (m *cohortMachine) InvariantNoInventedShares(tc hegel.TestCase) {
 		b.State = "changed_between_reads"
 	}
 	if m.drift {
-		b.Question.ToMS++
+		b.Question.Environment = "other"
 	}
 	r, e := exploration.CompareCohorts(exploration.ComparisonRequest{Baseline: a, Selection: b})
 	if m.drift {
@@ -88,7 +88,7 @@ func TestQuintObservedCohorts(t *testing.T) {
 			b.State = "changed_between_reads"
 		}
 		if action == "scopeChange" {
-			b.Question.ToMS++
+			b.Question.Environment = "other"
 		}
 		r, e := exploration.CompareCohorts(exploration.ComparisonRequest{Baseline: cohort(12, "observed"), Selection: b})
 		supported := e == nil

@@ -12,39 +12,45 @@ import (
 // Cohort is a browser-held capture of complete group/count results, not a signed
 // source receipt. Comparison validates its internal accounting, not provenance.
 type Cohort struct {
-	Question Query        `json:"question"`
-	Basis    string       `json:"basis"`
-	Count    string       `json:"count"`
-	State    string       `json:"state"`
-	Groups   []ValueCount `json:"groups"`
+	Duration   *DurationSummary   `json:"duration,omitempty"`
+	SpanStatus *SpanStatusSummary `json:"spanStatus,omitempty"`
+	Question   Query              `json:"question"`
+	Basis      string             `json:"basis"`
+	Count      string             `json:"count"`
+	State      string             `json:"state"`
+	Groups     []ValueCount       `json:"groups"`
 }
 type ValueCount struct {
-	Value *string `json:"g0"`
-	Count string  `json:"count"`
+	Duration   *DurationSummary   `json:"duration,omitempty"`
+	SpanStatus *SpanStatusSummary `json:"spanStatus,omitempty"`
+	Value      *string            `json:"g0"`
+	Count      string             `json:"count"`
 }
 type ComparisonRequest struct {
 	Baseline  Cohort `json:"baseline"`
 	Selection Cohort `json:"selection"`
 }
 type ValueComparison struct {
-	Value            *string `json:"value"`
-	BaselineCount    string  `json:"baselineCount"`
-	SelectionCount   string  `json:"selectionCount"`
-	BaselinePercent  string  `json:"baselinePercent"`
-	SelectionPercent string  `json:"selectionPercent"`
-	DifferencePP     string  `json:"differencePP"`
+	Measures         *MeasureComparison `json:"measures,omitempty"`
+	Value            *string            `json:"value"`
+	BaselineCount    string             `json:"baselineCount"`
+	SelectionCount   string             `json:"selectionCount"`
+	BaselinePercent  string             `json:"baselinePercent"`
+	SelectionPercent string             `json:"selectionPercent"`
+	DifferencePP     string             `json:"differencePP"`
 }
 type CohortComparison struct {
-	State          string            `json:"state"`
-	Reason         string            `json:"reason,omitempty"`
-	Field          Field             `json:"field"`
-	BaselineCount  string            `json:"baselineCount"`
-	SelectionCount string            `json:"selectionCount"`
-	BaselineBasis  string            `json:"baselineBasis"`
-	SelectionBasis string            `json:"selectionBasis"`
-	Basis          string            `json:"basis"`
-	Rows           []ValueComparison `json:"rows"`
-	Warnings       []string          `json:"warnings"`
+	Measures       *MeasureComparison `json:"measures,omitempty"`
+	State          string             `json:"state"`
+	Reason         string             `json:"reason,omitempty"`
+	Field          Field              `json:"field"`
+	BaselineCount  string             `json:"baselineCount"`
+	SelectionCount string             `json:"selectionCount"`
+	BaselineBasis  string             `json:"baselineBasis"`
+	SelectionBasis string             `json:"selectionBasis"`
+	Basis          string             `json:"basis"`
+	Rows           []ValueComparison  `json:"rows"`
+	Warnings       []string           `json:"warnings"`
 }
 
 func decimal(value string) (*big.Int, error) {
@@ -100,6 +106,9 @@ func (c Cohort) validate() (map[string]ValueCount, *big.Int, error) {
 	if c.State != "changed_between_reads" && (sum.Cmp(total) != 0 || c.State == "no_data" && total.Sign() != 0 || c.State == "observed" && total.Sign() == 0) {
 		return nil, nil, fmt.Errorf("distribution counts disagree with population")
 	}
+	if e := c.validateMeasures(); e != nil {
+		return nil, nil, e
+	}
 	return m, total, nil
 }
 func CompareCohorts(request ComparisonRequest) (*CohortComparison, error) {
@@ -112,10 +121,13 @@ func CompareCohorts(request ComparisonRequest) (*CohortComparison, error) {
 		return nil, e
 	}
 	qa, qb := request.Baseline.Question, request.Selection.Question
-	if qa.Signal != qb.Signal || qa.Environment != qb.Environment || qa.FromMS != qb.FromMS || qa.ToMS != qb.ToMS || qa.GroupBy[0] != qb.GroupBy[0] {
-		return nil, fmt.Errorf("comparison requires identical signal, environment, fixed window and distribution field")
+	if qa.Signal != qb.Signal || qa.Environment != qb.Environment || qa.GroupBy[0] != qb.GroupBy[0] {
+		return nil, fmt.Errorf("comparison requires identical signal, environment and distribution field")
 	}
 	result := &CohortComparison{State: "ok", Field: qa.GroupBy[0], BaselineCount: request.Baseline.Count, SelectionCount: request.Selection.Count, BaselineBasis: request.Baseline.Basis, SelectionBasis: request.Selection.Basis, Rows: []ValueComparison{}, Warnings: []string{"Captures were read separately; late data, sampling and source changes may affect differences.", "Populations may overlap. Percentage-point differences are descriptive leads, not causal attribution or statistical significance.", "These are captured record counts, not unique requests or business outcomes. Source bases are caller-supplied metadata, not authenticated provenance."}}
+	if request.Baseline.Duration != nil && request.Selection.Duration != nil || request.Baseline.SpanStatus != nil && request.Selection.SpanStatus != nil {
+		result.Measures = compareMeasures(request.Baseline.Duration, request.Selection.Duration, request.Baseline.SpanStatus, request.Selection.SpanStatus)
+	}
 	if request.Baseline.State == "changed_between_reads" || request.Selection.State == "changed_between_reads" {
 		result.State = "unknown"
 		result.Reason = "source-reads-disagree"
@@ -159,7 +171,7 @@ func CompareCohorts(request ComparisonRequest) (*CohortComparison, error) {
 			if displayDifference == "-0.00" {
 				displayDifference = "0.00"
 			}
-			rows = append(rows, ranked{ValueComparison{value, ac.String(), bc.String(), ap.FloatString(2), bp.FloatString(2), displayDifference}, new(big.Rat).Abs(difference), key})
+			rows = append(rows, ranked{ValueComparison{Value: value, BaselineCount: ac.String(), SelectionCount: bc.String(), BaselinePercent: ap.FloatString(2), SelectionPercent: bp.FloatString(2), DifferencePP: displayDifference, Measures: compareMeasures(av.Duration, bv.Duration, av.SpanStatus, bv.SpanStatus)}, new(big.Rat).Abs(difference), key})
 		}
 		sort.Slice(rows, func(i, j int) bool {
 			if order := rows[i].score.Cmp(rows[j].score); order != 0 {
@@ -170,6 +182,9 @@ func CompareCohorts(request ComparisonRequest) (*CohortComparison, error) {
 		for _, row := range rows {
 			result.Rows = append(result.Rows, row.row)
 		}
+	}
+	if result.State != "ok" {
+		result.Measures = nil
 	}
 	// Hash the actual caller-held group evidence, not only claimed source bases.
 	canonical := request

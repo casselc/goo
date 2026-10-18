@@ -693,3 +693,43 @@ flowchart LR
 Comparison baselines still use captured record proportions. Stored count-only
 groups remain readable, and fixed-plan refresh may require a new capture after
 compiler changes.
+
+
+## 22. Error and latency change investigation
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant UI as Explore workbench
+    participant Go as Go semantic core
+    participant CH as ClickHouse OTel tables
+    participant Store as Local immutable capture store
+    User->>UI: Apply span question with status, duration and breakdown
+    UI->>Go: Current fixed question
+    Go->>CH: Full total, group and optional interval aggregates
+    CH-->>Go: Exact duration and exhaustive status counts
+    Go-->>UI: Validated evidence or source-read disagreement
+    User->>UI: Compare previous window
+    UI->>Go: Adjacent fixed question with same selectors
+    Go->>CH: Independently read previous population
+    CH-->>Go: Previous aggregates
+    Go-->>UI: Baseline evidence
+    UI->>Go: Compare both captured aggregate cohorts
+    Go-->>UI: Exact differences, absent groups and explicit unknowns
+    User->>UI: Capture comparison
+    UI->>Go: Two fixed questions, no caller evidence
+    Go->>CH: Reread both questions and bounded inspection banks
+    Go->>Store: Publish two child captures, then comparison receipt
+    Store-->>UI: Pair ID and child capture links
+    User->>UI: Reopen pair and inspect current child
+    UI->>Store: Read immutable pair and stored records
+    Note over UI,Store: Pair reopening does not query telemetry
+    User->>UI: Explicitly expand a reported trace and linked logs
+    UI->>Go: Original selection bounds, exact reported identity
+    Go->>CH: Fresh bounded trace and log reads
+    Go-->>UI: Separate evidence with coverage unknown
+```
+
+[Contract](ERROR_COMPARISONS.md) and journey 35 distinguish captured-span error
+fractions from application SLIs. Publication is sequential, not an atomic
+multi-object transaction; failed pairs can leave valid child captures.

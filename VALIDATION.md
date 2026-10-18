@@ -5,6 +5,36 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Error and latency comparisons (2026-10-18)
+
+[Contract](docs/ERROR_COMPARISONS.md): exhaustive captured span-status categories,
+full-population error-percentage ranking, independently computed mean/p95/p99
+changes across fixed windows, retained-baseline group drilldown and explicit
+server-reread saved comparison pairs with links to both record captures.
+Unset and unrecognized status remain visible; no-data/disagreement suppress
+normalized differences. Existing count-only captures/SQL remain compatible.
+
+Passed: root Go race suite/vet; focused capture-refresh race checks; 19 Python
+tests; 24 frontend checks; Hegel comparison state/swarm (100 sequences of 25
+steps, 0.54 s initial / 0.67 s model regression), plus existing cohort state/swarm
+and Quint cohort regression (7.55 s). Native checks cover invalid/missing status
+counts, category drift with identical total counts, missing groups, package YAML,
+interval validation, source-free saved pair reopening, refresh child lineage and
+retaining the predecessor on source outage.
+
+Journey 35 passed initially (54.8 s) and on the polished image (47.0 s). It checks
+80 previous/124 current real OTLP spans with only 100 current displayed rows,
+2.50% → 16.13% recorded errors (+13.63 pp), +90 ms p95, missing/empty routes,
+saved comparison reopening, changed-route-to-trace/log navigation and mobile
+containment. The final new-feature campaign passed Quint with four rejecting
+controls (7.20 s) and 342 Bombadil records through all six required stages.
+All 11 affected regression journeys passed (3.9 minutes). A final trace-action
+guard was checked by both discovery and the strengthened comparison journey
+(2 passes, 1.3 minutes), including live adapter status-class groups and saved
+trace-ID pair behavior. The final comparison campaign recorded 501 Bombadil
+records through six stages. Five new frames and affected existing storyboards
+were regenerated; see [environment evidence](ENVIRONMENT_VALIDATION.md).
+
 ## Grouped duration measures and polish (2026-10-18)
 
 [Contract](docs/GROUPED_MEASURES.md): complete per-group duration aggregates,

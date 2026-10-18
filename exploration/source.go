@@ -19,20 +19,21 @@ import (
 )
 
 type Result struct {
-	TimeSeries    []TimePoint       `json:"timeSeries,omitempty"`
-	Duration      *DurationSummary  `json:"duration,omitempty"`
-	Question      Query             `json:"question"`
-	CapturedAt    string            `json:"capturedAt"`
-	Basis         string            `json:"basis"`
-	Count         string            `json:"count"`
-	State         string            `json:"state"`
-	Rows          []json.RawMessage `json:"rows"`
-	HasMore       bool              `json:"hasMore"`
-	Groups        []json.RawMessage `json:"groups"`
-	Fields        []Field           `json:"fields"`
-	FieldsLimited bool              `json:"fieldsLimited"`
-	Plan          Plan              `json:"plan"`
-	Warnings      []string          `json:"warnings"`
+	SpanStatus    *SpanStatusSummary `json:"spanStatus,omitempty"`
+	TimeSeries    []TimePoint        `json:"timeSeries,omitempty"`
+	Duration      *DurationSummary   `json:"duration,omitempty"`
+	Question      Query              `json:"question"`
+	CapturedAt    string             `json:"capturedAt"`
+	Basis         string             `json:"basis"`
+	Count         string             `json:"count"`
+	State         string             `json:"state"`
+	Rows          []json.RawMessage  `json:"rows"`
+	HasMore       bool               `json:"hasMore"`
+	Groups        []json.RawMessage  `json:"groups"`
+	Fields        []Field            `json:"fields"`
+	FieldsLimited bool               `json:"fieldsLimited"`
+	Plan          Plan               `json:"plan"`
+	Warnings      []string           `json:"warnings"`
 }
 type Source struct {
 	Endpoint, User, Password string
@@ -149,6 +150,12 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 			return nil, e
 		}
 	}
+	if q.SpanStatus {
+		r.SpanStatus, e = DecodeSpanStatus(count[0])
+		if e != nil {
+			return nil, e
+		}
+	}
 	r.State = "observed"
 	if r.Count == "0" {
 		r.State = "no_data"
@@ -201,6 +208,7 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 		sum := new(big.Int)
 		durationSum := new(big.Int)
 		var durationMin, durationMax *big.Int
+		statusTotals := emptySpanStatus()
 		seenGroups := map[string]bool{}
 		for groupIndex, raw := range r.Groups {
 			var group map[string]json.RawMessage
@@ -236,6 +244,17 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 					durationMax = hi
 				}
 			}
+			if q.SpanStatus {
+				status, err := DecodeSpanStatus(raw)
+				if err != nil || status.Count == "0" {
+					return nil, fmt.Errorf("invalid grouped span status")
+				}
+				statusTotals.add(*status)
+				for _, k := range []string{"status_error", "status_ok", "status_unset", "status_unknown"} {
+					delete(group, k)
+				}
+				group["spanStatus"], _ = json.Marshal(status)
+			}
 			dimensions := []*string{}
 			for i := range q.GroupBy {
 				key := fmt.Sprintf("g%d", i)
@@ -254,9 +273,12 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 				return nil, fmt.Errorf("duplicate group dimensions")
 			}
 			seenGroups[string(key)] = true
-			if q.Summary == "span-duration" {
+			if q.Summary == "span-duration" || q.SpanStatus {
 				r.Groups[groupIndex], _ = json.Marshal(group)
 			}
+		}
+		if r.SpanStatus != nil && *r.SpanStatus != statusTotals {
+			r.State = "changed_between_reads"
 		}
 		if r.Duration != nil {
 			totalSum, _ := durationDecimal(r.Duration.SumNS, 128)
@@ -323,9 +345,16 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 			return nil, err
 		}
 		sum := new(big.Int)
+		statusTotal := emptySpanStatus()
 		for _, point := range r.TimeSeries {
+			if point.SpanStatus != nil {
+				statusTotal.add(*point.SpanStatus)
+			}
 			n, _ := new(big.Int).SetString(point.Count, 10)
 			sum.Add(sum, n)
+		}
+		if r.SpanStatus != nil && *r.SpanStatus != statusTotal {
+			r.State = "changed_between_reads"
 		}
 		if sum.Cmp(totalValue) != 0 {
 			r.State = "changed_between_reads"

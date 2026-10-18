@@ -22,6 +22,7 @@ type Predicate struct {
 	Value string      `json:"value,omitempty" yaml:"value,omitempty"`
 }
 type Query struct {
+	SpanStatus  bool       `json:"spanStatus,omitempty" yaml:"spanStatus,omitempty"`
 	BucketMS    int64      `json:"bucketMs,omitempty" yaml:"bucketMs,omitempty"`
 	Summary     string     `json:"summary,omitempty" yaml:"summary,omitempty"`
 	Signal      string     `json:"signal" yaml:"signal"`
@@ -34,12 +35,12 @@ type Query struct {
 	Offset      int        `json:"offset" yaml:"offset"`
 }
 
-var columns = map[string]string{"service": "string", "trace_id": "string", "span_id": "string", "scope": "string", "scope_version": "string", "name": "string", "kind": "string", "status": "string", "duration_ns": "uint64", "duration_bucket": "string", "body": "string", "severity": "string"}
+var columns = map[string]string{"service": "string", "trace_id": "string", "span_id": "string", "scope": "string", "scope_version": "string", "name": "string", "kind": "string", "status": "string", "duration_ns": "uint64", "duration_bucket": "string", "status_class": "string", "body": "string", "severity": "string"}
 
 func (f Field) Type(signal string) (string, error) {
 	if f.Kind == "column" {
 		typ, ok := columns[f.Key]
-		if !ok || signal == "logs" && (f.Key == "name" || f.Key == "kind" || f.Key == "status" || f.Key == "duration_ns" || f.Key == "duration_bucket") || signal == "spans" && (f.Key == "body" || f.Key == "severity") {
+		if !ok || signal == "logs" && (f.Key == "name" || f.Key == "kind" || f.Key == "status" || f.Key == "duration_ns" || f.Key == "duration_bucket" || f.Key == "status_class") || signal == "spans" && (f.Key == "body" || f.Key == "severity") {
 			return "", fmt.Errorf("unsupported %s field %s", signal, f.Key)
 		}
 		return typ, nil
@@ -50,6 +51,9 @@ func (f Field) Type(signal string) (string, error) {
 	return "string", nil
 }
 func (q Query) Validate() error {
+	if q.SpanStatus && q.Signal != "spans" {
+		return fmt.Errorf("spanStatus requires spans")
+	}
 	if q.BucketMS != 0 {
 		if q.BucketMS != 1000 && q.BucketMS != 10000 && q.BucketMS != 60000 && q.BucketMS != 300000 {
 			return fmt.Errorf("bucketMs must be 1000, 10000, 60000 or 300000")

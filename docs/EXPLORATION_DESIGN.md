@@ -242,4 +242,4 @@ capture path, separate from operation receipts. Full counts/groups and at most
 1,000 ordered inspection records are retained; cursor pages read only the stored
 bank. Reopen is source-free, while fixed-question/plan refresh creates a successor.
 Ordinary live offsets remain mutable. Expanded context and browser baseline pairs
-are not automatically stored. See [the complete contract](GENERAL_CAPTURES.md).
+are not automatically stored. Explicit [comparison capture](ERROR_COMPARISONS.md) now rereads and archives two fixed questions plus the comparison. See [the complete contract](GENERAL_CAPTURES.md).

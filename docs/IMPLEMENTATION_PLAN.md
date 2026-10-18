@@ -274,3 +274,17 @@ groups, while older count-only groups remain readable. Source disagreement and
 fixed-plan upgrade boundaries remain explicit. See [contract](GROUPED_MEASURES.md),
 flow 21 and journey 34. Next: broader typed numeric measures, grouped time-series
 comparison and native metric exploration before collaborative documents.
+
+
+## Error and latency investigation
+
+Implemented: opt-in span-status category accounting for totals/groups/intervals;
+recorded-error percentage ranking; exact mean/p95/p99/error changes across fixed
+windows; prior-window baseline action; changed-group record/trace/log drilldown;
+server-reread immutable comparison pairs linked to ordinary record captures.
+See [contract](ERROR_COMPARISONS.md), journey 35 and architecture flow 22.
+Acceptance uses full-population denominators, missing/unknown preservation,
+source-free pair reopening, real browser/mobile evidence, Hegel state/swarm,
+Quint ledger rejection controls and saved-only Bombadil measure exploration.
+Next: deployment markers and ordered investigation notes, alongside broader typed
+measures/native metrics. Statistical/causal attribution remains unimplemented.

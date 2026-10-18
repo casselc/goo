@@ -1,0 +1,13 @@
+spec: error_comparison.qnt
+module: error_comparison
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  measure:
+    expect: 'coherent == {{.obs.coherent}}'
+  compare:
+    expect: 'coherent == {{.obs.coherent}}'
+  save:
+    expect: 'coherent == {{.obs.coherent}}'
+  reopen:
+    expect: 'coherent == {{.obs.coherent}}'

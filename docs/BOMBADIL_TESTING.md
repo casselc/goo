@@ -419,3 +419,5 @@ p95 ranking, local search/clear, next stored record page and return. Invariants
 retain full count/sum/p95, missing/empty groups, exact ranking and the unchanged
 source basis/groups across pages. After completion it varies count/mean/p95/p99/max.
 It never saves or reads live telemetry. Journey 34 retains coverage/trace artifacts.
+
+`npm run test:error-comparison-campaign` runs journey 35 with the saved-only `verification/bombadil/error-comparison.ts` actor. Its required prefix visits remember/errors/latency/mean/share, then varies all five comparison measures. Invariants retain exact population/status accounting, +13.63 pp errors, +90 ms p95 and immutable comparison evidence. No source queries or capture writes are actor actions.

@@ -60,13 +60,15 @@ backend/evaluator version pinning and renderer archival remain future work.
 
 Trace expansion and linked/surrounding logs opened from a saved row are independent
 **fresh reads** of the original bounds. They are not added to the stored receipt.
-Pinning distribution baselines remains browser-local; neither a baseline pair nor
-an expanded inspector is automatically archived by a general capture.
+Pinning a distribution baseline remains browser-local. Explicit **Capture comparison**
+now rereads/stores both questions and a pair receipt; expanded inspectors are not
+automatically archived. See [comparison contract](ERROR_COMPARISONS.md).
 
 ## Storage and API
 
 - `POST /api/captures`: `{title, question: {kind: "explore", explore: Query}}`
-  or `{title, question: {kind: "inventory", inventory: InventoryQuestion}}`.
+  or `{title, question: {kind: "inventory", inventory: InventoryQuestion}}`, or
+  `{title, question: {kind: "comparison", comparison: {baseline: Query, selection: Query}}}`.
 - Refresh: `POST /api/captures` with `{parent: id}`. A supplied question must match
   the predecessor after presentation normalization. Clients cannot supply evidence.
 - `GET /api/captures/{id}?cursor=...`: verified receipt and one stored record page,

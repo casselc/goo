@@ -125,3 +125,5 @@ explicit identity/authorization design. Investigation documents, annotations and
 multiplayer remain separate increments after the useful core workflows.
 
 [Grouped duration measures](GROUPED_MEASURES.md) now extend the same summary to one/two breakdown fields, with exact ranking, retained capture data and package previews. Count-cohort comparison remains separate from duration ranking.
+
+[Recorded span status and comparisons](ERROR_COMPARISONS.md) now add exact status-category aggregates, prior-window mean/p95/p99/error changes and saved two-population receipts. These remain captured-span measures rather than request/fleet SLOs.

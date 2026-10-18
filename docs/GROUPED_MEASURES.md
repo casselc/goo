@@ -44,9 +44,9 @@ binding knowledge. Old count-only groups remain readable.
    future fresh-window execution retain its grouping/summary; previews expose
    total and group measures. Configuration does not archive preview evidence.
 
-**Pin counts as baseline** makes the current comparison boundary explicit when
-viewing duration rankings: cohort comparison still compares record proportions.
-It does not compare percentile significance or implement a duration-baseline test.
+**Pin as baseline** retains complete supported measures. [Error and latency
+comparisons](ERROR_COMPARISONS.md) add descriptive mean/p95/p99 changes alongside
+record shares; statistical percentile significance is not inferred.
 
 ## Capture/compiler compatibility
 
@@ -67,7 +67,7 @@ of its history. Count-only plans retain their existing source shape.
 ordinary OTLP spans: 100 fast, 20 slow, two with missing route and two with an empty
 route. It checks full-population p95 versus a 100-row page, two-field grouping,
 exact zero/missing distinctions, ranking, stable search scale, explicit refinement,
-count-only cohort projection, package preview, immutable pages and narrow screens.
+cohort measure accounting, package preview, immutable pages and narrow screens.
 Quint validates measure/save/page observations and rejects three corrupted ledgers.
 Hegel checks exact group count/sum conservation across generated populations,
 including uint64 extremes; native source tests cover malformed/duplicate groups
@@ -77,3 +77,5 @@ without reading live telemetry, saving resources or generating application work.
 Next: arbitrary typed numeric measures, grouped time-series comparison and native
 metric exploration. Production identity and actual ingestion-health evidence remain
 separate gaps; these span measurements do not establish request or trace latency.
+
+[Error and latency comparisons](ERROR_COMPARISONS.md) extend baselines to complete duration/status evidence and allow different fixed windows. Count-only evidence still uses population-share comparison.

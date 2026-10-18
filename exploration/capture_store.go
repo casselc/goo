@@ -28,26 +28,46 @@ const CaptureCatalogLimit = 10000
 
 var ErrCapturePlanChanged = errors.New("captured source plan differs from the current compiler; original evidence remains reopenable")
 
+type ComparisonQuestion struct {
+	Baseline  Query `json:"baseline"`
+	Selection Query `json:"selection"`
+}
+type SavedComparison struct {
+	BaselineID  string            `json:"baselineId"`
+	SelectionID string            `json:"selectionId"`
+	Request     ComparisonRequest `json:"request"`
+	Result      *CohortComparison `json:"result"`
+}
 type CaptureQuestion struct {
-	Kind      string             `json:"kind"`
-	Explore   *Query             `json:"explore,omitempty"`
-	Inventory *InventoryQuestion `json:"inventory,omitempty"`
+	Comparison *ComparisonQuestion `json:"comparison,omitempty"`
+	Kind       string              `json:"kind"`
+	Explore    *Query              `json:"explore,omitempty"`
+	Inventory  *InventoryQuestion  `json:"inventory,omitempty"`
 }
 
 func (q CaptureQuestion) Validate() error {
 	switch q.Kind {
 	case "explore":
-		if q.Explore == nil || q.Inventory != nil {
+		if q.Explore == nil || q.Inventory != nil || q.Comparison != nil {
 			return errors.New("explore question required")
 		}
 		return q.Explore.Validate()
 	case "inventory":
-		if q.Inventory == nil || q.Explore != nil {
+		if q.Inventory == nil || q.Explore != nil || q.Comparison != nil {
 			return errors.New("inventory question required")
 		}
 		return q.Inventory.Query().Validate()
+	case "comparison":
+		if q.Comparison == nil || q.Explore != nil || q.Inventory != nil {
+			return errors.New("comparison questions required")
+		}
+		a, b := q.Comparison.Baseline, q.Comparison.Selection
+		if a.Validate() != nil || b.Validate() != nil || len(a.GroupBy) != 1 || len(b.GroupBy) != 1 || a.Signal != b.Signal || a.Environment != b.Environment || a.GroupBy[0] != b.GroupBy[0] {
+			return errors.New("comparison requires valid questions with identical signal, environment and one breakdown")
+		}
+		return nil
 	default:
-		return errors.New("kind must be explore or inventory")
+		return errors.New("kind must be explore, inventory or comparison")
 	}
 }
 
@@ -62,6 +82,12 @@ func (q CaptureQuestion) Normalized() CaptureQuestion {
 		}
 		q.Explore = &v
 	}
+	if q.Comparison != nil {
+		pair := *q.Comparison
+		pair.Baseline = *(CaptureQuestion{Explore: &pair.Baseline}).Normalized().Explore
+		pair.Selection = *(CaptureQuestion{Explore: &pair.Selection}).Normalized().Explore
+		q.Comparison = &pair
+	}
 	return q
 }
 
@@ -74,11 +100,13 @@ type CaptureReceipt struct {
 	Question   CaptureQuestion `json:"question"`
 }
 type SavedCapture struct {
+	Comparison *SavedComparison `json:"comparison,omitempty"`
 	CaptureReceipt
 	Explore   *Result          `json:"explore,omitempty"`
 	Inventory *InventoryResult `json:"inventory,omitempty"`
 }
 type CapturePage struct {
+	Comparison      *SavedComparison `json:"comparison,omitempty"`
 	Receipt         CaptureReceipt   `json:"receipt"`
 	Explore         *Result          `json:"explore,omitempty"`
 	Inventory       *InventoryResult `json:"inventory,omitempty"`
@@ -128,6 +156,22 @@ func (s CaptureStore) Create(ctx context.Context, source Source, title string, q
 		if !reflect.DeepEqual(q, p.Question) {
 			return nil, errors.New("refresh must retain the original question")
 		}
+		if q.Kind == "comparison" {
+			for _, id := range []string{p.Comparison.BaselineID, p.Comparison.SelectionID} {
+				child, e := s.Load(id)
+				if e != nil {
+					return nil, e
+				}
+				plan, e := compile(*child.Question.Explore, CaptureRowLimit)
+				if e != nil {
+					return nil, e
+				}
+				if !reflect.DeepEqual(plan, child.Explore.Plan) {
+					return nil, ErrCapturePlanChanged
+				}
+			}
+			return s.createComparison(ctx, source, title, q, parent, p.Comparison)
+		}
 		var current, previous Plan
 		if q.Kind == "explore" {
 			current, e = compile(*q.Explore, CaptureRowLimit)
@@ -142,6 +186,9 @@ func (s CaptureStore) Create(ctx context.Context, source Source, title string, q
 		if !reflect.DeepEqual(current, previous) {
 			return nil, ErrCapturePlanChanged
 		}
+	}
+	if q.Kind == "comparison" {
+		return s.createComparison(ctx, source, title, q, parent, nil)
 	}
 	c := SavedCapture{CaptureReceipt: CaptureReceipt{Version: 1, Parent: parent, Title: title, Question: q}}
 	var e error
@@ -166,10 +213,34 @@ func validateCapture(c *SavedCapture) error {
 	if c.Parent != "" && !regexpRevision.MatchString(c.Parent) {
 		return errors.New("invalid capture parent")
 	}
+	if c.Question.Kind == "comparison" {
+		if c.Comparison == nil || c.Explore != nil || c.Inventory != nil || !regexpRevision.MatchString(c.Comparison.BaselineID) || !regexpRevision.MatchString(c.Comparison.SelectionID) {
+			return errors.New("invalid saved comparison")
+		}
+		pair := c.Comparison
+		if !reflect.DeepEqual(pair.Request.Baseline.Question, c.Question.Comparison.Baseline) || !reflect.DeepEqual(pair.Request.Selection.Question, c.Question.Comparison.Selection) {
+			return errors.New("comparison question drift")
+		}
+		result, e := CompareCohorts(pair.Request)
+		if e != nil || !reflect.DeepEqual(result, pair.Result) {
+			return errors.New("invalid comparison evidence")
+		}
+		return nil
+	}
+	if c.Comparison != nil {
+		return errors.New("unexpected comparison evidence")
+	}
 	if c.Question.Kind == "explore" {
 		if c.Explore != nil {
 			if e := ValidateTimeSeries(*c.Question.Explore, c.Explore.TimeSeries); e != nil {
 				return e
+			}
+			if c.Question.Explore.SpanStatus {
+				if c.Explore.SpanStatus == nil || c.Explore.SpanStatus.Count != c.Explore.Count || c.Explore.SpanStatus.Validate() != nil {
+					return errors.New("invalid saved span status")
+				}
+			} else if c.Explore.SpanStatus != nil {
+				return errors.New("unexpected saved span status")
 			}
 			if c.Question.Explore.Summary == "span-duration" {
 				if c.Explore.Duration == nil || c.Explore.Duration.Count != c.Explore.Count || c.Explore.Duration.Validate() != nil {
@@ -304,7 +375,7 @@ func (c *SavedCapture) Page(cursor string) (*CapturePage, error) {
 	if e != nil {
 		return nil, e
 	}
-	p := &CapturePage{Receipt: c.CaptureReceipt, Inventory: c.Inventory}
+	p := &CapturePage{Receipt: c.CaptureReceipt, Inventory: c.Inventory, Comparison: c.Comparison}
 	if c.Explore == nil {
 		if offset != 0 {
 			return nil, errors.New("inventory has no record pages")
@@ -387,4 +458,35 @@ func (s CaptureStore) List(after string) (*CaptureList, error) {
 		list.NextCursor = ids[len(ids)-1]
 	}
 	return list, nil
+}
+
+// A comparison is published only after both server-read child captures succeed.
+// Children remain individually useful if the second read or pair publication fails.
+func (s CaptureStore) createComparison(ctx context.Context, source Source, title string, q CaptureQuestion, parent string, previous *SavedComparison) (*SavedCapture, error) {
+	parents := [2]string{}
+	if previous != nil {
+		parents = [2]string{previous.BaselineID, previous.SelectionID}
+	}
+	captures := [2]*SavedCapture{}
+	for i, question := range []Query{q.Comparison.Baseline, q.Comparison.Selection} {
+		c, e := s.Create(ctx, source, title, CaptureQuestion{Kind: "explore", Explore: &question}, parents[i])
+		if e != nil {
+			return nil, e
+		}
+		captures[i] = c
+	}
+	a, e := CohortFromResult(captures[0].Explore)
+	if e != nil {
+		return nil, e
+	}
+	b, e := CohortFromResult(captures[1].Explore)
+	if e != nil {
+		return nil, e
+	}
+	req := ComparisonRequest{a, b}
+	result, e := CompareCohorts(req)
+	if e != nil {
+		return nil, e
+	}
+	return s.publish(SavedCapture{CaptureReceipt: CaptureReceipt{Version: 1, Parent: parent, Title: title, Question: q, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano)}, Comparison: &SavedComparison{BaselineID: captures[0].ID, SelectionID: captures[1].ID, Request: req, Result: result}})
 }

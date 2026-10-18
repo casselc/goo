@@ -22,6 +22,7 @@ var packageName = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_.-]{0,127}$`)
 // TelemetryPackage binds existing OTel data without a source-code manifest.
 // A definition is reusable configuration, never a frozen evidence receipt.
 type TelemetryPackage struct {
+	SpanStatus      bool          `json:"spanStatus,omitempty" yaml:"spanStatus,omitempty"`
 	BucketMS        int64         `json:"bucketMs,omitempty" yaml:"bucketMs,omitempty"`
 	Summary         string        `json:"summary,omitempty" yaml:"summary,omitempty"`
 	APIVersion      string        `json:"apiVersion" yaml:"apiVersion"`
@@ -60,7 +61,7 @@ type PackagePlan struct {
 }
 
 func (p TelemetryPackage) Question(from, to int64) Query {
-	return Query{BucketMS: p.BucketMS, Summary: p.Summary, Signal: p.Source.Signal, Environment: p.Source.Environment, FromMS: from, ToMS: to, Where: p.Where, GroupBy: p.GroupBy, Limit: 100, Offset: 0}
+	return Query{SpanStatus: p.SpanStatus, BucketMS: p.BucketMS, Summary: p.Summary, Signal: p.Source.Signal, Environment: p.Source.Environment, FromMS: from, ToMS: to, Where: p.Where, GroupBy: p.GroupBy, Limit: 100, Offset: 0}
 }
 func (p TelemetryPackage) Validate() error {
 	if p.APIVersion != PackageVersion || !packageName.MatchString(p.Name) || p.Title == "" || len(p.Title) > 160 || !utf8.ValidString(p.Title) || strings.ContainsRune(p.Title, 0) || len(p.Description) > 2048 || !utf8.ValidString(p.Description) || strings.ContainsRune(p.Description, 0) {
@@ -140,7 +141,7 @@ func DraftTelemetryPackage(q Query, name, title string, minutes int) (TelemetryP
 	b, _ := json.Marshal(q)
 	var clone Query
 	json.Unmarshal(b, &clone)
-	p := TelemetryPackage{BucketMS: q.BucketMS, Summary: q.Summary, APIVersion: PackageVersion, Name: name, Title: title, Source: PackageSource{"clickhouse.otel/v1", q.Signal, q.Environment}, Where: clone.Where, GroupBy: clone.GroupBy, Measure: "captured-record-count", LookbackMinutes: minutes, Views: []string{"records", "trace-context"}}
+	p := TelemetryPackage{SpanStatus: q.SpanStatus, BucketMS: q.BucketMS, Summary: q.Summary, APIVersion: PackageVersion, Name: name, Title: title, Source: PackageSource{"clickhouse.otel/v1", q.Signal, q.Environment}, Where: clone.Where, GroupBy: clone.GroupBy, Measure: "captured-record-count", LookbackMinutes: minutes, Views: []string{"records", "trace-context"}}
 	if len(p.GroupBy) == 1 {
 		p.Views = []string{"records", "distribution", "trace-context"}
 	}

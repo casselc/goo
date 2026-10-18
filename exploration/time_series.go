@@ -7,11 +7,12 @@ import (
 )
 
 type TimePoint struct {
-	FromMS   int64            `json:"fromMs"`
-	ToMS     int64            `json:"toMs"`
-	Count    string           `json:"count"`
-	State    string           `json:"state"`
-	Duration *DurationSummary `json:"duration,omitempty"`
+	SpanStatus *SpanStatusSummary `json:"spanStatus,omitempty"`
+	FromMS     int64              `json:"fromMs"`
+	ToMS       int64              `json:"toMs"`
+	Count      string             `json:"count"`
+	State      string             `json:"state"`
+	Duration   *DurationSummary   `json:"duration,omitempty"`
 }
 
 // Empty intervals mean no captured records in this aggregate read, not health.
@@ -38,6 +39,10 @@ func DecodeTimeSeries(q Query, raw []json.RawMessage) ([]TimePoint, error) {
 			d := ReferenceDurationSummary(nil)
 			p.Duration = &d
 		}
+		if q.SpanStatus {
+			d := emptySpanStatus()
+			p.SpanStatus = &d
+		}
 		points = append(points, p)
 	}
 	seen := map[int64]bool{}
@@ -61,6 +66,13 @@ func DecodeTimeSeries(q Query, raw []json.RawMessage) ([]TimePoint, error) {
 		n, e := durationDecimal(v.Count, 64)
 		if e != nil || n.Sign() == 0 {
 			return nil, fmt.Errorf("invalid observed interval count")
+		}
+		if q.SpanStatus {
+			d, e := DecodeSpanStatus(r)
+			if e != nil {
+				return nil, e
+			}
+			points[i].SpanStatus = d
 		}
 		points[i].Count = v.Count
 		points[i].State = "observed"
@@ -102,6 +114,13 @@ func ValidateTimeSeries(q Query, points []TimePoint) error {
 		state := "observed"
 		if n.Sign() == 0 {
 			state = "no_data"
+		}
+		if q.SpanStatus {
+			if p.SpanStatus == nil || p.SpanStatus.Count != p.Count || p.SpanStatus.Validate() != nil {
+				return fmt.Errorf("invalid interval span status")
+			}
+		} else if p.SpanStatus != nil {
+			return fmt.Errorf("unexpected interval span status")
 		}
 		if p.State != state {
 			return fmt.Errorf("invalid interval state")

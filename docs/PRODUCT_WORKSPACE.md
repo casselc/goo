@@ -38,12 +38,12 @@ administration or a complete accessibility certification.
    descriptive investigation leads, not significance tests or causal attribution.
 4. Scope changes (signal, environment, lookback or breakdown) clear the baseline.
    Navigation alone preserves the browser baseline; reload loses it. General
-   captures persist individual questions/evidence, but neither capture format
-   automatically stores a comparison baseline pair or its browser layout.
+   captures persist individual questions/evidence. Explicit **Capture comparison**
+   now stores a server-reread pair; browser layout is not archived.
 
 `POST /api/compare` proxies to Go `/compare`. It accepts two bounded client-held
-cohort captures. Both must use the same signal, environment, fixed window and
-single breakdown field. The Go kernel validates canonical uint64 counts, unique
+cohort captures. Both must use the same signal, environment and single breakdown
+field; different fixed windows and selectors are supported. The Go kernel validates canonical uint64 counts, unique
 values, positive groups and exact population accounting. It computes shares with
 rational arithmetic and rounds display strings to two decimals, without converting
 counts to floating point. Results hash the actual supplied questions/groups.
@@ -178,6 +178,8 @@ budgets. Identity/access control and actual ingestion-health signals remain futu
 
 Duration-enabled breakdowns now offer exact mean/p95/p99/max ranking. The unified
 measure controls apply one question, local search preserves the captured scale,
-and baseline controls explicitly describe count comparisons. Responsive summary
+and baselines retain supported duration/status measures as well as counts. Responsive summary
 cards and scrollable group tables serve live/saved views and package previews.
 [Contract](GROUPED_MEASURES.md) and journey 34 define the implemented boundary.
+
+[Error and latency comparisons](ERROR_COMPARISONS.md) add status accounting, prior-window comparisons, exact change ranking, current-population drilldown and explicit immutable pair captures. Journey 35 and architecture flow 22 document the workflow.

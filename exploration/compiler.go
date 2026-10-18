@@ -27,6 +27,9 @@ func (c *compiler) param(value, typ string) string {
 func (c *compiler) field(f Field) (value, present string) {
 	if f.Kind == "column" {
 		mapping := map[string]string{"service": "ServiceName", "trace_id": "TraceId", "span_id": "SpanId", "scope": "ScopeName", "scope_version": "ScopeVersion", "name": "SpanName", "kind": "SpanKind", "status": "StatusCode", "duration_ns": "Duration", "body": "Body", "severity": "SeverityText"}
+		if f.Key == "status_class" {
+			return statusClassSQL(), "1"
+		}
 		if f.Key == "duration_bucket" {
 			return durationBucketSQL(), "1"
 		}
@@ -104,6 +107,10 @@ func compile(q Query, rowLimit int) (Plan, error) {
 	aggregate := "toString(count()) AS count"
 	if q.Summary == "span-duration" {
 		aggregate += ", toString(sum(toUInt128(Duration))) AS sum_ns, toString(min(Duration)) AS min_ns, toString(max(Duration)) AS max_ns, arrayMap(x -> toString(x), quantilesExactHigh(0.50, 0.95, 0.99)(Duration)) AS quantiles_ns"
+		p.Count = "SELECT " + aggregate + base + " FORMAT JSONEachRow"
+	}
+	if q.SpanStatus {
+		aggregate += statusAggregateSQL()
 		p.Count = "SELECT " + aggregate + base + " FORMAT JSONEachRow"
 	}
 	if q.BucketMS != 0 {

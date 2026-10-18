@@ -19,3 +19,16 @@ test('group duration ranking compares exact rational means and strips measures f
  assert.equal(metricWidth({n:0n,d:1n},{n:0n,d:1n}),'0.00');
  assert.deepEqual(snapshot({question:{},basis:'x',count:'5',state:'observed',groups:[a,b]}).groups,[{g0:'a',count:'2'},{g0:'b',count:'3'}]);
 });
+
+test('measure comparisons retain full summaries and rank exact change rather than rounded labels',()=>{
+ const {snapshot,compareMeasureDifference,groupMetric}=require('../ui/distributions');
+ const d=(sum,count)=>({state:'observed',count,sumNs:sum,p95Ns:'10'});
+ const a={value:'a',measures:{baselineDuration:d('18446744073709551616','2'),selectionDuration:d('18446744073709551618','2')}};
+ const b={value:'b',measures:{baselineDuration:d('18446744073709551616','2'),selectionDuration:d('18446744073709551619','2')}};
+ assert.equal(compareMeasureDifference(a,b,'mean'),1);
+ assert.equal(compareMeasureDifference(a,{value:'missing'},'mean'),-1);
+ const status={count:'5',error:'1',ok:'0',unset:'3',unknown:'1'},group={g0:null,count:'5',spanStatus:status};
+ assert.deepEqual(groupMetric(group,'error-rate'),{n:100n,d:5n});
+ assert.deepEqual(snapshot({question:{spanStatus:true},basis:'x',state:'observed',count:'5',spanStatus:status,groups:[group]},true).groups,[{...group,duration:undefined}]);
+ assert.equal(snapshot({question:{},groups:[group]},true).spanStatus,undefined);
+});

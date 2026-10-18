@@ -285,3 +285,4 @@ Saved operation evidence can now be reopened and refreshed as immutable revision
 [Core workbench basics](docs/CORE_WORKBENCH.md): full-population span measures/time charts, reusable questions, service signals/reported dependencies and query controls.
 
 [Duration breakdowns](docs/GROUPED_MEASURES.md) rank full-population latency by service or attribute and retain it with saved investigations.
+[Error and latency comparisons](docs/ERROR_COMPARISONS.md) compare fixed windows, follow changed groups into traces/logs and save both populations.

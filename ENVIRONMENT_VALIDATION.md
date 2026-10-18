@@ -630,3 +630,53 @@ mobile frames were regenerated from the running app. The final mobile ranking
 frame was visually reviewed with readable saved values and explicit count-baseline
 labelling. Unaffected native-operation screenshots were retained. All 12 services
 were restored; no queues, volumes or stale pending entries were deleted.
+
+
+## Error and latency comparisons — 2026-10-18
+
+The reviewed query/packages offline image is `96871367e708` (build log:
+`artifacts/error-comparison-reviewed-build.log`). The preceding polished build
+`e5b8714307c2` passed all 11 affected regression journeys. The Go semantic core and UI assets
+were staged into the existing offline Python image context. Only query/packages
+were recreated; no service/port/dependency or volume reset was added. The first
+build invocation selected the read-only default Docker config and failed before
+building; selecting the already configured `/workspace/.docker-goo` resolved it.
+Existing proxy/CA configuration was preserved.
+
+Passed native evidence: `artifacts/error-comparison-go.log` (Go race/vet),
+`error-comparison-capture-refresh.log` (focused refresh/lineage race checks),
+`error-comparison-python.log` (19 tests), `error-comparison-node.log` (24 checks),
+`error-comparison-hegel.log` and `error-comparison-model-regression.log`.
+Hegel exercises 100 sequences of 25 comparison state/swarm steps; the existing
+cohort swarm also passes with environment drift separated from supported windows.
+Quint's existing cohort adapter passes with the updated scope contract.
+
+Initial journey 35 passed in 54.8 s; evidence is
+`artifacts/error-comparison/changes-26580233/`, including four rejecting Quint
+controls (9.12 s) and 384 Bombadil records across six required stages. The polished
+image campaign passed journey 35 in 47.0 s; final new-feature evidence is
+`artifacts/error-comparison/changes-a7f4e1b8/`, including four rejecting Quint
+controls (7.20 s) and 342 Bombadil records across all six stages. Five new screenshot
+frames document errors, latency/missing groups, saved pair, mobile comparison and
+trace/log continuation. The final mobile frame was visually inspected.
+
+The full affected regression log is `artifacts/error-comparison-regression.log`.
+The journey wrapper pauses/drains/restores only owned traffic and retains all
+telemetry volumes and the five pre-existing stale Redis pending entries.
+
+
+All 11 affected regression journeys passed in 3.9 minutes, including both opt-in
+comparison/group campaigns. The group campaign recorded 517 Bombadil records
+through nine stages (`artifacts/grouped-measures/groups-c3914da2/`). Final review
+disabled an otherwise inactive trace action in aggregate-only pair views; their
+linked child capture remains the path to record/trace inspection. The final
+reviewed image passed both discovery (18.9 s) and the strengthened comparison
+journey (54.3 s), including actual adapter status-class groups and saved trace-ID
+pair behavior. The final comparison ledger/campaign is
+`artifacts/error-comparison/changes-bd815a45/`, with four rejecting Quint controls (9.20 s)
+and 501 Bombadil records through all six stages. The focused log is
+`artifacts/error-comparison-reviewed-journeys.log` (two passes, 1.3 minutes).
+A fresh CGO-disabled Go build matched the staged runtime binary byte for byte;
+all UI files matched the staged runtime assets. All 12 services were running after
+the wrapper restored traffic. Changed-doc relative links and Markdown fences were
+checked; rendered Mermaid diagrams were not separately browser-validated.

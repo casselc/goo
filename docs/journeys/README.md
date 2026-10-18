@@ -614,8 +614,8 @@ and rejects five corrupted variants; Hegel exercises duration state/swarm.
 
 `journeys/grouped-measures.spec.js` uses 124 real OTLP spans with fast/slow/missing/
 empty route groups. It verifies full-population p95 versus 100 displayed records,
-one/two-field group summaries, exact ranking/search/refinement, count-cohort
-projection, retained pages, package preview and mobile containment. The live
+one/two-field group summaries, exact ranking/search/refinement, cohort measure
+accounting, retained pages, package preview and mobile containment. The live
 ledger is checked by Quint with three rejecting controls; the optional
 `GOO_GROUPS_BOMBADIL=1` campaign explores saved-only ranks/search/pages.
 
@@ -625,3 +625,23 @@ ledger is checked by Quint with three rejecting controls; the optional
 | [34b](screenshots/34b-saved-mean-breakdowns.png) | Compare exact means from an immutable capture. |
 | [34c](screenshots/34c-mobile-duration-breakdown.png) | Inspect the same stored breakdown on a narrow screen. |
 | [34d](screenshots/34d-grouped-package-preview.png) | Preview total and grouped duration measures from reusable YAML. |
+
+
+<a id="error-and-latency-comparison"></a>
+## 35. Error and latency comparison
+
+`journeys/error-comparison.spec.js` ingests 80 prior and 124 current OTel spans.
+The user ranks recorded errors, compares prior-window errors and latency,
+saves both populations, reopens the pair and follows a changed route into a
+cross-service trace and linked logs. Missing/empty groups remain distinct;
+only 100 current inspection rows are displayed. Quint checks the actual ledger
+with four rejecting controls. `GOO_ERROR_COMPARISON_BOMBADIL=1` explores saved
+measure changes with immutable evidence and exact known-result invariants.
+
+| Frame | User journey |
+| --- | --- |
+| [35a](screenshots/35a-error-rate-change.png) | Compare recorded errors with the previous fixed window. |
+| [35b](screenshots/35b-latency-change-and-missing-groups.png) | Rank p95 changes; absent baseline groups have unavailable differences. |
+| [35c](screenshots/35c-saved-population-comparison.png) | Reopen the server-reread pair with links to both record captures. |
+| [35d](screenshots/35d-mobile-comparison.png) | Inspect the same comparison on a narrow screen. |
+| [35e](screenshots/35e-changed-route-to-trace-and-logs.png) | Follow a changed route to explicit trace and log context. |

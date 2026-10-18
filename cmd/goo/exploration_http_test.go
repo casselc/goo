@@ -54,7 +54,7 @@ func TestCohortComparisonHTTPRejectsDriftAndUnknownPayloads(t *testing.T) {
 	for _, tc := range []struct {
 		body string
 		code int
-	}{{valid, 200}, {strings.Replace(valid, `"toMs":60001`, `"toMs":60002`, 1), 400}, {valid + ` {}`, 400}, {strings.Replace(valid, `"baseline":`, `"unknown":true,"baseline":`, 1), 400}, {strings.Replace(valid, `"count":"2"`, `"count":"02"`, 1), 400}} {
+	}{{valid, 200}, {strings.Replace(valid, `"toMs":60001`, `"toMs":60002`, 1), 200}, {strings.Replace(valid, `"environment":"local"`, `"environment":"other"`, 1), 400}, {valid + ` {}`, 400}, {strings.Replace(valid, `"baseline":`, `"unknown":true,"baseline":`, 1), 400}, {strings.Replace(valid, `"count":"2"`, `"count":"02"`, 1), 400}} {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest("POST", "/compare", strings.NewReader(tc.body)))
 		if w.Code != tc.code {
