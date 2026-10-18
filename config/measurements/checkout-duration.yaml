@@ -1,0 +1,16 @@
+apiVersion: goo/measurement-package/v1alpha1
+environment: local
+lookbackMinutes: 2
+maxGapMs: 10000
+grain: per-stream
+name: checkout-duration
+title: Checkout duration distributions
+kind: histogram
+source:
+  services:
+  - lab-go-checkout
+  scope: github.com/casselc/goo/instrumentation
+  version: 0.1.0
+  schemaURL: goo://instrumentation/v1
+  metric: goo.operation.duration
+  unit: s

@@ -205,3 +205,21 @@ ledger consumed by `TestQuintRecipesLiveLedger` (set `GOO_RECIPES_LEDGER`); its
 preview/run/capture/narrative/reuse conformance checks have six rejecting controls.
 `GOO_RECIPES_BOMBADIL=1 bash scripts/run_journeys.sh journeys/recipes.spec.js`
 from the repository root includes the preview-only browser guard campaign.
+
+## Shared measurements
+
+`TestHegelMeasurementStateSwarm` runs 120 requested sequences of up to 35 steps
+against the actual package adapter and gauge kernel: independent streams, random
+observations, permutation invariance, immutable result replay and rejecting scope
+tampering. Root tests additionally check freshness/conflicts, bounded input,
+Float64 counter precision, lifecycle first-observation custody/corrections and
+source-free general capture reopening after a source outage.
+
+`journeys/measurements.spec.js` writes a real four-family ledger. The
+`TestQuintMeasurementsLiveLedger` qobs/quint-go checker validates preview → execute
+→ capture → reopen → refresh → document → reuse and rejects seven mutations. It
+skips without `GOO_MEASUREMENTS_LEDGER`; browser execution supplies the ledger.
+This protocol model checks the declared observations, not arbitrary distributed
+scheduling. Existing lifecycle MBT covers the preparer separately. Optional
+`GOO_MEASUREMENTS_BOMBADIL=1 bash scripts/run_journeys.sh journeys/measurements.spec.js`
+checks source-free package preview/edit guards through a real browser.

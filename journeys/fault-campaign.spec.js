@@ -9,6 +9,7 @@ const app = process.env.GOO_SAMPLE_URL || 'http://127.0.0.1:8081';
 const scenarios = ['retry', 'reject', 'missing'];
 
 test('28 correlate generated retry, rejection and missing-terminal workloads', async ({ page, request }, testInfo) => {
+  test.setTimeout(240000);
   test.skip(process.env.GOO_FAULT_CAMPAIGN !== '1', 'opt-in: npm run test:fault-campaign pauses and restores owned demo traffic');
   const run = randomUUID(), dir = path.resolve('artifacts/bombadil/fault-campaigns', run);
   await fs.mkdir(dir, { recursive: true });
@@ -20,7 +21,7 @@ test('28 correlate generated retry, rejection and missing-terminal workloads', a
   const observed = { version: 1, run, seed: plan.seed, scenarios, checkpoints: [], requests: [], inspections: [] };
   const persist = () => fs.writeFile(path.join(dir, 'observations.json'), JSON.stringify(observed, null, 2));
   const explorer = await startBombadil({ dir: path.join(dir, 'goo'), url: goo,
-    specification: 'verification/bombadil/workspace.ts', seconds: 60 });
+    specification: 'verification/bombadil/workspace.ts', seconds: 120 });
   const checked = new Set(); let revisits = 0, done = false;
   try {
     await explorer.ready('goo.navigate');
@@ -33,7 +34,7 @@ test('28 correlate generated retry, rejection and missing-terminal workloads', a
         const startedAt = Date.now(), appDir = path.join(dir, 'app-' + target);
         const url = new URL(app); url.hash = new URLSearchParams({ scenario: scenarios[target] }).toString();
         const actor = await startBombadil({ dir: appDir, url: url.href,
-          specification: 'verification/bombadil/scenario.ts', seconds: 6 });
+          specification: 'verification/bombadil/scenario.ts', seconds: 12 });
         try {
           const outcome = await actor.finish(), result = await capturedScenario(appDir, scenarios[target]);
           expect(observed.requests.some(previous => previous.result.id === result.id)).toBe(false);

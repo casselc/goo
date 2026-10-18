@@ -95,7 +95,7 @@ func registerCaptures(mux *http.ServeMux, client *http.Client, dir string) {
 				fail(w, 409, fmt.Errorf("refresh cannot change the captured question"))
 				return
 			}
-			if in.Question.Kind == "" && (in.Question.Explore != nil || in.Question.Inventory != nil || in.Question.Comparison != nil) {
+			if in.Question.Kind == "" && (in.Question.Explore != nil || in.Question.Inventory != nil || in.Question.Comparison != nil || in.Question.Measurement != nil) {
 				fail(w, 400, fmt.Errorf("partial refresh question is invalid"))
 				return
 			}

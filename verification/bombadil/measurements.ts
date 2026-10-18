@@ -1,0 +1,10 @@
+// Source-free package exploration: preview/edit/cancel guards, no captures or workload writes.
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document})=>({version:'goo.measurements.v1',stage:document.documentElement.dataset.gooMeasureStage||'initial',ready:document.querySelectorAll('#measureLibrary option').length>1,status:document.getElementById('measureStatus')?.textContent||'',captureDisabled:(document.getElementById('measureCapture') as HTMLButtonElement)?.disabled,evidence:document.getElementById('measureResult')?.textContent||''}));
+export const previewHasNoEvidence=always(()=>state.current.evidence==='');
+export const previewCannotCapture=always(()=>state.current.captureDisabled!==false);
+export const complete=eventually(()=>state.current.stage==='complete').within(25,'seconds');
+const act=registerCustomAction('goo.measurements',async(document,_window,phase:string)=>{const select=document.getElementById('measureLibrary') as HTMLSelectElement;if(phase==='select'){select.selectedIndex=1;select.dispatchEvent(new Event('change',{bubbles:true}));document.documentElement.dataset.gooMeasureStage='preview'}else if(phase==='edit'){const input=document.getElementById('measureYAML') as HTMLTextAreaElement;input.value+='\nunknownField: true';input.dispatchEvent(new Event('input',{bubbles:true}));document.getElementById('measureValidate')?.click();document.documentElement.dataset.gooMeasureStage='invalid'}else{document.documentElement.dataset.gooMeasureStage='complete'}});
+export const explore=actions(()=>{const s=state.current;if(!s.ready)return['Wait'];if(s.stage==='initial')return[act('select')];if(s.stage==='preview'&&s.status.includes('validated'))return[act('edit')];if(s.stage==='invalid'&&s.status.includes('unavailable'))return[act('complete')];return['Wait']});

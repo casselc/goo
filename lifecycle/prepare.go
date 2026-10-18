@@ -137,6 +137,10 @@ func (p Policy) PrepareRaw(raw []json.RawMessage) (*Prepared, error) {
 			invalid(e, "invalid_event")
 			continue
 		}
+		if p.KnowledgeAfterEvaluation && time > b.evaluation {
+			invalid(e, "beyond_evaluation")
+			continue
+		}
 		if time > received {
 			invalid(e, "clock_violation")
 			continue

@@ -24,7 +24,9 @@ function summarizeCaptured(spans, logs) {
 }
 
 async function capturedScenario(dir, scenario) {
-  const records = (await fs.readFile(path.join(dir, 'trace.jsonl'), 'utf8')).trim().split('\n').map(JSON.parse);
+  const text = (await fs.readFile(path.join(dir, 'trace.jsonl'), 'utf8')).trim();
+  expect(text, 'Bombadil finished before recording any browser observations').not.toBe('');
+  const records = text.split('\n').map(JSON.parse);
   expect(records.filter(record => record.action?.Custom?.name === 'sample.submit-scenario')).toHaveLength(1);
   const states = records.flatMap(record => record.snapshots || []).filter(snapshot => snapshot.name === 'scenarioResult')
     .map(snapshot => snapshot.value).filter(value => value.id);

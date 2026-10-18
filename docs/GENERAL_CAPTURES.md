@@ -119,3 +119,11 @@ remain reopenable; adding a measure is a new live question, not a mutation of ol
 evidence. Summary/chart component counts retain independent-read disagreement.
 
 [Investigation notes](WORKBENCH_CONTEXT.md) can now cite an exact general capture or comparison ID. Notes preserve their own ordered revision history; they neither refresh nor rewrite cited evidence. Deployment context in a saved Explore view is an explicit fresh local read, with marker receipts separately pinnable into notes.
+
+Typed `measurement` captures now retain the complete bounded gauge, counter,
+histogram or lifecycle input/result rather than an Explore record page. They
+share immutable IDs, parent refreshes, deep links and note references. Stored
+source plans are evidence: reopening does not require the current compiler to
+emit the same SQL; refresh does require an identical current plan. Canonical
+source JSON keeps evidence bases stable across browser transport spellings.
+See [measurement packages](MEASUREMENT_PACKAGES.md).

@@ -1,0 +1,19 @@
+apiVersion: goo/measurement-package/v1alpha1
+environment: local
+lookbackMinutes: 2
+maxGapMs: 30000
+grain: per-stream
+name: worker-utilization
+title: Worker utilization snapshot
+kind: gauge
+source:
+  services:
+  - lab-consumer
+  scope: goo.worker-queue
+  version: 0.1.0
+  schemaURL: goo://demo/queue/v1
+  attributes:
+    messaging.destination.name: reservations
+    messaging.consumer.group.name: inventory
+  metric: lab.worker.utilization
+  unit: '1'

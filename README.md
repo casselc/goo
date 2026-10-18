@@ -12,7 +12,10 @@ attribute distributions, pinned baseline comparisons and a trace/log inspector.
 reservations, Go checkout and Go reports. Scoped recipes retain the applied
 population while exploring duration, recorded errors or log severity. Save the
 question as a package, or capture evidence and cite it in ordered notes. The
-specialized reservation lifecycle/resource lab remains explicitly available.
+[measurement library](docs/MEASUREMENT_PACKAGES.md) adds typed gauges, counters,
+native histograms and scoped lifecycle outcomes to the same capture/notes flow.
+Data-only delay/retry/RED/USE/report workflows preview shared package questions;
+the original specialized lab remains available for compatibility.
 
 Explore and trace inspection share searchable, typed attribute rows, exact-value
 copying and secondary raw evidence. Scoped filter chips and searchable facets

@@ -1,5 +1,22 @@
 # Implementation plan
 
+## Current example standardization
+
+[Shared measurement packages](MEASUREMENT_PACKAGES.md) now connect gauges,
+reset-aware counters, native histograms and live lifecycle preparation to general
+captures, ordered notes and reusable YAML definitions. Twelve defaults and five
+validated data-only workflows cover reservations, checkout and reports. Both Go
+examples emit actual trace-correlated OTLP logs. The specialized Python views
+remain a labelled compatibility lab, not the primary implementation.
+
+Next: production logging SDK/provider configuration, user-authored workflows,
+additional metric kinds/expressions, explicit fleet policies and durable source
+coverage contracts. Raw-source preparation/lowering to Databricks is still future.
+Historical milestones below retain their original scope; they are not a claim
+that these remaining integrations are complete.
+
+## Earlier plan and milestone history
+
 Use the [architecture/process diagrams](ARCHITECTURE_DIAGRAMS.md) to connect build,
 production telemetry and investigation stages. Current implemented slices include
 [YAML operation packages](OPERATION_PACKAGES.md), live span/subject investigations,

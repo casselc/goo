@@ -792,3 +792,66 @@ Preview retains environment, fixed half-open window and the entire predicate;
 execution replaces breakdown/measures only and resets record paging. Saving a
 capture is another source read. The legacy lifecycle/resource lab is explicit;
 its specialized semantics have not been replaced by span/log counts.
+
+## Shared typed measurements and investigation flow (implemented local path)
+
+```mermaid
+flowchart LR
+  P[Python OTel SDKs] --> C[OTel collector]
+  G[Woven Go spans and metrics] --> C
+  L[Go example OTLP JSON logs] --> C
+  C --> CH[ClickHouse OTel tables]
+  Y[Versioned measurement YAML] --> V[Strict validation and typed plan]
+  W[Data-only ordered workflows] --> V
+  V -->|explicit Run, bounded read| CH
+  CH --> A[Go source adapter]
+  A --> K[Gauges / counters / histograms / lifecycle kernels]
+  A --> O[Persistent first Goo observation custody]
+  O --> K
+  K --> UI[Explore Measurements]
+  UI -->|server rereads fixed question| S[Immutable general capture]
+  S -->|source-free reopen| R[Saved typed evidence]
+  R --> N[Ordered notes with exact capture reference]
+  R -->|same question, later knowledge| S
+  R -->|definition, fresh window| V
+```
+
+The same capture store serves captured records, service inventory, comparison
+pairs and typed measurements. Source services, queue names, tenant scopes and business outcomes come from
+YAML bindings. The generic renderer dispatches on measurement family. Native stream instances remain separate; charts do not perform
+implicit fleet aggregation. The Go log transport here is explicitly example-only.
+
+```mermaid
+sequenceDiagram
+  actor User
+  participant UI as Goo UI
+  participant Go as Go measurement service
+  participant CH as ClickHouse
+  participant Custody as Local custody store
+  participant Capture as Immutable capture store
+  User->>UI: Select workflow step / edit YAML
+  UI->>Go: Preview package and resolve fixed bounds
+  Go-->>UI: Typed plan (no telemetry read)
+  User->>UI: Run measurement
+  UI->>Go: Fixed question
+  Go->>CH: Parameterized bounded source read
+  CH-->>Go: Captured observations
+  opt Lifecycle source
+    Go->>Custody: Retain first observation per immutable payload
+    Custody-->>Go: Exact received time (not completeness)
+  end
+  Go-->>UI: Typed result and evidence basis
+  User->>UI: Capture investigation
+  UI->>Go: Fixed question (no supplied evidence)
+  Go->>CH: Reread same source scope
+  Go->>Capture: Publish input, result, plan and receipt
+  Capture-->>UI: Immutable capture ID
+  User->>UI: Reopen cited capture
+  UI->>Capture: Load exact stored revision
+  Capture-->>UI: Evidence without telemetry/custody query
+```
+
+Lifecycle refresh retains business evaluation T and advances local knowledge
+cutoff under an explicit policy. It may reveal past events; it never moves the
+business question or licenses future events. Coverage stays unverified, so missing
+terminal events remain unknown. See [measurement contract](MEASUREMENT_PACKAGES.md).

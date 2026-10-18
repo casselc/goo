@@ -683,3 +683,29 @@ controls. `GOO_RECIPES_BOMBADIL=1` exercises source-free preview guards.
 | [37c](screenshots/37c-recipe-operation-distribution.png) | Inspect complete operation duration groups from the recipe. |
 | [37d](screenshots/37d-recipe-hypothesis-and-evidence.png) | Keep the hypothesis separate from an exact frozen evidence citation. |
 | [37e](screenshots/37e-mobile-log-recipe.png) | Preview the same generic log recipe on a narrow screen. |
+
+## 38. Shared resource and lifecycle measurements
+
+`journeys/measurements.spec.js` generates ordinary good/retry/missing/rejected/late
+reservation work, a Go checkout and a Go report. Independent ClickHouse queries
+locate actual trace-correlated Go log records and check the gauge source count.
+The user opens a declarative USE step without reading telemetry, then executes
+fixed questions across all four measurement families. Mature lifecycle subjects
+preserve missing→unknown; typed subject drilldown retains exact tenant/event scope.
+A gauge capture refreshes without changing the question, reopens without source
+execution, is cited in notes, and becomes a reusable saved package. Independent
+Go lifecycle definitions exercise a different app/event vocabulary. Quint validates
+the actual live ledger and rejects seven altered ledgers; Hegel runs measurement
+state/swarm sequences. Optional `GOO_MEASUREMENTS_BOMBADIL=1` explores preview/edit
+invariants without creating evidence. This is bounded local verification, not a
+production delivery or completeness guarantee.
+
+| Frame | User journey |
+| --- | --- |
+| [38a](screenshots/38a-guided-resource-investigation.png) | Choose a data-only USE flow and inspect its requirements and shared window. |
+| [38b](screenshots/38b-resource-gauge-observations.png) | Inspect independent gauge samples with full stream identity. |
+| [38c](screenshots/38c-native-duration-intervals.png) | Inspect native histogram intervals, bucket ranges and exact counts. |
+| [38d](screenshots/38d-scoped-lifecycle-evidence.png) | Distinguish mature observed outcomes, pending work and missing evidence. |
+| [38e](screenshots/38e-measurement-capture-in-notes.png) | Cite a frozen typed capture in the common investigation narrative. |
+| [38f](screenshots/38f-mobile-measurement-editor.png) | Edit and validate a reusable definition on a narrow screen. |
+| [38g](screenshots/38g-fixed-record-package-workflow.png) | Preview a record package without a read, then explicitly run its fixed workflow window. |

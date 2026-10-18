@@ -19,7 +19,8 @@
     "test:grouped-campaign": "GOO_GROUPS_BOMBADIL=1 bash scripts/run_journeys.sh journeys/grouped-measures.spec.js",
     "test:error-comparison-campaign": "GOO_ERROR_COMPARISON_BOMBADIL=1 bash scripts/run_journeys.sh journeys/error-comparison.spec.js",
     "test:context-campaign": "GOO_CONTEXT_BOMBADIL=1 bash scripts/run_journeys.sh journeys/context-notes.spec.js",
-    "test:recipes-campaign": "GOO_RECIPES_BOMBADIL=1 bash scripts/run_journeys.sh journeys/recipes.spec.js"
+    "test:recipes-campaign": "GOO_RECIPES_BOMBADIL=1 bash scripts/run_journeys.sh journeys/recipes.spec.js",
+    "test:measurements-campaign": "GOO_MEASUREMENTS_BOMBADIL=1 bash scripts/run_journeys.sh journeys/measurements.spec.js"
   },
   "devDependencies": {
     "@antithesishq/bombadil": "0.7.9",

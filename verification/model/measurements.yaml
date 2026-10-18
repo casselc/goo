@@ -1,0 +1,19 @@
+spec: measurements.qnt
+module: measurements
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  preview:
+    expect: 'coherent == {{.obs.coherent}}'
+  execute:
+    expect: 'coherent == {{.obs.coherent}}'
+  capture:
+    expect: 'coherent == {{.obs.coherent}}'
+  reopen:
+    expect: 'coherent == {{.obs.coherent}}'
+  refresh:
+    expect: 'coherent == {{.obs.coherent}}'
+  document:
+    expect: 'coherent == {{.obs.coherent}}'
+  reuse:
+    expect: 'coherent == {{.obs.coherent}}'

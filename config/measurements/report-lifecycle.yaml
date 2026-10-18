@@ -1,0 +1,32 @@
+apiVersion: goo/measurement-package/v1alpha1
+environment: local
+lookbackMinutes: 2
+maxGapMs: 30000
+grain: subject
+name: report-lifecycle
+title: Report lifecycle outcomes
+kind: lifecycle
+source:
+  services:
+  - lab-go-reports
+  scope: ''
+  version: ''
+  schemaURL: ''
+lifecycle:
+  logicalService: report-lifecycle
+  tenants:
+  - demo
+  accepted: report.accepted
+  terminal: report.ready
+  eventID: goo.event.id
+  eventTime: goo.event.time_ns
+  subject: goo.subject.id
+  tenant: goo.subject.tenant
+  release: app.release
+  outcome: app.outcome
+  success: ready
+  outcomes:
+  - ready
+  - failed
+  deadlineMs: 10000
+  allowanceMs: 3000

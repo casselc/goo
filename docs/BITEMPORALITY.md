@@ -76,8 +76,13 @@ custody provenance or the evaluation-generation contract.
 ## Small verification journey
 
 The first two semantic checks now have lifecycle fixtures and Hegel/Quint
-coverage (see [verification](../verification/README.md)); their UI journey is
-still proposed. Concurrent publication remains a future model/implementation:
+coverage (see [verification](../verification/README.md)).
+[Storyboard 38](journeys/README.md#38-shared-resource-and-lifecycle-measurements)
+now exercises live local custody, fixed-question refresh and immutable general
+capture reopening. The new adapter opts into knowledge after business evaluation
+while excluding future business facts. Local first publication is not warehouse
+ingestion or complete delivery. Concurrent selected-generation publication
+remains a future model/implementation:
 
 1. **Historical stability:** evaluate at basis B1; deliver a terminal received
    exactly at B1 or later; replay B1 and obtain the same visible evidence and

@@ -77,3 +77,16 @@ or reimplementing measurement semantics in browser code.
 
 The [browser storyboards](journeys/README.md) execute a selected retry through the
 log step, check USE capabilities/gaps, switch to resource telemetry, and open RED volume/duration. They use real services and no UI mocks.
+
+## Shared package workflows
+
+The primary Examples UI now reads five strict, versioned descriptors from
+[config/workflows.json](../config/workflows.json): delay, retry, RED, USE and
+reports. Each declares requirements and ordered measurement/telemetry package
+steps, with a shared fixed two-minute window. Opening a step validates/plans
+without source execution. Measurement Run or the workflow package's Run fixed
+question in Explore explicitly reads that scope. Capture and notes use common
+product tools. Subject/event inspection carries explicit tenant and subject
+identity; resource steps disclose scope changes rather than inventing continuity.
+The earlier JavaScript recipes described above remain in the labelled compatibility
+lab. See [MEASUREMENT_PACKAGES.md](MEASUREMENT_PACKAGES.md) for current boundaries.

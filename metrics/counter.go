@@ -12,13 +12,14 @@ import (
 )
 
 type Stream struct {
-	Resource   map[string]string `json:"resource"`
-	Scope      string            `json:"scope"`
-	Version    string            `json:"version"`
-	SchemaURL  string            `json:"schemaURL"`
-	Name       string            `json:"name"`
-	Unit       string            `json:"unit"`
-	Attributes map[string]string `json:"attributes"`
+	ResourceSchemaURL string            `json:"resourceSchemaURL,omitempty"`
+	Resource          map[string]string `json:"resource"`
+	Scope             string            `json:"scope"`
+	Version           string            `json:"version"`
+	SchemaURL         string            `json:"schemaURL"`
+	Name              string            `json:"name"`
+	Unit              string            `json:"unit"`
+	Attributes        map[string]string `json:"attributes"`
 }
 type CounterPoint struct {
 	Stream          Stream `json:"stream"`

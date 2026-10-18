@@ -1,6 +1,7 @@
 import logging
 import os
 import uuid
+import time
 from opentelemetry import trace, metrics
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
@@ -31,12 +32,14 @@ def setup(service):
     logger.setLevel(logging.INFO)
     logger.addHandler(LoggingHandler(logger_provider=lp))
     logger.addHandler(logging.StreamHandler())
-    meter = metrics.get_meter(service)
+    meter = metrics.get_meter(service, '0.1.0', schema_url='goo://demo/application/v1')
     return trace.get_tracer(service), logger, meter, (tp, mp, lp)
 
 
 def emit(logger, name, item, **extra):
-    attrs = {'app.event.name': name, 'app.reservation.id': item['id'],
+    attrs = {'goo.event.id': str(uuid.uuid4()), 'goo.event.time_ns': str(time.time_ns()),
+             'goo.subject.id': item['id'], 'goo.subject.namespace': 'reservation',
+             'goo.subject.tenant': item.get('tenant', 'demo'), 'app.event.name': name, 'app.reservation.id': item['id'],
              'app.tenant.id': item.get('tenant', 'demo'), 'app.release': item['release'],
              'app.region': item['region'], 'app.scenario': item['scenario'], **extra}
     logger.info(name, extra=attrs)

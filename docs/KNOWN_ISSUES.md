@@ -18,7 +18,13 @@ This list describes the current code at handoff. Items are observations or missi
 
 ## Language and resources
 
-grammar.py still uses view-specific query branches. Grouping fields and map bindings are hardcoded. definitions/reservations.json is a small demo config and has no complete resource schema or version resolver. The original EDN package and deadline-outcome syntax are illustrative. Separate [Go aggregate](PORTABLE_COMPILER.md) and [lifecycle](LIFECYCLE_PREPARATION.md) pilots now implement a bounded typed model, normalized-event preparation, reference evaluation, and aggregate backend compilation. They are not integrated into the Python API and do not implement real-exporter source adapters, generated SQL preparation, template expansion, durable immutable publication, CLI plan/apply, or an IaC provider.
+grammar.py still uses view-specific query branches. Grouping fields and map bindings are hardcoded. definitions/reservations.json is a small demo config and has no complete resource schema or version resolver. The original EDN package and deadline-outcome syntax are illustrative. The [Go aggregate](PORTABLE_COMPILER.md) and [lifecycle](LIFECYCLE_PREPARATION.md)
+kernels implement bounded typed models, preparation, reference evaluation and
+aggregate backend compilation. [Shared measurement packages](MEASUREMENT_PACKAGES.md)
+now connect real exporter data to the Go kernels, general captures and the UI
+through the Python proxy. Generated lifecycle SQL preparation, coordinated
+production publication, CLI plan/apply and an IaC provider remain future work.
+The Python view-specific branches remain a labelled compatibility lab.
 
 No scheduler, durable alarm state, multiwindow SLO evaluation, notification delivery, or historical correction store exists. The UI is an initial query interface, not a complete investigation workbench: an initial bounded waterfall and raw-duration heatmap are implemented (see VISUALIZATIONS.md), but general saved workspaces, unbounded/complete trace capture, general selection algebra, and statistical cohort comparison remain absent.
 
@@ -149,8 +155,9 @@ when that plan is unavailable. See [GENERAL_CAPTURES.md](GENERAL_CAPTURES.md).
 
 [Core basics](CORE_WORKBENCH.md) now provide full-population span-duration summaries,
 fixed record-count time charts, reusable package questions, span/log service event
-activity and reported parent links. Arbitrary numeric measures, general native
-metrics, ingestion lag/drop evidence and production authorization remain absent.
+activity and reported parent links. Arbitrary numeric expressions, ingestion lag/drop evidence and production
+authorization remain absent. Typed native metric packages now exist; see
+[measurement boundaries](MEASUREMENT_PACKAGES.md).
 Per-process query limits/cancellation cover general routes, not all legacy routes
 or cross-replica/per-tenant quotas. Service discovery is a separate live read and
 is not archived by saved inventory. Event age does not establish pipeline health.
@@ -166,5 +173,17 @@ Investigation documents currently reference general captures and local deploymen
 Three [built-in recipes](INVESTIGATION_RECIPES.md) preserve an applied population,
 with explicit source-free preview and live execution. Six example packages use
 the shared product flow. Prerequisites are declared, not automatically verified;
-user-authored multistep recipes and general lifecycle lowering remain absent.
+repository-authored ordered workflows and live typed lifecycle packages now exist.
+UI workflow authoring and Databricks lifecycle lowering remain absent.
 The specialized reservation/Redis lab remains an explicit legacy section.
+
+
+## Shared measurement boundaries
+
+See [MEASUREMENT_PACKAGES.md](MEASUREMENT_PACKAGES.md) for source limits, required
+stream metadata, local custody semantics, display limits and example log transport.
+No metric family implies telemetry completeness. Lifecycle absence is unknown;
+first Goo observation is not warehouse ingestion. The original compatibility lab
+has different preview assumptions and is not retroactively rewritten. Package
+revision catalogs have a 256-file bound; persistent custody storage currently has
+no quota/garbage collection. Source data and custody reads are not transactional.

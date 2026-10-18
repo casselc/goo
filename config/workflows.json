@@ -1,0 +1,170 @@
+[
+  {
+    "apiVersion": "goo/investigation-workflow/v1alpha1",
+    "name": "delay",
+    "title": "Why is completion delayed?",
+    "description": "Distinguish acceptance latency from mature business outcomes.",
+    "requirements": [
+      "Generate sample work in the local environment before running a question.",
+      "Exported telemetry has unknown delivery completeness. No step establishes service health."
+    ],
+    "steps": [
+      {
+        "title": "Lifecycle outcomes",
+        "family": "measurement",
+        "package": "reservation-lifecycle",
+        "why": "Inspect maturity, deadlines and unknown delivery before selecting a subject."
+      },
+      {
+        "title": "Acceptance and processing",
+        "family": "telemetry",
+        "package": "reservations-spans",
+        "why": "Compare synchronous and asynchronous work; inspect a subject using bound-event drilldown."
+      },
+      {
+        "title": "Queue wait",
+        "family": "measurement",
+        "package": "queue-wait",
+        "why": "Compare observed wait distributions by stream; missing intervals remain unknown."
+      }
+    ]
+  },
+  {
+    "apiVersion": "goo/investigation-workflow/v1alpha1",
+    "name": "retry",
+    "title": "Did a retry recover?",
+    "description": "Attempt errors and final subject outcomes have different denominators.",
+    "requirements": [
+      "Generate sample work in the local environment before running a question.",
+      "Exported telemetry has unknown delivery completeness. No step establishes service health."
+    ],
+    "steps": [
+      {
+        "title": "Lifecycle outcomes",
+        "family": "measurement",
+        "package": "reservation-lifecycle",
+        "why": "Inspect mature subject outcomes, not the count of failed attempts."
+      },
+      {
+        "title": "Retry evidence",
+        "family": "telemetry",
+        "package": "reservations-logs",
+        "why": "Filter a specific subject and inspect retry and terminal records."
+      },
+      {
+        "title": "Attempt durations",
+        "family": "telemetry",
+        "package": "reservations-spans",
+        "why": "Use errors and duration recipes over the exact service window."
+      }
+    ]
+  },
+  {
+    "apiVersion": "goo/investigation-workflow/v1alpha1",
+    "name": "red",
+    "title": "Is the service slow? (RED)",
+    "description": "Compare observed volume, errors and duration without merging unlike streams.",
+    "requirements": [
+      "Generate sample work in the local environment before running a question.",
+      "Exported telemetry has unknown delivery completeness. No step establishes service health."
+    ],
+    "steps": [
+      {
+        "title": "Calls and reset-aware rate",
+        "family": "measurement",
+        "package": "checkout-calls",
+        "why": "Keep each process and outcome separate; partial boundaries are unknown."
+      },
+      {
+        "title": "Duration distribution",
+        "family": "measurement",
+        "package": "checkout-duration",
+        "why": "Inspect native histogram intervals and bucket ranges; never average p95s."
+      },
+      {
+        "title": "Error evidence",
+        "family": "telemetry",
+        "package": "checkout-spans",
+        "why": "Apply the Errors recipe to inspect the full bounded status summary."
+      }
+    ]
+  },
+  {
+    "apiVersion": "goo/investigation-workflow/v1alpha1",
+    "name": "use",
+    "title": "Could resource pressure explain it? (USE)",
+    "description": "Identify instrumented resources before interpreting utilization or saturation.",
+    "requirements": [
+      "Generate sample work in the local environment before running a question.",
+      "Exported telemetry has unknown delivery completeness. No step establishes service health."
+    ],
+    "steps": [
+      {
+        "title": "Worker utilization",
+        "family": "measurement",
+        "package": "worker-utilization",
+        "why": "Recorded utilization is per worker instance; CPU and memory remain uninstrumented."
+      },
+      {
+        "title": "Queue lag",
+        "family": "measurement",
+        "package": "queue-lag",
+        "why": "Lag is undelivered group work. Do not sum repeated broker observations."
+      },
+      {
+        "title": "Pending work",
+        "family": "measurement",
+        "package": "queue-pending",
+        "why": "Pending may include active work and unreclaimed stale entries."
+      },
+      {
+        "title": "Queue wait distribution",
+        "family": "measurement",
+        "package": "queue-wait",
+        "why": "Compare observed waits with processing evidence; correlation does not prove causation."
+      },
+      {
+        "title": "Processing and error evidence",
+        "family": "telemetry",
+        "package": "reservations-spans",
+        "why": "Inspect processing spans and recorded errors over the same fixed window. These do not prove resource saturation."
+      },
+      {
+        "title": "Supporting events",
+        "family": "telemetry",
+        "package": "reservations-logs",
+        "why": "Inspect retries and stalls after identifying the resource. Keep supporting observations separate from a causal finding."
+      }
+    ]
+  },
+  {
+    "apiVersion": "goo/investigation-workflow/v1alpha1",
+    "name": "reports",
+    "title": "Follow a different application",
+    "description": "Use the same measurement and evidence tools for report generation.",
+    "requirements": [
+      "Generate sample work in the local environment before running a question.",
+      "Exported telemetry has unknown delivery completeness. No step establishes service health."
+    ],
+    "steps": [
+      {
+        "title": "Report lifecycle",
+        "family": "measurement",
+        "package": "report-lifecycle",
+        "why": "Observe accepted and ready events with explicit tenant scope and local custody."
+      },
+      {
+        "title": "Report events",
+        "family": "telemetry",
+        "package": "reports-logs",
+        "why": "Inspect actual trace-correlated OTLP logs, not synthesized span events."
+      },
+      {
+        "title": "Report traces",
+        "family": "telemetry",
+        "package": "reports-spans",
+        "why": "Inspect operations and trace context; save evidence and cite it in notes."
+      }
+    ]
+  }
+]

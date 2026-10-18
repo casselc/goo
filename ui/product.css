@@ -1025,3 +1025,14 @@ td details {
 #recipePlan { border-left: 3px solid var(--accent, #5479dc); padding: .2rem 1rem; margin: 1rem 0; }
 #exampleQuestions { margin-bottom: 1.5rem; }
 #legacyExamples > summary { font-weight: 600; padding: 1rem 0; }
+
+.explore-modes {display:flex;gap:4px;margin:0 0 20px;border-bottom:1px solid var(--border);padding-bottom:10px}
+.explore-modes [aria-selected=true] {border-color:var(--accent);color:var(--accent)}
+#measureYAML {width:100%;min-height:320px;box-sizing:border-box;font:13px/1.6 ui-monospace,monospace;margin:12px 0}
+#measurementWorkbench table {width:100%}
+#measurementWorkbench > details,#captureMeasurementEvidence > details {margin:16px 0}
+.measurement-plot {width:100%;max-height:180px;background:var(--panel);border:1px solid var(--border);border-radius:8px}
+#guidedPackageSteps article {margin:12px 0}
+#guidedMeasurements {margin:30px 0}
+#measureLibrary {max-width:100%}
+@media(max-width:600px){#measurementWorkbench .controls{align-items:stretch;flex-direction:column}#measureLibrary{width:100%}#measurementWorkbench input{max-width:100%;box-sizing:border-box}#measureYAML{min-height:240px}}

@@ -314,3 +314,31 @@ func TestExclusiveBasisAndVisibleEvidenceIdentity(t *testing.T) {
 		t.Fatal("historical visible identity must be independent of invisible source additions")
 	}
 }
+
+func TestLaterKnowledgeRequiresExplicitPolicy(t *testing.T) {
+	// Reuse the repository's policy fixture rather than bypassing validation.
+	p := Policy{APIVersion: "goo/lifecycle/v1alpha1", EvaluationID: "e1", DefinitionRevision: "d1", SourceRevision: "s1", EvidenceBasis: "b1", CustodyClock: "local", EvaluationTimeNS: "100", EvidenceCutoffNS: "110", DeadlineNS: "10", AllowanceNS: "3", WindowNS: "50", SubjectField: "subject_id", SuccessOutcome: "ok", TerminalOutcomes: []string{"ok"}, Scopes: []Scope{{Environment: "local", TenantID: "demo", ServiceName: "service", Coverage: "unverified"}}}
+	if _, e := p.Prepare(nil); e == nil {
+		t.Fatal("implicit future knowledge accepted")
+	}
+	p.KnowledgeAfterEvaluation = true
+	future, e := p.Prepare([]Event{{EventID: "future", Kind: "accepted", Environment: "local", TenantID: "demo", ServiceName: "service", SubjectID: "s1", Release: "r1", EventTimeNS: "105", ReceivedTimeNS: "109"}})
+	if e != nil || future.Receipt.InvalidRecords != 1 || len(future.Subjects) != 0 {
+		t.Fatal("future business event became evidence", e)
+	}
+	prior, e := p.Prepare(nil)
+	if e != nil {
+		t.Fatal(e)
+	}
+	p.EvaluationID = "e2"
+	p.EvidenceBasis = "b2"
+	p.EvidenceCutoffNS = "120"
+	p.SupersedesEvaluationID = "e1"
+	if e = p.ValidateCorrection(prior.Receipt); e != nil {
+		t.Fatal(e)
+	}
+	p.KnowledgeAfterEvaluation = false
+	if e = p.ValidateCorrection(prior.Receipt); e == nil {
+		t.Fatal("knowledge mode changed during correction")
+	}
+}

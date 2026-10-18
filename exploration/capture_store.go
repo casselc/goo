@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/casselc/goo/measurements"
 	"io"
 	"os"
 	"path/filepath"
@@ -39,14 +40,23 @@ type SavedComparison struct {
 	Result      *CohortComparison `json:"result"`
 }
 type CaptureQuestion struct {
-	Comparison *ComparisonQuestion `json:"comparison,omitempty"`
-	Kind       string              `json:"kind"`
-	Explore    *Query              `json:"explore,omitempty"`
-	Inventory  *InventoryQuestion  `json:"inventory,omitempty"`
+	Measurement *measurements.Question `json:"measurement,omitempty"`
+	Comparison  *ComparisonQuestion    `json:"comparison,omitempty"`
+	Kind        string                 `json:"kind"`
+	Explore     *Query                 `json:"explore,omitempty"`
+	Inventory   *InventoryQuestion     `json:"inventory,omitempty"`
 }
 
 func (q CaptureQuestion) Validate() error {
+	if q.Kind != "measurement" && q.Measurement != nil {
+		return errors.New("unexpected measurement question")
+	}
 	switch q.Kind {
+	case "measurement":
+		if q.Measurement == nil || q.Explore != nil || q.Inventory != nil || q.Comparison != nil {
+			return errors.New("exclusive measurement question required")
+		}
+		return q.Measurement.Validate()
 	case "explore":
 		if q.Explore == nil || q.Inventory != nil || q.Comparison != nil {
 			return errors.New("explore question required")
@@ -67,12 +77,20 @@ func (q CaptureQuestion) Validate() error {
 		}
 		return nil
 	default:
-		return errors.New("kind must be explore, inventory or comparison")
+		return errors.New("kind must be explore, inventory, comparison or measurement")
 	}
 }
 
 // Normalized removes inspection-page position, never semantic filters or bounds.
 func (q CaptureQuestion) Normalized() CaptureQuestion {
+	if q.Measurement != nil {
+		// Use the wire representation for immutable typed questions, including
+		// equivalent empty/omitted selector maps. This also detaches caller maps.
+		encoded, _ := json.Marshal(q.Measurement)
+		var detached measurements.Question
+		json.Unmarshal(encoded, &detached)
+		q.Measurement = &detached
+	}
 	if q.Explore != nil {
 		v := *q.Explore
 		v.Offset = 0
@@ -100,20 +118,22 @@ type CaptureReceipt struct {
 	Question   CaptureQuestion `json:"question"`
 }
 type SavedCapture struct {
-	Comparison *SavedComparison `json:"comparison,omitempty"`
+	Measurement *measurements.Result `json:"measurement,omitempty"`
+	Comparison  *SavedComparison     `json:"comparison,omitempty"`
 	CaptureReceipt
 	Explore   *Result          `json:"explore,omitempty"`
 	Inventory *InventoryResult `json:"inventory,omitempty"`
 }
 type CapturePage struct {
-	Comparison      *SavedComparison `json:"comparison,omitempty"`
-	Receipt         CaptureReceipt   `json:"receipt"`
-	Explore         *Result          `json:"explore,omitempty"`
-	Inventory       *InventoryResult `json:"inventory,omitempty"`
-	RetainedRecords int              `json:"retainedRecords"`
-	RecordsLimited  bool             `json:"recordsLimited"`
-	NextCursor      string           `json:"nextCursor,omitempty"`
-	PreviousCursor  string           `json:"previousCursor,omitempty"`
+	Measurement     *measurements.Result `json:"measurement,omitempty"`
+	Comparison      *SavedComparison     `json:"comparison,omitempty"`
+	Receipt         CaptureReceipt       `json:"receipt"`
+	Explore         *Result              `json:"explore,omitempty"`
+	Inventory       *InventoryResult     `json:"inventory,omitempty"`
+	RetainedRecords int                  `json:"retainedRecords"`
+	RecordsLimited  bool                 `json:"recordsLimited"`
+	NextCursor      string               `json:"nextCursor,omitempty"`
+	PreviousCursor  string               `json:"previousCursor,omitempty"`
 }
 type CaptureList struct {
 	Items      []CaptureReceipt `json:"items"`
@@ -172,6 +192,16 @@ func (s CaptureStore) Create(ctx context.Context, source Source, title string, q
 			}
 			return s.createComparison(ctx, source, title, q, parent, p.Comparison)
 		}
+		if q.Kind == "measurement" {
+			plan, e := measurements.Compile(*q.Measurement)
+			if e != nil {
+				return nil, e
+			}
+			if !reflect.DeepEqual(plan, p.Measurement.Plan) {
+				return nil, ErrCapturePlanChanged
+			}
+			return s.createMeasurement(ctx, source, title, q, parent, p.Measurement)
+		}
 		var current, previous Plan
 		if q.Kind == "explore" {
 			current, e = compile(*q.Explore, CaptureRowLimit)
@@ -189,6 +219,9 @@ func (s CaptureStore) Create(ctx context.Context, source Source, title string, q
 	}
 	if q.Kind == "comparison" {
 		return s.createComparison(ctx, source, title, q, parent, nil)
+	}
+	if q.Kind == "measurement" {
+		return s.createMeasurement(ctx, source, title, q, parent, nil)
 	}
 	c := SavedCapture{CaptureReceipt: CaptureReceipt{Version: 1, Parent: parent, Title: title, Question: q}}
 	var e error
@@ -212,6 +245,15 @@ func validateCapture(c *SavedCapture) error {
 	}
 	if c.Parent != "" && !regexpRevision.MatchString(c.Parent) {
 		return errors.New("invalid capture parent")
+	}
+	if c.Question.Kind == "measurement" {
+		if c.Explore != nil || c.Inventory != nil || c.Comparison != nil || c.Measurement == nil || !reflect.DeepEqual(c.Measurement.Question, *c.Question.Measurement) {
+			return errors.New("invalid measurement capture envelope")
+		}
+		return measurements.ValidateResult(c.Measurement)
+	}
+	if c.Measurement != nil {
+		return errors.New("unexpected measurement evidence")
 	}
 	if c.Question.Kind == "comparison" {
 		if c.Comparison == nil || c.Explore != nil || c.Inventory != nil || !regexpRevision.MatchString(c.Comparison.BaselineID) || !regexpRevision.MatchString(c.Comparison.SelectionID) {
@@ -375,7 +417,10 @@ func (c *SavedCapture) Page(cursor string) (*CapturePage, error) {
 	if e != nil {
 		return nil, e
 	}
-	p := &CapturePage{Receipt: c.CaptureReceipt, Inventory: c.Inventory, Comparison: c.Comparison}
+	p := &CapturePage{Measurement: c.Measurement, Receipt: c.CaptureReceipt, Inventory: c.Inventory, Comparison: c.Comparison}
+	if c.Measurement != nil {
+		p.RetainedRecords = len(c.Measurement.Rows)
+	}
 	if c.Explore == nil {
 		if offset != 0 {
 			return nil, errors.New("inventory has no record pages")
@@ -489,4 +534,14 @@ func (s CaptureStore) createComparison(ctx context.Context, source Source, title
 		return nil, e
 	}
 	return s.publish(SavedCapture{CaptureReceipt: CaptureReceipt{Version: 1, Parent: parent, Title: title, Question: q, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano)}, Comparison: &SavedComparison{BaselineID: captures[0].ID, SelectionID: captures[1].ID, Request: req, Result: result}})
+}
+
+func (s CaptureStore) createMeasurement(ctx context.Context, source Source, title string, q CaptureQuestion, parent string, previous *measurements.Result) (*SavedCapture, error) {
+	adapter := measurements.Source{Endpoint: source.Endpoint, User: source.User, Password: source.Password, Client: source.Client, CustodyDir: filepath.Join(s.Dir, "custody")}
+	result, e := adapter.Run(ctx, *q.Measurement, previous)
+	if e != nil {
+		return nil, e
+	}
+	c := SavedCapture{CaptureReceipt: CaptureReceipt{Version: 1, Parent: parent, Title: title, Question: q, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano)}, Measurement: result}
+	return s.publish(c)
 }

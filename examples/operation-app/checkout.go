@@ -4,6 +4,9 @@ import (
 	"context"
 	"crypto/rand"
 	"errors"
+	"github.com/casselc/goo/instrumentation"
+	"log"
+	"os"
 	"time"
 )
 
@@ -37,11 +40,24 @@ func Accept(ctx context.Context, fail bool) (result *Decision, err error) {
 	if id == "" {
 		id = rand.Text()
 	}
+	emitLog(ctx, "reservation.accepted", id, "")
 	return &Decision{ID: id, Outcome: "confirmed"}, nil
 }
 
 //goo:event name:reservation.terminal subject:decision.ID outcome:decision.Outcome when:ok
-func Complete(ctx context.Context, decision *Decision) (err error) { return nil }
+func Complete(ctx context.Context, decision *Decision) (err error) {
+	emitLog(ctx, "reservation.terminal", decision.ID, decision.Outcome)
+	return nil
+}
+func emitLog(ctx context.Context, name, id, outcome string) {
+	instance := os.Getenv("GOO_INSTANCE_ID")
+	if instance == "" {
+		instance = "woven-demo"
+	}
+	if e := instrumentation.EmitExampleLog(ctx, "lab-go-checkout", instance, name, id, outcome); e != nil {
+		log.Printf("example log export failed: %v", e)
+	}
+}
 
 //goo:operation name:checkout.panic role:internal
 func Panic(ctx context.Context) { panic("original panic") }

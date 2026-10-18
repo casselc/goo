@@ -49,11 +49,12 @@ itself only reads local definitions; a button plans and runs a fresh question.
 The package source is visible and can be refined, saved, exported, captured and
 cited through the same product workflow as arbitrary OTel applications.
 
-This migrates the sample investigation entry points, not the sample applications'
-instrumentation or specialized business semantics. The original reservation
-lifecycle/resource lab is an explicit collapsed section and only starts querying
-when opened. Its acceptance/terminal/deadline and Redis/worker measurements remain
-separate because captured span/log recipes do not implement those contracts.
+The [shared measurement packages](MEASUREMENT_PACKAGES.md) now add gauges,
+native intervals and live lifecycle contracts alongside these captured-record
+packages. Both Go examples emit real OTLP logs. The original reservation
+lifecycle/resource lab remains an explicit collapsed compatibility section and
+only starts querying when opened. Its historical preview assumptions are retained;
+the primary measurement path uses explicit local custody and unknown absence.
 Go application operation manifests and native metric contracts remain available
 under Operations. The new packages do not require goo annotations and also work
 over the Python sample. A sample with no exported logs correctly shows no data;
@@ -68,6 +69,6 @@ run → fixed capture → narrative → fresh package reuse, with rejecting cont
 not an exhaustive proof of browser interleavings. Bombadil additionally explores
 preview guards without an applied population or source writes.
 
-Remaining: capability discovery for richer recipes, user-authored ordered steps,
-specialized lifecycle migration, explicit successor comparison in narratives,
+Remaining: capability discovery for richer recipes, UI-authored ordered steps,
+explicit successor comparison in narratives,
 authenticated collaboration and production storage/retention.

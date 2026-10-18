@@ -4,6 +4,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY annotations ./annotations
 COPY metrics ./metrics
+COPY measurements ./measurements
 COPY measurement ./measurement
 COPY lifecycle ./lifecycle
 COPY prebuilt ./prebuilt

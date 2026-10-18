@@ -1,0 +1,33 @@
+apiVersion: goo/measurement-package/v1alpha1
+environment: local
+lookbackMinutes: 2
+maxGapMs: 30000
+grain: subject
+name: reservation-lifecycle
+title: Reservation lifecycle outcomes
+kind: lifecycle
+source:
+  services:
+  - lab-grpc
+  - lab-consumer
+  scope: ''
+  version: ''
+  schemaURL: ''
+lifecycle:
+  logicalService: reservation-lifecycle
+  tenants:
+  - demo
+  accepted: reservation.accepted
+  terminal: reservation.terminal
+  eventID: goo.event.id
+  eventTime: goo.event.time_ns
+  subject: goo.subject.id
+  tenant: goo.subject.tenant
+  release: app.release
+  outcome: app.outcome
+  success: confirmed
+  outcomes:
+  - confirmed
+  - rejected
+  deadlineMs: 10000
+  allowanceMs: 3000

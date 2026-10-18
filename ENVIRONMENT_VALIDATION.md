@@ -808,3 +808,26 @@ startup instructions and local Docker/toolchain setup still apply. Declared reci
 prerequisites are not verified coverage; the specialized lifecycle/Redis contracts,
 production authorization/storage and general user-authored workflows remain
 separate work.
+
+## Shared measurement standardization — 2026-10-18
+
+Current behavior is documented in [MEASUREMENT_PACKAGES.md](docs/MEASUREMENT_PACKAGES.md)
+and [VALIDATION.md](VALIDATION.md). New runtime work remains in Go; the Python lab
+continues to emit standard OTel data and proxy the bounded APIs. Both woven Go
+examples were rebuilt and actual OTLP logs with trace/span IDs were independently
+observed in ClickHouse. The Python meter now declares instrumentation version/schema.
+
+Root race/vet, the separate verification module (uncached, 240.18 s), instrumentation,
+19 Python tests, 32 frontend checks and compiler/lifecycle/package parity checks
+passed. The focused measurement journey passed all four families, scoped lifecycle
+outcomes, capture/refresh/reopen, notes and reusable definitions. Its live Quint
+ledger passed with seven rejecting controls; Bombadil recorded all four required
+preview/edit stages. Full browser and final targeted results are recorded in the
+new top section of VALIDATION.md; historical entries below/above retain their
+original scope.
+
+The external offline build context remains `/workspace/.goo-image`; the repository
+Dockerfiles also include the new `measurements` package. Default telemetry volumes
+and five pre-existing stale pending Redis entries were retained. Journey wrappers
+pause/drain/restore only the owned traffic generator. New storyboard frames 38a–g
+and shared measurement architecture diagrams describe actual implemented paths.

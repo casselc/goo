@@ -131,6 +131,14 @@ plus coexistence of old/new generations without double counting. It does **not**
 execute a SQL implementation of lifecycle preparation. The Hegel and Quint checks
 are described in [verification/README.md](../verification/README.md).
 
-Remaining integrations: source adapters for actual exporter data, generated
-ClickHouse/Spark preparation plans, durable generation publication, and wiring the
-Go results into the live UI. Databricks artifacts remain unexecuted on a warehouse.
+The [live measurement adapter](MEASUREMENT_PACKAGES.md) now reads actual OTel
+logs, persists a local first-observation custody basis and renders these Go facts
+in the shared UI/capture/notes path. It explicitly opts into
+`knowledgeAfterEvaluation: true`: a correction can reveal past business events
+at a cutoff after T, while future business events remain invalid. The default
+policy still requires cutoff ≤ T, and corrections preserve the chosen mode.
+Coverage stays unverified, so missing completion is unknown in the live adapter.
+
+Remaining integrations: generated ClickHouse/Spark preparation plans, production
+custody/completeness contracts and a coordinated selected-generation publication
+protocol. Databricks artifacts remain unexecuted on a warehouse.

@@ -16,22 +16,23 @@ import (
 // Nanoseconds are decimal strings at the JSON/YAML boundary. This preserves
 // exact epoch values across clients whose JSON numbers are IEEE-754 doubles.
 type Policy struct {
-	APIVersion             string   `yaml:"apiVersion" json:"apiVersion"`
-	EvaluationID           string   `yaml:"evaluationId" json:"evaluationId"`
-	DefinitionRevision     string   `yaml:"definitionRevision" json:"definitionRevision"`
-	SourceRevision         string   `yaml:"sourceRevision" json:"sourceRevision"`
-	EvidenceBasis          string   `yaml:"evidenceBasis" json:"evidenceBasis"`
-	CustodyClock           string   `yaml:"custodyClock" json:"custodyClock"`
-	SupersedesEvaluationID string   `yaml:"supersedesEvaluationId,omitempty" json:"supersedesEvaluationId,omitempty"`
-	EvaluationTimeNS       string   `yaml:"evaluationTimeNs" json:"evaluationTimeNs"`
-	EvidenceCutoffNS       string   `yaml:"evidenceCutoffNs" json:"evidenceCutoffNs"`
-	DeadlineNS             string   `yaml:"deadlineNs" json:"deadlineNs"`
-	AllowanceNS            string   `yaml:"allowanceNs" json:"allowanceNs"`
-	WindowNS               string   `yaml:"windowNs" json:"windowNs"`
-	SubjectField           string   `yaml:"subjectField" json:"subjectField"`
-	SuccessOutcome         string   `yaml:"successOutcome" json:"successOutcome"`
-	TerminalOutcomes       []string `yaml:"terminalOutcomes" json:"terminalOutcomes"`
-	Scopes                 []Scope  `yaml:"scopes" json:"scopes"`
+	KnowledgeAfterEvaluation bool     `yaml:"knowledgeAfterEvaluation,omitempty" json:"knowledgeAfterEvaluation,omitempty"`
+	APIVersion               string   `yaml:"apiVersion" json:"apiVersion"`
+	EvaluationID             string   `yaml:"evaluationId" json:"evaluationId"`
+	DefinitionRevision       string   `yaml:"definitionRevision" json:"definitionRevision"`
+	SourceRevision           string   `yaml:"sourceRevision" json:"sourceRevision"`
+	EvidenceBasis            string   `yaml:"evidenceBasis" json:"evidenceBasis"`
+	CustodyClock             string   `yaml:"custodyClock" json:"custodyClock"`
+	SupersedesEvaluationID   string   `yaml:"supersedesEvaluationId,omitempty" json:"supersedesEvaluationId,omitempty"`
+	EvaluationTimeNS         string   `yaml:"evaluationTimeNs" json:"evaluationTimeNs"`
+	EvidenceCutoffNS         string   `yaml:"evidenceCutoffNs" json:"evidenceCutoffNs"`
+	DeadlineNS               string   `yaml:"deadlineNs" json:"deadlineNs"`
+	AllowanceNS              string   `yaml:"allowanceNs" json:"allowanceNs"`
+	WindowNS                 string   `yaml:"windowNs" json:"windowNs"`
+	SubjectField             string   `yaml:"subjectField" json:"subjectField"`
+	SuccessOutcome           string   `yaml:"successOutcome" json:"successOutcome"`
+	TerminalOutcomes         []string `yaml:"terminalOutcomes" json:"terminalOutcomes"`
+	Scopes                   []Scope  `yaml:"scopes" json:"scopes"`
 }
 
 type Scope struct {
@@ -169,8 +170,8 @@ func (p Policy) validate() (bounds, error) {
 		*pair.dest = v
 	}
 	window, err := parseNS(p.WindowNS)
-	if err != nil || window <= 0 || b.deadline <= 0 || b.allowance < 0 || b.cutoff > b.evaluation {
-		return b, fmt.Errorf("require positive deadline/window, nonnegative allowance, cutoff <= evaluation")
+	if err != nil || window <= 0 || b.deadline <= 0 || b.allowance < 0 || b.cutoff > b.evaluation && !p.KnowledgeAfterEvaluation {
+		return b, fmt.Errorf("require positive deadline/window, nonnegative allowance, cutoff <= evaluation unless later knowledge is explicit")
 	}
 	b.end, err = subtract(b.evaluation, b.deadline)
 	if err == nil {

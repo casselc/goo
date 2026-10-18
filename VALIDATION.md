@@ -5,6 +5,81 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Typed measurement packages and standardized examples (2026-10-18)
+
+[Contract](docs/MEASUREMENT_PACKAGES.md): twelve YAML packages bind actual queue
+and application telemetry to Go gauges, reset-aware counters, native histograms
+and scoped lifecycle preparation. Five data-only ordered workflows preserve a
+fixed window and preview without source execution. General captures, immutable
+package revisions and ordered notes are shared across all families. Both Go
+examples now emit real trace-correlated OTLP logs; Python lifecycle records carry
+exact business nanoseconds and stable per-emission event IDs.
+
+Passed native checks: root Go suite, root race suite/vet, instrumentation module,
+19 Python tests, 32 frontend checks, portable compiler/lifecycle/package CLI parity
+storyboards and Compose configuration. The full verification module passed
+uncached (240.18 s), including Hegel state/swarm and existing Quint MBT/trace
+checks. Live-ledger tests in that module intentionally skip without supplied
+artifacts; the browser journey supplies its actual measurement ledger.
+Additional race coverage checks atomic custody publication by 16 concurrent
+readers. Binding tests reject a consistently recomputed receipt that falsely
+claims complete coverage, not merely an inconsistent receipt.
+
+Focused storyboard 38 passed (1.4 minutes): ordinary reservation scenarios,
+Go checkout/report work, independent ClickHouse gauge counts and actual Go logs,
+all four measurement families, mature good/retry/missing/rejected/late outcomes,
+scoped subject drilldown, fixed question capture/refresh, source-free reopening,
+exact notes reference, immutable package save and fresh reuse. Both record and
+measurement workflow steps preview without telemetry reads. Quint accepted the
+real ledger and rejected seven altered ledgers. Bombadil recorded 462 observations
+through initial/preview/invalid/complete stages without invented evidence.
+
+The journey caught an incorrect checkout UI assertion and a real transport bug:
+ClickHouse's escaped JSON spellings changed a raw-input evidence hash after a
+browser round trip. Source inputs are now canonicalized before hashing, with a
+transport regression test. A source metadata mismatch also exposed the Python
+meter's missing version/schema; those are now emitted and bound explicitly.
+Stored source plans remain reopenable as evidence after compiler changes;
+refresh requires an identical current plan.
+
+Broad browser regression: 37 passed, one failed (19.1 minutes), with all
+opt-in generated/fault/Bombadil campaigns enabled. The failure was the fault
+campaign's six-second actor budget expiring before any browser observation, not
+an application or UI invariant failure. The harness now permits browser startup
+headroom while preserving its five-second application-response property, and
+reports empty traces explicitly instead of a JSON parse error.
+
+Final targeted run on the deployed final image: **2 passed, no skips (4.0
+minutes)**. The corrected fault campaign completed all three scenarios and five
+inspections/revisits with its model checks (2.5 minutes). Measurement storyboard
+38 passed again (1.4 minutes), including valid empty-selector capture
+normalization, rejection of unsupported lifecycle scope filters, and a saved
+same-name custom package that cannot shadow a builtin workflow's environment.
+Thus all 38 browser journeys were verified across the broad run and corrected
+focused rerun. All 132 storyboard images (131 PNGs and one JPEG) were refreshed; seven new frames and
+architecture flow/sequence diagrams document this slice.
+
+Artifacts: `artifacts/standardization-regression.log`,
+`artifacts/standardization-final-journeys.log`,
+`artifacts/standardization-race.log`, `artifacts/standardization-verification.log`,
+and `artifacts/measurements/360b30f8/`. The first failed fault trace is preserved
+under `artifacts/standardization-regression-failure/`; the successful fault run is
+`artifacts/bombadil/fault-campaigns/40131596-b9ce-4cb2-9834-9270c7047939/`.
+Final scope/normalization/default-resolution checks also have native regressions.
+The final measurement Bombadil run recorded 565 observations through all four
+required stages; its eight model reports contain one pass and seven intended
+conformance rejections.
+
+The broad run used query/packages image
+`sha256:7494aa650a6be69c8d06e7d58a1fc88e93149d88b057600bf0beb2da0eea0010`.
+The final targeted image, including selector normalization, strict lifecycle scope
+validation and builtin workflow resolution, is
+`sha256:4df78f6a14a53320181c8f0934f32b73fe1648c22938ab77f215dfb2d6f49b48`.
+Runtime frontend hashes match the repository. Telemetry volumes and all five
+pre-existing stale Redis pending entries were preserved. The local custody clock
+is not warehouse ingestion or a completeness guarantee; missing completion stays
+unknown. Databricks YAML was structurally checked, not warehouse-executed.
+
 ## Scoped recipes and shared sample investigations (2026-10-18)
 
 [Contract](docs/INVESTIGATION_RECIPES.md): three Go recipe transforms preserve the

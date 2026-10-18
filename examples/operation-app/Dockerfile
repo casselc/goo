@@ -4,6 +4,7 @@ WORKDIR /src
 COPY go.mod go.sum ./
 COPY annotations ./annotations
 COPY metrics ./metrics
+COPY measurements ./measurements
 COPY measurement ./measurement
 COPY lifecycle ./lifecycle
 COPY prebuilt ./prebuilt

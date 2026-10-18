@@ -19,7 +19,7 @@ func (p Policy) ValidateCorrection(previous Receipt) error {
 		return fmt.Errorf("correction must name a distinct prior evaluation ID")
 	}
 	if next.evaluation != old.evaluation || next.deadline != old.deadline || next.allowance != old.allowance || next.start != old.start || next.end != old.end ||
-		p.DefinitionRevision != prior.DefinitionRevision || p.SourceRevision != prior.SourceRevision || p.CustodyClock != prior.CustodyClock || p.SubjectField != prior.SubjectField || p.SuccessOutcome != prior.SuccessOutcome {
+		p.KnowledgeAfterEvaluation != prior.KnowledgeAfterEvaluation || p.DefinitionRevision != prior.DefinitionRevision || p.SourceRevision != prior.SourceRevision || p.CustodyClock != prior.CustodyClock || p.SubjectField != prior.SubjectField || p.SuccessOutcome != prior.SuccessOutcome {
 		return fmt.Errorf("correction must preserve the original question, revisions and custody clock")
 	}
 	if next.cutoff <= old.cutoff || p.EvidenceBasis == prior.EvidenceBasis {

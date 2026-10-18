@@ -31,8 +31,9 @@ def run(role):
     def create(item, context):
         parent = propagate.extract(dict(context.invocation_metadata()))
         with tracer.start_as_current_span('ReservationService.Create', context=parent, kind=SpanKind.SERVER) as span:
-            started = time.time()
-            item.update(id=str(uuid.uuid4()), accepted_at=started)
+            started_ns = time.time_ns()
+            started = started_ns / 1e9
+            item.update(id=str(uuid.uuid4()), accepted_at=started, accepted_at_ns=str(started_ns))
             span.set_attribute('rpc.system', 'grpc')
             span.set_attribute('rpc.service', 'lab.Reservations')
             span.set_attribute('rpc.method', 'Create')
@@ -48,7 +49,7 @@ def run(role):
                 propagate.inject(carrier)
                 item['carrier'] = carrier
                 queue.xadd('reservations', {'payload': json.dumps(item)}, maxlen=20000)
-            emit(log, 'reservation.accepted', item, **{'app.accepted_at': started})
+            emit(log, 'reservation.accepted', item, **{'app.accepted_at': started, 'goo.event.time_ns': str(started_ns)})
             count.add(1, {'operation': 'accept', 'release': item['release']})
             duration.record(time.time() - started, {'operation': 'grpc'})
             return {'id': item['id'], 'scenario': item['scenario']}
@@ -159,8 +160,9 @@ def run(role):
                         break
                     time.sleep(14 if item['scenario'] == 'late' else .3)
                     outcome = 'rejected' if item['scenario'] == 'reject' else 'confirmed'
-                    completed = time.time()
-                    emit(log, 'reservation.terminal', item, **{'app.completed_at': completed, 'app.outcome': outcome})
+                    completed_ns = time.time_ns()
+                    completed = completed_ns / 1e9
+                    emit(log, 'reservation.terminal', item, **{'app.completed_at': completed, 'app.outcome': outcome, 'goo.event.time_ns': str(completed_ns)})
                     duration.record(completed - item['accepted_at'], {'operation': 'completion', 'outcome': outcome})
             # Demo acknowledges missing work deliberately; no production retry guarantee.
             queue.xack('reservations', 'inventory', message_id)

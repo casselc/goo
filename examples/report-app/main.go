@@ -24,12 +24,21 @@ type Report struct {
 //goo:operation name:report.generate role:server
 func Generate(ctx context.Context) (result *Report, err error) {
 	result = &Report{ID: rand.Text(), Outcome: "ready"}
+	emitLog(ctx, "report.accepted", result.ID, "")
 	err = Ready(ctx, result)
 	return result, err
 }
 
 //goo:event name:report.ready subject:report.ID outcome:report.Outcome when:ok
-func Ready(ctx context.Context, report *Report) (err error) { return nil }
+func Ready(ctx context.Context, report *Report) (err error) {
+	emitLog(ctx, "report.ready", report.ID, report.Outcome)
+	return nil
+}
+func emitLog(ctx context.Context, name, id, outcome string) {
+	if e := instrumentation.EmitExampleLog(ctx, "lab-go-reports", "reports-demo", name, id, outcome); e != nil {
+		log.Printf("example log export failed: %v", e)
+	}
+}
 
 func main() {
 	exporter, err := otlptracehttp.New(context.Background())

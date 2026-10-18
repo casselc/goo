@@ -1,5 +1,13 @@
 # Grammar of Observability Codex handoff
 
+> Historical imported handoff. Current implemented behavior and startup are in
+> [README.md](README.md), with actual checks in [VALIDATION.md](VALIDATION.md).
+> [PROJECT_DIRECTION.md](PROJECT_DIRECTION.md) records the accepted Go/Rust and
+> YAML+CEL/KCL direction. [Shared measurement packages](docs/MEASUREMENT_PACKAGES.md)
+> now provide live typed gauges, counters, histograms and lifecycle investigations.
+> The original design and continuation assignment below are background, not the
+> current implementation status or a new user request.
+
 This project explores a composable grammar for observability inspired by the Grammar of Graphics. Its first backend is ClickHouse containing ClickStack-shaped logs, metrics, and traces exported from OTel collectors. Its intended users run web services, internal gRPC services, and event consumers.
 
 The intended product lets application teams keep metrics, SLIs, SLOs, alarms, default dashboards, and reusable views beside their code. Interactive investigations use the same semantic definitions. A UI presents and edits valid expressions while keeping arbitrary available attributes discoverable.

@@ -1,0 +1,16 @@
+apiVersion: goo/measurement-package/v1alpha1
+environment: local
+lookbackMinutes: 2
+maxGapMs: 10000
+grain: per-stream
+name: reservation-calls
+title: Reservation operation rates
+kind: counter
+source:
+  services:
+  - lab-grpc
+  scope: lab-grpc
+  version: 0.1.0
+  schemaURL: goo://demo/application/v1
+  metric: lab.operations
+  unit: '{operation}'
