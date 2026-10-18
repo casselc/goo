@@ -161,3 +161,19 @@ recreation. Read-only disk diagnostics confirmed full bytes, not inodes. Removin
 dangling unused images and unused builder cache recovered roughly 19 GiB free;
 running containers and all data volumes were preserved, and recreation succeeded.
 No Docker daemon/authentication configuration or storage driver was changed.
+
+## Bombadil browser spike (2026-10-18)
+
+Pinned npm development tool `@antithesishq/bombadil` 0.7.9 and exercised
+`verification/bombadil/workspace.ts` against the running UI at localhost:8088
+with system Chromium, headless and the container's required `--no-sandbox`.
+The initial 20-second run passed. The final 15-second run passed with 160
+generated navigation actions, a bounded shell-readiness property, panel/navigation
+agreement, and uncaught-exception/unhandled-rejection properties. A temporary
+always-false property exited 2 with a reported violation (negative control); the
+temporary specification was removed. Runtime traces/screenshots remain ignored
+under `artifacts/bombadil/`. No product runtime or screenshots changed.
+
+The cross-app coordinator and optional Quint MBT/trace bridge are documented
+proposals, not executed integration claims. No existing Go/Python semantic code
+changed, so their suites were not repeated for this browser-only spike.

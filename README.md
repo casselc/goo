@@ -36,6 +36,10 @@ business events into frozen subject facts and evidence receipts. Explore the
 [Hegel/Quint verification](verification/README.md), and
 [bitemporal design note](docs/BITEMPORALITY.md).
 
+The [Bombadil testing spike](docs/BOMBADIL_TESTING.md) adds generated workspace
+navigation and describes coordinated application/goo exploration with optional
+Quint trace validation and model-based checkpoints.
+
 The reference reservation example emits ClickStack-shaped OTel data: HTTP gateway → gRPC reservation service → Redis Streams → inventory consumer → OTel collector → ClickHouse. Its Examples workspace edits a validated JSON query expression and shows its compiled SQL, completion cohorts, gRPC latency, logs, spans and links, and exported metric points.
 
 The [visualization slice](docs/VISUALIZATIONS.md) adds trace waterfalls with span

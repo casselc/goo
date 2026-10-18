@@ -1,5 +1,10 @@
 # Semantic properties and model conformance
 
+The optional [Bombadil browser spike](../docs/BOMBADIL_TESTING.md) complements these
+semantic checks. It includes a proposed coordinator bridge for Quint-generated
+cross-app checkpoints and validation of observed semantic traces; that bridge is
+not yet implemented.
+
 This separate Go module keeps Hegel's native loader/development dependencies out
 of the runtime module. It uses hegel-go **0.9.8** (embedded libhegel 0.43.4), Quint
 **0.32.0**, and the checked-out sibling `observability/quintgo` tools. No sibling
