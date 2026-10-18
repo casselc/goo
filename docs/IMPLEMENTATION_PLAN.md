@@ -21,6 +21,8 @@ The [core primitives review](CORE_PRIMITIVES.md) supersedes feature-by-feature
 ordering above: first unify resolved scope and checked question transforms across
 recipes/follow-ups, then typed measures and capability-aware planning. Preserve
 existing wire formats, immutable receipts and specialized metric/lifecycle kernels.
+OTel semantic-convention profiles are a first-class input across all six primitives,
+with explicit version/unit/identity bindings and generic fallback for custom data.
 This is proposed work; the review defines a bounded next slice and acceptance checks.
 
 ## Earlier plan and milestone history

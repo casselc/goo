@@ -29,6 +29,71 @@ The seams are concrete:
 - `workbench.Document` validates capture references on evidence cards, but findings
   and evidence-gap citations remain text rather than structured evidence links.
 
+## OpenTelemetry semantic conventions are a first-class input
+
+All six primitives must work over standard OpenTelemetry instrumentation without
+requiring goo annotations. Convention packages bind OTel meaning into the common
+typed model; physical exporter adapters bind storage columns. Keep these layers
+separate so a new convention or exporter does not require a new query language,
+visualization or investigation implementation. Custom attributes/instruments remain
+usable through explicit bindings and generic exploration.
+
+Build on the existing [semantic-package catalog and binding rules](SEMANTIC_PACKAGES.md),
+not a parallel registry. The catalog is currently a recognition pilot; broad
+convention expansion and the following shared contracts are proposed work.
+
+| Primitive | Semantic-convention requirement |
+| --- | --- |
+| Scope | Retain resource identity, instrumentation scope and applicable resource/signal schema URLs; distinguish service namespace/name/instance, span kind and operation grain. Resource attributes and record/point attributes are separate namespaces. |
+| Measures/dimensions | Bind declared instrument kind, unit, temporality, monotonicity and dimensions. Use explicit checked unit conversions. Span durations, duration histograms and counter-derived rates have different operators even when they describe the same activity. |
+| Capabilities | Pin a convention profile/revision and its required/recommended/optional inputs. Report compatibility per output: missing route may disable route breakdown without disabling a service-level duration view. Missing optional data does not invalidate an OTel producer. |
+| Relations | Bind standard trace/span IDs, parentage, span links and resource identities according to their contracts. Destination, database address, host or Kubernetes labels provide scoped context unless a stronger relation is declared. |
+| Evidence metadata | Retain original observed names, values, units and schema metadata alongside binding/conversion provenance. Missing schema URL or unknown convention version remains explicit; scope library version is not a semantic-convention version. |
+| Investigation steps/citations | Generate presets and requirements from the resolved convention profile, using the same planner and evidence links as custom packages. Explain unsupported or missing inputs without inventing health, business outcomes or collection completeness. |
+
+Initial compatibility families should cover HTTP server/client; RPC; messaging
+producer/consumer; database client/pools; runtime; host/process/container/Kubernetes;
+and cross-cutting service/resource, log/error and exception conventions. These are
+coverage goals, not claims that every catalog profile or backend supports them.
+Profiles may evolve independently and must record stability/version expectations.
+
+Examples of semantics that must survive normalization:
+
+- HTTP server and client populations have separate status/error policies; OTel
+  span status, HTTP response status and application outcome are different fields.
+  Use route templates for default breakdowns; do not promote raw URLs by default.
+- RPC duration names/units and status representations can differ across convention
+  revisions and protocols. Legacy/current mappings require explicit profiles;
+  mixed telemetry must not silently merge or double-count during migration.
+- Messaging send/process durations, broker lag and end-to-end business completion
+  are different measures. Batch/message multiplicity and span links matter;
+  counting processing spans does not establish unique delivered messages.
+- Database client latency does not measure database-server utilization. Pool
+  utilization requires matching pool identity, states and capacity; runtime/host
+  pressure requires correct instance/resource association and units.
+- Log severity, exception events and recorded span error status are related evidence,
+  not interchangeable failure counts. Missing error attributes do not prove success.
+
+Schema URLs can inform selection but are not a universal availability requirement.
+When metadata is absent, preserve generic exploration and require a reviewable
+binding for convention-specific semantics. Never infer a version from a metric
+name or library version alone. Renamed attributes and unit conversions need declared
+compatibility mappings with conflict handling, not heuristic aliases. Preserve
+original fields for inspection; reject incompatible unit/type/temporality merges.
+Metric stream identity retains all identity-bearing resource, scope and point
+attributes even when a visualization projects fewer dimensions. Cardinality limits
+and sensitive-data defaults belong to profiles and planning, not silent data loss.
+
+The conformance suite should pin fixtures/profile revisions rather than depend on
+whatever the latest online convention happens to be. Cover stable, legacy, mixed,
+missing-metadata and custom producers; missing optional fields; conflicting aliases;
+unit/type mismatches; different span kinds; async/batch cases; and repeated names
+across service namespaces/instances. Hegel must preserve binding/scope through
+transforms; Quint must reject invalid relation/scope transitions. Test normalization
+and equivalent backend outputs where supported, and explicit capability rejection
+where semantics cannot be preserved. Real OTel journeys continue to validate the
+source adapter; fixtures alone do not certify exporter integration.
+
 ## Priorities
 
 | Order | Missing/shared primitive | Simplifies existing use cases | First useful increment |
@@ -156,12 +221,15 @@ Acceptance:
    recipe preview, package round-trip and capture/reopen; page changes do not alter it.
 2. Duration/status transforms preserve the complete selector; trace navigation
    reports its replacement; resource discovery reports service/time context.
-3. Plans are source-free, explicit execution remains required, and old capture
+3. Scope descriptors retain available OTel resource/scope/schema identity and
+   resolved profile/binding revision. Missing metadata is explicit; custom telemetry
+   remains usable without fabricated convention recognition.
+4. Plans are source-free, explicit execution remains required, and old capture
    JSON/hashes and reopen behavior remain valid.
-4. Hegel state/swarm checks compose transforms and mutate returned plans without
+5. Hegel state/swarm checks compose transforms and mutate returned plans without
    changing origins. Quint validates observed handoffs and rejects scope drift;
    Bombadil explores preview/execution/draft guards in existing real journeys.
-5. Existing screenshots/diagrams are regenerated only when their visible behavior
+6. Existing screenshots/diagrams are regenerated only when their visible behavior
    changes. Do not add a new parallel demo to demonstrate this consolidation.
 
 Then add the first explicit typed record-measure path and grouped time series,

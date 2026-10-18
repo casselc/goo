@@ -9,6 +9,13 @@ An OTel convention supplies a vocabulary and measurement contract. It does not
 supply the application's business objective, completeness guarantees, retention
 policy, or an automatically correct causal diagnosis.
 
+The [core primitives plan](CORE_PRIMITIVES.md#opentelemetry-semantic-conventions-are-a-first-class-input)
+requires convention-aware scope, typed measures, capabilities, relations, evidence
+and investigation steps. Standard OTel producers and custom telemetry must use
+these same primitives. Profiles supply explicit versioned meaning; exporter
+adapters supply physical bindings. The plan includes compatibility/migration and
+conformance requirements; it does not upgrade this recognition pilot's maturity.
+
 ## Useful package families
 
 | Family | Reusable defaults | Decisions or evidence still needed |

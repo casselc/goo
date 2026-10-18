@@ -10,6 +10,8 @@ environment limitations below describe the original handoff session.
 Reviewed the implemented question/package/capture, workflow/recipe/follow-up and
 investigation models. [The consolidation plan](docs/CORE_PRIMITIVES.md) records
 missing shared contracts, migration boundaries and next-slice acceptance criteria.
+The plan also explicitly requires OTel convention profiles across all six primitives,
+with versioned bindings, optional-field degradation and conformance cases.
 Documentation only: changed-file local links and `git diff --check` passed; no
 runtime changes, new browser claims or application test reruns in this review.
 
