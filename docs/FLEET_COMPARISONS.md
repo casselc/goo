@@ -35,6 +35,9 @@ The measured spread is a property of reported timestamps, not a bound on host
 clock error. Clock accuracy, sampling and ingestion completeness remain
 unverified. Overlapping but different windows may contain different events;
 comparable does not mean identical populations or statistical equivalence.
+Check exposure durations before interpreting raw count differences as traffic
+imbalance; this policy does not normalize counts into rates or establish a
+statistically significant change.
 
 ## Matching and evidence limits
 
