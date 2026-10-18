@@ -160,3 +160,7 @@ Live two-instance slice: operation-peer has distinct identity and loopback8092. 
 ## Local saved investigation milestone
 
 Implemented: immutable bounded server captures, package-revision/fixed-window refresh, stored trace/filter/subject and ratio/member explanation navigation, separate component bases, local named-volume persistence and revision comparison. See [contract](SAVED_INVESTIGATIONS.md). Next proposed: [general exploration, full traces/logs, then cohort comparison](PRODUCT_GAPS.md). General workspaces and production collaboration remain future.
+
+## Bounded general exploration milestone
+
+Implemented: shared UI/API/CLI Go query AST and ClickHouse adapter, typed literal predicates and AND/OR, discovered attribute keys, independent full-record counts/groups, bounded row pages, detected cross-read disagreement, cross-service trace expansion and exact trace/span log scopes. See [design and remaining slices](EXPLORATION_DESIGN.md). Next proposed: value distributions, stable capture/cursor paging, saved general workspaces and cohort comparisons; production access control remains a prerequisite for team deployment.

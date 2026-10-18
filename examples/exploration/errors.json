@@ -1,0 +1,15 @@
+{
+  "signal": "spans",
+  "environment": "local",
+  "fromMs": 1792272000000,
+  "toMs": 1792272120000,
+  "where": {
+    "all": [
+      {"field": {"kind": "column", "key": "service"}, "op": "eq", "value": "lab-go-checkout"},
+      {"field": {"kind": "attribute", "key": "goo.operation.outcome"}, "op": "eq", "value": "error"}
+    ]
+  },
+  "groupBy": [{"kind": "attribute", "key": "goo.operation.name"}],
+  "limit": 100,
+  "offset": 0
+}

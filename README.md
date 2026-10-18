@@ -235,3 +235,5 @@ The second checkout instance runs at loopback **8092**. See
 metric-export loss/restart controls. Exact totals retain strict boundaries.
 
 Saved operation evidence can now be reopened and refreshed as immutable revisions: [Saved investigations](docs/SAVED_INVESTIGATIONS.md). See the [general observability feature gaps and proposed order](docs/PRODUCT_GAPS.md) for the path toward broader HyperDX/Honeycomb-style exploration.
+
+[General exploration](docs/EXPLORATION_DESIGN.md) now searches captured spans/logs by discovered attributes, groups full matching record populations independently of row pages, expands traces across services and finds exact linked logs. The [JSON example](examples/exploration/errors.json) uses the same compiler through `goo plan-exploration -query examples/exploration/errors.json`.

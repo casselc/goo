@@ -1,0 +1,13 @@
+spec: exploration.qnt
+module: exploration
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  search:
+    expect: 'scope == {{.obs.scope}} and population == {{.obs.population}} and exact == {{.obs.exact}}'
+  page:
+    expect: 'scope == {{.obs.scope}} and population == {{.obs.population}} and exact == {{.obs.exact}}'
+  trace:
+    expect: 'scope == {{.obs.scope}} and population == {{.obs.population}} and exact == {{.obs.exact}}'
+  logs:
+    expect: 'scope == {{.obs.scope}} and population == {{.obs.population}} and exact == {{.obs.exact}}'

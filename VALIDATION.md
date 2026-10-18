@@ -4,6 +4,58 @@ Current additions: see the [cloud baseline](ENVIRONMENT_VALIDATION.md) for the
 successful default Compose run in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Bounded general exploration and expanded trace/log context
+
+Implemented: shared Go query model/reference predicates and parameterized
+ClickHouse compiler; UI/API/CLI source planning; discovered attribute keys,
+string and UInt64-duration predicates with bounded AND/OR; independent captured
+record counts/groups and bounded pages; missing-vs-empty grouping; detected
+cross-read disagreement; cross-service trace pages and exact trace/span log scopes.
+Operation/saved waterfalls explicitly expand into separate live evidence. See
+[design](docs/EXPLORATION_DESIGN.md),
+[diagram 10](docs/ARCHITECTURE_DIAGRAMS.md#10-general-exploration-and-independent-expanded-evidence)
+and [journeys 20–22](docs/journeys/README.md#20-general-exploration-and-population-safe-paging).
+
+Passed: root Go race tests/vet, 19 Python checks and 12 Node checks. Core/HTTP
+fixtures cover type/operator/budget validation, literal parameter safety, exact
+UInt64 comparisons, missing values, page-independent count/group SQL, fixed
+trace scope, source/group overflow failures, detected read disagreement, CLI
+planning and invalid requests rejected before source execution. Hegel state/swarm
+passes 100 sequences of up to 30 steps; Quint observed search/page/trace/log steps
+pass with three negative population/scope/identity controls. All three Dockerfile first-stage COPY contexts compile the root CLI with
+VCS stamping disabled for temporary contexts. Full nested
+verification suite passed (89.4 seconds), log in ignored
+`artifacts/verification/exploration-full-suite.log`.
+
+Live targeted journeys 20/21 passed together (13.8 seconds); expanded 20–22
+passed together (37.6 seconds), including trace paging with missing parents and
+saved/live evidence separation. An initial journey read collapsed diagnostics
+using rendered text and failed; it now reads the actual stored text content.
+Direct read-only ClickHouse checks found that raw HTTP query parameters reinterpret
+backslashes and reject literal tabs. The adapter now escapes ClickHouse parameter
+text as well as URL encoding. Exact backslash/tab/newline/Unicode/DEL round trips
+were verified, and journey 20 now includes literal transport characters in both
+keys and values. This is a transport correction, not an SQL interpolation path.
+
+All 22 live browser journeys passed together (4.2 minutes), including the literal
+transport regression in the 123-record fixture. The 63 documentation frames were
+regenerated. After a UI origin-metadata refinement, focused journeys 20–22 passed again
+(22.7 seconds), including the assertion that log→trace navigation carries the log
+response question/basis as its origin. Context diagnostics also retain source
+state/warnings; actual read disagreement is covered by source fixtures. No Go
+query kernels changed after the full browser pass. The six new documentation
+frames were regenerated, and the exploration, distributed waterfall/log and
+saved/live-context frames were visually inspected. All 12 services are running;
+the owned traffic generator is restored and no queues/volumes were cleared.
+Mermaid source and relative documentation links were checked without claiming a
+local Mermaid render.
+
+General query/cursor persistence, whole-trace completeness/accumulation, live tail,
+value distributions, cohort comparison, production authorization and warehouse
+lowering remain unimplemented. No production deployment, Databricks instance or
+full networked Docker build is claimed. General context is not added to saved
+operation receipts.
+
 ## Saved fixed-window investigations
 
 Implemented: bounded server-captured immutable operation evidence; local named

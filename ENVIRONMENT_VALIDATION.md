@@ -120,3 +120,20 @@ for these temporary contexts because the sandbox's ancestor Git metadata caused
 an unrelated status failure. Both sample manifests also build from the real tree.
 These checks establish local compilation inputs, not a full networked Docker build
 or an Orchestrion toolchain rebuild for this milestone.
+
+## General exploration and context expansion
+
+The Go packages service adds POST `/explore`; the Python query service forwards
+bounded JSON at `/api/explore` and serves `ui/exploration.js`. No service or port
+is added: the default lab remains 12 services. Only query/packages are rebuilt
+and recreated; existing telemetry/storage/queues remain. All three Dockerfiles
+copy the new Go `exploration` package because their builds compile the root CLI.
+The host-staged image includes updated CLI, proxy, index/operation UI and new
+exploration UI. The shared CLI supports `plan-exploration -query <JSON file>`.
+
+The live source uses the actual pinned exporter schema. Direct read-only
+ClickHouse checks establish exact round trips for backslashes, tabs, newlines,
+Unicode and DEL using the adapter's Escaped-format parameter encoding. Journeys
+20–22 cover labelled collector fixture populations, real web/gRPC traces/logs and
+independent live expansion from retained operation receipts. Full networked
+multistage builds and optional HyperDX/Databricks runtimes remain unverified.

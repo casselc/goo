@@ -76,3 +76,5 @@ The immutable store has race-tested persistence/concurrency/corruption tests;
 Hegel state/swarm explores refresh/reopen/rejected question changes; Quint validates
 observed save/reopen/refresh/reject transitions, with negative controls for changed
 original evidence or question. See VALIDATION.md for actual run results.
+
+Operation waterfalls can now explicitly expand into [general live trace/log context](EXPLORATION_DESIGN.md). This creates independent live evidence; it is not part of the stored operation capture and does not alter its receipt.

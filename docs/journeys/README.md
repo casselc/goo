@@ -292,3 +292,41 @@ No browser operation/metric fetches are permitted during reopen.
 This test controls only the local Compose packages service and collector. It
 adds explicitly labelled test telemetry; no real business completion is invented.
 See [capture contract and limitations](../SAVED_INVESTIGATIONS.md).
+
+## 20. General exploration and population-safe paging
+
+A labelled collector fixture emits 123 spans across two synthetic resource names.
+The investigator discovers arbitrary keys, filters a cohort and groups a key with
+61 present-empty values and 62 missing values. A 100-row page and its 23-row
+successor keep the same full captured-record count/group results. The fixture
+also exercises an SQL-looking key as a literal, AND/OR, consistent no-data and a
+delayed genuine response discarded after a signal change. These are controlled
+telemetry records, not real service executions.
+
+- [Independent counts and missing/empty grouping](screenshots/20a-full-counts-and-missing-key-groups.png)
+- [Bounded next page](screenshots/20b-bounded-next-page.png)
+- [Trace page with parents outside the page](screenshots/20c-trace-paging-keeps-partial-context-visible.png)
+
+## 21. Real distributed trace and exact linked logs
+
+A real reservation request passes through web and gRPC. Starting with a gRPC-only
+attribute search, the investigator expands its exact trace to include the web
+parent in the same environment/time bounds. Original filters/basis remain
+separate. The UI shows the cross-service waterfall and trace-linked acceptance
+logs; clicking a span narrows logs to exact trace AND span IDs. Async consumer
+trace links are retained as references, not silently joined as parent edges.
+
+- [Cross-service waterfall and trace logs](screenshots/21a-cross-service-waterfall-and-linked-logs.png)
+- [Exact selected-span log scope](screenshots/21b-exact-span-log-scope.png)
+
+See [the query and expansion contract](../EXPLORATION_DESIGN.md).
+
+## 22. A saved operation expands independent live context
+
+The investigator reopens an immutable Go checkout capture, then explicitly
+expands its trace to live cross-service context and exact log lookup. The original
+fixed environment/time bounds and origin basis remain visible. The saved receipt
+is checked before/after and stays equal; expanded evidence has separate questions
+and bases and is not silently archived with the operation capture.
+
+- [Saved origin and independent live context](screenshots/22a-saved-question-and-independent-live-context.png)

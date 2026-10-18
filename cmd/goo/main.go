@@ -18,6 +18,9 @@ func run(args []string, out io.Writer) error {
 		return fmt.Errorf("usage: goo validate|compile|evaluate|prepare|evaluate-prepared|discover|catalog|expand|prepare-http|manifest|weave|observe-operations|plan-operations|evaluate-counters|evaluate-histograms|merge-histograms [options]")
 	}
 	command := args[0]
+	if command == "plan-exploration" {
+		return planExploration(args[1:], out)
+	}
 	if command == "evaluate-histograms" || command == "merge-histograms" {
 		return histograms(args[1:], out, command == "merge-histograms")
 	}

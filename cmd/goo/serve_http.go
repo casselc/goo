@@ -207,6 +207,7 @@ func serveHTTP(args []string) error {
 		json.NewEncoder(w).Encode(result)
 	})
 	registerInvestigations(mux, plans, client, *captureDir)
+	registerExploration(mux, client)
 	server := &http.Server{Addr: *listen, Handler: mux, ReadHeaderTimeout: 5 * time.Second, WriteTimeout: 90 * time.Second}
 	return server.ListenAndServe()
 }

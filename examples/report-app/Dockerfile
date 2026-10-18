@@ -7,6 +7,7 @@ COPY metrics ./metrics
 COPY measurement ./measurement
 COPY lifecycle ./lifecycle
 COPY prebuilt ./prebuilt
+COPY exploration ./exploration
 COPY investigations ./investigations
 COPY cmd ./cmd
 COPY instrumentation ./instrumentation

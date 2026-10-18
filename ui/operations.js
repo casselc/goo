@@ -57,6 +57,7 @@
   function openTrace(traceID){
    navigation={traceID};
    waterfall.replaceChildren(node('h3','Trace '+traceID));
+   const expand=node('button','Expand trace across services and find linked logs');expand.onclick=()=>global.dispatchEvent(new CustomEvent('goo:expand-trace',{detail:{traceID,basis:data.conformance.basis,question:{environment:data.source.environment,fromMs:data.fromMs,toMs:data.toMs}}}));waterfall.append(expand);
    const trace=select(snapshot,{traceID});
    global.GooVisuals.waterfall(waterfall,waterfallRows(trace,data.source.service),false,undefined,'operationSpanDetails');
    subjects.replaceChildren(node('h3','Observed subject events in this trace'));

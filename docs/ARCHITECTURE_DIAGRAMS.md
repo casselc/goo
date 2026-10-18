@@ -335,3 +335,30 @@ sequenceDiagram
 Capture time is server receipt time, not ingestion custody. Reads are not a
 transactional source snapshot. This supports reproducible inspection; raw metric
 inputs, renderer versions and evaluator re-execution are not archived.
+
+## 10. General exploration and independent expanded evidence
+
+```mermaid
+flowchart TB
+  UI["Explore UI: fields, predicates, grouping"] --> AST["Bounded Go query AST: explicit environment and event window"]
+  CLI["goo plan-exploration: JSON question"] --> AST
+  AST --> Validate["Validate types, operators, budgets and scope"]
+  Validate --> Adapter["ClickHouse physical adapter and parameterized SQL"]
+  Adapter --> Count["Full captured-record count and groups"]
+  Adapter --> Rows["Bounded inspection page"]
+  Adapter --> Fields["Bounded field inventory across matching records"]
+  Count --> Result["Independent read results and content basis; disagreement diagnostic"]
+  Rows --> Result
+  Fields --> Result
+  Result --> Search["Original query evidence stays visible"]
+  Search --> Trace["Selected exact trace ID; retain environment and time, drop search filters"]
+  Op["Operation or saved-capture waterfall"] -->|explicit fresh expansion| Trace
+  Trace --> TraceRows["Cross-service span page and separate basis; completeness unknown"]
+  TraceRows --> Logs["Exact trace ID or trace AND selected span ID"]
+  Logs --> LogRows["Log page, count and independent basis"]
+```
+
+The database optimizes the generated SQL. The reference predicate evaluator is
+for verification. Expanded context is live evidence and does not mutate saved
+operation captures. This is implemented local behavior, not a production RBAC,
+transactional snapshot, whole-trace completeness or Databricks-runtime claim.
