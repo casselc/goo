@@ -116,10 +116,10 @@ A bounded Go span/log AST, captured-record counts/groups, discovered keys and pa
 
 ## Exploratory UI testing boundaries
 
-The opt-in Quint/Bombadil campaign exercises three successful report requests and
-two evidence revisits with independent source checks. Generated schedule replay
-checks observed handler effects; it does not establish deterministic browser
-scheduling, business durability or telemetry completeness. Application-side retries,
-faults and long-lived independent actors remain unimplemented in this campaign.
+The opt-in Quint/Bombadil campaigns exercise successful reports and Python retry,
+rejection and stalled-work paths with independent source checks. Generated schedule
+replay checks observed handler effects; it does not establish deterministic browser
+scheduling, business durability or telemetry completeness. Resource/export-loss/
+late-capture generation and long-lived independent actors remain unimplemented.
 See [testing contract](BOMBADIL_TESTING.md); existing curated journeys cover their
 separately documented retry, export-loss and late-evidence scenarios.

@@ -98,6 +98,66 @@ The normal browser suite skips this explicitly opt-in campaign, preserving its
 existing optional Go verification dependency. This bounded successful-report
 campaign does not yet generate retries, faults or arbitrary application behavior.
 
+## Retry, rejection and missing-terminal campaign
+
+The separate opt-in [fault campaign](../journeys/fault-campaign.spec.js) applies
+the same generated nine-step schedule to the existing Python HTTP → gRPC → Redis
+consumer sample, without changing its instrumentation or deploying new services.
+Its three fixed coverage cases are retry, business rejection and stalled work;
+the model varies revisit placement/targets. It does not randomize arbitrary faults.
+
+```sh
+npm run test:fault-campaign
+GOO_CAMPAIGN_SEED=7 npm run test:fault-campaign
+```
+
+Use the local Compose lab. This command uses the existing journey wrapper to pause
+and restore only its owned background traffic generator and drain active queued
+work without deleting stream entries or volumes. Previously stale pending entries
+are retained. Endpoints can use the existing sample/query overrides, but this
+wrapper still controls only the local lab's queue and traffic generator.
+
+Bombadil chooses the requested scenario through the real app select/button and
+captures its returned ID. Acceptance is not completion. The scenario adapter waits
+for the actual response so the sample's enabled button cannot generate duplicate
+requests while the first is in flight. Each app actor has a fresh browser profile;
+the independent goo actor continues exploring navigation.
+
+The source adapter polls for positive captured evidence in fixed bounds, then the
+observer searches **Explore spans and logs** by the literal returned ID. Every
+displayed record/attribute and full bounded count is compared with an independent
+read over exactly that UI question. This uses ordinary Python OTel attributes, not
+a goo source manifest or a reservation-specific product renderer.
+
+| Case | Required captured evidence | Test-observed interpretation |
+| --- | --- | --- |
+| Retry | Two consumer attempts, an error span, a retry log and a confirmed terminal | `confirmed-after-retry`; an attempt error did not prove terminal failure. |
+| Rejection | A rejected terminal, one consumer attempt and no error span | `rejected`; business outcome is distinct from transport/span success. |
+| Stalled work | A positive stalled log, one consumer attempt and no captured terminal | `unknown-no-terminal`; absence is neither health nor a business rejection. |
+
+These interpretations are test contracts over the raw displayed records, not new
+goo SLO/health results or durability guarantees. A present terminal with an empty
+outcome is distinct from an absent terminal. Conflicting terminal outcomes remain
+unknown. Ingestion timeout/missing required evidence fails the campaign; it cannot
+satisfy the stalled case by observing nothing. Source/span/log reads remain separate
+and can change as data arrives; no transactional snapshot is claimed.
+
+`connect.Driver` checks actual handler effects against the generated schedule.
+Every inspection also passes through qobs/quint-go against
+[`fault_observation.qnt`](../verification/model/fault_observation.qnt), which checks
+scenario-specific evidence, terminal presence and observed interpretation, plus a
+fingerprint of both fixed questions and captured record identities. Fingerprints
+are comparisons, not authenticated provenance; raw questions/records remain in the
+archive at `artifacts/bombadil/fault-campaigns/<run-id>/`.
+
+Protocol tests reject healthy labels, mismatched fingerprints, invented terminal
+values and incorrect terminal-presence flags for each scenario. A Hegel state/swarm
+test drives the actual JavaScript projection through a persistent Node process:
+duplicate logs and delivery order cannot change interpretation, missing terminals
+cannot invent outcomes, and conflicting outcomes must withdraw certainty. These
+unit/model fixtures are separate from the real integration evidence in
+[journey 28](journeys/README.md#28-investigate-retry-rejection-and-stalled-work).
+
 With the lab running and Chromium installed:
 
 ```sh
@@ -225,7 +285,9 @@ The first model covers accepted → source_ready → displayed → explored for 
 successful request. The coordinator enforces wall-clock readiness and actual actor
 overlap; the model checks order and matching observations. It does not prove
 ingestion liveness, browser scheduling, distributed causality or capture completeness.
-Later models can add saved/refresh, retries, missing capture and readiness timeouts.
+The separate fault model above adds bounded retry/rejection/stalled observations.
+Saved/refresh, export loss and explicit readiness-timeout transitions remain future
+extensions to these coordinated campaigns.
 
 Reuse the patterns in [`verification/model_test.go`](../verification/model_test.go)
 and [`verification/operation_navigation_test.go`](../verification/operation_navigation_test.go).
@@ -246,6 +308,7 @@ and the installed 0.7.9 CLI on 2026-10-18:
 - [Browser target attachment](https://github.com/antithesishq/bombadil/blob/41f94f51aff970382b0af1cca7439d36790ecd2b/lib/bombadil-browser/src/browser.rs)
 - [CLI options and best-effort shrink](https://github.com/antithesishq/bombadil/blob/41f94f51aff970382b0af1cca7439d36790ecd2b/lib/bombadil-cli/src/browser.rs)
 
-The real-app coordinator, two Bombadil actors, generated schedules and optional
-qobs observed-trace checks are implemented for the bounded successful-report
-campaign. Broader fault campaigns and longer-lived independent actors remain future work.
+The real-app coordinator, two Bombadil actors, generated schedules and observed
+trace checks are implemented for successful reports and the bounded Python retry,
+rejection and stalled-work campaign. Broader resource/export-loss/late-capture
+generation and longer-lived independent actors remain future work.

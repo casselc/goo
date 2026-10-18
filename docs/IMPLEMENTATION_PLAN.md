@@ -198,5 +198,8 @@ observed-trace validation with rejecting protocol controls. See
 The next opt-in campaign now uses Quint-generated issue/inspect/revisit checkpoints,
 application-side Bombadil submissions, simultaneous goo navigation and live ITF
 poststate replay. It covers three successful reports and two evidence revisits.
-Next: explicit retry/late-capture/fault campaigns and longer-lived independent
-actors. The models do not establish browser scheduling or telemetry completeness.
+The next fault campaign now exercises existing Python retry, rejection and stalled
+paths, checks rendered spans/logs independently, validates each observation with
+Quint and property-tests the test interpretation with Hegel state/swarm. Next:
+resource/export-loss/late-capture generation and longer-lived independent actors.
+The models do not establish browser scheduling or telemetry completeness.

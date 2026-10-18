@@ -156,4 +156,4 @@ async function capturedReport(dir) {
   return { id: states[0].id, outcome: states[0].outcome };
 }
 
-module.exports = { inspectReport, startBombadil, verifyWithGo, capturedReport };
+module.exports = { inspectReport, startBombadil, verifyWithGo, capturedReport, source };

@@ -1,0 +1,13 @@
+spec: fault_observation.qnt
+module: fault_observation
+constants: {INITIAL: '0'}
+invariants: [honest]
+actions:
+  accepted:
+    args: {id: '{{.subject}}', kind: '{{.scenario}}'}
+  source_ready:
+    args: {id: '{{.subject}}', sig: '{{.signature}}', retrySeen: '{{.retrySeen}}', stalled: '{{.stalled}}', terminalSeen: '{{.terminalSeen}}', terminal: '{{.terminal}}', attempts: '{{.attempts}}', errors: '{{.errors}}'}
+  displayed:
+    args: {id: '{{.subject}}', sig: '{{.signature}}', observed: '{{.meaning}}'}
+  explored:
+    args: {steps: '{{.steps}}', passed: '{{.passed}}'}

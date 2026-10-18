@@ -41,6 +41,8 @@ request with independently captured telemetry and goo's rendered trace while a
 second browser explores navigation. Optional Quint validation checks the observed
 cross-app checkpoints. An opt-in generated campaign uses Quint MBT schedules to
 drive Bombadil app submissions and goo evidence inspections/revisits.
+The fault campaign adds Python retry, rejection and stalled-work evidence, with
+Hegel state/swarm properties and Quint checks that preserve unknown outcomes.
 
 The reference reservation example emits ClickStack-shaped OTel data: HTTP gateway → gRPC reservation service → Redis Streams → inventory consumer → OTel collector → ClickHouse. Its Examples workspace edits a validated JSON query expression and shows its compiled SQL, completion cohorts, gRPC latency, logs, spans and links, and exported metric points.
 

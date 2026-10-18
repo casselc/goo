@@ -442,4 +442,34 @@ required. The artifact reader rejects missing/duplicate submissions and unstable
 identities; projection tests reject changed counts/targets, reordered and truncated
 campaigns. Plans, seed, partial observations, actor traces and evidence checks stay
 in ignored runtime artifacts. The model does not infer business outcomes, verify
-durability or claim deterministic scheduling; retries/fault campaigns remain future work.
+durability or claim deterministic scheduling. This report campaign remains
+success-only; the separate Python fault campaign follows below.
+
+## 28. Investigate retry, rejection and stalled work
+
+Run `npm run test:fault-campaign` with the local Compose lab and Go/quint-go.
+The wrapper pauses/restores owned background traffic and drains active work without
+deleting pre-existing stale stream entries. This opt-in journey uses the same seeded
+Quint schedule as journey 27, with three fixed fault coverage cases and two revisits.
+
+Bombadil selects a scenario and clicks the real Python app button in a fresh
+browser. The returned ID scopes independent ClickHouse reads and ordinary Explore
+span/log queries; no source annotations, backend responses or telemetry are mocked.
+Another Bombadil actor explores goo navigation concurrently. Counts, record
+identities and attributes are checked against each UI query's exact fixed window.
+
+| Frame | Question and captured evidence |
+| --- | --- |
+| [Retry then confirmation](screenshots/28-retry-captured-evidence.png) | An error attempt and retry are visible alongside the later confirmed terminal; an attempt error is not itself terminal failure. |
+| [Business rejection](screenshots/28-reject-captured-evidence.png) | A terminal log carries `rejected` even though the spans are non-error. Transport/attempt status and business outcome remain distinct. |
+| [Stalled work](screenshots/28-missing-captured-evidence.png) | A positive stalled event is present, while no terminal is captured in the bounded question. The test records `unknown-no-terminal`, without inventing success or rejection. |
+
+These labels are the test observer's interpretation of raw displayed records,
+not new goo health badges or durability claims. The Quint fault model checks each
+inspection, including explicit terminal-presence flags and question/record
+fingerprints. Hegel state/swarm checks over the actual test projection cover
+duplicates, ordering, conflicting outcomes and missing terminals. A present empty
+terminal is distinguished from absence. Missing required source evidence fails
+readiness instead of satisfying a fault case. Seed, partial observations, actor
+traces, raw source reads, UI evidence and model reports remain archived under
+`artifacts/bombadil/fault-campaigns/<run-id>/`.

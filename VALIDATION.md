@@ -1,8 +1,8 @@
 # Validation record
 
 Current additions: see the [cloud baseline](ENVIRONMENT_VALIDATION.md) for the
-successful default Compose run, real cross-app Bombadil journey and generated
-Quint MBT browser campaign in this environment. The historical hosted
+successful default Compose run, real cross-app Bombadil journeys and generated
+Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
 ## Manifest-free ad hoc telemetry packages

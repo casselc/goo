@@ -485,3 +485,37 @@ result from satisfying a new request; an artifact gate requires exactly one real
 submission and one returned identity per issue. Capture failure or missing
 checkpoints fail the campaign. The schedule models test coordination, not business
 durability, random browser scheduling or production capture completeness.
+
+## 15. Fault evidence without inventing business outcomes
+
+Implemented opt-in Python sample campaign; these are test interpretations of
+captured evidence, not a new production health evaluator.
+
+```mermaid
+flowchart TB
+ Plan["Seeded Quint schedule: issue / inspect / revisit"] --> App["Bombadil sample UI: retry, reject, missing"]
+ App --> Accept["Actual returned ID: request accepted"]
+ Accept --> Pipeline["HTTP → gRPC → Redis → consumer → standard OTel"]
+ Pipeline --> CH["ClickHouse captured spans and logs"]
+ CH --> Oracle["Independent bounded source reads"]
+ CH --> Explore["goo Explore: ordinary attribute filters"]
+ Explore --> UI["Rendered span and log records / fixed questions"]
+ Oracle --> Compare["Compare counts, identities and attributes"]
+ UI --> Compare
+ Compare --> Retry["Two attempts + error + retry + confirmed terminal"]
+ Compare --> Rejected["Rejected terminal despite non-error spans"]
+ Compare --> Stalled["Stalled event + no captured terminal"]
+ Retry --> Confirmed["Test-observed confirmed after retry"]
+ Rejected --> Rejection["Test-observed rejected"]
+ Stalled --> Unknown["Unknown: no captured terminal; not healthy or rejected"]
+ Confirmed --> Validate["qobs / quint-go fault model + generated ITF replay"]
+ Rejection --> Validate
+ Unknown --> Validate
+ Properties["Hegel state/swarm: duplicate/order invariance and conflicting evidence"] --> Compare
+```
+
+The positive stalled event is required; empty capture or ingestion failure cannot
+pass that case. Terminal presence is separate from terminal outcome, so an empty
+or conflicting terminal payload is not silently treated as absence. The wrapper
+pauses/restores only owned lab traffic and retains stale queue entries and volumes.
+See [fault testing contract](BOMBADIL_TESTING.md#retry-rejection-and-missing-terminal-campaign).

@@ -251,3 +251,48 @@ copied unchanged from Bombadil's own capture. Journey 27, three new documentary
 frames, refreshed journey 26 frames, diagram 14 and design/planning/issue docs were
 updated. This campaign remains bounded to successful reports and fresh evidence
 revisits; retry/fault generation and long-lived independent actors remain future work.
+
+## Generated retry/rejection/stalled evidence campaign (2026-10-18)
+
+Implemented `npm run test:fault-campaign` over the unchanged Python HTTP/gRPC/Redis
+sample, using the existing generated nine-checkpoint schedule and fresh Bombadil
+app actors alongside concurrent goo navigation. Each inspection checks ordinary
+Explore span/log records, full bounded counts and attributes against independent
+ClickHouse reads over the exact UI questions. The observer also opens the real
+attribute disclosure and checks its terminal outcome/scenario, then closes it so
+the documentary frame shows the full captured log sequence.
+
+The first live run with seed 2026 passed in about 1.4 minutes: three accepted IDs,
+nine checkpoints, five evidence inspections, five qobs/quint-go fault-model reports
+and 503 goo navigation actions. After adding an explicit terminal-presence flag
+to distinguish an absent terminal from a present empty outcome, the final seed-7
+campaign also passed in about 1.4 minutes, with all five fault checks and 420
+navigation actions. Both wrappers restored the owned traffic generator and
+retained the five pre-existing stale pending stream entries; no streams/volumes
+were cleared and no services were rebuilt.
+
+Captured retry evidence contained two consumer attempts, one error span, retry
+and confirmed terminal logs. Business rejection had a rejected terminal and no
+error span. Stalled work had a positive stalled log and no terminal, preserving
+`unknown-no-terminal`. These are test interpretations of raw displayed records,
+not a new product health result, complete-capture claim or business durability
+guarantee. The source readiness gate cannot pass on empty capture.
+
+The final Quint protocol checks passed all three positive fixtures and twelve
+rejecting controls (healthy label, changed fingerprint, invented terminal value,
+wrong terminal-presence flag per case). The actual JavaScript projection passed
+50 Hegel state/swarm sequences of up to 20 steps, checking duplicate-log and order
+invariance, absence semantics and withdrawal of certainty for conflicting terminal
+outcomes. The combined model/property run passed in 41.047 seconds; the Hegel
+property portion took 1.64 seconds. Verification-module vet, JavaScript syntax,
+local documentation links and whitespace checks passed.
+
+Focused real-browser rechecks over the final captured IDs passed for all three
+cases after refining the disclosure/screenshot workflow and checking the displayed
+question against the actual request. Those rechecks and updated frames use fresh
+source reads and are archived separately as `documentation-recheck.json` in the
+same permanent run directory. No UI/backend records were mocked. The default
+suite's opt-in skip was verified, and permanent fault archives survived ordinary
+Playwright output cleanup. Journey 28, diagram 15, three real screenshots and
+design/planning/issue docs were updated. Unchanged runtime suites and the complete
+existing journey suite were not repeated for this test-only addition.

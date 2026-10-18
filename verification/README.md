@@ -12,6 +12,15 @@ against its ITF poststates. It requires the running lab and is opt-in; model/pro
 fixtures run with `go test -run TestQuintGenerateBrowserCampaign` without browsers.
 The live observation test skips unless `GOO_CAMPAIGN_OBSERVATIONS` is supplied.
 
+`npm run test:fault-campaign` exercises ordinary Python OTel retry, rejection and
+stalled-work paths. Every inspection is checked against `model/fault_observation.qnt`.
+`go test -run 'Test(QuintFaultEvidenceContract|HegelFaultEvidenceProjectionStateSwarm)'`
+runs the protocol/negative fixtures and 50 Hegel state/swarm sequences (20 steps)
+without a live lab. The Hegel test uses one persistent Node process to execute the
+actual test-oracle JavaScript projection. It checks ordering/duplicate invariance,
+withdrawal of certainty on conflicts and absence semantics, not production durability.
+The live fault-ledger test skips unless `GOO_FAULT_LEDGER` is supplied.
+
 This separate Go module keeps Hegel's native loader/development dependencies out
 of the runtime module. It uses hegel-go **0.9.8** (embedded libhegel 0.43.4), Quint
 **0.32.0**, and the checked-out sibling `observability/quintgo` tools. No sibling
