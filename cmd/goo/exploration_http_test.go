@@ -65,3 +65,28 @@ func TestCohortComparisonHTTPRejectsDriftAndUnknownPayloads(t *testing.T) {
 		}
 	}
 }
+
+func TestInventoryHTTPStrictScopeAndUnavailable(t *testing.T) {
+	source := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {}))
+	t.Setenv("CLICKHOUSE_URL", source.URL)
+	mux := http.NewServeMux()
+	registerExploration(mux, source.Client())
+	call := func(body string) *httptest.ResponseRecorder {
+		w := httptest.NewRecorder()
+		mux.ServeHTTP(w, httptest.NewRequest("POST", "/inventory", strings.NewReader(body)))
+		return w
+	}
+	for _, body := range []string{`{}`, `{"environment":"prod","fromMs":1,"toMs":60001,"limit":1}`, `{"environment":"prod","fromMs":1,"toMs":60001} {}`, `{"environment":"prod","fromMs":1,"toMs":99999999}`} {
+		if w := call(body); w.Code != 400 {
+			t.Fatal(w.Code, w.Body.String())
+		}
+	}
+	valid := `{"environment":"prod","fromMs":1,"toMs":60001}`
+	if w := call(valid); w.Code != 200 || !strings.Contains(w.Body.String(), `"state":"no_data"`) || w.Header().Get("Cache-Control") != "no-store" {
+		t.Fatal(w.Code, w.Body.String())
+	}
+	source.Close()
+	if w := call(valid); w.Code != 502 || strings.Contains(w.Body.String(), `"count":"0"`) {
+		t.Fatal("unavailable became no data", w.Code, w.Body.String())
+	}
+}

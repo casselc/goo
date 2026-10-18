@@ -166,3 +166,9 @@ prefix reaches trace/context paging, quick search, duration groups and package
 preview/reuse before random actions. The driver requires full duration counts
 beyond the record-page limit and passes the actor's own captured questions through
 the discovery model, with negative controls and artifacts beside the browser trace.
+
+Observed inventory: `go test -run TestHegelInventoryStateSwarm -v .` exercises
+observe/reset accounting. Journey 31 always invokes `TestQuintInventoryLiveLedger`
+with actual browser questions and three rejecting controls. See
+[service inventory](../docs/SERVICE_INVENTORY.md); the optional Bombadil campaign
+checks read-only UI actions and source-derived invariants over the same fixture.

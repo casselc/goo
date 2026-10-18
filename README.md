@@ -5,7 +5,7 @@ inspectable definitions shared between code and interactive investigation. This
 repository currently runs as a local lab; reservation, checkout and report services
 are examples used to exercise its contracts.
 
-The [investigation workspace](docs/PRODUCT_WORKSPACE.md) brings Explore, Operations,
+The [investigation workspace](docs/PRODUCT_WORKSPACE.md) brings Explore, Services, Operations,
 Saved investigations and Definitions into one interface. Explore includes captured
 attribute distributions, pinned baseline comparisons and a trace/log inspector.
 Reference reservation workflows remain available under Examples.
@@ -20,6 +20,10 @@ surrounding-log inspector. Trace discovery opens reported trace IDs from full
 matching span groups and shows fixed, full-population span-duration buckets.
 Suggested breakdowns feed directly into reusable packages. See
 [the discovery storyboard](docs/journeys/README.md#30-from-log-search-to-reusable-span-distributions).
+
+[Services](docs/SERVICE_INVENTORY.md) discovers emitting services and span names
+with full captured counts, error statuses and duration buckets. Open a fixed-window
+Explore question, then build a reusable package without a source manifest.
 
 [Ad hoc telemetry packages](docs/TELEMETRY_PACKAGES.md) turn an Explore question
 into validated YAML, a live preview and an immutable reusable definition. They work

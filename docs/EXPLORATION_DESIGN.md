@@ -226,3 +226,11 @@ Re-anchoring on a nearby record retains the initial search window/basis while
 recording the anchor's own selection question and evidence basis separately.
 A neighbor need not satisfy the original message/severity filters, so its provenance
 must not be attributed to that initial filtered capture.
+
+## Service inventory entry point
+
+The Services destination uses the shared physical adapter and duration partition
+for a bounded single-read aggregate, then opens a separate exact service/name
+Explore question in the same environment and fixed bounds. Capture totals remain
+independent of local search and the Explore record page. See
+[SERVICE_INVENTORY.md](SERVICE_INVENTORY.md) for semantics, budgets and limitations.

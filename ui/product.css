@@ -961,3 +961,15 @@ td details {
  .telemetry-table .record-row>td>* {grid-column:2;min-width:0}
  .telemetry-table .severity-badge {justify-self:start}
 }
+
+/* Compact observed-service inventory shares the workspace's table and evidence vocabulary. */
+.inventory-table{width:100%;border-collapse:collapse}.inventory-table th{text-align:left;color:var(--muted);font-size:12px}.inventory-table td,.inventory-table th{padding:14px 12px;border-bottom:1px solid var(--border);vertical-align:top}.inventory-span-name{margin-top:5px;overflow-wrap:anywhere;color:var(--muted)}.inventory-buckets{height:42px;display:flex;align-items:flex-end;gap:3px;min-width:120px;margin-bottom:6px}.inventory-buckets span{display:block;background:var(--accent,#8cacf9);width:13px;min-height:1px;border-radius:2px 2px 0 0}.inventory-table details{font-size:12px}.inventory-table td:first-child{max-width:320px;overflow-wrap:anywhere}.inventory-table td:nth-child(2),.inventory-table td:nth-child(3){font-variant-numeric:tabular-nums}.inventory-table button{white-space:nowrap}
+@media(max-width:700px){
+ .inventory-table,.inventory-table tbody{display:block;width:100%}
+ .inventory-table thead{display:none}
+ .inventory-table tbody tr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-bottom:1px solid var(--border);padding:10px 0}
+ .inventory-table tbody td{display:block;border:0;min-width:0;padding:8px 12px;max-width:none}
+ .inventory-table tbody td::before{content:attr(data-label);display:block;color:var(--muted);font-size:11px;margin-bottom:5px}
+ .inventory-table tbody td:first-child,.inventory-table tbody td:nth-child(4),.inventory-table tbody td:last-child{grid-column:1/-1;max-width:none}
+ .inventory-table button{min-height:40px}
+}

@@ -363,3 +363,20 @@ summaries are retained together under `artifacts/discovery/<run>/`.
 Opening a fresh package draft clears the prior preview/plan/handoff before the
 new definition is built. The deterministic journey checks a four-span preview
 followed by a different thirteen-span draft; stale evidence cannot carry across.
+
+## Observed-service inventory
+
+`npm run test:inventory-campaign` runs journey 31 and a dedicated 35-second
+`verification/bombadil/inventory.ts` actor against its isolated captured fixture.
+The required prefix discovers services, searches for a missing pair, clears search
+and opens an actual inventory row. Subsequent choices refresh, search and edit
+scope. Invariants check exact population/bucket accounting, rendered counts,
+fixed drilldown scope and evidence clearing after edits. Browser exception and
+promise-rejection properties also apply. The actor queries and inspects only;
+it neither emits workload nor saves/exports definitions. The Playwright driver
+checks an independent ClickHouse read and records the capture/search/open/package
+questions for Quint conformance and three negative controls. Hegel observe/reset
+state/swarm checks run separately in the native verification module.
+
+The shared workspace-navigation actor also includes Services. Its existing
+selected-navigation/visible-panel invariant applies to all five destinations.

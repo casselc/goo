@@ -76,17 +76,20 @@ func (c *compiler) predicate(p *Predicate) string {
 	}
 	return "(" + present + " AND " + expr + ")"
 }
-func Compile(q Query) (Plan, error) {
-	if e := q.Validate(); e != nil {
-		return Plan{}, e
-	}
-	c := compiler{signal: q.Signal, params: map[string]string{"from": strconv.FormatInt(q.FromMS, 10), "to": strconv.FormatInt(q.ToMS, 10), "environment": q.Environment}}
+func (c *compiler) source(q Query) (string, string) {
 	table, attrs := "otel_traces", "SpanAttributes"
 	if q.Signal == "logs" {
 		table, attrs = "otel_logs", "LogAttributes"
 	}
 	where := "Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND " + c.predicate(q.Where)
-	base := " FROM " + table + " WHERE " + where
+	return " FROM " + table + " WHERE " + where, attrs
+}
+func Compile(q Query) (Plan, error) {
+	if e := q.Validate(); e != nil {
+		return Plan{}, e
+	}
+	c := compiler{signal: q.Signal, params: map[string]string{"from": strconv.FormatInt(q.FromMS, 10), "to": strconv.FormatInt(q.ToMS, 10), "environment": q.Environment}}
+	base, attrs := c.source(q)
 	common := "toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, " + attrs + " AS Attributes"
 	selectRows := common + ", SpanName, SpanKind, ParentSpanId, " + durationBucketSQL() + " AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans"
 	order := "Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration"

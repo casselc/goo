@@ -131,3 +131,8 @@ root/trace latency, unique invocation counts, stable cursors, live tail or compl
 capture. Quick search adds visible AND filters rather than silently replacing
 existing predicates. Context highlights compare captured fields; identical duplicate
 logs have no unique event identity. See the discovery section of EXPLORATION_DESIGN.md.
+
+Observed service/span-name inventory now exists, bounded to 1000 pairs and one
+environment/window. It excludes log-only services and does not infer fleet
+membership, health, dependencies, request rate or declared business operations.
+General inventory/Explore evidence remains volatile. See [contract](SERVICE_INVENTORY.md).

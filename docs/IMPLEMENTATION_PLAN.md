@@ -226,6 +226,9 @@ buckets; available-field suggestions leading to reusable package preview/save/us
 Journey 30 exercises the real collector/ClickHouse path, including a source
 population larger than the record page. Hegel context state/swarm and bucket
 properties complement live-ledger Quint checks and rejecting negative controls.
-Next: structured service/operation inventory, explicit trace-level/root measures,
+Observed service/span-name inventory now provides single-read full-population
+counts, Error statuses and duration buckets with fixed-window Explore/package
+navigation. See [contract](SERVICE_INVENTORY.md) and journey 31.
+Next: explicit trace-level/root measures,
 persisted general investigation captures and stable paging. Live tail, statistical
 inference and production authorization remain separate work.

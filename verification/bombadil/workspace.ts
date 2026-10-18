@@ -23,5 +23,5 @@ const navigate = registerCustomAction('goo.navigate', async (document, _window, 
 });
 
 export const workspaceNavigation = actions(() => shell.current.ready
-  ? ['explore', 'operations', 'investigations', 'definitions'].map(route => navigate(route))
+  ? ['explore', 'services', 'operations', 'investigations', 'definitions'].map(route => navigate(route))
   : ['Wait']);

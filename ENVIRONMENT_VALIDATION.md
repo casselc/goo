@@ -457,3 +457,52 @@ Final focused journey 30 passed again (20.8 seconds), including the second-draft
 four-to-thirteen-span preview isolation assertion, empty-OR quick-search AND
 semantics, unlinked-log re-anchoring, mobile geometry and its Quint negative
 controls. Its six frames were regenerated once more from the final running image.
+
+## 2026-10-18 — observed service inventory
+
+Added a Services destination over ordinary captured OTel spans, without application
+manifests. A single bounded ClickHouse aggregate supplies full service/span-name
+counts, Error status counts and fixed duration-bucket counts. Search filters local
+rows without altering totals/basis. Drilldown opens a separate exact service/name
+Explore read in the original environment/window, then uses the existing reusable
+package authoring/preview path. Health, expected membership and unique request/root
+latency remain unknown or separately defined.
+
+Root Go race suite/vet passed, followed by focused final-source race checks for
+HTTP/source validation. All 19 Python tests and 20 Node checks passed; Compose
+configuration is valid. Hegel observe/reset state/swarm passed 100 sequences of
+up to 20 steps, including a final-source rerun (2.14 seconds). Actual browser
+capture/search/open/package questions passed quint-go conformance and three
+negative controls: changed local totals, widened open scope and changed package
+environment. Missing/null dimensions, invalid/overflowing counts, contradictory
+partitions, duplicate pairs and source overflow/failure remain fail-closed.
+
+The initial dedicated Bombadil campaign passed 609 records and every required
+stage against the real collector/ClickHouse fixture. Its driver independently
+checked source counts and statuses, 113 matching spans versus 100 displayed,
+package preview, local search, no data and stale-read guards. Evidence:
+`artifacts/inventory/inventory-a777c2549e/`. Screenshot review caught compressed
+mobile columns; the final layout uses readable stacked cards with a width assertion.
+
+The default suite passed 29 journeys in 5.4 minutes; two opt-in campaigns were
+skipped in that command. It regenerated the standard documentation frames,
+including the four new inventory frames, from the updated UI. The owned generator
+was paused/drained/restored; all five pre-existing stale pending entries and
+telemetry volumes were retained. Query/packages were then recreated from final
+image `6297a2f117e5`; the previous image produced in this round was removed only
+after those containers stopped using it, leaving about 3 GiB workspace free.
+
+Final-image opt-in fault, generated-success and inventory campaigns passed together
+(3 tests, 3.3 minutes). Together with the default run, all 31 distinct journeys
+passed in this round. The final inventory actor recorded 685 steps and all six
+required stages; its actual browser ledger passed Quint plus all three negative
+controls (6.06 seconds). Evidence: `artifacts/inventory/inventory-b6aa4b353b/`.
+All 95 PNG documentation frames and the generated-campaign JPEG frame were regenerated, including the opt-in campaign
+frames. Architecture/workspace diagrams, design limits, planning and storyboards
+were synchronized; local documentation links and code fences were checked.
+The generator was restored and all 12 services are running with existing volumes.
+
+The shared workspace Bombadil actor now includes Services. A final 20-second
+navigation smoke passed 174 records and reached all five primary destinations,
+checking that selected navigation and the visible panel agree. Its coverage is
+retained in `artifacts/inventory/workspace-services-final/`.

@@ -368,6 +368,9 @@ transactional snapshot, whole-trace completeness or Databricks-runtime claim.
 ```mermaid
 flowchart LR
  Nav["Workspace navigation"] --> Explore["Explore: Records / Distribution / Compare"]
+ Nav --> Services["Services: observed span inventory"]
+ Services --> Inventory["Single aggregate read: counts, errors, duration buckets"]
+ Inventory --> Explore
  Nav --> Ops["Operations: declared packages"]
  Nav --> Saved["Saved operation receipts"]
  Nav --> Defs["Definitions: contracts and proposed capabilities"]
@@ -577,3 +580,27 @@ retries/duplicates; they are not root latency or native histogram streams. Sugge
 breakdowns and saved packages use the same logical field/compiler contract.
 [Journey 30](journeys/README.md#30-from-log-search-to-reusable-span-distributions)
 provides executable frames and live-ledger validation.
+
+## 18. Discover services and promote an investigation question
+
+```mermaid
+flowchart LR
+    Services[Services: environment and lookback] --> Scope[Go bounded fixed-window question]
+    Scope --> Adapter[Shared OTel ClickHouse adapter]
+    Adapter --> Aggregate[One read: service and span-name groups]
+    Aggregate --> Check[Validate complete counts, errors and duration partition]
+    Check --> Inventory[Captured inventory with plan and basis]
+    Inventory --> Search[Local search preserves captured totals]
+    Inventory --> Open[Exact service and name selector in original bounds]
+    Open --> Explore[Separate live Explore read and basis]
+    Explore --> Package[Strict YAML package and independent preview]
+    Ledger[Observed browser questions] --> Quint[Quint protocol and rejecting controls]
+    Bombadil[Read-only UI actor and data invariants] --> Ledger
+    Hegel[Accounting state and swarm checks] --> Check
+```
+
+Implemented locally. Span names are observed labels, not business-operation
+contracts. Counts describe spans, not unique requests or healthy fleet members.
+The [inventory contract](SERVICE_INVENTORY.md) and
+[journey 31](journeys/README.md#31-from-observed-services-to-a-reusable-question)
+cover drilldown, local filtering, preview and scope invalidation.

@@ -1,0 +1,13 @@
+spec: inventory.qnt
+module: inventory
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  capture:
+    expect: 'coherent == {{.obs.coherent}}'
+  search:
+    expect: 'coherent == {{.obs.coherent}}'
+  open:
+    expect: 'coherent == {{.obs.coherent}}'
+  package:
+    expect: 'coherent == {{.obs.coherent}}'

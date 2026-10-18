@@ -5,6 +5,33 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Observed service inventory
+
+Implemented: single-read full-population service/span-name counts, OTel Error
+statuses and fixed span-duration buckets; local filtering preserves captured
+accounting; drilldown opens a separate fixed-window Explore read and package
+preview. [Contract](docs/SERVICE_INVENTORY.md), [diagram 18](docs/ARCHITECTURE_DIAGRAMS.md#18-discover-services-and-promote-an-investigation-question)
+and [journey 31](docs/journeys/README.md#31-from-observed-services-to-a-reusable-question)
+record semantics and executable frames. Unknown fleet membership/health and
+span-versus-request grain remain explicit.
+
+Passed: root Go race suite/vet, 19 Python tests, 20 Node checks, Compose config,
+Hegel observe/reset state/swarm (100 sequences, up to 20 steps), and actual-browser
+Quint capture/search/open/package conformance with three rejecting controls.
+Source tests retain counts above JavaScript integer precision and reject invalid
+partitions, errors exceeding counts, missing/null dimensions, duplicate groups,
+cardinality overflow and unavailable-to-zero conversion. Query values remain
+parameters; HTTP rejects unknown fields and multiple objects.
+
+The live 116-span fixture checks independent ClickHouse counts, 113 matching
+spans versus 100 displayed rows, package preview, local filter stability, no data
+and pending-read invalidation. The dedicated read-only Bombadil campaign passed
+609 records across all six prefix stages plus refresh/search/scope edits. Evidence:
+`artifacts/inventory/inventory-a777c2549e/`. Narrow-screen screenshot review exposed
+compressed table headings; stacked mobile cards and a width assertion corrected
+that issue, and the updated journey passed. See the cloud validation record for
+the subsequent broader browser run and final-image verification.
+
 ## Manifest-free ad hoc telemetry packages
 
 Implemented: captured Explore question → named telemetry package YAML → shared Go
@@ -752,3 +779,10 @@ available-field suggestions feeding reusable packages. See the
 and the current detailed results in [ENVIRONMENT_VALIDATION.md](ENVIRONMENT_VALIDATION.md).
 This is a captured-record investigation workflow; it does not establish complete
 traces, root latency, live tail or production readiness.
+
+Final inventory milestone: default browser run passed 29 journeys (two opt-in
+skips); explicit fault, generated-success and final-image inventory campaigns
+passed together (3.3 minutes). All 31 distinct journeys passed across these runs.
+The final inventory actor recorded 685 steps with all required stages and rejecting
+Quint controls. All 95 PNG documentation frames and the generated-campaign JPEG frame were regenerated; see
+[the cloud record](ENVIRONMENT_VALIDATION.md#2026-10-18--observed-service-inventory).

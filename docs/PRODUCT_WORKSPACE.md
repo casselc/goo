@@ -1,11 +1,12 @@
 # Investigation workspace
 
-Implemented locally: goo opens at **Explore**. Four primary destinations share
+Implemented locally: goo opens at **Explore**. Five primary destinations share
 one navigation rail, visual system and evidence vocabulary:
 
 | Destination | Purpose |
 | --- | --- |
 | Explore | Search captured spans/logs; inspect records, distributions and cohort differences; expand traces and linked logs in a side inspector. |
+| Services | Discover observed service/span-name pairs with captured counts, error statuses and duration buckets; open fixed-window Explore questions. |
 | Operations | Run declared application packages; inspect operation, metric, fleet and subject evidence; explicitly save an investigation. |
 | Saved investigations | Open immutable operation receipts and compare fixed-question revisions. The evidence badge distinguishes saved receipts from a currently loaded operation query. |
 | Definitions | Build/import/preview/save telemetry packages over existing data; inspect application contracts, the HTTP package and proposed capabilities. |
@@ -140,3 +141,10 @@ and [storyboard](journeys/README.md#30-from-log-search-to-reusable-span-distribu
 The [dedicated Bombadil discovery campaign](BOMBADIL_TESTING.md#dedicated-discovery-actions-and-invariants)
 checks the new exploration/package workflows with a required prefix, data
 invariants and optional validation of actual actor questions through Quint.
+
+## Observed services
+
+Services provides a discovery entry point for unfamiliar telemetry. Local search
+retains captured totals; a row opens a separate Explore read of the same environment
+and fixed window. Its span-name vocabulary remains separate from application-owned
+operation contracts and declared fleet membership. See [inventory contract](SERVICE_INVENTORY.md).

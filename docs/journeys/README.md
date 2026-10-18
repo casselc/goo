@@ -534,3 +534,26 @@ an empty OR composer, trace/context paging, radius changes, re-anchoring, durati
 breakdowns and package draft/edit/validate/preview/use. Data invariants and a
 second actor-derived Quint ledger complement the deterministic journey. The actor
 publishes no definitions; its fixture driver retains the earlier saved package.
+
+## 31. From observed services to a reusable question
+
+`journeys/inventory.spec.js` sends labelled OTLP fixture spans through the real
+collector: 113 edge spans, three worker spans and an excluded environment control.
+An independent ClickHouse query checks source counts and Error statuses. This
+validates the captured discovery path, not SDK instrumentation completeness.
+
+| Frame | User journey |
+| --- | --- |
+| [Observed services](screenshots/31a-observed-service-inventory.png) | Discover two services, full captured counts, error statuses and span-duration buckets without a manifest. |
+| [Fixed-window exploration](screenshots/31b-inventory-fixed-window-exploration.png) | Open one exact service/name pair; 113 matching spans remain distinct from the 100 displayed records. |
+| [Reusable preview](screenshots/31c-inventory-reusable-package-preview.png) | Build and independently preview a reusable package from the selected question. |
+| [Mobile inventory](screenshots/31d-mobile-service-inventory.png) | Use the same discovery surface on a narrow screen with readable stacked cards. |
+
+Local filtering retains capture totals/basis. Scope edits invalidate pending reads;
+no-data results retain unknown health. The actual capture/search/open/package
+ledger is always checked with quint-go and three rejecting controls (changed local
+total, widened open window, changed package environment). Hegel state/swarm checks
+observe/reset accounting. `npm run test:inventory-campaign` adds a read-only
+Bombadil actor with a required discovery/filter/clear/open prefix and independent
+accounting/rendered-count/scope/stale-evidence invariants; it saves no definitions.
+Permanent ignored ledgers, coverage and actor traces live under `artifacts/inventory/`.
