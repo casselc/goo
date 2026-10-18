@@ -312,3 +312,15 @@ The real-app coordinator, two Bombadil actors, generated schedules and observed
 trace checks are implemented for successful reports and the bounded Python retry,
 rejection and stalled-work campaign. Broader resource/export-loss/late-capture
 generation and longer-lived independent actors remain future work.
+
+## Structured inspection exploration
+
+`npm run test:bombadil:inspection -- --no-sandbox` runs a bounded read-only actor
+against the local Explore workspace. It refreshes captured telemetry, opens record
+attributes, varies local key/value and scope searches, expands traces, selects
+spans and closes the inspector. It checks explicit field counts, at most one
+selected span, and uncaught errors/rejections. It creates no saved definitions or
+workload. This complements the deterministic [journey 29](journeys/README.md#29-structured-inspection-and-filter-composition)
+clipboard, filter population, linked-log action and mobile assertions. It is not
+a liveness or capture-completeness guarantee; an empty source limits reachable
+inspection actions. Use `CHROME=/usr/bin/chromium` where browser discovery needs it.

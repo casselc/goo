@@ -296,3 +296,65 @@ suite's opt-in skip was verified, and permanent fault archives survived ordinary
 Playwright output cleanup. Journey 28, diagram 15, three real screenshots and
 design/planning/issue docs were updated. Unchanged runtime suites and the complete
 existing journey suite were not repeated for this test-only addition.
+
+## Structured investigation polish (2026-10-18)
+
+Implemented a shared structured record/span/log attribute viewer, scoped local
+search, exact copying, expandable long/nested values and secondary raw records.
+Explore adds removable typed filter chips, searchable grouped field choices,
+operator-aware value controls and searchable captured-value facets. Full-population
+counts and missing/empty distinctions remain intact. Trace selection is explicit,
+evidence scope has a concise summary plus disclosure, and Close/Escape restores
+focus. Mobile rows stack and attribute actions have 40px touch targets. A design
+agent reviewed screenshots and caught cross-signal linked-log actions; these are
+suppressed and covered by the live journey.
+
+Passed: 16 Node helper checks, 19 Python tests, JavaScript/Python syntax and
+Compose config validation. New live journey 29 passed against collector/ClickHouse
+records, covering exact clipboard strings, HTML-like text, long values, local
+search query counts, ALL/ANY populations, missing controls, duration comparisons,
+linked logs, trace selection, focus and mobile overflow. Its documentation fixture
+is labelled as such; it is not SDK instrumentation evidence.
+
+A 30-second Bombadil inspection campaign passed without reported violations:
+150 trace records, 23 query actions, 19 attribute opens, local searches/scope changes,
+17 trace-open actions and 12 closes. The deterministic journey separately verifies
+span selection. Evidence is retained under ignored
+`artifacts/bombadil/ui-polish-inspection`; this bounded run does not prove liveness,
+source completeness or comprehensive accessibility. The initial invocation omitted
+this container's required Chromium `--no-sandbox` flag and failed to launch; rerunning
+with that flag and explicit Chromium succeeded.
+
+Existing semantic verification also passed in 44 seconds: Hegel cohort state/swarm
+and fault-evidence projection state/swarm, Quint observed cohorts and the fault
+contract's retry/rejection/missing cases. Negative controls rejected invented
+outcomes/terminals and changed evidence. No query AST, count arithmetic or backend
+measurement semantics changed in this polish pass.
+
+The complete default Playwright suite passed: 27 journeys in 5.3 minutes, with the
+two explicit opt-in generated campaigns skipped. Existing native metric/fleet,
+package authoring, saved-receipt and independent trace/log provenance journeys
+passed with the shared viewer. Traffic was restored, the five pre-existing stale
+pending entries were retained, and the final UI image was rebuilt and recreated.
+README, workspace/design/plan docs, architecture diagram 16 and the executable
+storyboard were updated together. Markdown target/fence and diff checks passed;
+Mermaid rendering and comprehensive accessibility certification are not claimed.
+
+The explicit generated success campaign passed again in 1.4 minutes on the rebuilt
+image, with three real report requests, nine generated checkpoints, five evidence
+inspections/revisits and live Quint replay. Its ledger/raw reads/reports are
+retained under `artifacts/bombadil/campaigns/787eea19-8769-4166-abe4-2545c4067299`.
+
+The explicit fault campaign also passed (1.3 minutes): three real retry/reject/
+stalled requests, nine generated checkpoints, five structured rendered-evidence
+inspections, live schedule replay and five qobs/quint-go fault-ledger validations.
+The goo actor recorded 508 navigation actions. Permanent evidence is in
+`artifacts/bombadil/fault-campaigns/166e2d15-e7e3-4ce2-aae9-c0a10d13cd3e`.
+The traffic wrapper restored the owned generator without resetting data or queues.
+Together the default suite and explicit campaigns passed all 29 distinct journeys
+and regenerated the 85 documentation frames, including four new inspection views.
+
+A final focused journey 29 passed on the rebuilt image (9.1 seconds), regenerating
+its four frames after documentation framing adjustments. Desktop attribute scopes,
+selected trace context and mobile layout were visually inspected. All 12 services
+are running after validation.

@@ -203,3 +203,16 @@ paths, checks rendered spans/logs independently, validates each observation with
 Quint and property-tests the test interpretation with Hegel state/swarm. Next:
 resource/export-loss/late-capture generation and longer-lived independent actors.
 The models do not establish browser scheduling or telemetry completeness.
+
+## Cohesive core investigation polish
+
+Implemented: shared scoped/typed attribute inspection across Explore and waterfalls;
+local key/value search, exact copy and secondary raw evidence; removable filter
+chips, grouped field discovery, valid operator controls and denominator-preserving
+facet search; selected-span state, scope disclosure, focus return and mobile rows.
+The [workspace contract](PRODUCT_WORKSPACE.md#record-inspection-and-query-composition),
+[architecture flow](ARCHITECTURE_DIAGRAMS.md#16-structured-investigation-and-local-refinement)
+and [journey 29](journeys/README.md#29-structured-inspection-and-filter-composition)
+describe the implementation and tests. Cross-signal linked records do not silently
+change the active query. Future work may explicitly open a separate log question;
+automatic signal switching and a complete accessibility audit are not implemented.

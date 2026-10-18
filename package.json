@@ -5,12 +5,13 @@
     "test:journeys": "bash scripts/run_journeys.sh",
     "model:check": "quint typecheck verification/model/lifecycle.qnt",
     "model:test": "quint run verification/model/lifecycle.qnt --main=lifecycleInstance --backend=typescript --max-samples=100 --max-steps=30 --invariant=safety --seed=42 --verbosity=1",
-    "test:visualizations": "node --test tests/visualizations.test.js tests/operations.test.js tests/histograms.test.js tests/ratios.test.js tests/fleet.test.js tests/investigations.test.js tests/exploration.test.js tests/workspace.test.js",
+    "test:visualizations": "node --test tests/visualizations.test.js tests/operations.test.js tests/histograms.test.js tests/ratios.test.js tests/fleet.test.js tests/investigations.test.js tests/exploration.test.js tests/workspace.test.js tests/attributes.test.js",
     "test:bombadil": "bombadil browser test --headless --time-limit 1m --exit-on-violation http://localhost:8088 verification/bombadil/workspace.ts",
     "test:cross-app": "playwright test journeys/cross-app.spec.js",
     "test:generated-campaign": "GOO_GENERATED_CAMPAIGN=1 playwright test journeys/generated-campaign.spec.js",
     "test:campaign-adapters": "node --test tests/bombadil-adapter.test.js",
-    "test:fault-campaign": "GOO_FAULT_CAMPAIGN=1 bash scripts/run_journeys.sh journeys/fault-campaign.spec.js"
+    "test:fault-campaign": "GOO_FAULT_CAMPAIGN=1 bash scripts/run_journeys.sh journeys/fault-campaign.spec.js",
+    "test:bombadil:inspection": "bombadil browser test --headless --time-limit 30s --exit-on-violation http://localhost:8088 verification/bombadil/inspection.ts"
   },
   "devDependencies": {
     "@antithesishq/bombadil": "0.7.9",

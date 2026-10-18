@@ -473,3 +473,24 @@ terminal is distinguished from absence. Missing required source evidence fails
 readiness instead of satisfying a fault case. Seed, partial observations, actor
 traces, raw source reads, UI evidence and model reports remain archived under
 `artifacts/bombadil/fault-campaigns/<run-id>/`.
+
+## 29. Structured inspection and filter composition
+
+`journeys/ui-polish.spec.js` publishes a controlled documentation fixture through
+the real OTel collector and reads it back through ClickHouse and the Go query API.
+It does not claim SDK instrumentation coverage. Six spans and a correlated log
+exercise duplicate resource/span keys, large numeric-looking strings, exact
+whitespace, Unicode, long values and HTML-like captured text.
+
+| Frame | User journey |
+| --- | --- |
+| [Structured attributes](screenshots/29a-structured-attribute-inspection.png) | Open a record, search by key/value and scope, copy exact values, expand long values and retain raw evidence as a secondary disclosure. |
+| [Facets](screenshots/29b-facets-and-explicit-empty-values.png) | Break down from an attribute, search categories without changing denominators, distinguish empty from missing and remove a filter chip. |
+| [Trace context](screenshots/29c-selected-trace-and-structured-context.png) | Expand the six captured spans across services, select a span and inspect structured fields; detailed evidence limitations remain available. |
+| [Mobile](screenshots/29d-mobile-attribute-inspection.png) | Read and search an attribute on a narrow screen without horizontal page overflow. |
+
+Assertions cover exact clipboard content, escaped text, local-search query counts,
+ALL/ANY populations, missing-value controls, duration-only ordering, selected-span
+state, Escape focus restoration and mobile layout. Pure helper tests additionally
+cover nested value types and literal searches. Counts always describe captured
+records; the fixture does not establish production completeness or sampling guarantees.

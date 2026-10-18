@@ -105,12 +105,13 @@ async function inspectScenario({ page, request, result, startedAt, frameName }) 
   // Exercise the actual disclosure, then leave the full log sequence visible
   // for documentation instead of allowing one expanded JSON row to obscure it.
   const body = result.scenario === 'missing' ? 'reservation.stalled' : 'reservation.terminal';
-  const row = page.locator('#exploreRows tr').filter({ hasText: body }).first();
+  const row = page.locator('#exploreRows .record-detail-row').filter({ hasText: body }).first();
   const disclosure = row.getByText('Captured attributes', { exact: true });
   await disclosure.click();
-  await expect(row.locator('pre')).toBeVisible();
-  await expect(row.locator('pre')).toContainText(result.scenario === 'missing'
-    ? '"app.scenario": "missing"' : '"app.outcome": "' + (result.scenario === 'retry' ? 'confirmed' : 'rejected') + '"');
+  const key = result.scenario === 'missing' ? 'app.scenario' : 'app.outcome';
+  const attribute = row.locator('.attribute-row').filter({ has: page.locator('.attribute-key').filter({ hasText: new RegExp('^' + key.replaceAll('.', '\\.') + '$') }) });
+  await expect(attribute).toBeVisible();
+  await expect(attribute.locator('.attribute-value-text')).toHaveText(result.scenario === 'missing' ? 'missing' : result.scenario === 'retry' ? 'confirmed' : 'rejected');
   await disclosure.click();
   await page.screenshot({ path: path.join('docs/journeys/screenshots', frameName), fullPage: true });
   return evidence;

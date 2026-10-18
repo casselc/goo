@@ -55,6 +55,7 @@
       if (trace !== r.TraceId) { trace = r.TraceId; container.append(node('h3', 'Trace ' + trace)); }
       const line = node('button', undefined, 'waterfall-row'); line.type = 'button';
       line.dataset.spanId = r.SpanId; line.dataset.traceId = r.TraceId;
+      line.setAttribute('aria-pressed','false');
       const suffix = s.cycle ? ' · parent cycle' : s.missingParent ? ' · parent outside results' : '';
       const title = `${r.ServiceName} · ${r.SpanName}${suffix}`;
       line.setAttribute('aria-label', title);
@@ -65,8 +66,9 @@
       track.append(bar);
       line.append(label, track, node('span', `${Number(s.duration)/1e6} ms${r.StatusCode === 'Error' ? ' · error' : ''}`));
       line.onclick = () => {
+        for(const other of container.querySelectorAll('.waterfall-row'))other.setAttribute('aria-pressed',String(other===line));
         details.replaceChildren(node('h3', r.SpanName), node('p', `${r.ServiceName} · ${r.duration_ms} ms · ${r.StatusCode || 'unset status'}`));
-        const pre = node('pre', JSON.stringify(r, null, 2)); details.append(pre);
+        global.GooAttributes.mount(details,r);
         for (const action of relatedActions?.(r) || []) {
           const b = node('button', action.label); b.onclick = action.select; details.append(b);
         }

@@ -10,6 +10,11 @@ Saved investigations and Definitions into one interface. Explore includes captur
 attribute distributions, pinned baseline comparisons and a trace/log inspector.
 Reference reservation workflows remain available under Examples.
 
+Explore and trace inspection share searchable, typed attribute rows, exact-value
+copying and secondary raw evidence. Scoped filter chips and searchable facets
+carry investigations from a captured value into a fixed-window breakdown. See
+[the inspection storyboard](docs/journeys/README.md#29-structured-inspection-and-filter-composition).
+
 [Ad hoc telemetry packages](docs/TELEMETRY_PACKAGES.md) turn an Explore question
 into validated YAML, a live preview and an immutable reusable definition. They work
 over existing OTel telemetry from any language without an application manifest;

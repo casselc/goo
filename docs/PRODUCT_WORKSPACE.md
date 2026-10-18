@@ -90,3 +90,27 @@ Explore now offers **Create package** after a captured result. The Definitions
 workspace owns naming, YAML editing, validation, preview, immutable publication,
 import/export and optional instrumentation handoff. The same package can run over
 non-Go services without manifests. See [the contract](TELEMETRY_PACKAGES.md).
+
+## Record inspection and query composition
+
+Explore uses the same structured attribute viewer as trace waterfalls throughout
+Operations, saved investigations and Examples. Record fields, resource attributes
+and span/log attributes have separate sections. Local key/value search and scope
+selection do not issue source queries. Values retain their captured type; empty
+strings, nulls and missing keys have distinct meanings. Copy preserves complete
+values, including whitespace and numeric-looking strings. Long and nested values
+expand on demand; Raw record remains a secondary evidence disclosure.
+
+Explore attribute actions add exact filters or select a breakdown. Filter chips
+show the current predicates and can be removed individually. The field picker is
+searchable and grouped by scope. Missing/exists require no value, and ordered
+comparisons are offered only for duration. Changes to the composer require Apply;
+a value drilldown immediately refines the last captured question with its fixed
+window. OR questions require an explicit change to ALL before value drilldown.
+
+Facet search only hides rendered categories. Shares and totals continue to use
+the complete captured population, including present-empty and missing categories.
+The trace inspector summarizes scope before its expandable evidence limitations;
+selected spans are visible and keyboard Escape/Close returns focus to the opener.
+On narrow screens, record cells and attribute rows stack while retaining labels.
+See [journey 29](journeys/README.md#29-structured-inspection-and-filter-composition).

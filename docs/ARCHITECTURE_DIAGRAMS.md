@@ -519,3 +519,32 @@ pass that case. Terminal presence is separate from terminal outcome, so an empty
 or conflicting terminal payload is not silently treated as absence. The wrapper
 pauses/restores only owned lab traffic and retains stale queue entries and volumes.
 See [fault testing contract](BOMBADIL_TESTING.md#retry-rejection-and-missing-terminal-campaign).
+
+## 16. Structured investigation and local refinement
+
+Implemented in Explore and the shared trace waterfall. Search and disclosure are
+local display operations; source queries retain their own explicit evidence basis.
+
+```mermaid
+flowchart LR
+    Q[Signal, environment, fixed time window] --> C[Go query and ClickHouse adapter]
+    C --> R[Captured rows and source basis]
+    C --> G[Complete captured groups and count]
+    R --> A[Structured attribute viewer]
+    A --> L[Local key/value and scope search]
+    A --> E[Exact copy or secondary raw record]
+    A --> F[Exact filter or breakdown]
+    F --> Q
+    G --> S[Local facet search: denominator unchanged]
+    S --> V[Value drilldown under ALL filters]
+    V --> Q
+    R --> T[Fresh trace read in original fixed bounds]
+    T --> W[Selected span and structured attributes]
+    T --> H[Separate exact-ID linked-log read]
+```
+
+Cross-signal linked-log inspection offers local search/copy without filter or
+breakdown actions against the span question. Trace scope and limitations remain
+expandable. [Journey 29](journeys/README.md#29-structured-inspection-and-filter-composition)
+executes this path against collector-ingested records, including keyboard/mobile
+checks; the diagram does not claim snapshot consistency or complete capture.
