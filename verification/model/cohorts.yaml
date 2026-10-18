@@ -1,0 +1,15 @@
+spec: cohorts.qnt
+module: cohorts
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  pin:
+    expect: 'scope == {{.obs.scope}} and honest == {{.obs.honest}}'
+  selection:
+    expect: 'scope == {{.obs.scope}} and honest == {{.obs.honest}}'
+  empty:
+    expect: 'scope == {{.obs.scope}} and honest == {{.obs.honest}}'
+  changed:
+    expect: 'scope == {{.obs.scope}} and honest == {{.obs.honest}}'
+  scopeChange:
+    expect: 'scope == {{.obs.scope}} and honest == {{.obs.honest}}'

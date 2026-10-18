@@ -12,6 +12,29 @@ import (
 )
 
 func registerExploration(mux *http.ServeMux, client *http.Client) {
+	mux.HandleFunc("POST /compare", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Cache-Control", "no-store")
+		fail := func(e error) { w.WriteHeader(400); json.NewEncoder(w).Encode(map[string]string{"error": e.Error()}) }
+		var request exploration.ComparisonRequest
+		d := json.NewDecoder(http.MaxBytesReader(w, r.Body, 1<<20))
+		d.DisallowUnknownFields()
+		if e := d.Decode(&request); e != nil {
+			fail(e)
+			return
+		}
+		if d.Decode(new(any)) != io.EOF {
+			fail(fmt.Errorf("expected one JSON object"))
+			return
+		}
+		result, e := exploration.CompareCohorts(request)
+		if e != nil {
+			fail(e)
+			return
+		}
+		json.NewEncoder(w).Encode(result)
+	})
+
 	mux.HandleFunc("POST /explore", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Cache-Control", "no-store")

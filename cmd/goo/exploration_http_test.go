@@ -45,3 +45,23 @@ func TestExplorationHTTPValidationAndSourceFailure(t *testing.T) {
 		t.Fatal("failure became zero", w.Code, w.Body.String())
 	}
 }
+
+func TestCohortComparisonHTTPRejectsDriftAndUnknownPayloads(t *testing.T) {
+	mux := http.NewServeMux()
+	registerExploration(mux, http.DefaultClient)
+	cohort := `{"question":{"signal":"spans","environment":"local","fromMs":1,"toMs":60001,"limit":100,"groupBy":[{"kind":"attribute","key":"region"}]},"basis":"client-capture","count":"2","state":"observed","groups":[{"g0":"east","count":"2"}]}`
+	valid := `{"baseline":` + cohort + `,"selection":` + cohort + `}`
+	for _, tc := range []struct {
+		body string
+		code int
+	}{{valid, 200}, {strings.Replace(valid, `"toMs":60001`, `"toMs":60002`, 1), 400}, {valid + ` {}`, 400}, {strings.Replace(valid, `"baseline":`, `"unknown":true,"baseline":`, 1), 400}, {strings.Replace(valid, `"count":"2"`, `"count":"02"`, 1), 400}} {
+		w := httptest.NewRecorder()
+		mux.ServeHTTP(w, httptest.NewRequest("POST", "/compare", strings.NewReader(tc.body)))
+		if w.Code != tc.code {
+			t.Fatalf("got %d: %s", w.Code, w.Body.String())
+		}
+		if w.Header().Get("Cache-Control") != "no-store" {
+			t.Fatal("missing no-store")
+		}
+	}
+}

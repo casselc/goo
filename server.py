@@ -50,16 +50,20 @@ class Handler(BaseHTTPRequestHandler):
         elif self.path in ('/', '/index.html'):
             self.send_response(200); self.send_header('Content-Type', 'text/html; charset=utf-8'); self.end_headers()
             self.wfile.write((Path(__file__).parent / 'ui/index.html').read_bytes())
-        elif self.path in ('/visualizations.js', '/workflows.js', '/operations.js', '/histograms.js', '/ratios.js', '/fleet.js', '/investigations.js', '/exploration.js'):
+        elif self.path == '/product.css':
+            self.send_response(200); self.send_header('Content-Type', 'text/css; charset=utf-8'); self.end_headers()
+            self.wfile.write((Path(__file__).parent / 'ui/product.css').read_bytes())
+        elif self.path in ('/workspace.js', '/visualizations.js', '/workflows.js', '/operations.js', '/histograms.js', '/ratios.js', '/fleet.js', '/investigations.js', '/exploration.js', '/distributions.js'):
             self.send_response(200); self.send_header('Content-Type', 'application/javascript; charset=utf-8'); self.end_headers()
             self.wfile.write((Path(__file__).parent / 'ui' / self.path[1:]).read_bytes())
         else: self.send_error(404)
 
     def do_POST(self):
-        if self.path in ('/api/investigations','/api/explore'):
+        if self.path in ('/api/investigations','/api/explore','/api/compare'):
             try:
                 length = int(self.headers.get('Content-Length', 0))
-                if not 0 < length <= 16384: raise ValueError('Expected JSON body, maximum 16 KiB')
+                limit = 1048576 if self.path == '/api/compare' else 16384
+                if not 0 < length <= limit: raise ValueError('JSON request exceeds size limit')
                 endpoint = os.getenv('PACKAGES_URL', 'http://localhost:8089') + self.path.removeprefix('/api')
                 request = urllib.request.Request(endpoint, data=self.rfile.read(length), headers={'Content-Type': 'application/json'})
                 with urllib.request.urlopen(request, timeout=90) as response:

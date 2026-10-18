@@ -1,4 +1,14 @@
-# Grammar of Observability local lab
+# goo — Grammar of Observability
+
+Goo is a general-purpose observability workbench over OpenTelemetry data, with
+inspectable definitions shared between code and interactive investigation. This
+repository currently runs as a local lab; reservation, checkout and report services
+are examples used to exercise its contracts.
+
+The [investigation workspace](docs/PRODUCT_WORKSPACE.md) brings Explore, Operations,
+Saved investigations and Definitions into one interface. Explore includes captured
+attribute distributions, pinned baseline comparisons and a trace/log inspector.
+Reference reservation workflows remain available under Examples.
 
 For the end-to-end design, start with the [architecture and process diagrams](docs/ARCHITECTURE_DIAGRAMS.md):
 source validation and weaving → application OTel SDKs → collector/ClickStack capture
@@ -21,7 +31,7 @@ business events into frozen subject facts and evidence receipts. Explore the
 [Hegel/Quint verification](verification/README.md), and
 [bitemporal design note](docs/BITEMPORALITY.md).
 
-A runnable prototype over ClickStack-shaped OTel data: HTTP gateway → gRPC reservation service → Redis Streams → inventory consumer → OTel collector → ClickHouse. A small browser UI edits a validated JSON query expression and shows its compiled SQL, completion cohorts, gRPC latency, logs, spans and links, and exported metric points.
+The reference reservation example emits ClickStack-shaped OTel data: HTTP gateway → gRPC reservation service → Redis Streams → inventory consumer → OTel collector → ClickHouse. Its Examples workspace edits a validated JSON query expression and shows its compiled SQL, completion cohorts, gRPC latency, logs, spans and links, and exported metric points.
 
 The [visualization slice](docs/VISUALIZATIONS.md) adds trace waterfalls with span
 inspection and async-link navigation, plus a raw-duration heatmap whose cells

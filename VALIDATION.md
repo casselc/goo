@@ -4,6 +4,52 @@ Current additions: see the [cloud baseline](ENVIRONMENT_VALIDATION.md) for the
 successful default Compose run in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Cohesive general-purpose workspace and cohort distributions
+
+Implemented locally: Explore/Operations/Saved investigations/Definitions navigation,
+secondary reservation Examples, shared responsive styles, result tabs and trace/log
+inspector. Complete captured distributions support a browser-held fixed-window
+baseline and Go rational percentage-point comparison. The shared waterfall accepts
+caller-provided related actions; reservation navigation is supplied only by Examples.
+See [workspace and scope contract](docs/PRODUCT_WORKSPACE.md),
+[diagram 11](docs/ARCHITECTURE_DIAGRAMS.md#11-workspace-navigation-and-captured-distribution-comparison)
+and [journey 23](docs/journeys/README.md#23-one-investigation-workspace-from-distribution-to-trace).
+
+Passed: root Go race tests/vet, 19 Python tests, 14 Node checks, strict comparison
+HTTP validation and Compose configuration. Fixtures cover exact uint64 counts,
+missing/empty identities, category unions, scope drift, duplicate/partial groups,
+empty populations and changed-read unknowns. Hegel cohort state/swarm runs 100
+sequences of up to 30 steps. Quint validates observed pin/selection/empty/changed/
+scope-change results with three rejecting negative controls. Full nested verification
+suite passed (91.9 seconds); ignored log: `artifacts/verification/workspace-full-suite.log`.
+
+The initial targeted seven browser journeys passed (37.6 seconds), covering actual
+workspace navigation, old and new query paths, saved/live expansion, and a labelled
+12-record collector fixture compared with a four-record filtered population. The
+source fixture is documentation telemetry, not a production error attribution.
+Mobile screenshot review prompted labelled comparison rows and visible navigation.
+The full run then passed 22/23 journeys (4.8 minutes). Journey 07 exposed a
+pre-existing readiness assumption: its five-minute API poll could see an older
+failure while the UI used the new two-minute default. Its fixture now aligns
+the window and waits for a newly captured failure identity. The first focused
+rerun also encountered an actual transient source error during baseline acquisition;
+readiness now checks HTTP success before accessing facts. Source failures are
+not converted into zero-valued evidence. Expanded journey 23 passed again (6.7
+seconds), including distribution-value refinement in the baseline's fixed window.
+The corrected journey 07 then passed (4.0 seconds; focused command 6.3 seconds).
+Together with the full run and focused journey 23, all 23 journeys have passing
+results against this round's runtime. All 68 documentation frames were regenerated;
+desktop comparison/definitions and mobile comparison/inspector frames were visually
+reviewed. The inspector frame uses the actual viewport, avoiding full-page fixed-overlay
+screenshot distortion. All 12 services are running and traffic is restored. Existing
+five stale pending entries and all volumes were retained.
+Cohort observations were strengthened to check expected positive/empty/unknown
+results explicitly; focused Hegel/Quint verification passed again (4.7 seconds).
+Baselines remain volatile browser state; caller-held comparison evidence is not
+source-authenticated. Optional HyperDX, a Databricks instance, production deployment
+and a complete accessibility audit were not validated. Mermaid source/fences and
+relative documentation links were checked; no rendered-Mermaid validation is claimed.
+
 ## Bounded general exploration and expanded trace/log context
 
 Implemented: shared Go query model/reference predicates and parameterized

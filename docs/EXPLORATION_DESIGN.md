@@ -136,12 +136,12 @@ invented population/scope/identity agreement. See VALIDATION.md for actual runs.
 
 Next proposed slices:
 
-1. Attribute value distributions and type-aware numeric bindings; time/latency
+1. Type-aware numeric bindings and multi-attribute distributions; time/latency
    aggregate charts sharing the same source/grain contract.
 2. Cursor strategy or materialized captures for stable paging; stored expanded
    evidence with explicit successor refresh, and trace-window widening.
-3. Selected-vs-baseline cohort comparison with explicit denominators, coverage,
-   sampling assumptions and ranked attribute differences, without causal claims.
+3. Persisted general cohort receipts and broader attribute ranking; explicit
+   sampling/coverage contracts. One-field descriptive comparison is implemented.
 4. Named query/board resources and plan/apply; capability diagnostics for warehouse
    lowering. Raw row exploration is not a Databricks metric-view definition. The
    existing portable aggregate compiler remains artifact-only for Databricks;
@@ -151,3 +151,9 @@ Live tail, arbitrary metrics/gauges, whole-trace accumulation across pages, text
 search across every field, RUM/session replay, dependency maps, production SLOs,
 alerts and team collaboration remain outside this slice. Log `body contains`
 provides literal text search, not an indexed/full-text search language.
+
+## Workspace and cohort distributions
+
+The [product workspace contract](PRODUCT_WORKSPACE.md) defines implemented result
+tabs, fixed-window baselines, comparison arithmetic and responsive trace inspection.
+General cohorts remain browser-held, separate from durable operation receipts.

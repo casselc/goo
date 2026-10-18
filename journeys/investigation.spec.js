@@ -49,7 +49,7 @@ test.beforeAll(async ({ request }) => {
 test('01 retry success crosses the async trace boundary', async ({ page, request }) => {
   const id = await create(page, 'retry');
   await frame(page, '01a-create-retry');
-  await page.goto(investigation);
+  await page.goto(investigation+'/#examples');
   await expect(page.locator('.warning')).toContainText('unverified');
   await expect.poll(async () => (await query(request, { view: 'completion', reservationId: id }))
     .rows[0]?.classification, { timeout: 100_000, intervals: [1500] }).toBe('good');
@@ -76,7 +76,7 @@ test('01 retry success crosses the async trace boundary', async ({ page, request
 test('02 compare good, late, missing and rejected outcomes', async ({ page, request }) => {
   const ids = {};
   for (const scenario of ['good', 'late', 'missing', 'reject']) ids[scenario] = await create(page, scenario);
-  await page.goto(investigation);
+  await page.goto(investigation+'/#examples');
   for (const scenario of ['good', 'late', 'missing', 'reject']) {
     const want = scenario === 'good' ? 'good' : 'bad';
     await expect.poll(async () => (await query(request, { view: 'completion', reservationId: ids[scenario] }))
@@ -92,10 +92,11 @@ test('02 compare good, late, missing and rejected outcomes', async ({ page, requ
 });
 
 test('03 inspect the definition, reject invalid queries, and distinguish metric points', async ({ page }) => {
-  await page.goto(investigation);
+  await page.goto(investigation+'/#definitions');
   await page.getByText('Application-owned package', { exact: true }).click();
   await expect(page.locator('#package')).toContainText('reservations');
   await frame(page, '03a-owned-definition');
+  await page.getByRole('button',{name:'Examples',exact:true}).click();
   await page.locator('#expression').fill(JSON.stringify({ view: 'arbitrary-sql', sql: 'DROP TABLE otel_logs' }));
   await page.getByRole('button', { name: 'Run expression', exact: true }).click();
   await expect(page.locator('#status')).toContainText(/unsupported|unknown|view/i);
@@ -115,7 +116,7 @@ test('04 heatmap cell opens raw spans and the linked reservation waterfall', asy
     const data=await query(request,{view:'traces',reservationId:id});
     return data.rows.some(r=>r.SpanName==='inventory process');
   },{timeout:100_000,intervals:[1500]}).toBeTruthy();
-  await page.goto(investigation);
+  await page.goto(investigation+'/#examples');
   const heat=await render(page,{view:'heatmap',reservationId:id,minutes:5});
   expect(heat.possiblyTruncated).toBe(false);
   const total=heat.rows.reduce((n,r)=>n+Number(r.calls),0);
@@ -159,7 +160,7 @@ test('05 guided questions preserve a subject and expose USE measurement gaps',as
   const id=await create(page,'retry');
   await expect.poll(async()=>(await query(request,{view:'traces',reservationId:id})).rows.length,
     {timeout:100_000,intervals:[1500]}).toBeGreaterThan(0);
-  await page.goto(investigation);
+  await page.goto(investigation+'/#examples');
   await render(page,{view:'traces',reservationId:id,scenario:'retry'});
   await page.locator('#workflow').selectOption('retry');
   await expect(page.locator('#workflowCoverage')).toContainText('different denominators');
@@ -190,7 +191,7 @@ test('06 real queue pressure and a discoverable semantic package library',async(
     const data=await query(request,{view:'queue',minutes:5});
     return data.rows.some(r=>r.metric==='lab.worker.active'&&Number(r.value)>0);
   },{timeout:15_000,intervals:[500]}).toBeTruthy();
-  await page.goto(investigation);
+  await page.goto(investigation+'/#examples');
   const data=await render(page,{view:'queue',minutes:5});
   const metrics=new Set(data.rows.map(r=>r.metric));
   for(const metric of ['lab.queue.depth','lab.queue.pending','lab.worker.active','lab.worker.capacity','lab.worker.utilization','lab.queue.wait.p95'])expect(metrics.has(metric)).toBeTruthy();
@@ -201,6 +202,7 @@ test('06 real queue pressure and a discoverable semantic package library',async(
   await expect(page.locator('#chart svg')).toHaveCount(4);
   await expect(page.locator('#chart')).toContainText('no averaging across instances');
   await frame(page,'06a-live-queue-and-workers');
+  await page.getByRole('button',{name:'Definitions',exact:true}).click();
   await page.getByText('OTel prebuilt library · capability proposals',{exact:true}).click();
   await page.getByText('otel.database.pool · semconv-v1.37.0-development',{exact:true}).click();
   await expect(page.locator('#prebuilts')).toContainText('db.client.connection.wait_time');
@@ -210,15 +212,18 @@ test('06 real queue pressure and a discoverable semantic package library',async(
 
 test('07 live HTTP package renders the shared Go descriptor',async({page,request})=>{
   await create(page,'good');
+  let previous;await expect.poll(async()=>{const r=await request.get(investigation+'/api/http-package?minutes=5');if(!r.ok())return false;previous=await r.json();return true},{timeout:45000,intervals:[1000]}).toBe(true);
+  const priorFailures=new Set(previous.prepared.facts.filter(f=>f.route==='/demo-failure').map(f=>f.trace_id));
   const failure=await request.get(app+'/demo-failure');expect(failure.status()).toBe(503);
   await expect.poll(async()=>{
     const r=await request.get(investigation+'/api/http-package?minutes=5');
     if(!r.ok())return false;
     const data=await r.json();
-    return data.results.some(row=>row.dimensions.route==='/demo-failure'&&row.measures.failures.count>=1)&&
+    return data.prepared.facts.some(f=>f.route==='/demo-failure'&&!priorFailures.has(f.trace_id))&&data.results.some(row=>row.dimensions.route==='/demo-failure'&&row.measures.failures.count>=1)&&
       data.results.some(row=>row.dimensions.route==='/reserve'&&row.measures.successful.count>=1);
   },{timeout:30_000,intervals:[1000]}).toBeTruthy();
-  await page.goto(investigation);
+  await page.goto(investigation+'/#definitions');
+  await page.locator('#minutes').fill('5');
   const response=page.waitForResponse(r=>r.url().includes('/api/http-package?'));
   await page.getByRole('button',{name:'Evaluate HTTP package',exact:true}).click();
   const data=await(await response).json();
@@ -382,6 +387,7 @@ test('11 a second application loads the same operation views from YAML',async({p
  await page.getByText('Operation binding and evidence basis',{exact:true}).click();await expect(page.locator('#operationExplain')).toContainText(reports.revision);
  await expect(page.locator('#operationExplain')).toContainText('Sampling and completeness remain unverified');
  await frame(page,'11c-package-contract-and-subject');
+ await page.locator('#operationWaterfall').getByRole('button',{name:'Expand trace across services and find linked logs',exact:true}).click();await expect(page.locator('#workspaceTitle')).toHaveText('Explore');await expect(page.locator('#exploreTrace')).toContainText('report.generate');await page.locator('#exploreTrace .waterfall-row').first().click();await expect(page.locator('#exploreSpanDetails')).toContainText(report.id);await expect(page.locator('#exploreSpanDetails')).not.toContainText('reservation');await page.locator('#exploreContextClose').click();await page.getByRole('button',{name:'Operations',exact:true}).click();
  await page.locator('#operationPackage').selectOption('checkout');await expect(page.locator('#operationExplorer')).toBeEmpty();await expect(page.locator('#operationView')).toBeEmpty();
 });
 
@@ -513,7 +519,7 @@ test('17 live peer imbalance telemetry loss and restart retain honest comparison
 test('18 late initial query preserves edited operation lookback',async({page})=>{
  let captured,release;const fetched=new Promise(r=>captured=r),gate=new Promise(r=>release=r);
  await page.route('**/api/query',async route=>{const response=await route.fetch();captured();await gate;await route.fulfill({response})});
- await page.goto(investigation+'/#operations');await fetched;await page.locator('#minutes').fill('2');release();await expect(page.locator('#run')).toBeEnabled();await expect(page.locator('#minutes')).toHaveValue('2');
+ await page.goto(investigation+'/#examples');await fetched;await page.getByRole('button',{name:'Operations',exact:true}).click();await page.locator('#minutes').fill('2');release();await expect(page.locator('#run')).toBeEnabled();await expect(page.locator('#minutes')).toHaveValue('2');
  await expect(page.locator('#operationPackage option')).toHaveCount(2);const response=page.waitForResponse(r=>r.url().includes('/api/operations?'));await page.getByRole('button',{name:'Inspect operations',exact:true}).click();const result=await(await response).json();expect(result.toMs-result.fromMs).toBe(120000);await expect(page.locator('#runOperations')).toBeEnabled();await expect(page.locator('#minutes')).toHaveValue('2');await frame(page,'18a-edited-lookback-survives-late-response');
 });
 
@@ -522,7 +528,7 @@ test('19 saved investigation reopens fixed evidence and refreshes late telemetry
  const main=process.env.GOO_OPERATION_URL||'http://127.0.0.1:8090';
  expect((await request.post(main+'/invoke?scenario=error')).status()).toBe(503);
  await expect.poll(async()=>{const r=await request.get(investigation+'/api/operations?minutes=2');if(!r.ok())return false;return (await r.json()).spans.some(s=>s.operation==='checkout.reserve'&&s.outcome==='error')},{timeout:45000,intervals:[1000]}).toBe(true);
- await page.goto(investigation);await page.locator('#minutes').fill('2');await expect(page.locator('#operationPackage option[value="checkout"]')).toHaveCount(1);await page.locator('#operationPackage').selectOption('checkout');await page.locator('#runOperations').click();await expect(page.locator('#runOperations')).toBeEnabled();await page.getByRole('button',{name:'Inspect errors for checkout.reserve',exact:true}).click();
+ await page.goto(investigation+'/#operations');await page.locator('#minutes').fill('2');await expect(page.locator('#operationPackage option[value="checkout"]')).toHaveCount(1);await page.locator('#operationPackage').selectOption('checkout');await page.locator('#runOperations').click();await expect(page.locator('#runOperations')).toBeEnabled();await page.getByRole('button',{name:'Inspect errors for checkout.reserve',exact:true}).click();
  await page.locator('#errorRatioView').evaluate(n=>n.open=true);await page.locator('#errorRatioView section').filter({has:page.getByRole('heading',{name:'checkout.reserve / server',exact:true})}).getByRole('button',{name:'Why did errors rise?',exact:true}).first().click();
  await page.locator('#fleetCoverageView').evaluate(n=>n.open=true);await page.locator('#fleetComparison .fleet-comparison-series').filter({has:page.getByRole('heading',{name:'checkout.reserve / server',exact:true})}).getByRole('button',{name:'Explain member comparison',exact:true}).first().click();
  await page.locator('#operationHeatmap .heat-cell:not([disabled])').first().click();
@@ -560,9 +566,10 @@ test('20 general exploration counts full captured populations and preserves miss
  expect((await explore(request,{...base,where:{all:[base.where,{field:attribute('test.transport'),op:'eq',value:special}]}})).count).toBe('123');
  const grouped=await explore(request,{...base,groupBy:[attribute(key)]});expect(grouped.rows).toHaveLength(100);expect(grouped.hasMore).toBe(true);expect(grouped.groups).toEqual([{g0:'',count:'61'},{g0:null,count:'62'}]);const next=await explore(request,{...base,offset:100,groupBy:[attribute(key)]});expect(next.rows).toHaveLength(23);expect(next.count).toBe('123');expect(next.groups).toEqual(grouped.groups);expect(next.rows.every(r=>!grouped.rows.some(p=>p.SpanId===r.SpanId))).toBe(true);
  const empty=await explore(request,{...base,where:{all:[base.where,{field:attribute(key),op:'eq',value:''}]}});expect(empty.count).toBe('61');const missing=await explore(request,{...base,where:{all:[base.where,{field:attribute(key),op:'missing'}]}});expect(missing.count).toBe('62');const either=await explore(request,{...base,where:{all:[base.where,{any:[{field:attribute(key),op:'eq',value:''},{field:attribute(key),op:'missing'}]}]}});expect(either.count).toBe('123');expect(grouped.plan.rows).not.toContain(key);expect(Object.values(grouped.plan.parameters)).toContain(key);
- await page.goto(investigation);await page.locator('#exploreEnvironment').fill(environment);await exploreClick(page,'#exploreRun');await addExploreFilter(page,attribute('goo.test.cohort'),'eq',tag);await page.locator('#exploreGroup').selectOption(JSON.stringify(attribute(key)));const shown=await exploreClick(page,'#exploreGroupRun');expect(shown.count).toBe('123');await expect(page.locator('#exploreStatus')).toContainText('100 displayed');await expect(page.locator('#exploreGroups')).toContainText('Missing key');await expect(page.locator('#exploreGroups')).toContainText('Present empty string');await page.locator('#exploration').screenshot({path:path.join(frames,'20a-full-counts-and-missing-key-groups.png')});await exploreClick(page,'#exploreNext');await expect(page.locator('#exploreStatus')).toContainText('23 displayed');await expect(page.locator('#exploreStatus')).toContainText('123 matching');await page.locator('#exploreRows').screenshot({path:path.join(frames,'20b-bounded-next-page.png')});
+ await page.goto(investigation);await page.locator('#exploreEnvironment').fill(environment);await exploreClick(page,'#exploreRun');await addExploreFilter(page,attribute('goo.test.cohort'),'eq',tag);await page.locator('#exploreGroup').selectOption(JSON.stringify(attribute(key)));const shown=await exploreClick(page,'#exploreGroupRun');expect(shown.count).toBe('123');await page.getByRole('tab',{name:'Records',exact:true}).click();await expect(page.locator('#exploreStatus')).toContainText('100 displayed');await expect(page.locator('#exploreGroups')).toContainText('Missing key');await expect(page.locator('#exploreGroups')).toContainText('Present empty string');await page.locator('#exploration').screenshot({path:path.join(frames,'20a-full-counts-and-missing-key-groups.png')});await exploreClick(page,'#exploreNext');await expect(page.locator('#exploreStatus')).toContainText('23 displayed');await expect(page.locator('#exploreStatus')).toContainText('123 matching');await page.locator('#exploreRows').screenshot({path:path.join(frames,'20b-bounded-next-page.png')});
  await page.locator('#exploreRows').getByRole('button',{name:'Expand trace '+trace,exact:true}).first().click();await expect(page.locator('#exploreTrace .waterfall-row')).toHaveCount(100);await expect(page.locator('#exploreTraceMore')).toBeEnabled();await page.locator('#exploreTraceMore').click();await expect(page.locator('#exploreTrace .waterfall-row')).toHaveCount(23);await expect(page.locator('#exploreContextStatus')).toContainText('page offset 100');await expect(page.locator('#exploreTrace')).toContainText('parent outside results');await page.locator('#exploreContext').screenshot({path:path.join(frames,'20c-trace-paging-keeps-partial-context-visible.png')});
  // Delay a genuine result and change signal while it is in flight.
+ await page.locator('#exploreContextClose').click();
  let release,seen;const gate=new Promise(r=>release=r),fetched=new Promise(r=>seen=r);await page.route('**/api/explore',async route=>{const real=await route.fetch();seen();await gate;await route.fulfill({response:real})});await page.locator('#exploreRun').click();await fetched;await page.locator('#exploreSignal').selectOption('logs');release();await expect(page.locator('#exploreRows')).toBeEmpty();await expect(page.locator('#exploreStatus')).toContainText('Question changed');await page.unroute('**/api/explore');
  const none=await explore(request,{...base,where:{field:attribute('goo.test.cohort'),op:'eq',value:'absent-'+tag}});expect(none.state).toBe('no_data');expect(none.count).toBe('0');
 });
@@ -582,4 +589,25 @@ test('22 saved operation evidence expands live context without changing the rece
  await expect.poll(async()=>{const r=await request.get(investigation+'/api/operations?minutes=2&package=checkout');if(!r.ok())return false;live=await r.json();return live.spans.some(s=>s.operation==='checkout.reserve'&&s.outcome==='error')},{timeout:45000,intervals:[1000]}).toBe(true);
  const target=live.spans.filter(s=>s.operation==='checkout.reserve'&&s.outcome==='error').at(-1);const q={package:'checkout',packageRevision:live.package.revision,fromMs:live.fromMs,toMs:live.toMs};const response=await request.post(investigation+'/api/investigations',{data:{question:q,selection:{filter:{operation:'checkout.reserve',role:'server',outcome:'error'},traceID:target.traceID}}});expect(response.ok(),await response.text()).toBe(true);const saved=await response.json();
  await page.goto(investigation+'/#investigation='+saved.id);await expect(page.locator('#operationStatus')).toContainText(saved.id.slice(0,12));await page.locator('#operationWaterfall').getByRole('button',{name:'Expand trace across services and find linked logs',exact:true}).click();await expect(page.locator('#exploreContextStatus')).toContainText('Expanded context is a fresh read');await expect(page.locator('#exploreContextStatus')).toContainText('not included in saved operation captures');await expect(page.locator('#exploreTrace')).toContainText('checkout.reserve');await expect(page.locator('#exploreContextExplain')).toContainText('"logs"');const expanded=JSON.parse(await page.locator('#exploreContextExplain').textContent());expect(expanded.originBasis).toBe(saved.evidence.operations.conformance.basis);expect(expanded.trace.question.fromMs).toBe(saved.question.fromMs);expect(expanded.trace.question.toMs).toBe(saved.question.toMs);expect(expanded.trace.question.environment).toBe(saved.evidence.operations.source.environment);expect(await(await request.get(investigation+'/api/investigations/'+saved.id)).json()).toEqual(saved);await page.locator('#exploreContext').screenshot({path:path.join(frames,'22a-saved-question-and-independent-live-context.png')});
+});
+
+test('23 compare captured distributions in one workspace on desktop and mobile',async({page,request})=>{
+ const {randomBytes}=require('node:crypto'),tag=randomBytes(8).toString('hex'),environment='goo-cohort-journey',now=Date.now();
+ const attrs=o=>Object.entries(o).map(([key,stringValue])=>({key,value:{stringValue}}));
+ const spans=Array.from({length:12},(_,i)=>({traceId:randomBytes(16).toString('hex'),spanId:randomBytes(8).toString('hex'),name:'index.refresh',kind:2,startTimeUnixNano:String(BigInt(now-2000)*1000000n),endTimeUnixNano:String(BigInt(now-1999)*1000000n),attributes:attrs({'goo.test.cohort':tag,'test.outcome':i<4?'error':'ok',...(i<8?{'test.region':i<3?'east':'west'}:i<10?{'test.region':''}:{})})}));
+ expect((await request.post('http://127.0.0.1:4318/v1/traces',{data:{resourceSpans:[{resource:{attributes:attrs({'service.name':'search-indexer','deployment.environment.name':environment})},scopeSpans:[{scope:{name:'goo.documentation-fixture'},spans}]}]}})).ok()).toBe(true);
+ const q={signal:'spans',environment,fromMs:now-60000,toMs:now+1000,limit:100,offset:0,where:{field:attribute('goo.test.cohort'),op:'eq',value:tag}};
+ await expect.poll(async()=>(await explore(request,q)).count,{timeout:45000,intervals:[1000]}).toBe('12');
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(investigation);
+ await expect(page.locator('#workspaceTitle')).toHaveText('Explore');await expect(page.locator('#operations')).toBeHidden();await expect(page.locator('#guided')).toBeHidden();
+ await page.locator('#exploreEnvironment').fill(environment);await exploreClick(page,'#exploreRun');await addExploreFilter(page,attribute('goo.test.cohort'),'eq',tag);await page.locator('#exploreGroup').selectOption(JSON.stringify(attribute('test.region')));const base=await exploreClick(page,'#exploreGroupRun');expect(base.count).toBe('12');await expect(page.locator('#distributionContent')).toContainText('Missing key');await frame(page,'23a-distribution-workspace');
+ let compared=page.waitForResponse(r=>r.url().endsWith('/api/compare'));await page.locator('#baselinePin').click();await compared;
+ await addExploreFilter(page,attribute('test.outcome'),'eq','error');compared=page.waitForResponse(r=>r.url().endsWith('/api/compare'));const selected=await exploreClick(page,'#exploreGroupRun');expect(selected.count).toBe('4');expect(selected.question.fromMs).toBe(base.question.fromMs);expect(selected.question.toMs).toBe(base.question.toMs);const comparison=await(await compared).json();expect(comparison.state).toBe('ok');const east=comparison.rows.find(r=>r.value==='east');expect(east).toMatchObject({baselineCount:'3',selectionCount:'3',baselinePercent:'25.00',selectionPercent:'75.00',differencePP:'50.00'});
+ await page.getByRole('tab',{name:'Compare',exact:true}).click();await expect(page.locator('#cohortValues')).toContainText('+50.00');await expect(page.locator('#cohortStatus')).toContainText('4 selected records vs 12 baseline');await frame(page,'23b-pinned-baseline-comparison');
+ await page.getByRole('button',{name:'Definitions',exact:true}).click();await expect(page.locator('#definitionCatalog .definition-card')).toHaveCount(2);await frame(page,'23c-definition-workspace');await page.getByRole('button',{name:'Explore',exact:true}).click();await expect(page.locator('#cohortValues')).toContainText('+50.00');
+ await page.setViewportSize({width:390,height:844});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await frame(page,'23d-mobile-comparison');
+ await page.getByRole('tab',{name:'Compare',exact:true}).focus();await page.keyboard.press('Home');await expect(page.getByRole('tab',{name:'Records',exact:true})).toBeFocused();await page.locator('#exploreRows').getByRole('button',{name:/Expand trace/}).first().click();await expect(page.locator('#exploreTrace .waterfall-row')).toHaveCount(1);await page.screenshot({path:path.join(frames,'23e-mobile-trace-inspector.png')});await page.keyboard.press('Escape');await expect(page.locator('#exploreContext')).toBeHidden();
+ await page.getByRole('tab',{name:'Distribution',exact:true}).click();const refinedResponse=page.waitForResponse(r=>r.url().endsWith('/api/explore'));compared=page.waitForResponse(r=>r.url().endsWith('/api/compare'));await page.locator('#distributionContent').getByRole('button',{name:'"east"',exact:true}).click();const refined=await(await refinedResponse).json();expect(refined.count).toBe('3');expect(refined.question.fromMs).toBe(base.question.fromMs);expect((await(await compared).json()).rows.find(r=>r.value==='east').selectionPercent).toBe('100.00');
+ await addExploreFilter(page,attribute('test.outcome'),'eq','absent');compared=page.waitForResponse(r=>r.url().endsWith('/api/compare'));await exploreClick(page,'#exploreGroupRun');expect((await(await compared).json()).state).toBe('no_data');await page.getByRole('tab',{name:'Compare',exact:true}).click();await expect(page.locator('#cohortValues')).toBeEmpty();await expect(page.locator('#cohortStatus')).toContainText('no normalized comparison');
+ await page.locator('#exploreSignal').selectOption('logs');await expect(page.locator('#baselineClear')).toBeHidden();await expect(page.locator('#cohortValues')).toBeEmpty();expect(errors).toEqual([]);
 });

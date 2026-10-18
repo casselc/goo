@@ -101,4 +101,9 @@ Local server-captured immutable revisions and fixed-question refresh now exist. 
 
 ## General exploration boundaries
 
-A bounded Go span/log AST, captured-record counts/groups, discovered keys and paged cross-service trace/exact-log navigation now exist. Reads are not transactional, offset pages are not frozen, trace completeness is unknown, numeric-looking attributes remain strings, and general explorations/expanded context are not archived by operation captures. No value distributions, general chart algebra, arbitrary-field numeric casts, complete trace accumulation, live tail or production tenancy exists. See EXPLORATION_DESIGN.md.
+A bounded Go span/log AST, captured-record counts/groups, discovered keys and paged cross-service trace/exact-log navigation now exist. Reads are not transactional, offset pages are not frozen, trace completeness is unknown, numeric-looking attributes remain strings, and general explorations/expanded context are not archived by operation captures. One-field distributions and fixed-window descriptive cohort comparison now exist. General chart algebra, arbitrary-field numeric casts, complete trace accumulation, live tail and production tenancy remain absent. See EXPLORATION_DESIGN.md.
+
+- Explore baselines are volatile browser-held captures, not durable saved operation
+  receipts. Comparison checks accounting/scope, not caller-supplied provenance;
+  it provides descriptive differences without statistical/causal claims. See
+  [workspace contract](PRODUCT_WORKSPACE.md).

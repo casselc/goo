@@ -117,3 +117,9 @@ Bounded comparisons: `go test -run 'TestHegelComparison|TestQuintObservedBounded
 Saved investigations: `go test -v -run "Test(HegelInvestigation|QuintObservedInvestigation)" ./...` exercises immutable store state/swarm sequences and observed Quint transitions with rejected mutated-history/question controls. Model: `model/investigations.qnt`.
 
 Exploration: `go test -v -run "Test(HegelExploration|QuintObservedExploration)" ./...` explores AST/filter/presence/page state and validates observed search→page→trace→logs against `model/exploration.qnt`, with negative population/scope/identity controls.
+
+Cohort comparison adds a Hegel state/swarm machine for changing populations,
+source disagreement and scope drift, plus Quint observed pin/selection/empty/changed/
+scope-change validation with three negative controls. `cohorts_test.go` exercises
+the actual Go comparison kernel; it does not claim verification of the browser or
+source authenticity.

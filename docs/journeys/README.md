@@ -15,7 +15,8 @@ for another local binary. Test endpoints can be changed with `GOO_SAMPLE_URL` an
 
 The live app labels evidence `demo-unverified`, SLO/alarm results as previews,
 and native metrics as points. These are visible limitations, not hidden test
-exceptions. Today the UI still uses the original bounded Python SQL templates.
+exceptions. Examples uses the original bounded Python SQL templates; Explore and
+operation packages use Go.
 The new Go lifecycle accounting has separate fixtures and is not wired into it.
 
 For the source/build, telemetry and investigation paths behind these journeys, see
@@ -330,3 +331,29 @@ is checked before/after and stays equal; expanded evidence has separate question
 and bases and is not silently archived with the operation capture.
 
 - [Saved origin and independent live context](screenshots/22a-saved-question-and-independent-live-context.png)
+
+## 23. One investigation workspace from distribution to trace
+
+A labelled search-index refresh OTLP fixture supplies 12 captured records with region and outcome
+attributes, including missing and present-empty regions. The investigator groups
+by region, pins the baseline, filters to four error records and sees east rise
+from 3/12 (25%) to 3/4 (75%), a +50 percentage-point difference. Both questions
+retain identical time bounds. This is a controlled documentation population,
+not a claim about real production errors or causality.
+
+| Frame | User action and evidence |
+| --- | --- |
+| [Distribution](screenshots/23a-distribution-workspace.png) | Explore complete captured groups inside the shared product shell. |
+| [Comparison](screenshots/23b-pinned-baseline-comparison.png) | Compare two explicitly sized populations within a fixed window. |
+| [Definitions](screenshots/23c-definition-workspace.png) | Inspect contracts, then return without losing comparison state. |
+| [Mobile comparison](screenshots/23d-mobile-comparison.png) | Use the same navigation/result tabs on a 390px viewport without document overflow. |
+| [Mobile inspector](screenshots/23e-mobile-trace-inspector.png) | Open a selected trace and close with Escape. |
+
+The executable journey also checks keyboard tab navigation, distribution-value
+refinement within the pinned window, an empty selection
+without invented percentages, baseline clearing after a signal change and no
+uncaught browser errors. Earlier journeys now navigate actual workspace destinations;
+reference workflows live under Examples. See [workspace contract](../PRODUCT_WORKSPACE.md).
+
+Journey 11 also expands the real report application into the generic trace inspector,
+with report-specific attributes and no reservation-specific action.

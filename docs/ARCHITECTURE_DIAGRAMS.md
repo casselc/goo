@@ -362,3 +362,29 @@ The database optimizes the generated SQL. The reference predicate evaluator is
 for verification. Expanded context is live evidence and does not mutate saved
 operation captures. This is implemented local behavior, not a production RBAC,
 transactional snapshot, whole-trace completeness or Databricks-runtime claim.
+
+## 11. Workspace navigation and captured distribution comparison
+
+```mermaid
+flowchart LR
+ Nav["Workspace navigation"] --> Explore["Explore: Records / Distribution / Compare"]
+ Nav --> Ops["Operations: declared packages"]
+ Nav --> Saved["Saved operation receipts"]
+ Nav --> Defs["Definitions: contracts and proposed capabilities"]
+ Explore --> Source["Go query AST / ClickHouse adapter"]
+ Source --> Capture["Complete bounded groups + count + question + basis"]
+ Capture --> Baseline["Pin browser-held baseline with fixed window"]
+ Baseline --> Filter["Refine filters within the same fixed scope"]
+ Filter --> Source
+ Capture --> Compare["Go comparison: scope and accounting validation; exact rational shares"]
+ Baseline --> Compare
+ Compare --> Result["Ranked descriptive differences / no_data / unknown"]
+ Explore --> Inspector["Trace and exact linked-log inspector: independent live bases"]
+ Ops --> Inspector
+ Saved --> Inspector
+```
+
+Navigation does not query or mutate evidence. Baselines are volatile client-held
+captures; comparison hashes their supplied contents without authenticating source
+provenance. Saved operation receipts remain a separate server-side persistence
+path. See [workspace contract](PRODUCT_WORKSPACE.md) and journey 23.

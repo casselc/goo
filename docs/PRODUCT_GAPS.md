@@ -12,10 +12,10 @@ not a replacement for HyperDX or Honeycomb.
 
 | Capability | Current Goo boundary | Next useful behavior |
 | --- | --- | --- |
-| General exploration | Bounded general span/log attribute builder and one/two-field count groups now exist; no value distributions or broader chart algebra | Discover fields/types/cardinality; typed attribute filters, AND/OR, full-text log search; arbitrary bounded grouping and aggregate charts. Shared Go query AST/compiler and explain, source-specific physical adapters. |
+| General exploration | Bounded general span/log attribute builder and one/two-field count groups now exist; complete one-field distributions now exist; no broader chart algebra | Discover fields/types/cardinality; typed attribute filters, AND/OR, full-text log search; arbitrary bounded grouping and aggregate charts. Shared Go query AST/compiler and explain, source-specific physical adapters. |
 | Full distributed traces | Cross-service exact-trace paging now exists within original environment/time bounds; no complete-trace guarantee or window widening | Fetch a selected trace across services with bounded pagination, explicit missing-parent/partial status; preserve async links. Keep original question scope separate from expanded context. |
 | Correlated logs | Exact trace/span log scopes and literal body search now exist; no live tail or broader search language | Exact trace/span IDs first; declared scoped business identity next; time context separately labelled. Search/tail/pagination and log-to-trace navigation. |
-| Comparative debugging | One interval error context and actual member windows | Selected vs baseline populations, attribute distributions, sample sizes, missing fields, sampling/coverage caveats and ranked differences. BubbleUp-like differences are leads, not causal attribution. |
+| Comparative debugging | Pinned fixed-window cohort distributions plus interval/member context; no significance tests | Selected vs baseline populations, attribute distributions, sample sizes, missing fields, sampling/coverage caveats and ranked differences. BubbleUp-like differences are leads, not causal attribution. |
 | Reusable workspaces | Local immutable captures by ID and URL fragment | Named saved queries, boards, annotations, deployment markers, history, team sharing and export. Separate live board definitions from frozen evidence snapshots. |
 | APM and resource discovery | Declared membership and bounded OTel profile recognition | Service/operation inventory, dependencies, DB/cache/queue conventions; activation windows and freshness. Do not infer healthy membership from observed-only discovery. |
 | SLOs and alerting | Legacy preview; separate typed lifecycle pilots | Full-population SLI execution; scheduler, durable evaluations, multiwindow burn rates, unknown/no-data policies, dedup/silence/routing, notifications and audit. |
@@ -25,8 +25,9 @@ not a replacement for HyperDX or Honeycomb.
 | Portable authoring | Local YAML packages; separate ClickHouse/Databricks aggregate compiler pilot | Versioned resources, shared interactive/IaC AST, plan/apply, migration and backend capability diagnostics. Live operation queries do not yet lower to Databricks metric views. |
 
 The first general exploration and trace/log expansion slice is implemented; see
-[its design and limits](EXPLORATION_DESIGN.md). Next: value distributions, stable
-capture/paging, explicit cohort comparison and reusable boards.
+[its design and limits](EXPLORATION_DESIGN.md). Fixed-window distribution comparison and the [cohesive workspace](PRODUCT_WORKSPACE.md)
+are implemented locally. Next: stable capture/paging, persisted general exploration
+questions/baselines and reusable boards.
 Production authorization and query budgets must precede shared deployment;
 durable SLO/notification workflows are their own milestone. RUM/replay can remain
 an integration with the existing observability platform until justified.

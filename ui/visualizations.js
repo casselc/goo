@@ -44,7 +44,7 @@
     return { spans: ordered, start, end };
   }
   function node(tag, text, cls) { const n = document.createElement(tag); if (text !== undefined) n.textContent = text; if (cls) n.className = cls; return n; }
-  function waterfall(container, rows, truncated, openReservation, detailsId = 'spanDetails') {
+  function waterfall(container, rows, truncated, relatedActions, detailsId = 'spanDetails') {
     const data = layout(rows);
     container.append(node('p', `Displayed span extent: ${(Number(data.end-data.start)/1e6).toFixed(2)} ms. Relative to earliest returned span. Evidence completeness unknown${truncated ? '; span list truncated' : ''}. Async links are references, not parent edges.`, 'muted'));
     if (!rows.length) { container.append(node('p', 'No spans in this selection.')); return; }
@@ -67,9 +67,8 @@
       line.onclick = () => {
         details.replaceChildren(node('h3', r.SpanName), node('p', `${r.ServiceName} · ${r.duration_ms} ms · ${r.StatusCode || 'unset status'}`));
         const pre = node('pre', JSON.stringify(r, null, 2)); details.append(pre);
-        const id = (r.SpanAttributes || {})['app.reservation.id'];
-        if (id && openReservation) {
-          const b = node('button', 'Open reservation waterfall'); b.onclick = () => openReservation(id); details.append(b);
+        for (const action of relatedActions?.(r) || []) {
+          const b = node('button', action.label); b.onclick = action.select; details.append(b);
         }
         for (let i=0; i<(r.linked_traces || []).length; i++) {
           const targetTrace = r.linked_traces[i], targetSpan = (r.linked_spans || [])[i];

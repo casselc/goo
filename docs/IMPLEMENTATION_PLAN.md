@@ -159,8 +159,23 @@ Live two-instance slice: operation-peer has distinct identity and loopback8092. 
 
 ## Local saved investigation milestone
 
-Implemented: immutable bounded server captures, package-revision/fixed-window refresh, stored trace/filter/subject and ratio/member explanation navigation, separate component bases, local named-volume persistence and revision comparison. See [contract](SAVED_INVESTIGATIONS.md). Next proposed: [general exploration, full traces/logs, then cohort comparison](PRODUCT_GAPS.md). General workspaces and production collaboration remain future.
+Implemented: immutable bounded server captures, package-revision/fixed-window refresh, stored trace/filter/subject and ratio/member explanation navigation, separate component bases, local named-volume persistence and revision comparison. See [contract](SAVED_INVESTIGATIONS.md). General exploration, cross-service trace/log expansion and one-field cohort comparison are now implemented in later increments below. Persisted general workspaces and production collaboration remain future; see [gaps](PRODUCT_GAPS.md).
 
 ## Bounded general exploration milestone
 
-Implemented: shared UI/API/CLI Go query AST and ClickHouse adapter, typed literal predicates and AND/OR, discovered attribute keys, independent full-record counts/groups, bounded row pages, detected cross-read disagreement, cross-service trace expansion and exact trace/span log scopes. See [design and remaining slices](EXPLORATION_DESIGN.md). Next proposed: value distributions, stable capture/cursor paging, saved general workspaces and cohort comparisons; production access control remains a prerequisite for team deployment.
+Implemented: shared UI/API/CLI Go query AST and ClickHouse adapter, typed literal predicates and AND/OR, discovered attribute keys, independent full-record counts/groups, bounded row pages, detected cross-read disagreement, cross-service trace expansion and exact trace/span log scopes. See [design and remaining slices](EXPLORATION_DESIGN.md). One-field distributions/comparison and workspace navigation are implemented below. Next proposed: stable capture/cursor paging and persisted general workspaces; production access control remains a prerequisite for team deployment.
+
+## Cohesive workspace and distribution comparison
+
+Implemented: primary Explore/Operations/Saved investigations/Definitions navigation,
+secondary Examples, shared visual tokens and responsive trace inspector. Explore
+now has Records/Distribution/Compare tabs, complete captured groups, a browser-held
+fixed-window baseline and exact rational Go comparison. Empty/changed populations
+remain no_data/unknown. See [contract](PRODUCT_WORKSPACE.md). Next: persisted general
+questions and baseline receipts, stable paging and reusable boards; production
+authorization remains separate.
+
+General-purpose direction: use service-neutral signal/source onboarding and
+capability-driven OTel recipes across independent applications as acceptance criteria.
+Keep sample identities and business assumptions in example packages/adapters;
+shared views consume declared fields, units, grain and relation contracts.

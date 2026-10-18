@@ -10,13 +10,14 @@ from remaining work; [validation](../VALIDATION.md) records actual checks.
 
 | Component | Source | Responsibility |
 | --- | --- | --- |
-| Local stack | compose.yaml | Eleven default services: capture/storage, Python sample roles, two woven Go apps, query and Go packages; optional MongoDB/HyperDX |
+| Local stack | compose.yaml | Twelve default services: capture/storage, Python sample roles, two woven Go apps, query and Go packages; optional MongoDB/HyperDX |
 | OTel pipeline | config/collector.yaml | Receive OTLP logs/traces/metrics, batch, export to ClickHouse baseline tables |
 | Sample roles | sample.py | HTTP gateway, unary gRPC acceptance, Redis publisher, consumer attempts, traffic generator |
 | Telemetry setup | telemetry.py | Python SDK providers, explicit always-on demo tracing, OTLP/HTTP exporters |
 | Prototype query compiler | grammar.py | Validate the original lab request and select bounded SQL templates |
 | Query service | server.py | Serve static UI, package definition, query and explain endpoints |
-| Browser | ui/index.html | Query controls, JSON editor, summary cards, cohort bars, row tables, subject navigation |
+| Browser workspace | ui/workspace.js, ui/product.css, ui/index.html | Service-neutral navigation and visual system; Examples contains the original Python reservation workflow |
+| General exploration | exploration/, ui/exploration.js, ui/distributions.js | Arbitrary retained OTel attributes, population counts, distributions, fixed-window cohort comparison and cross-service trace/log context |
 | Prototype package data | definitions/reservations.json | Demo deadline, target, permitted views, grouping choices |
 | Annotation build/runtime | annotations/, instrumentation/, scripts/build_*_app.sh | Validate selected source contracts, weave opt-in Go builds, emit standard OTel spans/events/metrics |
 | Operation package planner | annotations/package.go, config/operations/ | Shared strict YAML bindings, identity, enabled views, counter/histogram contracts and content revisions |
@@ -91,3 +92,6 @@ Two live checkout instances now support [bounded-skew comparison](FLEET_COMPARIS
 Immutable capture storage lives in `investigations/`; the Go packages HTTP boundary captures trusted source results, retains separate bases/errors and publishes receipts to a local named volume. Browser reopening renders stored evidence and refresh creates a successor with the same fixed question. See [Saved investigations](SAVED_INVESTIGATIONS.md) and architecture diagram 9.
 
 The bounded general exploration AST, reference predicates and ClickHouse compiler/source executor live in `exploration/`; `cmd/goo/exploration_http.go` exposes the Go API and the CLI shares its compiler. The UI retains original query and expanded trace/log bases separately. See [design](EXPLORATION_DESIGN.md) and architecture diagram 10.
+
+Application-specific examples and general-purpose product boundaries are documented
+in [the workspace contract](PRODUCT_WORKSPACE.md#general-purpose-boundary).

@@ -137,3 +137,13 @@ Unicode and DEL using the adapter's Escaped-format parameter encoding. Journeys
 20–22 cover labelled collector fixture populations, real web/gRPC traces/logs and
 independent live expansion from retained operation receipts. Full networked
 multistage builds and optional HyperDX/Databricks runtimes remain unverified.
+
+## Product workspace and distribution comparison
+
+No new services, dependencies or ports. The query image must include `ui/product.css`,
+`ui/workspace.js` and `ui/distributions.js` alongside the existing UI assets. Rebuild
+the Go packages binary for `/compare`; the server proxy permits bounded comparison
+bodies up to 1 MiB. General exploration baselines live only in browser memory.
+The named capture volume continues to store operation receipts, not those baselines.
+Host-staged offline image builds and the existing managed Docker daemon were used;
+no daemon, credentials, volumes or queues were replaced. See current [checks](VALIDATION.md).
