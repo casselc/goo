@@ -283,3 +283,5 @@ Saved operation evidence can now be reopened and refreshed as immutable revision
 [General exploration](docs/EXPLORATION_DESIGN.md) now searches captured spans/logs by discovered attributes, groups full matching record populations independently of row pages, expands traces across services and finds exact linked logs. The [JSON example](examples/exploration/errors.json) uses the same compiler through `goo plan-exploration -query examples/exploration/errors.json`.
 
 [Core workbench basics](docs/CORE_WORKBENCH.md): full-population span measures/time charts, reusable questions, service signals/reported dependencies and query controls.
+
+[Duration breakdowns](docs/GROUPED_MEASURES.md) rank full-population latency by service or attribute and retain it with saved investigations.

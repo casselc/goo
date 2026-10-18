@@ -119,7 +119,7 @@ func compile(q Query, rowLimit int) (Plan, error) {
 			dims = append(dims, "if("+present+", CAST(toString("+v+") AS Nullable(String)), NULL) AS "+alias)
 			aliases = append(aliases, alias)
 		}
-		p.Groups = "SELECT " + strings.Join(dims, ", ") + ", toString(count()) AS count" + base + " GROUP BY " + strings.Join(aliases, ", ") + " ORDER BY " + strings.Join(aliases, ", ") + " LIMIT 1001 FORMAT JSONEachRow"
+		p.Groups = "SELECT " + strings.Join(dims, ", ") + ", " + aggregate + base + " GROUP BY " + strings.Join(aliases, ", ") + " ORDER BY " + strings.Join(aliases, ", ") + " LIMIT 1001 FORMAT JSONEachRow"
 	}
 	p.Fields = "SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -> concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -> concat('attribute:', k), mapKeys(" + attrs + ")))) AS field" + base + " ORDER BY field LIMIT 129 FORMAT JSONEachRow"
 	p.Parameters = c.params

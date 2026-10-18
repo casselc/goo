@@ -187,3 +187,10 @@ exact sums, permutation and record-page independence). Journey 33 invokes
 observations. Five rejecting controls corrupt p95, archived sum, ambiguous parent
 classification, cancellation observation and reused environment. This is observed-trace conformance;
 it does not establish source completeness or all browser/database scheduling.
+
+Grouped durations: `TestHegelGroupedDurationConservation` checks 100 generated
+populations including uint64 extremes; sums/counts conserve across disjoint groups.
+`TestQuintGroupedMeasuresLiveLedger` checks real measure/save/page observations,
+with rejecting controls for wrong total p95, omitted saved group and altered page
+group. Typed comparisons ignore JSON indentation while preserving exact integers
+and missing/empty values. This is observed conformance, not proof of completeness.

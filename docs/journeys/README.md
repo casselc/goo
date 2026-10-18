@@ -609,3 +609,19 @@ and rejects five corrupted variants; Hegel exercises duration state/swarm.
 | [33b](screenshots/33b-reusable-question-fresh-window.png) | Run a saved package question in a fresh source window. |
 | [33c](screenshots/33c-service-signals-and-reported-dependencies.png) | Discover span/log services and parent-link diagnostics; event age is not ingestion lag. |
 | [33d](screenshots/33d-mobile-saved-measures.png) | Reopen archived measures/chart on a narrow screen with stable values. |
+
+## 34. Duration breakdowns and saved measures
+
+`journeys/grouped-measures.spec.js` uses 124 real OTLP spans with fast/slow/missing/
+empty route groups. It verifies full-population p95 versus 100 displayed records,
+one/two-field group summaries, exact ranking/search/refinement, count-cohort
+projection, retained pages, package preview and mobile containment. The live
+ledger is checked by Quint with three rejecting controls; the optional
+`GOO_GROUPS_BOMBADIL=1` campaign explores saved-only ranks/search/pages.
+
+| Frame | User journey |
+| --- | --- |
+| [34a](screenshots/34a-duration-breakdown-ranking.png) | Rank complete route groups by p95 while keeping the overall measure separate. |
+| [34b](screenshots/34b-saved-mean-breakdowns.png) | Compare exact means from an immutable capture. |
+| [34c](screenshots/34c-mobile-duration-breakdown.png) | Inspect the same stored breakdown on a narrow screen. |
+| [34d](screenshots/34d-grouped-package-preview.png) | Preview total and grouped duration measures from reusable YAML. |

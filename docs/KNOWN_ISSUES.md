@@ -154,3 +154,5 @@ metrics, ingestion lag/drop evidence and production authorization remain absent.
 Per-process query limits/cancellation cover general routes, not all legacy routes
 or cross-replica/per-tenant quotas. Service discovery is a separate live read and
 is not archived by saved inventory. Event age does not establish pipeline health.
+
+[Grouped span-duration measures](GROUPED_MEASURES.md) now support complete per-group summaries/ranking. Arbitrary numeric measures and grouped time-series remain absent. Old summary+group capture plans may require explicit new live evidence rather than refresh; count-only groups are not retroactively upgraded.

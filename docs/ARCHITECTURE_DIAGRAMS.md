@@ -669,3 +669,27 @@ flowchart TD
 Implemented local behavior and limits: [core contract](CORE_WORKBENCH.md). Read
 components are not a database snapshot. Cancellation is best effort, and local
 request IDs/admission do not provide authentication or distributed tenant quotas.
+
+## 21. Full-population duration breakdowns
+
+```mermaid
+flowchart LR
+  UI[Measures and breakdown controls] --> Q[Shared Go query]
+  Q --> SQL[One aggregate expression]
+  SQL --> TOTAL[Full total summary]
+  SQL --> GROUPS[Full group summaries]
+  GROUPS --> VALIDATE[Validate count / sums / extrema / unique keys]
+  TOTAL --> VALIDATE
+  VALIDATE --> STATE[Observed or changed between reads]
+  STATE --> RANK[Exact rational UI ranking]
+  RANK --> SEARCH[Local search preserves scale]
+  SEARCH -->|explicit refinement| Q
+  STATE --> CAPTURE[Immutable group evidence]
+  CAPTURE --> PAGES[Stable stored record pages]
+  Q --> PACKAGE[Reusable YAML question and preview]
+```
+
+[Contract](GROUPED_MEASURES.md). Group percentiles are not averaged into a total.
+Comparison baselines still use captured record proportions. Stored count-only
+groups remain readable, and fixed-plan refresh may require a new capture after
+compiler changes.

@@ -413,3 +413,9 @@ settings, event-time bounds, unique reported edge versus ambiguous/unresolved
 parents, cleared cancelled evidence and coherent workspace navigation. Journey 33
 with the same opt-in runs both actors, retaining each trace and required prefix.
 No definitions/captures or application workloads are written by either actor.
+
+`grouped-measures.ts` explores a saved route breakdown. Its required prefix visits
+p95 ranking, local search/clear, next stored record page and return. Invariants
+retain full count/sum/p95, missing/empty groups, exact ranking and the unchanged
+source basis/groups across pages. After completion it varies count/mean/p95/p99/max.
+It never saves or reads live telemetry. Journey 34 retains coverage/trace artifacts.

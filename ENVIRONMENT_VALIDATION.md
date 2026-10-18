@@ -591,3 +591,42 @@ cancellation. Final evidence: `artifacts/core-basics/basics-197824e0/`; live wor
 trace/coverage lives in its `workflows/` directory. Neither actor saves resources
 or emits application workload. All 12 services were restored/running; the five
 pre-existing stale pending entries and telemetry volumes were retained.
+
+## 2026-10-18 — grouped duration measures and polish
+
+Implemented per-group exact duration aggregates, semantic adapter normalization,
+integer/rational chart ranking, package previews and readable saved/mobile layouts.
+See [contract](docs/GROUPED_MEASURES.md), architecture flow 21 and journey 34.
+The reviewed query/packages image is `96cd32499e15`. Only those services were
+recreated for the feature; telemetry volumes and the five pre-existing stale Redis
+entries were retained. Test wrappers continue to restore owned demo traffic.
+
+Root Go race/vet, 19 Python tests and 23 Node checks passed. Hegel group conservation
+passed 100 generated populations (0.254 s). The initial six-journey campaign passed
+five, including the new group journey with one/two dimensions, count comparison,
+package preview, stored-page replay and mobile width checks. Its Quint trace plus
+three negative controls passed in 7.32 s; the saved-only Bombadil actor recorded
+454 records through nine required stages. Evidence:
+`artifacts/grouped-measures/groups-15b514e3/`. The discovery failure was an omitted
+accessible trace label, restored in the reviewed image. The earlier checkbox
+failure was a blur-triggered layout shift, corrected with input-time invalidation;
+a model formatting mismatch was corrected with typed group comparisons.
+
+The new mobile group frame was visually reviewed. Static local links and Markdown
+fences passed across 44 documents; no rendered Mermaid validation is claimed.
+Final targeted regression and affected-frame refresh results follow below.
+
+The final reviewed-image regression passed **all 10 selected journeys in 3.5
+minutes**: capture/core/discovery, grouped measures, general exploration, exact
+trace context, distribution comparison, package authoring/import and UI polish.
+The restored accessible trace label passed the original discovery assertion.
+Journey 34 passed in 52.9 s, including one/two-field aggregates, package preview,
+mobile Records/Distribution containment, three rejecting Quint controls (6.46 s)
+and a 30-second saved-only Bombadil run: 383 records through all nine stages.
+Final evidence: `artifacts/grouped-measures/groups-e219e14d/`.
+
+Four new storyboard frames and the affected existing Explore/capture/definition/
+mobile frames were regenerated from the running app. The final mobile ranking
+frame was visually reviewed with readable saved values and explicit count-baseline
+labelling. Unaffected native-operation screenshots were retained. All 12 services
+were restored; no queues, volumes or stale pending entries were deleted.

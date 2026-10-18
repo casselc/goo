@@ -123,3 +123,5 @@ Next basics: typed arbitrary numeric measures and grouped/time-series comparison
 native gauge/general metric exploration, collector ingestion-health inputs and an
 explicit identity/authorization design. Investigation documents, annotations and
 multiplayer remain separate increments after the useful core workflows.
+
+[Grouped duration measures](GROUPED_MEASURES.md) now extend the same summary to one/two breakdown fields, with exact ranking, retained capture data and package previews. Count-cohort comparison remains separate from duration ranking.

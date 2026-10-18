@@ -175,3 +175,9 @@ Main Explore/Services reads can be cancelled; scope edits invalidate measures an
 request upstream cancellation. [Core contract](CORE_WORKBENCH.md) describes exact
 arithmetic, interval/no-data meaning, independent source reads and local query
 budgets. Identity/access control and actual ingestion-health signals remain future.
+
+Duration-enabled breakdowns now offer exact mean/p95/p99/max ranking. The unified
+measure controls apply one question, local search preserves the captured scale,
+and baseline controls explicitly describe count comparisons. Responsive summary
+cards and scrollable group tables serve live/saved views and package previews.
+[Contract](GROUPED_MEASURES.md) and journey 34 define the implemented boundary.

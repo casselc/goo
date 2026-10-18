@@ -15,7 +15,8 @@
     "test:discovery-campaign": "GOO_DISCOVERY_QUINT=1 GOO_DISCOVERY_BOMBADIL=1 playwright test journeys/discovery.spec.js",
     "test:inventory-campaign": "GOO_INVENTORY_BOMBADIL=1 playwright test journeys/inventory.spec.js",
     "test:captures-campaign": "GOO_CAPTURES_BOMBADIL=1 playwright test journeys/captures.spec.js",
-    "test:core-campaign": "GOO_CORE_BOMBADIL=1 bash scripts/run_journeys.sh journeys/core-basics.spec.js"
+    "test:core-campaign": "GOO_CORE_BOMBADIL=1 bash scripts/run_journeys.sh journeys/core-basics.spec.js",
+    "test:grouped-campaign": "GOO_GROUPS_BOMBADIL=1 bash scripts/run_journeys.sh journeys/grouped-measures.spec.js"
   },
   "devDependencies": {
     "@antithesishq/bombadil": "0.7.9",

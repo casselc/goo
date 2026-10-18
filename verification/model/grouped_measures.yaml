@@ -1,0 +1,11 @@
+spec: grouped_measures.qnt
+module: grouped_measures
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  measure:
+    expect: 'coherent == {{.obs.coherent}}'
+  save:
+    expect: 'coherent == {{.obs.coherent}}'
+  page:
+    expect: 'coherent == {{.obs.coherent}}'

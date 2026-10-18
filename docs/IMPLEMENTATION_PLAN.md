@@ -264,3 +264,13 @@ distributed quotas. See [contract](CORE_WORKBENCH.md), architecture flow 20 and
 journey 33. Next: broader typed aggregates/native metrics, actual collector
 ingestion-health inputs and explicit identity/authorization design. Ordered cards
 and collaboration remain their own milestones.
+
+## Grouped measures and core polish
+
+Implemented: complete per-group duration summaries, adapter normalization, exact
+rational ranking and stable local-search scales; measure controls, responsive
+summary/table layout and duration package previews. General captures retain these
+groups, while older count-only groups remain readable. Source disagreement and
+fixed-plan upgrade boundaries remain explicit. See [contract](GROUPED_MEASURES.md),
+flow 21 and journey 34. Next: broader typed numeric measures, grouped time-series
+comparison and native metric exploration before collaborative documents.

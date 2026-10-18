@@ -199,7 +199,10 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 	}
 	if plan.Groups != "" {
 		sum := new(big.Int)
-		for _, raw := range r.Groups {
+		durationSum := new(big.Int)
+		var durationMin, durationMax *big.Int
+		seenGroups := map[string]bool{}
+		for groupIndex, raw := range r.Groups {
 			var group map[string]json.RawMessage
 			if json.Unmarshal(raw, &group) != nil {
 				return nil, fmt.Errorf("invalid group")
@@ -213,6 +216,27 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 				return nil, fmt.Errorf("invalid group count")
 			}
 			sum.Add(sum, n)
+			if q.Summary == "span-duration" {
+				d, err := DecodeDurationSummary(raw)
+				if err != nil || d.State != "observed" {
+					return nil, fmt.Errorf("invalid grouped duration summary")
+				}
+				for _, key := range []string{"sum_ns", "min_ns", "max_ns", "quantiles_ns"} {
+					delete(group, key)
+				}
+				group["duration"], _ = json.Marshal(d)
+				v, _ := durationDecimal(d.SumNS, 128)
+				durationSum.Add(durationSum, v)
+				lo, _ := durationDecimal(d.MinNS, 64)
+				hi, _ := durationDecimal(d.MaxNS, 64)
+				if durationMin == nil || lo.Cmp(durationMin) < 0 {
+					durationMin = lo
+				}
+				if durationMax == nil || hi.Cmp(durationMax) > 0 {
+					durationMax = hi
+				}
+			}
+			dimensions := []*string{}
 			for i := range q.GroupBy {
 				key := fmt.Sprintf("g%d", i)
 				v, exists := group[key]
@@ -223,6 +247,24 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 				if json.Unmarshal(v, &value) != nil {
 					return nil, fmt.Errorf("invalid group dimension")
 				}
+				dimensions = append(dimensions, value)
+			}
+			key, _ := json.Marshal(dimensions)
+			if seenGroups[string(key)] {
+				return nil, fmt.Errorf("duplicate group dimensions")
+			}
+			seenGroups[string(key)] = true
+			if q.Summary == "span-duration" {
+				r.Groups[groupIndex], _ = json.Marshal(group)
+			}
+		}
+		if r.Duration != nil {
+			totalSum, _ := durationDecimal(r.Duration.SumNS, 128)
+			if durationSum.Cmp(totalSum) != 0 {
+				r.State = "changed_between_reads"
+			}
+			if durationMin != nil && r.Duration.State == "observed" && (durationMin.String() != r.Duration.MinNS || durationMax.String() != r.Duration.MaxNS) {
+				r.State = "changed_between_reads"
 			}
 		}
 		if sum.Cmp(totalValue) != 0 {

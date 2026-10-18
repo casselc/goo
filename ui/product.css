@@ -981,7 +981,7 @@ td details {
 .duration-summary {border:1px solid var(--border);border-radius:10px;padding:1rem;margin:1rem 0;}
 .duration-summary h3 {margin-top:0;}
 .duration-summary p {color:var(--muted);font-size:.85rem;line-height:1.5;}
-.duration-stat-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;}
+.duration-stat-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;}
 .duration-stat-grid dt {color:var(--muted);font-size:.85rem;}
 .duration-stat-grid dd {margin:.25rem 0 0;font-size:1.2rem;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;}
 @media(min-width:1000px){.duration-stat-grid{grid-template-columns:repeat(6,minmax(0,1fr));}}
@@ -995,3 +995,12 @@ td details {
 .time-bar:focus-visible {outline:2px solid var(--ink);outline-offset:1px;}
 
 .time-axis{display:flex;justify-content:space-between;gap:1rem;color:var(--muted);font-size:.75rem;overflow-wrap:anywhere;}
+
+.measure-controls {align-items:end;border-top:1px solid var(--border);padding-top:1rem;margin-top:.5rem;}
+.measure-controls .span-summary-control {flex:1;min-width:180px;align-self:center;}
+.measure-controls label {min-width:150px;}
+.measure-controls select {width:100%;}
+@media(min-width:600px) and (max-width:999px){.duration-stat-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
+
+#packagePreviewResult{overflow-x:auto;}
+.distribution-label:disabled {opacity:1;color:var(--ink);}

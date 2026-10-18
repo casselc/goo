@@ -5,6 +5,28 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Grouped duration measures and polish (2026-10-18)
+
+[Contract](docs/GROUPED_MEASURES.md): complete per-group duration aggregates,
+normalized semantic results, exact rational ranking, fixed local-search scales,
+retained capture pages and reusable package previews. Count-cohort comparison
+projects out duration metadata and remains a record-proportion comparison.
+
+Passed: root Go race suite/vet, 19 Python tests, 23 frontend checks and Hegel group
+count/sum conservation over 100 generated populations (0.254 s), including uint64
+extremes. Native source tests reject missing summaries/duplicate dimensions and
+preserve same-count duration disagreement. A live fixture verifies 124 spans versus
+100 displayed rows, missing/empty routes, zero duration, p95 ranking, one/two-field
+groups, count-cohort projection, package preview and mobile containment.
+
+The initial extended campaign passed five of six journeys, including journey 34
+(52.1 s), Quint with three rejecting controls (7.32 s) and 454 Bombadil records
+through all nine saved-ranking prefix stages. The discovery regression exposed a
+removed accessible trace-button label, now restored. Browser checks also found a
+blur-linked control shift, fixed by input-time scope invalidation. Typed model
+comparisons preserve exact values without treating JSON indentation as evidence.
+The final reviewed-image run passed all 10 selected regression journeys (3.5 minutes), including the original discovery assertion. The final group campaign passed three rejecting Quint controls (6.46 s) and 383 Bombadil records through nine stages. Four new and affected existing frames were refreshed; evidence paths are in [the environment record](ENVIRONMENT_VALIDATION.md).
+
 ## Core workbench basics (2026-10-18)
 
 [Contract](docs/CORE_WORKBENCH.md): opt-in full-population span-duration summaries

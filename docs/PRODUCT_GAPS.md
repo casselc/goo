@@ -12,7 +12,7 @@ not a replacement for HyperDX or Honeycomb.
 
 | Capability | Current Goo boundary | Next useful behavior |
 | --- | --- | --- |
-| General exploration | Typed span/log filters, field discovery, one/two-field count groups, distributions, exact span-duration summaries and bounded count-over-time charts | Typed arbitrary numeric measures, grouped measure charts and general metrics; shared AST and backend capability reports. |
+| General exploration | Typed span/log filters, field discovery, one/two-field count groups, distributions, exact total/group span-duration summaries and bounded count-over-time charts | Typed arbitrary numeric measures, grouped time-series comparison and general metrics; shared AST and backend capability reports. |
 | Full distributed traces | Cross-service exact-trace paging now exists within original environment/time bounds; no complete-trace guarantee or window widening | Fetch a selected trace across services with bounded pagination, explicit missing-parent/partial status; preserve async links. Keep original question scope separate from expanded context. |
 | Correlated logs | Exact trace/span scopes, literal message/service/severity controls and bounded same-service surrounding logs now exist; no live tail or broader search language | Exact trace/span IDs first; declared scoped business identity next; time context separately labelled. Search/tail/pagination and log-to-trace navigation. |
 | Comparative debugging | Pinned fixed-window cohort distributions plus interval/member context; no significance tests | Selected vs baseline populations, attribute distributions, sample sizes, missing fields, sampling/coverage caveats and ranked differences. BubbleUp-like differences are leads, not causal attribution. |
