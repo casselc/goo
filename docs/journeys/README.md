@@ -231,19 +231,46 @@ missing/reset/gap/idle/delta semantics have independent Go/Hegel/Quint checks.
 See [error-ratio semantics](../OPERATION_ERROR_RATIOS.md). Fleet views and change
 detection are planned, not depicted as implemented.
 
-## 16. Declared fleet membership and missing coverage
+## 16. Declared fleet membership and interval coverage
 
-**Question:** Can a healthy observed instance accidentally conceal an expected
-member that has no captured telemetry?
+**Question:** Does observing both instances establish a common fleet population?
 
 | Frame | User action and evidence | Executable check |
 | --- | --- | --- |
-| [Declared members](screenshots/16a-declared-fleet-members.png) | Invoke the real checkout app; expand fleet coverage | woven-demo observed; expected woven-peer unobserved through a real empty source query |
-| [Unknown total](screenshots/16b-unsupported-fleet-total.png) | Inspect an interval supported by the selected instance | 1/2 members support it; no fleet calls/errors/percentage invented |
-| [Coverage explanation](screenshots/16c-fleet-coverage-explanation.png) | Explain that interval | Per-member states, explicit missing coverage and no zero-fill; separate selected-instance rates stay available |
+| [Declared members](screenshots/16a-declared-fleet-members.png) | Invoke both live checkout instances; expand fleet coverage | Both declared instances observed through actual OTLP/source queries |
+| [Unknown exact total](screenshots/16b-unsupported-fleet-total.png) | Inspect an unsupported interval | Differing SDK windows leave exact fleet calls/errors/percentage unknown |
+| [Coverage explanation](screenshots/16c-fleet-coverage-explanation.png) | Explain that interval | Per-member states distinguish observation from exact alignment |
 
-Test `16 declared fleet membership…` also checks policy/basis details and clears
-fleet evidence when switching to reports. The expected peer is not deployed by
-the default lab. Aligned fleet arithmetic has separate Go/Hegel/Quint fixtures;
-a live second replica and automatic alignment are not depicted as implemented.
-See [fleet coverage semantics](../FLEET_COVERAGE.md).
+Test `16 declared fleet…` checks package clearing and separate member evidence.
+Missing-member and failed-source cases retain Go/Hegel/Quint fixtures. See
+[fleet coverage](../FLEET_COVERAGE.md) and the bounded comparison journey below.
+
+## 17. Two live instances, imbalance, loss and restart
+
+**Question:** How can an operator compare independently timed telemetry and still
+recognize loss and reset without constructing an unsupported fleet percentage?
+
+| Frame | User action and evidence | Executable check |
+| --- | --- | --- |
+| [Actual windows and imbalance](screenshots/17a-actual-member-windows-and-imbalance.png) | Send more successful traffic to woven-demo and errors to woven-peer; explain a supported comparison | Actual windows/counts retained, endpoint spreads within policy, no combined percentage |
+| [Requests during metric loss](screenshots/17b-peer-serves-requests-with-metric-loss.png) | Pause peer metric exports through the sample app, then make a successful checkout | Real HTTP200 while explicit lab metric gate is off |
+| [Unknown during loss](screenshots/17c-peer-loss-stays-unknown.png) | Investigate after more than the maximum counter gap | Main has a supported interval; unmatched peer has no invented counts/percentage |
+| [Restart epoch](screenshots/17d-restart-epoch-is-not-a-comparison.png) | Resume metrics, observe the excessive gap, then restart only the local peer | Gap and new counter epoch remain unknown; raw counter cause is explained |
+
+Test `17 live peer…` restores metric export in `finally`. Restart control manages
+only the owned local Compose peer; volumes, pending entries and other services
+remain. The default stack now has twelve services and loopback8092 for the peer.
+No automatic clock correction or common-window aggregation is depicted.
+See [comparison semantics](../FLEET_COMPARISONS.md) and diagram8.
+
+## 18. A late initial response preserves an edited lookback
+
+**Question:** Can startup work silently replace an operator's chosen query window?
+
+| Frame | User action and evidence | Executable check |
+| --- | --- | --- |
+| [Edited lookback retained](screenshots/18a-edited-lookback-survives-late-response.png) | Delay the actual initial query response; edit lookback to two minutes, release it, then inspect operations | Edited input stays2 and the operation request/result spans exactly120 seconds |
+
+Test `18 late initial…` delays delivery of a real upstream response, not its data.
+This guards the shared control race found by the loss journey; source limits stay
+unchanged and excess rows still reject rather than becoming partial success.

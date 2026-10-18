@@ -12,8 +12,8 @@ x-app: &app
     CLICKHOUSE_PASSWORD: lab-local
     # Container service traffic stays on the local Compose network. Preserve
     # the environment's proxy for external HTTPS destinations.
-    NO_PROXY: clickhouse,collector,redis,reservations,web,query,packages,operation-app,report-app,localhost,127.0.0.1
-    no_proxy: clickhouse,collector,redis,reservations,web,query,packages,operation-app,report-app,localhost,127.0.0.1
+    NO_PROXY: clickhouse,collector,redis,reservations,web,query,packages,operation-app,operation-peer,report-app,localhost,127.0.0.1
+    no_proxy: clickhouse,collector,redis,reservations,web,query,packages,operation-app,operation-peer,report-app,localhost,127.0.0.1
   depends_on:
     collector: {condition: service_started}
     redis: {condition: service_healthy}
@@ -84,6 +84,20 @@ services:
       NO_PROXY: collector,localhost,127.0.0.1
       no_proxy: collector,localhost,127.0.0.1
     ports: ['127.0.0.1:8090:8090']
+    depends_on:
+      collector: {condition: service_started}
+  operation-peer:
+    build:
+      context: .
+      dockerfile: examples/operation-app/Dockerfile
+    command: ['operation-app']
+    restart: unless-stopped
+    environment:
+      GOO_INSTANCE_ID: woven-peer
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://collector:4318
+      NO_PROXY: collector,localhost,127.0.0.1
+      no_proxy: collector,localhost,127.0.0.1
+    ports: ['127.0.0.1:8092:8090']
     depends_on:
       collector: {condition: service_started}
   report-app:

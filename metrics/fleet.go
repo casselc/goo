@@ -16,11 +16,12 @@ type FleetInput struct {
 	Counter  *CounterResult `json:"counter"`
 }
 type FleetRequest struct {
-	FromNS  string       `json:"fromNS"`
-	ToNS    string       `json:"toNS"`
-	Members []string     `json:"members"`
-	Policy  RatioPolicy  `json:"policy"`
-	Inputs  []FleetInput `json:"inputs"`
+	Comparison *ComparisonPolicy `json:"comparison,omitempty"`
+	FromNS     string            `json:"fromNS"`
+	ToNS       string            `json:"toNS"`
+	Members    []string          `json:"members"`
+	Policy     RatioPolicy       `json:"policy"`
+	Inputs     []FleetInput      `json:"inputs"`
 }
 type FleetMember struct {
 	Instance string `json:"instance"`
@@ -39,13 +40,14 @@ type FleetSeries struct {
 	Intervals []FleetInterval `json:"intervals"`
 }
 type FleetResult struct {
-	APIVersion string        `json:"apiVersion"`
-	Basis      string        `json:"basis"`
-	FromNS     string        `json:"fromNS"`
-	ToNS       string        `json:"toNS"`
-	Policy     RatioPolicy   `json:"policy"`
-	Members    []FleetMember `json:"members"`
-	Series     []FleetSeries `json:"series"`
+	Comparison *FleetComparison `json:"comparison,omitempty"`
+	APIVersion string           `json:"apiVersion"`
+	Basis      string           `json:"basis"`
+	FromNS     string           `json:"fromNS"`
+	ToNS       string           `json:"toNS"`
+	Policy     RatioPolicy      `json:"policy"`
+	Members    []FleetMember    `json:"members"`
+	Series     []FleetSeries    `json:"series"`
 }
 
 func ValidateFleetMembers(members []string) error {
@@ -105,6 +107,7 @@ func EvaluateFleet(request FleetRequest) (*FleetResult, error) {
 		edges  map[int64]bool
 	}
 	groups := map[string]*group{}
+	ratios := map[string]*RatioResult{}
 	availability := map[string]string{}
 	points := 0
 	for _, member := range members {
@@ -127,6 +130,7 @@ func EvaluateFleet(request FleetRequest) (*FleetResult, error) {
 			if e != nil {
 				return nil, e
 			}
+			ratios[member] = ratio
 			status.Basis = ratio.Basis
 			status.State = "unobserved"
 			if len(ratio.Series) > 0 {
@@ -222,6 +226,13 @@ func EvaluateFleet(request FleetRequest) (*FleetResult, error) {
 			series.State = "ok"
 		}
 		result.Series = append(result.Series, series)
+	}
+	if request.Comparison != nil {
+		comparison, e := compareFleet(request, ratios)
+		if e != nil {
+			return nil, e
+		}
+		result.Comparison = comparison
 	}
 	payload, e := json.Marshal(result)
 	if e != nil {

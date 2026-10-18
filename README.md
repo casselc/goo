@@ -65,6 +65,7 @@ The runnable source is the current Python prototype. The RFCs describe the propo
 | [CODEX_HANDOFF.md](CODEX_HANDOFF.md) | Ready-to-use continuation task |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Current components and target boundaries |
 | [Architecture diagrams](docs/ARCHITECTURE_DIAGRAMS.md) | Build, production telemetry flow, investigations and backend portability |
+| [Live fleet comparisons](docs/FLEET_COMPARISONS.md) | Two woven instances, actual member windows, bounded skew, loss and restart journey |
 | [Fleet coverage](docs/FLEET_COVERAGE.md) | Declared membership, supported intervals, guarded exact totals and missing-member storyboard |
 | [Operation error ratios](docs/OPERATION_ERROR_RATIOS.md) | Aligned exact calls/errors, explicit unknown/idle intervals and guided trace investigation |
 | [Native histogram semantics](docs/NATIVE_HISTOGRAMS.md) | Exact bucket deltas, aligned explicit merging, heatmap and bucket-bounded P95 |
@@ -227,4 +228,8 @@ one aligned counter result and guide contextual span/trace investigation.
 
 [Declared fleet membership](docs/FLEET_COVERAGE.md) now exposes missing-member
 coverage explicitly. Exact fleet totals require compatible aligned intervals
-from every expected instance; the local example intentionally has an absent peer.
+from every expected instance; the default lab now runs two instances and separately compares their actual windows.
+
+The second checkout instance runs at loopback **8092**. See
+[live fleet comparisons](docs/FLEET_COMPARISONS.md) for explicit tolerance and
+metric-export loss/restart controls. Exact totals retain strict boundaries.

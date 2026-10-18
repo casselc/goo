@@ -279,6 +279,17 @@ func (p OperationPackage) Bind(m *Manifest) (*OperationPlan, error) {
 	if p.Fleet != nil {
 		fleet := *p.Fleet
 		fleet.Members = append([]string{}, fleet.Members...)
+		if fleet.Comparison != nil {
+			copy := *fleet.Comparison
+			fleet.Comparison = &copy
+			skew, e := time.ParseDuration(copy.MaxSkew)
+			if e != nil {
+				return nil, e
+			}
+			if e = metrics.ValidateComparisonPolicy(metrics.ComparisonPolicy{Mode: copy.Mode, MaxSkewNS: fmt.Sprint(int64(skew))}); e != nil {
+				return nil, e
+			}
+		}
 		p.Fleet = &fleet
 		if !stableName.MatchString(fleet.Name) || !ratioNames[fleet.Ratio] || len(fleet.Description) > 500 {
 			return nil, fmt.Errorf("fleet requires a stable name and declared ratio")

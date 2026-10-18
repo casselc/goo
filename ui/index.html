@@ -35,13 +35,16 @@
 <script src="/fleet.js"></script>
 <script>
 const el=id=>document.getElementById(id);let selected='';let spanFilter;
+let controlRevision=0,queryGeneration=0;
+for(const id of ['view','group','minutes','scenario'])for(const event of ['input','change'])el(id).addEventListener(event,()=>controlRevision++);
 const initial={view:'completion',minutes:30,groupBy:'release',reservationId:'',scenario:''};
 function controls(){return{view:el('view').value,minutes:Number(el('minutes').value),groupBy:el('group').value,reservationId:selected,scenario:el('scenario').value,...(spanFilter&&el('view').value==='traces'?{spanFilter}: {})}}
 function textNode(tag,value){const n=document.createElement(tag);n.textContent=value;return n}
 async function run(spec){
+ const generation=++queryGeneration,revision=controlRevision;
  el('expression').value=JSON.stringify(spec,null,2);el('status').textContent='Querying…';el('run').disabled=true;
- try{const r=await fetch('/api/query',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(spec)});const data=await r.json();if(!r.ok)throw Error(data.error);
- const expression=data.expression;spanFilter=expression.spanFilter;el('view').value=expression.view;el('group').value=expression.groupBy;el('minutes').value=expression.minutes;el('scenario').value=expression.scenario||'';selected=expression.reservationId||'';workflow.update(expression);el('selection').textContent=(selected?'Reservation: '+selected:'')+(spanFilter?' · Heatmap selection: '+new Date(spanFilter.fromMs).toISOString()+' to '+new Date(spanFilter.toMs).toISOString()+' · '+spanFilter.minMs+'–'+spanFilter.maxMs+' ms (upper bounds exclusive)':'');
+ try{const r=await fetch('/api/query',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(spec)});const data=await r.json();if(generation!==queryGeneration)return;if(!r.ok)throw Error(data.error);
+ const expression=data.expression;if(revision===controlRevision){spanFilter=expression.spanFilter;el('view').value=expression.view;el('group').value=expression.groupBy;el('minutes').value=expression.minutes;el('scenario').value=expression.scenario||'';selected=expression.reservationId||'';workflow.update(expression);el('selection').textContent=(selected?'Reservation: '+selected:'')+(spanFilter?' · Heatmap selection: '+new Date(spanFilter.fromMs).toISOString()+' to '+new Date(spanFilter.toMs).toISOString()+' · '+spanFilter.minMs+'–'+spanFilter.maxMs+' ms (upper bounds exclusive)':'');}
  el('explain').textContent=data.sql+'\n\n'+JSON.stringify(data.parameters,null,2);el('cards').replaceChildren();el('results').replaceChildren();el('chart').replaceChildren();
  if(data.summary){const s=data.summary;for(const [label,value] of [['Good',s.good],['Bad',s.bad],['Pending',s.pending],['Success preview',s.successRatio===null?'Unknown':(s.successRatio*100).toFixed(1)+'%']]){let c=textNode('div',label);c.className='card muted';c.append(textNode('b',value));el('cards').append(c)}
  el('status').textContent=`Burn preview: ${s.burnRate===null?'unknown':s.burnRate.toFixed(2)+'×'} · Alarm: ${s.alarmPreview} · Unknown subjects: ${s.unknown}. ${data.possiblyTruncated?'ROW LIMIT REACHED; values cover only displayed subjects.':''}`;
@@ -56,7 +59,7 @@ async function run(spec){
  if(!data.rows.length){el('results').textContent='No rows yet. Allow 15–30 seconds for traffic and ingestion.';return}
  const keys=Object.keys(data.rows[0]);const table=document.createElement('table'),head=document.createElement('tr');keys.forEach(k=>head.append(textNode('th',k)));table.append(head);
  for(const row of data.rows){const tr=document.createElement('tr');for(const key of keys){const td=document.createElement('td');const value=row[key];if(key==='reservation_id'){const b=textNode('button',String(value).slice(0,8)+' → spans');b.onclick=()=>{selected=value;el('view').value='traces';el('selection').textContent='Reservation: '+value;run(controls())};td.append(b)}else td.textContent=typeof value==='object'?JSON.stringify(value):value;tr.append(td)}table.append(tr)}el('results').append(table);
- }catch(e){el('status').textContent=e.message}finally{el('run').disabled=false}
+ }catch(e){if(generation===queryGeneration)el('status').textContent=e.message}finally{if(generation===queryGeneration)el('run').disabled=false}
 }
 let operationGeneration=0;
 fetch('/api/operation-packages').then(async response=>{const packages=await response.json();if(!response.ok)throw Error(packages.error);const select=el('operationPackage');select.replaceChildren();for(const p of packages){const option=textNode('option',p.definition.title);option.value=p.definition.name;select.append(option)}}).catch(error=>{el('operationStatus').textContent=error.message});

@@ -38,7 +38,8 @@ ratios:
     errorOutcomes: [error, panic]
 fleet:
   name: checkout-coverage
-  description: "This local coverage example expects woven-peer; the default lab deploys only woven-demo. An undeployed expected member is not zero traffic."
+  description: "Two live instances collect independently. Compare their actual windows within the declared tolerance; exact fleet totals still require identical boundaries."
+  comparison: {mode: bounded-skew, maxSkew: 1s}
   ratio: operation-errors
   members: [woven-demo, woven-peer]
 histograms:

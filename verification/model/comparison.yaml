@@ -1,0 +1,17 @@
+spec: comparison.qnt
+module: comparison
+constants: {INITIAL: '-1'}
+invariants: [safety]
+actions:
+  aligned:
+    expect: 'comparable == {{.obs.comparable}} and exact == {{.obs.exact}} and spread == {{.obs.spread}}'
+  skew:
+    expect: 'comparable == {{.obs.comparable}} and exact == {{.obs.exact}} and spread == {{.obs.spread}}'
+  outside:
+    expect: 'comparable == {{.obs.comparable}} and exact == {{.obs.exact}} and spread == {{.obs.spread}}'
+  loss:
+    expect: 'comparable == {{.obs.comparable}} and exact == {{.obs.exact}} and spread == {{.obs.spread}}'
+  reset:
+    expect: 'comparable == {{.obs.comparable}} and exact == {{.obs.exact}} and spread == {{.obs.spread}}'
+  recovered:
+    expect: 'comparable == {{.obs.comparable}} and exact == {{.obs.exact}} and spread == {{.obs.spread}}'

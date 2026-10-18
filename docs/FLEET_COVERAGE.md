@@ -2,7 +2,7 @@
 
 Goo can now declare expected instance membership and evaluate fleet calls/errors
 without treating an absent member as zero. The UI separates source observation
-from valid aligned interval coverage. Membership is fixed for the entire selected
+from valid aligned interval coverage. Optional [bounded-skew comparisons](FLEET_COMPARISONS.md) now show actual per-member windows separately from exact totals. Membership is fixed for the entire selected
 window; it is not discovered from telemetry or a deployment inventory.
 
 ```yaml
@@ -59,17 +59,17 @@ input/member order does not change the basis.
 
 ## Local journey and limits
 
-The default lab deploys only `woven-demo`. Checkout deliberately declares an
-expected `woven-peer` to make missing coverage visible using a real empty source
-query. This is a coverage demonstration, not a second deployed service. Expand
-**Fleet membership and coverage**, inspect the unknown fleet total and choose
-**Explain fleet coverage**. Selected-instance error investigation still works.
-Changing packages clears the fleet panel and rejects stale responses.
+The default lab now deploys both `woven-demo` and `woven-peer` on loopback
+8090/8092. Invoke both and expand **Fleet membership and coverage**. Both can be
+observed while exact intervals remain unsupported because SDK windows differ.
+**Compare actual member windows** uses a separately declared tolerance without
+creating common-window totals. Selected-instance investigation remains scoped.
 
-[Journey 16](journeys/README.md#16-declared-fleet-membership-and-missing-coverage)
-executes the real sample, collector/source queries and browser interactions.
-Aligned multi-member aggregation is verified with Go/Hegel/Quint fixtures, not
-claimed as a live two-replica deployment. See [diagram 7](ARCHITECTURE_DIAGRAMS.md#7-fleet-membership-and-coverage-before-totals).
+[Journey 16](journeys/README.md#16-declared-fleet-membership-and-interval-coverage)
+executes real source queries and contrasts observed membership with exact
+coverage. [Journey 17](FLEET_COMPARISONS.md) covers independent windows, imbalance,
+metric loss and restart. Missing-peer and peer-source-failure semantics retain
+Go/Hegel/Quint coverage. See [diagram 7](ARCHITECTURE_DIAGRAMS.md#7-fleet-membership-and-coverage-before-totals).
 
 Go tests exercise weighting, exact totals above uint64, zero traffic, missing and
 unavailable members, unknown/reset intervals, skew, resource mismatch, membership
@@ -80,7 +80,7 @@ Quint validates six observed aligned/missing/skew/reset/idle/recovered steps and
 rejects four invented fleet totals. These bounded checks do not prove arbitrary
 production histories.
 
-Dynamic membership/activation windows, trusted discovery, automatic alignment,
+Dynamic membership/activation windows, trusted discovery, automatic common-window aggregation,
 rebucketing, rolling-deployment coverage and live fleet histogram views remain
 future work. Independently timed SDK exports can be unaligned even when every
 member is observed. The existing explicit histogram merge API remains separate.

@@ -85,3 +85,5 @@ baselines through the guided contextual investigation.
 [Fleet coverage](FLEET_COVERAGE.md) now separates observed members from valid
 aligned intervals. Diagram 7 shows guarded fleet totals and the selected-instance
 path. Membership is declarative; discovery and automatic alignment remain planned.
+
+Two live checkout instances now support [bounded-skew comparison](FLEET_COMPARISONS.md) through `metrics/comparison.go`, keeping actual member populations distinct from exact fleet totals. Diagram 8 includes the sample-only export fault gate.

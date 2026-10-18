@@ -7,13 +7,19 @@ import (
 	"net/http"
 	"strconv"
 	"sync"
+	"time"
 )
 
+type FleetComparisonContract struct {
+	Mode    string `yaml:"mode" json:"mode"`
+	MaxSkew string `yaml:"maxSkew" json:"maxSkew"`
+}
 type FleetContract struct {
-	Description string   `yaml:"description,omitempty" json:"description,omitempty"`
-	Name        string   `yaml:"name" json:"name"`
-	Ratio       string   `yaml:"ratio" json:"ratio"`
-	Members     []string `yaml:"members" json:"members"`
+	Comparison  *FleetComparisonContract `yaml:"comparison,omitempty" json:"comparison,omitempty"`
+	Description string                   `yaml:"description,omitempty" json:"description,omitempty"`
+	Name        string                   `yaml:"name" json:"name"`
+	Ratio       string                   `yaml:"ratio" json:"ratio"`
+	Members     []string                 `yaml:"members" json:"members"`
 }
 type LiveFleet struct {
 	Contract FleetContract        `json:"contract"`
@@ -81,6 +87,10 @@ func (p *OperationPlan) FetchRates(ctx context.Context, client *http.Client, end
 		}
 	}
 	request := metrics.FleetRequest{FromNS: strconv.FormatInt(from*1000000, 10), ToNS: strconv.FormatInt(to*1000000, 10), Members: contract.Members, Policy: metrics.RatioPolicy{Outcomes: rateContract.Outcomes, Errors: ratioContract.ErrorOutcomes}}
+	if contract.Comparison != nil {
+		skew, _ := time.ParseDuration(contract.Comparison.MaxSkew)
+		request.Comparison = &metrics.ComparisonPolicy{Mode: contract.Comparison.Mode, MaxSkewNS: strconv.FormatInt(int64(skew), 10)}
+	}
 	for i, instance := range contract.Members {
 		input := metrics.FleetInput{Instance: instance}
 		if replies[i].err != nil {

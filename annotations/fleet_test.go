@@ -70,3 +70,26 @@ func TestFleetPeerFailureKeepsSelectedRates(t *testing.T) {
 		t.Fatal(i)
 	}
 }
+
+func TestFleetComparisonPackagePolicy(t *testing.T) {
+	for _, mode := range []string{"mode", "skew", "negative"} {
+		t.Run(mode, func(t *testing.T) {
+			p, e := LoadOperationPackage("../config/operations/checkout.yaml")
+			if e != nil {
+				t.Fatal(e)
+			}
+			d := p.Definition
+			switch mode {
+			case "mode":
+				d.Fleet.Comparison.Mode = "interpolate"
+			case "skew":
+				d.Fleet.Comparison.MaxSkew = "2s"
+			case "negative":
+				d.Fleet.Comparison.MaxSkew = "-1ms"
+			}
+			if _, e = d.Bind(p.Manifest); e == nil {
+				t.Fatal("invalid comparison policy accepted")
+			}
+		})
+	}
+}

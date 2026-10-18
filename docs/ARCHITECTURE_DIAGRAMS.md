@@ -258,7 +258,7 @@ and [journey 15](journeys/README.md#15-from-operation-error-ratios-to-traces).
 ## 7. Fleet membership and coverage before totals
 
 Implemented fixed-window membership; discovery and automatic time alignment are
-planned. The default local fleet intentionally contains one undeployed expected peer.
+planned. The default local fleet now deploys both expected instances; bounded comparisons are separate from exact totals (diagram8).
 
 ```mermaid
 flowchart LR
@@ -276,6 +276,32 @@ flowchart LR
 ```
 
 Observed membership is distinct from supported interval coverage and ingestion
-completeness. The live journey validates missing-member behavior; aligned fleet
-population arithmetic is fixture/property/model verified, not a live multi-replica
-claim. See [fleet semantics](FLEET_COVERAGE.md) and journey 16.
+completeness. The live journey separates observed membership from exact coverage; aligned fleet
+population arithmetic retains fixture/property/model verification. Live independent
+windows are compared separately without claiming an exact combined population. See [fleet semantics](FLEET_COVERAGE.md) and journey 16.
+
+## 8. Two live instances and bounded comparisons
+
+Both sample instances are now deployed in the default lab. This diagram separates
+reported-time comparison from exact population aggregation.
+
+```mermaid
+flowchart LR
+  Main["Woven checkout: woven-demo / port 8090"] --> OTLP["Collector and ClickHouse"]
+  Peer["Woven checkout: woven-peer / port 8092"] --> Gate["Lab metric-export gate; requests and traces continue"]
+  Gate --> OTLP
+  OTLP --> Source["Bound per-member source and counter/outcome evaluation"]
+  Source --> Exact["Exact same-boundary fleet totals or unknown"]
+  Source --> Compare["Declared bounded-skew matcher: actual whole intervals"]
+  Policy["YAML tolerance: at most 1 second"] --> Compare
+  Compare --> Members["Per-member windows, counts, percentages and measured spread"]
+  Compare --> Unknown["Loss / reset / outside tolerance: unknown comparison"]
+  Exact --> UI["Separate exact-total and comparison sections"]
+  Members --> UI
+  Unknown --> UI
+```
+
+Comparisons never shift timestamps or create a common-window population. Host
+clock accuracy remains unverified. Journey 17 exercises traffic imbalance,
+metric-export loss, recovery and a controlled peer restart. See
+[comparison semantics](FLEET_COMPARISONS.md).

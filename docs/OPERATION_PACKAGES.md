@@ -155,3 +155,5 @@ Native metric views: optional `rates`/`counter-rates` and `histograms`/`histogra
 `ratios` can reference an exhaustive calls rate and declare error outcomes; `error-ratios` enables the guided ratio view. See [policy and alignment](OPERATION_ERROR_RATIOS.md) and checkout.yaml for supported syntax. Policy contributes to the package revision.
 
 Optional `fleet` references a declared ratio, lists 2–4 expected instances including the selected one, and enables `fleet-coverage`. Membership is fixed across the question window and contributes to revisions. See [source and coverage limits](FLEET_COVERAGE.md).
+
+Fleet `comparison: {mode: bounded-skew, maxSkew: 1s}` enables side-by-side actual-window comparison without relaxing exact fleet totals. Positive tolerance is limited to one second, and policy contributes to revisions. See [comparison semantics](FLEET_COMPARISONS.md).

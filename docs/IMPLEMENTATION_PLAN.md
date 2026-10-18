@@ -153,4 +153,6 @@ Native histogram slice: exact cumulative/delta bucket evaluation, reset/gap/layo
 
 Operation error ratios now support exhaustive denominator contracts, explicit SDK zero baselines, exact same-basis ratios, unknown/zero-traffic distinctions and guided contextual trace investigation. Journey 15 and OPERATION_ERROR_RATIOS.md describe the live path. Fleet aggregation, burn rates, alerts and change detection remain future work.
 
-Declared fleet slice: 2–4 expected instances, same-bound-source queries, peer-failure isolation, exact aligned population sums and coverage explanations are implemented. Journey 16 validates the deliberately absent expected peer; live multi-replica alignment and deployment discovery remain future work.
+Declared fleet slice: 2–4 expected instances, same-bound-source queries, peer-failure isolation, exact aligned population sums and coverage explanations are implemented. Journey16 now uses two observed replicas. Bounded comparisons are implemented separately; exact multi-replica common-window alignment and deployment discovery remain future work.
+
+Live two-instance slice: operation-peer has distinct identity and loopback8092. An explicit bounded-skew policy compares actual valid windows without forming approximate fleet totals. Journey17 covers imbalance, export loss, gap and restart; dynamic membership and common-window fleet aggregation remain future work. See FLEET_COMPARISONS.md.

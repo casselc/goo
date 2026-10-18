@@ -5,9 +5,12 @@ import (
 	"crypto/rand"
 	"encoding/json"
 	"github.com/casselc/goo/instrumentation"
+	"go.opentelemetry.io/otel/sdk/metric/metricdata"
 	"log"
 	"net/http"
+	"os"
 	"regexp"
+	"sync/atomic"
 	"time"
 
 	"go.opentelemetry.io/otel"
@@ -19,25 +22,57 @@ import (
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 )
 
+// demoExporter can intentionally drop metric exports while requests/traces continue.
+// It is a lab fault-injection control, not a production telemetry policy.
+type demoExporter struct {
+	sdkmetric.Exporter
+	enabled *atomic.Bool
+}
+
+func (e demoExporter) Export(ctx context.Context, data *metricdata.ResourceMetrics) error {
+	if !e.enabled.Load() {
+		return nil
+	}
+	return e.Exporter.Export(ctx, data)
+}
 func main() {
+	instance := os.Getenv("GOO_INSTANCE_ID")
+	if instance == "" {
+		instance = "woven-demo"
+	}
+	if !regexp.MustCompile(`^[A-Za-z0-9_.-]{1,128}$`).MatchString(instance) {
+		log.Fatal("invalid GOO_INSTANCE_ID")
+	}
+	var metricsEnabled atomic.Bool
+	metricsEnabled.Store(true)
 	exporter, err := otlptracehttp.New(context.Background())
 	if err != nil {
 		log.Fatal(err)
 	}
 	appResource := resource.NewSchemaless(
-		attribute.String("service.name", "lab-go-checkout"), attribute.String("deployment.environment.name", "local"), attribute.String("service.instance.id", "woven-demo"))
+		attribute.String("service.name", "lab-go-checkout"), attribute.String("deployment.environment.name", "local"), attribute.String("service.instance.id", instance))
 	tp := sdktrace.NewTracerProvider(sdktrace.WithBatcher(exporter), sdktrace.WithResource(appResource))
 	metricExporter, e := otlpmetrichttp.New(context.Background())
 	if e != nil {
 		log.Fatal(e)
 	}
-	meter := sdkmetric.NewMeterProvider(sdkmetric.WithReader(sdkmetric.NewPeriodicReader(metricExporter, sdkmetric.WithInterval(2*time.Second))), sdkmetric.WithResource(appResource))
+	meter := sdkmetric.NewMeterProvider(sdkmetric.WithReader(sdkmetric.NewPeriodicReader(demoExporter{metricExporter, &metricsEnabled}, sdkmetric.WithInterval(2*time.Second))), sdkmetric.WithResource(appResource))
 	otel.SetMeterProvider(meter)
 	otel.SetTracerProvider(tp)
 	mux := http.NewServeMux()
+	mux.HandleFunc("POST /demo/metrics", func(w http.ResponseWriter, r *http.Request) {
+		mode := r.URL.Query().Get("mode")
+		if mode != "on" && mode != "off" {
+			http.Error(w, "mode must be on or off", 400)
+			return
+		}
+		metricsEnabled.Store(mode == "on")
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]any{"instance": instance, "metricsEnabled": metricsEnabled.Load()})
+	})
 	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		w.Write([]byte(`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Woven Go checkout</title><style>body{font:18px system-ui;max-width:800px;margin:50px auto;background:#0b1420;color:#d9e6f5}button{padding:15px;margin:8px;background:#204b45;color:white;border:1px solid #67ddbb}a{color:#67ddbb}pre{white-space:pre-wrap}</style><h1>Woven Go checkout</h1><p>Run real Go invocation paths. Operation spans are exported through the collector into ClickHouse. These calls demonstrate instrumentation, not durable business transactions.</p><label>Subject ID (empty creates a new one) <input id="subject"></label><label>Tenant <select id="tenant"><option>demo</option><option>other</option></select></label><button data-scenario="ok">Successful checkout</button><button data-scenario="error">Fail checkout</button><button data-scenario="panic">Panic checkout</button><pre id="result" role="status"></pre><a href="http://localhost:8088/#operations">Investigate operations</a><script>for(const b of document.querySelectorAll('button'))b.onclick=async()=>{b.disabled=true;try{const r=await fetch('/invoke?scenario='+b.dataset.scenario+'&subject='+encodeURIComponent(document.querySelector('#subject').value)+'&tenant='+encodeURIComponent(document.querySelector('#tenant').value),{method:'POST'});document.querySelector('#result').textContent='HTTP '+r.status+' '+await r.text()}finally{b.disabled=false}};</script></html>`))
+		w.Write([]byte(`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Woven Go checkout</title><style>body{font:18px system-ui;max-width:800px;margin:50px auto;background:#0b1420;color:#d9e6f5}button{padding:15px;margin:8px;background:#204b45;color:white;border:1px solid #67ddbb}a{color:#67ddbb}pre{white-space:pre-wrap}</style><h1>Woven Go checkout</h1><p>Instance: <strong>` + instance + `</strong></p><p>Run real Go invocation paths. Operation spans are exported through the collector into ClickHouse. These calls demonstrate instrumentation, not durable business transactions.</p><label>Subject ID (empty creates a new one) <input id="subject"></label><label>Tenant <select id="tenant"><option>demo</option><option>other</option></select></label><button data-scenario="ok">Successful checkout</button><button data-scenario="error">Fail checkout</button><button data-scenario="panic">Panic checkout</button><pre id="result" role="status"></pre><details><summary>Lab telemetry fault injection</summary><p>Requests and traces continue while metric exports are deliberately dropped. This is a local demo control.</p><button data-metrics="off">Pause metric export</button><button data-metrics="on">Resume metric export</button><p id="metricsStatus" role="status"></p></details><a href="http://localhost:8088/#operations">Investigate operations</a><script>for(const b of document.querySelectorAll('button[data-scenario]'))b.onclick=async()=>{b.disabled=true;try{const r=await fetch('/invoke?scenario='+b.dataset.scenario+'&subject='+encodeURIComponent(document.querySelector('#subject').value)+'&tenant='+encodeURIComponent(document.querySelector('#tenant').value),{method:'POST'});document.querySelector('#result').textContent='HTTP '+r.status+' '+await r.text()}finally{b.disabled=false}};for(const b of document.querySelectorAll('button[data-metrics]'))b.onclick=async()=>{const r=await fetch('/demo/metrics?mode='+b.dataset.metrics,{method:'POST'});document.querySelector('#metricsStatus').textContent=await r.text()};</script></html>`))
 	})
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("ok")) })
 	mux.HandleFunc("POST /invoke", func(w http.ResponseWriter, r *http.Request) {

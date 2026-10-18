@@ -82,3 +82,20 @@ fleet journey generated three frames.
 The initially unborn goo checkout now has its first committed milestone on `work`.
 Older onboarding notes about leaving all imported files untracked are superseded.
 Commit validated milestones and report their hashes as required by AGENTS.md.
+
+
+## Two-instance live comparison milestone
+
+The default stack now has twelve services. `operation-peer` runs the same woven
+binary with GOO_INSTANCE_ID=woven-peer and loopback8092 mapped to internal8090.
+The original instance defaults to woven-demo. Metric collection remains every2s;
+peer exports can be paused/resumed through its clearly labelled lab controls.
+The browser restart journey manages only the owned local Compose peer and restores
+metric export. Existing queue entries/volumes are retained.
+
+When rebuilding the offline image, preserve the woven operation-app binary and tag
+`grammar-observability-operation-peer` as well as operation-app/query/packages.
+Stage current ui/fleet.js, ui/index.html, checkout YAML and sample source before
+building. `docker compose up -d --no-build` includes the peer. No new dependency
+or credential is needed. Exact totals remain strict; comparison tolerance does
+not shift timestamps or invent a common population. See FLEET_COMPARISONS.md.

@@ -4,7 +4,31 @@ Current additions: see the [cloud baseline](ENVIRONMENT_VALIDATION.md) for the
 successful default Compose run in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
-## Declared fleet membership and guarded totals
+## Live peer and bounded-skew comparisons
+
+Implemented: two actual woven checkout instances with distinct resource identity
+(default ports8090/8092); optional explicit bounded-skew policy; actual per-member
+window/count preservation; pairwise endpoint spreads; deterministic conservative
+matching without reusing intervals in successful rows. Comparison rows have no
+combined percentage; exact fleet totals remain strict. The lab-only export gate
+can drop metrics while requests and the independent trace exporter remain enabled.
+See [semantics](docs/FLEET_COMPARISONS.md),
+[diagram8](docs/ARCHITECTURE_DIAGRAMS.md#8-two-live-instances-and-bounded-comparisons)
+and [journey17](docs/journeys/README.md#17-two-live-instances-imbalance-loss-and-restart).
+
+Passed: root Go race tests/vet, 19 Python checks, ten Node checks; Hegel comparison
+state/swarm100 sequences up to30 steps; six observed Quint outcomes and three
+negative controls rejecting invented common populations. Targeted live journey17
+passed through imbalance, successful requests during metric loss, excessive gap,
+and controlled peer restart/new epoch. Four screenshots were generated. The first
+attempt exposed a real startup-query/control race (a late30-minute response
+replaced the edited2-minute lookback); controls now preserve edits and stale query
+responses are generation-guarded. Source limits were retained. Targeted journeys17/18 passed together (41 seconds); journey18 guards
+that race using a delayed real response. The full nested verification module passed (60 seconds).
+Full browser regression results follow when complete.
+
+## Historical declared fleet membership milestone
+
 
 Implemented: fixed-window YAML membership for 2–4 instances; bounded concurrent
 member queries; separate observed/unobserved/unavailable source states; exact
