@@ -897,3 +897,23 @@ recipe/follow-up rerun passed both cases (2.4 minutes), including enabled Bombad
 campaigns and live Quint checks with rejecting controls. Desktop/mobile frames
 were regenerated. Twelve Compose services are running, traffic was restored and
 existing telemetry volumes/five stale pending entries were retained.
+
+## Typed record measures and grouped time charts (2026-10-18)
+
+Existing toolchains/lab reused; offline final image `bfb62c257374`. Root Go tests,
+affected race tests, vet, 32 frontend checks, Python compilation and three expanded
+Hegel state/swarm suites passed. Three prior-image SQL plans, package revisions and
+canonical YAML outputs match the final image exactly. The new real OTLP/collector/
+ClickHouse storyboard passed with seven rejecting Quint controls and Bombadil.
+
+The workspace filled during repeated offline builds. Regenerable Go compilation
+cache, dangling images and unused Docker build cache were removed; existing data
+volumes and running app data were preserved. Free space recovered to approximately
+14 GiB before cache warming. No setup configuration changed. Final browser evidence
+and recovered native-check results are recorded in VALIDATION.md.
+
+Final image passed five affected browser journeys in 5.9 minutes, with all six
+enabled Bombadil campaigns and live Quint/negative controls. Affected desktop/
+mobile storyboards were regenerated. Owned traffic was restored; all twelve
+Compose services are running and existing telemetry volumes/five stale pending
+entries were retained.

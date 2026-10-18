@@ -162,7 +162,8 @@ Per-process query limits/cancellation cover general routes, not all legacy route
 or cross-replica/per-tenant quotas. Service discovery is a separate live read and
 is not archived by saved inventory. Event age does not establish pipeline health.
 
-[Grouped span-duration measures](GROUPED_MEASURES.md) now support complete per-group summaries/ranking. Arbitrary numeric measures and grouped time-series remain absent. Old summary+group capture plans may require explicit new live evidence rather than refresh; count-only groups are not retroactively upgraded.
+[Grouped span-duration measures](GROUPED_MEASURES.md) now support complete per-group summaries/ranking. Arbitrary numeric measures remain absent. Opt-in bounded grouped time series now
+exist through the [typed record-measure adapter](RECORD_MEASURES.md). Old summary+group capture plans may require explicit new live evidence rather than refresh; count-only groups are not retroactively upgraded.
 
 [Error/latency comparison boundaries](ERROR_COMPARISONS.md): span status is exporter status, not request/business outcome policy; captured-error percentages include Unset/unknown in the denominator. Different fixed windows and saved server-read pairs now exist. Statistical attribution and custom outcome policies remain future work. Local [deployment context and ordered notes](WORKBENCH_CONTEXT.md) now exist, with explicit authored provenance, immutable branches and exact evidence references.
 
@@ -232,6 +233,8 @@ Recipes and follow-ups now share checked scope/transform metadata; persisted
 question and capture formats remain unchanged. OTel/custom selectors retain their
 namespaces and native bindings retain declared schema identity. Automatic convention
 profile resolution, record schema-URL projection, cross-signal attribute mapping,
-typed general measures and backend capability negotiation remain future work.
+arbitrary typed numeric expressions and backend capability negotiation remain
+future work. Existing record count/duration/status controls now lower through a
+bounded typed measure plan; opt-in split charts preserve their semantics.
 Comparison scopes retain separate members; automatic comparison transforms are
 rejected. See [QUESTION_SCOPE.md](QUESTION_SCOPE.md).

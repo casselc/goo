@@ -2,8 +2,9 @@
 
 Reviewed 2026-10-18 against the implemented Go models and current workbench.
 This is a consolidation plan. The first [scope/transform slice](QUESTION_SCOPE.md)
-is now implemented for recipes and capture-derived follow-ups; broader capabilities
-below remain proposed.
+is now implemented for recipes and capture-derived follow-ups. The first bounded
+[typed record-measure and split-chart slice](RECORD_MEASURES.md) is also implemented;
+broader expressions, capability negotiation and profile resolution remain proposed.
 
 The most useful next work is to make the same question retain its meaning across
 Explore, measurement packages, recipes, captures and backend compilation. More
@@ -235,9 +236,10 @@ states these limits explicitly. Acceptance and regression expectations:
 6. Existing screenshots/diagrams are regenerated only when their visible behavior
    changes. Do not add a new parallel demo to demonstrate this consolidation.
 
-Then add the first explicit typed record-measure path and grouped time series,
-using the shared scope and capability contract. Migrate only equivalent semantics;
-keep adapters for old definitions and reject lossy conversions.
+The first [typed record-measure and grouped-time-series path](RECORD_MEASURES.md)
+now uses shared scope and existing query controls. Broader numeric expressions
+and capability negotiation remain future. Continue migrating only equivalent
+semantics; keep adapters for old definitions and reject lossy conversions.
 
 ## Separate deployment gate
 

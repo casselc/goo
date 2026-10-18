@@ -1,0 +1,17 @@
+spec: grouped_series.qnt
+module: grouped_series
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  plan:
+    expect: 'coherent == {{.obs.coherent}}'
+  execute:
+    expect: 'coherent == {{.obs.coherent}}'
+  inspect:
+    expect: 'coherent == {{.obs.coherent}}'
+  capture:
+    expect: 'coherent == {{.obs.coherent}}'
+  reuse:
+    expect: 'coherent == {{.obs.coherent}}'
+  reopen:
+    expect: 'coherent == {{.obs.coherent}}'

@@ -100,12 +100,13 @@ type ScopeChange struct {
 	Effect string `json:"effect"` // preserved or replaced; never infer subset containment
 }
 type QuestionTransform struct {
-	Relation  string        `json:"relation"`
-	Origin    QuestionScope `json:"origin"`
-	Target    QuestionScope `json:"target"`
-	Changes   []ScopeChange `json:"changes"`
-	Preserves []string      `json:"preserves"`
-	Replaces  []string      `json:"replaces"`
+	MeasurePlan *RecordMeasurePlan `json:"measurePlan,omitempty"`
+	Relation    string             `json:"relation"`
+	Origin      QuestionScope      `json:"origin"`
+	Target      QuestionScope      `json:"target"`
+	Changes     []ScopeChange      `json:"changes"`
+	Preserves   []string           `json:"preserves"`
+	Replaces    []string           `json:"replaces"`
 }
 
 // DescribeTransform checks supported relationship claims against typed questions.
@@ -198,6 +199,9 @@ func describeScopeChanges(origin, target CaptureQuestion, a, b QuestionScope, re
 	}
 	if origin.Explore != nil && target.Explore != nil {
 		x, y := origin.Explore, target.Explore
+		measures, _ := y.RecordMeasures()
+		out.MeasurePlan = &measures
+		add("groupTimeSeries", "Split time chart by breakdown", x.GroupTimeSeries == y.GroupTimeSeries)
 		names := []string{}
 		for _, f := range y.GroupBy {
 			names = append(names, f.Kind+"."+f.Key)

@@ -7,7 +7,7 @@ not a universal query language or automatic OTel convention resolver.
 `exploration.CaptureQuestion.Scope()` validates and detaches a descriptor without
 a source read. Record scope contains environment, half-open fixed bounds, exact
 predicate, source-adapter contract and span/log-record grain. Paging, grouping,
-summary and chart settings are presentation/aggregation choices outside population
+summary and chart settings (including opt-in `groupTimeSeries`) are presentation/aggregation choices outside population
 scope. Query edits do not mutate derived metadata, or vice versa.
 
 Adapters also describe native measurements (exact declared source binding and

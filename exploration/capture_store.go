@@ -274,8 +274,14 @@ func validateCapture(c *SavedCapture) error {
 	}
 	if c.Question.Kind == "explore" {
 		if c.Explore != nil {
+			if e := ValidateGroupedTimeSeries(*c.Question.Explore, c.Explore.GroupedTimeSeries); e != nil {
+				return e
+			}
 			if e := ValidateTimeSeries(*c.Question.Explore, c.Explore.TimeSeries); e != nil {
 				return e
+			}
+			if c.Question.Explore.GroupTimeSeries && c.Explore.State != "changed_between_reads" && !groupedSeriesAgree(c.Explore) {
+				return errors.New("saved split chart disagrees with aggregate reads")
 			}
 			if c.Question.Explore.SpanStatus {
 				if c.Explore.SpanStatus == nil || c.Explore.SpanStatus.Count != c.Explore.Count || c.Explore.SpanStatus.Validate() != nil {

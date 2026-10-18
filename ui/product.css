@@ -1070,3 +1070,7 @@ td details {
 .followup-preview p,.followup-preview li {overflow-wrap:anywhere}
 .followup-gap textarea {width:100%;font:inherit;min-height:90px;margin:8px 0}
 .investigate-further select {width:100%}
+
+.series-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:1rem}.series-card{padding:1rem;border:1px solid var(--border);border-radius:var(--radius);min-width:0}.series-card h4{overflow-wrap:anywhere;margin:0 0 .75rem}.series-card .time-bars{height:110px}.time-bar.no-data::after{height:0;min-height:0}.series-interval-detail{overflow-wrap:anywhere}
+
+.split-chart-control{display:flex;align-items:center;gap:.6rem;flex-direction:row}.split-chart-control input{width:auto}.measure-controls .split-chart-control{flex:1;min-width:180px;align-self:center}

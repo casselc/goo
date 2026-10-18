@@ -25,7 +25,10 @@ OTel semantic-convention profiles are a first-class input across all six primiti
 with explicit version/unit/identity bindings and generic fallback for custom data.
 The first [scope/transform slice](QUESTION_SCOPE.md) now supplies checked shared
 planning metadata for recipes/follow-ups, with adapters for typed capture questions.
-Typed measures and convention-profile resolution remain subsequent work.
+The first typed record-measure lowering and bounded split-time-chart slice is now
+implemented ([contract](RECORD_MEASURES.md)). General numeric expressions,
+convention-profile resolution and backend capability negotiation remain subsequent
+work.
 
 ## Earlier plan and milestone history
 

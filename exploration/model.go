@@ -22,17 +22,18 @@ type Predicate struct {
 	Value string      `json:"value,omitempty" yaml:"value,omitempty"`
 }
 type Query struct {
-	SpanStatus  bool       `json:"spanStatus,omitempty" yaml:"spanStatus,omitempty"`
-	BucketMS    int64      `json:"bucketMs,omitempty" yaml:"bucketMs,omitempty"`
-	Summary     string     `json:"summary,omitempty" yaml:"summary,omitempty"`
-	Signal      string     `json:"signal" yaml:"signal"`
-	Environment string     `json:"environment" yaml:"environment"`
-	FromMS      int64      `json:"fromMs" yaml:"fromMs"`
-	ToMS        int64      `json:"toMs" yaml:"toMs"`
-	Where       *Predicate `json:"where,omitempty" yaml:"where,omitempty"`
-	GroupBy     []Field    `json:"groupBy,omitempty" yaml:"groupBy,omitempty"`
-	Limit       int        `json:"limit" yaml:"limit"`
-	Offset      int        `json:"offset" yaml:"offset"`
+	GroupTimeSeries bool       `json:"groupTimeSeries,omitempty" yaml:"groupTimeSeries,omitempty"`
+	SpanStatus      bool       `json:"spanStatus,omitempty" yaml:"spanStatus,omitempty"`
+	BucketMS        int64      `json:"bucketMs,omitempty" yaml:"bucketMs,omitempty"`
+	Summary         string     `json:"summary,omitempty" yaml:"summary,omitempty"`
+	Signal          string     `json:"signal" yaml:"signal"`
+	Environment     string     `json:"environment" yaml:"environment"`
+	FromMS          int64      `json:"fromMs" yaml:"fromMs"`
+	ToMS            int64      `json:"toMs" yaml:"toMs"`
+	Where           *Predicate `json:"where,omitempty" yaml:"where,omitempty"`
+	GroupBy         []Field    `json:"groupBy,omitempty" yaml:"groupBy,omitempty"`
+	Limit           int        `json:"limit" yaml:"limit"`
+	Offset          int        `json:"offset" yaml:"offset"`
 }
 
 var columns = map[string]string{"service": "string", "trace_id": "string", "span_id": "string", "scope": "string", "scope_version": "string", "name": "string", "kind": "string", "status": "string", "duration_ns": "uint64", "duration_bucket": "string", "status_class": "string", "body": "string", "severity": "string"}
@@ -51,6 +52,10 @@ func (f Field) Type(signal string) (string, error) {
 	return "string", nil
 }
 func (q Query) Validate() error {
+	if q.GroupTimeSeries && (q.BucketMS == 0 || len(q.GroupBy) == 0) {
+		return fmt.Errorf("split chart requires a time bucket and breakdown; at most 8 series and 1000 observed cells")
+	}
+
 	if q.SpanStatus && q.Signal != "spans" {
 		return fmt.Errorf("spanStatus requires spans")
 	}

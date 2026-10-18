@@ -22,6 +22,7 @@ var packageName = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_.-]{0,127}$`)
 // TelemetryPackage binds existing OTel data without a source-code manifest.
 // A definition is reusable configuration, never a frozen evidence receipt.
 type TelemetryPackage struct {
+	GroupTimeSeries bool          `json:"groupTimeSeries,omitempty" yaml:"groupTimeSeries,omitempty"`
 	SpanStatus      bool          `json:"spanStatus,omitempty" yaml:"spanStatus,omitempty"`
 	BucketMS        int64         `json:"bucketMs,omitempty" yaml:"bucketMs,omitempty"`
 	Summary         string        `json:"summary,omitempty" yaml:"summary,omitempty"`
@@ -51,17 +52,18 @@ type InstrumentationHandoff struct {
 	Notes     []string `json:"notes"`
 }
 type PackagePlan struct {
-	Definition TelemetryPackage       `json:"definition"`
-	Revision   string                 `json:"revision"`
-	YAML       string                 `json:"yaml"`
-	Question   Query                  `json:"question"`
-	Plan       Plan                   `json:"plan"`
-	Handoff    InstrumentationHandoff `json:"handoff"`
-	Warnings   []string               `json:"warnings"`
+	MeasurePlan RecordMeasurePlan      `json:"measurePlan"`
+	Definition  TelemetryPackage       `json:"definition"`
+	Revision    string                 `json:"revision"`
+	YAML        string                 `json:"yaml"`
+	Question    Query                  `json:"question"`
+	Plan        Plan                   `json:"plan"`
+	Handoff     InstrumentationHandoff `json:"handoff"`
+	Warnings    []string               `json:"warnings"`
 }
 
 func (p TelemetryPackage) Question(from, to int64) Query {
-	return Query{SpanStatus: p.SpanStatus, BucketMS: p.BucketMS, Summary: p.Summary, Signal: p.Source.Signal, Environment: p.Source.Environment, FromMS: from, ToMS: to, Where: p.Where, GroupBy: p.GroupBy, Limit: 100, Offset: 0}
+	return Query{GroupTimeSeries: p.GroupTimeSeries, SpanStatus: p.SpanStatus, BucketMS: p.BucketMS, Summary: p.Summary, Signal: p.Source.Signal, Environment: p.Source.Environment, FromMS: from, ToMS: to, Where: p.Where, GroupBy: p.GroupBy, Limit: 100, Offset: 0}
 }
 func (p TelemetryPackage) Validate() error {
 	if p.APIVersion != PackageVersion || !packageName.MatchString(p.Name) || p.Title == "" || len(p.Title) > 160 || !utf8.ValidString(p.Title) || strings.ContainsRune(p.Title, 0) || len(p.Description) > 2048 || !utf8.ValidString(p.Description) || strings.ContainsRune(p.Description, 0) {
@@ -141,7 +143,7 @@ func DraftTelemetryPackage(q Query, name, title string, minutes int) (TelemetryP
 	b, _ := json.Marshal(q)
 	var clone Query
 	json.Unmarshal(b, &clone)
-	p := TelemetryPackage{SpanStatus: q.SpanStatus, BucketMS: q.BucketMS, Summary: q.Summary, APIVersion: PackageVersion, Name: name, Title: title, Source: PackageSource{"clickhouse.otel/v1", q.Signal, q.Environment}, Where: clone.Where, GroupBy: clone.GroupBy, Measure: "captured-record-count", LookbackMinutes: minutes, Views: []string{"records", "trace-context"}}
+	p := TelemetryPackage{GroupTimeSeries: q.GroupTimeSeries, SpanStatus: q.SpanStatus, BucketMS: q.BucketMS, Summary: q.Summary, APIVersion: PackageVersion, Name: name, Title: title, Source: PackageSource{"clickhouse.otel/v1", q.Signal, q.Environment}, Where: clone.Where, GroupBy: clone.GroupBy, Measure: "captured-record-count", LookbackMinutes: minutes, Views: []string{"records", "trace-context"}}
 	if len(p.GroupBy) == 1 {
 		p.Views = []string{"records", "distribution", "trace-context"}
 	}
@@ -198,7 +200,11 @@ func PlanTelemetryPackage(p TelemetryPackage, from, to int64, target *Annotation
 		handoff.GoExample = fmt.Sprintf("package example\n\nimport \"context\"\n\n//goo:operation name:%s role:%s\nfunc ObservedOperation(ctx context.Context) (err error) {\n\t// Implement the operation and explicitly attach required attributes.\n\treturn nil\n}\n", target.Name, target.Role)
 		handoff.Notes = append(handoff.Notes, "Go example is an opt-in template, not a patch or equivalent source binding. Choose the real function, preserve attributes, validate/weave with goo, and review duplicate instrumentation before changing package selectors. Existing telemetry is unchanged.")
 	}
-	return &PackagePlan{Definition: p, Revision: revision, YAML: string(text), Question: q, Plan: plan, Handoff: handoff, Warnings: []string{"Definition revision identifies configuration, not captured evidence. Applying it performs a fresh live read.", "Counts are captured records, including retries and exporter duplicates; sampling/completeness remain unknown. No business outcome or SLO is inferred.", "Only captured-record-count, bounded records, one-field distributions and trace context are supported. Native metrics, lifecycle rules, calculation languages and Databricks lowering are separate contracts."}}, nil
+	measures, e := q.RecordMeasures()
+	if e != nil {
+		return nil, e
+	}
+	return &PackagePlan{MeasurePlan: measures, Definition: p, Revision: revision, YAML: string(text), Question: q, Plan: plan, Handoff: handoff, Warnings: []string{"Definition revision identifies configuration, not captured evidence. Applying it performs a fresh live read.", "Counts are captured records, including retries and exporter duplicates; sampling/completeness remain unknown. No business outcome or SLO is inferred.", "Supported record measures include counts, span durations, recorded status and bounded split time charts. Native metrics, lifecycle rules, arbitrary numeric expressions and Databricks lowering are separate contracts."}}, nil
 }
 
 // DecodePackageJSON is used for stored definitions with strict field validation.

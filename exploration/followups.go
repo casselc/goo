@@ -84,6 +84,7 @@ func (c SavedCapture) Followups(row int) (*FollowupSet, error) {
 			derived.Summary = "span-duration"
 			derived.SpanStatus = true
 			derived.BucketMS = 0
+			derived.GroupTimeSeries = false
 			derived.GroupBy = []Field{{Kind: "column", Key: "service"}, {Kind: "column", Key: "status_class"}}
 			addQuery("duration-status", "Compare duration and recorded status by service", "Test whether latency and recorded error status differ within the original matching span population. Recorded status is not a business-outcome policy.", "Same matching span population", derived)
 		}
@@ -113,6 +114,7 @@ func (c SavedCapture) Followups(row int) (*FollowupSet, error) {
 						derived.Summary = ""
 						derived.SpanStatus = false
 						derived.BucketMS = 0
+						derived.GroupTimeSeries = false
 						addQuery("reported-"+key, "Break down reported "+key, "Inspect literal reported values, including missing and empty values in the matching population. A reported attribute does not establish an exhaustive outcome policy.", "Same matching span population", derived)
 					}
 				}

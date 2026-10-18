@@ -19,21 +19,22 @@ import (
 )
 
 type Result struct {
-	SpanStatus    *SpanStatusSummary `json:"spanStatus,omitempty"`
-	TimeSeries    []TimePoint        `json:"timeSeries,omitempty"`
-	Duration      *DurationSummary   `json:"duration,omitempty"`
-	Question      Query              `json:"question"`
-	CapturedAt    string             `json:"capturedAt"`
-	Basis         string             `json:"basis"`
-	Count         string             `json:"count"`
-	State         string             `json:"state"`
-	Rows          []json.RawMessage  `json:"rows"`
-	HasMore       bool               `json:"hasMore"`
-	Groups        []json.RawMessage  `json:"groups"`
-	Fields        []Field            `json:"fields"`
-	FieldsLimited bool               `json:"fieldsLimited"`
-	Plan          Plan               `json:"plan"`
-	Warnings      []string           `json:"warnings"`
+	GroupedTimeSeries []TimeSeriesGroup  `json:"groupedTimeSeries,omitempty"`
+	SpanStatus        *SpanStatusSummary `json:"spanStatus,omitempty"`
+	TimeSeries        []TimePoint        `json:"timeSeries,omitempty"`
+	Duration          *DurationSummary   `json:"duration,omitempty"`
+	Question          Query              `json:"question"`
+	CapturedAt        string             `json:"capturedAt"`
+	Basis             string             `json:"basis"`
+	Count             string             `json:"count"`
+	State             string             `json:"state"`
+	Rows              []json.RawMessage  `json:"rows"`
+	HasMore           bool               `json:"hasMore"`
+	Groups            []json.RawMessage  `json:"groups"`
+	Fields            []Field            `json:"fields"`
+	FieldsLimited     bool               `json:"fieldsLimited"`
+	Plan              Plan               `json:"plan"`
+	Warnings          []string           `json:"warnings"`
 }
 type Source struct {
 	Endpoint, User, Password string
@@ -357,6 +358,20 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 			r.State = "changed_between_reads"
 		}
 		if sum.Cmp(totalValue) != 0 {
+			r.State = "changed_between_reads"
+		}
+	}
+
+	if q.GroupTimeSeries {
+		raw, err := s.read(ctx, plan.GroupedTimeSeries, plan.Parameters)
+		if err != nil {
+			return nil, err
+		}
+		r.GroupedTimeSeries, err = DecodeGroupedTimeSeries(q, raw)
+		if err != nil {
+			return nil, err
+		}
+		if !groupedSeriesAgree(r) {
 			r.State = "changed_between_reads"
 		}
 	}

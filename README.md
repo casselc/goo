@@ -24,6 +24,11 @@ another explicit question: duration/status breakdowns, exact trace/log links,
 fixed-window resource discovery, or a recorded evidence gap. Each preview names
 which population and time scope it keeps or replaces before any source read.
 
+[Typed record measures and split time charts](docs/RECORD_MEASURES.md) compare
+captured counts, duration and recorded status across bounded breakdown series.
+Local chart controls retain the captured scope and scale; captures and reusable
+packages preserve the chart settings and evidence separately.
+
 The [investigation workspace](docs/PRODUCT_WORKSPACE.md) brings Explore, Services, Operations,
 Saved investigations and Definitions into one interface. Explore includes captured
 attribute distributions, pinned baseline comparisons and a trace/log inspector.

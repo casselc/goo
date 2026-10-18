@@ -773,3 +773,20 @@ relationship and render computed population/grain changes. Their refreshed frame
 include progressive disclosure for source binding and unbound OTel semantics.
 The source reads remain explicit; this does not demonstrate automatic convention
 profile resolution. See [the shared contract](../QUESTION_SCOPE.md).
+
+
+### 43 · Compare HTTP route measures over time
+
+Implemented in `journeys/grouped-time-series.spec.js`. A controlled ordinary OTLP
+producer sends 124 server-shaped spans through the real collector/exporter into
+ClickHouse. The engineer compares route-specific duration/status over fixed time
+cells, distinguishes missing and empty routes, and searches locally without
+changing chart scale or querying again. A 100-row page does not limit the measures.
+The engineer captures the chart, derives/saves/reuses its package in a fresh window,
+then reopens the original evidence without source reads. Typed planning identifies
+span-record grain and raw-value percentile requirements. This does not certify
+HTTP semantic-convention coverage, unique requests or production health.
+
+![Fixed route/time comparison](screenshots/43a-http-route-time-comparison.png)
+![Frozen grouped evidence](screenshots/43b-frozen-grouped-evidence.png)
+![Mobile grouped evidence](screenshots/43c-mobile-grouped-evidence.png)

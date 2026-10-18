@@ -5,6 +5,48 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Typed record measures and grouped time charts (2026-10-18)
+
+Existing record controls now expand into typed count, duration and recorded-status
+operators used for SQL lowering. Input/unit/operator/percentile-profile checks fail
+closed; arbitrary attribute casts and general expressions remain unsupported.
+Optional `groupTimeSeries` adds bounded group/interval evidence, common-scale local
+chart controls, capture/reopen and definition reuse. See [the contract](docs/RECORD_MEASURES.md).
+
+Passed: full root Go suite, exploration/HTTP race tests, root vet, 32 frontend
+checks, Python compilation and expanded Hegel state/swarm (100 requested sequences
+of 25 steps each for grouped-series, recipes and follow-ups). Native tests cover
+missing/empty dimensions, no-data cells, duplicate/invalid bounds, cardinality/cell
+budgets, same-count duration disagreement, signal-specific lowering and unsupported
+measure bindings. Three source-free plans retained from the prior deployed image
+match the final image's SQL, package revisions and canonical YAML exactly.
+
+The initial real-stack storyboard passed in one minute with seven rejecting Quint
+controls and its Bombadil campaign (`artifacts/grouped-time-series/series-d6d2af76/`).
+It sends 124 ordinary OTLP server-shaped spans through the real collector/exporter,
+compares four route-value series with a 100-row inspection page, checks local scale
+and no-read guards, and captures/reuses/reopens the evidence. This is controlled
+integration telemetry, not production traffic or a convention-coverage certificate.
+Screenshot inspection exposed a checkbox style issue, corrected before regression.
+
+The build filled the workspace disk. Regenerable Go compilation cache, dangling
+images and unused Docker build cache were removed; telemetry volumes and running
+application data were preserved, restoring approximately 14 GiB free before caches
+were warmed. An intermediate test-file editing error was caught by compilation and
+corrected; the final full native suite passed. No environment configuration changed.
+
+Artifacts: `artifacts/series-{go,race,vet,node,hegel,compatibility}.log`,
+`artifacts/series-journey.log`, `artifacts/series-regression.log` and the live
+storyboard ledgers. Final image: `bfb62c257374`. All five affected browser journeys passed in 5.9
+minutes, without skips: core basics 33, follow-ups 42, grouped measures 34,
+grouped time series 43 and recipes 37. All six enabled Bombadil campaigns and
+associated live Quint checks passed. The final grouped-series ledger rejected all
+seven mutated controls: `artifacts/grouped-time-series/series-68ffb67e/`. Final
+ledger replay also passed after strengthening exact integer accounting and total
+series validation (`artifacts/series-ledger-final.log`). Affected
+desktop/mobile frames were regenerated. Traffic was restored; existing telemetry
+volumes and all five stale pending entries were retained.
+
 ## Shared question scope and checked transforms (2026-10-18)
 
 Recipes and capture-derived follow-ups now use shared detached Go planning metadata.

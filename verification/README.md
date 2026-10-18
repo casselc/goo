@@ -259,3 +259,14 @@ metadata. Recipe replay compares the full shared plan. Bombadil follow-up invari
 require a checked same-population preview with explicit unbound convention metadata.
 The existing model protocol is retained; these are stronger observed-value checks,
 not a new proof of all telemetry semantics. See docs/QUESTION_SCOPE.md and VALIDATION.md.
+
+
+Grouped time series: `TestHegelGroupedSeriesStateSwarm` exercises late input,
+interval and inspection-page changes while preserving complete count/duration-sum
+accounting and explicit no-data cells. Storyboard 43 produces a real collector/
+ClickHouse ledger for `TestQuintGroupedSeriesLiveLedger`, with seven rejecting
+controls for unit, boundary, local-read, capture-group, reuse-scope and reopen drift.
+Its Bombadil actor explores local mean/p95/filter controls while stored evidence
+and the captured scale remain fixed. The model observes a bounded plan → execute →
+inspect → capture → reuse → reopen protocol; it does not prove all schedules or
+telemetry completeness. See RECORD_MEASURES.md and VALIDATION.md for actual results.

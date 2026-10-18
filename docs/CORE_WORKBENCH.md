@@ -44,6 +44,14 @@ The result basis includes the measures/chart. See [general captures](GENERAL_CAP
 for immutable retention, stable stored pages and refresh: summary/chart data is
 archived with new captures. Old captures lacking these fields remain readable.
 
+## Typed record measures and split charts
+
+The existing controls now expand to a shared typed record-measure plan, used by
+the SQL compiler and exposed in source-free planning. Opt-in `groupTimeSeries`
+adds bounded group/interval aggregates and shared-scale local charts. Counts,
+span-duration exact statistics and recorded-status partitions retain their existing
+semantics; arbitrary numeric expressions remain future. See [the contract](RECORD_MEASURES.md).
+
 ## Reusable questions
 
 A reusable question is the existing versioned **telemetry package**. **Create

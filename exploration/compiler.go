@@ -7,12 +7,13 @@ import (
 )
 
 type Plan struct {
-	TimeSeries string            `json:"timeSeries,omitempty"`
-	Rows       string            `json:"rows"`
-	Count      string            `json:"count"`
-	Groups     string            `json:"groups,omitempty"`
-	Fields     string            `json:"fields"`
-	Parameters map[string]string `json:"parameters"`
+	GroupedTimeSeries string            `json:"groupedTimeSeries,omitempty"`
+	TimeSeries        string            `json:"timeSeries,omitempty"`
+	Rows              string            `json:"rows"`
+	Count             string            `json:"count"`
+	Groups            string            `json:"groups,omitempty"`
+	Fields            string            `json:"fields"`
+	Parameters        map[string]string `json:"parameters"`
 }
 type compiler struct {
 	signal string
@@ -104,15 +105,12 @@ func compile(q Query, rowLimit int) (Plan, error) {
 		order = "Timestamp, TraceId, SpanId, ServiceName, Body, SeverityText, toString(ResourceAttributes), toString(LogAttributes)"
 	}
 	p := Plan{Rows: "SELECT " + selectRows + base + " ORDER BY " + order + fmt.Sprintf(" LIMIT %d OFFSET %d FORMAT JSONEachRow", rowLimit+1, q.Offset), Count: "SELECT toString(count()) AS count" + base + " FORMAT JSONEachRow"}
-	aggregate := "toString(count()) AS count"
-	if q.Summary == "span-duration" {
-		aggregate += ", toString(sum(toUInt128(Duration))) AS sum_ns, toString(min(Duration)) AS min_ns, toString(max(Duration)) AS max_ns, arrayMap(x -> toString(x), quantilesExactHigh(0.50, 0.95, 0.99)(Duration)) AS quantiles_ns"
-		p.Count = "SELECT " + aggregate + base + " FORMAT JSONEachRow"
+	aggregate, e := recordAggregateSQL(q)
+	if e != nil {
+		return Plan{}, e
 	}
-	if q.SpanStatus {
-		aggregate += statusAggregateSQL()
-		p.Count = "SELECT " + aggregate + base + " FORMAT JSONEachRow"
-	}
+	p.Count = "SELECT " + aggregate + base + " FORMAT JSONEachRow"
+
 	if q.BucketMS != 0 {
 		c.params["bucketMs"] = strconv.FormatInt(q.BucketMS, 10)
 		p.TimeSeries = "SELECT toString({from:Int64} + intDiv(toUnixTimestamp64Milli(Timestamp) - {from:Int64}, {bucketMs:Int64}) * {bucketMs:Int64}) AS from_ms, " + aggregate + base + " GROUP BY from_ms ORDER BY toInt64(from_ms) LIMIT 241 FORMAT JSONEachRow"
@@ -127,6 +125,11 @@ func compile(q Query, rowLimit int) (Plan, error) {
 			aliases = append(aliases, alias)
 		}
 		p.Groups = "SELECT " + strings.Join(dims, ", ") + ", " + aggregate + base + " GROUP BY " + strings.Join(aliases, ", ") + " ORDER BY " + strings.Join(aliases, ", ") + " LIMIT 1001 FORMAT JSONEachRow"
+		if q.GroupTimeSeries {
+			time := "toString({from:Int64} + intDiv(toUnixTimestamp64Milli(Timestamp) - {from:Int64}, {bucketMs:Int64}) * {bucketMs:Int64}) AS from_ms"
+			p.GroupedTimeSeries = "SELECT " + strings.Join(dims, ", ") + ", " + time + ", " + aggregate + base + " GROUP BY " + strings.Join(aliases, ", ") + ", from_ms ORDER BY " + strings.Join(aliases, ", ") + ", toInt64(from_ms) LIMIT 1001 FORMAT JSONEachRow"
+		}
+
 	}
 	p.Fields = "SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -> concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -> concat('attribute:', k), mapKeys(" + attrs + ")))) AS field" + base + " ORDER BY field LIMIT 129 FORMAT JSONEachRow"
 	p.Parameters = c.params

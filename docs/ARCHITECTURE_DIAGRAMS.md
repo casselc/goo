@@ -952,3 +952,24 @@ Scope retains exact OTel/custom selectors and declared bindings; unknown schema 
 convention metadata stays unknown. Inspection paging/aggregation presentation is
 outside record population scope. Descriptors are planning metadata only; persisted
 capture formats and hashes are unchanged. See QUESTION_SCOPE.md for boundaries.
+
+### Typed record measures and grouped time evidence
+
+```mermaid
+flowchart LR
+  Question[Existing record question and shared scope] --> Adapter[Typed count / duration / status operators]
+  Adapter --> SQL[Bounded ClickHouse lowering]
+  SQL --> Total[Totals and global time chart]
+  SQL --> Groups[Breakdown summaries]
+  SQL --> Cells[Optional group plus interval read]
+  Total --> Check[Compare additive count / sum / status states]
+  Groups --> Check
+  Cells --> Check
+  Check --> Chart[Shared-scale chart and immutable capture]
+  Chart -->|definition reuse| Question
+```
+
+Reads remain independent. Disagreement stays explicit; agreement does not establish
+a transaction. Per-cell percentiles use raw durations, never averaged scalar
+percentiles. Old unsplit plans/definitions retain their representation. See
+RECORD_MEASURES.md for budgets, typed-model scope and OTel boundaries.
