@@ -16,6 +16,37 @@ action vocabulary: it does not yet explore queries, package edits or sample apps
 No application behavior or telemetry is mocked. This is a smoke spike, not a
 claim of comprehensive product coverage.
 
+[`journeys/cross-app.spec.js`](../journeys/cross-app.spec.js) now implements the
+first coordinator: Playwright drives the real report app and observes goo while
+a separate Bombadil browser explores goo's four primary workspaces for 30 seconds.
+It waits for an actual exploration action before starting the workload. A direct,
+bounded read-only ClickHouse adapter finds the application's emitted subject/trace;
+after the UI query it independently reads the exact same half-open window and
+compares captured span IDs/counts with rendered records. The trace inspector is
+also exercised. Unique application-generated report IDs isolate the experiment;
+the test never clears telemetry or Redis.
+
+```sh
+npm run test:cross-app
+# Optional observed-trace validation; Go and sibling observability/quintgo required:
+GOO_CROSS_APP_QUINT=1 npm run test:cross-app
+```
+
+The report app, collector, ClickHouse and goo must already be running. This
+report-only journey does not use the reservation queue, so its standalone command
+does not pause background reservation traffic. The default full journey wrapper
+still pauses/restores its owned traffic generator as before. Override endpoints
+with `GOO_REPORT_URL`, `GOO_QUERY_URL`, and `GOO_TEST_CLICKHOUSE_URL`; the test adapter
+accepts `GOO_TEST_CLICKHOUSE_USER`/`GOO_TEST_CLICKHOUSE_PASSWORD` (local lab defaults).
+An ingestion timeout or absent checkpoint fails the campaign, rather than proving
+healthy absence. Source reads are independent, not a transactional snapshot.
+
+Artifacts are retained under the Playwright test's `cross-app/` directory:
+`ledger.json`, direct source SQL/parameters/results, goo's frozen question/basis,
+Bombadil trace/screenshots/log and action count. With Quint enabled this also
+includes its report, native qobs steps and ITF trace. Documentation screenshots
+and the human walkthrough are in [journey 26](journeys/README.md#26-correlate-a-real-application-with-goo-during-generated-ui-exploration).
+
 With the lab running and Chromium installed:
 
 ```sh
@@ -95,8 +126,9 @@ tabs without attaching to them. URL allowlists support navigating multiple origi
 that is not a built-in scheduler for two simultaneously controlled applications.
 Custom actions execute within the current page and its origin restrictions.
 
-The practical first coordinated implementation is a Playwright coordinator owning
-the workload page and ledger while one Bombadil process explores goo. Next, two
+The implemented coordinator owns the workload page and ledger while one Bombadil
+process explores goo. Its Playwright observer checks the correlated UI evidence;
+Bombadil currently explores navigation, not that specific trace. Next, two
 separate Bombadil processes can explore the app and goo concurrently, coordinated
 through a test-only service that holds the ledger and independent source oracle.
 Use separate browser profiles and bounded action vocabularies. Shared-data races
@@ -120,33 +152,37 @@ remain responsible for broad semantic input/state exploration.
 
 ## Optional Quint connection
 
-Keep this an opt-in coordinator adapter, with two independent directions:
+There are two independent directions, with the first now implemented as an opt-in:
 
 1. **Observed-trace validation:** project completed semantic events from the
    ledger into `qobs` records and use `validate.NewChecker` plus an explicit binding
    to check them against a Quint model. Browser clicks, loading states and unrelated
-   navigation are stuttering steps, not evidence of business transitions. Preserve
-   actor IDs and causal links; do not infer ordering from client timestamps alone.
-2. **Model-based generation:** use the existing `connect.Generate` path to obtain
+   navigation are not business transitions. The implemented adapter uses one logical
+   coordinator thread for causally ordered acceptance/source/display/exploration
+   checkpoints; the ledger retains the originating actor role. It does not reconstruct
+   distributed causality from timestamps. The [model](../verification/model/cross_app.qnt)
+   and [binding](../verification/model/cross_app.yaml) require the same subject,
+   trace identity, environment, frozen window, count and span membership at display.
+   A completeness gate rejects partial/empty/mixed-run ledgers before model checking.
+2. **Model-based generation (proposed):** use the existing `connect.Generate` path to obtain
    seeded model traces. A coordinator maps each enabled abstract action to a real
    application or goo interaction, then checks observed postconditions. Bombadil
    can explore UI variations between these semantic checkpoints. Its random choices
    are not themselves a claim that the generated model action executed.
 
-A first cross-app model would track `submitted`, `accepted`, `sourceObserved`,
-`displayed` and `saved/refresh` per action, with package revision and evidence basis.
-Permit retries, missing capture and explicit readiness timeout; distinguish those
-from display disagreement after source readiness. Model safety such as immutable
-prior receipts and matching scope separately from bounded ingestion liveness.
-Do not make the model's expected state the oracle's observed state.
+The first model covers accepted → source_ready → displayed → explored for one
+successful request. The coordinator enforces wall-clock readiness and actual actor
+overlap; the model checks order and matching observations. It does not prove
+ingestion liveness, browser scheduling, distributed causality or capture completeness.
+Later models can add saved/refresh, retries, missing capture and readiness timeouts.
 
 Reuse the patterns in [`verification/model_test.go`](../verification/model_test.go)
 and [`verification/operation_navigation_test.go`](../verification/operation_navigation_test.go).
-Require negative controls: wrong run/trace identity, display before source readiness,
-changed saved receipt, and an out-of-scope record must be rejected. A successful
-empty trace must not count as exercise: require observed acceptance, source readiness
-and UI checkpoints, reporting incomplete campaigns separately. This integration is
-proposed, not implemented by the workspace smoke specification.
+The protocol tests require rejection of wrong trace/subject/scope, changed window,
+wrong count/membership, premature display, unexercised/failed explorer, mixed run,
+truncated and empty ledgers. These are labelled protocol fixtures; optional live
+validation reads the actual browser-generated ledger. Saved-receipt properties
+remain in their existing model and have not been added to this coordinator.
 
 ## Research sources and scope
 
@@ -159,5 +195,6 @@ and the installed 0.7.9 CLI on 2026-10-18:
 - [Browser target attachment](https://github.com/antithesishq/bombadil/blob/41f94f51aff970382b0af1cca7439d36790ecd2b/lib/bombadil-browser/src/browser.rs)
 - [CLI options and best-effort shrink](https://github.com/antithesishq/bombadil/blob/41f94f51aff970382b0af1cca7439d36790ecd2b/lib/bombadil-cli/src/browser.rs)
 
-The coordinated ledger, dual-process runner and cross-app properties above are a
-design proposal; only the bounded workspace exploration is implemented here.
+The real-app coordinator and optional observed-trace check are implemented. Two
+Bombadil actors, semantic-action generation from Quint and broader fault campaigns
+remain proposals.

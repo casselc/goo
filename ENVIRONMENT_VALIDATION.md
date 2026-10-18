@@ -177,3 +177,36 @@ under `artifacts/bombadil/`. No product runtime or screenshots changed.
 The cross-app coordinator and optional Quint MBT/trace bridge are documented
 proposals, not executed integration claims. No existing Go/Python semantic code
 changed, so their suites were not repeated for this browser-only spike.
+
+## Coordinated cross-app journey and optional Quint validation (2026-10-18)
+
+Implemented the next slice of that proposal in `journeys/cross-app.spec.js`.
+`GOO_CROSS_APP_QUINT=1 npm run test:cross-app` passed in 35.9 seconds (37.6 seconds
+including Playwright startup). A real report-app UI request emitted one captured
+span, identified through its actual report subject. The direct read-only ClickHouse
+test adapter matched the rendered span IDs/count over the exact UI query window;
+the trace inspector rendered that span. A concurrent, independently profiled
+Bombadil process completed 270 generated navigation actions with exit code 0.
+No responses, telemetry or UI records were mocked; no data was cleared.
+
+The run's accepted/source_ready/displayed/explored ledger passed qobs/quint-go
+conformance and the Quint safety invariant. Native steps, report and ITF were
+retained beside `ledger.json`, source SQL/results and Bombadil artifacts under
+ignored Playwright output. Two real screenshots were generated and the goo frame
+visually reviewed in `docs/journeys/screenshots/26*`; architecture diagram 13, the
+storyboard, testing design and implementation plan describe the implemented scope.
+
+The labelled protocol fixture and all twelve rejecting controls passed in 23.958
+seconds: trace/subject/scope/window/count/membership disagreement, premature display,
+unexercised/failed exploration, mixed runs, truncated and empty ledgers. Quint
+typechecking, JavaScript syntax and whitespace checks passed. `go vet ./...` in
+`verification` initially found a pre-existing unkeyed histogram fixture literal;
+the equivalent keyed literal fixes that warning. Vet and the affected Hegel
+histogram merge property then passed. Unchanged runtime suites and the full
+existing browser suite were not repeated for this test-only increment.
+
+The harness strips ANSI codes when reading Bombadil's progress, removes inherited
+Playwright forced-color output before the optional Quint subprocess (quint-go
+parses plain verdicts), and launches the pinned native Bombadil binary so SIGINT
+cancellation reaches its cleanup handler. Application-side generated exploration,
+model-generated browser actions, retries and fault campaigns remain future work.

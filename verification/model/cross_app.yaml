@@ -1,0 +1,13 @@
+spec: cross_app.qnt
+module: cross_app
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  accepted:
+    args: {id: '{{.subject}}'}
+  source_ready:
+    args: {id: '{{.subject}}', traceID: '{{.trace}}', env: '{{.environment}}', lower: '{{.fromMs}}', upper: '{{.toMs}}', n: '{{.count}}', ids: '{{.members}}'}
+  displayed:
+    args: {id: '{{.subject}}', traceID: '{{.trace}}', env: '{{.environment}}', lower: '{{.fromMs}}', upper: '{{.toMs}}', n: '{{.count}}', ids: '{{.members}}'}
+  explored:
+    args: {steps: '{{.steps}}', passed: '{{.passed}}'}

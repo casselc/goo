@@ -395,3 +395,22 @@ selection returns `no_data`, without invented successes. A delayed genuine packa
 apply response cannot replace a newer environment selection after leaving Definitions.
 
 - [Nested log package and two breakdowns](screenshots/25a-nested-log-package-and-two-breakdowns.png)
+
+## 26. Correlate a real application with goo during generated UI exploration
+
+Run `npm run test:cross-app`, optionally with `GOO_CROSS_APP_QUINT=1` to check the
+actual event ledger against a Quint model using the sibling quint-go tools.
+
+| Frame | User action and independently checked evidence |
+| --- | --- |
+| [Generate a real report](screenshots/26a-correlated-real-report.png) | A user submits the report app while a separate Bombadil browser explores goo navigation. The returned report ID is recorded; this is a reported outcome, not a durable job guarantee. |
+| [Find the captured trace](screenshots/26b-correlated-goo-trace.png) | A direct ClickHouse read finds its emitted subject/trace. The observer filters Explore by that trace and compares rendered IDs/counts with an independent source read over exactly the UI's frozen window, then opens the waterfall. |
+
+The coordinator retains run identity, actual source SQL/results, question/basis,
+causally ordered checkpoints and Bombadil artifacts under ignored Playwright output.
+Quint optionally checks matching identity/scope/window/count/membership and checkpoint
+order; its protocol fixture tests reject twelve mutations and incomplete runs.
+Bombadil's bounded action vocabulary currently covers navigation only. It does not
+generate application requests or check the selected trace itself; the Playwright
+observer does those checks. This exercises concurrent independent browsers, not a
+claim of deterministic distributed scheduling or complete telemetry capture.

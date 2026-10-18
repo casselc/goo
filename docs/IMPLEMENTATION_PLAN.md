@@ -188,3 +188,14 @@ Import/export and optional scanner-validated Go annotation templates coexist wit
 in-place use of ordinary non-Go telemetry. This is captured-record-count only;
 configuration revisions do not archive evidence or infer outcomes. See
 [contract and next typed-measure/promotion work](TELEMETRY_PACKAGES.md).
+
+## Coordinated exploratory UI testing
+
+Implemented: bounded Bombadil workspace exploration, a real report-app/ClickHouse/goo
+coordinator with rendered-evidence checks and retained ledger, and opt-in quint-go
+observed-trace validation with rejecting protocol controls. See
+[testing design](BOMBADIL_TESTING.md) and [journey 26](journeys/README.md).
+Next: model-generated semantic checkpoints and application-side Bombadil action
+generators, followed by explicit retry/late-capture/fault campaigns. The current
+model covers one successful report and independent navigation; it does not model
+browser scheduling or establish telemetry completeness.

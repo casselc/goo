@@ -1,9 +1,12 @@
 # Semantic properties and model conformance
 
-The optional [Bombadil browser spike](../docs/BOMBADIL_TESTING.md) complements these
-semantic checks. It includes a proposed coordinator bridge for Quint-generated
-cross-app checkpoints and validation of observed semantic traces; that bridge is
-not yet implemented.
+The optional [Bombadil coordinator](../docs/BOMBADIL_TESTING.md) complements these
+semantic checks. `GOO_CROSS_APP_QUINT=1 npm run test:cross-app` from the repository
+root validates a real report → source readiness → goo display → exploration ledger
+through qobs/quint-go. `go test -run TestQuintCrossAppProtocolRejectsMutations`
+checks a labelled protocol fixture and twelve rejecting controls without a running
+lab. The live-ledger test explicitly skips unless `GOO_CROSS_APP_LEDGER` is supplied.
+Quint-generated browser checkpoints remain proposed.
 
 This separate Go module keeps Hegel's native loader/development dependencies out
 of the runtime module. It uses hegel-go **0.9.8** (embedded libhegel 0.43.4), Quint

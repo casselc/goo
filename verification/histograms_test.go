@@ -92,7 +92,7 @@ func TestHegelHistogramMerge(t *testing.T) {
 		b := uint64(hegel.Draw(tc, hegel.Integers(0, 10000)))
 		p := histogramPoint(10, 20, a, b)
 		p.Temporality = "delta"
-		r, e := metrics.EvaluateHistograms(metrics.HistogramRequest{"10", "20", "10", []metrics.HistogramPoint{p}})
+		r, e := metrics.EvaluateHistograms(metrics.HistogramRequest{FromNS: "10", ToNS: "20", MaxGapNS: "10", Points: []metrics.HistogramPoint{p}})
 		if e != nil {
 			tc.Fatalf("%v", e)
 		}

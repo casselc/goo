@@ -416,3 +416,33 @@ evidence basis and optional source instrumentation remain distinct. The generate
 Go template is scanner-validated; automatic source editing/promotion, new native
 metric contracts and Databricks lowering of this package kind remain future work.
 See [authoring contract](TELEMETRY_PACKAGES.md).
+
+## 13. Coordinated application and investigation testing
+
+Implemented local test path; the separate browser actors run concurrently.
+
+```mermaid
+flowchart LR
+ Coordinator["Playwright coordinator / run ledger"] --> App["Real sample-app UI request"]
+ App --> SDK["Application OTel SDK / woven operation"]
+ SDK --> Collector["Collector → ClickHouse"]
+ Collector --> Oracle["Independent bounded read-only test adapter"]
+ Oracle --> Coordinator
+ Coordinator --> Observer["Playwright goo observer / frozen query"]
+ Collector --> Goo["goo Explore / trace inspector"]
+ Goo --> Observer
+ Observer --> Compare["Compare rendered IDs and counts with source facts"]
+ Coordinator --> Bombadil["Separate Bombadil browser / generated navigation"]
+ Bombadil --> Goo
+ Bombadil --> Ledger["Exploration trace, result and action count"]
+ Compare --> Ledger
+ Ledger --> Optional["Opt-in qobs → quint-go → Quint model conformance"]
+```
+
+The first campaign covers one successful report request. Its four coordinator
+checkpoints retain acceptance, source readiness, displayed evidence and completed
+exploration. The model checks identity/scope/window/membership and order, with an
+explicit complete-ledger gate. It does not model browser scheduling or prove
+telemetry completeness. Application-side Bombadil generators and model-generated
+browser checkpoints are future work. See [testing contract](BOMBADIL_TESTING.md)
+and [executable storyboard](journeys/README.md#26-correlate-a-real-application-with-goo-during-generated-ui-exploration).
