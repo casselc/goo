@@ -989,3 +989,9 @@ connects draft composition, explicit generation-checked execution, contextual
 one-gesture reads and immutable evidence. Shortcut and advanced controls share one
 executor. Native discovery remains a separate signal population, retaining explicit
 service/time bounds from inventory. It is not an automatic cross-signal correlation.
+
+## Service browsing
+
+The [service browsing flow](SERVICE_BROWSING.md#scope-and-return-behavior) shows
+independent bounded metadata reads, convention-based record questions and native
+measurement preview feeding the existing typed executors.

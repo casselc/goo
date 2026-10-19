@@ -9,6 +9,8 @@ definition. Start from instrumented code or unfamiliar OpenTelemetry data.
 criteria for keeping the workbench coherent. The [core primitives review](docs/CORE_PRIMITIVES.md)
 sets the next consolidation priorities; [shared scope and checked transforms](docs/QUESTION_SCOPE.md)
 now connect recipe and follow-up planning.
+[Service browsing](docs/SERVICE_BROWSING.md) connects observed signals, operations,
+OTel attribute suggestions and native instruments through fixed-window questions.
 The first [question-workbench cleanup](docs/QUESTION_WORKBENCH.md) provides one Run
 path, explicit draft/applied scope, one-gesture drilldowns and fixed-window metric
 discovery. The [design review](docs/ENTRY_POINTS_DESIGN_SPIKE.md) records the broader

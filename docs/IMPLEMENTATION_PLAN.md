@@ -399,3 +399,10 @@ service/time context have different labels; absent/invalid IDs do not create lin
 An evidence-gap action appends an exact-citation open question to the draft.
 Storyboard 42 follows competing explanations through a real delayed operation,
 trace/log evidence and resource instrumentation without automatic causal claims.
+
+## Service browsing slice
+
+[Service details](SERVICE_BROWSING.md) connect existing inventory/signal discovery,
+observed attribute suggestions and native instrument previews. Fixed-window return
+is local; native metric-only fleet discovery, durable navigation history and a
+unified Library remain future work.

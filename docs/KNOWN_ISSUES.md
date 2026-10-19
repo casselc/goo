@@ -238,8 +238,10 @@ The usability [entry-point review](ENTRY_POINTS_DESIGN_SPIKE.md) found that
 Services → Discover metrics previously dropped the inventory window. The first
 [question-workbench slice](QUESTION_WORKBENCH.md) now passes those bounds and
 consolidates Explore execution with explicit draft/applied scope. Broader
-Investigation/Evidence and Library entry-point restructuring, native browse-first
-discovery, navigation history and durable draft recovery remain proposed.
+Investigation/Evidence and Library entry-point restructuring, standalone native
+browse-first discovery, navigation history and durable draft recovery remain
+proposed. [Service browsing](SERVICE_BROWSING.md) now provides scoped instrument
+previews from service detail.
 
 Recipes and follow-ups now share checked scope/transform metadata; persisted
 question and capture formats remain unchanged. OTel/custom selectors retain their
@@ -250,3 +252,13 @@ future work. Existing record count/duration/status controls now lower through a
 bounded typed measure plan; opt-in split charts preserve their semantics.
 Comparison scopes retain separate members; automatic comparison transforms are
 rejected. See [QUESTION_SCOPE.md](QUESTION_SCOPE.md).
+
+## Service browsing boundaries
+
+The [service detail flow](SERVICE_BROWSING.md) offers observed HTTP/database/messaging
+span questions and native instrument previews. The inventory catalog starts from
+spans; signal discovery exposes log-only services. Metric-only service enumeration
+is not implemented: use explicit native metric discovery by service name. Attribute
+discovery is bounded, convention aliases are not merged, and missing observations
+do not establish instrumentation coverage or health. Service context reads can
+fail independently. Service return is local, not durable browser-history recovery.

@@ -828,3 +828,21 @@ The controlled producer uses ordinary OTLP spans and a gauge, not mocked evidenc
 - Executable: `journeys/question-workbench.spec.js`; optional source-free draft
   exploration: `GOO_QUESTION_BOMBADIL=1`. The observed Quint lifecycle validates
   generations/phases and rejects mutated publication, scope, read and custody facts.
+
+### 46 · Browse a service and follow observed conventions
+
+Run `journeys/service-browser.spec.js` through the normal journey wrapper. An
+ordinary catalog service emits HTTP/database spans, a log, a process utilization
+gauge and an unsupported nonmonotonic sum; another service emits only logs. Open
+service detail, choose an observed HTTP breakdown, return locally, preview a native
+measurement without execution, then inspect the log-only service. The journey also
+delays a real metadata response and changes environment to check stale publication.
+
+- [Service signals, questions and instruments](screenshots/46a-service-signals-questions-instruments.png)
+- [Fixed service route question](screenshots/46b-fixed-service-route-question.png)
+- [Native instrument preview](screenshots/46c-fixed-native-instrument-preview.png)
+- [Mobile service detail](screenshots/46d-mobile-service-detail.png)
+
+`GOO_SERVICE_BROWSER_BOMBADIL=1` enables the matching 30-second exploration campaign.
+The actual ledger is validated by quint-go with six rejecting mutations. See
+[service browsing](../SERVICE_BROWSING.md) for scope and semantic boundaries.

@@ -2,8 +2,9 @@
 
 Implemented first slice of the [entry-point review](ENTRY_POINTS_DESIGN_SPIKE.md).
 Current routes and typed record/native metric/lifecycle kernels remain in place.
-Library/navigation migrations and a browse-first native-metric experience are
-still proposed; this slice changes how the existing record question is composed,
+The later [service browsing slice](SERVICE_BROWSING.md) adds observed-instrument
+previews. Library/navigation migrations and standalone native browsing remain
+proposed; this slice changes how the existing record question is composed,
 executed and followed into evidence.
 
 ## Start and run

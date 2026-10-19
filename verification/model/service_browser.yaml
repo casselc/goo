@@ -1,0 +1,9 @@
+spec: service_browser.qnt
+module: service_browser
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  browse: {expect: 'coherent == {{.obs.coherent}}'}
+  follow: {expect: 'coherent == {{.obs.coherent}}'}
+  returnLocal: {expect: 'coherent == {{.obs.coherent}}'}
+  preview: {expect: 'coherent == {{.obs.coherent}}'}

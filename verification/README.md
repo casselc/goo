@@ -297,3 +297,12 @@ typed questions and service-discovery/capture custody with eight rejecting contr
 Run storyboard 45 with `GOO_QUESTION_BOMBADIL=1` through the standard journey wrapper.
 The new Bombadil actor is source-free and bounded; existing discovery campaigns
 now target the single Run action and preserve authored OR with AND shortcuts.
+
+### Service browsing
+
+`TestHegelServiceSuggestionScope` invokes the actual JavaScript suggestion planner
+with generated fixed bounds and preferred/legacy/absent database attribute keys.
+`TestQuintServiceBrowserLive` consumes `GOO_SERVICE_BROWSER_LEDGER`, checks the
+three independent read scopes, narrowed HTTP question, local return and native
+preview scope, and rejects six scope/selector/read mutations. Storyboard 46 writes
+that ledger; `GOO_SERVICE_BROWSER_BOMBADIL=1` adds the 30-second service actor.

@@ -5,6 +5,56 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Browse-first service investigations (2026-10-19)
+
+[Service browsing](docs/SERVICE_BROWSING.md) now connects fixed-window service
+inventory and span/log discovery with observed-attribute questions and native
+instrument previews. Opening a service explicitly reads three independent bounded
+sources; unavailable sources remain separate. HTTP/database/messaging suggestions
+use exact observed OTel attribute keys (including documented aliases), add an
+explicit exists predicate, and enter the shared Explore executor. Native previews
+retain instrument identity and fixed bounds; unsupported kernels cannot execute.
+Back to service is local. Scope changes abort reads and reject late publication.
+Metric-only fleet enumeration and durable navigation history remain unimplemented.
+
+Passed: 35 frontend tests; Python compilation; verification vet; Quint typecheck;
+Hegel (100 requested generated cases) invoking the actual JavaScript suggestion
+planner with generated windows and preferred/legacy/absent keys. Storyboard 46
+passed with real OTLP spans/logs/metrics through ClickHouse, a 30-second Bombadil
+campaign, and observed quint-go ledger validation with six rejecting mutations.
+The journey checks narrowed HTTP count 4 of 6 spans, preserved service/window,
+source-free native preview, read-free return, unsupported nonmonotonic sums,
+log-only service browsing and cancellation of a delayed real metadata response.
+Evidence: `artifacts/service-{node,hegel,vet,final-journey}.log` and
+`artifacts/service-browser/browse-9939f5b3/ledger.json` (release rerun).
+
+Existing core basics 33, inventory 31, metric discovery 39 and question workbench
+45 all passed in 4.5 minutes (`artifacts/service-regression.log`), including five
+enabled Bombadil campaigns and their live Quint validations. These ran before the
+final two presentation fixes for local service-button filtering and unread
+operation inventory wording; storyboard 46 checks both on the release image.
+
+The release rerun passed (`artifacts/service-release-journey.log`), including
+local service-button filtering without reads and explicit unread operation inventory
+for log-only service detail. Its live Quint validation and Bombadil campaign passed;
+all six distinct enabled campaigns across this slice and regressions succeeded.
+Final image: `sha256:f51dff13fb845ad45b648608bbadeee36af1cea13dab41b6aa1f692e029b50f1`.
+All 12 services are running, traffic is restored and all five pre-existing stale
+Redis pending entries remain (`artifacts/service-final-health.json`). Only dangling
+Docker images were pruned for space; no telemetry volumes were removed.
+
+Frames 46a–d document service detail, fixed-window record exploration, native
+measurement preview and mobile detail. Final desktop/mobile service frames were
+visually reviewed. The detail replaces the operation table while open, with
+question/instrument cards arranged in desktop grids and mobile columns. README,
+architecture/process diagram, implementation plan and known boundaries are updated.
+
+Early integration attempts found two fixture/assertion mistakes: monotonic delta
+counters are supported (the unsupported fixture now uses a nonmonotonic sum), and
+measurement environment is nested in the definition rather than the question root.
+Those attempts remain in `service-journey.log` and `service-journey-rerun.log`;
+the final successful run is distinct. No backend kernel or persisted schema changed.
+
 ## One scoped question workbench (2026-10-19)
 
 The first [entry-point design slice](docs/QUESTION_WORKBENCH.md) is implemented:
