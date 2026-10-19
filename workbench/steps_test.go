@@ -2,9 +2,11 @@ package workbench
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/casselc/goo/exploration"
 	"github.com/casselc/goo/measurements"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -55,5 +57,49 @@ func TestMixedQuestionStepsPreserveRevisionsAndScope(t *testing.T) {
 	}
 	if (Card{Kind: "note", Role: "finding", Text: "x", Step: &metric}).Validate() == nil {
 		t.Fatal("question hidden in note")
+	}
+}
+
+func TestLinkedEvidenceRequiresResolverAndPreservesHistory(t *testing.T) {
+	q := exploration.Query{Signal: "spans", Environment: "prod", FromMS: 1000, ToMS: 2000, Limit: 100}
+	step := Step{Version: 1, Kind: "record", Scope: StepScope{"prod", 1000, 2000}, View: "Records", Record: &q}
+	key := strings.Repeat("a", 64)
+	one, two := strings.Repeat("b", 64), strings.Repeat("c", 64)
+	card := Card{Kind: "question", Key: key, Step: &step, Evidence: []string{one}}
+	store := Store{Dir: t.TempDir()}
+	in := DocumentInput{Title: "Evidence history", Cards: []Card{card}}
+	if _, e := store.CreateDocument(in, "", nil); e == nil {
+		t.Fatal("unchecked evidence accepted")
+	}
+	if _, e := store.CreateDocument(in, "", func(string) error { return errors.New("missing") }); e == nil {
+		t.Fatal("missing evidence accepted")
+	}
+	resolver := func(id string) error {
+		if id != one && id != two {
+			return errors.New("missing")
+		}
+		return nil
+	}
+	first, e := store.CreateDocument(in, "", resolver)
+	if e != nil {
+		t.Fatal(e)
+	}
+	in.Cards[0].Evidence = append([]string{one}, two)
+	child, e := store.CreateDocument(in, first.ID, resolver)
+	if e != nil || len(child.Cards[0].Evidence) != 2 {
+		t.Fatal(child, e)
+	}
+	old, e := store.LoadDocument(first.ID)
+	if e != nil || len(old.Cards[0].Evidence) != 1 || old.Cards[0].Evidence[0] != one {
+		t.Fatal("history overwritten")
+	}
+	in.Cards[0].Evidence = []string{one, one}
+	if in.Validate() == nil {
+		t.Fatal("duplicate evidence accepted")
+	}
+	in.Cards[0].Evidence = nil
+	in.Cards = append(in.Cards, in.Cards[0])
+	if in.Validate() == nil {
+		t.Fatal("duplicate question key accepted")
 	}
 }

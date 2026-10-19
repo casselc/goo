@@ -2,6 +2,16 @@
 (function(global){
  const routes={explore:{title:'Explore',description:'Follow a question through captured telemetry.'},services:{title:'Services',description:'Discover emitting services and open focused investigations.'},operations:{title:'Operations',description:'Investigate application behavior through shared definitions.'},investigations:{title:'Saved investigations',description:'Reopen evidence, preserve context, and compare revisions.'},definitions:{title:'Definitions',description:'Inspect the contracts behind your investigations.'},examples:{title:'Examples',description:'Investigate independent sample applications using shared telemetry packages.'}};
  // Versioned links contain questions, never evidence or source credentials.
+ function captureQuestion(step){validateStep(step);return step.kind==='record'?{kind:'explore',explore:structuredClone(step.record)}:{kind:'measurement',measurement:{definition:structuredClone(step.measurement),fromMs:step.scope.fromMs,toMs:step.scope.toMs}}}
+ function evidenceDifference(step,capture){
+  const identify=global.GooQuestionSession?.identity||(typeof module!=='undefined'?require('./question-session').identity:null);const expected=captureQuestion(step),actual=capture,changes=[];if(expected.kind!==actual.kind)return ['Signal family differs'];
+  const a=expected.explore||expected.measurement,b=actual.explore||actual.measurement;if(!b)return ['Question unavailable'];
+  if((a.environment||a.definition?.environment)!==(b.environment||b.definition?.environment))changes.push('Environment differs');
+  if(a.fromMs!==b.fromMs||a.toMs!==b.toMs)changes.push('Fixed window differs');
+  function definition(q){if(q.definition){const d=structuredClone(q.definition);delete d.environment;return identify?identify(d):stable(d)}const d=structuredClone(q);for(const k of ['environment','fromMs','toMs','offset','limit'])delete d[k];return identify?identify(d):stable(d)}
+  function stable(x){if(Array.isArray(x))return '['+x.map(stable).join(',')+']';if(x&&typeof x==='object')return '{'+Object.keys(x).sort().map(k=>JSON.stringify(k)+':'+stable(x[k])).join(',')+'}';return JSON.stringify(x)}
+  if(definition(a)!==definition(b))changes.push('Question definition differs');return changes;
+ }
  function recordStep(q,view='Records'){return {version:1,kind:'record',scope:{environment:q.environment,fromMs:q.fromMs,toMs:q.toMs},view,record:structuredClone(q)}}
  function measurementStep(q){return {version:1,kind:'measurement',scope:{environment:q.definition.environment,fromMs:q.fromMs,toMs:q.toMs},view:'Overview',measurement:structuredClone(q.definition)}}
  function validateStep(s){
@@ -40,5 +50,5 @@
   for(const button of buttons)button.onclick=()=>navigate(button.dataset.workspace,{focus:true});global.addEventListener('popstate',()=>navigate(routeFromHash(location.hash),{writeHash:false}));global.addEventListener('hashchange',()=>navigate(routeFromHash(location.hash),{writeHash:false}));navigate(routeFromHash(location.hash),{writeHash:false});
   return {navigate,current:()=>current};
  }
- const api={recordStep,measurementStep,validateStep,stepLink,readStepLink,sameWindow,routes,routeFromHash,questionLink,readQuestionLink,validateLink,mount};if(typeof module!=='undefined')module.exports=api;else global.GooWorkspace=api;
+ const api={captureQuestion,evidenceDifference,recordStep,measurementStep,validateStep,stepLink,readStepLink,sameWindow,routes,routeFromHash,questionLink,readQuestionLink,validateLink,mount};if(typeof module!=='undefined')module.exports=api;else global.GooWorkspace=api;
 })(typeof window==='undefined'?globalThis:window);

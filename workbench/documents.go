@@ -7,20 +7,32 @@ import (
 )
 
 type Card struct {
-	Step      *Step  `json:"step,omitempty"`
-	Kind      string `json:"kind"`
-	Role      string `json:"role,omitempty"`
-	Text      string `json:"text,omitempty"`
-	Reference string `json:"reference,omitempty"`
-	Caption   string `json:"caption,omitempty"`
+	Key       string   `json:"key,omitempty"`
+	Evidence  []string `json:"evidence,omitempty"`
+	Step      *Step    `json:"step,omitempty"`
+	Kind      string   `json:"kind"`
+	Role      string   `json:"role,omitempty"`
+	Text      string   `json:"text,omitempty"`
+	Reference string   `json:"reference,omitempty"`
+	Caption   string   `json:"caption,omitempty"`
 }
 
 func (c Card) Validate() error {
-	if c.Kind != "question" && c.Step != nil {
+	if c.Kind != "question" && (c.Step != nil || c.Key != "" || len(c.Evidence) > 0) {
 		return errors.New("only question cards carry a step")
 	}
 	switch c.Kind {
 	case "question":
+		if (c.Key != "" && !ID.MatchString(c.Key)) || len(c.Evidence) > 16 || (len(c.Evidence) > 0 && c.Key == "") {
+			return errors.New("question evidence requires a key and at most 16 capture references")
+		}
+		seen := map[string]bool{}
+		for _, id := range c.Evidence {
+			if !ID.MatchString(id) || seen[id] {
+				return errors.New("question evidence requires unique exact capture IDs")
+			}
+			seen[id] = true
+		}
 		if c.Step == nil || c.Reference != "" || c.Role != "" || c.Text != "" || !text(c.Caption, 160, false, false) {
 			return errors.New("question card requires a step and optional caption")
 		}
@@ -51,7 +63,14 @@ func (d DocumentInput) Validate() error {
 	if !text(d.Title, 120, true, false) || (len(d.Cards) < 1 && strings.TrimSpace(d.Question) == "") || len(d.Cards) > 32 || !text(d.Question, 4000, false, true) || !text(d.Finding, 4000, false, true) || !text(d.OpenQuestions, 4000, false, true) {
 		return errors.New("document requires title, a question or 1..32 ordered cards, and bounded investigation summaries")
 	}
+	keys := map[string]bool{}
 	for _, c := range d.Cards {
+		if c.Key != "" {
+			if keys[c.Key] {
+				return errors.New("duplicate question key")
+			}
+			keys[c.Key] = true
+		}
 		if e := c.Validate(); e != nil {
 			return e
 		}
@@ -89,6 +108,14 @@ func (s Store) CreateDocument(in DocumentInput, parent string, checkCapture func
 		}
 	}
 	for _, c := range in.Cards {
+		for _, id := range c.Evidence {
+			if checkCapture == nil {
+				return nil, errors.New("capture reference resolver required")
+			}
+			if e := checkCapture(id); e != nil {
+				return nil, errors.New("linked question capture unavailable")
+			}
+		}
 		switch c.Kind {
 		case "capture":
 			if checkCapture == nil {

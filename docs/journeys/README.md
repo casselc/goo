@@ -894,3 +894,11 @@ questions plus a UI-captured evidence reference, displays same/different windows
 saves a revision, reopens without reads and explicitly reruns. A second browser
 opens the shared native question. Frames `50a-mixed-question-investigation.png`,
 `50b-resume-native-question.png` and `50c-mobile-native-question.png` document it.
+
+## 51 — Linked question evidence
+
+`linked-evidence.spec.js` runs and captures a saved question twice, explains a
+changed-filter capture, recovers from document publication failure without another
+source read and reopens stored history on mobile. A companion case captures native
+metrics with their stored read time and typed definition. Frames 51a–e show the
+history, drift preview, recovery, mobile layout and native result summary.

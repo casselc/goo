@@ -1,0 +1,17 @@
+spec: linked_evidence.qnt
+module: linked_evidence
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  save:
+    expect: 'reads == {{.obs.reads}} and linked == {{.obs.linked}} and coherent == {{.obs.coherent}}'
+  capture:
+    expect: 'reads == {{.obs.reads}} and linked == {{.obs.linked}} and coherent == {{.obs.coherent}}'
+  inspectRead:
+    expect: 'reads == {{.obs.reads}} and linked == {{.obs.linked}} and coherent == {{.obs.coherent}}'
+  failPublish:
+    expect: 'reads == {{.obs.reads}} and linked == {{.obs.linked}} and coherent == {{.obs.coherent}}'
+  recover:
+    expect: 'reads == {{.obs.reads}} and linked == {{.obs.linked}} and coherent == {{.obs.coherent}}'
+  reopen:
+    expect: 'reads == {{.obs.reads}} and linked == {{.obs.linked}} and coherent == {{.obs.coherent}}'

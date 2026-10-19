@@ -1017,3 +1017,10 @@ measurement definitions to immutable document revisions. Reopening dispatches
 to a staged record question or source-free measurement planner; an explicit run
 reaches existing adapters and evaluators. Capture IDs retain separate custody
 and read semantics. Equal scope bounds never merge signal populations.
+
+## Capturing evidence for a saved question
+
+[Question evidence history](LINKED_QUESTION_EVIDENCE.md) documents the explicit
+source-read → immutable capture → child document-revision flow. Publication can
+fail after capture; the retained ID can be linked without another source read.
+Read time, custody time and question scope remain separate.

@@ -82,11 +82,27 @@ func registerCaptures(mux *http.ServeMux, client *http.Client, dir string) {
 			fail(w, 404, e)
 			return
 		}
+		readAt := ""
+		if c.Explore != nil {
+			readAt = c.Explore.CapturedAt
+		}
 		revision := ""
 		if c.Measurement != nil {
 			revision = c.Measurement.Plan.Revision
+			readAt = c.Measurement.ReadAt
 		}
-		reply(w, 200, map[string]any{"receipt": c.CaptureReceipt, "definitionRevision": revision})
+		summary := map[string]string{}
+		if c.Explore != nil {
+			summary["state"] = c.Explore.State
+			summary["count"] = c.Explore.Count
+			summary["grain"] = c.Explore.Question.Signal + " records"
+		}
+		if c.Measurement != nil {
+			summary["state"] = c.Measurement.State
+			summary["count"] = c.Measurement.Count
+			summary["grain"] = "source records; " + c.Measurement.Question.Definition.Grain + " measurement"
+		}
+		reply(w, 200, map[string]any{"receipt": c.CaptureReceipt, "definitionRevision": revision, "readAt": readAt, "summary": summary})
 	})
 	mux.HandleFunc("GET /captures/{id}", func(w http.ResponseWriter, r *http.Request) {
 		cur, e := cursor(r)

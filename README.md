@@ -27,7 +27,8 @@ services exercise general-purpose contracts.
 bring the question, finding, open questions and cross-signal evidence together.
 [Typed question steps](docs/INVESTIGATION_STEPS.md) preserve record questions and
 measurement definitions in the same named investigation. Reopen either without
-executing it, then explicitly Run again.
+executing it, then explicitly Run again. [Linked evidence histories](docs/LINKED_QUESTION_EVIDENCE.md)
+add Run and capture, show scope differences, and preserve earlier results.
 Capture directly into an investigation draft or a new child of a saved revision;
 reopen the handoff without telemetry reads, or reuse its definition against fresh
 data while retaining the original evidence.

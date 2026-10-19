@@ -283,3 +283,9 @@ and validated measurement definitions with fixed scope and view. Native question
 can be shared and reopened without telemetry reads. Service-detail panels,
 inspector state, baselines and unsaved keystrokes remain local. There is no
 automatic association with a latest capture or synchronized multiuser editing.
+
+[Linked question evidence](LINKED_QUESTION_EVIDENCE.md) now supports explicit
+capture-to-step histories. Capture and document publication are separate; retained
+capture IDs support retrying a failed attachment without rereading. Histories are
+bounded to 16 references per question, with no scheduled refresh or distributed
+transaction. Matching scope is not a shared snapshot or population guarantee.

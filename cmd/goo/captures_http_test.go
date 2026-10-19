@@ -66,9 +66,11 @@ func TestCaptureHTTPServerCustodyAndSourceFreePaging(t *testing.T) {
 	registerCaptures(mux, source.Client(), dir)
 	metadata := call("GET", "/captures/"+first.Receipt.ID+"/receipt", "")
 	var brief struct {
-		Receipt exploration.CaptureReceipt `json:"receipt"`
+		Receipt exploration.CaptureReceipt           `json:"receipt"`
+		ReadAt  string                               `json:"readAt"`
+		Summary struct{ State, Count, Grain string } `json:"summary"`
 	}
-	if metadata.Code != 200 || json.Unmarshal(metadata.Body.Bytes(), &brief) != nil || brief.Receipt.ID != first.Receipt.ID || strings.Contains(metadata.Body.String(), `"rows"`) {
+	if metadata.Code != 200 || json.Unmarshal(metadata.Body.Bytes(), &brief) != nil || brief.Receipt.ID != first.Receipt.ID || brief.ReadAt == "" || brief.Summary.Count != first.Explore.Count || brief.Summary.Grain != "spans records" || strings.Contains(metadata.Body.String(), `"rows"`) {
 		t.Fatal("invalid receipt-only response", metadata.Body.String())
 	}
 	if reads.Load() != oldReads {

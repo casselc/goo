@@ -188,3 +188,11 @@ It contains no evidence. [Investigation steps](INVESTIGATION_STEPS.md) document 
 validated union, source-free reopen flow, matched/different windows, native sharing
 and executable mixed-question journey. Question cards use the same ordering,
 32-card limit, 128 KiB bound and immutable revision history as existing cards.
+
+## Linked question evidence
+
+Question cards accept an optional unique 64-hex `key` and an ordered `evidence`
+array of at most 16 unique capture IDs. The store resolves linked captures before
+publishing. [Linked evidence](LINKED_QUESTION_EVIDENCE.md) describes explicit
+capture/child-revision publication and retained-capture recovery. Receipt metadata
+exposes stored `readAt` and `summary` fields without source evaluation.

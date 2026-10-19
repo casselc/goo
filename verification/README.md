@@ -348,3 +348,11 @@ The existing `TestHegelContextNotesStateSwarm` also includes typed record/native
 card creation and detached question-scope revisions after forks. Its 60 requested
 15-step scenarios retain the history/context invariant across saves, ordering and
 scope changes.
+
+Linked evidence: `TestHegelLinkedEvidenceDifference` runs 100 requested cases
+through actual JS capture projection/difference functions.
+`TestHegelLinkedEvidenceStateSwarm` exercises 60 requested 15-step link/save/fork
+scenarios against the Go store. `TestQuintLinkedEvidenceLive` consumes
+`GOO_LINKED_LEDGER`; its model checks capture reads, failed publication, recovery
+and read-free reopening with seven negative controls. Enable the stored-history
+Bombadil actor with `GOO_LINKED_BOMBADIL=1` for storyboard 51.

@@ -5,6 +5,38 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Linked question evidence (2026-10-19)
+
+[Linked evidence](docs/LINKED_QUESTION_EVIDENCE.md) gives saved questions an
+explicit Run and capture action, immutable capture history, stored result counts
+and source read times, and visible question/scope differences. Partial publication
+preserves the capture ID for explicit recovery without another source read.
+
+Passed: full root Go suite, 40 frontend checks, verification vet, 100 requested
+Hegel cases comparing the actual JavaScript scope/definition logic, and 60
+requested state/swarm scenarios of 15 steps preserving immutable revisions.
+Logs: `artifacts/linked-go-summary.log`, `linked-node-ready.log`,
+`linked-verification-vet.log`, `linked-hegel.log`, `linked-state-final.log`.
+
+Both new browser journeys passed (no skips, 1.1 minutes): record capture history,
+refined-question drift, failed-publication recovery, stored reopening, mobile
+layout, and native capture with one source execution. The live ledger passed Quint
+trace validation with seven rejecting mutations; 30 seconds of Bombadil exploration
+passed without implicit source reads (`artifacts/linked-release-focused.log`,
+`artifacts/linked-evidence/1792445673965/ledger.json`). The first focused run exposed
+mobile overflow from an unwrapped capture ID; using the existing reference-ID
+style fixed it, and the final mobile assertion passed. Storyboard 51 and its five
+screenshots document the final behavior.
+
+Final compatibility campaign: **4 passed, no skips, 5.2 minutes**, covering
+saved captures 32, investigation notes 36, mixed steps 50 and measurements 38,
+with their enabled Bombadil campaigns and live trace validations
+(`artifacts/linked-regression.log`). Refreshed affected screenshots accompany the
+new storyboard. All 12 services are running, owned traffic was restored, all five
+pre-existing stale Redis pending IDs were preserved, and the three served UI assets
+match the tested source (`linked-final-health.json`, `linked-served-assets.json`).
+Final query image: `sha256:495e49a385806d103d9c398b3dda90f1c245b9c0490b2217bfde524478ffac3e`.
+
 ## Typed investigation steps (2026-10-19)
 
 [Question steps](docs/INVESTIGATION_STEPS.md) persist record questions and complete

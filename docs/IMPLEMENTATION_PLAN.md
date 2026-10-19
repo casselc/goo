@@ -423,3 +423,7 @@ subsequent work.
 Implemented: [mixed investigation steps](INVESTIGATION_STEPS.md), using one typed
 scope envelope for record and measurement intent, immutable named document
 revisions, native sharing, explicit reruns and separate evidence references.
+
+Implemented: [linked question evidence](LINKED_QUESTION_EVIDENCE.md), explicit
+Run and capture, typed scope differences and attachment recovery. Scheduled runs,
+automatic refresh and statistical comparisons remain later work.

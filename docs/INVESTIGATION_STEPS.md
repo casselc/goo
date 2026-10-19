@@ -59,8 +59,8 @@ their IDs and load without conversion.
 Cards remain bounded to 32 and the existing 128 KiB document limit. Native view
 state currently means Overview; record views are Records or Distribution. Service
 catalog search, inspector selection, baselines, unsaved keystrokes and simultaneous
-collaborative editing are not serialized. Question cards do not automatically adopt
-newer captures or a mutable latest revision.
+collaborative editing are not serialized. Question cards now support explicit [Run and capture and linked evidence histories](LINKED_QUESTION_EVIDENCE.md).
+They do not automatically refresh or adopt a mutable latest revision.
 
 Storyboard 50 (`journeys/investigation-steps.spec.js`) uses real requests and worker
 metrics, captures through the UI, saves a mixed investigation, reopens it and shares
@@ -73,3 +73,6 @@ rejecting mutations. Bombadil explores the saved question cards without running 
 ![Saved questions and frozen evidence in a named investigation](journeys/screenshots/50a-mixed-question-investigation.png)
 
 ![Reopen a native question without executing it](journeys/screenshots/50b-resume-native-question.png)
+
+Question cards may include optional `key` and ordered `evidence` capture IDs.
+See the linked-history contract for publication, scope differences and recovery.
