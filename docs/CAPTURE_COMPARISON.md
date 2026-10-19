@@ -77,3 +77,8 @@ compatible and incompatible selections through ordinary controls.
 ![Definition mismatch](journeys/screenshots/52b-incompatible-capture-definition.png)
 
 ![Native stream comparison](journeys/screenshots/52d-native-stream-comparison.png)
+
+The native comparison panel also offers [Find comparable windows](OBSERVED_WINDOW_DISCOVERY.md).
+It inspects captured intervals without reading telemetry, previews exact supported
+sub-scopes and exclusions, and requires explicit selection and capture before
+comparing new evidence. Original capture IDs and scope remain unchanged.

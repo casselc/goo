@@ -1,0 +1,13 @@
+spec: window_discovery.qnt
+module: window_discovery
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  discover:
+    expect: 'reads == {{.obs.reads}} and phase == {{.obs.phase}} and coherent == {{.obs.coherent}}'
+  choose_support:
+    expect: 'reads == {{.obs.reads}} and phase == {{.obs.phase}} and coherent == {{.obs.coherent}}'
+  capture:
+    expect: 'reads == {{.obs.reads}} and phase == {{.obs.phase}} and coherent == {{.obs.coherent}}'
+  reopen:
+    expect: 'reads == {{.obs.reads}} and phase == {{.obs.phase}} and coherent == {{.obs.coherent}}'

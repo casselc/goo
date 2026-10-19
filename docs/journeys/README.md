@@ -928,3 +928,23 @@ counter rates, whole histogram populations, mobile containment, counter decrease
 refusal and incompatible bucket layouts. Incomplete coverage is also refused.
 Quint validates source-free transitions with six negative controls; optional
 Bombadil exploration reopens the saved native result.
+
+### 55 — Find and capture observed SDK windows
+
+`window-discovery.spec.js` ingests real standard OTLP cumulative counters and delta
+explicit histograms with 123 ns offsets. Broad captured questions cannot assert
+complete coverage. Discovery reads stored intervals only, previews exclusions and
+requires both selections before two explicit source reads create exact captures.
+It compares and shares frozen evidence with a fresh browser and checks mobile
+containment. Original captures remain byte-for-byte unchanged. A forced second-capture failure
+retains the first ID and leaves the original comparison selected.
+
+- [Original support and exclusions](screenshots/55a-observed-support-and-exclusions.png)
+- [Explicit exact sub-scope selection](screenshots/55b-explicit-exact-window-selection.png)
+- [New captures compared](screenshots/55c-selected-scopes-captured-and-compared.png)
+- [Mobile histogram support](screenshots/55d-mobile-histogram-support.png)
+- [Completed first capture retained after second capture failure](screenshots/55e-partial-capture-recovery.png)
+
+Quint observed-trace replay validates source-free discovery/selection and explicit
+two-read capture, with six rejecting mutations. Optional Bombadil exploration
+compares original captures, discovers support and toggles selections.

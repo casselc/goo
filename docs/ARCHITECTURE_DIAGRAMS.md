@@ -1043,3 +1043,24 @@ The [native window flow](NATIVE_WINDOW_COMPARISON.md) validates full coverage an
 stream identity before computing exact rates or compatible bucket populations.
 Supported changes and refusal reasons enter version 2 receipts; version 1
 snapshots remain readable without engine reevaluation.
+
+## Observed support to new exact evidence
+
+[Observed-window discovery](OBSERVED_WINDOW_DISCOVERY.md) is source-free until
+the user explicitly captures both selected sub-scopes.
+
+```mermaid
+flowchart LR
+  Old[Two immutable native captures] --> Support[Go all-stream supported-boundary intersection]
+  Support --> Preview[Exact candidates and coverage exclusions]
+  Preview --> Pick[User selects both sub-scopes]
+  Pick --> Compatible{Same streams, temporality and layout?}
+  Compatible -->|yes / explicit capture| Read[Two bounded Nano source reads]
+  Compatible -->|no| Withhold[Explain incompatibility]
+  Read --> New[Two new immutable captures]
+  New --> Compare[Existing complete-window comparison]
+  Compare --> Frozen[Explicitly saved comparison and investigation revision]
+```
+
+The original capture question and evidence remain unchanged. Partial publication
+retains completed capture IDs for recovery; separate source reads are not atomic.

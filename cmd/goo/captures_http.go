@@ -95,6 +95,23 @@ func registerCaptures(mux *http.ServeMux, client *http.Client, dir string) {
 		}
 		reply(w, 200, result)
 	})
+	mux.HandleFunc("GET /captures/{id}/windows", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.RawQuery != "" {
+			fail(w, 400, fmt.Errorf("window discovery has no query parameters"))
+			return
+		}
+		c, e := store.Load(r.PathValue("id"))
+		if e != nil {
+			fail(w, 404, e)
+			return
+		}
+		result, e := exploration.DiscoverCapturedWindows(c)
+		if e != nil {
+			fail(w, 400, e)
+			return
+		}
+		reply(w, 200, result)
+	})
 	mux.HandleFunc("GET /captures/{id}/receipt", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.RawQuery != "" {
 			fail(w, 400, fmt.Errorf("receipt metadata has no query parameters"))

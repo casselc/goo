@@ -1,0 +1,11 @@
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document})=>{const c=document.querySelector('#documentCards .evidence-comparison'),w=c?.querySelector('.window-discovery');return{state:c?.querySelector('.evidence-comparison-result')?.getAttribute('data-state'),phase:w?.getAttribute('data-phase'),picks:Array.from(w?.querySelectorAll('select')||[]).map((s:any)=>s.value),captureDisabled:(Array.from(w?.querySelectorAll('button')||[]).find(b=>b.textContent==='Capture selected windows')as HTMLButtonElement)?.disabled}});
+export const ready=eventually(()=>!!state.current.phase).within(15,'seconds');
+export const noImplicitCapture=always(()=>!state.current.state||state.current.state==='unavailable');
+export const explicitBoth=always(()=>state.current.picks.length!==2||state.current.picks.every(v=>v!=='')||state.current.captureDisabled!==false);
+const compare=registerCustomAction('goo.compareForSupport',async(document)=>{(Array.from(document.querySelectorAll('#documentCards button')).find(b=>b.textContent==='Compare captures')as HTMLButtonElement)?.click()});
+const find=registerCustomAction('goo.findSupport',async(document)=>{(document.querySelector('#documentCards .window-discovery > button')as HTMLButtonElement)?.click()});
+const choose=registerCustomAction('goo.chooseSupport',async(document)=>{for(const select of document.querySelectorAll('#documentCards .window-discovery select')){const s=select as HTMLSelectElement;s.value=s.value===''?'0':'';s.dispatchEvent(new Event('change',{bubbles:true}))}});
+export const explore=actions(()=>!state.current.phase?[compare()]:state.current.phase==='idle'?[find()]:['unselected','selected'].includes(state.current.phase)?[choose(),find()]:['Wait']);

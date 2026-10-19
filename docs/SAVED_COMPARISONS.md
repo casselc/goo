@@ -87,3 +87,9 @@ controls; Bombadil reopens frozen cards through ordinary controls.
 ![Recipient sees the revised finding with the original comparison](journeys/screenshots/53b-recipient-frozen-comparison.png)
 
 ![Saved unit incompatibility](journeys/screenshots/53d-saved-unit-incompatibility.png)
+
+Native comparisons created through [observed-support selection](OBSERVED_WINDOW_DISCOVERY.md)
+reference two newly captured exact questions, retaining nanosecond strings in the
+frozen receipt. The original question card and its original evidence remain
+unchanged. Saving the comparison records the actual new results; support preview
+alone is not saved as evidence or a promise of source completeness.

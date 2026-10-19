@@ -305,9 +305,9 @@ snapshots are limited to 128 KiB and fail rather than truncate. Sharing requires
 access to the same workspace; verified authorship, access control and receipt
 garbage collection remain future work.
 
-Native questions now accept exact `fromNS`/`toNS` string bounds alongside matching
-enclosing millisecond bounds. SQL, evaluation, captures and shared question steps
-retain those bounds. The interactive editor still accepts millisecond input;
-“Find comparable windows” discovery and explicit selection remain planned.
-Nanosecond-offset edges therefore still require an API-authored exact question;
-no silent trimming or interpolation occurs.
+Native questions and shared steps preserve exact nanosecond scope. The comparison
+panel now offers [observed-support discovery](OBSERVED_WINDOW_DISCOVERY.md) for
+counter and explicit histogram captures, with explicit selection and rereads.
+Asynchronous streams without common boundaries, unsupported members and overflowing
+histogram populations withhold support. Discovery does not select stream subsets
+or realign intervals; the ordinary time editor still authors millisecond bounds.

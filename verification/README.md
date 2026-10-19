@@ -378,3 +378,26 @@ suffix). Storyboard 54 writes `GOO_NATIVE_WINDOWS_LEDGER` for
 `TestQuintNativeWindowsLive`, with six rejecting controls. Run
 `GOO_NATIVE_WINDOWS_BOMBADIL=1 bash scripts/run_journeys.sh
 journeys/native-windows.spec.js` for the live OTLP and frozen-reopen workflow.
+
+## Observed window discovery
+
+`TestHegelWindowDiscoverySupport` generates modern nanosecond offsets, gaps/flags
+and multiple exact streams, checks every offered scope against the original
+kernel points, preserves input immutability and withholds support when one member
+has no valid intervals. `TestHegelSavedComparisonStateSwarm` continues to cover
+publication and context recovery.
+
+`model/window_discovery.qnt` and its adapter validate observed source-free discovery
+and explicit selection, followed by two new captures and source-free frozen
+reopening. `TestQuintWindowDiscoveryLive` consumes the journey ledger via
+`GOO_WINDOW_DISCOVERY_LEDGER` and rejects six mutations.
+
+```sh
+GOO_WINDOW_DISCOVERY_BOMBADIL=1 bash scripts/run_journeys.sh journeys/window-discovery.spec.js
+cd verification
+go test -run 'TestHegelWindowDiscoverySupport|TestHegelSavedComparisonStateSwarm' -v .
+```
+
+The Bombadil actor explores compare/discover/select/clear without source capture.
+Its invariants require the original incomplete decision to remain withheld and
+the capture control to remain disabled until both scopes are selected.

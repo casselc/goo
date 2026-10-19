@@ -1101,3 +1101,5 @@ td details {
 .comparison-composer textarea,.comparison-finding{box-sizing:border-box;width:100%;min-width:0;resize:vertical}
 .native-window .scroll{max-width:100%;overflow-x:auto}
 .native-window .scroll table{min-width:560px}
+
+.window-discovery{margin-block:1rem;padding:1rem;border:1px solid var(--border,#364357);border-radius:8px}.window-discovery .comparison-side{min-width:0}.window-discovery p{overflow-wrap:anywhere}.window-discovery select{max-width:100%}

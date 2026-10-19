@@ -453,4 +453,8 @@ refusals and p95 ranges in version 2 receipts. Historical version 1 snapshots
 remain readable. Fleet aggregation, lifecycle deltas and automatic rebinning
 remain future work.
 
-Exact native scope transport is implemented; next implement source-free observed-support discovery with exclusions and explicit scope selection. The discovery picker remains planned.
+Exact native scope transport and
+[observed-support discovery](OBSERVED_WINDOW_DISCOVERY.md) are implemented. The
+picker previews all-stream coverage and exclusions, requires selection on both
+sides and explicitly rereads selected exact sub-scopes. Future work may expand
+support policies; no interval realignment or member dropping is implied.

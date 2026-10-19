@@ -5,6 +5,57 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Observed native window discovery (2026-10-19)
+
+[Find comparable windows](docs/OBSERVED_WINDOW_DISCOVERY.md) reads validated
+retained kernel intervals without a telemetry query. It intersects boundaries
+across all retained streams, previews exact support and exclusions, requires
+explicit selection on both sides and rereads two new exact questions. New results
+are compared through the existing engine; original captures remain unchanged.
+
+Local checks passed: full root Go suite and vet (`window-discovery-go-final.log`,
+`window-discovery-vet-final.log`); all **42 frontend tests**
+(`window-discovery-node-final.log`); **100 requested Hegel support properties**,
+**100 native exact arithmetic/histogram properties** and **60 saved-comparison
+state/swarm scenarios of 15 steps** (`window-discovery-hegel-final.log`);
+verification vet and Quint model typecheck. Unit coverage includes source-offline
+HTTP discovery, strict request validation, reset taint, all-member coverage,
+asynchronous boundaries, layout changes, empty histograms, aggregate overflow,
+10,000 intervals and explicit 32-window/64-exclusion output bounds.
+
+The first Hegel invocation omitted the configured writable XDG cache and failed
+before exercising properties; the configured-cache rerun passed. The first Quint
+model used a built-in action name; renaming it fixed typecheck. The initial live
+browser workflow and six rejecting Quint controls passed, but the new Bombadil
+invariant rejected the pre-result null state. Its guard now allows that initial
+state while continuing to reject an implicit comparable result.
+
+Final live regression campaign: **6 passed, no skips, 3.7 minutes**
+(`artifacts/window-discovery-final-journeys.log`). Real standard OTLP cumulative
+counters and delta explicit histograms carry **123 ns** SDK offsets. Browser
+checks prove discovery/selection do not read telemetry, both selections are
+required, capture performs two explicit reads, exact shared questions restore
+without telemetry reads, original captures remain unchanged and saved receipts
+reopen in a fresh browser. A forced second-capture failure retains the first ID
+and leaves the original comparison selected. Mobile containment passed.
+
+The new observed ledger is
+`artifacts/window-discovery/1792453916512/ledger.json`. Quint replay passed with
+all six rejecting mutations; the **30-second Bombadil campaign** passed, recording
+1 compare, 141 discovery and 170 selection/clearing actions. Existing record/gauge,
+complete-native-window and saved-comparison journeys also passed. Frames 52–55
+were regenerated as affected; storyboard 55 includes exclusions, exact selection,
+actual recapture/comparison, mobile histogram support and partial recovery.
+
+Final offline-built image:
+`sha256:db18045a876d23a228443a9a6420d60c24fd1065988a244771523abf7c89f2e6`
+(`window-discovery-final-image.log`, `window-discovery-final-up.log`). Health
+checks confirm all **12 services running**, HTTP health, served JS/CSS/HTML and
+Go binary hashes matching tested sources, and preservation of all five pre-existing
+stale pending Redis IDs (`window-discovery-final-health.json`). The wrapper
+restored the owned traffic generator; no volumes or stream entries were reset.
+Only unused Docker build cache and dangling images were pruned to recover disk.
+
 ## Exact native scope transport (2026-10-19)
 
 Implemented optional native nanosecond question bounds, parameterized Nano source

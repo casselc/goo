@@ -20,3 +20,7 @@ test('exact native scopes survive sharing and capture without Number conversion'
  assert.deepEqual(api.evidenceDifference(step,{kind:'measurement',measurement:{...q,fromNS:'1700000000000000124'}}),['Fixed window differs']);
  for(const patch of [{fromNS:'01'},{toNS:''},{toMs:q.toMs+1},{fromNS:1700000000000000123}])assert.throws(()=>api.stepLink({...step,scope:{...step.scope,...patch}}));
 });
+test('window selection builds an exact question and requires identical full support signatures',()=>{
+ const {question,compatible}=require('../ui/window-discovery');const original={definition:{kind:'counter'},fromMs:1700000000000,toMs:1700000003000},w={fromNS:'1700000000000000123',toNS:'1700000002000000123',signature:'a'};const before=structuredClone(original);const q=question(original,w);
+ assert.equal(q.fromMs,1700000000000);assert.equal(q.toMs,1700000002001);assert.equal(q.fromNS,w.fromNS);assert.equal(q.toNS,w.toNS);assert.deepEqual(original,before);assert.equal(compatible(w,{...w}),true);assert.equal(compatible(w,{...w,signature:'b'}),false);assert.equal(compatible(null,w),false);
+});

@@ -357,4 +357,7 @@ decision without reevaluating it.
 and histogram bucket-population comparisons, with full coverage, reset/gap and
 layout checks. Versioned saved receipts preserve the resulting decision.
 
-Native measurement APIs and shared question steps retain optional exact nanosecond scopes; see [scope transport](docs/NATIVE_WINDOW_COMPARISON.md#exact-scope-transport). Observed-window discovery remains planned.
+Native measurement APIs and shared question steps retain optional exact nanosecond
+scopes; see [scope transport](docs/NATIVE_WINDOW_COMPARISON.md#exact-scope-transport).
+The [comparison panel discovers supported windows](docs/OBSERVED_WINDOW_DISCOVERY.md)
+without a source read and captures explicitly selected sub-scopes.

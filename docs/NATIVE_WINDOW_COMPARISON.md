@@ -27,8 +27,9 @@ missing data. Empty histogram populations retain no-data uncertainty.
 
 Measurement questions accept exact native nanosecond bounds (see below). The
 interactive editor still authors millisecond bounds, so SDK exports may be refused
-unless an exact question is supplied. Observed-support discovery remains future
-work; comparisons never silently trim requested scope.
+unless an exact question is supplied.
+[Observed-support discovery](OBSERVED_WINDOW_DISCOVERY.md) offers explicit
+sub-scope selection; comparisons never silently trim requested scope.
 
 ## Counter rates
 
@@ -109,8 +110,9 @@ of the end. Conflicting, partial, noncanonical or lifecycle nanosecond bounds
 are rejected. Exact bounds drive parameterized ClickHouse Nano predicates,
 including cumulative warmup, and the native evaluation kernels. Captures and
 shared measurement steps preserve the strings; omitted fields retain legacy
-serialization and millisecond SQL. No observed-window discovery is implemented
-yet. Editing UTC bounds in the editor creates a millisecond question.
+serialization and millisecond SQL. The comparison panel now discovers supported
+intervals and captures explicitly selected exact sub-scopes. Editing UTC bounds in the ordinary editor creates a
+millisecond question.
 
 ```mermaid
 flowchart LR
