@@ -6,6 +6,8 @@ is now implemented for recipes and capture-derived follow-ups. The first bounded
 [typed record-measure and split-chart slice](RECORD_MEASURES.md) is also implemented;
 [Numeric attribute measures](NUMERIC_ATTRIBUTE_PLANNING.md) now connect explicit
 bindings and exact reference/SQL semantics to Explore, charts, captures and YAML.
+[Investigation steps](INVESTIGATION_STEPS.md) now carry record and measurement
+intent through one fixed-scope envelope, named revisions and explicit reopening.
 Broader expression capabilities and convention profile resolution remain proposed.
 
 The most useful next work is to make the same question retain its meaning across

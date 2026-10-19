@@ -1,0 +1,11 @@
+spec: investigation_steps.qnt
+module: investigation_steps
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  save:
+    expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'
+  reopen:
+    expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'
+  executeRead:
+    expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'

@@ -334,3 +334,17 @@ mutations for restore/history reads and changed source scope. The model is
 `model/question_links.{qnt,yaml}`; the navigation actor is
 `bombadil/question-links.ts`. Enable it with `GOO_QUESTION_LINKS_BOMBADIL=1` when
 running `journeys/question-links.spec.js` through the normal wrapper.
+
+Mixed investigation steps: `TestHegelInvestigationSteps` runs 100 requested cases
+through the actual JavaScript envelope codec and verifies typed Go validation,
+window relationships and detached native identity. `TestQuintInvestigationStepsLive`
+reads `GOO_STEPS_LEDGER` from storyboard 50 and checks observed save/reopen/run
+read counts with seven rejecting controls. Its model is
+`model/investigation_steps.{qnt,yaml}`. Enable the saved-card exploration actor
+with `GOO_STEPS_BOMBADIL=1`; the actor reopens records/native steps via ordinary
+investigation controls and never runs a source query.
+
+The existing `TestHegelContextNotesStateSwarm` also includes typed record/native
+card creation and detached question-scope revisions after forks. Its 60 requested
+15-step scenarios retain the history/context invariant across saves, ordering and
+scope changes.

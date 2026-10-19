@@ -5,6 +5,55 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Typed investigation steps (2026-10-19)
+
+[Question steps](docs/INVESTIGATION_STEPS.md) persist record questions and complete
+measurement definitions in named immutable investigation revisions. The common
+versioned scope/view envelope rejects mismatches between a record/definition and
+its declared environment/window. Question intent stays separate from frozen
+capture references. Both record and native question URLs stage explicit Run again;
+native reopening performs definition planning without telemetry reads. Legacy
+record URLs and existing stored document IDs remain compatible.
+
+Passed local checks: full root Go suite (including mixed-card validation and
+immutable predecessor checks), 39 frontend checks, verification vet, and 100
+requested Hegel cases through the actual JavaScript envelope codec. Logs:
+`artifacts/steps-{go,node-final,vet-final,hegel}.log`.
+
+The first focused browser run completed all mixed-question UI assertions, source
+reads, capture attachment, second-browser reopening and screenshots, but its new
+Quint model used a reserved action name. Renaming the modeled explicit-read action
+fixed it. Replaying that real ledger passes, with seven rejecting controls for
+scope drift, native unit/identity changes, hidden reopens/recipient reads, false
+window equivalence and wrong observed read transitions (`steps-quint.log`). Both
+existing question-link checks passed in that initial focused run
+(`steps-focused.log`). The model checks observed save → reopen → explicit-read
+transitions, preserving source read counts across saving and reopening.
+
+Final live campaign: **11 passed, no skips, 11.7 minutes**
+(`artifacts/steps-release.log`). This covers coherence 40, notes/context 36, core 33,
+inventory 31, new mixed questions 50, measurements 38, metric-only services 47,
+both question-link cases 49, workbench 45 and service browser 46/48. All enabled
+Bombadil campaigns and associated live Quint validations passed. The new actor
+returns to the active investigation and reopens each question type without running
+it. The mixed-step ledger is
+`artifacts/investigation-steps/1792444529620/ledger.json`.
+
+The existing Hegel investigation state/swarm model now also creates record/native
+question cards and revises detached question scopes after saving/forking. Its
+60 requested scenarios of 15 steps passed, preserving all prior revisions and
+context semantics (`steps-state-swarm.log`); verification vet passed again afterward.
+New frames 50a–c and affected existing frames were regenerated from real telemetry.
+The final desktop investigation and mobile native-question frames were visually
+reviewed. README, architecture/process flow, contracts, plans and known boundaries
+are synchronized.
+
+Deployed image:
+`sha256:5bae60c988431e0ec7edcbc9dab734428fe303e16960f1a3270f9d0eb06f4fd2`.
+All 12 services run, traffic is restored, all five stale pending entries remain,
+and served navigation assets match the checkout (`steps-final-health.json`).
+No telemetry volumes were removed.
+
 ## Resumable record-question links (2026-10-19)
 
 [Question links](docs/QUESTION_LINKS.md) preserve fixed record scope, selectors,

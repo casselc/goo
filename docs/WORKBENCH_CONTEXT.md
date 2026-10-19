@@ -103,7 +103,8 @@ The Python lab proxies the same bounded Go APIs used by the UI:
 | `GET /api/documents?cursor=...` | At most 20 revisions per ID-ordered seek page; search in the UI is local to that page |
 
 Card kinds are `note` (`role`, `text`), `capture` and `deployment` (`reference`,
-optional `caption`). Documents require 1–32 cards and a bounded UTF-8 title.
+optional `caption`), and `question` (`step`, optional `caption`). Documents require
+a bounded UTF-8 title and a question or at least one card, with at most 32 cards.
 Note text is at most 4,000 UTF-8 bytes; each artifact/request is at most 128 KiB.
 Lists scan at most 10,000 directory entries and fail rather than imply a complete
 partial list. Local files use content digests, atomic immutable publication and
@@ -178,3 +179,12 @@ reported outcome attributes, exact trace/log IDs and fixed-window resource
 instrument discovery. **Record missing evidence or instrumentation** appends an
 authored question with the origin capture ID to the existing open-question brief;
 it remains an unsaved draft until explicitly saved. See INVESTIGATION_FOLLOWUPS.md.
+
+## Typed question steps
+
+Documents also accept `{kind:"question", step:… , caption?}` cards. The step
+contains version, kind, fixed scope, typed record/measurement definition and view.
+It contains no evidence. [Investigation steps](INVESTIGATION_STEPS.md) document the
+validated union, source-free reopen flow, matched/different windows, native sharing
+and executable mixed-question journey. Question cards use the same ordering,
+32-card limit, 128 KiB bound and immutable revision history as existing cards.

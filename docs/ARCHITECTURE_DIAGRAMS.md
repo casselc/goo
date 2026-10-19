@@ -1009,3 +1009,11 @@ entry, fixed-window service detail, existing executors and local return navigati
 versioned fragment. Restoring a link or browser history stages a draft; only an
 explicit Run again reaches the source adapter. Capture links continue to retrieve
 immutable stored evidence. The handoff sequence is documented in that contract.
+
+## Mixed investigation intent and evidence
+
+The [investigation-step flow](INVESTIGATION_STEPS.md) connects both record and
+measurement definitions to immutable document revisions. Reopening dispatches
+to a staged record question or source-free measurement planner; an explicit run
+reaches existing adapters and evaluators. Capture IDs retain separate custody
+and read semantics. Equal scope bounds never merge signal populations.

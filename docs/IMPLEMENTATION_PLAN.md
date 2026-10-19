@@ -416,5 +416,10 @@ detail; the read-only frozen inventory viewer remains compatible. No backend
 measurement kernel or persisted capture schema changed.
 
 Record-question navigation now supports versioned fixed-scope links and source-free
-history restoration; see [contract and boundaries](QUESTION_LINKS.md). Native
-measurement and service-detail URL state remain subsequent work.
+history restoration; see [contract and boundaries](QUESTION_LINKS.md). Validated native
+questions now use investigation steps below; service-detail URL state remains
+subsequent work.
+
+Implemented: [mixed investigation steps](INVESTIGATION_STEPS.md), using one typed
+scope envelope for record and measurement intent, immutable named document
+revisions, native sharing, explicit reruns and separate evidence references.

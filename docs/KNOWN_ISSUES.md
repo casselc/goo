@@ -270,8 +270,16 @@ fail independently. Service return is local, not durable browser-history recover
 service. Operation inventory still reads the whole environment/window with the
 existing 1000-pair limit, then filters displayed operations by service. Its capture
 action explicitly captures that whole environment scope. Service-only operation
-inventory compilation, durable history and catalog captures remain future work.
+inventory compilation, restoring catalog state from a link and catalog captures
+remain future work.
 
 Explore record questions now have [fixed-scope share links](QUESTION_LINKS.md) and
-source-free browser-history restoration. Unsaved keystrokes, native measurement
-drafts, service-detail panels and trace-inspector state are not serialized.
+source-free browser-history restoration. Unsaved keystrokes, unpreviewed native drafts, service-detail panels and
+trace-inspector state are not serialized. Validated native questions now have
+typed investigation steps, described below.
+
+[Typed investigation steps](INVESTIGATION_STEPS.md) now persist record questions
+and validated measurement definitions with fixed scope and view. Native questions
+can be shared and reopened without telemetry reads. Service-detail panels,
+inspector state, baselines and unsaved keystrokes remain local. There is no
+automatic association with a latest capture or synchronized multiuser editing.

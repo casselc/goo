@@ -7,6 +7,7 @@ import (
 )
 
 type Card struct {
+	Step      *Step  `json:"step,omitempty"`
 	Kind      string `json:"kind"`
 	Role      string `json:"role,omitempty"`
 	Text      string `json:"text,omitempty"`
@@ -15,7 +16,15 @@ type Card struct {
 }
 
 func (c Card) Validate() error {
+	if c.Kind != "question" && c.Step != nil {
+		return errors.New("only question cards carry a step")
+	}
 	switch c.Kind {
+	case "question":
+		if c.Step == nil || c.Reference != "" || c.Role != "" || c.Text != "" || !text(c.Caption, 160, false, false) {
+			return errors.New("question card requires a step and optional caption")
+		}
+		return c.Step.Validate()
 	case "note":
 		if c.Reference != "" || c.Caption != "" || !text(c.Text, 4000, true, true) || (c.Role != "hypothesis" && c.Role != "finding" && c.Role != "conclusion" && c.Role != "next-step") {
 			return errors.New("note requires a supported role and 1..4000 UTF-8 bytes")

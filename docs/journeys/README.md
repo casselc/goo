@@ -886,3 +886,11 @@ opening a service; saved inventory 32 retains its original environment-wide scop
 share with a second browser, traverse history without reads, reject malformed input
 and inspect mobile layout. Frames: `49a-reopened-question.png`,
 `49b-share-question.png`, `49c-mobile-resume.png`.
+
+## 50 — Mixed investigation steps
+
+`investigation-steps.spec.js` builds a named investigation with record and native
+questions plus a UI-captured evidence reference, displays same/different windows,
+saves a revision, reopens without reads and explicitly reruns. A second browser
+opens the shared native question. Frames `50a-mixed-question-investigation.png`,
+`50b-resume-native-question.png` and `50c-mobile-native-question.png` document it.

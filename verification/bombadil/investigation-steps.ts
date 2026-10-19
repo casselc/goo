@@ -1,0 +1,10 @@
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document})=>({cards:document.querySelectorAll('#documentCards [data-kind=question]').length,run:document.querySelector('#measureRun')?.textContent,result:document.querySelector('#measureResult')?.children.length||0,record:document.querySelector('#exploration')?.getAttribute('data-question-phase'),rows:document.querySelector('#exploreRows')?.children.length||0}));
+export const ready=eventually(()=>state.current.cards===3).within(10,'seconds');
+export const cardsRemainAvailable=always(()=>state.current.cards===0||state.current.cards===3);
+export const reopeningNativeHasNoEvidence=always(()=>state.current.run!=='Run again'||state.current.result===0);
+export const reopeningRecordsHasNoEvidence=always(()=>state.current.record!=='draft'||state.current.rows===0);
+const reopen=registerCustomAction('goo.reopenInvestigationStep',async(document,_window,index:number)=>{(document.querySelector('#activeInvestigationOpen') as HTMLButtonElement)?.click();const cards=document.querySelectorAll('#documentCards [data-kind=question]');([...(cards[index]?.querySelectorAll('button')||[])].find(button=>button.textContent==='Reopen question') as HTMLButtonElement)?.click()});
+export const steps=actions(()=>state.current.cards===3?[reopen(0),reopen(1),reopen(2)]:['Wait']);

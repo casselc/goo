@@ -37,8 +37,10 @@ Links are bounded to 16,000 encoded characters, versioned and validated before
 restoration. Invalid links clear live results and display an error. Backend query
 validation remains authoritative at execution. History stores applied/shared
 questions and explicit Records/Distribution switches, not every unsaved keystroke.
-Trace-inspector state, baselines, native measurement drafts, selected service-detail
-panels and collaborative document editing are not encoded by this first version.
+Trace-inspector state, baselines, selected service-detail panels and collaborative
+document editing are not encoded. Validated native measurements now use the shared
+[question-step envelope](INVESTIGATION_STEPS.md), which also saves both question
+types in named investigations.
 Service selection is retained when expressed as a record-question selector.
 
 Executable storyboard 49 in `journeys/question-links.spec.js` covers real reads,
@@ -50,3 +52,7 @@ mutations. See VALIDATION.md for executed checks.
 ![A shared question reopens with fixed scope and an explicit Run again action](journeys/screenshots/49a-reopened-question.png)
 
 ![Share the question separately from captured evidence](journeys/screenshots/49b-share-question.png)
+
+Record sharing now writes the common `#step=…` format; existing `#question=…`
+links remain compatible. Native questions use the same envelope and source-free
+reopen behavior, with an explicit definition-planning request.

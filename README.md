@@ -25,6 +25,9 @@ services exercise general-purpose contracts.
 
 [Question-first investigations](docs/WORKBENCH_CONTEXT.md#question-first-investigation-workspace)
 bring the question, finding, open questions and cross-signal evidence together.
+[Typed question steps](docs/INVESTIGATION_STEPS.md) preserve record questions and
+measurement definitions in the same named investigation. Reopen either without
+executing it, then explicitly Run again.
 Capture directly into an investigation draft or a new child of a saved revision;
 reopen the handoff without telemetry reads, or reuse its definition against fresh
 data while retaining the original evidence.
