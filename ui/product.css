@@ -1099,3 +1099,5 @@ td details {
 @media(max-width:760px){.comparison-sides{grid-template-columns:1fr}.evidence-comparison{padding:.65rem}.evidence-comparison .controls label{min-width:0;width:100%}.evidence-comparison select{max-width:100%}}
 .comparison-composer{border-top:1px solid var(--border);margin-top:1rem;padding-top:1rem}
 .comparison-composer textarea,.comparison-finding{box-sizing:border-box;width:100%;min-width:0;resize:vertical}
+.native-window .scroll{max-width:100%;overflow-x:auto}
+.native-window .scroll table{min-width:560px}

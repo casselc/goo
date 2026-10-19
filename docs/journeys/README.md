@@ -919,3 +919,12 @@ and a changed-context receipt by ID, and saves native unit incompatibility.
 53a shows the saved finding, 53b the recipient view, 53c mobile containment and 53d
 the frozen incompatible decision. Ledger replay uses Quint with six rejecting
 controls; the optional Bombadil actor reopens stored comparison cards.
+
+### 54 — Compare complete native windows
+
+`native-windows.spec.js` ingests standard OTLP sums and explicit histograms, then
+compares complete windows and shares a versioned frozen receipt. Frames 54a–e show
+counter rates, whole histogram populations, mobile containment, counter decrease
+refusal and incompatible bucket layouts. Incomplete coverage is also refused.
+Quint validates source-free transitions with six negative controls; optional
+Bombadil exploration reopens the saved native result.

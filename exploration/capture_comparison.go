@@ -28,14 +28,15 @@ type GaugeChange struct {
 	State      string               `json:"state"`
 }
 type EvidenceComparison struct {
-	Baseline        EvidenceSide       `json:"baseline"`
-	Selection       EvidenceSide       `json:"selection"`
-	State           string             `json:"state"`
-	Differences     []string           `json:"differences"`
-	Warnings        []string           `json:"warnings"`
-	CountDifference string             `json:"countDifference,omitempty"`
-	Measures        *MeasureComparison `json:"measures,omitempty"`
-	Gauges          []GaugeChange      `json:"gauges,omitempty"`
+	NativeWindows   []metrics.WindowComparison `json:"nativeWindows,omitempty"`
+	Baseline        EvidenceSide               `json:"baseline"`
+	Selection       EvidenceSide               `json:"selection"`
+	State           string                     `json:"state"`
+	Differences     []string                   `json:"differences"`
+	Warnings        []string                   `json:"warnings"`
+	CountDifference string                     `json:"countDifference,omitempty"`
+	Measures        *MeasureComparison         `json:"measures,omitempty"`
+	Gauges          []GaugeChange              `json:"gauges,omitempty"`
 }
 
 func evidenceSide(c *SavedCapture) EvidenceSide {
@@ -120,6 +121,43 @@ func CompareEvidence(a, b *SavedCapture) (*EvidenceComparison, error) {
 		r.Warnings = append(r.Warnings, "Window lengths differ; raw count differences are not normalized rates.")
 	}
 	if r.State != "comparable" {
+		return r, nil
+	}
+	if a.Measurement != nil && (a.Measurement.Counters != nil || a.Measurement.Histograms != nil) {
+		if a.Measurement.Counters != nil {
+			r.NativeWindows = metrics.CompareCounterWindows(a.Measurement.Counters, b.Measurement.Counters)
+		} else {
+			r.NativeWindows = metrics.CompareHistogramWindows(a.Measurement.Histograms, b.Measurement.Histograms)
+		}
+		if len(r.NativeWindows) == 0 {
+			r.State = "unavailable"
+		}
+		for _, row := range r.NativeWindows {
+			if row.State == "incompatible" {
+				r.State = "incompatible"
+			} else if row.State != "comparable" && r.State != "incompatible" {
+				r.State = "unavailable"
+			}
+		}
+		if r.Baseline.State != "observed" || r.Selection.State != "observed" {
+			if r.State == "comparable" {
+				r.State = "unavailable"
+			}
+		}
+		if r.State != "comparable" {
+			for i := range r.NativeWindows {
+				r.NativeWindows[i].RateDifference = ""
+				r.NativeWindows[i].Buckets = nil
+				r.NativeWindows[i].P95Relation = ""
+				if r.NativeWindows[i].State == "comparable" {
+					r.NativeWindows[i].State = "unavailable"
+					r.NativeWindows[i].Reasons = append(r.NativeWindows[i].Reasons, "another-member-withholds-comparison")
+				}
+			}
+		} else {
+			r.CountDifference = signedDifference(r.Baseline.Count, r.Selection.Count)
+		}
+		r.Warnings = append(r.Warnings, "Native comparisons require complete validated window coverage for every exact stream. No boundary interpolation, interval shifting, cross-instance matching or rebinning. One unsupported member withholds all numeric changes.", "Counter rates use full-window increments and actual duration. Histogram populations combine only identical layouts; p95 remains a bucket range, never a scalar difference.")
 		return r, nil
 	}
 	if r.Baseline.State != "observed" || r.Selection.State != "observed" {

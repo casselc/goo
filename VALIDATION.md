@@ -5,6 +5,55 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Complete native window comparisons (2026-10-19)
+
+[Native window comparison](docs/NATIVE_WINDOW_COMPARISON.md) uses complete validated
+coverage for exact OTel streams. Counter rates use exact window increments and
+actual durations; histogram comparisons combine compatible bucket populations
+and retain p95 ranges. Missing members, resets, gaps, incomplete boundaries,
+temporality changes, incompatible layouts and histogram count overflow withhold
+changes. One unsupported member withholds all deltas. New receipts use algorithm
+v2; v1 snapshots remain readable without reevaluation.
+
+Passed local checks: full root Go suite including counter exact totals beyond
+uint64, histogram overflow refusal, whole-population p95s, multi-stream withholding
+and v1 receipt compatibility (`artifacts/native-windows-go-final.log`); 40 frontend
+checks (`native-windows-node.log`); 100 requested Hegel exact-rate,
+share-conservation/layout-refusal, reversal and immutability cases plus 60 saved
+comparison state/swarm scenarios of 15 steps (`native-windows-hegel-complete.log`);
+verification vet and Quint model typecheck (`native-windows-vet-final.log`,
+`native-windows-model.log`). An initial property filename used the Go Windows-only
+suffix and was renamed before accepting results. The first actual run then exposed
+an incomplete test stream fixture; adding its required instrumentation scope fixed
+that fixture. Both named Hegel tests executed and passed afterward.
+
+Focused live journey: **1 passed, no skips, 1.3 minutes**
+(`artifacts/native-windows-focused.log`). It ingests real standard OTLP delta and
+cumulative sums and explicit histograms, compares complete windows, shares a v2
+snapshot in a fresh browser, checks mobile layout and refuses counter decrease,
+coverage gaps and bucket mismatch. Live Quint replay passed with six rejecting
+mutations; 30 seconds of Bombadil frozen-result exploration passed. Initial ledger:
+`artifacts/native-windows/1792448783045/ledger.json`.
+
+Compatibility campaign: **5 passed, no skips, 3.6 minutes**
+(`artifacts/native-windows-release.log`), covering record/gauge comparison 52,
+native windows 54 and saved sharing/recovery 53. All enabled Bombadil exploration
+and live Quint checks passed. Visual review then improved native table scrolling
+on mobile and reused the existing captured-attribute viewer for stream identity.
+The final affected journey passed again (**1 passed, no skips, 1.1 minutes**,
+`native-windows-polish-focused.log`), including attribute disclosure and actual
+horizontal scrolling, plus six rejecting trace controls and Bombadil. Its ledger
+is `artifacts/native-windows/1792449184577/ledger.json`. Five new focused frames and
+affected 52/53 screenshots are updated; all new frames were visually reviewed.
+
+Final health confirms 12 running services, functional query health, restored owned
+traffic, all five pre-existing stale Redis pending IDs retained, and served assets
+matching source (`native-windows-final-health.json`, `native-windows-served-assets.json`).
+Final query image:
+`sha256:f234be3fd02517e080c77f1e94c7bb4c5f15b8e3c525c1f052763cf48bbcac29`.
+Exact native coverage remains deliberately strict; millisecond question bounds
+can reject nanosecond-offset interval edges, as documented in known issues.
+
 ## Saved comparison evidence (2026-10-19)
 
 [Saved comparison cards](docs/SAVED_COMPARISONS.md) freeze the server-verified

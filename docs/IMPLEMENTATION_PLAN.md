@@ -433,8 +433,9 @@ automatic refresh and statistical comparisons remain later work.
 Linked questions compare two stored IDs with full-population record summaries,
 exact per-stream native gauge endpoints, explicit compatibility decisions and
 source-free native inspection. See [capture comparison](CAPTURE_COMPARISON.md).
-Counter/histogram interval alignment, lifecycle deltas and statistical inference
-remain future work.
+Complete-window rate and bucket-population comparisons are implemented below.
+Interval realignment, lifecycle deltas and statistical inference remain future
+work.
 
 ### Shared comparison evidence (implemented)
 
@@ -443,3 +444,11 @@ verified displayed decision/result and an algorithm version. Findings revise in
 immutable documents; shared links reopen the snapshot. Partial publication and
 context changes support retained-ID recovery. Public hosting, author identity and
 access control remain outside the local workspace model.
+
+### Complete native window comparisons (implemented)
+
+[Counter rates and histogram populations](NATIVE_WINDOW_COMPARISON.md) now use
+full validated coverage and exact stream matching, preserving reset/gap/layout
+refusals and p95 ranges in version 2 receipts. Historical version 1 snapshots
+remain readable. Fleet aggregation, lifecycle deltas and automatic rebinning
+remain future work.

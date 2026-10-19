@@ -29,14 +29,15 @@ integrity checks. Reopening an investigation automatically loads these receipts;
 it does not invoke the current comparison engine or query telemetry. Even the
 **Reopen saved comparison** retry reads the snapshot. A later engine revision must
 not silently redefine an old decision. The current algorithm is
-`goo/evidence-comparison/v1`.
+`goo/evidence-comparison/v2`; version 1 receipts remain readable without
+reevaluation.
 
 Saved cards reuse the existing comparison renderer, including both original
 scopes, exact counts, span summaries and native gauge endpoints. Expanding native
 results separately reads the underlying immutable captures; it may report those
-captures unavailable without changing the frozen comparison. Counter/histogram
-interval alignment, lifecycle deltas and statistical inference remain outside
-this feature.
+captures unavailable without changing the frozen comparison. [Complete counter/histogram windows](NATIVE_WINDOW_COMPARISON.md) now support
+validated rate and bucket-population comparisons. Lifecycle deltas, interval
+realignment and statistical inference remain outside this feature.
 
 ```mermaid
 sequenceDiagram

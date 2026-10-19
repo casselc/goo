@@ -369,3 +369,12 @@ Saved comparisons: `go test -run TestHegelSavedComparisonStateSwarm -v .` reques
 controls. Run `GOO_SAVED_PAIR_BOMBADIL=1 bash scripts/run_journeys.sh
 journeys/saved-comparison.spec.js` for the real shared-browser/recovery journeys
 and 30 seconds of frozen-card exploration.
+
+Native window comparisons: `go test -run TestHegelNativeWindowComparison -v .`
+requests 100 exact-rate, histogram share-conservation/layout-refusal, reversal, immutability
+and reset-refusal cases. The source
+is `native_window_comparison_test.go` (avoid the OS-specific `_windows_test.go`
+suffix). Storyboard 54 writes `GOO_NATIVE_WINDOWS_LEDGER` for
+`TestQuintNativeWindowsLive`, with six rejecting controls. Run
+`GOO_NATIVE_WINDOWS_BOMBADIL=1 bash scripts/run_journeys.sh
+journeys/native-windows.spec.js` for the live OTLP and frozen-reopen workflow.

@@ -293,12 +293,19 @@ transaction. Matching scope is not a shared snapshot or population guarantee.
 ## Stored capture comparison boundaries
 
 [Capture comparison](CAPTURE_COMPARISON.md) supports source-record counts, stored
-span summaries and exact-stream gauge endpoints. Native counters, histograms and
-lifecycles are inspectable side by side; numerical interval/cohort deltas are not
-implemented. Different definitions, units or environments withhold all numeric
+span summaries, exact-stream gauge endpoints and [complete native counter and
+histogram windows](NATIVE_WINDOW_COMPARISON.md). Full coverage, identity, unit,
+temporality and bucket compatibility are required; one unsupported member
+withholds all changes. Lifecycle cohort deltas, fleet merging, interval
+realignment and histogram rebinning remain unsupported. Different definitions, units or environments withhold all numeric
 deltas. Exploratory selection is transient until explicitly saved as a
 [comparison card](SAVED_COMPARISONS.md). Frozen receipts and document publication
 are separate; retained receipt IDs support explicit recovery. Complete comparison
 snapshots are limited to 128 KiB and fail rather than truncate. Sharing requires
 access to the same workspace; verified authorship, access control and receipt
 garbage collection remain future work.
+
+Native complete-window comparisons currently inherit millisecond question bounds.
+Nanosecond-offset interval edges can fail exact coverage; no silent trimming or
+interpolation is performed. Exact nanosecond scopes or an explicit observed-support
+policy are needed to broaden that boundary. See [native windows](NATIVE_WINDOW_COMPARISON.md).

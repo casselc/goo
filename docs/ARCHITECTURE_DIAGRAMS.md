@@ -1036,3 +1036,10 @@ span-summary kernel with exploration and has no source-query or publication step
 The [saved-comparison sequence](SAVED_COMPARISONS.md) separates source captures,
 a server-verified comparison receipt, an authored finding and a shared document
 revision. The recipient reads the receipt directly, without engine reevaluation.
+
+## Complete native window comparison
+
+The [native window flow](NATIVE_WINDOW_COMPARISON.md) validates full coverage and
+stream identity before computing exact rates or compatible bucket populations.
+Supported changes and refusal reasons enter version 2 receipts; version 1
+snapshots remain readable without engine reevaluation.

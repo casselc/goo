@@ -120,3 +120,33 @@ func TestComparisonCardValidationAndPublicationFailure(t *testing.T) {
 		t.Fatal("receipt lost", e)
 	}
 }
+
+func TestLegacyComparisonReceiptStillReopensWithoutReevaluation(t *testing.T) {
+	s := Store{Dir: t.TempDir()}
+	a, b := comparisonCaptures()
+	expected, _ := exploration.CompareEvidence(a, b)
+	r, e := s.CreateComparison(a.ID, b.ID, expected, func(id string) (*exploration.SavedCapture, error) {
+		if id == a.ID {
+			return a, nil
+		}
+		return b, nil
+	})
+	if e != nil {
+		t.Fatal(e)
+	}
+	r.ID = ""
+	r.Algorithm = "goo/evidence-comparison/v1"
+	id, e := digest(r)
+	if e != nil {
+		t.Fatal(e)
+	}
+	r.ID = id
+	if e = s.publish("comparisons", id, r); e != nil {
+		t.Fatal(e)
+	}
+	a.Explore.Count = "99"
+	got, e := s.LoadComparison(id)
+	if e != nil || got.Algorithm != "goo/evidence-comparison/v1" || got.Result.CountDifference != "2" {
+		t.Fatal(got, e)
+	}
+}

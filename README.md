@@ -352,3 +352,7 @@ telemetry, with explicit scope, definition, unit and missing-data checks.
 [Save a comparison and finding](docs/SAVED_COMPARISONS.md) in an immutable
 investigation revision, then share its exact link; reopening preserves the saved
 decision without reevaluating it.
+
+[Complete native windows](docs/NATIVE_WINDOW_COMPARISON.md) add exact counter-rate
+and histogram bucket-population comparisons, with full coverage, reset/gap and
+layout checks. Versioned saved receipts preserve the resulting decision.

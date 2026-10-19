@@ -42,8 +42,9 @@ fleet aggregates. Source-record count changes remain labeled as record counts.
 
 **Inspect both stored native results** expands the existing saved-result renderer
 on each side. Counters, histograms and lifecycle results can be inspected this way;
-this slice does not subtract percentile scalars, align intervals, compute fleet
-aggregates or define lifecycle cohort deltas. Incompatible pairs can still be
+[complete native windows](NATIVE_WINDOW_COMPARISON.md) now compare rates and
+bucket populations. No percentile scalar subtraction, interval realignment, fleet
+aggregation or lifecycle cohort delta is inferred. Incompatible pairs can still be
 inspected without numerical claims. No statistical significance is inferred.
 
 ```mermaid

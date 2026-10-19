@@ -1,0 +1,11 @@
+spec: native_windows.qnt
+module: native_windows
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  compare:
+    expect: 'reads == {{.obs.reads}} and allowed == {{.obs.allowed}} and coherent == {{.obs.coherent}}'
+  refuse:
+    expect: 'reads == {{.obs.reads}} and allowed == {{.obs.allowed}} and coherent == {{.obs.coherent}}'
+  reopen:
+    expect: 'reads == {{.obs.reads}} and allowed == {{.obs.allowed}} and coherent == {{.obs.coherent}}'
