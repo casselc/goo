@@ -289,3 +289,12 @@ capture-to-step histories. Capture and document publication are separate; retain
 capture IDs support retrying a failed attachment without rereading. Histories are
 bounded to 16 references per question, with no scheduled refresh or distributed
 transaction. Matching scope is not a shared snapshot or population guarantee.
+
+## Stored capture comparison boundaries
+
+[Capture comparison](CAPTURE_COMPARISON.md) supports source-record counts, stored
+span summaries and exact-stream gauge endpoints. Native counters, histograms and
+lifecycles are inspectable side by side; numerical interval/cohort deltas are not
+implemented. Different definitions, units or environments withhold all numeric
+deltas. Comparison selection is transient and scoped to the current question
+history; sharing a saved comparison selection is future work.

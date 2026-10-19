@@ -76,6 +76,16 @@ func TestCaptureHTTPServerCustodyAndSourceFreePaging(t *testing.T) {
 	if reads.Load() != oldReads {
 		t.Fatal("metadata read queried telemetry")
 	}
+	compared := call("GET", "/captures/"+first.Receipt.ID+"/compare?selection="+first.Receipt.ID, "")
+	var pair exploration.EvidenceComparison
+	if compared.Code != 200 || json.Unmarshal(compared.Body.Bytes(), &pair) != nil || pair.State != "comparable" || pair.CountDifference != "0" || reads.Load() != oldReads {
+		t.Fatal("stored comparison queried source or changed totals", compared.Body.String())
+	}
+	for _, suffix := range []string{"", "?selection=x", "?selection=" + first.Receipt.ID + "&selection=" + first.Receipt.ID, "?selection=" + first.Receipt.ID + "&extra=1"} {
+		if call("GET", "/captures/"+first.Receipt.ID+"/compare"+suffix, "").Code == 200 {
+			t.Fatal("unchecked selection", suffix)
+		}
+	}
 	followups := call("GET", "/captures/"+first.Receipt.ID+"/followups", "")
 	var next exploration.FollowupSet
 	if followups.Code != 200 || json.Unmarshal(followups.Body.Bytes(), &next) != nil || next.Origin != first.Receipt.ID || reads.Load() != oldReads {

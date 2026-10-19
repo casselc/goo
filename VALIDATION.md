@@ -5,6 +5,45 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Stored capture comparison (2026-10-19)
+
+[Stored comparison](docs/CAPTURE_COMPARISON.md) loads immutable capture IDs and
+compares full record counts, span duration/error summaries and exact-stream native
+gauge endpoints without telemetry reads. Incompatible definitions, environments
+or units withhold deltas. Empty/unknown results retain their uncertainty; native
+counter/histogram/lifecycle results remain inspectable side by side.
+
+Passed local checks: full root Go suite, 40 frontend checks, 100 requested Hegel
+precision/reversal/immutability/compatibility cases, verification vet, Quint
+model typecheck and Python server compilation. Logs:
+`artifacts/evidence-pair-{go,node,hegel-ready,vet,model}.log`.
+The live ledger replay passed with four rejecting controls
+(`artifacts/evidence-pair-quint-replay-ready.log`). The first trace-validation
+attempt exposed the checker's generated empty-argument import for a model without
+constants; declaring the explicit initial read count fixed the model adapter.
+The first Hegel attempt used an unwritable default cache; setting the documented
+workspace `XDG_CACHE_HOME` fixed the setup failure. The first live browser campaign
+found a missing entry for the new script in the Python server's static asset
+allowlist; the corrected build serves source-matching assets.
+
+Final live campaign: **5 passed, no skips, 3.4 minutes**
+(`artifacts/evidence-pair-release.log`). This covers saved captures 32, both new
+comparison journeys 52, and both linked-history journeys 51. Enabled Bombadil
+campaigns and live Quint validations passed. The new observed ledger is
+`artifacts/evidence-comparison/1792447023081/ledger.json`; its four negative
+controls reject hidden reads, incompatible deltas, forged arithmetic and changed
+receipts. Final native expansion retains explicit Baseline/Comparison labels.
+Storyboards 32/51 were refreshed with the changed UI, and four new 52 screenshots
+were captured and visually reviewed (record, incompatible, mobile, native).
+
+Final health checks confirm 12 running services, a functional query health request,
+restored owned traffic, all five pre-existing stale Redis pending IDs preserved,
+and source-matching served HTML/JS/CSS (`evidence-pair-final-health.json`,
+`evidence-pair-served-assets.json`). Final query image:
+`sha256:8e031dc91f396851ce4e9865975b048d9da9df1d60cabf10a07842d86116ed03`.
+Build disk pressure was resolved by clearing unused build cache and dangling
+images; telemetry volumes and pending stream entries were retained.
+
 ## Linked question evidence (2026-10-19)
 
 [Linked evidence](docs/LINKED_QUESTION_EVIDENCE.md) gives saved questions an

@@ -63,3 +63,6 @@ mutations; Bombadil explores stored history without executing source reads.
 ![Scope difference before capture](journeys/screenshots/51b-scope-difference-before-capture.png)
 
 ![Native result and original read time](journeys/screenshots/51e-native-linked-result.png)
+
+Two or more linked captures now offer [stored evidence comparison](CAPTURE_COMPARISON.md),
+with explicit compatibility checks and supported descriptive deltas.

@@ -1024,3 +1024,9 @@ and read semantics. Equal scope bounds never merge signal populations.
 source-read → immutable capture → child document-revision flow. Publication can
 fail after capture; the retained ID can be linked without another source read.
 Read time, custody time and question scope remain separate.
+
+## Stored evidence comparison
+
+The [capture comparison sequence](CAPTURE_COMPARISON.md) follows selected linked
+IDs through Go validation and immutable capture storage. It shares the full
+span-summary kernel with exploration and has no source-query or publication step.

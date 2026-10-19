@@ -1,0 +1,11 @@
+spec: evidence_comparison.qnt
+module: evidence_comparison
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  inspect:
+    expect: 'reads == {{.obs.reads}} and compatible == {{.obs.compatible}} and delta == {{.obs.delta}} and coherent == {{.obs.coherent}}'
+  compare:
+    expect: 'reads == {{.obs.reads}} and compatible == {{.obs.compatible}} and delta == {{.obs.delta}} and coherent == {{.obs.coherent}}'
+  refuse:
+    expect: 'reads == {{.obs.reads}} and compatible == {{.obs.compatible}} and delta == {{.obs.delta}} and coherent == {{.obs.coherent}}'

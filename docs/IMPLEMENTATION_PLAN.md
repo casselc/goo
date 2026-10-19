@@ -427,3 +427,11 @@ revisions, native sharing, explicit reruns and separate evidence references.
 Implemented: [linked question evidence](LINKED_QUESTION_EVIDENCE.md), explicit
 Run and capture, typed scope differences and attachment recovery. Scheduled runs,
 automatic refresh and statistical comparisons remain later work.
+
+### Stored capture comparison (implemented)
+
+Linked questions compare two stored IDs with full-population record summaries,
+exact per-stream native gauge endpoints, explicit compatibility decisions and
+source-free native inspection. See [capture comparison](CAPTURE_COMPARISON.md).
+Counter/histogram interval alignment, lifecycle deltas and statistical inference
+remain future work.

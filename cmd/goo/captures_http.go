@@ -72,6 +72,29 @@ func registerCaptures(mux *http.ServeMux, client *http.Client, dir string) {
 		}
 		reply(w, 200, result)
 	})
+	mux.HandleFunc("GET /captures/{id}/compare", func(w http.ResponseWriter, r *http.Request) {
+		values := r.URL.Query()
+		if len(values) != 1 || len(values["selection"]) != 1 {
+			fail(w, 400, fmt.Errorf("one selection capture ID required"))
+			return
+		}
+		a, e := store.Load(r.PathValue("id"))
+		if e != nil {
+			fail(w, 404, e)
+			return
+		}
+		b, e := store.Load(values.Get("selection"))
+		if e != nil {
+			fail(w, 404, e)
+			return
+		}
+		result, e := exploration.CompareEvidence(a, b)
+		if e != nil {
+			fail(w, 400, e)
+			return
+		}
+		reply(w, 200, result)
+	})
 	mux.HandleFunc("GET /captures/{id}/receipt", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.RawQuery != "" {
 			fail(w, 400, fmt.Errorf("receipt metadata has no query parameters"))

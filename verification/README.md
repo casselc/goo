@@ -356,3 +356,9 @@ scenarios against the Go store. `TestQuintLinkedEvidenceLive` consumes
 `GOO_LINKED_LEDGER`; its model checks capture reads, failed publication, recovery
 and read-free reopening with seven negative controls. Enable the stored-history
 Bombadil actor with `GOO_LINKED_BOMBADIL=1` for storyboard 51.
+
+Stored capture comparison: `go test -run TestHegelStoredComparison -v .` checks
+100 requested precision/immutability/compatibility cases. Storyboard 52 writes
+`GOO_EVIDENCE_PAIR_LEDGER` for `TestQuintStoredComparisonLive` (four rejecting
+controls). `GOO_EVIDENCE_PAIR_BOMBADIL=1 bash scripts/run_journeys.sh
+journeys/evidence-comparison.spec.js` also explores stored selections for 30 seconds.

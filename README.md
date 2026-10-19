@@ -345,3 +345,7 @@ and [executable journey](journeys/metric-discovery.spec.js).
 Explore supports [resumable question links](docs/QUESTION_LINKS.md): share a fixed
 question, restore it without a source read, then explicitly Run again. Use captures
 to share immutable evidence.
+
+Saved question histories support [capture comparison](docs/CAPTURE_COMPARISON.md):
+compare full record summaries and exact native gauge endpoints without rereading
+telemetry, with explicit scope, definition, unit and missing-data checks.

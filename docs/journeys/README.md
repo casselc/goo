@@ -902,3 +902,11 @@ changed-filter capture, recovers from document publication failure without anoth
 source read and reopens stored history on mobile. A companion case captures native
 metrics with their stored read time and typed definition. Frames 51a–e show the
 history, drift preview, recovery, mobile layout and native result summary.
+
+### 52 — Compare stored evidence
+
+`evidence-comparison.spec.js` exercises real OTLP HTTP spans and worker gauges:
+52a shows latency/error changes between stored windows, 52b refuses a changed
+selector, 52c checks mobile containment, and 52d preserves native stream identity
+and side-by-side saved results. It also checks empty results, failed GET recovery,
+no source reads and immutable receipts, with Quint and optional Bombadil coverage.
