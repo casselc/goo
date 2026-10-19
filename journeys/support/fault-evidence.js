@@ -1,3 +1,4 @@
+const {openFilters}=require('./explore');
 const { expect } = require('@playwright/test');
 const fs = require('node:fs/promises');
 const path = require('node:path');
@@ -85,8 +86,8 @@ async function inspectScenario({ page, request, result, startedAt, frameName }) 
       return { question: r.request().postDataJSON(), data: await r.json() };
     };
     await run(); // Discover ordinary OTel attributes from the actual source.
-    await page.locator('#exploreField').selectOption(JSON.stringify({ kind: 'attribute', key: 'app.reservation.id' }));
-    await page.locator('#exploreValue').fill(result.id);
+    await openFilters(page);await page.locator('#exploreField').selectOption(JSON.stringify({ kind: 'attribute', key: 'app.reservation.id' }));
+    await openFilters(page);await page.locator('#exploreValue').fill(result.id);
     await page.locator('#exploreAdd').click();
     const shown = await run(), q = shown.question;
     expect(q.environment).toBe('local'); expect(q.signal).toBe(signal);

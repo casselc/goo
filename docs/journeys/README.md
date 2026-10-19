@@ -809,3 +809,22 @@ inference are required. Controlled data does not certify completeness or health.
 - Executable: `journeys/numeric-measures.spec.js`; optional local exploration:
   `GOO_NUMERIC_BOMBADIL=1`. The live Quint ledger reuses the existing six-stage
   custody model with numeric reference projections and eleven rejecting mutations.
+
+### 45 · One question from entry to frozen evidence
+
+An engineer arrives at a compact Explore entry, composes service/duration shortcuts
+and an advanced filter without a source read, then runs once. A route attribute
+narrows the fixed question in one gesture. Trace context and return preserve the
+main result; returning issues no query. An edit supersedes a delayed real response,
+which cannot publish stale results. From Services the engineer explicitly discovers
+a native worker instrument in the inventory's incident window, then captures the
+main record question and reopens frozen evidence without rereading telemetry.
+The controlled producer uses ordinary OTLP spans and a gauge, not mocked evidence.
+
+- [One primary entry](screenshots/45a-one-question-entry.png)
+- [Applied scope and contextual narrowing](screenshots/45b-applied-scope-and-drilldown.png)
+- [Metric discovery retains incident bounds](screenshots/45c-service-metric-window.png)
+- [Mobile frozen evidence](screenshots/45d-mobile-frozen-scope.png)
+- Executable: `journeys/question-workbench.spec.js`; optional source-free draft
+  exploration: `GOO_QUESTION_BOMBADIL=1`. The observed Quint lifecycle validates
+  generations/phases and rejects mutated publication, scope, read and custody facts.

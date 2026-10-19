@@ -285,3 +285,15 @@ mutations must be rejected: units/parsing policy, coverage, exact sum, cell boun
 local source reads, reuse and reopen custody. The Bombadil actions switch local
 numeric measures and search; invariants retain coverage and frozen evidence.
 This is bounded controlled integration telemetry, not a completeness certificate.
+
+## Question execution lifecycle
+
+`TestHegelQuestionSessionStateSwarm` generates edits, fresh/fixed scope, starts,
+cancels and out-of-order publish/fail completions. It executes the real JavaScript
+session and compares every snapshot to an independent Go oracle (100 requested
+sequences, 25 steps). `model/question_session.qnt` models generation/phase/publication
+ownership; the live `TestQuintQuestionWorkbenchLive` checks observed transitions,
+typed questions and service-discovery/capture custody with eight rejecting controls.
+Run storyboard 45 with `GOO_QUESTION_BOMBADIL=1` through the standard journey wrapper.
+The new Bombadil actor is source-free and bounded; existing discovery campaigns
+now target the single Run action and preserve authored OR with AND shortcuts.

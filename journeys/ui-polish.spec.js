@@ -1,3 +1,4 @@
+const {openFilters}=require('./support/explore');
 const { test, expect } = require('@playwright/test');
 const { randomBytes } = require('node:crypto');
 const path = require('node:path');
@@ -39,24 +40,24 @@ test('29 inspect structured attributes, refine facets and navigate with keyboard
   await search.fill('');expect(reads).toBe(before);
   await search.fill('same.key');await page.screenshot({path:path.join(frames,'29a-structured-attribute-inspection.png'),fullPage:true});
 
-  await search.fill('geo.region');await viewer.getByRole('button',{name:'Break down by attribute:geo.region',exact:true}).click();
+  await search.fill('geo.region');await viewer.getByRole('button',{name:'Break down and run by attribute:geo.region',exact:true}).click();
   await expect(page.locator('#distributionContent .distribution-row')).toHaveCount(3);
   await page.locator('#facetSearch').fill('empty');await expect(page.locator('#distributionContent .distribution-row:visible')).toHaveCount(1);await expect(page.locator('#facetStatus')).toContainText('1 of 3');await expect(page.locator('#exploreCount')).toContainText('6');
   const facetResponse=page.waitForResponse(r=>r.url().endsWith('/api/explore')&&r.request().method()==='POST');
-  await page.getByRole('button',{name:'Filter attribute:geo.region equals Present empty string',exact:true}).click();const empty=await(await facetResponse).json();expect(empty.count).toBe('2');
+  await page.getByRole('button',{name:'Filter and run attribute:geo.region equals Present empty string',exact:true}).click();const empty=await(await facetResponse).json();expect(empty.count).toBe('2');
   await expect(page.locator('#exploreFilters')).toContainText('Empty string');
-  await page.getByRole('button',{name:'Remove filter attribute:geo.region eq',exact:true}).click();await expect(page.locator('#exploreField')).toBeFocused();await page.locator('#facetSearch').fill('');await run('#exploreGroupRun');
+  await page.getByRole('button',{name:'Remove filter attribute:geo.region eq',exact:true}).click();await expect(page.locator('#filterComposer > summary')).toBeFocused();await run('#exploreRun');await page.locator('#facetSearch').fill('');
   await page.screenshot({path:path.join(frames,'29b-facets-and-explicit-empty-values.png'),fullPage:true});
 
-  const add=async(f,op,value)=>{await page.locator('#exploreFieldSearch').fill('');await page.locator('#exploreField').selectOption(JSON.stringify(f));await page.locator('#exploreOp').selectOption(op);if(!['missing','exists'].includes(op))await page.locator('#exploreValue').fill(value);await page.locator('#exploreAdd').click()};
-  await page.locator('#exploreFieldSearch').fill('geo.region');expect(await page.locator('#exploreField option').count()).toBe(1);await page.locator('#exploreOp').selectOption('missing');await expect(page.locator('#exploreValue')).toBeDisabled();
-  await page.locator('#exploreAdd').click();const missing=await run('#exploreGroupRun');expect(missing.count).toBe('2');
+  const add=async(f,op,value)=>{await openFilters(page);await page.locator('#exploreFieldSearch').fill('');await openFilters(page);await page.locator('#exploreField').selectOption(JSON.stringify(f));await openFilters(page);await page.locator('#exploreOp').selectOption(op);if(!['missing','exists'].includes(op)){await openFilters(page);await page.locator('#exploreValue').fill(value)};await page.locator('#exploreAdd').click()};
+  await openFilters(page);await page.locator('#exploreFieldSearch').fill('geo.region');expect(await page.locator('#exploreField option').count()).toBe(1);await openFilters(page);await page.locator('#exploreOp').selectOption('missing');await expect(page.locator('#exploreValue')).toBeDisabled();
+  await page.locator('#exploreAdd').click();const missing=await run('#exploreRun');expect(missing.count).toBe('2');
   await page.getByRole('button',{name:'Remove filter attribute:geo.region missing',exact:true}).click();
   await add(field('attribute','geo.region'),'eq','east');await add(field('column','service'),'eq','edge');const and=await run();expect(and.count).toBe('2');
   await page.locator('#exploreJoin').selectOption('any');const or=await run();expect(or.count).toBe('3');
   await page.locator('#exploreJoin').selectOption('all');await run();
-  await page.locator('#exploreFieldSearch').fill('');await page.locator('#exploreField').selectOption(JSON.stringify(field('column','service')));await expect(page.locator('#exploreOp option[value=gte]')).toHaveJSProperty('disabled',true);
-  await page.locator('#exploreField').selectOption(JSON.stringify(field('column','duration_ns')));await expect(page.locator('#exploreOp option[value=gte]')).toHaveJSProperty('disabled',false);await expect(page.locator('#exploreOp option[value=contains]')).toHaveJSProperty('disabled',true);
+  await openFilters(page);await page.locator('#exploreFieldSearch').fill('');await openFilters(page);await page.locator('#exploreField').selectOption(JSON.stringify(field('column','service')));await expect(page.locator('#exploreOp option[value=gte]')).toHaveJSProperty('disabled',true);
+  await openFilters(page);await page.locator('#exploreField').selectOption(JSON.stringify(field('column','duration_ns')));await expect(page.locator('#exploreOp option[value=gte]')).toHaveJSProperty('disabled',false);await expect(page.locator('#exploreOp option[value=contains]')).toHaveJSProperty('disabled',true);
   await page.getByRole('tab',{name:'Records',exact:true}).click();const opener=page.locator('#exploreRows').getByRole('button',{name:'Expand trace '+trace,exact:true}).first();await opener.click();
   await expect(page.locator('#exploreContextSummary')).toContainText('6 captured spans');await expect(page.locator('#exploreContextStatus')).not.toBeVisible();
   const spanButton=page.locator('#exploreTrace .waterfall-row').first();await spanButton.click();await expect(spanButton).toHaveAttribute('aria-pressed','true');await expect(page.locator('#exploreSpanDetails .attribute-viewer')).toBeVisible();

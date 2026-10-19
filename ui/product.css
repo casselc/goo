@@ -1077,3 +1077,12 @@ td details {
 
 /* Numeric values keep exact integer labels with room for 64-bit extrema. */
 @media(min-width:1000px){.numeric-summary .duration-stat-grid{grid-template-columns:repeat(4,minmax(0,1fr));}}
+
+/* An applied scope is evidence context; draft edits never relabel old results. */
+.question-state {margin:12px 0;padding:12px 14px;border-left:3px solid var(--accent);background:var(--surface);overflow-wrap:anywhere;}
+.question-state p {margin:7px 0;font-size:.85rem;}
+.question-state small {display:block;color:var(--muted);margin-top:6px;}
+[data-question-phase=draft] .question-state {border-left-color:#d4b97b;}
+.question-result-actions {margin:12px 0;}
+.question-result-actions[hidden] {display:none;}
+.exploration-scope #exploreRun {background:var(--accent);color:#11251f;font-weight:600;}

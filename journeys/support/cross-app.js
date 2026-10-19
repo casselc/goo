@@ -1,3 +1,4 @@
+const {openFilters}=require('./explore');
 const { expect } = require('@playwright/test');
 const fs = require('node:fs/promises');
 const path = require('node:path');
@@ -49,8 +50,8 @@ async function inspectReport({ page, request, report, ledger, record, frameName 
     if (await page.locator('#exploreContextClose').isVisible()) await page.locator('#exploreContextClose').click();
     await page.locator('#exploreClear').click();
     await page.locator('#minutes').fill('5');
-    await page.locator('#exploreField').selectOption(JSON.stringify({ kind: 'column', key: 'trace_id' }));
-    await page.locator('#exploreValue').fill(trace);
+    await openFilters(page);await page.locator('#exploreField').selectOption(JSON.stringify({ kind: 'column', key: 'trace_id' }));
+    await openFilters(page);await page.locator('#exploreValue').fill(trace);
     await page.locator('#exploreAdd').click();
     const responsePromise = page.waitForResponse(r => r.url().endsWith('/api/explore') && r.request().method() === 'POST');
     await page.locator('#exploreRun').click();

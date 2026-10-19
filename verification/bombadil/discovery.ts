@@ -27,7 +27,7 @@ const discovery = extract(({document}) => {
     const rows=document.querySelectorAll('#surroundingRows .record-row').length;if(rows>100)contextBounded=false;
   }catch{contextBounded=false;anchorProvenance=false}}
   let quickAnd=true;
-  if(question&&intent){quickAnd=(el('exploreJoin') as HTMLSelectElement)?.value==='all'&&question.signal===intent.signal;for(const p of intent.predicates)if(!(question.where?.all||[]).some((a:any)=>canonical(a)===canonical(p)))quickAnd=false;}
+  if(question&&intent){quickAnd=question.signal===intent.signal;for(const p of intent.predicates)if(!(question.where?.all||[]).some((a:any)=>canonical(a)===canonical(p)))quickAnd=false;}
   const packagePreserved=!plan||!draft||definition(plan.question)===definition(draft);
   const previewSeparate=!preview||!!plan&&canonical(preview.question)===canonical(plan.question)&&typeof preview.basis==='string'&&preview.basis.length>0;
   const reused=document.documentElement.dataset.gooDiscoveryReuse==='true';
@@ -68,9 +68,9 @@ const act=registerCustomAction('goo.discovery',async(document,window,command:str
     clearIntent();click('exploreClear');set('exploreJoin','any');set('discoveryService',signal==='logs'?row.ServiceName||'':'');set('discoveryMessage',signal==='logs'?(row.Body||'').slice(0,24):'');set('discoverySeverity',signal==='logs'?row.SeverityText||'':'');set('discoveryDuration',signal==='spans'?'0':'');(el('discoveryErrors') as HTMLInputElement).checked=false;
     const predicates:any[]=[],add=(key:string,op:string,value:string)=>predicates.push({field:{kind:'column',key},op,value});
     if(signal==='spans')add('duration_ns','gte','0');else{if(row.ServiceName)add('service','eq',row.ServiceName);if(row.Body)add('body','contains',row.Body.slice(0,24));if(row.SeverityText)add('severity','eq',row.SeverityText)}
-    document.documentElement.dataset.gooDiscoveryIntent=JSON.stringify({signal,predicates});click('discoveryRun');
+    document.documentElement.dataset.gooDiscoveryIntent=JSON.stringify({signal,predicates});click('exploreRun');
   }
-  if(command==='traces'||command==='buckets'){const name=command==='traces'?'Find matching traces':'Span latency distribution';[...document.querySelectorAll<HTMLButtonElement>('#discoverySuggestions button')].find(b=>b.textContent===name)?.click()}
+  if(command==='traces'||command==='buckets'){clearIntent();const name=command==='traces'?'Find matching traces':'Span latency distribution';[...document.querySelectorAll<HTMLButtonElement>('#discoverySuggestions button')].find(b=>b.textContent===name)?.click()}
   if(command==='trace'){document.querySelector<HTMLButtonElement>('#distributionContent button[aria-label^="Open matching trace"]:not(:disabled)')?.click()}
   if(command==='tracePage')click('exploreTraceMore');if(command==='select')document.querySelector<HTMLButtonElement>('#exploreTrace .waterfall-row')?.click();if(command==='closeTrace')click('exploreContextClose');
   if(command==='nearby')document.querySelector<HTMLButtonElement>('#exploreRows button[aria-label^="Surrounding logs for"]')?.click();

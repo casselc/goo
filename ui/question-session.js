@@ -1,0 +1,20 @@
+/* One execution lifecycle for record questions. No source or DOM access. */
+(function(global){
+ const clone=x=>structuredClone(x);
+ function canonical(value){if(Array.isArray(value))return value.map(canonical);if(value&&typeof value==='object')return Object.fromEntries(Object.keys(value).sort().filter(k=>value[k]!==undefined).map(k=>[k,canonical(value[k])]));return value}
+ function predicateIdentity(p){if(!p)return p;const out=clone(p);if(out.value==='')delete out.value;if(out.all)out.all=out.all.map(predicateIdentity);if(out.any)out.any=out.any.map(predicateIdentity);return out}
+ function identity(q){const v=clone(q);if(v.where)v.where=predicateIdentity(v.where);for(const key of ['numeric','where','summary','bucketMs','groupTimeSeries','spanStatus'])if(!v[key])delete v[key];if(!v.groupBy?.length)delete v.groupBy;return JSON.stringify(canonical(v))}
+ function combineWhere(base,filters,join,shortcuts){const authored=base&&filters.length?{all:[base,{[join]:clone(filters)}]}:base?clone(base):filters.length?{[join]:clone(filters)}:undefined;if(!shortcuts.length)return authored;return {all:[...(authored?[authored]:[]),...clone(shortcuts)]}}
+ function selectorText(p){if(!p)return 'No additional selectors';if(p.all||p.any){const children=p.all||p.any;return '('+children.map(selectorText).join(p.all?' AND ':' OR ')+')'}const labels={service:'Service',duration_ns:'Span duration (ns)',status:'Recorded status',body:'Log message',severity:'Severity'},field=p.field.kind==='column'?(labels[p.field.key]||p.field.key):p.field.kind+' '+p.field.key,op={eq:'=',ne:'≠',gte:'≥',lte:'≤',contains:'contains',exists:'is present',missing:'is missing'}[p.op]||p.op;return field+' '+op+(['exists','missing'].includes(p.op)?'':' '+JSON.stringify(p.value??''))}
+ class Session {
+  constructor(observe=()=>{}){this.state={generation:0,phase:'initial',applied:null,requested:null,bounds:null};this.observe=observe}
+  snapshot(){return clone(this.state)}
+  emit(action,token=null){const value={action,token,...this.snapshot()};this.observe(value);return value}
+  edit(resetBounds=false){this.state.generation++;this.state.phase='draft';this.state.requested=null;if(resetBounds)this.state.bounds=null;this.emit('edit');return this.state.generation}
+  start(q){if(!q||!['spans','logs'].includes(q.signal)||!q.environment||!Number.isSafeInteger(q.fromMs)||!Number.isSafeInteger(q.toMs)||q.fromMs<0||q.toMs<=q.fromMs||q.toMs-q.fromMs>7200000)throw Error('Choose a valid signal, environment and fixed window.');this.state.generation++;this.state.phase='running';this.state.requested=clone(q);this.state.bounds={fromMs:q.fromMs,toMs:q.toMs};this.emit('start');return this.state.generation}
+  publish(token,data){if(token!==this.state.generation||this.state.phase!=='running'){this.emit('reject',token);return false}if(identity(data.question)!==identity(this.state.requested))throw Error('Returned evidence does not match the requested question.');this.state.applied={question:clone(data.question),basis:data.basis,count:data.count,state:data.state};this.state.requested=null;this.state.phase='applied';this.emit('publish',token);return true}
+  fail(token){if(token!==this.state.generation||this.state.phase!=='running'){this.emit('reject',token);return false}this.state.phase='failed';this.state.requested=null;this.emit('fail',token);return true}
+  cancel(){this.state.generation++;this.state.phase='cancelled';this.state.requested=null;this.emit('cancel');return this.state.generation}
+ }
+ const api={Session,identity,combineWhere,selectorText};if(typeof module!=='undefined')module.exports=api;else global.GooQuestionSession=api;
+})(typeof window==='undefined'?globalThis:window);

@@ -1,0 +1,10 @@
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document})=>({stage:document.documentElement.dataset.gooEntryStage||'initial',ready:!!document.getElementById('exploreRun'),phase:document.getElementById('exploration')?.dataset.questionPhase,old:!!document.querySelector('#discoveryRun,#exploreGroupRun'),evidence:document.getElementById('exploreExplain')?.textContent||'',captureHidden:(document.querySelector('.question-result-actions') as HTMLElement)?.hidden,overflow:document.documentElement.scrollWidth>innerWidth}));
+export const complete=eventually(()=>state.current.stage==='complete').within(25,'seconds');
+export const oneExecutor=always(()=>!state.current.old);
+export const draftHasNoPublishableEvidence=always(()=>state.current.phase!=='draft'||state.current.evidence===''&&state.current.captureHidden);
+export const noHorizontalOverflow=always(()=>!state.current.overflow);
+const act=registerCustomAction('goo.entry',async(document,_window,stage:string)=>{if(stage==='draft'){const service=document.getElementById('discoveryService') as HTMLInputElement;service.value='ordinary';service.dispatchEvent(new Event('input',{bubbles:true}))}else if(stage==='advanced'){(document.getElementById('filterComposer') as HTMLDetailsElement).open=true;(document.getElementById('measureComposer') as HTMLDetailsElement).open=true}else document.getElementById('exploreFreshWindow')!.click();document.documentElement.dataset.gooEntryStage=stage});
+export const explore=actions(()=>{const s=state.current;if(!s.ready)return['Wait'];if(s.stage==='initial')return[act('draft')];if(s.stage==='draft')return[act('advanced')];if(s.stage==='advanced')return[act('complete')];return['Wait']});

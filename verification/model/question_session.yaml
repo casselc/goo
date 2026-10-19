@@ -1,0 +1,17 @@
+spec: question_session.qnt
+module: question_session
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  edit:
+    expect: 'generation == {{.obs.generation}} and phase == {{.obs.phase}} and coherent == {{.obs.coherent}}'
+  start:
+    expect: 'generation == {{.obs.generation}} and phase == {{.obs.phase}} and coherent == {{.obs.coherent}}'
+  publish:
+    expect: 'generation == {{.obs.generation}} and phase == {{.obs.phase}} and coherent == {{.obs.coherent}}'
+  reject:
+    expect: 'generation == {{.obs.generation}} and phase == {{.obs.phase}} and coherent == {{.obs.coherent}}'
+  cancel:
+    expect: 'generation == {{.obs.generation}} and phase == {{.obs.phase}} and coherent == {{.obs.coherent}}'
+  failedRead:
+    expect: 'generation == {{.obs.generation}} and phase == {{.obs.phase}} and coherent == {{.obs.coherent}}'

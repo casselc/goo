@@ -1,6 +1,8 @@
 # Entry points and investigation flow
 
-Design spike, 2026-10-19. **Recommendations below are proposed, not implemented.**
+Design spike, 2026-10-19. The first bounded [question-workbench slice](QUESTION_WORKBENCH.md)
+is now implemented. Broader navigation, Library and native discovery proposals
+below remain future work. Findings describe the audited baseline at `bf54b36`.
 This is an expert review of the current UI and code, not a usability study with
 customers. The aim is to let an engineer follow a question without first learning
 goo's package taxonomy.
@@ -23,7 +25,7 @@ Grounding: [workspace routing](../ui/workspace.js), [Explore](../ui/exploration.
 The numeric-measure release was in progress during the browser audit and completed
 as `bf54b36`; this spike does not alter its code or validation record.
 
-## Findings in the current product
+## Findings at the audited baseline
 
 | Observed entry or transition | What an engineer must work out | Consequence |
 | --- | --- | --- |

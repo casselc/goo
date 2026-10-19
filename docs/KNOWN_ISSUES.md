@@ -235,12 +235,11 @@ not implemented. See INVESTIGATION_FOLLOWUPS.md.
 ## Shared scope planning boundaries
 
 The usability [entry-point review](ENTRY_POINTS_DESIGN_SPIKE.md) found that
-Services → Discover metrics passes service/environment but drops the inventory's
-fixed bounds. The destination labels its fresh two-minute window; it does not
-retain the incident window as the adjacent Explore spans action does. Passing
-explicit bounds is part of the proposed interaction-consolidation slice. The
-review also records competing Explore execution actions and ambiguous evidence/
-investigation entry points; its proposed redesign is not current behavior.
+Services → Discover metrics previously dropped the inventory window. The first
+[question-workbench slice](QUESTION_WORKBENCH.md) now passes those bounds and
+consolidates Explore execution with explicit draft/applied scope. Broader
+Investigation/Evidence and Library entry-point restructuring, native browse-first
+discovery, navigation history and durable draft recovery remain proposed.
 
 Recipes and follow-ups now share checked scope/transform metadata; persisted
 question and capture formats remain unchanged. OTel/custom selectors retain their

@@ -981,3 +981,11 @@ connects optional question/YAML bindings, parameterized source lowering, exact
 reference checks, coverage/accounting, Explore and immutable capture/reuse. This
 path uses ordinary OTel string-map records without code annotations or inferred
 semantic-convention conformance. Native metric kernels remain distinct.
+
+## One question execution lifecycle
+
+The [question-workbench state diagram](QUESTION_WORKBENCH.md#evidence-questions-and-investigations)
+connects draft composition, explicit generation-checked execution, contextual
+one-gesture reads and immutable evidence. Shortcut and advanced controls share one
+executor. Native discovery remains a separate signal population, retaining explicit
+service/time bounds from inventory. It is not an automatic cross-signal correlation.

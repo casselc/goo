@@ -5,6 +5,58 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## One scoped question workbench (2026-10-19)
+
+The first [entry-point design slice](docs/QUESTION_WORKBENCH.md) is implemented:
+shortcuts, advanced filters and measures share one Run question executor. Draft,
+requested and applied scopes have generation ownership; editing cancels pending
+reads and clears stale evidence actions. Ordinary edits and explicit drilldowns
+retain fixed bounds. Fresh-window staging performs no read. Evidence capture and
+reusable definitions have separate labels, and Services → native metric discovery
+preserves inventory service/environment/bounds without asserting the same population.
+
+Passed: full root Go suite, 34 frontend checks, Python compilation, verification
+vet, and Hegel state/swarm (100 requested sequences × 25 steps) replaying the actual
+JavaScript session against an independent Go oracle. Quint typechecking and the
+new live session/evidence ledger validation passed, including eight rejecting
+controls for generation, scope, bounds, local navigation reads and frozen custody.
+Storyboard 45 passed through the real OTLP/ClickHouse pipeline, delaying an actual
+response to check stale completion rejection; its 30-second Bombadil actor passed.
+The structured-attribute desktop/mobile polish journey 29 also passed. See
+`artifacts/entry-{go,node,hegel,vet,ledger,focused}.log`; the latest workbench ledger
+is `artifacts/question-workbench/entry-6f69f0e8/ledger.json`.
+
+The final regression results cover nine distinct browser journeys: new workbench
+45 and attribute polish 29 (`entry-focused.log`), core basics 33, follow-ups 42,
+grouped measures 34, grouped time series 43 and recipes 37 (`entry-regression.log`),
+plus corrected discovery 30 and numeric measures 44 (`entry-rerun.log`, two passed
+in 2.8 minutes). All nine enabled Bombadil campaigns and their associated live
+Quint checks passed across those successful journeys. Discovery includes both
+its Playwright and Bombadil-observed ledger validations. Existing affected frames
+were regenerated. The numeric rerun opens the relocated measure disclosure rather
+than waiting on its old direct-child selector.
+
+The final deployed image is
+`sha256:628c8735182a85cb1b25556b4a8cfd2f66bc82fd6df8601c7926a4a509e359c3`.
+All 12 services are running, traffic is restored, and all five pre-existing stale
+Redis pending entries remain (`artifacts/entry-final-health.json`). No telemetry
+volumes were removed; only dangling Docker images were pruned for disk space.
+
+Desktop/mobile frames 45a–d document initial entry, applied scope, metric handoff
+and frozen evidence. The initial and applied desktop layouts were visually
+reviewed; the frozen mobile layout was also visually reviewed. The broader
+navigation/Library migration, native browse-first flow and durable navigation/draft
+recovery remain proposed, rather than claimed complete.
+
+Early validation found and corrected a Quint action-name collision, Go omitted
+empty predicate defaults in returned question identity, service-shortcut loss
+when switching signals, and older tests acting on hidden result/disclosure controls.
+The first focused discovery attempt also assumed the first log had a trace link;
+the mobile check now explicitly selects a linked log. The exploratory discovery
+actor also retained a reuse expectation after intentionally changing the breakdown;
+its explicit breakdown actions now clear that old intent. These failed attempts are
+retained in the local artifact logs.
+
 ## Live numeric attribute measures (2026-10-19)
 
 One optional explicit int64/uint64 string-map binding now executes through the Go
