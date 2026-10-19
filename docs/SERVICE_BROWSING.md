@@ -6,20 +6,21 @@ rows without a telemetry read. Services keeps its existing operation table and s
 entry point; the new detail view connects those observations into an investigation.
 
 Discover services to capture an environment and fixed window. **Open service**
-reads three bounded sources explicitly: span/log signal discovery, a service-scoped
+reads three bounded sources explicitly: span/log/metric signal discovery, a service-scoped
 span question (including discovered attributes), and native instrument metadata.
 Opening the service does not execute a measurement or save evidence. Each source
 may fail independently; successful sections remain usable. The evidence disclosure
 retains each question, response and status. These reads are independent, rather
 than a transactional snapshot or proof of instrumentation coverage.
 
-The detail view shows observed span/log signals, operation names from the original
+The detail view shows observed span/log/metric signals, operation names from the original
 inventory read, suggested span questions and exact native instrument identities.
-Signal discovery also provides **Open service** for log-only services. When no
+Signal discovery also provides **Open service** for log-only and metric-only
+services via **Discover all signal services**. When no
 operation inventory was read for that scope, the view says so explicitly; it does
-not substitute a zero count. Native
-metric-only services still require an explicit service name in the existing metric
-discovery flow; this is not yet a complete fleet/service catalog.
+not substitute a zero count. The [native metric extension](METRIC_SERVICE_DISCOVERY.md) includes gauge, sum
+and explicit-histogram data-point records. This remains an observed catalog,
+rather than a complete fleet or declared membership.
 
 ## Questions from observed conventions
 
@@ -65,7 +66,7 @@ they do not automatically gain live instrument reads.
 ```mermaid
 flowchart TD
   Inventory[Discover services: fixed environment and window] --> Open[Open service]
-  Signals[Discover span and log services] --> LogOnly[Open log-only service]
+  Signals[Discover span, log and native metric services] --> LogOnly[Open log-only or metric-only service]
   Open --> Reads[Independent bounded reads]
   LogOnly --> Reads
   Reads --> Activity[Signals and captured operation names]

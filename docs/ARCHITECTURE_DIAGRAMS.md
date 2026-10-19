@@ -995,3 +995,7 @@ service/time bounds from inventory. It is not an automatic cross-signal correlat
 The [service browsing flow](SERVICE_BROWSING.md#scope-and-return-behavior) shows
 independent bounded metadata reads, convention-based record questions and native
 measurement preview feeding the existing typed executors.
+
+The [all-signal discovery diagram](METRIC_SERVICE_DISCOVERY.md) adds native metric
+point-presence groups to service discovery without changing dependency inference
+or native measurement kernels.

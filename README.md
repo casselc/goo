@@ -11,6 +11,8 @@ sets the next consolidation priorities; [shared scope and checked transforms](do
 now connect recipe and follow-up planning.
 [Service browsing](docs/SERVICE_BROWSING.md) connects observed signals, operations,
 OTel attribute suggestions and native instruments through fixed-window questions.
+[All-signal discovery](docs/METRIC_SERVICE_DISCOVERY.md) includes metric-only
+services, counting data-point records without combining metric values.
 The first [question-workbench cleanup](docs/QUESTION_WORKBENCH.md) provides one Run
 path, explicit draft/applied scope, one-gesture drilldowns and fixed-window metric
 discovery. The [design review](docs/ENTRY_POINTS_DESIGN_SPIKE.md) records the broader

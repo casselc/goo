@@ -42,3 +42,43 @@ func TestServiceDiscoveryScopeAndValidation(t *testing.T) {
 		t.Fatal("missing dimension accepted")
 	}
 }
+
+func TestMetricServiceDiscoveryValidation(t *testing.T) {
+	q := InventoryQuestion{Environment: "prod'\n", FromMS: 1000, ToMS: 3000}
+	plan, err := CompileServiceDiscovery(q)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, family := range []string{"gauge", "sum", "histogram"} {
+		if !strings.Contains(plan.Count, "otel_metrics_"+family) {
+			t.Fatal("missing metric family", family)
+		}
+	}
+	if strings.Contains(plan.Count, q.Environment) || !strings.Contains(plan.Count, "toString(sum(n))") || strings.Contains(plan.Count, "sum(Value)") || strings.Contains(plan.Groups, "otel_metrics_") {
+		t.Fatal("metric presence scope or grain changed")
+	}
+	rows := `{"service":"metrics-only","signal":"metrics","count":"18446744073709551615","first_ms":"1000","last_ms":"2999"}`
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		b, _ := io.ReadAll(r.Body)
+		if !strings.Contains(string(b), "WITH captured") {
+			fmt.Fprintln(w, rows)
+		}
+	}))
+	defer server.Close()
+	source := Source{Endpoint: server.URL}
+	result, err := source.DiscoverServices(context.Background(), q)
+	if err != nil || len(result.Signals) != 1 || len(result.Dependencies) != 0 || result.Signals[0].Signal != "metrics" || result.Signals[0].Count != "18446744073709551615" {
+		t.Fatal(result, err)
+	}
+	original := rows
+	for _, bad := range []string{strings.Replace(original, "metrics\"", "unknown\"", 1), strings.Replace(original, "18446744073709551615", "0", 1), strings.Replace(original, "2999", "3000", 1), strings.Replace(original, "1000", "999", 1), original + "\n" + original} {
+		rows = bad
+		if _, e := source.DiscoverServices(context.Background(), q); e == nil {
+			t.Fatal("invalid metric service row accepted", bad)
+		}
+	}
+	rows = strings.Repeat(original+"\n", 1001)
+	if _, e := source.DiscoverServices(context.Background(), q); e == nil {
+		t.Fatal("partial over-budget discovery published")
+	}
+}

@@ -1,0 +1,10 @@
+spec: metric_services.qnt
+module: metric_services
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  discover: {expect: 'coherent == {{.obs.coherent}}'}
+  browse: {expect: 'coherent == {{.obs.coherent}}'}
+  preview: {expect: 'coherent == {{.obs.coherent}}'}
+  execute: {expect: 'coherent == {{.obs.coherent}}'}
+  returnLocal: {expect: 'coherent == {{.obs.coherent}}'}

@@ -846,3 +846,20 @@ delays a real metadata response and changes environment to check stale publicati
 `GOO_SERVICE_BROWSER_BOMBADIL=1` enables the matching 30-second exploration campaign.
 The actual ledger is validated by quint-go with six rejecting mutations. See
 [service browsing](../SERVICE_BROWSING.md) for scope and semantic boundaries.
+
+### 47 · Discover metric-only services
+
+`journeys/metric-services.spec.js` ingests an ordinary metric-only worker with
+gauge, counter and histogram points, plus an unsupported-only worker. Discover
+services directly from native points, open the original window, preview a gauge
+without reading telemetry, run it explicitly and return locally. Boundary fixtures
+prove inclusion at the start and exclusion at the end using independent SQL.
+Counts are records, not the histogram's 5000 observations or metric values.
+
+- [All-signal catalog](screenshots/47a-metric-only-service-discovery.png)
+- [Metric-only instrument detail](screenshots/47b-metric-service-instruments.png)
+- [Fixed native execution](screenshots/47c-fixed-native-measurement.png)
+- [Mobile metric service](screenshots/47d-mobile-metric-service.png)
+
+`GOO_METRIC_SERVICES_BOMBADIL=1` enables its 30-second actor. The observed ledger
+is validated by quint-go with seven rejecting mutations.

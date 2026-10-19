@@ -5,6 +5,52 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Metric-only service discovery (2026-10-19)
+
+[All-signal service discovery](docs/METRIC_SERVICE_DISCOVERY.md) now includes native
+gauge, sum and explicit-histogram data-point records. It groups presence by service
+without combining metric values, units or histogram observations. A direct Services
+entry opens the catalog; metric rows open the original fixed window in service
+browser/native measurement flow, never as a record query. Dependency inference
+remains trace/parent-span only. Summary/exponential-histogram families remain outside
+the current adapter, and no complete fleet or health claim is introduced.
+
+Passed: full root Go suite, discovery race checks, root and verification vet,
+35 frontend tests, Python compilation and Compose configuration validation.
+Hegel generated 100 requested valid scope/count/bound cases and verified rejection
+of the exclusive upper event bound. Unit cases cover malformed/duplicate rows,
+zero counts, event bounds, UInt64 decimal counts, parameter isolation and the
+1000-pair global cardinality budget. Quint model typechecking passed.
+Logs: `artifacts/metric-services-{go,race,root-vet,vet,node,hegel}.log`.
+
+Final integration passed: core basics 33, native metric discovery 39, new
+metric-only services 47 and service browsing 46 in 4.8 minutes
+(`artifacts/metric-services-release.log`), plus inventory 31 in 1.1 minutes
+(`artifacts/metric-services-inventory.log`). All six enabled Bombadil campaigns
+and associated live Quint validations passed. New storyboard 47 validates the
+actual ledger with seven rejecting mutations: point count, window, service identity,
+preview read, local-return read, forged dependency and exclusive event bound.
+The histogram with 5000 observations contributes one of four point records;
+gauge execution returns its two selected points. Local search remains applied
+after an explicit catalog refresh, without altering source totals.
+Ledger: `artifacts/metric-services/metric-services-195c85b9/ledger.json`.
+
+New frames 47a–d and affected inventory/core/native/service-browser frames were
+regenerated. The new desktop catalog and mobile service detail were visually
+reviewed. README, source/process diagram, implementation plan, known boundaries
+and executable storyboards are synchronized. Final image:
+`sha256:fa69ff90cb9bfb46bac4197878b845c0df03817efca3fedbcb27e197cf6f6f18`.
+All 12 services are running, traffic is restored and all five pre-existing stale
+Redis pending entries remain (`artifacts/metric-services-final-health.json`).
+
+The first live attempt confirmed cross-family record counts and exact boundary
+inclusion using independent ClickHouse SQL, then failed native execution because
+the new fixture omitted `service.instance.id`. The fixture now supplies that
+required stream identity; the native validator remains intact. The initial attempt
+is retained in `artifacts/metric-services-journey.log`. Disk pressure during image
+recreation was resolved by removing unused Docker build cache, without removing
+telemetry volumes or running images (`metric-services-cache-prune.log`).
+
 ## Browse-first service investigations (2026-10-19)
 
 [Service browsing](docs/SERVICE_BROWSING.md) now connects fixed-window service

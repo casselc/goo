@@ -257,8 +257,9 @@ rejected. See [QUESTION_SCOPE.md](QUESTION_SCOPE.md).
 
 The [service detail flow](SERVICE_BROWSING.md) offers observed HTTP/database/messaging
 span questions and native instrument previews. The inventory catalog starts from
-spans; signal discovery exposes log-only services. Metric-only service enumeration
-is not implemented: use explicit native metric discovery by service name. Attribute
+spans; [all-signal discovery](METRIC_SERVICE_DISCOVERY.md) now exposes log-only and
+metric-only services from gauge/sum/explicit-histogram records. Metric summary and
+exponential-histogram families remain outside the adapter. Attribute
 discovery is bounded, convention aliases are not merged, and missing observations
 do not establish instrumentation coverage or health. Service context reads can
 fail independently. Service return is local, not durable browser-history recovery.

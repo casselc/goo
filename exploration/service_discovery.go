@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -45,7 +46,14 @@ func CompileServiceDiscovery(q InventoryQuestion) (Plan, error) {
 	aggregate := func(signal, base string) string {
 		return "SELECT ServiceName AS service, '" + signal + "' AS signal, toString(count()) AS count, toString(min(toUnixTimestamp64Milli(Timestamp))) AS first_ms, toString(max(toUnixTimestamp64Milli(Timestamp))) AS last_ms" + base + " GROUP BY service"
 	}
-	signals := "SELECT * FROM (" + aggregate("spans", spanBase) + " UNION ALL " + aggregate("logs", logBase) + ") ORDER BY service, signal LIMIT 1001 FORMAT JSONEachRow"
+	// Count exporter data-point records, never metric values or histogram observations.
+	// Each family is aggregated before the union to bound intermediate cardinality.
+	metricParts := []string{}
+	for _, family := range []string{"gauge", "sum", "histogram"} {
+		metricParts = append(metricParts, "SELECT ServiceName AS service, count() AS n, min(toUnixTimestamp64Milli(TimeUnix)) AS first_ms, max(toUnixTimestamp64Milli(TimeUnix)) AS last_ms FROM otel_metrics_"+family+" WHERE TimeUnix>=fromUnixTimestamp64Milli({from:Int64}) AND TimeUnix<fromUnixTimestamp64Milli({to:Int64}) AND ResourceAttributes['deployment.environment.name']={environment:String} GROUP BY service")
+	}
+	metrics := "SELECT service, 'metrics' AS signal, toString(sum(n)) AS count, toString(min(first_ms)) AS first_ms, toString(max(last_ms)) AS last_ms FROM (" + strings.Join(metricParts, " UNION ALL ") + ") GROUP BY service"
+	signals := "SELECT * FROM (" + aggregate("spans", spanBase) + " UNION ALL " + aggregate("logs", logBase) + " UNION ALL " + metrics + ") ORDER BY service, signal LIMIT 1001 FORMAT JSONEachRow"
 	// Parent identity is exact reported trace/span identity, scoped to this environment
 	// and window. Ambiguous service ownership never becomes an arbitrary graph edge.
 	edges := "WITH captured AS (SELECT TraceId, SpanId, ParentSpanId, ServiceName" + spanBase + "), parents AS (SELECT TraceId, SpanId, groupUniqArray(ServiceName) AS services FROM captured GROUP BY TraceId, SpanId) SELECT c.ServiceName AS child, if(length(p.services)=1, p.services[1], '') AS parent, multiIf(NOT match(c.TraceId, '^[a-f0-9]{32}$') OR c.TraceId=repeat('0',32) OR NOT match(c.ParentSpanId, '^[a-f0-9]{16}$'), 'invalid', length(p.services)=0, 'unresolved', length(p.services)>1, 'ambiguous', c.ServiceName=p.services[1], 'internal', 'edge') AS kind, toString(count()) AS count FROM captured AS c LEFT JOIN parents AS p ON c.TraceId=p.TraceId AND c.ParentSpanId=p.SpanId WHERE c.ParentSpanId NOT IN ('', '0000000000000000') GROUP BY child, parent, kind ORDER BY child, parent, kind LIMIT 1001 FORMAT JSONEachRow"
@@ -63,7 +71,7 @@ func (s Source) DiscoverServices(ctx context.Context, q InventoryQuestion) (*Ser
 	if len(raw) > 1000 {
 		return nil, fmt.Errorf("service/signal cardinality exceeds 1000; narrow window")
 	}
-	r := &ServiceDiscovery{Question: q, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano), Signals: []ServiceSignal{}, Dependencies: []Dependency{}, Plan: p, Warnings: []string{"Event timestamps and counts describe captured spans/logs, not ingestion lag, telemetry completeness, service health or declared membership.", "Parent links use reported trace/parent-span IDs within the environment and fixed window. Counts are child span records, not unique requests. Unresolved/ambiguous/invalid parents are diagnostics, not inferred edges.", "Signal presence and parent links are separate aggregate reads; no transactional consistency or complete topology is claimed. Native metrics, asynchronous span links and external peer inference are not included."}}
+	r := &ServiceDiscovery{Question: q, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano), Signals: []ServiceSignal{}, Dependencies: []Dependency{}, Plan: p, Warnings: []string{"Event timestamps and counts describe captured spans, logs and native metric data-point records, not ingestion lag, telemetry completeness, service health or declared membership. Metric counts are records across gauge, sum and explicit-histogram tables, not values, unique streams or histogram observation counts.", "Parent links use reported trace/parent-span IDs within the environment and fixed window. Counts are child span records, not unique requests. Unresolved/ambiguous/invalid parents are diagnostics, not inferred edges.", "Signal presence and parent links are separate aggregate reads; no transactional consistency or complete topology is claimed. Metric-only services create no parent links. Summary/exponential-histogram metric families, asynchronous span links and external peer inference are not included."}}
 	seen := map[[2]string]bool{}
 	for _, v := range raw {
 		var x struct {
@@ -73,7 +81,7 @@ func (s Source) DiscoverServices(ctx context.Context, q InventoryQuestion) (*Ser
 			First   string  `json:"first_ms"`
 			Last    string  `json:"last_ms"`
 		}
-		if json.Unmarshal(v, &x) != nil || x.Service == nil || x.Signal != "spans" && x.Signal != "logs" {
+		if json.Unmarshal(v, &x) != nil || x.Service == nil || x.Signal != "spans" && x.Signal != "logs" && x.Signal != "metrics" {
 			return nil, fmt.Errorf("invalid service signal")
 		}
 		n, e := inventoryNumber(x.Count)

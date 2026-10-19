@@ -41,7 +41,7 @@
    const [signals,spans,metrics]=results;const error=(section,result)=>section.append(node('p','Unavailable · '+result.reason.message,'warning'));
    if(signals.status==='fulfilled'){
     const rows=signals.value.signals.filter(r=>r.service===service);
-    for(const signal of ['spans','logs']){const row=rows.find(r=>r.signal===signal);sections[0].append(node('p',row?row.count+' captured '+signal:'No '+signal+' observed in this read; coverage unknown.'));if(row)sections[0].append(button('Explore service '+signal,()=>follow(scopeQuestion(scope,service,signal))))}
+    for(const signal of ['spans','logs','metrics']){const row=rows.find(r=>r.signal===signal);sections[0].append(node('p',row?row.count+(signal==='metrics'?' captured metric data-point records':' captured '+signal):'No '+signal+' observed in this read; coverage unknown.'));if(row&&signal!=='metrics')sections[0].append(button('Explore service '+signal,()=>follow(scopeQuestion(scope,service,signal))))}
    }else error(sections[0],signals);
    const operations=inventory?.rows.filter(r=>r.service===service)||[];
    sections[0].append(node('p',inventory?operations.length+' operation names in the inventory read. Counts are span records.':'Operation inventory was not read for this window.'));

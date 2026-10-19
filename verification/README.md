@@ -306,3 +306,13 @@ with generated fixed bounds and preferred/legacy/absent database attribute keys.
 three independent read scopes, narrowed HTTP question, local return and native
 preview scope, and rejects six scope/selector/read mutations. Storyboard 46 writes
 that ledger; `GOO_SERVICE_BROWSER_BOMBADIL=1` adds the 30-second service actor.
+
+### Metric-only service discovery
+
+`TestHegelMetricServiceBounds` generates native signal counts and fixed windows,
+checks exact returned scope and rejects the exclusive upper timestamp bound.
+`TestQuintMetricServicesLive` consumes `GOO_METRIC_SERVICES_LEDGER` from storyboard
+47 and rejects seven count, scope, identity, dependency and local-read mutations.
+`GOO_METRIC_SERVICES_BOMBADIL=1` enables the matching discovery/service/native
+preview actor. Unit tests also cover malformed rows, duplicates, bounds, parameter
+isolation and the global cardinality budget.
