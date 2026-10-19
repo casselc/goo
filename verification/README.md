@@ -325,3 +325,12 @@ precision. Storyboard 46/48's observed ledger now includes actual catalog rows a
 source scope. `TestQuintServiceBrowserLive` checks four independent service reads
 and rejects eight scope, identity, custody, implicit-read and mixed-grain mutations.
 Updated Bombadil actors use the single catalog entry.
+
+Record-question links: `TestHegelQuestionLinkRoundtrip` generates 100 requested
+scope/literal/view cases through the actual JavaScript URL codec and session
+staging, including stale-response rejection. `TestQuintQuestionLinksLive` consumes
+`GOO_QUESTION_LINKS_LEDGER`, produced by storyboard 49, with three rejecting
+mutations for restore/history reads and changed source scope. The model is
+`model/question_links.{qnt,yaml}`; the navigation actor is
+`bombadil/question-links.ts`. Enable it with `GOO_QUESTION_LINKS_BOMBADIL=1` when
+running `journeys/question-links.spec.js` through the normal wrapper.

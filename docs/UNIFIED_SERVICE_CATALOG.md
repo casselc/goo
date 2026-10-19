@@ -31,7 +31,8 @@ continue through the existing preview/Explore executors and capture workflows.
 Returning from Explore or a native preview restores service detail without a read.
 **Back to service list** restores the catalog and its search locally. Focus returns
 to the opener, a visible catalog button, or the search field when no row matches.
-These are retained browser views, not durable navigation history or shareable drafts.
+Service-detail panels and catalog search remain local views. Record questions
+now support [shareable fixed-scope links](QUESTION_LINKS.md) and browser history.
 A new discovery run or scope edit aborts pending catalog/service work and clears
 publishable evidence. Generation checks reject late responses; returned catalog
 scope must also exactly match the active request.

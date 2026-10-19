@@ -1,0 +1,11 @@
+spec: question_links.qnt
+module: question_links
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  restore:
+    expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'
+  read:
+    expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'
+  history:
+    expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'

@@ -5,6 +5,50 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Resumable record-question links (2026-10-19)
+
+[Question links](docs/QUESTION_LINKS.md) preserve fixed record scope, selectors,
+grouping, measures and Records/Distribution view. Reopening or traversing history
+stages Run again and clears live evidence without a source read. Capture receipt
+links remain a separate frozen-evidence workflow. Native drafts, service-detail
+panels and unsaved keystrokes are outside this first link format.
+
+Passed: full root Go suite, 38 frontend checks, verification vet, and 100 requested
+Hegel cases through the actual URL codec and session state. The observed browser
+read ledger passes quint-go validation and rejects three mutations (restore read,
+foreign fixed window, history read). Logs: `artifacts/navigation-{go,node-final,
+vet,hegel-final,quint}.log`.
+
+The first browser run completed its UI assertions and screenshots but failed on a
+new Quint model import with no constants. Adding its explicit initial-state constant
+fixed that setup. The first Hegel invocation used the read-only default cache;
+rerunning with the established XDG cache path passed. Initial logs remain in
+`navigation-journey.log` and `navigation-hegel.log`.
+
+Final browser evidence: seven existing journeys passed across
+`artifacts/navigation-release.log` (captures, workbench, service browser) and
+`artifacts/navigation-final.log` (coherence, core, inventory, metric-only services).
+Their seven enabled Bombadil campaigns and live Quint checks passed. The new
+link journey initially exposed an actor trying Back before creating in-app history;
+its actions now stay within their own entries. A retry hit Bombadil's existing-output
+safeguard; runs now retain separate trace directories rather than overwrite evidence.
+Those earlier failures remain in the two campaign logs.
+
+The final image adds sender-side draft-window pinning. Both link browser tests
+passed on it, including the corrected eighth Bombadil campaign and live Quint check
+with all three rejecting mutations (`artifacts/navigation-links-final.log`,
+52.5 seconds, no skips). The final frontend rerun again passed all 38 checks
+(`navigation-node-shared.log`). Storyboard 49 uses actual populated `lab-web`
+telemetry, a second browser, fixed-window history, a duration refinement, malformed
+links, view retention and mobile containment. Existing affected frames 31–33,
+40 and 45–48 were refreshed. Desktop and mobile frames were visually inspected.
+
+Final deployed image:
+`sha256:9d761f84bbe610e2a9cb4fee88fbfbc7be5e7009551ad7b232030071c5e00c97`.
+All 12 services run, traffic is restored, and all five stale pending entries remain
+(`artifacts/navigation-final-health.json`). Unused Docker build cache was pruned;
+telemetry volumes were retained. Served navigation assets match checkout hashes.
+
 ## Unified Services catalog (2026-10-19)
 
 [Services](docs/UNIFIED_SERVICE_CATALOG.md) now has one discovery action and local

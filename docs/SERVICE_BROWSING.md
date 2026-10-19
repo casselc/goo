@@ -55,7 +55,8 @@ Record questions enter the shared Explore executor. Native previews enter the
 existing measurement planner. **Back to service** returns to the retained detail
 without a source read, preserving its window and observations. This return link
 provides service context; it does not claim later Explore edits retain the service
-selector. Browser history and durable draft recovery remain separate future work.
+selector. [Question links](QUESTION_LINKS.md) preserve record questions through
+browser history; service-detail panels and native drafts remain local views.
 Scope edits, a new inventory run, service changes and explicit service cancellation
 invalidate the detail and abort outstanding reads. Responses from an old generation
 cannot publish into a changed environment. Cancelled or failed reads never become

@@ -1,0 +1,10 @@
+import { always, eventually } from '@antithesishq/bombadil';
+import { extract, actions, registerCustomAction } from '@antithesishq/bombadil/browser';
+export { noUncaughtExceptions, noUnhandledPromiseRejections } from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document})=>({ready:!!document.querySelector('#exploreShareQuestion'),linked:document.location.hash.startsWith('#question='),visited:document.documentElement.dataset.gooLinksVisited==='yes',phase:document.querySelector('#exploration')?.getAttribute('data-question-phase'),rows:document.querySelector('#exploreRows')?.children.length||0,run:document.querySelector('#exploreRun')?.textContent}));
+export const ready=eventually(()=>state.current.ready).within(10,'seconds');
+export const restoredQuestionsHaveNoEvidence=always(()=>state.current.run!=='Run again'||state.current.phase==='draft'&&state.current.rows===0);
+const restore=registerCustomAction('goo.restoreQuestion',async(document,window)=>{document.documentElement.dataset.gooLinksVisited='yes';const q={signal:'spans',environment:'local',fromMs:1000,toMs:61000,limit:100,offset:0,where:{field:{kind:'column',key:'service'},op:'eq',value:'literal & 雪'}};window.location.hash='question='+encodeURIComponent(JSON.stringify({version:1,question:q,view:'Records'}));});
+const back=registerCustomAction('goo.questionBack',async(_document,window)=>{window.history.back()});
+const forward=registerCustomAction('goo.questionForward',async(_document,window)=>{window.history.forward()});
+export const navigation=actions(()=>!state.current.ready?['Wait']:state.current.linked?[restore(),back()]:state.current.visited?[restore(),forward()]:[restore()]);

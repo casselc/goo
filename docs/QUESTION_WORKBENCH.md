@@ -46,7 +46,9 @@ evidence. Editing while a request is running cancels it locally and requests
 upstream cancellation. Late completion cannot republish cleared results. Leaving
 a running record query for another workspace or native measurements cancels that
 query. Returning from an inspector is local and restores focus without rerunning.
-This is not a general navigation-history or durable draft-recovery implementation.
+[Question links](QUESTION_LINKS.md) now restore applied/shared record questions and
+Records/Distribution views through browser history without reads. Unsaved keystrokes
+and inspector state are not persisted.
 
 Ordinary filter/measure edits retain the last requested fixed window. **Use fresh
 window** stages a newly resolved lookback for the next Run; it does not query. Editing

@@ -1,3 +1,10 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');const {routeFromHash}=require('../ui/workspace.js');const {percent,valueLabel}=require('../ui/distributions.js');
 test('workspace routes preserve capture links and reject unknown destinations',()=>{assert.equal(routeFromHash(''),'explore');assert.equal(routeFromHash('#operations'),'operations');assert.equal(routeFromHash('#services'),'services');assert.equal(routeFromHash('#investigation='+'a'.repeat(64)),'investigations');assert.equal(routeFromHash('#unknown'),'explore');});
 test('distribution shares retain exact large counts and explicit missing/empty identities',()=>{assert.equal(percent('9007199254740993','18014398509481986'),'50.00');assert.equal(percent('1','3'),'33.33');assert.equal(percent('0','0'),null);assert.notEqual(valueLabel(null),valueLabel(''));assert.notEqual(valueLabel('Missing key'),valueLabel(null));});
+const {questionLink,readQuestionLink}=require('../ui/workspace');
+test('question links round trip literal Unicode, missing/empty selectors and fixed scope without evidence',()=>{
+ const q={signal:'logs',environment:'prod',fromMs:1000,toMs:61000,limit:100,offset:0,where:{any:[{field:{kind:'attribute',key:'地域'},op:'eq',value:''},{field:{kind:'column',key:'body'},op:'contains',value:'a.*b #&? 雪'}]},groupBy:[{kind:'column',key:'service'}]};
+ const hash=questionLink(q,'Distribution');assert.deepEqual(readQuestionLink(hash),{version:1,question:q,view:'Distribution'});assert.equal(readQuestionLink('#capture='+'a'.repeat(64)),null);assert.equal(routeFromHash(hash),'explore');
+ for(const patch of [{signal:'metrics'},{toMs:1000},{environment:''},{numeric:{}},{bucketMs:-1},{basis:'forged'},{where:{field:{kind:'sql',key:'drop'},op:'eq'}}])assert.throws(()=>questionLink({...q,...patch}));
+ assert.throws(()=>readQuestionLink('#question=%zz'));assert.throws(()=>readQuestionLink('#question='+ 'x'.repeat(16000)));assert.throws(()=>readQuestionLink('#question='+encodeURIComponent(JSON.stringify({version:2,question:q,view:'Records'}))));
+});

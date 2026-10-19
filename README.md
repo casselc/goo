@@ -337,3 +337,7 @@ Metric discovery in **Explore → Measurements** builds editable packages from
 ordinary OTel producers without a goo manifest. See the
 [discovery contract](docs/MEASUREMENT_PACKAGES.md#discover-instruments-without-a-goo-manifest)
 and [executable journey](journeys/metric-discovery.spec.js).
+
+Explore supports [resumable question links](docs/QUESTION_LINKS.md): share a fixed
+question, restore it without a source read, then explicitly Run again. Use captures
+to share immutable evidence.

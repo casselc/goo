@@ -271,3 +271,7 @@ service. Operation inventory still reads the whole environment/window with the
 existing 1000-pair limit, then filters displayed operations by service. Its capture
 action explicitly captures that whole environment scope. Service-only operation
 inventory compilation, durable history and catalog captures remain future work.
+
+Explore record questions now have [fixed-scope share links](QUESTION_LINKS.md) and
+source-free browser-history restoration. Unsaved keystrokes, native measurement
+drafts, service-detail panels and trace-inspector state are not serialized.

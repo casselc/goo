@@ -1002,3 +1002,10 @@ or native measurement kernels.
 
 The [unified catalog diagram](UNIFIED_SERVICE_CATALOG.md) connects one discovery
 entry, fixed-window service detail, existing executors and local return navigation.
+
+## Resumable record questions
+
+[Question links](QUESTION_LINKS.md) serialize fixed record scope and view into a
+versioned fragment. Restoring a link or browser history stages a draft; only an
+explicit Run again reaches the source adapter. Capture links continue to retrieve
+immutable stored evidence. The handoff sequence is documented in that contract.

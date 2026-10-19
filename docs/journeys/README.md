@@ -879,3 +879,10 @@ containment and rejection of an intentionally tampered real response scope.
 See [the catalog contract](../UNIFIED_SERVICE_CATALOG.md) for capture scope and
 remaining boundaries. Existing storyboard 31 now reaches operation inventory by
 opening a service; saved inventory 32 retains its original environment-wide scope.
+
+## 49 — Resume a fixed question
+
+`question-links.spec.js`: reopen a question without evidence, explicitly Run again,
+share with a second browser, traverse history without reads, reject malformed input
+and inspect mobile layout. Frames: `49a-reopened-question.png`,
+`49b-share-question.png`, `49c-mobile-resume.png`.
