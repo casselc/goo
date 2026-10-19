@@ -33,6 +33,17 @@ declared integer bindings, exact reference/ClickHouse execution, coverage states
 Explore controls, capture validation and optional YAML persistence. Existing
 definitions retain their previous representation when numeric measures are off.
 
+## Next interaction consolidation
+
+The [entry-point design spike](ENTRY_POINTS_DESIGN_SPIKE.md) reviews the running
+app and proposes one scoped question workbench, consistent question/evidence/
+investigation vocabulary and contextual one-gesture drilldowns through a shared
+executor. These recommendations are not implemented. The first slice consolidates
+Explore's three competing query actions, exposes draft versus applied scope,
+clarifies capture/reuse semantics and preserves incident bounds when Services
+opens metric discovery. Keep current routes and typed kernels during the change;
+catalog/navigation migrations follow only after equivalent workflows exist.
+
 ## Earlier plan and milestone history
 
 Use the [architecture/process diagrams](ARCHITECTURE_DIAGRAMS.md) to connect build,

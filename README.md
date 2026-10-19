@@ -9,6 +9,8 @@ definition. Start from instrumented code or unfamiliar OpenTelemetry data.
 criteria for keeping the workbench coherent. The [core primitives review](docs/CORE_PRIMITIVES.md)
 sets the next consolidation priorities; [shared scope and checked transforms](docs/QUESTION_SCOPE.md)
 now connect recipe and follow-up planning.
+The [entry-point design review](docs/ENTRY_POINTS_DESIGN_SPIKE.md) proposes the next
+interaction cleanup, with concrete journeys and acceptance criteria.
 
 This repository currently runs as a local lab. Reservation, checkout and report
 services exercise general-purpose contracts.
