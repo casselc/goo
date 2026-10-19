@@ -139,6 +139,8 @@ func registerMeasurements(mux *http.ServeMux, client *http.Client, dir string) {
 			YAML   string `json:"yaml"`
 			FromMS int64  `json:"fromMs"`
 			ToMS   int64  `json:"toMs"`
+			FromNS string `json:"fromNS"`
+			ToNS   string `json:"toNS"`
 		}
 		if !decode(w, r, &input) {
 			return
@@ -149,11 +151,11 @@ func registerMeasurements(mux *http.ServeMux, client *http.Client, dir string) {
 			return
 		}
 		from, to := input.FromMS, input.ToMS
-		if from == 0 && to == 0 {
+		if from == 0 && to == 0 && input.FromNS == "" && input.ToNS == "" {
 			to = time.Now().UnixMilli()
 			from = to - int64(d.LookbackMinutes)*60000
 		}
-		q := measurements.Question{Definition: d, FromMS: from, ToMS: to}
+		q := measurements.Question{Definition: d, FromMS: from, ToMS: to, FromNS: input.FromNS, ToNS: input.ToNS}
 		p, e := measurements.Compile(q)
 		if e != nil {
 			fail(w, e)

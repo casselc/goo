@@ -12,6 +12,7 @@ import (
 	"gopkg.in/yaml.v3"
 	"io"
 	"regexp"
+	"strconv"
 	"strings"
 	"unicode/utf8"
 )
@@ -62,6 +63,8 @@ type Question struct {
 	Definition Definition `json:"definition"`
 	FromMS     int64      `json:"fromMs"`
 	ToMS       int64      `json:"toMs"`
+	FromNS     string     `json:"fromNS,omitempty"`
+	ToNS       string     `json:"toNS,omitempty"`
 }
 type Plan struct {
 	SQL        string            `json:"sql"`
@@ -156,12 +159,28 @@ func (d Definition) Validate() error {
 	}
 	return nil
 }
+
+// BoundsNS returns exact native bounds; legacy questions retain millisecond semantics.
+func (q Question) BoundsNS() (string, string) {
+	if q.FromNS != "" {
+		return q.FromNS, q.ToNS
+	}
+	return ns(q.FromMS), ns(q.ToMS)
+}
+
 func (q Question) Validate() error {
 	if e := q.Definition.Validate(); e != nil {
 		return e
 	}
 	if q.FromMS < 0 || q.ToMS <= q.FromMS || q.ToMS-q.FromMS > 7200000 || q.ToMS >= 4102444800000 {
 		return fmt.Errorf("require fixed half-open window <=120 minutes before 2100")
+	}
+	if q.FromNS != "" || q.ToNS != "" {
+		from, e1 := strconv.ParseInt(q.FromNS, 10, 64)
+		to, e2 := strconv.ParseInt(q.ToNS, 10, 64)
+		if e1 != nil || e2 != nil || strconv.FormatInt(from, 10) != q.FromNS || strconv.FormatInt(to, 10) != q.ToNS || from < 0 || to <= from || to-from > 7200000000000 || to >= 4102444800000000000 || q.Definition.Kind == "lifecycle" || q.FromMS != from/1000000 || q.ToMS != (to+999999)/1000000 {
+			return fmt.Errorf("require canonical paired native nanosecond bounds and matching enclosing millisecond bounds")
+		}
 	}
 	if l := q.Definition.Lifecycle; l != nil && q.FromMS < l.DeadlineMS+l.AllowanceMS {
 		return fmt.Errorf("lifecycle cohort predates epoch")

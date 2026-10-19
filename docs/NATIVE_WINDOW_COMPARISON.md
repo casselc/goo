@@ -25,11 +25,10 @@ for the pair are withheld**; valid stored observations can still be inspected.
 This intentionally avoids selecting a healthy subset or substituting zero for
 missing data. Empty histogram populations retain no-data uncertainty.
 
-The current measurement-question transport has millisecond bounds. Interval edges
-must coincide with those bounds exactly, so SDK exports with nanosecond-offset
-edges may be refused even when an interior interval is valid. Nanosecond question
-scopes or an explicit observed-support policy remain future work; the comparison
-does not silently trim requested scope to make a result comparable.
+Measurement questions accept exact native nanosecond bounds (see below). The
+interactive editor still authors millisecond bounds, so SDK exports may be refused
+unless an exact question is supplied. Observed-support discovery remains future
+work; comparisons never silently trim requested scope.
 
 ## Counter rates
 
@@ -101,3 +100,23 @@ Bombadil reopens the frozen native comparison.
 ![Counter reset refusal](journeys/screenshots/54d-counter-reset-withheld.png)
 
 ![Bucket layout mismatch](journeys/screenshots/54e-bucket-layout-incompatibility.png)
+
+## Exact scope transport
+
+Native measurement questions optionally carry canonical decimal `fromNS` and
+`toNS` strings. Their `fromMs` is the floor of the start and `toMs` the ceiling
+of the end. Conflicting, partial, noncanonical or lifecycle nanosecond bounds
+are rejected. Exact bounds drive parameterized ClickHouse Nano predicates,
+including cumulative warmup, and the native evaluation kernels. Captures and
+shared measurement steps preserve the strings; omitted fields retain legacy
+serialization and millisecond SQL. No observed-window discovery is implemented
+yet. Editing UTC bounds in the editor creates a millisecond question.
+
+```mermaid
+flowchart LR
+  Q[Exact native question strings] --> P[Parameterized Nano source plan]
+  P --> K[Exact native evaluation]
+  K --> C[Immutable capture and replay]
+  Q --> S[Shared typed question step]
+  S --> Q
+```

@@ -5,6 +5,16 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Exact native scope transport (2026-10-19)
+
+Implemented optional native nanosecond question bounds, parameterized Nano source
+predicates, exact kernel evaluation, capture replay and shared-step round trips.
+Passed full root `go test ./...` and all 41 frontend tests, including exact-bound
+plan/evaluation/replay and shared-link/capture round trips with rejecting controls.
+Logs: `artifacts/exact-native-scopes-go.log` and `exact-native-scopes-node.log`.
+The discovery picker is not implemented in this milestone. No live deployment
+or screenshot regeneration was performed; no new interactive control is added.
+
 ## Complete native window comparisons (2026-10-19)
 
 [Native window comparison](docs/NATIVE_WINDOW_COMPARISON.md) uses complete validated

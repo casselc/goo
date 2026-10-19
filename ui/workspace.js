@@ -2,27 +2,29 @@
 (function(global){
  const routes={explore:{title:'Explore',description:'Follow a question through captured telemetry.'},services:{title:'Services',description:'Discover emitting services and open focused investigations.'},operations:{title:'Operations',description:'Investigate application behavior through shared definitions.'},investigations:{title:'Saved investigations',description:'Reopen evidence, preserve context, and compare revisions.'},definitions:{title:'Definitions',description:'Inspect the contracts behind your investigations.'},examples:{title:'Examples',description:'Investigate independent sample applications using shared telemetry packages.'}};
  // Versioned links contain questions, never evidence or source credentials.
- function captureQuestion(step){validateStep(step);return step.kind==='record'?{kind:'explore',explore:structuredClone(step.record)}:{kind:'measurement',measurement:{definition:structuredClone(step.measurement),fromMs:step.scope.fromMs,toMs:step.scope.toMs}}}
+ function exactBounds(q){return q.fromNS!==undefined||q.toNS!==undefined?{fromNS:q.fromNS,toNS:q.toNS}:{}}
+ function captureQuestion(step){validateStep(step);return step.kind==='record'?{kind:'explore',explore:structuredClone(step.record)}:{kind:'measurement',measurement:{definition:structuredClone(step.measurement),fromMs:step.scope.fromMs,toMs:step.scope.toMs,...exactBounds(step.scope)}}}
  function evidenceDifference(step,capture){
   const identify=global.GooQuestionSession?.identity||(typeof module!=='undefined'?require('./question-session').identity:null);const expected=captureQuestion(step),actual=capture,changes=[];if(expected.kind!==actual.kind)return ['Signal family differs'];
   const a=expected.explore||expected.measurement,b=actual.explore||actual.measurement;if(!b)return ['Question unavailable'];
   if((a.environment||a.definition?.environment)!==(b.environment||b.definition?.environment))changes.push('Environment differs');
-  if(a.fromMs!==b.fromMs||a.toMs!==b.toMs)changes.push('Fixed window differs');
+  if(a.fromMs!==b.fromMs||a.toMs!==b.toMs||a.fromNS!==b.fromNS||a.toNS!==b.toNS)changes.push('Fixed window differs');
   function definition(q){if(q.definition){const d=structuredClone(q.definition);delete d.environment;return identify?identify(d):stable(d)}const d=structuredClone(q);for(const k of ['environment','fromMs','toMs','offset','limit'])delete d[k];return identify?identify(d):stable(d)}
   function stable(x){if(Array.isArray(x))return '['+x.map(stable).join(',')+']';if(x&&typeof x==='object')return '{'+Object.keys(x).sort().map(k=>JSON.stringify(k)+':'+stable(x[k])).join(',')+'}';return JSON.stringify(x)}
   if(definition(a)!==definition(b))changes.push('Question definition differs');return changes;
  }
  function recordStep(q,view='Records'){return {version:1,kind:'record',scope:{environment:q.environment,fromMs:q.fromMs,toMs:q.toMs},view,record:structuredClone(q)}}
- function measurementStep(q){return {version:1,kind:'measurement',scope:{environment:q.definition.environment,fromMs:q.fromMs,toMs:q.toMs},view:'Overview',measurement:structuredClone(q.definition)}}
+ function measurementStep(q){return {version:1,kind:'measurement',scope:{environment:q.definition.environment,fromMs:q.fromMs,toMs:q.toMs,...exactBounds(q)},view:'Overview',measurement:structuredClone(q.definition)}}
  function validateStep(s){
   const b=s?.scope;if(s?.version!==1||!b||typeof b.environment!=='string'||!b.environment||!Number.isSafeInteger(b.fromMs)||!Number.isSafeInteger(b.toMs)||b.fromMs<0||b.toMs<=b.fromMs||b.toMs-b.fromMs>7200000||b.toMs>=4102444800000)throw Error('Invalid question step scope.');
+  if(b.fromNS!==undefined||b.toNS!==undefined){if(s.kind!=='measurement'||s.measurement?.kind==='lifecycle'||typeof b.fromNS!=='string'||typeof b.toNS!=='string'||!/^(0|[1-9][0-9]*)$/.test(b.fromNS)||!/^(0|[1-9][0-9]*)$/.test(b.toNS))throw Error('Invalid exact native scope.');const f=BigInt(b.fromNS),t=BigInt(b.toNS);if(t<=f||t-f>7200000000000n||t>=4102444800000000000n||BigInt(b.fromMs)!==f/1000000n||BigInt(b.toMs)!==(t+999999n)/1000000n)throw Error('Exact scope differs from enclosing bounds.');}
   if(s.kind==='record'){if(s.measurement||!s.record||s.record.environment!==b.environment||s.record.fromMs!==b.fromMs||s.record.toMs!==b.toMs)throw Error('Record step scope differs.');validateLink({version:1,question:s.record,view:s.view})}
   else if(s.kind==='measurement'){if(s.record||s.view!=='Overview'||!s.measurement||s.measurement.environment!==b.environment||typeof s.measurement.source!=='object')throw Error('Invalid measurement step.');}
   else throw Error('Unsupported question step.');return s;
  }
  function stepLink(s){validateStep(s);const hash='#step='+encodeURIComponent(JSON.stringify(s));if(hash.length>48000)throw Error('Question step is too large to share.');return hash}
  function readStepLink(hash){if(!hash.startsWith('#step='))return null;if(hash.length>48000)throw Error('Question step is too large.');return validateStep(JSON.parse(decodeURIComponent(hash.slice(6))))}
- function sameWindow(a,b){return a.environment===b.environment&&a.fromMs===b.fromMs&&a.toMs===b.toMs}
+ function sameWindow(a,b){return a.environment===b.environment&&a.fromMs===b.fromMs&&a.toMs===b.toMs&&a.fromNS===b.fromNS&&a.toNS===b.toNS}
  function questionLink(question,view='Records'){
   const value={version:1,question:structuredClone(question),view};validateLink(value);
   const hash=stepLink(recordStep(question,view));if(hash.length>16000)throw Error('Question is too large to share in a link.');return hash;

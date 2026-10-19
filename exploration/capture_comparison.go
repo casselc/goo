@@ -99,6 +99,14 @@ func CompareEvidence(a, b *SavedCapture) (*EvidenceComparison, error) {
 		x, y := *qa.Measurement, *qb.Measurement
 		ea, eb = x.Definition.Environment, y.Definition.Environment
 		fa, ta, fb, tb = x.FromMS, x.ToMS, y.FromMS, y.ToMS
+		if x.FromNS != "" || y.FromNS != "" {
+			af, at := x.BoundsNS()
+			bf, bt := y.BoundsNS()
+			fa, _ = strconv.ParseInt(af, 10, 64)
+			ta, _ = strconv.ParseInt(at, 10, 64)
+			fb, _ = strconv.ParseInt(bf, 10, 64)
+			tb, _ = strconv.ParseInt(bt, 10, 64)
+		}
 		if x.Definition.Source.Unit != y.Definition.Source.Unit {
 			r.Differences = append(r.Differences, "Unit differs")
 			r.State = "incompatible"

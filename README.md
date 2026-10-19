@@ -356,3 +356,5 @@ decision without reevaluating it.
 [Complete native windows](docs/NATIVE_WINDOW_COMPARISON.md) add exact counter-rate
 and histogram bucket-population comparisons, with full coverage, reset/gap and
 layout checks. Versioned saved receipts preserve the resulting decision.
+
+Native measurement APIs and shared question steps retain optional exact nanosecond scopes; see [scope transport](docs/NATIVE_WINDOW_COMPARISON.md#exact-scope-transport). Observed-window discovery remains planned.

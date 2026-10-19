@@ -11,6 +11,8 @@ type StepScope struct {
 	Environment string `json:"environment"`
 	FromMS      int64  `json:"fromMs"`
 	ToMS        int64  `json:"toMs"`
+	FromNS      string `json:"fromNS,omitempty"`
+	ToNS        string `json:"toNS,omitempty"`
 }
 type Step struct {
 	Version     int                      `json:"version"`
@@ -27,7 +29,7 @@ func (s Step) Validate() error {
 	}
 	switch s.Kind {
 	case "record":
-		if s.Record == nil || s.Measurement != nil || (s.View != "Records" && s.View != "Distribution") {
+		if s.Scope.FromNS != "" || s.Scope.ToNS != "" || s.Record == nil || s.Measurement != nil || (s.View != "Records" && s.View != "Distribution") {
 			return errors.New("record step requires one record question and supported view")
 		}
 		q := s.Record
@@ -39,7 +41,7 @@ func (s Step) Validate() error {
 		if s.Measurement == nil || s.Record != nil || s.View != "Overview" || s.Measurement.Environment != s.Scope.Environment {
 			return errors.New("measurement step requires one definition matching scope")
 		}
-		return (measurements.Question{Definition: *s.Measurement, FromMS: s.Scope.FromMS, ToMS: s.Scope.ToMS}).Validate()
+		return (measurements.Question{Definition: *s.Measurement, FromMS: s.Scope.FromMS, ToMS: s.Scope.ToMS, FromNS: s.Scope.FromNS, ToNS: s.Scope.ToNS}).Validate()
 	default:
 		return errors.New("unsupported question step kind")
 	}

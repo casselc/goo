@@ -62,7 +62,20 @@ func Compile(q Question) (Plan, error) {
 	if d.Kind == "counter" || d.Kind == "histogram" {
 		upper = "<="
 	}
-	where := timeColumn + ">=fromUnixTimestamp64Milli(" + param(strconv.FormatInt(from, 10), "Int64") + ") AND " + timeColumn + upper + "fromUnixTimestamp64Milli(" + param(strconv.FormatInt(q.ToMS, 10), "Int64") + ") AND ResourceAttributes['deployment.environment.name']=" + param(d.Environment, "String")
+	clock, lower, end := "fromUnixTimestamp64Milli", strconv.FormatInt(from, 10), strconv.FormatInt(q.ToMS, 10)
+	if q.FromNS != "" {
+		clock = "fromUnixTimestamp64Nano"
+		lower, end = q.BoundsNS()
+		if d.Kind == "counter" || d.Kind == "histogram" {
+			n, _ := strconv.ParseInt(lower, 10, 64)
+			n -= d.MaxGapMS * 1000000
+			if n < 0 {
+				n = 0
+			}
+			lower = strconv.FormatInt(n, 10)
+		}
+	}
+	where := timeColumn + ">=" + clock + "(" + param(lower, "Int64") + ") AND " + timeColumn + upper + clock + "(" + param(end, "Int64") + ") AND ResourceAttributes['deployment.environment.name']=" + param(d.Environment, "String")
 	services := []string{}
 	for _, s := range d.Source.Services {
 		services = append(services, param(s, "String"))
@@ -238,13 +251,14 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 			hs = append(hs, metrics.HistogramPoint{Stream: stream, Temporality: map[int]string{1: "delta", 2: "cumulative"}[row.Temporality], StartNS: row.StartNS, EndNS: row.EndNS, Bounds: row.Bounds, BucketCounts: row.BucketCounts, Count: row.Count, NoRecordedValue: missing})
 		}
 	}
+	fromNS, toNS := q.BoundsNS()
 	switch d.Kind {
 	case "gauge":
-		r.Gauges, e = metrics.EvaluateGauges(ns(q.FromMS), ns(q.ToMS), ns(d.MaxGapMS), gs)
+		r.Gauges, e = metrics.EvaluateGauges(fromNS, toNS, ns(d.MaxGapMS), gs)
 	case "counter":
-		r.Counters, e = metrics.EvaluateCounters(metrics.CounterRequest{FromNS: ns(q.FromMS), ToNS: ns(q.ToMS), MaxGapNS: ns(d.MaxGapMS), Points: cs})
+		r.Counters, e = metrics.EvaluateCounters(metrics.CounterRequest{FromNS: fromNS, ToNS: toNS, MaxGapNS: ns(d.MaxGapMS), Points: cs})
 	case "histogram":
-		r.Histograms, e = metrics.EvaluateHistograms(metrics.HistogramRequest{FromNS: ns(q.FromMS), ToNS: ns(q.ToMS), MaxGapNS: ns(d.MaxGapMS), Points: hs})
+		r.Histograms, e = metrics.EvaluateHistograms(metrics.HistogramRequest{FromNS: fromNS, ToNS: toNS, MaxGapNS: ns(d.MaxGapMS), Points: hs})
 	}
 	if e != nil {
 		return nil, e

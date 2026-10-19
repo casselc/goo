@@ -305,7 +305,9 @@ snapshots are limited to 128 KiB and fail rather than truncate. Sharing requires
 access to the same workspace; verified authorship, access control and receipt
 garbage collection remain future work.
 
-Native complete-window comparisons currently inherit millisecond question bounds.
-Nanosecond-offset interval edges can fail exact coverage; no silent trimming or
-interpolation is performed. Exact nanosecond scopes or an explicit observed-support
-policy are needed to broaden that boundary. See [native windows](NATIVE_WINDOW_COMPARISON.md).
+Native questions now accept exact `fromNS`/`toNS` string bounds alongside matching
+enclosing millisecond bounds. SQL, evaluation, captures and shared question steps
+retain those bounds. The interactive editor still accepts millisecond input;
+“Find comparable windows” discovery and explicit selection remain planned.
+Nanosecond-offset edges therefore still require an API-authored exact question;
+no silent trimming or interpolation occurs.

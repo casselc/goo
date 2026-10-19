@@ -36,7 +36,7 @@ func TestBuiltinsAndParameterizedPlans(t *testing.T) {
 		if e != nil {
 			t.Fatal(f, e)
 		}
-		q := Question{d, 100000, 220000}
+		q := Question{Definition: d, FromMS: 100000, ToMS: 220000}
 		p, e := Compile(q)
 		if e != nil {
 			t.Fatal(e)
@@ -68,7 +68,7 @@ func TestBuiltinsAndParameterizedPlans(t *testing.T) {
 }
 func TestGaugeReplayAndIsolation(t *testing.T) {
 	d := definition(t, "queue-lag")
-	q := Question{d, 100000, 220000}
+	q := Question{Definition: d, FromMS: 100000, ToMS: 220000}
 	row := gaugeRow(d, "worker-a", 210000, "7")
 	r, e := Evaluate(q, []json.RawMessage{raw(row)}, time.UnixMilli(230000), "", nil)
 	if e != nil {
@@ -92,7 +92,7 @@ func TestGaugeReplayAndIsolation(t *testing.T) {
 }
 func TestLifecycleCustodyCorrectionAndReplay(t *testing.T) {
 	d := definition(t, "reservation-lifecycle")
-	q := Question{d, 100000, 220000}
+	q := Question{Definition: d, FromMS: 100000, ToMS: 220000}
 	dir := t.TempDir()
 	event := func(id, body, at, outcome string) json.RawMessage {
 		return raw(map[string]any{"body": body, "service": "lab-grpc", "resource": map[string]string{"deployment.environment.name": "local"}, "attributes": map[string]string{"goo.event.id": id, "goo.event.time_ns": at, "goo.subject.id": "s1", "goo.subject.tenant": "demo", "app.release": "r1", "app.outcome": outcome}})
@@ -133,7 +133,7 @@ func TestLifecycleCustodyCorrectionAndReplay(t *testing.T) {
 }
 func TestCounterPrecisionAndBoundedInputs(t *testing.T) {
 	d := definition(t, "checkout-calls")
-	q := Question{d, 100000, 220000}
+	q := Question{Definition: d, FromMS: 100000, ToMS: 220000}
 	row := gaugeRow(d, "a", 210000, "9007199254740992")
 	row.StartNS = ns(90000)
 	row.Temporality = 2
@@ -148,7 +148,7 @@ func TestCounterPrecisionAndBoundedInputs(t *testing.T) {
 
 func TestEvidenceSurvivesJSONTransportSpellings(t *testing.T) {
 	d := definition(t, "worker-active")
-	q := Question{d, 100000, 220000}
+	q := Question{Definition: d, FromMS: 100000, ToMS: 220000}
 	row := gaugeRow(d, "worker", 210000, "1")
 	data, _ := json.Marshal(row)
 	// ClickHouse commonly escapes slashes; JSON transports are free to unescape.

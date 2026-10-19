@@ -20,7 +20,7 @@ func TestMixedQuestionStepsPreserveRevisionsAndScope(t *testing.T) {
 		t.Fatal(e)
 	}
 	q := exploration.Query{Signal: "spans", Environment: d.Environment, FromMS: 100000, ToMS: 220000, Limit: 100}
-	scope := StepScope{q.Environment, q.FromMS, q.ToMS}
+	scope := StepScope{Environment: q.Environment, FromMS: q.FromMS, ToMS: q.ToMS}
 	record := Step{Version: 1, Kind: "record", Scope: scope, View: "Records", Record: &q}
 	metric := Step{Version: 1, Kind: "measurement", Scope: scope, View: "Overview", Measurement: &d}
 	store := Store{Dir: t.TempDir()}
@@ -62,7 +62,7 @@ func TestMixedQuestionStepsPreserveRevisionsAndScope(t *testing.T) {
 
 func TestLinkedEvidenceRequiresResolverAndPreservesHistory(t *testing.T) {
 	q := exploration.Query{Signal: "spans", Environment: "prod", FromMS: 1000, ToMS: 2000, Limit: 100}
-	step := Step{Version: 1, Kind: "record", Scope: StepScope{"prod", 1000, 2000}, View: "Records", Record: &q}
+	step := Step{Version: 1, Kind: "record", Scope: StepScope{Environment: "prod", FromMS: 1000, ToMS: 2000}, View: "Records", Record: &q}
 	key := strings.Repeat("a", 64)
 	one, two := strings.Repeat("b", 64), strings.Repeat("c", 64)
 	card := Card{Kind: "question", Key: key, Step: &step, Evidence: []string{one}}

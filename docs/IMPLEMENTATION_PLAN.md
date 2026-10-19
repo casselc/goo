@@ -452,3 +452,5 @@ full validated coverage and exact stream matching, preserving reset/gap/layout
 refusals and p95 ranges in version 2 receipts. Historical version 1 snapshots
 remain readable. Fleet aggregation, lifecycle deltas and automatic rebinning
 remain future work.
+
+Exact native scope transport is implemented; next implement source-free observed-support discovery with exclusions and explicit scope selection. The discovery picker remains planned.
