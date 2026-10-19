@@ -7,6 +7,7 @@ import (
 )
 
 type TimePoint struct {
+	Numeric    *NumericSummary    `json:"numeric,omitempty"`
 	SpanStatus *SpanStatusSummary `json:"spanStatus,omitempty"`
 	FromMS     int64              `json:"fromMs"`
 	ToMS       int64              `json:"toMs"`
@@ -43,6 +44,10 @@ func DecodeTimeSeries(q Query, raw []json.RawMessage) ([]TimePoint, error) {
 			d := emptySpanStatus()
 			p.SpanStatus = &d
 		}
+		if q.Numeric != nil {
+			d, _ := EvaluateNumericValues(*q.Numeric, nil)
+			p.Numeric = &d
+		}
 		points = append(points, p)
 	}
 	seen := map[int64]bool{}
@@ -73,6 +78,13 @@ func DecodeTimeSeries(q Query, raw []json.RawMessage) ([]TimePoint, error) {
 				return nil, e
 			}
 			points[i].SpanStatus = d
+		}
+		if q.Numeric != nil {
+			d, e := decodeNumeric(r, *q.Numeric, v.Count)
+			if e != nil {
+				return nil, e
+			}
+			points[i].Numeric = d
 		}
 		points[i].Count = v.Count
 		points[i].State = "observed"
@@ -121,6 +133,9 @@ func ValidateTimeSeries(q Query, points []TimePoint) error {
 			}
 		} else if p.SpanStatus != nil {
 			return fmt.Errorf("unexpected interval span status")
+		}
+		if err := validateOptionalNumeric(q.Numeric, p.Numeric, p.Count); err != nil {
+			return err
 		}
 		if p.State != state {
 			return fmt.Errorf("invalid interval state")

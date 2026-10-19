@@ -19,6 +19,7 @@ import (
 )
 
 type Result struct {
+	Numeric           *NumericSummary    `json:"numeric,omitempty"`
 	GroupedTimeSeries []TimeSeriesGroup  `json:"groupedTimeSeries,omitempty"`
 	SpanStatus        *SpanStatusSummary `json:"spanStatus,omitempty"`
 	TimeSeries        []TimePoint        `json:"timeSeries,omitempty"`
@@ -145,6 +146,12 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 		return nil, fmt.Errorf("invalid count")
 	}
 	r.Count = total.Count
+	if q.Numeric != nil {
+		r.Numeric, e = decodeNumeric(count[0], *q.Numeric, r.Count)
+		if e != nil {
+			return nil, e
+		}
+	}
 	if q.Summary == "span-duration" {
 		r.Duration, e = DecodeDurationSummary(count[0])
 		if e != nil {
@@ -274,7 +281,14 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 				return nil, fmt.Errorf("duplicate group dimensions")
 			}
 			seenGroups[string(key)] = true
-			if q.Summary == "span-duration" || q.SpanStatus {
+			if q.Numeric != nil {
+				summary, err := decodeNumeric(raw, *q.Numeric, count)
+				if err != nil {
+					return nil, err
+				}
+				group["numeric"], _ = json.Marshal(summary)
+			}
+			if q.Summary == "span-duration" || q.SpanStatus || q.Numeric != nil {
 				r.Groups[groupIndex], _ = json.Marshal(group)
 			}
 		}
@@ -372,6 +386,14 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 			return nil, err
 		}
 		if !groupedSeriesAgree(r) {
+			r.State = "changed_between_reads"
+		}
+	}
+	if q.Numeric != nil {
+		if err := ValidateNumericResult(r); err != nil {
+			return nil, err
+		}
+		if !numericReadsAgree(r) {
 			r.State = "changed_between_reads"
 		}
 	}

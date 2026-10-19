@@ -973,3 +973,11 @@ Reads remain independent. Disagreement stays explicit; agreement does not establ
 a transaction. Per-cell percentiles use raw durations, never averaged scalar
 percentiles. Old unsplit plans/definitions retain their representation. See
 RECORD_MEASURES.md for budgets, typed-model scope and OTel boundaries.
+
+## Explicit numeric attributes across the investigation loop
+
+The [numeric attribute process diagram](NUMERIC_ATTRIBUTE_PLANNING.md#charts-custody-and-disagreement)
+connects optional question/YAML bindings, parameterized source lowering, exact
+reference checks, coverage/accounting, Explore and immutable capture/reuse. This
+path uses ordinary OTel string-map records without code annotations or inferred
+semantic-convention conformance. Native metric kernels remain distinct.

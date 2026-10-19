@@ -1,94 +1,133 @@
-# Numeric attribute preflight and reference semantics
+# Numeric attributes: plan, measure and retain evidence
 
-Implemented: a source-free Go planner, exact reference evaluator and HTTP preflight.
-Live numeric-attribute SQL execution, UI controls, saved definitions and captures
-are **not implemented**. Existing record measures remain unchanged.
+Implemented in the Go record adapter, Explore and telemetry packages. One explicit
+integer attribute binding can accompany record count, span duration and recorded
+status. It applies to the full selected span/log population independently of the
+inspection page, with the same result contract in totals, breakdowns, time cells,
+split charts and immutable captures. Native metric kernels remain separate.
 
-This separates declaring a meaning from discovering a storage value. The exporter
-stores record/resource attribute maps as strings. A numeric-looking value, an OTel
-name or a unit label cannot recover its original OTLP scalar type or certify
-semantic-convention conformance. This works for custom keys and standard OTel keys
-without requiring goo annotations; convention profiles must eventually supply
-versioned bindings rather than guess from names.
+## Declare a meaning over ordinary OTel data
 
-## Preflight
+In Explore, expand **Numeric attribute measure** under Measures and chart. Enable
+it, choose record or resource attributes, enter a key, declare int64 or uint64 and
+a unit, then Apply question. Available keys are suggestions; custom keys can be
+entered even when bounded inventory did not discover them. Missing/empty/invalid
+values remain visible beside arithmetic. Units label inputs; no rescaling occurs.
 
-`POST /api/telemetry-packages/numeric-plan` accepts one strict JSON object:
+The exporter stores attribute maps as strings. A numeric-looking value or an OTel
+name cannot recover its original OTLP scalar type or establish semantic-convention
+conformance. This works for ordinary standard/custom keys without goo annotations.
+Convention profiles must eventually supply explicit versioned bindings. The example
+uses a familiar database convention key without claiming coverage or version binding.
 
-```json
-{
-  "question": {
-    "signal": "logs", "environment": "demo",
-    "fromMs": 1000, "toMs": 61000, "limit": 100, "offset": 0
-  },
-  "binding": {
-    "field": {"kind": "attribute", "key": "db.response.returned_rows"},
-    "type": "uint64", "unit": "{row}", "parse": "canonical-decimal"
-  }
-}
+Reusable YAML and record questions add the optional `numeric` field:
+
+```yaml
+numeric:
+  field:
+    kind: attribute
+    key: db.response.returned_rows
+  type: uint64
+  unit: '{row}'
+  parse: canonical-decimal
 ```
 
-The Go endpoint omits the `/api` prefix. No credentials or source connection are
-needed. The response retains detached shared question scope, the explicit binding,
-sum/min/max/mean operators, coverage states and `meanDenominator: "valid"`.
-`executable` is always false in this slice. Structured diagnostics include stable
-`code`, `path` and explanatory `message` fields. An otherwise supported binding has
-`execution_unavailable`; invalid fields, types, parsing policies and units produce
-additional diagnostics. An invalid question or transport shape returns HTTP 400.
-HTTP 200 means preflight completed, not that execution is supported.
+All four operators (sum, min, max, mean) are available together. `RecordMeasures()`
+exposes typed operators and the detached binding, including parsing policy. The
+mean merge rule is sum-and-valid-count; coverage partitions merge by aligned sums.
+Optional fields are omitted when disabled, preserving old questions, package
+revisions, default SQL and captures. No old evidence is rewritten.
 
-| Capability | Current contract |
+## Source-free capability preflight
+
+`POST /api/telemetry-packages/numeric-plan` accepts one strict JSON object with
+`question` (an existing valid record question) and `binding` (the object above).
+The Go endpoint omits `/api`. It needs no source credentials or source access.
+The response retains detached shared scope, binding, operators, coverage states
+and `meanDenominator: "valid"`. Supported bindings now return `executable: true`
+and empty diagnostics. This means the adapter supports the binding; it does not
+mean the source supplied any valid values or met runtime budgets.
+
+Unsupported fields/types/parsing policies/units return `executable: false` with
+structured `code`, `path`, `message` diagnostics. Invalid questions or transport
+shapes return HTTP 400. Execute/plan/save reject invalid bindings. Run
+`python3 scripts/check_numeric_preflight.py` against the local stack to check both
+supported and unsupported paths through the proxy.
+
+| Capability | Contract |
 | --- | --- |
 | Signals / fields | Span or log question; explicit record-attribute or resource-map key |
-| Types | Declared int64 or uint64, with range validation |
+| Types | Declared int64 or uint64 with range validation |
 | Parsing | Canonical decimal integers; no trimming or coercion |
-| Units | Required declared label, at most 64 UTF-8 bytes; no whitespace/control characters; `1` is dimensionless |
-| Calculations | Reference sum, min, max and rational mean |
-| Conversion | None; the unit labels the input, it never rescales values |
-| Floats, decimals, quantiles, expressions | Unsupported in this slice |
-| Source lowering / Explore / persistence | Unavailable; no numeric payload is added to existing Query/package/capture formats |
+| Units | Nonempty label, at most 64 UTF-8 bytes; no whitespace/control characters; `1` is dimensionless |
+| Calculations | Exact sum, min, max and rational mean |
+| Coverage | `count = valid + missing + empty + invalid` in every result/cell |
+| Conversion, floats, decimals, numeric quantiles, expressions | Unsupported |
+| Numeric cohort comparisons | Unsupported; baseline/previous-window controls disabled for numeric questions |
 
-## Exact reference evaluation
+## Exact arithmetic and unavailable states
 
-`exploration.EvaluateNumericValues(binding, values)` consumes one optional exporter
-map value per record: nil means absent key, pointer-to-empty means present empty.
-Canonical forms are `0`, positive digits without leading zeros, or a minus sign
-followed by nonzero-leading digits for signed values. `-0`, `+1`, `01`, whitespace,
-fractions, exponents, NaN, infinity and out-of-range integers are invalid. An
-unsigned binding rejects negative values. Empty values have their own category.
+`EvaluateNumericValues(binding, values)` consumes one optional exporter map value
+per record: nil means absent key, pointer-to-empty means present empty. Canonical
+forms are `0`, positive digits without leading zeros, or a minus sign followed by
+nonzero-leading digits for signed values. `-0`, `+1`, `01`, whitespace, fractions,
+exponents, NaN/infinity and out-of-range values are invalid. Unsigned bindings
+reject negatives. Empty values have their own category.
 
-`count = valid + missing + empty + invalid`. Only valid values enter arithmetic.
-All outputs are exact decimal strings; the reference sum uses arbitrary-precision
-integers and mean is represented by `sum / valid`. Future backends must declare
-overflow policies and match these semantics rather than substitute float64 or
-`to*OrZero`. Zero is an observed value. With no valid values extrema are unavailable
-and state is `no_valid_values`; an empty record population is `no_data`. Sum is the
-additive identity zero in these states, not evidence of an observed zero or a
-defined mean. With some valid values state is `observed`; coverage counters still
-expose excluded values and must travel with the result.
+Only valid values enter arithmetic. Decimal-string outputs preserve full precision;
+the mean is exactly `sum / valid`, displayed rounded to three decimals. The reference
+sum uses arbitrary-precision integers. ClickHouse roundtrip-checks nullable integer
+parsing against the original string to reject permissive casts and overflow wraps.
+Only validated values enter an Int256 accumulator. Given UInt64 record counts and
+64-bit inputs, absolute sum is below 2^128, so Int256 cannot overflow. Values never
+pass through float64 or `to*OrZero`.
+
+Zero is observed. With no valid values extrema and mean are unavailable and state
+is `no_valid_values`; an empty record population is `no_data`. Sum retains the
+additive identity zero in those states, not evidence of an observed zero or defined
+mean. With valid values state is `observed`, while coverage retains exclusions.
+
+## Charts, custody and disagreement
+
+Breakdown rankings and split-chart bars use **absolute magnitude**, explicitly
+labelled; signed value labels remain intact. Local search retains the full captured
+scale, and local chart selection reads no telemetry. Count charts also expose
+numeric values/coverage when an interval is selected. Split charts retain their
+existing limits of eight observed series, 1,000 observed cells and 240 intervals.
+A no-record cell and a cell containing only invalid numbers are distinct.
+
+Totals, groups and charts are separate reads. The adapter compares exact numeric
+sum, extrema and all coverage partitions across them, including split cells per
+group and per interval. Disagreement yields `changed_between_reads`; malformed
+summaries fail. Matching aggregates cannot establish identical raw records,
+transactional snapshots, completeness or health. Mean denominators are never pooled
+from rounded means. Capture load validates numeric shapes/units/accounting and
+preserves declared disagreement. Reopen and saved paging read stored evidence;
+package reuse reads fresh data while old evidence remains unchanged.
 
 ```mermaid
 flowchart LR
-  Q[Validated question + explicit numeric binding] --> P[Source-free preflight]
-  P --> D[Capability diagnostics: executable false]
-  V[Optional exporter string values] --> C[Missing / empty / invalid / valid]
-  C --> R[Exact reference summary + coverage]
-  P -. next milestone .-> S[ClickHouse lowering + differential checks]
-  S -. subsequent .-> U[Explore, package reuse and immutable captures]
+  Q[Question / reusable YAML + explicit binding] --> P[Go validation + typed plan]
+  P --> C[Parameterized ClickHouse lowering]
+  O[Ordinary OTLP] --> X[Collector + exporter string maps] --> C
+  C --> R[Exact totals / groups / cells + coverage]
+  V[Reference evaluator] --> T[Differential validation]
+  R --> T
+  R --> A[Cross-read accounting]
+  A --> UI[Explore summary / breakdown / time charts]
+  UI --> S[Immutable capture]
+  S --> F[Local reopen and paging]
+  S --> Y[Reusable definition] --> Q
 ```
 
-## Validation and next acceptance gate
+[Storyboard 44](journeys/README.md#44--measure-numeric-attributes-with-explicit-coverage)
+uses controlled ordinary OTLP spans/logs through the real collector and ClickHouse.
+It compares signed/unsigned/resource bindings and every cell with the Go reference,
+checks page-independent totals, UI authoring, capture/reuse/reopen and mobile layout.
+Hegel covers partition conservation and state/swarm edits; Quint validates observed
+plan/execute/inspect/capture/reuse/reopen steps with rejecting numeric mutations;
+Bombadil explores local measures/search with frozen-evidence/coverage invariants.
+This fixture is integration evidence, not production traffic or OTel completeness.
 
-Native boundary tests cover signed/unsigned extrema, sums above uint64, canonical
-syntax, coverage states, invalid units, detached scope and strict HTTP decoding.
-Hegel checks partition conservation and valid-only denominators across arbitrary
-mixtures and partitions. There is no new UI journey or screenshot: this milestone
-has no browser-visible behavior. Existing screenshots still describe existing
-features. A live source-free HTTP check exercises the Python proxy after deploy.
-
-Next, lower one explicit integer binding to ClickHouse and compare real OTLP
-fixtures against this evaluator, including all four coverage partitions. Before
-adding controls, define exact sum overflow and cross-read disagreement behavior,
-then carry the typed result through groups/time cells, captures and reusable YAML.
-That live journey should add Bombadil actions, Quint ledger validation/rejecting
-controls and new documentation frames; this preflight is not that acceptance gate.
+Next: multiple named measures, explicit decimal/float policies, unit conversions
+and numeric cohort comparisons. Databricks raw-source lowering remains future work.

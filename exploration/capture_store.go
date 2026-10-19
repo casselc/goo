@@ -274,6 +274,12 @@ func validateCapture(c *SavedCapture) error {
 	}
 	if c.Question.Kind == "explore" {
 		if c.Explore != nil {
+			if e := ValidateNumericResult(c.Explore); e != nil {
+				return e
+			}
+			if c.Explore.State != "changed_between_reads" && !numericReadsAgree(c.Explore) {
+				return errors.New("saved numeric measures disagree with aggregate reads")
+			}
 			if e := ValidateGroupedTimeSeries(*c.Question.Explore, c.Explore.GroupedTimeSeries); e != nil {
 				return e
 			}

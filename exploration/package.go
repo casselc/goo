@@ -22,20 +22,21 @@ var packageName = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_.-]{0,127}$`)
 // TelemetryPackage binds existing OTel data without a source-code manifest.
 // A definition is reusable configuration, never a frozen evidence receipt.
 type TelemetryPackage struct {
-	GroupTimeSeries bool          `json:"groupTimeSeries,omitempty" yaml:"groupTimeSeries,omitempty"`
-	SpanStatus      bool          `json:"spanStatus,omitempty" yaml:"spanStatus,omitempty"`
-	BucketMS        int64         `json:"bucketMs,omitempty" yaml:"bucketMs,omitempty"`
-	Summary         string        `json:"summary,omitempty" yaml:"summary,omitempty"`
-	APIVersion      string        `json:"apiVersion" yaml:"apiVersion"`
-	Name            string        `json:"name" yaml:"name"`
-	Title           string        `json:"title" yaml:"title"`
-	Description     string        `json:"description,omitempty" yaml:"description,omitempty"`
-	Source          PackageSource `json:"source" yaml:"source"`
-	Where           *Predicate    `json:"where,omitempty" yaml:"where,omitempty"`
-	GroupBy         []Field       `json:"groupBy,omitempty" yaml:"groupBy,omitempty"`
-	Measure         string        `json:"measure" yaml:"measure"`
-	LookbackMinutes int           `json:"lookbackMinutes" yaml:"lookbackMinutes"`
-	Views           []string      `json:"views" yaml:"views"`
+	Numeric         *NumericBinding `json:"numeric,omitempty" yaml:"numeric,omitempty"`
+	GroupTimeSeries bool            `json:"groupTimeSeries,omitempty" yaml:"groupTimeSeries,omitempty"`
+	SpanStatus      bool            `json:"spanStatus,omitempty" yaml:"spanStatus,omitempty"`
+	BucketMS        int64           `json:"bucketMs,omitempty" yaml:"bucketMs,omitempty"`
+	Summary         string          `json:"summary,omitempty" yaml:"summary,omitempty"`
+	APIVersion      string          `json:"apiVersion" yaml:"apiVersion"`
+	Name            string          `json:"name" yaml:"name"`
+	Title           string          `json:"title" yaml:"title"`
+	Description     string          `json:"description,omitempty" yaml:"description,omitempty"`
+	Source          PackageSource   `json:"source" yaml:"source"`
+	Where           *Predicate      `json:"where,omitempty" yaml:"where,omitempty"`
+	GroupBy         []Field         `json:"groupBy,omitempty" yaml:"groupBy,omitempty"`
+	Measure         string          `json:"measure" yaml:"measure"`
+	LookbackMinutes int             `json:"lookbackMinutes" yaml:"lookbackMinutes"`
+	Views           []string        `json:"views" yaml:"views"`
 }
 type PackageSource struct {
 	Adapter     string `json:"adapter" yaml:"adapter"`
@@ -63,7 +64,7 @@ type PackagePlan struct {
 }
 
 func (p TelemetryPackage) Question(from, to int64) Query {
-	return Query{GroupTimeSeries: p.GroupTimeSeries, SpanStatus: p.SpanStatus, BucketMS: p.BucketMS, Summary: p.Summary, Signal: p.Source.Signal, Environment: p.Source.Environment, FromMS: from, ToMS: to, Where: p.Where, GroupBy: p.GroupBy, Limit: 100, Offset: 0}
+	return Query{Numeric: p.Numeric, GroupTimeSeries: p.GroupTimeSeries, SpanStatus: p.SpanStatus, BucketMS: p.BucketMS, Summary: p.Summary, Signal: p.Source.Signal, Environment: p.Source.Environment, FromMS: from, ToMS: to, Where: p.Where, GroupBy: p.GroupBy, Limit: 100, Offset: 0}
 }
 func (p TelemetryPackage) Validate() error {
 	if p.APIVersion != PackageVersion || !packageName.MatchString(p.Name) || p.Title == "" || len(p.Title) > 160 || !utf8.ValidString(p.Title) || strings.ContainsRune(p.Title, 0) || len(p.Description) > 2048 || !utf8.ValidString(p.Description) || strings.ContainsRune(p.Description, 0) {
@@ -143,7 +144,7 @@ func DraftTelemetryPackage(q Query, name, title string, minutes int) (TelemetryP
 	b, _ := json.Marshal(q)
 	var clone Query
 	json.Unmarshal(b, &clone)
-	p := TelemetryPackage{GroupTimeSeries: q.GroupTimeSeries, SpanStatus: q.SpanStatus, BucketMS: q.BucketMS, Summary: q.Summary, APIVersion: PackageVersion, Name: name, Title: title, Source: PackageSource{"clickhouse.otel/v1", q.Signal, q.Environment}, Where: clone.Where, GroupBy: clone.GroupBy, Measure: "captured-record-count", LookbackMinutes: minutes, Views: []string{"records", "trace-context"}}
+	p := TelemetryPackage{Numeric: clone.Numeric, GroupTimeSeries: q.GroupTimeSeries, SpanStatus: q.SpanStatus, BucketMS: q.BucketMS, Summary: q.Summary, APIVersion: PackageVersion, Name: name, Title: title, Source: PackageSource{"clickhouse.otel/v1", q.Signal, q.Environment}, Where: clone.Where, GroupBy: clone.GroupBy, Measure: "captured-record-count", LookbackMinutes: minutes, Views: []string{"records", "trace-context"}}
 	if len(p.GroupBy) == 1 {
 		p.Views = []string{"records", "distribution", "trace-context"}
 	}
@@ -190,6 +191,9 @@ func PlanTelemetryPackage(p TelemetryPackage, from, to int64, target *Annotation
 		}
 	}
 	walk(p.Where)
+	if p.Numeric != nil {
+		add(p.Numeric.Field)
+	}
 	for _, f := range p.GroupBy {
 		add(f)
 	}

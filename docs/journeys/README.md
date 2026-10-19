@@ -790,3 +790,22 @@ HTTP semantic-convention coverage, unique requests or production health.
 ![Fixed route/time comparison](screenshots/43a-http-route-time-comparison.png)
 ![Frozen grouped evidence](screenshots/43b-frozen-grouped-evidence.png)
 ![Mobile grouped evidence](screenshots/43c-mobile-grouped-evidence.png)
+
+### 44 · Measure numeric attributes with explicit coverage
+
+A database engineer selects a numeric attribute from ordinary OTel spans, declares
+integer type and unit in Explore, and sees exact arithmetic beside missing, empty
+and malformed-value counts. A controlled producer sends 128 spans and 128 logs
+through OTLP and the real exporter; a 100-row inspection page cannot define totals.
+The engineer explores route/time breakdowns locally, captures evidence, saves and
+reuses its YAML in a fresh window, then reopens the original immutable capture.
+Unsigned, signed and resource bindings, including overflow strings, are compared
+to the Go reference for every total/group/cell. No manifests or convention/type
+inference are required. Controlled data does not certify completeness or health.
+
+- [Declared measure and coverage](screenshots/44a-numeric-coverage-and-series.png)
+- [Frozen numeric evidence](screenshots/44b-frozen-numeric-evidence.png)
+- [Mobile numeric evidence](screenshots/44c-mobile-numeric-evidence.png)
+- Executable: `journeys/numeric-measures.spec.js`; optional local exploration:
+  `GOO_NUMERIC_BOMBADIL=1`. The live Quint ledger reuses the existing six-stage
+  custody model with numeric reference projections and eleven rejecting mutations.

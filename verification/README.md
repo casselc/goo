@@ -270,3 +270,18 @@ Its Bombadil actor explores local mean/p95/filter controls while stored evidence
 and the captured scale remain fixed. The model observes a bounded plan → execute →
 inspect → capture → reuse → reopen protocol; it does not prove all schedules or
 telemetry completeness. See RECORD_MEASURES.md and VALIDATION.md for actual results.
+
+## Numeric attribute measures
+
+`go test -run TestHegelNumericBinding -count=1 -v .` checks valid-only arithmetic,
+partition conservation and state/swarm appends, declared-type edits, paging and
+frozen summaries (100 requested sequences, 25 steps for the state suite).
+`GOO_NUMERIC_BOMBADIL=1 bash scripts/run_journeys.sh journeys/numeric-measures.spec.js`
+from the repository root executes storyboard 44 with ordinary OTLP spans/logs and
+writes a live ledger under `artifacts/numeric-measures/`. It checks signed,
+unsigned and resource totals, groups and every time cell against reference values,
+then runs the existing six-stage custody Quint model through quint-go. Eleven
+mutations must be rejected: units/parsing policy, coverage, exact sum, cell bounds,
+local source reads, reuse and reopen custody. The Bombadil actions switch local
+numeric measures and search; invariants retain coverage and frozen evidence.
+This is bounded controlled integration telemetry, not a completeness certificate.

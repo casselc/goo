@@ -109,6 +109,9 @@ func compile(q Query, rowLimit int) (Plan, error) {
 	if e != nil {
 		return Plan{}, e
 	}
+	if q.Numeric != nil {
+		aggregate += ", " + c.numericSQL(*q.Numeric)
+	}
 	p.Count = "SELECT " + aggregate + base + " FORMAT JSONEachRow"
 
 	if q.BucketMS != 0 {

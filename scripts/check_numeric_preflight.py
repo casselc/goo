@@ -20,18 +20,18 @@ def main():
             return json.load(response)
 
     plan = call({"question": question, "binding": binding})
-    assert plan["executable"] is False
+    assert plan["executable"] is True
     assert plan["binding"] == binding
     assert plan["scope"]["signal"] == "logs"
     assert plan["scope"]["environment"] == question["environment"]
     assert plan["meanDenominator"] == "valid"
     assert plan["coverage"] == ["valid", "missing", "empty", "invalid"]
-    assert [d["code"] for d in plan["diagnostics"]] == ["execution_unavailable"]
+    assert [d["code"] for d in plan["diagnostics"]] == []
     bad = {**binding, "type": "float64", "parse": "or-zero", "unit": ""}
     unsupported = call({"question": question, "binding": bad})
     assert unsupported["executable"] is False
     assert [d["code"] for d in unsupported["diagnostics"]] == [
-        "unsupported_type", "unsupported_parse", "invalid_unit", "execution_unavailable"]
+        "unsupported_type", "unsupported_parse", "invalid_unit"]
     try:
         call({"question": question, "binding": binding, "sql": "SELECT 1"})
     except urllib.error.HTTPError as error:

@@ -58,7 +58,7 @@ func TestNumericPlanDiagnosticsAndIsolation(t *testing.T) {
 	q := Query{Signal: "logs", Environment: "test", FromMS: 1000, ToMS: 61000, Limit: 100, Where: &Predicate{Field: &Field{Kind: "resource", Key: "service.name"}, Op: "eq", Value: "ordinary"}}
 	before, _ := json.Marshal(q)
 	p, e := PlanNumericBinding(q, numericBinding())
-	if e != nil || p.Executable || len(p.Diagnostics) != 1 || p.Diagnostics[0].Code != "execution_unavailable" || p.MeanDenominator != "valid" {
+	if e != nil || !p.Executable || len(p.Diagnostics) != 0 || p.MeanDenominator != "valid" {
 		t.Fatal(p, e)
 	}
 	p.Scope.Selector.Value = "changed"
@@ -82,7 +82,7 @@ func TestNumericPlanDiagnosticsAndIsolation(t *testing.T) {
 			t.Fatal(d)
 		}
 	}
-	if !reflect.DeepEqual(codes, []string{"unsupported_field", "unsupported_type", "unsupported_parse", "invalid_unit", "execution_unavailable"}) {
+	if !reflect.DeepEqual(codes, []string{"unsupported_field", "unsupported_type", "unsupported_parse", "invalid_unit"}) {
 		t.Fatal(codes)
 	}
 	if _, e = EvaluateNumericValues(b, nil); e == nil {

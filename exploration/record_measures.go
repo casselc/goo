@@ -19,6 +19,7 @@ type RecordMeasure struct {
 	Merge       string `json:"merge"`
 }
 type RecordMeasurePlan struct {
+	Numeric          *NumericBinding `json:"numeric,omitempty"`
 	Scope            QuestionScope   `json:"scope"`
 	Measures         []RecordMeasure `json:"measures"`
 	Dimensions       []Field         `json:"dimensions"`
@@ -32,7 +33,12 @@ func (q Query) RecordMeasures() (RecordMeasurePlan, error) {
 	if e != nil {
 		return RecordMeasurePlan{}, e
 	}
-	return RecordMeasurePlan{Scope: scope, Measures: recordMeasures(q), Dimensions: append([]Field{}, q.GroupBy...), BucketMS: q.BucketMS, GroupTimeSeries: q.GroupTimeSeries, PercentilePolicy: func() string {
+	var binding *NumericBinding
+	if q.Numeric != nil {
+		b := *q.Numeric
+		binding = &b
+	}
+	return RecordMeasurePlan{Numeric: binding, Scope: scope, Measures: recordMeasures(q), Dimensions: append([]Field{}, q.GroupBy...), BucketMS: q.BucketMS, GroupTimeSeries: q.GroupTimeSeries, PercentilePolicy: func() string {
 		if q.Summary != "" {
 			return "exact-high: floor(p*N), clamped to N-1; no interpolation"
 		}
@@ -51,12 +57,26 @@ func recordMeasures(q Query) []RecordMeasure {
 		field := Field{Kind: "column", Key: "status_class"}
 		out = append(out, RecordMeasure{ID: "recorded_status", Operator: "partition-count", Input: &field, InputType: "string", OutputType: "partitioned-uint64", Unit: "{record}", Merge: "sum-aligned-partitions"})
 	}
+	if q.Numeric != nil {
+		b := q.Numeric
+		for _, v := range []struct{ id, op, typ, merge string }{{"numeric_sum", "sum", "int256", "sum"}, {"numeric_min", "min", b.Type, "min"}, {"numeric_max", "max", b.Type, "max"}, {"numeric_mean", "mean", "rational", "sum-and-valid-count"}, {"numeric_coverage", "coverage-count", "partitioned-uint64", "sum-aligned-partitions"}} {
+			f := b.Field
+			unit := b.Unit
+			if v.op == "coverage-count" {
+				unit = "{record}"
+			}
+			out = append(out, RecordMeasure{ID: v.id, Operator: v.op, Input: &f, InputType: b.Type, OutputType: v.typ, Unit: unit, Merge: v.merge})
+		}
+	}
 	return out
 }
 
 // Lower only planner-produced operators. The existing public controls expand to
 // this bounded typed model; user-defined operators/casts are intentionally absent.
-func recordAggregateSQL(q Query) (string, error) { return lowerRecordMeasures(recordMeasures(q)) }
+func recordAggregateSQL(q Query) (string, error) {
+	q.Numeric = nil
+	return lowerRecordMeasures(recordMeasures(q))
+}
 func lowerRecordMeasures(measures []RecordMeasure) (string, error) {
 	parts := []string{}
 	quantiles := []string{}

@@ -11,10 +11,10 @@ import (
 // NumericBinding is an explicit interpretation of an exporter string map.
 // Unit labels are declarations, never inferred from an OTel attribute name.
 type NumericBinding struct {
-	Field Field  `json:"field"`
-	Type  string `json:"type"`
-	Unit  string `json:"unit"`
-	Parse string `json:"parse"`
+	Field Field  `json:"field" yaml:"field"`
+	Type  string `json:"type" yaml:"type"`
+	Unit  string `json:"unit" yaml:"unit"`
+	Parse string `json:"parse" yaml:"parse"`
 }
 
 type NumericDiagnostic struct {
@@ -33,8 +33,8 @@ type NumericPlan struct {
 	MeanDenominator string              `json:"meanDenominator"`
 }
 
-// PlanNumericBinding is source-free. It deliberately does not add an executable
-// expression to Query or existing package/capture schemas.
+// PlanNumericBinding reports source-free capabilities for the explicit binding.
+// Executable means supported by this adapter, not that any data was observed.
 func PlanNumericBinding(q Query, b NumericBinding) (NumericPlan, error) {
 	scope, err := (CaptureQuestion{Kind: "explore", Explore: &q}).Scope()
 	if err != nil {
@@ -59,7 +59,10 @@ func PlanNumericBinding(q Query, b NumericBinding) (NumericPlan, error) {
 	if !validNumericUnit(b.Unit) {
 		add("invalid_unit", "binding.unit", "declare a nonempty unit label of at most 64 UTF-8 bytes without whitespace or control characters; use 1 for dimensionless values")
 	}
-	add("execution_unavailable", "execution", "reference semantics only; ClickHouse lowering, Explore controls and package/capture persistence are not implemented for numeric attributes")
+	p.Executable = len(p.Diagnostics) == 0
+	if p.Diagnostics == nil {
+		p.Diagnostics = []NumericDiagnostic{}
+	}
 	return p, nil
 }
 
@@ -81,7 +84,7 @@ var canonicalInteger = regexp.MustCompile(`^(0|[1-9][0-9]*|-[1-9][0-9]*)$`)
 // Empty and malformed values never contribute zero or enter the denominator.
 type NumericSummary struct {
 	State   string `json:"state"`
-	Unit    string `json:"unit"`
+	Unit    string `json:"unit" yaml:"unit"`
 	Count   string `json:"count"`
 	Valid   string `json:"valid"`
 	Missing string `json:"missing"`

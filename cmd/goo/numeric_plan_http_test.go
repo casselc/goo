@@ -18,7 +18,7 @@ func TestNumericPlanHTTPSourceFree(t *testing.T) {
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, httptest.NewRequest("POST", "/telemetry-packages/numeric-plan", bytes.NewReader(data)))
 	var plan exploration.NumericPlan
-	if w.Code != 200 || json.Unmarshal(w.Body.Bytes(), &plan) != nil || plan.Executable || len(plan.Diagnostics) != 1 || plan.Scope.Signal != "logs" {
+	if w.Code != 200 || json.Unmarshal(w.Body.Bytes(), &plan) != nil || !plan.Executable || len(plan.Diagnostics) != 0 || plan.Scope.Signal != "logs" {
 		t.Fatal(w.Code, w.Body.String())
 	}
 	for _, data := range []string{`{}`, `{"sql":"SELECT 1"}`, string(data) + ` {}`} {

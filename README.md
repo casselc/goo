@@ -29,9 +29,9 @@ captured counts, duration and recorded status across bounded breakdown series.
 Local chart controls retain the captured scope and scale; captures and reusable
 packages preserve the chart settings and evidence separately.
 
-[Numeric attribute preflight](docs/NUMERIC_ATTRIBUTE_PLANNING.md) adds explicit
-integer bindings, capability diagnostics and exact reference semantics. Live
-numeric-attribute execution and UI authoring remain the next step.
+[Numeric attribute measures](docs/NUMERIC_ATTRIBUTE_PLANNING.md) add explicit integer
+bindings, capability diagnostics and exact sums/extrema/means with distinct coverage
+counts. Explore, charts, saved evidence and reusable YAML share the binding.
 
 The [investigation workspace](docs/PRODUCT_WORKSPACE.md) brings Explore, Services, Operations,
 Saved investigations and Definitions into one interface. Explore includes captured

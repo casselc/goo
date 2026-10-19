@@ -18,10 +18,10 @@ This list describes the current code at handoff. Items are observations or missi
 
 ## Language and resources
 
-Numeric attribute [preflight and reference evaluation](NUMERIC_ATTRIBUTE_PLANNING.md)
-now support explicit int64/uint64 parsing, declared units and separate coverage
-counts. Live numeric-attribute SQL, UI authoring and package/capture persistence
-remain unavailable and are reported as structured planning diagnostics.
+[Numeric attribute measures](NUMERIC_ATTRIBUTE_PLANNING.md) now support one explicit
+int64/uint64 binding across totals, groups, charts, captures and YAML, with separate
+coverage counts and capability diagnostics. Multiple measures, numeric cohort
+comparisons, floating/decimal parsing and unit conversion remain unsupported.
 
 grammar.py still uses view-specific query branches. Grouping fields and map bindings are hardcoded. definitions/reservations.json is a small demo config and has no complete resource schema or version resolver. The original EDN package and deadline-outcome syntax are illustrative. The [Go aggregate](PORTABLE_COMPILER.md) and [lifecycle](LIFECYCLE_PREPARATION.md)
 kernels implement bounded typed models, preparation, reference evaluation and

@@ -5,6 +5,52 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Live numeric attribute measures (2026-10-19)
+
+One optional explicit int64/uint64 string-map binding now executes through the Go
+ClickHouse adapter, Explore summaries/breakdowns/time charts, immutable captures
+and reusable YAML. Missing/empty/invalid values retain separate counts; only valid
+values enter exact sum/extrema/rational means. Signed chart rankings use labelled
+absolute magnitude with signed values retained. Preflight now reports supported
+bindings executable. Multiple numeric bindings, float/decimal parsing, conversion
+and numeric cohort comparisons remain unsupported. See [contract and process diagram](docs/NUMERIC_ATTRIBUTE_PLANNING.md).
+
+Passed: full root Go suite; exploration/HTTP race tests; root vet; 29 frontend
+checks; Python compilation; Hegel partition conservation and numeric state/swarm
+(100 requested cases/sequences, 25 state steps), plus existing package state/swarm.
+Native checks cover parameterized keys/units, exact type bounds, impossible summary
+states, missing source summaries, same-count sum disagreement, capture rejection
+and YAML/typed-plan round trips. Three retained historical source-free plans still
+match SQL, canonical YAML and package revisions exactly on the final image.
+
+Controlled integration sends 128 ordinary OTLP spans and 128 logs through the real
+collector/exporter. Signed values produce 116 valid, one missing, one empty and ten
+invalid records; exact sum is 9223372036854776141. Unsigned and resource bindings,
+all groups and every interval are checked against the Go reference, independent of
+the 100-row page. A live six-stage custody ledger passed quint-go/Quint validation
+and rejected eleven mutations, including coverage, units/parsing, sum, cell bounds,
+local reads and reopened/reused evidence. All six final browser journeys passed
+without skips in 7.5 minutes: core basics 33, follow-ups 42, grouped measures 34,
+grouped time series 43, numeric measures 44 and recipes 37. All seven enabled
+Bombadil campaigns and associated live Quint checks passed. Final numeric ledger:
+`artifacts/numeric-measures/numeric-deeb5719/ledger.json`. Desktop/mobile numeric
+frames and affected existing frames were regenerated; both numeric layouts were
+visually reviewed. All 12 services are running, traffic is restored, and inspection
+confirmed all five pre-existing stale pending entries remain.
+
+An early browser attempt was interrupted after a time-control blur moved the
+editor click target; the journey now waits for the layout change. A subsequent
+attempt completed the UI path but launched an unrelated system `go`; the final
+campaign uses the pinned Go toolchain. An immediate post-deploy probe also hit a
+startup connection reset; the ready-service preflight passed. Visual review led
+to wider exact-value tiles and a clear unsupported numeric-comparison message;
+enabling a numeric measure clears the earlier count baseline.
+
+Final image: `15d9fcb7d278`. Artifacts: `artifacts/numeric-live-{go,race,vet,node,hegel,compatibility,preflight,ledger,regression}.log` and
+`artifacts/numeric-measures/*/ledger.json`. Existing volumes and the five stale
+pending entries are retained. Screenshot/storyboard updates are in journey 44
+and affected regression frames. No environment configuration changed.
+
 ## Numeric attribute preflight and reference semantics (2026-10-19)
 
 Added explicit int64/uint64 attribute/resource bindings, canonical-decimal parsing,

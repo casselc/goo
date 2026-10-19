@@ -4,9 +4,9 @@ Reviewed 2026-10-18 against the implemented Go models and current workbench.
 This is a consolidation plan. The first [scope/transform slice](QUESTION_SCOPE.md)
 is now implemented for recipes and capture-derived follow-ups. The first bounded
 [typed record-measure and split-chart slice](RECORD_MEASURES.md) is also implemented;
-An initial [numeric attribute preflight](NUMERIC_ATTRIBUTE_PLANNING.md) now reports
-explicit bindings and execution gaps with exact reference semantics. Live numeric
-execution, broader capability negotiation and profile resolution remain proposed.
+[Numeric attribute measures](NUMERIC_ATTRIBUTE_PLANNING.md) now connect explicit
+bindings and exact reference/SQL semantics to Explore, charts, captures and YAML.
+Broader expression capabilities and convention profile resolution remain proposed.
 
 The most useful next work is to make the same question retain its meaning across
 Explore, measurement packages, recipes, captures and backend compilation. More

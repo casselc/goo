@@ -31,9 +31,10 @@ outcome policy; Unset and unknown are never silently turned into success.
 The compiler lowers planner-produced operators into the existing aggregate result
 shape. This preserves count/duration/status reads and inspection independently.
 Databricks lowering and a public typed authoring schema remain subsequent work.
-The separate [numeric attribute preflight](NUMERIC_ATTRIBUTE_PLANNING.md) now
-defines explicit integer parsing, units and coverage semantics; it reports live
-execution unavailable and does not change these existing controls.
+An optional [numeric attribute binding](NUMERIC_ATTRIBUTE_PLANNING.md) now adds
+exact integer sum/min/max/mean operators and coverage counts to the typed plan,
+SQL, Explore, groups/time cells, reusable YAML and captures. Existing controls
+and formats retain their representation when this binding is absent.
 
 ## Split chart by breakdown
 
