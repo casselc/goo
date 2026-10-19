@@ -10,6 +10,8 @@ source-record count, source-read time and custody time. Comparing never rereads
 telemetry, saves a revision, refreshes a capture or changes either receipt. Changing
 a selection clears the previous comparison; failures clear stale results and can
 be retried. Choosing the same ID on both sides disables the UI action.
+After comparing, [save the comparison and finding](SAVED_COMPARISONS.md) in an
+investigation revision to preserve and share the exact decision.
 
 The Go `GET /captures/{baseline}/compare?selection={capture}` endpoint loads and
 validates both immutable captures before comparing. It does not accept caller-held

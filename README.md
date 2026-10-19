@@ -349,3 +349,6 @@ to share immutable evidence.
 Saved question histories support [capture comparison](docs/CAPTURE_COMPARISON.md):
 compare full record summaries and exact native gauge endpoints without rereading
 telemetry, with explicit scope, definition, unit and missing-data checks.
+[Save a comparison and finding](docs/SAVED_COMPARISONS.md) in an immutable
+investigation revision, then share its exact link; reopening preserves the saved
+decision without reevaluating it.

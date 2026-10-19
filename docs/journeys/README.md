@@ -910,3 +910,12 @@ history, drift preview, recovery, mobile layout and native result summary.
 selector, 52c checks mobile containment, and 52d preserves native stream identity
 and side-by-side saved results. It also checks empty results, failed GET recovery,
 no source reads and immutable receipts, with Quint and optional Bombadil coverage.
+
+### 53 — Save and share a comparison
+
+`saved-comparison.spec.js` saves a comparison and finding, shares the exact revision
+link with a fresh browser, preserves older findings, recovers failed publication
+and a changed-context receipt by ID, and saves native unit incompatibility.
+53a shows the saved finding, 53b the recipient view, 53c mobile containment and 53d
+the frozen incompatible decision. Ledger replay uses Quint with six rejecting
+controls; the optional Bombadil actor reopens stored comparison cards.

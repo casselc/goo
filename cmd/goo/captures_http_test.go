@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/workbench"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -59,11 +60,18 @@ func TestCaptureHTTPServerCustodyAndSourceFreePaging(t *testing.T) {
 	if len(first.Explore.Rows) != 100 || first.RetainedRecords != 105 || first.Explore.Count != "105" || first.NextCursor == "" || first.Receipt.Question.Explore.Offset != 0 {
 		t.Fatal("invalid captured bank", first)
 	}
+	secondResponse := call("POST", "/captures", valid)
+	if secondResponse.Code != 201 {
+		t.Fatal(secondResponse.Body.String())
+	}
+	var second exploration.CapturePage
+	json.Unmarshal(secondResponse.Body.Bytes(), &second)
 	oldReads := reads.Load()
 	source.Close()
 	// New handler/store instance simulates process restart; source is now unavailable.
 	mux = http.NewServeMux()
 	registerCaptures(mux, source.Client(), dir)
+	registerWorkbench(mux, dir)
 	metadata := call("GET", "/captures/"+first.Receipt.ID+"/receipt", "")
 	var brief struct {
 		Receipt exploration.CaptureReceipt           `json:"receipt"`
@@ -85,6 +93,29 @@ func TestCaptureHTTPServerCustodyAndSourceFreePaging(t *testing.T) {
 		if call("GET", "/captures/"+first.Receipt.ID+"/compare"+suffix, "").Code == 200 {
 			t.Fatal("unchecked selection", suffix)
 		}
+	}
+	expectedResponse := call("GET", "/captures/"+first.Receipt.ID+"/compare?selection="+second.Receipt.ID, "")
+	var expected exploration.EvidenceComparison
+	json.Unmarshal(expectedResponse.Body.Bytes(), &expected)
+	body, _ := json.Marshal(map[string]any{"baseline": first.Receipt.ID, "selection": second.Receipt.ID, "expected": expected})
+	frozenResponse := call("POST", "/captures/comparisons", string(body))
+	if frozenResponse.Code != 201 {
+		t.Fatal(frozenResponse.Body.String())
+	}
+	var frozen workbench.ComparisonReceipt
+	json.Unmarshal(frozenResponse.Body.Bytes(), &frozen)
+	reopened := call("GET", "/captures/comparisons/"+frozen.ID+"/receipt", "")
+	if reopened.Code != 200 || reads.Load() != oldReads {
+		t.Fatal("snapshot read queried source", reopened.Body.String())
+	}
+	docBody := `{"document":{"title":"Saved pair","cards":[{"kind":"comparison","reference":"` + frozen.ID + `","text":"No causal claim"}]}}`
+	if response := call("POST", "/documents", docBody); response.Code != 201 || reads.Load() != oldReads {
+		t.Fatal("saved card publication", response.Body.String())
+	}
+	expected.State = "incompatible"
+	body, _ = json.Marshal(map[string]any{"baseline": first.Receipt.ID, "selection": second.Receipt.ID, "expected": expected})
+	if response := call("POST", "/captures/comparisons", string(body)); response.Code != 409 {
+		t.Fatal("forged decision accepted", response.Body.String())
 	}
 	followups := call("GET", "/captures/"+first.Receipt.ID+"/followups", "")
 	var next exploration.FollowupSet

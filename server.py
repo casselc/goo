@@ -61,10 +61,10 @@ class Handler(BaseHTTPRequestHandler):
         else: self.send_error(404)
 
     def do_POST(self):
-        if self.path.startswith('/api/queries/') or self.path in ('/api/metric-discovery','/api/measurements','/api/measurement-packages','/api/measurement-packages/plan','/api/recipes','/api/documents','/api/deployments','/api/captures','/api/investigations','/api/explore','/api/inventory', '/api/discovery','/api/compare','/api/telemetry-packages','/api/telemetry-packages/draft','/api/telemetry-packages/plan','/api/telemetry-packages/numeric-plan'):
+        if self.path.startswith('/api/queries/') or self.path in ('/api/metric-discovery','/api/measurements','/api/measurement-packages','/api/measurement-packages/plan','/api/recipes','/api/documents','/api/deployments','/api/captures','/api/captures/comparisons','/api/investigations','/api/explore','/api/inventory', '/api/discovery','/api/compare','/api/telemetry-packages','/api/telemetry-packages/draft','/api/telemetry-packages/plan','/api/telemetry-packages/numeric-plan'):
             try:
                 length = int(self.headers.get('Content-Length', 0))
-                limit = 131072 if self.path == '/api/documents' else 1048576 if self.path == '/api/compare' else 65536 if self.path.startswith(('/api/telemetry-packages','/api/measurement-packages','/api/measurements')) else 16384
+                limit = 131072 if self.path in ('/api/documents','/api/captures/comparisons') else 1048576 if self.path == '/api/compare' else 65536 if self.path.startswith(('/api/telemetry-packages','/api/measurement-packages','/api/measurements')) else 16384
                 if not 0 < length <= limit: raise ValueError('JSON request exceeds size limit')
                 endpoint = os.getenv('PACKAGES_URL', 'http://localhost:8089') + self.path.removeprefix('/api')
                 request = urllib.request.Request(endpoint, data=self.rfile.read(length), headers={'Content-Type': 'application/json', 'X-Goo-Query-ID': self.headers.get('X-Goo-Query-ID', '')})

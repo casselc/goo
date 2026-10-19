@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -79,6 +80,39 @@ func registerWorkbench(mux *http.ServeMux, dir string) {
 			return
 		}
 		reply(w, 200, result)
+	})
+	mux.HandleFunc("POST /captures/comparisons", func(w http.ResponseWriter, r *http.Request) {
+		var in struct {
+			Baseline  string                          `json:"baseline"`
+			Selection string                          `json:"selection"`
+			Expected  *exploration.EvidenceComparison `json:"expected"`
+		}
+		if e := decode(w, r, &in); e != nil {
+			fail(w, 400, e)
+			return
+		}
+		receipt, e := store.CreateComparison(in.Baseline, in.Selection, in.Expected, captures.Load)
+		if e != nil {
+			code := 400
+			if errors.Is(e, workbench.ErrComparisonChanged) {
+				code = 409
+			}
+			fail(w, code, e)
+			return
+		}
+		reply(w, 201, receipt)
+	})
+	mux.HandleFunc("GET /captures/comparisons/{id}/receipt", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.RawQuery != "" {
+			fail(w, 400, fmt.Errorf("stored comparison has no query parameters"))
+			return
+		}
+		receipt, e := store.LoadComparison(r.PathValue("id"))
+		if e != nil {
+			fail(w, 404, e)
+			return
+		}
+		reply(w, 200, receipt)
 	})
 	mux.HandleFunc("POST /documents", func(w http.ResponseWriter, r *http.Request) {
 		var in struct {

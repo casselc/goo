@@ -5,6 +5,47 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Saved comparison evidence (2026-10-19)
+
+[Saved comparison cards](docs/SAVED_COMPARISONS.md) freeze the server-verified
+ordered capture IDs, displayed decision/result and algorithm version. Findings
+revise in immutable documents. Shared investigation links read the saved snapshot
+without querying telemetry or reevaluating the comparison. Retained receipt IDs
+support explicit recovery after context changes; failed document publication
+retains the draft and finding.
+
+Passed local checks: full root Go suite including source-free HTTP publication,
+forged-decision rejection, missing references, integrity checks and preserved
+finding history (`artifacts/saved-pair-go-http.log`); 40 frontend checks
+(`saved-pair-node.log`); 60 requested Hegel state/swarm scenarios of 15 steps
+(`saved-pair-state.log`); verification vet (`saved-pair-vet-final.log`), Quint
+model typecheck (`saved-pair-model.log`) and Python server compilation.
+
+The first live campaign completed all sharing, recovery, mobile and native UI
+assertions, and Quint trace validation with six rejecting controls, but its new
+Bombadil actor used an overly broad last-child selector that clicked Remove.
+Targeting the saved comparison's direct reopen button and adding a card-count
+invariant corrects the test actor. That campaign reports one failed/one passed;
+its passing ledger replay is
+`artifacts/saved-comparison/1792447998043/TestQuintSavedComparisonLive.log`.
+
+Final live campaign: **5 passed, no skips, 3.1 minutes**
+(`artifacts/saved-pair-release.log`): notes/context 36, both comparison journeys 52,
+and both new sharing journeys 53. All enabled Bombadil campaigns and live Quint
+validations passed. The final ledger is
+`artifacts/saved-comparison/1792448210686/ledger.json`; its six rejecting controls
+cover implicit reads, changed receipt references, forged decisions, lost findings,
+false publication transitions and reversed capture identity. Both native gauge
+snapshots and frozen unit incompatibility reopen in a fresh browser without engine
+requests. Four focused storyboard screenshots were captured and visually reviewed;
+affected 36/52 frames were regenerated.
+
+All 12 services are running, query health passed, owned traffic was restored, and
+all five pre-existing stale Redis pending IDs were retained
+(`artifacts/saved-pair-final-health.json`). Served document/comparison scripts and
+styles match source (`saved-pair-served-assets.json`). Final query image:
+`sha256:e3dc20bac4df747e4230b10be5747cc6dbbf4d19b19118f669740d7b01823bc7`.
+
 ## Stored capture comparison (2026-10-19)
 
 [Stored comparison](docs/CAPTURE_COMPARISON.md) loads immutable capture IDs and

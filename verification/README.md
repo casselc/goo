@@ -362,3 +362,10 @@ Stored capture comparison: `go test -run TestHegelStoredComparison -v .` checks
 `GOO_EVIDENCE_PAIR_LEDGER` for `TestQuintStoredComparisonLive` (four rejecting
 controls). `GOO_EVIDENCE_PAIR_BOMBADIL=1 bash scripts/run_journeys.sh
 journeys/evidence-comparison.spec.js` also explores stored selections for 30 seconds.
+
+Saved comparisons: `go test -run TestHegelSavedComparisonStateSwarm -v .` requests
+60 scenarios of 15 save/fork/finding/order steps. Storyboard 53 writes
+`GOO_SAVED_PAIR_LEDGER` for `TestQuintSavedComparisonLive`, with six rejecting
+controls. Run `GOO_SAVED_PAIR_BOMBADIL=1 bash scripts/run_journeys.sh
+journeys/saved-comparison.spec.js` for the real shared-browser/recovery journeys
+and 30 seconds of frozen-card exploration.

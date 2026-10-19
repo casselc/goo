@@ -1030,3 +1030,9 @@ Read time, custody time and question scope remain separate.
 The [capture comparison sequence](CAPTURE_COMPARISON.md) follows selected linked
 IDs through Go validation and immutable capture storage. It shares the full
 span-summary kernel with exploration and has no source-query or publication step.
+
+## Sharing a frozen comparison
+
+The [saved-comparison sequence](SAVED_COMPARISONS.md) separates source captures,
+a server-verified comparison receipt, an authored finding and a shared document
+revision. The recipient reads the receipt directly, without engine reevaluation.

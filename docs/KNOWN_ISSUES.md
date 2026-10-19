@@ -296,5 +296,9 @@ transaction. Matching scope is not a shared snapshot or population guarantee.
 span summaries and exact-stream gauge endpoints. Native counters, histograms and
 lifecycles are inspectable side by side; numerical interval/cohort deltas are not
 implemented. Different definitions, units or environments withhold all numeric
-deltas. Comparison selection is transient and scoped to the current question
-history; sharing a saved comparison selection is future work.
+deltas. Exploratory selection is transient until explicitly saved as a
+[comparison card](SAVED_COMPARISONS.md). Frozen receipts and document publication
+are separate; retained receipt IDs support explicit recovery. Complete comparison
+snapshots are limited to 128 KiB and fail rather than truncate. Sharing requires
+access to the same workspace; verified authorship, access control and receipt
+garbage collection remain future work.

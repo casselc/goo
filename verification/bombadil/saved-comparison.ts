@@ -1,0 +1,10 @@
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document})=>{const cards=[...document.querySelectorAll('#documentCards [data-kind=comparison]')];return{count:cards.length,ready:cards.length===2,refs:cards.map(c=>c.querySelector('[data-saved-comparison]')?.getAttribute('data-saved-comparison')),states:cards.map(c=>c.querySelector('.evidence-comparison-result')?.getAttribute('data-state')),findings:cards.map(c=>(c.querySelector('.comparison-finding')as HTMLTextAreaElement)?.value)}});
+export const ready=eventually(()=>state.current.ready&&state.current.states.every(s=>s==='comparable')).within(10,'seconds');
+export const cardsRemain=always(()=>state.current.count===0||state.current.count===2);
+export const findingsRemain=always(()=>!state.current.ready||state.current.findings.every(s=>s==='Latency increased; causality remains unverified.'));
+export const decisionNeverChanges=always(()=>state.current.states.every(s=>!s||s==='comparable'));
+const reopen=registerCustomAction('goo.reopenFrozenComparison',async(document,_window,index:number)=>{(document.querySelectorAll('#documentCards [data-kind=comparison]')[index]?.querySelector('.evidence-comparison > button')as HTMLButtonElement)?.click()});
+export const inspect=actions(()=>state.current.ready&&state.current.states.every(s=>s==='comparable')?[reopen(0),reopen(1)]:['Wait']);

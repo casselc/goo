@@ -1097,3 +1097,5 @@ td details {
 .evidence-comparison td{overflow-wrap:anywhere;max-width:28rem;vertical-align:top}
 .evidence-comparison h5{font-size:1rem;margin:.4rem 0}
 @media(max-width:760px){.comparison-sides{grid-template-columns:1fr}.evidence-comparison{padding:.65rem}.evidence-comparison .controls label{min-width:0;width:100%}.evidence-comparison select{max-width:100%}}
+.comparison-composer{border-top:1px solid var(--border);margin-top:1rem;padding-top:1rem}
+.comparison-composer textarea,.comparison-finding{box-sizing:border-box;width:100%;min-width:0;resize:vertical}

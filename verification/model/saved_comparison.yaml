@@ -1,0 +1,13 @@
+spec: saved_comparison.qnt
+module: saved_comparison
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  publish:
+    expect: 'reads == {{.obs.reads}} and revisions == {{.obs.revisions}} and coherent == {{.obs.coherent}}'
+  reopen:
+    expect: 'reads == {{.obs.reads}} and revisions == {{.obs.revisions}} and coherent == {{.obs.coherent}}'
+  failPublish:
+    expect: 'reads == {{.obs.reads}} and revisions == {{.obs.revisions}} and coherent == {{.obs.coherent}}'
+  failStage:
+    expect: 'reads == {{.obs.reads}} and revisions == {{.obs.revisions}} and coherent == {{.obs.coherent}}'

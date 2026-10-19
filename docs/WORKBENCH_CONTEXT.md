@@ -5,11 +5,12 @@ telemetry evidence. These are local workspace capabilities in the Go runtime.
 They reuse Saved investigations; no extra permanent navigation section or new
 measurement language is introduced.
 
-## Three separate objects and clocks
+## Four separate objects and clocks
 
 | Object | Meaning | Time and identity |
 | --- | --- | --- |
 | General capture | Server-read span/log/inventory evidence, or a two-population comparison | Fixed telemetry question bounds, source basis, capture receipt ID and custody time |
+| Comparison receipt | Server-verified frozen comparison of two stored captures; finding remains authored document content | Ordered capture IDs, original source clocks, versioned decision and independent server recording time |
 | Deployment receipt | An authored claim about a service or environment deployment | Explicit `occurredAtMs` event time and independent server `recordedAt`; immutable receipt ID |
 | Investigation document revision | Ordered hypotheses, findings, conclusions, next steps and exact receipt references | Its own server recording time and revision ID; explicit parent/root lineage |
 
@@ -196,3 +197,9 @@ array of at most 16 unique capture IDs. The store resolves linked captures befor
 publishing. [Linked evidence](LINKED_QUESTION_EVIDENCE.md) describes explicit
 capture/child-revision publication and retained-capture recovery. Receipt metadata
 exposes stored `readAt` and `summary` fields without source evaluation.
+
+[Saved comparison cards](SAVED_COMPARISONS.md) use `kind: "comparison"`, an exact
+comparison receipt `reference`, optional `caption` and optional 4000-byte `text`
+finding. Document publication resolves that receipt; reopening reads its stored
+result without running the comparison engine. Old card formats and document IDs
+remain compatible.

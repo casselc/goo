@@ -435,3 +435,11 @@ exact per-stream native gauge endpoints, explicit compatibility decisions and
 source-free native inspection. See [capture comparison](CAPTURE_COMPARISON.md).
 Counter/histogram interval alignment, lifecycle deltas and statistical inference
 remain future work.
+
+### Shared comparison evidence (implemented)
+
+[Comparison receipts and cards](SAVED_COMPARISONS.md) freeze ordered IDs, the
+verified displayed decision/result and an algorithm version. Findings revise in
+immutable documents; shared links reopen the snapshot. Partial publication and
+context changes support retained-ID recovery. Public hosting, author identity and
+access control remain outside the local workspace model.

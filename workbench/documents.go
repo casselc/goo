@@ -41,12 +41,16 @@ func (c Card) Validate() error {
 		if c.Reference != "" || c.Caption != "" || !text(c.Text, 4000, true, true) || (c.Role != "hypothesis" && c.Role != "finding" && c.Role != "conclusion" && c.Role != "next-step") {
 			return errors.New("note requires a supported role and 1..4000 UTF-8 bytes")
 		}
+	case "comparison":
+		if !ID.MatchString(c.Reference) || !text(c.Caption, 160, false, false) || !text(c.Text, 4000, false, true) || c.Role != "" {
+			return errors.New("comparison requires an exact receipt ID and bounded finding")
+		}
 	case "capture", "deployment":
 		if !ID.MatchString(c.Reference) || !text(c.Caption, 160, false, false) || c.Role != "" || c.Text != "" {
 			return errors.New("reference card requires an exact capture/deployment ID and optional caption")
 		}
 	default:
-		return errors.New("card kind must be note, capture or deployment")
+		return errors.New("card kind must be question, note, capture, comparison or deployment")
 	}
 	return nil
 }
@@ -123,6 +127,10 @@ func (s Store) CreateDocument(in DocumentInput, parent string, checkCapture func
 			}
 			if e := checkCapture(c.Reference); e != nil {
 				return nil, errors.New("capture reference unavailable")
+			}
+		case "comparison":
+			if _, e := s.LoadComparison(c.Reference); e != nil {
+				return nil, errors.New("comparison reference unavailable")
 			}
 		case "deployment":
 			if _, e := s.LoadDeployment(c.Reference); e != nil {
