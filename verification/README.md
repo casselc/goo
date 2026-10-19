@@ -316,3 +316,12 @@ checks exact returned scope and rejects the exclusive upper timestamp bound.
 `GOO_METRIC_SERVICES_BOMBADIL=1` enables the matching discovery/service/native
 preview actor. Unit tests also cover malformed rows, duplicates, bounds, parameter
 isolation and the global cardinality budget.
+
+### Unified service catalog
+
+`TestHegelServiceCatalogGrain` executes the actual JavaScript planner across 100
+requested generated service/signal sets, including UInt64 counts beyond JS numeric
+precision. Storyboard 46/48's observed ledger now includes actual catalog rows and
+source scope. `TestQuintServiceBrowserLive` checks four independent service reads
+and rejects eight scope, identity, custody, implicit-read and mixed-grain mutations.
+Updated Bombadil actors use the single catalog entry.

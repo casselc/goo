@@ -1,11 +1,11 @@
 # Discover services from native metric data
 
 Implemented extension of [service browsing](SERVICE_BROWSING.md). Services →
-**Discover all signal services** discovers emitting services from spans, logs and
+**Discover services** discovers emitting services from spans, logs and
 native metrics in the selected environment/lookback window. This explicit action
-opens the signal catalog directly. **Discover span operations** retains the
-separate span-name inventory and duration buckets; an empty span inventory does
-not hide services emitting another signal.
+opens the [unified catalog](UNIFIED_SERVICE_CATALOG.md) directly. Open a service
+to inspect its operations and instruments; an empty span inventory does not hide
+services emitting another signal.
 
 The Go `/api/discovery` adapter groups gauge, sum and explicit-histogram exporter
 records by service, then combines those record counts into one `metrics` signal

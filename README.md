@@ -9,6 +9,8 @@ definition. Start from instrumented code or unfamiliar OpenTelemetry data.
 criteria for keeping the workbench coherent. The [core primitives review](docs/CORE_PRIMITIVES.md)
 sets the next consolidation priorities; [shared scope and checked transforms](docs/QUESTION_SCOPE.md)
 now connect recipe and follow-up planning.
+[One Services catalog](docs/UNIFIED_SERVICE_CATALOG.md) now connects the existing
+span, log and native metric discovery paths through one searchable entry.
 [Service browsing](docs/SERVICE_BROWSING.md) connects observed signals, operations,
 OTel attribute suggestions and native instruments through fixed-window questions.
 [All-signal discovery](docs/METRIC_SERVICE_DISCOVERY.md) includes metric-only

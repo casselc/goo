@@ -17,10 +17,10 @@
   });
  }
  const node=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n};
- function mount(host){
+ function mount(host,{catalog}={}){
   let scope=null,inventory=null,selected=null,generation=0,controller=null,opener=null;
-  const list=node('div',undefined,'service-browser-list'),detail=node('section',undefined,'service-browser-detail');detail.id='serviceDetail';detail.hidden=true;detail.setAttribute('aria-label','Service detail');host.insertBefore(list,host.querySelector('#inventoryRows'));host.insertBefore(detail,host.querySelector('#inventoryRows'));
-  const inventoryParts=[host.querySelector('#inventoryRows'),host.querySelector('#inventoryExplain').closest('details'),host.querySelector('#serviceDiscoveryRun').closest('details')];
+  const detail=node('section',undefined,'service-browser-detail');detail.id='serviceDetail';detail.hidden=true;detail.setAttribute('aria-label','Service detail');host.append(detail);
+  const inventoryParts=[catalog];
   const returnBar=node('div',undefined,'service-return controls');returnBar.id='serviceReturn';returnBar.hidden=true;
   document.querySelector('[data-workspace-panel="explore"]').prepend(returnBar);
   function invalidate(){inventoryParts.forEach(n=>n.hidden=false);generation++;controller?.abort();controller=null;selected=null;detail.hidden=true;detail.replaceChildren();returnBar.hidden=true;returnBar.replaceChildren()}
@@ -30,22 +30,24 @@
   function button(title,action){const b=node('button',title);b.onclick=action;return b}
   async function open(service,origin){
    invalidate();selected=service;opener=origin;inventoryParts.forEach(n=>n.hidden=true);detail.hidden=false;const g=generation;controller=new AbortController();const active=controller;
-   const title=node('h3',service||'(empty service name)');title.tabIndex=-1;detail.append(button('Back to service list',()=>{invalidate();opener?.focus()}),title,node('p',scope.environment+' · ['+new Date(scope.fromMs).toISOString()+', '+new Date(scope.toMs).toISOString()+')','evidence-note'),node('p','Separate bounded reads of captured signals, span attributes and instrument metadata. Coverage and health remain unknown.'));
+   const title=node('h3',service||'(empty service name)');title.tabIndex=-1;detail.append(button('Back to service list',()=>{invalidate();if(opener?.isConnected)opener.focus();else (catalog.querySelector('button')||document.getElementById('inventorySearch')).focus()}),title,node('p',scope.environment+' · ['+new Date(scope.fromMs).toISOString()+', '+new Date(scope.toMs).toISOString()+')','evidence-note'),node('p','Separate bounded reads of captured signals, span attributes, operation inventory and native instruments. Coverage and health remain unknown.'));
    const cancel=button('Cancel service reads',()=>{invalidate();notify('cancel')});detail.append(cancel);
    const sections=['Signals and operations','Suggested questions','Native instruments'].map(text=>{const section=node('section');section.append(node('h4',text),node('p','Reading…','service-loading'));detail.append(section);return section});
    detail.scrollIntoView({block:'start'});title.focus({preventScroll:true});notify('start');
-   const requests=[['/api/discovery',scope],['/api/explore',scopeQuestion(scope,service)],['/api/metric-discovery',{...scope,service}]];
+   const requests=[['/api/discovery',scope],['/api/explore',scopeQuestion(scope,service)],['/api/metric-discovery',{...scope,service}],['/api/inventory',scope]];
    const results=await Promise.allSettled(requests.map(async([url,q])=>{const r=await global.GooQueries.post(url,q,active.signal),data=await r.json();if(!r.ok)throw Error(data.error||'Source unavailable');return data}));
    if(g!==generation)return;cancel.remove();controller=null;sections.forEach(s=>s.querySelector('.service-loading').remove());
    sections[1].classList.add('service-question-grid');sections[2].classList.add('service-instrument-grid');
-   const [signals,spans,metrics]=results;const error=(section,result)=>section.append(node('p','Unavailable · '+result.reason.message,'warning'));
+   const [signals,spans,metrics,operationsRead]=results;inventory=operationsRead.status==='fulfilled'?operationsRead.value:null;const error=(section,result)=>section.append(node('p','Unavailable · '+result.reason.message,'warning'));
    if(signals.status==='fulfilled'){
     const rows=signals.value.signals.filter(r=>r.service===service);
     for(const signal of ['spans','logs','metrics']){const row=rows.find(r=>r.signal===signal);sections[0].append(node('p',row?row.count+(signal==='metrics'?' captured metric data-point records':' captured '+signal):'No '+signal+' observed in this read; coverage unknown.'));if(row&&signal!=='metrics')sections[0].append(button('Explore service '+signal,()=>follow(scopeQuestion(scope,service,signal))))}
    }else error(sections[0],signals);
    const operations=inventory?.rows.filter(r=>r.service===service)||[];
-   sections[0].append(node('p',inventory?operations.length+' operation names in the inventory read. Counts are span records.':'Operation inventory was not read for this window.'));
-   for(const row of operations){const b=button('Explore operation '+(row.name||'(empty name)')+' · '+row.count,()=>follow(global.GooInventory.question(inventory,row)));sections[0].append(b)}
+   const ops=node('div');ops.id='inventoryRows';sections[0].append(node('p',inventory?operations.length+' observed operation names for this service · '+operations.reduce((n,r)=>n+BigInt(r.count),0n)+' captured spans.':'Operation inventory unavailable · '+operationsRead.reason.message),ops);
+   if(inventory){const search=node('input');search.id='operationSearch';search.type='search';search.placeholder='Find an observed operation';search.setAttribute('aria-label','Find an observed operation');sections[0].insertBefore(search,ops);const paint=()=>{ops.replaceChildren();const table=node('table',undefined,'inventory-table'),head=node('tr');['Observed operation','Captured spans','Recorded errors','Duration buckets','Investigate'].forEach(t=>head.append(node('th',t)));const thead=node('thead');thead.append(head);table.append(thead);const body=node('tbody');for(const row of operations.filter(r=>r.name.toLowerCase().includes(search.value.toLowerCase()))){const tr=node('tr');tr.dataset.count=row.count;tr.dataset.errors=row.errors;tr.dataset.buckets=JSON.stringify(row.buckets);tr.append(node('td',row.name||'(empty name)'),node('td',row.count),node('td',row.errors));const buckets=node('td'),counts=node('details');counts.append(node('summary','Duration bucket counts'));row.buckets.forEach((n,i)=>counts.append(node('p',inventory.bucketLabels[i]+': '+n)));buckets.append(counts);tr.append(buckets);const action=node('td'),open=button('Explore spans',()=>follow(global.GooInventory.question(inventory,row)));open.setAttribute('aria-label','Explore '+service+' / '+row.name);action.append(open);tr.append(action);[...tr.children].forEach((c,i)=>c.dataset.label=['Observed operation','Captured spans','Recorded errors','Duration buckets','Investigate'][i]);body.append(tr)}table.append(body);ops.append(table)};search.oninput=paint;paint();
+    const capture=button('Capture environment span inventory',()=>global.dispatchEvent(new CustomEvent('goo:save-capture',{detail:{question:{kind:'inventory',inventory:clone(inventory.question)},title:scope.environment+' observed span inventory'}})));capture.id='inventorySaveCapture';sections[0].append(capture,node('p','Inventory capture rereads all service/operation pairs in this environment and fixed window, including other services. It does not archive this catalog.','evidence-note'));const explain=node('details');explain.append(node('summary','Environment-wide operation inventory evidence'));const pre=node('pre');pre.id='inventoryExplain';pre.textContent=JSON.stringify(inventory,null,2);explain.append(pre);sections[0].append(explain);
+   }
    if(spans.status==='fulfilled'){
     sections[1].append(button('Explore recorded span status',()=>follow({...scopeQuestion(scope,service),groupBy:[{kind:'column',key:'status'}],spanStatus:true})),node('p',spans.value.fieldsLimited?'Attribute discovery reached its limit; absent suggestions may have undiscovered fields.':'Suggestions use observed attribute keys; absent keys do not prove missing instrumentation.'));
     for(const suggestion of suggestions(scope,service,spans.value.fields)){
@@ -54,18 +56,13 @@
     }
    }else error(sections[1],spans);
    if(metrics.status==='fulfilled'){
-    const result=metrics.value;sections[2].append(node('p',result.warning));if(!result.instruments.length)sections[2].append(node('p','No native instruments observed in this window. Coverage unknown; resource utilization cannot be inferred from spans.'));
+    const result=metrics.value;const discover=button('Discover metrics',()=>global.dispatchEvent(new CustomEvent('goo:discover-metrics',{detail:{...scope,service}})));discover.setAttribute('aria-label','Discover metrics for '+service);sections[2].append(discover);sections[2].append(node('p',result.warning));if(!result.instruments.length)sections[2].append(node('p','No native instruments observed in this window. Coverage unknown; resource utilization cannot be inferred from spans.'));
     for(const i of result.instruments){const card=node('article',undefined,'definition-card');card.append(node('h4',i.metric),node('p',i.kind+' · '+(i.unit||'unit omitted')+' · '+i.scope+' · version '+(i.version||'(empty)')+' · schema '+(i.schemaURL||'(empty)')+' · temporality '+i.temporality+' · monotonic '+i.monotonic),node('p','Observed dimensions: '+(i.dimensions||[]).join(', ')));
      const use=button(i.supported?'Preview measurement':'Unsupported by current kernels',()=>{returnBar.replaceChildren(node('span',service+' · fixed service window'),button('Back to service',returnToService));returnBar.hidden=false;notify('instrument',{question:{...scope,service}});global.dispatchEvent(new CustomEvent('goo:service-instrument',{detail:{definition:i.definition,...scope}}))});use.disabled=!i.supported;card.append(use);sections[2].append(card)}
    }else error(sections[2],metrics);
-   const evidence=node('details');evidence.append(node('summary','Independent source reads and scope'));const pre=node('pre');pre.textContent=JSON.stringify(results.map((r,i)=>({source:requests[i][0],question:requests[i][1],status:r.status,...(r.status==='fulfilled'?{evidence:r.value}:{error:r.reason.message})})),null,2);evidence.append(pre);detail.append(evidence);notify('applied',{statuses:results.map(r=>r.status)})
+   const evidence=node('details');evidence.className='service-source-evidence';evidence.append(node('summary','Independent source reads and scope'));const pre=node('pre');pre.textContent=JSON.stringify(results.map((r,i)=>({source:requests[i][0],question:requests[i][1],status:r.status,...(r.status==='fulfilled'?{evidence:r.value}:{error:r.reason.message})})),null,2);evidence.append(pre);detail.append(evidence);notify('applied',{statuses:results.map(r=>r.status)})
   }
-  function setInventory(value){invalidate();inventory=value;scope=value?clone(value.question):null;list.replaceChildren();if(!value)return;list.append(node('h3','Browse a service'),node('p','Open a service to read its signals, observed attributes and native instruments in this fixed window.'));
-   for(const service of [...new Set(value.rows.map(r=>r.service))]){const b=button('Open service '+(service||'(empty name)'),()=>open(service,b));b.dataset.service=service;list.append(b)}
-   search(host.querySelector('#inventorySearch').value);
-  }
-  function search(value){const text=value.toLowerCase();for(const b of list.querySelectorAll('button'))b.hidden=!inventory?.rows.some(r=>r.service===b.dataset.service&&(r.service+'\n'+r.name).toLowerCase().includes(text))}
-  return {setInventory,search,open:(service,origin)=>{if(scope)return open(service,origin)},setScope:value=>{invalidate();list.replaceChildren();scope=clone(value);inventory=null},invalidate};
+  return {open:(service,origin)=>{if(scope)return open(service,origin)},setScope:value=>{invalidate();scope=value?clone(value):null;inventory=null},invalidate};
  }
  const api={scopeQuestion,suggestions,mount};if(typeof module!=='undefined')module.exports=api;else global.GooServiceBrowser=api;
 })(typeof window==='undefined'?globalThis:window);

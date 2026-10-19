@@ -256,10 +256,18 @@ rejected. See [QUESTION_SCOPE.md](QUESTION_SCOPE.md).
 ## Service browsing boundaries
 
 The [service detail flow](SERVICE_BROWSING.md) offers observed HTTP/database/messaging
-span questions and native instrument previews. The inventory catalog starts from
-spans; [all-signal discovery](METRIC_SERVICE_DISCOVERY.md) now exposes log-only and
+span questions and native instrument previews. The [unified catalog](UNIFIED_SERVICE_CATALOG.md)
+starts from all supported signals; [all-signal discovery](METRIC_SERVICE_DISCOVERY.md) now exposes log-only and
 metric-only services from gauge/sum/explicit-histogram records. Metric summary and
 exponential-histogram families remain outside the adapter. Attribute
 discovery is bounded, convention aliases are not merged, and missing observations
 do not establish instrumentation coverage or health. Service context reads can
 fail independently. Service return is local, not durable browser-history recovery.
+
+## Unified catalog boundaries
+
+[Services](UNIFIED_SERVICE_CATALOG.md) now has one discovery entry and one row per
+service. Operation inventory still reads the whole environment/window with the
+existing 1000-pair limit, then filters displayed operations by service. Its capture
+action explicitly captures that whole environment scope. Service-only operation
+inventory compilation, durable history and catalog captures remain future work.

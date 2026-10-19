@@ -1,3 +1,7 @@
+> Current entry: [One Services catalog](UNIFIED_SERVICE_CATALOG.md). The earlier
+> separate span/all-signal starting controls have been consolidated. Service detail
+> now also reads operation inventory, for four independent reads.
+
 # Browse a service, then follow a question
 
 Implemented on top of existing inventory, service discovery, Explore and native
@@ -5,22 +9,17 @@ measurement APIs. Local inventory search filters service buttons and operation
 rows without a telemetry read. Services keeps its existing operation table and signal discovery
 entry point; the new detail view connects those observations into an investigation.
 
-Discover services to capture an environment and fixed window. **Open service**
-reads three bounded sources explicitly: span/log/metric signal discovery, a service-scoped
-span question (including discovered attributes), and native instrument metadata.
-Opening the service does not execute a measurement or save evidence. Each source
-may fail independently; successful sections remain usable. The evidence disclosure
-retains each question, response and status. These reads are independent, rather
-than a transactional snapshot or proof of instrumentation coverage.
+Discover services to read the catalog in a fixed environment/window, then open one
+service. The detail independently reads signal discovery, service-scoped spans and
+attributes, native instrument metadata and environment-wide operation inventory.
+The operation table displays just the selected service. Native/log-only services
+use the same catalog and detail; no span inventory entry is needed first.
 
-The detail view shows observed span/log/metric signals, operation names from the original
-inventory read, suggested span questions and exact native instrument identities.
-Signal discovery also provides **Open service** for log-only and metric-only
-services via **Discover all signal services**. When no
-operation inventory was read for that scope, the view says so explicitly; it does
-not substitute a zero count. The [native metric extension](METRIC_SERVICE_DISCOVERY.md) includes gauge, sum
-and explicit-histogram data-point records. This remains an observed catalog,
-rather than a complete fleet or declared membership.
+Each source can fail independently. The evidence disclosure retains each question,
+response and status; these reads are not a transactional snapshot or instrumentation
+coverage proof. The [native metric extension](METRIC_SERVICE_DISCOVERY.md) includes
+gauge, sum and explicit-histogram data-point records. The catalog is observed
+evidence, not complete fleet membership.
 
 ## Questions from observed conventions
 

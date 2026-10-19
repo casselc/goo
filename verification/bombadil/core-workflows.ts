@@ -9,7 +9,7 @@ const state=extract(({document})=>{
  const fixedValid=!['fixed','library'].includes(stage)||!!e&&!!fixed&&e.question.environment===fixed.environment&&e.question.fromMs===fixed.fromMs&&e.question.toMs===fixed.toMs&&JSON.stringify(e.question.where)===JSON.stringify(fixed.where)&&e.duration?.count==='205'&&e.duration.p95Ns==='195000000';
  const reusableValid=stage!=='reused'||!!e&&e.question.environment===fixed?.environment&&e.question.summary==='span-duration'&&e.question.bucketMs===60000&&e.question.toMs-e.question.fromMs===300000&&e.question.fromMs!==fixed.fromMs&&e.duration?.count===el('exploreCount')?.querySelector('span')?.textContent;
  let discoveryValid=true;if(stage==='signals'){discoveryValid=!!d&&d.question.environment===fixed?.environment&&d.signals.some((x:any)=>x.service==='log-only'&&x.signal==='logs')&&d.dependencies.filter((x:any)=>x.kind==='edge').length===1&&d.dependencies.some((x:any)=>x.kind==='edge'&&x.parent==='api'&&x.child==='worker'&&x.count==='1')&&d.dependencies.some((x:any)=>x.kind==='ambiguous'&&x.count==='1')&&d.dependencies.some((x:any)=>x.kind==='unresolved'&&x.count==='1')&&d.signals.every((x:any)=>x.firstMs>=d.question.fromMs&&x.lastMs<d.question.toMs&&x.firstMs<=x.lastMs)}
- const cancelledValid=stage!=='cancelled'||!d&&!el('serviceDiscoveryRows')?.textContent&&(el('serviceDiscoveryStatus')?.textContent||'').includes('cancelled');
+ const cancelledValid=stage!=='cancelled'||!d&&!el('serviceDiscoveryRows')?.textContent&&(el('inventoryStatus')?.textContent||'').includes('cancelled');
  const selected=[...document.querySelectorAll('[data-workspace][aria-current="page"]')].map(x=>x.getAttribute('data-workspace')),visible=[...document.querySelectorAll<HTMLElement>('[data-workspace-panel]')].filter(x=>!x.hidden).map(x=>x.dataset.workspacePanel);
  return {version:'goo.core-workflows.v1',stage,ready:!!fixed,environment:fixed?.environment,opened:!!e,reused:!!e&&e.question.fromMs!==fixed?.fromMs&&!((el('exploreRun') as HTMLButtonElement)?.disabled),hasQuestion:[...document.querySelectorAll('#questionLibraryRows button')].some(x=>x.textContent==='Run '+fixed?.environment),discovered:!!d,fixedValid,reusableValid,discoveryValid,cancelledValid,navigation:selected.length===1&&visible.length===1&&selected[0]===visible[0]};
 });
@@ -26,8 +26,8 @@ const act=registerCustomAction('goo.core-workflows',async(document,_window,comma
  if(command==='live')click('captureGeneralLive');
  if(command==='library'){const details=el('questionLibraryRows')?.closest('details');if(details)details.open=true;click('questionLibraryRefresh');set('questionLibrarySearch',fixed.environment)}
  if(command==='reuse'){const button=[...document.querySelectorAll<HTMLButtonElement>('#questionLibraryRows button')].find(x=>x.textContent==='Run '+fixed.environment);button?.click()}
- if(command==='discover'){nav('services');set('minutes','10','change');set('inventoryEnvironment',fixed.environment);const details=el('serviceDiscoveryRun')?.closest('details');if(details)details.open=true;click('serviceDiscoveryRun')}
- if(command==='cancel'){click('serviceDiscoveryRun');click('serviceDiscoveryCancel')}
+ if(command==='discover'){nav('services');set('minutes','10','change');set('inventoryEnvironment',fixed.environment);click('inventoryRun')}
+ if(command==='cancel'){click('inventoryRun');click('inventoryCancel')}
  if(command==='explore')nav('explore');if(command==='services')nav('services');
  if(next)document.documentElement.dataset.gooWorkflowStage=next;
 });

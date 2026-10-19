@@ -1,7 +1,8 @@
 # Entry points and investigation flow
 
 Design spike, 2026-10-19. The first bounded [question-workbench slice](QUESTION_WORKBENCH.md)
-is now implemented, followed by [scoped service browsing](SERVICE_BROWSING.md).
+is now implemented, followed by [scoped service browsing](SERVICE_BROWSING.md)
+and [one Services catalog](UNIFIED_SERVICE_CATALOG.md).
 Broader navigation, Library and standalone native discovery proposals below remain
 future work. Findings describe the audited baseline at `bf54b36`.
 This is an expert review of the current UI and code, not a usability study with

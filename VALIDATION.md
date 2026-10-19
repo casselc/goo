@@ -5,6 +5,47 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Unified Services catalog (2026-10-19)
+
+[Services](docs/UNIFIED_SERVICE_CATALOG.md) now has one discovery action and local
+search, with one row per observed service. Span/log/native point counts retain
+separate grains and exact decimal strings; absent observations are not zeros.
+Service detail independently reads signals, span attributes, native instruments
+and environment-wide operation inventory in the original catalog window. Operation
+inspection and capture actions moved inside detail. The inventory capture label
+explicitly describes its original whole-environment scope. Saved inventory rendering
+is source-free; capture formats, backend kernels and query semantics are unchanged.
+
+Passed: root Go suite, 36 frontend checks, Python compilation and verification vet.
+Hegel ran 100 requested catalog-grain cases plus 100 suggestion-scope cases through
+the actual JavaScript planners. The catalog property includes UInt64 values beyond
+JS number precision and service/signal grouping. Logs:
+`artifacts/catalog-{go,node,hegel,vet}.log`.
+
+Final live integration: all seven journeys passed in 11.3 minutes, without
+skips (`artifacts/catalog-release.log`): captures 32, coherence 40, core basics 33,
+inventory 31, native-only services 47, question workbench 45 and service/catalog
+46/48. All seven enabled Bombadil campaigns and associated live Quint checks
+passed. The updated service ledger rejects eight mutations, including summed/mixed
+signal counts and a foreign catalog window. The browser also deliberately tampers
+a real catalog response's window and confirms rejection before publication.
+Ledger: `artifacts/service-browser/browse-aafd713e/ledger.json`.
+
+Storyboards 31/32/33/40/45/46/47 were migrated and affected frames regenerated.
+New frames 48a–c show one entry, retained filtered return and mobile catalog;
+desktop/mobile catalog frames were visually reviewed. The list-return path checks
+read-free navigation and search focus when no row matches. Architecture/process
+diagrams, README, current contracts, planning and known boundaries are updated.
+Final deployed image: `sha256:2ce745c0a8e180bd06aba310c7f086b5cc34880fcc557376cf7963c538b0a469`.
+All 12 services are running, traffic is restored, and all five pre-existing stale
+Redis pending entries remain (`artifacts/catalog-final-health.json`). No telemetry
+volumes were removed.
+
+The first focused run passed the native-only journey, then found an old browser
+test trying to reopen a service while its catalog was hidden behind detail. The
+journey now returns to the catalog explicitly before opening again. That initial
+attempt is retained in `artifacts/catalog-focused.log`.
+
 ## Metric-only service discovery (2026-10-19)
 
 [All-signal service discovery](docs/METRIC_SERVICE_DISCOVERY.md) now includes native

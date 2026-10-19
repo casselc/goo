@@ -19,3 +19,8 @@ test('service suggestions choose observed exact convention aliases and narrow on
  const newer=suggestions(scope,service,[{kind:'attribute',key:'db.system'},{kind:'attribute',key:'db.system.name'}]);
  assert.equal(newer[1].field.key,'db.system.name');
 });
+
+test('catalog retains separate exact signal counts, groups services and leaves source evidence detached',()=>{
+ const {catalogRows}=require('../ui/inventory');const source=[{service:'worker',signal:'metrics',count:'18446744073709551615',firstMs:10,lastMs:20},{service:'api',signal:'spans',count:'3',firstMs:11,lastMs:19},{service:'worker',signal:'logs',count:'2',firstMs:5,lastMs:22}];const rows=catalogRows(source);
+ assert.equal(rows.length,2);assert.equal(rows[1].signals.metrics.count,'18446744073709551615');assert.equal(rows[1].signals.spans,undefined);assert.equal(rows[1].firstMs,5);assert.equal(rows[1].lastMs,22);rows[1].signals.metrics.count='0';assert.equal(source[0].count,'18446744073709551615');assert.throws(()=>catalogRows([source[0],source[0]]),/Duplicate/);
+});

@@ -407,3 +407,10 @@ observed attribute suggestions and native instrument previews. Fixed-window retu
 is local. [Metric-only service discovery](METRIC_SERVICE_DISCOVERY.md) now includes
 native gauge/sum/explicit-histogram emitters. Durable navigation history and a
 unified Library remain future work.
+
+## Unified service catalog
+
+[One catalog](UNIFIED_SERVICE_CATALOG.md) replaces the competing live span-inventory
+and all-signals entry points. Operation inspection/capture moved inside service
+detail; the read-only frozen inventory viewer remains compatible. No backend
+measurement kernel or persisted capture schema changed.

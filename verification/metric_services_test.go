@@ -105,7 +105,7 @@ func TestQuintMetricServicesLive(t *testing.T) {
 		b := l.BoundaryDiscovery
 		coherent := len(d.Signals) == 2 && len(d.Dependencies) == 0 && d.Signals[0].Service == "metrics-worker" && d.Signals[0].Signal == "metrics" && d.Signals[0].Count == "4" && d.Signals[1].Count == "1" && len(b.Signals) == 1 && b.Signals[0].Count == "2" && b.Signals[0].FirstMS == b.Question.FromMS && b.Signals[0].LastMS == b.Question.ToMS-1
 		record("discover", coherent)
-		coherent = len(l.Browse) == 3
+		coherent = len(l.Browse) == 4
 		metadata := false
 		records := false
 		for _, r := range l.Browse {

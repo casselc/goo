@@ -999,3 +999,6 @@ measurement preview feeding the existing typed executors.
 The [all-signal discovery diagram](METRIC_SERVICE_DISCOVERY.md) adds native metric
 point-presence groups to service discovery without changing dependency inference
 or native measurement kernels.
+
+The [unified catalog diagram](UNIFIED_SERVICE_CATALOG.md) connects one discovery
+entry, fixed-window service detail, existing executors and local return navigation.

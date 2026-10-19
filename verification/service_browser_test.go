@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"reflect"
+	"strconv"
 	"testing"
 
 	"github.com/casselc/goo/exploration"
@@ -61,6 +62,11 @@ func TestQuintServiceBrowserLive(t *testing.T) {
 		Evidence json.RawMessage
 	}
 	type ledger struct {
+		Catalog     exploration.ServiceDiscovery
+		CatalogRows []struct {
+			Service string
+			Counts  []string
+		}
 		Inventory exploration.InventoryResult
 		Browse    []read
 		Drilled   exploration.Result
@@ -88,12 +94,16 @@ func TestQuintServiceBrowserLive(t *testing.T) {
 			l.AfterPreview++
 		case 5:
 			l.Preview.Question.FromMS++
+		case 6:
+			l.CatalogRows[0].Counts[0] = "9"
+		case 7:
+			l.Catalog.Question.ToMS++
 		}
 		sink := &qobs.MemorySink{}
 		rec := qobs.NewRecorder(sink)
 		record := func(a string, b bool) { rec.Record(context.Background(), a, nil, "obs.coherent", b) }
 		q := l.Inventory.Question
-		coherent := len(l.Browse) == 3
+		coherent := len(l.Browse) == 4 && len(l.CatalogRows) == 2 && l.CatalogRows[0].Service == "catalog" && reflect.DeepEqual(l.CatalogRows[0].Counts, []string{"6", "1", "2"}) && reflect.DeepEqual(l.CatalogRows[1].Counts, []string{"Not observed", "1", "Not observed"}) && l.Catalog.Question == q
 		seen := map[string]bool{}
 		for _, r := range l.Browse {
 			var scope struct {
@@ -129,9 +139,57 @@ func TestQuintServiceBrowserLive(t *testing.T) {
 	if !check(-1) {
 		t.Fatal("live service journey rejected")
 	}
-	for i := 0; i < 6; i++ {
+	for i := 0; i < 8; i++ {
 		if check(i) {
 			t.Fatal("mutated trace accepted", i)
 		}
 	}
+}
+
+func TestHegelServiceCatalogGrain(t *testing.T) {
+	hegel.Test(t, func(tc *hegel.T) {
+		n := hegel.Draw(tc, hegel.Integers(1, 60))
+		type signal struct {
+			Service string `json:"service"`
+			Signal  string `json:"signal"`
+			Count   string `json:"count"`
+			FirstMS int    `json:"firstMs"`
+			LastMS  int    `json:"lastMs"`
+		}
+		input := []signal{}
+		for i := 0; i < n; i++ {
+			count := hegel.Draw(tc, hegel.Integers(1, 1000000))
+			value := strconv.Itoa(count)
+			if i%5 == 0 {
+				value = "18446744073709551615"
+			}
+			input = append(input, signal{strconv.Itoa(i / 3), []string{"spans", "logs", "metrics"}[i%3], value, 100 + i, 1000 + i})
+		}
+		data, _ := json.Marshal(input)
+		script := `const {catalogRows}=require('../ui/inventory');process.stdout.write(JSON.stringify(catalogRows(JSON.parse(process.argv[1]))));`
+		out, e := exec.Command("node", "-e", script, string(data)).Output()
+		if e != nil {
+			tc.Fatal(e)
+		}
+		var rows []struct {
+			Service         string
+			Signals         map[string]signal
+			FirstMS, LastMS int
+		}
+		if json.Unmarshal(out, &rows) != nil {
+			tc.Fatal("invalid catalog")
+		}
+		byService := map[string]map[string]signal{}
+		for _, r := range rows {
+			byService[r.Service] = r.Signals
+		}
+		if len(rows) != (n+2)/3 {
+			tc.Fatal("service duplication")
+		}
+		for _, s := range input {
+			if !reflect.DeepEqual(byService[s.Service][s.Signal], s) {
+				tc.Fatal("signal grain/precision changed")
+			}
+		}
+	}, options(100)...)
 }

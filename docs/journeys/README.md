@@ -863,3 +863,19 @@ Counts are records, not the histogram's 5000 observations or metric values.
 
 `GOO_METRIC_SERVICES_BOMBADIL=1` enables its 30-second actor. The observed ledger
 is validated by quint-go with seven rejecting mutations.
+
+### 48 · One Services catalog
+
+Executed by `journeys/service-browser.spec.js` alongside storyboard 46. Discover
+once, see one row per service with distinct signal counts, search locally, follow
+a service question, return to the retained detail and then the filtered catalog.
+The journey checks no implicit return reads, empty-filter keyboard focus, mobile
+containment and rejection of an intentionally tampered real response scope.
+
+- [One catalog entry](screenshots/48a-one-services-catalog.png)
+- [Retained local filter and return](screenshots/48b-local-filtered-return.png)
+- [Mobile catalog](screenshots/48c-mobile-services-catalog.png)
+
+See [the catalog contract](../UNIFIED_SERVICE_CATALOG.md) for capture scope and
+remaining boundaries. Existing storyboard 31 now reaches operation inventory by
+opening a service; saved inventory 32 retains its original environment-wide scope.
