@@ -63,6 +63,21 @@ func registerTelemetryPackages(mux *http.ServeMux, dir string) {
 		}
 		send(w, 200, plan)
 	})
+	mux.HandleFunc("POST /telemetry-packages/numeric-plan", func(w http.ResponseWriter, r *http.Request) {
+		var input struct {
+			Question exploration.Query          `json:"question"`
+			Binding  exploration.NumericBinding `json:"binding"`
+		}
+		if !decode(w, r, &input) {
+			return
+		}
+		plan, err := exploration.PlanNumericBinding(input.Question, input.Binding)
+		if err != nil {
+			fail(w, 400, err)
+			return
+		}
+		send(w, 200, plan)
+	})
 	mux.HandleFunc("POST /telemetry-packages/plan", func(w http.ResponseWriter, r *http.Request) {
 		var input telemetryPlanRequest
 		if !decode(w, r, &input) {

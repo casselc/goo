@@ -5,6 +5,30 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Numeric attribute preflight and reference semantics (2026-10-19)
+
+Added explicit int64/uint64 attribute/resource bindings, canonical-decimal parsing,
+declared units, exact reference sum/extrema/rational-mean states and separate
+valid/missing/empty/invalid counts. A source-free HTTP preflight reports structured
+capability diagnostics and always marks execution unavailable. Live numeric SQL,
+UI controls and package/capture persistence remain future work; existing executable
+question/package/capture formats are unchanged. See [contract and process diagram](docs/NUMERIC_ATTRIBUTE_PLANNING.md).
+
+Passed: full root Go suite, exploration/HTTP race tests, root vet, Python compilation
+and Hegel partition conservation (100 requested cases). Tests include signed and
+unsigned limits, sums above uint64, zero versus unavailable extrema, malformed
+syntax, bad unit labels, detached scope and strict HTTP decoding. Reproducible live
+proxy checks passed with `python3 scripts/check_numeric_preflight.py`, including
+supported declarations, multiple unsupported diagnostics and unknown-field rejection.
+No UI behavior changed, so browser journeys/screenshots and Bombadil/Quint live
+ledgers were not regenerated for this source-free milestone.
+
+Artifacts: `artifacts/numeric-plan-{go,race,vet,hegel,image,up,live,services,pending}.log`.
+Deployed image `bb4ee24d75af`; all 12 default services remain running, including
+traffic. Volumes were preserved. Inspection confirmed all five pre-existing stale
+pending entries remain; an additional ordinary in-flight entry was present with
+traffic active. No telemetry reset or traffic pause was performed.
+
 ## Typed record measures and grouped time charts (2026-10-18)
 
 Existing record controls now expand into typed count, duration and recorded-status

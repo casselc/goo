@@ -28,7 +28,9 @@ planning metadata for recipes/follow-ups, with adapters for typed capture questi
 The first typed record-measure lowering and bounded split-time-chart slice is now
 implemented ([contract](RECORD_MEASURES.md)). General numeric expressions,
 convention-profile resolution and backend capability negotiation remain subsequent
-work.
+work. [Numeric attribute preflight](NUMERIC_ATTRIBUTE_PLANNING.md) now provides
+declared integer bindings, exact reference evaluation and structured unsupported
+capability diagnostics, without changing existing executable package formats.
 
 ## Earlier plan and milestone history
 
