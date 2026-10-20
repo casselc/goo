@@ -24,14 +24,15 @@ const RowLimit = 10000
 var stable = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_.-]{0,127}$`)
 
 type Binding struct {
-	Namespace  *identity.Namespace `json:"namespace,omitempty" yaml:"namespace,omitempty"`
-	Services   []string            `json:"services" yaml:"services"`
-	Scope      string              `json:"scope" yaml:"scope"`
-	Version    string              `json:"version" yaml:"version"`
-	SchemaURL  string              `json:"schemaURL" yaml:"schemaURL"`
-	Metric     string              `json:"metric,omitempty" yaml:"metric,omitempty"`
-	Unit       string              `json:"unit,omitempty" yaml:"unit,omitempty"`
-	Attributes map[string]string   `json:"attributes,omitempty" yaml:"attributes,omitempty"`
+	ExactStream *metrics.Stream     `json:"exactStream,omitempty" yaml:"exactStream,omitempty"`
+	Namespace   *identity.Namespace `json:"namespace,omitempty" yaml:"namespace,omitempty"`
+	Services    []string            `json:"services" yaml:"services"`
+	Scope       string              `json:"scope" yaml:"scope"`
+	Version     string              `json:"version" yaml:"version"`
+	SchemaURL   string              `json:"schemaURL" yaml:"schemaURL"`
+	Metric      string              `json:"metric,omitempty" yaml:"metric,omitempty"`
+	Unit        string              `json:"unit,omitempty" yaml:"unit,omitempty"`
+	Attributes  map[string]string   `json:"attributes,omitempty" yaml:"attributes,omitempty"`
 }
 type LifecycleBinding struct {
 	LogicalService string   `json:"logicalService" yaml:"logicalService"`
@@ -129,7 +130,10 @@ func (d Definition) Validate() error {
 		if d.Lifecycle != nil || d.Source.Scope == "" || d.Source.Metric == "" || !text(d.Source.Metric, 256) || d.Source.Unit == "" || !text(d.Source.Unit, 64) || d.Grain == "subject" {
 			return fmt.Errorf("require typed metric/unit binding")
 		}
-		return nil
+		return validateExactStream(d)
+	}
+	if d.Source.ExactStream != nil {
+		return fmt.Errorf("exact stream selector requires a native metric")
 	}
 	l := d.Lifecycle
 	if d.Source.Scope != "" || d.Source.Version != "" || d.Source.SchemaURL != "" {

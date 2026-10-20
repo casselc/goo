@@ -1095,3 +1095,6 @@ td details {
 .live-comparison .live-latency-pair .ui-latency-body{display:block}
 .live-comparison .live-latency-pair .ui-latency-mean{margin-bottom:12px;min-width:0}
 @media(max-width:850px){.live-comparison .live-latency-pair{grid-template-columns:minmax(0,1fr)}}
+
+/* Native observation tables keep readable columns inside their scroll owner. */
+.scroll > table.measurement-table { min-width: 35rem; }

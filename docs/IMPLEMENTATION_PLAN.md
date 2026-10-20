@@ -574,3 +574,14 @@ historical evidence. Rational common-domain bars reuse the passive comparison
 renderer. Journey 72, native Bombadil invariants, Hegel boundary properties and
 observed Quint replay cover the path. Next: explicit exact-stream selection over
 multi-stream inventories; live gauges/histograms remain planned.
+
+### Exact native stream selection (implemented 2026-10-20)
+
+Focus a stream in a broad native result to preview an immutable complete
+`source.exactStream` binding. Go validates and compiles it before source reads;
+sharing, package revisions, comparisons and frozen evidence retain the binding.
+Explore all matching streams removes only the exact pin. Journey73 covers actual
+lookalike streams; Hegel focus/clear state sequences and observed Quint replay
+verify source identity and custody. Live gauges/histograms and logical fleet
+selectors remain planned. Next: improve native metric inventory navigation and
+compact coverage diagnostics before broadening live native chart semantics.

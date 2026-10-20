@@ -127,8 +127,9 @@ width, ending at the newest observed export endpoint, including an endpoint with
 bad coverage or a reset. The evaluator refuses gaps, missing boundaries, resets,
 temporality changes and changed stream membership. It never selects an older
 healthy interval to produce a number, interpolates coverage, or sums unrelated
-instances. This pilot has no new stream selector: if the unchanged definition
-matches additional streams, the comparison is withheld.
+instances. Use [Focus this stream](EXACT_STREAM_SELECTION.md) to create and capture a
+complete exact-stream baseline from a broader inventory. An unselected definition
+that matches additional streams still withholds comparison.
 
 Each refresh first discovers endpoints in a bounded search (window width plus
 twice maxGapMs, capped at two hours), then reads the selected exact window.
@@ -149,7 +150,7 @@ is a transient live policy: a frozen complete fixed window remains historical
 evidence with its original bounds, source read time and basis; reopening it does
 not claim it is still live. Polling, cancellation and draft expiry follow the
 same custody contract as record comparisons. Gauges, histograms, fleet rates and
-interactive exact-stream selection remain future work.
+logical fleet selectors remain future work.
 
 ```mermaid
 sequenceDiagram

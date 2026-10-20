@@ -439,5 +439,6 @@ See [the regression storyboard](docs/journeys/README.md#71-a-service-regression-
 Native counter questions now support [live exact-stream rate comparisons](docs/LIVE_COMPARISON.md#exact-stream-counter-rates).
 The current export window retains the baseline's exact duration; resets, gaps,
 changed stream identity and stale exports withhold rates. Freeze retains the
-actual displayed historical window. This first slice requires one complete
-baseline stream; gauges, histograms and fleet rates remain planned.
+actual displayed historical window. This slice requires one complete baseline stream. [Focus an observed stream](docs/EXACT_STREAM_SELECTION.md)
+to save/share/capture an exact source binding from a multi-stream question.
+Live gauges, histograms and fleet rates remain planned.

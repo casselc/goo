@@ -362,7 +362,7 @@ Native histogram P95 remains a bucket range; this is not a new scalar percentile
 or a P90 evaluator. Light-DOM app styles must stay scoped to their owning view.
 
 A bounded log SSE tail is now implemented; see [limits](LIVE_LOG_TAIL.md).
-Durable replay/ingestion cursors, trace tails and live native metric comparisons
+Durable replay/ingestion cursors, trace tails and live gauges/histograms
 remain planned. Summary property updates currently rerender inner
 DOM and reset disclosures; log-tail row patches, bounded retention and explicit gaps now live in the app
 adapter. Snapshot value components still reset disclosure state on data updates.
@@ -371,15 +371,19 @@ adapter. Snapshot value components still reset disclosure state on data updates.
 
 Live baseline comparison displays record counts for saved span/log questions
 with windows of at most two hours, plus duration and recorded status when the
-saved span question requests them. Native metrics keep their fixed comparison
-flow. Count-only captures are not silently enriched or reread as a new definition. Refresh uses bounded polling;
+saved span question requests them. Native counters also support exact-stream live rate comparison; gauges and
+histograms retain fixed comparison flow. Count-only captures are not silently enriched or reread as a new definition. Refresh uses bounded polling;
 only log tail currently uses SSE. Live snapshots expire after two minutes and
 are process-local until explicitly frozen. Production authentication/session
 isolation and durable live workspaces remain future work. See LIVE_COMPARISON.md.
 
-- Live native counter comparison is a single-complete-stream pilot. There is no
-  interactive exact-stream selector yet; additional stream membership withholds
-  comparison. Endpoint discovery and exact-window reads are bounded, separate
+- Live native counter comparison requires a single complete baseline stream. Focus this stream now creates an explicit exact source binding. Unselected
+  definitions with additional stream membership still withhold comparison. Endpoint discovery and exact-window reads are bounded, separate
   source reads. maxGapMs also bounds live endpoint age. Frozen fixed-window
   evidence retains historical coverage, not a continuing freshness claim.
   Live gauge/histogram and fleet comparisons remain unimplemented.
+
+- Exact stream selection pins all captured resource and point dimensions, including
+  service.instance.id. A restart, added resource attribute or new schema produces
+  a different stream; Goo does not auto-follow it. Focus is bounded to observed
+  native inventories, not a fleet selector. See EXACT_STREAM_SELECTION.md.

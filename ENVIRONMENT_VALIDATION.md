@@ -1015,3 +1015,63 @@ or OOM-kill events, all application container OOMKilled flags false, and about
 29 GiB memory available (mostly reclaimable cache). Disk had 2 GiB free after
 removing only unused Docker build cache/dangling images. The session transport
 cause remains unconfirmed; completed source/browser checks were unaffected.
+
+## 2026-10-20 — exact native stream bindings
+
+Added optional `source.exactStream` to reusable native measurement packages.
+The adapter validates consistency with existing source constraints, compiles
+parameterized equality over complete resource/point maps and resource schema,
+and rejects off-stream reference-evaluator input. Stream temporality/epochs
+remain kernel evidence rather than identity filters. Definitions without the
+selector preserve their previous serialized revision inputs. Exact pins are
+bounded to 16 KiB identity and 64 keys per resource/point map; existing read limits
+still fail closed. App-owned focus/clear previews retain exact nanosecond bounds.
+Fixed questions work for counter, gauge and explicit histogram; only counters
+currently support live comparison.
+
+Completed checks:
+
+- Root `go test ./...` and `go vet ./...` passed. Affected measurements, metrics,
+  exploration and HTTP packages passed under `-race`; added cross-kind native
+  replay tests also passed under the race detector.
+- Frontend suite passed all 22 test files. New focus/share/capture test verifies
+  cloning, exact bounds, selected-definition incompatibility and clear behavior.
+- Hegel passed 100 twelve-action focus/clear sequences over 2–8 independent
+  streams, retaining immutable inventory and rejecting mixed/extra-empty input.
+- Real-source journey72 native counter regression passed against the selector
+  build, preserving prior unselected counter behavior.
+- Journey73 ingested two baseline instances and seven current identities through
+  actual OTLP. Near matches differ by instance, namespace missing versus empty,
+  added empty resource/point keys, missing versus empty route, or resource schema.
+  Focus/run isolated one stream. Share, package revision save, evidence capture,
+  pinned live 3/s against 5/s, freeze/reopen, no-data and clear assertions passed.
+  Desktop/mobile frames were regenerated and visually inspected. Observation
+  tables now preserve readable columns inside their horizontal scroll owner.
+- Observed Quint inventory/focus/evaluate/save/live/freeze/clear replay accepted
+  the actual ledger and rejected all nine corruptions. Bombadil exercised Run,
+  Focus, Run and Clear with exact identity/rendered-stream invariants.
+
+Initial checks exposed sandbox loopback restrictions, so HTTP tests were rerun
+with local socket access. The first UI attempt needed to open the collapsed
+package editor before Save. Verification tooling initially used Quint's reserved
+`run` action name and a zero-constant module unsupported by the replay generator;
+renaming the action and declaring INITIAL resolved both. The final successful
+checks supersede these attempts; they were not counted as passes.
+
+Evidence: `artifacts/exact-stream-{root,vet,race,native-race-final,native-kinds,frontend,hegel,quint-replay,journeys,final-journey}.log`
+and `artifacts/exact-stream-final-health.json`. Full identity pins intentionally
+stop matching after restart or dimension/schema changes; no automatic instance
+substitution, fleet rates or live gauge/histogram behavior is claimed.
+
+Final selector image and campaign evidence:
+
+- Image `sha256:e0f8c192af2fcb95e492440c5d29014d74aa07a185a68b6adaf511a6a29b489f`.
+- Final journey73 passed in 1.3 minutes. Its ledger is
+  `artifacts/exact-stream/37cf0ad4bd/ledger.json`; observed Quint replay passed
+  with nine rejecting controls. Bombadil completed 442 steps, including two Run
+  actions, Focus and Clear, with no invariant violations.
+- Final health verifies 12 running services, HTTP health, identical query/packages
+  images, matching served UI and Go binary hashes, all five historical pending
+  IDs retained, and restored traffic. No volumes or stream entries were reset.
+- All five journey73 screenshots were generated from actual source data; desktop
+  selected evidence and mobile scroll composition were visually inspected.

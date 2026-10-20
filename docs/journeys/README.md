@@ -1170,3 +1170,21 @@ the investigation. The original question and baseline remain unchanged.
 ![Late coverage repaired and explicitly rescaled](screenshots/72c-late-coverage-restored.png)
 ![Displayed native window frozen](screenshots/72d-displayed-native-rate-frozen.png)
 ![Native rate comparison on mobile](screenshots/72e-mobile-native-rate.png)
+
+## 73. Focus one native stream from a shared instrument
+
+Run `journeys/exact-stream.spec.js`. A generic HTTP instrument has two baseline
+instances. Inspect their independent streams, focus instance one, and preview
+without a source read. Run the exact question, share it, save the package revision
+and capture the baseline. Seven current identities include near matches with
+missing/added/empty attributes and changed resource schema. Live comparison shows
+only the pinned stream's 5/s against its frozen 3/s baseline. Freeze and reopen
+retain the exact binding. Explore all matching streams returns to the original
+broad question with an explicit preview and Run; prior evidence remains unchanged.
+
+![Independent native streams](screenshots/73a-discover-independent-streams.png)
+![Read-free exact-stream preview](screenshots/73b-exact-stream-preview.png)
+![Captured selected identity](screenshots/73c-selected-stream-evidence.png)
+![Pinned live native rate](screenshots/73d-pinned-live-rate.png)
+
+![Selected stream on mobile with horizontally scrollable observations](screenshots/73e-mobile-selected-stream.png)

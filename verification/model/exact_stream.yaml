@@ -1,0 +1,12 @@
+spec: exact_stream.qnt
+module: exact_stream
+constants: {INITIAL: 0}
+invariants: [safety]
+actions:
+  inventory: {expect: 'coherent == {{.obs.coherent}}'}
+  focus: {expect: 'coherent == {{.obs.coherent}}'}
+  evaluate: {expect: 'coherent == {{.obs.coherent}}'}
+  save: {expect: 'coherent == {{.obs.coherent}}'}
+  live: {expect: 'coherent == {{.obs.coherent}}'}
+  freeze: {expect: 'coherent == {{.obs.coherent}}'}
+  clear: {expect: 'coherent == {{.obs.coherent}}'}

@@ -526,3 +526,11 @@ GOO_LIVE_COUNTER_BOMBADIL=1 bash scripts/run_journeys.sh journeys/live-counter.s
 
 `verification/bombadil/live-counter.ts` adds rational common-axis geometry and
 exact-window ordering to the live preview/start/freeze/link state invariants.
+
+Journey73 writes `artifacts/exact-stream/<run>/ledger.json`. Set
+`GOO_EXACT_STREAM_LEDGER` and run `TestQuintExactStreamLedger` to validate the
+observed inventory/focus/run/save/live/freeze/clear projection and nine rejecting
+mutations using `model/exact_stream.qnt`. `TestHegelExactStreamFocusClearState`
+generates 100 twelve-action focus/clear sequences over 2–8 independent streams,
+checking immutable inventory and refusal of off-stream or extra-empty dimensions.
+Run the UI actor with `GOO_EXACT_STREAM_BOMBADIL=1` and journey73.

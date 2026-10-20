@@ -280,3 +280,8 @@ The shared comparison renderer accepts nonnegative integer/fraction rates and
 computes common-domain geometry with exact BigInt cross multiplication. The
 live-counter app adapter owns rounded labels, stable domains, coverage/freshness,
 reads and freeze capabilities; display components do not subscribe or fetch.
+
+Native measurement stream focus/clear actions belong to the app adapter. Their
+identity disclosures reuse GooAttributes. Observation tables retain readable
+columns inside the existing scroll owner on mobile; table minimum width is
+scoped to the measurement table class and does not affect other table users.

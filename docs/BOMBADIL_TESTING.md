@@ -476,3 +476,9 @@ live preview/choose/start/freeze/link lifecycle and verifies exact rational bar
 geometry plus increasing nanosecond bounds. Run journey 72 with
 `GOO_LIVE_COUNTER_BOMBADIL=1`. Its real OTLP fixture also exercises a missing
 interval, late repair, fixed-axis overflow and a source failure deterministically.
+
+`verification/bombadil/exact-stream.ts` drives the real measurement Run → Focus
+→ Run → Clear workflow. It verifies the selected instance, namespace presence and
+single rendered stream. Run journey73 with `GOO_EXACT_STREAM_BOMBADIL=1`; its
+Playwright portion checks exact source isolation from seven lookalike identities,
+package sharing, live comparison and immutable freeze/reopen.

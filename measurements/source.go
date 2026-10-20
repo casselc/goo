@@ -103,6 +103,20 @@ func Compile(q Question) (Plan, error) {
 		key := param(k, "String")
 		where += " AND mapContains(Attributes," + key + ") AND Attributes[" + key + "]=" + param(d.Source.Attributes[k], "String")
 	}
+	if exact := d.Source.ExactStream; exact != nil {
+		resource, _ := json.Marshal(exact.Resource)
+		attributes := exact.Attributes
+		if attributes == nil {
+			attributes = map[string]string{}
+		}
+		encodedAttributes, _ := json.Marshal(attributes)
+		// Compare sorted key/value tuples, preserving missing versus present-empty
+		// keys and ignoring map iteration order. Bind JSON as data, never SQL syntax.
+		where += " AND ResourceSchemaUrl=" + param(exact.ResourceSchemaURL, "String")
+		for _, pair := range [][2]string{{"mapUpdate(ResourceAttributes,map('service.name',toString(ServiceName)))", string(resource)}, {"Attributes", string(encodedAttributes)}} {
+			where += " AND arraySort(arrayZip(mapKeys(" + pair[0] + "),mapValues(" + pair[0] + ")))=arraySort(JSONExtractKeysAndValues(" + param(pair[1], "String") + ",'String'))"
+		}
+	}
 	p.SQL = "SELECT " + fields + " FROM " + table + " WHERE " + where + " ORDER BY " + timeColumn + " LIMIT 10001 FORMAT JSONEachRow"
 	return p, nil
 }
@@ -246,6 +260,9 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 			}
 		}
 		stream := metrics.Stream{ResourceSchemaURL: row.ResourceSchemaURL, Resource: row.Resource, Scope: row.Scope, Version: row.Version, SchemaURL: row.SchemaURL, Name: row.Name, Unit: row.Unit, Attributes: row.Attributes}
+		if selected := d.Source.ExactStream; selected != nil && !sameExactStream(*selected, stream) {
+			return nil, fmt.Errorf("metric exact stream selector mismatch")
+		}
 		missing := row.Flags&1 != 0
 		if d.Kind == "gauge" || d.Kind == "counter" {
 			value := float64(0)

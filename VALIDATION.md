@@ -2480,3 +2480,20 @@ Five real-source browser checks and the final-image native rerun (including
 Bombadil and observed Quint replay with seven rejecting controls) passed.
 All 12 services are running with matching served-source and binary hashes.
 Deployed image evidence is recorded in ENVIRONMENT_VALIDATION.md.
+
+## 2026-10-20 — exact native stream selection
+
+Native measurement results now offer read-free Focus this stream previews using
+an immutable `source.exactStream` package binding. Compilation applies exact
+resource/point map and schema identity before evaluation; off-stream evaluator
+input is rejected. Share/save/capture/live/freeze/reopen retain the binding;
+Explore all matching streams removes only the exact pin from a new question.
+
+Root Go suite/vet, affected-package race tests, cross-kind replay checks, frontend
+suite (22 test files) and 100 generated twelve-action Hegel focus/clear sequences
+passed. Journey73 verifies seven real OTel identities, exact-window focus without
+a read, package sharing/save/capture, pinned 3/s versus 5/s live comparison,
+source-free freeze/reopen and clear. Its observed Quint model rejects nine
+corruptions; Bombadil exercises Run/Focus/Run/Clear. Actual image, campaign and
+screenshot evidence is in ENVIRONMENT_VALIDATION.md and
+[the selection contract](docs/EXACT_STREAM_SELECTION.md).

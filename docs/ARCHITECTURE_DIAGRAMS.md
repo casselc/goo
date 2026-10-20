@@ -1122,3 +1122,10 @@ The [counter export-window sequence](LIVE_COMPARISON.md#exact-stream-counter-rat
 shows bounded endpoint discovery, exact-window evaluation and source-free freeze.
 The evaluator owns coverage/reset semantics; the app adapter owns polling,
 freshness and stable domains. Passive chart components accept rational rates.
+
+### Selecting a native stream
+
+The [exact-stream sequence](EXACT_STREAM_SELECTION.md) connects broad observed
+inventory, read-free focus preview, source-level identity predicates, immutable
+package/capture storage and live counter freeze. Focus is application intent;
+passive display components continue to own no reads or subscriptions.
