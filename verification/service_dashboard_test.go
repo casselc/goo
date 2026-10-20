@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/identity"
 	"github.com/casselc/goo/measurements"
 	"github.com/casselc/goo/workbench"
 	"github.com/casselc/observability/quintgo/qobs"
@@ -25,6 +26,9 @@ func TestHegelDashboardPlanning(t *testing.T) {
 				in.Signals = append(in.Signals, s)
 			}
 		}
+		if hegel.Draw(tc, hegel.Integers(0, 1)) == 1 {
+			in.Scope.Namespace = &identity.Namespace{Mode: "value", Value: "payments"}
+		}
 		before, _ := json.Marshal(in)
 		p, e := exploration.PlanServiceDashboard(in, nil)
 		after, _ := json.Marshal(in)
@@ -40,7 +44,7 @@ func TestHegelDashboardPlanning(t *testing.T) {
 			tc.Fatal("order changes plan")
 		}
 		for _, w := range p.Widgets {
-			if w.Query != nil && (w.Query.Validate() != nil || w.Query.Where.Value != in.Service || w.Query.Environment != in.Scope.Environment || w.Query.FromMS != in.Scope.FromMS || w.Query.ToMS != in.Scope.ToMS) {
+			if w.Query != nil && (w.Query.Validate() != nil || !exploration.Match(w.Query.Where, map[exploration.Field]string{{Kind: "column", Key: "service"}: in.Service, {Kind: "resource", Key: "service.namespace"}: "payments"}) || w.Query.Environment != in.Scope.Environment || w.Query.FromMS != in.Scope.FromMS || w.Query.ToMS != in.Scope.ToMS) {
 				tc.Fatal("scope escaped", w)
 			}
 		}
@@ -96,7 +100,7 @@ func TestQuintServiceDashboardLive(t *testing.T) {
 		case 5:
 			l.SavedCapture.Explore.Count = "777"
 		}
-		coherent := l.Events[0].Reads == 1 && l.Plan.Scope == l.Catalog.Question && l.Plan.Service == "api" && l.Focused.Validate() == nil && l.Focused.Record.Where.All[1].Value == "/items" && l.Wider.Validate() == nil && l.Wider.Record.Where.Value == "worker" && l.SavedCapture.Explore.Count == "2" && len(l.Captured.Cards[0].Evidence) == 1 && len(l.DeclarationPlan.Declarations) > 0 && len(l.Evidence) == 4
+		coherent := l.Events[0].Reads == 1 && l.Plan.Scope.Environment == l.Catalog.Question.Environment && l.Plan.Scope.FromMS == l.Catalog.Question.FromMS && l.Plan.Scope.ToMS == l.Catalog.Question.ToMS && l.Plan.Scope.Namespace != nil && l.Plan.Scope.Namespace.Mode == "missing" && l.Plan.Service == "api" && l.Focused.Validate() == nil && l.Focused.Record.Where.All[1].Value == "/items" && l.Wider.Validate() == nil && l.Wider.Record.Where.All[0].Value == "worker" && l.Wider.Record.Where.All[1].Op == "missing" && l.SavedCapture.Explore.Count == "2" && len(l.Captured.Cards[0].Evidence) == 1 && len(l.DeclarationPlan.Declarations) > 0 && len(l.Evidence) == 4
 		edges := 0
 		for _, d := range l.Catalog.Dependencies {
 			if d.Kind == "edge" {
@@ -116,7 +120,7 @@ func TestQuintServiceDashboardLive(t *testing.T) {
 			if ev.Widget.Query != nil {
 				var q exploration.Query
 				json.Unmarshal(ev.Question, &q)
-				coherent = coherent && reflect.DeepEqual(q, *ev.Widget.Query) && q.Environment == l.Catalog.Question.Environment && q.FromMS == l.Catalog.Question.FromMS && q.ToMS == l.Catalog.Question.ToMS && q.Where.Value == "api"
+				coherent = coherent && reflect.DeepEqual(q, *ev.Widget.Query) && q.Environment == l.Catalog.Question.Environment && q.FromMS == l.Catalog.Question.FromMS && q.ToMS == l.Catalog.Question.ToMS && q.Where.All[0].Value == "api" && q.Where.All[1].Op == "missing"
 			} else {
 				var q measurements.Question
 				json.Unmarshal(ev.Question, &q)

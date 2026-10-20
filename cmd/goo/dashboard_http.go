@@ -16,7 +16,11 @@ func registerDashboards(mux *http.ServeMux, packages []*annotations.OperationPla
 		if p.Manifest != nil {
 			m = p.Manifest.Revision
 		}
-		declarations = append(declarations, exploration.DashboardDeclaration{Name: p.Definition.Name, Title: p.Definition.Title, Revision: p.Revision, ManifestRevision: m, Service: p.Definition.Resource.Service, Environment: p.Definition.Resource.Environment})
+		ops := []exploration.DashboardOperation{}
+		for _, op := range p.Definition.Operations {
+			ops = append(ops, exploration.DashboardOperation{Name: op.Name, Role: op.Role})
+		}
+		declarations = append(declarations, exploration.DashboardDeclaration{Namespace: p.Definition.Resource.Namespace.Clone(), Instance: p.Definition.Resource.Instance, Scope: p.Definition.Instrumentation.Name, Version: p.Definition.Instrumentation.Version, SchemaURL: p.Definition.Instrumentation.SchemaURL, Operations: ops, Name: p.Definition.Name, Title: p.Definition.Title, Revision: p.Revision, ManifestRevision: m, Service: p.Definition.Resource.Service, Environment: p.Definition.Resource.Environment})
 	}
 	mux.HandleFunc("POST /dashboards/plan", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")

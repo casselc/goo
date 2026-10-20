@@ -66,7 +66,7 @@ func (q CaptureQuestion) Validate() error {
 		if q.Inventory == nil || q.Explore != nil || q.Comparison != nil {
 			return errors.New("inventory question required")
 		}
-		return q.Inventory.Query().Validate()
+		return q.Inventory.Validate()
 	case "comparison":
 		if q.Comparison == nil || q.Explore != nil || q.Inventory != nil {
 			return errors.New("comparison questions required")
@@ -83,6 +83,11 @@ func (q CaptureQuestion) Validate() error {
 
 // Normalized removes inspection-page position, never semantic filters or bounds.
 func (q CaptureQuestion) Normalized() CaptureQuestion {
+	if q.Inventory != nil {
+		v := *q.Inventory
+		v.Namespace = v.Namespace.Clone()
+		q.Inventory = &v
+	}
 	if q.Measurement != nil {
 		// Use the wire representation for immutable typed questions, including
 		// equivalent empty/omitted selector maps. This also detaches caller maps.

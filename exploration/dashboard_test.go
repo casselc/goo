@@ -2,6 +2,7 @@ package exploration
 
 import (
 	"encoding/json"
+	"github.com/casselc/goo/identity"
 	"github.com/casselc/goo/measurements"
 	"reflect"
 	"strings"
@@ -75,5 +76,40 @@ func TestDashboardRejectsUnsupportedNativeTemporalityAndKind(t *testing.T) {
 		if _, err := PlanServiceDashboard(in, nil); err == nil {
 			t.Fatal("unsupported metadata accepted", bad)
 		}
+	}
+}
+
+func TestNamespaceDashboardAndDeclaredBindingQuestion(t *testing.T) {
+	ns := &identity.Namespace{Mode: "value", Value: "payments"}
+	in := DashboardRequest{Scope: InventoryQuestion{Namespace: ns, Environment: "prod", FromMS: 1000, ToMS: 61000}, Service: "api", Signals: []string{"spans"}}
+	d := DashboardDeclaration{Name: "contract", Title: "Contract", Revision: strings.Repeat("a", 64), Service: "api", Environment: "prod", Instance: "one", Scope: "goo.sdk", Version: "1", SchemaURL: "goo://v1", Operations: []DashboardOperation{{Name: "work", Role: "server"}}}
+	p, e := PlanServiceDashboard(in, []DashboardDeclaration{d})
+	if e != nil {
+		t.Fatal(e)
+	}
+	w := p.Widgets[len(p.Widgets)-1]
+	if w.State != "supported" || w.Query == nil || p.Declarations[0].Match != "namespace-unspecified" {
+		t.Fatal(p)
+	}
+	plan, e := Compile(*w.Query)
+	if e != nil || !strings.Contains(plan.Count, "ScopeVersion") || strings.Contains(plan.Count, "ScopeSchemaUrl") || strings.Contains(plan.Count, "payments") || !strings.Contains(plan.Count, "mapContains") {
+		t.Fatal(plan, e)
+	}
+	resource := map[Field]string{{Kind: "column", Key: "service"}: "api", {Kind: "resource", Key: "service.namespace"}: "payments", {Kind: "resource", Key: "service.instance.id"}: "one", {Kind: "column", Key: "scope"}: "goo.sdk", {Kind: "column", Key: "scope_version"}: "1", {Kind: "attribute", Key: "goo.operation.name"}: "work", {Kind: "attribute", Key: "goo.operation.role"}: "server"}
+	if !Match(w.Query.Where, resource) {
+		t.Fatal("valid binding rejected")
+	}
+	resource[Field{Kind: "resource", Key: "service.namespace"}] = "other"
+	if Match(w.Query.Where, resource) {
+		t.Fatal("namespace leak")
+	}
+	ns.Value = "changed"
+	if p.Scope.Namespace.Value != "payments" {
+		t.Fatal("plan aliases selector")
+	}
+	d.Namespace = &identity.Namespace{Mode: "missing"}
+	p, e = PlanServiceDashboard(in, []DashboardDeclaration{d})
+	if e != nil || p.Widgets[len(p.Widgets)-1].State != "unsupported" {
+		t.Fatal("mismatched declaration executable", p, e)
 	}
 }

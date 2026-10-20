@@ -54,7 +54,7 @@ func registerExploration(mux *http.ServeMux, client *http.Client) {
 			fail(400, fmt.Errorf("expected one JSON object"))
 			return
 		}
-		if e := q.Query().Validate(); e != nil {
+		if e := q.Validate(); e != nil {
 			fail(400, e)
 			return
 		}
@@ -90,7 +90,7 @@ func registerExploration(mux *http.ServeMux, client *http.Client) {
 			fail(400, fmt.Errorf("expected one JSON object"))
 			return
 		}
-		if e := q.Query().Validate(); e != nil {
+		if e := q.Validate(); e != nil {
 			fail(400, e)
 			return
 		}

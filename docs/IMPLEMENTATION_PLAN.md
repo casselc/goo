@@ -50,9 +50,10 @@ The [automatic service dashboard slice](SERVICE_DASHBOARDS.md) implements a pure
 Go planner, bounded typed widgets, matching declaration revisions and a local
 distributed relationship table. Next priorities from the whole-product review:
 
-1. Enrich application-contract navigation without silently replacing generic
-   span grain with operation/lifecycle outcome policy.
-2. Add declared-only catalog membership and explicit service-namespace selection.
+1. Namespace-aware identity and registered operation-span cards are implemented;
+   see [service identity](SERVICE_IDENTITY.md). Next, add declared-only catalog
+   membership with an explicit distinction from observed telemetry.
+2. Add deliberate instance navigation without changing service-level populations.
 3. Extend distributed exploration with exact edge-population selectors and
    separately typed async links before a graphical topology view.
 4. Unify investigation outlines and broader definition entry points; a frozen

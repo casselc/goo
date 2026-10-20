@@ -455,3 +455,11 @@ rejecting mutations. `service-dashboard.ts` explores list/distributed switching,
 widget question inspection and native disclosures with scope, no invented-edge,
 no fabricated failed-widget totals and containment invariants. Existing service
 browser journeys retain stale-scope cancellation and log/metric-only coverage.
+
+Namespace identity: `TestHegelNamespacePredicateIsolation` checks the logical
+resource predicate against missing/empty/literal selectors with parameterized
+SQL. Journey 60 writes `GOO_NAMESPACE_LEDGER` for `TestQuintNamespaceLive`: reported
+cross-namespace edges, staged questions and actual declared-binding results are
+replayed with four rejecting mutations. Optional `GOO_NAMESPACE_BOMBADIL=1` uses
+`service-namespace.ts` to explore transitions and check namespace-preserving
+record/native questions. Root tests reject foreign-namespace native/operation rows.

@@ -1010,3 +1010,21 @@ automatic widgets, mobile layout and partial-source availability.
 - [59b — automatic service widgets](screenshots/59b-automatic-service-widgets.png)
 - [59c — mobile service overview](screenshots/59c-mobile-service-overview.png)
 - [59d — independent partial availability](screenshots/59d-partial-source-availability.png)
+
+## 60 Namespace service identity
+
+[Executable journey](../../journeys/service-namespaces.spec.js) injects four
+same-named OTel services: missing, empty, payments and orders namespaces. It
+checks independent inventory/native discovery isolation, a reported parent edge
+between same-named services in different namespaces, and a fixed payments
+question. A registered operation package produces a question matching its
+instance, instrumentation scope/version and operation name/role; a foreign role
+is excluded. Schema URL remains declared metadata. The observed ledger is replayed
+through Quint with namespace, count and window mutations required to fail.
+Optional `GOO_NAMESPACE_BOMBADIL=1` explores catalog/distributed/service transitions
+and checks namespace-preserving widget questions and uncaught exceptions.
+
+![Separate service identities](screenshots/60a-namespace-service-identities.png)
+![Fixed namespace overview](screenshots/60b-namespace-service-dashboard.png)
+![Declared operation question](screenshots/60c-declared-operation-question.png)
+![Mobile contract card](screenshots/60d-mobile-declared-operation-question.png)

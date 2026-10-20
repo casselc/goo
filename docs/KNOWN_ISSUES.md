@@ -330,10 +330,15 @@ aggregates. Numeric/two-field comparisons and arbitrary regrouping of old eviden
 remain unsupported; new dimensions require explicit source recapture. Automatic
 [service overviews and a distributed relationship table](SERVICE_DASHBOARDS.md)
 now execute bounded typed widgets within Services. Declared-only catalog entries,
-namespace disambiguation, graphical topology, async/declaration edges and complete
+instance navigation, graphical topology, async/declaration edges and complete
 dashboard snapshots remain future work.
 
 Breakdown ranking currently uses absolute population-share change. A group with
 large latency/error change and little share movement may rank later; alternate
 error/latency ranking is planned. Log breakdowns explicitly show unavailable
 span-measure columns; hiding unsupported columns remains polish work.
+
+Namespace-aware service identity and registered operation-span dashboard cards
+are implemented; see [service identity](SERVICE_IDENTITY.md). Trace schema URL
+remains declaration-only because the current exporter does not store it. These
+cards do not replace explicit operation conformance or business-outcome evaluation.

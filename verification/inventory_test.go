@@ -106,6 +106,9 @@ func TestQuintInventoryLiveLedger(t *testing.T) {
 		expected := l.Capture.Question.Query()
 		expected.GroupBy = nil
 		expected.Where = &exploration.Predicate{All: []exploration.Predicate{{Field: &exploration.Field{Kind: "column", Key: "service"}, Op: "eq", Value: l.Row.Service}, {Field: &exploration.Field{Kind: "column", Key: "name"}, Op: "eq", Value: l.Row.Name}}}
+		if n := exploration.NamespacePredicate(l.Capture.Question.Namespace); n != nil {
+			expected.Where.All = append(expected.Where.All[:1], append([]exploration.Predicate{*n}, expected.Where.All[1:]...)...)
+		}
 		rec.Record(context.Background(), "open", nil, "obs.coherent", reflect.DeepEqual(expected, l.Open))
 		rec.Record(context.Background(), "package", nil, "obs.coherent", l.Package.Signal == l.Open.Signal && l.Package.Environment == l.Open.Environment && reflect.DeepEqual(l.Package.Where, l.Open.Where) && len(l.Package.GroupBy) == 0)
 		checker, e := validate.NewChecker("model/inventory.yaml", validate.Options{Quint: quintPath(t), Backend: "typescript", Dir: t.TempDir()})

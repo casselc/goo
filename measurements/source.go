@@ -81,6 +81,13 @@ func Compile(q Question) (Plan, error) {
 		services = append(services, param(s, "String"))
 	}
 	where += " AND ServiceName IN (" + strings.Join(services, ",") + ")"
+	if n := d.Source.Namespace; n != nil {
+		if n.Mode == "missing" {
+			where += " AND NOT mapContains(ResourceAttributes,'service.namespace')"
+		} else {
+			where += " AND mapContains(ResourceAttributes,'service.namespace') AND ResourceAttributes['service.namespace']=" + param(n.Value, "String")
+		}
+	}
 	if d.Kind == "lifecycle" {
 		l := d.Lifecycle
 		where += " AND Body IN (" + param(l.Accepted, "String") + "," + param(l.Terminal, "String") + ")"
@@ -203,6 +210,16 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 		At   string
 		Rows []json.RawMessage
 	}{q, r.ReadAt, copied})
+	if q.Definition.Source.Namespace != nil {
+		for _, raw := range copied {
+			var row struct {
+				Resource map[string]string `json:"resource"`
+			}
+			if json.Unmarshal(raw, &row) != nil || !q.Definition.Source.Namespace.Matches(row.Resource) {
+				return nil, fmt.Errorf("source namespace mismatch")
+			}
+		}
+	}
 	if q.Definition.Kind == "lifecycle" {
 		return evaluateLifecycle(r, at, custodyDir, previous)
 	}
@@ -219,7 +236,7 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 		for _, name := range d.Source.Services {
 			serviceOK = serviceOK || row.Resource["service.name"] == name
 		}
-		if !serviceOK || row.Resource["deployment.environment.name"] != d.Environment || row.Resource["service.instance.id"] == "" || row.Scope != d.Source.Scope || row.Version != d.Source.Version || row.SchemaURL != d.Source.SchemaURL || row.Name != d.Source.Metric || row.Unit != d.Source.Unit || row.Flags&^uint32(1) != 0 {
+		if !d.Source.Namespace.Matches(row.Resource) || !serviceOK || row.Resource["deployment.environment.name"] != d.Environment || row.Resource["service.instance.id"] == "" || row.Scope != d.Source.Scope || row.Version != d.Source.Version || row.SchemaURL != d.Source.SchemaURL || row.Name != d.Source.Metric || row.Unit != d.Source.Unit || row.Flags&^uint32(1) != 0 {
 			return nil, fmt.Errorf("metric source identity/unit/flags mismatch")
 		}
 		for k, v := range d.Source.Attributes {

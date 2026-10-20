@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/casselc/goo/metrics"
 	"net/http"
+	"reflect"
 	"strconv"
 	"sync"
 	"time"
@@ -33,7 +34,7 @@ func (p *OperationPlan) FetchRates(ctx context.Context, client *http.Client, end
 		return p.fetchInstanceRates(ctx, client, endpoint, user, password, from, to)
 	}
 	fresh, e := p.Definition.Bind(p.Manifest)
-	if e != nil || fresh.Revision != p.Revision || fresh.Source != p.Source {
+	if e != nil || fresh.Revision != p.Revision || !reflect.DeepEqual(fresh.Source, p.Source) {
 		return nil, fmt.Errorf("invalid operation plan")
 	}
 	contract := p.Definition.Fleet

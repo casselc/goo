@@ -68,7 +68,7 @@ func TestInventoryRejectsPartialOrContradictoryEvidence(t *testing.T) {
 				}
 			}))
 			defer s.Close()
-			if _, e := (Source{Endpoint: s.URL}).Inventory(context.Background(), InventoryQuestion{"prod", 1000, 100000}); e == nil {
+			if _, e := (Source{Endpoint: s.URL}).Inventory(context.Background(), InventoryQuestion{Environment: "prod", FromMS: 1000, ToMS: 100000}); e == nil {
 				t.Fatal("accepted incomplete or contradictory inventory")
 			}
 		})
@@ -77,11 +77,11 @@ func TestInventoryRejectsPartialOrContradictoryEvidence(t *testing.T) {
 func TestInventoryNoDataAndValidation(t *testing.T) {
 	s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {}))
 	defer s.Close()
-	r, e := (Source{Endpoint: s.URL}).Inventory(context.Background(), InventoryQuestion{"prod", 1000, 100000})
+	r, e := (Source{Endpoint: s.URL}).Inventory(context.Background(), InventoryQuestion{Environment: "prod", FromMS: 1000, ToMS: 100000})
 	if e != nil || r.State != "no_data" || r.Count != "0" || len(r.Rows) != 0 {
 		t.Fatal(r, e)
 	}
-	if _, e := CompileInventory(InventoryQuestion{"", 1000, 100000}); e == nil {
+	if _, e := CompileInventory(InventoryQuestion{Environment: "", FromMS: 1000, ToMS: 100000}); e == nil {
 		t.Fatal("missing environment")
 	}
 }

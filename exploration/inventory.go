@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/identity"
 	"math/big"
 	"strconv"
 	"time"
@@ -14,13 +15,34 @@ import (
 // InventoryQuestion discovers observed span names; it does not declare fleet
 // membership, request identity, or application-owned operation contracts.
 type InventoryQuestion struct {
-	Environment string `json:"environment"`
-	FromMS      int64  `json:"fromMs"`
-	ToMS        int64  `json:"toMs"`
+	Namespace   *identity.Namespace `json:"namespace,omitempty"`
+	Environment string              `json:"environment"`
+	FromMS      int64               `json:"fromMs"`
+	ToMS        int64               `json:"toMs"`
 }
 
+func (q InventoryQuestion) Validate() error {
+	if e := q.Namespace.Validate(); e != nil {
+		return e
+	}
+	return q.Query().Validate()
+}
+func NamespacePredicate(n *identity.Namespace) *Predicate {
+	if n == nil {
+		return nil
+	}
+	p := &Predicate{Field: &Field{Kind: "resource", Key: identity.NamespaceKey}, Op: "eq", Value: n.Value}
+	if n.Mode == "missing" {
+		p.Op = "missing"
+	}
+	return p
+}
 func (q InventoryQuestion) Query() Query {
-	return Query{Signal: "spans", Environment: q.Environment, FromMS: q.FromMS, ToMS: q.ToMS, Limit: 100}
+	v := Query{Signal: "spans", Environment: q.Environment, FromMS: q.FromMS, ToMS: q.ToMS, Limit: 100}
+	if q.Namespace != nil {
+		v.Where = NamespacePredicate(q.Namespace)
+	}
+	return v
 }
 
 type InventoryRow struct {
@@ -43,7 +65,7 @@ type InventoryResult struct {
 }
 
 func CompileInventory(q InventoryQuestion) (Plan, error) {
-	if e := q.Query().Validate(); e != nil {
+	if e := q.Validate(); e != nil {
 		return Plan{}, e
 	}
 	c := compiler{signal: "spans", params: map[string]string{"from": strconv.FormatInt(q.FromMS, 10), "to": strconv.FormatInt(q.ToMS, 10), "environment": q.Environment}}

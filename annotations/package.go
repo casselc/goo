@@ -5,10 +5,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/identity"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
+	"reflect"
 	"sort"
 	"time"
 
@@ -26,9 +28,10 @@ type OperationPackage struct {
 	SourceDirectory string              `yaml:"sourceDirectory" json:"sourceDirectory"`
 	Adapter         string              `yaml:"adapter" json:"adapter"`
 	Resource        struct {
-		Service     string `yaml:"service" json:"service"`
-		Environment string `yaml:"environment" json:"environment"`
-		Instance    string `yaml:"instance" json:"instance"`
+		Service     string              `yaml:"service" json:"service"`
+		Namespace   *identity.Namespace `json:"namespace,omitempty" yaml:"namespace,omitempty"`
+		Environment string              `yaml:"environment" json:"environment"`
+		Instance    string              `yaml:"instance" json:"instance"`
 	} `yaml:"resource" json:"resource"`
 	Instrumentation struct {
 		Name      string `yaml:"name" json:"name"`
@@ -123,6 +126,10 @@ func LoadOperationPackage(path string) (*OperationPlan, error) {
 	return p.Bind(m)
 }
 func (p OperationPackage) Bind(m *Manifest) (*OperationPlan, error) {
+	if err := p.Resource.Namespace.Validate(); err != nil {
+		return nil, err
+	}
+	p.Resource.Namespace = p.Resource.Namespace.Clone()
 	p.Operations = append([]OperationContract(nil), p.Operations...)
 	p.Views = append([]string(nil), p.Views...)
 	p.Rates = append([]RateContract(nil), p.Rates...)
@@ -154,7 +161,7 @@ func (p OperationPackage) Bind(m *Manifest) (*OperationPlan, error) {
 	if p.Evidence.Sampling != "unverified" || p.Evidence.Completeness != "unverified" || p.Evidence.Schema != "declared" {
 		return nil, fmt.Errorf("only unverified sampling/completeness and declared schema are supported")
 	}
-	source := OperationSource{Service: p.Resource.Service, Environment: p.Resource.Environment, Instance: p.Resource.Instance, DeclaredSchema: p.Instrumentation.SchemaURL}
+	source := OperationSource{Namespace: p.Resource.Namespace.Clone(), Service: p.Resource.Service, Environment: p.Resource.Environment, Instance: p.Resource.Instance, DeclaredSchema: p.Instrumentation.SchemaURL}
 	if _, _, err := m.OperationQuery(source, 0, 1); err != nil {
 		return nil, err
 	}
@@ -364,7 +371,7 @@ func (p *OperationPlan) Fetch(ctx context.Context, client *http.Client, endpoint
 	if err != nil {
 		return nil, err
 	}
-	if fresh.Revision != p.Revision || fresh.Source != p.Source {
+	if fresh.Revision != p.Revision || !reflect.DeepEqual(fresh.Source, p.Source) {
 		return nil, fmt.Errorf("operation plan changed after binding")
 	}
 	result, err := FetchOperations(ctx, client, endpoint, user, password, *p.Manifest, p.Source, from, to)

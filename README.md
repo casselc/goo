@@ -391,3 +391,8 @@ contracts retain declared revision IDs. Services also offers a local distributed
 view of resolved parent relationships and diagnostics, with fixed-scope handoffs
 into questions and immutable investigation evidence. Async/declaration topology,
 whole-dashboard snapshots and declared-only catalog entries remain future work.
+
+Service discovery now separates same-named services by OTel namespace, including
+missing and present-empty values. Dashboard cards can explore spans matching
+registered operation bindings. See [service identity](docs/SERVICE_IDENTITY.md)
+and [journey 60](docs/journeys/README.md#60-namespace-service-identity).

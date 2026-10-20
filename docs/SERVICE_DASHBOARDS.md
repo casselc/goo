@@ -10,7 +10,7 @@ views does not query telemetry or tick the time window.
 
 `POST /dashboards/plan` is a pure Go planning operation. Supplied observed signals,
 attribute keys and native instrument descriptors produce a versioned
-`goo/service-dashboard/v1` plan of typed record/measurement questions. It does not
+`goo/service-dashboard/v2` plan of typed record/measurement questions. It does not
 contact a telemetry backend, manufacture SQL in the browser or define health.
 Metadata is a hint to execute supported questions, not authenticated provenance.
 The operation-package registry supplies matching declarations; callers cannot
@@ -41,6 +41,9 @@ Defaults are bounded:
   widget; stale/unknown latest observations never fall back to an earlier healthy
   value. These are not whole-window or fleet aggregates. Other instruments remain
   available in Native instruments; there is no fleet-value or percentile merge.
+
+- Up to two registered operation bindings produce ordinary operation-span cards,
+  retaining declared-versus-observed and schema-verification limitations.
 
 Time buckets keep at most 60 intervals. Group tables show up to 12 of the
 complete captured groups; summaries use full aggregate populations, never the
@@ -94,9 +97,10 @@ flowchart LR
  I --> S[Immutable revision / source-free shared reopening]
 ```
 
-The catalog currently keys services by environment and exporter service name;
-namespace/instance disambiguation of record-service identity remains future work.
-Native kernels retain their full stream identities independently. There is no
+The catalog keys services by environment, exporter service name and the presence/value
+of `service.namespace`. [Namespace identity and declared-operation questions](SERVICE_IDENTITY.md)
+describes selector propagation and registered-binding dashboard cards. Service
+instance remains an instrument stream identity rather than a separate catalog node. There is no
 background polling, automatic SLO creation, deployment-health status, topology
 layout graph or whole-dashboard custody artifact. See the
 [whole-product review](WHOLE_PRODUCT_REVIEW.md) for the remaining design roadmap.

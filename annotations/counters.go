@@ -9,6 +9,7 @@ import (
 	"math"
 	"net/http"
 	"net/url"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -69,7 +70,7 @@ func (p *OperationPlan) EvaluateRateRows(contract RateContract, from, to int64, 
 		ops[op.Name+"/"+op.Role] = true
 	}
 	for _, row := range rows {
-		if row.Resource["service.name"] != p.Source.Service || row.Resource["deployment.environment.name"] != p.Source.Environment || row.Resource["service.instance.id"] != p.Source.Instance || row.Scope != p.Manifest.Scope || row.Version != p.Manifest.ScopeVersion || row.SchemaURL != p.Manifest.SchemaURL || row.Name != contract.Metric || row.Unit != contract.Unit {
+		if !p.Source.Namespace.Matches(row.Resource) || row.Resource["service.name"] != p.Source.Service || row.Resource["deployment.environment.name"] != p.Source.Environment || row.Resource["service.instance.id"] != p.Source.Instance || row.Scope != p.Manifest.Scope || row.Version != p.Manifest.ScopeVersion || row.SchemaURL != p.Manifest.SchemaURL || row.Name != contract.Metric || row.Unit != contract.Unit {
 			return nil, fmt.Errorf("counter resource/instrumentation/unit binding mismatch")
 		}
 		if len(row.Attributes) != 3 || !ops[row.Attributes["goo.operation.name"]+"/"+row.Attributes["goo.operation.role"]] {
@@ -113,7 +114,7 @@ func (p *OperationPlan) EvaluateRateRows(contract RateContract, from, to int64, 
 }
 func (p *OperationPlan) fetchInstanceRates(ctx context.Context, client *http.Client, endpoint, user, password string, from, to int64) (*LiveRates, error) {
 	fresh, err := p.Definition.Bind(p.Manifest)
-	if err != nil || fresh.Revision != p.Revision || fresh.Source != p.Source {
+	if err != nil || fresh.Revision != p.Revision || !reflect.DeepEqual(fresh.Source, p.Source) {
 		return nil, fmt.Errorf("invalid operation plan")
 	}
 	_, params, err := p.Manifest.OperationQuery(p.Source, from, to)
@@ -126,6 +127,7 @@ func (p *OperationPlan) fetchInstanceRates(ctx context.Context, client *http.Cli
 		params["baseline"] = strconv.FormatInt(from-int64(gap/time.Millisecond), 10)
 		params["metric"] = contract.Metric
 		sql := `SELECT mapUpdate(ResourceAttributes,map('service.name',toString(ServiceName))) AS resource, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schema_url, MetricName AS name, MetricUnit AS unit, Attributes AS attributes, toString(toUnixTimestamp64Nano(StartTimeUnix)) AS start_ns, toString(toUnixTimestamp64Nano(TimeUnix)) AS end_ns, toString(Value) AS value, Flags AS flags, AggregationTemporality AS temporality, IsMonotonic AS monotonic FROM otel_metrics_sum WHERE TimeUnix >= fromUnixTimestamp64Milli({baseline:Int64}) AND TimeUnix <= fromUnixTimestamp64Milli({to:Int64}) AND ServiceName={service:String} AND ResourceAttributes['deployment.environment.name']={environment:String} AND ResourceAttributes['service.instance.id']={instance:String} AND ScopeName={scope:String} AND ScopeVersion={version:String} AND MetricName={metric:String} ORDER BY TimeUnix LIMIT 3001 FORMAT JSONEachRow`
+		sql = bindOperationNamespace(sql, p.Source.Namespace, params)
 		address, e := url.Parse(endpoint)
 		if e != nil {
 			return nil, e

@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/identity"
 	"github.com/casselc/goo/lifecycle"
 	"github.com/casselc/goo/metrics"
 	"gopkg.in/yaml.v3"
@@ -23,13 +24,14 @@ const RowLimit = 10000
 var stable = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_.-]{0,127}$`)
 
 type Binding struct {
-	Services   []string          `json:"services" yaml:"services"`
-	Scope      string            `json:"scope" yaml:"scope"`
-	Version    string            `json:"version" yaml:"version"`
-	SchemaURL  string            `json:"schemaURL" yaml:"schemaURL"`
-	Metric     string            `json:"metric,omitempty" yaml:"metric,omitempty"`
-	Unit       string            `json:"unit,omitempty" yaml:"unit,omitempty"`
-	Attributes map[string]string `json:"attributes,omitempty" yaml:"attributes,omitempty"`
+	Namespace  *identity.Namespace `json:"namespace,omitempty" yaml:"namespace,omitempty"`
+	Services   []string            `json:"services" yaml:"services"`
+	Scope      string              `json:"scope" yaml:"scope"`
+	Version    string              `json:"version" yaml:"version"`
+	SchemaURL  string              `json:"schemaURL" yaml:"schemaURL"`
+	Metric     string              `json:"metric,omitempty" yaml:"metric,omitempty"`
+	Unit       string              `json:"unit,omitempty" yaml:"unit,omitempty"`
+	Attributes map[string]string   `json:"attributes,omitempty" yaml:"attributes,omitempty"`
 }
 type LifecycleBinding struct {
 	LogicalService string   `json:"logicalService" yaml:"logicalService"`
@@ -96,6 +98,9 @@ func text(s string, max int) bool {
 	return len(s) <= max && utf8.ValidString(s) && !strings.ContainsRune(s, 0)
 }
 func (d Definition) Validate() error {
+	if err := d.Source.Namespace.Validate(); err != nil {
+		return err
+	}
 	if d.APIVersion != Version || !stable.MatchString(d.Name) || d.Title == "" || !text(d.Title, 160) || d.Environment == "" || !text(d.Environment, 128) || d.LookbackMinutes < 1 || d.LookbackMinutes > 120 || d.MaxGapMS < 1 || d.MaxGapMS > 600000 {
 		return fmt.Errorf("require versioned named package, explicit environment, 1..120 minute lookback and 1..600000 ms gap/freshness")
 	}

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/identity"
 	"io"
 	"net/http"
 	"net/url"
@@ -13,11 +14,12 @@ import (
 
 // OperationSource is an explicit physical binding, not an automatically inferred schema.
 type OperationSource struct {
-	SubjectNamespace string `json:"subjectNamespace,omitempty"`
-	Service          string `json:"service"`
-	Environment      string `json:"environment"`
-	Instance         string `json:"instance"`
-	DeclaredSchema   string `json:"declaredSchema"`
+	Namespace        *identity.Namespace `json:"namespace,omitempty"`
+	SubjectNamespace string              `json:"subjectNamespace,omitempty"`
+	Service          string              `json:"service"`
+	Environment      string              `json:"environment"`
+	Instance         string              `json:"instance"`
+	DeclaredSchema   string              `json:"declaredSchema"`
 }
 type OperationRow struct {
 	EventTimes      []string            `json:"event_times"`
@@ -63,6 +65,9 @@ type LiveOperations struct {
 }
 
 func (m Manifest) OperationQuery(s OperationSource, from, to int64) (string, map[string]string, error) {
+	if err := s.Namespace.Validate(); err != nil {
+		return "", nil, err
+	}
 	if from < 0 || to <= from || to-from > 120*60000 || to > 4102444800000 {
 		return "", nil, fmt.Errorf("require a half-open window of at most 120 minutes before 2100")
 	}
@@ -71,6 +76,7 @@ func (m Manifest) OperationQuery(s OperationSource, from, to int64) (string, map
 	}
 	p := map[string]string{"from": strconv.FormatInt(from, 10), "to": strconv.FormatInt(to, 10), "service": s.Service, "environment": s.Environment, "instance": s.Instance, "scope": m.Scope, "version": m.ScopeVersion}
 	q := `SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, toString(Duration) AS duration_ns, TraceId AS trace_id, SpanId AS span_id, ParentSpanId AS parent_span_id, SpanKind AS kind, ScopeName AS scope, ScopeVersion AS version, mapUpdate(ResourceAttributes, map('service.name', toString(ServiceName))) AS resource, SpanAttributes AS attributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times, Events.Name AS event_names, Events.Attributes AS event_attributes FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND ServiceName = {service:String} AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ResourceAttributes['service.instance.id'] = {instance:String} AND ScopeName = {scope:String} AND ScopeVersion = {version:String} ORDER BY Timestamp, TraceId, SpanId LIMIT 1001 FORMAT JSONEachRow`
+	q = bindOperationNamespace(q, s.Namespace, p)
 	return q, p, nil
 }
 func (m Manifest) ObserveRows(s OperationSource, from, to int64, rows []OperationRow) (Conformance, int, error) {
@@ -95,7 +101,7 @@ func (m Manifest) ObserveRows(s OperationSource, from, to int64, rows []Operatio
 		if err != nil {
 			return Conformance{}, 0, fmt.Errorf("invalid span duration")
 		}
-		if r.Resource["service.name"] != s.Service || r.Resource["deployment.environment.name"] != s.Environment || r.Resource["service.instance.id"] != s.Instance {
+		if !s.Namespace.Matches(r.Resource) || r.Resource["service.name"] != s.Service || r.Resource["deployment.environment.name"] != s.Environment || r.Resource["service.instance.id"] != s.Instance {
 			return Conformance{}, 0, fmt.Errorf("source crossed resource binding")
 		}
 		role := r.Attributes["goo.operation.role"]
@@ -201,4 +207,16 @@ func FetchOperations(ctx context.Context, client *http.Client, endpoint, user, p
 		spans = append(spans, OperationSpan{Events: events, TraceID: row.TraceID, SpanID: row.SpanID, ParentSpanID: row.ParentSpanID, StartNS: row.TimestampNS, DurationNS: row.DurationNS, Operation: row.Attributes["goo.operation.name"], Role: row.Attributes["goo.operation.role"], Outcome: row.Attributes["goo.operation.outcome"], Attributes: row.Attributes})
 	}
 	return &LiveOperations{Spans: spans, Conformance: report, Source: s, FromMS: from, ToMS: to, Query: sql, Parameters: params, DuplicateRecords: duplicates}, nil
+}
+
+func bindOperationNamespace(sql string, n *identity.Namespace, params map[string]string) string {
+	if n == nil {
+		return sql
+	}
+	condition := " AND NOT mapContains(ResourceAttributes,'service.namespace')"
+	if n.Mode == "value" {
+		params["namespace"] = n.Value
+		condition = " AND mapContains(ResourceAttributes,'service.namespace') AND ResourceAttributes['service.namespace']={namespace:String}"
+	}
+	return strings.Replace(sql, " ORDER BY", condition+" ORDER BY", 1)
 }

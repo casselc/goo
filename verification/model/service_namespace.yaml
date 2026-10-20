@@ -1,0 +1,8 @@
+spec: service_namespace.qnt
+module: service_namespace
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  discover: {expect: 'coherent == {{.obs.coherent}}'}
+  open: {expect: 'coherent == {{.obs.coherent}}'}
+  contract: {expect: 'coherent == {{.obs.coherent}}'}

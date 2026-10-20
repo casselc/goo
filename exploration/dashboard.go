@@ -3,13 +3,14 @@ package exploration
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/identity"
 	"github.com/casselc/goo/measurements"
 	"sort"
 	"strings"
 	"unicode/utf8"
 )
 
-const DashboardVersion = "goo/service-dashboard/v1"
+const DashboardVersion = "goo/service-dashboard/v2"
 const DashboardNativeLimit = 2
 
 // Inputs are supplied observations, not authenticated source evidence or health.
@@ -21,12 +22,23 @@ type DashboardRequest struct {
 	Instruments []measurements.Instrument `json:"instruments"`
 }
 type DashboardDeclaration struct {
-	Name             string `json:"name"`
-	Title            string `json:"title"`
-	Revision         string `json:"revision"`
-	ManifestRevision string `json:"manifestRevision"`
-	Service          string `json:"service"`
-	Environment      string `json:"environment"`
+	Namespace        *identity.Namespace  `json:"namespace,omitempty"`
+	Instance         string               `json:"instance,omitempty"`
+	Scope            string               `json:"scope,omitempty"`
+	Version          string               `json:"version,omitempty"`
+	SchemaURL        string               `json:"schemaURL,omitempty"`
+	Operations       []DashboardOperation `json:"operations,omitempty"`
+	Match            string               `json:"match,omitempty"`
+	Name             string               `json:"name"`
+	Title            string               `json:"title"`
+	Revision         string               `json:"revision"`
+	ManifestRevision string               `json:"manifestRevision"`
+	Service          string               `json:"service"`
+	Environment      string               `json:"environment"`
+}
+type DashboardOperation struct {
+	Name string `json:"name"`
+	Role string `json:"role"`
 }
 type DashboardWidget struct {
 	Key         string                 `json:"key"`
@@ -47,13 +59,17 @@ type DashboardPlan struct {
 }
 
 func DashboardRecordQuestion(scope InventoryQuestion, service, signal string) Query {
-	return Query{Signal: signal, Environment: scope.Environment, FromMS: scope.FromMS, ToMS: scope.ToMS, Limit: 100, Where: &Predicate{Field: &Field{Kind: "column", Key: "service"}, Op: "eq", Value: service}}
+	q := Query{Signal: signal, Environment: scope.Environment, FromMS: scope.FromMS, ToMS: scope.ToMS, Limit: 100, Where: &Predicate{Field: &Field{Kind: "column", Key: "service"}, Op: "eq", Value: service}}
+	if scope.Namespace != nil {
+		q.Where = &Predicate{All: []Predicate{*q.Where, *NamespacePredicate(scope.Namespace)}}
+	}
+	return q
 }
 
 // PlanServiceDashboard performs no source reads. Every executable widget uses an
 // existing typed evaluator; no SQL, health policy or fleet aggregation is inferred.
 func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclaration) (*DashboardPlan, error) {
-	if err := in.Scope.Query().Validate(); err != nil {
+	if err := in.Scope.Validate(); err != nil {
 		return nil, err
 	}
 	if !utf8.ValidString(in.Service) || len(in.Service) > 128 || strings.ContainsRune(in.Service, 0) {
@@ -74,7 +90,9 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			return nil, err
 		}
 	}
-	p := &DashboardPlan{Version: DashboardVersion, Scope: in.Scope, Service: in.Service, Widgets: []DashboardWidget{}, Declarations: []DashboardDeclaration{}, Warnings: []string{"Metadata suggests widgets, not service health or telemetry completeness. Each widget is a separate bounded source read; no transactional snapshot is claimed.", "Counts are captured records, not request throughput. Generic spans include retries and mixed span kinds; unset status is not verified success.", "Native evaluations preserve full OTel identity, units and temporality. At most two supported instruments are loaded automatically; other instruments remain discoverable."}}
+	scope := in.Scope
+	scope.Namespace = in.Scope.Namespace.Clone()
+	p := &DashboardPlan{Version: DashboardVersion, Scope: scope, Service: in.Service, Widgets: []DashboardWidget{}, Declarations: []DashboardDeclaration{}, Warnings: []string{"Metadata suggests widgets, not service health or telemetry completeness. Each widget is a separate bounded source read; no transactional snapshot is claimed.", "Counts are captured records, not request throughput. Generic spans include retries and mixed span kinds; unset status is not verified success.", "Native evaluations preserve full OTel identity, units and temporality. At most two supported instruments are loaded automatically; other instruments remain discoverable."}}
 	bucket := int64(1000)
 	for _, b := range []int64{1000, 10000, 60000, 300000} {
 		bucket = b
@@ -142,7 +160,7 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		}
 		d := *instrument.Definition
 		q := measurements.Question{Definition: d, FromMS: in.Scope.FromMS, ToMS: in.Scope.ToMS}
-		if d.Environment != in.Scope.Environment || len(d.Source.Services) != 1 || d.Source.Services[0] != in.Service || d.Kind != instrument.Kind || d.Source.Metric != instrument.Metric || d.Source.Unit != instrument.Unit || d.Source.Scope != instrument.Scope || d.Source.Version != instrument.Version || d.Source.SchemaURL != instrument.SchemaURL || q.Validate() != nil {
+		if !d.Source.Namespace.Equal(in.Scope.Namespace) || d.Environment != in.Scope.Environment || len(d.Source.Services) != 1 || d.Source.Services[0] != in.Service || d.Kind != instrument.Kind || d.Source.Metric != instrument.Metric || d.Source.Unit != instrument.Unit || d.Source.Scope != instrument.Scope || d.Source.Version != instrument.Version || d.Source.SchemaURL != instrument.SchemaURL || q.Validate() != nil {
 			return nil, fmt.Errorf("instrument definition does not match dashboard scope and identity")
 		}
 		encoded, _ := json.Marshal(d)
@@ -159,10 +177,55 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 	}
 	for _, d := range declarations {
 		if d.Environment == in.Scope.Environment && d.Service == in.Service {
+			d.Namespace = d.Namespace.Clone()
+			d.Operations = append([]DashboardOperation(nil), d.Operations...)
+			d.Match = "exact"
+			if d.Namespace == nil && in.Scope.Namespace != nil {
+				d.Match = "namespace-unspecified"
+			} else if !d.Namespace.Equal(in.Scope.Namespace) {
+				d.Match = "namespace-mismatch"
+			}
 			p.Declarations = append(p.Declarations, d)
 		}
 	}
 	sort.Slice(p.Declarations, func(i, j int) bool { return p.Declarations[i].Revision < p.Declarations[j].Revision })
+	for i, d := range p.Declarations {
+		if i >= 2 {
+			break
+		}
+		w := DashboardWidget{Key: fmt.Sprintf("contract-%d", i+1), Title: d.Title + " · declared operation spans", Grain: "span-record", State: "unsupported", Reason: "Requires a complete bounded instrumentation binding and at most six declared operations"}
+		if d.Match == "namespace-mismatch" {
+			w.Reason = "Declared namespace differs; no contract question generated"
+		} else if !signals["spans"] {
+			w.State = "not_observed"
+			w.Reason = "No spans observed in supplied inventory; declaration is not runtime evidence"
+		} else if d.Scope != "" && d.Instance != "" && len(d.Operations) > 0 && len(d.Operations) <= 6 {
+			q := DashboardRecordQuestion(in.Scope, in.Service, "spans")
+			all := []Predicate{*q.Where}
+			if q.Where.All != nil {
+				all = q.Where.All
+			}
+			for _, f := range []struct{ kind, key, value string }{{"resource", "service.instance.id", d.Instance}, {"column", "scope", d.Scope}, {"column", "scope_version", d.Version}} {
+				all = append(all, Predicate{Field: &Field{Kind: f.kind, Key: f.key}, Op: "eq", Value: f.value})
+			}
+			ops := []Predicate{}
+			for _, op := range d.Operations {
+				ops = append(ops, Predicate{All: []Predicate{{Field: &Field{Kind: "attribute", Key: "goo.operation.name"}, Op: "eq", Value: op.Name}, {Field: &Field{Kind: "attribute", Key: "goo.operation.role"}, Op: "eq", Value: op.Role}}})
+			}
+			all = append(all, Predicate{Any: ops})
+			q.Where = &Predicate{All: all}
+			q.GroupBy = []Field{{Kind: "attribute", Key: "goo.operation.name"}}
+			q.Summary = "span-duration"
+			q.SpanStatus = true
+			w.State = "supported"
+			w.Reason = "Captured spans matching declared operation names/roles and source binding; not a business-outcome or conformance evaluation. Schema URL is declared metadata; this exporter does not store it for verification"
+			if d.Match == "namespace-unspecified" {
+				w.Reason += ". Question explicitly narrows a namespace-unspecified declaration"
+			}
+			w.Query = &q
+		}
+		p.Widgets = append(p.Widgets, w)
+	}
 	for _, w := range p.Widgets {
 		if w.Query != nil {
 			if err := w.Query.Validate(); err != nil {
