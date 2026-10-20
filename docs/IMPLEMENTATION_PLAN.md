@@ -552,5 +552,15 @@ the displayed server snapshot without rereading telemetry. Shared passive chart
 frame supports SSR/native content and SPA metadata updates. Journey69 covers
 actual OTel data, explicit rescale, stale retention, exact snapshot freeze and
 old-generation disposal; standalone journey70 covers the component contract.
-Live duration/status/native-metric charts and SSE measure refresh remain planned.
+The next slice below adds live span duration/status; native live metric charts
+and SSE measure refresh remain planned.
 See LIVE_COMPARISON.md and VALIDATION.md for scope and execution evidence.
+
+### Live span regression measures (implemented 2026-10-20)
+
+Count, requested span latency and recorded error share now refresh/freeze as one
+window and evidence basis. Compact shared latency elements accept a supplied
+percentile domain; the app preserves it until explicit rescale. Error share has
+a fixed 0–100% axis with status coverage disclosure. Journey 71, the live actor,
+Hegel properties and observed Quint replay cover the path. Native live metric
+comparisons and SSE measure refresh remain future work.

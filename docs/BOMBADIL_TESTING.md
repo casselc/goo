@@ -462,3 +462,11 @@ for baseline/capture identity and common axis. Its eventual freeze requirement
 makes the 30-second journey69 actor campaign positive interaction coverage.
 The curated journey separately tests explicit rescale, unavailable source,
 unchanged baseline and a displayed snapshot frozen after source population grows.
+
+The live comparison actor also checks per-figure common scales (counts and error
+share have different units), exact percentile positions within each supplied
+nanosecond domain, agreement between both latency domains, and a valid snapshot
+basis. Journey71 supplies real duration/status data; its required action trace
+includes preview, baseline selection, start, freeze and linking to the draft.
+The curated journey additionally asserts overflow withholding/rescale, stale
+summary equality, complete source-free freeze, and mobile track bounds.

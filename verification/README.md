@@ -505,3 +505,12 @@ rejecting controls. Run the actual preview/selection/start/freeze/link actor wit
 ```sh
 GOO_LIVE_COMPARISON_BOMBADIL=1 bash scripts/run_journeys.sh journeys/live-comparison.spec.js
 ```
+
+Live span summaries extend the same observed state model: journey71 records
+count, latency, recorded status, shared domains and source basis. Set
+`GOO_LIVE_SPAN_MEASURES_LEDGER` and run `go test -run TestQuintLiveSpanMeasuresLedger`
+to replay with ten rejecting mutations. `TestHegelLiveSpanMeasurePopulationAndReversal`
+generates populations larger than the inspection bank, preserves Unknown status,
+and checks immutability and reversal of descriptive changes. The source Go test
+proves the three measures share one aggregate statement and survive a source-free
+freeze. Run the actor with `GOO_LIVE_COMPARISON_BOMBADIL=1` and journey71.

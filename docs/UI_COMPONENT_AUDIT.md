@@ -1,7 +1,7 @@
 # Whole-app display component audit
 
-Current follow-up: passive chart frame and rolling **record-count** baseline
-comparison are implemented; see [the live comparison contract](LIVE_COMPARISON.md).
+Current follow-up: passive chart frame and rolling **record measures** baseline
+comparison are implemented, including requested span latency and recorded status; see [the live comparison contract](LIVE_COMPARISON.md).
 Native live metrics and broader chart adoption remain planned.
 
 Reviewed 2026-10-20. This is a source/design audit, not an implementation claim

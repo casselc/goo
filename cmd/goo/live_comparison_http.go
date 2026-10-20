@@ -128,6 +128,6 @@ func registerLiveComparison(mux *http.ServeMux, client *http.Client, store explo
 		}
 		delete(drafts, in.Replace)
 		drafts[key] = &draft{snapshot: snapshot, expires: expiry, size: len(raw)}
-		reply(w, 200, map[string]any{"token": key, "expiresAt": expiry.UTC().Format(time.RFC3339Nano), "comparison": comparison})
+		reply(w, 200, map[string]any{"token": key, "expiresAt": expiry.UTC().Format(time.RFC3339Nano), "comparison": comparison, "basis": snapshot.Explore.Basis, "baselineBasis": baseline.Explore.Basis})
 	})
 }

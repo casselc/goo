@@ -5,6 +5,63 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Live span latency and recorded error share (2026-10-20 UTC)
+
+Saved span questions requesting duration/status now compare count, compact
+mean/p50/p95/p99 and recorded Error/total share under one rolling window and
+current evidence basis. The existing count aggregate already returns these
+measures in one SQL statement. Current refresh responses expose current/baseline
+basis metadata without changing historical comparison receipt formats. Freeze
+preserves the complete original result without another source read.
+
+- Root Go suite/vet passed; exploration/HTTP checks passed under the race
+  detector. A new source check retains full measures over 1,200 records while
+  keeping only 1,000 inspection rows, verifies one combined aggregate per read,
+  and freezes/reopens summaries after the source is closed.
+- The frontend suite passed 66 tests. Shared latency elements accept optional
+  server `ceiling-ns` or detached `.ceilingNs` properties. Exact geometry retains
+  nanosecond integers; invalid/undersized domains withhold markers. Existing
+  automatic scales remain the default for other callers.
+- Hegel passed 100 generated large-population comparisons, immutable summaries,
+  Unknown status preservation and descriptive-change reversal checks.
+- The main campaign passed five browser checks (3.5 minutes): both chart-frame
+  contracts, existing record/native fresh comparisons, count-only live comparison
+  and real OTel live span regression. Both live actors executed required
+  preview/choose/start/freeze/link actions. The span actor additionally checks
+  per-measure common domains, exact percentile positions and snapshot basis.
+- The span journey observed baseline 1 ms/1 recorded error out of 2, current
+  10 ms/1 out of 4, then 100 ms p95/p99 and 4 errors out of 7. Count and latency
+  required explicit rescale; recorded error share retained its 0–100% axis.
+  Failed refresh preserved all displayed summaries, basis and bounds. After an
+  eighth 1,000 ms error arrived, freeze still retained the displayed 7 spans,
+  340 ms duration sum and 4 errors. Quint accepted the observed ledger and
+  rejected all ten corruptions. The count-only ledger retained six controls.
+- A separate real-source check passed empty-current-window capture/freeze:
+  no percentile or error-share geometry, no zero-latency/zero-error claim, and
+  unavailable comparison state retained after freeze. The supplied-domain HTML
+  and pre-upgrade SPA checks also passed. Eight distinct browser tests passed
+  across the completed campaigns; source-backed 71 and affected 57/63/69 frames
+  were regenerated and desktop/mobile 71 frames inspected.
+- The first supplemental wrapper attempt stopped before Playwright: Docker
+  briefly reported the owned traffic generator as a zombie. It subsequently
+  exited and was restarted; the retry drained without deleting data and restored
+  traffic. One added standalone assertion incorrectly assumed the unit fixture's
+  p50 rather than the gallery's 40 ms p50; the corrected assertion passed. These
+  unsuccessful attempts are not counted as passing checks.
+
+Final runtime check matched image and served source/binary bytes, all 12 services
+running, health OK and historical pending IDs retained. The traffic process was
+also checked alive (not zombie). Evidence: `artifacts/live-span-journeys.log`,
+`live-span-component-empty-retry.log`, `live-span-components-final.log`,
+`live-span-hegel.log`, `live-span-final-health.json`, and
+`artifacts/live-span-measures/0cb74c185d/` including its actual ledger/actor trace.
+
+Count-only captures retain their definition; native metric comparisons remain
+fixed-window. Measure refresh is bounded polling, not SSE. Status coverage and
+sampling/completeness remain explicit unknowns. See [the contract](docs/LIVE_COMPARISON.md),
+[the component domain API](docs/UI_COMPONENTS.md#supplied-percentile-domain), and
+[journey 71](docs/journeys/README.md#71-a-service-regression-across-count-latency-and-recorded-error-share).
+
 ## Rolling record baseline and passive chart frame (2026-10-20 UTC)
 
 Saved span/log questions now support explicit rolling full-population count

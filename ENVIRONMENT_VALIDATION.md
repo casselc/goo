@@ -945,3 +945,27 @@ trace). No data volumes or stream entries were reset.
 Live scope is record count over equal-duration windows up to two hours, using
 bounded polling and expiring process-local snapshots until frozen. Native live
 metric comparisons and SSE measure refresh remain future work.
+
+## 2026-10-20 — live span regression measures
+
+Count, requested span latency and recorded status now refresh and freeze together.
+The main five-test campaign passed (3.5 minutes), including real OTLP ingestion,
+shared fixed percentile scales, fixed error-share percentage domain, stale result
+retention, full snapshot freeze/linking, required Bombadil interactions and
+Quint replay with ten rejecting span-measure mutations. A supplemental real-source
+empty-window check and two supplied-domain component checks also passed after
+correction of one gallery-fixture expectation (eight distinct browser checks).
+Go suite/vet/race checks, 66 frontend tests and 100 new Hegel cases passed.
+
+A supplemental wrapper attempt encountered a transient zombie traffic container
+before browser execution. The owned generator exited, was restarted, and the
+retry preserved stream entries and restored traffic. Final process inspection
+confirmed the generator alive. No stream entries or volumes were reset.
+
+Final query/packages image:
+`sha256:889cbdc2da8fa7e652f233f90e1bb3b17bff76a569120bf35d63db0bfa01222b`.
+`artifacts/live-span-final-health.json` records all 12 services running, HTTP health,
+source/binary hashes and preserved historical pending IDs. The actual span ledger,
+Quint log and 30-second actor trace are in
+`artifacts/live-span-measures/0cb74c185d/`; validation commands/results are detailed
+in VALIDATION.md. Frames 71a–f and affected 57/63/69 frames were regenerated.

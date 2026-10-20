@@ -146,3 +146,11 @@ compatibility kernel → passive shared chart frame/paired bars. Freeze publishe
 an expiring server-owned snapshot through the capture store without a source
 read. The local tail buffer never enters this measurement path. `goo-chart-frame`
 updates metadata without replacing caller-owned plots, native controls or focus.
+
+The live span adapter now renders count, duration and status from one aggregate
+result. Its single response supplies the current basis/read/window and all
+summaries; synchronous rendering replaces those measures together. Paired
+`goo-latency` elements accept the same app-supplied `ceiling-ns` while recorded
+error share uses a fixed percentage axis. Freeze retains the original aggregate
+and basis. The [sequence diagram](LIVE_COMPARISON.md) and journey 71 include this
+path; inspection rows/field discovery are still separate source reads.

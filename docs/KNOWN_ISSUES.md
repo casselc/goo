@@ -362,16 +362,17 @@ Native histogram P95 remains a bucket range; this is not a new scalar percentile
 or a P90 evaluator. Light-DOM app styles must stay scoped to their owning view.
 
 A bounded log SSE tail is now implemented; see [limits](LIVE_LOG_TAIL.md).
-Durable replay/ingestion cursors, trace tails and baseline-versus-live measures
+Durable replay/ingestion cursors, trace tails and live native metric comparisons
 remain planned. Summary property updates currently rerender inner
 DOM and reset disclosures; log-tail row patches, bounded retention and explicit gaps now live in the app
 adapter. Snapshot value components still reset disclosure state on data updates.
 
 ## Rolling comparison scope
 
-Live baseline comparison currently displays record counts for saved span/log
-questions with windows of at most two hours. Native metrics and duration/status
-charts keep their existing fixed comparison flow. Refresh uses bounded polling;
+Live baseline comparison displays record counts for saved span/log questions
+with windows of at most two hours, plus duration and recorded status when the
+saved span question requests them. Native metrics keep their fixed comparison
+flow. Count-only captures are not silently enriched or reread as a new definition. Refresh uses bounded polling;
 only log tail currently uses SSE. Live snapshots expire after two minutes and
 are process-local until explicitly frozen. Production authentication/session
 isolation and durable live workspaces remain future work. See LIVE_COMPARISON.md.

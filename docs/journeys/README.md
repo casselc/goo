@@ -1126,3 +1126,31 @@ coverage.
 
 ![Passive chart frame](screenshots/70a-passive-chart-frame.png)
 ![Mobile stale chart frame](screenshots/70b-mobile-stale-chart-frame.png)
+
+## 71. A service regression across count, latency and recorded error share
+
+`journeys/live-span-measures.spec.js` ingests real OTel spans and captures a
+question requesting duration and recorded status. Two baseline spans have 1 ms
+latency and one recorded error. Four current spans have 10 ms latency and one
+recorded error. The shared frame shows both compact percentile rails on the same
+fixed domain, plus Error/total fractions on a fixed 0–100% axis.
+
+Add three 100 ms errors: count grows to seven, p95/p99 grows to 100 ms, and Error
+share becomes 4/7 (57.14%). Explicitly rescale count and latency. A source failure
+retains all summaries, window and basis. After another 1,000 ms error arrives,
+freeze the displayed seven spans and their 340 ms duration sum/four errors into
+an investigation revision. Old source responses cannot populate a reopened panel.
+Quint rejects ten corrupted ledger observations; Bombadil checks exact percentile
+positions, per-measure domains and required start/freeze/link interactions.
+
+![One live window for count, latency and recorded error share](screenshots/71a-frozen-baseline-rolling-count.png)
+![Stale evidence retains all measures together](screenshots/71b-stale-read-stable-axis.png)
+![The complete displayed result is frozen](screenshots/71c-exact-displayed-evidence-frozen.png)
+![Frozen service regression evidence in the investigation](screenshots/71d-frozen-result-linked-to-investigation.png)
+![Mobile shared-domain comparison](screenshots/71e-mobile-live-comparison.png)
+
+A separate real-source check freezes an empty one-millisecond rolling window.
+No latency markers or error-share bars appear, and freezing keeps the result
+unavailable rather than inventing zero latency or zero percent errors.
+
+![Empty rolling window withholds numeric comparison](screenshots/71f-empty-live-window.png)

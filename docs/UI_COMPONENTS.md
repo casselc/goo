@@ -263,3 +263,15 @@ caller-owned native plots, legends, disclosures and actions. Attribute or
 freshness, refresh and evidence behavior; the frame performs no source reads.
 See [the API](UI_CHART_FRAME.md) and the `/ui-components` example. The standalone
 journey uses synthetic display data and explicitly verifies no telemetry reads.
+
+## Supplied percentile domain
+
+`goo-latency` now accepts optional `ceiling-ns="100000000"` in server HTML or
+`.ceilingNs = "100000000"` from an SPA, including before registration. The exact
+integer domain applies to percentile geometry; mean remains a separately labelled
+scalar. Both compared elements receive the same domain. Missing domain retains
+the original automatic behavior. Invalid domains or domains below a supplied
+quantile render unavailable, never clip or silently expand. Zero and exact large
+integers retain their existing semantics. Domain changes rerender the summary
+and reset its disclosure, just like snapshot changes. Components do not calculate
+comparison compatibility, fetch telemetry, rescale themselves or own subscriptions.
