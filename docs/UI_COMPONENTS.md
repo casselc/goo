@@ -170,3 +170,71 @@ be announced immediately. An adapter may independently mark the result container
 busy while replacing a snapshot. Real assistive-technology validation of the
 existing mobile table-to-card layouts remains outstanding; browser contracts
 verify native markup and keyboard behavior, not screen-reader output.
+
+## Facets and typed attributes
+
+`goo-facet-list` (components.js) keeps caller-authored direct children marked
+`data-facet-item`, with `data-facet-text` as literal searchable text and optional
+`data-facet-key` as an opaque identity. `query` / `.query` applies a local,
+case-insensitive substring search by toggling those rows' `hidden` property.
+`refresh()` returns `{visible,total}` and reapplies the search after caller row
+patches. There is no mutation observer. Supply native buttons/links, including
+controlled `aria-pressed` where selection is meaningful; the component neither
+selects values nor emits query intent. Native click handlers belong to adapters.
+Counts, measures, units, bar widths, rank and labels remain supplied exactly;
+local search never recalculates any of them. Use `.distribution-row`, label,
+track and fill classes for the shared compact bar presentation. Search controls
+and full-population explanatory status stay with the caller. Reconnects and
+searches retain row/action nodes. App adapters should show an explicit local
+no-match state, distinct from absence of source records.
+
+`goo-field-value` (attributes.js) accepts JSON `value` attributes or detached
+`.value` properties. It renders text with a type label, preserving empty strings,
+null, false, zero and exact integer strings. `state` / `.state` distinguishes
+present, missing, unknown and unavailable. With no supplied value, presence
+resolves to missing; malformed/oversized JSON resolves to unavailable. Explicit
+unknown/unavailable values are not nulls. Properties accept plain JSON-compatible
+values; cyclic, nonfinite, sparse, accessor-bearing and unsupported values are
+withheld rather than coerced. Values returned by getters are detached copies.
+Attribute JSON is limited to 64 KiB, as for existing component attributes.
+
+Nested arrays/objects expand lazily in batches of 50; depth eight points to a
+separate lazy Raw value disclosure for the full supplied JSON. Long strings use
+native disclosure. Updates/reconnects rerender the field and reset disclosures;
+this component is intended for snapshots, not focus-preserving live cell updates.
+No telemetry string is inserted as HTML. Upgrading a field starts no source read.
+
+`goo-attribute-list` is a passive child-preserving display shell. The existing
+`GooAttributes.mount/disclosure` adapter owns physical-to-semantic field mapping,
+scope grouping, local key/value search, clipboard feedback, and explicit filter/
+breakdown actions. It composes these elements in Explore, trace/log context and
+native metric identity displays. The component does not assume that string values
+are queryable, map OTel keys, or construct a question. Missing fields are not
+invented by the adapter; the standalone value API can display explicitly supplied
+absence/unknown states. Use the shared attribute classes for native caller rows.
+
+Journey 65 validates standalone SSR/SPA contracts, native facet selection
+preservation, row patches/reconnects, exact strings, type/presence distinctions,
+safe text and no API reads. Journey 29 follows real OTLP attributes through local
+search, copying, fixed-window narrowing, trace/log inspection and mobile display;
+journey 34 verifies full-population scales and saved facet evidence.
+
+```mermaid
+flowchart LR
+  E[Captured result and fixed question] --> A[Application adapters]
+  A -->|exact counts, widths, native row actions| F[goo-facet-list]
+  A -->|qualified fields, search, copy and filter callbacks| L[goo-attribute-list]
+  L --> V[goo-field-value]
+  Q[Local facet search] --> F
+  F --> H[Hide supplied rows; preserve measures]
+  V --> T[Typed text and lazy nested values]
+  C[Explicit caller button or link] --> A
+  A -->|explicit source read or source-free navigation| E
+```
+
+The return arrow is application behavior. Component upgrade, local search and
+value disclosure never perform that read or navigation.
+
+Types describe the supplied captured representation. In particular, numeric-looking
+exporter attribute strings remain strings; these elements do not recover lost OTel
+AnyValue types or authorize new numeric expressions.

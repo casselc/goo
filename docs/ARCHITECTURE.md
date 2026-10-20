@@ -122,3 +122,8 @@ Services/Explore latency and stat lists, grouped latency comparisons, native-tab
 viewports and explicit result states. Table/state shells retain caller-authored
 children across upgrade, attribute changes and reconnects; adapters own row
 patches and status explanations. Future live transport remains outside elements.
+
+Facets retain caller rows and filter them locally; typed field values render
+JSON-compatible snapshot values with explicit presence. `attributes.js` remains
+the app adapter for record mapping and query actions while exporting the reusable
+value/list elements. Components do not interpret OTel namespaces or issue reads.

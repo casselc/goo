@@ -5,6 +5,44 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Shared facets and typed attributes (2026-10-20 UTC)
+
+Explore live/frozen distributions now compose a caller-owned `goo-facet-list`.
+Local search hides rows without changing supplied exact counts, scales, ranking
+or action state. No local matches is distinct from no captured source records.
+Attribute inspectors now reuse `goo-field-value` and a passive
+`goo-attribute-list`, keeping qualified mapping, search, clipboard feedback and
+query actions in the existing app adapter. Values preserve explicit presence,
+null/empty/false, exact integer strings, safe text, lazy nested batches and a raw
+value escape. Standalone SSR and detached SPA use are documented.
+
+- Frontend suite passed all 54 tests. New pure checks cover exact values and
+  absence/type distinctions, JSON rejection, cyclic/unsupported input and
+  accessor/inherited serialization hooks without executing hooks.
+- The initial live campaign passed eight browser tests: component conformance,
+  log/trace discovery, grouped measures, question workbench and UI inspection.
+  Discovery/group/workbench observed Quint ledgers and rejecting controls passed;
+  30-second grouped and attribute-inspection Bombadil campaigns passed with new
+  facet visibility/presence invariants.
+- Standalone checks cover SSR/pre-upgrade properties, detached values,
+  reconnects, safe text and native facet row/state retention without API reads.
+  Live inspection verifies scoped duplicate keys, literal strings, clipboard,
+  no-match status, original-window narrowing and trace/log/mobile adoption.
+- Source reads, query ASTs and Go semantics were unchanged. A parallel agent
+  extracted and reviewed typed fields; review caught an inherited array
+  serialization hook and a page/component CSS precedence issue, both corrected.
+- Final post-review campaign passed all seven browser tests, including new
+  invalid-property and 50-to-75-item lazy-expansion assertions, corrected
+  trace-facet layout, updated grouped/inspection Bombadil campaigns and Quint
+  discovery/group trace checks. Real storyboards and synthetic component frames
+  were regenerated; standalone and live attribute screenshots were inspected.
+- Runtime checks passed: all 12 Compose services running; health OK; served
+  component/attribute/application hashes and binary match workspace/build context.
+  All five pre-existing Redis pending entries remain and traffic was restored.
+- Field snapshot updates reset disclosures. Facet row patches require explicit
+  `refresh()`; there is no mutation observer or live transport. Broader
+  screen-reader validation remains outstanding as documented for the library.
+
 ## Passive tables and explicit result states (2026-10-20 UTC)
 
 `goo-table` and `goo-result-state` now provide native caller-owned table viewports

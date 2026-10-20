@@ -12,15 +12,15 @@
    {name:record.Body!==undefined?'Log attributes':'Span attributes',entries:entries(record.Attributes||record.SpanAttributes||record.LogAttributes,'attribute')}];
  }
  function matches(entry,query){const q=query.toLocaleLowerCase();return entry.key.toLocaleLowerCase().includes(q)||(text(entry.value)||'').toLocaleLowerCase().includes(q)}
- function valueNode(value,depth=0){
+ function renderValue(value,depth=0){
   const kind=type(value);
   if(kind==='object'||kind==='array'){
-   const entries=Object.entries(value),detail=node('details',undefined,'attribute-object');detail.append(node('summary',`${kind==='array'?'Array':'Object'} · ${entries.length} ${kind==='array'?'items':'fields'}`));
+   const entries=Object.entries(value),detail=node('details',undefined,'attribute-object');detail.append(node('summary',`${kind==='array'?'Array':'Object'} · ${entries.length} ${kind==='array'?(entries.length===1?'item':'items'):(entries.length===1?'field':'fields')}`));
    let built=false;detail.addEventListener('toggle',()=>{if(!detail.open||built)return;built=true;
-    if(depth>=8){detail.append(node('p','Further nesting is available in Raw record.'));return}
+    if(depth>=8){detail.append(node('p','Further nesting is available in Raw value.'));return}
     const values=node('dl');let shown=0;
     const more=node('button','Show more values');more.type='button';
-    function append(){for(const [key,item]of entries.slice(shown,shown+50)){values.append(node('dt',key),node('dd'));values.lastChild.append(valueNode(item,depth+1))}shown=Math.min(shown+50,entries.length);more.hidden=shown===entries.length;more.textContent=`Show more values (${shown} of ${entries.length})`}
+    function append(){for(const [key,item]of entries.slice(shown,shown+50)){values.append(node('dt',key),node('dd'));values.lastChild.append(renderValue(item,depth+1))}shown=Math.min(shown+50,entries.length);more.hidden=shown===entries.length;more.textContent=`Show more values (${shown} of ${entries.length})`}
     more.onclick=append;append();detail.append(values,more);
    });return detail;
   }
@@ -28,8 +28,41 @@
   if(display.length>240){const detail=node('details',undefined,'attribute-long');detail.append(node('summary',display.slice(0,160)+'…'),node('span',display,'attribute-value-text'));return detail}
   return node('span',display,'attribute-value-text'+(value===''||value===null?' attribute-empty':''));
  }
+ // Validate JSON values without invoking getters, toJSON hooks or lossy coercion.
+ function isJSONValue(value){
+  const ancestors=new Set(),pending=[{value}];
+  try{while(pending.length){const item=pending.pop(),v=item.value;if(item.exit){ancestors.delete(v);continue}if(v===null||typeof v==='string'||typeof v==='boolean')continue;if(typeof v==='number'){if(!Number.isFinite(v))return false;continue}if(typeof v!=='object'||ancestors.has(v))return false;const array=Array.isArray(v),proto=Object.getPrototypeOf(v);if(array?proto!==Array.prototype:proto!==Object.prototype&&proto!==null)return false;ancestors.add(v);pending.push({value:v,exit:true});const keys=Reflect.ownKeys(v);if(array&&keys.length!==v.length+1)return false;for(const key of keys){if(array&&key==='length')continue;if(typeof key!=='string')return false;const descriptor=Object.getOwnPropertyDescriptor(v,key);if(!descriptor.enumerable||!Object.hasOwn(descriptor,'value'))return false;if(array&&(!/^(0|[1-9][0-9]*)$/.test(key)||Number(key)>=v.length))return false;pending.push({value:descriptor.value})}}
+   // Reject structures deeper than the platform can safely serialize as raw JSON.
+   JSON.stringify(value);return true;
+  }catch{return false}
+ }
+ function fieldModel(value,state='present'){
+  if(state!=='present')return {state:['missing','unknown','unavailable'].includes(state)?state:'unknown',kind:null,label:state==='missing'?'Missing value':state==='unavailable'?'Value unavailable':'Value unknown'};
+  if(value===undefined)return {state:'missing',kind:null,label:'Missing value'};
+  if(!isJSONValue(value))return {state:'unavailable',kind:null,label:'Value unavailable'};
+  return {state:'present',kind:type(value),label:value===''?'Empty string':value===null?'Null':typeof value==='object'?null:String(value)};
+ }
+ function valueNode(value){const element=node('goo-field-value');element.value=value;return element}
+ if(global.customElements&&global.HTMLElement){
+  class GooFieldValue extends global.HTMLElement{
+   static get observedAttributes(){return ['value','state']}
+   set value(value){this._invalid=value!==undefined&&!isJSONValue(value);try{this._value=this._invalid?undefined:structuredClone(value)}catch{this._invalid=true;this._value=undefined}this._hasValue=true;if(this.isConnected)this.render()}
+   get value(){return structuredClone(this._hasValue?this._value:this.attributeValue().value)}
+   get state(){const declared=this.getAttribute('state');if(declared&&declared!=='present')return ['missing','unknown','unavailable'].includes(declared)?declared:'unknown';const input=this._hasValue?{value:this._value,invalid:this._invalid}:this.attributeValue();return input.invalid?'unavailable':input.value===undefined?'missing':'present'}set state(value){this.setAttribute('state',value)}
+   attributeValue(){const json=this.getAttribute('value');if(json===null)return {value:undefined};if(json.length>65536)return {invalid:true};try{const value=JSON.parse(json);return isJSONValue(value)?{value}:{invalid:true}}catch{return {invalid:true}}}
+   connectedCallback(){for(const key of ['value','state'])if(Object.hasOwn(this,key)){const value=this[key];delete this[key];this[key]=value}this.render()}
+   attributeChangedCallback(name){if(name==='value'){this._hasValue=false;this._value=undefined;this._invalid=false}if(this.isConnected)this.render()}
+   render(){const input=this._hasValue?{value:this._value,invalid:this._invalid}:this.attributeValue(),model=fieldModel(input.value,input.invalid?'unavailable':this.state);this.replaceChildren();this.dataset.valueState=model.state;if(model.state!=='present'){this.append(node('span',model.label,'attribute-value-text attribute-empty'));return}this.append(renderValue(input.value),node('span',model.kind,'attribute-type'));
+    if(model.kind==='object'||model.kind==='array'){const raw=node('details',undefined,'raw-value');raw.append(node('summary','Raw value'));let built=false;raw.addEventListener('toggle',()=>{if(raw.open&&!built){built=true;raw.append(node('pre',JSON.stringify(input.value,null,2)))}});this.append(raw)}
+   }
+  }
+  // Caller owns fields, search, scopes and actions; this shell never maps records or replaces children.
+  class GooAttributeList extends global.HTMLElement{}
+  if(!global.customElements.get('goo-field-value'))global.customElements.define('goo-field-value',GooFieldValue);
+  if(!global.customElements.get('goo-attribute-list'))global.customElements.define('goo-attribute-list',GooAttributeList);
+ }
  function mount(container,record,{onFilter,onBreakdown,canRefine=()=>true,raw=true}={}){
-  const model=groups(record),total=model.reduce((n,g)=>n+g.entries.length,0),root=node('div',undefined,'attribute-viewer');
+  const model=groups(record),total=model.reduce((n,g)=>n+g.entries.length,0),root=node('goo-attribute-list',undefined,'attribute-viewer');
   const tools=node('div',undefined,'attribute-tools'),label=node('label','Find an attribute'),search=node('input');search.type='search';search.placeholder='Search keys and values';search.setAttribute('aria-label','Search attribute keys and values');label.append(search);
   const scopeLabel=node('label','Scope'),scope=node('select');scope.setAttribute('aria-label','Attribute scope');
   for(const name of ['All scopes',...model.map(g=>g.name)]){const option=node('option',name);option.value=name;scope.append(option)}scopeLabel.append(scope);
@@ -40,7 +73,7 @@
    for(const group of model){if(scope.value!=='All scopes'&&scope.value!==group.name)continue;const entries=group.entries.filter(e=>matches(e,search.value));found+=entries.length;if(!entries.length)continue;
     const section=node('div',undefined,'attribute-group'),heading=node('h4',group.name);heading.append(node('span',String(entries.length),'attribute-group-count'));section.append(heading);
     for(const entry of entries){const row=node('div',undefined,'attribute-row'),key=node('span',entry.key,'attribute-key'),value=node('div',undefined,'attribute-value'),actions=node('div',undefined,'attribute-actions');row.dataset.key=entry.key;row.setAttribute('role','group');row.setAttribute('aria-label',group.name+': '+entry.key);
-     value.append(valueNode(entry.value),node('span',type(entry.value),'attribute-type'));
+     value.append(valueNode(entry.value));
      const copyButton=node('button','Copy');copyButton.type='button';copyButton.setAttribute('aria-label','Copy value for '+entry.key);copyButton.onclick=()=>copy(entry.value,entry.key);actions.append(copyButton);
      if(entry.field&&typeof entry.value==='string'&&onFilter){const filter=node('button','Filter and run');filter.type='button';filter.disabled=!canRefine();filter.title=filter.disabled?'Choose All filters to narrow this question.':'Read a fresh result with this exact value in the fixed window';filter.setAttribute('aria-label','Filter and run by '+entry.field.kind+':'+entry.field.key);filter.onclick=()=>onFilter(entry.field,entry.value);actions.append(filter)}
      if(entry.field&&onBreakdown){const breakdown=node('button','Break down and run');breakdown.type='button';breakdown.setAttribute('aria-label','Break down and run by '+entry.field.kind+':'+entry.field.key);breakdown.onclick=()=>onBreakdown(entry.field);actions.append(breakdown)}
@@ -59,5 +92,5 @@
   const raw=node('details',undefined,'raw-record');raw.append(node('summary','Raw record'),node('pre',JSON.stringify(record,null,2)));detail.append(raw);
   let built=false;detail.addEventListener('toggle',()=>{if(detail.open&&!built){built=true;mount(host,record,{...options,raw:false})}});return detail;
  }
- const api={groups,type,text,matches,mount,disclosure};if(typeof module!=='undefined')module.exports=api;else global.GooAttributes=api;
+ const api={groups,type,text,matches,fieldModel,isJSONValue,mount,disclosure};if(typeof module!=='undefined')module.exports=api;else global.GooAttributes=api;
 })(typeof window==='undefined'?globalThis:window);

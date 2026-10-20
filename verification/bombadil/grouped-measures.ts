@@ -8,10 +8,11 @@ const state=extract(({document})=>{
  let grouped=true;if(e){grouped=e.duration?.p95Ns==='100000000'&&e.duration.sumNs==='2500000000'&&e.groups?.length===4&&e.groups.reduce((s:bigint,g:any)=>s+BigInt(g.count),0n)===124n&&e.groups.reduce((s:bigint,g:any)=>s+BigInt(g.duration.sumNs),0n)===2500000000n}
  const metric=(el('saveddistributionMeasure') as HTMLSelectElement)?.value;const ranking=!rows.length||metric==='count'||rows[0]?.dataset.value==='Missing key';
  const golden=document.documentElement.dataset.gooGroupsGolden,signature=e?JSON.stringify({basis:e.basis,duration:e.duration,groups:e.groups}):'';
- return {version:'goo.groups.v1',stage,ready:!!e?.groups?.length,loading,grouped,ranking,stable:!golden||!e||golden===signature,offset:e?.question?.offset||0,rows:rows.length,visible:rows.filter(x=>!x.hidden).length,metric,signature};
+ const facets=[...document.querySelectorAll<any>('goo-facet-list')].every(list=>[...list.querySelectorAll<HTMLElement>(':scope > [data-facet-item]')].every(row=>row.hidden===!(row.dataset.facetText||'').toLocaleLowerCase().includes(list.query.toLocaleLowerCase())));return {facets,version:'goo.groups.v1',stage,ready:!!e?.groups?.length,loading,grouped,ranking,stable:!golden||!e||golden===signature,offset:e?.question?.offset||0,rows:rows.length,visible:rows.filter(x=>!x.hidden).length,metric,signature};
 });
 export const ready=eventually(()=>state.current.ready).within(10,'seconds');
 export const complete=eventually(()=>state.current.stage==='complete').within(25,'seconds');
+export const localFacetContract=always(()=>state.current.facets);
 export const fullGroupAccounting=always(()=>state.current.grouped);
 export const exactRanking=always(()=>state.current.ranking);
 export const immutableMeasurePages=always(()=>state.current.stable);

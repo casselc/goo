@@ -4,6 +4,7 @@ import { extract, actions, registerCustomAction } from '@antithesishq/bombadil/b
 export { noUncaughtExceptions, noUnhandledPromiseRejections } from '@antithesishq/bombadil/browser/defaults/properties';
 
 const inspection = extract(({ document }) => ({
+  typed: [...document.querySelectorAll('goo-field-value')].every(el=>['present','missing','unknown','unavailable'].includes(el.getAttribute('data-value-state')||'')),
   ready: !!document.querySelector('#exploreRun'),
   busy: document.querySelector<HTMLButtonElement>('#exploreRun')?.disabled,
   records: !!document.querySelector('#exploreRows .record-attributes'),
@@ -17,6 +18,7 @@ const inspection = extract(({ document }) => ({
 export const becomesReady = eventually(() => inspection.current.ready).within(10, 'seconds');
 export const oneContextInspector = always(() => !(inspection.current.trace && inspection.current.nearby));
 export const singleSpanSelection = always(() => inspection.current.selected <= 1);
+export const typedPresenceIsExplicit = always(() => inspection.current.typed);
 export const attributeCountsAreExplicit = always(() => inspection.current.counts.every(s => /^\d+ of \d+ fields$/.test(s)));
 
 const act = registerCustomAction('goo.inspect', async (document, _window, action: string) => {

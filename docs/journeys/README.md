@@ -1085,3 +1085,9 @@ Journey 64 (`components.spec.js`) checks caller-owned table rows, focus retentio
 during appends, reconnects, explicit state transitions and keyboard overflow on
 mobile without API reads. These are synthetic component conformance fixtures.
 Journey 59 covers adoption in real service observations and partial source failure.
+
+Journey 65 (`components.spec.js`) exercises synthetic SSR/SPA facet and typed-value
+contracts without source reads. Journey 29 now verifies shared elements across
+real attribute/facet narrowing and trace/log inspection; optional
+`GOO_INSPECTION_BOMBADIL=1` explores that isolated fixed question. Journey 34
+checks full-population/saved facet scales with an updated Bombadil invariant.

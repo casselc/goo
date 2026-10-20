@@ -12,6 +12,14 @@
  function stats(items,{className=''}={}){const e=node('goo-stat-list',undefined,className);e.items=items;return e}
  if(global.customElements&&global.HTMLElement){
   // These shells never replace children: adapters retain row/action identity and focus.
+  class GooFacetList extends global.HTMLElement{
+   static get observedAttributes(){return ['query']}
+   get query(){return this.getAttribute('query')||''}set query(value){this.setAttribute('query',value??'')}
+   connectedCallback(){if(!this.hasAttribute('role'))this.setAttribute('role','group');if(Object.hasOwn(this,'query')){const value=this.query;delete this.query;this.query=value}this.refresh()}
+   attributeChangedCallback(){if(this.isConnected)this.refresh()}
+   refresh(){const q=this.query.toLocaleLowerCase(),rows=[...this.querySelectorAll(':scope > [data-facet-item]')];for(const row of rows)row.hidden=!(row.getAttribute('data-facet-text')||'').toLocaleLowerCase().includes(q);return {visible:rows.filter(row=>!row.hidden).length,total:rows.length}}
+  }
+  if(!global.customElements.get('goo-facet-list'))global.customElements.define('goo-facet-list',GooFacetList);
   class GooTable extends global.HTMLElement{
    connectedCallback(){if(!this.hasAttribute('tabindex'))this.tabIndex=0;if(!this.hasAttribute('role'))this.setAttribute('role','region');if(!this.hasAttribute('aria-label')&&!this.hasAttribute('aria-labelledby'))this.setAttribute('aria-label','Data table');}
   }

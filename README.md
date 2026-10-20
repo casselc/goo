@@ -413,3 +413,7 @@ table viewports and result states, then facets and typed attribute displays.
 Explore and Services share passive native-table viewports and explicit result-state
 displays from the [Web Component library](docs/UI_COMPONENTS.md). Caller-owned rows
 retain focus during patches; SSE transport and live retention remain planned.
+
+The same library now provides local-search facets and typed attribute values in
+Explore and trace/log inspectors. Full-population measures retain their original
+scales when searching supplied values; filter actions remain explicit source reads.

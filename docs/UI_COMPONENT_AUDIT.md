@@ -347,3 +347,9 @@ and are adopted in Explore inspection/group results and Services operation/widge
 results. Native table content is retained across attribute changes and reconnects.
 This is a passive viewport foundation, not an SSE transport or live evaluator.
 Facets, typed attributes and broader table migration remain next adoption work.
+
+The facet and typed-value extraction is now implemented: caller-owned facet rows
+with local search, typed snapshot values and a passive attribute-list shell.
+The existing adapter retains scope/search/copy/filter actions. Automatic field
+mapping, source-backed facet requests and streaming value patches remain outside
+the components. See [current contracts](UI_COMPONENTS.md).

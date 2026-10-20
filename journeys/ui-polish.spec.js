@@ -3,6 +3,8 @@ const { test, expect } = require('@playwright/test');
 const { randomBytes } = require('node:crypto');
 const path = require('node:path');
 const fs = require('node:fs/promises');
+const {startBombadil}=require('./support/cross-app');
+const GooWorkspace=require('../ui/workspace');
 const goo = process.env.GOO_QUERY_URL || 'http://127.0.0.1:8088';
 const field = (kind,key) => ({kind,key});
 test.use({actionTimeout:15000});
@@ -24,7 +26,7 @@ test('29 inspect structured attributes, refine facets and navigate with keyboard
   await page.goto(goo+'/#explore');await page.locator('#exploreEnvironment').fill(environment);await run();
   const details=page.locator('#exploreRows .record-attributes').first();await details.locator(':scope > summary').click();
   const viewer=details.locator('.attribute-viewer'),search=viewer.getByRole('searchbox',{name:'Search attribute keys and values'});
-  await expect(viewer).toBeVisible();await expect(details.locator(':scope > .raw-record')).not.toHaveAttribute('open','');
+  await expect(viewer).toBeVisible();await expect(details.locator('goo-attribute-list')).toHaveCount(1);await expect(viewer.locator('goo-field-value')).not.toHaveCount(0);await expect(details.locator(':scope > .raw-record')).not.toHaveAttribute('open','');
   const before=reads;await search.fill('same.key');await expect(viewer.locator('.attribute-row')).toHaveCount(2);
   await expect(viewer.getByRole('group',{name:'Resource attributes: same.key'})).toContainText('resource-value');
   await expect(viewer.getByRole('group',{name:'Span attributes: same.key'})).toContainText('span-value');
@@ -41,8 +43,8 @@ test('29 inspect structured attributes, refine facets and navigate with keyboard
   await search.fill('same.key');await page.screenshot({path:path.join(frames,'29a-structured-attribute-inspection.png'),fullPage:true});
 
   await search.fill('geo.region');await viewer.getByRole('button',{name:'Break down and run by attribute:geo.region',exact:true}).click();
-  await expect(page.locator('#distributionContent .distribution-row')).toHaveCount(3);
-  await page.locator('#facetSearch').fill('empty');await expect(page.locator('#distributionContent .distribution-row:visible')).toHaveCount(1);await expect(page.locator('#facetStatus')).toContainText('1 of 3');await expect(page.locator('#exploreCount')).toContainText('6');
+  await expect(page.locator('#distributionContent goo-facet-list > [data-facet-item]')).toHaveCount(3);
+  const facetReads=reads;await page.locator('#facetSearch').fill('no matching facet');await expect(page.locator('#distributionContent goo-result-state[state=empty]')).toContainText('totals and scale are unchanged');expect(reads).toBe(facetReads);await page.locator('#facetSearch').fill('empty');await expect(page.locator('#distributionContent .distribution-row:visible')).toHaveCount(1);await expect(page.locator('#facetStatus')).toContainText('1 of 3');await expect(page.locator('#exploreCount')).toContainText('6');
   const facetResponse=page.waitForResponse(r=>r.url().endsWith('/api/explore')&&r.request().method()==='POST');
   await page.getByRole('button',{name:'Filter and run attribute:geo.region equals Present empty string',exact:true}).click();const empty=await(await facetResponse).json();expect(empty.count).toBe('2');
   await expect(page.locator('#exploreFilters')).toContainText('Empty string');
@@ -60,7 +62,7 @@ test('29 inspect structured attributes, refine facets and navigate with keyboard
   await openFilters(page);await page.locator('#exploreField').selectOption(JSON.stringify(field('column','duration_ns')));await expect(page.locator('#exploreOp option[value=gte]')).toHaveJSProperty('disabled',false);await expect(page.locator('#exploreOp option[value=contains]')).toHaveJSProperty('disabled',true);
   await page.getByRole('tab',{name:'Records',exact:true}).click();const opener=page.locator('#exploreRows').getByRole('button',{name:'Expand trace '+trace,exact:true}).first();await opener.click();
   await expect(page.locator('#exploreContextSummary')).toContainText('6 captured spans');await expect(page.locator('#exploreContextStatus')).not.toBeVisible();
-  const spanButton=page.locator('#exploreTrace .waterfall-row').first();await spanButton.click();await expect(spanButton).toHaveAttribute('aria-pressed','true');await expect(page.locator('#exploreSpanDetails .attribute-viewer')).toBeVisible();
+  const spanButton=page.locator('#exploreTrace .waterfall-row').first();await spanButton.click();await expect(spanButton).toHaveAttribute('aria-pressed','true');await expect(page.locator('#exploreSpanDetails goo-attribute-list')).toBeVisible();await expect(page.locator('#exploreSpanDetails goo-field-value')).not.toHaveCount(0);
   await expect(page.locator('#exploreLogStatus')).toContainText('exact trace and span ID');await expect(page.locator('#exploreLogs .record-attributes')).toHaveCount(1);const linked=page.locator('#exploreLogs .record-attributes').first();await linked.locator(':scope > summary').click();await expect(linked.getByRole('button',{name:/^(Filter by|Break down by)/})).toHaveCount(0);
   await linked.locator(':scope > summary').click();await page.locator('#exploreSpanDetails').getByRole('searchbox',{name:'Search attribute keys and values'}).fill('SpanName');await page.locator('#exploreContext').evaluate(e=>e.scrollTop=0);
   await page.screenshot({path:path.join(frames,'29c-selected-trace-and-structured-context.png'),fullPage:true});
@@ -70,4 +72,6 @@ test('29 inspect structured attributes, refine facets and navigate with keyboard
   const mobile=page.locator('#exploreRows .record-attributes').first();await mobile.locator(':scope > summary').click();await mobile.getByRole('searchbox',{name:'Search attribute keys and values'}).fill('test.multiline');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
   await mobile.scrollIntoViewIfNeeded();await page.screenshot({path:path.join(frames,'29d-mobile-attribute-inspection.png'),fullPage:true});
+  if(process.env.GOO_INSPECTION_BOMBADIL==='1'){const dir=path.resolve('artifacts/typed-inspection',environment);await fs.mkdir(dir,{recursive:true});const question={signal:'spans',environment,fromMs:now-60000,toMs:now+1000,limit:100,offset:0};const actor=await startBombadil({dir:path.join(dir,'bombadil'),url:goo+'/'+GooWorkspace.stepLink(GooWorkspace.recordStep(question)),specification:'verification/bombadil/inspection.ts',seconds:30});try{await actor.finish()}finally{await actor.stop()}}
+
 });

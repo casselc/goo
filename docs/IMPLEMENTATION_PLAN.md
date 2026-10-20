@@ -529,3 +529,10 @@ live-tail/comparison engine is implemented in the component foundation round.
 Implemented shared native-table viewport and explicit result-state elements in
 Explore and Services. Preserve caller-owned row/action DOM for future patches.
 Next: shared facets and typed attribute displays; streaming adapters remain planned.
+
+### Facets and typed attribute displays
+
+Implemented shared local facet shell, typed values and passive attribute-list
+shell, adopted by Explore and trace/log inspection. Next: explicit live transport
+and bounded retention adapter design, keeping fixed population measures separate
+from tail rows. Field snapshot updates currently reset disclosure state.

@@ -20,3 +20,27 @@ test('inspection searches literal hostile keys/values without evaluating them',(
  assert.equal(groups(JSON.parse('{"__proto__":"literal"}'))[0].entries[0].field,undefined);
  assert.ok(!matches(entry,'a.*b'));assert.equal(groups(JSON.parse('{"Attributes":{"__proto__":"literal"}}'))[2].entries[0].value,'literal');
 });
+test('field display distinguishes absence from present null, empty, false and exact strings',()=>{
+ const {fieldModel}=require('../ui/attributes.js');
+ assert.deepEqual(fieldModel(undefined),{state:'missing',kind:null,label:'Missing value'});
+ assert.deepEqual(fieldModel(null),{state:'present',kind:'null',label:'Null'});
+ assert.deepEqual(fieldModel(''),{state:'present',kind:'string',label:'Empty string'});
+ assert.deepEqual(fieldModel(false),{state:'present',kind:'boolean',label:'false'});
+ assert.deepEqual(fieldModel('900719925474099300'),{state:'present',kind:'string',label:'900719925474099300'});
+ for(const state of ['missing','unknown','unavailable'])assert.equal(fieldModel('retained but withheld',state).kind,null);
+ assert.equal(fieldModel('', 'unrecognized').state,'unknown');
+ assert.equal(fieldModel({present:false}).kind,'object');assert.equal(fieldModel([]).kind,'array');
+});
+
+test('field properties withhold non-JSON values without coercion or executable hooks',()=>{
+ const {isJSONValue,fieldModel}=require('../ui/attributes.js');const cycle={};cycle.self=cycle;let reads=0;
+ const accessor={get secret(){reads++;return 'side effect'}};
+ class HookedArray extends Array{toJSON(){reads++;return 'changed'}}
+ const inheritedHook=Object.setPrototypeOf([], {toJSON(){reads++;return 'changed'}});
+ for(const value of [cycle,1n,NaN,Infinity,{nested:1n},{nested:undefined},[undefined],Array(1),new Date(),new Map(),new HookedArray(),inheritedHook,accessor,{toJSON(){reads++;return 'changed'}}]){
+  assert.equal(isJSONValue(value),false);assert.equal(fieldModel(value).state,'unavailable');
+ }
+ assert.equal(reads,0);const shared={flag:false};assert.equal(isJSONValue({a:shared,b:shared}),true);
+ assert.equal(isJSONValue(JSON.parse('{"__proto__":"literal","value":null}')),true);
+ assert.equal(isJSONValue({nested:['900719925474099300',null,false,'']}),true);
+});
