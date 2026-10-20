@@ -13,6 +13,7 @@ import (
 // Selector and Binding retain exact typed constraints, including OTel namespaces.
 // Unknown schema/convention metadata is not guessed from names or library versions.
 type QuestionScope struct {
+	ReportedEdge       *ReportedEdge         `json:"reportedEdge,omitempty"`
 	Family             string                `json:"family"`
 	Signal             string                `json:"signal"`
 	MeasurementKind    string                `json:"measurementKind,omitempty"`
@@ -58,6 +59,7 @@ func (q CaptureQuestion) Scope() (QuestionScope, error) {
 		s.FromMS = v.FromMS
 		s.ToMS = v.ToMS
 		s.Selector = detached(v.Where)
+		s.ReportedEdge = detached(v.ReportedEdge)
 	case "measurement":
 		v := q.Measurement
 		d := v.Definition
@@ -137,7 +139,7 @@ func DescribeTransform(origin, target CaptureQuestion, relation string) (*Questi
 			return nil, fmt.Errorf("same question changed")
 		}
 	case "exact-trace", "exact-span":
-		if target.Explore == nil || origin.Explore == nil {
+		if target.Explore == nil || origin.Explore == nil || target.Explore.ReportedEdge != nil {
 			return nil, fmt.Errorf("exact ID relationship requires records")
 		}
 		p := target.Explore.Where
@@ -190,6 +192,9 @@ func describeScopeChanges(origin, target CaptureQuestion, a, b QuestionScope, re
 			label += " (replaced by exact reported IDs; allow all services)"
 		}
 		add("selector", label, sameSelector)
+	}
+	if a.ReportedEdge != nil || b.ReportedEdge != nil {
+		add("reportedEdge", "Reported parent population", reflect.DeepEqual(a.ReportedEdge, b.ReportedEdge))
 	}
 	if a.Binding != nil || b.Binding != nil {
 		add("binding", "Declared measurement binding", reflect.DeepEqual(a.Binding, b.Binding))

@@ -472,3 +472,15 @@ fixed-question exploration and empty capture with five rejecting mutations,
 including a changed namespace in the stored question.
 `declared-services.ts` explores declaration disclosures and catalog/service
 transitions while checking no invented telemetry, graph edges or observed widgets.
+
+Reported edges: `TestHegelReportedEdgePlanning` generates parameterized service
+identities and missing/empty/literal namespaces, checking ownership SQL and detached
+question custody. Journey 62 writes `GOO_EDGE_LEDGER` for
+`TestQuintReportedEdgeLive`: actual duplicate/ambiguous/out-of-window parent data,
+full totals beyond the record page, namespace-scoped ownership, narrowed errors
+and stored investigation selectors are replayed with five rejecting mutations.
+`GOO_EDGE_BOMBADIL=1` explores the staged edge, reruns and error filters while
+checking exact parent/child namespace preservation and page containment. The
+journey separately checks a 390-pixel mobile viewport.
+Comparison actors additionally check bounded visual bar geometry; journeys 35,
+stored evidence, native windows and breakdowns exercise the common-scale visuals.

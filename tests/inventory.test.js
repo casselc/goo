@@ -46,3 +46,7 @@ test('declared services retain absent telemetry, exact namespaces, multiple bind
  const empty=catalogModel({...evidence,signals:[]},packages);assert.equal(empty.length,3);assert.equal(empty.filter(r=>r.namespace===null).length,1);assert.equal(empty.every(r=>!r.observed),true);
  const scoped=catalogModel({...evidence,question:{...evidence.question,namespace:{mode:'value',value:'payments'}}},packages);assert.equal(scoped.length,1);assert.equal(scoped[0].declarations.length,1);
 });
+test('reported edge handoffs retain namespaces and captured parent-search scope without source reads',()=>{
+ const {edgeQuestion}=require('../ui/distributed-services'),{recordStep,stepLink,readStepLink}=require('../ui/workspace');const scope={environment:'prod',fromMs:1000,toMs:61000},edge={parent:'api',parentNamespace:'payments',child:'api',childNamespace:''};const q=edgeQuestion(scope,edge);assert.equal(q.summary,'span-duration');assert.deepEqual(q.reportedEdge.child.namespace,{mode:'value'});assert.equal(q.reportedEdge.parent.namespace.value,'payments');assert.deepEqual(readStepLink(stepLink(recordStep(q))).record,q);
+ const visual=require('../ui/comparison-visual');assert.deepEqual(visual.scale(['900719925474099300','1801439850948198600']).widths,[50,100]);assert.deepEqual(visual.scale([null,'0'],'100').widths,[null,0]);assert.deepEqual(visual.scale(['0.25','0.5'],'1').widths,[25,50]);assert.equal(visual.maximum(['0.01','0.1']),'0.1');
+});

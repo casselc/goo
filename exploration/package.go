@@ -22,6 +22,7 @@ var packageName = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_.-]{0,127}$`)
 // TelemetryPackage binds existing OTel data without a source-code manifest.
 // A definition is reusable configuration, never a frozen evidence receipt.
 type TelemetryPackage struct {
+	ReportedEdge    *ReportedEdge   `json:"reportedEdge,omitempty" yaml:"reportedEdge,omitempty"`
 	Numeric         *NumericBinding `json:"numeric,omitempty" yaml:"numeric,omitempty"`
 	GroupTimeSeries bool            `json:"groupTimeSeries,omitempty" yaml:"groupTimeSeries,omitempty"`
 	SpanStatus      bool            `json:"spanStatus,omitempty" yaml:"spanStatus,omitempty"`
@@ -64,7 +65,7 @@ type PackagePlan struct {
 }
 
 func (p TelemetryPackage) Question(from, to int64) Query {
-	return Query{Numeric: p.Numeric, GroupTimeSeries: p.GroupTimeSeries, SpanStatus: p.SpanStatus, BucketMS: p.BucketMS, Summary: p.Summary, Signal: p.Source.Signal, Environment: p.Source.Environment, FromMS: from, ToMS: to, Where: p.Where, GroupBy: p.GroupBy, Limit: 100, Offset: 0}
+	return Query{ReportedEdge: p.ReportedEdge, Numeric: p.Numeric, GroupTimeSeries: p.GroupTimeSeries, SpanStatus: p.SpanStatus, BucketMS: p.BucketMS, Summary: p.Summary, Signal: p.Source.Signal, Environment: p.Source.Environment, FromMS: from, ToMS: to, Where: p.Where, GroupBy: p.GroupBy, Limit: 100, Offset: 0}
 }
 func (p TelemetryPackage) Validate() error {
 	if p.APIVersion != PackageVersion || !packageName.MatchString(p.Name) || p.Title == "" || len(p.Title) > 160 || !utf8.ValidString(p.Title) || strings.ContainsRune(p.Title, 0) || len(p.Description) > 2048 || !utf8.ValidString(p.Description) || strings.ContainsRune(p.Description, 0) {
@@ -144,7 +145,7 @@ func DraftTelemetryPackage(q Query, name, title string, minutes int) (TelemetryP
 	b, _ := json.Marshal(q)
 	var clone Query
 	json.Unmarshal(b, &clone)
-	p := TelemetryPackage{Numeric: clone.Numeric, GroupTimeSeries: q.GroupTimeSeries, SpanStatus: q.SpanStatus, BucketMS: q.BucketMS, Summary: q.Summary, APIVersion: PackageVersion, Name: name, Title: title, Source: PackageSource{"clickhouse.otel/v1", q.Signal, q.Environment}, Where: clone.Where, GroupBy: clone.GroupBy, Measure: "captured-record-count", LookbackMinutes: minutes, Views: []string{"records", "trace-context"}}
+	p := TelemetryPackage{ReportedEdge: clone.ReportedEdge, Numeric: clone.Numeric, GroupTimeSeries: q.GroupTimeSeries, SpanStatus: q.SpanStatus, BucketMS: q.BucketMS, Summary: q.Summary, APIVersion: PackageVersion, Name: name, Title: title, Source: PackageSource{"clickhouse.otel/v1", q.Signal, q.Environment}, Where: clone.Where, GroupBy: clone.GroupBy, Measure: "captured-record-count", LookbackMinutes: minutes, Views: []string{"records", "trace-context"}}
 	if len(p.GroupBy) == 1 {
 		p.Views = []string{"records", "distribution", "trace-context"}
 	}
@@ -197,7 +198,15 @@ func PlanTelemetryPackage(p TelemetryPackage, from, to int64, target *Annotation
 	for _, f := range p.GroupBy {
 		add(f)
 	}
+	if p.ReportedEdge != nil {
+		add(Field{Kind: "column", Key: "trace_id"})
+		add(Field{Kind: "resource", Key: "service.namespace"})
+		handoff.Notes = append(handoff.Notes, "Reported-edge queries require standard trace/span/parent-span IDs and original service resource identity. Parent ownership is resolved across records; no single-function annotation expresses this relationship.")
+	}
 	if target != nil {
+		if p.ReportedEdge != nil {
+			return nil, fmt.Errorf("reported-edge relationships cannot be generated as a single-function annotation; retain the reusable telemetry package")
+		}
 		if !packageName.MatchString(target.Name) || !map[string]bool{"internal": true, "server": true, "client": true, "producer": true, "consumer": true}[target.Role] {
 			return nil, fmt.Errorf("annotation requires stable operation name and supported role")
 		}

@@ -87,6 +87,9 @@ func (c *compiler) source(q Query) (string, string) {
 		table, attrs = "otel_logs", "LogAttributes"
 	}
 	where := "Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND " + c.predicate(q.Where)
+	if q.ReportedEdge != nil {
+		where += " AND " + c.reportedEdge(q)
+	}
 	return " FROM " + table + " WHERE " + where, attrs
 }
 func Compile(q Query) (Plan, error) { return compile(q, q.Limit) }

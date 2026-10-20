@@ -123,3 +123,12 @@ implementation. Two follow-ups remain: provide error/latency ranking alongside
 explicit population-share ranking (a large error regression can have a small
 share shift), and hide span-only measure columns for logs instead of repeating
 Unavailable. These are proposed polish, not implemented controls.
+
+## Visual follow-through
+
+The [visual comparison pass](VISUAL_COMPARISONS.md) adds paired bars on common
+zero-based scales, equal-width group tracks and aligned native histogram bins.
+Scope and arithmetic remain inspectable in disclosures. Updated executable
+frames 35, 52, 54 and 58 show the delivered behavior; this supplements the
+historical screenshot observations above. Signed/native scientific-number formats
+still retain exact tables rather than an invented chart value.

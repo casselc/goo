@@ -98,6 +98,7 @@ func (q CaptureQuestion) Normalized() CaptureQuestion {
 	}
 	if q.Explore != nil {
 		v := *q.Explore
+		v.ReportedEdge = detached(v.ReportedEdge)
 		v.Offset = 0
 		v.Limit = CapturePageSize
 		if len(v.GroupBy) == 0 {

@@ -346,3 +346,9 @@ cards do not replace explicit operation conformance or business-outcome evaluati
 Declared services without observations now remain visible in Services. Their
 metadata comes from the current registry, not a frozen deployment inventory.
 Discovery failure withholds presence claims; registry failure is shown separately.
+
+[Reported-edge questions](REPORTED_EDGES.md) now select exact resolved child records
+within the captured discovery scope. Async links, external peer inference and
+end-to-end request latency remain outside that relationship. The first
+[visual comparison pass](VISUAL_COMPARISONS.md) uses aligned scales and compact
+metrics; some signed/scientific native formats still remain exact tables.

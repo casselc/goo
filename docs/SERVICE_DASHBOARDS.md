@@ -111,3 +111,8 @@ Discovery support does not guarantee a valid native evaluation: missing service
 instance identity, mixed source metadata or invalid intervals still produce an
 unavailable/unknown widget under the existing kernel contracts. These states
 remain visible instead of substituting a healthy value.
+
+Resolved edges now offer [exact child-population questions](REPORTED_EDGES.md)
+alongside the explicitly wider child-service link. The typed relationship retains
+parent-search scope through filters, packages and immutable investigation capture.
+Overview assumptions are collapsed under **How these widgets are measured**.

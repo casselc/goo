@@ -1,0 +1,8 @@
+spec: reported_edge.qnt
+module: reported_edge
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  discover: {expect: 'coherent == {{.obs.coherent}}'}
+  investigate: {expect: 'coherent == {{.obs.coherent}}'}
+  capture: {expect: 'coherent == {{.obs.coherent}}'}

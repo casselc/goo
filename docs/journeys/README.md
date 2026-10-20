@@ -1046,3 +1046,23 @@ and catalog/service transitions without inventing observed widgets or edges.
 ![Unified empty service overview](screenshots/61b-declared-service-empty-overview.png)
 ![Mobile declared service](screenshots/61c-mobile-declared-service.png)
 ![Stored empty service question](screenshots/61d-empty-service-evidence.png)
+
+## 62 Investigate an exact reported edge
+
+[Executable journey](../../journeys/reported-edges.spec.js) injects 130 child span
+records plus duplicate, ambiguous, internal, wrong-trace, wrong-environment and
+out-of-window parent cases. It stages the edge without a read, runs full latency
+and recorded-error summaries beyond the 100-record page, narrows to errors while
+retaining the parent universe, expands broader trace context, and saves/reopens
+an investigation without rereading telemetry. A separate namespace-filtered case
+proves that parent ownership keeps the original discovery namespace scope.
+Quint replays the observed ledger with five rejecting mutations; optional
+`GOO_EDGE_BOMBADIL=1` explores reruns, error filters and evidence disclosures.
+
+![Staged edge question](screenshots/62a-staged-reported-edge.png)
+![Exact child population and full summaries](screenshots/62b-exact-edge-latency-and-errors.png)
+![Stored mobile edge evidence](screenshots/62c-mobile-stored-edge.png)
+
+Comparison storyboards 35 and the stored/native comparison journeys now show
+[aligned visual comparisons](../VISUAL_COMPARISONS.md), with full-population values
+and explicit unavailable states rather than a wall of prose.

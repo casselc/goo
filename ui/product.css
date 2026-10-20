@@ -1128,3 +1128,27 @@ td details {
 .distributed-nodes { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: 1rem; }
 .distributed-view table { min-width: 36rem; }
 .dashboard-widget[data-state="unavailable"] { border-color: #b58a45; }
+
+/* Comparisons keep identical zero-based scales and exact labels. Color is redundant with side names. */
+.comparison-metric-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px;margin:16px 0}
+.comparison-pair {margin:0 0 14px;padding:16px;border:1px solid var(--border,#303b4b);border-radius:10px;background:var(--panel,#151d28);min-width:0}
+.comparison-pair figcaption {display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.comparison-unit,.comparison-axis {color:var(--muted,#9bacc0);font-size:12px}
+.comparison-delta {margin-left:auto;font-variant-numeric:tabular-nums;font-size:13px}
+.comparison-pair-row {display:grid;grid-template-columns:84px minmax(0,1fr);gap:12px;align-items:center;margin:12px 0}
+.comparison-bar-cell {min-width:100px;width:100%;font-variant-numeric:tabular-nums}
+.comparison-value {display:block;margin-bottom:5px;font-size:13px;overflow-wrap:anywhere}
+.comparison-bar-track {height:10px;background:#263140;border-radius:3px;overflow:hidden;width:100%}
+.comparison-bar-fill {display:block;height:100%;border-radius:3px;min-width:0}
+.comparison-bar-fill.baseline {background:#79aafa}.comparison-bar-fill.selection {background:#f5b85d}
+.comparison-baseline-label {color:#a6c6ff}.comparison-selection-label {color:#f5c880}
+.comparison-bar-cell.unavailable .comparison-bar-track {background:repeating-linear-gradient(135deg,#263140,#263140 4px,#364050 4px,#364050 6px)}
+.cohort-table {table-layout:fixed;width:100%}.cohort-table th:first-child {width:20%}.cohort-table td {vertical-align:middle}
+.comparison-key {font-size:12px;color:var(--muted,#9bacc0)}
+.edge-investigate {display:block;margin-bottom:8px}
+@media(max-width:650px){.cohort-table{table-layout:auto}.cohort-table .comparison-bar-cell{min-width:100px}.comparison-pair-row{grid-template-columns:74px minmax(0,1fr)}}
+.comparison-histogram {margin:16px 0;padding:16px;border:1px solid var(--border,#303b4b);border-radius:10px;min-width:0}
+.comparison-histogram figcaption{font-weight:600}.comparison-histogram p{display:flex;gap:20px;font-size:12px}.comparison-histogram svg{display:block;width:100%;height:auto}.comparison-histogram small{font-size:12px;color:var(--muted,#9bacc0)}
+.edge-investigate{font-weight:600}.edge-wider{font-size:12px;color:var(--muted,#9bacc0)}
+/* Equal fractions need equal pixel lengths even when table columns size differently. */
+.comparison-breakdown .comparison-bar-cell {width:144px;min-width:144px}

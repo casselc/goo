@@ -132,6 +132,9 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 		return nil, e
 	}
 	r := &Result{Question: q, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano), Rows: []json.RawMessage{}, Groups: []json.RawMessage{}, Fields: []Field{}, Plan: plan, Warnings: []string{"Captured records only; sampling, ingestion completeness and clock accuracy are unverified.", "Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.", "Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes."}}
+	if q.ReportedEdge != nil {
+		r.Warnings = append(r.Warnings, "Reported-edge population: child span records with one parent service owner in the original discovery environment/window/namespace scope. Parent ownership is resolved before child filters. Late parent evidence may change resolution on reread; captures reopen stored rows without a parent lookup. This is not unique calls, end-to-end latency or async causality.")
+	}
 	count, e := s.read(ctx, plan.Count, plan.Parameters)
 	if e != nil {
 		return nil, e

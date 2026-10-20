@@ -397,3 +397,7 @@ Service discovery now separates same-named services by OTel namespace, including
 missing and present-empty values. Dashboard cards can explore spans matching
 registered operation bindings. See [service identity](docs/SERVICE_IDENTITY.md)
 and [journey 60](docs/journeys/README.md#60-namespace-service-identity).
+
+[Reported-edge investigations](docs/REPORTED_EDGES.md) now stage exact child-span
+questions from distributed relationships. [Visual comparisons](docs/VISUAL_COMPARISONS.md)
+put aligned baseline/current values ahead of detailed provenance and assumptions.

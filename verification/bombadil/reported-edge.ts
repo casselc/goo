@@ -1,0 +1,10 @@
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document})=>{let q:any=null;try{q=JSON.parse(document.querySelector('#exploreExplain')?.textContent||'null')?.question}catch{}const run=document.querySelector('#exploreRun')as HTMLButtonElement;return {ready:!!run&&!run.disabled,started:document.documentElement.dataset.edgeStarted==='true',applied:!!q,running:document.querySelector('#exploration')?.getAttribute('data-question-phase')==='running',safe:!q||q.reportedEdge?.parent.namespace.value==='payments'&&q.reportedEdge?.child.namespace.value==='orders',overflow:document.documentElement.scrollWidth>innerWidth}});
+export const loaded=eventually(()=>state.current.applied).within(20,'seconds');
+export const exactEdge=always(()=>state.current.safe&&!state.current.overflow);
+const run=registerCustomAction('goo.runReportedEdge',async(document)=>{document.documentElement.dataset.edgeStarted='true';(document.querySelector('#exploreRun')as HTMLButtonElement)?.click()});
+const filter=registerCustomAction('goo.filterEdgeErrors',async(document)=>{const b=document.querySelector('#discoveryErrors')as HTMLInputElement;b.click();(document.querySelector('#exploreRun')as HTMLButtonElement)?.click()});
+const inspect=registerCustomAction('goo.inspectEdgeEvidence',async(document)=>{const d=document.querySelector('#exploreExplain')?.closest('details');if(d)d.open=!d.open});
+export const explore=actions(()=>{const s=state.current;if(!s.ready)return['Wait'];if(!s.started)return[run()];return s.applied?[filter(),inspect()]:['Wait']});

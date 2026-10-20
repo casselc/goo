@@ -54,8 +54,8 @@ distributed relationship table. Next priorities from the whole-product review:
    see [service identity](SERVICE_IDENTITY.md). Declared-only catalog membership
    now retains explicit presence states and independent registry provenance.
 2. Add deliberate instance navigation without changing service-level populations.
-3. Extend distributed exploration with exact edge-population selectors and
-   separately typed async links before a graphical topology view.
+3. Exact reported-edge populations are implemented; see [reported edges](REPORTED_EDGES.md).
+   Add separately typed async links before a graphical topology view.
 4. Unify investigation outlines and broader definition entry points; a frozen
    whole-dashboard artifact needs its own explicit custody contract.
 

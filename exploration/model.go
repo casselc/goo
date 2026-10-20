@@ -22,6 +22,7 @@ type Predicate struct {
 	Value string      `json:"value,omitempty" yaml:"value,omitempty"`
 }
 type Query struct {
+	ReportedEdge    *ReportedEdge   `json:"reportedEdge,omitempty" yaml:"reportedEdge,omitempty"`
 	Numeric         *NumericBinding `json:"numeric,omitempty" yaml:"numeric,omitempty"`
 	GroupTimeSeries bool            `json:"groupTimeSeries,omitempty" yaml:"groupTimeSeries,omitempty"`
 	SpanStatus      bool            `json:"spanStatus,omitempty" yaml:"spanStatus,omitempty"`
@@ -53,6 +54,14 @@ func (f Field) Type(signal string) (string, error) {
 	return "string", nil
 }
 func (q Query) Validate() error {
+	if q.ReportedEdge != nil {
+		if q.Signal != "spans" {
+			return fmt.Errorf("reported edges require spans")
+		}
+		if e := q.ReportedEdge.Validate(); e != nil {
+			return e
+		}
+	}
 	if q.Numeric != nil {
 		if e := q.Numeric.Validate(q.Signal); e != nil {
 			return e

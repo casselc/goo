@@ -120,7 +120,7 @@ func TestQuintNativeWindowsLive(t *testing.T) {
 		if mutation == 5 {
 			l.Gap.NativeWindows[0].RateDifference = "1"
 		}
-		coherent := l.Before == l.After && l.Counter.State == "comparable" && l.Counter.NativeWindows[0].RateDifference == "2" && l.Histogram.State == "comparable" && l.Histogram.NativeWindows[0].Buckets[0].DifferencePP == "-100" && l.Histogram.NativeWindows[0].P95Relation == "selection-range-higher" && l.Reset.State == "unavailable" && l.Reset.NativeWindows[0].RateDifference == "" && l.Gap.State == "unavailable" && l.Gap.NativeWindows[0].RateDifference == "" && l.Layout.State == "incompatible" && len(l.Layout.NativeWindows[0].Buckets) == 0 && l.Receipt.Algorithm == "goo/evidence-comparison/v2" && l.Receipt.Result.NativeWindows[0].RateDifference == "2"
+		coherent := l.Before == l.After && l.Counter.State == "comparable" && l.Counter.NativeWindows[0].RateDifference == "2" && l.Histogram.State == "comparable" && l.Histogram.NativeWindows[0].Buckets[0].DifferencePP == "-100" && l.Histogram.NativeWindows[0].P95Relation == "selection-range-higher" && l.Reset.State == "unavailable" && l.Reset.NativeWindows[0].RateDifference == "" && l.Gap.State == "unavailable" && l.Gap.NativeWindows[0].RateDifference == "" && l.Layout.State == "incompatible" && len(l.Layout.NativeWindows[0].Buckets) == 0 && l.Receipt.Algorithm == "goo/evidence-comparison/v3" && l.Receipt.Result.NativeWindows[0].RateDifference == "2"
 		sink := &qobs.MemorySink{}
 		rec := qobs.NewRecorder(sink)
 		for _, event := range l.Events {

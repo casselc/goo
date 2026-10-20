@@ -244,4 +244,5 @@ question/capture workflows. Schema URL remains declared metadata for trace data,
 and contract cards remain span-record evidence rather than outcome/conformance
 claims. Declared-only catalog entries now retain independent registry provenance,
 explicit absence states and ordinary fixed-question capture workflows. Exact
-edge-population selectors remain a future slice.
+reported-edge selectors now retain the original parent-search scope; async links
+and graphical topology remain separate future slices.

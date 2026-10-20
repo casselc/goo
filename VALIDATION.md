@@ -5,6 +5,44 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Reported-edge investigation and visual comparisons (2026-10-20 UTC)
+
+Distributed relationships now stage typed exact child-population questions, keeping
+parent ownership in the original environment/window/namespace universe. Filters,
+packages, captures and investigation steps retain that selector; explicitly wider
+child-service and whole-trace actions remain labeled. Real fixtures include 130
+children beyond the 100-record page, duplicate/ambiguous parents and namespace-
+scoped ownership. See [reported edges](docs/REPORTED_EDGES.md).
+
+Comparison views now use paired zero-based bars, common duration ceilings,
+0–100% error/share axes, equal-width breakdown tracks, explicit unavailable
+hatching and aligned native histogram bins. Detailed scope/provenance and exact
+tables remain in disclosures. See [visual comparisons](docs/VISUAL_COMPARISONS.md).
+
+- Root Go tests and vet passed; the frontend suite passed 51 tests.
+- Hegel edge planning passed 100 generated cases, including missing/empty/literal
+  namespaces, parameterized service names and detached question custody.
+- Live journeys 35, 52 (record and native cases), 54, 58, 59 and 62 passed,
+  including real OTLP ingestion, saved evidence, source-free reopening, mobile
+  containment and independent source failures. Their Quint observed-trace checks
+  passed; edge replay rejected five deliberately corrupted ledgers.
+- Thirty-second Bombadil campaigns passed for latency/error comparisons and
+  reported edges. Comparison invariants check common scale metadata and bounded
+  geometry; the breakdown journey additionally measures equal track pixel widths.
+- A final native-layout refinement promotes the actual rate/distribution ahead of
+  coverage clocks and retains metric-record counts in the exact-values disclosure.
+  Its focused journey passed, checking visual order as well as reset/gap/layout
+  withholding; the refreshed native frames were inspected directly.
+- Final runtime checks: all 12 Compose services running, health OK, served UI
+  hashes and Go binary match the built workspace. Existing Redis pending IDs were
+  preserved; traffic was restored after each journey wrapper.
+- Initial journey runs exposed fixture/test issues: the UI's two-minute scope
+  legitimately included an extra parent, the trace action was attempted while
+  Distribution was selected, and native-window tests still expected receipt v2
+  after the earlier v3 rollout. The journeys now select the intended one-minute
+  window, open Records before expanding a trace, and check the current version.
+  No comparison receipt algorithm or historical receipt was rewritten here.
+
 ## Declared services alongside observed telemetry (2026-10-20 UTC)
 
 Services now combines independent fixed-window discovery and current operation-
