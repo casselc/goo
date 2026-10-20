@@ -135,3 +135,38 @@ together. That display update is already supported; a live comparison engine,
 SSE transport, coverage semantics and high-frequency focus retention are not.
 The standalone fixture tests current-side property updates without mutating the
 baseline or starting a query.
+
+## Native tables and result states
+
+`goo-table` wraps a caller-authored native table, including its caption, thead,
+tbody, scoped headers and controls. It supplies a keyboard-focusable labelled
+region and contained horizontal overflow. Set `aria-label` or `aria-labelledby`,
+`density="compact"` for tighter cells, and optionally `sticky-header` with an
+app-owned bounded height. Default density uses comfortable spacing. It never
+replaces children, sorts, pages, calculates totals or attaches subscriptions.
+Adapters can append/update native rows while retaining existing nodes and focus;
+reconnect and attribute updates retain all content. The adapter must supply row
+identity, retention and follow/pause behavior for any future streaming surface.
+
+`goo-result-state state="partial"` accepts caller-authored explanation and native
+action children. Supported vocabulary is loading, empty, partial, unavailable,
+stale and unknown. `.state` reflects the attribute, including pre-upgrade SPA
+assignment. The component supplies a polite atomic status region; `announce="off"`
+disables announcements. Update the explanation text when state changes; color is
+supplementary, never the sole status cue. Caller-authored roles are retained.
+Unknown states receive neutral styling. There is no telemetry health inference,
+retry handler or source fetch. Avoid duplicating announcements in nested regions.
+
+Explore adopts these for inspection pages, full-population breakdown tables and
+main read status. Services uses them for operation lists, widget breakdowns and
+independent source/empty/partial states. Existing query scope, total counts,
+paging and action callbacks remain adapter-owned. Native source absence and local
+search misses have distinct explanations. See journey 64 for native row patch,
+focus retention, reconnect and keyboard overflow checks; journey 59 exercises real
+OTLP-backed Services adoption and partial source availability.
+
+The status region itself is not marked `aria-busy`: its loading explanation should
+be announced immediately. An adapter may independently mark the result container
+busy while replacing a snapshot. Real assistive-technology validation of the
+existing mobile table-to-card layouts remains outstanding; browser contracts
+verify native markup and keyboard behavior, not screen-reader output.

@@ -895,7 +895,7 @@ td details {
  .breakdown-controls>button {width:100%}
  .facet-toolbar {align-items:start;flex-direction:column;gap:8px}
  .facet-toolbar>label {width:100%;max-width:none}
- .telemetry-table,.telemetry-table .record-row,.telemetry-table .record-detail-row {display:block}
+ .telemetry-table,.telemetry-table>tbody,.telemetry-table .record-row,.telemetry-table .record-detail-row {display:block}
  .telemetry-table .record-columns {display:none}
  .telemetry-table .record-row>td {display:grid;grid-template-columns:75px minmax(0,1fr);gap:10px;border:0;max-width:none;padding:6px 10px}
  .telemetry-table .record-row>td::before {content:attr(data-label);color:var(--muted);font-size:10px}
@@ -1155,3 +1155,5 @@ td details {
 @media(max-width:700px){.comparison-metric-grid:has(>goo-metric-comparison){grid-template-columns:minmax(0,1fr)}.comparison-metric-grid>goo-metric-comparison{grid-column:auto;grid-row:auto}}
 
 .comparison-metric-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px;margin:16px 0}
+/* Widget viewports retain bounded scrolling; reusable tables don't choose heights. */
+.dashboard-widget goo-table{max-height:24rem}

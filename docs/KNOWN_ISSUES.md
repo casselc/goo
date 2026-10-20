@@ -354,8 +354,8 @@ end-to-end request latency remain outside that relationship. The first
 metrics; some signed/scientific native formats still remain exact tables.
 
 The [display component library](UI_COMPONENTS.md) is incremental. Compact latency,
-stat lists and grouped metric comparisons are adopted; remaining tables, facets,
-attribute viewers and result-state panels still use existing implementations.
+stat lists and grouped metric comparisons are adopted; passive tables and result states are now adopted in Explore and Services.
+Other tables, facets and attribute viewers still use existing implementations.
 Native histogram P95 remains a bucket range; this is not a new scalar percentile
 or a P90 evaluator. Light-DOM app styles must stay scoped to their owning view.
 

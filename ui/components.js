@@ -11,6 +11,19 @@
  function latency(host,summary,{title='Span latency',headingLevel=3}={}){const e=node('goo-latency');e.heading=title;e.headingLevel=headingLevel;e.summary=summary;host.append(e);return e}
  function stats(items,{className=''}={}){const e=node('goo-stat-list',undefined,className);e.items=items;return e}
  if(global.customElements&&global.HTMLElement){
+  // These shells never replace children: adapters retain row/action identity and focus.
+  class GooTable extends global.HTMLElement{
+   connectedCallback(){if(!this.hasAttribute('tabindex'))this.tabIndex=0;if(!this.hasAttribute('role'))this.setAttribute('role','region');if(!this.hasAttribute('aria-label')&&!this.hasAttribute('aria-labelledby'))this.setAttribute('aria-label','Data table');}
+  }
+  class GooResultState extends global.HTMLElement{
+   static get observedAttributes(){return ['state','announce']}
+   get state(){return this.getAttribute('state')||'unknown'}set state(value){this.setAttribute('state',value)}
+   connectedCallback(){if(Object.hasOwn(this,'state')){const value=this.state;delete this.state;this.state=value}if(!this.hasAttribute('role'))this.setAttribute('role','status');if(!this.hasAttribute('aria-atomic'))this.setAttribute('aria-atomic','true');this.syncAnnouncement()}
+   attributeChangedCallback(){if(this.isConnected)this.syncAnnouncement()}
+   syncAnnouncement(){this.setAttribute('aria-live',this.getAttribute('announce')==='off'?'off':'polite')}
+  }
+  if(!global.customElements.get('goo-table'))global.customElements.define('goo-table',GooTable);
+  if(!global.customElements.get('goo-result-state'))global.customElements.define('goo-result-state',GooResultState);
   class GooLatency extends global.HTMLElement{
    static get observedAttributes(){return ['summary','heading','heading-level']}
    set summary(value){this._summary=structuredClone(value);if(this.isConnected)this.render()}

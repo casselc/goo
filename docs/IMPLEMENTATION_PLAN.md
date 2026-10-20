@@ -523,3 +523,9 @@ cannot stand in for full-population measures. See the
 [component audit](UI_COMPONENT_AUDIT.md#eventual-live-updates-transport-neutral-display-contracts)
 for compatibility, ordering and freeze/capture boundaries. No SSE endpoint or
 live-tail/comparison engine is implemented in the component foundation round.
+
+### Passive table and result-state adoption
+
+Implemented shared native-table viewport and explicit result-state elements in
+Explore and Services. Preserve caller-owned row/action DOM for future patches.
+Next: shared facets and typed attribute displays; streaming adapters remain planned.

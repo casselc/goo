@@ -37,7 +37,7 @@ Prefer progressive enhancement of a native table over JSON column definitions
 with executable cell render callbacks:
 
 ```html
-<goo-table label="Captured route populations" density="compact" sticky-header>
+<goo-table aria-label="Captured route populations" density="compact" sticky-header>
   <table>
     <caption>Captured route populations</caption>
     <thead><tr><th scope="col">Route</th><th scope="col">Span records</th></tr></thead>
@@ -46,8 +46,8 @@ with executable cell render callbacks:
 </goo-table>
 ```
 
-This is a proposed API. The initial element should retain the table and supplied
-links/buttons in light DOM rather than replacing them. It should standardize:
+This initial API is now implemented (see the adoption update below). It retains the table and supplied
+links/buttons in light DOM. The original adoption requirements are:
 
 - Native caption, column/row-header semantics and visible numeric alignment.
 - Keyboard-reachable overflow when content actually overflows, with a meaningful
@@ -339,3 +339,11 @@ Existing Go/Hegel properties continue to verify semantic adapters. Quint observe
 traces and Bombadil actions should verify that component adoption preserves
 application read boundaries, exact scopes and stale-result rejection. Do not move
 those semantic or workflow assertions into a display component's implementation.
+
+## Adoption update (2026-10-20)
+
+The first two proposed primitives, `goo-table` and `goo-result-state`, now exist
+and are adopted in Explore inspection/group results and Services operation/widget
+results. Native table content is retained across attribute changes and reconnects.
+This is a passive viewport foundation, not an SSE transport or live evaluator.
+Facets, typed attributes and broader table migration remain next adoption work.

@@ -5,6 +5,42 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Passive tables and explicit result states (2026-10-20 UTC)
+
+`goo-table` and `goo-result-state` now provide native caller-owned table viewports
+and supplied state displays in Explore and Services. Captions, scoped headers,
+keyboard overflow and compact density share one implementation. Source reads,
+full totals, paging and action callbacks remain in the app. Native row patches,
+attribute changes and reconnects retain existing row/action identity; the component
+has no subscription or query behavior. Draft/cancel paths clear loading state.
+The design subagent implemented Services adoption and reviewed the shared contract.
+
+- Frontend suite passed all 52 tests. The first live campaign passed all seven
+  browser tests (component contracts, grouped measures, workbench, reported edges
+  and Services), including observed Quint trace validation/negative controls and
+  the 30-second Services Bombadil campaign. New Bombadil invariants check table
+  captions/scoped headers and explicit polite result regions.
+- Browser contracts check server HTML, pre-upgrade state assignment, caller-owned
+  row/action identity through append/reconnect, retained focus, supplied state
+  transitions, no component API reads and mobile keyboard horizontal scrolling.
+  Services checks local-search misses without new reads and independent partial
+  source availability. Workbench checks loading-to-draft state reset.
+- Parallel review caught stale loading styling on cancelled/edited questions,
+  a lost widget viewport bound and redundant outer scroll containers; corrected.
+  Screenshot inspection also corrected mid-word table headings. Shared styles
+  preserve readable headers with contained horizontal overflow.
+- Final post-review campaign passed all six tests (components, grouped measures,
+  workbench and Services), including the updated state/table assertions, Quint
+  checks and a second Services Bombadil campaign. Affected real journey frames
+  and synthetic reference frames were regenerated and inspected.
+- Runtime verification passed: all 12 services running, health OK, query/packages
+  image matches, served component/application asset hashes and Go binary match
+  the workspace. All five pre-existing Redis pending entries retained; demo
+  traffic restored. Build cache/dangling images were pruned without touching volumes.
+- No Go semantic core changes were made. Full screen-reader validation of the
+  existing mobile table-to-card pattern remains outstanding; the browser checks
+  establish markup, keyboard behavior and containment. SSE remains planned.
+
 ## Framework-neutral display components and compact exploration (2026-10-20 UTC)
 
 The public library now registers `goo-latency`, `goo-stat-list` and

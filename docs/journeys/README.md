@@ -1080,3 +1080,8 @@ verify its adoption in application workflows.
 
 ![Standalone component reference: synthetic fixtures](screenshots/63a-framework-neutral-display-components.png)
 ![Mobile component reference: synthetic fixtures](screenshots/63b-mobile-display-components.png)
+
+Journey 64 (`components.spec.js`) checks caller-owned table rows, focus retention
+during appends, reconnects, explicit state transitions and keyboard overflow on
+mobile without API reads. These are synthetic component conformance fixtures.
+Journey 59 covers adoption in real service observations and partial source failure.

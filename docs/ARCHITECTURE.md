@@ -118,4 +118,7 @@ an SPA. They own semantic DOM, formatting and native disclosure behavior. The
 application owns source reads, typed questions, scope changes, navigation and
 custody. Shared component styling is separate from page layout; light-DOM adapters
 must scope table/viewport rules to their own children. Current adoption covers
-Services/Explore latency and stat lists, plus grouped latency comparisons.
+Services/Explore latency and stat lists, grouped latency comparisons, native-table
+viewports and explicit result states. Table/state shells retain caller-authored
+children across upgrade, attribute changes and reconnects; adapters own row
+patches and status explanations. Future live transport remains outside elements.

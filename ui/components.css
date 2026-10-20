@@ -34,3 +34,20 @@ goo-latency,goo-stat-list,goo-metric-comparison{display:block;min-width:0}
 .ui-latency{border:0;border-radius:0;box-shadow:none;background:transparent}
 .ui-disclosure{border-top:1px solid var(--border,#2b3545);padding-top:8px}
 .ui-action-menu{border:0;padding:0}
+
+/* Passive native-table viewport: caller owns caption, head, body, rows and controls. */
+goo-table{display:block;min-width:0;max-width:100%;overflow:auto;overscroll-behavior-inline:contain;border:1px solid var(--border,#2b3545);border-radius:8px}
+goo-table:focus-visible{outline:2px solid var(--accent,#79ddc6);outline-offset:2px}
+goo-table>table{width:100%;border-collapse:collapse;margin:0;font-variant-numeric:tabular-nums}
+goo-table>table>caption{text-align:left;padding:10px 12px;color:var(--muted,#98a8bf);font-size:12px}
+goo-table>table>thead>tr>th,goo-table>table>tbody>tr>td,goo-table>table>tbody>tr>th{padding:12px;text-align:left;border-bottom:1px solid var(--border,#2b3545)}
+goo-table[density=compact]>table>thead>tr>th,goo-table[density=compact]>table>tbody>tr>td,goo-table[density=compact]>table>tbody>tr>th{padding:8px 10px}
+goo-table>table>thead>tr>th{font-size:12px;color:var(--muted,#98a8bf)}
+goo-table[sticky-header]>table>thead>tr>th{position:sticky;top:0;background:var(--panel,#151d28);z-index:1}
+goo-result-state{display:block;padding:10px 12px;margin:8px 0;border-inline-start:3px solid var(--border,#2b3545);background:var(--panel,#151d28);color:var(--muted,#98a8bf);font-size:13px;overflow-wrap:anywhere}
+goo-result-state:empty,goo-result-state[hidden],goo-table[hidden]{display:none}
+goo-result-state[state=loading]{border-inline-start-style:dashed}
+goo-result-state:is([state=partial],[state=stale],[state=unavailable]){border-inline-start-color:var(--warning,#f5b85d)}
+goo-result-state>p:first-child{margin-top:0}goo-result-state>p:last-child{margin-bottom:0}
+/* Header words stay legible; narrow tables use the viewport's horizontal scroll. */
+goo-table>table>thead>tr>th{white-space:nowrap;overflow-wrap:normal;word-break:normal}
