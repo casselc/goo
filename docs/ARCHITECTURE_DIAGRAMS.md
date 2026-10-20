@@ -1136,3 +1136,11 @@ The [native navigation diagram](NATIVE_STREAM_NAVIGATION.md) separates typed
 source evidence from local search/review/paging and the explicit Focus/Run read
 boundary. Coverage explanations use evaluator states; they do not rewrite or
 re-evaluate stored evidence or manufacture rates from displayed rows.
+
+### Discovered native service views
+
+The [native service sequence](SERVICE_DASHBOARDS.md#native-service-cards-and-exact-stream-questions)
+connects observed instrument planning, independent typed widget reads, passive
+compact values/coverage, source-free retained browsing and exact stream preview
+through capture custody. Latest interval values and whole-window coverage are
+separate; no browser measurement evaluator or automatic fleet aggregation is added.

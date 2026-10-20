@@ -447,3 +447,9 @@ Native results also offer [local stream search and coverage diagnostics](docs/NA
 Find an instance or dimension across retained streams, isolate those needing
 review, and inspect readable gap/reset explanations with their exact codes.
 Local browsing preserves the measurement's window, totals and evidence basis.
+
+Default [service dashboards](docs/SERVICE_DASHBOARDS.md#native-service-cards-and-exact-stream-questions)
+show evaluated native interval values alongside coverage, with exact-stream
+question links and source-free browsing of the retained inventory. Counters,
+gauges and native histogram ranges remain independent per stream; no manifest
+or fleet aggregation is required.

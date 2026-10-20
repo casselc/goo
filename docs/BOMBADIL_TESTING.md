@@ -489,3 +489,10 @@ evidence. Invariants require at most 25 entries, entries satisfying active local
 predicates and a retained basis. Run with `GOO_NATIVE_NAVIGATION_BOMBADIL=1`.
 Playwright also checks zero source reads, immutable question/basis, readable
 coverage guidance and cached stream disclosure state.
+
+`verification/bombadil/service-native.ts` discovers a real metrics-only service,
+opens its namespaced native dashboard, expands retained streams and checks exact
+links. Invariants keep latest unknown values unavailable and bind stream links
+to the displayed instance/namespace. Run journey75 with
+`GOO_SERVICE_NATIVE_BOMBADIL=1`. The existing service-dashboard actor continues
+to exercise table/result-state contracts, scoped questions and activity charts.

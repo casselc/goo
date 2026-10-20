@@ -1139,3 +1139,63 @@ and `artifacts/native-navigation-final-health.json`. Local filters/open-state
 cache are scoped to the current render and are not saved into question links or
 captures. No fleet aggregation, health inference or live gauge/histogram support
 was added by this presentation milestone.
+
+## 2026-10-20 — native service cards and exact-stream evidence
+
+Upgraded existing automatically selected native service widgets with shared
+compact tables, full retained stream counts/coverage, exact-stream question links
+and lazy retained-result navigation. The planner still selects at most two
+supported discovered instruments and executes with two concurrent requests.
+No naming heuristic, fleet aggregation, new evaluator or evidence format was
+introduced. A valid latest interval may display beside incomplete full-window
+coverage; it is explicitly not a whole-window or live service rate. Gauge state
+remains fixed-window freshness. Native percentile bounds use the shared histogram
+formatter rather than ad hoc labels. A share-link size failure no longer hides
+otherwise valid retained values.
+
+Checks:
+
+- Frontend suite: all 22 test files passed. Focused native-card checks cover
+  actual `ok` interval states, latest unknown withholding, zero preservation,
+  partial-window versus latest-interval distinction, detached identity, bounded
+  summaries and native histogram ranges/no-observation labels.
+- Existing Hegel dashboard planning passed 100 generated scope/order cases.
+  No production Go semantic changes were made; root/race suites were not rerun.
+- The original dashboard journey passed on the first image, including its actor,
+  partial source availability, stale-generation disposal and investigation custody.
+- The first native fixture exposed an existing additional rendering mismatch:
+  unbounded-upper histogram ranges were incorrectly treated as unavailable.
+  The corrected card reuses the shared histogram formatter. Failed initial
+  attempts are not counted as successful validation.
+- The workspace briefly exhausted disk while spawning a test sandbox. Removing
+  only unused Docker build cache and dangling images recovered about 6 GiB.
+  All containers/volumes/telemetry were retained; all 12 services remained running.
+  The previously blocked Hegel check was rerun successfully.
+
+Final campaign/image details follow below. Native cards retain the existing
+floating interval-rate representation; exact rational full-window comparison is
+a separate workflow. Incomplete default service windows do not automatically
+qualify as live-rate baselines. Exact stream identity and fixed scope survive
+preview, explicit Run, ordinary capture reread and immutable reopen.
+
+Final validation:
+
+- All five affected real-source journeys (46/47/59/60/75) passed in 3.7 minutes.
+  The native ledger `artifacts/service-native/93062d0d36/ledger.json` passed
+  observed Quint replay and all nine rejecting controls (18.82 seconds).
+- Native Bombadil recorded 529 steps and exercised discovery, service opening,
+  retained browsing and exact-link checks. The existing dashboard actor recorded
+  228 steps. An earlier actor-only failure used an absent aria-label; the corrected
+  selector matches the button's visible accessible name. Only the final passing
+  campaign is counted here.
+- Regenerated affected service frames (46/47/59/60) and new 75 desktop/mobile
+  storyboards; visually inspected the three-column overview and mobile retained
+  stream view. Wide native tables scroll within their panels.
+- Final query/packages image:
+  `sha256:bc8f61e16e7d605e36a21674f04ae1fa20508b566d52b829c7b7fcbf67268960`.
+  All 12 services run, health passes, served UI and binary hashes match local
+  source/build, and all five historical pending IDs remain among 12 pending
+  entries. The journey wrapper restored traffic after completion.
+
+Evidence: `artifacts/service-native-final-journeys.log`,
+`artifacts/service-native-final-health.json`, and the ledger/actor directory above.

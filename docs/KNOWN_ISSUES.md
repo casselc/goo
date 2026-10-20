@@ -393,3 +393,10 @@ isolation and durable live workspaces remain future work. See LIVE_COMPARISON.md
   fleet rates or imply health. Local filters are not saved in question links or evidence. Outer stream
   disclosure state survives local filtering within one rendered result; nested value components retain their existing lifecycle limits.
   Unrecognized diagnostics preserve the exact code with neutral guidance.
+
+- Compact native service values are latest evaluated endpoint/interval values,
+  not whole-window rates or fleet percentiles. A valid interval may be displayed
+  alongside incomplete whole-window coverage. Counter interval rates retain the
+  kernel's floating representation; rational full-window comparisons are separate.
+  Automatic service native selection remains capped at two supported instruments;
+  other discovered instruments can be previewed in Native instruments.

@@ -1107,3 +1107,10 @@ td details {
 .native-reason-list li { margin: .5rem 0; }
 .native-stream-list > details { margin: .75rem 0; }
 .scroll > table.measurement-table th, .scroll > table.measurement-table td { white-space: nowrap; }
+
+.dashboard-native-table > table { min-width: 30rem; }
+.dashboard-native-table td { vertical-align: top; }
+.dashboard-native-table td:nth-child(2) { font-variant-numeric: tabular-nums; }
+.dashboard-native-retained { margin-top: .75rem; }
+
+.dashboard-native-table td:first-child { min-width: 10rem; overflow-wrap: normal; word-break: normal; }

@@ -1,0 +1,13 @@
+spec: service_native.qnt
+module: service_native
+constants: {INITIAL: 0}
+invariants: [safety]
+actions:
+  automatic: {expect: 'coherent == {{.obs.coherent}}'}
+  values: {expect: 'coherent == {{.obs.coherent}}'}
+  browse: {expect: 'coherent == {{.obs.coherent}}'}
+  preview: {expect: 'coherent == {{.obs.coherent}}'}
+  evaluate: {expect: 'coherent == {{.obs.coherent}}'}
+  capture: {expect: 'coherent == {{.obs.coherent}}'}
+  reopen: {expect: 'coherent == {{.obs.coherent}}'}
+  gauge: {expect: 'coherent == {{.obs.coherent}}'}

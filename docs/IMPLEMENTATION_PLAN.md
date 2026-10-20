@@ -596,3 +596,16 @@ same presenter. Journey74 records zero-read navigation and custody for Quint
 replay with rejecting mutations; a native navigation Bombadil actor exercises the
 controls. Next: default service-native views from observed instrument inventory,
 using the same bindings and explicit coverage limits rather than fleet inference.
+
+### Native service-card integration (implemented 2026-10-20)
+
+Default discovered native widgets now show evaluated latest interval values with
+separate whole-window/gauge state. Fixed the counter/histogram `ok` versus
+`observed` state mismatch; newest unknown intervals still withhold values.
+Shared compact tables expose exact-stream question links; lazy retained results
+reuse stream navigation/coverage guidance without reads. Existing two-instrument
+and two-concurrent-read budgets remain unchanged. Journey75 covers namespace
+isolation, interval semantics, histogram ranges, gauge freshness and exact-stream
+capture custody with Bombadil/Quint; no new evaluator or planner policy is added.
+Next: explicit selection of native service widgets from the observed instrument
+inventory, retaining bounded reads and the same question/evidence primitives.

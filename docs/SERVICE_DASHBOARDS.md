@@ -121,3 +121,73 @@ Widgets now reuse the [display library](UI_COMPONENTS.md): one mean plus a compa
 p50/P95/P99 strip, exact values in Latency details, and shared label/value lists.
 The primary question link stays visible; add/capture actions are under **Widget
 actions**. Exact read timestamps remain in each widget evidence disclosure.
+
+## Native service cards and exact-stream questions
+
+Native service cards now use the same passive table/stat/attribute components
+as the rest of Goo. Up to four retained streams show their latest evaluated
+value beside whole-window coverage or gauge observation state. The current
+planner still automatically loads at most two supported discovered instruments;
+selection is deterministic by metadata, with other instruments available in the
+service's Native instruments section. No new health policy or convention-name
+heuristic was introduced.
+
+The compact summary accepts the native kernel's real `ok` interval state for
+counters and histograms (gauges use `observed`). Previously, an `observed` check
+incorrectly suppressed valid counter/histogram interval values. Latest is chosen
+by its actual endpoint, never by an earlier usable value. A newer unknown/reset/
+absent interval withholds the value. Recorded zero remains observed. Histograms
+retain bucket-bounded p95 ranges, including open-ended bounds; an empty recorded
+distribution has no percentile. No scalar percentile or fleet merge is inferred.
+
+A valid latest interval can coexist with incomplete whole-window coverage.
+The value is explicitly that retained interval's evaluated rate or distribution,
+not a rate for the whole selected window or a live service/fleet claim. Counter
+`perSecond` is the existing kernel's floating interval value; exact rational
+whole-window comparisons remain a separate workflow. Gauge freshness remains
+that of the fixed evaluated window. Source-read time, exact question and evidence
+basis stay available on each independently read widget.
+
+Each row offers **Open stream question**, preserving complete resource/point
+identity, resource and scope schema URLs, library version, unit, namespace,
+environment and fixed bounds through the common exact-stream binding. Opening
+previews without reading telemetry; **Run measurement** is explicit. Capture
+rereads that exact fixed question, then retains ordinary immutable evidence that
+can be reopened or attached to an investigation. An incomplete service-window
+capture does not become a valid live-rate baseline automatically; choose complete
+export-aligned bounds explicitly for that comparison.
+
+**Native result · exact streams** lazily renders the complete bounded retained
+result once. Expanding it, searching streams and reviewing coverage perform no
+source reads. Local filters do not revise the widget question, compact summary,
+source record count or basis. Closing/reopening the same retained disclosure
+keeps its local view; a new source read is a new result. The full result reuses
+[native stream navigation](NATIVE_STREAM_NAVIGATION.md) and its diagnostic codes.
+
+```mermaid
+sequenceDiagram
+ actor User
+ participant Service as Service app adapter
+ participant Go as Existing typed planner and evaluators
+ participant UI as Passive native table and retained browser
+ participant Store as Capture store
+ User->>Service: Open discovered service and namespace
+ Service->>Go: Plan supported questions (no telemetry read)
+ Service->>Go: Execute bounded widgets under fixed scope
+ Go-->>UI: Independent native results with evaluated intervals and coverage
+ User->>UI: Expand/search retained streams
+ UI-->>User: Same evidence basis (no telemetry read)
+ User->>Service: Open exact stream question
+ Service->>Go: Validate exact binding preview (no telemetry read)
+ User->>Go: Run measurement; explicitly capture evidence
+ Go->>Store: Retain fixed question and typed result
+ Store-->>User: Immutable evidence for reopen/investigation
+```
+
+Journey75 exercises metrics-only HTTP/runtime services without a manifest,
+namespace isolation, six counter streams, a newer absent counter value, native
+histogram bounds, gauge freshness, source-free retained browsing, mobile layout,
+exact stream preview/Run and capture/reopen. Observed Quint replay includes nine
+rejecting mutations; a native service Bombadil actor covers discovery, service
+open, retained browsing and exact links. Existing dashboard and service-browser
+journeys continue to cover partial failures and cancelled scope generations.

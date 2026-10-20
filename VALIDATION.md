@@ -2524,3 +2524,29 @@ ledgers passed with nine rejecting controls each. All 12 services are healthy
 with matching served-source/binary hashes and historical pending IDs preserved.
 Affected 38/57/72/73/74 frames were regenerated; desktop/mobile diagnostics were
 visually inspected. See ENVIRONMENT_VALIDATION.md for the exact final image.
+
+## 2026-10-20 — native service overview integration
+
+Native service cards now present evaluated latest interval/sample values with
+separate whole-window coverage, using shared passive tables/stats/attributes.
+Counter/histogram `ok` interval states and native unbounded quantile ranges are
+handled correctly; shared histogram formatting preserves bounds and empty
+observations. Newer unknown values never fall back to older valid intervals.
+Rows open exact-stream questions; retained inventories are constructed lazily
+and searched without telemetry reads. Planner budgets and Go evaluator semantics
+are unchanged.
+
+The frontend suite passes 22 files; focused native-card checks cover actual kernel
+states, unknown latest observations, zero, partial-window/valid-interval coexistence,
+stream detachment and histogram ranges. Existing Hegel dashboard-planning
+properties pass. The existing dashboard journey passed an initial real-source
+campaign; final affected service journeys, native actors, observed Quint ledgers,
+image health and documentation frames are recorded in ENVIRONMENT_VALIDATION.md.
+See [native service cards](docs/SERVICE_DASHBOARDS.md#native-service-cards-and-exact-stream-questions).
+
+Final affected browser campaign: five journeys passed in 3.7 minutes. Native
+Bombadil exercised all four required actions over 529 steps; dashboard Bombadil
+recorded 228 steps. The observed native ledger passed Quint replay and nine
+rejecting controls. Updated desktop/mobile frames were reviewed. Final health
+checks passed for all 12 services, matching served assets/binary and preserved
+historical pending telemetry; see ENVIRONMENT_VALIDATION.md for image and evidence.

@@ -1202,3 +1202,20 @@ previews its exact typed identity. Reopening the capture is unchanged.
 ![Bounded retained stream inventory](screenshots/74a-bounded-stream-inventory.png)
 ![Boundary coverage explained after identity search](screenshots/74b-explained-boundary-coverage.png)
 ![Native review controls and scrollable observations on mobile](screenshots/74c-mobile-stream-review.png)
+
+## 75. From a native service overview to exact-stream evidence
+
+Run `journeys/service-native.spec.js`. Discover an ordinary OTel HTTP service in
+namespace payments without a Goo manifest. Two native widgets load automatically:
+six independent request-counter streams and a native request-duration histogram.
+The newest absent interval withholds a value; another stream shows a valid latest
+5/s interval alongside incomplete whole-window coverage. Histogram p95 stays the
+0.5 … +∞ s bucket range. A same-named service in another namespace is excluded.
+Expand/search the retained six streams without a telemetry read, then open one
+exact stream question. Preview preserves scope/identity; Run and Capture are
+explicit reads. Reopen retains immutable evidence. A runtime service separately
+shows a fresh gauge observation. The mobile compact table scrolls within its owner.
+
+![Native service values and separate window coverage](screenshots/75a-native-service-overview.png)
+![Retained service stream browsing without a read](screenshots/75b-retained-service-streams.png)
+![Compact native service card on mobile](screenshots/75c-mobile-native-service-card.png)

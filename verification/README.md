@@ -544,3 +544,12 @@ custody projection, not a replacement metric evaluator. Run the actor with
 `GOO_NATIVE_NAVIGATION_BOMBADIL=1` and journey74. Frontend generated sequences
 check local paging/search immutability; existing Hegel exact-stream state tests
 continue to cover the underlying Go semantic contract.
+
+Journey75 writes `artifacts/service-native/<run>/ledger.json`. Set
+`GOO_SERVICE_NATIVE_LEDGER` and run `TestQuintServiceNativeLedger` to replay its
+actual automatic/value/browse/preview/evaluate/capture/reopen/gauge projection,
+including nine rejecting mutations. It verifies latest-value versus window state,
+namespace scope, no-read browsing and immutable exact-stream capture custody.
+`model/service_native.qnt` describes UI/evidence coherence, not a new metric
+kernel. Existing Hegel dashboard-planning properties cover unchanged scope/order
+semantics. Run the native actor with `GOO_SERVICE_NATIVE_BOMBADIL=1`.

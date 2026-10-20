@@ -292,3 +292,9 @@ inventory search/review predicates, pagination, focus and diagnostic mapping.
 Only supplied interval/sample states are counted; no rates/coverage semantics or
 subscriptions move into components. Observation table headings/cells stay intact
 inside their existing horizontal scroll owner on narrow screens.
+
+Native service cards reuse `goo-table`, `goo-stat-list` and structured attributes.
+The service adapter owns typed-result matching, latest-interval presentation,
+exact-stream links and lazy retained-result construction. Expanding/searching a
+retained widget does not subscribe or fetch. The compact table remains outside
+the retained browser and preserves its nodes while local inventory filters change.
