@@ -24,3 +24,9 @@ test('window selection builds an exact question and requires identical full supp
  const {question,compatible}=require('../ui/window-discovery');const original={definition:{kind:'counter'},fromMs:1700000000000,toMs:1700000003000},w={fromNS:'1700000000000000123',toNS:'1700000002000000123',signature:'a'};const before=structuredClone(original);const q=question(original,w);
  assert.equal(q.fromMs,1700000000000);assert.equal(q.toMs,1700000002001);assert.equal(q.fromNS,w.fromNS);assert.equal(q.toNS,w.toNS);assert.deepEqual(original,before);assert.equal(compatible(w,{...w}),true);assert.equal(compatible(w,{...w,signature:'b'}),false);assert.equal(compatible(null,w),false);
 });
+test('a comparison side becomes a detached reusable question with exactly its own evidence',()=>{
+ const {questionFromEvidence,captureQuestion}=require('../ui/workspace');const receipt={id:'a'.repeat(64),question:{kind:'measurement',measurement:{definition:{environment:'prod',kind:'counter',source:{metric:'calls'}},fromMs:1700000000000,toMs:1700000002001,fromNS:'1700000000000000123',toNS:'1700000002000000123'}}};const before=structuredClone(receipt),card=questionFromEvidence(receipt);
+ assert.deepEqual(card.evidence,[receipt.id]);assert.deepEqual(captureQuestion(card.step),receipt.question);card.step.measurement.source.metric='changed';card.evidence.push('b'.repeat(64));assert.deepEqual(receipt,before);
+ for(const patch of [{id:'bad'},{question:{kind:'inventory'}},{question:{kind:'measurement',measurement:{...receipt.question.measurement,toNS:'1'}}}])assert.throws(()=>questionFromEvidence({...receipt,...patch}));
+ const record={id:'b'.repeat(64),question:{kind:'explore',explore:{signal:'logs',environment:'prod',fromMs:1000,toMs:2000,limit:100,offset:0}}};assert.deepEqual(captureQuestion(questionFromEvidence(record).step),record.question);
+});

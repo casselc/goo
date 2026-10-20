@@ -458,3 +458,7 @@ Exact native scope transport and
 picker previews all-stream coverage and exclusions, requires selection on both
 sides and explicitly rereads selected exact sub-scopes. Future work may expand
 support policies; no interval realignment or member dropping is implied.
+
+[Reusable comparison questions](REUSABLE_COMPARISON_QUESTIONS.md) now close the
+comparison-to-investigation loop: either side stages a typed question with its own
+capture linked. Existing revision, fixed rerun and fresh-window flows are reused.

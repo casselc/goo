@@ -1064,3 +1064,18 @@ flowchart LR
 
 The original capture question and evidence remain unchanged. Partial publication
 retains completed capture IDs for recovery; separate source reads are not atomic.
+
+## Comparison evidence to reusable intent
+
+```mermaid
+flowchart LR
+  Side[Stored comparison side] -->|explicit add / no source read| Draft[New typed question and linked capture in draft]
+  Draft -->|save| Revision[Immutable investigation revision]
+  Revision -->|reopen / no source read| Fixed[Exact fixed question]
+  Fixed -->|run and capture| Read[Explicit source read]
+  Read --> Child[Child revision appends capture ID]
+  Fixed -->|preview fresh window / no source read| Fresh[Same definition, new proposed scope]
+```
+
+[Contract and journey](REUSABLE_COMPARISON_QUESTIONS.md): new question keys keep
+evidence distinct, and fresh previews do not rewrite the saved question.

@@ -1,0 +1,10 @@
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document})=>({count:document.querySelectorAll('#documentCards > li').length,questions:Array.from(document.querySelectorAll('#documentCards [data-kind=question]')).map(q=>q.querySelectorAll('.step-evidence-entry').length),ready:!!document.querySelector('[data-add-question]')}));
+export const ready=eventually(()=>state.current.ready).within(15,'seconds');
+export const bounded=always(()=>state.current.count<=32);
+export const linked=always(()=>state.current.questions.every(n=>n===1));
+const add=registerCustomAction('goo.reuseBaseline',async(document)=>{(Array.from(document.querySelectorAll('[data-add-question]')).find(b=>b.textContent==='Add baseline question')as HTMLButtonElement)?.click()});
+const revert=registerCustomAction('goo.revertQuestions',async(document)=>{(document.querySelector('#documentRevert')as HTMLButtonElement)?.click()});
+export const explore=actions(()=>state.current.ready?[add(),revert()]:['Wait']);

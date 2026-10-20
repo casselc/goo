@@ -311,3 +311,9 @@ counter and explicit histogram captures, with explicit selection and rereads.
 Asynchronous streams without common boundaries, unsupported members and overflowing
 histogram populations withhold support. Discovery does not select stream subsets
 or realign intervals; the ordinary time editor still authors millisecond bounds.
+
+Typed comparison sides can now become
+[reusable question cards](REUSABLE_COMPARISON_QUESTIONS.md) with their own capture
+linked. Staging is local until revision publication; fresh-window previews retain
+the definition but do not rewrite the saved fixed scope or relink old evidence.
+Inventory/legacy pair captures are not reusable question sides.

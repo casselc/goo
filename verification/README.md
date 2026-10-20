@@ -401,3 +401,22 @@ go test -run 'TestHegelWindowDiscoverySupport|TestHegelSavedComparisonStateSwarm
 The Bombadil actor explores compare/discover/select/clear without source capture.
 Its invariants require the original incomplete decision to remain withheld and
 the capture control to remain disabled until both scopes are selected.
+
+## Reusable comparison questions
+
+`TestHegelReusableQuestionRevisions` checks exact nanosecond scope and evidence
+retention across immutable revisions for 100 requested cases. Existing saved
+comparison state/swarm tests continue to cover revision and receipt recovery.
+`model/reusable_questions.qnt` models source-free staging, failed publication,
+save/reopen/fresh preview and explicit fixed capture/fresh execution. The live
+checker consumes `GOO_REUSABLE_QUESTIONS_LEDGER` and rejects six mutations.
+
+```sh
+GOO_REUSABLE_QUESTIONS_BOMBADIL=1 bash scripts/run_journeys.sh journeys/reusable-questions.spec.js
+cd verification
+go test -run 'TestHegelReusableQuestionRevisions|TestHegelSavedComparisonStateSwarm' -v .
+```
+
+The Bombadil actor stages baseline questions and reverts unsaved drafts; it never
+executes telemetry reads or publishes revisions. It checks the card bound and
+that every added question has exactly one linked evidence entry.

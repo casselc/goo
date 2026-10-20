@@ -361,3 +361,7 @@ Native measurement APIs and shared question steps retain optional exact nanoseco
 scopes; see [scope transport](docs/NATIVE_WINDOW_COMPARISON.md#exact-scope-transport).
 The [comparison panel discovers supported windows](docs/OBSERVED_WINDOW_DISCOVERY.md)
 without a source read and captures explicitly selected sub-scopes.
+
+Comparison sides can become [reusable question cards](docs/REUSABLE_COMPARISON_QUESTIONS.md)
+with their exact scope and captured evidence already linked. Save a revision to
+share, reopen without a source read, or explicitly rerun the fixed question.

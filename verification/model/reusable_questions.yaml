@@ -1,0 +1,19 @@
+spec: reusable_questions.qnt
+module: reusable_questions
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  stage:
+    expect: 'reads == {{.obs.reads}} and revisions == {{.obs.revisions}} and coherent == {{.obs.coherent}}'
+  publish_failed:
+    expect: 'reads == {{.obs.reads}} and revisions == {{.obs.revisions}} and coherent == {{.obs.coherent}}'
+  save:
+    expect: 'reads == {{.obs.reads}} and revisions == {{.obs.revisions}} and coherent == {{.obs.coherent}}'
+  open:
+    expect: 'reads == {{.obs.reads}} and revisions == {{.obs.revisions}} and coherent == {{.obs.coherent}}'
+  capture:
+    expect: 'reads == {{.obs.reads}} and revisions == {{.obs.revisions}} and coherent == {{.obs.coherent}}'
+  fresh:
+    expect: 'reads == {{.obs.reads}} and revisions == {{.obs.revisions}} and coherent == {{.obs.coherent}}'
+  execute:
+    expect: 'reads == {{.obs.reads}} and revisions == {{.obs.revisions}} and coherent == {{.obs.coherent}}'

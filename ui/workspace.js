@@ -3,6 +3,11 @@
  const routes={explore:{title:'Explore',description:'Follow a question through captured telemetry.'},services:{title:'Services',description:'Discover emitting services and open focused investigations.'},operations:{title:'Operations',description:'Investigate application behavior through shared definitions.'},investigations:{title:'Saved investigations',description:'Reopen evidence, preserve context, and compare revisions.'},definitions:{title:'Definitions',description:'Inspect the contracts behind your investigations.'},examples:{title:'Examples',description:'Investigate independent sample applications using shared telemetry packages.'}};
  // Versioned links contain questions, never evidence or source credentials.
  function exactBounds(q){return q.fromNS!==undefined||q.toNS!==undefined?{fromNS:q.fromNS,toNS:q.toNS}:{}}
+ function questionFromEvidence(receipt){
+  if(!/^[a-f0-9]{64}$/.test(receipt?.id))throw Error('An exact capture ID is required.');
+  const q=receipt.question;let step;if(q?.kind==='measurement'&&q.measurement)step=measurementStep(q.measurement);else if(q?.kind==='explore'&&q.explore)step=recordStep(q.explore);else throw Error('This evidence cannot become a reusable question.');
+  validateStep(step);return {kind:'question',step,evidence:[receipt.id]};
+ }
  function captureQuestion(step){validateStep(step);return step.kind==='record'?{kind:'explore',explore:structuredClone(step.record)}:{kind:'measurement',measurement:{definition:structuredClone(step.measurement),fromMs:step.scope.fromMs,toMs:step.scope.toMs,...exactBounds(step.scope)}}}
  function evidenceDifference(step,capture){
   const identify=global.GooQuestionSession?.identity||(typeof module!=='undefined'?require('./question-session').identity:null);const expected=captureQuestion(step),actual=capture,changes=[];if(expected.kind!==actual.kind)return ['Signal family differs'];
@@ -52,5 +57,5 @@
   for(const button of buttons)button.onclick=()=>navigate(button.dataset.workspace,{focus:true});global.addEventListener('popstate',()=>navigate(routeFromHash(location.hash),{writeHash:false}));global.addEventListener('hashchange',()=>navigate(routeFromHash(location.hash),{writeHash:false}));navigate(routeFromHash(location.hash),{writeHash:false});
   return {navigate,current:()=>current};
  }
- const api={captureQuestion,evidenceDifference,recordStep,measurementStep,validateStep,stepLink,readStepLink,sameWindow,routes,routeFromHash,questionLink,readQuestionLink,validateLink,mount};if(typeof module!=='undefined')module.exports=api;else global.GooWorkspace=api;
+ const api={questionFromEvidence,captureQuestion,evidenceDifference,recordStep,measurementStep,validateStep,stepLink,readStepLink,sameWindow,routes,routeFromHash,questionLink,readQuestionLink,validateLink,mount};if(typeof module!=='undefined')module.exports=api;else global.GooWorkspace=api;
 })(typeof window==='undefined'?globalThis:window);

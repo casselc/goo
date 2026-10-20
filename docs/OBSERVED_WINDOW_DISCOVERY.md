@@ -90,3 +90,8 @@ matching evidence to the old question card.
 The existing shared measurement step preserves exact string `fromNS`/`toNS` bounds
 and enclosing millisecond bounds. All selected captures use that contract. Native
 comparison receipts remain algorithm v2; no receipt algorithm changed here.
+
+After recapture, either comparison side can be
+[added as a reusable question](REUSABLE_COMPARISON_QUESTIONS.md), with its exact
+selected scope and new capture ID already linked. This is a separate explicit
+draft action and does not alter the original broad-scope question.

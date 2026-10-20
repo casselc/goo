@@ -5,6 +5,55 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Reusable comparison questions (2026-10-20)
+
+[Comparison sides become reusable questions](docs/REUSABLE_COMPARISON_QUESTIONS.md)
+with a detached typed step, unique question key and exactly that capture linked.
+Staging and shared reopening do not read telemetry. Existing immutable document
+publication and fixed Run and capture append evidence in a child revision. Fresh
+window preview now sits beside the time controls and retains the definition while
+proposing a new scope, leaving the saved question unchanged.
+
+Passed local checks: full root Go suite and vet (`reusable-questions-go.log`,
+`reusable-questions-vet.log`), all **43 frontend tests**
+(`reusable-questions-node.log`), **100 requested Hegel exact-scope/revision cases**
+and **60 saved-comparison state/swarm scenarios of 15 steps**
+(`reusable-questions-hegel.log`), verification vet and Quint model typecheck.
+Frontend checks cover detached evidence/definition objects, exact native scope,
+record questions and malformed/unsupported receipt rejection.
+
+The first Quint draft used reserved action names; the renamed model typechecks.
+The initial live run reached successful fixed rerun, then exposed that fresh-window
+preview was hidden inside the package editor. That owned run was interrupted and
+its wrapper restored traffic. Moving the existing preview button beside the time
+controls makes the intended workflow directly accessible without opening YAML.
+
+Final live campaign: **11 passed, no skips, 4.0 minutes**
+(`artifacts/reusable-questions-final-journeys.log`). It covers record/gauge/native
+comparisons, mixed question steps, linked evidence, shared measurements, reusable
+questions, saved findings and observed-window discovery. Storyboard 56 uses real
+standard OTLP counters with **123 ns** offsets. Adding both sides, retrying a
+failed publication and reopening a shared exact question perform no telemetry
+read; fixed Run and capture appends one evidence ID in a child revision; fresh
+preview retains the definition and requires explicit execution for its new scope.
+Earlier revisions and captures remain unchanged; mobile containment passed.
+
+Observed ledger: `artifacts/reusable-questions/1792454583766/ledger.json`. Quint
+replay passed and all **six deliberate mutations were rejected**. The **30-second
+Bombadil campaign** passed with 120 baseline-question actions and 114 draft
+revert actions, checking linked evidence and the card bound. Storyboard 56 frames and
+affected frames 38 and 50–55 were regenerated from the running app. Architecture,
+workflow docs and the implementation plan describe the implemented contract.
+
+Final image:
+`sha256:1bc22f7438d40cba68f4468177c3f6d9a5b518a234e1972bdc4284dd888f7f86`
+(`reusable-questions-final-image.log`, `reusable-questions-final-up.log`).
+Final health checks passed for all **12 running services**, HTTP health, Go binary
+and served HTML/JS/CSS hashes matching tested sources, and preservation of all
+five pre-existing stale pending Redis IDs
+(`artifacts/reusable-questions-final-health.json`). The wrapper restored the owned
+traffic generator; no stream entries or volumes were reset.
+
 ## Observed native window discovery (2026-10-19)
 
 [Find comparable windows](docs/OBSERVED_WINDOW_DISCOVERY.md) reads validated

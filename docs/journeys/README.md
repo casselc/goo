@@ -948,3 +948,21 @@ retains the first ID and leaves the original comparison selected.
 Quint observed-trace replay validates source-free discovery/selection and explicit
 two-read capture, with six rejecting mutations. Optional Bombadil exploration
 compares original captures, discovers support and toggles selections.
+
+### 56 — Reuse comparison questions
+
+`reusable-questions.spec.js` captures real standard OTLP request counters with
+123 ns offsets, then adds each saved comparison side as a separate reusable
+question. It forces a publication failure and retries without recapture, shares
+the revision with a fresh browser, restores exact scope without telemetry reads,
+runs and captures a child revision and previews/runs a fresh window with the same
+definition. Earlier revisions and evidence remain unchanged.
+
+- [Questions with linked captured evidence](screenshots/56a-comparison-to-reusable-questions.png)
+- [Restored exact question](screenshots/56b-restored-exact-question.png)
+- [Rerun appends evidence history](screenshots/56c-rerun-linked-evidence-history.png)
+- [Fresh window on mobile](screenshots/56d-mobile-fresh-window.png)
+
+Quint replay includes six rejecting mutations. Optional Bombadil exploration adds
+questions and reverts drafts, checking bounded cards and one linked capture per
+new question.

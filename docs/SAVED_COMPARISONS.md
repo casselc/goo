@@ -93,3 +93,7 @@ reference two newly captured exact questions, retaining nanosecond strings in th
 frozen receipt. The original question card and its original evidence remain
 unchanged. Saving the comparison records the actual new results; support preview
 alone is not saved as evidence or a promise of source completeness.
+
+Each typed side offers [Add question](REUSABLE_COMPARISON_QUESTIONS.md). It stages
+a separate reusable question with that side's capture linked, without a source
+read; save the investigation revision to share it.
