@@ -2497,3 +2497,30 @@ source-free freeze/reopen and clear. Its observed Quint model rejects nine
 corruptions; Bombadil exercises Run/Focus/Run/Clear. Actual image, campaign and
 screenshot evidence is in ENVIRONMENT_VALIDATION.md and
 [the selection contract](docs/EXACT_STREAM_SELECTION.md).
+
+## 2026-10-20 — retained native stream navigation
+
+Native results and captures now offer full-retained-inventory identity search,
+Needs review filtering, 25-stream paging and explicit local empty results. These
+controls preserve question, source totals and evidence basis. Coverage guidance
+maps existing typed states/reasons to readable explanations while retaining exact
+codes. Gauges keep independent sample/freshness semantics; no new rates or
+coverage evaluator is implemented in the browser.
+
+The frontend suite passes 22 test files, including ten focused native/stream/live
+checks and generated local navigation sequences. Existing Hegel exact-stream
+state checks pass. Journey74's actual 28-stream capture validates zero-read local
+navigation, unknown coverage, immutable question/basis, disclosure retention,
+mobile bounds, exact Focus preview and reopen. Quint accepts its observed trace
+and rejects nine corruptions; the navigation Bombadil actor exercises review,
+empty/matching search, clear and paging. Journey72's live native gap explanation
+also passes. Final image and additional regression results are recorded in
+ENVIRONMENT_VALIDATION.md. See [the contract](docs/NATIVE_STREAM_NAVIGATION.md).
+
+Final navigation campaign: all five real-source journeys passed together (4.1
+minutes), including both native navigation and exact-stream Bombadil actors.
+The navigation actor recorded 443 steps and exact-stream actor 534; actual Quint
+ledgers passed with nine rejecting controls each. All 12 services are healthy
+with matching served-source/binary hashes and historical pending IDs preserved.
+Affected 38/57/72/73/74 frames were regenerated; desktop/mobile diagnostics were
+visually inspected. See ENVIRONMENT_VALIDATION.md for the exact final image.

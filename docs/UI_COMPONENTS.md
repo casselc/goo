@@ -285,3 +285,10 @@ Native measurement stream focus/clear actions belong to the app adapter. Their
 identity disclosures reuse GooAttributes. Observation tables retain readable
 columns inside the existing scroll owner on mobile; table minimum width is
 scoped to the measurement table class and does not affect other table users.
+
+Native stream navigation composes the existing passive `goo-facet-list`,
+`goo-stat-list` and attribute disclosures. The measurement adapter owns full
+inventory search/review predicates, pagination, focus and diagnostic mapping.
+Only supplied interval/sample states are counted; no rates/coverage semantics or
+subscriptions move into components. Observation table headings/cells stay intact
+inside their existing horizontal scroll owner on narrow screens.

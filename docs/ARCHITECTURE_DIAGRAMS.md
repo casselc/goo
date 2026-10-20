@@ -1129,3 +1129,10 @@ The [exact-stream sequence](EXACT_STREAM_SELECTION.md) connects broad observed
 inventory, read-free focus preview, source-level identity predicates, immutable
 package/capture storage and live counter freeze. Focus is application intent;
 passive display components continue to own no reads or subscriptions.
+
+### Retained native inventory browsing
+
+The [native navigation diagram](NATIVE_STREAM_NAVIGATION.md) separates typed
+source evidence from local search/review/paging and the explicit Focus/Run read
+boundary. Coverage explanations use evaluator states; they do not rewrite or
+re-evaluate stored evidence or manufacture rates from displayed rows.

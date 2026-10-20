@@ -482,3 +482,10 @@ interval, late repair, fixed-axis overflow and a source failure deterministicall
 single rendered stream. Run journey73 with `GOO_EXACT_STREAM_BOMBADIL=1`; its
 Playwright portion checks exact source isolation from seven lookalike identities,
 package sharing, live comparison and immutable freeze/reopen.
+
+`verification/bombadil/native-navigation.ts` drives Needs review, empty identity
+search, matching identity search, reset and next page in journey74's saved native
+evidence. Invariants require at most 25 entries, entries satisfying active local
+predicates and a retained basis. Run with `GOO_NATIVE_NAVIGATION_BOMBADIL=1`.
+Playwright also checks zero source reads, immutable question/basis, readable
+coverage guidance and cached stream disclosure state.

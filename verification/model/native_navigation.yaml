@@ -1,0 +1,13 @@
+spec: native_navigation.qnt
+module: native_navigation
+constants: {INITIAL: 0}
+invariants: [safety]
+actions:
+  inventory: {expect: 'coherent == {{.obs.coherent}}'}
+  page: {expect: 'coherent == {{.obs.coherent}}'}
+  review: {expect: 'coherent == {{.obs.coherent}}'}
+  empty: {expect: 'coherent == {{.obs.coherent}}'}
+  find: {expect: 'coherent == {{.obs.coherent}}'}
+  clear: {expect: 'coherent == {{.obs.coherent}}'}
+  restore: {expect: 'coherent == {{.obs.coherent}}'}
+  focus: {expect: 'coherent == {{.obs.coherent}}'}

@@ -1075,3 +1075,67 @@ Final selector image and campaign evidence:
   IDs retained, and restored traffic. No volumes or stream entries were reset.
 - All five journey73 screenshots were generated from actual source data; desktop
   selected evidence and mobile scroll composition were visually inspected.
+
+## 2026-10-20 — native inventory browsing and coverage explanations
+
+Added application-owned search/review/paging over retained typed metric streams,
+reusing passive facet/stat/attribute components. All local operations preserve
+source scope, exact bounds, record count and evidence basis. A separate explicit
+Focus preview creates a source binding. Per-stream diagnostics use existing
+kernel states/reasons; no backend semantics or evidence formats changed. The
+same readable guidance explains unavailable live counter rates. Exact unknown
+codes remain visible. Gauge observations are not presented as continuous
+coverage. Local search matches literal identity strings, including quote and
+backslash values, rather than JSON-escaped representation.
+
+Checks:
+
+- Frontend suite: all 22 files passed. Ten focused native/live checks passed,
+  covering full inventory paging/search, no mutation, unknown/zero preservation,
+  literal special-character search, safe fallback diagnostics and generated
+  twelve-action local sequences over inventories of 1–100 streams.
+- Existing Hegel exact-stream focus/clear state property passed 100 cases against
+  the unchanged Go source-binding contract.
+- Real-source journey74 passed: 28 OTel counter streams, two unavailable windows
+  beyond the first page, local paging/review/empty/find/clear, human-readable
+  boundary guidance, exact codes, cached outer disclosure state, mobile bounds,
+  zero source reads, unchanged question/basis, Focus preview and immutable reopen.
+  The observed ledger `artifacts/native-navigation/173ba16f88/ledger.json` passed
+  Quint replay with all nine corruptions rejected. Navigation Bombadil completed
+  449 steps with all five required actions and no invariant violations.
+- Journey72 passed the existing real-source live counter path and new readable
+  gap guidance; its frames were regenerated.
+
+Initial supplemental attempts exposed a capture-dialog timeout and an
+older Bombadil actor selector matching the new stream container rather than its
+Focus button. The journey now waits for the returned basis to be rendered before
+Capture and asserts dialog visibility. The actor targets the button explicitly.
+Final successful campaigns below supersede failed attempts; they are not counted
+as passes. Root/race Go suites were not rerun for presentation-only changes;
+typed semantics and source adapters are unchanged.
+
+Final navigation image/campaign:
+
+- Image `sha256:4a2aa85a7c3502a8738b7aa58576bfe13afb8f5d8905bd95dc8e25ef2a0ef2eb`.
+- All five real-source journeys passed together in 4.1 minutes: exact-stream
+  focus/share/save/live/freeze, record/gauge fresh comparison, live counter gap
+  guidance, shared gauge/counter/histogram/lifecycle sample flows, and native
+  inventory navigation including literal quote/backslash identity search.
+- Final native ledger: `artifacts/native-navigation/78b758141f/ledger.json`.
+  Quint replay passed and rejected all nine corruptions. Native navigation
+  Bombadil completed 443 steps with Review/Empty/Find/Reset/Next actions.
+  The corrected exact-stream actor completed 534 steps with Run/Focus/Run/Clear;
+  its real-source ledger and nine rejecting controls also passed.
+- Affected storyboard frames 38, 57, 72, 73 and 74 were regenerated. Native
+  diagnostics desktop/mobile frames were visually inspected. The measurement
+  tables retain intact headings and values inside horizontal scroll owners.
+- Final health confirms all 12 services running, HTTP health, matching served UI
+  hashes and Go binary, identical query/packages images and retention of all
+  five historical pending IDs. Traffic was restored; no volumes/stream entries
+  were reset.
+
+Evidence: `artifacts/native-navigation-{frontend,focused,hegel,journeys,regressions,final-journeys,image-final}.log`
+and `artifacts/native-navigation-final-health.json`. Local filters/open-state
+cache are scoped to the current render and are not saved into question links or
+captures. No fleet aggregation, health inference or live gauge/histogram support
+was added by this presentation milestone.

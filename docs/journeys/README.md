@@ -1188,3 +1188,17 @@ broad question with an explicit preview and Run; prior evidence remains unchange
 ![Pinned live native rate](screenshots/73d-pinned-live-rate.png)
 
 ![Selected stream on mobile with horizontally scrollable observations](screenshots/73e-mobile-selected-stream.png)
+
+## 74. Find a native stream and understand unavailable coverage
+
+Run `journeys/native-navigation.spec.js`. Open saved evidence containing 28 HTTP
+counter streams. Page past the first 25, select Needs review, see an explicit
+empty search and find a stream by a resource value. Its retained export crosses
+the fixed boundary: readable guidance explains why it cannot be split into an
+increment, with exact diagnostic codes preserved. Clear/search retains the open
+stream disclosure and original question/basis without reading telemetry. Focus
+previews its exact typed identity. Reopening the capture is unchanged.
+
+![Bounded retained stream inventory](screenshots/74a-bounded-stream-inventory.png)
+![Boundary coverage explained after identity search](screenshots/74b-explained-boundary-coverage.png)
+![Native review controls and scrollable observations on mobile](screenshots/74c-mobile-stream-review.png)

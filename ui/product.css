@@ -1098,3 +1098,12 @@ td details {
 
 /* Native observation tables keep readable columns inside their scroll owner. */
 .scroll > table.measurement-table { min-width: 35rem; }
+
+.native-stream-tools { align-items: end; }
+.native-stream-tools input { min-width: 12rem; max-width: 100%; }
+.native-diagnostics { padding: .75rem; margin: .75rem 0; border: 1px solid var(--border, #344153); border-radius: .5rem; }
+.native-diagnostics h4 { margin: 0 0 .5rem; }
+.native-reason-list { padding-left: 1.25rem; }
+.native-reason-list li { margin: .5rem 0; }
+.native-stream-list > details { margin: .75rem 0; }
+.scroll > table.measurement-table th, .scroll > table.measurement-table td { white-space: nowrap; }

@@ -585,3 +585,14 @@ lookalike streams; Hegel focus/clear state sequences and observed Quint replay
 verify source identity and custody. Live gauges/histograms and logical fleet
 selectors remain planned. Next: improve native metric inventory navigation and
 compact coverage diagnostics before broadening live native chart semantics.
+
+### Native inventory navigation and coverage guidance (implemented 2026-10-20)
+
+Local identity search, Needs review filtering, explicit empty results and bounded
+pagination operate on full retained native inventories. Shared passive stats,
+facet shell and attribute disclosures present typed states and readable reason
+codes; no new evaluator or source semantics. Live counter gap guidance uses the
+same presenter. Journey74 records zero-read navigation and custody for Quint
+replay with rejecting mutations; a native navigation Bombadil actor exercises the
+controls. Next: default service-native views from observed instrument inventory,
+using the same bindings and explicit coverage limits rather than fleet inference.

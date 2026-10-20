@@ -387,3 +387,9 @@ isolation and durable live workspaces remain future work. See LIVE_COMPARISON.md
   service.instance.id. A restart, added resource attribute or new schema produces
   a different stream; Goo does not auto-follow it. Focus is bounded to observed
   native inventories, not a fleet selector. See EXACT_STREAM_SELECTION.md.
+
+- Native stream search/review filters are local over bounded retained evidence;
+  they do not discover additional source streams, revise questions, aggregate
+  fleet rates or imply health. Local filters are not saved in question links or evidence. Outer stream
+  disclosure state survives local filtering within one rendered result; nested value components retain their existing lifecycle limits.
+  Unrecognized diagnostics preserve the exact code with neutral guidance.

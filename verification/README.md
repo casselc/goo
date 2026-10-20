@@ -534,3 +534,13 @@ mutations using `model/exact_stream.qnt`. `TestHegelExactStreamFocusClearState`
 generates 100 twelve-action focus/clear sequences over 2–8 independent streams,
 checking immutable inventory and refusal of off-stream or extra-empty dimensions.
 Run the UI actor with `GOO_EXACT_STREAM_BOMBADIL=1` and journey73.
+
+Journey74 writes `artifacts/native-navigation/<run>/ledger.json`. Set
+`GOO_NATIVE_NAVIGATION_LEDGER` and run `TestQuintNativeNavigationLedger` for the
+observed eight-phase navigation/focus projection and nine rejecting mutations.
+The adapter compares actual DOM membership, open state, question, basis and read
+count to retained evidence. `model/native_navigation.qnt` is deliberately a UI
+custody projection, not a replacement metric evaluator. Run the actor with
+`GOO_NATIVE_NAVIGATION_BOMBADIL=1` and journey74. Frontend generated sequences
+check local paging/search immutability; existing Hegel exact-stream state tests
+continue to cover the underlying Go semantic contract.

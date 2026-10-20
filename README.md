@@ -442,3 +442,8 @@ changed stream identity and stale exports withhold rates. Freeze retains the
 actual displayed historical window. This slice requires one complete baseline stream. [Focus an observed stream](docs/EXACT_STREAM_SELECTION.md)
 to save/share/capture an exact source binding from a multi-stream question.
 Live gauges, histograms and fleet rates remain planned.
+
+Native results also offer [local stream search and coverage diagnostics](docs/NATIVE_STREAM_NAVIGATION.md).
+Find an instance or dimension across retained streams, isolate those needing
+review, and inspect readable gap/reset explanations with their exact codes.
+Local browsing preserves the measurement's window, totals and evidence basis.
