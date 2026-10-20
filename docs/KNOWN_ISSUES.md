@@ -361,6 +361,8 @@ trace/log inspection. Other table migrations remain incremental.
 Native histogram P95 remains a bucket range; this is not a new scalar percentile
 or a P90 evaluator. Light-DOM app styles must stay scoped to their owning view.
 
-SSE/live tails remain planned. Summary property updates currently rerender inner
-DOM and reset disclosures; keyed row patches, bounded retention, gap/cursor
-handling and focus/scroll-follow need a separate app adapter and passive viewport.
+A bounded log SSE tail is now implemented; see [limits](LIVE_LOG_TAIL.md).
+Durable replay/ingestion cursors, trace tails and baseline-versus-live measures
+remain planned. Summary property updates currently rerender inner
+DOM and reset disclosures; log-tail row patches, bounded retention and explicit gaps now live in the app
+adapter. Snapshot value components still reset disclosure state on data updates.

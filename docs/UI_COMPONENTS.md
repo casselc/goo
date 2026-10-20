@@ -238,3 +238,19 @@ value disclosure never perform that read or navigation.
 Types describe the supplied captured representation. In particular, numeric-looking
 exporter attribute strings remain strings; these elements do not recover lost OTel
 AnyValue types or authorize new numeric expressions.
+
+## Trace and count-time plots
+
+`goo-trace-waterfall` and `goo-time-bars` now share the display-only boundary.
+See [waterfall API and limitations](UI_WATERFALL.md) and
+[count-time bars](UI_TIME_BARS.md). Both accept server HTML JSON and detached SPA
+properties. Controlled selection changes update native state without replacing
+focused rows/bars; data snapshot replacement rerenders the plot. The application
+retains trace details, source reads, question links and interval selection logic.
+
+Waterfalls show supplied span extents and reported parent/link context, never a
+complete-trace guarantee or invocation count. Count bars preserve supplied exact
+counts/domain; zero has zero geometry and unavailable values remain explicit.
+Explore and Services use these components. Native interval/histogram/metric
+semantics remain in their separate adapters. The [chart/detail review](UI_CHART_DETAIL_REVIEW.md)
+prioritizes chart frames, detail panels and heatmap matrix reuse as follow-up work.

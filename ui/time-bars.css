@@ -1,0 +1,16 @@
+/* A count plot consumes supplied exact labels; it never owns a page's grid. */
+goo-time-bars{display:block;min-width:0;--time-bars-height:100px}
+goo-time-bars>.time-bars-figure{margin:0;min-width:0}
+goo-time-bars>.time-bars-figure>figcaption{font-size:12px;font-weight:600;overflow-wrap:anywhere}
+goo-time-bars .time-bars-scale{font-size:11px;color:var(--muted,#98a8bf);margin:4px 0 10px;overflow-wrap:anywhere}
+goo-time-bars .time-bars{display:flex;gap:2px;height:var(--time-bars-height);align-items:stretch;border-bottom:1px solid var(--border,#2b3545);min-width:0}
+goo-time-bars .time-bar{display:block;flex:1;min-width:0;min-height:0;padding:0;border:0;border-radius:2px 2px 0 0;position:relative;background:transparent}
+goo-time-bars .time-bar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:var(--bar-height,0%);min-height:0;background:var(--accent,#79ddc6);border-radius:2px 2px 0 0}
+goo-time-bars .time-bar[data-positive=true]::after{min-height:2px}
+goo-time-bars .time-bar:is([data-state=unknown],[data-state=unavailable])::after{height:100%;min-height:0;background:repeating-linear-gradient(135deg,#263140,#263140 4px,#465365 4px,#465365 6px);opacity:.6}
+goo-time-bars .time-bar:is([aria-pressed=true],[aria-current=true]){outline:1px solid var(--accent,#79ddc6);outline-offset:1px}
+goo-time-bars .time-bar:focus-visible{outline:2px solid var(--ink,#e3e9f3);outline-offset:2px}
+goo-time-bars .time-axis{display:flex;justify-content:space-between;gap:1rem;color:var(--muted,#98a8bf);font-size:11px;overflow-wrap:anywhere;margin-top:6px}
+goo-time-bars .time-axis>span{min-width:0}
+goo-time-bars .time-axis>span:last-child{text-align:right}
+goo-time-bars[density=compact] figcaption,goo-time-bars[density=compact] .time-bars-scale,goo-time-bars[density=compact] .time-axis{font-size:10px}

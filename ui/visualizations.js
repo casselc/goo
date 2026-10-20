@@ -3,85 +3,28 @@
 (function (global) {
   const edges = [0, 10, 50, 100, 500, 1000, 10000, 18446744073710];
   const labels = ['0–10 ms', '10–50 ms', '50–100 ms', '100–500 ms', '0.5–1 s', '1–10 s', '≥10 s'];
-  function layout(rows) {
-    const spans = rows.map(row => ({ row, start: BigInt(row.timestamp_ns), duration: BigInt(row.duration_ns) }));
-    if (!spans.length) return { spans: [], start: 0n, end: 0n };
-    let start = spans[0].start, end = start;
-    for (const s of spans) { if (s.start < start) start = s.start; if (s.start + s.duration > end) end = s.start + s.duration; }
-    const range = Number(end - start) || 1;
-    const byKey = new Map(spans.map(s => [s.row.TraceId + ':' + s.row.SpanId, s]));
-    function depth(s) {
-      const seen = new Set([s]); let current = s, n = 0;
-      while (current.row.ParentSpanId && !/^0+$/.test(current.row.ParentSpanId)) {
-        const parent = byKey.get(current.row.TraceId + ':' + current.row.ParentSpanId);
-        if (!parent) { s.missingParent = true; break; }
-        if (seen.has(parent)) { s.cycle = true; break; }
-        seen.add(parent); n++; current = parent;
-      }
-      return n;
-    }
-    for (const s of spans) {
-      s.depth = depth(s); s.left = 100 * Number(s.start - start) / range;
-      s.width = 100 * Number(s.duration) / range;
-    }
-    // Parent-first traversal, stable by exact start time; links never add edges.
-    const compare = (a,b) => a.start < b.start ? -1 : a.start > b.start ? 1 : a.row.SpanId.localeCompare(b.row.SpanId);
-    const ordered = [], visited = new Set();
-    const children = new Map();
-    for (const s of spans) {
-      const key = s.row.TraceId + ':' + s.row.ParentSpanId;
-      if (!children.has(key)) children.set(key, []);
-      children.get(key).push(s);
-    }
-    function visit(s) { if (visited.has(s)) return; visited.add(s); ordered.push(s);
-      for (const child of (children.get(s.row.TraceId + ':' + s.row.SpanId) || []).sort(compare)) visit(child); }
-    const traces = [...new Set(spans.map(s => s.row.TraceId))].sort();
-    for (const trace of traces) {
-      const group = spans.filter(s => s.row.TraceId === trace).sort(compare);
-      group.filter(s => !byKey.has(trace + ':' + s.row.ParentSpanId)).forEach(visit);
-      group.forEach(visit); // Cycles remain inspectable and explicitly labelled.
-    }
-    return { spans: ordered, start, end };
-  }
+  const waterfallAPI=()=>typeof module!=='undefined'?require('./waterfall'):global.GooWaterfall;
+  const layout=rows=>waterfallAPI().layout(rows);
   function node(tag, text, cls) { const n = document.createElement(tag); if (text !== undefined) n.textContent = text; if (cls) n.className = cls; return n; }
   function waterfall(container, rows, truncated, relatedActions, detailsId = 'spanDetails') {
-    const data = layout(rows);
-    container.append(node('p', `Displayed span extent: ${(Number(data.end-data.start)/1e6).toFixed(2)} ms. Relative to earliest returned span. Evidence completeness unknown${truncated ? '; span list truncated' : ''}. Async links are references, not parent edges.`, 'muted'));
-    if (!rows.length) { container.append(node('p', 'No spans in this selection.')); return; }
-    const details = node('section'); details.id = detailsId; details.append(node('p', 'Select a span to inspect attributes and exact IDs.'));
-    let trace;
-    for (const s of data.spans) {
-      const r = s.row;
-      if (trace !== r.TraceId) { trace = r.TraceId; container.append(node('h3', 'Trace ' + trace)); }
-      const line = node('button', undefined, 'waterfall-row'); line.type = 'button';
-      line.dataset.spanId = r.SpanId; line.dataset.traceId = r.TraceId;
-      line.setAttribute('aria-pressed','false');
-      const suffix = s.cycle ? ' · parent cycle' : s.missingParent ? ' · parent outside results' : '';
-      const title = `${r.ServiceName} · ${r.SpanName}${suffix}`;
-      line.setAttribute('aria-label', title);
-      const label = node('span', title, 'span-label'); label.style.paddingLeft = Math.min(s.depth, 12)*12 + 'px';
-      const track = node('span', undefined, 'span-track'), bar = node('span', undefined, 'span-bar');
-      bar.style.left = s.left + '%'; bar.style.width = s.width + '%';
-      bar.dataset.error = r.StatusCode === 'Error' ? 'true' : 'false';
-      track.append(bar);
-      line.append(label, track, node('span', `${Number(s.duration)/1e6} ms${r.StatusCode === 'Error' ? ' · error' : ''}`));
-      line.onclick = () => {
-        for(const other of container.querySelectorAll('.waterfall-row'))other.setAttribute('aria-pressed',String(other===line));
-        details.replaceChildren(node('h3', r.SpanName), node('p', `${r.ServiceName} · ${r.duration_ms} ms · ${r.StatusCode || 'unset status'}`));
-        global.GooAttributes.mount(details,r);
-        for (const action of relatedActions?.(r) || []) {
-          const b = node('button', action.label); b.onclick = action.select; details.append(b);
-        }
-        for (let i=0; i<(r.linked_traces || []).length; i++) {
-          const targetTrace = r.linked_traces[i], targetSpan = (r.linked_spans || [])[i];
-          const target = [...container.querySelectorAll('.waterfall-row')].find(n => n.dataset.spanId === targetSpan && n.dataset.traceId === targetTrace);
-          if (target) { const b = node('button', 'Follow async link → ' + targetSpan); b.onclick = () => { target.focus(); target.click(); }; details.append(b); }
-          else details.append(node('p', `Async link outside returned spans: ${targetTrace} / ${targetSpan || '(span unspecified)'}`));
-        }
-      };
-      container.append(line);
-    }
-    container.append(details);
+    const element=node('goo-trace-waterfall');element.data={rows,truncated:!!truncated};container.append(element);
+    if(!rows.length)return element;
+    const details=node('section');details.id=detailsId;details.append(node('p','Select a span to inspect attributes and exact IDs.'));container.append(details);
+    element.addEventListener('click',event=>{
+      const line=event.target.closest('.waterfall-row');if(!line||!element.contains(line))return;
+      const index=Number(line.dataset.rowIndex),r=rows[index];if(!r)return;
+      element.selectedIndex=index;
+      details.replaceChildren(node('h3',r.SpanName),node('p',`${r.ServiceName} · ${Number(BigInt(r.duration_ns))/1e6} ms · ${r.StatusCode||'unset status'}`));
+      global.GooAttributes.mount(details,r);
+      for(const action of relatedActions?.(r)||[]){const button=node('button',action.label);button.onclick=action.select;details.append(button)}
+      for(let i=0;i<(r.linked_traces||[]).length;i++){
+        const targetTrace=r.linked_traces[i],targetSpan=(r.linked_spans||[])[i];
+        const target=[...element.querySelectorAll('.waterfall-row')].find(n=>n.dataset.spanId===targetSpan&&n.dataset.traceId===targetTrace);
+        if(target){const button=node('button','Follow async link → '+targetSpan);button.onclick=()=>{target.focus();target.click()};details.append(button)}
+        else details.append(node('p',`Async link outside returned spans: ${targetTrace} / ${targetSpan||'(span unspecified)'}`));
+      }
+    });
+    return element;
   }
   function heatmap(container, rows, data, select) {
     const from = data.evaluatedAt - data.expression.minutes*60000, to = data.evaluatedAt;

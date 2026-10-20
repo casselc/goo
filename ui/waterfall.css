@@ -1,0 +1,14 @@
+/* Only component internals. Embedding view chooses height, width and layout. */
+goo-trace-waterfall{display:block;min-width:0;color:var(--ink,#e3e9f3)}
+goo-trace-waterfall>.waterfall-status{color:var(--muted,#98a8bf);font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+goo-trace-waterfall>.waterfall-identity-note{font-size:11px}
+goo-trace-waterfall>h3{font-size:13px;overflow-wrap:anywhere}
+goo-trace-waterfall>.waterfall-row{display:grid;grid-template-columns:minmax(170px,36%) minmax(0,1fr) 125px;gap:10px;align-items:center;width:100%;margin:4px 0;text-align:left;font:11px/1.5 system-ui,sans-serif;min-width:0;border:1px solid var(--border,#2b3545);border-radius:6px;padding:8px;color:inherit;background:var(--panel,#151d28);cursor:pointer}
+goo-trace-waterfall>.waterfall-row:focus-visible{outline:2px solid var(--accent,#79ddc6);outline-offset:2px}
+goo-trace-waterfall>.waterfall-row[aria-pressed=true]{border-color:var(--accent,#79ddc6);background:#1d3838;box-shadow:inset 3px 0 var(--accent,#79ddc6)}
+goo-trace-waterfall .span-label{overflow-wrap:anywhere;min-width:0}
+goo-trace-waterfall .span-track{display:block;height:24px;position:relative;border-left:1px solid #52677e;background:repeating-linear-gradient(90deg,transparent,transparent 24.8%,#26384d 25%);min-width:0}
+goo-trace-waterfall .span-bar{position:absolute;top:4px;height:16px;background:var(--accent,#79ddc6);min-width:2px;max-width:100%}
+goo-trace-waterfall .span-bar[data-error=true]{background:#e7a887}
+goo-trace-waterfall .span-duration{overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+@media(max-width:700px){goo-trace-waterfall>.waterfall-row{grid-template-columns:minmax(0,1fr)}goo-trace-waterfall .span-track{min-height:24px}}

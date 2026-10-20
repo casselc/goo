@@ -1088,3 +1088,5 @@ td details {
 .comparison-metric-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px;margin:16px 0}
 /* Widget viewports retain bounded scrolling; reusable tables don't choose heights. */
 .dashboard-widget goo-table{max-height:24rem}
+.live-tail{margin:16px 0;padding:16px;border:1px solid var(--border);border-radius:10px}.live-tail[hidden]{display:none}.live-tail>goo-table{max-height:420px}.live-tail td{vertical-align:top}.tail-message{white-space:pre-wrap;overflow-wrap:anywhere;max-height:180px;overflow:auto;min-width:160px}.tail-severity,.tail-counts,.tail-scope{font-size:12px;color:var(--muted)}.live-tail>goo-table>table{table-layout:fixed}.live-tail th:first-child{width:190px}.live-tail th:nth-child(2){width:130px}.live-tail .controls label{display:flex;align-items:center;gap:8px}.live-tail .controls input{min-height:0}
+@media(max-width:700px){.live-tail{padding:10px}.live-tail>goo-table>table{min-width:580px}}

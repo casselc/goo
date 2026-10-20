@@ -417,3 +417,9 @@ retain focus during patches; SSE transport and live retention remain planned.
 The same library now provides local-search facets and typed attribute values in
 Explore and trace/log inspectors. Full-population measures retain their original
 scales when searching supplied values; filter actions remain explicit source reads.
+
+Applied log questions now offer a [live log tail](docs/LIVE_LOG_TAIL.md) with
+bounded retention, pause/resume, follow-scroll and explicit reconnect gaps.
+Reusable [trace waterfalls](docs/UI_WATERFALL.md) and
+[count-time bars](docs/UI_TIME_BARS.md) support the same framework-neutral display
+contracts; charts and tails retain their separate source semantics.

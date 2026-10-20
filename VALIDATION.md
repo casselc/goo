@@ -5,6 +5,51 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Live logs, passive waterfalls and count-time plots (2026-10-20 UTC)
+
+Explore now tails an applied log selector over a separate rolling event-time
+window. The Go source/compiler adapter emits bounded SSE batches through the
+Python streaming proxy; the app owns generations, reconnect gaps, buffer
+retention, follow-scroll and inspection pause. Counts label local observations,
+not the full question population. Two parallel agents extracted passive
+`goo-trace-waterfall` and `goo-time-bars`, adopted by existing trace inspection,
+Explore and Services, and prepared a chart/detail reuse review.
+
+- Root Go tests and vet passed; the frontend suite passed 60 tests. The tail
+  HTTP admission/cancellation checks passed under the race detector.
+- Hegel passed 100 generated overlapping-multiset/late-arrival campaigns. An
+  initial property assumption incorrectly classified a first observation as late;
+  the corrected property compares against a previously observed maximum.
+- The release campaign passed nine tests: core basics, discovery, workbench,
+  Services, UI inspection and both standalone waterfall/time-bar contracts.
+  Core/Services Bombadil campaigns require actual chart interaction and check
+  exact count/state geometry and focus preservation. The inspection campaign
+  completed deterministic waterfall selection/detail checks before exploration.
+- Tail browser assertions passed duplicates, same reported IDs, late data,
+  foreign-scope exclusion, 100-row eviction, focus pause, resumed gaps, injected
+  transport failure recovery, mobile containment and scope clearing. Its first
+  integrated model check found a Quint built-in-name collision; after renaming
+  that action, the observed ledger and all six rejecting mutations passed.
+- Earlier live checks exposed newest-first batch eviction discarding the newest
+  observations; the source now presents each bounded batch in event-time order,
+  with a regression check. A chart fixture retained application/json from /health
+  and did not upgrade custom elements; its explicit synthetic HTML fixture passed.
+  An interrupted image deployment was not counted as validation; subsequent
+  deployment checks matched running image IDs and served asset bytes before tests.
+
+- The final tail rerun passed end to end, including the 30-second Bombadil
+  start/pause/resume/focus/close sequence with required completed-stage evidence,
+  Quint live replay and all six negative controls. Across the corrected runs all
+  ten selected browser tests passed. New standalone and real app frames were
+  regenerated and inspected; the chart/detail review is linked from the library.
+- Runtime verification passed: all 12 services running, health OK, served tail,
+  waterfall, time-bar and application hashes plus Go binary match the workspace
+  and build context. Existing five stale Redis pending IDs were preserved; one
+  current active entry brought the final pending count to six. Traffic restored.
+- Durable ingestion cursors/replay, trace tails, arbitrary chart algebra and
+  baseline-versus-live measures remain planned. Count plots retain explicit
+  zero/unknown distinctions; native interval/histogram semantics remain separate.
+
 ## Shared facets and typed attributes (2026-10-20 UTC)
 
 Explore live/frozen distributions now compose a caller-owned `goo-facet-list`.

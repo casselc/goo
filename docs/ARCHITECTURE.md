@@ -127,3 +127,13 @@ Facets retain caller rows and filter them locally; typed field values render
 JSON-compatible snapshot values with explicit presence. `attributes.js` remains
 the app adapter for record mapping and query actions while exporting the reusable
 value/list elements. Components do not interpret OTel namespaces or issue reads.
+
+## Live observation adapter
+
+The Go tail handler validates a log selector, performs bounded rolling row reads
+and emits SSE observations through the Python streaming proxy. Explore owns
+connection generations, reconnect gaps, retention and focus/follow behavior.
+The passive table and attribute components retain caller rows. No tail buffer
+becomes a measurement population. See the [sequence diagram](LIVE_LOG_TAIL.md).
+Waterfall and count-time geometry are separate passive components; app adapters
+own details, interval actions and source questions.

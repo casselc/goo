@@ -1,0 +1,17 @@
+spec: tail.qnt
+module: tail
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  connect:
+    expect: 'coherent == {{.obs.coherent}}'
+  receive_batch:
+    expect: 'coherent == {{.obs.coherent}}'
+  retain:
+    expect: 'coherent == {{.obs.coherent}}'
+  pause:
+    expect: 'coherent == {{.obs.coherent}}'
+  resume:
+    expect: 'coherent == {{.obs.coherent}}'
+  scope:
+    expect: 'coherent == {{.obs.coherent}}'

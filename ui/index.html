@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Explore · goo</title><link rel="stylesheet" href="/product.css"><link rel="stylesheet" href="/components.css"></head><body>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Explore · goo</title><link rel="stylesheet" href="/product.css"><link rel="stylesheet" href="/components.css"><link rel="stylesheet" href="/waterfall.css"><link rel="stylesheet" href="/time-bars.css"></head><body>
 <aside class="app-sidebar"><a class="brand" href="#explore" aria-label="goo home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>goo</a><p class="nav-label">INVESTIGATE</p><nav aria-label="Main navigation">
 <button data-workspace="explore"><span class="nav-icon" aria-hidden="true">⌕</span>Explore</button><button data-workspace="services"><span class="nav-icon" aria-hidden="true">▦</span>Services</button><button data-workspace="operations"><span class="nav-icon" aria-hidden="true">◫</span>Operations</button><button data-workspace="investigations"><span class="nav-icon" aria-hidden="true">▤</span>Saved investigations</button><button data-workspace="definitions"><span class="nav-icon" aria-hidden="true">◇</span>Definitions</button></nav>
 <div class="sidebar-bottom"><button data-workspace="examples"><span class="nav-icon" aria-hidden="true">›</span>Examples</button><a href="http://localhost:8081">Open sample application</a><p>Local workspace<br>Captured evidence · coverage unverified</p></div></aside>
@@ -34,16 +34,16 @@
 </div><footer class="app-footer">Captured records are evidence, not a guarantee of coverage. Inspect the source and scope behind each result.</footer></main>
 <dialog id="captureDialog" aria-labelledby="captureDraftHeading"><h2 id="captureDraftHeading">Capture investigation</h2><label>Capture title<input id="captureDraftTitle" maxlength="120"></label><label>Add evidence to<select id="captureDraftInvestigation"><option value="">Capture only</option></select></label><button id="captureDraftMoreInvestigations" hidden>More investigation revisions</button><p class="evidence-note">A selected saved revision receives a new child revision. The current draft receives a reference to save explicitly.</p><p id="captureDraftStatus" role="status"></p><div class="controls"><button id="captureDraftConfirm">Save capture</button><button id="captureDraftCancel">Cancel</button></div></dialog><script src="/components.js"></script><script src="/queries.js"></script><script src="/namespace.js"></script><script src="/workspace.js"></script>
 <script src="/attributes.js"></script>
-<script src="/visualizations.js"></script>
+<script src="/waterfall.js"></script><script src="/visualizations.js"></script>
 <script src="/guided-measurements.js"></script><script src="/example-questions.js"></script><script src="/workflows.js"></script>
 <script src="/operations.js"></script>
 <script src="/histograms.js"></script>
 <script src="/ratios.js"></script>
 <script src="/fleet.js"></script>
 <script src="/investigations.js"></script>
-<script src="/question-scope.js"></script><script src="/followups.js"></script><script src="/measurements.js"></script><script src="/recipes.js"></script><script src="/window-discovery.js"></script><script src="/comparison-breakdown.js"></script><script src="/evidence-comparison.js"></script><script src="/fresh-comparison.js"></script><script src="/documents.js"></script><script src="/deployments.js"></script><script src="/question-session.js"></script><script src="/numeric-measures.js"></script><script src="/grouped-time-series.js"></script><script src="/comparison-visual.js"></script><script src="/distributions.js"></script>
+<script src="/question-scope.js"></script><script src="/followups.js"></script><script src="/measurements.js"></script><script src="/recipes.js"></script><script src="/window-discovery.js"></script><script src="/comparison-breakdown.js"></script><script src="/evidence-comparison.js"></script><script src="/fresh-comparison.js"></script><script src="/documents.js"></script><script src="/deployments.js"></script><script src="/question-session.js"></script><script src="/numeric-measures.js"></script><script src="/grouped-time-series.js"></script><script src="/comparison-visual.js"></script><script src="/time-bars.js"></script><script src="/distributions.js"></script>
 <script src="/discovery.js"></script>
-<script src="/captures.js"></script><script src="/service-identity.js"></script><script src="/service-dashboard.js"></script><script src="/distributed-services.js"></script><script src="/service-browser.js"></script><script src="/inventory.js"></script><script src="/exploration.js"></script><script src="/telemetry-packages.js"></script>
+<script src="/captures.js"></script><script src="/service-identity.js"></script><script src="/service-dashboard.js"></script><script src="/distributed-services.js"></script><script src="/service-browser.js"></script><script src="/inventory.js"></script><script src="/tail.js"></script><script src="/exploration.js"></script><script src="/telemetry-packages.js"></script>
 <script>
 const el=id=>document.getElementById(id);let selected='';let spanFilter;
 let controlRevision=0,queryGeneration=0;

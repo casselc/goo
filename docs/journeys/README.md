@@ -1091,3 +1091,9 @@ contracts without source reads. Journey 29 now verifies shared elements across
 real attribute/facet narrowing and trace/log inspection; optional
 `GOO_INSPECTION_BOMBADIL=1` explores that isolated fixed question. Journey 34
 checks full-population/saved facet scales with an updated Bombadil invariant.
+
+Journey 66 follows an applied log question into real OTel live observations,
+late duplicates, bounded eviction, focus pause, resumed/reconnected gaps and scope
+cancellation, with Quint ledger mutations and an opt-in Bombadil campaign.
+Journeys 67 and 68 are clearly synthetic standalone waterfall/time-bar contracts;
+actual app adoption is exercised by journeys 29, 30, 33, 45 and 59.

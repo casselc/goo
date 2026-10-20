@@ -536,3 +536,10 @@ Implemented shared local facet shell, typed values and passive attribute-list
 shell, adopted by Explore and trace/log inspection. Next: explicit live transport
 and bounded retention adapter design, keeping fixed population measures separate
 from tail rows. Field snapshot updates currently reset disclosure state.
+
+### Live logs and reusable trace/time plots
+
+Implemented bounded recent-log SSE observations, explicit gaps, retention and
+inspection pause. Reusable waterfalls/count-time plots are adopted in existing
+flows. Next: shared plot frames/detail panels and carefully scoped live measure
+comparison against a fixed baseline; tail rows remain outside measure totals.

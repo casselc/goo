@@ -431,3 +431,27 @@ no-population guard; randomized tail actions repeat these source-free previews. 
 Journey 37 separately covers real applied populations, explicit execution,
 wrong-signal rejection, stale-response isolation, captures and narrative handoff.
 Run with `GOO_RECIPES_BOMBADIL=1` and `journeys/recipes.spec.js` through the wrapper.
+
+## Streaming and shared display components
+
+Journey 66 optionally runs `verification/bombadil/tail.ts` with
+`GOO_TAIL_BOMBADIL=1`. Its isolated ordinary OTel fixture exercises start,
+pause/resume, a visible continuity gap, focus-triggered pause and close. Invariants
+check bounded unique observation handles, local retained/evicted accounting,
+paused row stability and mobile containment. This actor makes no persistence or
+workload changes. The curated journey separately validates source failures,
+late records, identical duplicates, scope cancellation and Quint rejecting traces.
+
+`inspection.ts` now deterministically opens a real supplied trace, selects two
+spans and verifies the reusable waterfall's exact IDs/details before broader
+exploration. The `GOO_INSPECTION_BOMBADIL=1` journey asserts a completed waterfall
+stage in the emitted actor snapshots, not merely absence of violations.
+
+`time-bars-contract.ts` is shared by core-basics, Services and grouped-measure
+actors. It checks supplied exact counts/scale, zero versus positive geometry,
+unknown hatching and controlled selection. Core and Services require actual chart
+interaction (including preserved keyboard focus). The grouped fixture without a
+time bucket is not counted as positive chart coverage. Run
+`GOO_CORE_BOMBADIL=1` journey 33 and `GOO_DASHBOARD_BOMBADIL=1` journey 59.
+Standalone waterfall/time-bar Playwright fixtures test SSR/SPA display contracts
+without application runtime; live campaigns validate their app adapters separately.
