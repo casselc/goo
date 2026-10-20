@@ -399,4 +399,8 @@ isolation and durable live workspaces remain future work. See LIVE_COMPARISON.md
   alongside incomplete whole-window coverage. Counter interval rates retain the
   kernel's floating representation; rational full-window comparisons are separate.
   Automatic service native selection remains capped at two supported instruments;
-  other discovered instruments can be previewed in Native instruments.
+  supported choices can be changed with the overview picker. Selection is local
+  to the service visit and resets on reopening. Apply explicitly rereads all
+  supported overview questions from retained metadata; it does not rediscover
+  instruments or create a transactional snapshot. Unsupported instruments remain
+  visible in Native instruments. Saved dashboard configurations remain planned.

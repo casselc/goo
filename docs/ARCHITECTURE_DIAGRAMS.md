@@ -1144,3 +1144,10 @@ connects observed instrument planning, independent typed widget reads, passive
 compact values/coverage, source-free retained browsing and exact stream preview
 through capture custody. Latest interval values and whole-window coverage are
 separate; no browser measurement evaluator or automatic fleet aggregation is added.
+
+### Choosing native service instruments
+
+The [selection sequence](SERVICE_DASHBOARDS.md#choose-native-instruments-for-this-service-visit)
+separates metadata-only draft edits, Go validation of offered definition keys,
+explicit bounded rereads and current-generation publication. Empty selection
+means no native reads; changing the selection leaves stored captures intact.

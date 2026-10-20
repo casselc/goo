@@ -42,7 +42,7 @@ Defaults are bounded:
   schema, temporality/reset and histogram semantics. Up to four exact-stream latest endpoints or intervals are shown per native
   widget; stale/unknown latest observations never fall back to an earlier healthy
   value. These are not whole-window or fleet aggregates. Other instruments remain
-  available in Native instruments; there is no fleet-value or percentile merge.
+  available in Native instruments and the [overview picker](#choose-native-instruments-for-this-service-visit); there is no fleet-value or percentile merge.
 
 - Up to two registered operation bindings produce ordinary operation-span cards,
   retaining declared-versus-observed and schema-verification limitations.
@@ -128,8 +128,8 @@ Native service cards now use the same passive table/stat/attribute components
 as the rest of Goo. Up to four retained streams show their latest evaluated
 value beside whole-window coverage or gauge observation state. The current
 planner still automatically loads at most two supported discovered instruments;
-selection is deterministic by metadata, with other instruments available in the
-service's Native instruments section. No new health policy or convention-name
+defaults are deterministic by metadata. The overview's instrument picker can
+replace those defaults with up to two supported observed definitions. No new health policy or convention-name
 heuristic was introduced.
 
 The compact summary accepts the native kernel's real `ok` interval state for
@@ -191,3 +191,63 @@ exact stream preview/Run and capture/reopen. Observed Quint replay includes nine
 rejecting mutations; a native service Bombadil actor covers discovery, service
 open, retained browsing and exact links. Existing dashboard and service-browser
 journeys continue to cover partial failures and cancelled scope generations.
+
+## Choose native instruments for this service visit
+
+**Choose native instruments** uses the supported inventory already returned by
+the pure Go planner. Labels retain metric, kind, unit, library scope/version,
+schema, temporality and monotonicity so same-name instruments can be distinguished.
+Unsupported observations remain visible in Native instruments but are not offered
+as executable dashboard choices. Options are not a complete-inventory claim.
+
+Checkbox edits, **Clear selection** and **Use defaults** only stage intent; they
+make no telemetry or planner requests. More than two choices disables Apply and
+explains the budget. **Apply and reread overview** explicitly replans and reruns
+all supported overview questions in the same environment, namespace, service and
+fixed window, with at most two concurrent widget reads. Record questions retain
+their existing scope; selecting no native instruments performs no native reads.
+Each newly evaluated widget has its own read time. The current visit's source
+metadata is reused rather than rediscovered.
+
+`DashboardRequest.nativeSelection` is optional: omitted/null uses defaults, `[]`
+selects none, and one/two keys select exact offered definitions. The additive
+`nativeOptions`/`nativeLimit` fields in the v2 plan describe supported choices.
+Keys hash full validated definitions rather than row positions or metric names.
+The server rejects duplicates, unknown keys and selections above its limit;
+all supplied supported metadata still undergoes scope/identity validation.
+The endpoint remains a metadata planner, not authenticated proof of discovery.
+
+Applying a newer choice aborts the older generation. Scope changes also cancel
+subsequent Apply reads; a delayed old result cannot publish into a newer overview.
+Selections are local to this open service detail and reset on reopening; this is
+not saved dashboard configuration. **Open widget question**, adding to an
+investigation and ordinary capture retain the selected definition through the
+existing question/evidence primitives. Stored evidence is unaffected by later
+selection changes.
+
+```mermaid
+sequenceDiagram
+ actor User
+ participant App as Service app adapter
+ participant Go as Pure Go planner
+ participant Source as Existing bounded evaluators
+ User->>App: Open instrument picker / edit or restore defaults
+ Note over User,App: Retained metadata only; no reads
+ User->>App: Apply and reread overview
+ App->>App: Abort older generation
+ App->>Go: Same fixed scope + offered definition keys
+ Go-->>App: Validated choices, at most two native questions
+ App->>Source: Explicit bounded widget reads (two concurrent)
+ Source-->>App: Independent typed results and read times
+ Note over App: Only current generation may publish
+ User->>App: Capture selected widget question
+ App->>Source: Ordinary fixed-question capture reread
+```
+
+Journey76 covers four supported definitions (including the same metric with
+different library versions/schema URLs), one unsupported sum, another namespace,
+read-free edits, over-budget feedback, exact chosen values, empty selection,
+default restoration, ordinary capture/source-free reopen and superseded real
+responses. Generated Hegel selection sequences check deterministic scope and
+budgets. Its observed Quint ledger and rejecting controls validate custody;
+Bombadil exercises selection edits, Apply and clear in the actual interface.

@@ -20,6 +20,14 @@ type DashboardRequest struct {
 	Signals     []string                  `json:"signals"`
 	Fields      []Field                   `json:"fields"`
 	Instruments []measurements.Instrument `json:"instruments"`
+	// Nil uses defaults; an explicit empty list selects no native reads.
+	NativeSelection *[]string `json:"nativeSelection,omitempty"`
+}
+type DashboardNativeOption struct {
+	Key        string                  `json:"key"`
+	Instrument measurements.Instrument `json:"instrument"`
+	Selected   bool                    `json:"selected"`
+	Default    bool                    `json:"default"`
 }
 type DashboardDeclaration struct {
 	Namespace        *identity.Namespace  `json:"namespace,omitempty"`
@@ -50,12 +58,14 @@ type DashboardWidget struct {
 	Measurement *measurements.Question `json:"measurement,omitempty"`
 }
 type DashboardPlan struct {
-	Version      string                 `json:"version"`
-	Scope        InventoryQuestion      `json:"scope"`
-	Service      string                 `json:"service"`
-	Widgets      []DashboardWidget      `json:"widgets"`
-	Declarations []DashboardDeclaration `json:"declarations"`
-	Warnings     []string               `json:"warnings"`
+	Version       string                  `json:"version"`
+	Scope         InventoryQuestion       `json:"scope"`
+	Service       string                  `json:"service"`
+	Widgets       []DashboardWidget       `json:"widgets"`
+	Declarations  []DashboardDeclaration  `json:"declarations"`
+	Warnings      []string                `json:"warnings"`
+	NativeOptions []DashboardNativeOption `json:"nativeOptions"`
+	NativeLimit   int                     `json:"nativeLimit"`
 }
 
 func DashboardRecordQuestion(scope InventoryQuestion, service, signal string) Query {
@@ -92,7 +102,7 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 	}
 	scope := in.Scope
 	scope.Namespace = in.Scope.Namespace.Clone()
-	p := &DashboardPlan{Version: DashboardVersion, Scope: scope, Service: in.Service, Widgets: []DashboardWidget{}, Declarations: []DashboardDeclaration{}, Warnings: []string{"Metadata suggests widgets, not service health or telemetry completeness. Each widget is a separate bounded source read; no transactional snapshot is claimed.", "Counts are captured records, not request throughput. Generic spans include retries and mixed span kinds; unset status is not verified success.", "Native evaluations preserve full OTel identity, units and temporality. At most two supported instruments are loaded automatically; other instruments remain discoverable."}}
+	p := &DashboardPlan{Version: DashboardVersion, Scope: scope, Service: in.Service, Widgets: []DashboardWidget{}, Declarations: []DashboardDeclaration{}, NativeOptions: []DashboardNativeOption{}, NativeLimit: DashboardNativeLimit, Warnings: []string{"Metadata suggests widgets, not service health or telemetry completeness. Each widget is a separate bounded source read; no transactional snapshot is claimed.", "Counts are captured records, not request throughput. Generic spans include retries and mixed span kinds; unset status is not verified success.", "Native evaluations preserve full OTel identity, units and temporality. At most two supported instruments are loaded; selection is local to this service visit, not saved dashboard configuration."}}
 	bucket := int64(1000)
 	for _, b := range []int64{1000, 10000, 60000, 300000} {
 		bucket = b
@@ -147,6 +157,18 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		return string(a) < string(b)
 	})
 	seen := map[string]bool{}
+	selected := map[string]bool{}
+	if in.NativeSelection != nil {
+		if len(*in.NativeSelection) > DashboardNativeLimit {
+			return nil, fmt.Errorf("select at most %d native instruments", DashboardNativeLimit)
+		}
+		for _, key := range *in.NativeSelection {
+			if len(key) != 64 || selected[key] {
+				return nil, fmt.Errorf("invalid or duplicate native selection")
+			}
+			selected[key] = true
+		}
+	}
 	native := 0
 	for _, instrument := range instruments {
 		if !signals["metrics"] || !instrument.Supported || instrument.Definition == nil {
@@ -169,11 +191,22 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			continue
 		}
 		seen[key] = true
-		if native >= DashboardNativeLimit {
+		optionKey := measurements.Hash(d)
+		isDefault := len(p.NativeOptions) < DashboardNativeLimit
+		chosen := isDefault
+		if in.NativeSelection != nil {
+			chosen = selected[optionKey]
+		}
+		p.NativeOptions = append(p.NativeOptions, DashboardNativeOption{Key: optionKey, Instrument: instrument, Default: isDefault, Selected: chosen})
+		delete(selected, optionKey)
+		if !chosen {
 			continue
 		}
 		native++
 		p.Widgets = append(p.Widgets, DashboardWidget{Key: fmt.Sprintf("native-%d", native), Title: d.Title, State: "supported", Grain: "per-stream", Measurement: &q})
+	}
+	if len(selected) != 0 {
+		return nil, fmt.Errorf("native selection is absent from supported instrument inventory")
 	}
 	for _, d := range declarations {
 		if d.Environment == in.Scope.Environment && d.Service == in.Service {

@@ -607,5 +607,17 @@ reuse stream navigation/coverage guidance without reads. Existing two-instrument
 and two-concurrent-read budgets remain unchanged. Journey75 covers namespace
 isolation, interval semantics, histogram ranges, gauge freshness and exact-stream
 capture custody with Bombadil/Quint; no new evaluator or planner policy is added.
-Next: explicit selection of native service widgets from the observed instrument
-inventory, retaining bounded reads and the same question/evidence primitives.
+
+### Native instrument selection (implemented 2026-10-20)
+
+The pure planner offers validated definition keys and enforces up to two selected
+native instruments, with omitted/default versus explicit empty intent. The service
+picker stages metadata locally; Apply explicitly rereads the fixed overview under
+the existing two-concurrent-read budget. Same-name library/version/schema variants
+remain distinct. Later Apply/scope generations invalidate older results. Selection
+is visit-local; saved questions/captures retain definitions independently. Journey76,
+Hegel generated state sequences and observed Quint/Bombadil checks cover the flow.
+
+Next: improve temporal exploration of retained native measurements with the shared
+chart primitives, preserving coverage gaps, exact stream identity and histogram
+bounds rather than inventing fleet totals or scalar percentile trends.

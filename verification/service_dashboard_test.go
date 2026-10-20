@@ -3,6 +3,7 @@ package verification
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/casselc/goo/exploration"
 	"github.com/casselc/goo/identity"
 	"github.com/casselc/goo/measurements"
@@ -12,6 +13,7 @@ import (
 	"hegel.dev/go/hegel"
 	"os"
 	"reflect"
+	"sort"
 	"testing"
 )
 
@@ -151,4 +153,73 @@ func TestQuintServiceDashboardLive(t *testing.T) {
 			t.Fatal("mutation accepted", i)
 		}
 	}
+}
+
+// Generated state sequences exercise edits against a retained inventory. Planning
+// must be deterministic, detached and bounded in every state, including clear.
+func TestHegelDashboardSelectionSequences(t *testing.T) {
+	hegel.Test(t, func(tc *hegel.T) {
+		count := hegel.Draw(tc, hegel.Integers(3, 8))
+		in := exploration.DashboardRequest{Scope: exploration.InventoryQuestion{Environment: "prod", FromMS: 1000, ToMS: 61000, Namespace: &identity.Namespace{Mode: "value", Value: "payments"}}, Service: "api", Signals: []string{"metrics"}}
+		for i := 0; i < count; i++ {
+			name := fmt.Sprintf("metric-%d", i)
+			d := measurements.Definition{APIVersion: measurements.Version, Name: name, Title: name, Kind: "gauge", Environment: "prod", LookbackMinutes: 1, MaxGapMS: 60000, Grain: "per-stream", Source: measurements.Binding{Namespace: in.Scope.Namespace.Clone(), Services: []string{"api"}, Scope: "sdk", Metric: name, Unit: "1"}}
+			in.Instruments = append(in.Instruments, measurements.Instrument{Kind: "gauge", Metric: name, Unit: "1", Scope: "sdk", Supported: true, Definition: &d})
+		}
+		original, _ := json.Marshal(in.Instruments)
+		base, e := exploration.PlanServiceDashboard(in, nil)
+		if e != nil {
+			tc.Fatal(e)
+		}
+		for step := 0; step < 12; step++ {
+			mask := hegel.Draw(tc, hegel.Integers(0, (1<<count)-1))
+			keys := []string{}
+			for i, o := range base.NativeOptions {
+				if mask&(1<<i) != 0 {
+					keys = append(keys, o.Key)
+				}
+			}
+			in.NativeSelection = &keys
+			p, e := exploration.PlanServiceDashboard(in, nil)
+			if len(keys) > exploration.DashboardNativeLimit {
+				if e == nil {
+					tc.Fatal("unbounded selection")
+				}
+				continue
+			}
+			if e != nil {
+				tc.Fatal(e)
+			}
+			n := 0
+			for _, w := range p.Widgets {
+				if w.Measurement != nil {
+					n++
+					q := w.Measurement
+					if q.Validate() != nil || !q.Definition.Source.Namespace.Equal(in.Scope.Namespace) || q.FromMS != in.Scope.FromMS || q.ToMS != in.Scope.ToMS {
+						tc.Fatal("selection escaped scope")
+					}
+				}
+			}
+			if n != len(keys) {
+				tc.Fatal("wrong native count")
+			}
+			for i, j := 0, len(in.Instruments)-1; i < j; i, j = i+1, j-1 {
+				in.Instruments[i], in.Instruments[j] = in.Instruments[j], in.Instruments[i]
+			}
+			for i, j := 0, len(keys)-1; i < j; i, j = i+1, j-1 {
+				keys[i], keys[j] = keys[j], keys[i]
+			}
+			again, e := exploration.PlanServiceDashboard(in, nil)
+			if e != nil || !reflect.DeepEqual(p, again) {
+				tc.Fatal("order-dependent selection")
+			}
+			// Returned metadata must not alias the retained source catalog.
+			p.NativeOptions[0].Instrument.Definition.Source.Services[0] = "mutated"
+		}
+		sort.Slice(in.Instruments, func(i, j int) bool { return in.Instruments[i].Metric < in.Instruments[j].Metric })
+		after, _ := json.Marshal(in.Instruments)
+		if string(original) != string(after) {
+			tc.Fatal("planner mutated source metadata")
+		}
+	}, options(100)...)
 }

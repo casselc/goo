@@ -1,0 +1,13 @@
+spec: native_selection.qnt
+module: native_selection
+constants: {INITIAL: 0}
+invariants: [safety]
+actions:
+  defaults: {expect: 'coherent == {{.obs.coherent}}'}
+  draft: {expect: 'coherent == {{.obs.coherent}}'}
+  apply: {expect: 'coherent == {{.obs.coherent}}'}
+  capture: {expect: 'coherent == {{.obs.coherent}}'}
+  reopen: {expect: 'coherent == {{.obs.coherent}}'}
+  clear: {expect: 'coherent == {{.obs.coherent}}'}
+  restore: {expect: 'coherent == {{.obs.coherent}}'}
+  supersede: {expect: 'coherent == {{.obs.coherent}}'}

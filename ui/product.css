@@ -1114,3 +1114,9 @@ td details {
 .dashboard-native-retained { margin-top: .75rem; }
 
 .dashboard-native-table td:first-child { min-width: 10rem; overflow-wrap: normal; word-break: normal; }
+
+.dashboard-native-picker { margin-block:.75rem; }
+.dashboard-native-picker fieldset { display:grid; gap:.75rem; max-height:24rem; overflow:auto; min-inline-size:0; border:1px solid var(--border); border-radius:8px; padding:.75rem; }
+.dashboard-native-picker label { display:grid; grid-template-columns:auto 1fr; gap:.25rem .5rem; align-items:start; }
+.dashboard-native-picker label input { width:auto; min-height:0; padding:0; margin:.15rem 0 0; }
+.dashboard-native-picker label small { grid-column:2; overflow-wrap:anywhere; }

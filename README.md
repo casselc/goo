@@ -453,3 +453,8 @@ show evaluated native interval values alongside coverage, with exact-stream
 question links and source-free browsing of the retained inventory. Counters,
 gauges and native histogram ranges remain independent per stream; no manifest
 or fleet aggregation is required.
+
+Service overviews now offer [native instrument selection](docs/SERVICE_DASHBOARDS.md#choose-native-instruments-for-this-service-visit):
+stage up to two supported observed definitions, then explicitly apply and reread
+the same fixed scope. Empty selection and restoring defaults are supported;
+selected questions use ordinary investigation and capture custody.

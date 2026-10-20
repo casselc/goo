@@ -553,3 +553,13 @@ namespace scope, no-read browsing and immutable exact-stream capture custody.
 `model/service_native.qnt` describes UI/evidence coherence, not a new metric
 kernel. Existing Hegel dashboard-planning properties cover unchanged scope/order
 semantics. Run the native actor with `GOO_SERVICE_NATIVE_BOMBADIL=1`.
+
+Native service selection: `TestHegelDashboardSelectionSequences` generates 100
+twelve-step selection sequences across reordered inventories, explicit empty
+choices and over-budget attempts, checking scope, determinism and detached
+metadata. `TestQuintNativeSelectionLedger` consumes journey76's observed real
+ledger (`GOO_NATIVE_SELECTION_LEDGER`) and replays defaults/edit/apply/capture/
+reopen/clear/restore/supersede against `model/native_selection.{qnt,yaml}`. Nine
+negative controls corrupt scope, membership, edit read counts, exact values,
+selected/captured definitions, immutable receipt, clear and superseded output.
+The companion Bombadil actor requires discovery/open/draft/apply/clear actions.

@@ -496,3 +496,10 @@ links. Invariants keep latest unknown values unavailable and bind stream links
 to the displayed instance/namespace. Run journey75 with
 `GOO_SERVICE_NATIVE_BOMBADIL=1`. The existing service-dashboard actor continues
 to exercise table/result-state contracts, scoped questions and activity charts.
+
+`verification/bombadil/native-selection.ts` exercises the overview picker with
+four real supported instruments: over-budget draft feedback, read-free edits,
+explicit Apply and clear. It checks bounded native output, empty-selection
+publication, viewport bounds and standard browser exception properties. Journey76
+requires all selection actions to occur (`GOO_NATIVE_SELECTION_BOMBADIL=1`), in
+addition to its deterministic capture and delayed-response assertions.

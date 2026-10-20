@@ -1219,3 +1219,20 @@ shows a fresh gauge observation. The mobile compact table scrolls within its own
 ![Native service values and separate window coverage](screenshots/75a-native-service-overview.png)
 ![Retained service stream browsing without a read](screenshots/75b-retained-service-streams.png)
 ![Compact native service card on mobile](screenshots/75c-mobile-native-service-card.png)
+
+## 76. Choose the native measurements in a service overview
+
+An operator opens a discovered payments API with multiple OTel instruments,
+including same-name version/schema variants. They stage non-default instruments
+without reading telemetry, see the two-card limit, then explicitly reread the
+same fixed service window. They capture one selected question and reopen that
+evidence without source reads, clear native cards, and restore defaults. A later
+empty Apply supersedes a held real source response. Selections last for this visit.
+
+Executable: `journeys/service-native-selection.spec.js`. Its real OTLP fixtures,
+Bombadil actions and observed Quint replay cover selection and evidence custody;
+Hegel generates independent planner selection sequences.
+
+![Staged choices and the native budget](screenshots/76a-staged-instrument-selection.png)
+![Selected native service measurements](screenshots/76b-selected-service-overview.png)
+![Mobile instrument picker](screenshots/76c-mobile-instrument-selection.png)

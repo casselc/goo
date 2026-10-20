@@ -2550,3 +2550,26 @@ recorded 228 steps. The observed native ledger passed Quint replay and nine
 rejecting controls. Updated desktop/mobile frames were reviewed. Final health
 checks passed for all 12 services, matching served assets/binary and preserved
 historical pending telemetry; see ENVIRONMENT_VALIDATION.md for image and evidence.
+
+## 2026-10-20 — bounded native service selection
+
+Service dashboards offer supported observed instrument choices from the pure Go
+planner. Edits are read-free; explicit Apply rereads the same fixed overview with
+a two-native/two-concurrent-read budget. Omitted selection uses defaults; empty
+selection performs no native reads. Same-name version/schema variants remain
+separate, and older Apply generations cannot publish over newer intent. Choices
+are visit-local; ordinary questions/captures retain their exact definitions.
+
+Root Go/vet, affected-package race checks, the 22-file frontend suite and Hegel
+planning/selection checks pass. Journey76 documents actual OTLP selection,
+read-free edits, budget feedback, namespace isolation, capture/reopen, default
+restoration and superseded responses, with observed Quint replay and nine
+rejecting controls. Final campaign evidence is recorded in ENVIRONMENT_VALIDATION.md.
+See [the selection contract](docs/SERVICE_DASHBOARDS.md#choose-native-instruments-for-this-service-visit).
+
+Final selection campaign: six journeys passed in 4.5 minutes with all three
+service Bombadil actors. The new actor recorded 540 steps and reached empty
+selection confirmation; its observed Quint ledger passed all nine rejecting
+controls. Keyboard focus and regenerated desktop/mobile documentation frames
+were reviewed. Final health/source/binary checks passed for all 12 services and
+historical pending telemetry remained preserved.

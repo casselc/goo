@@ -298,3 +298,9 @@ The service adapter owns typed-result matching, latest-interval presentation,
 exact-stream links and lazy retained-result construction. Expanding/searching a
 retained widget does not subscribe or fetch. The compact table remains outside
 the retained browser and preserves its nodes while local inventory filters change.
+
+Native service selection uses an application-owned standard details/form/fieldset
+with labelled checkboxes and an explicit Apply action. It consumes retained pure
+planner options, not a display-component fetch/subscription. The existing shared
+tables, stats and attributes still render results; selection generation, abort
+and evidence navigation stay in the service adapter.

@@ -1199,3 +1199,63 @@ Final validation:
 
 Evidence: `artifacts/service-native-final-journeys.log`,
 `artifacts/service-native-final-health.json`, and the ledger/actor directory above.
+
+## 2026-10-20 — choose native service instruments
+
+The pure v2 dashboard planner now publishes supported definition-key options and
+its two-instrument limit. Optional selection distinguishes omitted/default intent
+from an explicitly empty list. Unknown/duplicate keys and over-budget choices
+fail before publishing a plan. All supplied supported descriptors still undergo
+scope/identity validation. The picker stages retained metadata without reads;
+Apply explicitly rereads fixed overview questions with two concurrent workers.
+Newer Apply generations and service scope changes abort older reads and withhold
+stale publication. Selections last for this service visit; stored question and
+capture definitions remain independent.
+
+Completed semantic checks:
+
+- Root Go suite and vet passed; affected `exploration`/`cmd/goo` race suites passed.
+  The first sandbox-only focused invocation could not create local test listeners;
+  the full suite was rerun with local socket access and passed.
+- Frontend suite: 22 files passed. Existing Hegel dashboard planning and new
+  selection state sequences each passed 100 generated cases. Selection sequences
+  contain twelve steps across three to eight supported definitions, including
+  empty/over-budget choices, input reordering, detached metadata and fixed scope.
+- New observed native-selection Quint replay passed its actual ledger and nine
+  rejecting controls on the first image. Its browser flow covered supported
+  version/schema variants, excluded unsupported metadata, another namespace,
+  read-free edits, limit feedback, two explicit reads, capture/source-free reopen,
+  clear/default restoration and a held real response superseded by empty Apply.
+- An initial campaign's existing dashboard actor timed out launching Chromium;
+  its UI flow and Quint replay passed. No OOM kill was recorded. This failed actor
+  attempt is not counted as successful validation. The new selection actor passed.
+- Desktop/mobile screenshot review prompted scoped checkbox height/border styling,
+  a clearer applied-count label and keyboard focus restoration after Apply.
+
+Final image, browser campaign, actor counts and health results follow below.
+
+Final validation:
+
+- All six real-source service journeys (46/47/59/60/75/76) passed together in
+  4.5 minutes on the final image. The previously failed dashboard actor passed
+  on this campaign; no browser checks were skipped.
+- Native-selection ledger `artifacts/native-selection/b5999531a8/ledger.json`
+  passed observed Quint replay and all nine rejecting controls (21.15 seconds).
+  Its Bombadil actor recorded 540 steps, including discovery, open, draft, Apply,
+  clear and confirmation of empty output. Existing dashboard/native service actors
+  recorded 371/589 steps respectively; the native service custody replay passed.
+- The frontend suite passed again after final styling/focus changes (22 files).
+  Journey76 asserts summary focus after Apply, including empty and superseding
+  choices. All affected 46/47/48/59/60/75 frames and new 76 frames were regenerated;
+  desktop/mobile picker and selected overview screenshots were visually reviewed.
+- Final query/packages image:
+  `sha256:0dc0c3dc35031a5162e7f6139217f6bdd0f28897559b89b54d99941a2dd98e52`.
+  All 12 services run and health passes. Served UI hashes and the deployed Go
+  binary match reviewed source/build; both services use the same image. All five
+  historical pending IDs remain present among 13 pending entries at the final
+  check. No telemetry volumes or pending entries were reset. Traffic was restored.
+
+Evidence: `artifacts/native-selection-{go,vet,race,hegel,frontend-final,final-journeys}.log`,
+`artifacts/native-selection-final-health.json`, final image/deploy logs and the
+ledger/actor directories above. The selection remains visit-local; live refresh,
+saved dashboard configuration and whole-dashboard snapshots remain future work.

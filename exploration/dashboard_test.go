@@ -113,3 +113,51 @@ func TestNamespaceDashboardAndDeclaredBindingQuestion(t *testing.T) {
 		t.Fatal("mismatched declaration executable", p, e)
 	}
 }
+
+func TestDashboardExplicitNativeSelection(t *testing.T) {
+	in := DashboardRequest{Scope: InventoryQuestion{Environment: "prod", FromMS: 1000, ToMS: 61000}, Service: "api", Signals: []string{"metrics"}}
+	for _, name := range []string{"a", "b", "c", "d"} {
+		d := measurements.Definition{APIVersion: measurements.Version, Name: name, Title: name, Kind: "gauge", Environment: "prod", LookbackMinutes: 1, MaxGapMS: 60000, Grain: "per-stream", Source: measurements.Binding{Services: []string{"api"}, Scope: "sdk", Metric: name, Unit: "1"}}
+		in.Instruments = append(in.Instruments, measurements.Instrument{Kind: "gauge", Metric: name, Unit: "1", Scope: "sdk", Supported: true, Definition: &d})
+	}
+	defaults, e := PlanServiceDashboard(in, nil)
+	if e != nil {
+		t.Fatal(e)
+	}
+	if defaults.NativeLimit != 2 || len(defaults.NativeOptions) != 4 {
+		t.Fatal(defaults)
+	}
+	selected := []string{defaults.NativeOptions[3].Key, defaults.NativeOptions[2].Key}
+	in.NativeSelection = &selected
+	p, e := PlanServiceDashboard(in, nil)
+	if e != nil {
+		t.Fatal(e)
+	}
+	if len(p.Widgets) != 4 || p.Widgets[2].Measurement.Definition.Source.Metric != "c" || p.Widgets[3].Measurement.Definition.Source.Metric != "d" {
+		t.Fatal(p)
+	}
+	selected[0], selected[1] = selected[1], selected[0]
+	in.Instruments[0], in.Instruments[3] = in.Instruments[3], in.Instruments[0]
+	again, e := PlanServiceDashboard(in, nil)
+	if e != nil || !reflect.DeepEqual(p, again) {
+		t.Fatal("ordering changed explicit selection", e)
+	}
+	for _, bad := range [][]string{{selected[0], selected[0]}, {strings.Repeat("f", 64)}, {selected[0], selected[1], defaults.NativeOptions[0].Key}} {
+		in.NativeSelection = &bad
+		if _, e := PlanServiceDashboard(in, nil); e == nil {
+			t.Fatal("invalid selection accepted", bad)
+		}
+	}
+	empty := []string{}
+	in.NativeSelection = &empty
+	p, e = PlanServiceDashboard(in, nil)
+	if e != nil || len(p.Widgets) != 2 {
+		t.Fatal("empty selection caused native reads", p, e)
+	}
+	// A key is a scoped definition, never just a metric name or discovery row index.
+	in.NativeSelection = &selected
+	in.Scope.Environment = "other"
+	if _, e := PlanServiceDashboard(in, nil); e == nil {
+		t.Fatal("cross-environment selection accepted")
+	}
+}
