@@ -563,3 +563,12 @@ reopen/clear/restore/supersede against `model/native_selection.{qnt,yaml}`. Nine
 negative controls corrupt scope, membership, edit read counts, exact values,
 selected/captured definitions, immutable receipt, clear and superseded output.
 The companion Bombadil actor requires discovery/open/draft/apply/clear actions.
+
+Native timelines: `TestQuintNativeTimelineLedger` consumes journey77's actual OTLP
+gauge/counter/histogram observations (`GOO_NATIVE_TIMELINE_LEDGER`). Replay phases
+cover typed visual inputs, local read-free inspection and ordinary capture/reopen.
+Nine controls corrupt signed/unknown values, interval rates/states, uncovered time,
+histogram P95 bounds, read counts, captured unit and immutable receipt identity.
+Existing counter/histogram/measurement Hegel state/swarm properties complement
+exact visual-geometry unit tests. Journey78 checks passive server/SPA lifecycle
+and controlled keyboard selection independently of source semantics.

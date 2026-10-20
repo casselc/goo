@@ -251,3 +251,9 @@ default restoration, ordinary capture/source-free reopen and superseded real
 responses. Generated Hegel selection sequences check deterministic scope and
 budgets. Its observed Quint ledger and rejecting controls validate custody;
 Bombadil exercises selection edits, Apply and clear in the actual interface.
+
+Expanded **Native result · exact streams** now reuses the common
+[native timeline renderer](NATIVE_TIMELINES.md). Opening a retained stream lazily
+builds its gauge/counter/histogram chart. Selecting observations or native buckets
+performs no source read and changes neither dashboard scope nor stored evidence.
+Compact latest-value cards and their whole-window coverage semantics are unchanged.

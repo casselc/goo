@@ -618,6 +618,17 @@ remain distinct. Later Apply/scope generations invalidate older results. Selecti
 is visit-local; saved questions/captures retain definitions independently. Journey76,
 Hegel generated state sequences and observed Quint/Bombadil checks cover the flow.
 
-Next: improve temporal exploration of retained native measurements with the shared
-chart primitives, preserving coverage gaps, exact stream identity and histogram
-bounds rather than inventing fleet totals or scalar percentile trends.
+### Retained native timelines (implemented 2026-10-20)
+
+A reusable passive scalar timeline composes with the shared chart frame. Native
+results/captures show independent gauge dots, evaluated counter interval rates
+and histogram interval counts, with explicit unknown bands and read-free
+selection. Selected native histogram buckets retain per-interval layouts and
+P95 ranges. Exact tables use the shared table shell; unopened stream charts are
+lazy. Existing evaluator, question and custody formats are unchanged. Journey77
+uses real OTLP plus observed Quint/Bombadil validation; journey78 covers component
+server HTML, detached properties, keyboard selection and mobile composition.
+
+Next: richer native histogram distribution comparison/heatmaps over compatible
+retained intervals, keeping changed layouts explicit and reusing the same
+question/evidence primitives rather than averaging percentile scalars.

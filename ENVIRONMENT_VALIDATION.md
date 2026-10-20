@@ -1259,3 +1259,76 @@ Evidence: `artifacts/native-selection-{go,vet,race,hegel,frontend-final,final-jo
 `artifacts/native-selection-final-health.json`, final image/deploy logs and the
 ledger/actor directories above. The selection remains visit-local; live refresh,
 saved dashboard configuration and whole-dashboard snapshots remain future work.
+
+## 2026-10-20 — retained native timelines
+
+Added the passive `goo-value-timeline` component and a native measurement adapter
+inside shared chart-frame chrome. Independent gauge samples, evaluated counter
+rates and histogram interval counts retain exact stream/time scope, unknown
+states and recorded zero. Native histogram inspection preserves each selected
+interval's own bounds and P95 range, never a scalar percentile. The old gauge
+SVG is replaced; observation and selected bucket tables use the shared passive
+table shell. Unopened stream charts are lazy. Local selection performs no reads
+and changes no question/evidence basis. Native evaluators and capture formats
+are unchanged.
+
+Completed checks before the final campaign:
+
+- Frontend suite: all 23 test files passed, including exact nanosecond geometry,
+  signed/scientific values, large integer counts, unknown withholding, zero,
+  native formatter reuse, caps, immutable inputs and generated bounded positions.
+- Existing Hegel counter/histogram/measurement state/swarm checks passed (100 cases
+  each under their existing step policies). No production Go semantics changed;
+  root/race suites were not rerun for this presentation milestone.
+- Quint model typecheck passed. The first real-OTLP journey and its observed
+  replay passed, including nine rejecting controls; its Bombadil actor passed.
+  The standalone component journey passed server HTML, controlled keyboard
+  selection/focus, detached upgrade, getter detachment, empty update and mobile
+  layout without API reads. Two initial journeys passed together in 1.3 minutes.
+- Screenshot review prompted UTC primary labels plus exact-nanosecond disclosure,
+  an explicit zero baseline, no numeric scale for all-unknown snapshots, clearer
+  selected headings, and compact shared native bucket tables on mobile.
+
+Final regression/image/health evidence follows below. The 200-point visual limit
+never defines measurement totals. Per-stream plot domains are labelled local
+scales, not aligned cross-stream comparisons. Counter rates retain the kernel's
+floating interval representation. Live gauges/histograms and generic temporal
+bucket heatmaps remain planned.
+
+Final validation:
+
+- Seven affected journeys (38/73/74/75/76/77/78) passed together in 7.1 minutes,
+  with native timeline, retained-navigation and exact-stream Bombadil actors.
+  Navigation/exact actors recorded 57/491 steps and exercised every required action.
+  Their observed custody ledgers passed alongside the shared measurement/service
+  replays. No browser checks were skipped.
+- Visual review caught an unknown gauge inheriting a numeric dot pseudo-element.
+  The stylesheet now restricts dots to observed/stale samples. A final real-source
+  browser assertion checks computed pseudo-element content for the unknown sample.
+  Focused journeys77/78 passed again on the reviewed image in 1.4 minutes.
+- Final table-migration review restored the original 510 px observation-table
+  scroll limit. A browser geometry assertion now verifies it. Journeys38/77/78
+  passed again on the final bounded-table image in 2.1 minutes, including the
+  unknown glyph, custody, Bombadil and component contracts. Their frames were
+  regenerated. Unused Docker build cache/dangling images were removed to recover
+  validation space; telemetry volumes were untouched.
+- Latest timeline ledger: `artifacts/native-timeline/793f7e2451/ledger.json`.
+  Observed Quint replay and all nine rejecting controls passed (17.54 seconds).
+  The final Bombadil actor recorded 551 steps and exercised capture open plus
+  unknown, observed-empty and selected-bucket inspection.
+- Final frontend suite: 23 files passed. Regenerated affected 38/73/74/75/76
+  storyboards and new 77/78 frames. Reviewed desktop gauge/counter charts and
+  mobile histogram/bucket inspection; reviewed the final unknown-sample glyph fix.
+- Final query/packages image:
+  `sha256:a2d5ef79b876d6f65efc3c8b43384ec12c2296acc0c2a1bb7452421fd8f63e7f`.
+  All 12 services run and health passes. Served UI assets (including both new
+  component assets), server.py and deployed Go binary match reviewed source/build;
+  query/packages use the same image. All five historical pending IDs remain among
+  13 pending entries at the final check. Traffic was restored; no telemetry
+  volumes or pending entries were reset.
+
+Evidence: `artifacts/native-timeline-{frontend-final,hegel,final-journeys,reviewed-journeys,bounded-journeys}.log`,
+`artifacts/native-timeline-final-health.json`, bounded image/deploy logs and the
+ledger/actor directory above. The seven-journey campaign used the preceding
+shared-table/UTC-label image; subsequent focused campaigns verified the unknown glyph and restored table
+viewport bounds, refreshing the affected documentation frames.

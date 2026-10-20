@@ -1,0 +1,11 @@
+spec: native_timeline.qnt
+module: native_timeline
+constants: {INITIAL: 0}
+invariants: [safety]
+actions:
+  gauge: {expect: 'coherent == {{.obs.coherent}}'}
+  counter: {expect: 'coherent == {{.obs.coherent}}'}
+  histogram: {expect: 'coherent == {{.obs.coherent}}'}
+  inspect: {expect: 'coherent == {{.obs.coherent}}'}
+  capture: {expect: 'coherent == {{.obs.coherent}}'}
+  reopen: {expect: 'coherent == {{.obs.coherent}}'}

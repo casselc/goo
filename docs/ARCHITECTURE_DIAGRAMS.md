@@ -1151,3 +1151,11 @@ The [selection sequence](SERVICE_DASHBOARDS.md#choose-native-instruments-for-thi
 separates metadata-only draft edits, Go validation of offered definition keys,
 explicit bounded rereads and current-generation publication. Empty selection
 means no native reads; changing the selection leaves stored captures intact.
+
+### Retained native temporal inspection
+
+The [native timeline sequence](NATIVE_TIMELINES.md#interaction-and-custody) keeps
+Go-classified observations/coverage separate from bounded passive geometry and
+read-free local selection. Ordinary explicit capture rereads the same question;
+stored charts reopen without telemetry reads. P95 remains a bucket range and
+unknown intervals never inherit previous distributions.

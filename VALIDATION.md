@@ -2573,3 +2573,33 @@ selection confirmation; its observed Quint ledger passed all nine rejecting
 controls. Keyboard focus and regenerated desktop/mobile documentation frames
 were reviewed. Final health/source/binary checks passed for all 12 services and
 historical pending telemetry remained preserved.
+
+## 2026-10-20 — retained native timelines
+
+Ordinary native results/captures and expanded service results now use a passive
+scalar timeline with shared chart-frame/table components. Gauge dots remain
+independent, counter rates come from evaluated intervals, and histogram charts
+show interval counts with native bucket/P95 details. Unknowns are not zero;
+selection is read-free and preserves fixed question/custody. Charts are lazy per
+stream and capped at the latest 200 retained observations/intervals.
+
+All 23 frontend files and existing Hegel native measurement state/swarm checks
+pass. Journey77 uses actual OTLP evidence with observed Quint replay and nine
+rejecting controls; journey78 tests server/SPA lifecycle, keyboard selection and
+mobile bounds without API reads. The initial two-journey campaign passed with
+Bombadil. Final affected regressions and deployed source/image checks are recorded
+in ENVIRONMENT_VALIDATION.md. See [the timeline contract](docs/NATIVE_TIMELINES.md).
+
+Final timeline validation: all seven affected journeys passed together (7.1
+minutes), with exact-stream/native-navigation/timeline actors. After the visual
+unknown-dot correction, both new journeys passed again (1.4 minutes), including
+a computed-style assertion. Latest observed Quint replay passed all nine
+rejecting controls; Bombadil exercised all required inspection actions. Final
+health and served asset/server/binary checks passed for all 12 services; historical
+pending telemetry remained preserved. Documentation frames were refreshed and
+reviewed on desktop/mobile.
+
+Final bounded-table confirmation: journeys38/77/78 passed again in 2.1 minutes
+with an explicit table-height assertion, the unknown-glyph assertion and native
+timeline Bombadil/Quint checks. Final source/image health matches this build;
+the original 510 px observation-table scroll bound is preserved.

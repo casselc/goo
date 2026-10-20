@@ -458,3 +458,8 @@ Service overviews now offer [native instrument selection](docs/SERVICE_DASHBOARD
 stage up to two supported observed definitions, then explicitly apply and reread
 the same fixed scope. Empty selection and restoring defaults are supported;
 selected questions use ordinary investigation and capture custody.
+
+[Native timelines](docs/NATIVE_TIMELINES.md) now show independent gauge samples,
+evaluated counter intervals and histogram interval counts in ordinary results
+and captures. Keyboard/pointer inspection is read-free; unknowns stay distinct
+from zero and histogram P95 remains a native bucket range.

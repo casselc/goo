@@ -1097,7 +1097,7 @@ td details {
 @media(max-width:850px){.live-comparison .live-latency-pair{grid-template-columns:minmax(0,1fr)}}
 
 /* Native observation tables keep readable columns inside their scroll owner. */
-.scroll > table.measurement-table { min-width: 35rem; }
+.scroll > table.measurement-table, .native-measurement-table > table.measurement-table { min-width: 35rem; }
 
 .native-stream-tools { align-items: end; }
 .native-stream-tools input { min-width: 12rem; max-width: 100%; }
@@ -1106,7 +1106,7 @@ td details {
 .native-reason-list { padding-left: 1.25rem; }
 .native-reason-list li { margin: .5rem 0; }
 .native-stream-list > details { margin: .75rem 0; }
-.scroll > table.measurement-table th, .scroll > table.measurement-table td { white-space: nowrap; }
+.scroll > table.measurement-table th, .scroll > table.measurement-table td, .native-measurement-table > table.measurement-table th, .native-measurement-table > table.measurement-table td { white-space: nowrap; }
 
 .dashboard-native-table > table { min-width: 30rem; }
 .dashboard-native-table td { vertical-align: top; }
@@ -1120,3 +1120,15 @@ td details {
 .dashboard-native-picker label { display:grid; grid-template-columns:auto 1fr; gap:.25rem .5rem; align-items:start; }
 .dashboard-native-picker label input { width:auto; min-height:0; padding:0; margin:.15rem 0 0; }
 .dashboard-native-picker label small { grid-column:2; overflow-wrap:anywhere; }
+
+.native-timeline { margin-block:1rem; }
+.native-timeline-axis { display:flex; justify-content:space-between; gap:1rem; font-size:11px; overflow-wrap:anywhere; }
+.native-timeline-selection { margin-top:.75rem; }
+.native-timeline-selection > p { font-size:12px; overflow-wrap:anywhere; }
+
+.native-timeline-selection > h6 { font-size:13px; margin:0 0 8px; }
+.native-bucket-table > table { min-width:0; width:100%; }
+.native-bucket-table > table th { white-space:normal; }
+.native-bucket-table > table td:last-child { text-align:right; font-variant-numeric:tabular-nums; }
+
+.native-measurement-table { max-height:510px; }

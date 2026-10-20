@@ -503,3 +503,10 @@ explicit Apply and clear. It checks bounded native output, empty-selection
 publication, viewport bounds and standard browser exception properties. Journey76
 requires all selection actions to occur (`GOO_NATIVE_SELECTION_BOMBADIL=1`), in
 addition to its deterministic capture and delayed-response assertions.
+
+`verification/bombadil/native-timeline.ts` opens journey77's real stored histogram
+capture and selects unknown, observed-empty and nonempty intervals, then opens
+the selected native bucket details. Invariants retain exact supplied values/time
+bounds and viewport limits. Actions reject prior buckets on unknown selection
+and reject scalar percentiles for zero observations. Run journey77 with
+`GOO_NATIVE_TIMELINE_BOMBADIL=1`; it requires all three inspection actions.

@@ -304,3 +304,15 @@ with labelled checkboxes and an explicit Apply action. It consumes retained pure
 planner options, not a display-component fetch/subscription. The existing shared
 tables, stats and attributes still render results; selection generation, abort
 and evidence navigation stay in the service adapter.
+
+### Scalar observations and interval timelines
+
+[`goo-value-timeline`](NATIVE_TIMELINES.md#framework-neutral-component) accepts
+exact supplied time/value strings, independent sample dots, interval segments
+and explicit nonnumeric states. It has bounded visual scaling and controlled
+selection only; native measurement semantics and detail panels stay in the app
+adapter. It supports server `data` attributes, detached SPA properties and native
+keyboard buttons without subscriptions/fetches. Shared chart-frame chrome wraps
+its local plot. Native observation/bucket tables now use `goo-table` with captions
+and column scopes; compact selected buckets avoid the wide interval-table minimum.
+See `/ui-components` and journeys77/78.

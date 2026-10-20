@@ -404,3 +404,11 @@ isolation and durable live workspaces remain future work. See LIVE_COMPARISON.md
   supported overview questions from retained metadata; it does not rediscover
   instruments or create a transactional snapshot. Unsupported instruments remain
   visible in Native instruments. Saved dashboard configurations remain planned.
+
+- [Native timelines](NATIVE_TIMELINES.md) are fixed retained views capped at the
+  latest 200 observations/intervals per stream. Scalar domains are labelled and
+  local to each visual snapshot, not aligned fleet or cross-stream comparisons.
+  Histogram timelines show interval counts; P95 ranges/native buckets live in
+  selection details. Historical gauge samples may be stale under the fixed
+  evaluation policy. Live gauges/histograms, timeline-driven window reruns and
+  generic compatible-bucket temporal heatmaps remain planned.

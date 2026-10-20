@@ -1,0 +1,16 @@
+/* Caller-supplied values; native controls keep keyboard and pointer semantics. */
+goo-value-timeline{display:block;min-width:0;max-width:100%;padding:0 10px}
+goo-value-timeline[hidden]{display:none}
+goo-value-timeline>.value-timeline-scale{font-size:12px;color:var(--muted,#98a8bf);margin:0 0 20px;font-variant-numeric:tabular-nums}
+goo-value-timeline>.value-timeline-plot{height:150px;position:relative;margin:12px 0 24px;border-bottom:1px solid var(--border,#2b3545);background:repeating-linear-gradient(to top,transparent,transparent calc(25% - 1px),var(--border,#2b3545) 25%)}
+goo-value-timeline>.value-timeline-plot>.value-timeline-mark{position:absolute;min-width:14px;min-height:0;height:16px;padding:0;border:0;border-radius:0;transform:translateY(-50%);background:transparent;color:var(--accent,#67ddbb);cursor:pointer}
+goo-value-timeline>.value-timeline-plot>.value-timeline-mark[data-interval=false]{transform:translate(-50%,-50%)}
+goo-value-timeline>.value-timeline-plot>.value-timeline-mark:is([data-state=observed],[data-state=stale])::before{content:'';position:absolute;inset:7px 0 auto;height:2px;background:currentColor}
+goo-value-timeline>.value-timeline-plot>.value-timeline-mark[data-interval=false]:is([data-state=observed],[data-state=stale])::after{content:'';position:absolute;left:4px;top:4px;width:8px;height:8px;border-radius:50%;background:currentColor}
+goo-value-timeline>.value-timeline-plot>.value-timeline-mark[data-state=stale]{color:var(--muted,#98a8bf)}
+goo-value-timeline>.value-timeline-plot>.value-timeline-mark:is([data-state=unknown],[data-state=no_data]){height:100%;transform:none;border:1px dashed var(--muted,#98a8bf);background:repeating-linear-gradient(135deg,transparent,transparent 6px,#8896aa15 6px,#8896aa15 8px);color:var(--muted,#98a8bf)}
+goo-value-timeline>.value-timeline-plot>.value-timeline-mark[aria-pressed=true]{outline:2px solid var(--accent,#67ddbb);outline-offset:2px;z-index:2}
+goo-value-timeline>.value-timeline-plot>.value-timeline-mark:focus-visible{outline:3px solid var(--warning,#f5b85d);outline-offset:3px;z-index:3}
+
+goo-value-timeline>.value-timeline-plot>.value-timeline-mark[data-interval=true]{min-width:1px}
+goo-value-timeline>.value-timeline-plot>.value-timeline-zero{position:absolute;left:0;right:0;border-top:2px dashed var(--muted,#98a8bf);pointer-events:none}

@@ -1236,3 +1236,30 @@ Hegel generates independent planner selection sequences.
 ![Staged choices and the native budget](screenshots/76a-staged-instrument-selection.png)
 ![Selected native service measurements](screenshots/76b-selected-service-overview.png)
 ![Mobile instrument picker](screenshots/76c-mobile-instrument-selection.png)
+
+## 77. Inspect native observations over time
+
+An operator opens ordinary OTel gauge, counter and histogram questions for a
+payments API. They inspect signed/stale/zero gauge samples, a counter reset and
+unknown intervals, then histogram intervals with an uncovered gap, zero
+observations and changed native bucket bounds. Selection is local and read-free.
+They capture the unchanged histogram question and reopen its stored timeline
+without source reads. Unknown selection never reuses a prior distribution.
+
+Executable: `journeys/native-timeline.spec.js`; actual OTLP, observed Quint replay
+with nine rejecting controls, and saved-evidence Bombadil inspection.
+
+![Independent gauge samples and latest unknown](screenshots/77a-gauge-native-timeline.png)
+![Counter interval values and typed unknowns](screenshots/77b-counter-unknown-intervals.png)
+![Selected native histogram interval and its bounds](screenshots/77c-histogram-interval-bounds.png)
+![Mobile native interval and bucket inspection](screenshots/77d-mobile-native-timeline.png)
+
+## 78. Reuse the passive timeline in server HTML or an SPA
+
+The labelled synthetic component catalog demonstrates supplied observations and
+controlled selection. Executable `journeys/value-timeline-components.spec.js`
+checks keyboard focus, exact zero/unknown values, detached property upgrade,
+getter detachment, reactive empty results and mobile composition without API reads.
+This component contract complements, rather than replaces, journey77's real data.
+
+![Passive supplied timeline at mobile width](screenshots/78a-passive-scalar-timeline.png)
