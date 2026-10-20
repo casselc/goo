@@ -463,3 +463,7 @@ selected questions use ordinary investigation and capture custody.
 evaluated counter intervals and histogram interval counts in ordinary results
 and captures. Keyboard/pointer inspection is read-free; unknowns stay distinct
 from zero and histogram P95 remains a native bucket range.
+
+## Native histogram heatmaps
+
+Inspect retained intervals and compatible captured windows with [native bucket heatmaps](docs/NATIVE_HEATMAPS.md). Counts, unknowns and incompatible layouts remain distinct.

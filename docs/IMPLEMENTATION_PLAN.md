@@ -632,3 +632,7 @@ server HTML, detached properties, keyboard selection and mobile composition.
 Next: richer native histogram distribution comparison/heatmaps over compatible
 retained intervals, keeping changed layouts explicit and reusing the same
 question/evidence primitives rather than averaging percentile scalars.
+
+## Retained native bucket heatmaps
+
+Added passive exact-count grids, layout selection over the latest 32 retained intervals, synchronized interval inspection, and compatible captured-window counts alongside normalized share comparisons. Unknown and other-layout cells remain distinct. Next: consider time-bucketed distribution views only with an explicit Go aggregation and coverage contract; interval columns do not imply equally spaced time buckets.

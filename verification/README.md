@@ -572,3 +572,13 @@ histogram P95 bounds, read counts, captured unit and immutable receipt identity.
 Existing counter/histogram/measurement Hegel state/swarm properties complement
 exact visual-geometry unit tests. Journey78 checks passive server/SPA lifecycle
 and controlled keyboard selection independently of source semantics.
+
+Native histogram heatmap display checks reuse the real retained-evidence paths in
+journeys 77 and 54. Their existing observed Quint ledgers continue to check exact
+stream identity, unknown/zero handling, compatible-window semantics and source-read
+boundaries; the display adapter itself does not introduce a new evaluator or
+custody transition. Journey 77 additionally runs `goo.timelineHeatmap` in its
+saved-capture Bombadil actor, switching layouts and selecting zero/unknown cells.
+Pure grid/adapter cases live in `tests/bucket-heatmap.test.js`; journeys 79/80 cover
+SSR, detached/pre-definition properties, controlled selection, invalid data and
+mobile layout. See [native heatmap contract](../docs/NATIVE_HEATMAPS.md).

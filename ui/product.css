@@ -1132,3 +1132,7 @@ td details {
 .native-bucket-table > table td:last-child { text-align:right; font-variant-numeric:tabular-nums; }
 
 .native-measurement-table { max-height:510px; }
+
+/* Native histogram workbench layout; passive grid styles live separately. */
+.native-bucket-heatmap>label{display:block;min-width:0;max-width:100%}
+.native-bucket-heatmap>label>select{display:block;min-width:0;max-width:100%;width:100%}

@@ -1159,3 +1159,7 @@ Go-classified observations/coverage separate from bounded passive geometry and
 read-free local selection. Ordinary explicit capture rereads the same question;
 stored charts reopen without telemetry reads. P95 remains a bucket range and
 unknown intervals never inherit previous distributions.
+
+## Native histogram display path
+
+The [native histogram heatmap design](NATIVE_HEATMAPS.md) diagrams the Go evaluator, retained interval adapter, passive grid and existing selection panel. Go remains responsible for captured-window compatibility.

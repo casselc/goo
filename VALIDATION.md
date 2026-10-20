@@ -2603,3 +2603,57 @@ Final bounded-table confirmation: journeys38/77/78 passed again in 2.1 minutes
 with an explicit table-height assertion, the unknown-glyph assertion and native
 timeline Bombadil/Quint checks. Final source/image health matches this build;
 the original 510 px observation-table scroll bound is preserved.
+
+## 2026-10-20 — compatible native histogram bucket heatmaps
+
+Implemented a passive `goo-bucket-heatmap` display element, a lazy retained-interval
+layout adapter and a captured-window count view gated by the Go comparison's
+`comparable` result. Unknown intervals have no inferred layout, recorded zero stays
+observed and other-layout cells are disabled. Counts remain exact strings; only
+color geometry uses a numeric ratio. The retained grid is limited to the latest
+32 intervals and 64 buckets per layout; exact tables remain authoritative.
+
+Validation completed:
+
+- `npm run test:visualizations`: all 24 frontend test files passed, including exact
+  large counts, zero/unknown/outside states, fail-closed input/budget checks,
+  incompatible equal-length layouts, stable count ceilings, original retained keys
+  and input immutability. Artifact: `artifacts/native-heatmap-frontend.log`.
+- Final image browser campaign: journeys 38, 54, 77, 79 and 80 all passed in 2.6m.
+  Real OTLP evidence covers native measurements, layout switching, zero/unknown
+  selection, cleared stale bucket tables, source-free saved-capture reuse,
+  compatible/incompatible captured-window grids, mobile overflow and exact table
+  viewport behavior. Standalone contracts cover SSR attributes, detached and
+  pre-definition properties, controlled selection/focus, invalid/empty data and
+  exact counts above JavaScript's safe integer range. Artifact:
+  `artifacts/native-heatmap-final-journeys.log`.
+- `GOO_NATIVE_TIMELINE_BOMBADIL=1`: updated saved-capture actor completed 559 trace
+  entries, exercised all five required custom actions including
+  `goo.timelineHeatmap`, and passed continuous supplied-cell-state/count,
+  disabled-layout, overflow and default exception invariants. Evidence:
+  `artifacts/native-timeline/056759d6ff/bombadil`.
+- Observed Quint replay passed for native timelines (17.52s, nine rejecting
+  controls), native captured windows (11.40s, six rejecting controls) and the
+  Measurements regression (22.99s). Actual ledgers/logs:
+  `artifacts/native-timeline/056759d6ff`,
+  `artifacts/native-windows/1792539097069`, and
+  `artifacts/measurements/fee03094`. Existing models validate retained semantic and
+  custody/read boundaries; no new browser metric evaluator was introduced.
+- Hegel histogram state/swarm (100 cases) and merge (150 cases) checks passed,
+  `go test -run 'TestHegelHistogramStateSwarm|TestHegelHistogramMerge' -count=1 .`
+  in `verification`. The first invocation used the read-only default user cache;
+  setting `XDG_CACHE_HOME=/workspace/.cache` corrected the environment. Artifact:
+  `artifacts/native-heatmap-hegel.log`.
+- JavaScript syntax checks, Python server compilation and `git diff --check`
+  passed. Regenerated journey 38/54/77 frames and the new labelled synthetic
+  component frame; reviewed desktop/mobile grid screenshots. Updated README,
+  component/design docs, architecture diagram, executable storyboard, Bombadil
+  notes, planning and known display limits.
+
+The final deployed query/packages image is
+`sha256:463ab7de755a77512de87e9e2211f1f5aeafe04bceb6dc095d4ddf9b51192fae`.
+The wrapper restored the traffic generator and retained existing telemetry volumes
+and historical pending entries. Final service/asset/binary verification is recorded
+in `artifacts/native-heatmap-final-health.json`. Unused build caches and dangling
+images were reclaimed without touching volumes. No production Go semantics changed,
+so unrelated root/race suites were not repeated for this display milestone.

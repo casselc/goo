@@ -1263,3 +1263,7 @@ getter detachment, reactive empty results and mobile composition without API rea
 This component contract complements, rather than replaces, journey77's real data.
 
 ![Passive supplied timeline at mobile width](screenshots/78a-passive-scalar-timeline.png)
+
+## Native bucket heatmap journeys
+
+Journey 77 now covers layout switching, recorded zero, unknown selection and mobile overflow over real OTLP evidence; its 77c/77d screenshots show the grid in context. Journey 54 shows the compatible-window count grid and rejects a grid for incompatible layouts. Journeys 79/80 document the passive component using a clearly synthetic fixture (`79-bucket-component-contract.png`).

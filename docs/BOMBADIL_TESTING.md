@@ -510,3 +510,7 @@ the selected native bucket details. Invariants retain exact supplied values/time
 bounds and viewport limits. Actions reject prior buckets on unknown selection
 and reject scalar percentiles for zero observations. Run journey77 with
 `GOO_NATIVE_TIMELINE_BOMBADIL=1`; it requires all three inspection actions.
+
+## Native bucket heatmap exploration
+
+Journey 77’s saved-capture actor now opens the histogram grid, switches layouts, selects recorded-zero and unknown cells, and rejects stale bucket tables after unknown selection (`goo.timelineHeatmap`). Run with `GOO_NATIVE_TIMELINE_BOMBADIL=1`.

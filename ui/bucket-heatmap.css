@@ -1,0 +1,16 @@
+goo-bucket-heatmap{display:block;min-width:0;max-width:100%}
+goo-bucket-heatmap[hidden]{display:none}
+goo-bucket-heatmap>.bucket-heatmap-legend{font-size:12px;color:var(--muted,#98a8bf);overflow-wrap:anywhere}
+goo-bucket-heatmap>goo-table{display:block;overflow:auto;max-height:360px;max-width:100%;min-width:0}
+goo-bucket-heatmap>goo-table>table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+goo-bucket-heatmap>goo-table>table>caption{text-align:left;font-size:12px;padding:8px;color:var(--muted,#98a8bf)}
+goo-bucket-heatmap>goo-table>table th{padding:8px;font-size:12px;white-space:nowrap;background:var(--panel,#151d28)}
+goo-bucket-heatmap>goo-table>table>thead th{position:sticky;top:0;z-index:2;max-width:180px;white-space:normal;min-width:84px}
+goo-bucket-heatmap>goo-table>table>tbody th{position:sticky;left:0;z-index:1;text-align:left;min-width:140px}
+goo-bucket-heatmap>goo-table>table td{padding:2px}
+goo-bucket-heatmap .bucket-heatmap-cell{display:block;width:100%;min-height:32px;min-width:64px;border:1px solid var(--border,#2b3545);border-radius:3px;background:transparent;color:var(--ink,#e3e9f3);padding:5px 8px;cursor:pointer;font:inherit;font-size:12px}
+goo-bucket-heatmap .bucket-heatmap-cell[data-state=unknown]{background:repeating-linear-gradient(135deg,transparent,transparent 6px,#8896aa15 6px,#8896aa15 8px);border-style:dashed}
+goo-bucket-heatmap .bucket-heatmap-cell[data-state=outside]{color:var(--muted,#98a8bf);cursor:default;opacity:1}
+goo-bucket-heatmap .bucket-heatmap-cell[aria-pressed=true]{outline:2px solid var(--accent,#67ddbb);outline-offset:-2px}
+goo-bucket-heatmap .bucket-heatmap-cell:focus-visible{outline:3px solid var(--warning,#f5b85d);outline-offset:-3px}
+goo-bucket-heatmap>goo-table>table th{text-transform:none;letter-spacing:normal}

@@ -316,3 +316,7 @@ keyboard buttons without subscriptions/fetches. Shared chart-frame chrome wraps
 its local plot. Native observation/bucket tables now use `goo-table` with captions
 and column scopes; compact selected buckets avoid the wide interval-table minimum.
 See `/ui-components` and journeys77/78.
+
+## Bucket heatmap
+
+`goo-bucket-heatmap` supplies exact-count, controlled-selection grids with SSR JSON and SPA properties. See [contract and integration](NATIVE_HEATMAPS.md); standalone journeys 79/80 cover focus, invalid data and mobile overflow.

@@ -412,3 +412,7 @@ isolation and durable live workspaces remain future work. See LIVE_COMPARISON.md
   selection details. Historical gauge samples may be stale under the fixed
   evaluation policy. Live gauges/histograms, timeline-driven window reruns and
   generic compatible-bucket temporal heatmaps remain planned.
+
+## Retained histogram heatmap limits
+
+Native bucket grids display the latest 32 retained intervals and at most 64 buckets per layout. These are interval columns, not equally spaced elapsed-time buckets. Oversized layouts retain their exact tables; unknown intervals have no inferred layout. Shared raw-count scales do not normalize differing window durations.
