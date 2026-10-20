@@ -983,3 +983,15 @@ with a fresh browser; original questions, evidence links and captures are unchan
 Quint replays observed reads and saved evidence relationships with six rejecting
 mutations. Optional Bombadil exploration opens/closes previews and selects prior
 evidence without capturing.
+
+## 58 — Locate a change by captured attribute
+
+Executable: `journeys/comparison-breakdown.spec.js`. Real standard OTLP spans
+create before/after populations of 1200/1300 records. Select HTTP route without
+a source read, explicitly capture both windows, inspect missing/empty/new groups,
+open a fixed-side question, save a finding and reopen it source-free on mobile.
+Frames: 58a explicit recapture, 58b full population breakdown, 58c shared mobile.
+
+- [58a — explicit breakdown recapture](screenshots/58a-explicit-breakdown-recapture.png)
+- [58b — complete route populations](screenshots/58b-complete-route-change.png)
+- [58c — frozen mobile finding](screenshots/58c-shared-mobile-breakdown.png)

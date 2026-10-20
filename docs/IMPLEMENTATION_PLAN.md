@@ -467,3 +467,12 @@ capture linked. Existing revision, fixed rerun and fresh-window flows are reused
 new evidence and findings through existing capture/comparison/revision primitives.
 Preview fixes a same-duration scope; explicit baseline selection and one new read
 lead to a source-free comparison. Lifecycle comparisons remain unsupported.
+
+## Captured change breakdowns and product direction
+
+[Captured group comparisons](COMPARISON_BREAKDOWNS.md) reuse full stored
+aggregates and open focused questions. New dimensions require explicit recapture.
+[Whole-product review](WHOLE_PRODUCT_REVIEW.md) proposes automatic service
+and distributed-service dashboards within Services, derived from observed inventory
+and explicitly matched manifests/packages. Dashboard recommendations remain planned;
+observed, declared and executed-supported evidence are distinct.

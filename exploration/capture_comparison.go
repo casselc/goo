@@ -28,6 +28,7 @@ type GaugeChange struct {
 	State      string               `json:"state"`
 }
 type EvidenceComparison struct {
+	Breakdown       *CohortComparison          `json:"breakdown,omitempty"`
 	NativeWindows   []metrics.WindowComparison `json:"nativeWindows,omitempty"`
 	Baseline        EvidenceSide               `json:"baseline"`
 	Selection       EvidenceSide               `json:"selection"`
@@ -182,6 +183,22 @@ func CompareEvidence(a, b *SavedCapture) (*EvidenceComparison, error) {
 	r.CountDifference = signedDifference(r.Baseline.Count, r.Selection.Count)
 	if a.Explore != nil {
 		r.Measures = compareMeasures(a.Explore.Duration, b.Explore.Duration, a.Explore.SpanStatus, b.Explore.SpanStatus)
+		if len(qa.Explore.GroupBy) == 1 && qa.Explore.Numeric == nil {
+			ac, err := CohortFromResult(a.Explore)
+			if err != nil {
+				return nil, err
+			}
+			bc, err := CohortFromResult(b.Explore)
+			if err != nil {
+				return nil, err
+			}
+			r.Breakdown, err = CompareCohorts(ComparisonRequest{Baseline: ac, Selection: bc})
+			if err != nil {
+				return nil, err
+			}
+			// Provenance here is validated immutable storage, not caller-held metadata.
+			r.Breakdown.Warnings = []string{"Complete captured group aggregates; never retained inspection rows. Separate source reads, sampling and ingestion coverage remain unverified.", "Share changes are percentage points, not causal attribution. Absent groups have zero captured records; their duration and error shares remain unavailable."}
+		}
 	} else if a.Measurement.Gauges != nil && b.Measurement.Gauges != nil {
 		type endpoints struct {
 			stream metrics.Stream

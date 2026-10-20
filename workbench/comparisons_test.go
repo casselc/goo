@@ -134,19 +134,21 @@ func TestLegacyComparisonReceiptStillReopensWithoutReevaluation(t *testing.T) {
 	if e != nil {
 		t.Fatal(e)
 	}
-	r.ID = ""
-	r.Algorithm = "goo/evidence-comparison/v1"
-	id, e := digest(r)
-	if e != nil {
-		t.Fatal(e)
-	}
-	r.ID = id
-	if e = s.publish("comparisons", id, r); e != nil {
-		t.Fatal(e)
-	}
-	a.Explore.Count = "99"
-	got, e := s.LoadComparison(id)
-	if e != nil || got.Algorithm != "goo/evidence-comparison/v1" || got.Result.CountDifference != "2" {
-		t.Fatal(got, e)
+	for _, algorithm := range []string{"goo/evidence-comparison/v1", "goo/evidence-comparison/v2"} {
+		r.ID = ""
+		r.Algorithm = algorithm
+		id, err := digest(r)
+		if err != nil {
+			t.Fatal(err)
+		}
+		r.ID = id
+		if err = s.publish("comparisons", id, r); err != nil {
+			t.Fatal(err)
+		}
+		a.Explore.Count = "99"
+		got, err := s.LoadComparison(id)
+		if err != nil || got.Algorithm != algorithm || got.Result.CountDifference != "2" {
+			t.Fatal(got, err)
+		}
 	}
 }

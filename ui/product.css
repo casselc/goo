@@ -1106,3 +1106,12 @@ td details {
 
 .fresh-comparison{margin-block:1rem}.fresh-comparison>div{margin-top:.75rem;padding:.75rem;border:1px solid var(--border);border-radius:8px}.fresh-comparison select{max-width:100%}.fresh-comparison p{overflow-wrap:anywhere}
 .fresh-comparison label{display:block;min-width:0;max-width:100%}.fresh-comparison select{display:block;width:100%;min-width:0;box-sizing:border-box}
+
+.comparison-breakdown { margin-block: 1rem; padding-block: .75rem; border-block: 1px solid var(--border, #dce2ea); min-width: 0; }
+.comparison-breakdown label { display: block; }
+.comparison-breakdown select { width: 100%; min-width: 0; }
+.comparison-breakdown td { vertical-align: top; }
+.comparison-breakdown .scroll { max-height: 34rem; overflow: auto; }
+/* Keep comparison columns readable; narrow screens scroll inside the result. */
+.comparison-breakdown table { min-width: 58rem; }
+.evidence-comparison-result > .scroll > table { min-width: 32rem; }

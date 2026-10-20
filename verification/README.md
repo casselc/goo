@@ -440,3 +440,9 @@ go test -run 'TestHegelFreshScopeContract|TestHegelSavedComparisonStateSwarm' -v
 The Bombadil actor previews, selects compatible prior evidence and closes the
 preview; it does not capture. Invariants require explicit prior selection and no
 implicitly retained fresh evidence.
+
+Captured breakdowns: `TestHegelBreakdownPartitions` checks partition accounting,
+order independence and immutable missing/empty identities. Live journey 58 writes
+`GOO_BREAKDOWN_LEDGER` for `TestQuintBreakdownLive`, replaying source-read boundaries
+and rejecting six corrupted observations. Bombadil spec `comparison-breakdown.ts`
+checks frozen group rows, focused question links and receipt disclosure actions.

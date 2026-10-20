@@ -1,0 +1,10 @@
+spec: comparison_breakdown.qnt
+module: comparison_breakdown
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  preview: {expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'}
+  capture_pair: {expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'}
+  focus: {expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'}
+  save: {expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'}
+  reopen: {expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'}

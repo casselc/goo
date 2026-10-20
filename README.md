@@ -369,3 +369,12 @@ share, reopen without a source read, or explicitly rerun the fixed question.
 Saved questions can [compare with a fresh window](docs/FRESH_COMPARISON.md): preview
 the proposed scope, choose frozen prior evidence and explicitly capture once,
 then save the comparison as a finding in the investigation.
+
+## Captured change breakdowns and product direction
+
+[Captured group comparisons](docs/COMPARISON_BREAKDOWNS.md) reuse full stored
+aggregates and open focused questions. New dimensions require explicit recapture.
+[Whole-product review](docs/WHOLE_PRODUCT_REVIEW.md) proposes automatic service
+and distributed-service dashboards within Services, derived from observed inventory
+and explicitly matched manifests/packages. Dashboard recommendations remain planned;
+observed, declared and executed-supported evidence are distinct.

@@ -35,3 +35,8 @@ test('fresh comparison moves only scope, preserving exact native duration and re
  assert.equal(BigInt(fresh.scope.toNS)-BigInt(fresh.scope.fromNS),2000000333n);assert.deepEqual(fresh.measurement,step.measurement);assert.deepEqual(step,before);assert.deepEqual(api.readStepLink(api.stepLink(fresh)),fresh);
  const r=api.recordStep({signal:'logs',environment:'prod',fromMs:1000,toMs:2000,limit:100,offset:0,where:{field:{kind:'column',key:'service'},op:'eq',value:'search'}});const next=propose(r,5000);assert.equal(next.record.fromMs,4000);assert.deepEqual(next.record.where,r.record.where);assert.throws(()=>propose(r,0));assert.throws(()=>propose(step,NaN));assert.throws(()=>propose({...step,measurement:{...step.measurement,kind:'lifecycle'}},5000));
 });
+test('breakdown questions preserve nested predicates, literal values and missing vs empty without mutating evidence',()=>{
+ const {grouped,focused}=require('../ui/comparison-breakdown'),q={signal:'spans',environment:'prod',fromMs:1000,toMs:2000,limit:100,offset:100,where:{any:[{field:{kind:'column',key:'service'},op:'eq',value:'a'},{field:{kind:'column',key:'service'},op:'eq',value:'b'}]}},field={kind:'attribute',key:'http.route'},before=structuredClone(q);
+ const g=grouped(q,field);assert.equal(g.spanStatus,true);assert.equal(g.summary,'span-duration');assert.equal(g.offset,0);
+ for(const v of [null,'','/a?雪','Missing key']){const f=focused(q,field,v);assert.deepEqual(f.where.all[0],q.where);assert.equal(f.where.all[1].op,v===null?'missing':'eq');if(v!==null)assert.equal(f.where.all[1].value,v);assert.deepEqual(f.groupBy,[field]);assert.deepEqual(readStepLink(stepLink(recordStep(f))).record,f)}assert.deepEqual(q,before);
+});

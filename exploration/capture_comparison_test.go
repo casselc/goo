@@ -102,3 +102,29 @@ func TestGaugeEvidencePreservesStreamIdentityUnitsAndUnknownEndpoints(t *testing
 		t.Fatal(r, e)
 	}
 }
+
+func TestEvidenceBreakdownCompleteGroupsNotInspectionRows(t *testing.T) {
+	a, b := comparisonFixture("1200", "observed"), comparisonFixture("1500", "observed")
+	for _, c := range []*SavedCapture{a, b} {
+		c.Question.Explore.GroupBy = []Field{{Kind: "attribute", Key: "http.route"}}
+		c.Explore.Question = *c.Question.Explore
+		c.Explore.Rows = []json.RawMessage{json.RawMessage(`{"http.route":"wrong-page"}`)}
+	}
+	a.Explore.Groups = []json.RawMessage{json.RawMessage(`{"g0":null,"count":"100"}`), json.RawMessage(`{"g0":"","count":"100"}`), json.RawMessage(`{"g0":"/search","count":"1000"}`)}
+	b.Explore.Groups = []json.RawMessage{json.RawMessage(`{"g0":"/new","count":"100"}`), json.RawMessage(`{"g0":"/search","count":"1400"}`)}
+	before, _ := json.Marshal([]*SavedCapture{a, b})
+	r, e := CompareEvidence(a, b)
+	after, _ := json.Marshal([]*SavedCapture{a, b})
+	if e != nil || r.Breakdown == nil || len(r.Breakdown.Rows) != 4 || r.Breakdown.BaselineCount != "1200" || r.Breakdown.SelectionCount != "1500" || string(before) != string(after) {
+		t.Fatal(r, e)
+	}
+	for _, row := range r.Breakdown.Rows {
+		if row.Value != nil && *row.Value == "/new" && (row.BaselineCount != "0" || row.Measures != nil) {
+			t.Fatal(row)
+		}
+	}
+	b.Explore.Groups = append(b.Explore.Groups, json.RawMessage(`{"g0":"/extra","count":"1"}`))
+	if _, e = CompareEvidence(a, b); e == nil {
+		t.Fatal("inconsistent complete groups accepted")
+	}
+}

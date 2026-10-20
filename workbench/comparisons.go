@@ -8,7 +8,7 @@ import (
 	"github.com/casselc/goo/exploration"
 )
 
-const ComparisonAlgorithm = "goo/evidence-comparison/v2"
+const ComparisonAlgorithm = "goo/evidence-comparison/v3"
 
 var ErrComparisonChanged = errors.New("comparison changed; compare these captures again before saving")
 
@@ -61,7 +61,7 @@ func (s Store) LoadComparison(id string) (*ComparisonReceipt, error) {
 	r.ID = ""
 	hash, e := digest(r)
 	r.ID = actual
-	if e != nil || actual != id || hash != id || r.Version != 1 || (r.Algorithm != ComparisonAlgorithm && r.Algorithm != "goo/evidence-comparison/v1") || !validTime(r.RecordedAt) || r.Result == nil {
+	if e != nil || actual != id || hash != id || r.Version != 1 || (r.Algorithm != ComparisonAlgorithm && r.Algorithm != "goo/evidence-comparison/v1" && r.Algorithm != "goo/evidence-comparison/v2") || !validTime(r.RecordedAt) || r.Result == nil {
 		return nil, errors.New("comparison integrity check failed")
 	}
 	a, b := r.Result.Baseline.Receipt, r.Result.Selection.Receipt

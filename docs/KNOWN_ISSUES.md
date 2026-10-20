@@ -322,3 +322,16 @@ Inventory/legacy pair captures are not reusable question sides.
 and definition. Native scope transport preserves nanoseconds but does not infer
 SDK export phase; incomplete fresh windows still withhold numeric differences.
 Lifecycle question cards do not offer this comparison action.
+
+## Captured breakdowns and automatic dashboard scope
+
+[Stored one-field group comparisons](COMPARISON_BREAKDOWNS.md) now reuse complete
+aggregates. Numeric/two-field comparisons and arbitrary regrouping of old evidence
+remain unsupported; new dimensions require explicit source recapture. Automatic
+service/distributed dashboards are [designed](WHOLE_PRODUCT_REVIEW.md), not yet
+implemented. Existing Services catalog/detail remains the current entry point.
+
+Breakdown ranking currently uses absolute population-share change. A group with
+large latency/error change and little share movement may rank later; alternate
+error/latency ranking is planned. Log breakdowns explicitly show unavailable
+span-measure columns; hiding unsupported columns remains polish work.

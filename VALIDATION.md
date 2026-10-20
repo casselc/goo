@@ -5,6 +5,66 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Captured attribute breakdowns and whole-product review (2026-10-20)
+
+[Captured breakdowns](docs/COMPARISON_BREAKDOWNS.md) compare complete one-field
+span/log group aggregates, preserve missing/empty/one-sided groups, and open
+fixed-side focused questions without source reads. A new dimension requires two
+explicit recaptures of the original fixed windows. Frozen receipts use algorithm
+v3; v1/v2 receipts reopen without reevaluation. Results precede provenance,
+with readable duration/error displays and internally scrolling mobile tables.
+
+Local checks passed: full root Go suite and vet (`breakdown-go.log`,
+`breakdown-vet.log`), explicit v1/v2 frozen-receipt compatibility
+(`breakdown-legacy-go.log`), **45 frontend tests** (`breakdown-node-final.log`),
+**100 requested Hegel partition cases** and **60 saved-comparison state/swarm
+scenarios of 15 steps** (`breakdown-hegel-final.log`), verification vet, Python
+server syntax compilation and Quint typecheck. The first Hegel invocation used
+the default read-only home cache; setting the documented workspace XDG cache fixed
+that environment error without changing the property.
+
+The live OTLP route journey exercises 1200/1300 matching records and complete
+aggregates beyond the 1000-row inspection cap, explicit recapture, source-free
+focused questions, frozen sharing and mobile containment. Its first model replay
+exposed the adapter's requirement for a parameterized module import; supplying the
+initial-state constant fixed the harness. Replay then passed with six rejecting
+mutations (implicit read, changed scope, altered group count, evidence-link drift,
+wrong baseline, wrong selected group). An initial regression draft was stopped
+to update selectors for the intentional provenance disclosure. A later visual
+inspection found that the mobile table squeezed headers into vertical text despite
+page containment; minimum readable table widths inside scroll areas fix it, and
+the live test now requires an actual group value in view. Interrupted drafts are
+retained as `breakdown-journeys.log` and `breakdown-mobile-draft-journeys.log`.
+
+Final live campaign: **8 passed, no skips, 2.5 minutes**
+(`artifacts/breakdown-final-journeys.log`). It covers the new route/log breakdowns,
+existing record and native comparisons, fresh follow-ups, reusable exact questions,
+saved findings, publication recovery and fresh-browser frozen reopening. Frames
+52, 53, 56 and 57 were regenerated alongside new 58a–c; the corrected mobile frame
+shows readable columns in an internal scroll area, with an actual group in view.
+
+Observed ledger: `artifacts/comparison-breakdown/1792456617714/ledger.json`.
+Quint replay passed with **six rejecting mutations**. The **30-second Bombadil
+campaign** passed, recording 319 provenance-toggle and 275 focused-question
+inspection actions without invariant failures. These inspect saved links and
+receipt disclosure; the actor does not execute new telemetry reads.
+
+Final image:
+`sha256:476e83d5d4b7a7e537a30a5b4e4d55b803db6358496ea55b3e5ebfd95340445d`
+(`breakdown-mobile-image.log`, `breakdown-mobile-up.log`). Final source/binary
+hashes, HTTP health and all **12 running services** passed, with exactly the five
+pre-existing stale pending Redis entries preserved
+(`artifacts/breakdown-final-health.json`). Traffic was restored by the wrapper;
+no volumes or stream entries were reset.
+
+The [whole-product review](docs/WHOLE_PRODUCT_REVIEW.md) covers navigation,
+discovery, service/distributed overviews, manifests, measurements and investigation
+flows. Automatic service/distributed dashboards are **designed, not implemented**;
+the next sequence is a bounded capability-driven planner, service defaults,
+distributed relationships and investigation integration. The narrower
+[comparison review](docs/COMPARISON_PRODUCT_REVIEW.md) records this feature's
+usability rationale and remaining proposals.
+
 ## Fresh follow-up comparison (2026-10-20)
 
 [Saved questions compare with fresh evidence](docs/FRESH_COMPARISON.md) through a

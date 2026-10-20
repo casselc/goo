@@ -1097,3 +1097,12 @@ flowchart LR
 
 [Contract](FRESH_COMPARISON.md): the prior evidence and saved fixed question remain
 unchanged. Scope, source read and custody times are displayed separately.
+
+## Captured change breakdowns and product direction
+
+[Captured group comparisons](COMPARISON_BREAKDOWNS.md) reuse full stored
+aggregates and open focused questions. New dimensions require explicit recapture.
+[Whole-product review](WHOLE_PRODUCT_REVIEW.md) proposes automatic service
+and distributed-service dashboards within Services, derived from observed inventory
+and explicitly matched manifests/packages. Dashboard recommendations remain planned;
+observed, declared and executed-supported evidence are distinct.
