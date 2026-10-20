@@ -97,3 +97,8 @@ alone is not saved as evidence or a promise of source completeness.
 Each typed side offers [Add question](REUSABLE_COMPARISON_QUESTIONS.md). It stages
 a separate reusable question with that side's capture linked, without a source
 read; save the investigation revision to share it.
+
+Saved question cards now offer [Compare with a fresh window](FRESH_COMPARISON.md),
+with explicit scope preview and baseline selection before one new source read.
+The resulting comparison can be saved as a finding without changing the original
+question scope or linking fresh evidence as if it answered the old fixed question.

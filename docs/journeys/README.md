@@ -966,3 +966,20 @@ definition. Earlier revisions and evidence remain unchanged.
 Quint replay includes six rejecting mutations. Optional Bombadil exploration adds
 questions and reverts drafts, checking bounded cards and one linked capture per
 new question.
+
+### 57 — Resume with fresh evidence
+
+`fresh-comparison.spec.js` captures real HTTP server spans and OTel memory gauges.
+It previews fresh scope without telemetry reads, rejects changed-definition prior
+evidence, selects a frozen baseline and performs one new capture. A forced
+comparison failure is retried without recapture. The finding is saved and shared
+with a fresh browser; original questions, evidence links and captures are unchanged.
+
+- [Explicit fresh scope and prior evidence](screenshots/57a-explicit-fresh-scope-preview.png)
+- [Fresh evidence against the frozen baseline](screenshots/57b-current-evidence-and-stored-baseline.png)
+- [Shared follow-up finding](screenshots/57c-shared-followup-finding.png)
+- [Native follow-up on mobile](screenshots/57d-mobile-native-followup.png)
+
+Quint replays observed reads and saved evidence relationships with six rejecting
+mutations. Optional Bombadil exploration opens/closes previews and selects prior
+evidence without capturing.

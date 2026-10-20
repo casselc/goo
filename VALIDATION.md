@@ -5,6 +5,55 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Fresh follow-up comparison (2026-10-20)
+
+[Saved questions compare with fresh evidence](docs/FRESH_COMPARISON.md) through a
+fixed same-duration preview, explicit compatible prior selection and one new
+capture. The baseline is not refreshed. Existing stored comparison and finding
+publication preserve the original question and evidence links. Native scopes
+retain exact duration without inferring an SDK export phase.
+
+Local checks passed: full root Go suite and vet (`fresh-comparison-go.log`,
+`fresh-comparison-vet.log`), all **44 frontend tests**
+(`fresh-comparison-node.log`), **100 requested cross-language fresh-scope cases**,
+**100 immutable-revision cases**, **100 observed-support cases** and **60 saved
+comparison state/swarm scenarios of 15 steps** (`fresh-comparison-hegel-final.log`),
+verification vet and Quint typecheck. The fresh-scope property invokes the actual
+browser projection in Node and validates it through Go's typed-step contract,
+checking exact duration, definition retention and input immutability.
+
+Early browser drafts corrected disabled-option and textarea-value assertions
+after inspecting the DOM. The native mobile case then exposed a real overflow:
+a long selected baseline label expanded its inline containing label. Block labels
+and a width-constrained selector fix the layout without hiding content. Prior
+scope, source-read time and custody time are now explicit in the preview.
+
+Final live campaign: **12 passed, no skips, 5.4 minutes**
+(`artifacts/fresh-comparison-final-journeys.log`). The new journey uses real
+standard OTLP HTTP spans and system-memory gauges. It proves preview and baseline
+selection cause no telemetry read; capture creates one new evidence request; a
+forced comparison GET failure retries without recapture; changed-definition prior
+evidence is disabled; original questions, evidence links and baselines remain
+unchanged; and findings reopen source-free in a fresh browser. Native mobile
+containment passes with the selected long baseline label.
+
+Observed ledger: `artifacts/fresh-comparison/1792455384426/ledger.json`. Quint replay
+passed with **six rejecting mutations**. The **30-second Bombadil campaign** passed
+with 177 preview, 169 prior-selection and 181 close-preview actions. Frames 57a–d
+show scope/clock preview, actual comparison, recipient finding and mobile native
+follow-up. Affected frames 38 and 50–56 were regenerated. Existing shared
+measurements, fixed reruns, linked history, saved comparisons and native support
+discovery all passed in the same campaign.
+
+Final image:
+`sha256:f8cd5f6c377bed933fa5c336216ce7ad09999af32b79fbbc982afffb4a221161`
+(`fresh-comparison-fixed-image.log`, `fresh-comparison-fixed-up.log`).
+Final checks confirm all **12 services running**, HTTP health, served source asset
+and Go binary hashes matching the tested build, and all five pre-existing stale
+pending Redis IDs preserved (`artifacts/fresh-comparison-final-health.json`). The
+wrapper restored the owned traffic generator; no volumes or stream entries were
+reset.
+
 ## Reusable comparison questions (2026-10-20)
 
 [Comparison sides become reusable questions](docs/REUSABLE_COMPARISON_QUESTIONS.md)

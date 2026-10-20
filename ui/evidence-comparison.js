@@ -38,7 +38,7 @@
    for(const warning of r.warnings)output.append(n('p',warning,'evidence-note'));
    if(r.baseline.receipt.question.kind==='measurement'&&r.selection.receipt.question.kind==='measurement'){const details=n('details'),body=n('div',undefined,'comparison-sides');details.append(n('summary','Inspect both stored native results'),body);output.append(details);let loaded=false;details.ontoggle=async()=>{if(!details.open||loaded)return;loaded=true;body.textContent='Reading stored results…';try{const pair=await Promise.all([get(a),get(b)]);if(g!==generation)return;body.replaceChildren();pair.forEach((p,i)=>{const h=n('section',undefined,'comparison-side');h.append(n('h5',i?'Comparison':'Baseline'));const content=n('div');h.append(content);body.append(h);global.GooMeasurements.render(content,p.measurement,{saved:true})})}catch(e){body.textContent='Stored results unavailable · '+e.message;loaded=false}}}
   }catch(e){if(g===generation){output.replaceChildren();output.removeAttribute('data-state');status.textContent='Comparison unavailable · '+e.message}}finally{if(g===generation)button.disabled=baseline.value===selection.value}};
-  if(saved){const retry=n('button','Reopen saved comparison');retry.onclick=()=>button.onclick();section.append(retry);button.onclick();}
+  if(saved){const retry=n('button','Reopen saved comparison');retry.onclick=()=>button.onclick();section.append(retry);button.onclick();}else if(options.autoCompare)button.onclick();
  }
  global.GooEvidenceComparison={mount,mountSaved:(host,id)=>mount(host,[],{reference:id})};
 })(window);

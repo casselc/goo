@@ -1,0 +1,17 @@
+spec: fresh_comparison.qnt
+module: fresh_comparison
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  preview:
+    expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'
+  choose_prior:
+    expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'
+  capture:
+    expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'
+  retry:
+    expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'
+  save:
+    expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'
+  reopen:
+    expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'

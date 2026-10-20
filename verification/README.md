@@ -420,3 +420,23 @@ go test -run 'TestHegelReusableQuestionRevisions|TestHegelSavedComparisonStateSw
 The Bombadil actor stages baseline questions and reverts unsaved drafts; it never
 executes telemetry reads or publishes revisions. It checks the card bound and
 that every added question has exactly one linked evidence entry.
+
+## Fresh follow-up comparisons
+
+`TestHegelFreshScopeContract` invokes the browser's pure scope projection from Go
+for 100 requested generated nanosecond scopes, then validates the result with the
+Go typed-step contract. It checks exact duration, unchanged definition and input
+immutability. Existing revision/state/swarm and observed-support properties remain
+applicable. `model/fresh_comparison.qnt` replays preview/selection, one capture,
+source-free retry, save and reopening. `TestQuintFreshComparisonLive` consumes
+`GOO_FRESH_COMPARISON_LEDGER` with six rejecting mutations.
+
+```sh
+GOO_FRESH_COMPARISON_BOMBADIL=1 bash scripts/run_journeys.sh journeys/fresh-comparison.spec.js
+cd verification
+go test -run 'TestHegelFreshScopeContract|TestHegelSavedComparisonStateSwarm' -v .
+```
+
+The Bombadil actor previews, selects compatible prior evidence and closes the
+preview; it does not capture. Invariants require explicit prior selection and no
+implicitly retained fresh evidence.

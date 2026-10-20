@@ -1079,3 +1079,21 @@ flowchart LR
 
 [Contract and journey](REUSABLE_COMPARISON_QUESTIONS.md): new question keys keep
 evidence distinct, and fresh previews do not rewrite the saved question.
+
+## Resume an investigation with fresh evidence
+
+```mermaid
+flowchart LR
+  Saved[Saved typed question] --> Preview[Pure same-duration scope proposal]
+  Old[Linked immutable captures] --> Prior[Explicit prior-evidence selection]
+  Preview --> Consent[Capture and compare]
+  Prior --> Consent
+  Consent --> Read[One new source read / existing Go adapter]
+  Read --> New[New immutable capture]
+  Prior --> Compare[Existing stored-evidence comparison]
+  New --> Compare
+  Compare --> Finding[Explicit frozen finding and document revision]
+```
+
+[Contract](FRESH_COMPARISON.md): the prior evidence and saved fixed question remain
+unchanged. Scope, source read and custody times are displayed separately.

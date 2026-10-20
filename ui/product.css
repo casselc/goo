@@ -1103,3 +1103,6 @@ td details {
 .native-window .scroll table{min-width:560px}
 
 .window-discovery{margin-block:1rem;padding:1rem;border:1px solid var(--border,#364357);border-radius:8px}.window-discovery .comparison-side{min-width:0}.window-discovery p{overflow-wrap:anywhere}.window-discovery select{max-width:100%}
+
+.fresh-comparison{margin-block:1rem}.fresh-comparison>div{margin-top:.75rem;padding:.75rem;border:1px solid var(--border);border-radius:8px}.fresh-comparison select{max-width:100%}.fresh-comparison p{overflow-wrap:anywhere}
+.fresh-comparison label{display:block;min-width:0;max-width:100%}.fresh-comparison select{display:block;width:100%;min-width:0;box-sizing:border-box}

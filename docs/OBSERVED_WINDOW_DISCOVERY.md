@@ -95,3 +95,8 @@ After recapture, either comparison side can be
 [added as a reusable question](REUSABLE_COMPARISON_QUESTIONS.md), with its exact
 selected scope and new capture ID already linked. This is a separate explicit
 draft action and does not alter the original broad-scope question.
+
+Saved question cards now offer [Compare with a fresh window](FRESH_COMPARISON.md),
+with explicit scope preview and baseline selection before one new source read.
+The resulting comparison can be saved as a finding without changing the original
+question scope or linking fresh evidence as if it answered the old fixed question.

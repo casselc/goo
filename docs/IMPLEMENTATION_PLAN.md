@@ -462,3 +462,8 @@ support policies; no interval realignment or member dropping is implied.
 [Reusable comparison questions](REUSABLE_COMPARISON_QUESTIONS.md) now close the
 comparison-to-investigation loop: either side stages a typed question with its own
 capture linked. Existing revision, fixed rerun and fresh-window flows are reused.
+
+[Fresh follow-up comparison](FRESH_COMPARISON.md) now connects saved questions to
+new evidence and findings through existing capture/comparison/revision primitives.
+Preview fixes a same-duration scope; explicit baseline selection and one new read
+lead to a source-free comparison. Lifecycle comparisons remain unsupported.

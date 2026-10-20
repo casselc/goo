@@ -1,0 +1,11 @@
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document})=>{const p=document.querySelector('.fresh-comparison');return {ready:!!p,selected:(p?.querySelector('select')as HTMLSelectElement)?.value,disabled:(Array.from(p?.querySelectorAll('button')||[]).find(b=>b.textContent==='Capture and compare')as HTMLButtonElement)?.disabled,retained:p?.querySelector('.reference-id')?.textContent||''}});
+export const ready=eventually(()=>state.current.ready).within(15,'seconds');
+export const explicitPrior=always(()=>state.current.selected!==''||state.current.disabled!==false);
+export const noImplicitRead=always(()=>state.current.retained==='');
+const preview=registerCustomAction('goo.previewFresh',async(document)=>{(document.querySelector('[data-fresh-compare]')as HTMLButtonElement)?.click()});
+const choose=registerCustomAction('goo.choosePrior',async(document)=>{const s=document.querySelector('.fresh-comparison select')as HTMLSelectElement;if(s){s.value=Array.from(s.options).find(o=>o.value&&!o.disabled)?.value||'';s.dispatchEvent(new Event('change',{bubbles:true}))}});
+const close=registerCustomAction('goo.closeFreshPreview',async(document)=>{(Array.from(document.querySelectorAll('.fresh-comparison button')).find(b=>b.textContent==='Close preview')as HTMLButtonElement)?.click()});
+export const explore=actions(()=>state.current.ready?[preview(),choose(),close()]:['Wait']);

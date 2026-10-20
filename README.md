@@ -365,3 +365,7 @@ without a source read and captures explicitly selected sub-scopes.
 Comparison sides can become [reusable question cards](docs/REUSABLE_COMPARISON_QUESTIONS.md)
 with their exact scope and captured evidence already linked. Save a revision to
 share, reopen without a source read, or explicitly rerun the fixed question.
+
+Saved questions can [compare with a fresh window](docs/FRESH_COMPARISON.md): preview
+the proposed scope, choose frozen prior evidence and explicitly capture once,
+then save the comparison as a finding in the investigation.

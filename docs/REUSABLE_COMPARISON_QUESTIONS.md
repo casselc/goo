@@ -65,3 +65,8 @@ sequenceDiagram
 The executable [storyboard 56](journeys/README.md#56--reuse-comparison-questions)
 uses real standard OTLP counters with 123 ns offsets and exercises failed
 publication, fresh-browser sharing, fixed reruns and fresh-window execution.
+
+Saved question cards now offer [Compare with a fresh window](FRESH_COMPARISON.md),
+with explicit scope preview and baseline selection before one new source read.
+The resulting comparison can be saved as a finding without changing the original
+question scope or linking fresh evidence as if it answered the old fixed question.

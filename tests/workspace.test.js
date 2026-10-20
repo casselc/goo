@@ -30,3 +30,8 @@ test('a comparison side becomes a detached reusable question with exactly its ow
  for(const patch of [{id:'bad'},{question:{kind:'inventory'}},{question:{kind:'measurement',measurement:{...receipt.question.measurement,toNS:'1'}}}])assert.throws(()=>questionFromEvidence({...receipt,...patch}));
  const record={id:'b'.repeat(64),question:{kind:'explore',explore:{signal:'logs',environment:'prod',fromMs:1000,toMs:2000,limit:100,offset:0}}};assert.deepEqual(captureQuestion(questionFromEvidence(record).step),record.question);
 });
+test('fresh comparison moves only scope, preserving exact native duration and record selectors',()=>{
+ const {propose}=require('../ui/fresh-comparison'),api=require('../ui/workspace');const q={definition:{environment:'prod',kind:'counter',source:{metric:'calls',unit:'{request}'}},fromMs:1700000000000,toMs:1700000002001,fromNS:'1700000000000000123',toNS:'1700000002000000456'},step=api.measurementStep(q),before=structuredClone(step),fresh=propose(step,1790000000000);
+ assert.equal(BigInt(fresh.scope.toNS)-BigInt(fresh.scope.fromNS),2000000333n);assert.deepEqual(fresh.measurement,step.measurement);assert.deepEqual(step,before);assert.deepEqual(api.readStepLink(api.stepLink(fresh)),fresh);
+ const r=api.recordStep({signal:'logs',environment:'prod',fromMs:1000,toMs:2000,limit:100,offset:0,where:{field:{kind:'column',key:'service'},op:'eq',value:'search'}});const next=propose(r,5000);assert.equal(next.record.fromMs,4000);assert.deepEqual(next.record.where,r.record.where);assert.throws(()=>propose(r,0));assert.throws(()=>propose(step,NaN));assert.throws(()=>propose({...step,measurement:{...step.measurement,kind:'lifecycle'}},5000));
+});

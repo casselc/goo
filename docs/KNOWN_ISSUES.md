@@ -317,3 +317,8 @@ Typed comparison sides can now become
 linked. Staging is local until revision publication; fresh-window previews retain
 the definition but do not rewrite the saved fixed scope or relink old evidence.
 Inventory/legacy pair captures are not reusable question sides.
+
+[Fresh follow-up comparison](FRESH_COMPARISON.md) uses the saved question's duration
+and definition. Native scope transport preserves nanoseconds but does not infer
+SDK export phase; incomplete fresh windows still withhold numeric differences.
+Lifecycle question cards do not offer this comparison action.
