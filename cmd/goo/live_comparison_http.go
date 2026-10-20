@@ -85,7 +85,14 @@ func registerLiveComparison(mux *http.ServeMux, client *http.Client, store explo
 		source := exploration.Source{Endpoint: endpoint, User: os.Getenv("CLICKHOUSE_USER"), Password: os.Getenv("CLICKHOUSE_PASSWORD"), Client: client}
 		ctx, cancel := context.WithTimeout(r.Context(), 55*time.Second)
 		defer cancel()
-		snapshot, comparison, e := source.LiveRecordComparison(ctx, baseline, time.Now())
+		var snapshot *exploration.SavedCapture
+		var comparison *exploration.EvidenceComparison
+		var native *exploration.LiveCounterInfo
+		if baseline.Measurement != nil {
+			snapshot, comparison, native, e = source.LiveCounterComparison(ctx, baseline, time.Now())
+		} else {
+			snapshot, comparison, e = source.LiveRecordComparison(ctx, baseline, time.Now())
+		}
 		if e != nil {
 			fail(w, 502, e)
 			return
@@ -128,6 +135,16 @@ func registerLiveComparison(mux *http.ServeMux, client *http.Client, store explo
 		}
 		delete(drafts, in.Replace)
 		drafts[key] = &draft{snapshot: snapshot, expires: expiry, size: len(raw)}
-		reply(w, 200, map[string]any{"token": key, "expiresAt": expiry.UTC().Format(time.RFC3339Nano), "comparison": comparison, "basis": snapshot.Explore.Basis, "baselineBasis": baseline.Explore.Basis})
+		reply(w, 200, map[string]any{"token": key, "expiresAt": expiry.UTC().Format(time.RFC3339Nano), "comparison": comparison, "basis": liveBasis(snapshot), "baselineBasis": liveBasis(baseline), "native": native})
 	})
+}
+
+func liveBasis(c *exploration.SavedCapture) string {
+	if c.Measurement != nil {
+		return c.Measurement.Basis
+	}
+	if c.Explore != nil {
+		return c.Explore.Basis
+	}
+	return ""
 }

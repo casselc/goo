@@ -514,3 +514,15 @@ generates populations larger than the inspection bank, preserves Unknown status,
 and checks immutability and reversal of descriptive changes. The source Go test
 proves the three measures share one aggregate statement and survive a source-free
 freeze. Run the actor with `GOO_LIVE_COMPARISON_BOMBADIL=1` and journey71.
+
+Journey 72 writes `artifacts/live-counter/<run>/ledger.json`. Set
+`GOO_LIVE_COUNTER_LEDGER` and run `TestQuintLiveCounterLedger` for observed replay
+and seven rejecting mutations. `TestHegelCounterWindowRateAndCoverageState`
+generates exact widths, increments and boundary crossings. Run the native UI actor:
+
+```sh
+GOO_LIVE_COUNTER_BOMBADIL=1 bash scripts/run_journeys.sh journeys/live-counter.spec.js
+```
+
+`verification/bombadil/live-counter.ts` adds rational common-axis geometry and
+exact-window ordering to the live preview/start/freeze/link state invariants.

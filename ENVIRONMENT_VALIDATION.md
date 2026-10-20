@@ -969,3 +969,49 @@ source/binary hashes and preserved historical pending IDs. The actual span ledge
 Quint log and 30-second actor trace are in
 `artifacts/live-span-measures/0cb74c185d/`; validation commands/results are detailed
 in VALIDATION.md. Frames 71a–f and affected 57/63/69 frames were regenerated.
+
+## 2026-10-20 — live exact-stream native counter comparison
+
+Implemented newest-observed-export endpoint discovery followed by an exact
+baseline-width window read. Native evaluation retains stream identity,
+temporality, reset and coverage rules. Missing discovery endpoints (including an
+export arriving between the two reads) and exports older than maxGapMs withhold
+live rates. Frozen typed evidence remains historical, with exact bounds and basis.
+
+Validation completed:
+
+- Root `go test ./...` and `go vet ./...` passed; final affected-package race
+  checks passed after the endpoint-discovery race regression was added.
+- Frontend suite: 68 passed. Hegel generated 100 exact-width counter cases with
+  complete-window equivalence and boundary-crossing refusal.
+- Real-source browser campaign: five passed in four minutes, covering journey57
+  (record/gauge fixed follow-up), journey69 (live record counts), journey72
+  (native counters) and both journey71 span measures/empty-window cases.
+- Final-image journey72 rerun passed in 1.2 minutes, including real OTLP ingestion,
+  exact nanosecond windows, latest gap refusal, late coverage repair, fixed-domain
+  overflow/rescale, source-failure retention, displayed-result freeze after a
+  newer export, investigation linking, baseline immutability and exact reopen.
+- Final native observed ledger: `artifacts/live-counter/72fb3089e8/ledger.json`.
+  Quint accepted the actual projection and rejected all seven corruptions.
+  Native Bombadil completed 370 steps with preview, baseline, start, freeze and
+  link actions, no invariant violations. The earlier campaign completed 230 steps.
+- Documentation screenshots 57, 69, 71 and 72 were regenerated. Native desktop,
+  unavailable and mobile frames were visually inspected.
+- Deployed query/packages image:
+  `sha256:a17a6cf854db84501f06a613b94bb4d8067db3de8bd25b844d51684ff2761724`.
+  Final health check verified all 12 services running, HTTP health, served UI
+  hashes and Go binary hash, identical query/packages images, and preservation
+  of all five historical pending IDs (nine pending entries total). Traffic was
+  restored by the wrapper; existing volumes and stream entries were preserved.
+
+Evidence: `artifacts/live-counter-{root,vet,race-final,frontend,hegel,journeys,final-journey}.log`
+and `artifacts/live-counter-final-health.json`. The UI and source adapters are
+bounded pilots, not proof of ingestion completeness or transactional reads.
+Interactive multi-stream selection, fleet rates and live gauge/histogram remain
+planned; see docs/LIVE_COMPARISON.md.
+
+Session diagnostics after reported stream disconnects found zero cgroup OOM
+or OOM-kill events, all application container OOMKilled flags false, and about
+29 GiB memory available (mostly reclaimable cache). Disk had 2 GiB free after
+removing only unused Docker build cache/dangling images. The session transport
+cause remains unconfirmed; completed source/browser checks were unaffected.

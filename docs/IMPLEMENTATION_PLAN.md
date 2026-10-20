@@ -564,3 +564,13 @@ percentile domain; the app preserves it until explicit rescale. Error share has
 a fixed 0–100% axis with status coverage disclosure. Journey 71, the live actor,
 Hegel properties and observed Quint replay cover the path. Native live metric
 comparisons and SSE measure refresh remain future work.
+
+### Native live counter pilot (implemented 2026-10-20)
+
+Single-stream frozen baselines now compare against the newest observed export
+window with the same exact nanosecond width. Coverage/reset/identity checks reuse
+the native evaluator; freshness is explicit and source-free freeze retains typed
+historical evidence. Rational common-domain bars reuse the passive comparison
+renderer. Journey 72, native Bombadil invariants, Hegel boundary properties and
+observed Quint replay cover the path. Next: explicit exact-stream selection over
+multi-stream inventories; live gauges/histograms remain planned.

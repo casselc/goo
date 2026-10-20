@@ -1,8 +1,9 @@
 /* Shared zero-based scales. Values remain exact strings; only bounded pixel ratios use Number. */
 (function(global){
  function decimal(v){if(v===null||v===undefined||!/^\d+(\.\d+)?$/.test(String(v))||String(v).length>256)return null;const [a,b='']=String(v).split('.');return {n:BigInt(a+b),p:b.length}}
- function maximum(values){const valid=values.filter(v=>decimal(v)!==null);return valid.reduce((a,b)=>{const x=decimal(a),y=decimal(b);return x.n*10n**BigInt(y.p)>=y.n*10n**BigInt(x.p)?a:b},'0')}
- function scale(values,ceiling){const max=maximum([...values,...(ceiling!==undefined?[ceiling]:[])]),m=decimal(max);return {max,widths:values.map(v=>{const x=decimal(v);return !x?null:m.n===0n?0:Number(x.n*10n**BigInt(m.p)*10000n/(m.n*10n**BigInt(x.p)))/100})}}
+ function ratio(v){const x=decimal(v);if(x)return {n:x.n,d:10n**BigInt(x.p)};if(typeof v!=='string'||v.length>256||!/^\d+\/[1-9]\d*$/.test(v))return null;const [n,d]=v.split('/');return {n:BigInt(n),d:BigInt(d)}}
+ function maximum(values){const valid=values.filter(v=>ratio(v)!==null);return valid.reduce((a,b)=>{const x=ratio(a),y=ratio(b);return x.n*y.d>=y.n*x.d?a:b},'0')}
+ function scale(values,ceiling){const max=maximum([...values,...(ceiling!==undefined?[ceiling]:[])]),m=ratio(max);return {max,widths:values.map(v=>{const x=ratio(v);return !x?null:m.n===0n?0:Number(x.n*m.d*10000n/(m.n*x.d))/100})}}
  const ui=()=>typeof module!=='undefined'?require('./components'):global.GooUI,node=(...args)=>ui().node(...args);
  function cell(host,value,side,{max,unit='',text}={}){const width=scale([value],max).widths[0],wrap=node('div',undefined,'comparison-bar-cell'),track=node('div',undefined,'comparison-bar-track');wrap.dataset.value=value??'unavailable';wrap.dataset.scaleMax=max;wrap.dataset.side=side;if(width!==null){const fill=node('span',undefined,'comparison-bar-fill '+side);fill.style.width=width+'%';track.append(fill)}else wrap.classList.add('unavailable');track.setAttribute('aria-hidden','true');wrap.append(node('span',text??(width===null?'Unavailable':value+' '+unit),'comparison-value'),track);host.append(wrap);return wrap}
  function pair(host,{title,values,display=values,unit='',delta,ceiling,labels=['Baseline','Current']}){const model=scale(values,ceiling),figure=node('figure',undefined,'comparison-pair');figure.dataset.scaleMax=model.max;const caption=node('figcaption');caption.append(node('strong',title),node('span',unit,'comparison-unit'));if(delta!==undefined)caption.append(node('span','Change '+(/^\d/.test(String(delta))?'+':'')+delta,'comparison-delta'));figure.append(caption);values.forEach((v,i)=>{const row=node('div',undefined,'comparison-pair-row');row.append(node('span',labels[i],i?'comparison-selection-label':'comparison-baseline-label'));cell(row,v,i?'selection':'baseline',{max:model.max,unit,text:display[i]??'Unavailable'});figure.append(row)});figure.append(node('small','Shared scale: 0–'+model.max+(unit?' '+unit:''),'comparison-axis'));host.append(figure);return figure}
@@ -19,5 +20,5 @@
   }
   global.customElements.define('goo-metric-comparison',GooMetricComparison);
  }
- const api={decimal,maximum,scale,cell,pair,metrics,histogram};if(typeof module!=='undefined')module.exports=api;else global.GooComparisonVisual=api;
+ const api={decimal,ratio,maximum,scale,cell,pair,metrics,histogram};if(typeof module!=='undefined')module.exports=api;else global.GooComparisonVisual=api;
 })(typeof window==='undefined'?globalThis:window);

@@ -275,3 +275,8 @@ quantile render unavailable, never clip or silently expand. Zero and exact large
 integers retain their existing semantics. Domain changes rerender the summary
 and reset its disclosure, just like snapshot changes. Components do not calculate
 comparison compatibility, fetch telemetry, rescale themselves or own subscriptions.
+
+The shared comparison renderer accepts nonnegative integer/fraction rates and
+computes common-domain geometry with exact BigInt cross multiplication. The
+live-counter app adapter owns rounded labels, stable domains, coverage/freshness,
+reads and freeze capabilities; display components do not subscribe or fetch.

@@ -1115,3 +1115,10 @@ contracts retain declared revision IDs. Services also offers a local distributed
 view of resolved parent relationships and diagnostics, with fixed-scope handoffs
 into questions and immutable investigation evidence. Async/declaration topology,
 whole-dashboard snapshots and declared-only catalog entries remain future work.
+
+### Live native counter windows
+
+The [counter export-window sequence](LIVE_COMPARISON.md#exact-stream-counter-rates)
+shows bounded endpoint discovery, exact-window evaluation and source-free freeze.
+The evaluator owns coverage/reset semantics; the app adapter owns polling,
+freshness and stable domains. Passive chart components accept rational rates.

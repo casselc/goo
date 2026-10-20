@@ -1154,3 +1154,19 @@ No latency markers or error-share bars appear, and freezing keeps the result
 unavailable rather than inventing zero latency or zero percent errors.
 
 ![Empty rolling window withholds numeric comparison](screenshots/71f-empty-live-window.png)
+
+## 72. Follow a native counter stream without hiding export gaps
+
+Run `journeys/live-counter.spec.js`. From a saved generic HTTP counter question,
+choose one frozen OTel stream baseline (3/s), then start live comparison (5/s).
+A newer incomplete export window withholds rates. Late coverage restores 15/s;
+the original domain remains fixed until Rescale. A failed read preserves the
+same display and basis. A later export arrives before Freeze, but the saved and
+reopened evidence retains the displayed window. Explicitly add that capture to
+the investigation. The original question and baseline remain unchanged.
+
+![Exact native rates on one domain](screenshots/72a-native-rate-shared-domain.png)
+![Latest export gap withholds rates](screenshots/72b-latest-export-gap-withheld.png)
+![Late coverage repaired and explicitly rescaled](screenshots/72c-late-coverage-restored.png)
+![Displayed native window frozen](screenshots/72d-displayed-native-rate-frozen.png)
+![Native rate comparison on mobile](screenshots/72e-mobile-native-rate.png)

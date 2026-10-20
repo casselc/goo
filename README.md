@@ -435,3 +435,9 @@ also shows compact mean/p50/p95/p99 summaries on a shared fixed percentile scale
 and recorded Error/total share on a 0–100% scale. All measures share one window,
 source aggregate and evidence basis; freezing retains the complete displayed result.
 See [the regression storyboard](docs/journeys/README.md#71-a-service-regression-across-count-latency-and-recorded-error-share).
+
+Native counter questions now support [live exact-stream rate comparisons](docs/LIVE_COMPARISON.md#exact-stream-counter-rates).
+The current export window retains the baseline's exact duration; resets, gaps,
+changed stream identity and stale exports withhold rates. Freeze retains the
+actual displayed historical window. This first slice requires one complete
+baseline stream; gauges, histograms and fleet rates remain planned.

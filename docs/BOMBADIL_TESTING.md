@@ -470,3 +470,9 @@ basis. Journey71 supplies real duration/status data; its required action trace
 includes preview, baseline selection, start, freeze and linking to the draft.
 The curated journey additionally asserts overflow withholding/rescale, stale
 summary equality, complete source-free freeze, and mobile track bounds.
+
+The native counter actor `verification/bombadil/live-counter.ts` exercises the
+live preview/choose/start/freeze/link lifecycle and verifies exact rational bar
+geometry plus increasing nanosecond bounds. Run journey 72 with
+`GOO_LIVE_COUNTER_BOMBADIL=1`. Its real OTLP fixture also exercises a missing
+interval, late repair, fixed-axis overflow and a source failure deterministically.

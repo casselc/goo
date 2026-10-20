@@ -376,3 +376,10 @@ flow. Count-only captures are not silently enriched or reread as a new definitio
 only log tail currently uses SSE. Live snapshots expire after two minutes and
 are process-local until explicitly frozen. Production authentication/session
 isolation and durable live workspaces remain future work. See LIVE_COMPARISON.md.
+
+- Live native counter comparison is a single-complete-stream pilot. There is no
+  interactive exact-stream selector yet; additional stream membership withholds
+  comparison. Endpoint discovery and exact-window reads are bounded, separate
+  source reads. maxGapMs also bounds live endpoint age. Frozen fixed-window
+  evidence retains historical coverage, not a continuing freshness claim.
+  Live gauge/histogram and fleet comparisons remain unimplemented.

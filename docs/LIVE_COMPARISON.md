@@ -1,10 +1,10 @@
-# Frozen baseline and rolling record measures
+# Frozen baselines and live comparisons
 
 Implemented for saved **record questions** (spans or logs) linked to an
 investigation question. Open **Compare with a fresh window**, choose a compatible
 prior evidence baseline, then explicitly **Start live comparison**. Opening the
-preview and choosing evidence read only stored metadata. Native measurement
-comparisons retain the existing fixed-window capture flow.
+preview and choosing evidence read only stored metadata. Native counters also support the exact-stream pilot below; gauges and histograms
+retain the fixed-window capture flow.
 
 The rolling window has the baseline's exact duration (at most two hours), ending
 at the server's evaluation time. Environment, predicate, reported edge and all
@@ -20,7 +20,7 @@ attribution are inferred. Existing evidence compatibility checks withhold numeri
 comparisons for unavailable/no-data or incompatible results. Saved span questions requesting `summary: span-duration` and/or `spanStatus: true`
 also display full-population span latency and recorded error share. Existing count-only
 captures retain their definition; capture a question requesting those measures to
-compare them. Logs remain record counts. Native metric comparisons remain future work.
+compare them. Logs remain record counts. Native counter rates use the separate export-window policy below.
 
 The app refreshes ten seconds after a completed read, with one outstanding read
 per panel. Pause, hidden browser, route change, preview close, baseline change or
@@ -116,3 +116,65 @@ An empty current window is explicit: the comparison identifies no matching curre
 records and withholds percentile and error-share geometry. Freezing retains the
 `no_data` duration/count result without promoting it to observed latency or a
 zero-percent error claim. A separate real-source browser check covers this path.
+
+
+## Exact-stream counter rates
+
+A saved native counter question can use a frozen baseline containing exactly one
+complete, validated OTel stream. Start explicitly from the fresh-comparison panel.
+The baseline is never reread. The current window has the same exact nanosecond
+width, ending at the newest observed export endpoint, including an endpoint with
+bad coverage or a reset. The evaluator refuses gaps, missing boundaries, resets,
+temporality changes and changed stream membership. It never selects an older
+healthy interval to produce a number, interpolates coverage, or sums unrelated
+instances. This pilot has no new stream selector: if the unchanged definition
+matches additional streams, the comparison is withheld.
+
+Each refresh first discovers endpoints in a bounded search (window width plus
+twice maxGapMs, capped at two hours), then reads the selected exact window.
+The source adapter also includes its existing pre-window boundary context. These
+two reads are not transactional. Source limits fail closed. The response exposes
+the search question, read timestamp, basis, chosen endpoint, evaluation time and
+endpoint age under policy `latest-observed-endpoint/v1`. No endpoint means age is
+unknown, not zero. An endpoint older than maxGapMs withholds the live rate even
+when its historical window has complete coverage.
+
+Both bars share a stable zero-based rate domain. Rational rates retain exact
+integer/fraction values for geometry; labels round to three decimal places.
+Exceeding the domain requires explicit rescale. Stream identity, temporality,
+coverage reasons, exact bounds, increments and rates are available in disclosures.
+Source failures retain the previous display with stale state. Freeze publishes
+the displayed server-owned typed result without another source read. Freshness
+is a transient live policy: a frozen complete fixed window remains historical
+evidence with its original bounds, source read time and basis; reopening it does
+not claim it is still live. Polling, cancellation and draft expiry follow the
+same custody contract as record comparisons. Gauges, histograms, fleet rates and
+interactive exact-stream selection remain future work.
+
+```mermaid
+sequenceDiagram
+ actor User
+ participant UI as App adapter
+ participant Goo as Go source adapter
+ participant CH as ClickHouse OTel metrics
+ participant Store as Capture store
+ User->>UI: Choose frozen single-stream baseline; Start
+ UI->>Goo: Refresh baseline capability
+ Goo->>CH: Bounded endpoint discovery
+ CH-->>Goo: Newest observed endpoint + search receipt
+ Goo->>CH: Exact equal-duration nanosecond window
+ CH-->>Goo: Typed counter evidence
+ Goo-->>UI: Coverage comparison + freshness + snapshot capability
+ UI-->>User: Shared rate axis or explicit unavailable reasons
+ User->>UI: Freeze displayed result
+ UI->>Store: Publish retained snapshot capability
+ Store-->>User: Immutable historical evidence (no telemetry reread)
+```
+
+Journey 72 exercises real OTLP delta counters: baseline 3/s, current 5/s,
+latest-window missing coverage, late coverage repair to 15/s, explicit rescale,
+failed refresh and exact displayed-window freeze after a newer export arrives.
+The observed ledger is replayed through Quint with seven rejecting mutations.
+Hegel generates exact-width counter windows and boundary-crossing refusals.
+The native Bombadil actor exercises preview, selection, start, freeze and link,
+and checks rational geometry and exact-window ordering.

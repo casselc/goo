@@ -2466,3 +2466,17 @@ passed together (3.3 minutes). All 31 distinct journeys passed across these runs
 The final inventory actor recorded 685 steps with all required stages and rejecting
 Quint controls. All 95 PNG documentation frames and the generated-campaign JPEG frame were regenerated; see
 [the cloud record](ENVIRONMENT_VALIDATION.md#2026-10-18--observed-service-inventory).
+
+## 2026-10-20 — exact-stream live counter comparison
+
+The native live pilot uses the existing typed evaluator and exact OTel identity.
+Focused source tests and race checks cover nanosecond bounds, newest-window gaps,
+cumulative resets, changed instances, stale endpoints and source-free freeze.
+`go test ./...`, `go vet ./...`, the three affected packages under `-race`, 68
+frontend tests and `TestHegelCounterWindowRateAndCoverageState` pass. See the
+[counter contract](docs/LIVE_COMPARISON.md#exact-stream-counter-rates) and
+[journey 72](docs/journeys/README.md#72-follow-a-native-counter-stream-without-hiding-export-gaps).
+Five real-source browser checks and the final-image native rerun (including
+Bombadil and observed Quint replay with seven rejecting controls) passed.
+All 12 services are running with matching served-source and binary hashes.
+Deployed image evidence is recorded in ENVIRONMENT_VALIDATION.md.
