@@ -11,7 +11,7 @@ Comparisons now put aligned visual values ahead of long explanations:
   use paired baseline/current bars with a common zero and scale within each metric.
 - Cohort rows use the same scale across both populations and every displayed group.
   Share/error plots use 0–100%; duration rows use one common maximum in milliseconds.
-  Stored duration cards likewise share a ceiling across mean/P95/P99, and paired
+  Stored duration matrices share one ceiling across mean/P95/P99, and paired
   breakdown tracks have equal pixel widths even when table columns differ.
 - Stored breakdown counts show within-population share bars while retaining exact
   counts, so differently sized populations can be compared by composition.
@@ -44,3 +44,7 @@ evidence comparisons, native windows and captured breakdowns. These validate rea
 source data, stored receipts, missing groups, mobile containment and source-free
 reopening. This is a first visual pass, not a claim that every native value format
 or signed quantity has a chart.
+
+The [display library](UI_COMPONENTS.md) now groups related mean/P95/P99 values
+in one framework-neutral metric matrix. Live and frozen Explore and Services use
+the same compact mean/percentile summary rather than separate percentile cards.

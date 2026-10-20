@@ -500,3 +500,26 @@ contracts retain declared revision IDs. Services also offers a local distributed
 view of resolved parent relationships and diagnostics, with fixed-scope handoffs
 into questions and immutable investigation evidence. Async/declaration topology
 and whole-dashboard snapshots remain future work. Declared-only entries are implemented.
+
+### Framework-neutral display components
+
+The current polish round starts a reusable custom-element library, with compact
+mean/percentile summaries shared by Services and live/frozen Explore, and one
+related-metric comparison matrix. Declarative HTML and SPA properties use the same
+renderer. Application query and evidence state remain outside the elements.
+See [component contracts](UI_COMPONENTS.md); whole-app table/facet/attribute
+extraction should follow the design audit rather than introduce a second grid or
+query-builder runtime.
+
+### Live delivery and baseline-versus-live comparisons (planned)
+
+Future log/trace tail screens can use application-owned SSE adapters delivering
+HTML patches (Datastar/htmx-style) or typed display snapshots. Passive components
+retain transport-neutral contracts. Design requirements include stable keys,
+bounded retention, focus/scroll-follow, explicit pause/gap/reconnect state and
+separate event/observation/custody clocks. Pinned baseline comparisons must advance
+an explicitly scoped current question/window/basis coherently; retained tail rows
+cannot stand in for full-population measures. See the
+[component audit](UI_COMPONENT_AUDIT.md#eventual-live-updates-transport-neutral-display-contracts)
+for compatibility, ordering and freeze/capture boundaries. No SSE endpoint or
+live-tail/comparison engine is implemented in the component foundation round.

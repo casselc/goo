@@ -1,0 +1,137 @@
+# Display component library
+
+The public UI library is framework-neutral Web Components: custom elements that
+upgrade ordinary server-rendered HTML and accept property updates in an SPA.
+They render supplied data. They do not fetch telemetry, calculate measurements,
+choose question scope, navigate, publish evidence or own investigation state.
+The application remains responsible for those actions and their read boundaries.
+
+The standalone [component reference](http://localhost:8088/ui-components) loads
+only the display library, its stylesheet and synthetic fixtures. It does not load
+the goo application or a query client. Its examples are component conformance
+fixtures, separate from the real OTLP-backed application storyboards.
+
+## Public elements
+
+| Element | HTML attribute | SPA property | Purpose |
+| --- | --- | --- | --- |
+| `goo-latency` | `summary` (JSON), `heading`, `heading-level` | `.summary`, `.heading`, `.headingLevel` | One mean and a compact p50/P95/P99 group, with exact values and min/max in native disclosure. |
+| `goo-stat-list` | `items` (JSON) | `.items` | Label/value pairs; counts remain exact strings. |
+| `goo-metric-comparison` | `data` (JSON) | `.data` | A related group of paired metrics on one zero-based scale. |
+
+Load `components.css` and `components.js`. The comparison element additionally
+loads `comparison-visual.js`; it depends only on the display library. Classic
+script tags or side-effect imports work; no framework or application bootstrap
+is required. Wait for `customElements.whenDefined(name)` if needed. Properties
+assigned before definition are upgraded and remain reactive. Elements can be
+reconnected. Structured properties and getters are detached copies.
+
+```html
+<link rel="stylesheet" href="/components.css">
+<goo-latency heading="Span latency"
+  summary='{"state":"observed","count":"2","sumNs":"30000000","p50Ns":"20000000","p95Ns":"20000000","p99Ns":"20000000","minNs":"10000000","maxNs":"20000000"}'>
+  <p>Mean 15 ms; p95 20 ms.</p>
+</goo-latency>
+<goo-stat-list items='[{"label":"Captured spans","value":"900719925474099300"}]'></goo-stat-list>
+<script src="/components.js"></script>
+```
+
+Use the server template engine's ordinary HTML-attribute escaping for JSON,
+including quotes and ampersands. The optional child content is a server-rendered
+fallback; upgrading replaces it with the component's display. Inputs are data,
+never expressions or HTML. Labels render as text. A malformed JSON attribute
+produces an unavailable/empty display without executing anything.
+
+```js
+await customElements.whenDefined('goo-latency');
+const latency = document.querySelector('goo-latency');
+latency.summary = validatedResult.duration;
+// No query, navigation or application event is triggered.
+```
+
+A latency summary uses the existing typed span-duration result: `state`, `count`,
+`sumNs`, `minNs`, `maxNs`, and whichever of `p50Ns`, `p95Ns`, `p99Ns` were actually
+supplied. All numeric fields are canonical nonnegative integer strings. Missing
+quantiles remain absent; P90 is not invented or interpolated. Zero duration is
+observed zero; `no_data` and `unavailable` do not render zero-valued markers.
+Display rounding remains 0.001 ms, using BigInt arithmetic. Exact strings remain
+in the disclosure. The percentile rail shows positions on one duration scale;
+it is not a histogram or a reconstruction of a distribution.
+
+Comparison data has `title`, `unit` and `rows`; each row supplies `label`, two
+`values` (nonnegative decimal strings or null), two `display` labels, and `delta`.
+The caller supplies already-compatible measurements and the actual difference.
+The component chooses a shared zero-based axis and does no compatibility,
+percentile, rate or health inference. An unavailable value has a hatched track.
+Signed/scientific native formats continue to use exact tables where unsupported.
+
+## Standard behavior and styling
+
+Elements use light DOM and native semantic HTML, including `dl`, `table` and
+`details/summary`. Disclosures support keyboard activation without a custom
+widget protocol. `heading-level` accepts 2–6 (default 3), so an embedding page
+can preserve its heading outline; service cards request level 6. Grid placement
+and page layout belong to the embedding application. Updating data rerenders the display and resets disclosures.
+There are no custom business events, storage, timers, network clients or hidden
+source reads. JSON attributes are bounded to 64K characters; comparisons have at most 16
+metric rows and stat lists at most 32 entries. Presentation limits never define
+source totals. Layout does not introduce record IDs or shared DOM IDs.
+
+`components.css` owns reusable component styles. Product page layout stays in
+`product.css`. Theme with the existing CSS tokens (`--ink`, `--muted`, `--border`,
+`--accent`); standalone defaults use the dark product palette. The library also
+exports small native DOM/disclosure/action helpers for existing vanilla app
+callers. Those are adapters, not a requirement for using the custom elements.
+Existing charts remain in the display-only `GooComparisonVisual` module.
+
+```mermaid
+flowchart LR
+  SSR[Server-rendered HTML] --> A[JSON attributes]
+  SPA[SPA adapter] --> P[Detached structured properties]
+  A --> E[Display custom elements]
+  P --> E
+  E --> D[Semantic light DOM and shared CSS]
+  Q[Application: queries and evidence state] --> SPA
+```
+
+## Adoption and verification
+
+Services and live/frozen Explore use the same latency element and stat-list
+primitive. A related group of mean/P95/P99 comparison values occupies one metric
+matrix instead of three independent cards. Unsupported native percentile ranges
+retain their original interval semantics. Widget secondary actions use one native
+disclosure; opening the question remains visible. Explore combines search,
+filters and breakdowns in one workbench; advanced measure settings remain closed
+until requested, even when the applied query includes those measures.
+
+Journey 63 exercises server HTML upgrade, SPA updates (including assignment before
+registration), detached values, invalid JSON, exact large labels, zero/absence,
+text safety, keyboard disclosure, shared geometry, and mobile containment with no
+app runtime or API requests. Real journeys 35/52/54/58/59/62 exercise the adopted
+components with captured telemetry and source-free evidence. Their observed Quint
+ledgers and Bombadil checks retain the semantic and state-transition coverage.
+This is an incremental library: adopt these primitives when touching remaining
+views rather than introducing another local metric-card implementation.
+
+The [whole-app component audit](UI_COMPONENT_AUDIT.md) maps remaining adoption
+surfaces and proposes passive table, result-state, facet and attribute contracts.
+These are recommendations, not additional implemented elements.
+
+## Eventual streaming adapters
+
+The same property/attribute contracts can receive snapshots from an application
+SSE adapter, and a passive table shell can retain caller-owned HTML rows patched
+by Datastar/htmx-style delivery. No component lifecycle or disclosure should
+subscribe or fetch. Transport authentication, retry/cursor/gap state, ordering,
+retention and fixed/live scope belong outside the components. Current summary
+updates replace their inner DOM and reset disclosures; they are not a high-rate
+tailer with keyed rows, preserved focus or scroll-follow. The audit defines those
+future requirements; no SSE endpoint, tailer or framework dependency is added.
+
+A future baseline-vs-live adapter can send one paired snapshot to
+`goo-metric-comparison.data`: the baseline values remain fixed while supplied
+current values/differences and the app's visible current basis/window advance
+together. That display update is already supported; a live comparison engine,
+SSE transport, coverage semantics and high-frequency focus retention are not.
+The standalone fixture tests current-side property updates without mutating the
+baseline or starting a query.

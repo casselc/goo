@@ -401,3 +401,11 @@ and [journey 60](docs/journeys/README.md#60-namespace-service-identity).
 [Reported-edge investigations](docs/REPORTED_EDGES.md) now stage exact child-span
 questions from distributed relationships. [Visual comparisons](docs/VISUAL_COMPARISONS.md)
 put aligned baseline/current values ahead of detailed provenance and assumptions.
+
+The [display component library](docs/UI_COMPONENTS.md) now provides framework-neutral
+Web Components for compact latency, exact label/value lists and grouped metric
+comparisons. The standalone `/ui-components` reference works without the app runtime;
+Services and Explore use the same display primitives.
+
+The [whole-app component audit](docs/UI_COMPONENT_AUDIT.md) prioritizes passive
+table viewports and result states, then facets and typed attribute displays.

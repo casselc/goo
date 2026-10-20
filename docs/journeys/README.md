@@ -1066,3 +1066,17 @@ Quint replays the observed ledger with five rejecting mutations; optional
 Comparison storyboards 35 and the stored/native comparison journeys now show
 [aligned visual comparisons](../VISUAL_COMPARISONS.md), with full-population values
 and explicit unavailable states rather than a wall of prose.
+
+## 63 Framework-neutral display components
+
+[Executable component conformance tests](../../journeys/components.spec.js) open
+`/ui-components`, a standalone reference containing explicitly synthetic fixtures.
+No app runtime or telemetry API is loaded. Server HTML upgrades to native custom
+elements; SPA properties remain reactive even when assigned before definition.
+Tests cover detached inputs, exact large values, zero vs absence, malformed JSON,
+text safety, keyboard disclosures, shared geometry and mobile containment.
+These fixture frames explain the library; real OTLP-backed journeys 35/52/54/58/59/62
+verify its adoption in application workflows.
+
+![Standalone component reference: synthetic fixtures](screenshots/63a-framework-neutral-display-components.png)
+![Mobile component reference: synthetic fixtures](screenshots/63b-mobile-display-components.png)

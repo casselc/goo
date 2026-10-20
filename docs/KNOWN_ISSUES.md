@@ -352,3 +352,13 @@ within the captured discovery scope. Async links, external peer inference and
 end-to-end request latency remain outside that relationship. The first
 [visual comparison pass](VISUAL_COMPARISONS.md) uses aligned scales and compact
 metrics; some signed/scientific native formats still remain exact tables.
+
+The [display component library](UI_COMPONENTS.md) is incremental. Compact latency,
+stat lists and grouped metric comparisons are adopted; remaining tables, facets,
+attribute viewers and result-state panels still use existing implementations.
+Native histogram P95 remains a bucket range; this is not a new scalar percentile
+or a P90 evaluator. Light-DOM app styles must stay scoped to their owning view.
+
+SSE/live tails remain planned. Summary property updates currently rerender inner
+DOM and reset disclosures; keyed row patches, bounded retention, gap/cursor
+handling and focus/scroll-follow need a separate app adapter and passive viewport.

@@ -5,6 +5,57 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Framework-neutral display components and compact exploration (2026-10-20 UTC)
+
+The public library now registers `goo-latency`, `goo-stat-list` and
+`goo-metric-comparison`, using ordinary server HTML attributes and detached SPA
+properties. Its standalone `/ui-components` reference has synthetic fixtures and
+loads no app runtime/query client. Services and live/frozen Explore reuse the
+latency/stat primitives; stored comparisons group mean/P95/P99 on one matrix.
+Only supplied percentiles are shown; no P90 evaluator was introduced. Query
+construction now occupies one compact workbench, and applied measures do not
+force advanced settings open. Widget secondary actions use native disclosure.
+
+The [whole-app design audit](docs/UI_COMPONENT_AUDIT.md) prioritizes passive tables,
+result states, facets and typed attributes next. It also specifies eventual SSE
+and baseline-vs-live boundaries. These additional elements and streaming features
+remain proposed. Current summary updates replace inner DOM/reset disclosures;
+they are not high-rate focus/scroll-preserving tailers.
+
+- Frontend suite passed 52 tests, including exact large-value formatting,
+  zero/absence, missing quantiles and input immutability.
+- `TestHegelDashboardPlanning` passed 100 generated cases for the unchanged typed
+  query/adaptor contract.
+- Standalone browser tests passed server HTML upgrade, pre-definition property
+  assignment/reactivity, detached values, malformed JSON, safe text, keyboard
+  disclosure and mobile containment with no API requests.
+- The corrected live campaign passed all 11 browser tests (component conformance,
+  error/latency and stored comparisons, grouped measures, native windows, question
+  workbench, full breakdowns, exact edges and service dashboards). Their observed
+  Quint checks passed. Thirty-second Bombadil campaigns passed for comparisons,
+  exact edges and service dashboards, including the new quantile display invariant.
+- The standalone fixture also checks configurable heading levels, reconnects and
+  detached current-side comparison updates that leave supplied baseline values
+  unchanged. This validates display updates, not SSE delivery or a live evaluator.
+- Direct screenshot inspection exposed an ancestor CSS minimum width leaking
+  from an outer breakdown table into a nested component. App selectors are now
+  scoped to their owning table; a composition check requires the Change column
+  to fit on desktop. Grid placement belongs to the app, not the reusable element;
+  a bounded heading-level setting preserves the embedding outline.
+- After component chrome isolation, the six focused browser checks passed again,
+  including standalone/reconnect updates, nested comparison geometry, mobile
+  layouts, source-free edge evidence and the service-dashboard Bombadil actor.
+  Affected live frames and clearly labeled synthetic component frames were
+  regenerated and inspected. All 12 Compose services are running; health and
+  served component/app asset hashes match the built workspace. Existing Redis
+  pending IDs and volumes were retained and traffic restored. Unused build cache
+  and dangling images were pruned after a full-disk build condition.
+- The first live campaign passed eight tests and exposed two older fixture
+  assumptions. A demo gauge legitimately became unknown while traffic was paused;
+  its test now injects an isolated ordinary OTel gauge with a fixed fresh scope.
+  A metric-handoff assertion now expects the explicit missing-namespace selector
+  introduced by the earlier identity work. Neither fix relaxes source semantics.
+
 ## Reported-edge investigation and visual comparisons (2026-10-20 UTC)
 
 Distributed relationships now stage typed exact child-population questions, keeping

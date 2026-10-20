@@ -484,3 +484,13 @@ checking exact parent/child namespace preservation and page containment. The
 journey separately checks a 390-pixel mobile viewport.
 Comparison actors additionally check bounded visual bar geometry; journeys 35,
 stored evidence, native windows and breakdowns exercise the common-scale visuals.
+
+Display components: journey 63 is a standalone conformance fixture with no app
+runtime or API reads. It checks server attributes, property assignment before
+custom-element definition, detached/reactive updates, invalid JSON, exact large
+values, zero/absence, keyboard disclosure and mobile geometry. Application
+journeys 35/45/52/54/58/59/62 retain their observed Quint traces and rejecting
+mutations. `service-dashboard.ts` now checks rendered quantile values/positions
+against the supplied summary and explores native widget/latency disclosures.
+SSE/tailer and baseline-vs-live requirements in the component audit remain design;
+these tests do not establish streaming delivery, gap recovery or scroll-follow.

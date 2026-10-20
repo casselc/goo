@@ -246,3 +246,11 @@ claims. Declared-only catalog entries now retain independent registry provenance
 explicit absence states and ordinary fixed-question capture workflows. Exact
 reported-edge selectors now retain the original parent-search scope; async links
 and graphical topology remain separate future slices.
+
+## Component consistency follow-through
+
+The [display library](UI_COMPONENTS.md) now starts framework-neutral custom
+elements for latency, stat lists and grouped metric comparisons. The
+[whole-app component audit](UI_COMPONENT_AUDIT.md) proposes the next shared table,
+state, facet and attribute contracts, with application query/evidence behavior
+kept outside presentation components. Those additional elements remain proposed.

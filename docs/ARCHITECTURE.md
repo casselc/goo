@@ -109,3 +109,13 @@ Built-in recipes are pure transforms in `exploration/recipes.go` followed by the
 same source compiler. Sample investigation entry points now consume ordinary
 telemetry packages rather than adding example-specific query branches. See
 [the contract](INVESTIGATION_RECIPES.md) and architecture flow 24.
+
+## Display component boundary
+
+[UI components](UI_COMPONENTS.md) are native custom elements with declarative
+JSON attributes and structured properties, usable from server-rendered HTML or
+an SPA. They own semantic DOM, formatting and native disclosure behavior. The
+application owns source reads, typed questions, scope changes, navigation and
+custody. Shared component styling is separate from page layout; light-DOM adapters
+must scope table/viewport rules to their own children. Current adoption covers
+Services/Explore latency and stat lists, plus grouped latency comparisons.

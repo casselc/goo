@@ -116,3 +116,8 @@ Resolved edges now offer [exact child-population questions](REPORTED_EDGES.md)
 alongside the explicitly wider child-service link. The typed relationship retains
 parent-search scope through filters, packages and immutable investigation capture.
 Overview assumptions are collapsed under **How these widgets are measured**.
+
+Widgets now reuse the [display library](UI_COMPONENTS.md): one mean plus a compact
+p50/P95/P99 strip, exact values in Latency details, and shared label/value lists.
+The primary question link stays visible; add/capture actions are under **Widget
+actions**. Exact read timestamps remain in each widget evidence disclosure.
