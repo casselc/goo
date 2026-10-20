@@ -1028,3 +1028,21 @@ and checks namespace-preserving widget questions and uncaught exceptions.
 ![Fixed namespace overview](screenshots/60b-namespace-service-dashboard.png)
 ![Declared operation question](screenshots/60c-declared-operation-question.png)
 ![Mobile contract card](screenshots/60d-mobile-declared-operation-question.png)
+
+## 61 Declared services without observations
+
+[Executable journey](../../journeys/declared-services.spec.js) opens a real stored
+historical inventory as a fixed-window Services question. It discovers registered
+application bindings with no telemetry, sees them separately in the distributed
+view, opens the unified service overview, and explicitly explores/captures an
+empty span question. An explicitly selected namespace remains in the next captured
+question. A recipient reopens that receipt without a source read.
+Independent registry failure remains visible, and a late registry response is
+rejected after a scope edit. The observed ledger is replayed through Quint with
+five mutations; optional `GOO_DECLARED_BOMBADIL=1` explores declaration disclosures
+and catalog/service transitions without inventing observed widgets or edges.
+
+![Declared services and explicit absence](screenshots/61a-declared-services-without-observations.png)
+![Unified empty service overview](screenshots/61b-declared-service-empty-overview.png)
+![Mobile declared service](screenshots/61c-mobile-declared-service.png)
+![Stored empty service question](screenshots/61d-empty-service-evidence.png)

@@ -235,12 +235,13 @@ The first [service dashboard slice](SERVICE_DASHBOARDS.md) now implements the pu
 Go planner, bounded automatic record/native widgets, explicit matching contract
 revision metadata, partial-state loading and a source-free distributed relationship
 table within Services. The review above remains the design snapshot. Full graphical
-topology, declared-only catalog membership, async/declaration edges, definition
+topology, async/declaration edges, definition
 route consolidation and whole-dashboard persistence remain proposed.
 
 The next slice implements namespace-aware service identity and declared-operation
 span cards; see [service identity](SERVICE_IDENTITY.md). These preserve ordinary
 question/capture workflows. Schema URL remains declared metadata for trace data,
 and contract cards remain span-record evidence rather than outcome/conformance
-claims. Declared-only catalog entries and exact edge-population selectors remain
-future slices.
+claims. Declared-only catalog entries now retain independent registry provenance,
+explicit absence states and ordinary fixed-question capture workflows. Exact
+edge-population selectors remain a future slice.

@@ -2,7 +2,9 @@
 
 Implemented within **Services**, using the existing fixed environment/window and
 standard OTel telemetry. No manifest is required. Select **Discover services**,
-then open an emitting service; its supported overview widgets load automatically.
+then open an observed or declared service; its supported overview widgets load automatically.
+Declared services without telemetry retain explicit not-observed widgets and
+independent registry provenance; see [service identity](SERVICE_IDENTITY.md#declared-services-and-observed-services).
 **Service list** and **Distributed view** share that discovery evidence. Switching
 views does not query telemetry or tick the time window.
 
@@ -63,8 +65,8 @@ freeze a whole dashboard; no whole-dashboard snapshot contract is introduced.
 Application contracts match the actual registry's declared service and environment,
 show package/source-manifest revision IDs and remain labelled **declared binding**.
 They do not establish current deployment, emission, conformance, a fleet roster
-or a distributed graph. The service list still lists observed services; browsing
-a declared-only service is a future catalog extension. Generic widgets do not
+or a distributed graph. The service list includes observed and
+declared-only services with separate provenance and explicit absence states. Generic widgets do not
 silently replace the package's operation/lifecycle outcome policy.
 
 ## Distributed view

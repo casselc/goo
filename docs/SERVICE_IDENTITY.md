@@ -50,3 +50,44 @@ is queried. Bindings above the six-operation automatic-card budget are withheld;
 the underlying package remains available through its normal entry point.
 
 Executable journey: [60 — namespace identity](../journeys/service-namespaces.spec.js).
+
+
+## Declared services and observed services
+
+Services reads the existing operation-package registry independently alongside
+telemetry discovery. Registered declarations with no matching observed identity
+remain visible as **Declared · Not observed in this window**. Their signal cells
+and latest-event cell say not observed; no zero health value or synthetic event
+time is created. Source discovery must succeed before this absence statement is
+shown. Registry failure leaves observed services usable with a separate warning.
+
+An explicit namespace binding joins only its exact missing/empty/literal identity.
+An unspecified namespace annotates observed candidates with **namespace unspecified**;
+if there are no candidates it produces an all-namespaces entry (or retains an
+already selected namespace). This association does not verify instrumentation
+emission or resolve namespace ownership. Multiple package revisions/bindings stay
+visible; none is chosen as the authoritative runtime binding.
+
+```mermaid
+flowchart LR
+  Registry[Current operation-package registry] --> Declared[Declared bindings and revisions]
+  Source[Fixed-window discovery] --> Observed[Captured signal counts and reported parents]
+  Declared --> Catalog[Service catalog with separate presence states]
+  Observed --> Catalog
+  Catalog --> Overview[Service overview and declared contract details]
+  Overview --> Question[Explicit fixed-scope span or log question]
+  Question --> Capture[Immutable record evidence, including no data]
+```
+
+The distributed view lists declared services separately; declarations create no
+reported parent edges. Opening a declared service reads the same bounded metadata
+as any other service. Contract widgets remain **not_observed** when spans are
+absent. Explicit **Explore service spans/logs** actions can investigate the fixed
+question even when no records were observed. Capturing and sharing that question
+uses existing evidence semantics, including explicit empty results. Registry
+metadata is current configuration and is not silently frozen into a record receipt.
+No deployment roster, availability judgment or complete fleet is inferred.
+
+[Journey 61](../journeys/declared-services.spec.js) exercises this through a real
+historical inventory capture, independent registry read, service overview, empty
+span capture, source-free reopening, registry failure and late-read cancellation.

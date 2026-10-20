@@ -463,3 +463,12 @@ cross-namespace edges, staged questions and actual declared-binding results are
 replayed with four rejecting mutations. Optional `GOO_NAMESPACE_BOMBADIL=1` uses
 `service-namespace.ts` to explore transitions and check namespace-preserving
 record/native questions. Root tests reject foreign-namespace native/operation rows.
+
+Declared services: `TestHegelDeclaredCatalogIsolation` generates counts and OTel
+namespace presence/value cases while checking independent declaration order,
+unchanged evidence and retained multiple bindings. Journey 61 writes
+`GOO_DECLARED_LEDGER` for `TestQuintDeclaredServicesLive`, replaying actual absence,
+fixed-question exploration and empty capture with five rejecting mutations,
+including a changed namespace in the stored question.
+`declared-services.ts` explores declaration disclosures and catalog/service
+transitions while checking no invented telemetry, graph edges or observed widgets.

@@ -312,7 +312,7 @@ func validateCapture(c *SavedCapture) error {
 		if c.Explore == nil || c.Inventory != nil || !reflect.DeepEqual(c.Explore.Question, *c.Question.Explore) || len(c.Explore.Rows) > CaptureRowLimit || !regexpRevision.MatchString(c.Explore.Basis) {
 			return errors.New("invalid saved exploration")
 		}
-	} else if c.Inventory == nil || c.Explore != nil || c.Inventory.Question != *c.Question.Inventory || len(c.Inventory.Rows) > 1000 || !regexpRevision.MatchString(c.Inventory.Basis) {
+	} else if c.Inventory == nil || c.Explore != nil || !reflect.DeepEqual(c.Inventory.Question, *c.Question.Inventory) || len(c.Inventory.Rows) > 1000 || !regexpRevision.MatchString(c.Inventory.Basis) {
 		return errors.New("invalid saved inventory")
 	}
 	return nil

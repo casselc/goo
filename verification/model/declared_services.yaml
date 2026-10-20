@@ -1,0 +1,8 @@
+spec: declared_services.qnt
+module: declared_services
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  discover: {expect: 'coherent == {{.obs.coherent}}'}
+  open: {expect: 'coherent == {{.obs.coherent}}'}
+  capture: {expect: 'coherent == {{.obs.coherent}}'}

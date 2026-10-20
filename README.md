@@ -390,7 +390,8 @@ from observed signals, convention keys and native instruments. Matching registry
 contracts retain declared revision IDs. Services also offers a local distributed
 view of resolved parent relationships and diagnostics, with fixed-scope handoffs
 into questions and immutable investigation evidence. Async/declaration topology,
-whole-dashboard snapshots and declared-only catalog entries remain future work.
+whole-dashboard snapshots remain future work. Declared services without observed
+telemetry now remain visible in Services, with independent registry provenance.
 
 Service discovery now separates same-named services by OTel namespace, including
 missing and present-empty values. Dashboard cards can explore spans matching

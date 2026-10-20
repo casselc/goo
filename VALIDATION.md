@@ -5,6 +5,45 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Declared services alongside observed telemetry (2026-10-20 UTC)
+
+Services now combines independent fixed-window discovery and current operation-
+package registry metadata. Declared-only rows retain explicit not-observed states,
+namespace uncertainty and all declared bindings without creating counts, event
+timestamps or parent edges. Registry failure remains distinct from no declarations;
+late registry results are discarded after scope edits. Current declarations do not
+establish deployment or emission during a historical telemetry window.
+
+- Frontend suite: 50 tests passed.
+- `TestHegelDeclaredCatalogIsolation`: 100 generated cases passed, checking
+  namespace presence/value isolation, declaration order, retained bindings and
+  unchanged source evidence.
+- Journey 61 passed its initial live historical-inventory → service → empty capture
+  → source-free recipient reopening path, registry failure and stale-result checks.
+  Its Quint replay and 30-second Bombadil campaign passed. The final focused run
+  additionally checks explicit namespace retention and unavailable-registry wording.
+- That added check exposed a real namespace-inventory persistence defect (HTTP
+  502, `invalid saved inventory`): the receipt validator compared selector pointers
+  after serialization. It now compares semantic values. Missing/empty/named
+  namespace save/reopen/refresh and mismatched-selector regressions pass in
+  `go test ./...`; `go vet ./...` also passes. Existing receipt formats are unchanged.
+- The first post-fix run passed the live namespace capture and all five Quint
+  negative controls, then exposed a Bombadil startup race: repeated start actions
+  canceled their own in-flight discovery. The actor now starts once after the
+  capture is enabled and waits for discovery; its liveness deadline is unchanged.
+- Initial browser campaign: journeys 46, 47, 59, 60 and 61 all passed (4.5 minutes).
+  Final focused journey 61 passed (52.1 seconds), including the namespace capture,
+  `no_data` custody, five rejecting Quint mutations and the corrected 30-second
+  Bombadil campaign. Ledger/actor output: `artifacts/declared-services/1792462359930/`.
+- Refreshed affected service screenshots and added storyboard 61 with desktop/mobile
+  frames and a registry → discovery → question → capture diagram.
+- Final health/source checks: all 12 services running; query/packages image
+  `sha256:5c88917f0a65ffd2ae2cab406ffdb88d275d37a1e4f74667de7f9bdad7b62251`; served assets and binary
+  match the tested source/build. All five pre-existing stale pending IDs remain;
+  traffic is restored (6 total pending entries at the health read).
+  Evidence: `artifacts/declared-final-health.json`. Unused build cache/images were
+  removed; application volumes and stream entries were preserved.
+
 ## Namespace-aware service identity and declared operation questions (2026-10-19, America/Los_Angeles)
 
 [Service identity](docs/SERVICE_IDENTITY.md) now separates missing, present-empty

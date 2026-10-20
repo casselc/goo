@@ -329,8 +329,8 @@ Lifecycle question cards do not offer this comparison action.
 aggregates. Numeric/two-field comparisons and arbitrary regrouping of old evidence
 remain unsupported; new dimensions require explicit source recapture. Automatic
 [service overviews and a distributed relationship table](SERVICE_DASHBOARDS.md)
-now execute bounded typed widgets within Services. Declared-only catalog entries,
-instance navigation, graphical topology, async/declaration edges and complete
+now execute bounded typed widgets within Services. Instance navigation,
+graphical topology, async/declaration edges and complete
 dashboard snapshots remain future work.
 
 Breakdown ranking currently uses absolute population-share change. A group with
@@ -342,3 +342,7 @@ Namespace-aware service identity and registered operation-span dashboard cards
 are implemented; see [service identity](SERVICE_IDENTITY.md). Trace schema URL
 remains declaration-only because the current exporter does not store it. These
 cards do not replace explicit operation conformance or business-outcome evaluation.
+
+Declared services without observations now remain visible in Services. Their
+metadata comes from the current registry, not a frozen deployment inventory.
+Discovery failure withholds presence claims; registry failure is shown separately.

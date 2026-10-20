@@ -51,8 +51,8 @@ Go planner, bounded typed widgets, matching declaration revisions and a local
 distributed relationship table. Next priorities from the whole-product review:
 
 1. Namespace-aware identity and registered operation-span cards are implemented;
-   see [service identity](SERVICE_IDENTITY.md). Next, add declared-only catalog
-   membership with an explicit distinction from observed telemetry.
+   see [service identity](SERVICE_IDENTITY.md). Declared-only catalog membership
+   now retains explicit presence states and independent registry provenance.
 2. Add deliberate instance navigation without changing service-level populations.
 3. Extend distributed exploration with exact edge-population selectors and
    separately typed async links before a graphical topology view.
@@ -498,5 +498,5 @@ are planned. Observed, declared and executed-supported evidence remain distinct.
 from observed signals, convention keys and native instruments. Matching registry
 contracts retain declared revision IDs. Services also offers a local distributed
 view of resolved parent relationships and diagnostics, with fixed-scope handoffs
-into questions and immutable investigation evidence. Async/declaration topology,
-whole-dashboard snapshots and declared-only catalog entries remain future work.
+into questions and immutable investigation evidence. Async/declaration topology
+and whole-dashboard snapshots remain future work. Declared-only entries are implemented.
