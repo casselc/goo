@@ -6,6 +6,11 @@ elements are implemented. Live log tail work and the waterfall extraction are
 being developed separately. This review made no application or runtime changes
 and did not run new browser checks.
 
+Implementation follow-up: passive time bars, trace waterfall and
+[chart frame](UI_CHART_FRAME.md) are now implemented. The frame is adopted by
+[rolling record comparison](LIVE_COMPARISON.md); broader frame adoption and the
+remaining proposed primitives below are still planned.
+
 ## Recommended order
 
 | Priority | Proposed primitive | First adoption surfaces | Why it earns a component |

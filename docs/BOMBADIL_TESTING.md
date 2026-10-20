@@ -455,3 +455,10 @@ time bucket is not counted as positive chart coverage. Run
 `GOO_CORE_BOMBADIL=1` journey 33 and `GOO_DASHBOARD_BOMBADIL=1` journey 59.
 Standalone waterfall/time-bar Playwright fixtures test SSR/SPA display contracts
 without application runtime; live campaigns validate their app adapters separately.
+
+The rolling baseline comparison has `verification/bombadil/live-comparison.ts`:
+explicit preview, stored-baseline selection, start, freeze and link actions; invariants
+for baseline/capture identity and common axis. Its eventual freeze requirement
+makes the 30-second journey69 actor campaign positive interaction coverage.
+The curated journey separately tests explicit rescale, unavailable source,
+unchanged baseline and a displayed snapshot frozen after source population grows.

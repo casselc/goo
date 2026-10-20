@@ -17,6 +17,7 @@ import (
 
 func registerCaptures(mux *http.ServeMux, client *http.Client, dir string) {
 	store := exploration.CaptureStore{Dir: filepath.Join(dir, "exploration")}
+	registerLiveComparison(mux, client, store)
 	reply := func(w http.ResponseWriter, code int, value any) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Cache-Control", "no-store")

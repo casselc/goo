@@ -137,3 +137,12 @@ The passive table and attribute components retain caller rows. No tail buffer
 becomes a measurement population. See the [sequence diagram](LIVE_LOG_TAIL.md).
 Waterfall and count-time geometry are separate passive components; app adapters
 own details, interval actions and source questions.
+
+### Rolling record comparison and snapshot custody
+
+The [live comparison sequence](LIVE_COMPARISON.md) describes the current path:
+app-owned polling → frozen baseline question → equal-duration Go source read →
+compatibility kernel → passive shared chart frame/paired bars. Freeze publishes
+an expiring server-owned snapshot through the capture store without a source
+read. The local tail buffer never enters this measurement path. `goo-chart-frame`
+updates metadata without replacing caller-owned plots, native controls or focus.

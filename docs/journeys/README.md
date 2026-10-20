@@ -1097,3 +1097,32 @@ late duplicates, bounded eviction, focus pause, resumed/reconnected gaps and sco
 cancellation, with Quint ledger mutations and an opt-in Bombadil campaign.
 Journeys 67 and 68 are clearly synthetic standalone waterfall/time-bar contracts;
 actual app adoption is exercised by journeys 29, 30, 33, 45 and 59.
+
+## 69. A frozen baseline beside a rolling record population
+
+`journeys/live-comparison.spec.js` sends real OTel spans for a generic search
+service. Select linked baseline evidence, explicitly start a rolling comparison,
+pause, add observations, and rescale when the population exceeds the fixed axis.
+A failed refresh retains the old window as stale. Another source record arrives
+before freezing: the capture retains the seven displayed records, not the eight
+now in the source. Reopen evidence and verify the baseline is unchanged. The
+optional Bombadil actor exercises the live controls; the observed ledger runs
+through Quint with negative controls.
+
+![Frozen baseline and rolling count](screenshots/69a-frozen-baseline-rolling-count.png)
+![Stale read retains its axis and original window](screenshots/69b-stale-read-stable-axis.png)
+![Displayed evidence frozen without another source read](screenshots/69c-exact-displayed-evidence-frozen.png)
+
+![Frozen result linked to an immutable investigation revision](screenshots/69d-frozen-result-linked-to-investigation.png)
+![Mobile rolling comparison](screenshots/69e-mobile-live-comparison.png)
+
+## 70. Passive chart frame in server HTML and SPA updates
+
+`journeys/chart-frame-components.spec.js` demonstrates safe metadata, caller-owned
+native actions and disclosures, pre-upgrade properties, contained mobile layout,
+and focus preservation when state/window metadata changes. Synthetic standalone
+HTML tests the reusable display contract; journey 69 supplies real-source product
+coverage.
+
+![Passive chart frame](screenshots/70a-passive-chart-frame.png)
+![Mobile stale chart frame](screenshots/70b-mobile-stale-chart-frame.png)

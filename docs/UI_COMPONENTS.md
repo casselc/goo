@@ -254,3 +254,12 @@ counts/domain; zero has zero geometry and unavailable values remain explicit.
 Explore and Services use these components. Native interval/histogram/metric
 semantics remain in their separate adapters. The [chart/detail review](UI_CHART_DETAIL_REVIEW.md)
 prioritizes chart frames, detail panels and heatmap matrix reuse as follow-up work.
+
+## Shared chart frame
+
+`goo-chart-frame` supplies passive heading/unit/window/state chrome around
+caller-owned native plots, legends, disclosures and actions. Attribute or
+`.data` metadata updates preserve those children and their focus. The app owns
+freshness, refresh and evidence behavior; the frame performs no source reads.
+See [the API](UI_CHART_FRAME.md) and the `/ui-components` example. The standalone
+journey uses synthetic display data and explicitly verifies no telemetry reads.

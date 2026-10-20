@@ -5,6 +5,60 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Rolling record baseline and passive chart frame (2026-10-20 UTC)
+
+Saved span/log questions now support explicit rolling full-population count
+refresh beside frozen linked evidence. The app owns cancellation, generations,
+source-window labels, stale retention and explicit axis rescaling. Freeze
+publishes the displayed server snapshot without another telemetry read; linking
+it stages an investigation draft and saving creates an immutable child revision.
+The parallel component slice supplies `goo-chart-frame` with SSR attributes,
+detached SPA metadata, native child/focus retention and no source lifecycle.
+
+- Root Go suite and vet passed. Source/capture and HTTP checks passed under the
+  race detector, including source-free exact freeze, repeated-freeze idempotence,
+  strict request validation, 16-draft admission, budget replacement and obsolete
+  capability rejection. Python proxy syntax and Compose configuration passed.
+- The frontend suite passed 64 tests, including unavailable/incompatible frozen
+  display state and unstarted-panel pause semantics. Hegel passed 100 generated
+  shifted equal-duration windows and incompatible environment cases. Its first
+  run generated durations beyond the existing two-hour record-query limit;
+  the corrected generator matches that supported domain rather than widening it.
+- Four browser checks passed together: both passive frame contracts, the existing
+  fixed-window fresh-comparison record/native journey, and the real OTel rolling
+  comparison journey. Frame tests use explicit synthetic standalone HTML; the
+  product journey reads actual ClickHouse ingestion through standard OTLP.
+- The rolling journey observed 2 baseline/4 current records, grew current to 7,
+  required explicit rescale, injected a 503, retained the stale result/window,
+  then ingested an eighth source record before freezing exactly the displayed 7.
+  It reopened the stored result, verified the baseline unchanged, and rejected a
+  completed response held across preview disposal. Quint accepted the observed ledger and rejected all six
+  corrupted observations.
+- Initial source failure is labelled unavailable with no invented retained result.
+  Mobile frame bounds are asserted independently of page overflow: screenshot
+  inspection exposed nested paired-bar clipping, fixed in the shared component
+  stylesheet. Baseline/source provenance is disclosed without repeating it inline.
+- A subsequent full rolling run passed explicit investigation linking and saved
+  revision preservation. Its 30-second Bombadil actor executed preview, baseline
+  choice, start, freeze and link; the test requires all five observed actions.
+  The final state mapping also has focused regression coverage: unavailable
+  frozen evidence remains unavailable, and pausing an empty panel stays unknown.
+
+Final release: all four selected browser tests passed together in 1.4 minutes
+(`artifacts/live-measures-release.log`), including the required Bombadil actions
+and live Quint replay with six rejecting mutations. Runtime validation matched
+the final image and served source bytes, all 12 services running, health OK and
+all five historical pending stream IDs preserved. The wrapper restored traffic.
+`artifacts/live-measures-final-health.json` records the final checks.
+
+Live native metrics, duration/status charts and SSE measure refresh remain
+planned. Record refresh uses bounded polling and a two-minute process-local
+snapshot capability until explicitly frozen. Serialized draft budgets do not
+establish a production authorization model or telemetry completeness.
+See [the contract and sequence diagram](docs/LIVE_COMPARISON.md),
+[journeys 69–70](docs/journeys/README.md#69-a-frozen-baseline-beside-a-rolling-record-population)
+and [the passive component contract](docs/UI_CHART_FRAME.md).
+
 ## Live logs, passive waterfalls and count-time plots (2026-10-20 UTC)
 
 Explore now tails an applied log selector over a separate rolling event-time

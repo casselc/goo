@@ -1,0 +1,16 @@
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document})=>{const live=document.querySelector('.live-comparison');return {linked:document.documentElement.dataset.gooLiveLinked||'',preview:!!document.querySelector('.fresh-comparison select'),ready:!!live,phase:live?.getAttribute('data-phase')||'',baseline:live?.getAttribute('data-baseline')||'',frozen:live?.getAttribute('data-frozen')||'',bars:Array.from(live?.querySelectorAll('.comparison-bar-cell')||[]).map(e=>({max:e.getAttribute('data-scale-max'),value:e.getAttribute('data-value')}))}});
+export const ready=eventually(()=>state.current.ready).within(15,'seconds');
+export const linked=eventually(()=>/^[a-f0-9]{64}$/.test(state.current.linked)).within(28,'seconds');
+export const frozen=eventually(()=>state.current.phase==='frozen').within(25,'seconds');
+export const baselineIdentity=always(()=>!state.current.ready||/^[a-f0-9]{64}$/.test(state.current.baseline));
+export const retainedCustody=always(()=>state.current.phase!=='frozen'||/^[a-f0-9]{64}$/.test(state.current.frozen));
+export const commonAxis=always(()=>state.current.bars.length<2||state.current.bars.every(b=>b.max===state.current.bars[0].max));
+const preview=registerCustomAction('goo.livePreview',async(document)=>{(document.querySelector('[data-fresh-compare]')as HTMLButtonElement)?.click()});
+const choose=registerCustomAction('goo.liveBaseline',async(document)=>{const s=document.querySelector('.fresh-comparison select')as HTMLSelectElement;if(s){const o=Array.from(s.options).find(o=>o.value&&!o.disabled);if(o){s.value=o.value;s.dispatchEvent(new Event('change',{bubbles:true}))}}});
+const start=registerCustomAction('goo.liveStart',async(document)=>{(Array.from(document.querySelectorAll('.live-comparison button')).find(b=>b.textContent==='Start live comparison')as HTMLButtonElement)?.click()});
+const freeze=registerCustomAction('goo.liveFreeze',async(document)=>{(Array.from(document.querySelectorAll('.live-comparison button')).find(b=>b.textContent==='Freeze displayed result')as HTMLButtonElement)?.click()});
+const link=registerCustomAction('goo.liveLink',async(document)=>{const panel=document.querySelector('.live-comparison');const button=Array.from(panel?.querySelectorAll('button')||[]).find(b=>b.textContent==='Add frozen result to investigation')as HTMLButtonElement;if(button&&!button.hidden){const id=panel?.getAttribute('data-frozen')||'';button.click();if(!panel?.isConnected)document.documentElement.dataset.gooLiveLinked=id}});
+export const explore=actions(()=>state.current.linked?['Wait']:!state.current.preview?[preview()]:!state.current.ready?[choose()]:!state.current.phase?[start()]:state.current.phase==='current'?[freeze()]:state.current.phase==='frozen'?[link()]:['Wait']);

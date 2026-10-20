@@ -1,0 +1,17 @@
+spec: live_comparison.qnt
+module: live_comparison
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  observe:
+    expect: 'coherent == {{.obs.coherent}}'
+  axis:
+    expect: 'coherent == {{.obs.coherent}}'
+  stale:
+    expect: 'coherent == {{.obs.coherent}}'
+  freeze:
+    expect: 'coherent == {{.obs.coherent}}'
+  reopen:
+    expect: 'coherent == {{.obs.coherent}}'
+  discard:
+    expect: 'coherent == {{.obs.coherent}}'

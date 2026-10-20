@@ -917,3 +917,31 @@ enabled Bombadil campaigns and live Quint/negative controls. Affected desktop/
 mobile storyboards were regenerated. Owned traffic was restored; all twelve
 Compose services are running and existing telemetry volumes/five stale pending
 entries were retained.
+
+## 2026-10-20 — rolling baseline comparison and passive chart frame
+
+The final release campaign passed four browser checks together (1.4 minutes):
+standalone frame contracts, existing record/native fresh capture comparison,
+and real OTel rolling record comparison with explicit rescale, initial/unavailable
+and stale source failures, exact displayed-result freeze, saved investigation
+linking, obsolete-response rejection and contained mobile bars. The 30-second
+Bombadil actor executed all required preview/select/start/freeze/link actions;
+Quint accepted the observed ledger and rejected all six mutations.
+
+Go suite/vet/race checks, 64 frontend tests and 100 Hegel window compatibility
+cases passed. A mobile screenshot exposed paired bars overflowing a nested frame;
+the common CSS fix now has an explicit geometric assertion. Actual source-backed
+frames 69a–e and standalone 70a–b were generated, with affected 57 frames refreshed.
+
+Final running query/packages image:
+`sha256:eca8602128015dc06f8b3eabfda0b342f9f0a720d303ef5e8f2f275f10a6185a`.
+All 12 services running, health OK, served assets and binary matched workspace
+build context; all five historical pending IDs retained (pending count 5 at final
+check). Traffic restored by the journey wrapper. Evidence is in
+`artifacts/live-measures-release.log`, `live-measures-final-health.json` and
+`artifacts/live-comparison/56403185c9/` (including the observed ledger and actor
+trace). No data volumes or stream entries were reset.
+
+Live scope is record count over equal-duration windows up to two hours, using
+bounded polling and expiring process-local snapshots until frozen. Native live
+metric comparisons and SSE measure refresh remain future work.

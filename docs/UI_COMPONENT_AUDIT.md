@@ -1,5 +1,9 @@
 # Whole-app display component audit
 
+Current follow-up: passive chart frame and rolling **record-count** baseline
+comparison are implemented; see [the live comparison contract](LIVE_COMPARISON.md).
+Native live metrics and broader chart adoption remain planned.
+
 Reviewed 2026-10-20. This is a source/design audit, not an implementation claim
 or a new live browser validation campaign. It covers Explore, Services,
 Operations, Measurements, Definitions, and saved investigations. Sources include

@@ -133,3 +133,6 @@ goo-facet-list [aria-pressed=true]{border-color:var(--accent,#79ddc6);background
  .attribute-count {padding-bottom:0}
 }
 goo-facet-list .distribution-label:disabled{opacity:1;color:var(--ink,#e3e9f3)}
+
+/* Paired charts can nest in narrower frames; table cells retain their own minima. */
+.comparison-pair .comparison-bar-cell{min-width:0}

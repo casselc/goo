@@ -468,7 +468,7 @@ Declared services: `TestHegelDeclaredCatalogIsolation` generates counts and OTel
 namespace presence/value cases while checking independent declaration order,
 unchanged evidence and retained multiple bindings. Journey 61 writes
 `GOO_DECLARED_LEDGER` for `TestQuintDeclaredServicesLive`, replaying actual absence,
-fixed-question exploration and empty capture with five rejecting mutations,
+fixed-question exploration and empty capture with six rejecting mutations,
 including a changed namespace in the stored question.
 `declared-services.ts` explores declaration disclosures and catalog/service
 transitions while checking no invented telemetry, graph edges or observed widgets.
@@ -478,7 +478,7 @@ identities and missing/empty/literal namespaces, checking ownership SQL and deta
 question custody. Journey 62 writes `GOO_EDGE_LEDGER` for
 `TestQuintReportedEdgeLive`: actual duplicate/ambiguous/out-of-window parent data,
 full totals beyond the record page, namespace-scoped ownership, narrowed errors
-and stored investigation selectors are replayed with five rejecting mutations.
+and stored investigation selectors are replayed with six rejecting mutations.
 `GOO_EDGE_BOMBADIL=1` explores the staged edge, reruns and error filters while
 checking exact parent/child namespace preservation and page containment. The
 journey separately checks a 390-pixel mobile viewport.
@@ -492,5 +492,16 @@ values, zero/absence, keyboard disclosure and mobile geometry. Application
 journeys 35/45/52/54/58/59/62 retain their observed Quint traces and rejecting
 mutations. `service-dashboard.ts` now checks rendered quantile values/positions
 against the supplied summary and explores native widget/latency disclosures.
-SSE/tailer and baseline-vs-live requirements in the component audit remain design;
-these tests do not establish streaming delivery, gap recovery or scroll-follow.
+These passive-display checks do not establish streaming delivery, gap recovery or
+scroll-follow. The separate tail journey and rolling record comparison below
+cover their own application adapters. Native live measure comparisons remain planned.
+
+Live baseline comparison: `go test -run TestHegelRecordComparisonWindowCompatibility`
+generates equal-duration shifted windows and incompatible environment cases.
+Journey 69 writes an actual OTel-backed ledger; set `GOO_LIVE_COMPARISON_LEDGER`
+and run `go test -run TestQuintLiveComparisonLedger` to replay it with six
+rejecting controls. Run the actual preview/selection/start/freeze/link actor with:
+
+```sh
+GOO_LIVE_COMPARISON_BOMBADIL=1 bash scripts/run_journeys.sh journeys/live-comparison.spec.js
+```

@@ -423,3 +423,9 @@ bounded retention, pause/resume, follow-scroll and explicit reconnect gaps.
 Reusable [trace waterfalls](docs/UI_WATERFALL.md) and
 [count-time bars](docs/UI_TIME_BARS.md) support the same framework-neutral display
 contracts; charts and tails retain their separate source semantics.
+
+Saved record questions also support an explicit [rolling record-count comparison](docs/LIVE_COMPARISON.md)
+against linked frozen evidence. Both sides share a stable axis; source failures
+retain a stale result, and freezing saves the displayed snapshot without another
+telemetry read. The passive [chart frame](docs/UI_CHART_FRAME.md) preserves native
+caller content and focus across window/state metadata updates.

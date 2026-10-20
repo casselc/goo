@@ -366,3 +366,12 @@ Durable replay/ingestion cursors, trace tails and baseline-versus-live measures
 remain planned. Summary property updates currently rerender inner
 DOM and reset disclosures; log-tail row patches, bounded retention and explicit gaps now live in the app
 adapter. Snapshot value components still reset disclosure state on data updates.
+
+## Rolling comparison scope
+
+Live baseline comparison currently displays record counts for saved span/log
+questions with windows of at most two hours. Native metrics and duration/status
+charts keep their existing fixed comparison flow. Refresh uses bounded polling;
+only log tail currently uses SSE. Live snapshots expire after two minutes and
+are process-local until explicitly frozen. Production authentication/session
+isolation and durable live workspaces remain future work. See LIVE_COMPARISON.md.

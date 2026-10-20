@@ -543,3 +543,14 @@ Implemented bounded recent-log SSE observations, explicit gaps, retention and
 inspection pause. Reusable waterfalls/count-time plots are adopted in existing
 flows. Next: shared plot frames/detail panels and carefully scoped live measure
 comparison against a fixed baseline; tail rows remain outside measure totals.
+
+### Rolling baseline comparison slice (implemented 2026-10-20)
+
+Saved record questions can explicitly refresh full-population counts beside a
+frozen baseline, preserve their common axis, expose stale source reads, and freeze
+the displayed server snapshot without rereading telemetry. Shared passive chart
+frame supports SSR/native content and SPA metadata updates. Journey69 covers
+actual OTel data, explicit rescale, stale retention, exact snapshot freeze and
+old-generation disposal; standalone journey70 covers the component contract.
+Live duration/status/native-metric charts and SSE measure refresh remain planned.
+See LIVE_COMPARISON.md and VALIDATION.md for scope and execution evidence.
