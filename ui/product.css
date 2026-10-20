@@ -1115,3 +1115,16 @@ td details {
 /* Keep comparison columns readable; narrow screens scroll inside the result. */
 .comparison-breakdown table { min-width: 58rem; }
 .evidence-comparison-result > .scroll > table { min-width: 32rem; }
+
+.service-dashboard { margin-block: 1.2rem; }
+.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,28rem),1fr)); gap: 1rem; }
+.dashboard-widget { min-width: 0; border: 1px solid var(--border,#344052); border-radius: .6rem; padding: 1rem; }
+.dashboard-widget h5 { margin-top: 0; font-size: 1rem; }
+.dashboard-widget .scroll { max-height: 24rem; overflow: auto; }
+.dashboard-widget table { min-width: 28rem; }
+.dashboard-widget .time-bars { height: 6rem; gap: 1px; }
+.dashboard-widget .time-bar { display: block; min-width: 0; }
+.dashboard-declarations { margin-block: 1rem; }
+.distributed-nodes { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: 1rem; }
+.distributed-view table { min-width: 36rem; }
+.dashboard-widget[data-state="unavailable"] { border-color: #b58a45; }

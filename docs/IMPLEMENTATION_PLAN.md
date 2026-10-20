@@ -44,6 +44,20 @@ clarifies capture/reuse semantics and preserves incident bounds when Services
 opens metric discovery. Broader navigation changes remain proposed. Keep current routes and typed kernels during the change;
 catalog/navigation migrations follow only after equivalent workflows exist.
 
+## Service overview delivery and next product slices
+
+The [automatic service dashboard slice](SERVICE_DASHBOARDS.md) implements a pure
+Go planner, bounded typed widgets, matching declaration revisions and a local
+distributed relationship table. Next priorities from the whole-product review:
+
+1. Enrich application-contract navigation without silently replacing generic
+   span grain with operation/lifecycle outcome policy.
+2. Add declared-only catalog membership and explicit service-namespace selection.
+3. Extend distributed exploration with exact edge-population selectors and
+   separately typed async links before a graphical topology view.
+4. Unify investigation outlines and broader definition entry points; a frozen
+   whole-dashboard artifact needs its own explicit custody contract.
+
 ## Earlier plan and milestone history
 
 Use the [architecture/process diagrams](ARCHITECTURE_DIAGRAMS.md) to connect build,
@@ -472,7 +486,16 @@ lead to a source-free comparison. Lifecycle comparisons remain unsupported.
 
 [Captured group comparisons](COMPARISON_BREAKDOWNS.md) reuse full stored
 aggregates and open focused questions. New dimensions require explicit recapture.
-[Whole-product review](WHOLE_PRODUCT_REVIEW.md) proposes automatic service
-and distributed-service dashboards within Services, derived from observed inventory
-and explicitly matched manifests/packages. Dashboard recommendations remain planned;
-observed, declared and executed-supported evidence are distinct.
+[Whole-product review](WHOLE_PRODUCT_REVIEW.md) guides automatic service
+overviews and distributed relationships within Services. The first bounded slice
+is implemented; remaining graphical topology and broader dashboard recommendations
+are planned. Observed, declared and executed-supported evidence remain distinct.
+
+## Automatic service overviews
+
+[Service dashboards](SERVICE_DASHBOARDS.md) now derive bounded typed widgets
+from observed signals, convention keys and native instruments. Matching registry
+contracts retain declared revision IDs. Services also offers a local distributed
+view of resolved parent relationships and diagnostics, with fixed-scope handoffs
+into questions and immutable investigation evidence. Async/declaration topology,
+whole-dashboard snapshots and declared-only catalog entries remain future work.

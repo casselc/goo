@@ -228,3 +228,12 @@ causal diagnosis, universal SLO/alert creation, generalized whole-dashboard
 snapshot persistence, statistical sampling correction, complete distributed
 transaction reconstruction and arbitrary manifest topology schemas are separate
 features. They should not block useful automatically composed defaults now.
+
+## Implementation follow-through
+
+The first [service dashboard slice](SERVICE_DASHBOARDS.md) now implements the pure
+Go planner, bounded automatic record/native widgets, explicit matching contract
+revision metadata, partial-state loading and a source-free distributed relationship
+table within Services. The review above remains the design snapshot. Full graphical
+topology, declared-only catalog membership, async/declaration edges, definition
+route consolidation and whole-dashboard persistence remain proposed.

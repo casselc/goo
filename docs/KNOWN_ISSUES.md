@@ -328,8 +328,10 @@ Lifecycle question cards do not offer this comparison action.
 [Stored one-field group comparisons](COMPARISON_BREAKDOWNS.md) now reuse complete
 aggregates. Numeric/two-field comparisons and arbitrary regrouping of old evidence
 remain unsupported; new dimensions require explicit source recapture. Automatic
-service/distributed dashboards are [designed](WHOLE_PRODUCT_REVIEW.md), not yet
-implemented. Existing Services catalog/detail remains the current entry point.
+[service overviews and a distributed relationship table](SERVICE_DASHBOARDS.md)
+now execute bounded typed widgets within Services. Declared-only catalog entries,
+namespace disambiguation, graphical topology, async/declaration edges and complete
+dashboard snapshots remain future work.
 
 Breakdown ranking currently uses absolute population-share change. A group with
 large latency/error change and little share movement may rank later; alternate

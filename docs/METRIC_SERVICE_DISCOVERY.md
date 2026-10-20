@@ -66,3 +66,7 @@ and proves the exclusive end is rejected by source validation. quint-go validate
 the live journey ledger and rejects seven count, scope, identity, edge and read
 mutations. Bombadil explores discovery → service → preview → local return.
 See [VALIDATION.md](../VALIDATION.md) for actual runs.
+
+[Automatic service dashboards](SERVICE_DASHBOARDS.md) now evaluate at most two
+supported discovered instruments per overview. All other instruments stay in
+the discovery inventory; kernels still withhold invalid identity/interval results.

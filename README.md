@@ -11,6 +11,10 @@ sets the next consolidation priorities; [shared scope and checked transforms](do
 now connect recipe and follow-up planning.
 [One Services catalog](docs/UNIFIED_SERVICE_CATALOG.md) now connects the existing
 span, log and native metric discovery paths through one searchable entry.
+[Automatic service overviews](docs/SERVICE_DASHBOARDS.md) compose span/log activity,
+duration/status breakdowns and supported native instruments. A distributed view
+shows resolved parent relationships and keeps uncertain boundaries explicit.
+Each widget opens a fixed question or an explicit evidence capture.
 [Service browsing](docs/SERVICE_BROWSING.md) connects observed signals, operations,
 OTel attribute suggestions and native instruments through fixed-window questions.
 [All-signal discovery](docs/METRIC_SERVICE_DISCOVERY.md) includes metric-only
@@ -374,7 +378,16 @@ then save the comparison as a finding in the investigation.
 
 [Captured group comparisons](docs/COMPARISON_BREAKDOWNS.md) reuse full stored
 aggregates and open focused questions. New dimensions require explicit recapture.
-[Whole-product review](docs/WHOLE_PRODUCT_REVIEW.md) proposes automatic service
-and distributed-service dashboards within Services, derived from observed inventory
-and explicitly matched manifests/packages. Dashboard recommendations remain planned;
-observed, declared and executed-supported evidence are distinct.
+[Whole-product review](docs/WHOLE_PRODUCT_REVIEW.md) guides automatic service
+overviews and distributed relationships within Services. The first bounded slice
+is implemented; remaining graphical topology and broader dashboard recommendations
+are planned. Observed, declared and executed-supported evidence remain distinct.
+
+## Automatic service overviews
+
+[Service dashboards](docs/SERVICE_DASHBOARDS.md) now derive bounded typed widgets
+from observed signals, convention keys and native instruments. Matching registry
+contracts retain declared revision IDs. Services also offers a local distributed
+view of resolved parent relationships and diagnostics, with fixed-scope handoffs
+into questions and immutable investigation evidence. Async/declaration topology,
+whole-dashboard snapshots and declared-only catalog entries remain future work.

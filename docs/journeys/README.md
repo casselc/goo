@@ -995,3 +995,18 @@ Frames: 58a explicit recapture, 58b full population breakdown, 58c shared mobile
 - [58a — explicit breakdown recapture](screenshots/58a-explicit-breakdown-recapture.png)
 - [58b — complete route populations](screenshots/58b-complete-route-change.png)
 - [58c — frozen mobile finding](screenshots/58c-shared-mobile-breakdown.png)
+
+## 59 — Automatic service overview and distributed relationships
+
+Executable: `journeys/service-dashboards.spec.js`. Ordinary OTel spans, logs and
+native gauges produce manifest-free service widgets and a resolved parent edge.
+Switch to the distributed view without a read, open a node in the same scope,
+stage its widget question, capture it in an immutable revision and reopen in a
+fresh browser. An independent log-source failure retains span results. Registry
+declarations remain separate from observed data. Frames 59a–d show relationships,
+automatic widgets, mobile layout and partial-source availability.
+
+- [59a — reported distributed relationships](screenshots/59a-distributed-reported-relationships.png)
+- [59b — automatic service widgets](screenshots/59b-automatic-service-widgets.png)
+- [59c — mobile service overview](screenshots/59c-mobile-service-overview.png)
+- [59d — independent partial availability](screenshots/59d-partial-source-availability.png)

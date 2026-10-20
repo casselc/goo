@@ -5,6 +5,79 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Automatic service overviews and distributed relationships (2026-10-20)
+
+[Service dashboards](docs/SERVICE_DASHBOARDS.md) now use a pure Go planner over
+supplied observed metadata plus matching server-registry declarations. Existing
+record/native evaluators execute bounded widgets with two concurrent requests.
+The Services distributed table reuses resolved parent evidence without a new
+source read and labels child-span drilldown as a wider population. Widget questions,
+explicit captures and shared revisions reuse existing investigation contracts.
+
+Local checks passed: full root Go suite and vet (`dashboard-final-go.log`,
+`dashboard-final-vet.log`), pure planning/registry HTTP checks, **48 frontend
+tests** (`dashboard-final-node.log`), **100 requested Hegel dashboard planning
+cases** and **60 saved-comparison state/swarm scenarios of 15 steps**
+(`dashboard-hegel-final.log`), verification vet, Python server syntax compilation
+and Quint model typecheck. Planning properties check deterministic order,
+capability gating, exact scope/service retention and input detachment. Concrete
+native tests reject mismatched units/bindings; unsupported temporality/kinds fail.
+
+The first live campaign passed metric-only browsing but exposed mobile activity
+bar overflow and a new test fixture without the kernel-required service instance
+identity. The chart now uses at most 60 default intervals with shrinking bars and
+no bar for zero-count intervals; the supported-native fixture supplies identity.
+The older missing-identity fixture still exercises an unavailable widget rather
+than weakening kernel validation. Instrument preview selectors now target the
+instrument inventory rather than matching a similarly titled automatic widget.
+The deployment ran out of disk during recreation; pruning unused Docker build
+cache with the workspace Docker configuration restored space, without deleting
+volumes or stream entries. Recreation completed with all services running.
+
+The follow-up regression campaign passed inventory/package handoff, metric-only
+browsing and full service-browser scope/cancellation checks (**3 passed**); journey
+59's product checks and Quint replay passed, but its actor startup failed by
+reading the fixture environment after navigation changed the URL hash
+(`dashboard-final-journeys.log`). Correcting the actor to retain that environment
+also allows it to inspect actual widget questions and native detail disclosures.
+A filtered-list focus regression was fixed by focusing a real service-row action
+or the search field, rather than a view-switch button. The new capture assertion
+now checks the existing linked-revision status rather than a generic save label.
+
+Final focused journey: **1 passed, 1.4 minutes**
+(`artifacts/dashboard-final-focused.log`), with the three existing regressions
+already passed on the same build. Real OTLP fixtures cover manifest-free spans,
+logs and gauges, resolved and unresolved parents, exact widget question handoff,
+immutable Run and capture, source-free fresh-browser reopening, partial log-source
+failure and rejection of a late widget response after environment change. Registry
+planning also preserves declared-only bindings without inventing observed data.
+Frames 31, 46–48 were refreshed; new 59a–d show distributed relationships,
+automatic widgets, native values/mobile layout and partial availability.
+
+Observed ledger: `artifacts/service-dashboards/1792459008491/ledger.json`.
+Quint replay passed with **eight rejecting mutations**, including invented edges,
+changed unit/scope/selector, extra reads and an invalid action sequence. The final
+**30-second Bombadil campaign** passed with no violations: 21 view switches,
+17 service opens, 28 widget-question inspections, 18 native disclosure toggles
+and 16 local returns. The actor validates scope, containment, reported edges and
+absence of fabricated totals in failed widgets.
+
+Final image:
+`sha256:badca4da5a34205ba719c5db679119052ad578ba6cdac4ca060901e847f37bef`
+(`dashboard-native-image.log`, `dashboard-native-up.log`). Final health, served
+asset hashes and Go binary hash passed, with all **12 services running** and all
+five pre-existing stale Redis pending entries preserved. There were six pending
+entries at the health observation with normal traffic restored
+(`artifacts/dashboard-final-health.json`); no stream entries or volumes were reset.
+
+Limits: no whole-dashboard custody artifact, graphical/async/declared topology,
+automatic SLOs, authoritative fleet membership or declared-only catalog route.
+Application contracts retain declared revision IDs rather than claiming runtime
+conformance. Record-service identity remains environment/service-name scoped;
+native evaluations retain full OTel stream identities. Unsupported native source
+identity/intervals stay unavailable/unknown. See the updated whole-product review
+and known issues for the remaining roadmap.
+
 ## Captured attribute breakdowns and whole-product review (2026-10-20)
 
 [Captured breakdowns](docs/COMPARISON_BREAKDOWNS.md) compare complete one-field

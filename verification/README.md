@@ -446,3 +446,12 @@ order independence and immutable missing/empty identities. Live journey 58 write
 `GOO_BREAKDOWN_LEDGER` for `TestQuintBreakdownLive`, replaying source-read boundaries
 and rejecting six corrupted observations. Bombadil spec `comparison-breakdown.ts`
 checks frozen group rows, focused question links and receipt disclosure actions.
+
+Service dashboards: `TestHegelDashboardPlanning` checks pure deterministic planning,
+capability gating, scope/selector preservation and input detachment. Journey 59
+writes `GOO_DASHBOARD_LEDGER` for `TestQuintServiceDashboardLive`, using observed
+query contracts, relationship identities and read-intent boundaries with eight
+rejecting mutations. `service-dashboard.ts` explores list/distributed switching, service loading,
+widget question inspection and native disclosures with scope, no invented-edge,
+no fabricated failed-widget totals and containment invariants. Existing service
+browser journeys retain stale-scope cancellation and log/metric-only coverage.

@@ -209,6 +209,7 @@ func serveHTTP(args []string) error {
 		json.NewEncoder(w).Encode(result)
 	})
 	registerInvestigations(mux, plans, client, *captureDir)
+	registerDashboards(mux, ordered)
 	registerExploration(mux, client)
 	registerCaptures(mux, client, *captureDir)
 	registerWorkbench(mux, *captureDir)

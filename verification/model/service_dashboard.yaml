@@ -1,0 +1,10 @@
+spec: service_dashboard.qnt
+module: service_dashboard
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  switch_view: {expect: 'coherent == {{.obs.coherent}}'}
+  inspect_question: {expect: 'coherent == {{.obs.coherent}}'}
+  stage_question: {expect: 'coherent == {{.obs.coherent}}'}
+  capture: {expect: 'coherent == {{.obs.coherent}}'}
+  reopen: {expect: 'coherent == {{.obs.coherent}}'}

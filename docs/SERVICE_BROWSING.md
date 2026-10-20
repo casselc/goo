@@ -1,6 +1,7 @@
 > Current entry: [One Services catalog](UNIFIED_SERVICE_CATALOG.md). The earlier
 > separate span/all-signal starting controls have been consolidated. Service detail
-> now also reads operation inventory, for four independent reads.
+> now reads four metadata sources, followed by bounded
+> [automatic widget execution](SERVICE_DASHBOARDS.md).
 
 # Browse a service, then follow a question
 
@@ -93,3 +94,11 @@ and alias choices. Quint validates the actual journey ledger with rejecting scop
 selector, return-read and preview-read mutations. Bombadil follows the service →
 question → return path and checks fixed scope, unsupported actions and overflow.
 Actual successful checks belong in [VALIDATION.md](../VALIDATION.md).
+
+## Automatic overview extension
+
+[Service dashboards](SERVICE_DASHBOARDS.md) now follow the four independent
+metadata reads with a pure Go plan and bounded widget execution. Source failures
+remain local/partial and fixed-scope cancellation covers the widget phase.
+Returning from a distributed node preserves its view; returning to a filtered
+empty service list focuses the catalog search, not the view-switch buttons.

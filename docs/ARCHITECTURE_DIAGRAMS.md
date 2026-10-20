@@ -1102,7 +1102,16 @@ unchanged. Scope, source read and custody times are displayed separately.
 
 [Captured group comparisons](COMPARISON_BREAKDOWNS.md) reuse full stored
 aggregates and open focused questions. New dimensions require explicit recapture.
-[Whole-product review](WHOLE_PRODUCT_REVIEW.md) proposes automatic service
-and distributed-service dashboards within Services, derived from observed inventory
-and explicitly matched manifests/packages. Dashboard recommendations remain planned;
-observed, declared and executed-supported evidence are distinct.
+[Whole-product review](WHOLE_PRODUCT_REVIEW.md) guides automatic service
+overviews and distributed relationships within Services. The first bounded slice
+is implemented; remaining graphical topology and broader dashboard recommendations
+are planned. Observed, declared and executed-supported evidence remain distinct.
+
+## Automatic service overviews
+
+[Service dashboards](SERVICE_DASHBOARDS.md) now derive bounded typed widgets
+from observed signals, convention keys and native instruments. Matching registry
+contracts retain declared revision IDs. Services also offers a local distributed
+view of resolved parent relationships and diagnostics, with fixed-scope handoffs
+into questions and immutable investigation evidence. Async/declaration topology,
+whole-dashboard snapshots and declared-only catalog entries remain future work.

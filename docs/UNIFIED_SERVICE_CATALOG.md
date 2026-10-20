@@ -69,3 +69,7 @@ and mobile catalog. Hegel invokes the actual JavaScript catalog planner with
 count/grain, identity and scope mutations. Migrated inventory, captures, core,
 metric-only and workbench journeys preserve the existing use cases through this
 single entry. See [VALIDATION.md](../VALIDATION.md) for actual acceptance evidence.
+
+[Automatic service overviews](SERVICE_DASHBOARDS.md) extend this catalog with
+bounded typed widgets and a local Distributed view. Resolved parent relationships
+retain their observed child-record grain; declarations do not create graph edges.
