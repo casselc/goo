@@ -1267,3 +1267,13 @@ td details {
 .population-child:has(.population-child) > :is(button,.evidence-note) { display:none }
 .population-child .recent-canvas-heading { display:none }
 .service-timeline .controls [aria-pressed=true] { color:var(--accent);border-color:var(--accent) }
+
+/* Staged intent stays distinct from applied population measurements. */
+.population-selection {position:sticky;top:2.75rem;z-index:3;background:var(--surface,#171d28);border:1px solid var(--border, #ccd4df);border-radius:6px;padding:.5rem .65rem;margin:.4rem 0;overflow-wrap:anywhere}
+.population-selection p {margin:0 0 .35rem;font-size:.8rem}
+.population-selection .selection-clause {font-size:.8rem;margin:.2rem 0}
+.population-selection .controls {margin-top:.4rem;gap:.35rem}
+.recent-canvas .population-facets goo-facet-list > .distribution-row:has(.facet-exclude) {grid-template-columns:1.6rem minmax(0,1fr) minmax(2rem,1fr) auto}
+.facet-exclude {padding:0 .35rem;min-height:1.5rem;font-size:.85rem}
+
+.population-selection .controls > button {width:auto;flex:0 1 auto}

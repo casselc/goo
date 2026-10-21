@@ -30,10 +30,11 @@ A log-only environment selects the nonempty log page automatically. Zero records
 remain absence of captured data, not a health assessment.
 
 Chart interval selection previews exact UTC bounds without reading telemetry.
-Apply reruns the configured populations. A facet value explicitly filters and
-reruns only that signal's selector; the companion's independent selector is
-preserved. The existing breakdown, baseline and comparison adapters remain the
-semantic authority. This slice does not add freehand brushing or anomaly scoring.
+Apply reruns the configured populations. Facet values now [stage Include/Exclude
+intent](FACET_SELECTION.md) without reading. Apply facet selection explicitly
+reads the populations with only that signal's selector changed; the companion's
+independent selector is preserved. Go remains the measurement authority. Horizontal
+brushing and retained children are supported; automatic anomaly scoring is future work.
 
 View settings collect layout, columns, fixed-window rerun/staging, save and exact
 scope details. Live controls follow records in a collapsed disclosure. Opening
@@ -83,7 +84,7 @@ ingestion through ClickHouse before entering through the UI.
 1. Open Explore without source reads or subscriptions. Choose scope and run recent
    activity directly; verify one planning request and two exploration requests
    with identical fresh five-minute bounds.
-2. Switch loaded record pages locally. Select the API service facet and then a
+2. Switch loaded record pages locally. Stage the API service facet, explicitly Apply facet selection, then select a
    chart interval; verify the original selector, independent companion and
    source-free range preview.
 3. Change columns, save configuration, reopen staged and explicitly run recent

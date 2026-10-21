@@ -1,5 +1,8 @@
 # Known issues and gaps
 
+Recent activity supports [staged categorical selections](FACET_SELECTION.md). General predicate complements, automatic difference scoring and durable selection history remain future work.
+
+
 The [recent-entry canvas](RECENT_ACTIVITY.md) now includes
 [horizontal time brushing and bounded retained child populations](RANGE_DRILLDOWNS.md).
 Heatmap rectangle selection, record-selection trays, persistent branches,

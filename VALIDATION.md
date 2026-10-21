@@ -1,5 +1,50 @@
 # Validation record
 
+## Staged categorical populations (2026-10-21 UTC)
+
+Query/packages final image: `sha256:dc5d7e229dddf7135f10767416279932be32df9878933317291830ef8c5daba7`.
+The seven-journey regression batch passed on `ac12bc3f3922…`; the final tray
+visibility/mobile-action polish passed targeted journey 96 on this image,
+including a viewport assertion while browsing facets. The final documentation
+capture checks scroll position explicitly so sticky elements render correctly.
+All 12 services run with traffic restored. Served UI/server/binary hashes match
+the workspace; prior Redis pending IDs are preserved (15 pending at the check
+after traffic resumed), and OOM/OOM-kill counters are zero. Health evidence is in
+`artifacts/facet-selection-health.json`.
+
+- Root Go tests and all 29 frontend test files passed. Hegel checked 60 categorical
+  intent cases against Go compilation and reference matching, including missing,
+  empty and present-value exclusions; the existing immutable-view state/swarm
+  campaign also passed. UI construction preserves the original nested predicate
+  and independent companion, and rejects over-budget intent before Apply/Open.
+- Real OTLP journey 96 passed source-free Include/Exclude, Undo/Clear, retained
+  child staging/return, explicit two-record missing-or-empty reads, four-record
+  pinned baseline comparison, configuration save/reopen, and three-record
+  exclusion of west retaining missing/empty. The final build also passed pending
+  save protection and cross-field selection across an explicit breakdown read.
+  Desktop/mobile frames were regenerated from this running build.
+- Quint/quint-go accepted the observed categorical depth/read ledger and rejected
+  five controls: hidden preview read, hidden return read, changed companion
+  environment, lost selection predicate and incorrect return depth. It reuses
+  the retained-population model.
+- The final Bombadil campaign produced 627 records with zero violations. All five
+  custom actions executed and completed at the applied parent, depth zero, with
+  no viewport overflow or live tail. Exception/rejection invariants passed.
+- Regression journeys 90–95 passed alongside 96 in the seven-test release batch,
+  covering saved populations, comparisons, live tails, recent entry and retained
+  range drilldowns. Their affected documentation frames were regenerated.
+- Arbitrary complements, selection-versus-rest and automated difference scoring
+  remain proposed. The staged tray/Undo history are temporary intent; saved views
+  store typed questions and optional baseline configuration, not frozen evidence.
+
+Evidence: `artifacts/facet-selection-{go,unit,hegel,recheck,release,final,storyboards,image,final-image}.log`,
+`artifacts/facet-selection/*/{ledger.json,TestQuintFacetLedger.log,bombadil/trace.jsonl}`,
+and `artifacts/facet-selection-coverage.json`. The first draft browser run was
+interrupted to correct its navigation: pinning selects Compare, so the journey
+must explicitly return to Distribution before choosing facet values.
+See the [contract, process diagram and storyboards](docs/FACET_SELECTION.md).
+
+
 ## Time brushing and retained population drilldowns (2026-10-21 UTC)
 
 Deployment: query/packages use image

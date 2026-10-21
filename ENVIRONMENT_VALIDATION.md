@@ -1,5 +1,17 @@
 # Cloud baseline validation — 2026-10-16
 
+Categorical-selection deployment (2026-10-21 UTC): query/packages use image
+`sha256:dc5d7e229dddf7135f10767416279932be32df9878933317291830ef8c5daba7`.
+All 12 services run with traffic restored; served UI/server/binary hashes match
+the workspace and prior Redis pending IDs remain preserved (15 pending at check
+after traffic resumed). OOM/OOM-kill counters remain zero. Seven regression
+journeys passed on the preceding build; targeted journey 96 passed on this final
+sticky-tray build with Quint replay and Bombadil, followed by a documentation
+capture rerun with checked scroll positions. Evidence:
+`artifacts/facet-selection-{health,coverage}.json` and
+`artifacts/facet-selection-{release,final,storyboards}.log`.
+
+
 Time-brushing/retained-drilldown deployment (2026-10-21 UTC): query/packages use
 image `sha256:94e51837384f221a1cf0db8d532bb8af386946cff4de78ae615456a18eb6a15c`.
 All 12 services run with traffic restored, served assets/server/binary match the

@@ -1,5 +1,8 @@
 # Display component library
 
+Categorical selection intent and the compact tray are application-owned; existing passive facet rows receive optional Include/Exclude callbacks. See [facet contract](FACET_SELECTION.md).
+
+
 `goo-value-timeline[brush]` now emits display-only `goo-timeline-range` events
 (`start`, `preview`, `commit`, `cancel`); preview/commit carry decimal-string
 `fromNS`/`toNS` bounds inside the supplied domain. `touch-brush` explicitly enables

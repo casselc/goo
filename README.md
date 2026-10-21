@@ -1,5 +1,8 @@
 # goo — Grammar of Observability
 
+Staged categorical [facet selections](docs/FACET_SELECTION.md) add Include/Exclude, Undo/Clear and retained population drilldowns to recent activity.
+
+
 [Population exploration and saved views](docs/POPULATION_WORKSPACE.md) bring aligned charts and matching span/log pages to arbitrary cross-service selectors. Portable filters are retained; independent companion selectors are explicit. Saved views retain fixed queries, layout and columns, and reopen without source reads.
 
 [Show recent activity](docs/RECENT_ACTIVITY.md) opens aligned span/log exploration directly, with fresh fixed bounds, charts before records, local signal switching and desktop facets alongside compact inspection pages. Live updates remain explicit. The broader [recent-activity design](docs/LIVE_EXPLORATION_DESIGN.md) organizes the remaining selection, comparison and composable capture/reuse work.

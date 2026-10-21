@@ -1,5 +1,8 @@
 # Architecture
 
+[Categorical selection](FACET_SELECTION.md) constructs bounded typed predicates in the population adapter, then delegates validation/compilation and measurement to Go. Staging and child return are source-free.
+
+
 [Range drilldowns](RANGE_DRILLDOWNS.md) retain connected parent DOM/owners while
 staging an independently namespaced child population. Display components emit
 selection intent; the adapter projects checked fixed bounds without source reads.

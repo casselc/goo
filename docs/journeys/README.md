@@ -1335,3 +1335,16 @@ Quint/quint-go replays observed depth/read transitions with seven rejecting
 controls. Bombadil runs/stages/returns without an implicit subscription. Journey
 95 separately checks the synthetic server-rendered component reference, detached
 property updates and native point/keyboard compatibility without API calls.
+
+## 96. Stage categorical populations
+
+[Contract, sequence diagram and generated frames](../FACET_SELECTION.md).
+`journeys/facet-selection.spec.js` ingests real OTLP spans with missing, empty,
+west and east region attributes. Include/Exclude, Undo/Clear and child staging
+perform no source reads; explicit Apply/Run yields the expected populations.
+Back preserves the original baseline and draft; Compare uses Go kernels; saving
+and reopening restores typed configuration without reading. The journey also
+checks mobile layout and combining fields across an explicit breakdown read.
+Hegel checks construction against Go matching/compilation, Quint replays the
+observed depth/read ledger with five rejecting controls, and optional
+`GOO_FACET_BOMBADIL=1` exercises the categorical actor.

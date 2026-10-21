@@ -688,3 +688,10 @@ queries through Go compilation, including missing/empty predicates and parent
 nonmutation. The existing 60 × 15 saved-view state/swarm campaign checks reused
 immutable configuration behavior. `GOO_RANGE_BOMBADIL=1` executes explicit
 recent-run, stage and return actions with depth/containment/no-live invariants.
+
+Categorical population intent is checked by `TestHegelFacetSelection` (60 cases
+against Go compilation/reference matching). `TestQuintFacetLedger` consumes
+`GOO_FACET_LEDGER` from journey 96 and reuses `population_drilldown.yaml`, rejecting
+hidden preview/return reads, changed companion environment, lost predicate and
+incorrect return depth. Optional `GOO_FACET_BOMBADIL=1` runs
+`verification/bombadil/facet-selection.ts` over real ingested telemetry.

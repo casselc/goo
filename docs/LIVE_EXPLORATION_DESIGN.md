@@ -9,7 +9,9 @@ remain in [Population workspace](POPULATION_WORKSPACE.md) and
 [UI components](UI_COMPONENTS.md).
 
 Implementation follow-through: the first [recent-entry canvas slice](RECENT_ACTIVITY.md)
-provides the direct planner entry and compact fixed-result composition. This
+provides the direct planner entry and compact fixed-result composition.
+[Staged categorical selections](FACET_SELECTION.md) now supply Include/Exclude,
+grouped values, Undo/Clear, retained children and explicit Apply. This
 document retains the wider proposed experience. [Time brushing and bounded retained
 children](RANGE_DRILLDOWNS.md) now implement the first selection/navigation slice;
 rectangle selection, record trays and persistent branches remain subsequent work.
@@ -91,7 +93,7 @@ may start a source read from connection, expansion or property assignment.
 | --- | --- | --- |
 | Drag horizontally across a time chart | Pause motion; preview a UTC interval on all aligned plots | **Apply range** reads that fixed interval; **Cancel** restores the previous view without a read. Numeric UTC handles provide keyboard/touch alternatives. |
 | Drag a rectangle over a duration heatmap | Preview time × duration bounds and matching typed predicates | **Inspect population** runs the bounded query; bucket-edge inclusion and exact units must match Go semantics. Never estimate its population from pixels. |
-| Click a series, facet value or attribute | Show selection with Include / Exclude / Compare actions | Include or Exclude is an explicit read action with its predicate visible. Same-field multiselect proposes OR; across fields AND; preserve advanced existing trees. |
+| Click a series, facet value or attribute | Show selection with Include / Exclude / Compare actions | Facet Include/Exclude stages intent; Apply explicitly reads, or Open stages a retained child. Same-field values use OR; across fields AND; preserve advanced existing trees. Series/attribute adoption remains proposed. |
 | Toggle errors or a signal | Preview the precise supported selector or signal plan | Apply explicitly; unset/unknown statuses remain distinct. “Errors” cannot silently combine span status and log severity. |
 | Adjust a duration/value slider | Preview bounds, units and resulting predicate | Apply on confirmation, not every pointer movement. Pair with exact text inputs. Log-scale position is not a measurement transform. |
 | Click / check / Shift-select records | Pause tail, retain nodes, show a selection tray | Inspect one; bookmark several; open reported trace context; prepare a population from chosen attributes. Row range means visible rows only. |
@@ -182,10 +184,10 @@ where representable; annotations are optional enrichment, not entry requirements
 | Need | Existing basis | Missing bounded work |
 | --- | --- | --- |
 | One scope/mode bar | Question scope, evidence summary and workspace history | Consolidated owner state; compact draft/applied/live/paused indication. |
-| Linked time and value selection | Time range, time bars, value timeline, bucket heatmap | Shared brush preview/commit/cancel contract, rectangle selection and accessible equivalents. |
-| Compact facets and filters | Facet list, attributes, typed query AST | Include/exclude multiselect, visible AST grouping, apply batch and undo. |
+| Linked time and value selection | Time range, time bars, value timeline, bucket heatmap | Horizontal brush/UTC handles are delivered; rectangle selection and wider linked gestures remain. |
+| Compact facets and filters | Facet list, attributes, typed query AST | Categorical Include/Exclude, grouping, batch Apply and Undo are delivered; extend the intent contract to attribute/series entry points. |
 | Record selection and field chooser | Native table, typed field values, bounded tail | Stable owner selection, local selection tray, arbitrary supported columns and compact reorder UI. |
-| Inspector and scope continuation | Existing inspector shell, trace waterfall and workspace history | Parent/child state retention and explicit widening proposals. |
+| Inspector and scope continuation | Existing inspector shell, trace waterfall and workspace history | Bounded population parent/child retention is delivered; inspector-wide retention and explicit widening proposals remain. |
 | Comparable populations | Shared comparison display, distributions and live comparison | Adjacent scope headers and optional compatible overlays; exact complement and difference ranking need Go support. |
 | Reuse and evidence | Saved views, packages, capture and documents adapters | One action vocabulary and staged multi-intent capture with partial results. |
 

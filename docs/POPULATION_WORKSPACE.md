@@ -88,7 +88,10 @@ facet component ranks full-population counts, recorded error percentages and
 Go-computed duration measures. Local value search and ranking do not read sources.
 Field discovery is bounded; an undiscovered attribute is not proof of absence.
 
-Clicking a value intersects the existing predicate tree, preserving OR branches,
+In recent activity, [Include/Exclude stages categorical intent](FACET_SELECTION.md)
+without reading; explicit Apply or Open controls the next step. Legacy population
+views retain their immediate value-filter action. Applying intersects the existing
+predicate tree, preserving OR branches,
 missing keys and present empty strings. Charts and records for that signal rerun
 together; the other signal retains its independent selector. Reset value filters
 returns to the workspace's original selector at the current time bounds.

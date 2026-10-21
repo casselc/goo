@@ -1,5 +1,8 @@
 # Implementation plan
 
+Recent exploration now includes [staged categorical populations](FACET_SELECTION.md); arbitrary complements and automated population-difference ranking remain proposed.
+
+
 ## Next whole-product interaction priority
 
 The [recent-activity design pass](LIVE_EXPLORATION_DESIGN.md) sets the next sequence:
