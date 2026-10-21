@@ -2,6 +2,8 @@
 
 Reviewed 2026-10-20 against the implemented product at `068389f`. This is a source/design audit with inspection of existing recorded screenshots, not a new live-browser validation campaign. Recommendations below are **proposed**. The existing component contracts and their actual checks remain in [UI_COMPONENTS.md](UI_COMPONENTS.md) and [VALIDATION.md](../VALIDATION.md).
 
+Implementation update: the first [evidence-summary adoption](EVIDENCE_SUMMARIES.md) now covers native capture and linked investigation surfaces. Remaining priorities below stay proposed.
+
 ## Main finding
 
 Goo now has enough plot primitives to express several useful investigations. The next broad improvement should make **scope, evidence, selection and continuation** consistent around those plots. Extracting another generic card would preserve the current accumulation of paragraphs and controls. A compact evidence-summary primitive, adopted in multiple real surfaces, would instead make it easier to answer: **What am I looking at, what population does it describe, and what will this action do?**

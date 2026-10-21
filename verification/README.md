@@ -586,3 +586,7 @@ mobile layout. See [native heatmap contract](../docs/NATIVE_HEATMAPS.md).
 ## Explicit native histogram time buckets
 
 `TestHegelHistogramTimeAlignedPopulation` and `TestHegelHistogramTimeStateSwarm` use an independent whole-export oracle, including local gaps, repairs, zeros, layout/epoch diagnostics and crossing widths. `TestQuintHistogramTimeLive` consumes `GOO_HISTOGRAM_TIME_LEDGER` from journey81 and rejects nine corruptions spanning derived counts, unavailable values, width, display values, read counts and capture/reopen identity. Model: `model/histogram_time.qnt/.yaml`; optional browser actor: `verification/bombadil/histogram-time.ts`.
+
+## Evidence-summary observed trace
+
+`TestQuintEvidenceSummaryLive` consumes `GOO_EVIDENCE_SUMMARY_LEDGER` from journey82, validating capture state/counts, separately labelled source/storage clocks, local read counts, linked metadata and immutable reopening. Eight corruptions must fail. Model: `model/evidence_summary.qnt/.yaml`; browser actor: `verification/bombadil/evidence-summary.ts`. No new measurement evaluator or semantic property was introduced by this display extraction.

@@ -518,3 +518,7 @@ Journey 77’s saved-capture actor now opens the histogram grid, switches layout
 ## Fixed-time histogram actor
 
 `GOO_HISTOGRAM_TIME_BOMBADIL=1` enables journey81’s saved-capture actor (`verification/bombadil/histogram-time.ts`). It switches raw/fixed-time views, inspects observed zero and unavailable changed-layout buckets, and checks supplied point states/bounds/values plus overflow and default exception invariants. Local actions do not run telemetry queries.
+
+## Shared evidence summaries
+
+`GOO_EVIDENCE_SUMMARY_BOMBADIL=1` enables journey82’s saved-capture/investigation actor (`verification/bombadil/evidence-summary.ts`): open capture, inspect labelled clocks, open linked investigation, disclose exact metadata. Invariants check passive content, frozen mode/state, overflow and default exceptions.

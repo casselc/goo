@@ -1,0 +1,9 @@
+spec: evidence_summary.qnt
+module: evidence_summary
+constants: {INITIAL: 0}
+invariants: [safety]
+actions:
+  open: {expect: 'coherent == {{.obs.coherent}}'}
+  inspect: {expect: 'coherent == {{.obs.coherent}}'}
+  linked: {expect: 'coherent == {{.obs.coherent}}'}
+  reopen: {expect: 'coherent == {{.obs.coherent}}'}

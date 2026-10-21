@@ -324,3 +324,7 @@ See `/ui-components` and journeys77/78.
 ## Fixed-time native histogram composition
 
 The measurement adapter reuses `goo-chart-frame`, `goo-value-timeline` and `goo-bucket-heatmap` for explicit Go-evaluated time buckets and retained export intervals. The view switch is local; source/custody semantics remain in the application and Go kernel. See [time buckets](HISTOGRAM_TIME_BUCKETS.md) and the [current whole-product sweep](WHOLE_PRODUCT_COMPONENT_SWEEP.md).
+
+## Evidence summary
+
+`goo-evidence-summary` is a passive bounded display snapshot with native exact-detail disclosure, SSR JSON and detached/pre-definition properties. `GooEvidenceScope` is its application presenter for captured measurements. [Contract, adoption and storyboards](EVIDENCE_SUMMARIES.md).

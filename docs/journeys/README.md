@@ -1271,3 +1271,7 @@ Journey 77 now covers layout switching, recorded zero, unknown selection and mob
 ## 81 · Explicit histogram time buckets
 
 `journeys/histogram-time.spec.js` injects real OTLP exports, validates an explicit width, merges complete intervals, withholds crossings/layout changes, distinguishes zero/unknown, switches views without reads and reopens captured evidence. [Storyboard and frames](../HISTOGRAM_TIME_BUCKETS.md). Screenshots: `81a-go-time-bucket-aggregation.png` and `81b-mobile-time-bucket-unknown.png`.
+
+## 82/83 · Shared evidence summaries
+
+Journey82 exercises real OTLP capture → exact evidence summary → linked investigation, preserving unsaved findings and retained receipt identity without source reads. Journey83 covers synthetic standalone SSR/properties/focus and mobile layout. [Storyboard and frames](../EVIDENCE_SUMMARIES.md).

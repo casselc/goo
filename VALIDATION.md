@@ -2742,3 +2742,75 @@ Limits are explicit: 200 time buckets per stream, 20,000 total output buckets an
 No splitting, interpolation, fleet aggregation, normalized-rate heatmap or live
 histogram subscription was added. Next: implement the sweep's evidence-summary
 primitive in two real workflows before broadening its API.
+
+## 2026-10-21 — shared evidence-summary primitive
+
+Implemented passive `goo-evidence-summary` with bounded supplied facts, separate
+mode/result state, a visible completeness/independent-read caveat and native
+exact-detail disclosure. The application presenter `GooEvidenceScope` interprets
+typed measurement receipts; the component owns no reads, actions, subscriptions,
+clock inference, navigation or persistence. Adopted in the full measurement capture,
+linked native question evidence and a separate native capture card in notes.
+Repeated capture scope/count/read paragraphs are suppressed where the summary
+owns them; operational refresh/error/attachment status remains adapter-owned.
+
+The presenter preserves all four namespace selector states, exact source counts,
+question bounds, declared grain, binding and revision identity. Source read and
+stored custody clocks are separately labelled. Missing receipt-only basis/read
+metadata remains unavailable; no full-result fetch or custody substitution fills
+it in. Full lifecycle results may additionally supply business evaluation and
+knowledge-cutoff clocks. Invalid snapshots fail closed and clear prior facts/mode.
+
+Completed validation:
+
+- All 25 frontend test files passed. New pure cases cover bounds/invalid data,
+  detached facts, mode/state independence, counts above JS safe integer range,
+  exact nanosecond bounds, namespace distinctions and missing source-read clocks.
+  Artifact: `artifacts/evidence-summary-frontend.log`.
+- Final browser campaign: five tests passed in 2.1m: standalone journey83, real
+  OTLP summary journey82, both linked-evidence journey51 cases (record and native),
+  and shared Measurements journey38. The first campaign additionally passed
+  histogram time-bucket journey81 with unchanged native semantics. Artifact:
+  `artifacts/evidence-summary-final-journeys.log`.
+- Standalone browser contracts cover pre-definition properties, SSR attributes,
+  detached getter isolation, safe text, invalid state clearing, native keyboard
+  disclosure, focus/open-state preservation during valid updates, no component
+  buttons/links/inputs and mobile overflow.
+- Real OTLP capture → linked investigation checks retain exact source/storage
+  clocks, source counts, matching-scope guidance and receipt-only limitations.
+  Local inspection preserves unsaved findings, performs no source POSTs and
+  leaves the saved capture unchanged. Desktop/mobile frames 82a/82b/82c and the
+  clearly synthetic frame 83 were generated from the browser and reviewed.
+- New observed Quint replay passed in 13.56s with eight rejecting corruptions:
+  evidence mode, clock roles/values, local reads, result state/count, linked read
+  metadata and immutable reopening. Actual ledger/log:
+  `artifacts/evidence-summary/637efe06fe`.
+- The saved-capture/investigation Bombadil actor completed 581 trace entries,
+  exercised all four required custom actions and passed passive-content,
+  supplied frozen mode/state, overflow, exception and completion properties.
+- Existing observed Measurements and linked-evidence Quint checks also passed;
+  actual ledgers/logs: `artifacts/measurements/b0c8860d` and
+  `artifacts/linked-evidence/1792543434585`.
+- The first campaign caught a test-driver retry that overwrote navigation IDs
+  after the initial hash changed. It was fixed by retaining IDs and making repeat
+  navigation idempotent; completion bounds were unchanged. The old native linked
+  test expected one source-read paragraph; it now checks the rendered definition
+  list's source-read and stored-custody values separately. Both final cases passed.
+- JavaScript syntax checks and `git diff --check` passed. No production Go evaluator
+  or storage schema changed; backend semantic/race and Hegel suites were not
+  repeated for this bounded presentation extraction. The actual capture paths
+  continue to validate/replay typed Go results through the observed trace tests.
+
+Updated README, architecture diagram, component/adoption contracts, whole-product
+sweep status, executable storyboards, known limits and verification/Bombadil docs.
+Final query/packages image:
+`sha256:881e6fb0920695b40d565eb075f5496a14d7ff4e10a95e6781cb289975ccd253`.
+Final health/served asset/server/binary hashes are recorded in
+`artifacts/evidence-summary-final-health.json`; all 12 services run and historical
+pending telemetry is preserved. The wrapper restored demo traffic. Unused build
+caches/dangling images were reclaimed without touching volumes.
+
+Current adoption is native captured evidence. Record/inventory summaries, service
+widgets, comparison sides and selected-item compositions remain explicit follow-up
+work. Next: reuse the evidence summary for service-widget evidence, with its own
+typed fixed/live display adapter and clocks.

@@ -1167,3 +1167,7 @@ The [native histogram heatmap design](NATIVE_HEATMAPS.md) diagrams the Go evalua
 ## Explicit time-bucket aggregation
 
 The [histogram time-bucket diagram](HISTOGRAM_TIME_BUCKETS.md) places whole-interval aggregation after the Go native evaluator and before shared passive display adapters. Width belongs to the immutable question, while raw/fixed-time switching uses retained results. The [whole-product component sweep](WHOLE_PRODUCT_COMPONENT_SWEEP.md) documents proposed evidence and investigation compositions.
+
+## Evidence presentation boundary
+
+The [evidence-summary diagram](EVIDENCE_SUMMARIES.md) shows full captures and existing receipt metadata flowing through application-owned presentation into the shared passive element. Clocks and scope interpretation stay in adapters; buttons and reads stay outside the component.

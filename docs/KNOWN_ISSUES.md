@@ -420,3 +420,7 @@ Native bucket grids display the latest 32 retained intervals and at most 64 buck
 ## Explicit native histogram time-bucket limits
 
 Opt-in `histogramBucketMs` derives at most 200 anchored buckets per stream and 20,000 total output buckets. Exports crossing bucket boundaries are withheld, not split; narrow widths may therefore make many buckets unavailable. Final buckets can be shorter. Display grids retain the latest-32/64-native-bucket limits; no resampling, fleet merge, live histogram tail or normalized-rate heatmap is implied. Export-window coverage and time-bucket coverage are separate.
+
+## Evidence-summary adoption limits
+
+Shared evidence summaries currently cover captured measurements and their native investigation entries/cards. Record, inventory, service and comparison presenters retain their current layouts. Receipt-only metadata lacks a full evidence basis and diagnostics; the summary leaves those unavailable and the existing Open captured evidence action exposes the full result. Display input bounds fail closed; arbitrary adapter-owned interactive children are unsupported.

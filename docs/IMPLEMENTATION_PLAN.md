@@ -640,3 +640,7 @@ Added passive exact-count grids, layout selection over the latest 32 retained in
 ## Explicit histogram time buckets
 
 Implemented optional `histogramBucketMs`, whole-interval Go aggregation with complete per-bucket coverage, checked native bucket sums, preserved P95 ranges and explicit unavailable/zero states. Fixed/raw UI views reuse existing passive components and retain source-free capture replay. Journey81, Hegel state/swarm properties and observed Quint/Bombadil validation cover the contract. Next product priority from the [whole-product sweep](WHOLE_PRODUCT_COMPONENT_SWEEP.md): adopt a passive evidence summary in frozen native captures and linked investigation evidence before expanding more chart types.
+
+## Shared native evidence summaries
+
+Implemented the whole-product sweep’s first component in the full captured measurement, linked question evidence, and native capture-card surfaces. Source/storage clocks, exact bounds, namespace identity, independent reads and unknown metadata remain explicit. Next: adopt the same display primitive in service widgets before adding more selection/detail components.

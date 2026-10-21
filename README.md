@@ -471,3 +471,7 @@ Inspect retained intervals and compatible captured windows with [native bucket h
 ## Fixed-time histograms and component reuse
 
 Histogram packages can opt into [Go-backed time buckets](docs/HISTOGRAM_TIME_BUCKETS.md), with local export/fixed-time inspection and replayable captures. The [whole-product component sweep](docs/WHOLE_PRODUCT_COMPONENT_SWEEP.md) prioritizes shared scope/evidence summaries, selected-item inspectors, existing component adoption and larger investigation compositions.
+
+## Shared evidence summaries
+
+Native captures and linked investigation evidence now share a [compact evidence summary](docs/EVIDENCE_SUMMARIES.md), with explicit population, scope, counts, result mode and separate source/storage clocks.
