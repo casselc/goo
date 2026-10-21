@@ -670,3 +670,10 @@ first slices of all six survey items using existing evaluators and display
 components. Durable cross-session resume, exclusive/critical-path trace analysis,
 general convention resolution and metric exemplar ingestion remain separate
 contracts, not implied features.
+
+Population attribute breakdown milestone: discovered per-signal grouping, preserved
+predicate intersections, value filter reset, full-population ranking, shared-scale
+value/previous-window comparisons and optional saved baseline configuration.
+Acceptance includes real OTLP journey 91, source-free save/reopen, explicit baseline
+replay, old-view integrity, no-data comparisons, mobile composition, Hegel state
+history and observed Quint traces with rejection controls.

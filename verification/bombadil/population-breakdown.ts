@@ -1,0 +1,10 @@
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document,window})=>({phase:document.querySelector('.population-workspace')?.getAttribute('data-phase'),stage:Number(document.documentElement.dataset.breakdownStage||0),overflow:document.documentElement.scrollWidth>window.innerWidth,rows:document.querySelectorAll('[data-population-signal=spans] .distribution-row').length,rank:(document.querySelector('[id$="population-spans-distributionMeasure"]')as HTMLSelectElement)?.value,status:document.querySelector('[id$="population-spans-cohortStatus"]')?.textContent||''}));
+export const compact=always(()=>!state.current.overflow);
+export const complete=eventually(()=>state.current.stage===3&&state.current.rank==='p95'&&state.current.status.includes('no captured records')).within(25,'seconds');
+const run=registerCustomAction('goo.breakdownRun',async(document)=>{[...document.querySelectorAll<HTMLButtonElement>('.population-workspace button')].find(b=>b.textContent==='Run population view')!.click();document.documentElement.dataset.breakdownStage='1'});
+const rank=registerCustomAction('goo.breakdownRank',async(document)=>{const input=document.querySelector('[id$="population-spans-distributionMeasure"]')as HTMLSelectElement;input.value='p95';input.dispatchEvent(new Event('change',{bubbles:true}));document.documentElement.dataset.breakdownStage='2'});
+const previous=registerCustomAction('goo.breakdownPrevious',async(document)=>{(document.querySelector('[id$="population-spans-comparePrevious"]')as HTMLButtonElement).click();document.documentElement.dataset.breakdownStage='3'});
+export const choices=actions(()=>state.current.stage===0?state.current.phase==='staged'?[run()]:['Wait']:state.current.stage===1?state.current.phase==='applied'&&state.current.rows>0&&state.current.status.includes('selected records vs')?[rank()]:['Wait']:state.current.stage===2?[previous()]:['Wait']);

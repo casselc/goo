@@ -54,3 +54,37 @@ func TestExplorationViewImmutableConfiguration(t *testing.T) {
 		t.Fatal("tampered view")
 	}
 }
+
+func TestExplorationViewBreakdownBaseline(t *testing.T) {
+	s := Store{Dir: t.TempDir()}
+	q := exploration.Query{Signal: "spans", Environment: "prod", FromMS: 1000, ToMS: 2000, Limit: 100, GroupBy: []exploration.Field{{Kind: "resource", Key: "region"}}}
+	v := ExplorationView{Version: 1, Title: "Region differences", Queries: []exploration.Query{q}, Layout: "charts-records", Columns: []string{"utc", "summary"}}
+	old, e := s.CreateExplorationView(v)
+	if e != nil {
+		t.Fatal(e)
+	}
+	baseline := q
+	baseline.FromMS = 0
+	baseline.ToMS = 1000
+	v.Breakdowns = map[string]ExplorationBreakdown{"spans": {Metric: "p95", ComparisonMetric: "p95", Baseline: &baseline}}
+	saved, e := s.CreateExplorationView(v)
+	if e != nil {
+		t.Fatal(e)
+	}
+	if saved.ID == old.ID {
+		t.Fatal("comparison config not addressed")
+	}
+	baseline.Environment = "foreign"
+	if _, e = s.CreateExplorationView(v); e == nil {
+		t.Fatal("foreign baseline accepted")
+	}
+	again, e := s.LoadExplorationView(old.ID)
+	if e != nil || len(again.Breakdowns) != 0 {
+		t.Fatal("old artifact changed", e)
+	}
+	baseline.Environment = "prod"
+	baseline.GroupBy = []exploration.Field{{Kind: "column", Key: "service"}}
+	if _, e = s.CreateExplorationView(v); e == nil {
+		t.Fatal("incompatible grouping accepted")
+	}
+}

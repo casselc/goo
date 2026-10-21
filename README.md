@@ -494,3 +494,9 @@ trace highlighting, deployment context and capability-to-binding handoffs. These
 are bounded first slices of the [product survey](docs/CORE_EXPERIENCE_PRODUCT_SURVEY.md),
 which records verified vendor sources and Honeycomb research access limits. The
 workflow document links executable journeys, screenshots and current limits.
+
+The [population workspace](docs/POPULATION_WORKSPACE.md#attribute-breakdowns-and-comparisons)
+also offers discovered-attribute breakdowns, full-population count/error/latency
+ranking and shared-scale pinned-value or previous-window comparisons. Saved views
+retain ranking and baseline questions; reopening stages configuration without
+reading telemetry. Run explicitly to refresh each independent population.

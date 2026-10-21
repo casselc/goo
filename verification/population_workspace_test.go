@@ -60,6 +60,17 @@ func (m *viewMachine) RuleNarrow(tc hegel.TestCase) {
 		m.draft.Queries[i].FromMS = from
 	}
 }
+func (m *viewMachine) RuleBreakdown(tc hegel.TestCase) {
+	q := &m.draft.Queries[0]
+	q.GroupBy = []exploration.Field{{Kind: "resource", Key: "region"}}
+	baseline := *q
+	baseline.FromMS = 0
+	baseline.ToMS = 1000
+	m.draft.Breakdowns = map[string]workbench.ExplorationBreakdown{q.Signal: {Metric: "p95", ComparisonMetric: "p95", Baseline: &baseline}}
+}
+func (m *viewMachine) RuleClearBaseline(tc hegel.TestCase) {
+	m.draft.Breakdowns = nil
+}
 func (m *viewMachine) RuleSave(tc hegel.TestCase) {
 	v, e := m.store.CreateExplorationView(m.draft)
 	if e != nil {
@@ -138,6 +149,67 @@ func TestQuintPopulationWorkspaceLedger(t *testing.T) {
 	}
 	if !check(-1) {
 		t.Fatal("observed population rejected")
+	}
+	for i := 0; i < 5; i++ {
+		if check(i) {
+			t.Fatal("mutation accepted", i)
+		}
+	}
+}
+
+func TestQuintPopulationBreakdownLedger(t *testing.T) {
+	name := os.Getenv("GOO_BREAKDOWN_LEDGER")
+	if name == "" {
+		t.Skip("requires browser ledger")
+	}
+	raw, e := os.ReadFile(name)
+	if e != nil {
+		t.Fatal(e)
+	}
+	check := func(mutation int) bool {
+		var l struct {
+			View                                                          workbench.ExplorationView
+			BeforeSave, AfterSave, BeforeReopen, AfterReopen, ReplayReads int
+			Events                                                        []struct {
+				Action string
+				Reads  int
+			}
+		}
+		if e := json.Unmarshal(raw, &l); e != nil {
+			t.Fatal(e)
+		}
+		switch mutation {
+		case 0:
+			l.AfterSave++
+		case 1:
+			l.AfterReopen++
+		case 2:
+			l.View.Breakdowns["spans"].Baseline.Environment = "foreign"
+		case 3:
+			l.ReplayReads = 2
+		case 4:
+			c := l.View.Breakdowns["spans"]
+			c.Metric = "bogus"
+			l.View.Breakdowns["spans"] = c
+		}
+		coherent := l.View.Validate() == nil && l.BeforeSave == l.AfterSave && l.BeforeReopen == l.AfterReopen && l.ReplayReads == 3
+		sink := &qobs.MemorySink{}
+		rec := qobs.NewRecorder(sink)
+		for _, event := range l.Events {
+			rec.Record(context.Background(), event.Action, nil, "obs.reads", event.Reads, "obs.coherent", coherent)
+		}
+		c, e := validate.NewChecker("model/question_links.yaml", validate.Options{Quint: quintPath(t), Backend: "typescript", Dir: t.TempDir()})
+		if e != nil {
+			t.Fatal(e)
+		}
+		r, e := c.Check(context.Background(), sink.Steps())
+		if e != nil {
+			t.Fatal(e)
+		}
+		return r.OK()
+	}
+	if !check(-1) {
+		t.Fatal("observed breakdown rejected")
 	}
 	for i := 0; i < 5; i++ {
 		if check(i) {

@@ -4,16 +4,24 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/casselc/goo/exploration"
+	"reflect"
 )
+
+type ExplorationBreakdown struct {
+	Metric           string             `json:"metric"`
+	ComparisonMetric string             `json:"comparisonMetric"`
+	Baseline         *exploration.Query `json:"baseline,omitempty"`
+}
 
 // ExplorationView is reusable fixed-question configuration, never captured evidence.
 type ExplorationView struct {
-	Version int                 `json:"version"`
-	ID      string              `json:"id,omitempty"`
-	Title   string              `json:"title"`
-	Queries []exploration.Query `json:"queries"`
-	Layout  string              `json:"layout"`
-	Columns []string            `json:"columns"`
+	Version    int                             `json:"version"`
+	ID         string                          `json:"id,omitempty"`
+	Title      string                          `json:"title"`
+	Queries    []exploration.Query             `json:"queries"`
+	Layout     string                          `json:"layout"`
+	Columns    []string                        `json:"columns"`
+	Breakdowns map[string]ExplorationBreakdown `json:"breakdowns,omitempty"`
 }
 
 func (v ExplorationView) Validate() error {
@@ -41,6 +49,32 @@ func (v ExplorationView) Validate() error {
 			return e
 		}
 	}
+
+	for signal, config := range v.Breakdowns {
+		var current *exploration.Query
+		for i := range v.Queries {
+			if v.Queries[i].Signal == signal {
+				current = &v.Queries[i]
+			}
+		}
+		if current == nil || len(current.GroupBy) != 1 {
+			return errors.New("breakdown requires a configured single-group signal")
+		}
+		if config.Metric != "count" && config.Metric != "error-rate" && config.Metric != "mean" && config.Metric != "p95" && config.Metric != "p99" && config.Metric != "max" && config.Metric != "numeric-mean" && config.Metric != "numeric-sum" && config.Metric != "numeric-min" && config.Metric != "numeric-max" {
+			return errors.New("unsupported breakdown ranking")
+		}
+		if config.ComparisonMetric != "share" && config.ComparisonMetric != "error-rate" && config.ComparisonMetric != "mean" && config.ComparisonMetric != "p95" && config.ComparisonMetric != "p99" {
+			return errors.New("unsupported comparison metric")
+		}
+		if b := config.Baseline; b != nil {
+			if b.Signal != signal || b.Environment != current.Environment || b.Offset != 0 || !reflect.DeepEqual(b.GroupBy, current.GroupBy) || b.Numeric != nil || current.Numeric != nil {
+				return errors.New("baseline requires the same signal, environment and breakdown without numeric measures")
+			}
+			if _, e := exploration.Compile(*b); e != nil {
+				return e
+			}
+		}
+	}
 	return nil
 }
 func (s Store) CreateExplorationView(v ExplorationView) (*ExplorationView, error) {
@@ -51,7 +85,9 @@ func (s Store) CreateExplorationView(v ExplorationView) (*ExplorationView, error
 		return nil, e
 	}
 	raw, _ := json.Marshal(v)
-	json.Unmarshal(raw, &v)
+	var detached ExplorationView
+	json.Unmarshal(raw, &detached)
+	v = detached
 	id, e := digest(v)
 	if e != nil {
 		return nil, e

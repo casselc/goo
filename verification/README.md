@@ -648,3 +648,13 @@ replays source reads versus source-free preview/save/reopen with quint-go and
 rejects scope, selector, presentation-validation and hidden-read mutations. Run
 `GOO_POPULATION_BOMBADIL=1 bash scripts/run_journeys.sh journeys/population-workspace.spec.js`
 for the saved-view run/layout actor as well as partial-failure/cancellation checks.
+
+Population journey 91 emits `GOO_BREAKDOWN_LEDGER` for
+`TestQuintPopulationBreakdownLedger`: observed reads versus source-free save/open
+transitions are checked through quint-go/question_links. Five controls reject
+hidden save/open reads, a foreign baseline, a missing baseline replay read and an
+invalid ranking. The population Hegel state/swarm rules now include breakdown and
+baseline edits, with immutable published histories checked after each step.
+`verification/bombadil/population-breakdown.ts` exercises explicit Run, local
+ranking and previous-window comparisons, retaining overflow and runtime-error
+invariants.

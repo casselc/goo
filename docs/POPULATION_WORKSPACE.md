@@ -73,3 +73,66 @@ for immutable saved-view layout, column and range edits.
 ![Linked records and chart range](journeys/screenshots/90b-linked-records-and-charts.png)
 ![Saved presentation configuration](journeys/screenshots/90c-saved-population-view.png)
 ![Mobile inspection](journeys/screenshots/90d-mobile-population-view.png)
+
+## Attribute breakdowns and comparisons
+
+Each successful signal read exposes its discovered record/resource/attribute fields.
+Choosing a breakdown reruns the fixed population with that signal's grouping;
+it does not copy span-only fields or selectors to the companion. The existing
+facet component ranks full-population counts, recorded error percentages and
+Go-computed duration measures. Local value search and ranking do not read sources.
+Field discovery is bounded; an undiscovered attribute is not proof of absence.
+
+Clicking a value intersects the existing predicate tree, preserving OR branches,
+missing keys and present empty strings. Charts and records for that signal rerun
+together; the other signal retains its independent selector. Reset value filters
+returns to the workspace's original selector at the current time bounds.
+
+For a value-to-value comparison, filter the first value, pin it as baseline, reset
+value filters, and filter the second value. Compare previous window instead reads
+the immediately preceding equal-duration fixed window. Both use the shared
+comparison renderer and Go comparison kernel, with common zero-based scales.
+No-data and disagreeing reads withhold normalized differences. Results describe
+captured records and do not establish causality or telemetry completeness.
+
+Saved views optionally retain per-signal ranking, comparison measure and baseline
+query. Existing version-1 views retain their encoding/content identity because
+this new configuration is omitted when absent. Saving/reopening reads configuration
+only. An explicit Run reads the signal queries and each configured baseline
+independently; a baseline failure is visible and leaves the successful signal
+results usable. A failed/interrupted read preserves its baseline configuration for
+the next explicit Run. Filtering retains the captured pinned baseline, while Run
+refreshes configured baselines. Saved baseline queries start at inspection page zero.
+Baseline queries must retain signal, environment and grouping;
+time windows and predicates may differ. Numeric cohort comparison remains unsupported.
+Fresh-window staging clears old comparison baselines. Captures remain the route
+for frozen evidence; a saved view contains no comparison results or source basis.
+
+```mermaid
+flowchart LR
+  Fields[Discovered fields] --> Group[Typed groupBy query]
+  Group --> Go[Go / ClickHouse full-population aggregates]
+  Go --> Facets[Shared facets and comparison display]
+  Facets -->|value / missing / empty| Intersect[AND with existing predicate tree]
+  Intersect --> Group
+  Facets -->|pin / previous window| Baseline[Independent baseline question]
+  Baseline --> Compare[Go comparison kernel]
+  Go --> Compare
+  Compare --> Facets
+  Group --> Save[Immutable view configuration]
+  Baseline --> Save
+  Save -->|open without source reads| Stage[Staged view]
+  Stage -->|explicit Run| Go
+```
+
+Journey 91 supplies ordinary OTLP spans for two services, compares worker versus
+API, saves/reopens/replays the baseline, verifies an empty previous window, and
+changes grouping to distinguish missing and empty attributes. It includes mobile
+composition, an observed Quint/quint-go read ledger with rejecting controls, and
+optional Bombadil ranking/previous-window actions. It also exercises baseline-source
+failure/retry, keyboard tab navigation and a delayed previous-window response
+arriving after an explicit refresh. The Hegel state/swarm campaign
+also mutates breakdown/baseline configuration while retaining earlier saved views.
+
+![Value-to-value comparison](journeys/screenshots/91a-population-value-comparison.png)
+![Compact mobile attribute breakdown](journeys/screenshots/91b-population-mobile-breakdown.png)

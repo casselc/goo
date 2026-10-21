@@ -1300,3 +1300,9 @@ elements; application adapters own navigation, read lifecycle and scope. Journey
 Bombadil actor covers selection and returning to retained evidence. Hegel
 selection properties and the question-session state swarm complement observed
 quint-go validation against the existing question-links model.
+
+Journey **91** (`population-workspace.spec.js`) explores discovered attributes,
+compares two service values using a pinned baseline and explicit filter reset,
+saves/reopens/replays the configuration, checks an empty preceding window and
+missing versus empty attributes, and captures desktop/mobile frames. Enable
+`GOO_BREAKDOWN_BOMBADIL=1` for ranking and preceding-window actor actions.

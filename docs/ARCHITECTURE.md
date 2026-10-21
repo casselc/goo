@@ -160,3 +160,11 @@ summaries; synchronous rendering replaces those measures together. Paired
 error share uses a fixed percentage axis. Freeze retains the original aggregate
 and basis. The [sequence diagram](LIVE_COMPARISON.md) and journey 71 include this
 path; inspection rows/field discovery are still separate source reads.
+
+Population breakdowns reuse the existing distribution/comparison adapter with
+per-signal DOM namespaces. Field selection and value intersections produce typed
+Go queries; comparison uses the existing Go cohort kernel and shared zero-based
+visual renderer. `ExplorationView.breakdowns` optionally stores display choices
+and baseline queries, never results. Validation requires compatible signal,
+environment and grouping; source reads occur only after explicit Run/compare.
+See [population contract and flow](POPULATION_WORKSPACE.md#attribute-breakdowns-and-comparisons).

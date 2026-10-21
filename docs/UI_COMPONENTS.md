@@ -351,3 +351,16 @@ elements; application adapters own navigation, read lifecycle and scope. Journey
 Bombadil actor covers selection and returning to retained evidence. Hegel
 selection properties and the question-session state swarm complement observed
 quint-go validation against the existing question-links model.
+
+The population workspace reuses `GooDistributions` for facets, exact duration/error
+ranking and baseline comparisons, with per-workspace, per-signal namespaced DOM. Its
+`presentation()`/`restorePresentation()` transport only display choices and a
+baseline question; reads and durable view custody remain in the owning adapter.
+Population layout hides duplicated counts/timelines/summary tiles and keeps its
+existing aligned timeline and record inspectors. No new evaluator or chart widget
+was introduced for population breakdowns.
+
+`GooDistributions.mount(..., {recordTabs:false})` exposes Distribution/Compare when
+the owning workspace already renders record inspection. Keyboard navigation uses
+that same visible tab set. Previous-window controls retain their own DOM reference
+so a late request can finish after replacement without changing a newer control.

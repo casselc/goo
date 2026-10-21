@@ -1,5 +1,45 @@
 # Validation record
 
+Population-breakdown deployment (2026-10-21 UTC): query/packages use image
+`sha256:99b583a7cfcdafa726d7f48827d547a93684163c8558025a45ab88c5136eaa04`. All 12 services run; traffic is restored,
+served UI/server/binary hashes match the workspace, prior Redis pending entries
+remain preserved (14 pending at check), and OOM/OOM-kill counters are zero.
+Evidence: `artifacts/population-breakdown-health.json` and
+`artifacts/population-breakdown-coverage.json`.
+
+## Population attribute breakdowns and saved comparisons (2026-10-21 UTC)
+
+- Root Go suite and focused vet passed. Saved-view checks cover addressed ranking/
+  baseline revisions, unchanged prior views, detached caller configuration and
+  rejection of foreign environments/incompatible grouping. Existing version-1
+  artifacts retain their encoding when optional breakdown configuration is absent.
+- The frontend suite passed 29 files. Pure checks retain nested selectors,
+  independent companions, missing versus empty values and canonical optional query
+  fields. Hegel passed generated portable selectors and 60 × 15 state/swarm
+  sequences expanded with breakdown/baseline edits and immutable history checks.
+- Real OTLP journey 91 passes full-population ranking, value-to-value comparisons,
+  explicit filter reset, source-free save/open, baseline replay/refresh, missing/
+  empty filtering, previous-window no-data and mobile composition. Failed baseline
+  reads retain successful signal results and configured baseline queries for retry.
+  Keyboard navigation visits only visible tabs; late previous-window responses
+  cannot mutate replacement controls. Population journey 90 and retained-navigation
+  journeys 85/86 also passed across the recorded runs.
+- Observed Quint/quint-go read ledgers passed and rejected hidden save/open reads,
+  foreign baselines, missing replay reads and invalid ranking. Bombadil explicitly
+  ran a saved view, changed ranking locally and compared a previous window without
+  runtime/overflow violations. Earlier runs caught canonical false-field mismatch
+  (fixed) and an order-sensitive tie assertion (corrected to test both values).
+- Source queries/group aggregates and comparison semantics reuse the existing Go
+  implementation. Shared distribution/facet/comparison adapters use workspace and
+  signal namespaces; view artifacts contain configuration, never result evidence.
+  Numeric cohort comparisons remain unsupported.
+
+Evidence: `artifacts/population-breakdown-{go,vet,unit,pure,hegel,release,final,verified,retry,complete}.log`,
+`artifacts/population-breakdown/*/{ledger.json,TestQuintPopulationBreakdownLedger.log}`,
+`artifacts/population-breakdown/*/bombadil/trace.jsonl`,
+`artifacts/population-breakdown-coverage.json` and
+[storyboards/diagrams/screenshots](docs/POPULATION_WORKSPACE.md#attribute-breakdowns-and-comparisons).
+
 Population-workspace deployment (2026-10-21 UTC): query/packages use image
 `sha256:5be65187e1c5f7ddd03c4b0bce63c3fa9ab3f1d68b54baa2ac9818fefae78904`. All 12 services run, traffic is restored, and served UI assets, Python server
 and Go binary match the workspace. Existing Redis pending entries remain preserved
