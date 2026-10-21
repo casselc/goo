@@ -8,6 +8,11 @@ or screenshots were produced for this documentation change. Implemented contract
 remain in [Population workspace](POPULATION_WORKSPACE.md) and
 [UI components](UI_COMPONENTS.md).
 
+Implementation follow-through: the first [recent-entry canvas slice](RECENT_ACTIVITY.md)
+provides the direct planner entry and compact fixed-result composition. This
+document retains the wider proposed experience; generalized brushing, selection
+trays and retained parent/child exploration remain subsequent work.
+
 ## Product decision
 
 Make **Explore one workspace for recent activity, narrowing, comparison and

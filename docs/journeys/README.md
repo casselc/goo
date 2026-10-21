@@ -1313,3 +1313,13 @@ saves/reopens without subscriptions, recovers with a continuity gap, changes sig
 and checks mobile composition. Enable `GOO_POPULATION_LIVE_BOMBADIL=1` for actor
 start/pause actions. The observed ledger counts subscription/read initiations,
 not the Go tail's internal polling reads.
+
+## 93. Enter through recent activity
+
+[Executable journey](../../journeys/recent-entry.spec.js) and
+[contract/storyboard](../RECENT_ACTIVITY.md): ordinary OTel multi-service data,
+explicit direct recent reads, local loaded-signal switching, service facets,
+source-free range preview and saved configuration reopening, mobile composition,
+log-only/no-data/partial sources and stale-response rejection. Quint checks the
+observed request ledger with rejecting controls; optional Bombadil actions run
+recent activity and switch loaded record pages without starting a tail.

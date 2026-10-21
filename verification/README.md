@@ -668,3 +668,12 @@ baseline references. The existing tail model and generated properties remain
 shared with the standalone log tail. Hegel saved-view state/swarm rules now toggle
 live settings too. `bombadil/population-live.ts` starts/pauses the selected tail
 with bounded-row, overflow and runtime-error invariants.
+
+Recent-entry journey 93 records `GOO_RECENT_LEDGER` for
+`TestQuintRecentEntryLedger`, replaying the existing question-links model through
+quint-go. Five mutations reject hidden preview/reopen reads, a foreign companion
+environment, erased selection filters and an implicit tail. Run with
+`GOO_RECENT_BOMBADIL=1` to execute `bombadil/recent-entry.ts`: explicit recent run
+and local log-page switching, with containment/runtime/no-tail invariants.
+Existing Hegel population-selector and immutable saved-view state/swarm checks
+exercise the unchanged Go planner/storage used by this composition.

@@ -2,7 +2,7 @@
 
 [Population exploration and saved views](docs/POPULATION_WORKSPACE.md) bring aligned charts and matching span/log pages to arbitrary cross-service selectors. Portable filters are retained; independent companion selectors are explicit. Saved views retain fixed queries, layout and columns, and reopen without source reads.
 
-The proposed [recent-activity exploration design](docs/LIVE_EXPLORATION_DESIGN.md) rethinks the primary entry point as one canvas for scoping, chart selection, record inspection, comparison and reusable evidence. This is a design plan; current UI behavior remains described above.
+[Show recent activity](docs/RECENT_ACTIVITY.md) opens aligned span/log exploration directly, with fresh fixed bounds, charts before records, local signal switching and desktop facets alongside compact inspection pages. Live updates remain explicit. The broader [recent-activity design](docs/LIVE_EXPLORATION_DESIGN.md) plans shared brushing, retained scope navigation and composable capture/reuse.
 
 [Linked service timelines](docs/LINKED_TIMELINE.md) align span activity, errors, latency, logs and native streams. Preview a UTC range without reads, then explicitly apply it to every overview widget or open the selected span/log question.
 

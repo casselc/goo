@@ -1,5 +1,11 @@
 # Known issues and gaps
 
+The [recent-entry canvas](RECENT_ACTIVITY.md) is the first direct-entry/layout
+slice. General brush gestures, selection trays, retained parent/child navigation,
+arbitrary field columns and automatic anomaly/difference scoring remain proposed.
+Saved exploration views retain their existing staged presentation and do not
+automatically start live updates.
+
 Population live tails are bounded recent event-time observations, not ingestion cursors or complete traces. Reconnect/resume exposes a continuity gap. Full-population live comparison uses independent reads over the baseline duration; its window may differ from the 60-second inspection tail. Saved settings never auto-subscribe. See [live contract](POPULATION_WORKSPACE.md#watching-a-population).
 
 Service-overview time selections scope that overview and its span/log follow-up links. Supporting discovery inventory retains its original window. General cross-service span/log populations and saved exploration views are now supported in the [population workspace](POPULATION_WORKSPACE.md). Discovered per-signal breakdowns and saved baseline comparisons are supported; numeric cohort comparisons remain unsupported. Arbitrary native-stream composition and saved multi-widget dashboards remain future work. Native crossing intervals are omitted, never split or interpolated. See [contract](LINKED_TIMELINE.md).

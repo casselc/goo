@@ -284,3 +284,72 @@ func TestQuintPopulationLiveLedger(t *testing.T) {
 		}
 	}
 }
+
+// Replay actual entry/read/local-edit initiations; reject widened or hidden reads.
+func TestQuintRecentEntryLedger(t *testing.T) {
+	name := os.Getenv("GOO_RECENT_LEDGER")
+	if name == "" {
+		t.Skip("requires observed browser ledger")
+	}
+	raw, e := os.ReadFile(name)
+	if e != nil {
+		t.Fatal(e)
+	}
+	check := func(mutation int) bool {
+		var l struct {
+			Initial, Filtered                                                         []exploration.Query
+			View                                                                      workbench.ExplorationView
+			BeforePreview, AfterPreview, BeforeSave, BeforeReopen, AfterReopen, Tails int
+			Events                                                                    []struct {
+				Action string
+				Reads  int
+			}
+		}
+		if e := json.Unmarshal(raw, &l); e != nil {
+			t.Fatal(e)
+		}
+		switch mutation {
+		case 0:
+			l.AfterPreview++
+		case 1:
+			l.AfterReopen++
+		case 2:
+			l.Initial[1].Environment = "foreign"
+		case 3:
+			l.Filtered[0].Where = nil
+		case 4:
+			l.Tails++
+		}
+		coherent := len(l.Initial) == 2 && len(l.Filtered) == 2 && l.View.Validate() == nil && l.BeforePreview == l.AfterPreview && l.BeforeSave == l.BeforeReopen && l.BeforeReopen == l.AfterReopen && l.Tails == 0
+		if len(l.Initial) == 2 && len(l.Filtered) == 2 {
+			a, b := l.Initial[0], l.Initial[1]
+			coherent = coherent && a.Signal == "spans" && b.Signal == "logs" && a.Environment == b.Environment && a.FromMS == b.FromMS && a.ToMS == b.ToMS && a.ToMS-a.FromMS == 300000 && l.Filtered[0].Where != nil && reflect.DeepEqual(l.Filtered[1].Where, b.Where)
+			for _, q := range append(l.Initial, l.Filtered...) {
+				_, e := exploration.Compile(q)
+				coherent = coherent && e == nil
+			}
+		}
+		sink := &qobs.MemorySink{}
+		rec := qobs.NewRecorder(sink)
+		for _, event := range l.Events {
+			rec.Record(context.Background(), event.Action, nil, "obs.reads", event.Reads, "obs.coherent", coherent)
+		}
+		c, e := validate.NewChecker("model/question_links.yaml", validate.Options{Quint: quintPath(t), Backend: "typescript", Dir: t.TempDir()})
+		if e != nil {
+			t.Fatal(e)
+		}
+		r, e := c.Check(context.Background(), sink.Steps())
+		if e != nil {
+			t.Fatal(e)
+		}
+		return r.OK()
+	}
+	if !check(-1) {
+		t.Fatal("recent entry ledger rejected")
+	}
+	for i := 0; i < 5; i++ {
+		if check(i) {
+			t.Fatal("mutation accepted", i)
+		}
+	}
+}

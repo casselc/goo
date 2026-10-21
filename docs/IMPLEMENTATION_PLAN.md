@@ -6,8 +6,13 @@ The [recent-activity design pass](LIVE_EXPLORATION_DESIGN.md) sets the next sequ
 one compact Explore entry canvas, unified selection with retained parent state,
 adjacent population comparisons, then composable capture/reuse. This supersedes
 adding a standalone tail-to-investigation panel. Existing semantic contracts and
-immutable artifacts remain; proposed UI and acceptance storyboards are not yet
-implemented.
+immutable artifacts remain; later selection, retention and capture steps remain
+proposed.
+
+The first [recent-entry slice](RECENT_ACTIVITY.md) now implements the direct
+planner entry and compact chart/facet/record composition. Shared brushing,
+selection retention, comparison consolidation and capture/reuse follow; this
+does not imply that all four design stages are delivered.
 
 Implemented: general span/log population exploration with paired record pages, checked companion selectors, shared time selection, and immutable saved views carrying layout/columns. [Contract and sequence](POPULATION_WORKSPACE.md). Subsequent slices include arbitrary native-stream composition and broader saved dashboard layouts.
 

@@ -1199,6 +1199,51 @@ td details {
 .population-live > p { margin:.4rem 0;font-size:.8rem }
 .population-live .live-tail { margin:.5rem 0 }
 
+/* Recent activity uses the population adapter as the primary canvas. */
+.exploration-current > h2,.exploration-current > h2 + p { display:none }
+.recent-activity-run { background:var(--accent);color:#11251f;font-weight:600 }
+.recent-entry-hint { margin:.4rem 0;font-size:12px;color:var(--muted) }
+.recent-mode.population-open .exploration-scope > :is([id$=exploreRun],[id$=exploreCancel]) { display:none }
+.recent-mode.population-open .recent-entry-hint { display:none }
+.recent-mode.population-open .query-workbench { padding:8px 0;margin:6px 0;border:0;background:transparent }
+.recent-mode.population-open .query-workbench .discovery-suggestions { display:none }
+.recent-mode.population-open .population-controls > button { display:none }
+.recent-mode.population-open .population-controls { margin:2px 0;font-size:12px }
+.recent-mode.population-open .population-controls > details { min-width:0 }
+.population-workspace.recent-canvas { border:0;border-radius:0;padding:0;margin:6px 0 }
+.recent-canvas-heading { justify-content:flex-end;margin:0 }
+.recent-canvas-heading h3 { display:none }
+.recent-canvas-heading button { padding:4px 7px;font-size:11px }
+.recent-canvas > .population-status { margin:4px 0;font-size:12px }
+.recent-canvas .population-view-settings { font-size:12px;margin:4px 0 }
+.recent-canvas .population-view-settings > :not(summary) { margin:6px 0 }
+.recent-canvas .population-view-settings pre { max-height:240px;overflow:auto }
+.recent-canvas .population-view-settings input { max-width:100%;box-sizing:border-box }
+.recent-canvas .population-signal-layout { display:grid;grid-template-columns:minmax(180px,240px) minmax(0,1fr);gap:16px }
+.recent-canvas .population-signal-layout > * { min-width:0 }
+.recent-canvas .population-facets > .controls { display:grid;gap:6px;margin:4px 0 }
+.recent-canvas .population-facets label { font-size:11px }
+.recent-canvas .population-facets select { width:100%;min-width:0;max-width:100% }
+.recent-canvas .population-facets .evidence-note { margin:6px 0;font-size:11px }
+.recent-canvas .population-facets .result-tabs { margin:4px 0 }
+.recent-canvas .population-signal-tabs { gap:6px;margin:6px 0 }
+.recent-canvas .population-signal-tabs button { padding:5px 9px;font-size:12px }
+.recent-canvas .population-signal-tabs [aria-pressed=true] { border-color:var(--accent);color:var(--accent) }
+.recent-canvas .population-live-disclosure { margin:8px 0;font-size:12px }
+.recent-settings { margin:4px 0;font-size:12px }
+.recent-canvas .population-facets .facet-toolbar { display:grid;gap:6px;padding:0 }
+.recent-canvas .population-facets .facet-toolbar > label { width:100%;min-width:0;max-width:none }
+.recent-canvas .population-facets .facet-toolbar input { width:100%;min-width:0;box-sizing:border-box }
+.recent-canvas .population-facets [id$=facetStatus] { font-size:11px;overflow-wrap:anywhere }
+.recent-canvas .population-facets goo-facet-list > .distribution-row { grid-template-columns:minmax(60px,1fr) minmax(0,1fr) auto;gap:6px }
+.recent-canvas .population-facets goo-facet-list > .distribution-row > * { min-width:0;font-size:11px }
+@media(max-width:800px){
+ .recent-canvas .population-signal-layout { grid-template-columns:1fr;gap:6px }
+ .recent-canvas .population-facets .distribution-viewport { max-height:180px }
+ .recent-canvas .population-facets .evidence-note { display:none }
+ .recent-canvas .population-signal-layout .telemetry-table { width:100% }
+}
+
 /* Keep the record itself visible on narrow tail viewports. */
 @media(max-width:700px){
  .live-tail>goo-table>table{display:block;min-width:0;width:100%}

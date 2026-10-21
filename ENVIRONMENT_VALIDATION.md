@@ -1,5 +1,13 @@
 # Cloud baseline validation — 2026-10-16
 
+Recent-entry deployment (2026-10-21 UTC): query/packages use image
+`sha256:ae4a96113d5c19b256c846a888013c6fa4d48d2c0e0a79da9889851f5557f55f`.
+All 12 services run with traffic restored; served assets/server/binary match the
+workspace. Prior Redis pending IDs remain preserved (14 pending at check), and
+OOM/OOM-kill counters remain zero. Journey 93 plus regression journeys
+66/69/90/91/92 passed; evidence is in `artifacts/recent-entry-health.json`,
+`artifacts/recent-entry-coverage.json` and `artifacts/recent-entry-{release,regression}.log`.
+
 Population-live deployment (2026-10-21 UTC): query/packages use image
 `sha256:86105ae4b88e41060744a07d971331f1e648bfdd221af0befbe80a60903d6467`. All 12 services run; traffic is restored,
 served UI/server/binary hashes match the workspace, existing Redis pending entries

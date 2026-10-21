@@ -5,6 +5,11 @@ maps existing components to shared brushing, selection, field choice and retaine
 inspection work. These extensions remain proposed; source/subscription/capture
 ownership stays outside display elements.
 
+The first [recent-entry canvas](RECENT_ACTIVITY.md) composes existing time-range,
+timeline, facets, table and typed inspector primitives. Its application adapter
+owns fresh-bound resolution, source requests and local loaded-signal switching;
+the display components acquire no new fetching or subscription behavior.
+
 The general population workspace reuses `goo-time-range`, `goo-value-timeline`, `goo-table` and the existing attribute/record inspector. Population queries, paging, cancellation, selector portability and saved-view publication stay in application adapters/Go services; no display component owns those operations.
 
 `goo-time-range` (`time-range.js` + `time-range.css`) accepts server JSON `data` or detached `.data`: `{fromMs,toMs,selection:{fromMs,toMs}}`. It renders two native UTC-labelled range handles and emits `goo-range-select` with exact safe-integer millisecond bounds. It performs no reads or navigation. Invalid, empty or out-of-domain selections withhold the controls. The standalone reference includes markup; journeys 88–89 exercise composition and keyboard/property upgrades.

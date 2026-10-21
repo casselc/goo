@@ -1,5 +1,11 @@
 # Architecture
 
+[Recent activity](RECENT_ACTIVITY.md) enters the existing Go population planner
+directly from Explore. The adapter resolves fresh fixed bounds, runs at most two
+typed exploration requests and composes existing charts/facets/record pages;
+those requests retain their independent backend read bases. Local signal switching,
+view settings and range preview do not query telemetry. Live owners remain explicit.
+
 The [population workspace](POPULATION_WORKSPACE.md) composes existing record queries through a data-only Go planner, reuses aligned timeline/record display adapters, and stores immutable exploration-view configuration in the workbench. Query kernels, captured evidence and saved presentation configuration remain separate.
 
 [Linked timeline architecture](LINKED_TIMELINE.md) composes existing Go widget results into passive shared-time lanes. `goo-time-range` emits bounded selections; the service adapter preserves identity and native definitions while rereading the overview.

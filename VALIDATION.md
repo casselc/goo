@@ -1,5 +1,52 @@
 # Validation record
 
+## Direct recent-activity entry (2026-10-21 UTC)
+
+Deployment: query/packages use image
+`sha256:ae4a96113d5c19b256c846a888013c6fa4d48d2c0e0a79da9889851f5557f55f`.
+All 12 services run with traffic restored, served asset/server/binary hashes match
+the workspace, prior Redis pending entries remain preserved (14 pending at check),
+and OOM/OOM-kill counters are zero. Evidence:
+`artifacts/recent-entry-health.json` and `artifacts/recent-entry-coverage.json`.
+
+- Root Go tests and 29 frontend test files passed. The fresh-window helper retains
+  complete selectors, signal/source identity and detached configuration, resets
+  inspection offset, and rejects invalid clock/lookback inputs. Existing Hegel
+  portable-selector and saved-view state/swarm campaigns passed for the unchanged
+  Go planner and immutable storage.
+- Real OTLP journey 93 passed against the packaged image: one explicit plan and
+  two typed exploration requests with shared fresh bounds, local signal switching,
+  service-facet refinement, source-free range preview/column edits/save/reopen,
+  fresh-run selector preservation including an independent companion, log-only
+  and no-data environments, partial-source failures and obsolete response rejection.
+  The fixture independently checked ingestion through ClickHouse. No tail or other
+  telemetry endpoint started implicitly. Desktop/mobile frames were regenerated.
+- Quint/quint-go accepted the observed initiation ledger and rejected five
+  mutations for hidden preview/reopen reads, changed environment, erased filtering
+  and an implicit subscription. Bombadil executed `goo.recentActivity` and
+  `goo.recentLogs`: 450 trace records, zero violations, both actions observed and
+  completion reached with no live tail or viewport overflow. OOM counters remain
+  zero.
+- Regression journeys 66, 69, 90, 91 and 92 passed against the same final image:
+  standalone tail, live comparison/freeze, saved populations, attribute/baseline
+  comparisons and live population settings. Their affected desktop/mobile
+  documentation frames were regenerated. Combined with journey 93, six browser
+  journeys passed; `artifacts/recent-entry-regression.log` records the five
+  existing workflows.
+- Initial browser attempts identified a quoted-value locator and retained
+  same-document button text; test assumptions were corrected. Screenshot review
+  corrected a narrow facet toolbar and moved advanced controls below disclosure.
+  The final successful journey uses the packaged source, not a hand-built mockup.
+
+Evidence: `artifacts/recent-entry-{go,unit,hegel,browser,recheck,release}.log`,
+`artifacts/recent-entry/recent-f301a19b/{ledger.json,TestQuintRecentEntryLedger.log}`,
+`artifacts/recent-entry/recent-f301a19b/bombadil/trace.jsonl`,
+`artifacts/recent-entry-coverage.json` and the
+[contract, diagram and screenshots](docs/RECENT_ACTIVITY.md).
+
+This implements the direct-entry/layout slice. General brushing, retained child
+scope navigation and composable multi-item capture remain subsequent design work.
+
 ## Recent-activity product design (2026-10-21 UTC)
 
 Documentation-only [whole-product design pass](docs/LIVE_EXPLORATION_DESIGN.md):
