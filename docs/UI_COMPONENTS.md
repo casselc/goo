@@ -1,5 +1,7 @@
 # Display component library
 
+`goo-time-range` (`time-range.js` + `time-range.css`) accepts server JSON `data` or detached `.data`: `{fromMs,toMs,selection:{fromMs,toMs}}`. It renders two native UTC-labelled range handles and emits `goo-range-select` with exact safe-integer millisecond bounds. It performs no reads or navigation. Invalid, empty or out-of-domain selections withhold the controls. The standalone reference includes markup; journeys 88–89 exercise composition and keyboard/property upgrades.
+
 The public UI library is framework-neutral Web Components: custom elements that
 upgrade ordinary server-rendered HTML and accept property updates in an SPA.
 They render supplied data. They do not fetch telemetry, calculate measurements,

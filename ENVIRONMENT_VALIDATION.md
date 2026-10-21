@@ -1,5 +1,11 @@
 # Cloud baseline validation — 2026-10-16
 
+Linked-timeline deployment (2026-10-21 UTC): query/packages use image
+`sha256:f39b44ec66cd9cdefb199f923d4bcf9c0c3e503a8dff107b457620ea220de506`. All 12 services run, traffic is restored, and served component/app assets,
+server and Go binary match the workspace. Existing pending Redis entries remain
+preserved (14 pending at check); cgroup OOM/OOM-kill counters remain zero. Evidence:
+`artifacts/linked-timeline-final-health.json`.
+
 Final trace-finding deployment (2026-10-21 UTC): query/packages run image
 `sha256:0c146e9dcea3b238605d807f21a72357797f00de6e7df2160c20c3625826e14b`. All 12 services run; served UI assets, Go binary and Python server match the
 verified workspace. Prior pending Redis entries remain preserved (14 pending at

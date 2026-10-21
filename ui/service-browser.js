@@ -66,10 +66,11 @@
    }else error(sections[2],metrics);
    if(signals.status==='rejected'){dashboard.replaceChildren(node('h4','Service overview'),state('unavailable','Overview unavailable · service discovery failed; signal support cannot be inferred.'));dashboard.dataset.state='unavailable'}else {
     const input={scope:clone(activeScope),service,signals:[...new Set(signals.value.signals.filter(r=>r.service===service).map(r=>r.signal))],fields:spans.status==='fulfilled'?spans.value.fields:[],instruments:metrics.status==='fulfilled'?metrics.value.instruments:[]};
-    let revision=0,read=null;
-    const run=async(selection,pickerOpen=false)=>{
+    let revision=0,read=null,overviewScope=clone(input.scope),nativeSelection;
+    const run=async(selection,pickerOpen=false,nextScope=overviewScope)=>{
+     overviewScope=clone(nextScope);nativeSelection=selection;
      read?.abort();read=new AbortController();const request=read,version=++revision,abort=()=>request.abort();active.signal.addEventListener('abort',abort,{once:true});
-     try{await global.GooServiceDashboard.load(dashboard,{...input,...(selection===undefined?{}:{nativeSelection:selection})},{signal:request.signal,current:()=>g===generation&&version===revision&&detail.isConnected,onPlan:plan=>{const picker=global.GooServiceDashboard.nativePicker(plan,keys=>run(keys,true),{open:pickerOpen});if(picker)dashboard.insertBefore(picker,dashboard.querySelector('.service-loading'));}});if(pickerOpen&&g===generation&&version===revision)dashboard.querySelector('.dashboard-native-picker > summary')?.focus()}finally{active.signal.removeEventListener('abort',abort)}
+     try{await global.GooServiceDashboard.load(dashboard,{...input,scope:overviewScope,...(selection===undefined?{}:{nativeSelection:selection})},{signal:request.signal,current:()=>g===generation&&version===revision&&detail.isConnected,resetAvailable:overviewScope.fromMs!==input.scope.fromMs||overviewScope.toMs!==input.scope.toMs,onRange:next=>run(nativeSelection,false,next.scope),onReset:()=>run(nativeSelection,false,input.scope),onPlan:plan=>{const picker=global.GooServiceDashboard.nativePicker(plan,keys=>run(keys,true),{open:pickerOpen});if(picker)dashboard.insertBefore(picker,dashboard.querySelector('.service-loading'));}});if(pickerOpen&&g===generation&&version===revision)dashboard.querySelector('.dashboard-native-picker > summary')?.focus()}finally{active.signal.removeEventListener('abort',abort)}
     };
     // Keep parent cancellation until leaving this service, including later Apply reads.
     active.signal.addEventListener('abort',()=>read?.abort(),{once:true});

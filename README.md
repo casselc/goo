@@ -1,5 +1,7 @@
 # goo — Grammar of Observability
 
+[Linked service timelines](docs/LINKED_TIMELINE.md) align span activity, errors, latency, logs and native streams. Preview a UTC range without reads, then explicitly apply it to every overview widget or open the selected span/log question.
+
 **Turn telemetry into shared definitions of system behavior, and investigate what
 happened with evidence you can inspect and preserve.**
 

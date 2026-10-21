@@ -1,0 +1,1 @@
+goo-time-range{display:grid;grid-template-columns:1fr 1fr;gap:12px}goo-time-range label{display:grid;gap:3px;font-size:11px}goo-time-range input{width:100%;padding:0;min-width:0;accent-color:var(--accent,#77d9cb)}goo-time-range output{font-variant-numeric:tabular-nums;overflow-wrap:anywhere}@media(max-width:600px){goo-time-range{grid-template-columns:1fr}}

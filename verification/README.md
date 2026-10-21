@@ -630,3 +630,12 @@ Run the live workflow and composer actor with
 `GOO_TRACE_FINDING_BOMBADIL=1 bash scripts/run_journeys.sh journeys/trace-finding.spec.js`.
 Its ledger drives `TestQuintTraceFindingLedger`; five rejecting controls alter
 scope, trace identity, linked evidence and reads during stored reopening.
+
+`TestHegelLinkedTimelineScope` generates 100 bounded service-window transforms
+against the actual JavaScript adapter, preserving namespace and native identity.
+`GOO_LINKED_TIMELINE_BOMBADIL=1 bash scripts/run_journeys.sh journeys/linked-timeline.spec.js`
+emits real OTLP spans, logs and metrics, verifies preview/Apply/reset and partial
+log failure, and replays the observed ledger through `question_links.qnt` with
+quint-go. Rejecting controls cover foreign environment, altered bounds, preview
+reads, reset-read drift and lost predicates. The passive component conformance
+journey needs no source and verifies keyboard and detached-property behavior.

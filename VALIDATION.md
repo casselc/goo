@@ -5,6 +5,42 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Aligned service timelines and shared UTC selection (2026-10-21 UTC)
+
+- The frontend suite passed 28 test files. Pure checks preserve exact counts and
+  formatted nanosecond duration values, missing latency, independent input data,
+  service/namespace/native selection identity and half-open bounded selections.
+- Hegel passed 100 generated range-preservation cases against the actual adapter,
+  plus the existing 60-case immutable-history state/swarm check (15 steps each).
+- Real OTLP journey 88 passed Apply/reset across four widget reads, source-free
+  range preview, identical time domains across five lanes, unchanged record
+  predicates and native definitions, filtered span/log counts, partial log failure
+  with usable span lanes, and mobile overflow checks. Journey 89 passed native
+  keyboard controls, server markup, detached properties and zero API requests.
+  Existing service-dashboard and metric-service journeys also passed on this image.
+- The observed Quint/quint-go ledger passed and rejected five mutated histories:
+  environment drift, changed bounds, a preview read, reset-read drift and lost
+  selectors. Bombadil executed all four discovery/range/Apply actions and reached
+  a loaded aligned overview with no property violations. Its initial setup read
+  the fixture environment after route navigation; the corrected actor retains
+  that value before navigating and passes the rerun.
+- Duplicate per-widget activity charts are omitted from this composition; fixed
+  summaries, exact questions and independently read evidence remain available.
+  Native lanes do not resample or merge streams. This milestone scopes the service
+  overview, not arbitrary cross-service populations or saved dashboard layouts.
+
+Evidence: `artifacts/linked-timeline-{unit,hegel,browser,final,recheck}.log`,
+`artifacts/linked-timeline/*/{ledger.json,TestQuintLinkedTimelineLedger.log}`,
+`artifacts/linked-timeline-bombadil-coverage.json` and
+[storyboard/diagrams/screenshots](docs/LINKED_TIMELINE.md).
+
+
+Linked-timeline deployment (2026-10-21 UTC): query/packages use image
+`sha256:f39b44ec66cd9cdefb199f923d4bcf9c0c3e503a8dff107b457620ea220de506`. All 12 services run, traffic is restored, and served component/app assets,
+server and Go binary match the workspace. Existing pending Redis entries remain
+preserved (14 pending at check); cgroup OOM/OOM-kill counters remain zero. Evidence:
+`artifacts/linked-timeline-final-health.json`.
+
 ## Population → trace → finding (2026-10-21 UTC)
 
 - Root Go suite and focused vet passed. Exact uint64 page selection checks cover
