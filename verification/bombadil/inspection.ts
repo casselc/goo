@@ -56,8 +56,11 @@ const act = registerCustomAction('goo.inspect', async (document, _window, action
     const plot=document.querySelector<any>('#exploreTrace goo-trace-waterfall'),selected=plot?.querySelector('.waterfall-row[aria-pressed=true]') as HTMLButtonElement|null;
     if(!plot||!selected)throw Error('Waterfall selection was not controlled by the app adapter');
     const record=plot.data.rows[Number(selected.dataset.rowIndex)];
-    if(selected.dataset.traceId!==record.TraceId||selected.dataset.spanId!==record.SpanId||document.querySelector('#exploreSpanDetails > h3')?.textContent!==record.SpanName)throw Error('Selected waterfall IDs and detail view disagree');
+    if(selected.dataset.traceId!==record.TraceId||selected.dataset.spanId!==record.SpanId||document.querySelector('#exploreSpanDetails .ui-inspector-heading > h3')?.textContent!==record.SpanName)throw Error('Selected waterfall IDs and detail view disagree');
+    const close=document.querySelector<HTMLButtonElement>('#exploreSpanDetails button[aria-label="Close selected item details"]');close?.click();if(document.activeElement!==selected||selected.getAttribute('aria-pressed')!=='true')throw Error('Selected inspector lost focus or selection');selected.click();
   }
+  if(action==='record')click('#exploreRows [data-inspect-record]');
+  if(action==='closeRecord')click('#exploreRows .ui-inspector button[aria-label="Close selected item details"]');
   if(stage)document.documentElement.dataset.gooWaterfallStage=stage;
   if (action === 'close') click('#exploreContextClose');
   if (action === 'scope') {
@@ -81,7 +84,7 @@ export const inspect = actions(() => {
   const choices = [act('query'),act('signal')];
   if(s.nearbyAvailable)choices.push(act('nearby'));
   if(s.nearby)choices.push(act('radius'),act('closeNearby'));
-  if (s.records) choices.push(act('open'), act('trace'));
+  if (s.records) choices.push(act('open'), act('trace'),act('record'),act('closeRecord'));
   if (s.viewer) choices.push(act('scope'), ...['service', 'missing-key', '<tag>', ''].map(q => act('search:' + q)));
   if(s.trace){choices.push(act('close'));if(s.waterfallRows)choices.push(act('select'),act('nextSpan'));if(s.selected)choices.push(act('verifyWaterfall'))}
   return choices;

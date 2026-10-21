@@ -479,3 +479,12 @@ Native captures and linked investigation evidence now share a [compact evidence 
 Service widgets and saved native evidence share [compact evidence summaries](docs/EVIDENCE_SUMMARIES.md): fixed scope, independently labelled read clocks, and readable UTC timestamps with exact nanoseconds available in tooltips. Latency summaries use compact inline Mean/p50/P95/P99 values, with the positional rail and exact values in Latency details.
 
 [Comparison views](docs/COMPARISON_PRESENTATION.md) align baseline/current values on shared scales and group exact scope and read clocks into disclosures.
+
+[Selected-item inspectors](docs/SELECTED_ITEM_INSPECTORS.md) share compact trace/log/native detail layout, retained local selection state and close-to-opener focus.
+
+The [core experience survey](docs/CORE_EXPERIENCE_PRODUCT_SURVEY.md) compares verified
+Datadog/Grafana patterns with goo’s existing foundations and proposes a focused
+sequence: resumable investigation navigation, a compact service operation table,
+and chart selections that continue into precise population questions. These are
+recommendations, not implemented features; Honeycomb research access limits are
+recorded in the report.

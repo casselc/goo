@@ -1281,3 +1281,5 @@ Journeys59/75 now document compact shared service summaries and readable UTC tim
 Journey63 now checks the collapsed latency readout stays under 100px in its standalone desktop fixture, with the positional rail revealed through keyboard disclosure. Its desktop/mobile reference frames and journey59’s real service frames show the inline Mean/p50/P95/P99 layout.
 
 See [comparison presentation](../COMPARISON_PRESENTATION.md) for aligned scalar pairs, compact metric matrices, frozen-side summaries and UTC tooltip adoption.
+
+Journey84 documents the standalone selected-item shell; journey35 exercises real log/span inspection and journey77 exercises native selection replay. [Inspector storyboard](../SELECTED_ITEM_INSPECTORS.md).

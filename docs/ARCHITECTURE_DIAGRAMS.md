@@ -1175,3 +1175,5 @@ The [evidence-summary diagram](EVIDENCE_SUMMARIES.md) shows full captures, exist
 Service widgets pass their validated plan/result to the application presenter, then the passive summary. The widget adapter still owns two bounded concurrent reads, generation guards and capture actions. UTC/tooltips are a display projection of exact timestamp strings, never rounded query bounds or a new evaluator.
 
 See [comparison presentation](COMPARISON_PRESENTATION.md) for aligned scalar pairs, compact metric matrices, frozen-side summaries and UTC tooltip adoption.
+
+The shared selected-item shell is now adopted in waterfall spans, span/log record inspection and native timeline/bucket selections. See [selected-item inspectors](SELECTED_ITEM_INSPECTORS.md) for lifecycle, retention, focus and source-action boundaries.

@@ -2949,3 +2949,50 @@ build; no volumes or stream entries were reset.
 Remaining work includes general selected-item inspectors, legacy diagnostic JSON,
 and deeper live-comparison composition. This milestone does not change capture,
 refresh, freeze, SSE or query lifecycle protocols.
+
+### Compact selected-item inspectors (2026-10-21)
+
+Shared caller-owned inspector presentation now covers selected trace spans, log/span
+records and native measurement points. It retains 32 recent content nodes and their
+scroll/disclosure state within one rendered result; Close returns focus without
+changing source selection. Record details appear beside their selected row. UTC
+summaries preserve exact timestamp bounds in disclosures/tooltips. Existing inline
+attribute disclosures remain available; this is not a cross-query selection store.
+
+`npm run test:visualizations` passed all 25 frontend test files. The broad browser
+run passed all 25 legacy investigation journeys, plus three inspector-related
+journeys (28/29 overall); the remaining test incorrectly counted the trace adapter's
+existing linked-log refresh as an inspector read. Its assertion now distinguishes
+span-selection reads from source-free inspector disclosure/close.
+
+The next targeted runs exposed a native focus-return defect and a test-actor
+visibility error. Native openers now identify the exact plot mark/heatmap cell;
+a browser regression covers programmatic selection while another mark has focus.
+The actor now enters Saved investigations and opens the stream disclosure before
+asserting focus, rather than interacting with hidden content. A hidden-panel guard
+also preserves scroll when reopening a closed inspector. The initial targeted
+runs remain recorded as failures, not successful validation.
+
+A parallel, read-only product research pass produced
+[CORE_EXPERIENCE_PRODUCT_SURVEY.md](docs/CORE_EXPERIENCE_PRODUCT_SURVEY.md).
+It distinguishes recommendations from shipped foundations and verified official
+Datadog/Grafana source documentation from inaccessible Honeycomb material.
+README and the implementation plan link its prioritized follow-ups; the survey
+does not itself change runtime behavior.
+
+Final release validation: **4/4 passed in 3.4 minutes**
+(`artifacts/inspector-release-final.log`): journey 35 actual log/span inspection,
+84 local shell retention and mobile composition, 77 native timelines with
+Bombadil action coverage and observed Quint validation, and 29 typed inspection
+with Bombadil. The release image is
+`sha256:2cb6bc1c7827984f73d642e36e13d3e7b40f0ffc54e9ff4831db7c4dfafa9a7d`.
+Screenshots and executable storyboards are refreshed. No query, capture, SSE or
+semantic evaluator protocol changed. Existing trace selection still refreshes
+linked logs independently; the inspector adds no source read.
+
+`artifacts/inspector-final-health.json` confirms matching query/packages images,
+served source hashes, server/binary hashes, 12 running services and preservation
+of all five tracked historical pending IDs (14 pending entries at the check).
+The wrapper restored traffic. Only unused Docker caches/dangling images were
+reclaimed during builds; no volumes or stream entries were reset. Cgroup OOM and
+OOM-kill counters remained zero.

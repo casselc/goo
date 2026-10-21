@@ -162,3 +162,15 @@ goo-latency .ui-disclosure>small{font-size:10px;color:var(--muted,#98a8bf)}
 .comparison-metrics .comparison-bar-track{height:7px}
 .comparison-pair>.comparison-pair-row>.comparison-bar-cell{flex:1;display:flex;flex-direction:column;justify-content:space-between}
 .comparison-pair .comparison-bar-track{flex-shrink:0}
+/* Shared inline selected-item shell. Adapters supply content and own selection. */
+.ui-inspector{display:block;min-width:0;max-width:100%;padding:10px;border:1px solid var(--border,#2b3545);border-radius:7px;margin:8px 0;background:var(--panel,#151d28)}
+.ui-inspector[hidden]{display:none}
+.ui-inspector-heading{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.ui-inspector-heading>:is(h2,h3,h4,h5,h6){font-size:13px;margin:0;overflow-wrap:anywhere}
+.ui-inspector-heading>button{font-size:11px;padding:3px 7px;flex-shrink:0}
+.ui-inspector-summary{font-size:12px;line-height:1.4;overflow-wrap:anywhere;margin:6px 0}
+.ui-inspector-body{min-width:0;max-height:24rem;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+.ui-inspector-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.ui-inspector-actions:empty{display:none}
+.ui-inspector-actions>button{font-size:12px}
+.ui-inspector-body pre{white-space:pre-wrap;overflow-wrap:anywhere}

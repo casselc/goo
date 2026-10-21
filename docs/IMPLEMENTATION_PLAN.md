@@ -643,4 +643,16 @@ Implemented optional `histogramBucketMs`, whole-interval Go aggregation with com
 
 ## Shared native evidence summaries
 
-Implemented the whole-product sweep’s first component in the full captured measurement, linked question evidence, and native capture-card surfaces. Source/storage clocks, exact bounds, namespace identity, independent reads and unknown metadata remain explicit. Service widgets now adopt the same display primitive with fixed mode, domain-specific source clocks, compact facts and inspectable scope. UTC timestamp formatting preserves exact nanoseconds in tooltips. Stored comparison sides now adopt the summary, with aligned scalar pairs and UTC endpoint/window labels. See COMPARISON_PRESENTATION.md. Next: unify selected-item inspectors using the same primitives.
+Implemented the whole-product sweep’s first component in the full captured measurement, linked question evidence, and native capture-card surfaces. Source/storage clocks, exact bounds, namespace identity, independent reads and unknown metadata remain explicit. Service widgets now adopt the same display primitive with fixed mode, domain-specific source clocks, compact facts and inspectable scope. UTC timestamp formatting preserves exact nanoseconds in tooltips. Stored comparison sides now adopt the summary, with aligned scalar pairs and UTC endpoint/window labels. See COMPARISON_PRESENTATION.md. Selected-item inspectors now share the inline shell; cross-query navigation history remains future work.
+
+The shared selected-item shell is now adopted in waterfall spans, span/log record inspection and native timeline/bucket selections. See [selected-item inspectors](SELECTED_ITEM_INSPECTORS.md) for lifecycle, retention, focus and source-action boundaries.
+
+## Focused core-experience refinements (proposed)
+
+The [product survey](CORE_EXPERIENCE_PRODUCT_SURVEY.md) prioritizes a resumable
+investigation trail, compact route/operation diagnosis table and accessible
+chart-selection continuation into existing typed questions/comparisons. These
+are the next proposed slices, not current functionality. Reuse the existing
+service dashboards, comparisons, inspector and display library; do not introduce
+a dashboard builder or another analysis destination. The report records official
+sources, access limits, semantic boundaries and executable acceptance journeys.

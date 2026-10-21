@@ -600,3 +600,13 @@ remain authoritative for compatibility, immutable receipts and read budgets.
 The stored-comparison Bombadil actor opens both scope summaries and checks frozen
 mode, clock labels and identical bar domains. No evaluator/model transition was
 added for this passive presentation change.
+
+The selected-item shell uses application-owned keys and DOM content. Journey84
+checks retained nodes, disclosure/body scroll, no autofocus, close-to-opener and
+clear/mobile behavior in a synthetic standalone fixture. Journey35 checks real
+record/trace inspection and distinguishes source-free record inspection/close
+from the trace adapter's existing linked-log read on selection. Journeys77/29
+exercise the native and typed-inspection Bombadil actors, now checking close/
+reopen focus and retained selection. Their existing Go observed Quint ledgers and
+rejecting controls remain the semantic oracle; no new metric evaluator or Go
+planner state was introduced.

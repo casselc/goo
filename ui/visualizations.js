@@ -9,20 +9,22 @@
   function waterfall(container, rows, truncated, relatedActions, detailsId = 'spanDetails') {
     const element=node('goo-trace-waterfall');element.data={rows,truncated:!!truncated};container.append(element);
     if(!rows.length)return element;
-    const details=node('section');details.id=detailsId;details.append(node('p','Select a span to inspect attributes and exact IDs.'));container.append(details);
+    const details=node('section');details.id=detailsId;container.append(details);const inspector=global.GooUI.inspector(details,{headingLevel:3});
     element.addEventListener('click',event=>{
       const line=event.target.closest('.waterfall-row');if(!line||!element.contains(line))return;
       const index=Number(line.dataset.rowIndex),r=rows[index];if(!r)return;
       element.selectedIndex=index;
-      details.replaceChildren(node('h3',r.SpanName),node('p',`${r.ServiceName} · ${Number(BigInt(r.duration_ns))/1e6} ms · ${r.StatusCode||'unset status'}`));
-      global.GooAttributes.mount(details,r);
-      for(const action of relatedActions?.(r)||[]){const button=node('button',action.label);button.onclick=action.select;details.append(button)}
+      const key=String(index);if(inspector.has(key)){inspector.show({key,title:r.SpanName,opener:line});return}
+      const content=node('div'),description=node('div');description.append(node('span',r.ServiceName+' · '+global.GooUI.durationMS(r.duration_ns)+' · '+(r.StatusCode||'unset status')));if(r.timestamp_ns)description.append(' · ',global.GooEvidenceSummary.timestamp(r.timestamp_ns));
+      global.GooAttributes.mount(content,r);
+      const actions=[];for(const action of relatedActions?.(r)||[]){const button=node('button',action.label);button.onclick=action.select;actions.push(button)}
       for(let i=0;i<(r.linked_traces||[]).length;i++){
         const targetTrace=r.linked_traces[i],targetSpan=(r.linked_spans||[])[i];
         const target=[...element.querySelectorAll('.waterfall-row')].find(n=>n.dataset.spanId===targetSpan&&n.dataset.traceId===targetTrace);
-        if(target){const button=node('button','Follow async link → '+targetSpan);button.onclick=()=>{target.focus();target.click()};details.append(button)}
-        else details.append(node('p',`Async link outside returned spans: ${targetTrace} / ${targetSpan||'(span unspecified)'}`));
+        if(target){const button=node('button','Follow async link → '+targetSpan);button.onclick=()=>{target.focus();target.click()};actions.push(button)}
+        else content.append(node('p',`Async link outside returned spans: ${targetTrace} / ${targetSpan||'(span unspecified)'}`));
       }
+      inspector.show({key,title:r.SpanName,description,content,actions,opener:line});
     });
     return element;
   }

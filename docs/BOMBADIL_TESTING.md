@@ -526,3 +526,9 @@ Journey 77’s saved-capture actor now opens the histogram grid, switches layout
 The service-dashboard actor now opens shared evidence disclosures through `goo.inspectWidgetControls` and checks each fixed summary against retained source-read/state metadata. The native-service actor opens those disclosures during `goo.nativeBrowse` and rejects invented custody or a non-fixed mode. Existing widget question, exact-stream, chart-count and no-fleet-value invariants remain in place.
 
 The stored comparison actor opens the scope/evidence parent disclosure before inspecting shared side summaries. It checks frozen mode, separate source-read/storage labels and agreement between both bar-cell domains and their figure domain, alongside the existing incompatible-delta refusal invariant.
+
+Shared inspector coverage extends the typed-inspection actor with record inspect
+and close actions, plus selected waterfall identity and close/reopen checks. The
+native-timeline actor closes/reopens an observed-zero histogram selection while
+checking opener focus and retained selection. Existing unknown/no-bucket-table,
+layout, captured-count and source identity invariants remain active.
