@@ -1173,3 +1173,5 @@ The [histogram time-bucket diagram](HISTOGRAM_TIME_BUCKETS.md) places whole-inte
 The [evidence-summary diagram](EVIDENCE_SUMMARIES.md) shows full captures, existing receipt metadata and validated service-widget results flowing through application-owned presentation into the shared passive element. Clocks and scope interpretation stay in adapters; buttons and reads stay outside the component.
 
 Service widgets pass their validated plan/result to the application presenter, then the passive summary. The widget adapter still owns two bounded concurrent reads, generation guards and capture actions. UTC/tooltips are a display projection of exact timestamp strings, never rounded query bounds or a new evaluator.
+
+See [comparison presentation](COMPARISON_PRESENTATION.md) for aligned scalar pairs, compact metric matrices, frozen-side summaries and UTC tooltip adoption.

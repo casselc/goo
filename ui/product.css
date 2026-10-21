@@ -1149,3 +1149,9 @@ td details {
 .dashboard-grid{align-items:start}
 .dashboard-widget .ui-latency{margin-block:6px;padding-block:6px}
 .dashboard-widget-evidence>summary{font-size:12px}
+.comparison-metric-grid{gap:8px;margin-block:10px}
+.comparison-sides{gap:8px;margin-block:8px;align-items:start}
+.comparison-side{min-width:0}
+.comparison-side>h5{margin-block:4px;font-size:13px}
+.comparison-side>goo-evidence-summary{border:0;padding:0;background:transparent}
+.comparison-side>button{font-size:12px;margin:4px 6px 0 0}

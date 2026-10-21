@@ -592,3 +592,11 @@ mobile layout. See [native heatmap contract](../docs/NATIVE_HEATMAPS.md).
 `TestQuintEvidenceSummaryLive` consumes `GOO_EVIDENCE_SUMMARY_LEDGER` from journey82, validating capture state/counts, separately labelled source/storage clocks, local read counts, linked metadata and immutable reopening. Eight corruptions must fail. Model: `model/evidence_summary.qnt/.yaml`; browser actor: `verification/bombadil/evidence-summary.ts`. No new measurement evaluator or semantic property was introduced by this display extraction.
 
 Service-summary adoption extends journey59’s observed ledger with per-widget display snapshots and source result metadata. `TestQuintServiceDashboardLive` checks fixed mode, result state, source-read/basis/count correspondence and absence of invented custody; eleven rejecting mutations include frozen-mode, read-clock and custody corruption. Journeys59/75 Bombadil actors exercise summary disclosures and assert fixed mode/read-clock contracts. Pure display tests cover exact UTC formatting, negative/zero epochs and invalid bounds; the standalone browser journey checks keyboard focus and exact tooltips.
+
+Comparison presentation checks now assert horizontal track alignment/equal widths
+and separately labelled frozen-side source/storage clocks in journey52. The
+existing stored, fresh, saved and complete-native-window observed Quint ledgers
+remain authoritative for compatibility, immutable receipts and read budgets.
+The stored-comparison Bombadil actor opens both scope summaries and checks frozen
+mode, clock labels and identical bar domains. No evaluator/model transition was
+added for this passive presentation change.

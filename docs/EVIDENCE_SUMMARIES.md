@@ -77,3 +77,5 @@ Journeys 59 and 75 exercise real record/native service cards, disclosure without
 The service summary sits inside the single widget-level scope/evidence disclosure, after values, charts and actions. Source warnings and typed question JSON nest there too. This keeps the default card focused on observations while retaining the complete read context. Cards no longer stretch to fill the height of a longer neighboring card.
 
 Latency readouts now use inline Mean/p50/P95/P99 label/value pairs with compact spacing and wrapping. The percentile-position rail and exact counts/values stay in the keyboard-accessible Latency details disclosure. No duration calculations or query behavior changed.
+
+See [comparison presentation](COMPARISON_PRESENTATION.md) for aligned scalar pairs, compact metric matrices, frozen-side summaries and UTC tooltip adoption.

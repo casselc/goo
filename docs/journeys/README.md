@@ -1279,3 +1279,5 @@ Journey82 exercises real OTLP capture → exact evidence summary → linked inve
 Journeys59/75 now document compact shared service summaries and readable UTC time bounds with exact-value tooltips; journey83 covers formatter precision and keyboard inspection. Journeys82/77 refresh the affected captured-evidence and selected-interval frames. Details: [evidence-summary storyboard](../EVIDENCE_SUMMARIES.md#compact-service-cards-and-readable-time).
 
 Journey63 now checks the collapsed latency readout stays under 100px in its standalone desktop fixture, with the positional rail revealed through keyboard disclosure. Its desktop/mobile reference frames and journey59’s real service frames show the inline Mean/p50/P95/P99 layout.
+
+See [comparison presentation](../COMPARISON_PRESENTATION.md) for aligned scalar pairs, compact metric matrices, frozen-side summaries and UTC tooltip adoption.

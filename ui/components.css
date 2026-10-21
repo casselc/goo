@@ -148,3 +148,17 @@ goo-latency .ui-latency-body dt{font-size:11px}
 goo-latency .ui-latency-body dd{margin:0;font-size:13px;white-space:nowrap}
 goo-latency .ui-disclosure{margin:5px 0 0;padding-top:0;border:0}
 goo-latency .ui-disclosure>small{font-size:10px;color:var(--muted,#98a8bf)}
+/* Paired observations align horizontally and retain an identical zero baseline. */
+.comparison-pair{padding:10px;margin:0 0 8px;border-radius:7px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px}
+.comparison-pair>figcaption{grid-column:1/-1;margin:0;gap:6px;font-size:13px}
+.comparison-pair>.comparison-pair-row{display:flex;flex-direction:column;align-items:stretch;gap:4px;min-width:0;margin:0;font-size:12px}
+.comparison-pair>.comparison-pair-row>.comparison-bar-cell{min-width:0}
+.comparison-pair>.comparison-axis{grid-column:1/-1;font-size:10px}
+.comparison-pair .comparison-value{font-size:13px;margin-bottom:4px}
+.comparison-pair .comparison-bar-track{height:7px}
+.comparison-metrics{padding:10px;margin-bottom:8px;border-radius:7px}
+.comparison-metrics figcaption{font-size:13px;margin-bottom:6px}
+.comparison-metrics th,.comparison-metrics td{padding:6px}
+.comparison-metrics .comparison-bar-track{height:7px}
+.comparison-pair>.comparison-pair-row>.comparison-bar-cell{flex:1;display:flex;flex-direction:column;justify-content:space-between}
+.comparison-pair .comparison-bar-track{flex-shrink:0}

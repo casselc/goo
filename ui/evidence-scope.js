@@ -21,6 +21,15 @@
   if(native)details.push({label:'Binding',value:d.source.exactStream?'Pinned exact OTel stream':'All matching independent streams'},{label:'Scope library',value:d.source.scope||'Omitted'},{label:'Library version',value:d.source.version||'Omitted'},{label:'Schema URL',value:d.source.schemaURL||'Omitted'});
   return {mode:'fixed',state:result.state||'unknown',facts:facts.slice(0,1),details:[facts[1],facts[2],...details],notice:'Independent read · completeness unverified. Capturing evidence performs a new read.'};
  }
+ function comparisonSide(side){
+  const receipt=side.receipt,q=receipt.question.measurement||receipt.question.explore,d=q.definition,identity=typeof module!=='undefined'?require('./service-identity'):global.GooServiceIdentity;
+  const from=q.fromNS??String(BigInt(q.fromMs)*1000000n),to=q.toNS??String(BigInt(q.toMs)*1000000n);
+  const facts=[{label:'Population',value:d?d.kind+' · '+(d.source.metric||'Bound events')+' ['+(d.source.unit||'No scalar unit')+']':q.signal+' · captured records'},{label:'Source records',value:String(side.count??'Unavailable')},{label:'Fixed window · UTC',value:'['+from+', '+to+')',format:'unix-ns-range'}];
+  const details=[{label:'Capture ID',value:receipt.id},clock('Source read',side.readAt||'Unavailable in retained metadata'),clock('Stored custody time',receipt.capturedAt),{label:'Environment',value:q.environment||d.environment}];
+  if(d)details.push({label:'Scope',value:d.source.services.join(', ')+' · '+identity.label(d.source.namespace)},{label:'Declared grain',value:d.grain||'Unavailable'},{label:'Binding',value:d.source.exactStream?'Pinned exact OTel stream':'All matching independent streams'},{label:'Scope library',value:d.source.scope||'Omitted'},{label:'Library version',value:d.source.version||'Omitted'},{label:'Schema URL',value:d.source.schemaURL||'Omitted'});
+  else details.push({label:'Record predicate',value:JSON.stringify(q.where||{})});
+  return {mode:'frozen',state:side.state||'unknown',facts,details,notice:'Independent stored read · source completeness unverified.'};
+ }
  function element(data){const e=document.createElement('goo-evidence-summary');e.data=data;return e}
- const api={measurement,serviceWidget,element};if(typeof module!=='undefined')module.exports=api;else global.GooEvidenceScope=api;
+ const api={measurement,serviceWidget,comparisonSide,element};if(typeof module!=='undefined')module.exports=api;else global.GooEvidenceScope=api;
 })(typeof window==='undefined'?globalThis:window);

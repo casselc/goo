@@ -2895,3 +2895,57 @@ Updated component/adoption documentation, README and storyboard index. Image:
 `sha256:b2bdd6243e2e1d51ce2c2d163ca36f6931bc321aa03ffe30c638f42a802a042e`.
 `artifacts/latency-compact-health.json` verifies 12 running services, served asset
 hashes and preserved historical pending telemetry. Demo traffic was restored.
+
+## 2026-10-21 — comparison presentation coherence
+
+Aligned shared scalar pairs horizontally, with equal-width zero-based tracks,
+explicit side labels and signed changes. Reduced pair/matrix padding and retained
+separate count, duration and percentage domains. Captured latency continues to
+use one aligned Mean/P95/P99 matrix and one duration scale. Native histogram bins,
+exact count grids, incompatibility refusals and all Go calculations are unchanged.
+
+Stored record/native comparison sides now use `GooEvidenceScope.comparisonSide`
+and the existing passive summary inside the scope/receipt disclosure. Exact
+counts, windows, predicate/binding mode and separate read/custody clocks remain
+inspectable. Missing source reads never borrow storage time; unavailable basis
+metadata is not fabricated or fetched. Gauge endpoint/native-window times and
+fresh native bounds show UTC with exact nanosecond tooltips. Fresh baseline
+selection also no longer substitutes storage time for a missing source read.
+
+Validation:
+
+- All 25 frontend files passed (`artifacts/comparison-coherence-unit.log`), including
+  frozen-side metadata, exact/zero counts and missing-clock handling. An initial
+  pure fixture exposed missing grain metadata; the presenter now leaves it
+  explicitly unavailable rather than invalidating the display.
+- **11 browser tests passed in 5.0m**
+  (`artifacts/comparison-coherence-journeys.log`): standalone SSR/SPA components,
+  live/saved error and latency comparisons, stored record/gauge comparisons,
+  fresh capture/retry, native reset/gap/layout refusal and saved findings/recipient
+  reopening. Mobile containment and affected screenshot frames were refreshed.
+- Journey52 checks equal track widths/top alignment, frozen mode, exact independent
+  read/storage fields, receipt immutability and no source reads during inspection.
+  Stored-comparison observed Quint replay passed in 8.36s with rejecting controls;
+  its updated Bombadil actor completed 399 steps with both compare and scope/clock
+  inspection actions and no violations
+  (`artifacts/evidence-comparison/1792552326230`).
+- Native-window observed Quint replay passed in 26.71s with its rejecting controls;
+  Bombadil completed 197 steps without violations
+  (`artifacts/native-windows/1792552422225`). Fresh, error and saved-comparison
+  observed replay also passed; saved replay took 28.79s
+  (`artifacts/saved-comparison/1792552512464`). Existing Hegel semantic suites were
+  not rerun because no Go evaluator or planner changed.
+- Updated README, comparison presentation/diagram, component and evidence
+  contracts, storyboards, adoption plan/audit, known limits and Bombadil/verification
+  guidance. All frames came from the actual OTLP-fed app.
+
+Final query/packages image:
+`sha256:05477c1b103fc4b05507d00d599d5e1510025961a8dbafc8d62de334dc18a368`.
+`artifacts/comparison-coherence-health.json` verifies served assets, server/binary
+hashes, 12 running services and preserved historical pending telemetry. The wrapper
+restored traffic. Unused build cache/dangling images were reclaimed before the
+build; no volumes or stream entries were reset.
+
+Remaining work includes general selected-item inspectors, legacy diagnostic JSON,
+and deeper live-comparison composition. This milestone does not change capture,
+refresh, freeze, SSE or query lifecycle protocols.
