@@ -1,5 +1,13 @@
 # Architecture
 
+[Range drilldowns](RANGE_DRILLDOWNS.md) retain connected parent DOM/owners while
+staging an independently namespaced child population. Display components emit
+selection intent; the adapter projects checked fixed bounds without source reads.
+Only explicit Run executes existing Go questions. Back disposes the child's
+requests/descendants and restores the paused parent without reads. There are at
+most three child levels; this session state is separate from immutable evidence
+and stored view configuration. The linked sequence diagram documents ownership.
+
 [Recent activity](RECENT_ACTIVITY.md) enters the existing Go population planner
 directly from Explore. The adapter resolves fresh fixed bounds, runs at most two
 typed exploration requests and composes existing charts/facets/record pages;

@@ -14,3 +14,8 @@ goo-value-timeline>.value-timeline-plot>.value-timeline-mark:focus-visible{outli
 
 goo-value-timeline>.value-timeline-plot>.value-timeline-mark[data-interval=true]{min-width:1px}
 goo-value-timeline>.value-timeline-plot>.value-timeline-zero{position:absolute;left:0;right:0;border-top:2px dashed var(--muted,#98a8bf);pointer-events:none}
+
+goo-value-timeline[brush]>.value-timeline-plot{cursor:crosshair;touch-action:pan-y}
+goo-value-timeline[touch-brush]>.value-timeline-plot{touch-action:none}
+goo-value-timeline>.value-timeline-plot>.value-timeline-brush{position:absolute;inset-block:0;z-index:4;pointer-events:none;border-inline:2px solid var(--accent,#67ddbb);background:#77d9cb33}
+goo-value-timeline>.value-timeline-plot>.value-timeline-brush[hidden]{display:none}

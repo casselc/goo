@@ -677,3 +677,14 @@ environment, erased selection filters and an implicit tail. Run with
 and local log-page switching, with containment/runtime/no-tail invariants.
 Existing Hegel population-selector and immutable saved-view state/swarm checks
 exercise the unchanged Go planner/storage used by this composition.
+
+Range-drilldown journey 94 writes `GOO_RANGE_LEDGER` for
+`TestQuintRangeDrilldownLedger`, using `model/population_drilldown.{qnt,yaml}` through
+quint-go. It records bounded child depth and source-read initiations; seven
+mutations reject hidden reads, widened bounds, altered baselines, lost retained
+rows, extra subscriptions and an invalid return depth. `TestHegelBrushPopulationScope`
+generates 80 real JavaScript brush-to-query projections and checks the resulting
+queries through Go compilation, including missing/empty predicates and parent
+nonmutation. The existing 60 × 15 saved-view state/swarm campaign checks reused
+immutable configuration behavior. `GOO_RANGE_BOMBADIL=1` executes explicit
+recent-run, stage and return actions with depth/containment/no-live invariants.

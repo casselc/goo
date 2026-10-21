@@ -1,5 +1,14 @@
 # Cloud baseline validation — 2026-10-16
 
+Time-brushing/retained-drilldown deployment (2026-10-21 UTC): query/packages use
+image `sha256:94e51837384f221a1cf0db8d532bb8af386946cff4de78ae615456a18eb6a15c`.
+All 12 services run with traffic restored, served assets/server/binary match the
+workspace, prior pending Redis IDs remain preserved (14 pending at check), and
+OOM/OOM-kill counters remain zero. Ten regression journeys passed; staged-child
+navigation presentation was then checked again with 94/95 on the final image.
+Evidence: `artifacts/range-drilldown-{health,coverage}.json` and
+`artifacts/range-drilldown-{release,final,navigation}.log`.
+
 Recent-entry deployment (2026-10-21 UTC): query/packages use image
 `sha256:ae4a96113d5c19b256c846a888013c6fa4d48d2c0e0a79da9889851f5557f55f`.
 All 12 services run with traffic restored; served assets/server/binary match the

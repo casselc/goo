@@ -1259,3 +1259,11 @@ td details {
  .live-tail>goo-table>table>tbody>tr>td::before{grid-column:1;grid-row:1}
  .live-tail>goo-table>table>tbody>tr>td>*{grid-column:2;min-width:0;max-width:100%}
 }
+
+/* Retained drilldowns keep parent nodes connected and paused. */
+.population-child { min-width:0;margin:8px 0;padding:0 0 0 10px;border:0;border-left:2px solid var(--accent);border-radius:0;background:transparent;box-shadow:none }
+.population-child > .evidence-note { margin:4px 0;font-size:11px }
+.population-child > button { padding:5px 8px;font-size:12px }
+.population-child:has(.population-child) > :is(button,.evidence-note) { display:none }
+.population-child .recent-canvas-heading { display:none }
+.service-timeline .controls [aria-pressed=true] { color:var(--accent);border-color:var(--accent) }

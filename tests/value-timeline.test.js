@@ -22,3 +22,10 @@ test('native adapter retains typed interval rates, stale samples and histogram r
 test('generated visual positions stay bounded and monotonic without mutating exact values',()=>{
  for(let n=1;n<=100;n++){const points=Array.from({length:20},(_,i)=>point(String(i),String((i-10)*n),String(i*5))),m=model({fromNS:'0',toNS:'100',points});assert.equal(m.state,'observed');for(let i=0;i<m.points.length;i++){assert.ok(m.points[i].y>=0&&m.points[i].y<=100);if(i)assert.ok(m.points[i].y>=m.points[i-1].y);assert.equal(m.points[i].value,points[i].value)}}
 });
+
+test('brush geometry uses exact supplied timestamps, clamps no invalid inputs and treats reverse drags identically',()=>{
+ const {brushRange}=require('../ui/value-timeline'),data={fromNS:'900719925474099300',toNS:'900719925474099400'},before=structuredClone(data);
+ assert.deepEqual(brushRange(data,.2,.8),{fromNS:'900719925474099320',toNS:'900719925474099380'});assert.deepEqual(brushRange(data,.8,.2),brushRange(data,.2,.8));assert.equal(brushRange(data,.5,.5),null);
+ for(const pair of [[-1,1],[0,1.1],[NaN,1],[0,Infinity]])assert.equal(brushRange(data,...pair),null);
+ for(let i=1;i<100;i++){const r=brushRange(data,0,i/100);assert.equal(BigInt(r.fromNS),BigInt(data.fromNS));assert.ok(BigInt(r.toNS)>BigInt(r.fromNS)&&BigInt(r.toNS)<=BigInt(data.toNS))}assert.deepEqual(data,before);
+});

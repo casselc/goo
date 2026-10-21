@@ -1,9 +1,19 @@
 # Display component library
 
-The proposed [recent-activity canvas](LIVE_EXPLORATION_DESIGN.md#widget-and-adapter-work)
-maps existing components to shared brushing, selection, field choice and retained
-inspection work. These extensions remain proposed; source/subscription/capture
-ownership stays outside display elements.
+`goo-value-timeline[brush]` now emits display-only `goo-timeline-range` events
+(`start`, `preview`, `commit`, `cancel`); preview/commit carry decimal-string
+`fromNS`/`toNS` bounds inside the supplied domain. `touch-brush` explicitly enables
+touch selection; ordinary swipes otherwise scroll. Escape/disconnection cancel
+unfinished gestures. Native point-key and keyboard behavior remains supported.
+The service-timeline adapter owns millisecond-bound projection, linked preview
+and explicit apply/open actions. The population adapter owns paused retained
+children, source generations and subscriptions. See the
+[contract and executable SSR/SPA/real-data journeys](RANGE_DRILLDOWNS.md).
+
+The broader [recent-activity design](LIVE_EXPLORATION_DESIGN.md#widget-and-adapter-work)
+maps existing components to further selection, field choice and inspection work.
+Rectangle selection, record trays and generalized field choice remain proposed;
+source/subscription/capture ownership stays outside display elements.
 
 The first [recent-entry canvas](RECENT_ACTIVITY.md) composes existing time-range,
 timeline, facets, table and typed inspector primitives. Its application adapter

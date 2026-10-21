@@ -1,7 +1,8 @@
 # Known issues and gaps
 
-The [recent-entry canvas](RECENT_ACTIVITY.md) is the first direct-entry/layout
-slice. General brush gestures, selection trays, retained parent/child navigation,
+The [recent-entry canvas](RECENT_ACTIVITY.md) now includes
+[horizontal time brushing and bounded retained child populations](RANGE_DRILLDOWNS.md).
+Heatmap rectangle selection, record-selection trays, persistent branches,
 arbitrary field columns and automatic anomaly/difference scoring remain proposed.
 Saved exploration views retain their existing staged presentation and do not
 automatically start live updates.

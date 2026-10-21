@@ -10,8 +10,9 @@ remain in [Population workspace](POPULATION_WORKSPACE.md) and
 
 Implementation follow-through: the first [recent-entry canvas slice](RECENT_ACTIVITY.md)
 provides the direct planner entry and compact fixed-result composition. This
-document retains the wider proposed experience; generalized brushing, selection
-trays and retained parent/child exploration remain subsequent work.
+document retains the wider proposed experience. [Time brushing and bounded retained
+children](RANGE_DRILLDOWNS.md) now implement the first selection/navigation slice;
+rectangle selection, record trays and persistent branches remain subsequent work.
 
 ## Product decision
 

@@ -1,5 +1,10 @@
 # General population exploration and saved views
 
+Shared timelines now support source-free horizontal brushing as well as native
+UTC handles. In the [recent-activity canvas](RECENT_ACTIVITY.md), **Open selected
+population** also stages an independently run child while retaining its paused
+parent. See [range/drilldown ownership, keyboard/touch behavior and storyboards](RANGE_DRILLDOWNS.md).
+
 Start with any applied span or log question in Explore, including cross-service
 resource/attribute predicates. **Explore linked population** asks the Go planner
 to compose existing record kernels, then reads one or two signal questions. The

@@ -2,7 +2,9 @@
 
 [Population exploration and saved views](docs/POPULATION_WORKSPACE.md) bring aligned charts and matching span/log pages to arbitrary cross-service selectors. Portable filters are retained; independent companion selectors are explicit. Saved views retain fixed queries, layout and columns, and reopen without source reads.
 
-[Show recent activity](docs/RECENT_ACTIVITY.md) opens aligned span/log exploration directly, with fresh fixed bounds, charts before records, local signal switching and desktop facets alongside compact inspection pages. Live updates remain explicit. The broader [recent-activity design](docs/LIVE_EXPLORATION_DESIGN.md) plans shared brushing, retained scope navigation and composable capture/reuse.
+[Show recent activity](docs/RECENT_ACTIVITY.md) opens aligned span/log exploration directly, with fresh fixed bounds, charts before records, local signal switching and desktop facets alongside compact inspection pages. Live updates remain explicit. The broader [recent-activity design](docs/LIVE_EXPLORATION_DESIGN.md) organizes the remaining selection, comparison and composable capture/reuse work.
+
+[Time-range brushing and retained drilldowns](docs/RANGE_DRILLDOWNS.md) now let a recent population preview a range, stage and run an independent child, and return to its paused parent without rereading or losing its baseline, inspector, rows or position. Keyboard handles and explicit touch-selection mode share the same source-free preview contract.
 
 [Linked service timelines](docs/LINKED_TIMELINE.md) align span activity, errors, latency, logs and native streams. Preview a UTC range without reads, then explicitly apply it to every overview widget or open the selected span/log question.
 

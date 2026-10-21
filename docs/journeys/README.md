@@ -1323,3 +1323,15 @@ source-free range preview and saved configuration reopening, mobile composition,
 log-only/no-data/partial sources and stale-response rejection. Quint checks the
 observed request ledger with rejecting controls; optional Bombadil actions run
 recent activity and switch loaded record pages without starting a tail.
+
+## 94–95. Brush a population and retain the parent
+
+[Executable journeys](../../journeys/range-drilldown.spec.js) and
+[contract/sequence/storyboards](../RANGE_DRILLDOWNS.md): real generic OTLP clusters,
+reverse brush and Escape, source-free child staging, independent fixed reads,
+retained parent baseline/record inspector/tail rows/focus/scroll, nested returns,
+late-response rejection, keyboard handles and deliberate mobile touch selection.
+Quint/quint-go replays observed depth/read transitions with seven rejecting
+controls. Bombadil runs/stages/returns without an implicit subscription. Journey
+95 separately checks the synthetic server-rendered component reference, detached
+property updates and native point/keyboard compatibility without API calls.

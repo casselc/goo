@@ -1,0 +1,13 @@
+spec: population_drilldown.qnt
+module: population_drilldown
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  read:
+    expect: 'reads == {{.obs.reads}} and depth == {{.obs.depth}} and coherent == {{.obs.coherent}}'
+  stage:
+    expect: 'reads == {{.obs.reads}} and depth == {{.obs.depth}} and coherent == {{.obs.coherent}}'
+  back:
+    expect: 'reads == {{.obs.reads}} and depth == {{.obs.depth}} and coherent == {{.obs.coherent}}'
+  history:
+    expect: 'reads == {{.obs.reads}} and depth == {{.obs.depth}} and coherent == {{.obs.coherent}}'

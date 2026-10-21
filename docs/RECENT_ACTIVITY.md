@@ -43,8 +43,9 @@ configuration through existing immutable views, not displayed evidence. Saved
 view reopening retains its existing presentation; making every entry surface
 use the new canvas is subsequent work.
 
-The advanced query builder remains available for typed measures and shared
-questions. Selection trays, retained parent/child scope navigation, generalized
+The [range/drilldown slice](RANGE_DRILLDOWNS.md) now adds source-free horizontal
+brushing, child staging and retained paused-parent return. The advanced query builder remains available for typed measures and shared
+questions. Selection trays, persistent scope branches, generalized
 column fields, coordinated live charts and selection-versus-rest comparison
 remain proposed in the broader design. This is the direct-entry and compact
 composition slice, not a claim that the entire redesign is complete.

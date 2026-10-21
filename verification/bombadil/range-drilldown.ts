@@ -1,0 +1,10 @@
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document,window})=>({phase:document.querySelector('.population-workspace')?.getAttribute('data-phase'),stage:Number(document.documentElement.dataset.rangeStage||0),depth:document.querySelectorAll('.population-child').length,overflow:document.documentElement.scrollWidth>window.innerWidth,live:document.querySelectorAll('.live-tail:not([hidden])').length}));
+export const bounded=always(()=>!state.current.overflow&&state.current.depth<=3&&state.current.live===0);
+export const complete=eventually(()=>state.current.stage===3&&state.current.depth===0&&state.current.phase==='applied').within(30,'seconds');
+const run=registerCustomAction('goo.rangeRecent',async(document)=>{document.querySelector<HTMLButtonElement>('#exploreRecent')!.click();document.documentElement.dataset.rangeStage='1'});
+const select=registerCustomAction('goo.rangeStage',async(document)=>{const input=document.querySelector<HTMLInputElement>('goo-time-range input')!;input.value=String(Number(input.min)+1);input.dispatchEvent(new Event('input',{bubbles:true}));[...document.querySelectorAll<HTMLButtonElement>('.service-timeline button')].find(b=>b.textContent==='Open selected population')!.click();document.documentElement.dataset.rangeStage='2'});
+const back=registerCustomAction('goo.rangeReturn',async(document)=>{[...document.querySelectorAll<HTMLButtonElement>('.population-child > button')].find(b=>b.textContent==='Back to parent population')!.click();document.documentElement.dataset.rangeStage='3'});
+export const choices=actions(()=>state.current.stage===0?state.current.phase==='staged'?[run()]:['Wait']:state.current.stage===1?state.current.phase==='applied'?[select()]:['Wait']:state.current.stage===2&&state.current.depth===1?[back()]:['Wait']);

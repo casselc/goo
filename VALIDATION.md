@@ -1,5 +1,51 @@
 # Validation record
 
+## Time brushing and retained population drilldowns (2026-10-21 UTC)
+
+Deployment: query/packages use image
+`sha256:94e51837384f221a1cf0db8d532bb8af386946cff4de78ae615456a18eb6a15c`.
+All 12 services run with traffic restored; served assets, server and binary hashes
+match the workspace. Prior Redis pending IDs remain preserved (14 pending at
+check), and OOM/OOM-kill counters remain zero. Evidence:
+`artifacts/range-drilldown-health.json` and `artifacts/range-drilldown-coverage.json`.
+
+- Root Go tests and all 29 frontend test files passed. Hegel generated 80
+  JavaScript brush-to-range-query projections checked by Go compilation, preserving
+  bounds, source identity, missing/empty predicates and unmodified parent inputs.
+  The reused immutable-view state/swarm campaign passed (60 × 15 steps). The new
+  Quint depth/read model typechecks.
+- Real OTLP journey 94 passed reverse brushing, Escape cancellation, source-free
+  child staging, independent selected reads, nested returns, retained baseline,
+  actual parent row/inspector nodes, tail observation keys and paused state,
+  focus/scroll restoration, late child response rejection, exact keyboard handles
+  and native touch selection. Journey 95 passed server HTML, native point/keyboard
+  compatibility, detached property updates and large exact values without API calls.
+- Quint/quint-go replay accepted the observed depth/read ledger and rejected seven
+  controls: hidden preview/return reads, widened bounds, altered baseline, lost
+  tail rows, extra subscription and wrong return depth. The first replay exposed
+  an empty-parameter generated import; the model now supplies its explicit initial
+  read-counter constant, and replay/rejecting controls pass.
+- Regression journeys 77, 78, 88, 89, 90, 91, 92 and 93 passed alongside 94/95
+  in the ten-journey batch. These cover native metrics and frozen reopening,
+  SSR/SPA timelines and UTC controls, linked services, saved populations,
+  baseline comparisons, live populations and recent entry. Their affected
+  screenshots were regenerated. Later staged-child Run/Back presentation changes
+  were followed by targeted 94/95 reruns, with actual frame regeneration.
+  The final CSS-polished image passed 94/95 again, including one visible nested
+  Back action, a visible primary Run and no misleading child advanced-mode exit.
+- The final Bombadil trace contains 415 records with zero violations. All three
+  actions (`goo.rangeRecent`, `goo.rangeStage`, `goo.rangeReturn`) executed and
+  reached completion at parent depth zero with no live tail or viewport overflow.
+- Selection primitives remain passive; query scope, subscriptions, child lifetime
+  and capture state remain application-owned. Child staging/return never uses
+  tail rows as population inputs or automatically starts live updates. Retention
+  is bounded session state, not immutable captured evidence.
+
+Evidence: `artifacts/range-drilldown-{go,unit,hegel,quint-typecheck,browser,model-recheck,recheck,release,final,navigation}.log`,
+`artifacts/range-drilldown/*/{ledger.json,TestQuintRangeDrilldownLedger.log}`,
+the optional Bombadil traces under the same directories, and the
+[contract, sequence diagram and actual storyboards](docs/RANGE_DRILLDOWNS.md).
+
 ## Direct recent-activity entry (2026-10-21 UTC)
 
 Deployment: query/packages use image
