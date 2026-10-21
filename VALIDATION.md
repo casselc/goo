@@ -2872,3 +2872,26 @@ restored demo traffic; no volumes or historical stream entries were reset.
 Remaining adoption: comparison-side metadata, selected-item inspectors, legacy
 chart presenters and diagnostic JSON. Those are not claimed to have migrated to
 UTC/tooltips or the shared summary by this milestone.
+
+## 2026-10-21 — inline latency readouts
+
+Replaced the shared latency component’s large stacked labels/values and stretched
+percentile columns with compact inline Mean/p50/P95/P99 pairs. Mean uses the same
+13px value size as the quantiles. Spacing is smaller and pairs wrap on mobile.
+The percentile-position rail and scale now live in the existing keyboard-accessible
+Latency details disclosure with exact values and source caveats. Calculations,
+units, missing/zero semantics and public component properties are unchanged.
+
+All 25 frontend test files passed (`artifacts/latency-compact-unit.log`). Five
+standalone/service browser tests passed in 1.3m
+(`artifacts/latency-compact-journeys.log`). The standalone check bounds the
+collapsed desktop fixture below 100px and proves the rail is hidden until keyboard
+expansion. Real OTLP service/mobile/source-failure workflows passed with refreshed
+journey59/63 screenshots. Observed Quint replay rejected all eleven corruptions
+in 22.28s; service Bombadil completed 441 steps without violations, including widget
+and latency disclosure controls (`artifacts/service-dashboards/1792545035823`).
+
+Updated component/adoption documentation, README and storyboard index. Image:
+`sha256:b2bdd6243e2e1d51ce2c2d163ca36f6931bc321aa03ffe30c638f42a802a042e`.
+`artifacts/latency-compact-health.json` verifies 12 running services, served asset
+hashes and preserved historical pending telemetry. Demo traffic was restored.

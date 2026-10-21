@@ -55,7 +55,7 @@ supplied. All numeric fields are canonical nonnegative integer strings. Missing
 quantiles remain absent; P90 is not invented or interpolated. Zero duration is
 observed zero; `no_data` and `unavailable` do not render zero-valued markers.
 Display rounding remains 0.001 ms, using BigInt arithmetic. Exact strings remain
-in the disclosure. The percentile rail shows positions on one duration scale;
+in the disclosure. The percentile rail inside Latency details shows positions on one duration scale;
 it is not a histogram or a reconstruction of a distribution.
 
 Comparison data has `title`, `unit` and `rows`; each row supplies `label`, two
@@ -330,3 +330,5 @@ The measurement adapter reuses `goo-chart-frame`, `goo-value-timeline` and `goo-
 `goo-evidence-summary` is a passive bounded display snapshot with native exact-detail disclosure, SSR JSON and detached/pre-definition properties. `GooEvidenceScope` is its application presenter for captured measurements and fixed service widgets. [Contract, adoption and storyboards](EVIDENCE_SUMMARIES.md).
 
 Timestamp facts optionally use `unix-ns` / `unix-ns-range` / `utc` display formatting: UTC text, focusable exact-value tooltips, retained raw snapshot strings. `GooEvidenceSummary.unixNs` is the pure formatter; `timestamp` creates the same `<time>` presentation for native stream tables and selected intervals. These functions never alter question bounds.
+
+Latency readouts now use inline Mean/p50/P95/P99 label/value pairs with compact spacing and wrapping. The percentile-position rail and exact counts/values stay in the keyboard-accessible Latency details disclosure. No duration calculations or query behavior changed.

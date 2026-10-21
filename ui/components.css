@@ -136,3 +136,15 @@ goo-facet-list .distribution-label:disabled{opacity:1;color:var(--ink,#e3e9f3)}
 
 /* Paired charts can nest in narrower frames; table cells retain their own minima. */
 .comparison-pair .comparison-bar-cell{min-width:0}
+
+/* Latency is a short numeric readout; the positional aid belongs in details. */
+goo-latency .ui-latency{margin:6px 0;padding:4px 0}
+goo-latency .ui-latency-title{font-size:12px;margin:0 0 4px}
+goo-latency .ui-latency-body{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px}
+goo-latency .ui-latency-mean,goo-latency .ui-quantiles{min-width:0;flex:0 1 auto}
+goo-latency .ui-latency-body .ui-stats{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0}
+goo-latency .ui-latency-body .ui-stats>div{display:flex;align-items:baseline;gap:5px}
+goo-latency .ui-latency-body dt{font-size:11px}
+goo-latency .ui-latency-body dd{margin:0;font-size:13px;white-space:nowrap}
+goo-latency .ui-disclosure{margin:5px 0 0;padding-top:0;border:0}
+goo-latency .ui-disclosure>small{font-size:10px;color:var(--muted,#98a8bf)}
