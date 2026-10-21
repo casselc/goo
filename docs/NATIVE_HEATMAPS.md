@@ -1,5 +1,7 @@
 # Native histogram bucket heatmaps
 
+Packages may additionally opt into [Go-evaluated fixed time buckets](HISTOGRAM_TIME_BUCKETS.md). The retained export-interval view described below remains available without aggregation.
+
 Open an exact native histogram stream in Measurements, then expand **Bucket heatmap · compatible layouts**. The timeline retains exact time positions; the grid uses the latest 32 retained intervals as columns. Gaps do not become zero-count columns. Choose a supplied layout to inspect its native buckets, then select a cell to inspect that interval using the existing retained evidence panel.
 
 The count scale is shared across all displayed evaluated intervals, including other layouts, so switching layouts cannot quietly rescale colors. Recorded zero is `0`, an unknown interval is `?`, and a known interval with another layout is a disabled `—`. Unknown intervals have no assigned layout. Layout identity includes unit and every explicit boundary; equal bucket counts alone never imply compatibility. Native bucket labels preserve open lower bounds and the unbounded tail. Colors show populations, not rates, interpolated percentiles, or normalized distribution shapes.

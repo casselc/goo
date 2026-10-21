@@ -1136,3 +1136,6 @@ td details {
 /* Native histogram workbench layout; passive grid styles live separately. */
 .native-bucket-heatmap>label{display:block;min-width:0;max-width:100%}
 .native-bucket-heatmap>label>select{display:block;min-width:0;max-width:100%;width:100%}
+
+.native-time-view{display:block;max-width:100%;min-width:0}
+.native-time-view>select{max-width:100%;min-width:0}

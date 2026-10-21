@@ -1,0 +1,10 @@
+spec: histogram_time.qnt
+module: histogram_time
+constants: {INITIAL: 0}
+invariants: [safety]
+actions:
+  evaluate: {expect: 'coherent == {{.obs.coherent}}'}
+  inspect: {expect: 'coherent == {{.obs.coherent}}'}
+  crossing: {expect: 'coherent == {{.obs.coherent}}'}
+  capture: {expect: 'coherent == {{.obs.coherent}}'}
+  reopen: {expect: 'coherent == {{.obs.coherent}}'}

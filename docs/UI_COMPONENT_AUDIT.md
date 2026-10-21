@@ -1,8 +1,16 @@
 # Whole-app display component audit
 
+Current review: the [whole-product component sweep](WHOLE_PRODUCT_COMPONENT_SWEEP.md)
+updates this initial extraction audit against milestone `068389f`. Tables, result
+states, facets, typed attributes, chart frames, native timelines and bucket grids
+are now implemented. The application also has an SSE log-tail adapter and rolling
+record/counter comparisons; older future-tense passages below are historical
+recommendations, not current implementation status. The new sweep prioritizes
+scope/evidence summaries and remaining adoption before additional plot types.
+
 Current follow-up: passive chart frame and rolling **record measures** baseline
 comparison are implemented, including requested span latency and recorded status; see [the live comparison contract](LIVE_COMPARISON.md).
-Native live metrics and broader chart adoption remain planned.
+Native live gauges/histograms and broader chart adoption remain planned.
 
 Reviewed 2026-10-20. This is a source/design audit, not an implementation claim
 or a new live browser validation campaign. It covers Explore, Services,

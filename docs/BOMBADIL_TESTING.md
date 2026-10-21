@@ -514,3 +514,7 @@ and reject scalar percentiles for zero observations. Run journey77 with
 ## Native bucket heatmap exploration
 
 Journey 77’s saved-capture actor now opens the histogram grid, switches layouts, selects recorded-zero and unknown cells, and rejects stale bucket tables after unknown selection (`goo.timelineHeatmap`). Run with `GOO_NATIVE_TIMELINE_BOMBADIL=1`.
+
+## Fixed-time histogram actor
+
+`GOO_HISTOGRAM_TIME_BOMBADIL=1` enables journey81’s saved-capture actor (`verification/bombadil/histogram-time.ts`). It switches raw/fixed-time views, inspects observed zero and unavailable changed-layout buckets, and checks supplied point states/bounds/values plus overflow and default exception invariants. Local actions do not run telemetry queries.

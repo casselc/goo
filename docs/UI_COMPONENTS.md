@@ -320,3 +320,7 @@ See `/ui-components` and journeys77/78.
 ## Bucket heatmap
 
 `goo-bucket-heatmap` supplies exact-count, controlled-selection grids with SSR JSON and SPA properties. See [contract and integration](NATIVE_HEATMAPS.md); standalone journeys 79/80 cover focus, invalid data and mobile overflow.
+
+## Fixed-time native histogram composition
+
+The measurement adapter reuses `goo-chart-frame`, `goo-value-timeline` and `goo-bucket-heatmap` for explicit Go-evaluated time buckets and retained export intervals. The view switch is local; source/custody semantics remain in the application and Go kernel. See [time buckets](HISTOGRAM_TIME_BUCKETS.md) and the [current whole-product sweep](WHOLE_PRODUCT_COMPONENT_SWEEP.md).

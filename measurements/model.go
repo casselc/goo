@@ -51,16 +51,17 @@ type LifecycleBinding struct {
 	AllowanceMS    int64    `json:"allowanceMs" yaml:"allowanceMs"`
 }
 type Definition struct {
-	APIVersion      string            `json:"apiVersion" yaml:"apiVersion"`
-	Name            string            `json:"name" yaml:"name"`
-	Title           string            `json:"title" yaml:"title"`
-	Kind            string            `json:"kind" yaml:"kind"`
-	Environment     string            `json:"environment" yaml:"environment"`
-	LookbackMinutes int               `json:"lookbackMinutes" yaml:"lookbackMinutes"`
-	MaxGapMS        int64             `json:"maxGapMs" yaml:"maxGapMs"`
-	Grain           string            `json:"grain" yaml:"grain"`
-	Source          Binding           `json:"source" yaml:"source"`
-	Lifecycle       *LifecycleBinding `json:"lifecycle,omitempty" yaml:"lifecycle,omitempty"`
+	HistogramBucketMS *int64            `json:"histogramBucketMs,omitempty" yaml:"histogramBucketMs,omitempty"`
+	APIVersion        string            `json:"apiVersion" yaml:"apiVersion"`
+	Name              string            `json:"name" yaml:"name"`
+	Title             string            `json:"title" yaml:"title"`
+	Kind              string            `json:"kind" yaml:"kind"`
+	Environment       string            `json:"environment" yaml:"environment"`
+	LookbackMinutes   int               `json:"lookbackMinutes" yaml:"lookbackMinutes"`
+	MaxGapMS          int64             `json:"maxGapMs" yaml:"maxGapMs"`
+	Grain             string            `json:"grain" yaml:"grain"`
+	Source            Binding           `json:"source" yaml:"source"`
+	Lifecycle         *LifecycleBinding `json:"lifecycle,omitempty" yaml:"lifecycle,omitempty"`
 }
 type Question struct {
 	Definition Definition `json:"definition"`
@@ -75,19 +76,20 @@ type Plan struct {
 	Revision   string            `json:"revision"`
 }
 type Result struct {
-	Events     []lifecycle.Event        `json:"events,omitempty"`
-	Question   Question                 `json:"question"`
-	Plan       Plan                     `json:"plan"`
-	ReadAt     string                   `json:"readAt"`
-	Basis      string                   `json:"basis"`
-	Count      string                   `json:"count"`
-	State      string                   `json:"state"`
-	Warnings   []string                 `json:"warnings"`
-	Rows       []json.RawMessage        `json:"rows"`
-	Gauges     *metrics.GaugeResult     `json:"gauges,omitempty"`
-	Counters   *metrics.CounterResult   `json:"counters,omitempty"`
-	Histograms *metrics.HistogramResult `json:"histograms,omitempty"`
-	Lifecycle  *lifecycle.Prepared      `json:"lifecycle,omitempty"`
+	HistogramTime *metrics.HistogramTimeResult `json:"histogramTime,omitempty"`
+	Events        []lifecycle.Event            `json:"events,omitempty"`
+	Question      Question                     `json:"question"`
+	Plan          Plan                         `json:"plan"`
+	ReadAt        string                       `json:"readAt"`
+	Basis         string                       `json:"basis"`
+	Count         string                       `json:"count"`
+	State         string                       `json:"state"`
+	Warnings      []string                     `json:"warnings"`
+	Rows          []json.RawMessage            `json:"rows"`
+	Gauges        *metrics.GaugeResult         `json:"gauges,omitempty"`
+	Counters      *metrics.CounterResult       `json:"counters,omitempty"`
+	Histograms    *metrics.HistogramResult     `json:"histograms,omitempty"`
+	Lifecycle     *lifecycle.Prepared          `json:"lifecycle,omitempty"`
 }
 
 func Hash(v any) string {
@@ -104,6 +106,9 @@ func (d Definition) Validate() error {
 	}
 	if d.APIVersion != Version || !stable.MatchString(d.Name) || d.Title == "" || !text(d.Title, 160) || d.Environment == "" || !text(d.Environment, 128) || d.LookbackMinutes < 1 || d.LookbackMinutes > 120 || d.MaxGapMS < 1 || d.MaxGapMS > 600000 {
 		return fmt.Errorf("require versioned named package, explicit environment, 1..120 minute lookback and 1..600000 ms gap/freshness")
+	}
+	if d.HistogramBucketMS != nil && (d.Kind != "histogram" || *d.HistogramBucketMS < 1 || *d.HistogramBucketMS > 7200000) {
+		return fmt.Errorf("histogramBucketMs requires a histogram and a positive width <=120 minutes")
 	}
 	if d.Kind != "gauge" && d.Kind != "counter" && d.Kind != "histogram" && d.Kind != "lifecycle" {
 		return fmt.Errorf("unsupported measurement kind")
@@ -189,6 +194,14 @@ func (q Question) Validate() error {
 		to, e2 := strconv.ParseInt(q.ToNS, 10, 64)
 		if e1 != nil || e2 != nil || strconv.FormatInt(from, 10) != q.FromNS || strconv.FormatInt(to, 10) != q.ToNS || from < 0 || to <= from || to-from > 7200000000000 || to >= 4102444800000000000 || q.Definition.Kind == "lifecycle" || q.FromMS != from/1000000 || q.ToMS != (to+999999)/1000000 {
 			return fmt.Errorf("require canonical paired native nanosecond bounds and matching enclosing millisecond bounds")
+		}
+	}
+	if width := q.Definition.HistogramBucketMS; width != nil {
+		from, to := q.BoundsNS()
+		a, _ := strconv.ParseInt(from, 10, 64)
+		b, _ := strconv.ParseInt(to, 10, 64)
+		if (b-a-1)/(*width*1000000)+1 > 200 {
+			return fmt.Errorf("histogramBucketMs would exceed 200 fixed time buckets; choose a wider width or narrower window")
 		}
 	}
 	if l := q.Definition.Lifecycle; l != nil && q.FromMS < l.DeadlineMS+l.AllowanceMS {

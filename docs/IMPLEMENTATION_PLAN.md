@@ -636,3 +636,7 @@ question/evidence primitives rather than averaging percentile scalars.
 ## Retained native bucket heatmaps
 
 Added passive exact-count grids, layout selection over the latest 32 retained intervals, synchronized interval inspection, and compatible captured-window counts alongside normalized share comparisons. Unknown and other-layout cells remain distinct. Next: consider time-bucketed distribution views only with an explicit Go aggregation and coverage contract; interval columns do not imply equally spaced time buckets.
+
+## Explicit histogram time buckets
+
+Implemented optional `histogramBucketMs`, whole-interval Go aggregation with complete per-bucket coverage, checked native bucket sums, preserved P95 ranges and explicit unavailable/zero states. Fixed/raw UI views reuse existing passive components and retain source-free capture replay. Journey81, Hegel state/swarm properties and observed Quint/Bombadil validation cover the contract. Next product priority from the [whole-product sweep](WHOLE_PRODUCT_COMPONENT_SWEEP.md): adopt a passive evidence summary in frozen native captures and linked investigation evidence before expanding more chart types.

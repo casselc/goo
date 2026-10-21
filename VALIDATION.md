@@ -2657,3 +2657,88 @@ and historical pending entries. Final service/asset/binary verification is recor
 in `artifacts/native-heatmap-final-health.json`. Unused build caches and dangling
 images were reclaimed without touching volumes. No production Go semantics changed,
 so unrelated root/race suites were not repeated for this display milestone.
+
+## 2026-10-21 — explicit histogram time buckets and whole-product component sweep
+
+Implemented opt-in `histogramBucketMs` in native histogram packages and
+`metrics.BucketHistograms` over evaluated exports. Half-open buckets anchor at
+exact question start, retain a possibly shorter final window, and combine only
+whole compatible intervals with complete coverage. Checked native bucket sums
+produce exact populations/P95 ranges. Crossings, gaps, unknown/reset diagnostics,
+layout changes, invalid counts and overflow withhold the entire affected bucket;
+valid neighbors remain usable. Width belongs to the question/revision/basis.
+Existing definitions/results omit the new fields and retain their transport shape.
+
+The UI locally switches fixed-time/export views using the existing passive chart,
+timeline, grid and inspector. Source reads and capture replay remain in adapters
+and Go. Export diagnostics are labelled separately from bucket coverage. Selected
+zero/unavailable buckets have explicit guidance and no invented percentile or
+stale distribution. Added the executable journey81 storyboard and desktop/mobile
+frames, architecture diagram, component/verification notes and documented budgets.
+
+The parallel full-product agent prepared `docs/WHOLE_PRODUCT_COMPONENT_SWEEP.md`
+and marked older audit proposals against current implemented components. The
+report is a source/design and recorded-screenshot review, not a new user study or
+live whole-app validation campaign. It prioritizes a passive evidence summary in
+frozen native captures and linked investigation evidence; then selected-item
+inspectors, existing table/chart adoption, shared-scale compositions, revision
+catalogs and comparison presentation. Proposed components remain clearly distinct
+from implemented histogram aggregation.
+
+Completed checks:
+
+- `go test ./...`: all root packages passed, including measurement definition,
+  canonical width/budget validation, stored replay and corruption rejection.
+  Artifact: `artifacts/histogram-time-root-tests.log`. Initial sandboxed transport
+  tests could not bind loopback sockets; the actual full run used local socket
+  permission and passed.
+- `go test -race ./measurements ./metrics ./exploration` passed; the kernel agent
+  also ran `go test -race ./metrics`. Final extra cumulative-differencing/reset
+  case passed in `go test ./metrics`. Artifacts: `histogram-time-race.log` and
+  `histogram-time-kernel-final.log` under `artifacts`.
+- Hegel aligned-population property: 100 cases. Hegel state swarm: 100 cases × 20
+  generated steps. The independent whole-export oracle covers arrivals/removal,
+  repair, zeros, layout/epoch diagnostics, crossing widths, exact local sums,
+  immutable inputs, full identity and deterministic ordering. Artifact:
+  `artifacts/histogram-time-hegel.log` (0.776s).
+- All 24 frontend test files passed, including the supplied-time-bucket adapter's
+  complete identity matching, empty/unknown preservation and immutable input.
+  Artifact: `artifacts/histogram-time-frontend.log`.
+- Final-image browser journeys81/38/54 all passed in 2.2m. Journey81 injects real
+  OTLP, merges two exports to seven observations, retains recorded zero,
+  withholds unknown/layout/crossing buckets, preserves the clipped final bucket,
+  switches views without reads and reopens exact saved evidence. Journey38
+  exercises all measurement families and capture/notes reuse. Journey54 covers
+  compatible comparisons and withheld reset/gap/layout cases. Artifact:
+  `artifacts/histogram-time-final-journeys.log`. Raw native timeline journey77
+  also passed (33.9s) in the first campaign.
+- Observed Quint validation: journey81 passed in 15.45s with nine rejecting
+  mutations; measurements passed in 13.56s; native windows passed in 11.24s with
+  six rejecting mutations. Actual ledgers/logs:
+  `artifacts/histogram-time/9b5aaa00fd`,
+  `artifacts/measurements/30d839a1`, and
+  `artifacts/native-windows/1792541195706`.
+- Journey81's saved-capture Bombadil actor completed 651 trace entries and all
+  five required custom actions (open, raw, fixed, zero, unknown). Supplied
+  bounds/state/value, overflow, exception and completion properties passed.
+- During the first regression campaign, the unchanged native-window Quint
+  subprocess exceeded its existing 60s timeout during a transient load spike.
+  UI assertions had completed. Cgroup `oom`/`oom_kill` counters were 0 and available
+  memory was ample; observed load average reached 38.30. No timeouts/invariants
+  were relaxed. The same captured ledger passed independently in 9.90s
+  (`artifacts/histogram-time-native-windows-replay.log`), and the complete final
+  comparison journey then passed normally.
+- JavaScript syntax, Go formatting and `git diff --check` passed. Reviewed actual
+  desktop/mobile time-bucket screenshots and refreshed affected 38/54/77 frames.
+
+Final query/packages image:
+`sha256:de83ea6e9b4b4bf5c7890af3d6d01b7ad9671b0875afbe5ed1d5e120e03003d4`.
+The wrapper restored demo traffic, preserved telemetry volumes and historical
+pending entries. Final 12-service health and served UI/server/binary hash checks
+are recorded in `artifacts/histogram-time-final-health.json`.
+
+Limits are explicit: 200 time buckets per stream, 20,000 total output buckets and
+10,000 retained intervals; grid display remains latest 32 columns/64 native buckets.
+No splitting, interpolation, fleet aggregation, normalized-rate heatmap or live
+histogram subscription was added. Next: implement the sweep's evidence-summary
+primitive in two real workflows before broadening its API.

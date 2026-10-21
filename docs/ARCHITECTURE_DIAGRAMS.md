@@ -1163,3 +1163,7 @@ unknown intervals never inherit previous distributions.
 ## Native histogram display path
 
 The [native histogram heatmap design](NATIVE_HEATMAPS.md) diagrams the Go evaluator, retained interval adapter, passive grid and existing selection panel. Go remains responsible for captured-window compatibility.
+
+## Explicit time-bucket aggregation
+
+The [histogram time-bucket diagram](HISTOGRAM_TIME_BUCKETS.md) places whole-interval aggregation after the Go native evaluator and before shared passive display adapters. Width belongs to the immutable question, while raw/fixed-time switching uses retained results. The [whole-product component sweep](WHOLE_PRODUCT_COMPONENT_SWEEP.md) documents proposed evidence and investigation compositions.

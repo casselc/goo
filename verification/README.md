@@ -582,3 +582,7 @@ saved-capture Bombadil actor, switching layouts and selecting zero/unknown cells
 Pure grid/adapter cases live in `tests/bucket-heatmap.test.js`; journeys 79/80 cover
 SSR, detached/pre-definition properties, controlled selection, invalid data and
 mobile layout. See [native heatmap contract](../docs/NATIVE_HEATMAPS.md).
+
+## Explicit native histogram time buckets
+
+`TestHegelHistogramTimeAlignedPopulation` and `TestHegelHistogramTimeStateSwarm` use an independent whole-export oracle, including local gaps, repairs, zeros, layout/epoch diagnostics and crossing widths. `TestQuintHistogramTimeLive` consumes `GOO_HISTOGRAM_TIME_LEDGER` from journey81 and rejects nine corruptions spanning derived counts, unavailable values, width, display values, read counts and capture/reopen identity. Model: `model/histogram_time.qnt/.yaml`; optional browser actor: `verification/bombadil/histogram-time.ts`.

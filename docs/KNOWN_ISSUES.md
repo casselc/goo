@@ -410,9 +410,13 @@ isolation and durable live workspaces remain future work. See LIVE_COMPARISON.md
   local to each visual snapshot, not aligned fleet or cross-stream comparisons.
   Histogram timelines show interval counts; P95 ranges/native buckets live in
   selection details. Historical gauge samples may be stale under the fixed
-  evaluation policy. Live gauges/histograms, timeline-driven window reruns and
-  generic compatible-bucket temporal heatmaps remain planned.
+  evaluation policy. Live gauges/histograms and timeline-driven window reruns remain planned.
+  Fixed questions may opt into [Go-evaluated time buckets](HISTOGRAM_TIME_BUCKETS.md).
 
 ## Retained histogram heatmap limits
 
 Native bucket grids display the latest 32 retained intervals and at most 64 buckets per layout. These are interval columns, not equally spaced elapsed-time buckets. Oversized layouts retain their exact tables; unknown intervals have no inferred layout. Shared raw-count scales do not normalize differing window durations.
+
+## Explicit native histogram time-bucket limits
+
+Opt-in `histogramBucketMs` derives at most 200 anchored buckets per stream and 20,000 total output buckets. Exports crossing bucket boundaries are withheld, not split; narrow widths may therefore make many buckets unavailable. Final buckets can be shorter. Display grids retain the latest-32/64-native-bucket limits; no resampling, fleet merge, live histogram tail or normalized-rate heatmap is implied. Export-window coverage and time-bucket coverage are separate.

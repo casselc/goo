@@ -467,3 +467,7 @@ from zero and histogram P95 remains a native bucket range.
 ## Native histogram heatmaps
 
 Inspect retained intervals and compatible captured windows with [native bucket heatmaps](docs/NATIVE_HEATMAPS.md). Counts, unknowns and incompatible layouts remain distinct.
+
+## Fixed-time histograms and component reuse
+
+Histogram packages can opt into [Go-backed time buckets](docs/HISTOGRAM_TIME_BUCKETS.md), with local export/fixed-time inspection and replayable captures. The [whole-product component sweep](docs/WHOLE_PRODUCT_COMPONENT_SWEEP.md) prioritizes shared scope/evidence summaries, selected-item inspectors, existing component adoption and larger investigation compositions.

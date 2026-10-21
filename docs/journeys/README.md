@@ -1267,3 +1267,7 @@ This component contract complements, rather than replaces, journey77's real data
 ## Native bucket heatmap journeys
 
 Journey 77 now covers layout switching, recorded zero, unknown selection and mobile overflow over real OTLP evidence; its 77c/77d screenshots show the grid in context. Journey 54 shows the compatible-window count grid and rejects a grid for incompatible layouts. Journeys 79/80 document the passive component using a clearly synthetic fixture (`79-bucket-component-contract.png`).
+
+## 81 · Explicit histogram time buckets
+
+`journeys/histogram-time.spec.js` injects real OTLP exports, validates an explicit width, merges complete intervals, withholds crossings/layout changes, distinguishes zero/unknown, switches views without reads and reopens captured evidence. [Storyboard and frames](../HISTOGRAM_TIME_BUCKETS.md). Screenshots: `81a-go-time-bucket-aggregation.png` and `81b-mobile-time-bucket-unknown.png`.

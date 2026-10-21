@@ -297,6 +297,12 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 	if e != nil {
 		return nil, e
 	}
+	if d.HistogramBucketMS != nil {
+		r.HistogramTime, e = metrics.BucketHistograms(r.Histograms, ns(*d.HistogramBucketMS))
+		if e != nil {
+			return nil, e
+		}
+	}
 	if len(rows) > 0 {
 		r.State = "observed"
 	}
