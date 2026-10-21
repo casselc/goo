@@ -19,6 +19,7 @@ import (
 )
 
 type Result struct {
+	TraceExamples     *TraceExampleSet   `json:"traceExamples,omitempty"`
 	Numeric           *NumericSummary    `json:"numeric,omitempty"`
 	GroupedTimeSeries []TimeSeriesGroup  `json:"groupedTimeSeries,omitempty"`
 	SpanStatus        *SpanStatusSummary `json:"spanStatus,omitempty"`
@@ -403,6 +404,7 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 	if r.State == "changed_between_reads" {
 		r.Warnings = append(r.Warnings, "Source reads disagree; do not treat count, groups and page as one population snapshot. Rerun to capture new evidence.")
 	}
+	r.TraceExamples = SelectTraceExamples(*r)
 	// Timestamp is a receipt, not part of the evidence basis. Hash captured query,
 	// plan and results with exact JSON numbers retained by RawMessage.
 	basis := *r

@@ -457,6 +457,9 @@ func (c *SavedCapture) Page(cursor string) (*CapturePage, error) {
 	result.Question.Offset = offset
 	result.Question.Limit = CapturePageSize
 	result.Rows = result.Rows[offset:end]
+	if result.TraceExamples != nil {
+		result.TraceExamples = SelectTraceExamples(result)
+	}
 	result.HasMore = end < n
 	p.Explore = &result
 	p.RetainedRecords = n

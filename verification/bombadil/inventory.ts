@@ -18,12 +18,13 @@ const act=registerCustomAction('goo.inventory',async(document,window,command:str
  const el=(id:string)=>document.getElementById(id),click=(id:string)=>el(id)?.click(),set=(id:string,v:string)=>{const input=el(id) as HTMLInputElement;if(input){input.value=v;input.dispatchEvent(new Event('input',{bubbles:true}))}};
  const stage=(s:string)=>document.documentElement.dataset.gooInventoryStage=s;
  if(command==='start'){const env=new URLSearchParams(window.location.hash.slice(1)).get('environment')||document.documentElement.dataset.gooInventoryEnvironment;document.querySelector<HTMLElement>('[data-workspace="services"]')?.click();if(env)set('inventoryEnvironment',env);click('inventoryRun');stage('catalog')}
+ if(['searchMissing','searchClear','filter','clear'].includes(command)){const control=document.querySelector('#operationSearch');const parent=control?.closest('details');if(parent)(parent as HTMLDetailsElement).open=true}
  if(command==='searchMissing')set('operationSearch','__missing__');
  if(command==='searchClear')set('operationSearch','');
  if(command==='filter'){set('operationSearch','__missing__');stage('filtered')}
  if(command==='clear'){set('operationSearch','');stage('cleared')}
- if(command==='open'){const capture=JSON.parse(el('inventoryExplain')?.textContent||'null'),row=capture.rows[0],q={environment:capture.question.environment,fromMs:capture.question.fromMs,toMs:capture.question.toMs,where:{all:[{field:{kind:'column',key:'service'},op:'eq',value:row.service},{field:{kind:'column',key:'name'},op:'eq',value:row.name}]}};let marker=el('inventoryIntent');if(!marker){marker=document.createElement('script');marker.id='inventoryIntent';marker.type='application/json';document.body.append(marker)}marker.textContent=JSON.stringify(q);document.querySelector<HTMLElement>('#inventoryRows tbody button')?.click();stage('opening')}
- if(command==='browse'){const b=document.querySelector<HTMLElement>('#serviceCatalog button');if(b){b.click();stage('capturing')}}if(command==='complete'){stage('complete')}
+ if(command==='open'){const capture=JSON.parse(el('inventoryExplain')?.textContent||'null'),row=capture.rows[0],q=(window as any).GooInventory.question(capture,row);let marker=el('inventoryIntent');if(!marker){marker=document.createElement('script');marker.id='inventoryIntent';marker.type='application/json';document.body.append(marker)}marker.textContent=JSON.stringify(q);document.querySelector<HTMLElement>('#inventoryRows tbody button')?.click();stage('opening')}
+ if(command==='browse'){const b=[...document.querySelectorAll<HTMLElement>('#serviceCatalog button')].find(b=>b.textContent?.startsWith('Open service '));if(b){b.click();stage('capturing')}}if(command==='complete'){stage('complete')}
  if(command==='reset'){el('inventoryIntent')?.remove();document.querySelector<HTMLElement>('[data-workspace="services"]')?.click();click('inventoryRun')}
  if(command==='edit'){set('inventoryEnvironment',(el('inventoryEnvironment') as HTMLInputElement).value+'-no-data')}
 });

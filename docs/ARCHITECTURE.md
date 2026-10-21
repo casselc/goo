@@ -1,5 +1,7 @@
 # Architecture
 
+The [trace finding flow](TRACE_FINDINGS.md) keeps exact page-example selection in Go, navigation and two sequential capture requests in application adapters, and immutable custody in existing capture/document stores. Passive display elements perform no source reads. The sequence diagram documents compilation/query boundaries and the capture-to-finding handoff.
+
 See the [architecture and process diagrams](ARCHITECTURE_DIAGRAMS.md) for the
 source/build path, illustrative production service topology, OTel/ClickStack
 capture, investigation sequence and separate Databricks artifact boundary.

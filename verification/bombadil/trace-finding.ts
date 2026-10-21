@@ -1,0 +1,10 @@
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document,window})=>({ready:!!document.querySelector('#exploreRun'),running:document.querySelector('#exploration')?.getAttribute('data-question-phase')==='running',examples:[...document.querySelectorAll('[data-example-trace]')].map(n=>n.getAttribute('data-example-trace')),finding:!!document.querySelector('.trace-finding'),stage:Number(document.documentElement.dataset.findingStage||0),overflow:document.documentElement.scrollWidth>window.innerWidth,applied:document.querySelector('#exploreStatus')?.textContent?.includes('1 matching')}));
+export const bounded=always(()=>state.current.examples.length<=3&&new Set(state.current.examples).size===state.current.examples.length&&!state.current.overflow);
+export const complete=eventually(()=>state.current.stage===2).within(25,'seconds');
+const run=registerCustomAction('goo.findingRun',async(document)=>{(document.querySelector('#exploreRun')as HTMLButtonElement).click()});
+const follow=registerCustomAction('goo.findingFollow',async(document)=>{(document.querySelector('[data-example-trace]')as HTMLButtonElement).click();document.documentElement.dataset.findingStage='1'});
+const compose=registerCustomAction('goo.findingCompose',async(document)=>{const form=document.querySelector('.trace-finding')as HTMLDetailsElement;form.open=true;const text=form.querySelector('textarea')as HTMLTextAreaElement;text.value='Exploratory finding; no evidence published by this actor.';text.dispatchEvent(new Event('input',{bubbles:true}));if((form.querySelector('button')as HTMLButtonElement).disabled)throw Error('Finding composer did not accept authored text');document.documentElement.dataset.findingStage='2'});
+export const choices=actions(()=>!state.current.ready?['Wait']:state.current.stage===0?state.current.applied?[follow()]:state.current.running?['Wait']:[run()]:state.current.stage===1?state.current.finding?[compose()]:['Wait']:['Wait']);

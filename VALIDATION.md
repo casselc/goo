@@ -5,6 +5,44 @@ successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
 
+## Population → trace → finding (2026-10-21 UTC)
+
+- Root Go suite and focused vet passed. Exact uint64 page selection checks cover
+  invalid identity/time/duration, duplicate traces, ambiguous field separators,
+  order invariance, changed reads and frozen-page membership. Legacy captures do
+  not synthesize new metadata. All 27 frontend test files passed.
+- Hegel passed 100 generated page-example cases plus 60 immutable linked-history
+  state/swarm cases (15 steps each).
+- Real OTLP browser journeys covered compact service navigation, retained history,
+  captures, inventory, service dashboards and metric discovery handoffs. An initial
+  native-instrument assertion needed to open its new disclosure; the test and
+  Bombadil actor were corrected to follow the visible UI. The extended inventory
+  actor also exposed a stale first-button selector and pre-namespace question
+  construction; it now chooses a named service and uses the shared transform.
+  Trace-finding actor artifacts now use a unique per-ledger directory so reruns
+  preserve previous evidence without output-path collisions.
+- Journey 87 exercised failed second-capture recovery, two independent successful
+  captures, no implicit document write, explicit revision saving, rejection of
+  staging into a concurrently edited draft, stored reopening without source reads
+  and mobile overflow. Its Quint/quint-go observed ledger passed and rejected five
+  scope/reference/read mutations. Bombadil executed run, example navigation and
+  finding composition with no property violations. Corrected inventory and
+  metric-service actors also completed their live journeys; all ten distinct
+  targeted browser journeys passed across the recorded runs.
+
+Evidence: `artifacts/trace-journey-{go,unit,vet,browser,regression,final,final-recheck,inventory-recheck}.log`,
+`artifacts/trace-examples-hegel.log`, `artifacts/trace-finding/*/ledger.json`,
+`artifacts/trace-finding/*/TestQuintTraceFindingLedger.log`,
+`artifacts/trace-finding/*/bombadil/trace.jsonl` and the refreshed
+[storyboard frames](docs/TRACE_FINDINGS.md).
+
+
+Final trace-finding deployment (2026-10-21 UTC): query/packages run image
+`sha256:0c146e9dcea3b238605d807f21a72357797f00de6e7df2160c20c3625826e14b`. All 12 services run; served UI assets, Go binary and Python server match the
+verified workspace. Prior pending Redis entries remain preserved (14 pending at
+check); traffic is restored and cgroup OOM/OOM-kill counters remain zero. Evidence:
+`artifacts/trace-finding-final-health.json`.
+
 ## Live span latency and recorded error share (2026-10-20 UTC)
 
 Saved span questions requesting duration/status now compare count, compact

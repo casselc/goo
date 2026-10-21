@@ -1,5 +1,7 @@
 # Implementation plan
 
+Implemented: [population → trace → finding](TRACE_FINDINGS.md), including bounded Go-selected page examples, explicit two-capture staging, partial-failure recovery, compact service disclosures and a generic OTel storyboard. Next: declared trace coverage/anchor-retention diagnostics and validation of late evidence changes; no automatic completeness or causality inference.
+
 ## Current example standardization
 
 [Shared measurement packages](MEASUREMENT_PACKAGES.md) now connect gauges,

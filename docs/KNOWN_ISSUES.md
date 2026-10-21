@@ -1,5 +1,7 @@
 # Known issues and gaps
 
+Trace examples rank valid linked spans on a bounded record page, not complete traces or the full matching population. Findings link two later independent reads; automatic verification that an original anchor survived those reads remains future work. See [trace finding contract](TRACE_FINDINGS.md).
+
 This list describes the current code at handoff. Items are observations or missing features, not completed fixes.
 
 ## Measurement correctness

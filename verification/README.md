@@ -621,3 +621,12 @@ elements; application adapters own navigation, read lifecycle and scope. Journey
 Bombadil actor covers selection and returning to retained evidence. Hegel
 selection properties and the question-session state swarm complement observed
 quint-go validation against the existing question-links model.
+
+Trace findings reuse `model/linked_evidence.qnt` rather than introducing a second
+custody state machine. `TestHegelTracePageExamples` checks exact page membership,
+permutation invariance, deduplication and incoherent-read withholding over 100
+cases. `TestHegelLinkedEvidenceStateSwarm` exercises immutable revision history.
+Run the live workflow and composer actor with
+`GOO_TRACE_FINDING_BOMBADIL=1 bash scripts/run_journeys.sh journeys/trace-finding.spec.js`.
+Its ledger drives `TestQuintTraceFindingLedger`; five rejecting controls alter
+scope, trace identity, linked evidence and reads during stored reopening.

@@ -19,7 +19,7 @@ const act=registerCustomAction('goo.metricServices',async(document,window,comman
  const el=(id:string)=>document.getElementById(id);const button=(host:string,text:string)=>[...document.querySelectorAll<HTMLButtonElement>(host+' button')].find(b=>b.textContent===text);
  if(command==='start'){const env=new URLSearchParams(window.location.hash.slice(1)).get('metricServices')!;document.querySelector<HTMLButtonElement>('[data-workspace="services"]')!.click();const input=el('inventoryEnvironment') as HTMLInputElement;input.value=env;input.dispatchEvent(new Event('input',{bubbles:true}));el('inventoryRun')!.click()}
  if(command==='open')button('#serviceCatalog','Open service metrics-worker')!.click();
- if(command==='preview'){const card=[...document.querySelectorAll<HTMLElement>('#serviceDetail article')].find(c=>c.querySelector('h4')?.textContent==='worker.depth');card?.querySelector<HTMLButtonElement>('button')!.click()}
+ if(command==='preview'){(document.querySelector('.service-instrument-grid')as HTMLDetailsElement).open=true;const card=[...document.querySelectorAll<HTMLElement>('#serviceDetail article')].find(c=>c.querySelector('h4')?.textContent==='worker.depth');card?.querySelector<HTMLButtonElement>('button')!.click()}
  if(command==='return')button('#serviceReturn','Back to service')!.click();
  document.documentElement.dataset.metricServicesStage=command==='return'?'complete':command;
 });

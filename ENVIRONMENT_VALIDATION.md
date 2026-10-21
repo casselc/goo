@@ -1,5 +1,11 @@
 # Cloud baseline validation — 2026-10-16
 
+Final trace-finding deployment (2026-10-21 UTC): query/packages run image
+`sha256:0c146e9dcea3b238605d807f21a72357797f00de6e7df2160c20c3625826e14b`. All 12 services run; served UI assets, Go binary and Python server match the
+verified workspace. Prior pending Redis entries remain preserved (14 pending at
+check); traffic is restored and cgroup OOM/OOM-kill counters remain zero. Evidence:
+`artifacts/trace-finding-final-health.json`.
+
 This is the original onboarding record. Subsequent live browser journeys,
 lifecycle preparation and Hegel/Quint evidence are recorded in
 [VALIDATION.md](VALIDATION.md); they supersede the browser-unverified status below.
