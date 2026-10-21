@@ -70,8 +70,16 @@ func TestQuintServiceDashboardLive(t *testing.T) {
 			}
 			Plan, DeclarationPlan exploration.DashboardPlan
 			Evidence              []struct {
-				Widget   exploration.DashboardWidget
-				Question json.RawMessage
+				Widget                          exploration.DashboardWidget
+				Question                        json.RawMessage
+				Basis, SourceRead, Count, State string
+			}
+			Summaries []struct {
+				Key  string
+				Data struct {
+					Mode, State, Notice string
+					Facts, Details      []struct{ Label, Value string }
+				}
 			}
 			Focused, Wider     workbench.Step
 			Authored, Captured workbench.Document
@@ -81,6 +89,16 @@ func TestQuintServiceDashboardLive(t *testing.T) {
 			t.Fatal(e)
 		}
 		switch mutation {
+		case 8:
+			l.Summaries[0].Data.Mode = "frozen"
+		case 9:
+			for i := range l.Summaries[0].Data.Details {
+				if l.Summaries[0].Data.Details[i].Label == "Source read" {
+					l.Summaries[0].Data.Details[i].Value = "invented custody time"
+				}
+			}
+		case 10:
+			l.Summaries[0].Data.Details = append(l.Summaries[0].Data.Details, struct{ Label, Value string }{"Stored custody time", "invented"})
 		case 0:
 			l.Plan.Scope.ToMS++
 		case 1:
@@ -103,6 +121,32 @@ func TestQuintServiceDashboardLive(t *testing.T) {
 			l.SavedCapture.Explore.Count = "777"
 		}
 		coherent := l.Events[0].Reads == 1 && l.Plan.Scope.Environment == l.Catalog.Question.Environment && l.Plan.Scope.FromMS == l.Catalog.Question.FromMS && l.Plan.Scope.ToMS == l.Catalog.Question.ToMS && l.Plan.Scope.Namespace != nil && l.Plan.Scope.Namespace.Mode == "missing" && l.Plan.Service == "api" && l.Focused.Validate() == nil && l.Focused.Record.Where.All[1].Value == "/items" && l.Wider.Validate() == nil && l.Wider.Record.Where.All[0].Value == "worker" && l.Wider.Record.Where.All[1].Op == "missing" && l.SavedCapture.Explore.Count == "2" && len(l.Captured.Cards[0].Evidence) == 1 && len(l.DeclarationPlan.Declarations) > 0 && len(l.Evidence) == 4
+		coherent = coherent && len(l.Summaries) == len(l.Evidence)
+		for _, summary := range l.Summaries {
+			found := false
+			for _, ev := range l.Evidence {
+				if summary.Key != ev.Widget.Key {
+					continue
+				}
+				found = true
+				coherent = coherent && summary.Data.Mode == "fixed" && summary.Data.State == ev.State
+				read, basis, count := false, false, false
+				for _, row := range summary.Data.Details {
+					switch row.Label {
+					case "Source read":
+						read = row.Value == ev.SourceRead && row.Value != ""
+					case "Evidence basis":
+						basis = row.Value == ev.Basis
+					case "Source records":
+						count = row.Value == ev.Count
+					case "Stored custody time":
+						coherent = false
+					}
+				}
+				coherent = coherent && read && basis && count
+			}
+			coherent = coherent && found
+		}
 		edges := 0
 		for _, d := range l.Catalog.Dependencies {
 			if d.Kind == "edge" {
@@ -148,7 +192,7 @@ func TestQuintServiceDashboardLive(t *testing.T) {
 	if !check(-1) {
 		t.Fatal("live trace rejected")
 	}
-	for i := 0; i < 8; i++ {
+	for i := 0; i < 11; i++ {
 		if check(i) {
 			t.Fatal("mutation accepted", i)
 		}

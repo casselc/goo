@@ -327,4 +327,6 @@ The measurement adapter reuses `goo-chart-frame`, `goo-value-timeline` and `goo-
 
 ## Evidence summary
 
-`goo-evidence-summary` is a passive bounded display snapshot with native exact-detail disclosure, SSR JSON and detached/pre-definition properties. `GooEvidenceScope` is its application presenter for captured measurements. [Contract, adoption and storyboards](EVIDENCE_SUMMARIES.md).
+`goo-evidence-summary` is a passive bounded display snapshot with native exact-detail disclosure, SSR JSON and detached/pre-definition properties. `GooEvidenceScope` is its application presenter for captured measurements and fixed service widgets. [Contract, adoption and storyboards](EVIDENCE_SUMMARIES.md).
+
+Timestamp facts optionally use `unix-ns` / `unix-ns-range` / `utc` display formatting: UTC text, focusable exact-value tooltips, retained raw snapshot strings. `GooEvidenceSummary.unixNs` is the pure formatter; `timestamp` creates the same `<time>` presentation for native stream tables and selected intervals. These functions never alter question bounds.

@@ -1,8 +1,8 @@
 # Shared evidence summaries
 
-Captured measurements and their investigation links use the same passive `goo-evidence-summary` element. It groups the population, scope, fixed window, source-record count, declared grain and binding into labelled facts. The result state and evidence mode are separate. A visible notice preserves source-completeness and independent-read limits; exact identities and clocks stay in a native disclosure.
+Service widgets, captured measurements and their investigation links use the same passive `goo-evidence-summary` element. It groups the population, scope, fixed window, source-record count, declared grain and binding into labelled facts. The result state and evidence mode are separate. A visible notice preserves source-completeness and independent-read limits; exact identities and clocks stay in a native disclosure.
 
-The application presenter in `ui/evidence-scope.js` interprets typed measurement captures. The custom element in `ui/evidence-summary.js` only renders its supplied display snapshot. It never queries telemetry or metadata, chooses a namespace, infers health, calculates counts, refreshes evidence, navigates, copies or captures. Existing adapter buttons remain outside it.
+The application presenter in `ui/evidence-scope.js` interprets typed measurement captures and validated service-widget results. The custom element in `ui/evidence-summary.js` only renders its supplied display snapshot. It never queries telemetry or metadata, chooses a namespace, infers health, calculates counts, refreshes evidence, navigates, copies or captures. Existing adapter buttons remain outside it.
 
 ```js
 summary.data = {
@@ -44,6 +44,8 @@ flowchart LR
   D --> E[Passive goo-evidence-summary]
   E --> F[Capture workspace]
   E --> I[Linked investigation evidence]
+  S[Validated record and native service results] --> A
+  E --> W[Compact fixed service widgets]
   B[Adapter-owned open, refresh and capture buttons] --> F
   B --> I
 ```
@@ -58,4 +60,18 @@ Journey 83 covers the clearly synthetic standalone gallery, SSR attributes, pre-
 
 [Standalone synthetic reference](journeys/screenshots/83-synthetic-evidence-summary.png)
 
-Next adoption candidates are service widgets and comparison sides, with their own typed display adapters. They are proposed, not migrated by this feature. See the [whole-product sweep](WHOLE_PRODUCT_COMPONENT_SWEEP.md) for the later selection/detail and complex-composition work.
+Service widgets now use the same element through their own typed display adapter. Comparison sides remain a later adoption candidate. See the [whole-product sweep](WHOLE_PRODUCT_COMPONENT_SWEEP.md) for the later selection/detail and complex-composition work.
+
+## Compact service cards and readable time
+
+Service widgets lead with their values and charts. A compact “Fixed question · result · Scope and evidence” disclosure opens the shared summary, with one population fact beside the fixed-question/result labels. Scope, fixed window, exact count, grain, source read and evidence basis share one disclosure, rather than repeating source metadata paragraphs. The enclosing service keeps its fixed scope; each widget retains its independent read. A fixed widget is not a stored capture or a continuous subscription. Capturing explicitly performs another read. Record results use their `capturedAt` source-read field; native results use `readAt`. Neither becomes a custody time.
+
+Default summary spacing and card padding are tighter. The overview keeps independent-read, unverified-coverage and capture-reread guidance visible; per-widget detail retains the same limits. Native cards still distinguish the latest interval/endpoint from complete-window coverage and never imply a fleet aggregate. Full stream identities, source warnings and typed question JSON remain inspectable.
+
+Timestamp rows can supply `format: 'unix-ns'`, `'unix-ns-range'` or `'utc'` (RFC3339 UTC clocks). Their raw string `value` remains unchanged in the display snapshot. The element shows millisecond UTC dates and exposes exact Unix nanoseconds in a native tooltip, with a keyboard-focusable value. Scalar `<time>` elements retain a nine-digit fractional `datetime`. Invalid formats or out-of-range dates fail closed. These formats apply only to absolute timestamps: durations, units and counts retain their existing semantics. Native stream tables and selected intervals use the same timestamp formatter. This is a targeted adoption; other legacy diagnostic JSON and raw exporters retain exact source fields.
+
+Journeys 59 and 75 exercise real record/native service cards, disclosure without source reads, namespace and fixed-mode semantics, source failures, exact-stream navigation and mobile containment. Their screenshots now show the compact summaries. Journey 83 additionally checks UTC text, exact tooltip/`datetime`, keyboard focus and invalid formatting. Journey 82 refreshes the capture/investigation summary frames.
+
+[Service overview](journeys/screenshots/59b-automatic-service-widgets.png) · [Mobile service overview](journeys/screenshots/59c-mobile-service-overview.png) · [Native service overview](journeys/screenshots/75a-native-service-overview.png) · [Mobile native service card](journeys/screenshots/75c-mobile-native-service-card.png)
+
+The service summary sits inside the single widget-level scope/evidence disclosure, after values, charts and actions. Source warnings and typed question JSON nest there too. This keeps the default card focused on observations while retaining the complete read context. Cards no longer stretch to fill the height of a longer neighboring card.

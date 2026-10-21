@@ -2814,3 +2814,61 @@ Current adoption is native captured evidence. Record/inventory summaries, servic
 widgets, comparison sides and selected-item compositions remain explicit follow-up
 work. Next: reuse the evidence summary for service-widget evidence, with its own
 typed fixed/live display adapter and clocks.
+
+## 2026-10-21 — compact service evidence and readable UTC timestamps
+
+Implemented shared summaries for supported record/native service widgets through
+`GooEvidenceScope.serviceWidget`. Widgets lead with observations/charts/actions;
+one collapsed scope/evidence disclosure holds their summary, read basis and typed
+question/source warnings. Reduced summary/card/latency spacing and stopped short
+cards stretching to match neighbors. The overview keeps independent-read,
+unverified-coverage and capture-reread guidance visible. No planner, query budget,
+source mapping or capture persistence schema changed.
+
+Fixed widgets use fixed mode, with record `capturedAt` and native `readAt` treated
+as source-read clocks, never custody. Exact counts and namespace distinctions
+survive. Shared summaries show UTC timestamps/ranges and shorter same-day bounds;
+raw nanoseconds and RFC3339 fractions remain in focusable tooltips and display
+snapshots. Native stream tables, endpoint/interval disclosures and selected
+interval details use the same timestamp formatter. Durations/counts retain their
+native units; no query bounds are rounded.
+
+Validation:
+
+- All 25 frontend test files passed (`artifacts/service-evidence-unit.log`),
+  including domain clocks, zero/large counts, four namespace states, exact bounds,
+  negative/zero epochs, nine-digit fractions and invalid display formats.
+- Final deployed browser run: **5 passed in 2.9 minutes**, journeys59/75/77/82/83
+  (`artifacts/service-evidence-final-journeys.log`). Real OTLP inputs exercise
+  partial source failure, stale-response guards, exact-stream continuation,
+  immutable capture reopening, no reads during local disclosure, compact card
+  sizing, mobile containment, keyboard inspection and exact-value tooltips.
+- Journey59 observed Quint replay passed in 19.21s with eleven rejecting controls,
+  including invented frozen mode, source clock and custody. Its Bombadil actor
+  completed 466 steps without violations and exercised all eight custom actions
+  (`artifacts/service-dashboards/1792544287285`).
+- Journey75 observed Quint replay passed in 15.92s with its nine rejecting controls.
+  Bombadil completed 567 steps without violations, covering all four required
+  discovery/open/browse/link actions (`artifacts/service-native/a13c35576c`).
+  Capture-summary and native-timeline journeys also replayed their observed Quint
+  models and rejecting controls. No new Go semantic evaluator was introduced, so
+  the existing Hegel planner/state suites were not rerun for this display change.
+- Preliminary run: four browser journeys passed; service Bombadil caught a test
+  selector reading a nested native diagnostic instead of widget source metadata.
+  Corrected it to the widget provenance path and reran the complete five-journey
+  set against the final image. The initial failure is retained in
+  `artifacts/service-evidence-journeys.log`.
+- Refreshed all affected service, capture/investigation, native-timeline and
+  component-reference screenshots from the running app. Updated README,
+  architecture/presentation diagram, component contract, storyboards, roadmap,
+  whole-product adoption status, known limits and verification/Bombadil guidance.
+
+Final query/packages image:
+`sha256:703330e0f8b05c4a0b495e20eece866c380eaae2dfcec649e7e9cbd2e4093d43`.
+Health, served asset/server/binary hashes and preserved historical pending IDs are
+recorded in `artifacts/service-evidence-final-health.json`. The journey wrapper
+restored demo traffic; no volumes or historical stream entries were reset.
+
+Remaining adoption: comparison-side metadata, selected-item inspectors, legacy
+chart presenters and diagnostic JSON. Those are not claimed to have migrated to
+UTC/tooltips or the shared summary by this milestone.

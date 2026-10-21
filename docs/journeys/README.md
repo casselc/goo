@@ -1275,3 +1275,5 @@ Journey 77 now covers layout switching, recorded zero, unknown selection and mob
 ## 82/83 · Shared evidence summaries
 
 Journey82 exercises real OTLP capture → exact evidence summary → linked investigation, preserving unsaved findings and retained receipt identity without source reads. Journey83 covers synthetic standalone SSR/properties/focus and mobile layout. [Storyboard and frames](../EVIDENCE_SUMMARIES.md).
+
+Journeys59/75 now document compact shared service summaries and readable UTC time bounds with exact-value tooltips; journey83 covers formatter precision and keyboard inspection. Journeys82/77 refresh the affected captured-evidence and selected-interval frames. Details: [evidence-summary storyboard](../EVIDENCE_SUMMARIES.md#compact-service-cards-and-readable-time).

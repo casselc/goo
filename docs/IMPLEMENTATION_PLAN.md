@@ -643,4 +643,4 @@ Implemented optional `histogramBucketMs`, whole-interval Go aggregation with com
 
 ## Shared native evidence summaries
 
-Implemented the whole-product sweep’s first component in the full captured measurement, linked question evidence, and native capture-card surfaces. Source/storage clocks, exact bounds, namespace identity, independent reads and unknown metadata remain explicit. Next: adopt the same display primitive in service widgets before adding more selection/detail components.
+Implemented the whole-product sweep’s first component in the full captured measurement, linked question evidence, and native capture-card surfaces. Source/storage clocks, exact bounds, namespace identity, independent reads and unknown metadata remain explicit. Service widgets now adopt the same display primitive with fixed mode, domain-specific source clocks, compact facts and inspectable scope. UTC timestamp formatting preserves exact nanoseconds in tooltips. Next: simplify comparison-side metadata and selected-item inspectors using the same primitives.

@@ -475,3 +475,5 @@ Histogram packages can opt into [Go-backed time buckets](docs/HISTOGRAM_TIME_BUC
 ## Shared evidence summaries
 
 Native captures and linked investigation evidence now share a [compact evidence summary](docs/EVIDENCE_SUMMARIES.md), with explicit population, scope, counts, result mode and separate source/storage clocks.
+
+Service widgets and saved native evidence share [compact evidence summaries](docs/EVIDENCE_SUMMARIES.md): fixed scope, independently labelled read clocks, and readable UTC timestamps with exact nanoseconds available in tooltips.
