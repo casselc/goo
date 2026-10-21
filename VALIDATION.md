@@ -1,5 +1,13 @@
 # Validation record
 
+## Recent-activity product design (2026-10-21 UTC)
+
+Documentation-only [whole-product design pass](docs/LIVE_EXPLORATION_DESIGN.md):
+reviewed current adapters/component contracts and existing journey 92 desktop
+evidence. Includes proposed layout, gestures, composition boundaries, sequence
+diagram and acceptance storyboards. No runtime behavior changed; no new browser,
+model or property campaign was run. Proposed behavior is explicitly labelled.
+
 Population-live deployment (2026-10-21 UTC): query/packages use image
 `sha256:86105ae4b88e41060744a07d971331f1e648bfdd221af0befbe80a60903d6467`. All 12 services run; traffic is restored,
 served UI/server/binary hashes match the workspace, existing Redis pending entries

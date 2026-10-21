@@ -1,5 +1,14 @@
 # Implementation plan
 
+## Next whole-product interaction priority
+
+The [recent-activity design pass](LIVE_EXPLORATION_DESIGN.md) sets the next sequence:
+one compact Explore entry canvas, unified selection with retained parent state,
+adjacent population comparisons, then composable capture/reuse. This supersedes
+adding a standalone tail-to-investigation panel. Existing semantic contracts and
+immutable artifacts remain; proposed UI and acceptance storyboards are not yet
+implemented.
+
 Implemented: general span/log population exploration with paired record pages, checked companion selectors, shared time selection, and immutable saved views carrying layout/columns. [Contract and sequence](POPULATION_WORKSPACE.md). Subsequent slices include arbitrary native-stream composition and broader saved dashboard layouts.
 
 Implemented: [aligned service telemetry with linked time selection](LINKED_TIMELINE.md). Next general-purpose slices: arbitrary population/cross-service timelines and saved multi-widget dashboard composition; these are not implemented by this service-level milestone.

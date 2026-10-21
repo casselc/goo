@@ -11,6 +11,11 @@ help, but existing OpenTelemetry data must be a useful starting point.
 **Every conclusion should point to evidence, and every recurring question should
 be reusable.**
 
+The [recent-activity design](LIVE_EXPLORATION_DESIGN.md) applies this essence to the
+likely first question: “What is happening now in the system I care about?” It
+proposes one Explore canvas for narrowing, selecting, comparing and preserving,
+with reusable definitions available progressively rather than required at entry.
+
 ## The product loop
 
 1. **Ask.** Start with a behavior that matters: a slow operation, stalled work,
