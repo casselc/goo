@@ -1,5 +1,11 @@
 # Cloud baseline validation — 2026-10-16
 
+Population-workspace deployment (2026-10-21 UTC): query/packages use image
+`sha256:5be65187e1c5f7ddd03c4b0bce63c3fa9ab3f1d68b54baa2ac9818fefae78904`. All 12 services run, traffic is restored, and served UI assets, Python server
+and Go binary match the workspace. Existing Redis pending entries remain preserved
+(14 pending at check); cgroup OOM/OOM-kill counters remain zero. Evidence:
+`artifacts/population-final-health.json`.
+
 Linked-timeline deployment (2026-10-21 UTC): query/packages use image
 `sha256:f39b44ec66cd9cdefb199f923d4bcf9c0c3e503a8dff107b457620ea220de506`. All 12 services run, traffic is restored, and served component/app assets,
 server and Go binary match the workspace. Existing pending Redis entries remain

@@ -1,9 +1,51 @@
 # Validation record
 
+Population-workspace deployment (2026-10-21 UTC): query/packages use image
+`sha256:5be65187e1c5f7ddd03c4b0bce63c3fa9ab3f1d68b54baa2ac9818fefae78904`. All 12 services run, traffic is restored, and served UI assets, Python server
+and Go binary match the workspace. Existing Redis pending entries remain preserved
+(14 pending at check); cgroup OOM/OOM-kill counters remain zero. Evidence:
+`artifacts/population-final-health.json`.
+
 Current additions: see the [cloud baseline](ENVIRONMENT_VALIDATION.md) for the
 successful default Compose run, real cross-app Bombadil journeys and generated
 Quint MBT success/fault campaigns in this environment. The historical hosted
 environment limitations below describe the original handoff session.
+
+## General population workspace and immutable saved views (2026-10-21 UTC)
+
+- Root Go suite and focused vet passed. Planner checks retain portable predicates,
+  withhold incompatible companions without dropping clauses, and reject foreign
+  companion scopes. Store/HTTP checks cover immutable content identity, changed
+  presentation revisions, mixed scopes, required columns, strict decoding and
+  tampered artifacts. The actual Python proxy accepted a 17,482-byte two-query
+  planning request, beyond its previous single-query budget, without evaluation.
+- The frontend suite passed 29 files. Hegel passed 100 generated portable-selector
+  plans and 60 × 15 saved-view state/swarm sequences covering layout, columns,
+  range changes, saves and immutable prior configurations.
+- Real OTLP journey 90 passed cross-service span/log filtering with excluded
+  resource/attribute groups, missing/empty selector preservation, two-signal range
+  preview/apply, explicit independent companion selectors, presentation-only
+  changes, save/reopen/run, normal builder restoration, source-free navigation,
+  mobile layout, failed-log partial results, cancellation/late-response rejection
+  and source-free fresh-window staging. Configuration reopening and saving do not
+  read telemetry. Existing question-workbench, retained-navigation, trace-finding
+  and linked-service-timeline journeys also passed across the recorded runs.
+- The observed Quint/quint-go ledger passed and rejected five mutations: foreign
+  environment, lost saved predicates, hidden preview/reopen reads and invalid
+  columns. Bombadil opened a saved view, explicitly ran its two populations and
+  changed layout without property violations. Artifacts retain earlier test
+  corrections for canonical empty-value JSON and checkbox replacement; column
+  edits now preserve controls and record inspectors.
+- Shared timeline labels/notes are supplied by the owning adapter. Entering
+  population mode stops an old single-question tail/context; mode-specific source
+  requests retain independent cancellation and publication generations. Saved
+  configuration uses existing typed queries, not another measurement evaluator.
+
+Evidence: `artifacts/population-{go,vet,unit,hegel,browser,final,recheck,release,verified}.log`,
+`artifacts/population-workspace/*/{ledger.json,TestQuintPopulationWorkspaceLedger.log}`,
+`artifacts/population-workspace/*/bombadil/trace.jsonl`,
+`artifacts/population-proxy-budget.json` and the refreshed
+[storyboard and diagrams](docs/POPULATION_WORKSPACE.md).
 
 ## Aligned service timelines and shared UTC selection (2026-10-21 UTC)
 

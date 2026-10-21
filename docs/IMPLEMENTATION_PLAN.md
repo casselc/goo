@@ -1,5 +1,7 @@
 # Implementation plan
 
+Implemented: general span/log population exploration with paired record pages, checked companion selectors, shared time selection, and immutable saved views carrying layout/columns. [Contract and sequence](POPULATION_WORKSPACE.md). Subsequent slices include arbitrary native-stream composition and broader saved dashboard layouts.
+
 Implemented: [aligned service telemetry with linked time selection](LINKED_TIMELINE.md). Next general-purpose slices: arbitrary population/cross-service timelines and saved multi-widget dashboard composition; these are not implemented by this service-level milestone.
 
 Implemented: [population → trace → finding](TRACE_FINDINGS.md), including bounded Go-selected page examples, explicit two-capture staging, partial-failure recovery, compact service disclosures and a generic OTel storyboard. Next: declared trace coverage/anchor-retention diagnostics and validation of late evidence changes; no automatic completeness or causality inference.

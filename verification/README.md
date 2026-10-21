@@ -639,3 +639,12 @@ log failure, and replays the observed ledger through `question_links.qnt` with
 quint-go. Rejecting controls cover foreign environment, altered bounds, preview
 reads, reset-read drift and lost predicates. The passive component conformance
 journey needs no source and verifies keyboard and detached-property behavior.
+
+Population workspace checks: `TestHegelPopulationPortableSelectors` generates
+100 missing/empty portable-selector plans; `TestHegelPopulationViewStateSwarm`
+checks 60 × 15 immutable view edit/save sequences. Journey 90 emits real OTel
+spans/logs and saves only configuration. Its `TestQuintPopulationWorkspaceLedger`
+replays source reads versus source-free preview/save/reopen with quint-go and
+rejects scope, selector, presentation-validation and hidden-read mutations. Run
+`GOO_POPULATION_BOMBADIL=1 bash scripts/run_journeys.sh journeys/population-workspace.spec.js`
+for the saved-view run/layout actor as well as partial-failure/cancellation checks.

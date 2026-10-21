@@ -1,5 +1,7 @@
 # User journeys and storyboards
 
+[Journey 90](../../journeys/population-workspace.spec.js) exercises generic cross-service OTel populations, excluded resource/attribute groups, missing-versus-empty selectors, paired range filtering, explicit companion filters, column/layout changes, configuration save/reopen/run, partial failure, cancellation and fresh-window staging. [Storyboard, diagram and frames](../POPULATION_WORKSPACE.md).
+
 [Journeys 88–89](../../journeys/linked-timeline.spec.js) cover a generic OTel service timeline, source-free shared range preview, Apply/reset across record and native widgets, mobile layout, Quint trace validation, Bombadil exploration and standalone range-component conformance. [Storyboard and frames](../LINKED_TIMELINE.md).
 
 Journey [87](../../journeys/trace-finding.spec.js) follows a generic API population into a cross-service trace, exercises a failed second capture with retained first receipt, then stages and explicitly saves two capture-linked questions plus an authored finding. It reopens stored evidence without recapture, checks mobile overflow, validates the observed ledger with Quint/quint-go and supplies a Bombadil navigation/composer actor. [Storyboard and frames](../TRACE_FINDINGS.md).

@@ -34,6 +34,55 @@ func registerWorkbench(mux *http.ServeMux, dir string) {
 		}
 		return nil
 	}
+	mux.HandleFunc("POST /population/plan", func(w http.ResponseWriter, r *http.Request) {
+		var in exploration.PopulationRequest
+		if e := decode(w, r, &in); e != nil {
+			fail(w, 400, e)
+			return
+		}
+		p, e := exploration.PlanPopulation(in)
+		if e != nil {
+			fail(w, 400, e)
+			return
+		}
+		reply(w, 200, p)
+	})
+	mux.HandleFunc("POST /exploration-views", func(w http.ResponseWriter, r *http.Request) {
+		var in workbench.ExplorationView
+		if e := decode(w, r, &in); e != nil {
+			fail(w, 400, e)
+			return
+		}
+		v, e := store.CreateExplorationView(in)
+		if e != nil {
+			fail(w, 400, e)
+			return
+		}
+		reply(w, 201, v)
+	})
+	mux.HandleFunc("GET /exploration-views/{id}", func(w http.ResponseWriter, r *http.Request) {
+		v, e := store.LoadExplorationView(r.PathValue("id"))
+		if e != nil {
+			fail(w, 404, e)
+			return
+		}
+		reply(w, 200, v)
+	})
+	mux.HandleFunc("GET /exploration-views", func(w http.ResponseWriter, r *http.Request) {
+		for key, values := range r.URL.Query() {
+			if key != "cursor" || len(values) != 1 {
+				fail(w, 400, fmt.Errorf("only one view cursor supported"))
+				return
+			}
+		}
+		v, e := store.ExplorationViews(r.URL.Query().Get("cursor"))
+		if e != nil {
+			fail(w, 400, e)
+			return
+		}
+		reply(w, 200, v)
+	})
+
 	mux.HandleFunc("POST /deployments", func(w http.ResponseWriter, r *http.Request) {
 		var in workbench.DeploymentInput
 		if e := decode(w, r, &in); e != nil {

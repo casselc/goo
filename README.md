@@ -1,5 +1,7 @@
 # goo — Grammar of Observability
 
+[Population exploration and saved views](docs/POPULATION_WORKSPACE.md) bring aligned charts and matching span/log pages to arbitrary cross-service selectors. Portable filters are retained; independent companion selectors are explicit. Saved views retain fixed queries, layout and columns, and reopen without source reads.
+
 [Linked service timelines](docs/LINKED_TIMELINE.md) align span activity, errors, latency, logs and native streams. Preview a UTC range without reads, then explicitly apply it to every overview widget or open the selected span/log question.
 
 **Turn telemetry into shared definitions of system behavior, and investigate what

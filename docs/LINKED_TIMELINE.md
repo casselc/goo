@@ -33,8 +33,9 @@ Go evaluates duration percentiles per bucket; the UI only formats nanoseconds as
 milliseconds. Missing latency is unknown, rather than zero. Incoherent record
 reads withhold their lanes. Failed widget reads remain unavailable while other
 lanes can be inspected. Temporal alignment alone is not correlation by identity
-or a causal claim. Saved multi-widget dashboards and arbitrary cross-service
-population timelines are subsequent work.
+or a causal claim. The [population workspace](POPULATION_WORKSPACE.md) now supports cross-service
+span/log timelines and saved exploration views. Arbitrary native-stream composition
+and saved multi-widget dashboards remain subsequent work.
 
 ```mermaid
 flowchart LR
