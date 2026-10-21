@@ -71,6 +71,13 @@ func (m *viewMachine) RuleBreakdown(tc hegel.TestCase) {
 func (m *viewMachine) RuleClearBaseline(tc hegel.TestCase) {
 	m.draft.Breakdowns = nil
 }
+func (m *viewMachine) RuleTail(tc hegel.TestCase) {
+	if m.draft.Tail != nil {
+		m.draft.Tail = nil
+	} else {
+		m.draft.Tail = &workbench.ExplorationTail{Signal: m.draft.Queries[0].Signal}
+	}
+}
 func (m *viewMachine) RuleSave(tc hegel.TestCase) {
 	v, e := m.store.CreateExplorationView(m.draft)
 	if e != nil {
@@ -210,6 +217,66 @@ func TestQuintPopulationBreakdownLedger(t *testing.T) {
 	}
 	if !check(-1) {
 		t.Fatal("observed breakdown rejected")
+	}
+	for i := 0; i < 5; i++ {
+		if check(i) {
+			t.Fatal("mutation accepted", i)
+		}
+	}
+}
+
+func TestQuintPopulationLiveLedger(t *testing.T) {
+	name := os.Getenv("GOO_POPULATION_LIVE_LEDGER")
+	if name == "" {
+		t.Skip("requires observed browser ledger")
+	}
+	raw, e := os.ReadFile(name)
+	if e != nil {
+		t.Fatal(e)
+	}
+	check := func(mutation int) bool {
+		var l struct {
+			View                            workbench.ExplorationView
+			BeforeSave, AfterOpen, Retained int
+			Gap, Baseline                   string
+			Events                          []struct {
+				Action string
+				Reads  int
+			}
+		}
+		if e := json.Unmarshal(raw, &l); e != nil {
+			t.Fatal(e)
+		}
+		switch mutation {
+		case 0:
+			l.AfterOpen++
+		case 1:
+			l.View.Tail.Signal = "metrics"
+		case 2:
+			l.Retained = 101
+		case 3:
+			l.Gap = "false"
+		case 4:
+			l.View.Tail.Baseline = "foreign"
+		}
+		coherent := l.View.Validate() == nil && l.BeforeSave == l.AfterOpen && l.Retained == 100 && l.Gap == "true" && l.View.Tail.Baseline == l.Baseline
+		sink := &qobs.MemorySink{}
+		rec := qobs.NewRecorder(sink)
+		for _, event := range l.Events {
+			rec.Record(context.Background(), event.Action, nil, "obs.reads", event.Reads, "obs.coherent", coherent)
+		}
+		c, e := validate.NewChecker("model/question_links.yaml", validate.Options{Quint: quintPath(t), Backend: "typescript", Dir: t.TempDir()})
+		if e != nil {
+			t.Fatal(e)
+		}
+		r, e := c.Check(context.Background(), sink.Steps())
+		if e != nil {
+			t.Fatal(e)
+		}
+		return r.OK()
+	}
+	if !check(-1) {
+		t.Fatal("live ledger rejected")
 	}
 	for i := 0; i < 5; i++ {
 		if check(i) {

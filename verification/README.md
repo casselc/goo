@@ -658,3 +658,13 @@ baseline edits, with immutable published histories checked after each step.
 `verification/bombadil/population-breakdown.ts` exercises explicit Run, local
 ranking and previous-window comparisons, retaining overflow and runtime-error
 invariants.
+
+Population live journey 92 emits `GOO_POPULATION_LIVE_LEDGER` for
+`TestQuintPopulationLiveLedger`. It observes explicit read/subscription initiations
+and source-free saved-view reopening, then checks tail reference identity,
+100-row retention and visible reconnect gaps. Five negative controls reject hidden
+opening reads, unsupported signals, unbounded retention, erased gaps and changed
+baseline references. The existing tail model and generated properties remain
+shared with the standalone log tail. Hegel saved-view state/swarm rules now toggle
+live settings too. `bombadil/population-live.ts` starts/pauses the selected tail
+with bounded-row, overflow and runtime-error invariants.

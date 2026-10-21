@@ -52,3 +52,23 @@ func TestTailOnlyBoundedRowRead(t *testing.T) {
 		t.Fatal(query)
 	}
 }
+
+func TestTailSignalAndPortableSelectors(t *testing.T) {
+	p := &Predicate{Any: []Predicate{{Field: &Field{Kind: "attribute", Key: "region"}, Op: "missing"}, {Field: &Field{Kind: "attribute", Key: "region"}, Op: "eq", Value: ""}}}
+	for _, signal := range []string{"", "logs", "spans"} {
+		q := (TailSelector{Signal: signal, Environment: "prod", Where: p}).Query(120000)
+		want := signal
+		if want == "" {
+			want = "logs"
+		}
+		if q.Signal != want || q.FromMS != 60000 || q.ToMS != 120000 || q.Where != p {
+			t.Fatal(q)
+		}
+		if _, e := Compile(q); e != nil {
+			t.Fatal(e)
+		}
+	}
+	if e := (TailSelector{Signal: "metrics", Environment: "prod"}).Query(120000).Validate(); e == nil {
+		t.Fatal("unsupported signal accepted")
+	}
+}

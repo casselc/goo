@@ -1,5 +1,7 @@
 # Known issues and gaps
 
+Population live tails are bounded recent event-time observations, not ingestion cursors or complete traces. Reconnect/resume exposes a continuity gap. Full-population live comparison uses independent reads over the baseline duration; its window may differ from the 60-second inspection tail. Saved settings never auto-subscribe. See [live contract](POPULATION_WORKSPACE.md#watching-a-population).
+
 Service-overview time selections scope that overview and its span/log follow-up links. Supporting discovery inventory retains its original window. General cross-service span/log populations and saved exploration views are now supported in the [population workspace](POPULATION_WORKSPACE.md). Discovered per-signal breakdowns and saved baseline comparisons are supported; numeric cohort comparisons remain unsupported. Arbitrary native-stream composition and saved multi-widget dashboards remain future work. Native crossing intervals are omitted, never split or interpolated. See [contract](LINKED_TIMELINE.md).
 
 Trace examples rank valid linked spans on a bounded record page, not complete traces or the full matching population. Findings link two later independent reads; automatic verification that an original anchor survived those reads remains future work. See [trace finding contract](TRACE_FINDINGS.md).

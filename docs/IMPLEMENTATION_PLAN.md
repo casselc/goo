@@ -677,3 +677,9 @@ value/previous-window comparisons and optional saved baseline configuration.
 Acceptance includes real OTLP journey 91, source-free save/reopen, explicit baseline
 replay, old-view integrity, no-data comparisons, mobile composition, Hegel state
 history and observed Quint traces with rejection controls.
+
+Population live milestone: explicit signal-aware SSE tail, bounded inspection,
+pausing/navigation/disconnect lifecycle, captured full-population baseline
+comparison and source-free saved live settings. Acceptance: real OTLP journey 92,
+legacy tail/population regressions, Hegel state history, observed Quint ledger,
+Bombadil start/pause, and updated desktop/mobile frames.

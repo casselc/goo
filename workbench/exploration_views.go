@@ -7,6 +7,11 @@ import (
 	"reflect"
 )
 
+type ExplorationTail struct {
+	Signal   string `json:"signal"`
+	Baseline string `json:"baseline,omitempty"`
+}
+
 type ExplorationBreakdown struct {
 	Metric           string             `json:"metric"`
 	ComparisonMetric string             `json:"comparisonMetric"`
@@ -21,6 +26,7 @@ type ExplorationView struct {
 	Queries    []exploration.Query             `json:"queries"`
 	Layout     string                          `json:"layout"`
 	Columns    []string                        `json:"columns"`
+	Tail       *ExplorationTail                `json:"tail,omitempty"`
 	Breakdowns map[string]ExplorationBreakdown `json:"breakdowns,omitempty"`
 }
 
@@ -50,6 +56,11 @@ func (v ExplorationView) Validate() error {
 		}
 	}
 
+	if v.Tail != nil {
+		if !signals[v.Tail.Signal] || (v.Tail.Baseline != "" && !ID.MatchString(v.Tail.Baseline)) {
+			return errors.New("tail requires a configured signal and valid optional baseline capture ID")
+		}
+	}
 	for signal, config := range v.Breakdowns {
 		var current *exploration.Query
 		for i := range v.Queries {

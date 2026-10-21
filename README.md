@@ -500,3 +500,8 @@ also offers discovered-attribute breakdowns, full-population count/error/latency
 ranking and shared-scale pinned-value or previous-window comparisons. Saved views
 retain ranking and baseline questions; reopening stages configuration without
 reading telemetry. Run explicitly to refresh each independent population.
+
+The [population live area](docs/POPULATION_WORKSPACE.md#watching-a-population)
+can explicitly tail ordinary span/log records, pause for inspection, and compare
+full rolling populations against a captured baseline. Saved settings reopen
+without starting subscriptions; retention and continuity gaps stay visible.

@@ -364,3 +364,14 @@ was introduced for population breakdowns.
 the owning workspace already renders record inspection. Keyboard navigation uses
 that same visible tab set. Previous-window controls retain their own DOM reference
 so a late request can finish after replacement without changing a newer control.
+
+Population live telemetry reuses `GooTail` for bounded SSE records and
+`GooLiveComparison` for full-population baseline measures. Both remain application
+adapters. The tail now accepts logs or individual span records, with an optional
+owner callback for trace inspection and explicit disposal. Shared tables,
+attribute disclosures, latency displays and comparison scales remain passive.
+
+On narrow screens, tail rows use labelled record cards within the same bounded
+viewport; record text, disclosures and trace actions share the content column.
+The UTC label retains exact nanoseconds in a tooltip. Focusing retained content
+also cancels a pending reconnect, preserving inspection during a disconnect.

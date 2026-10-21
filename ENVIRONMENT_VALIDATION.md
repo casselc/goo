@@ -1,5 +1,12 @@
 # Cloud baseline validation — 2026-10-16
 
+Population-live deployment (2026-10-21 UTC): query/packages use image
+`sha256:86105ae4b88e41060744a07d971331f1e648bfdd221af0befbe80a60903d6467`. All 12 services run; traffic is restored,
+served UI/server/binary hashes match the workspace, existing Redis pending entries
+remain preserved (14 pending at check), and OOM/OOM-kill counters remain zero.
+Evidence: `artifacts/population-live-health.json` and
+`artifacts/population-live-coverage.json`.
+
 Population-breakdown deployment (2026-10-21 UTC): query/packages use image
 `sha256:99b583a7cfcdafa726d7f48827d547a93684163c8558025a45ab88c5136eaa04`. All 12 services run; traffic is restored,
 served UI/server/binary hashes match the workspace, prior Redis pending entries

@@ -77,7 +77,7 @@
   const visibility=()=>{if(document.hidden)stop()};document.addEventListener('visibilitychange',visibility);
   // Scope and document changes stop the application subscription immediately.
   const leave=()=>stop();global.addEventListener('goo:workspace',leave);global.addEventListener('hashchange',leave);
-  let disposed=false;const observer=new MutationObserver(()=>{if(!section.isConnected)dispose()});observer.observe(document.body,{childList:true,subtree:true});function dispose(){if(disposed)return;disposed=true;stop();observer.disconnect();document.removeEventListener('visibilitychange',visibility);global.removeEventListener('goo:workspace',leave);global.removeEventListener('hashchange',leave);section.remove()}return {dispose};
+  let disposed=false;const observer=new MutationObserver(()=>{if(!section.isConnected)dispose()});observer.observe(document.body,{childList:true,subtree:true});function dispose(){if(disposed)return;disposed=true;stop();observer.disconnect();document.removeEventListener('visibilitychange',visibility);global.removeEventListener('goo:workspace',leave);global.removeEventListener('hashchange',leave);section.remove()}return {dispose,pause:stop};
  }
  const api={displayState,measureView,rateText,mount};if(typeof module!=='undefined')module.exports=api;else global.GooLiveComparison=api;
 })(typeof window==='undefined'?globalThis:window);

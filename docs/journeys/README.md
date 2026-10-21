@@ -1306,3 +1306,10 @@ compares two service values using a pinned baseline and explicit filter reset,
 saves/reopens/replays the configuration, checks an empty preceding window and
 missing versus empty attributes, and captures desktop/mobile frames. Enable
 `GOO_BREAKDOWN_BOMBADIL=1` for ranking and preceding-window actor actions.
+
+Journey **92**, `population-live.spec.js`, watches ordinary spans/logs, investigates
+reported trace context while paused, prepares full-population baseline comparison,
+saves/reopens without subscriptions, recovers with a continuity gap, changes signal
+and checks mobile composition. Enable `GOO_POPULATION_LIVE_BOMBADIL=1` for actor
+start/pause actions. The observed ledger counts subscription/read initiations,
+not the Go tail's internal polling reads.

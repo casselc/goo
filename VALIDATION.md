@@ -1,5 +1,48 @@
 # Validation record
 
+Population-live deployment (2026-10-21 UTC): query/packages use image
+`sha256:86105ae4b88e41060744a07d971331f1e648bfdd221af0befbe80a60903d6467`. All 12 services run; traffic is restored,
+served UI/server/binary hashes match the workspace, existing Redis pending entries
+remain preserved (14 pending at check), and OOM/OOM-kill counters remain zero.
+Evidence: `artifacts/population-live-health.json` and
+`artifacts/population-live-coverage.json`.
+
+## Explicit population live telemetry (2026-10-21 UTC)
+
+- Root Go suite and focused vet passed. Tail selectors preserve logs as the
+  omitted-signal default and also compile span queries; unsupported signals and
+  incompatible saved settings are rejected. Optional saved tail settings retain
+  old-view encoding and immutable prior configurations.
+- The frontend suite passed 29 files. Pure cases cover bounded span/log retention,
+  source-free configuration and original-window trace inspection. Hegel generated
+  tail/selector properties and 60 × 15 saved-view state/swarm campaigns passed,
+  including live-setting mutations and immutable histories.
+- Real OTLP journey 92 passed explicit span/log starts, fixed baseline capture,
+  full rolling count/latency/status comparison, 123 matching spans versus a
+  100-row display buffer, explicit axis rescaling, focused/paused trace inspection,
+  retained original read windows after later polls advance, source-free save/open,
+  reconnect gaps, signal switching, navigation pause and baseline-selector
+  mismatch rejection before a current telemetry read. Mobile record text remains
+  in a readable content column with exact UTC/ns details.
+- Standalone log-tail 66, live comparison/freeze 69 and population journeys 90/91
+  passed across the recorded regressions. Final source and screenshots match the
+  deployed image. Earlier assertions were corrected to allow retained hidden DOM
+  on same-document reopening; screenshot review led to explicit mobile message
+  width checks and column placement fixes.
+- Observed Quint/quint-go read-initiation ledgers passed and rejected hidden
+  reopening reads, unsupported signals, unbounded retention, erased gaps and
+  changed baseline references. Bombadil explicitly started and paused the tail
+  without runtime, retention or overflow violations. The initiation ledger does
+  not count internal Go polling reads; existing tail semantics remain shared.
+- Display primitives remain passive. The population adapter owns subscriptions,
+  selector compatibility, metadata preparation and cancellation. Tail rows never
+  define population totals; span records do not establish complete traces.
+
+Evidence: `artifacts/population-live-{go,vet,unit,hegel,browser,recheck,final,complete,verified,release}.log`,
+`artifacts/population-live/*/{ledger.json,TestQuintPopulationLiveLedger.log}`,
+`artifacts/population-live/*/bombadil/trace.jsonl` and the
+[live storyboard/diagram/screenshots](docs/POPULATION_WORKSPACE.md#watching-a-population).
+
 Population-breakdown deployment (2026-10-21 UTC): query/packages use image
 `sha256:99b583a7cfcdafa726d7f48827d547a93684163c8558025a45ab88c5136eaa04`. All 12 services run; traffic is restored,
 served UI/server/binary hashes match the workspace, prior Redis pending entries

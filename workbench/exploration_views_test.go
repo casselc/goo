@@ -5,6 +5,7 @@ import (
 	"github.com/casselc/goo/exploration"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -86,5 +87,28 @@ func TestExplorationViewBreakdownBaseline(t *testing.T) {
 	baseline.GroupBy = []exploration.Field{{Kind: "column", Key: "service"}}
 	if _, e = s.CreateExplorationView(v); e == nil {
 		t.Fatal("incompatible grouping accepted")
+	}
+}
+
+func TestExplorationTailConfiguration(t *testing.T) {
+	q := exploration.Query{Signal: "spans", Environment: "prod", FromMS: 1000, ToMS: 2000, Limit: 100}
+	s := Store{Dir: t.TempDir()}
+	v := ExplorationView{Version: 1, Title: "Watch", Queries: []exploration.Query{q}, Layout: "records", Columns: []string{"utc", "summary"}}
+	old, e := s.CreateExplorationView(v)
+	if e != nil {
+		t.Fatal(e)
+	}
+	v.Tail = &ExplorationTail{Signal: "spans", Baseline: strings.Repeat("a", 64)}
+	saved, e := s.CreateExplorationView(v)
+	if e != nil || saved.ID == old.ID {
+		t.Fatal(saved, e)
+	}
+	v.Tail.Signal = "logs"
+	if _, e = s.CreateExplorationView(v); e == nil {
+		t.Fatal("unconfigured tail accepted")
+	}
+	loaded, e := s.LoadExplorationView(saved.ID)
+	if e != nil || loaded.Tail.Signal != "spans" {
+		t.Fatal("tail config aliased", e)
 	}
 }

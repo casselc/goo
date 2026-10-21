@@ -1193,3 +1193,24 @@ td details {
 .population-breakdown .comparison-controls { gap:.35rem; flex-wrap:wrap }
 .population-breakdown .facet-toolbar { margin:.4rem 0 }
 .population-breakdown .distribution-row { padding:.25rem 0 }
+
+.population-live { border-block:1px solid var(--border);padding:.6rem 0;margin:.6rem 0 }
+.population-live > h4 { margin:0 0 .4rem }
+.population-live > p { margin:.4rem 0;font-size:.8rem }
+.population-live .live-tail { margin:.5rem 0 }
+
+/* Keep the record itself visible on narrow tail viewports. */
+@media(max-width:700px){
+ .live-tail>goo-table>table{display:block;min-width:0;width:100%}
+ .live-tail>goo-table>table>caption{display:block}
+ .live-tail>goo-table>table>thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+ .live-tail>goo-table>table>tbody,.live-tail>goo-table>table>tbody>tr{display:block}
+ .live-tail>goo-table>table>tbody>tr{border-bottom:1px solid var(--border);padding:.35rem 0}
+ .live-tail>goo-table>table>tbody>tr>td{display:grid;grid-template-columns:3rem minmax(0,1fr);gap:.3rem;padding:.2rem .35rem;white-space:normal;overflow-wrap:anywhere}
+ .live-tail>goo-table>table>tbody>tr>td::before{content:attr(data-label);font-size:.65rem;color:var(--muted)}
+ .live-tail .tail-message{min-width:0}
+}
+@media(max-width:700px){
+ .live-tail>goo-table>table>tbody>tr>td::before{grid-column:1;grid-row:1}
+ .live-tail>goo-table>table>tbody>tr>td>*{grid-column:2;min-width:0;max-width:100%}
+}

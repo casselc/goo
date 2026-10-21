@@ -136,3 +136,73 @@ also mutates breakdown/baseline configuration while retaining earlier saved view
 
 ![Value-to-value comparison](journeys/screenshots/91a-population-value-comparison.png)
 ![Compact mobile attribute breakdown](journeys/screenshots/91b-population-mobile-breakdown.png)
+
+## Watching a population
+
+The live area offers one explicit span or log tail using that signal's current
+selector. Start replaces only its fixed time bounds with a rolling 60-second
+**event-time** window. Span rows are individual observations, not complete traces.
+The SSE transport polls source data every two seconds, retains at most 100 rows /
+2 MiB locally, and reports evictions, source limits, disconnection and continuity
+gaps. Resume/reconnect starts a recent window; it does not promise replay or
+recover arbitrarily late events. Exact UTC timestamps retain nanoseconds in tooltips.
+
+Focusing attributes or opening a reported trace pauses the tail and preserves
+its row nodes. Each retained observation keeps its original source-read window.
+Trace expansion independently reads that trace in the observation's window,
+even after later tail polls have advanced. Navigation, fixed-population reads and document hiding stop
+subscriptions; returning requires an explicit restart/resume. Changing selectors
+clears incompatible retained rows and baseline settings.
+
+**Capture live baseline** independently captures the fixed selected question.
+**Prepare live comparison** validates the stored baseline selector and creates
+controls without reading telemetry. **Start live comparison** explicitly starts
+full-population refreshes at ten-second intervals, following the baseline duration.
+Its scope can differ from the tail's 60-second inspection window, and this is
+stated next to the controls. Counts, recorded error share and span latency use the
+existing Go capture/comparison kernels and shared fixed scales. Tail rows never
+supply totals or percentiles. Explicit rescaling and freeze retain existing
+snapshot custody behavior; no-data/unknown/source failures remain visible.
+
+Saved view `tail` configuration contains only the selected signal and optional
+immutable baseline capture reference. Saving/opening never starts a stream,
+prepares a comparison, captures data or refreshes a current window. Legacy views
+omit this field and retain their content identity. Missing or incompatible
+baseline references fail visibly when the user prepares the comparison.
+
+```mermaid
+sequenceDiagram
+  actor User
+  participant UI as Population workspace
+  participant SSE as Go tail / SSE
+  participant CH as ClickHouse
+  participant Capture as Go capture / comparison
+  User->>UI: Start selected span or log tail
+  UI->>SSE: Typed selector, no fixed window
+  loop bounded 60-second connection, 2-second polls
+    SSE->>CH: Recent event-time window / bounded records
+    SSE-->>UI: reset / batch / gap
+  end
+  User->>UI: Inspect attributes or reported trace
+  UI->>SSE: Pause / cancel
+  Note over UI: Retain bounded rows; trace is a separate contextual read
+  User->>Capture: Capture fixed baseline explicitly
+  User->>UI: Prepare and start live comparison
+  UI->>Capture: Baseline reference / full current population
+  Capture->>CH: Independent rolling query over baseline duration
+  Capture-->>UI: Full measures, provenance, expiring freeze capability
+  Note over UI: Shared scales; tail rows never define measures
+```
+
+Journey 92 uses ordinary OTel HTTP spans/logs without manifests. It tests explicit
+starts, bounded span retention, paused trace investigation, baseline measures,
+source-free save/reopen, reconnection gaps, switching signals and mobile layout.
+It verifies 123 full-population records against a 100-row retained tail, explicit
+axis rescaling, paused inspection during a disconnect and selector-mismatch
+rejection before any live comparison read.
+Its read-initiation ledger uses Quint/quint-go and five rejecting controls;
+Bombadil exercises explicit start/pause and bounded rows. Saved-view Hegel
+state/swarm rules also mutate tail settings while retaining immutable histories.
+
+![Live population and baseline](journeys/screenshots/92a-population-live-baseline.png)
+![Mobile live population](journeys/screenshots/92b-mobile-population-live.png)

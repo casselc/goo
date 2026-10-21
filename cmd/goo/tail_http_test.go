@@ -19,7 +19,7 @@ func TestTailHTTPValidationFramesAndDisconnect(t *testing.T) {
 	t.Setenv("CLICKHOUSE_URL", source.URL)
 	mux := http.NewServeMux()
 	registerTail(mux, source.Client())
-	for _, s := range []string{`{"environment":"prod","sql":"select 1"}`, `{"environment":""}`, `{"environment":"prod"} {}`} {
+	for _, s := range []string{`{"environment":"prod","sql":"select 1"}`, `{"environment":""}`, `{"environment":"prod","signal":"metrics"}`, `{"environment":"prod"} {}`} {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest("POST", "/tail", strings.NewReader(s)))
 		if w.Code != 400 {

@@ -168,3 +168,10 @@ visual renderer. `ExplorationView.breakdowns` optionally stores display choices
 and baseline queries, never results. Validation requires compatible signal,
 environment and grouping; source reads occur only after explicit Run/compare.
 See [population contract and flow](POPULATION_WORKSPACE.md#attribute-breakdowns-and-comparisons).
+
+Population live subscriptions use the existing Go SSE tail transport with an
+optional signal selector (omitted means logs for compatibility). The source
+adapter compiles span/log predicates uniformly; observation identity remains a
+bounded per-connection multiplicity tracker. Independent baseline captures and
+rolling comparison reads use existing Go kernels, never the display buffer.
+See the [live process diagram](POPULATION_WORKSPACE.md#watching-a-population).

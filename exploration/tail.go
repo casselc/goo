@@ -17,12 +17,17 @@ const TailReadLimit = 1000
 // TailSelector deliberately has no fixed window or aggregate settings.
 // Every poll reads a rolling event-time window; this is not an ingestion cursor.
 type TailSelector struct {
+	Signal      string     `json:"signal,omitempty"`
 	Environment string     `json:"environment"`
 	Where       *Predicate `json:"where,omitempty"`
 }
 
 func (s TailSelector) Query(now int64) Query {
-	return Query{Signal: "logs", Environment: s.Environment, Where: s.Where, FromMS: now - TailWindowMS, ToMS: now, Limit: 100}
+	signal := s.Signal
+	if signal == "" {
+		signal = "logs"
+	}
+	return Query{Signal: signal, Environment: s.Environment, Where: s.Where, FromMS: now - TailWindowMS, ToMS: now, Limit: 100}
 }
 func (s Source) PollTail(ctx context.Context, selector TailSelector, now int64) ([]json.RawMessage, bool, error) {
 	q := selector.Query(now)
