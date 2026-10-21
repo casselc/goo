@@ -106,6 +106,9 @@ func TestQuintDiscoveryLiveLedger(t *testing.T) {
 		bounded := e == nil && reflect.DeepEqual(expected, l.Context)
 		rec.Record(context.Background(), "surround", nil, "obs.bounded", bounded, "obs.reusable", true)
 		trace, e := exploration.TraceQuestion(l.Buckets.Environment, l.Buckets.FromMS, l.Buckets.ToMS, l.TraceID, "", "spans", 0)
+		trace.GroupBy = []exploration.Field{{Kind: "column", Key: "service"}, {Kind: "column", Key: "name"}}
+		trace.Summary = "span-duration"
+		trace.SpanStatus = true
 		rec.Record(context.Background(), "trace", nil, "obs.bounded", e == nil && reflect.DeepEqual(trace, l.Trace), "obs.reusable", true)
 		reusable := l.Package.Signal == l.Buckets.Signal && l.Package.Environment == l.Buckets.Environment && reflect.DeepEqual(l.Package.Where, l.Buckets.Where) && reflect.DeepEqual(l.Package.GroupBy, l.Buckets.GroupBy)
 		rec.Record(context.Background(), "save", nil, "obs.bounded", true, "obs.reusable", reusable)

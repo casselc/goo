@@ -1283,3 +1283,14 @@ Journey63 now checks the collapsed latency readout stays under 100px in its stan
 See [comparison presentation](../COMPARISON_PRESENTATION.md) for aligned scalar pairs, compact metric matrices, frozen-side summaries and UTC tooltip adoption.
 
 Journey84 documents the standalone selected-item shell; journey35 exercises real log/span inspection and journey77 exercises native selection replay. [Inspector storyboard](../SELECTED_ITEM_INSPECTORS.md).
+
+## Core experience refinements
+
+See [the implemented workflow](../CORE_EXPERIENCE_REFINEMENTS.md) for retained
+application visits, typed population selection, compact diagnosis, trace
+breakdowns and independently loaded context. These compose passive display
+elements; application adapters own navigation, read lifecycle and scope. Journey
+85 exercises real OTLP data and refreshed screenshots; the core-refinements
+Bombadil actor covers selection and returning to retained evidence. Hegel
+selection properties and the question-session state swarm complement observed
+quint-go validation against the existing question-links model.

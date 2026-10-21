@@ -532,3 +532,14 @@ and close actions, plus selected waterfall identity and close/reopen checks. The
 native-timeline actor closes/reopens an observed-zero histogram selection while
 checking opener focus and retained selection. Existing unknown/no-bucket-table,
 layout, captured-count and source identity invariants remain active.
+
+## Core experience refinements
+
+See [the implemented workflow](CORE_EXPERIENCE_REFINEMENTS.md) for retained
+application visits, typed population selection, compact diagnosis, trace
+breakdowns and independently loaded context. These compose passive display
+elements; application adapters own navigation, read lifecycle and scope. Journey
+85 exercises real OTLP data and refreshed screenshots; the core-refinements
+Bombadil actor covers selection and returning to retained evidence. Hegel
+selection properties and the question-session state swarm complement observed
+quint-go validation against the existing question-links model.

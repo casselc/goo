@@ -426,3 +426,15 @@ Opt-in `histogramBucketMs` derives at most 200 anchored buckets per stream and 2
 Shared evidence summaries currently cover captured measurements and their native investigation entries/cards. Fixed record/native service widgets also use compact shared summaries. Stored comparison sides now use the shared summary too. Other record and inventory presenters retain their current layouts. Receipt-only metadata lacks a full evidence basis and diagnostics; the summary leaves those unavailable and the existing Open captured evidence action exposes the full result. Display input bounds and timestamp formats fail closed; arbitrary adapter-owned interactive children are unsupported. UTC/tooltips cover summary bounds and native stream/selection timestamps; stored comparison endpoint/window clocks and fresh native previews also use UTC/tooltips. Legacy diagnostic JSON and older chart presenters may still expose raw nanoseconds.
 
 The [shared inline inspector](SELECTED_ITEM_INSPECTORS.md) retains the 32 most recent selected detail bodies per rendered result. It does not retain selection across new source results or provide cross-query navigation history. Original inline row attribute disclosures and outer trace/surrounding-log source workspaces remain separate; only their selected-item presentation is shared.
+
+## Core experience refinement boundaries
+
+The [first survey slices](CORE_EXPERIENCE_REFINEMENTS.md) retain eight Explore
+visits in one tab; reload/eviction discards them and browser URL history still
+stages shared questions separately. Leaving stops tail subscriptions and invalidates
+pending publications. Service diagnosis counts matching mixed-kind captured spans,
+not verified requests or service health. Duration selection is for record
+populations; native histogram cells have no inferred trace membership. Trace
+breakdown sums are inclusive and can overlap. Deployment context reads remain
+explicit and independent of telemetry and captured custody. Convention capability
+explanations offer existing binding authoring; no general schema resolver is added.

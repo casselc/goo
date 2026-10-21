@@ -2996,3 +2996,80 @@ of all five tracked historical pending IDs (14 pending entries at the check).
 The wrapper restored traffic. Only unused Docker caches/dangling images were
 reclaimed during builds; no volumes or stream entries were reset. Cgroup OOM and
 OOM-kill counters remained zero.
+
+### Core experience refinements (2026-10-21)
+
+Bounded first slices of the six product-survey recommendations now compose existing
+Go aggregates and passive UI elements: eight retained Explore visits, exact typed
+population selection with an imported retained comparison baseline, compact service
+operation diagnosis/instance pivots, inclusive trace breakdown/highlighting,
+independent deployment context on service and comparison views, and actionable
+convention/instrument capability explanations. See
+[the workflow and limits](docs/CORE_EXPERIENCE_REFINEMENTS.md).
+
+Frontend checks pass all 26 test files, including exact half-open selection bounds,
+OR-preserving narrowing, missing/empty values and rejected incompatible selections.
+Hegel's 80 generated selection cases and 100 question-session state/swarm cases
+passed (`artifacts/core-refinements-hegel.log`, 23.072s). The initial Hegel invocation
+could not create its default home cache; rerunning with the existing writable
+`XDG_CACHE_HOME=/workspace/.cache` succeeded. No credentials or runtime selectors
+were replaced.
+
+Initial browser validation found ambiguous selectors after nested disclosures and
+the Services recipe were included. The first broader run passed discovery (with
+Bombadil/observed Quint), error comparison and service browsing, but failed five
+of eight tests: one ambiguous navigation selector, three assertions exposing the
+missing outer Explore phase contract, and one old diagnosis-table shape assertion.
+These are recorded failures (`artifacts/core-refinements-release.log`), not passing
+release evidence. The wrapper now preserves the public phase contract, inactive
+visits cannot publish state, and tests assert the new table/links. The discovery
+ledger continues to verify exact scope and now expects the explicit service/name
+aggregate presentation fields on expanded trace questions.
+
+Lifecycle review also added listener disposal on visit eviction, preserved selected
+bounds when importing a wider baseline, retained display DOM during reconnection,
+shared diagnosis scales across mean/p95 values, and source-free staged link entry.
+The dimension widget replaces repeated latency summaries with its diagnosis table.
+
+A standalone Chromium probe confirmed that detaching a scroll container resets its
+80-pixel offset to zero. The trail now saves/restores nested offsets explicitly;
+journey 85 includes a long typed attribute inspector and an 80-pixel return check.
+An intermediate release attempt was intentionally interrupted while waiting on an
+incorrect service-button accessible name; its wrapper restored traffic. The test
+now uses the catalog’s actual Open service name and bounded action timeouts.
+
+Final image:
+`sha256:49b36d545ef052ae01e3f9f73f9cff886ce6a9c0dce4167e3175b6f7eb01faaa`.
+The broad final regression run passed **9/10 in 3.6 minutes**, including both shared
+question journeys, workbench stale-completion rejection, service browsing/default
+widgets, both stored comparisons (with independent receipt-lane bounds), retained
+visit eviction/drafts, and typed inspection with its Bombadil actor. Journey 85's
+product checks and observed Quint ledger passed, but the new actor passed action
+factories instead of invoking them; this caused its sole failure.
+
+After fixing the actor registration, the focused final rerun passed **2/2 in
+55.1 seconds** (`artifacts/core-refinements-final-actor.log`). Its actor executed
+Run, Preview, Follow, Back and Forward, satisfied eventual completion and retained
+unique active DOM identities without overflow. The actual journey verified an
+80-pixel inspector return, retained actual DOM/search, exact narrowing of six
+spans to two, preserved narrowed shared-question bounds, source-free return,
+trace highlighting, compact shared diagnosis scales, instance staging and explicit
+deployment inspection. The observed ledger accepted the real run and rejected
+four scope/read mutations (7.85s). The union of the broad and corrected targeted
+runs validates all ten distinct journeys; the earlier failing run is not relabelled
+as a clean ten-test pass.
+
+Screenshots 85a–e and affected existing journey frames were regenerated from the
+OTLP-fed application. README, survey status, implementation/known-issues plans,
+component and architecture docs, executable storyboards and verification guidance
+are updated. No Go evaluator/compiler, telemetry schema, capture protocol or SSE
+protocol changed. In-tab visits remain bounded and non-durable; native exemplars,
+exclusive/critical-path analysis and general convention resolution are not added.
+
+`artifacts/core-refinements-final-health.json` verifies matching query/packages
+images, served source hashes (including both new adapters), unchanged server/binary
+identity against the build context, 12 running services and all five tracked
+historical pending IDs preserved (14 pending entries at the final check). Traffic
+was restored. Only unused Docker build caches/dangling images were reclaimed;
+no data volumes or stream entries were reset. Cgroup OOM and OOM-kill counters
+remained zero.

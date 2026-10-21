@@ -1,6 +1,6 @@
 /* Small multiples share a fixed captured scale. Local controls never read telemetry. */
 (function(global){
- function mount(host,data){
+ function mount(host,data,{onSelect}={}){
   const node=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=String(text);return n},api=global.GooDistributions,apiNumeric=global.GooNumericMeasures;
   host.replaceChildren();host.hidden=false;host.classList.add('grouped-time-chart');host.append(node('h3','Compare breakdowns over time'));
   const controls=node('div');controls.className='controls';const label=node('label','Chart measure'),select=node('select');select.setAttribute('aria-label','Grouped chart measure');select.dataset.seriesMeasure='true';
@@ -14,7 +14,7 @@
    scale.textContent=groups.length+' captured series · common scale across all captured series · '+(metric.startsWith('numeric-')?'absolute magnitude; labels retain signs; only valid values enter arithmetic':metric==='count'?'record counts':metric==='error-rate'?'recorded Error / all captured spans; Unset and unknown remain in the denominator':'span duration; exact measures rounded for display');list.replaceChildren();
    for(const g of groups){
     const heading=data.question.groupBy.map((f,i)=>f.kind+':'+f.key+' = '+api.valueLabel(g.values[i])).join(' · '),card=node('article');card.className='series-card';card.dataset.series=JSON.stringify(g.values);card.dataset.search=heading.toLocaleLowerCase();card.append(node('h4',heading));const bars=node('div');bars.className='time-bars';
-    for(const p of g.points){const b=node('button'),value=api.groupMetric(p,metric);b.className='time-bar'+(p.state==='no_data'?' no-data':'');b.dataset.state=p.state;b.style.setProperty('--bar-height',api.metricWidth(value,max)+'%');const text=heading+' · '+new Date(p.fromMs).toISOString()+' → '+new Date(p.toMs).toISOString()+' (exclusive) · '+display(p)+' · '+p.count+' captured records';b.setAttribute('aria-label',text);b.title=text;b.onclick=()=>status.textContent=text+(p.state==='no_data'?' · no captured data; health unknown':'');bars.append(b)}
+    for(const p of g.points){const b=node('button'),value=api.groupMetric(p,metric);b.className='time-bar'+(p.state==='no_data'?' no-data':'');b.dataset.state=p.state;b.style.setProperty('--bar-height',api.metricWidth(value,max)+'%');const text=heading+' · '+new Date(p.fromMs).toISOString()+' → '+new Date(p.toMs).toISOString()+' (exclusive) · '+display(p)+' · '+p.count+' captured records';b.setAttribute('aria-label',text);b.title=text;b.onclick=()=>{status.textContent=text+(p.state==='no_data'?' · no captured data; health unknown':'');onSelect?.(p,data.question.groupBy.map((field,i)=>({field,value:g.values[i]})))};bars.append(b)}
     const axis=node('div');axis.className='time-axis';axis.append(node('span',new Date(data.question.fromMs).toISOString()),node('span',new Date(data.question.toMs).toISOString()));card.append(bars,axis);list.append(card)
    }
    filter();status.textContent='Select an interval to inspect exact bounds, count and available duration measures.';

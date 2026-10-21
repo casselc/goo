@@ -610,3 +610,14 @@ exercise the native and typed-inspection Bombadil actors, now checking close/
 reopen focus and retained selection. Their existing Go observed Quint ledgers and
 rejecting controls remain the semantic oracle; no new metric evaluator or Go
 planner state was introduced.
+
+## Core experience refinements
+
+See [the implemented workflow](../docs/CORE_EXPERIENCE_REFINEMENTS.md) for retained
+application visits, typed population selection, compact diagnosis, trace
+breakdowns and independently loaded context. These compose passive display
+elements; application adapters own navigation, read lifecycle and scope. Journey
+85 exercises real OTLP data and refreshed screenshots; the core-refinements
+Bombadil actor covers selection and returning to retained evidence. Hegel
+selection properties and the question-session state swarm complement observed
+quint-go validation against the existing question-links model.

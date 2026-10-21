@@ -1155,3 +1155,14 @@ td details {
 .comparison-side>h5{margin-block:4px;font-size:13px}
 .comparison-side>goo-evidence-summary{border:0;padding:0;background:transparent}
 .comparison-side>button{font-size:12px;margin:4px 6px 0 0}
+
+/* Core investigation flow: application layout around passive display primitives. */
+.investigation-trail{position:sticky;top:0;z-index:4;padding:6px 0;background:var(--bg,#101722);border-bottom:1px solid var(--border,#303b4b);font-size:12px}
+.investigation-trail button,.population-selection button{font-size:12px;padding:5px 8px}
+.population-selection{margin:8px 0;font-size:12px}.population-selection form>p{overflow-wrap:anywhere;max-height:6rem;overflow:auto}.population-selection input{max-width:225px;font-size:12px}.population-selection button{margin:4px 8px 4px 0}
+.service-diagnosis{grid-column:1/-1;min-width:0}.service-diagnosis h6{font-size:13px;margin:8px 0}.service-diagnosis table{font-size:12px}.service-diagnosis .comparison-bar-cell{min-width:90px}.service-diagnosis small,.trace-breakdown small{font-size:11px;color:var(--muted,#98a8bf)}
+.trace-breakdown{margin:8px 0;font-size:12px}.waterfall-row.span-muted{opacity:.35}.waterfall-row.span-highlighted{outline:1px solid var(--accent,#79ddc6)}
+.comparison-context{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.comparison-context>h5{grid-column:1/-1}.comparison-context h6{margin:8px 0}.comparison-context .controls{gap:6px}
+@media(max-width:700px){.comparison-context{grid-template-columns:1fr}.population-selection .controls{display:grid}.service-diagnosis table{min-width:620px}}
+.dashboard-widget:has(.service-diagnosis){grid-column:1/-1}
+.trace-breakdown table{font-size:12px}.trace-breakdown button{font-size:11px;padding:4px 7px;white-space:nowrap}

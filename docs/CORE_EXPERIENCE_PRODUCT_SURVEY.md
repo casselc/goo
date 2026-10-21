@@ -4,6 +4,8 @@ Surveyed 2026-10-21 against the current workbench and official documentation sou
 This is a product recommendation, not a claim of implemented functionality or
 competitive parity. It complements the [component sweep](WHOLE_PRODUCT_COMPONENT_SWEEP.md).
 
+Bounded first slices are now implemented in [core experience refinements](CORE_EXPERIENCE_REFINEMENTS.md). This survey preserves the pre-implementation research and priorities; that workflow document records current behavior and limits.
+
 Goo's strongest direction is **a question that stays understandable as you move
 from service symptoms to individual records to a preserved explanation**. The
 next additions should shorten that journey. The application already has most of

@@ -28,6 +28,10 @@
     });
     return element;
   }
+  function breakdown(container,data){
+    const details=node('details',undefined,'trace-breakdown');details.append(node('summary','Trace service / operation breakdown'));const wrap=node('goo-table'),table=node('table'),head=node('tr'),thead=node('thead'),body=node('tbody');wrap.setAttribute('density','compact');wrap.setAttribute('aria-label','Trace service operation breakdown');const labels=['Service / operation','Matching spans','Recorded Error','Inclusive duration sum','Highlight'];for(const text of labels){const th=node('th',text);th.scope='col';head.append(th)}thead.append(head);table.append(node('caption','All matching trace spans in the fixed window · independent aggregate read'),thead,body);wrap.append(table);details.append(wrap,node('small','Inclusive span duration sums may overlap. They are not wall-clock time, CPU time, exclusive time or critical path. Sampling, missing parents and trace completeness remain unknown.'));
+    if(data.state==='changed_between_reads'){details.append(node('p','Source reads disagree; breakdown withheld.'));wrap.hidden=true}else for(const group of data.groups||[]){const tr=node('tr'),button=node('button','Highlight');button.setAttribute('aria-label','Highlight spans for '+group.g0+' / '+group.g1);button.setAttribute('aria-pressed','false');button.onclick=()=>{const selected=button.getAttribute('aria-pressed')!=='true';for(const b of body.querySelectorAll('button'))b.setAttribute('aria-pressed','false');button.setAttribute('aria-pressed',String(selected));for(const row of container.querySelectorAll('.waterfall-row')){const record=data.rows[Number(row.dataset.rowIndex)],match=record?.ServiceName===group.g0&&record?.SpanName===group.g1;row.classList.toggle('span-muted',selected&&!match);row.classList.toggle('span-highlighted',selected&&match)}};const td=node('td');td.append(button);tr.append(node('td',(group.g0||'(service omitted)')+' / '+(group.g1||'(empty name)')),node('td',group.count),node('td',group.spanStatus?group.spanStatus.error:'Unavailable'),node('td',group.duration?.state==='observed'?global.GooUI.durationMS(group.duration.sumNs):'Unavailable'),td);[...tr.children].forEach((cell,i)=>cell.dataset.label=labels[i]);body.append(tr)}container.append(details);
+  }
   function heatmap(container, rows, data, select) {
     const from = data.evaluatedAt - data.expression.minutes*60000, to = data.evaluatedAt;
     const first = Math.floor(from/60000)*60000, last = Math.floor(to/60000)*60000;
@@ -85,6 +89,6 @@
       box.append(svg);container.append(box);
     }
   }
-  const api={layout,waterfall,heatmap,queue};
+  const api={layout,waterfall,breakdown,heatmap,queue};
   if(typeof module!=='undefined') module.exports=api; else global.GooVisuals=api;
 })(typeof window==='undefined' ? globalThis : window);

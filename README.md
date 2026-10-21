@@ -482,9 +482,9 @@ Service widgets and saved native evidence share [compact evidence summaries](doc
 
 [Selected-item inspectors](docs/SELECTED_ITEM_INSPECTORS.md) share compact trace/log/native detail layout, retained local selection state and close-to-opener focus.
 
-The [core experience survey](docs/CORE_EXPERIENCE_PRODUCT_SURVEY.md) compares verified
-Datadog/Grafana patterns with goo’s existing foundations and proposes a focused
-sequence: resumable investigation navigation, a compact service operation table,
-and chart selections that continue into precise population questions. These are
-recommendations, not implemented features; Honeycomb research access limits are
-recorded in the report.
+[Core experience refinements](docs/CORE_EXPERIENCE_REFINEMENTS.md) connect retained
+investigation visits, compact service diagnosis, chart-population comparisons,
+trace highlighting, deployment context and capability-to-binding handoffs. These
+are bounded first slices of the [product survey](docs/CORE_EXPERIENCE_PRODUCT_SURVEY.md),
+which records verified vendor sources and Honeycomb research access limits. The
+workflow document links executable journeys, screenshots and current limits.

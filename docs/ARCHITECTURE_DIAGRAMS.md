@@ -1177,3 +1177,14 @@ Service widgets pass their validated plan/result to the application presenter, t
 See [comparison presentation](COMPARISON_PRESENTATION.md) for aligned scalar pairs, compact metric matrices, frozen-side summaries and UTC tooltip adoption.
 
 The shared selected-item shell is now adopted in waterfall spans, span/log record inspection and native timeline/bucket selections. See [selected-item inspectors](SELECTED_ITEM_INSPECTORS.md) for lifecycle, retention, focus and source-action boundaries.
+
+## Core experience refinements
+
+See [the implemented workflow](CORE_EXPERIENCE_REFINEMENTS.md) for retained
+application visits, typed population selection, compact diagnosis, trace
+breakdowns and independently loaded context. These compose passive display
+elements; application adapters own navigation, read lifecycle and scope. Journey
+85 exercises real OTLP data and refreshed screenshots; the core-refinements
+Bombadil actor covers selection and returning to retained evidence. Hegel
+selection properties and the question-session state swarm complement observed
+quint-go validation against the existing question-links model.
