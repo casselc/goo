@@ -1,5 +1,7 @@
 # Architecture
 
+[Native presentation](NATIVE_PRESENTATION.md) shares supplied latest values and coverage across measurements, services and native comparisons. Go evaluation and application read/custody owners remain separate.
+
 [Record population gestures](RECORD_POPULATIONS.md) reuse the attribute viewer and typed selection owner. Shared-field discovery is local string intersection; query evaluation remains in Go. [Shared annotations](WORKBENCH_ANNOTATIONS.md) attach exact-target revision sidecars; optional native retention freezes selected server-owned observations. The broader reviewed-label design remains proposed.
 
 

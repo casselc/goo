@@ -798,3 +798,11 @@ four counter/read/coherence mutations to fail. It does not model trace completen
 The capture Bombadil invariant now requires absent editor nodes, rather than hidden
 controls. Captured paging/retention/package and numeric/grouped compatibility keep
 their existing Hegel/Quint campaigns.
+
+`TestHegelNativePresentationProperties` runs 200 generated supplied-series cases
+against the pure native presenter: exact nanosecond latest selection, permutation
+invariance for distinct timestamps, no fallback to an older valid interval, zero
+versus unavailable, coverage counts and non-mutation. Native comparison properties
+and counter/histogram state campaigns protect evaluation separately. Existing browser
+Quint ledgers retain their observed protocol limits; no exhaustive native UI model
+is implied. See [presentation contract](../docs/NATIVE_PRESENTATION.md).

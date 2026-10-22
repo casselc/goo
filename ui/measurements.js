@@ -55,43 +55,8 @@
   function choose(key,row){if(heatmap)heatmap.select(key,row);const point=snapshot.points.find(p=>p.key===key);if(!point)return;plot.selectedKey=key;const title='Selected '+(kind==='gauge'?'observation':bucketed?'time bucket':'interval'),opener=(row!==undefined&&heatmap?heatmap.element.querySelector('.bucket-heatmap-cell[data-column="'+key+'"][data-row="'+row+'"]'):null)||plot.querySelector('[data-key="'+key+'"]');if(inspector.has(key)){inspector.show({key,title,description:point.label,opener});return}const content=node('div');const exact=node('details');exact.append(node('summary','Exact timestamp bounds'),(()=>{const p=node('p');p.append('From: ',global.GooEvidenceSummary.timestamp(point.fromNS),' · To: ',global.GooEvidenceSummary.timestamp(point.toNS));return p})());content.append(exact);if(global.GooAttributes)global.GooAttributes.mountStream(content,s.stream);const source=all[Number(key)];if(kind==='histogram'&&source.state==='ok'&&source.distribution){const d=source.distribution,details=node('details');details.append(node('summary','Selected native bucket counts'));table(details,['Bucket ('+d.unit+')',bucketed?'Captured time bucket count':'Captured interval count'],d.bucketCounts.map((count,i)=>[hist.bucketLabel(d.bounds,i,d.unit),count]),{caption:bucketed?'Selected histogram time bucket counts':'Selected histogram interval bucket counts',compact:true});content.append(details)}if(source.reasons)renderReasons(content,source.reasons);else if(source.reason)renderReasons(content,[source.reason]);inspector.show({key,title,description:point.label,content,opener});}
   plot.addEventListener('goo-timeline-select',e=>choose(e.detail.key));frame.append(plot,axis);if(heatmap)frame.append(heatmap.element);frame.append(selection);host.append(frame);if(snapshot.points.length)choose(snapshot.points.at(-1).key);
  }
- const reasonDescriptions={
-  'empty-distribution':['The complete bucket records zero observations.','No percentile is defined for an empty population.'],
-  'missing-exact-stream':['This exact stream is missing from one window.','Inspect the full identity; matching an instrument name or replacement instance is insufficient.'],
-  'unknown-observation':['No evaluated observation is available.','Inspect the fixed window and exported values; absence is not a zero.'],
-  'unsupported-temporality':['The exported temporality is unsupported.','Inspect delta or cumulative semantics before comparing windows.'],
-  'bucket-layout-differs':['The windows use different histogram buckets.','Compare compatible native bucket layouts.'],
-  'boundary-crossing':['An observation crosses a window boundary.','Choose bounds aligned with complete exports; Goo does not split an increment.'],
-  'incomplete-window':['The whole window cannot be evaluated.','Inspect interval boundaries and export coverage; missing time is not zero.'],
-  'incomplete-or-overlapping-coverage':['Export coverage is incomplete or overlapping.','Check missing boundaries, gaps and repeated exports before comparing rates.'],
-  'incomplete-or-empty-window':['A complete window is required.','Use a window with observed start and end boundaries.'],
-  'counter-decrease':['The counter decreased.','A reset cannot be treated as a negative increment. Inspect the counter epoch.'],
-  'counter-epoch-change':['The counter epoch changed.','Compare within one epoch rather than subtracting across a restart.'],
-  'invalid-counter-epoch':['The counter epoch is invalid.','Inspect exported start times and temporality.'],
-  'histogram-epoch-change':['The histogram epoch changed.','Do not subtract bucket counts across an epoch change.'],
-  'histogram-decrease':['Histogram counts decreased.','Inspect resets and bucket observations before comparing distributions.'],
-  'invalid-histogram-epoch':['The histogram epoch is invalid.','Inspect exported start times and temporality.'],
-  'bucket-layout-change':['Histogram bucket boundaries changed.','Compare compatible native bucket layouts.'],
-  'excessive-gap':['Observations exceed the declared gap limit.','Inspect export cadence or explicitly revise the package policy.'],
-  'no-recorded-value':['The exporter marked a value as absent.','Absence is unknown, not a measured zero.'],
-  'no recorded value':['The exporter marked a value as absent.','Absence is unknown, not a measured zero.'],
-  'older than declared freshness':['An observation exceeds the freshness limit.','Inspect export cadence. Stored evidence keeps its fixed evaluation time.'],
-  'conflicting observations at one timestamp':['Observations conflict at one timestamp.','Inspect duplicate exports; Goo does not choose a value arbitrarily.'],
-  'stale-export-endpoint':['The latest export is too old for a live rate.','Check the selected stream and export cadence. Frozen windows remain historical evidence.'],
-  'no-observed-endpoint':['No export endpoint was observed in the bounded search.','Check the exact identity and source window; a replacement instance is not substituted.'],
-  'missing-baseline-stream':['This exact stream is missing from the baseline.','Capture a compatible baseline; matching only the instrument name is insufficient.'],
-  'missing-selection-stream':['This exact stream is missing from the current window.','Inspect the selected identity; another instance is not a replacement.'],
-  'temporality-differs':['Metric temporality changed.','Do not compare cumulative and delta windows as if they were equivalent.']
- };
- function reasonInfo(code){const [title,guidance]=(Object.hasOwn(reasonDescriptions,code)?reasonDescriptions[code]:null)||['The source reported an additional diagnostic.','Inspect its exact code and retained observations before interpreting this window.'];return {code,title,guidance}}
- function streamDiagnostics(series,kind){
-  const observations=kind==='gauge'?series.samples||[]:series.intervals||[],good=kind==='gauge'?'observed':'ok',recorded=observations.filter(x=>x.state===good).length,review=observations.length-recorded;
-  const reasons=[...new Set(observations.map(x=>x.reason).filter(Boolean))];
-  const attention=series.state!==good||review>0;
-  if(attention&&!reasons.length)reasons.push(kind==='gauge'?'unknown-observation':'incomplete-window');
-  const label=kind==='gauge'?(series.state==='observed'?'Latest observation recorded':series.state==='stale'?'Latest observation stale':'Observation unavailable'):(series.state==='ok'?'Window covered':series.state==='no_data'?'No evaluated intervals':'Window needs review');
-  return {state:series.state,attention,label,recorded,review,reasons};
- }
+ const native=()=>typeof module!=='undefined'?require('./native-presentation'):global.GooNativePresentation;
+ const reasonInfo=(...args)=>native().reasonInfo(...args),streamDiagnostics=(...args)=>native().streamDiagnostics(...args);
  function streamSearchText(stream){return Object.entries(stream).flatMap(([key,value])=>[key,...(value&&typeof value==='object'?Object.entries(value).flatMap(([k,v])=>[k,String(v)]):[String(value??'')])]).join(' ')}
  function inventoryView(series,kind,{query='',state='all',offset=0,size=25}={}){
   size=Number.isInteger(size)&&size>0?Math.min(size,25):25;
@@ -99,15 +64,7 @@
   const start=Math.max(0,Math.min(Number.isSafeInteger(offset)?offset:0,Math.max(0,Math.floor((matches.length-1)/size)*size)));
   return {total:series.length,matched:matches.length,offset:start,items:matches.slice(start,start+size),review:series.filter(s=>streamDiagnostics(s,kind).attention).length};
  }
- function renderReasons(host,codes){
-  const unique=[...new Set(codes.filter(Boolean))];if(!unique.length)return;
-  const list=node('ul');list.className='native-reason-list';for(const code of unique){const info=reasonInfo(code),item=node('li');item.append(node('strong',info.title),node('span',' '+info.guidance));list.append(item)}
-  const exact=node('details');exact.append(node('summary','Diagnostic codes'),node('code',unique.join(' · ')));host.append(list,exact);
- }
- function renderStreamDiagnostics(host,s,kind,{exportCoverage=false}={}){const m=streamDiagnostics(s,kind),section=node('section');section.className='native-diagnostics';section.dataset.state=m.state;section.append(node('h4',(exportCoverage?'Export intervals · ':'')+m.label));
-  section.append(global.GooUI.stats([{label:kind==='gauge'?'Fresh observations':'Recorded intervals',value:String(m.recorded)},{label:kind==='gauge'?'Observations needing review':'Intervals needing review',value:String(m.review)}]));
-  renderReasons(section,m.reasons);section.append(node('small',kind==='gauge'?'Independent samples; freshness is evaluated at the fixed window end.':'Coverage state comes from the native evaluator. Recorded intervals alone do not imply a complete window.'));host.append(section);
- }
+ const renderReasons=(...args)=>native().renderReasons(...args),renderStreamDiagnostics=(...args)=>native().renderStreamDiagnostics(...args);
 
  function render(host,r,{saved=false,summaryProvided=false}={}){
   host.replaceChildren();const d=r.question.definition;host.append(node('h3',d.title));if(!summaryProvided)host.append(node('p',`${d.environment} · ${d.kind} · ${d.grain} · ${r.state} · ${r.count} source records · read ${r.readAt}`));const limits=node('details'),summary=node('summary','Evidence scope and limits');limits.append(summary);for(const w of r.warnings)limits.append(node('p',w));host.append(limits);if(r.gauges)host.append(node('p','Freshness is evaluated at the fixed window end, not the current wall clock. Reopening evidence does not change its state.'));

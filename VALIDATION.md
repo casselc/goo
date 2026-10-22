@@ -1,5 +1,63 @@
 # Validation record
 
+## Shared native values and coverage (2026-10-22 UTC)
+
+Final query/packages image:
+`sha256:5950e73230cc980cc896aa61fe08d3892e5043f91481dce851e76387daf4e056`.
+Initial native checks ran on `86f7e492`; the final application change is the mobile
+service-table layout. Shared native presenter/server assets are unchanged between
+those images.
+
+`GooNativePresentation` now shares latest native values, series diagnostics,
+comparison-window coverage, diagnostic explanations and the existing exact-rate
+formatter. Measurement details, service native summaries and fixed/live native
+windows compose it. Latest intervals remain distinct from whole-window validity;
+unknown coverage with no diagnostics never becomes validated coverage. Counter and
+histogram evaluation remains in Go, including reset/gap/temporality semantics.
+
+Service coverage is collapsed in its existing column; narrow service tables use
+labelled rows with geometry checks so stream/value/expanded coverage remain together.
+Comparison windows show UTC with exact nanoseconds in timestamp tooltips. Evidence
+read/custody/evaluation clocks and controller ownership remain separate. Public
+helper exports delegate for compatibility; shared styles have their own module.
+[Contract and diagram](docs/NATIVE_PRESENTATION.md).
+
+Completed checks:
+
+- All 33 frontend test files pass on final source. JavaScript/Python syntax,
+  whitespace and changed local Markdown file links pass.
+- Hegel passes: 200 new supplied-series presentation cases, 100 native-window
+  comparison cases, and counter/histogram state/swarm campaigns (100 × 30 each).
+  Generated cases check exact nanosecond latest ordering, no older-value fallback,
+  zero versus unavailable, count coherence and non-mutation (1.72s total).
+- Initial real-source batch: six journeys pass (72, 74, 54, 59, 76, 55).
+  Corrected timeline journey 77 and service-selection 76 pass on the final image,
+  including their Bombadil and existing Quint/quint-go ledgers. Full service journey
+  59 also passes on the final image (1.3m; 1.4m with wrapper). Seven distinct real-source
+  journeys and all six enabled Bombadil campaigns pass across these rounds.
+- Final served asset/server/binary hashes match source, including the new JS/CSS
+  modules. All 13 services run after traffic restoration. Pre-existing pending queue
+  IDs, retained manifests/reviews, pinned document citations and current catalogs
+  survive; cgroup OOM counts remain zero. No package/XTDB restart test was performed
+  this round.
+- Service and comparison coverage storyboards are regenerated, including new
+  desktop/mobile frames. Visual review found the old mobile horizontal table
+  separated identity from coverage; the labelled-row layout now keeps them together.
+  Geometry and source-read assertions cover opening coverage locally.
+
+The timeline Bombadil actor initially closed the first inspector (stream identity)
+instead of the selected native point; its selector now targets the selected-point
+owner. A final service run completed its UI/Bombadil checks but hit the browser
+helper's 60-second Go subprocess limit. Direct replay of that exact real ledger
+passes in 25.36s, including 11 rejecting controls. The full service rerun then passes
+with the original helper timeout and all assertions unchanged. Existing model ledgers
+validate observed protocol/accounting boundaries, not complete native UI composition.
+
+Evidence: `artifacts/native-presentation-final-unit.log`,
+`native-presentation-hegel.log`, `native-presentation-journeys.log`,
+`native-presentation-final.log`, `native-presentation-dashboard-replay.log`,
+`native-presentation-dashboard-final.log`, `native-presentation-health.json`.
+
 ## Standalone tail and native identity inspection (2026-10-22 UTC)
 
 Final query/packages image:

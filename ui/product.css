@@ -1101,10 +1101,6 @@ td details {
 
 .native-stream-tools { align-items: end; }
 .native-stream-tools input { min-width: 12rem; max-width: 100%; }
-.native-diagnostics { padding: .75rem; margin: .75rem 0; border: 1px solid var(--border, #344153); border-radius: .5rem; }
-.native-diagnostics h4 { margin: 0 0 .5rem; }
-.native-reason-list { padding-left: 1.25rem; }
-.native-reason-list li { margin: .5rem 0; }
 .native-stream-list > details { margin: .75rem 0; }
 .scroll > table.measurement-table th, .scroll > table.measurement-table td, .native-measurement-table > table.measurement-table th, .native-measurement-table > table.measurement-table td { white-space: nowrap; }
 
@@ -1403,3 +1399,15 @@ td details {
 /* Detail rows occupy space only while their shared inspector is mounted. */
 .telemetry-table .record-detail-row[hidden] {display:none}
 .comparison-controls[hidden] {display:none}
+
+/* Native service summaries keep values and coverage together on narrow screens. */
+@media(max-width:700px){
+ .dashboard-native-table>table{display:block;min-width:0;width:100%}
+ .dashboard-native-table>table>caption{display:block;width:auto;max-width:none}
+ .dashboard-native-table>table>thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+ .dashboard-native-table>table>tbody,.dashboard-native-table>table>tbody>tr{display:block}
+ .dashboard-native-table>table>tbody>tr>td{display:grid;grid-template-columns:5rem minmax(0,1fr);gap:.4rem;min-width:0;white-space:normal;overflow-wrap:anywhere;padding:.4rem}
+ .dashboard-native-table>table>tbody>tr>td:first-child{min-width:0;overflow-wrap:anywhere}
+ .dashboard-native-table>table>tbody>tr>td::before{content:attr(data-label);grid-column:1;grid-row:1;color:var(--muted);font-size:.65rem}
+ .dashboard-native-table>table>tbody>tr>td>*{grid-column:2;min-width:0;max-width:100%}
+}

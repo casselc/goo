@@ -463,3 +463,9 @@ selected-item shell and an Inspect stream button. These are application adapters
 not custom elements or source clients. Native lists/service summaries/comparisons/
 support previews share them. The older `disclosure` export remains for compatibility
 with external callers; application consumers have migrated.
+
+`GooNativePresentation` shares native latest values, series diagnostics, exact rate
+formatting and comparison-window coverage. It composes existing stats, UTC timestamps
+and disclosures, with styles in `native-presentation.css`. It has no source client or
+query/evidence state. Service coverage remains compact and collapsed; measurement
+stream details retain latest versus whole-window distinctions. [Contract and diagram](NATIVE_PRESENTATION.md).

@@ -1,5 +1,13 @@
 # User journeys and storyboards
 
+[Shared native values and coverage](../NATIVE_PRESENTATION.md): Journey 59 opens
+service coverage without a source request, including [desktop](screenshots/59g-shared-native-coverage.png)
+and [mobile](screenshots/59h-mobile-native-coverage.png). Journey 54 opens
+[comparison window coverage](screenshots/54g-shared-window-coverage.png), checking
+UTC bounds and exact nanosecond tooltips. Native navigation/timeline and live-counter
+storyboards use the same presenter while retaining their own fixed/source/custody
+contracts. Screenshot links are populated by the executable real-source journeys.
+
 [Standalone tail and native identity inspection](../RECORD_PRESENTATION.md#standalone-tails-and-native-identity)
 now share the selected-item shell. Journey 66 pauses on a retained log, searches
 its typed fields, closes to the opener and reopens with cached search without a new
