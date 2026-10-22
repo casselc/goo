@@ -1,10 +1,12 @@
 # Known issues and gaps
 
-Local disk maintenance: ClickHouse diagnostic logs reached 1.7 GB and contributed
-to exhausting the shared development filesystem on 2026-10-22. Old rotated debug
-archives were removed with current/recent and error logs preserved; telemetry was
-not deleted. Logging level/rotation budgets still need a bounded configuration
-change. See [actual cleanup evidence](../VALIDATION.md).
+Local disk maintenance: internal ClickHouse text/stack-trace/processor-profile
+histories grew beyond 5 GB, in addition to a large debug file, and exhausted the
+shared development filesystem. The named diagnostic histories were cleared and
+the current debug file was reduced to its latest 20 MB; application OTel tables,
+query audit/error logs, saved evidence and retry data were preserved. Logging
+level/retention budgets still need a bounded configuration change. See
+[actual cleanup evidence](../VALIDATION.md).
 
 [C2 HTTP boundaries](HTTP_BOUNDARIES.md) inventories current route effects/limits.
 All Go HTTP ClickHouse endpoint/credential/client configuration is now resolved by

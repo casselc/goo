@@ -1188,3 +1188,8 @@ elements; application adapters own navigation, read lifecycle and scope. Journey
 Bombadil actor covers selection and returning to retained evidence. Hegel
 selection properties and the question-session state swarm complement observed
 quint-go validation against the existing question-links model.
+
+The [Saved work composition diagram](SAVED_WORKSPACE.md#secondary-tools-and-relevant-recovery)
+shows the delivered narrative/evidence/catalog/tool boundaries and relevant
+browser-local retry entrance. These remain separate from production ingestion
+and query execution.

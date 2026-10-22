@@ -1,6 +1,63 @@
 # Validation record
 
 
+## Saved task composition and contextual recovery (2026-10-22 UTC)
+
+[Saved work](docs/SAVED_WORKSPACE.md) now leads with investigation/evidence
+browsing, compact catalog disclosures and one selected case. Exact document,
+capture, operation and retained-evidence owners remain independent. Raw-ID forms,
+annotation search and retry tools are secondary. A relevant pending-save or
+unreadable-journal notice opens recovery without submitting anything. Returning
+to a draft reuses the existing document-owner action, restores its exact route
+and suspends the standalone capture viewer. Ordinary unsaved notes remain
+page-local, not durable drafts.
+
+Actual checks:
+
+- All 39 Node test files pass after the owner/status changes (3.32s). Syntax,
+  Python compilation, Markdown local-target and whitespace checks pass.
+- New journey 117's two cases pass on the final layout: real ordinary OTel log,
+  immutable capture/narrative setup, metadata browsing, exact reopening, retained
+  unsaved finding and document route, mobile containment, hidden specialist
+  fields, visible malformed-ID errors and unreadable journal. A valid local
+  retry fixture is displayed without submitting it. Browser assertions require
+  zero telemetry reads and zero POSTs during these interactions.
+- Final existing journeys 32, 36, 98, 99 and 101 pass together (3.7m), including
+  stored-page race rejection, immutable capture successors, draft navigation,
+  exact annotation links, real interrupted retention acknowledgment/retry,
+  catalog snapshots, pinned old review citations and optional-store failure.
+  Their existing observed Go/Quint traces and rejecting controls pass.
+- Earlier runs exposed a test-local source-helper shadow, an unscoped duplicate
+  label locator and a run using the environment's wrong `go`; these harness
+  issues were corrected. One evidence-library formal child exceeded its existing
+  60-second wrapper limit. Separate observed-ledger replay passed (18.39s), then
+  the final complete journey passed without changing the limit or model.
+- Hegel `TestHegelPendingSaveStateSwarm` and `TestHegelRetainedSelectionIdentity`
+  pass (2.23s package). Native journal intent/identity semantics are unchanged.
+- New Saved Bombadil task/disclosure campaign passes (25-second budget).
+  Updated evidence-library catalog/recovery actor passes standalone (30 seconds)
+  and in the final real journey. Neither actor submits saves or retries.
+- Ten real Python API/docs/proxy tests pass (2.19s) after allowlisting the new
+  Saved script. No API route, schema or publication contract changed.
+- Twenty-six affected/new real storyboard PNGs are refreshed. The new selected
+  evidence and recovery frames were inspected; collapsed catalog cards and an
+  empty wrapper were compacted. README, plan, ownership and architecture links,
+  journey index and the Saved flow diagram describe the delivered boundaries.
+
+UI checks used edited Python/UI on loopback 8098 and the existing real Go,
+collector, ClickHouse and optional XTDB services. The Compose image on 8088 was
+not rebuilt. Broad backend suites were not rerun for this UI composition cut.
+
+The filesystem was nearly full before editing. Diagnostic maintenance retained
+the latest 20 MB of ClickHouse's oversized current debug file and cleared only
+`system.text_log`, `system.trace_log` and `system.processors_profile_log` histories
+(over 5 GB). Application OTel tables, query audit/error logs, immutable files,
+retained evidence, retry data and running/rollback images were preserved. Demo
+traffic was briefly paused and restored. Approximately 5 GB remained after
+acceptance; persistent diagnostic retention budgets remain a known issue.
+
+
+
 ## Contextual population selection and restoration (2026-10-22 UTC)
 
 The bounded population continuation in [the contract](docs/POPULATION_WORKSPACE.md#contextual-selection-comparison-and-restoration)

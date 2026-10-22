@@ -1421,3 +1421,14 @@ td details {
 .population-scope-context{font-size:12px;margin:6px 0;overflow-wrap:anywhere}
 .population-scope-context p{margin:5px 0;color:var(--muted)}
 .population-selection>.controls{gap:6px;flex-wrap:wrap}
+
+/* Saved starts with tasks and compact catalogs; specialist tools are secondary. */
+.saved-task-actions{margin:4px 0 12px;gap:8px;flex-wrap:wrap}
+.saved-workspace>.saved-tools{border-top:1px solid var(--border);padding-top:10px;margin-block:12px}
+.saved-id-tools{font-size:12px;margin:8px 0}
+.saved-id-tools>.controls{margin-top:8px}
+.saved-workspace :is(#captureGeneralID,#captureID){max-width:100%;min-width:0}
+.saved-workspace>#investigationDocuments:has(>#documentPanel:not([open])),
+.saved-workspace>#captureLibrary:has(>#captureLibraryPanel:not([open])),
+.saved-workspace>#savedRetainedCatalog:has(>.retained-catalog:not([open])){padding:6px 12px;margin-block:4px;background:transparent;border:0}
+.saved-workspace>#savedRetainedWorkspace:not(:has(>.retained-evidence:not([hidden]))){display:none}

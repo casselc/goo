@@ -1626,3 +1626,20 @@ original fixed questions.
 [Comparison](screenshots/116b-selected-population-comparison.png).
 The [population contract](../POPULATION_WORKSPACE.md#contextual-selection-comparison-and-restoration)
 keeps selection-versus-current separate from a future exact complement operation.
+
+## 117. Browse saved work and recover context without rerunning telemetry
+
+[Executable journey](../../journeys/saved-workspace.spec.js) ingests a real log,
+preserves it in a capture and links that capture from a narrative revision.
+Browse investigations previews catalog metadata, then the exact narrative opens.
+An unsaved finding survives opening the captured evidence and returning to notes.
+Raw-ID fields remain secondary; Tools discloses annotation search and recovery.
+A valid browser-local retry fixture produces a notice without a write, and an
+unreadable journal remains discoverable. A malformed operation ID reports its
+error inside Tools instead of hiding it with the selected-case area.
+
+[Selected saved evidence](screenshots/117a-selected-saved-evidence.png) ·
+[Contextual recovery](screenshots/117b-contextual-pending-recovery.png).
+The [Saved composition contract](../SAVED_WORKSPACE.md) and
+[bounded Bombadil actor](../../verification/bombadil/saved-workspace.ts) keep
+browsing and disclosure separate from execution/publication.

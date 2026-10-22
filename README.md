@@ -12,7 +12,8 @@ happened with evidence you can inspect and preserve.**
 reconciles independent architecture and running-product usability reviews. It
 recommends a continuous Activity → analysis → population → investigation flow;
 the [contextual Activity analysis handoff](docs/ACTIVITY_ANALYSIS.md) is now
-implemented; the broader recommendations remain proposed.
+implemented, followed by [Saved task composition](docs/SAVED_WORKSPACE.md)
+and bounded population continuation; the broader recommendations remain proposed.
 
 Ask a question → inspect its evidence → capture and explain it → reuse the
 definition. Start from instrumented code or unfamiliar OpenTelemetry data.

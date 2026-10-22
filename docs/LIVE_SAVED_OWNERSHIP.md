@@ -34,3 +34,7 @@ Old `#investigation=<id>` links and immutable IDs remain valid. The browser jour
 selection, unsaved investigation notes and independent live ownership, and refreshes a late-arriving span into
 a successor while preserving the original. The workspace Bombadil invariant
 checks that the editor always belongs to Operations and never appears in Saved.
+
+The [Saved task composition](SAVED_WORKSPACE.md) now groups catalog entry, exact
+selected cases and secondary tools without moving execution into display
+components or replacing the independent document/capture/retention owners.

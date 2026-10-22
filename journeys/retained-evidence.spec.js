@@ -1,5 +1,5 @@
 const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');
-const {source,verifyWithGo,startBombadil}=require('./support/cross-app'),base='http://127.0.0.1:8088';
+const {source,verifyWithGo,startBombadil}=require('./support/cross-app'),base=process.env.GOO_QUERY_URL||'http://127.0.0.1:8088';
 test('99 retain exact saved observations in XTDB and recover an interrupted response',async({page,request})=>{
  test.setTimeout(150000);page.setDefaultTimeout(15000);const configured=await(await request.get(base+'/api/retained-evidence/status')).json();test.skip(!configured.configured,'optional XTDB overlay required');const now=Date.now(),environment='retained-'+randomBytes(4).toString('hex'),attrs=o=>Object.entries(o).map(([key,stringValue])=>({key,value:{stringValue}}));
  expect((await request.post('http://127.0.0.1:4318/v1/traces',{data:{resourceSpans:[{resource:{attributes:attrs({'service.name':'api','deployment.environment.name':environment})},scopeSpans:[{spans:[0,1].map(i=>({traceId:randomBytes(16).toString('hex'),spanId:randomBytes(8).toString('hex'),name:'GET /items',kind:2,status:{code:1},startTimeUnixNano:String(BigInt(now-10000+i)*1000000n+1n),endTimeUnixNano:String(BigInt(now-9990+i)*1000000n+1n),attributes:attrs({region:'west',empty:''})}))}]}]}})).ok()).toBe(true);

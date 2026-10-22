@@ -1,0 +1,11 @@
+import{always,eventually}from'@antithesishq/bombadil';
+import{extract,actions,registerCustomAction}from'@antithesishq/bombadil/browser';
+export{noUncaughtExceptions,noUnhandledPromiseRejections}from'@antithesishq/bombadil/browser/defaults/properties';
+const s=extract(({document,window})=>({ready:!!document.querySelector('[data-saved-open="investigations"]'),stage:Number(document.documentElement.dataset.savedStage||0),overflow:document.documentElement.scrollWidth>window.innerWidth,raw:document.querySelector<HTMLDetailsElement>('#captureIDTools')?.open,tools:document.querySelector<HTMLDetailsElement>('#savedTools')?.open,notes:document.querySelector<HTMLDetailsElement>('#documentPanel')?.open}));
+export const contained=always(()=>!s.current.overflow);
+export const IDsStaySecondary=always(()=>!s.current.raw);
+export const completes=eventually(()=>s.current.stage===3&&s.current.tools).within(20,'seconds');
+const investigations=registerCustomAction('goo.savedInvestigations',async(document)=>{document.querySelector<HTMLButtonElement>('[data-saved-open="investigations"]')!.click();document.documentElement.dataset.savedStage='1'});
+const evidence=registerCustomAction('goo.savedEvidence',async(document)=>{document.querySelector<HTMLButtonElement>('[data-saved-open="evidence"]')!.click();document.documentElement.dataset.savedStage='2'});
+const tools=registerCustomAction('goo.savedTools',async(document)=>{document.querySelector<HTMLDetailsElement>('#savedTools')!.open=true;document.documentElement.dataset.savedStage='3'});
+export const choices=actions(()=>!s.current.ready?['Wait']:s.current.stage===0?[investigations()]:s.current.stage===1?[evidence()]:s.current.stage===2?[tools()]:['Wait']);

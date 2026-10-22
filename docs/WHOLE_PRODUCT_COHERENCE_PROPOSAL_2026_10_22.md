@@ -3,8 +3,9 @@
 Follow-through: the accepted bounded [Activity analysis handoff](ACTIVITY_ANALYSIS.md)
 is now implemented. A bounded [population continuation](POPULATION_WORKSPACE.md#contextual-selection-comparison-and-restoration)
 also implements selected-versus-current comparison and starting-scope restoration.
-Broader population/Saved and explicit blank-authoring work
-remain proposed. The review below records its original baseline and rationale.
+Bounded [Saved task composition](SAVED_WORKSPACE.md) now adds investigation/evidence
+entry, secondary storage tools and relevant recovery. Broader population controls,
+case outlines and explicit blank-authoring work remain proposed. The review below records its original baseline and rationale.
 
 Status at review: review and proposed sequence, not implemented behavior or an additional
 authorized backlog. Reviewed baseline: `f54d07c`. The
