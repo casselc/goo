@@ -1,0 +1,977 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "/compare/valid",
+      "method": "POST",
+      "path": "/compare",
+      "body": "{\"baseline\":{\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0},\"basis\":\"fixture-basis\",\"count\":\"9007199254740993\",\"state\":\"observed\",\"groups\":[{\"g0\":\"雪 \\u003cregion\\u003e\",\"count\":\"9007199254740993\"}]},\"selection\":{\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0},\"basis\":\"fixture-basis\",\"count\":\"9007199254740993\",\"state\":\"observed\",\"groups\":[{\"g0\":\"雪 \\u003cregion\\u003e\",\"count\":\"9007199254740993\"}]}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"state\":\"ok\",\"field\":{\"kind\":\"attribute\",\"key\":\"region\"},\"baselineCount\":\"9007199254740993\",\"selectionCount\":\"9007199254740993\",\"baselineBasis\":\"fixture-basis\",\"selectionBasis\":\"fixture-basis\",\"basis\":\"f219ed30a39b09066f5bb14990ca65c4c46744ce4fcde44db23bb09a952ebc92\",\"rows\":[{\"value\":\"雪 \\u003cregion\\u003e\",\"baselineCount\":\"9007199254740993\",\"selectionCount\":\"9007199254740993\",\"baselinePercent\":\"100.00\",\"selectionPercent\":\"100.00\",\"differencePP\":\"0.00\"}],\"warnings\":[\"Captures were read separately; late data, sampling and source changes may affect differences.\",\"Populations may overlap. Percentage-point differences are descriptive leads, not causal attribution or statistical significance.\",\"These are captured record counts, not unique requests or business outcomes. Source bases are caller-supplied metadata, not authenticated provenance.\"]}\n"
+    },
+    {
+      "name": "/compare/empty",
+      "method": "POST",
+      "path": "/compare",
+      "body": "",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "/compare/null",
+      "method": "POST",
+      "path": "/compare",
+      "body": "null",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"signal must be spans or logs\"}\n"
+    },
+    {
+      "name": "/compare/array",
+      "method": "POST",
+      "path": "/compare",
+      "body": "[]",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type exploration.ComparisonRequest\"}\n"
+    },
+    {
+      "name": "/compare/truncated",
+      "method": "POST",
+      "path": "/compare",
+      "body": "{",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"unexpected EOF\"}\n"
+    },
+    {
+      "name": "/compare/unknown",
+      "method": "POST",
+      "path": "/compare",
+      "body": "{\"sql\":\"SELECT 1\"}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"sql\\\"\"}\n"
+    },
+    {
+      "name": "/compare/nested-invalid",
+      "method": "POST",
+      "path": "/compare",
+      "body": "{\"baseline\":{\"unknown\":true}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"unknown\\\"\"}\n"
+    },
+    {
+      "name": "/compare/second-value",
+      "method": "POST",
+      "path": "/compare",
+      "body": "{\"baseline\":{\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0},\"basis\":\"fixture-basis\",\"count\":\"9007199254740993\",\"state\":\"observed\",\"groups\":[{\"g0\":\"雪 \\u003cregion\\u003e\",\"count\":\"9007199254740993\"}]},\"selection\":{\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0},\"basis\":\"fixture-basis\",\"count\":\"9007199254740993\",\"state\":\"observed\",\"groups\":[{\"g0\":\"雪 \\u003cregion\\u003e\",\"count\":\"9007199254740993\"}]}} {}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "/compare/malformed-tail",
+      "method": "POST",
+      "path": "/compare",
+      "body": "{\"baseline\":{\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0},\"basis\":\"fixture-basis\",\"count\":\"9007199254740993\",\"state\":\"observed\",\"groups\":[{\"g0\":\"雪 \\u003cregion\\u003e\",\"count\":\"9007199254740993\"}]},\"selection\":{\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0},\"basis\":\"fixture-basis\",\"count\":\"9007199254740993\",\"state\":\"observed\",\"groups\":[{\"g0\":\"雪 \\u003cregion\\u003e\",\"count\":\"9007199254740993\"}]}} x",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "/compare/whitespace",
+      "method": "POST",
+      "path": "/compare",
+      "body": "{\"baseline\":{\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0},\"basis\":\"fixture-basis\",\"count\":\"9007199254740993\",\"state\":\"observed\",\"groups\":[{\"g0\":\"雪 \\u003cregion\\u003e\",\"count\":\"9007199254740993\"}]},\"selection\":{\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0},\"basis\":\"fixture-basis\",\"count\":\"9007199254740993\",\"state\":\"observed\",\"groups\":[{\"g0\":\"雪 \\u003cregion\\u003e\",\"count\":\"9007199254740993\"}]}} \n\t",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"state\":\"ok\",\"field\":{\"kind\":\"attribute\",\"key\":\"region\"},\"baselineCount\":\"9007199254740993\",\"selectionCount\":\"9007199254740993\",\"baselineBasis\":\"fixture-basis\",\"selectionBasis\":\"fixture-basis\",\"basis\":\"f219ed30a39b09066f5bb14990ca65c4c46744ce4fcde44db23bb09a952ebc92\",\"rows\":[{\"value\":\"雪 \\u003cregion\\u003e\",\"baselineCount\":\"9007199254740993\",\"selectionCount\":\"9007199254740993\",\"baselinePercent\":\"100.00\",\"selectionPercent\":\"100.00\",\"differencePP\":\"0.00\"}],\"warnings\":[\"Captures were read separately; late data, sampling and source changes may affect differences.\",\"Populations may overlap. Percentage-point differences are descriptive leads, not causal attribution or statistical significance.\",\"These are captured record counts, not unique requests or business outcomes. Source bases are caller-supplied metadata, not authenticated provenance.\"]}\n"
+    },
+    {
+      "name": "/compare/exact-limit",
+      "method": "POST",
+      "path": "/compare",
+      "body": "{\"baseline\":{\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0},\"basis\":\"fixture-basis\",\"count\":\"9007199254740993\",\"state\":\"observed\",\"groups\":[{\"g0\":\"雪 \\u003cregion\\u003e\",\"count\":\"9007199254740993\"}]},\"selection\":{\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0},\"basis\":\"fixture-basis\",\"count\":\"9007199254740993\",\"state\":\"observed\",\"groups\":[{\"g0\":\"雪 \\u003cregion\\u003e\",\"count\":\"9007199254740993\"}]}}",
+      "padTo": 1048576,
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"state\":\"ok\",\"field\":{\"kind\":\"attribute\",\"key\":\"region\"},\"baselineCount\":\"9007199254740993\",\"selectionCount\":\"9007199254740993\",\"baselineBasis\":\"fixture-basis\",\"selectionBasis\":\"fixture-basis\",\"basis\":\"f219ed30a39b09066f5bb14990ca65c4c46744ce4fcde44db23bb09a952ebc92\",\"rows\":[{\"value\":\"雪 \\u003cregion\\u003e\",\"baselineCount\":\"9007199254740993\",\"selectionCount\":\"9007199254740993\",\"baselinePercent\":\"100.00\",\"selectionPercent\":\"100.00\",\"differencePP\":\"0.00\"}],\"warnings\":[\"Captures were read separately; late data, sampling and source changes may affect differences.\",\"Populations may overlap. Percentage-point differences are descriptive leads, not causal attribution or statistical significance.\",\"These are captured record counts, not unique requests or business outcomes. Source bases are caller-supplied metadata, not authenticated provenance.\"]}\n"
+    },
+    {
+      "name": "/compare/over-limit-trailing",
+      "method": "POST",
+      "path": "/compare",
+      "body": "{\"baseline\":{\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0},\"basis\":\"fixture-basis\",\"count\":\"9007199254740993\",\"state\":\"observed\",\"groups\":[{\"g0\":\"雪 \\u003cregion\\u003e\",\"count\":\"9007199254740993\"}]},\"selection\":{\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0},\"basis\":\"fixture-basis\",\"count\":\"9007199254740993\",\"state\":\"observed\",\"groups\":[{\"g0\":\"雪 \\u003cregion\\u003e\",\"count\":\"9007199254740993\"}]}}",
+      "padTo": 1048577,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "fillBytes": 1048576,
+      "suffix": "\"}",
+      "name": "/compare/over-limit-value",
+      "method": "POST",
+      "path": "/compare",
+      "body": "{\"baseline\":\"",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"http: request body too large\"}\n"
+    },
+    {
+      "name": "/compare/ignored-content-type",
+      "method": "POST",
+      "path": "/compare",
+      "body": "{\"baseline\":{\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0},\"basis\":\"fixture-basis\",\"count\":\"9007199254740993\",\"state\":\"observed\",\"groups\":[{\"g0\":\"雪 \\u003cregion\\u003e\",\"count\":\"9007199254740993\"}]},\"selection\":{\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0},\"basis\":\"fixture-basis\",\"count\":\"9007199254740993\",\"state\":\"observed\",\"groups\":[{\"g0\":\"雪 \\u003cregion\\u003e\",\"count\":\"9007199254740993\"}]}}",
+      "contentType": "text/plain",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"state\":\"ok\",\"field\":{\"kind\":\"attribute\",\"key\":\"region\"},\"baselineCount\":\"9007199254740993\",\"selectionCount\":\"9007199254740993\",\"baselineBasis\":\"fixture-basis\",\"selectionBasis\":\"fixture-basis\",\"basis\":\"f219ed30a39b09066f5bb14990ca65c4c46744ce4fcde44db23bb09a952ebc92\",\"rows\":[{\"value\":\"雪 \\u003cregion\\u003e\",\"baselineCount\":\"9007199254740993\",\"selectionCount\":\"9007199254740993\",\"baselinePercent\":\"100.00\",\"selectionPercent\":\"100.00\",\"differencePP\":\"0.00\"}],\"warnings\":[\"Captures were read separately; late data, sampling and source changes may affect differences.\",\"Populations may overlap. Percentage-point differences are descriptive leads, not causal attribution or statistical significance.\",\"These are captured record counts, not unique requests or business outcomes. Source bases are caller-supplied metadata, not authenticated provenance.\"]}\n"
+    },
+    {
+      "name": "/compare/empty-object",
+      "method": "POST",
+      "path": "/compare",
+      "body": "{}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"signal must be spans or logs\"}\n"
+    },
+    {
+      "name": "/compare/method-refusal",
+      "method": "PUT",
+      "path": "/compare",
+      "body": "{\"baseline\":{\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0},\"basis\":\"fixture-basis\",\"count\":\"9007199254740993\",\"state\":\"observed\",\"groups\":[{\"g0\":\"雪 \\u003cregion\\u003e\",\"count\":\"9007199254740993\"}]},\"selection\":{\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0},\"basis\":\"fixture-basis\",\"count\":\"9007199254740993\",\"state\":\"observed\",\"groups\":[{\"g0\":\"雪 \\u003cregion\\u003e\",\"count\":\"9007199254740993\"}]}}",
+      "status": 405,
+      "headers": {
+        "Allow": "POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    },
+    {
+      "name": "/compare/wrong-number-type",
+      "method": "POST",
+      "path": "/compare",
+      "body": "{\"fromMs\":9007199254740993.5}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"fromMs\\\"\"}\n"
+    },
+    {
+      "name": "/inventory/valid",
+      "method": "POST",
+      "path": "/inventory",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "/inventory/empty",
+      "method": "POST",
+      "path": "/inventory",
+      "body": "",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "/inventory/null",
+      "method": "POST",
+      "path": "/inventory",
+      "body": "null",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"explicit environment required\"}\n"
+    },
+    {
+      "name": "/inventory/array",
+      "method": "POST",
+      "path": "/inventory",
+      "body": "[]",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type exploration.InventoryQuestion\"}\n"
+    },
+    {
+      "name": "/inventory/truncated",
+      "method": "POST",
+      "path": "/inventory",
+      "body": "{",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"unexpected EOF\"}\n"
+    },
+    {
+      "name": "/inventory/unknown",
+      "method": "POST",
+      "path": "/inventory",
+      "body": "{\"sql\":\"SELECT 1\"}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"sql\\\"\"}\n"
+    },
+    {
+      "name": "/inventory/nested-invalid",
+      "method": "POST",
+      "path": "/inventory",
+      "body": "{\"namespace\":{\"unknown\":true}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"unknown\\\"\"}\n"
+    },
+    {
+      "name": "/inventory/second-value",
+      "method": "POST",
+      "path": "/inventory",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000} {}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "/inventory/malformed-tail",
+      "method": "POST",
+      "path": "/inventory",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000} x",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "/inventory/whitespace",
+      "method": "POST",
+      "path": "/inventory",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000} \n\t",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "/inventory/exact-limit",
+      "method": "POST",
+      "path": "/inventory",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000}",
+      "padTo": 16384,
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "/inventory/over-limit-trailing",
+      "method": "POST",
+      "path": "/inventory",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000}",
+      "padTo": 16385,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "fillBytes": 16384,
+      "suffix": "\"}",
+      "name": "/inventory/over-limit-value",
+      "method": "POST",
+      "path": "/inventory",
+      "body": "{\"environment\":\"",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"http: request body too large\"}\n"
+    },
+    {
+      "name": "/inventory/ignored-content-type",
+      "method": "POST",
+      "path": "/inventory",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000}",
+      "contentType": "text/plain",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "/inventory/empty-object",
+      "method": "POST",
+      "path": "/inventory",
+      "body": "{}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"explicit environment required\"}\n"
+    },
+    {
+      "name": "/inventory/method-refusal",
+      "method": "PUT",
+      "path": "/inventory",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000}",
+      "status": 405,
+      "headers": {
+        "Allow": "POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    },
+    {
+      "name": "/inventory/wrong-number-type",
+      "method": "POST",
+      "path": "/inventory",
+      "body": "{\"fromMs\":9007199254740993.5}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal number 9007199254740993.5 into Go struct field InventoryQuestion.fromMs of type int64\"}\n"
+    },
+    {
+      "name": "/discovery/valid",
+      "method": "POST",
+      "path": "/discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "/discovery/empty",
+      "method": "POST",
+      "path": "/discovery",
+      "body": "",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "/discovery/null",
+      "method": "POST",
+      "path": "/discovery",
+      "body": "null",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"explicit environment required\"}\n"
+    },
+    {
+      "name": "/discovery/array",
+      "method": "POST",
+      "path": "/discovery",
+      "body": "[]",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type exploration.InventoryQuestion\"}\n"
+    },
+    {
+      "name": "/discovery/truncated",
+      "method": "POST",
+      "path": "/discovery",
+      "body": "{",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"unexpected EOF\"}\n"
+    },
+    {
+      "name": "/discovery/unknown",
+      "method": "POST",
+      "path": "/discovery",
+      "body": "{\"sql\":\"SELECT 1\"}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"sql\\\"\"}\n"
+    },
+    {
+      "name": "/discovery/nested-invalid",
+      "method": "POST",
+      "path": "/discovery",
+      "body": "{\"namespace\":{\"unknown\":true}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"unknown\\\"\"}\n"
+    },
+    {
+      "name": "/discovery/second-value",
+      "method": "POST",
+      "path": "/discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000} {}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "/discovery/malformed-tail",
+      "method": "POST",
+      "path": "/discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000} x",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "/discovery/whitespace",
+      "method": "POST",
+      "path": "/discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000} \n\t",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "/discovery/exact-limit",
+      "method": "POST",
+      "path": "/discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000}",
+      "padTo": 16384,
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "/discovery/over-limit-trailing",
+      "method": "POST",
+      "path": "/discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000}",
+      "padTo": 16385,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "fillBytes": 16384,
+      "suffix": "\"}",
+      "name": "/discovery/over-limit-value",
+      "method": "POST",
+      "path": "/discovery",
+      "body": "{\"environment\":\"",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"http: request body too large\"}\n"
+    },
+    {
+      "name": "/discovery/ignored-content-type",
+      "method": "POST",
+      "path": "/discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000}",
+      "contentType": "text/plain",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "/discovery/empty-object",
+      "method": "POST",
+      "path": "/discovery",
+      "body": "{}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"explicit environment required\"}\n"
+    },
+    {
+      "name": "/discovery/method-refusal",
+      "method": "PUT",
+      "path": "/discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000}",
+      "status": 405,
+      "headers": {
+        "Allow": "POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    },
+    {
+      "name": "/discovery/wrong-number-type",
+      "method": "POST",
+      "path": "/discovery",
+      "body": "{\"fromMs\":9007199254740993.5}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal number 9007199254740993.5 into Go struct field InventoryQuestion.fromMs of type int64\"}\n"
+    },
+    {
+      "name": "/explore/valid",
+      "method": "POST",
+      "path": "/explore",
+      "body": "{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "/explore/empty",
+      "method": "POST",
+      "path": "/explore",
+      "body": "",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "/explore/null",
+      "method": "POST",
+      "path": "/explore",
+      "body": "null",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"signal must be spans or logs\"}\n"
+    },
+    {
+      "name": "/explore/array",
+      "method": "POST",
+      "path": "/explore",
+      "body": "[]",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type exploration.Query\"}\n"
+    },
+    {
+      "name": "/explore/truncated",
+      "method": "POST",
+      "path": "/explore",
+      "body": "{",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"unexpected EOF\"}\n"
+    },
+    {
+      "name": "/explore/unknown",
+      "method": "POST",
+      "path": "/explore",
+      "body": "{\"sql\":\"SELECT 1\"}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"sql\\\"\"}\n"
+    },
+    {
+      "name": "/explore/nested-invalid",
+      "method": "POST",
+      "path": "/explore",
+      "body": "{\"where\":{\"unknown\":true}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"unknown\\\"\"}\n"
+    },
+    {
+      "name": "/explore/second-value",
+      "method": "POST",
+      "path": "/explore",
+      "body": "{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0} {}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "/explore/malformed-tail",
+      "method": "POST",
+      "path": "/explore",
+      "body": "{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0} x",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "/explore/whitespace",
+      "method": "POST",
+      "path": "/explore",
+      "body": "{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0} \n\t",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "/explore/exact-limit",
+      "method": "POST",
+      "path": "/explore",
+      "body": "{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0}",
+      "padTo": 16384,
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "/explore/over-limit-trailing",
+      "method": "POST",
+      "path": "/explore",
+      "body": "{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0}",
+      "padTo": 16385,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "fillBytes": 16384,
+      "suffix": "\"}",
+      "name": "/explore/over-limit-value",
+      "method": "POST",
+      "path": "/explore",
+      "body": "{\"environment\":\"",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"http: request body too large\"}\n"
+    },
+    {
+      "name": "/explore/ignored-content-type",
+      "method": "POST",
+      "path": "/explore",
+      "body": "{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0}",
+      "contentType": "text/plain",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "/explore/empty-object",
+      "method": "POST",
+      "path": "/explore",
+      "body": "{}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"signal must be spans or logs\"}\n"
+    },
+    {
+      "name": "/explore/method-refusal",
+      "method": "PUT",
+      "path": "/explore",
+      "body": "{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"region\"}],\"limit\":100,\"offset\":0}",
+      "status": 405,
+      "headers": {
+        "Allow": "POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    },
+    {
+      "name": "/explore/wrong-number-type",
+      "method": "POST",
+      "path": "/explore",
+      "body": "{\"fromMs\":9007199254740993.5}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal number 9007199254740993.5 into Go struct field Query.fromMs of type int64\"}\n"
+    }
+  ]
+}

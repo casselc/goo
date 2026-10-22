@@ -656,7 +656,7 @@ an explicit effect; no source dependency or generic endpoint policy was added.
 Hegel shared-JSON byte/Unicode/integer properties pass. No UI/SSE/Quint protocol or
 running image changed; existing frames remain applicable. Final deployed-journey
 acceptance stays open. Native measurement/registry adoption below is now delivered behind its own
-wire contracts. Fixed exploration JSON is next; other route owners remain queued.
+wire contracts. Fixed exploration adoption below is now delivered; other route owners remain queued.
 
 
 ## Native measurement and registry JSON adoption
@@ -699,6 +699,48 @@ workflow behavior remain covered by existing affected suites, not by that fixtur
 Explicit-window plan fixtures preserve exact output bytes without changing the
 default planning clock. Hegel shared-JSON properties pass. No UI/SSE/Quint protocol
 or running image changed; screenshots remain applicable. Final deployed-journey
-acceptance remains open. Next freeze/adopt fixed exploration JSON (compare,
-inventory, discovery and Explore), preserving each body/time limit and effect
-ordering. Tail's separate SSE owner is a later cut; do not buffer its responses.
+acceptance remains open. Fixed exploration adoption below is now delivered.
+Tail request decoding is next; do not buffer its SSE responses.
+
+
+## Fixed exploration JSON adoption
+
+`registerExploration` now uses shared strict typed decoding and JSON/no-store
+writing for `/compare`, `/inventory`, `/discovery` and `/explore`. Comparison keeps
+its 1 MiB request budget; the source-reading routes keep 16 KiB. All retain
+`expected one JSON object`, existing validation and 400/502 mappings. Inventory,
+service discovery and Explore still own their 15/30/55-second contexts. Comparison
+still operates only on supplied summaries. Explore still freezes a process-local
+result-page capability only after a successful source result; no snapshot or query
+owner moved into the helper. Recipes and tail remain separate registrations.
+
+```mermaid
+flowchart LR
+  Compare[Compare: 1 MiB] --> Decode[Shared strict typed JSON / one value]
+  Records[Inventory / discovery / Explore: 16 KiB] --> Decode
+  Decode --> Validate[Existing family validation]
+  Validate --> Summaries[Compare supplied summaries: no source]
+  Validate --> Execute[Existing source deadlines: 15 / 30 / 55 seconds]
+  Execute --> Snapshot[Explore only: existing result-page freeze]
+  Summaries --> Write[Shared JSON / no-store writer]
+  Execute --> Write
+  Snapshot --> Write
+```
+
+`testdata/http/exploration-json.json` freezes 68 before/after cases across these
+four routes. It pins status, exact response bytes and selected headers for valid
+comparison (including counts above 2^53), source admission/failure, malformed/null/
+array/unknown/nested-invalid input, second values, malformed tails, whitespace,
+exact/overflow budgets, ignored content type, empty objects, numeric type refusal
+and method refusal. Injected transport counters prove comparison and rejected
+requests make no source calls, and admitted source failures make one call with the
+correct deadline. A deterministic 503 becomes the existing 502 response.
+
+Positive source execution, result snapshots, late/changed reads, dependency
+isolation and SSE behavior remain covered by existing affected tests. The frozen
+source-failure fixtures do not claim positive live-data or snapshot coverage.
+Hegel shared-JSON properties pass. No UI/SSE/Quint protocol or running image changed;
+existing frames remain applicable and final deployed-journey acceptance stays open.
+Next freeze/adopt tail request decoding only, preserving early-error headers,
+slots, streaming headers, flush/deadline/disconnect and independent lifetime.
+Capture/live/investigation/workbench/retention JSON owners remain queued.

@@ -966,3 +966,9 @@ Native measurement/registry JSON adopts the same helpers behind 68 frozen cases
 in `testdata/http/native-json.json`, retaining its distinct trailing-input message.
 Tests count source reads and file effects; existing positive execution/custody and
 publication fixtures remain separate. See [native JSON adoption](../docs/HTTP_BOUNDARIES.md#native-measurement-and-registry-json-adoption).
+
+Fixed exploration JSON uses shared mechanics behind 68 frozen cases in
+`testdata/http/exploration-json.json`. Tests retain comparison's 1 MiB budget,
+source routes' 16 KiB budgets, exact large counts, source-free rejection/comparison
+and 15/30/55-second source deadlines. Positive source/snapshot behavior stays in
+existing tests; see [fixed exploration adoption](../docs/HTTP_BOUNDARIES.md#fixed-exploration-json-adoption).

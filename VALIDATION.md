@@ -1,5 +1,34 @@
 # Validation record
 
+## C2 fixed exploration JSON adoption (2026-10-22 UTC)
+
+[Fixed exploration contract and diagram](docs/HTTP_BOUNDARIES.md#fixed-exploration-json-adoption)
+record shared JSON adoption for compare/inventory/discovery/Explore. Comparison
+retains 1 MiB, source routes 16 KiB, and each keeps its validation/error mapping.
+Source deadlines and Explore's result-page freeze remain in their existing owners.
+
+Actual checks:
+
+- All 68 static wire fixtures pass before extraction (0.058s): exact statuses,
+  bodies and selected headers across valid comparison, source admission/failure,
+  malformed/null/array/unknown/nested-invalid/second/trailing inputs, exact/overflow
+  bounds, whitespace, content-type behavior, numeric type refusal and mux refusal.
+  Comparison retains counts above 2^53. Transport counters prove source-free
+  comparison/rejection and one read for admitted failures; deadline assertions
+  preserve inventory/discovery/Explore's 15/30/55-second contexts.
+- After extraction, race suites pass for HTTP routes (2.381s) and exploration
+  (cached), including the same fixtures and existing positive source, comparison,
+  snapshot, dependency-isolation and SSE regression tests.
+- Hegel's 100 shared planning-JSON cases pass (0.023s).
+- `go test ./...` passes. JSON-only changes require no new live database test;
+  existing gated live checks skip without their configured URL variables.
+- Whitespace and local Markdown targets pass.
+
+Evidence: `artifacts/c2-exploration-json-{before,race,hegel,root}.log`.
+No UI/SSE/Quint protocol changed; no screenshots or running images were regenerated.
+Tail request decoding is next, preserving its separate error/stream policies.
+Other JSON owners and C2 final deployed-journey acceptance remain open.
+
 ## C2 native measurement/registry JSON adoption (2026-10-22 UTC)
 
 [Native JSON contract and diagram](docs/HTTP_BOUNDARIES.md#native-measurement-and-registry-json-adoption)

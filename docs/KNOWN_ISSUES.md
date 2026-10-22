@@ -11,7 +11,8 @@ now use shared POST/bounded-read primitives; the [acceptance audit](HTTP_BOUNDAR
 identified four additional readers; all are now adopted, including histograms.
 Telemetry package planning/publication JSON is now adopted behind 68 wire cases.
 Native measurement/registry JSON is adopted behind 68 wire cases. Fixed exploration
-JSON is next; other JSON owners and final deployed
+JSON is adopted behind 68 wire cases. Tail request decoding is next; other JSON
+owners and final deployed
 acceptance stay queued. Status/error ordering, escaping and row limits remain family-specific.
 Recipes/dashboard now share bounded JSON decoding/writing behind exact wire
 fixtures; other route adoption and transport consolidation remain queued. ClickHouse/XTDB environment mutation after startup is not a reload.
