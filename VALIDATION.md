@@ -1,5 +1,66 @@
 # Validation record
 
+## Retained catalog and owner consolidation — bounded B1 delivered (2026-10-22 UTC)
+
+Final query/packages image:
+`sha256:bde7234f2befb6397fe23ce61a994c5253a83b7f6f511a8a9b8a4280045a68f6`.
+Retained metadata uses the shared passive compact row and inspector while retaining
+its server-owned filters and 20-item cursor pages. Inspection performs no manifest,
+review, telemetry or publication request. Tags are explicitly per-load current-head
+snapshots; keys include load generation and manifest ID. Filter/refresh changes
+retain selected metadata with an earlier-load notice; stale completions are rejected
+and unavailable refreshes preserve existing rows. Exact pinned reviews remain
+separate. Client/basis, catalog, citation and explicit recovery now have distinct
+browser modules; existing transport, citation and recovery function bodies were
+moved verbatim. [Owner diagram and contracts](docs/DEFINITION_LIBRARY.md).
+
+Actual checks on final source/image:
+
+- All 36 frontend test files pass. New transport tests protect exact request-body/key
+  replay after lost acknowledgment, pending intent on optional-store failure and
+  pinned citation read-bound precedence. JS syntax, Python compile, whitespace and
+  changed local Markdown links pass.
+- Hegel definition catalog properties, retained selection identity and pending-save
+  state/swarm campaigns pass together (0.986s). Root `retention` tests pass, including
+  branch/head/time/filter/cursor rules; no backend semantics changed.
+- Seven browser journeys pass across serialized runs on this image: 98 annotations,
+  99 saved retention, 100 exact live retention, 101 recovery/catalog/pinned citations,
+  110 Definitions, 111 fixed reusable ownership and 112 document revision inspection.
+  The final complete 101 run passes in 1.2m, including real response loss/reload/retry,
+  source-free catalog inspection, a real delayed catalog reply overtaken by a filter
+  change, injected store unavailability, mobile layout and an unchanged old pinned
+  review after correction. Affected screenshots were regenerated and inspected.
+- The final actual 101 ledger passes Quint/quint-go with eight rejecting controls
+  (21.826s). The expanded Bombadil actor passes with 558 records, stages 0–5,
+  at most 20 catalog rows and zero publication calls. Its deterministic sequence
+  includes catalog browse/select/close and local recovery inspection. Existing
+  observed annotation/native retention ledgers also pass; no exhaustive catalog DOM
+  model is claimed.
+- Final post-wrapper audit verifies 13 running services, restored traffic, all 14
+  pre-existing pending IDs preserved (15 pending total), exact stored native/live
+  manifests and review histories, pinned document citation/read bound/current tag
+  catalog, optional XTDB health, served source/server/binary hashes and zero OOM
+  kills. No new XTDB restart experiment was performed.
+
+Environment/retry evidence: the root filesystem filled during deployment. Removing
+only two identified obsolete task-built UI images recovered space; no volumes or
+telemetry records were removed. An initial journey stopped at its unchanged 15s
+reload limit (successful static requests took about 18s). A subsequent run completed
+all browser assertions but its model subprocess hit the existing 60s harness limit;
+that same ledger passed isolated replay in 19.530s. The final unchanged integrated
+journey then passed, including the actor. Checks were not weakened.
+
+Local evidence: `artifacts/retained-catalog-complete.log` (final 101),
+`retained-catalog-final.log` (98 pass/model timeout), `retained-catalog-journeys.log`
+(other five passes/reload timeout), `retained-catalog-final-unit.log`,
+`retained-catalog-hegel.log`, `retained-catalog-go.log`,
+`retained-catalog-ledger-check.log`, `retained-catalog-health.json`, and
+`artifacts/evidence-library/library-891caf94/`.
+
+Bounded B1 is delivered. B2 protocol fixtures and qualified-field helpers are next;
+comparison/discovery and prerequisite-gated custody work retain their queue order.
+
+
 ## Investigation revision library — B1 continuation (2026-10-22 UTC)
 
 Final query/packages image:

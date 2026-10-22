@@ -478,3 +478,11 @@ authoring lifecycle. Paging/search is local to the loaded catalog; details are
 created on selection and cached with the inspector's existing bounded lifecycle.
 Definitions record/native, fixed reusable-question and document revision adapters retain distinct execution/refresh semantics. Document rows use an explicit typed document ID, revision labels and current-server-page search scope; opening the guarded editor remains a separate application action. The optional `onSelectionChange` user-intent callback lets an application invalidate pending work on selection/close; passive refresh/search lifecycle does not execute or publish. Styles live
 in `definition-library.css`. See [contract and diagram](DEFINITION_LIBRARY.md).
+
+
+The library presenter's exported `row` is a passive supplied-data primitive shared
+by definition/document controllers and the retained catalog. It renders an exact
+revision/manifest label and invokes a supplied selection callback. It does not
+validate a universal artifact schema, fetch, navigate, cache or subscribe. The
+retained owner composes it with the shared inspector using per-load snapshot keys,
+because current-head tags can change while the manifest ID remains unchanged.

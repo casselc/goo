@@ -60,10 +60,10 @@ and fixed suspension into Activity, proving zero obsolete queries. A mismatched 
 explicit Run reads exactly one fresh question. Core journey 33 and its Bombadil/Quint
 ledger protect full-population measures and real definition reuse.
 
-B1 remains open: compatible document/retained catalogs,
-selected contextual editors and touched retention-owner separation remain subsequent
-B1 cuts. Backend catalogs still return their existing revision arrays; this slice
-adds no server cursor, family/lineage API, inferred head, global search or store migration.
+Bounded B1 consolidation is delivered across Definitions, fixed reusable questions,
+document revisions and compatible retained metadata rows. Existing server cursor
+contracts remain independent; no new family/lineage API, inferred head, global search
+or store migration is introduced. B2 owns the next protocol/qualified-field work.
 
 Investigation rows inspect already supplied revision metadata without opening the
 editor or loading referenced evidence. The separate **Open investigation revision**
@@ -73,5 +73,54 @@ Rows show UTC custody time; the inspector carries the full selected and parent I
 Titles never imply family membership or a latest head. The server's **More revisions**
 cursor remains separate from the presenter's 25-row local pages. Search explicitly
 covers only the current server page. Selected detail survives local filtering or a
-server-page change; unavailable refreshes preserve existing rows. Retained evidence
-catalog ownership, retry journals and pinned review citations remain the next B1 cut.
+server-page change; unavailable refreshes preserve existing rows. Retained evidence uses the compatible row/inspector primitives described below.
+
+## Retained catalog snapshots
+
+The retained-evidence catalog reuses the compact supplied-data `row` primitive and
+shared inspector, rather than the immutable-definition catalog controller. Its
+server owns 20-item cursor pages and tag/environment/literal-service/UTC capture-time
+filters. Selection inspects only the supplied catalog metadata; the explicit **Open
+retained selection** link loads observations and review history in the retained view.
+Local inspection, filter edits and disclosure issue no manifest/review detail,
+source or publication request. Explicit Browse reads catalog metadata, including
+current review-head tags, through its existing endpoint.
+
+A manifest is immutable, but catalog tags reflect active review heads at the time of
+the request. Inspector keys therefore include a catalog-load generation and manifest
+ID. Selected metadata is explicitly a snapshot, never a pinned review. Filtering or
+refreshing preserves that snapshot with an earlier-load notice until another row is
+inspected; a failed refresh keeps the existing rows/detail. Old responses cannot
+replace a newer filter/page. A new explicit inspection after refresh uses the new
+snapshot. Exact review citations continue to use their own revision ID and read bound.
+
+Retention ownership is now split without changing native publication contracts:
+
+| Owner | Responsibility |
+| --- | --- |
+| `retention-client.js` | Native transport, tab-local read bounds, original request journaling before send and acknowledgment |
+| `retention-catalog.js` | Server filter/cursor requests, stale-response guards and supplied metadata selection |
+| `retention-citations.js` | Exact pinned review reads, explicit review choice and guarded investigation attachment |
+| `retention-recovery.js` | Explicit retry/forget UI over the native-only browser journal |
+| `retention.js` | Selection authoring and retained observation view composition; existing public facade |
+
+```mermaid
+flowchart LR
+  Selection[Explicit retain / review] --> Client[Retention client and read bounds]
+  Recovery[Explicit retry / forget owner] --> Client
+  Client --> Journal[Original native request journal]
+  Client --> Native[Native retained API / XTDB]
+  Catalog[Catalog filter / server cursor owner] --> Client
+  Catalog --> Row[Shared passive row / inspector]
+  Row --> Snapshot[Selected catalog snapshot / no records read]
+  Snapshot --> Open[Explicit open retained selection]
+  Open --> View[Retained observation view]
+  View --> Client
+  Citations[Exact review citation / attachment owner] --> Client
+  Citations --> Documents[Guarded document adapter]
+```
+
+Journey 101 now checks source-free catalog inspection, actual delayed response
+rejection across a filter change, failed-refresh retention, pending request recovery
+and old pinned citations after review correction. Its Bombadil actor also selects
+and closes catalog metadata while retaining publication/reference invariants.

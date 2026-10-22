@@ -226,8 +226,12 @@ external-source connector is implemented.
 ## Retained evidence in investigations
 
 `retention/catalog.go` enumerates bounded immutable manifests and explicit current
-review heads; metadata filtering never reads ClickStack. `ui/retention.js` owns the
-catalog, attachment actions and reference reads. Retained document cards pin both
+review heads; metadata filtering never reads ClickStack. Browser ownership is split
+into `retention-client.js` (transport/read basis/journal boundary),
+`retention-catalog.js` (filters/cursors/snapshot selection), `retention-citations.js`
+(pinned reads/attachment), and `retention-recovery.js` (explicit retry/forget).
+`retention.js` composes selection authoring and retained observation views.
+See the [owner diagram](DEFINITION_LIBRARY.md#retained-catalog-snapshots). Retained document cards pin both
 a manifest ID and an exact review revision with an await-token lower bound.
 `workbench/documents.go` validates the typed reference and a native resolver checks
 it before publication. Opening the file-backed narrative does not require the
@@ -313,7 +317,9 @@ switch/leave/document transitions invalidate old context publication. See the
 ## Selected definition revision libraries
 
 The first [B1 library slice](DEFINITION_LIBRARY.md) shares loaded-catalog paging,
-compact rows and a cached inspector between record/native Definitions and fixed reusable-question adapters.
+compact rows and a cached inspector between record/native Definitions, fixed reusable-question
+and document revision adapters. Retained catalogs share the row/inspector primitives
+with load-specific snapshot keys, retaining independent server filtering and cursors.
 List fetch/refresh generations, compiler previews, execution and authoring stay in
 typed adapters. Selection preserves exact family/revision identity; it does not
 replace the editor draft or infer lineage from a name/title. Record annotation

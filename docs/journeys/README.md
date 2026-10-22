@@ -1559,3 +1559,13 @@ execution. [Mobile frame](screenshots/112a-investigation-revision-inspection.png
 Journey 36 retains the deployed-app evidence path and the Quint ledger with rejecting
 controls; its optional Bombadil actor now explores revision browse/inspect/close as
 well as draft edits, with bounded rows and exact document selection invariants.
+
+
+Journey [101](../../journeys/evidence-library.spec.js) now selects compact retained
+catalog metadata before explicit opening, rejects an older real response after a
+filter change and preserves the selected snapshot when the optional store fails.
+Selection issues no manifest/review GET or source/publication request. It retains
+the real pending-save/reload/retry and pinned-old-review narrative path, including
+Quint rejecting controls and the expanded Bombadil catalog select/close actions.
+[Catalog](screenshots/101c-retained-evidence-catalog.png) ·
+[Mobile catalog](screenshots/101e-mobile-retained-catalog.png).

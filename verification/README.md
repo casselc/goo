@@ -845,3 +845,19 @@ checks at most 25 local rows and exact typed document selection, while retaining
 immutable base/reference/draft invariants. Journey 36 still validates real observed
 app/evidence/narrative transitions with Quint/quint-go and rejecting controls; the
 catalog DOM is not claimed as a new exhaustive formal model.
+
+
+## Retained catalog owner consolidation
+
+Journey 101 also checks metadata-only compact row inspection, a real catalog reply
+held across a filter change, failed-refresh preservation and exact old review
+citations after correction/reload. Its actor deterministically browses, selects and
+closes a catalog snapshot before inspecting recovery; invariants bound server-page
+rows to 20 and snapshot keys to a load generation plus exact manifest ID. It retains
+zero publication, unchanged document revision and exact citation invariants.
+`TestQuintEvidenceLibraryLedger` checks the actual observed recovery/citation ledger
+and eight rejecting controls; it does not model the full catalog DOM. Existing
+Hegel pending-save state/swarm, retained selection identity and library properties
+continue to cover unchanged protocols. Direct retention-client tests additionally
+check exact body/key replay after lost acknowledgments, optional-store failures and
+citation read-bound precedence across the extracted transport boundary.
