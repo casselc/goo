@@ -160,7 +160,7 @@ retains budget, SSE, capture and optional-store tests.
 
 C2 remains active. Pure planning JSON and native/record transport adoption are
 delivered. The acceptance audit below records the remaining adoption sequence; prebuilt transport is
-now delivered along with operation spans and counters; histogram transport is next. Transport adoption proceeds one family at a time, preserving parameter escaping,
+now delivered along with operation spans, counters and histograms; pure telemetry planning JSON is next. Transport adoption proceeds one family at a time, preserving parameter escaping,
 read limits, basis/identity and non-2xx/oversize/cancellation behavior. Python proxy
 removal, changing custody/duplicate policy and universal endpoint budgets are not
 part of these cuts.
@@ -565,6 +565,52 @@ without inserts or positive live-population claims. Hegel's shared bounded-read
 campaign also passes. No UI/SSE/Quint protocol or running image changed; screenshots
 remain applicable and the final deployed-journey gate stays open.
 
-Only histogram transport remains unadopted among the audited ClickHouse readers.
-Freeze its body-read-before-status, immediate closure, bucket and per-contract
-limits next. Local JSON-owner adoption remains queued.
+At the counter cut histogram transport remained. Its adoption below now completes
+the audited ClickHouse reader list. Local JSON-owner adoption remains queued.
+
+
+## Histogram transport adoption
+
+`OperationPlan.FetchHistograms` now uses shared `sourcehttp.Post` and
+`ReadBounded`, completing the audited Go ClickHouse reader adoptions. It retains
+its explicit client, raw URL-encoded parameters, baseline/query settings, typed
+decoding and 1,000-point guard. Each response is read and immediately closed;
+read error precedes status and status precedes overflow. Plan validation,
+per-contract evaluation, bucket layout/count precision, temporality/reset handling,
+P95 ranges, evidence basis and warnings remain family-owned. Later-contract
+failure still returns no partial result.
+
+```mermaid
+flowchart LR
+  Plan[Validated operation plan] --> Contract[Histogram contract / baseline / raw parameters]
+  Contract --> Post[Shared POST / auth / context]
+  Post --> CH[ClickHouse]
+  CH --> Read[Shared bounded read: 8 MiB plus one]
+  Read --> Close[Histogram closes response immediately]
+  Close --> Errors[Read error then status then overflow]
+  Errors --> Decode[Typed rows / 1000-point guard]
+  Decode --> Evaluate[Exact buckets / layout / reset / temporality / basis]
+  Evaluate --> Result[Existing histogram populations and P95 ranges]
+```
+
+Before/after contracts pin complete SQL/auth/settings, baselines and raw complex
+parameters, empty/positive reads, exact/overflow bytes and rows, malformed JSON,
+read/status/overflow precedence, closure before the next contract, cancellation,
+transport/read error identity and refusal of partial later-contract success. A
+fixture with two independently named histogram contracts checks multi-read lifetime;
+cumulative bucket counts above 2^53 retain an exact interval count of one. Existing
+histogram semantic tests retain unit/layout and inconsistent-population refusals.
+
+`TestClickHouseHistogramTransportIntegration` executes both fixture contracts via
+the actual histogram table/query/decoder/evaluator with an absent service and fixed
+window. It uses the existing gated ClickHouse variables, inserts nothing and
+establishes empty-path integration, not positive live-population coverage. Shared
+Hegel bounded-read properties also pass. No UI/SSE/Quint protocol or running image
+changed; screenshots remain applicable and the final deployed-journey gate stays open.
+
+All six audited readers now share only POST/auth/context and bounded-body mechanics:
+native measurements, record exploration, prebuilt HTTP, operation spans, counters
+and histograms. Their status ordering, parameter policy, decoding and semantics
+remain distinct. Next freeze the pure telemetry planning JSON wire contracts before
+adopting the shared decoder/responder. Other JSON owners and final deployed
+acceptance remain within C2; this transport completion does not close the milestone.

@@ -950,3 +950,9 @@ in `annotations/counter_transport_contract_test.go`: body reads and immediate cl
 precede status, and later-contract failures return no partial rates. Existing
 counter/fleet semantic tests remain separate. The gated readonly sum-table test
 uses an absent service; see [counter adoption](../docs/HTTP_BOUNDARIES.md#counter-transport-adoption).
+
+Histogram transport completes the audited ClickHouse helper adoption behind
+`annotations/histogram_transport_contract_test.go`. Independent contracts preserve
+read/status/overflow precedence, immediate closure, exact bucket counts above 2^53
+and no partial later-contract success. The gated readonly histogram-table test
+uses an absent service; see [histogram adoption](../docs/HTTP_BOUNDARIES.md#histogram-transport-adoption).

@@ -1,5 +1,35 @@
 # Validation record
 
+## C2 histogram HTTP transport adoption (2026-10-22 UTC)
+
+[Histogram transport contract and diagram](docs/HTTP_BOUNDARIES.md#histogram-transport-adoption)
+record shared POST/auth/context and bounded-read adoption only. Read errors still
+precede status, status precedes overflow, and every response closes immediately
+after reading. Typed buckets, limits, per-contract semantics and basis stay local.
+
+Actual checks:
+
+- New contracts pass before extraction (0.279s): complete SQL/auth/settings,
+  baselines/raw complex parameters, empty/positive payloads, exact/overflow 8 MiB
+  and 1,000-point boundaries, malformed JSON, error precedence, cancellation/error
+  identity, close-before-next-contract and no partial later-contract success.
+  Two named histogram contracts exercise multiple reads; cumulative bucket counts
+  above 2^53 preserve an exact interval count of one.
+- After extraction, race suites pass for annotations (13.359s), HTTP routes (3.840s)
+  and investigations (cached), with gated readonly ClickHouse checks enabled.
+  Both histogram fixture contracts execute through the real table/query/decoder/
+  empty evaluator on an absent service/fixed window. No inserts or positive live
+  population claims. Existing unit/layout/population semantic refusals still pass.
+- Hegel's 100 shared bounded-read cases pass (0.019s).
+- `go test ./...` passes. Gated live checks skip without their URL variable.
+- Whitespace and local Markdown targets pass. Source inspection confirms all six
+  audited ClickHouse readers now delegate POST/body mechanics to the shared helper.
+
+Evidence: `artifacts/c2-histogram-transport-{before,race,hegel,root}.log`.
+No UI/SSE/Quint protocol changed; no screenshots or running images were regenerated.
+C2 remains active: pure telemetry planning JSON next, then other JSON owners and
+final deployed-journey acceptance.
+
 ## C2 counter HTTP transport adoption (2026-10-22 UTC)
 
 [Counter transport contract and diagram](docs/HTTP_BOUNDARIES.md#counter-transport-adoption)
