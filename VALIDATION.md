@@ -1,5 +1,42 @@
 # Validation record
 
+## C1 capture publication adoption and frozen evidence contracts (2026-10-22 UTC)
+
+[Publication contract and diagram](docs/IMMUTABLE_PUBLICATION.md) now cover both
+capture stores. Exploration captures use idempotent publication followed by their
+existing verified reload. Investigation captures use `PublishNew`, preserving the
+original `*os.LinkError` on a duplicate and skipping directory sync on that error,
+as before. Encoding, digests, validation, source execution, lineage, catalog/page
+rules and size limits stay in the family stores. Old duplicated writers are removed.
+
+Actual checks:
+
+- New exploration/investigation storage fixtures pass on the old publishers before
+  extraction (0.039s/0.033s). After extraction they pin the same stored identities,
+  raw large integer `18446744073709551615`, independent source-read/receipt clocks,
+  exact exploration page JSON, investigation loaded JSON, reopen and refresh
+  compatibility. Exploration duplicate publication refuses corrupt winners without
+  overwriting them. Foreign cursors/references, truncation, digest mismatch and
+  trailing JSON remain refused. Investigation embedded-key-order normalization
+  preserves identity. Its historical permissive unknown-field policy is pinned;
+  exploration's envelope remains strict.
+- Affected race tests pass: immutable publisher (1.319s), exploration (8.080s),
+  investigations (1.240s), workbench (2.384s). Existing native metric, inventory,
+  comparison, parent/plan compatibility and concurrent capture checks remain in
+  those suites. Exclusive publication additionally pins original link-error
+  type/existence classification, no overwrite and temporary cleanup.
+- Expanded Hegel publication sequences pass: 100 generated sequences (0.053s),
+  preserving the first bytes through idempotent and exclusive duplicate attempts.
+  `go test ./...` passes across all 13 root packages, including HTTP route tests.
+  Changed local Markdown targets and whitespace checks pass.
+- No UI or execution-state protocol changed; existing browser/Quint storyboards
+  remain applicable and no screenshots were regenerated. The deployed stack was
+  not rebuilt for this backend-only cut. No crash/power-loss durability is claimed.
+
+C1 remains active for lifecycle first-observation custody and native measurement
+YAML publication. Both currently omit directory sync and have different winner
+verification contracts; freeze their fixtures before deciding compatible adoption.
+
 ## Disk cleanup and C1 immutable publication first adoption (2026-10-22 UTC)
 
 [Publication contract, diagram and store inventory](docs/IMMUTABLE_PUBLICATION.md)

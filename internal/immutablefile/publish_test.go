@@ -71,3 +71,23 @@ func TestPublicationFailureAndExistingObject(t *testing.T) {
 		t.Fatal("failed link leaked scratch", e)
 	}
 }
+
+func TestExclusivePublicationPreservesLinkErrorAndWinner(t *testing.T) {
+	dir := t.TempDir()
+	if e := PublishNew(dir, "object.json", ".capture-", []byte("original")); e != nil {
+		t.Fatal(e)
+	}
+	e := PublishNew(dir, "object.json", ".capture-", []byte("replacement"))
+	link, ok := e.(*os.LinkError)
+	if !ok || !os.IsExist(e) || link.Op != "link" || link.New != filepath.Join(dir, "object.json") {
+		t.Fatal("collision policy changed", e)
+	}
+	got, e := os.ReadFile(filepath.Join(dir, "object.json"))
+	if e != nil || string(got) != "original" {
+		t.Fatal("winner overwritten", e)
+	}
+	entries, e := os.ReadDir(dir)
+	if e != nil || len(entries) != 1 {
+		t.Fatal("scratch leaked", e)
+	}
+}

@@ -1,0 +1,1 @@
+{"version":1,"id":"861bfa127df692b1119f95ebb2b7feb8f57d549bbcc4b92095d457f855b74353","capturedAt":"2026-10-22T12:34:57.123456789Z","question":{"package":"api","packageRevision":"v1","fromMs":1700000000000,"toMs":1700000060000},"selection":{"filter":{"outcome":"error"}},"evidence":{"operations":{"spans":[],"basis":"one","count":18446744073709551615}}}

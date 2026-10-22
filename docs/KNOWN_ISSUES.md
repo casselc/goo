@@ -1,9 +1,12 @@
 # Known issues and gaps
 
-[C1 immutable publication](IMMUTABLE_PUBLICATION.md) has two matching adopters:
-workbench artifacts and reusable telemetry packages. Capture stores, lifecycle
+[C1 immutable publication](IMMUTABLE_PUBLICATION.md) now has workbench, reusable
+telemetry package and both capture-store adopters. Capture fixtures pin distinct
+digests/duplicate policies, exact evidence integers and page response. Lifecycle
 custody and native YAML publication still have separate writers and require their
-own identity/response/duplicate fixtures before migration. No power-loss durability
+own identity/response/duplicate fixtures before migration. Investigation capture
+loading retains its historical permissive unknown-field policy; exploration
+capture envelopes remain strict. No power-loss durability
 guarantee follows from file and directory sync calls.
 
 ## Current annotation retention boundaries

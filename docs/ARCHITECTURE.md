@@ -1,9 +1,11 @@
 # Architecture
 
 [Immutable publication](IMMUTABLE_PUBLICATION.md) shares write/sync/link mechanics
-between reusable telemetry packages and workbench artifacts. Family stores retain
+between reusable telemetry packages, workbench artifacts and capture stores.
+Investigation captures retain exclusive collision errors; other adopters accept
+existing names and verify through their family loaders. Family stores retain
 validation, encoding, digests, lineage, catalogs and reload integrity checks.
-The documented inventory keeps capture/custody/native YAML differences explicit.
+The documented inventory keeps digest/custody/native YAML differences explicit.
 
 [Native presentation](NATIVE_PRESENTATION.md) shares supplied latest values and coverage across measurements, services and native comparisons. Go evaluation and application read/custody owners remain separate.
 

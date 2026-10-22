@@ -902,7 +902,7 @@ no universal browser validator or complete UI state model is claimed.
 ## Immutable publication mechanics (C1 first adoption)
 
 `TestHegelImmutablePublicationSequence` generates 100 first-winner/duplicate-write
-sequences on real temporary files. Run with `go test -run
+sequences on real temporary files, including exclusive collision refusal. Run with `go test -run
 '^TestHegelImmutablePublicationSequence$' -count=1` in this module. Root race tests
 and store golden fixtures accompany it; see the [publication contract and remaining
 store inventory](../docs/IMMUTABLE_PUBLICATION.md). No browser/Quint transition

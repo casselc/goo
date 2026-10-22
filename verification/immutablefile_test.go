@@ -26,6 +26,9 @@ func TestHegelImmutablePublicationSequence(t *testing.T) {
 			if e != nil || created != (i == 0) {
 				tc.Fatal("publication outcome", i, created, e)
 			}
+			if e := immutablefile.PublishNew(dir, "winner.json", ".capture-", input); !os.IsExist(e) {
+				tc.Fatal("exclusive duplicate accepted", e)
+			}
 			got, e := os.ReadFile(filepath.Join(dir, "winner.json"))
 			if e != nil || !bytes.Equal(got, winner) {
 				tc.Fatal("winner changed", i, e)

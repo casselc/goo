@@ -14,6 +14,8 @@ import (
 	"path/filepath"
 	"regexp"
 	"time"
+
+	"github.com/casselc/goo/internal/immutablefile"
 )
 
 const MaxBytes = 24 << 20
@@ -104,36 +106,7 @@ func (s Store) Save(q Question, selection json.RawMessage, evidence Evidence, pa
 	if len(data) > MaxBytes {
 		return nil, errors.New("capture exceeds 24 MiB")
 	}
-	if e = os.MkdirAll(s.Dir, 0700); e != nil {
-		return nil, e
-	}
-	f, e := os.CreateTemp(s.Dir, ".capture-")
-	if e != nil {
-		return nil, e
-	}
-	defer os.Remove(f.Name())
-	if _, e = f.Write(data); e != nil {
-		f.Close()
-		return nil, e
-	}
-	if e = f.Sync(); e != nil {
-		f.Close()
-		return nil, e
-	}
-	if e = f.Close(); e != nil {
-		return nil, e
-	}
-	// Link publishes a complete file atomically and never overwrites an existing ID.
-	if e = os.Link(f.Name(), filepath.Join(s.Dir, id+".json")); e != nil {
-		return nil, e
-	}
-	dir, e := os.Open(s.Dir)
-	if e != nil {
-		return nil, e
-	}
-	e = dir.Sync()
-	dir.Close()
-	if e != nil {
+	if e = immutablefile.PublishNew(s.Dir, id+".json", ".capture-", data); e != nil {
 		return nil, e
 	}
 	return s.Load(id)

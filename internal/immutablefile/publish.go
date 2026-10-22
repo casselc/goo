@@ -13,6 +13,17 @@ import (
 // replaced. A successful link may precede a directory-sync error, so an error is
 // not proof of non-publication. This is not a power-loss durability guarantee.
 func Publish(dir, name, prefix string, data []byte) (created bool, err error) {
+	return publish(dir, name, prefix, data, true)
+}
+
+// PublishNew refuses an existing final name with the original link error.
+// Unlike Publish, it does not sync the directory after a collision.
+func PublishNew(dir, name, prefix string, data []byte) error {
+	_, err := publish(dir, name, prefix, data, false)
+	return err
+}
+
+func publish(dir, name, prefix string, data []byte, acceptExisting bool) (created bool, err error) {
 	if err = os.MkdirAll(dir, 0700); err != nil {
 		return false, err
 	}
@@ -33,7 +44,7 @@ func Publish(dir, name, prefix string, data []byte) (created bool, err error) {
 		return false, err
 	}
 	err = os.Link(f.Name(), filepath.Join(dir, name))
-	if err != nil && !errors.Is(err, os.ErrExist) {
+	if err != nil && (!acceptExisting || !errors.Is(err, os.ErrExist)) {
 		return false, err
 	}
 	created = err == nil
