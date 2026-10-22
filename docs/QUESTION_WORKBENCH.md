@@ -134,3 +134,13 @@ mutations for stale publication, scope, bounds, local reads and custody. Bombadi
 new entry-point actor explores draft edits and progressive controls without
 creating captures or source queries. Acceptance evidence is recorded in
 [VALIDATION.md](../VALIDATION.md), not inferred from this design contract.
+
+## Reusable question selection
+
+The fixed library shares compact exact-revision rows and selected detail with
+Definitions. Load saved questions reads definitions only; local selection/search/
+paging performs no query. Run in the selected detail explicitly resolves and reads
+a fresh lookback. Selecting/closing another revision, leaving the workspace/mode,
+or suspending this fixed visit invalidates its pending plan. An obsolete completion
+cannot execute a hidden source query. Saved capture bounds remain separate. See
+[the library contract](DEFINITION_LIBRARY.md).

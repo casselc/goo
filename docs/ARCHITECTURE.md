@@ -313,9 +313,14 @@ switch/leave/document transitions invalidate old context publication. See the
 ## Selected definition revision libraries
 
 The first [B1 library slice](DEFINITION_LIBRARY.md) shares loaded-catalog paging,
-compact rows and a cached inspector between record and native Definitions adapters.
+compact rows and a cached inspector between record/native Definitions and fixed reusable-question adapters.
 List fetch/refresh generations, compiler previews, execution and authoring stay in
 typed adapters. Selection preserves exact family/revision identity; it does not
 replace the editor draft or infer lineage from a name/title. Record annotation
 panels mount only in selected detail; their existing publication/basis owners are
 unchanged. Only the row list scrolls; the inspector sits outside that viewport.
+
+The fixed reusable-question owner invalidates pending plans on selection/close,
+workspace/mode changes and suspension. After its compiler response, it checks the
+owner generation, active visit and exact revision before explicit source dispatch.
+Local selection does not mutate the fixed draft or execute a query.

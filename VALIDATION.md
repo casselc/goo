@@ -1,5 +1,63 @@
 # Validation record
 
+## Shared fixed reusable-question library — B1 continuation (2026-10-22 UTC)
+
+Final image: `sha256:3864ab2b82b7d572b9a1bce50748059e114d046ffb434dca671a536f128bef23`.
+The fixed reusable-question list now uses the same compact exact-revision rows,
+loaded-catalog paging/search and selected inspector as Definitions. Selection is
+source-free; Run remains a separate explicit fresh-window query. The application
+invalidates pending compiler plans on selection/close, workspace/mode changes and
+fixed-owner suspension. A completion must match the current generation, active
+visit and selected revision before dispatching a source read. Abandoned work leaves
+an explicit non-loading status. The presenter's optional selection callback carries
+only user intent; refresh/disclosure lifecycle does not execute sources.
+
+B1 stays active for compatible document/retained catalogs and touched retention
+owners. This cut removes the older fixed-library card renderer, not typed execution
+owners, saved source bounds or immutable identity rules. [Contract/diagram](docs/DEFINITION_LIBRARY.md).
+
+Actual checks:
+
+- All 33 frontend test files pass on final source; JavaScript syntax, whitespace
+  and changed local Markdown links pass.
+- Existing Hegel catalog paging (200 cases) and reusable revision properties
+  (100 cases) pass together (0.389s). They protect supplied data/identity semantics,
+  not a complete DOM lifecycle model.
+- Final four browser journeys pass together (2.4m): 33 full-population measures,
+  saved paging, real definition reuse, discovery and cancellation; 110 Definitions
+  draft/identity/stale-refresh compatibility; 111 new reusable ownership checks;
+  and 109 explicit/lazy fixed authoring and retained draft identity.
+- Journey 111 holds real compiler responses across selection changes, detail close,
+  workspace leave and fixed suspension into Activity. None triggers an obsolete
+  query. A deliberately mismatched returned revision is refused; a later valid
+  explicit Run issues exactly one query in the selected two-minute window. The
+  explicit Activity visit is separately counted as one tail read. Mobile containment
+  and non-loading restored status are checked; source data is not mocked.
+- Core Quint/quint-go replay and rejecting controls pass (11.04s). Three enabled
+  Bombadil campaigns pass: saved measures (326 steps), core workflows including
+  selected-row reuse (297 steps), and shared Definitions library exploration. Both
+  core campaign coverage files reach their required complete stage. These ledgers
+  cover their existing accounting/semantic contracts, not every inspector state.
+- Updated storyboards/screenshots document the shared fixed list and real core
+  workflow. The mobile fixed-library frame is visually reviewed. Served hashes
+  match source; all 13 services run after traffic restoration. Existing pending IDs,
+  retained manifests/review history and pinned citations survive; OOM kills remain
+  zero. No XTDB restart was tested this round.
+
+Initial-image checks passed 110/111/109. The older core fixture first used a
+non-unique title to select a revision, then attempted a service action inside a
+collapsed support disclosure. It now selects its own definition and opens that
+section explicitly. It also enters explicit fixed authoring and explicitly reruns
+staged saved evidence, matching the previously delivered S2 contracts. Timeouts,
+full-population/identity assertions and required Bombadil completion checks remain
+intact. Final core and compatibility runs pass on the same final image.
+
+Evidence: `artifacts/fixed-library-unit.log`, `fixed-library-final-unit.log`,
+`fixed-library-hegel.log`, `fixed-library-journeys.log`,
+`fixed-library-core-final.log` (older fixture diagnostic), `fixed-library-final.log`,
+`fixed-library-health.json` and `artifacts/core-basics/basics-8675071a/`
+(real ledger, replay, campaign traces and coverage).
+
 ## Compact record/native definition rows — first B1 slice (2026-10-22 UTC)
 
 Final image: `sha256:0d60f896bc4f2a15b893b7f8cd56b368c4f71d6bc6a755dece2086ecb7684f08`.

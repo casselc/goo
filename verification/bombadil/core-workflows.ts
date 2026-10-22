@@ -11,10 +11,11 @@ const state=extract(({document})=>{
  let discoveryValid=true;if(stage==='signals'){discoveryValid=!!d&&d.question.environment===fixed?.environment&&d.signals.some((x:any)=>x.service==='log-only'&&x.signal==='logs')&&d.dependencies.filter((x:any)=>x.kind==='edge').length===1&&d.dependencies.some((x:any)=>x.kind==='edge'&&x.parent==='api'&&x.child==='worker'&&x.count==='1')&&d.dependencies.some((x:any)=>x.kind==='ambiguous'&&x.count==='1')&&d.dependencies.some((x:any)=>x.kind==='unresolved'&&x.count==='1')&&d.signals.every((x:any)=>x.firstMs>=d.question.fromMs&&x.lastMs<d.question.toMs&&x.firstMs<=x.lastMs)}
  const cancelledValid=stage!=='cancelled'||!d&&!el('serviceDiscoveryRows')?.textContent&&(el('inventoryStatus')?.textContent||'').includes('cancelled');
  const selected=[...document.querySelectorAll('[data-workspace][aria-current="page"]')].map(x=>x.getAttribute('data-workspace')),visible=[...document.querySelectorAll<HTMLElement>('[data-workspace-panel]')].filter(x=>!x.hidden).map(x=>x.dataset.workspacePanel);
- return {version:'goo.core-workflows.v1',stage,ready:!!fixed,environment:fixed?.environment,opened:!!e,reused:!!e&&e.question.fromMs!==fixed?.fromMs&&!((el('exploreRun') as HTMLButtonElement)?.disabled),hasQuestion:[...document.querySelectorAll('#questionLibraryRows button')].some(x=>x.textContent==='Run '+fixed?.environment),discovered:!!d,fixedValid,reusableValid,discoveryValid,cancelledValid,navigation:selected.length===1&&visible.length===1&&selected[0]===visible[0]};
+ return {libraryRows:document.querySelectorAll('#questionLibraryRows .definition-row').length,selectedRevision:document.querySelector('#questionLibraryRows .ui-inspector:not([hidden])')?.getAttribute('data-key'),version:'goo.core-workflows.v1',stage,ready:!!fixed,environment:fixed?.environment,opened:!!e,reused:!!e&&e.question.fromMs!==fixed?.fromMs&&!((el('exploreRun') as HTMLButtonElement)?.disabled),hasQuestion:!!document.querySelector('#questionLibraryRows .definition-row button'),discovered:!!d,fixedValid,reusableValid,discoveryValid,cancelledValid,navigation:selected.length===1&&visible.length===1&&selected[0]===visible[0]};
 });
 export const ready=eventually(()=>state.current.ready).within(10,'seconds');
 export const complete=eventually(()=>state.current.stage==='complete').within(25,'seconds');
+export const boundedRevisionSelection=always(()=>state.current.libraryRows<=25&&(!state.current.selectedRevision||/^record:[a-f0-9]{64}$/.test(state.current.selectedRevision)));
 export const frozenQuestionHandoff=always(()=>state.current.fixedValid);
 export const reusableMeasureScope=always(()=>state.current.reusableValid);
 export const honestServiceLinks=always(()=>state.current.discoveryValid);
@@ -23,9 +24,9 @@ export const coherentWorkspace=always(()=>!state.current.ready||state.current.na
 const act=registerCustomAction('goo.core-workflows',async(document,_window,command:string,next?:string)=>{
  const el=(id:string)=>document.getElementById(id),click=(id:string)=>el(id)?.click(),nav=(route:string)=>document.querySelector<HTMLElement>('[data-workspace="'+route+'"]')?.click(),set=(id:string,value:string,event='input')=>{const input=el(id) as HTMLInputElement;input.value=value;input.dispatchEvent(new Event(event,{bubbles:true}))};
  const fixed=JSON.parse(el('captureGeneralReceipt')?.textContent||'null')?.receipt?.question?.explore;
- if(command==='live')click('captureGeneralLive');
+ if(command==='live'){click('captureGeneralLive');click('exploreRun')}
  if(command==='library'){const details=el('questionLibraryRows')?.closest('details');if(details)details.open=true;click('questionLibraryRefresh');set('questionLibrarySearch',fixed.environment)}
- if(command==='reuse'){const button=[...document.querySelectorAll<HTMLButtonElement>('#questionLibraryRows button')].find(x=>x.textContent==='Run '+fixed.environment);button?.click()}
+ if(command==='reuse'){document.querySelector<HTMLButtonElement>('#questionLibraryRows .definition-row button')?.click();const button=[...document.querySelectorAll<HTMLButtonElement>('#questionLibraryRows button')].find(x=>x.textContent==='Run '+fixed.environment);button?.click()}
  if(command==='discover'){nav('services');set('minutes','10','change');set('inventoryEnvironment',fixed.environment);click('inventoryRun')}
  if(command==='cancel'){click('inventoryRun');click('inventoryCancel')}
  if(command==='explore')nav('explore');if(command==='services')nav('services');

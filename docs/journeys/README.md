@@ -1,5 +1,12 @@
 # User journeys and storyboards
 
+[Journey 111](../../journeys/fixed-library.spec.js) inspects same-title reusable
+revisions without execution, holds real compiler responses across selection/close/
+workspace/fixed-owner changes, refuses a mismatched compiler revision, then explicitly runs one fresh question.
+[Mobile reusable revision detail](screenshots/111a-fixed-reusable-revisions.png).
+Journey 33 additionally exercises real population measures/reuse and existing
+Bombadil/Quint ledgers through the shared rows.
+
 [Journey 110](../../journeys/definition-library.spec.js) explores compact record/native
 revision libraries with unrelated same-title definitions. It preserves selected
 annotation/editor drafts, rejects a delayed older real catalog response, and checks

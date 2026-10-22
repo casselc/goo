@@ -1,7 +1,7 @@
 # Compact definition libraries
 
-The first B1 slice adopts one supplied-data presenter in the record telemetry-package
-and native measurement catalogs on Definitions. Each compact row retains its exact
+B1 adopts one supplied-data presenter in the record telemetry-package and native
+measurement catalogs on Definitions and the fixed reusable-question list. Each compact row retains its exact
 revision; selecting it opens one detail with explicit Edit/Explore or Preview actions.
 Selection itself does not validate, execute telemetry, publish annotations or replace
 the package editor draft. Native Preview retains its existing source-free compiler
@@ -28,6 +28,7 @@ owners. No new retention or review semantics are introduced.
 flowchart LR
   Records[Record package adapter] --> Data[Supplied typed immutable revisions]
   Native[Native measurement adapter] --> Data
+  Fixed[Fixed reusable-question adapter] --> Data
   Data --> Rows[Compact loaded-catalog rows / paging / local search]
   Rows --> Inspect[Explicit selection: one cached inspector detail]
   Inspect --> Meaning[Selected record annotation panel]
@@ -45,8 +46,19 @@ Hegel generates loaded catalogs/pages to protect exact identity, complete paging
 literal search and non-mutation. Existing annotation Quint ledgers protect unchanged
 publication semantics; the DOM composition is not exhaustively modeled.
 
-B1 remains open: the fixed-editor reusable-question list is a named remaining
-consumer of the older card composition. Compatible document/retained catalogs,
+The fixed reusable-question list now uses these same rows and selected detail.
+Selection/close invalidate its pending compiler plan; workspace/mode changes and
+fixed-owner suspension do the same, with explicit non-loading status on return. A plan must still belong to the current owner
+and resolve the exact selected revision before its explicit Run can dispatch a
+source query. Inspection/filtering/paging never run a source. The existing Run
+semantics still use a fresh default-lookback window, not captured evidence.
+
+Journey 111 holds real compiler responses across selection/close/workspace changes
+and fixed suspension into Activity, proving zero obsolete queries. A mismatched returned revision is refused. A subsequent
+explicit Run reads exactly one fresh question. Core journey 33 and its Bombadil/Quint
+ledger protect full-population measures and real definition reuse.
+
+B1 remains open: compatible document/retained catalogs,
 selected contextual editors and touched retention-owner separation remain subsequent
 B1 cuts. Backend catalogs still return their existing revision arrays; this slice
 adds no server cursor, family/lineage API, inferred head, global search or store migration.

@@ -828,3 +828,10 @@ editor/annotation drafts, exact revision actions, delayed real list response
 rejection and failed-refresh retention; existing annotation journey 98 replays
 its real Quint ledger and rejecting controls. The definition-library Bombadil
 actor inspects, filters and pages without invoking source or publication actions.
+
+Journey 111 holds real reusable-plan responses across selection/close/workspace and
+fixed suspension into Activity, then proves that only the subsequent explicit Run
+queries a source. The existing core workflow actor now selects the shared revision
+row before Run and checks bounded rows/exact selected keys. Journey 33 retains its
+real full-population reuse Quint ledger and rejecting controls; these do not claim
+an exhaustive model of every inspector state.

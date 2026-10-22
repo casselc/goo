@@ -476,5 +476,5 @@ stream details retain latest versus whole-window distinctions. Supported-window 
 composing compact rows and the existing inspector. It has no source client or
 authoring lifecycle. Paging/search is local to the loaded catalog; details are
 created on selection and cached with the inspector's existing bounded lifecycle.
-Record and native adapters retain distinct execution/refresh semantics. Styles live
+Definitions record/native and fixed reusable-question adapters retain distinct execution/refresh semantics. The optional `onSelectionChange` user-intent callback lets an application invalidate pending work on selection/close; passive refresh/search lifecycle does not execute or publish. Styles live
 in `definition-library.css`. See [contract and diagram](DEFINITION_LIBRARY.md).
