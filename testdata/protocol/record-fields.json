@@ -1,0 +1,324 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "empty omitted",
+      "predicate": {
+        "field": {
+          "kind": "attribute",
+          "key": "region"
+        },
+        "op": "eq"
+      },
+      "canonical": {
+        "field": {
+          "kind": "attribute",
+          "key": "region"
+        },
+        "op": "eq"
+      },
+      "observed": [
+        {
+          "field": {
+            "kind": "attribute",
+            "key": "region"
+          },
+          "value": ""
+        }
+      ],
+      "match": true,
+      "display": {
+        "field": "attribute:region",
+        "operator": "=",
+        "value": "Empty string"
+      }
+    },
+    {
+      "name": "empty explicit",
+      "predicate": {
+        "field": {
+          "kind": "attribute",
+          "key": "region"
+        },
+        "op": "eq",
+        "value": ""
+      },
+      "canonical": {
+        "field": {
+          "kind": "attribute",
+          "key": "region"
+        },
+        "op": "eq"
+      },
+      "observed": [
+        {
+          "field": {
+            "kind": "attribute",
+            "key": "region"
+          },
+          "value": ""
+        }
+      ],
+      "match": true,
+      "display": {
+        "field": "attribute:region",
+        "operator": "=",
+        "value": "Empty string"
+      }
+    },
+    {
+      "name": "empty is not missing",
+      "predicate": {
+        "field": {
+          "kind": "attribute",
+          "key": "region"
+        },
+        "op": "eq",
+        "value": ""
+      },
+      "canonical": {
+        "field": {
+          "kind": "attribute",
+          "key": "region"
+        },
+        "op": "eq"
+      },
+      "observed": [],
+      "match": false,
+      "display": {
+        "field": "attribute:region",
+        "operator": "=",
+        "value": "Empty string"
+      }
+    },
+    {
+      "name": "missing is not empty",
+      "predicate": {
+        "field": {
+          "kind": "attribute",
+          "key": "region"
+        },
+        "op": "missing"
+      },
+      "canonical": {
+        "field": {
+          "kind": "attribute",
+          "key": "region"
+        },
+        "op": "missing"
+      },
+      "observed": [
+        {
+          "field": {
+            "kind": "attribute",
+            "key": "region"
+          },
+          "value": ""
+        }
+      ],
+      "match": false,
+      "display": {
+        "field": "attribute:region",
+        "operator": "is missing"
+      }
+    },
+    {
+      "name": "missing key",
+      "predicate": {
+        "field": {
+          "kind": "resource",
+          "key": "region"
+        },
+        "op": "missing"
+      },
+      "canonical": {
+        "field": {
+          "kind": "resource",
+          "key": "region"
+        },
+        "op": "missing"
+      },
+      "observed": [
+        {
+          "field": {
+            "kind": "attribute",
+            "key": "region"
+          },
+          "value": "west"
+        }
+      ],
+      "match": true,
+      "display": {
+        "field": "resource:region",
+        "operator": "is missing"
+      }
+    },
+    {
+      "name": "exists empty",
+      "predicate": {
+        "field": {
+          "kind": "attribute",
+          "key": "region"
+        },
+        "op": "exists"
+      },
+      "canonical": {
+        "field": {
+          "kind": "attribute",
+          "key": "region"
+        },
+        "op": "exists"
+      },
+      "observed": [
+        {
+          "field": {
+            "kind": "attribute",
+            "key": "region"
+          },
+          "value": ""
+        }
+      ],
+      "match": true,
+      "display": {
+        "field": "attribute:region",
+        "operator": "is present"
+      }
+    },
+    {
+      "name": "kind separation",
+      "predicate": {
+        "field": {
+          "kind": "resource",
+          "key": "region"
+        },
+        "op": "eq",
+        "value": "west"
+      },
+      "canonical": {
+        "field": {
+          "kind": "resource",
+          "key": "region"
+        },
+        "op": "eq",
+        "value": "west"
+      },
+      "observed": [
+        {
+          "field": {
+            "kind": "attribute",
+            "key": "region"
+          },
+          "value": "west"
+        }
+      ],
+      "match": false,
+      "display": {
+        "field": "resource:region",
+        "operator": "=",
+        "value": "\"west\""
+      }
+    },
+    {
+      "name": "literal missing text",
+      "predicate": {
+        "field": {
+          "kind": "attribute",
+          "key": "region"
+        },
+        "op": "eq",
+        "value": "Missing key"
+      },
+      "canonical": {
+        "field": {
+          "kind": "attribute",
+          "key": "region"
+        },
+        "op": "eq",
+        "value": "Missing key"
+      },
+      "observed": [
+        {
+          "field": {
+            "kind": "attribute",
+            "key": "region"
+          },
+          "value": "Missing key"
+        }
+      ],
+      "match": true,
+      "display": {
+        "field": "attribute:region",
+        "operator": "=",
+        "value": "\"Missing key\""
+      }
+    },
+    {
+      "name": "literal unicode",
+      "predicate": {
+        "field": {
+          "kind": "attribute",
+          "key": "地域:route"
+        },
+        "op": "contains",
+        "value": "雪.* \""
+      },
+      "canonical": {
+        "field": {
+          "kind": "attribute",
+          "key": "地域:route"
+        },
+        "op": "contains",
+        "value": "雪.* \""
+      },
+      "observed": [
+        {
+          "field": {
+            "kind": "attribute",
+            "key": "地域:route"
+          },
+          "value": "prefix 雪.* \" suffix"
+        }
+      ],
+      "match": true,
+      "display": {
+        "field": "attribute:地域:route",
+        "operator": "contains",
+        "value": "\"雪.* \\\"\""
+      }
+    },
+    {
+      "name": "exact uint64",
+      "predicate": {
+        "field": {
+          "kind": "column",
+          "key": "duration_ns"
+        },
+        "op": "gte",
+        "value": "18446744073709551615"
+      },
+      "canonical": {
+        "field": {
+          "kind": "column",
+          "key": "duration_ns"
+        },
+        "op": "gte",
+        "value": "18446744073709551615"
+      },
+      "observed": [
+        {
+          "field": {
+            "kind": "column",
+            "key": "duration_ns"
+          },
+          "value": "18446744073709551615"
+        }
+      ],
+      "match": true,
+      "display": {
+        "field": "column:duration_ns",
+        "operator": "≥",
+        "value": "\"18446744073709551615\""
+      }
+    }
+  ]
+}

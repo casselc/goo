@@ -5,7 +5,7 @@
  function predicateIdentity(p){if(!p)return p;const out=clone(p);if(out.value==='')delete out.value;if(out.all)out.all=out.all.map(predicateIdentity);if(out.any)out.any=out.any.map(predicateIdentity);return out}
  function identity(q){const v=clone(q);if(v.where)v.where=predicateIdentity(v.where);for(const key of ['numeric','where','summary','bucketMs','groupTimeSeries','spanStatus','reportedEdge'])if(!v[key])delete v[key];if(!v.groupBy?.length)delete v.groupBy;return JSON.stringify(canonical(v))}
  function combineWhere(base,filters,join,shortcuts){const authored=base&&filters.length?{all:[base,{[join]:clone(filters)}]}:base?clone(base):filters.length?{[join]:clone(filters)}:undefined;if(!shortcuts.length)return authored;return {all:[...(authored?[authored]:[]),...clone(shortcuts)]}}
- function selectorText(p){if(!p)return 'No additional selectors';if(p.all||p.any){const children=p.all||p.any;return '('+children.map(selectorText).join(p.all?' AND ':' OR ')+')'}const labels={service:'Service',duration_ns:'Span duration (ns)',status:'Recorded status',body:'Log message',severity:'Severity'},field=p.field.kind==='column'?(labels[p.field.key]||p.field.key):p.field.kind+' '+p.field.key,op={eq:'=',ne:'≠',gte:'≥',lte:'≤',contains:'contains',exists:'is present',missing:'is missing'}[p.op]||p.op;return field+' '+op+(['exists','missing'].includes(p.op)?'':' '+JSON.stringify(p.value??''))}
+ const selectorText=(...args)=>(typeof module!=='undefined'?require('./field-presentation'):global.GooFieldPresentation).selectorText(...args);
  class Session {
   constructor(observe=()=>{}){this.state={generation:0,phase:'initial',applied:null,requested:null,bounds:null};this.observe=observe}
   snapshot(){return clone(this.state)}

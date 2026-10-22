@@ -861,3 +861,16 @@ Hegel pending-save state/swarm, retained selection identity and library properti
 continue to cover unchanged protocols. Direct retention-client tests additionally
 check exact body/key replay after lost acknowledgments, optional-store failures and
 citation read-bound precedence across the extracted transport boundary.
+
+
+## Record field presentation — first B2 slice
+
+`testdata/protocol/record-fields.json` is consumed by root Go query/matcher/canonical
+wire tests and JS display/identity tests. Ten cases cover missing versus empty,
+omitted string defaults, resource/attribute separation, literal sentinel/Unicode
+text and exact uint64 bounds. The live-filter Hegel state/swarm campaign now invokes
+both display paths while asserting unchanged draft/applied intent and equivalent
+empty-default identities. Journey 113 checks source-free fixed/package authoring
+and mobile chips. Journey 104 retains its real OTel source, paused return and
+observed Quint trace with rejecting controls; its actor checks the qualified live
+selector text across staging and return. No request-owner protocol changed.

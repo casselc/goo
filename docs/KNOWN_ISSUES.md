@@ -479,3 +479,9 @@ populations; native histogram cells have no inferred trace membership. Trace
 breakdown sums are inclusive and can overlap. Deployment context reads remain
 explicit and independent of telemetry and captured custody. Convention capability
 explanations offer existing binding authoring; no general schema resolver is added.
+
+
+B2's first [record field/display slice](FIELD_PRESENTATION.md) is delivered. Shared
+fixtures cover record predicates and omitted empty defaults; they do not yet cover
+every service/native/envelope protocol. Source owners retain their independent
+cancellation and snapshot rules; no generic request-owner abstraction was added.

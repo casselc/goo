@@ -330,3 +330,14 @@ The fixed reusable-question owner invalidates pending plans on selection/close,
 workspace/mode changes and suspension. After its compiler response, it checks the
 owner generation, active visit and exact revision before explicit source dispatch.
 Local selection does not mutate the fixed draft or execute a query.
+
+
+## Record field display boundary — B2 first slice
+
+`field-presentation.js` shares qualified field/operator labels and record predicate
+text across fixed chips, the existing live selector summary and record package
+handoffs. It consumes supplied predicates without changing them. Shared Go/JS wire
+fixtures pin omitted empty defaults, field-family separation and exact decimal
+strings; native binding semantics remain independent. See the [contract and flow](FIELD_PRESENTATION.md).
+The source exploration owner and retained metadata catalog have different abort,
+visit, snapshot and cursor lifetimes; this slice introduces no common request owner.

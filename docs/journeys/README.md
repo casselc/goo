@@ -1569,3 +1569,11 @@ the real pending-save/reload/retry and pinned-old-review narrative path, includi
 Quint rejecting controls and the expanded Bombadil catalog select/close actions.
 [Catalog](screenshots/101c-retained-evidence-catalog.png) ·
 [Mobile catalog](screenshots/101e-mobile-retained-catalog.png).
+
+
+[Journey 113](../../journeys/field-presentation.spec.js) stages omitted-empty,
+missing and literal-sentinel filters without execution, checks a real Go package's
+qualified field handoff and preserves the fixed draft across navigation.
+[Mobile qualified filter chips](screenshots/113a-qualified-empty-presence-filters.png).
+Journey 104 continues to exercise real ingested OTel data, source-free staged
+selectors, fixed authoring and paused return with its Quint/Bombadil campaigns.

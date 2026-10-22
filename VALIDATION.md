@@ -1,5 +1,58 @@
 # Validation record
 
+## Record field presentation and Go/JS wire fixtures — first B2 slice (2026-10-22 UTC)
+
+Final query/packages image:
+`sha256:5a51acd51aed035ccaf5745fc05815e974a27b78bd33869e4de265dfc476e217`.
+The pure field presenter now supplies live selector text, fixed filter chip parts
+and record-package field handoffs. Fixed chips show Go's omitted empty string
+value explicitly and quote non-empty literals, distinguishing `Empty string` from
+`"Empty string"`. Missing/exists operators carry no value label. Qualified field
+families, Unicode keys and exact decimal strings remain unchanged; presentation
+never mutates predicates or question identities. Native binding semantics and
+execution ownership remain independent. [Contract/diagram](docs/FIELD_PRESENTATION.md).
+
+Actual checks:
+
+- All 37 frontend test files pass. JS syntax, Python compile, whitespace and changed
+  local Markdown links pass.
+- Ten shared protocol fixtures pass root Go query validation, reference matcher and
+  canonical omitted-default JSON checks (0.013s). JS consumes the same fixtures for
+  display and existing question-identity equivalence, including resource/attribute
+  separation, missing/present-empty, literal sentinel/Unicode text and uint64 max.
+- Hegel live-filter and entry-intent state/swarm campaigns pass together (1.466s),
+  each with 80 generated 24-step cases. The live-filter campaign now invokes display
+  functions while checking unchanged draft/applied selectors and empty-default
+  identity. No new request-owner abstraction was introduced.
+- Four final real browser journeys pass together (1.4m): 113 source-free fixed
+  staging/real package compilation/field handoff and mobile chips; 104 real OTel live
+  filtering, fixed authoring and paused return; 110 Definitions draft/identity
+  compatibility; 111 fixed reusable plan ownership. Both initial and final browser
+  passes succeeded; the final pass includes the literal-sentinel distinction.
+- Journey 104's observed Quint/quint-go ledger and rejecting controls pass (16.734s).
+  Its updated Bombadil campaign passes with 371 records/stages 0–5; 368 snapshots
+  carry the expected qualified live selector text. Existing no-overflow, bounded
+  retention, explicit editor and paused-selection restoration invariants remain.
+  This is not an exhaustive model of all field presentation.
+- Affected screenshots were regenerated; new mobile frame 113a was inspected for
+  clear missing/empty/literal separation and containment.
+- Final post-wrapper audit verifies 13 running services, restored traffic, all 14
+  pre-existing pending IDs preserved (15 total), exact retained/live manifests,
+  current reviews and old pinned citation/read bound, XTDB health, served source/
+  server/binary hashes and zero OOM kills. No XTDB restart experiment was performed.
+
+Root disk space remains tight. Only identified obsolete task UI images were removed
+for build/deployment headroom; no volumes or telemetry data were removed.
+Local evidence: `artifacts/field-presentation-final.log`,
+`field-presentation-final-unit.log`, `field-presentation-final-go.log`,
+`field-presentation-final-hegel.log`, `field-presentation-health.json`, and
+`artifacts/live-filters/filters-2074045a/`.
+
+B2 remains active for broader protocol/qualified identity fixtures and adoption.
+The inspected source exploration and retained catalog owners have different
+abort/visit/snapshot/cursor lifetimes; a common request owner is not established.
+
+
 ## Retained catalog and owner consolidation — bounded B1 delivered (2026-10-22 UTC)
 
 Final query/packages image:

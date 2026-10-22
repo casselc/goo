@@ -486,3 +486,10 @@ revision/manifest label and invokes a supplied selection callback. It does not
 validate a universal artifact schema, fetch, navigate, cache or subscribe. The
 retained owner composes it with the shared inspector using per-load snapshot keys,
 because current-head tags can change while the manifest ID remains unchanged.
+
+
+`GooFieldPresentation` supplies pure record-field `qualified`, `label`, `operator`,
+`parts` and nested `selectorText` functions to fixed chips, live selector summaries
+and record package handoffs. Empty equality uses Go's omitted string default;
+literal non-empty values are quoted. It owns no DOM or execution state. See the
+[wire/display contract](FIELD_PRESENTATION.md).
