@@ -276,3 +276,8 @@ Live, fixed/frozen pages and held service observations share the passive record
 table builder. The Services adapter lazily presents its existing supporting span
 page, validating the returned question before adoption. It does not bind that page
 to independently reread overview selections. See the [ownership diagram](RECORD_PRESENTATION.md#held-service-observations).
+
+The [saved record presenter](SAVED_RECORD_PRESENTATION.md) maps capture pages and
+metadata-only document references to shared frozen display facts. The capture owner
+supplies the single scope summary; its compatibility viewer retains paging and
+context reads. A record's fixed continuation stages a draft; Run owns the fresh read.

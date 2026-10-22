@@ -12,6 +12,8 @@
   if(linked&&!r)notice+=' Result metadata only; full stream identities and diagnostics remain in the capture.';
   return {mode:'frozen',state:meta?.state||r?.state||'unknown',facts,notice,details};
  }
+ // Full capture pages and metadata-only document references share receipt facts.
+ function record(page,{changes,linked=false}={}){const receipt=page.receipt,q=receipt?.question?.explore;if(!q)return null;const r=page.explore,meta=page.summary,count=String(r?.count??meta?.count??'Unavailable'),state=r?.state||meta?.state||'unknown',predicate=JSON.stringify(q.where||{});const facts=[{label:'Population',value:q.signal+' · captured records'},{label:'Scope',value:q.environment},{label:'Fixed window · UTC',value:'['+BigInt(q.fromMs)*1000000n+', '+BigInt(q.toMs)*1000000n+')',format:'unix-ns-range'},{label:'Source records',value:count}];const details=[{label:'Question definition',value:'Ad hoc fixed question; no reusable definition identity is inferred.'},{label:'Capture ID',value:receipt.id},clock('Source read',(r?r.capturedAt:page.readAt)||'Unavailable in retained metadata'),clock('Stored custody time',receipt.capturedAt),{label:'Evidence basis',value:r?.basis||meta?.basis||'Unavailable in retained metadata'},{label:'Record predicate',value:predicate.length<=8192?predicate:'Selector exceeds summary display budget; inspect the exact receipt.'}];if(r)details.push({label:'Displayed page',value:String(r.rows.length)+' records · offset '+r.question.offset},{label:'Retained inspection records',value:String(page.retainedRecords)},{label:'Retention limit',value:page.recordsLimited?'More source records were not retained':'All records returned by the capture read were retained; source coverage unverified'});let notice='Independent capture read; matching windows do not imply a shared snapshot. Coverage remains unknown.';if(state==='changed_between_reads')notice='Source count and page reads disagreed. '+notice;if(changes)notice=(changes.length?changes.join(' · '):'Matches this question and fixed scope')+'. '+notice;if(linked&&!r)notice+=' Metadata only; inspect stored pages in the capture.';return {mode:'frozen',state:state==='changed_between_reads'?'unknown':state,facts,details,notice}}
  // Plan scope is validated by the dashboard adapter before publishing any result.
  function serviceWidget(widget,result,plan){
   const q=result.question,d=q.definition,native=!!widget.measurement,identity=typeof module!=='undefined'?require('./service-identity'):global.GooServiceIdentity;
@@ -31,5 +33,5 @@
   return {mode:'frozen',state:side.state||'unknown',facts,details,notice:'Independent stored read · source completeness unverified.'};
  }
  function element(data){const e=document.createElement('goo-evidence-summary');e.data=data;return e}
- const api={measurement,serviceWidget,comparisonSide,element};if(typeof module!=='undefined')module.exports=api;else global.GooEvidenceScope=api;
+ const api={measurement,record,serviceWidget,comparisonSide,element};if(typeof module!=='undefined')module.exports=api;else global.GooEvidenceScope=api;
 })(typeof window==='undefined'?globalThis:window);

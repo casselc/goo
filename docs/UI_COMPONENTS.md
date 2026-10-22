@@ -436,3 +436,8 @@ standard time/service/summary cells and optional owner context cells. It returns
 detached row/cell handles; insertion, stable row identity, selection, actions and
 source lifecycle remain application-owned. Live, fixed/frozen pages and held
 service observations adopt it. Aggregate/native tables retain their own schemas.
+
+The pure `GooEvidenceScope.record` adapter now supplies frozen record facts to
+capture pages and document references. Metadata-only references retain unavailable
+source/page fields rather than borrowing custody time or totals from displayed
+rows. [Contract and remaining editor-removal gates](SAVED_RECORD_PRESENTATION.md).

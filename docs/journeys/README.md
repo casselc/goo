@@ -1,5 +1,10 @@
 # User journeys and storyboards
 
+Journeys 32/41/45/50 now exercise [shared saved-record scope](../SAVED_RECORD_PRESENTATION.md)
+in captures and document references. Journey 32 verifies source/custody/count facts,
+page offsets and source-free fixed staging before an explicit Run. Existing frames
+32a–32f, 41a–41b and 45d document the updated surfaces.
+
 Journey 46 also opens the existing held service span page, inspects shared UTC/fields
 and reported context, closes back to its opener, and verifies no local source reads.
 Frames: [held service spans](screenshots/46g-held-service-spans.png) and

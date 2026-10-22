@@ -1,5 +1,59 @@
 # Validation record
 
+## Shared saved-record scope and deliberate continuation (2026-10-22 UTC)
+
+Query/packages image:
+`sha256:936c6bc57ff5a5e04cc5045495049643d66769853bc24b416260c69858bbc8a3`.
+
+Capture record pages and metadata-only document references now share the pure
+record receipt adapter and passive evidence summary. Full source count, fixed UTC
+window, source-read time and stored custody remain distinct from retained/page
+counts. Count/page disagreement is unknown with an explicit notice. Saved record
+continuation stages the exact original question; Run explicitly rereads it. The
+capture owner suppresses repeated embedded viewer scope/intro text. Its hidden
+read-only editor remains a compatibility consumer for paging, measures, selection,
+package creation and trace/log context; full removal remains planned.
+[Contract/diagram](docs/SAVED_RECORD_PRESENTATION.md) and
+[storyboards](docs/journeys/README.md).
+
+Actual checks:
+
+- Frontend suite: 33 test files pass, including full-page/metadata equivalence,
+  large decimal counts, empty selectors, offset/retention versus total, unavailable
+  clocks, disagreement states and non-mutation.
+- Hegel passes: supplied-parent properties (200 cases), entry state/swarm
+  (80 × 24 steps), and capture state/swarm (60 × 15 steps) covering immutable pages
+  under arrivals, source resets and refreshes.
+- Final-image journey 32 passes (1.4m), including capture Bombadil, four rejecting
+  Quint/quint-go controls, actual packages restart, source-free disclosure and fixed
+  staging before explicit Run. Full count/source/custody/page facts and mobile
+  caption height are checked. Updated screenshots are visually reviewed.
+- Journeys 41, 45 and 50 pass on image `421b7864abf4…`, before the final change to
+  saved-view caption CSS/class only. They cover document reference summaries,
+  fixed drafts, measurement continuation and source-free reopen. Investigation
+  and step Bombadil campaigns and existing Quint/quint-go ledgers pass.
+- Deployed assets/server/binary hashes match source; all 13 services run after
+  traffic restoration. Pre-existing pending queue IDs, retained manifests, native
+  review history and exact pinned citations survive; cgroup OOM kills remain zero.
+  Packages restart is tested by journey 32; no XTDB restart was performed this round.
+- JavaScript syntax, changed Markdown local links and whitespace checks pass.
+
+Earlier runs exposed a Chromium `ERR_NETWORK_CHANGED` after the intentional
+packages restart (one reload now handles only that transport error), an obsolete
+copy assertion (replaced by frozen-mode/count/custody checks), and a new Bombadil
+assertion that referenced an absent explanation count (corrected to use the
+receipt count). Screenshot review found narrow mobile caption wrapping despite
+an overflow check passing; final geometry validation covers the correction.
+
+The Docker deployment exhausted workspace disk temporarily. Only verified-unused
+prior task images and unused build cache were removed; volumes, retained evidence
+and queue data were preserved.
+
+Evidence: `artifacts/saved-records-unit.log`, `saved-records-hegel.log`,
+`saved-records-journeys.log`, `saved-records-final-journeys.log`,
+`saved-records-capture-final.log`, `saved-records-release.log` and
+`saved-records-health.json`.
+
 ## Held service observations and shared record table (2026-10-22 UTC)
 
 Query/packages image:

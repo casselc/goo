@@ -780,3 +780,11 @@ readable mobile row/time geometry. Its Bombadil actor inspects that page before
 following a convention suggestion and checks the shared inspector body. Dashboard
 planning and entry/filter/parent properties retain their existing Hegel campaigns;
 service/dashboard/entry ledgers retain their existing Quint rejection controls.
+
+Saved record receipt presentation is shared between capture pages and document
+references. Journey 32 checks exact count/source/custody facts, page offset, local
+disclosure and fixed-question staging without source reads; Run explicitly rereads.
+Its Bombadil actor opens scope and checks summary identity/count/custody/page
+against the immutable receipt while traversing saved pages. Journeys 41/45/50
+cover document and fixed-draft compatibility; existing capture Hegel state/swarm
+and Quint capture/investigation protocols remain the validation basis.

@@ -1396,3 +1396,6 @@ td details {
 /* Services owns its held-page viewport; passive record content remains reusable. */
 .service-observations>goo-table{max-height:24rem}
 @media(max-width:700px){.service-observations .telemetry-table>caption{display:block;width:auto;max-width:none;padding:8px 10px}}
+
+/* Saved record pages own responsive caption width, as Services does for its page. */
+@media(max-width:700px){.saved-record-evidence .telemetry-table>caption{display:block;width:auto;max-width:none;padding:8px 10px}}
