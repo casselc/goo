@@ -1358,4 +1358,36 @@ parent navigation, baseline comparison, 20-of-22 selection bounds, refresh reset
 stale-action rejection and mobile layout over real OTLP data. Optional
 `GOO_RECORD_BOMBADIL=1` runs selection/shared-field/open/return/clear actions.
 The related [training-label proposal](../TRAINING_ANNOTATIONS_DESIGN.md) has
-conceptual journeys only; annotation persistence/export is not implemented.
+conceptual training journeys only; shared tags/notes and optional saved-evidence retention are covered by journeys 98–99. Training export remains proposed.
+
+## 98. Authored context across the workbench
+
+Implemented: [executable journey](../../journeys/annotations.spec.js),
+[contract](../WORKBENCH_ANNOTATIONS.md). Discover a real OTel-emitting scoped service,
+add a tag/note, cancel another draft, and use the same annotation panel on a saved
+exploration, narrative revision and telemetry package. Find all four by exact tag.
+Correct a service assertion in parallel, withdraw one branch, and inspect immutable
+history. Annotation interactions perform no additional source reads. The observed
+ledger is checked with quint-go and injected negative controls; Bombadil explores
+local draft/cancel/history actions. Rich training labels remain proposed.
+
+![Scoped service annotation](screenshots/98a-scoped-service-annotation.png)
+![Cross-product exact-tag catalog](screenshots/98b-cross-product-annotations.png)
+![Corrections, parallel branches and withdrawal history](screenshots/98c-annotation-branches-history.png)
+![Compact mobile annotation history](screenshots/98d-mobile-annotation-history.png)
+
+## 99. Retain selected evidence in XTDB
+
+Optional experiment: [executable journey](../../journeys/retained-evidence.spec.js),
+[setup and limitations](../WORKBENCH_ANNOTATIONS.md#optional-xtdb-retained-evidence-experiment).
+Emit ordinary OTLP records and explicitly save a fresh fixed-query capture. Select
+one stored observation, annotate it and copy it to XTDB. Lose the successful save
+response and retry with the same request key; the original annotation is recovered.
+Open attributes, correct the review and reload the retained evidence with browser
+source API requests blocked. This verifies source-free UI reopening, not physical
+shutdown of ClickHouse or a completed native external-source connector.
+
+![Retain a selected saved observation](screenshots/99a-retain-selected-observation.png)
+![Evidence retained in XTDB](screenshots/99b-xtdb-retained-evidence.png)
+![Review correction history](screenshots/99c-retained-evidence-review-history.png)
+![Mobile retained evidence](screenshots/99d-mobile-retained-evidence.png)

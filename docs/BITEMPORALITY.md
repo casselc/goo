@@ -1,5 +1,9 @@
 # Bitemporality in Goo
 
+For the 2026-10-22 assessment of native storage for annotations, historical entity
+relationships and training judgments, see [Minigraf and XTDB](ANNOTATION_STORAGE_SPIKE.md).
+An optional [XTDB retained-evidence adapter experiment](WORKBENCH_ANNOTATIONS.md) now follows that assessment; the general metadata store remains file-backed.
+
 Quick design spike, 2026-10-16. Recommendation: preserve reproducible evaluations
 and append corrected generations before introducing a general bitemporal store.
 

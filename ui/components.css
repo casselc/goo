@@ -174,3 +174,6 @@ goo-latency .ui-disclosure>small{font-size:10px;color:var(--muted,#98a8bf)}
 .ui-inspector-actions:empty{display:none}
 .ui-inspector-actions>button{font-size:12px}
 .ui-inspector-body pre{white-space:pre-wrap;overflow-wrap:anywhere}
+
+goo-tag-list{display:flex;flex-wrap:wrap;gap:4px;max-width:100%}
+goo-tag-list>span,goo-tag-list>button{font:inherit;font-size:11px;padding:2px 6px;border:1px solid var(--border,#303b4b);border-radius:4px;background:var(--accent-dark,#183c36);color:var(--ink,#e3e9f3);overflow-wrap:anywhere;max-width:100%}

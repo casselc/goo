@@ -1,0 +1,9 @@
+spec: annotations.qnt
+module: annotations
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  inspect:
+    expect: 'reads == {{.obs.reads}} and published == {{.obs.published}} and coherent == {{.obs.coherent}}'
+  publish:
+    expect: 'reads == {{.obs.reads}} and published == {{.obs.published}} and coherent == {{.obs.coherent}}'

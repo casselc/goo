@@ -1,5 +1,61 @@
 # Validation record
 
+## Shared annotations and optional XTDB retained evidence (2026-10-22 UTC)
+
+Query/packages image: `sha256:22e51f29cc819afc8258905aa855b51da2aa60ed395cbbf221a86d09862c9744`.
+The 12 core services and optional XTDB service run with traffic restored. Served
+UI assets, server and Go binary hashes match the workspace. Previously recorded
+Redis pending IDs remain preserved (15 pending after traffic resumed); OOM-kill
+counters remain zero. Evidence: `artifacts/annotation-retention-health.json`.
+Earlier iterative vfs builds exhausted local disk headroom and temporarily caused
+collector insert failures. Additional legacy smoke attempts under background
+traffic timed out; inspected fresh examples were correctly classified late while
+waiting behind a slow consumer batch.
+Unused build layers were reclaimed and fresh ingestion recovered. Evidence from
+the affected interval remains unverified; no data volumes or stream entries were
+reset to conceal the gap. The native database was restarted independently; the
+retained manifest's exact serialized identity and two review revisions reopened unchanged afterward.
+
+- The end-to-end sample smoke check passes with the owned traffic generator
+  paused/drained/restored. `npm run test:smoke` now makes that controlled fixture
+  reusable through the existing journey wrapper, preserving stale pending work
+  and the original good/deadline assertions.
+- The root Go suite passes, including real XTDB 2.2.0 integration tests using the
+  pinned optional image. Cases cover system-time cutoff queries, independent review
+  branches/withdrawals, exact record tokens and equal-payload occurrences, atomic
+  rollback before commit, response retry, concurrent request recovery and native
+  member projections. Race checks pass for the annotation/retention packages;
+  native instance tests are separately opt-in. The original Go 1.24 module floor
+  is retained; validation uses the installed cloud toolchain.
+- All 30 frontend test files pass (111 checks in the final run). Python server
+  compilation, Quint typechecking and new contract/research local links pass.
+- Hegel annotation state/swarm and retained-selection properties pass alongside
+  the existing saved-view campaign. They check immutable history, branch/head
+  membership, selection-order independence, equal occurrences, exact large
+  numeric/time tokens, detached input and rejected content mutation.
+- Real OTLP journeys 98 and 99 pass on the final image with fresh documentation
+  frames. Journey 98 crosses scoped services, saved views, narrative revisions and
+  packages, then checks exact-tag lookup, concurrent correction and withdrawal.
+  Journey 99 selects a saved observation, loses a successful native save response,
+  recovers the same receipt, corrects its review and reopens with browser source
+  API reads blocked. ClickHouse itself remains running. Both observed ledgers
+  pass quint-go replay with negative controls for hidden reads/publication,
+  altered scope/member content and broken parent history. Bombadil draft/cancel/
+  history campaigns pass on both file and native annotation surfaces.
+- Passive SSR/SPA component journeys 63–65 pass, including detached tag properties,
+  invalid duplicate tags and no API calls on the standalone page. Namespace
+  service journey 60 and record-population journey 97 pass; affected frames were
+  regenerated. The final safeguard change reran journeys 98–99; it did not alter
+  the service/record measurement paths.
+
+The optional adapter retains selected **saved-capture** records; it does not
+freeze earlier live result pages. Shared metadata stays file-backed. Cross-store
+catalogs, correction retry keys, cross-node await-token propagation, reviewed
+training labels and dataset exports remain future work. See the
+[implemented contract](docs/WORKBENCH_ANNOTATIONS.md) and
+[storage assessment](docs/ANNOTATION_STORAGE_SPIKE.md).
+
+
 ## Record-derived populations and product annotation design (2026-10-22 UTC)
 
 Query/packages image: `sha256:742ec802dd2670b871f275bd5630c7bfde4a1e2738d9c38964b898dd70067938`.

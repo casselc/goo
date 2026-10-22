@@ -10,6 +10,8 @@ COPY lifecycle ./lifecycle
 COPY prebuilt ./prebuilt
 COPY exploration ./exploration
 COPY workbench ./workbench
+COPY identity ./identity
+COPY retention ./retention
 COPY investigations ./investigations
 COPY cmd ./cmd
 RUN CGO_ENABLED=0 go build -o /out/goo ./cmd/goo

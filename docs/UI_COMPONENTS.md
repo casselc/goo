@@ -401,3 +401,14 @@ On narrow screens, tail rows use labelled record cards within the same bounded
 viewport; record text, disclosures and trace actions share the content column.
 The UTC label retains exact nanoseconds in a tooltip. Focusing retained content
 also cancels a pending reconnect, preserving inspection during a disconnect.
+
+### Authored tag list
+
+`goo-tag-list` in `ui/meaning.js` displays up to 16 unique lowercase annotation
+slugs. Server HTML uses a JSON `tags` attribute; SPA callers set/get detached
+`.tags` arrays, including assignment before custom-element definition. Invalid
+input exposes `data-state="invalid"` without rendering an invented tag. Text is
+never interpreted as HTML. Optional `interactive` emits `goo-tag-select` with an
+exact tag; the application owns filtering. Mount performs no fetch, subscription,
+publication or navigation. The editor and optional XTDB adapter remain application
+code; see the [annotation contract](WORKBENCH_ANNOTATIONS.md).

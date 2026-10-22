@@ -1,6 +1,13 @@
 # Implementation plan
 
-The [whole-product annotation design](PRODUCT_ANNOTATIONS_DESIGN.md) recommends a shared typed target/revision contract and first metadata slice across scoped services, saved definitions and investigation revisions. Reviewed evidence labels and datasets follow; observation labels need exact freezing, while existing durable targets do not. No shared annotation/export API is implemented.
+Current annotation slice: [shared metadata and optional XTDB retained evidence](WORKBENCH_ANNOTATIONS.md).
+Next acceptance work: native correction retry keys, cross-node await-token propagation,
+retained-evidence catalog integration;
+then exact server-owned freezing of live displayed results. Rich labels/export
+remain proposed. [Storage decision and connector options](ANNOTATION_STORAGE_SPIKE.md).
+
+
+The [whole-product annotation design](PRODUCT_ANNOTATIONS_DESIGN.md) recommends a shared typed target/revision contract and first metadata slice across scoped services, saved definitions and investigation revisions. Reviewed evidence labels and datasets follow; observation labels need exact freezing, while existing durable targets do not. The initial shared annotation API and optional native retained-evidence spike are implemented; reviewed labels and dataset exports remain proposed.
 
 
 Recent exploration now includes [staged categorical populations](FACET_SELECTION.md); arbitrary complements and automated population-difference ranking remain proposed.

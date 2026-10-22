@@ -1,7 +1,11 @@
 # Shared meaning across goo's product surfaces
 
+> Initial follow-through: [shared tags/notes and optional XTDB evidence retention](WORKBENCH_ANNOTATIONS.md).
+> Rich review vocabularies, training labels and dataset exports below remain proposed.
+
+
 Whole-product design pass, 2026-10-22 UTC. **Proposed architecture and interaction
-contracts; no shared tag/label store, review queue or training export is implemented.**
+contracts. An initial shared tag/note store and optional native retained-evidence experiment are now implemented; reviewed task labels, review queues and training export remain proposed.**
 This pass responds to the need to annotate throughout goo, rather than treating
 Explore or a separate labeling application as the center of the feature. The
 [earlier Explore-centered proposal](TRAINING_ANNOTATIONS_DESIGN.md) supplies useful

@@ -195,3 +195,22 @@ adapter compiles span/log predicates uniformly; observation identity remains a
 bounded per-connection multiplicity tracker. Independent baseline captures and
 rolling comparison reads use existing Go kernels, never the display buffer.
 See the [live process diagram](POPULATION_WORKSPACE.md#watching-a-population).
+
+## Authored context and optional retained evidence
+
+[Shared tags and notes](WORKBENCH_ANNOTATIONS.md) use typed exact targets and
+immutable parent-linked revisions in `workbench/meaning.go`. UI adapters share
+`ui/meaning.js`; its `goo-tag-list` element remains display-only. Scoped service
+assertions name an applicability window; exact saved artifacts do not manufacture
+one. Active heads derive from parent edges, preserving parallel reviews.
+
+The optional `retention` Go package writes selected **server-owned saved-capture**
+observations and their initial annotation atomically into XTDB through pgx. Native
+member projections support joins while exact JSON payloads remain retained. Request
+receipts support recovery after an uncertain initial save response. The capture
+store, live ClickStack source and native evidence store remain distinct boundaries;
+reopening native retained evidence does not read either live telemetry or the
+original capture file. The [contract and sequence diagram](WORKBENCH_ANNOTATIONS.md)
+identify prototype limits, including cross-store search, correction retry keys and
+cross-node await-token propagation. No ClickHouse external-source connector is
+implemented.

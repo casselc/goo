@@ -1,0 +1,11 @@
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document,window})=>({ready:!!document.querySelector('.meaning-panel .meaning-revision'),stage:Number(document.documentElement.dataset.annotationStage||0),overflow:document.documentElement.scrollWidth>window.innerWidth,target:document.querySelector('.meaning-panel')?.getAttribute('aria-label'),hash:window.location.hash,edit:!!document.querySelector('.meaning-editor:not([hidden])')}));
+export const compact=always(()=>!state.current.overflow);
+export const exactTarget=always(()=>!state.current.ready||!!state.current.target&&/^#(?:annotation|evidence)=[a-f0-9]{64}$/.test(state.current.hash));
+export const cancelled=eventually(()=>state.current.stage===3&&!state.current.edit).within(20,'seconds');
+const draft=registerCustomAction('goo.annotationDraft',async(document)=>{[...document.querySelectorAll<HTMLButtonElement>('.meaning-panel button')].find(b=>b.textContent==='Annotate')!.click();document.documentElement.dataset.annotationStage='1'});
+const cancel=registerCustomAction('goo.annotationCancel',async(document)=>{[...document.querySelectorAll<HTMLButtonElement>('.meaning-panel button')].find(b=>b.textContent==='Cancel annotation draft')!.click();document.documentElement.dataset.annotationStage='2'});
+const history=registerCustomAction('goo.annotationHistory',async(document)=>{document.querySelector<HTMLInputElement>('.meaning-panel input[type=checkbox]')!.click();document.documentElement.dataset.annotationStage='3'});
+export const choices=actions(()=>!state.current.ready?['Wait']:state.current.stage===0?[draft()]:state.current.stage===1?[cancel()]:state.current.stage===2?[history()]:['Wait']);

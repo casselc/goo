@@ -8,12 +8,14 @@ import (
 	"net/http"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/casselc/goo/exploration"
 	"github.com/casselc/goo/workbench"
 )
 
 func registerWorkbench(mux *http.ServeMux, dir string) {
+	registerRetention(mux, dir)
 	store := workbench.Store{Dir: filepath.Join(dir, "workbench")}
 	captures := exploration.CaptureStore{Dir: filepath.Join(dir, "exploration")}
 	reply := func(w http.ResponseWriter, code int, v any) {
@@ -34,6 +36,63 @@ func registerWorkbench(mux *http.ServeMux, dir string) {
 		}
 		return nil
 	}
+	mux.HandleFunc("POST /annotations", func(w http.ResponseWriter, r *http.Request) {
+		var in workbench.MeaningInput
+		if e := decode(w, r, &in); e != nil {
+			fail(w, 400, e)
+			return
+		}
+		v, e := store.CreateMeaning(in, func(id string) error {
+			_, e := (exploration.PackageStore{Dir: filepath.Join(dir, "telemetry-packages")}).Load(id)
+			return e
+		})
+		if e != nil {
+			fail(w, 400, e)
+			return
+		}
+		reply(w, 201, v)
+	})
+	mux.HandleFunc("GET /annotations/{id}", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.RawQuery != "" {
+			fail(w, 400, fmt.Errorf("revision has no query parameters"))
+			return
+		}
+		v, e := store.LoadMeaning(r.PathValue("id"))
+		if e != nil {
+			fail(w, 404, e)
+			return
+		}
+		reply(w, 200, v)
+	})
+	mux.HandleFunc("GET /annotations", func(w http.ResponseWriter, r *http.Request) {
+		q := r.URL.Query()
+		for k, v := range q {
+			if len(v) != 1 || (k != "target" && k != "tag" && k != "cursor" && k != "history") {
+				fail(w, 400, fmt.Errorf("unsupported annotation query"))
+				return
+			}
+		}
+		if q.Has("history") && q.Get("history") != "1" {
+			fail(w, 400, fmt.Errorf("history must be 1"))
+			return
+		}
+		var target *workbench.MeaningTarget
+		if q.Has("target") {
+			target = new(workbench.MeaningTarget)
+			d := json.NewDecoder(strings.NewReader(q.Get("target")))
+			d.DisallowUnknownFields()
+			if len(q.Get("target")) > 4096 || d.Decode(target) != nil || d.Decode(new(any)) != io.EOF {
+				fail(w, 400, fmt.Errorf("invalid typed target"))
+				return
+			}
+		}
+		v, e := store.Meanings(target, q.Get("tag"), q.Get("cursor"), q.Has("history"))
+		if e != nil {
+			fail(w, 400, e)
+			return
+		}
+		reply(w, 200, v)
+	})
 	mux.HandleFunc("POST /population/plan", func(w http.ResponseWriter, r *http.Request) {
 		var in exploration.PopulationRequest
 		if e := decode(w, r, &in); e != nil {

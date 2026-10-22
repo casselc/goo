@@ -39,4 +39,9 @@ while time.monotonic()<deadline:
 else:
     raise SystemExit('Demo stream did not drain; inspect lag/pending work without resetting it.')
 PY
-node_modules/.bin/playwright test "$@"
+if [[ "${1:-}" == "--smoke" ]]; then
+  shift
+  python3 scripts/smoke.py "$@"
+else
+  node_modules/.bin/playwright test "$@"
+fi

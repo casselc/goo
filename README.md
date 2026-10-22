@@ -168,6 +168,10 @@ The [goo annotation slice](docs/GOO_ANNOTATIONS.md) adds `//goo:operation`,
 Woven OTel emission and active-operation state/swarm checks are executable;
 aggregate policy stays in packages.
 
+[Tags and notes](docs/WORKBENCH_ANNOTATIONS.md) attach authored context to scoped
+services and exact saved revisions. An optional XTDB experiment retains selected
+stored observations with review history; see the contract for its current limits.
+
 ## Continue in Codex
 
 Open this folder as the project root. Start with [START_HERE.md](START_HERE.md) and give Codex [CODEX_HANDOFF.md](CODEX_HANDOFF.md). [AGENTS.md](AGENTS.md) contains repository working guidance. No prior chat history is required.

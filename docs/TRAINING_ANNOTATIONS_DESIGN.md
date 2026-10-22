@@ -1,9 +1,15 @@
 # Observability exploration as a source of training examples
 
+> Implemented foundation: [cross-product tags/notes and optional retention of selected
+> saved-capture observations](WORKBENCH_ANNOTATIONS.md). Reviewed training labels,
+> vocabularies, dataset exports and exact freezing of earlier live results below
+> remain proposed.
+
+
 Observation-focused design note, 2026-10-22 UTC. Its delivery sequence applies to
 retained training examples, not to all annotation surfaces. The
 [whole-product annotation design](PRODUCT_ANNOTATIONS_DESIGN.md) is the primary
-architecture and implementation roadmap. **Annotation storage, label editing,
+architecture and implementation roadmap. **Reviewed task-label editing,
 dataset snapshots and training export are not implemented.** Current record
 inspection, bounded selection, typed population definitions, immutable captures
 and comparison receipts provide useful foundations. This design adds no model

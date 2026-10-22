@@ -1282,3 +1282,17 @@ td details {
 .record-selection > p {margin:0 0 .35rem}
 .record-selection > details {margin-top:.35rem}
 .record-row input[type=checkbox] {width:16px;height:16px;vertical-align:middle;margin:.25rem .4rem .25rem 0}
+
+.meaning-panel,.meaning-index{font-size:12px;margin:.5rem 0;overflow-wrap:anywhere}
+.meaning-panel>summary,.meaning-index>summary{cursor:pointer}
+.meaning-revision{border-top:1px solid var(--border);padding:.5rem 0}
+.meaning-revision p{white-space:pre-wrap;margin:.3rem 0}
+.meaning-editor{display:grid;gap:.4rem;margin:.5rem 0;padding:.5rem;border:1px solid var(--border);border-radius:5px}
+.meaning-editor label{display:grid;gap:.2rem;min-width:0}
+.meaning-editor input,.meaning-editor textarea{width:100%;box-sizing:border-box}
+.meaning-editor textarea{min-height:5rem}
+.meaning-panel .controls>label{display:inline-flex;flex-direction:row;align-items:center;gap:.35rem;flex:0 1 auto}
+.meaning-panel input[type=checkbox]{width:14px;height:14px;min-height:0;min-width:0;padding:0;margin:0}
+.retained-evidence{min-width:0;overflow-wrap:anywhere}
+.retained-evidence>details{margin:.5rem 0}
+.retained-evidence>details>div{padding:.4rem 0}

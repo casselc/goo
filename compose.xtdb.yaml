@@ -1,0 +1,16 @@
+# Optional local experiment: docker compose -f compose.yaml -f compose.xtdb.yaml up -d --no-build xtdb packages query
+# Build query/packages first using the main Dockerfile. No production deployment claim.
+services:
+  xtdb:
+    image: ghcr.io/xtdb/xtdb:2.2.0@sha256:a6a426505b95a36e4e0e1d0de88efcf4220cb6bde8f1f5e594b0a1f92a948a77
+    mem_limit: 1g
+    cpus: 2
+    environment:
+      JAVA_TOOL_OPTIONS: '-Xmx512m -XX:MaxDirectMemorySize=256m'
+    ports: ['127.0.0.1:15432:5432', '127.0.0.1:18080:8080']
+    volumes: ['xtdb-evidence:/var/lib/xtdb']
+  packages:
+    environment:
+      GOO_XTDB_URL: postgres://xtdb@xtdb:5432/xtdb?sslmode=disable
+volumes:
+  xtdb-evidence:

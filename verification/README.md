@@ -704,3 +704,30 @@ rejecting eight controls involving hidden reads, source/predicate/depth changes,
 provenance source changes, duplicate observations and out-of-window event time.
 Optional `GOO_RECORD_BOMBADIL=1` checks the per-page selection bound, viewport,
 no-live-tail and completion/exception properties.
+
+### Cross-product annotations and optional XTDB retention
+
+`TestHegelMeaningStateSwarm` interleaves roots, corrections of old/new revisions
+and withdrawals against an independent parent-edge/head oracle. Root Go tests
+also exercise actual concurrent file publication. `TestHegelRetainedSelectionIdentity`
+generates equal payload occurrences, selection permutations, large numeric/time
+tokens and integrity failures without collapsing occurrence identity.
+
+`model/annotations.qnt` and the quint-go `TestQuintAnnotationLedger` replay observed
+metadata-only browser actions from journeys 98–99. Negative controls inject a
+source read, an implicit publication and incoherent provenance and must fail.
+`verification/bombadil/annotations.ts` explores draft/cancel/history on both exact
+file annotations and native retained-evidence pages. Set `GOO_ANNOTATION_BOMBADIL=1`
+for the corresponding Playwright journeys.
+
+Real native tests are opt-in, separate from the pure default Go suite:
+
+```sh
+GOO_XTDB_TEST_URL='postgres://xtdb@127.0.0.1:15432/xtdb?sslmode=disable' \
+  go test ./retention -count=1 -v # from repository root, not verification/
+```
+
+They cover native system-time cutoff queries, exact record payloads, independent
+review branches, a staged transaction interrupted before commit, idempotent retry
+and concurrent request recovery. The optional Compose overlay and prototype limits
+are in [the annotation contract](../docs/WORKBENCH_ANNOTATIONS.md).

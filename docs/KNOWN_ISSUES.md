@@ -1,6 +1,6 @@
 # Known issues and gaps
 
-[Bounded page-record selection](RECORD_POPULATIONS.md) and inspector/shared-field population actions are implemented. Durable annotation targets, exact selected-record freezing and [whole-product annotations, training labels and dataset exports](PRODUCT_ANNOTATIONS_DESIGN.md) remain proposed.
+[Bounded page-record selection](RECORD_POPULATIONS.md) and inspector/shared-field population actions are implemented. Shared service/artifact tags and notes plus optional XTDB retention of selected **saved-capture** records are implemented in the [annotation slice](WORKBENCH_ANNOTATIONS.md). Exact freezing of earlier live result pages and [whole-product annotations, training labels and dataset exports](PRODUCT_ANNOTATIONS_DESIGN.md) remain proposed.
 
 
 Recent activity supports [staged categorical selections](FACET_SELECTION.md). General predicate complements, automatic difference scoring and durable selection history remain future work.
@@ -75,7 +75,10 @@ Published ports bind to loopback. Query credentials are disposable local credent
 The original hosted environment denied Docker startup and browser installation.
 The current cloud baseline runs the default stack and real Chromium journeys;
 see VALIDATION.md and docs/journeys/README.md. Optional HyperDX remains unverified.
-The initial background-traffic journey missed its nominal deadline while queued;
+A nominally “good” sample request can miss its deadline behind the consumer's
+batch barrier under background load. Run `npm run test:smoke` for the controlled
+pause/drain/restore fixture; direct `scripts/smoke.py` assumes an otherwise quiet
+queue and may fail correctly under load. The initial background-traffic journey missed its nominal deadline while queued;
 documentation runs now pause/drain/restore the owned generator without deleting
 data. Stale pending stream entries from crashes are still not reclaimed. A
 recreated cloud container also inherited proxy defaults that routed local service
