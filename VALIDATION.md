@@ -1,5 +1,14 @@
 # Validation record
 
+## Stream-first entry review (2026-10-22 UTC)
+
+Product/design and architecture agents reviewed the current tail/source/UI code at
+`3fbefea` against the revised stream-first direction. The planning agent integrated
+these recommendations into the active S1–S3/A–F queue, preserving delivered work.
+This round changes documentation only; no new runtime behavior, screenshots, load
+results or browser integration campaign is claimed. Local document links and
+whitespace checks pass.
+
 ## First product consolidation cut (2026-10-22 UTC)
 
 Final query/packages image:

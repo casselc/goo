@@ -7,9 +7,10 @@ usability review with earlier product, interaction, component and semantic plans
 It recommends a small delivery queue rather than implementing every historical
 “next” paragraph.
 
-**Recommendation:** finish the current evidence-continuity round, then make the
-existing product compact and predictable before broadening it. Start with one
-clear Explore entry, a clean saved-work boundary, and a revision-aware library.
+**Current recommendation:** follow the user’s revised stream-first direction:
+fresh Explore opens on compact live observations, with scope and inspection
+shaping the question naturally. Preserve the completed evidence-continuity and
+live/saved separation work, then continue reusable compositions and compact libraries.
 Follow with useful general observability improvements—native-instrument browsing,
 comparison leads and explicit capabilities—through those same workflows.
 
@@ -82,7 +83,7 @@ research remains deferred, rather than becoming an automatic commitment.
 | Cut | Deliverable and deliberate consolidation | Acceptance before advancing |
 | --- | --- | --- |
 | 0 — closed | Native retained catalog, exact review citations and browser-local native retry recovery. | Delivered evidence is recorded in [VALIDATION.md](../VALIDATION.md). Preserve native-only recovery, distinct store/search clocks and pinned historical reviews. |
-| A1 — active, applied-result portion implemented | Compact Explore: extract the existing distribution/facet body from enclosing workflow chrome; compose one applied scope/result/action region; disclose mobile facets; remove redundant hidden controls and their CSS overrides after parity. | Real desktop/mobile useful visual and first-record positions; one primary recent action; keyboard/touch, staged/applied scope, explicit partial/unknown state, no reads on local disclosure, delayed response rejection. Refresh affected storyboard frames and bounded Bombadil actions. |
+| A1 — delivered applied-result portion; blank entry superseded by S1/S2 | Compact Explore: extract the existing distribution/facet body from enclosing workflow chrome; compose one applied scope/result/action region; disclose mobile facets; remove redundant hidden controls and their CSS overrides after parity. | Real desktop/mobile useful visual and first-record positions; stream-first entry follows S1/S2 below; keyboard/touch, staged/applied scope, explicit partial/unknown state, no reads on local disclosure, delayed response rejection. Refresh affected storyboard frames and bounded Bombadil actions. |
 | A2 — delivered | Clean live/saved ownership: leave the live operation editor in Operations; use a read-only operation receipt presenter in Saved with explicit continuation. Extract pure versioned route/link/step helpers where this change touches them. | Old hashes, IDs and receipt reopen still work; navigation/reopen does not execute sources; dirty drafts and retained-parent focus survive return; live and saved owners are not reparented. Go/JS fixtures protect exact bounds, missing/empty and optional defaults where protocol helpers move. |
 | A3 | Apply the compact scope/result composition to one service surface; add a record/capture transformation beside existing `GooEvidenceScope` adapters and adopt it in documents/captures. Consolidate only the CSS owned by these compositions. | Two real adopted surfaces share display facts rather than a universal result object; changed-read and coverage caveats stay visible; clocks remain separate; standalone/nested mobile and SSR/pre-definition SPA component checks remain source-free. |
 | B1 | Compact revision-aware library rows, initially record and native measurement definitions; then documents/retained catalog where compatible. Mount rich meaning/review detail only for selected entries. Split touched retention code into client/basis, catalog, citation and recovery owners without changing intents. | Same-title unrelated entries, explicit families, parallel heads, optional store unavailable, pagination/local search bounds, stale responses and exact old pinned review remain correct; selecting is not execution. Preserve retry body/key and await-token propagation. Mechanical formatting is a separate change. |
@@ -94,9 +95,50 @@ research remains deferred, rather than becoming an automatic commitment.
 | E1 | Native instrument discovery within existing entry points; explicit capability planning for one pinned HTTP-server convention plus generic fallback, then one database-pool or messaging case. Add typed relations and coverage only with an actual supporting source. | Ordinary non-Go, manifest-free and custom OTel data work; missing/empty identities, units, temporality, batch and unsupported cases are honest; static declaration/observed data/verified support remain distinct. No inferred trace completeness or fleet percentiles. |
 | F1 — prerequisite-gated | Broaden recovery or exact retained targets only for one concrete supported write/fragment after its server idempotency and source-membership contract exists. Inject exact-reference resolution/clocks without making file document loading depend on XTDB. | Lost acknowledgements/reload preserve intent, IDs and distinct clocks; unsupported writes do not inherit native-journal promises; current-head search differs from pinned/history reads. Select a concrete review task before adding formal labels/export. |
 
-The first delivered cut separates live/saved operation ownership (A2) and implements the applied-result portion of A1: facet-only composition, compact timeline controls and mobile facet disclosure. Blank-entry action consolidation remains active in A1. Actual checks and image identity are in [VALIDATION.md](../VALIDATION.md).
+The first delivered cut separates live/saved operation ownership (A2) and implements the applied-result portion of A1: facet-only composition, compact timeline controls and mobile facet disclosure. The remaining blank-entry plan is superseded by S1/S2 below. Actual checks and image identity are in [VALIDATION.md](../VALIDATION.md).
 
-A1–A3 are the first product round, not one unreviewable rewrite. B–F are subsequent
+### Stream-first revision of the entry queue
+
+The user's latest direction supersedes the earlier initial-entry “explicit start”
+constraint: a true fresh blank Explore entry should begin with live observations,
+not a question form. This does not authorize automatic execution of saved views,
+shared/deep links, captures or definitions. The peer [product/design](STREAM_FIRST_ENTRY_DESIGN.md)
+and [architecture](STREAM_FIRST_ENTRY_ARCHITECTURE.md) reviews define the proposed
+interaction and feasible boundaries. This is revised intent, not a claim that the
+stream-first UI has shipped.
+
+Preserve the delivered `3fbefea` baseline: A1's applied-result facet-only/compact
+composition and A2's live/saved ownership separation remain implemented. Replace
+A1's remaining blank-entry action consolidation with the cuts below, ahead of A3.
+A–F remains one queue; S cuts are its revised entry work, not another workbench.
+The design review’s capability sketches are not another numbered backlog:
+its compact entry maps to this S1, local context/filtering to this S2, exact custody
+to this S3, and mixed-signal/population enrichment remains deferred below.
+
+| Cut | Deliverable | Acceptance before advancing |
+| --- | --- | --- |
+| S1 — next | Fresh blank Explore auto-connects one bounded active-signal monitor using an explicit valid configured/previous environment. Offer the already-supported Logs/Spans switch; reuse the existing `/api/tail` owner and passive record/attribute components. Put compact rows first, with a single scope/connection strip, chosen facet pills and honest buffer statistics. Keep question/capture forms below or in contextual actions. | Existing log and span selectors retain their typed source contract. One active connection and no prerequisite population/aggregate read; abort reader, reconnect timer and watchdog on leave/hide/signal change; old generations cannot publish. Missing environment prompts scope selection, never silent all-environment reads. Saved/deep-link routes remain inert. Focus/inspection and intentional pause persist on return; scrolling away pauses transport as well as follow, preserving the buffer/anchor without hiding continuity warnings; resume is explicit and shows the new-window gap. Show empty/loading/stale/limited/gap/disconnected distinctly. Real logs and spans, desktop/mobile, keyboard, bounded Bombadil actions and source-request counts validate the entry; 429/source failure retains last-good rows with unavailable/gap state, not healthy emptiness. |
+| S2 | Stream interaction shapes scope: local inspection with minimal qualified attributes, chosen environment/facet pills, staged selector edits and explicit Apply starting a new generation. Show trace/span ancestry only from actually held exact IDs/parent relations, with explicit missing/ambiguous-parent, cycle and depth-limit states; deeper context reads remain named actions. Expose “Investigate this window” as a deliberate fixed-question reread, and keep shared inspector/retained-parent return. | Never mix old/new selectors or treat current buffer as full population. No hidden reads/publications from local inspection, breadcrumb rendering or staging. Paused anchor/focus survives updates and navigation; resume is explicit, starts a new bounded read and shows a continuity gap. Reread wording distinguishes fresh results from held rows. Hegel state/swarm and Quint observed traces/rejecting controls cover owner transitions, scope drift and obsolete publication. |
+| S3 — capability-gated | Exact retained tail selection only after a server-owned capability proves connection membership, canonical records, per-row read basis/window, expiry and retry identity. Reuse existing retention/citation contracts where their prerequisites genuinely fit. | Current connection-local observation handles are not durable event IDs or a live-page `resultToken`. Do not call the native page-retention API with fabricated membership or substitute a rerun. Test duplicate/late rows, eviction, expiry, changed selector, lost acknowledgement and correction before advertising exact capture. Until then offer explicit reread or existing supported evidence paths. |
+
+Start S1 with one selected signal. A coordinated “Both” view, separate global
+population totals, per-service concurrent subscriptions, ingestion replay and
+automatically derived ancestry are not prerequisites. Existing tail is bounded
+rolling event-time polling, not an ingestion cursor: say “live observations,”
+name retained/evicted/observed as local counts, and retain source limits/gaps.
+Basic severity/error/duration summaries are buffer summaries only, never fleet
+percentiles, complete request/error rates or application-health proofs.
+
+Reuse the compact distribution body, applied scope facts and inspectors already
+landed. The application owner controls startup, cancellation, source visibility,
+filter generations and capture; custom elements remain passive. S1's real journey
+must include a fresh entry that connects, a saved entry that does not, environment
+retargeting, route/background disposal and no automatic restart of a paused stream.
+Update the existing tail/recent-entry contracts, diagram and actual storyboard
+frames rather than creating a second independent “firehose” application.
+
+The next round is S1/S2, followed by A3; S3 waits for its membership capability.
+A1–A3 and S1–S3 are bounded cuts, not one unreviewable rewrite. B–F are subsequent
 bounded cuts in the same queue. Backend mechanics C1/C2 may run alongside B only
 with disjoint ownership and frozen fixtures; they do not block the first compact
 release. Reorder later cuts when a real usage result changes their value, and
@@ -153,9 +195,10 @@ not advertise recovery for all writes unless those paths are idempotent too.
 **Outcome:** “What is happening now?” has an obvious first action and useful
 results before the control scaffolding.
 
-- Give initial Explore one primary action. Default to recent activity; retain a
-  clearly named advanced fixed-question path, exact shared links and source-free
-  staging. Do not restore competing executors under new labels.
+- Fresh blank Explore now defaults to one bounded live observation connection
+  under S1/S2 above; this supersedes the earlier explicit-start proposal. Retain
+  advanced fixed-question access, exact shared links and source-free saved staging.
+  A stopped/paused or saved route does not silently start a stream.
 - Use one compact applied-scope/result-action strip. Keep active filters,
   draft/applied distinction and decisive unknown/partial/gap state visible; move
   repeated exact provenance into one disclosure per owning result.
@@ -358,7 +401,7 @@ that a feature could be valuable.
 
 | Work | Disposition / first useful boundary |
 | --- | --- |
-| Compact entry, one primary action, mobile facets, bounded charts, human axis units | **Next: 1.** Latest observed whole-product friction. |
+| Compact stream-first entry, mobile facets, bounded charts, human axis units | **Next: S1/S2.** Applied-result compactness is delivered; fresh-entry semantics follow the revised user direction. |
 | Saved/live separation, action vocabulary, compact case outline and relevant time editor | **Next: 2.** Preserve all historical IDs and capabilities. |
 | Native retained catalog, pinned review citation, native retry journal | **Delivered and validated: 0.** Do not reschedule. |
 | Cross-store search, broader document/draft recovery, search/index quotas | **Partial: 2/6 and deployment gate.** Native catalog is not a global file/native index or durable resume for every draft. |
@@ -432,10 +475,10 @@ proposed, in progress, implemented-with-limits and deferred. Do not rewrite old
 research to imply it was implemented then, and do not copy every old “next” list
 into that index.
 
-## Decisions and proposed defaults
+## Decisions and current defaults
 
 The user has authorized progressing through the integrated active queue. Start
-A1/A2 with the existing compact-first and local deployment defaults; no further
+S1/S2 with the revised stream-first and existing local deployment defaults; no further
 confirmation is needed for those bounded changes. Broader capability-dependent
 work remains deferred until its stated evidence or target exists.
 
