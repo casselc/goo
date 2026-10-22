@@ -271,3 +271,8 @@ parallel row-formatting paths from Live and fixed results. Its custom elements
 render supplied data only; application adapters retain reads, scope/basis, selection,
 fixed/trace continuations and retention. Supplied-parent context has bounded exact
 ID traversal and explicit ambiguity/missing/cycle states, with no wider lookup.
+
+Live, fixed/frozen pages and held service observations share the passive record
+table builder. The Services adapter lazily presents its existing supporting span
+page, validating the returned question before adoption. It does not bind that page
+to independently reread overview selections. See the [ownership diagram](RECORD_PRESENTATION.md#held-service-observations).

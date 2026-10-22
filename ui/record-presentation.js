@@ -11,6 +11,8 @@
  function service(record){const m=describe(record),e=ui.node('span',m.qualifiedService);e.title=m.namespace;return e}
  function summary(record,signal,{compact=false}={}){const e=ui.node('goo-record-summary');e.setAttribute('signal',signal);if(compact)e.setAttribute('compact','');e.record=record;return e}
  function description(record){const e=ui.node('span');e.append(service(record),' · ',timestamp(record));return e}
+ // Supplied rows only. Owners retain insertion, selection, actions and source lifecycle.
+ function table({signal='logs',compact=false,context=true,labels,caption='Supplied record observations',label=caption}={}){labels=labels||['UTC','Service',signal==='spans'?'Span / duration':'Severity / body',...(context?[signal==='logs'?'Trace / time context':'Trace context']:[])];const viewport=ui.node('goo-table'),element=ui.node('table'),head=ui.node('thead'),header=ui.node('tr'),body=ui.node('tbody');viewport.setAttribute('density','compact');viewport.setAttribute('aria-label',label);element.append(ui.node('caption',caption));for(const text of labels){const th=ui.node('th',text);th.scope='col';header.append(th)}head.append(header);element.append(head,body);viewport.append(element);return {viewport,element,header,body,row(record,kind=signal){const row=ui.node('tr'),cells=labels.map(text=>{const cell=ui.node('td');cell.dataset.label=text;return cell});cells[0].append(timestamp(record,{compact}));cells[1].append(service(record));cells[2].append(summary(record,kind,{compact}));row.append(...cells);return {row,cells}}}}
  function detail(record,signal,attributes={},records=[]){const e=ui.node('div',undefined,'record-detail');e.append(summary(record,signal));const context=ui.node('goo-record-context');context.setAttribute('signal',signal);context.record=record;context.records=records.map(r=>({TraceId:r.TraceId,SpanId:r.SpanId,ParentSpanId:r.ParentSpanId}));e.append(context);global.GooAttributes.mount(e,record,{...attributes,renderField:entry=>entry.key==='timestamp_ns'&&!entry.field?timestamp(record):null});return e}
  if(global.customElements&&global.HTMLElement){
   class SuppliedRecord extends global.HTMLElement{
@@ -29,5 +31,5 @@
   if(!global.customElements.get('goo-record-summary'))global.customElements.define('goo-record-summary',GooRecordSummary);
   if(!global.customElements.get('goo-record-context'))global.customElements.define('goo-record-context',GooRecordContext);
  }
- const api={describe,ancestry,validID,timestamp,service,summary,description,detail};if(typeof module!=='undefined')module.exports=api;else global.GooRecordPresentation=api;
+ const api={describe,ancestry,validID,timestamp,service,summary,description,detail,table};if(typeof module!=='undefined')module.exports=api;else global.GooRecordPresentation=api;
 })(typeof window==='undefined'?globalThis:window);

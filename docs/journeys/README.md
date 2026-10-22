@@ -1,5 +1,10 @@
 # User journeys and storyboards
 
+Journey 46 also opens the existing held service span page, inspects shared UTC/fields
+and reported context, closes back to its opener, and verifies no local source reads.
+Frames: [held service spans](screenshots/46g-held-service-spans.png) and
+[mobile inspection](screenshots/46h-mobile-service-spans.png).
+
 [Journey 106](../../journeys/record-presentation.spec.js): inspect a real log in
 Live → stage/run a fixed query → compare the same presentation and local detail →
 return → repeat for a span with a held parent and an unrelated same-ID span →

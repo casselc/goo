@@ -430,3 +430,9 @@ reuses the typed attribute viewer with an optional `renderField` callback; the
 record adapter formats only its normalized timestamp field, leaving raw Copy and
 qualified resource/attribute values intact. [Contract, SSR/SPA examples, limits and
 adoption gates](RECORD_PRESENTATION.md).
+
+`GooRecordPresentation.table` composes a native table inside `goo-table`, with
+standard time/service/summary cells and optional owner context cells. It returns
+detached row/cell handles; insertion, stable row identity, selection, actions and
+source lifecycle remain application-owned. Live, fixed/frozen pages and held
+service observations adopt it. Aggregate/native tables retain their own schemas.

@@ -772,3 +772,11 @@ updates, reconnect, text safety and mobile display in the standalone reference.
 `TestHegelRecordPresentationProperties` generates supplied parent graphs for order/
 cross-trace invariance, explicit-edge validity, bounded unique paths, non-mutation
 and exact time/individual-duration display. [Contract](../docs/RECORD_PRESENTATION.md).
+
+Journey 46 additionally validates the existing supporting service span page as a
+source-free local inspection surface: shared table cells/detail/UTC/context, exact
+question-link staging, retained selection on return, keyboard close focus and
+readable mobile row/time geometry. Its Bombadil actor inspects that page before
+following a convention suggestion and checks the shared inspector body. Dashboard
+planning and entry/filter/parent properties retain their existing Hegel campaigns;
+service/dashboard/entry ledgers retain their existing Quint rejection controls.

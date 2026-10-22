@@ -1,5 +1,54 @@
 # Validation record
 
+## Held service observations and shared record table (2026-10-22 UTC)
+
+Query/packages image:
+`sha256:60aa125903d7f5779e752545a145e22bfa2727a9dfcc27bf167cab7cc3c5c093`.
+
+Live, fixed/frozen records and held service observations now share the passive
+native-table/row builder. Owners retain stable keys, insertion, selection, actions,
+viewports and all source lifecycle. Services lazily exposes the bounded span page
+already read for field discovery, only after returned-question validation. Its
+scope/basis stays separate from independently reread overview widgets. Opening,
+inspecting and staging the exact fixed question do not read telemetry.
+[Contract/diagram](docs/RECORD_PRESENTATION.md#held-service-observations) and
+[actual storyboards](docs/journeys/README.md).
+
+Actual checks:
+
+- Frontend suite: 33 test files pass.
+- Hegel: supplied-parent properties (200 cases), entry/filter state/swarm
+  campaigns (80 × 24 steps each), and dashboard scope planning (100 cases) pass.
+  The first invocation used a read-only default cache and failed to initialize
+  libhegel; rerunning with the existing writable session cache passes.
+- Initial real-source journeys 106 and 46 pass, including the updated service
+  Bombadil actor and existing Quint/quint-go ledgers. Screenshot review then caught
+  unreadably narrow mobile cells despite the overflow check passing. The final
+  candidate uses the existing responsive record-row layout and a bounded Services
+  viewport; journey 46 now also asserts mobile row, timestamp and caption heights.
+- Ten real-source compatibility journeys pass together (8.1m): 85, 86, 100,
+  105, 106, 46, 59, 60, 102 and 103. Service, dashboard, entry and live-retention
+  Bombadil campaigns pass; existing Quint/quint-go trace replay and rejecting
+  controls pass. This run used image `ad964ca493bc…`; the final image differs only
+  by a Services-scoped mobile caption CSS rule and its added geometry assertion.
+- Final-image journey 46 passes again (1.1m), including the updated Bombadil
+  actor, exact-link staging without a read, retained selection on return, close
+  focus, and mobile row/time/caption geometry. Final desktop/mobile frames are
+  regenerated and visually reviewed.
+- Served asset/server/binary hashes match source. All 13 services run after
+  traffic restoration; pre-existing pending queue IDs, exact retained manifests,
+  native history and pinned review citations survive. Cgroup OOM kills remain zero.
+  No native-store restart was performed; prior restart evidence is carried forward.
+- JavaScript syntax, changed Markdown local links and whitespace checks pass.
+
+Other Services aggregate/native table schemas, inline attribute compatibility
+consumers and full saved-editor removal remain separate work. No new source/API,
+subscription, full-trace inference or exact tail-retention capability is added.
+
+Evidence: `artifacts/service-records-unit.log`, `service-records-hegel.log`,
+`service-records-focused.log`, `service-records-release.log`,
+`service-records-final-focused.log` and `service-records-health.json`.
+
 ## Shared Live/fixed record presentation (2026-10-22 UTC)
 
 Query/packages image:
