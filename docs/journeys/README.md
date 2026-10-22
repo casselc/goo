@@ -1577,3 +1577,11 @@ qualified field handoff and preserves the fixed draft across navigation.
 [Mobile qualified filter chips](screenshots/113a-qualified-empty-presence-filters.png).
 Journey 104 continues to exercise real ingested OTel data, source-free staged
 selectors, fixed authoring and paused return with its Quint/Bombadil campaigns.
+
+
+Journey [60](../../journeys/service-namespaces.spec.js) now covers six namespace
+populations using real OTel spans and gauges, including literal `missing` and
+`present empty` namespaces alongside missing-key and empty-string states. It
+checks distinct catalog labels, scoped native values, record question links and
+declared operation bindings, plus the existing observed Quint/rejecting controls
+and expanded Bombadil label invariant. [Namespace catalog](screenshots/60a-namespace-service-identities.png).

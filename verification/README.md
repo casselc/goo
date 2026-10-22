@@ -874,3 +874,14 @@ empty-default identities. Journey 113 checks source-free fixed/package authoring
 and mobile chips. Journey 104 retains its real OTel source, paused return and
 observed Quint trace with rejecting controls; its actor checks the qualified live
 selector text across staging and return. No request-owner protocol changed.
+
+
+The B2 namespace continuation adds `service-namespaces.json` Go/JS fixtures for
+eight selector representations and six observed resource maps. Go membership and
+record predicates agree; JS selection keys/canonical aliases remain stable and
+shared labels distinguish literal sentinel names from missing/empty modes.
+Journey 60 adds ordinary OTel span/gauge populations for literal `missing` and
+`present empty`, retaining the real Quint namespace trace with four rejecting
+controls; its actor checks distinct labels when the service-list table is present.
+Existing Hegel namespace isolation and entry/live-filter state/swarm campaigns
+protect unchanged logical selector and ownership semantics.

@@ -61,3 +61,39 @@ rejects stale completions without sharing the source execution lifecycle. Their
 begin/invalidate/current/dispose contracts do not establish an interchangeable
 owner. A later helper requires two genuinely matching adapters and their lifetime
 checks; there is no new global mutable store.
+
+## Service namespace identity — B2 continuation
+
+`testdata/protocol/service-namespaces.json` adds eight Go/JS wire fixtures for
+wildcard, missing, omitted/explicit empty and literal named namespace selectors.
+Six observed resource maps check each selector's membership, including literal
+`missing`, `present empty` and Unicode values. Root Go checks logical identity
+matching, the derived record predicate and canonical omitted-default JSON.
+JavaScript checks existing browser selection keys, canonical aliases and equivalent
+record predicates through the existing question-identity rules. Browser selection
+keys remain tab-local tuple keys; they are not server artifact digests.
+
+`GooServiceIdentity.label` now serves both existing catalog/dashboard selectors and
+annotation target summaries. Named values are quoted, so `Namespace "missing"`
+differs from `Namespace missing`, and `Namespace "present empty"` differs from
+`Namespace present empty`. The optional lowercase form is used within annotation
+sentences; literal namespace case is preserved. Wildcard descriptions say “all
+namespaces”; wildcard service annotation targets remain disallowed by their existing
+server validation. Qualified service names, query selectors, keys, native bindings,
+links and stored revision digests are unchanged.
+
+```mermaid
+flowchart LR
+  Wire[Shared namespace wire / resource fixtures] --> Logical[Go logical selector membership]
+  Logical --> Predicate[Go record namespace predicate]
+  Wire --> Browser[Browser key / predicate / canonical-alias checks]
+  Label[Shared passive namespace label] --> Catalog[Service catalog / dashboard]
+  Label --> Meaning[Annotation target summary]
+```
+
+Journey 60 now ingests ordinary OTel spans and gauge streams for six namespaces,
+including both literal sentinel names. It checks scoped native/record isolation,
+separate visible labels, existing declared operation bindings, real observed Quint
+traces and an expanded Bombadil label invariant. Journey 98 retains exact service
+annotation and saved revision behavior. Broader native/envelope protocol fixtures
+remain B2 work; this slice does not create a generic request owner.

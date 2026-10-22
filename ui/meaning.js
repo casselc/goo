@@ -2,7 +2,7 @@
 (function(global){
  const node=(tag,text,cls)=>{const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(cls)el.className=cls;return el};
  function tags(value){if(!Array.isArray(value)||value.length>16||new Set(value).size!==value.length||value.some(t=>typeof t!=='string'||!/^[a-z0-9][a-z0-9._:/-]{0,63}$/.test(t)))throw Error('Invalid tags');return [...value]}
- function describe(t){return t.kind==='service'?t.environment+' · '+(t.service||'(empty service)')+' · '+(t.namespace?.mode==='missing'?'namespace missing':t.namespace?.value?'namespace '+t.namespace.value:'namespace present empty'):(t.kind==='evidence'?'retained evidence':t.kind)+' revision '+t.id.slice(0,12)}
+ function describe(t){return t.kind==='service'?t.environment+' · '+(t.service||'(empty service)')+' · '+(typeof module!=='undefined'?require('./service-identity'):global.GooServiceIdentity).label(t.namespace,{lowercase:true}):(t.kind==='evidence'?'retained evidence':t.kind)+' revision '+t.id.slice(0,12)}
  if(global.customElements&&global.HTMLElement){class GooTagList extends global.HTMLElement{
   static get observedAttributes(){return ['tags','interactive']}
   set tags(value){try{this._tags=tags(value);this._invalid=false}catch{this._tags=[];this._invalid=true}if(this.isConnected)this.render()}

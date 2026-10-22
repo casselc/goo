@@ -1,0 +1,234 @@
+{
+  "version": 1,
+  "resources": [
+    {},
+    {
+      "service.namespace": ""
+    },
+    {
+      "service.namespace": "payments"
+    },
+    {
+      "service.namespace": "missing"
+    },
+    {
+      "service.namespace": "地域"
+    },
+    {
+      "service.namespace": "present empty"
+    }
+  ],
+  "cases": [
+    {
+      "name": "all",
+      "namespace": null,
+      "canonical": null,
+      "key": "[\"api\",\"any\",\"\"]",
+      "predicate": null,
+      "label": "All namespaces",
+      "matches": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "name": "missing",
+      "namespace": {
+        "mode": "missing"
+      },
+      "canonical": {
+        "mode": "missing"
+      },
+      "key": "[\"api\",\"missing\",\"\"]",
+      "predicate": {
+        "field": {
+          "kind": "resource",
+          "key": "service.namespace"
+        },
+        "op": "missing"
+      },
+      "label": "Namespace missing",
+      "matches": [
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "name": "empty omitted",
+      "namespace": {
+        "mode": "value"
+      },
+      "canonical": {
+        "mode": "value"
+      },
+      "key": "[\"api\",\"value\",\"\"]",
+      "predicate": {
+        "field": {
+          "kind": "resource",
+          "key": "service.namespace"
+        },
+        "op": "eq"
+      },
+      "label": "Namespace present empty",
+      "matches": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "name": "empty explicit",
+      "namespace": {
+        "mode": "value",
+        "value": ""
+      },
+      "canonical": {
+        "mode": "value"
+      },
+      "key": "[\"api\",\"value\",\"\"]",
+      "predicate": {
+        "field": {
+          "kind": "resource",
+          "key": "service.namespace"
+        },
+        "op": "eq"
+      },
+      "label": "Namespace present empty",
+      "matches": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "name": "named",
+      "namespace": {
+        "mode": "value",
+        "value": "payments"
+      },
+      "canonical": {
+        "mode": "value",
+        "value": "payments"
+      },
+      "key": "[\"api\",\"value\",\"payments\"]",
+      "predicate": {
+        "field": {
+          "kind": "resource",
+          "key": "service.namespace"
+        },
+        "op": "eq",
+        "value": "payments"
+      },
+      "label": "Namespace \"payments\"",
+      "matches": [
+        false,
+        false,
+        true,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "name": "literal missing",
+      "namespace": {
+        "mode": "value",
+        "value": "missing"
+      },
+      "canonical": {
+        "mode": "value",
+        "value": "missing"
+      },
+      "key": "[\"api\",\"value\",\"missing\"]",
+      "predicate": {
+        "field": {
+          "kind": "resource",
+          "key": "service.namespace"
+        },
+        "op": "eq",
+        "value": "missing"
+      },
+      "label": "Namespace \"missing\"",
+      "matches": [
+        false,
+        false,
+        false,
+        true,
+        false,
+        false
+      ]
+    },
+    {
+      "name": "unicode",
+      "namespace": {
+        "mode": "value",
+        "value": "地域"
+      },
+      "canonical": {
+        "mode": "value",
+        "value": "地域"
+      },
+      "key": "[\"api\",\"value\",\"地域\"]",
+      "predicate": {
+        "field": {
+          "kind": "resource",
+          "key": "service.namespace"
+        },
+        "op": "eq",
+        "value": "地域"
+      },
+      "label": "Namespace \"地域\"",
+      "matches": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    {
+      "name": "literal empty label",
+      "namespace": {
+        "mode": "value",
+        "value": "present empty"
+      },
+      "canonical": {
+        "mode": "value",
+        "value": "present empty"
+      },
+      "key": "[\"api\",\"value\",\"present empty\"]",
+      "predicate": {
+        "field": {
+          "kind": "resource",
+          "key": "service.namespace"
+        },
+        "op": "eq",
+        "value": "present empty"
+      },
+      "label": "Namespace \"present empty\"",
+      "matches": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ]
+    }
+  ]
+}

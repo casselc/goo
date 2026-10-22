@@ -1,5 +1,61 @@
 # Validation record
 
+## Service namespace wire fixtures and shared labels — B2 continuation (2026-10-22 UTC)
+
+Final query/packages image:
+`sha256:95239d0d41286e357c9a2064505adf0db7b32923855ad52ebdd1af1c159fc95c`.
+Service catalogs/dashboard scopes and annotation target summaries now share the
+namespace label formatter. Named values are quoted, distinguishing a literal
+`missing` or `present empty` namespace from the corresponding presence state.
+The lowercase sentence option preserves literal value case; wildcard descriptions
+say “all namespaces”. Existing wildcard annotation rejection, qualified service
+names, selection keys, query selectors/native bindings and stored digests retain
+their existing contracts. [Namespace contract/diagram](docs/FIELD_PRESENTATION.md#service-namespace-identity--b2-continuation).
+
+Actual checks:
+
+- All 38 frontend test files pass. Eight shared Go/JS fixtures pin wildcard, missing,
+  omitted/explicit empty and named selectors against six resource maps. Go checks
+  logical matching, derived record predicates and canonical omitted-default JSON;
+  JS checks tab-local selection keys, canonical aliases, predicate equivalence and
+  common annotation/catalog labels without mutation. Root identity/exploration
+  fixture tests pass (0.005s/0.021s). JS syntax, whitespace and changed local
+  Markdown links pass.
+- Hegel namespace predicate isolation (100 cases) and existing entry/live-filter
+  state/swarm campaigns pass together (1.712s). No request-owner protocol changed.
+- Three browser journeys pass across serialized runs on the final image: 98 scoped
+  service/saved annotations, 113 source-free field/package staging and 60 namespace
+  isolation. Expanded journey 60 ingests ordinary OTel spans and gauges for six
+  namespace populations, including both literal sentinel names; it checks distinct
+  catalog labels, scoped native values, record links and declared bindings.
+  Its final complete run passes in 57s. Affected desktop/mobile screenshots were
+  regenerated; the catalog frame was inspected.
+- Final namespace Quint/quint-go observed ledger passes with four rejecting controls
+  (8.934s). Expanded Bombadil actor passes with 350 records, including 347 catalog
+  snapshots, with the distinct namespace label invariant valid throughout. Existing
+  scope coherence and overflow invariants remain. Annotation journey 98 retains
+  its actual observed trace/rejecting controls. No exhaustive label/UI model is claimed.
+- Post-wrapper health verifies 13 running services, restored traffic, all 14 original
+  pending IDs preserved (15 total), exact retained/live manifests, current reviews,
+  pinned citation/read bound, XTDB health, served source/server/binary hashes and
+  zero OOM kills. No XTDB restart experiment was performed.
+
+Environment evidence: disk pressure was resolved by removing only verified obsolete
+UI image references and ten explicitly selected, unshared task COPY-layer cache IDs.
+This recovered approximately 3 GB; no volumes or telemetry records were removed.
+The initial namespace run passed browser assertions/model validation but Bombadil
+failed creating its browser tab (`Target.createTarget` timeout). The unchanged
+integrated rerun passed, including the actor; no checks were weakened.
+
+Local evidence: `artifacts/service-protocol-unit.log`, `service-protocol-go.log`,
+`service-protocol-hegel.log`, `service-protocol-journeys.log` (98/113 pass and actor
+startup failure), `service-protocol-final.log`, `service-protocol-health.json`,
+and `artifacts/service-namespaces/1792693388017/`.
+
+B2 remains active for broader native/envelope protocol fixtures and qualified
+identity/presence adoption; no generic request owner was introduced.
+
+
 ## Record field presentation and Go/JS wire fixtures — first B2 slice (2026-10-22 UTC)
 
 Final query/packages image:

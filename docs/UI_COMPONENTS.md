@@ -493,3 +493,12 @@ because current-head tags can change while the manifest ID remains unchanged.
 and record package handoffs. Empty equality uses Go's omitted string default;
 literal non-empty values are quoted. It owns no DOM or execution state. See the
 [wire/display contract](FIELD_PRESENTATION.md).
+
+
+`GooServiceIdentity.label(namespace, {lowercase})` supplies namespace presence and
+literal labels to existing catalogs/dashboard scopes and annotation target
+summaries. It quotes named values and preserves literal case; the lowercase option
+changes only the sentence prefix. This is display-only: selection keys, predicates,
+native bindings and server artifact digests retain their existing owners. Shared
+[namespace fixtures](FIELD_PRESENTATION.md#service-namespace-identity--b2-continuation)
+protect wildcard/missing/present-empty and literal sentinel separation.

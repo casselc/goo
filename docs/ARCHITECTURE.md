@@ -341,3 +341,9 @@ fixtures pin omitted empty defaults, field-family separation and exact decimal
 strings; native binding semantics remain independent. See the [contract and flow](FIELD_PRESENTATION.md).
 The source exploration owner and retained metadata catalog have different abort,
 visit, snapshot and cursor lifetimes; this slice introduces no common request owner.
+
+
+The B2 service namespace continuation shares `GooServiceIdentity.label` with
+annotation summaries, preserving the existing selector/key/name owners. Shared
+Go/JS namespace wire fixtures pin wildcard, missing, empty and literal populations
+without changing native bindings or server digests. See the [namespace flow](FIELD_PRESENTATION.md#service-namespace-identity--b2-continuation).

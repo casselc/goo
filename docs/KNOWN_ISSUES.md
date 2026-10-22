@@ -485,3 +485,10 @@ B2's first [record field/display slice](FIELD_PRESENTATION.md) is delivered. Sha
 fixtures cover record predicates and omitted empty defaults; they do not yet cover
 every service/native/envelope protocol. Source owners retain their independent
 cancellation and snapshot rules; no generic request-owner abstraction was added.
+
+
+B2 now also shares service namespace label formatting between catalogs/dashboard
+scopes and annotation summaries. Named labels are quoted to distinguish literal
+sentinel text from missing/empty modes. Shared namespace fixtures cover logical
+membership and record predicates, not all native/envelope protocols or server
+artifact digests; those retain their existing contracts.

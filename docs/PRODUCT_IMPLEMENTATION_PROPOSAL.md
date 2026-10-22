@@ -16,7 +16,7 @@ comparison leads and explicit capabilities—through those same workflows.
 
 The [architecture](ARCHITECTURE_REFACTORING_REVIEW.md) and [design](DESIGN_REFACTORING_REVIEW.md) findings are incorporated in the single active queue below. Their original recommendation status is historical; they do not create parallel refactoring backlogs.
 
-Current acceptance reconciliation: [S2/A3 audit](S2_A3_ACCEPTANCE.md). Bounded S2/A3 is delivered, including explicit/lazy fixed authoring. Bounded [B1 library consolidation](DEFINITION_LIBRARY.md) is delivered across Definitions, fixed reusable questions, document revisions and retained catalog metadata, with retention owner separation. B2 is active with the first [record field/display and wire-fixture slice](FIELD_PRESENTATION.md); broader protocol/qualified identity work remains. Comparison presentation remains D1, rather than an ad hoc next step.
+Current acceptance reconciliation: [S2/A3 audit](S2_A3_ACCEPTANCE.md). Bounded S2/A3 is delivered, including explicit/lazy fixed authoring. Bounded [B1 library consolidation](DEFINITION_LIBRARY.md) is delivered across Definitions, fixed reusable questions, document revisions and retained catalog metadata, with retention owner separation. B2 is active with the [record field and service namespace display/wire-fixture slices](FIELD_PRESENTATION.md); broader native/envelope protocol work remains. Comparison presentation remains D1, rather than an ad hoc next step.
 
 ## Basis, authority and current boundary
 
