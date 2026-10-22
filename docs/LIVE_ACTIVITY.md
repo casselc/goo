@@ -6,6 +6,14 @@ The S1 entry composition uses the existing bounded log/span tail. A fresh `/` or
 scope; Logs/Spans selects one active signal. Missing scope asks for an environment.
 This does not discover or query every environment in a deployment.
 
+The normal entry has one compact scope/action bar: environment, signal and Pause.
+Apply appears only while editing scope; a draft shows the currently applied scope.
+Coverage state and local counts share a compact metadata row. Repeated scope pills,
+workspace/source banners and the visible table caption are removed from this mode
+(the caption remains available to assistive technology). Mobile navigation is
+collapsed behind an accessible Menu toggle; other product areas remain reachable.
+Opening or closing that menu performs no source read.
+
 Rows and local buffer counts appear before the advanced fixed-question workspace.
 UTC time is compact, with the full UTC timestamp and exact nanoseconds in the
 row tooltip. Logs show body/severity; spans show name/duration/reported status.

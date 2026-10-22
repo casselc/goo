@@ -1,5 +1,32 @@
 # Validation record
 
+## Compact live-entry controls (2026-10-22 UTC)
+
+Query/packages image:
+`sha256:30b45206ce589c262b5ea202a730d67c902c29db6152f14095de27e439fbb71f`.
+
+Environment, signal and Pause share one bar. Apply appears for scope drafts, which
+retain the previous applied scope. The normal mode removes repeated scope/source
+banners and explanatory headings; coverage/gap/error states remain visible. Mobile
+navigation is collapsed behind Menu. See [contract](docs/LIVE_ACTIVITY.md) and
+[updated frames](docs/journeys/README.md).
+
+The real mobile first-record coordinate is **220.5px**, compared with approximately
+750px in the previous frame. Journey 102 requires the desktop first row below
+300px and mobile below 340px, checks that Menu performs no read, and checks draft
+scope presentation. Journey 93 guards against the Menu leaking into fixed mode.
+
+Final Chromium journeys 66, 93, 102 and 103 pass together, including the bounded
+Bombadil actor and observed Quint/quint-go trace checks. Normal OTLP/source reads
+use the real lab; the background event and capacity failure in 103 are injected.
+Frontend tests: all 32 pass. JavaScript syntax and changed-document links pass.
+Final source/binary hashes match the running image; 13 services running, prior
+pending queue IDs and exact native review citations preserved, OOM kills zero.
+Evidence: `artifacts/compact-entry-unit.log`, `compact-entry-health.json`,
+`compact-entry-final-release.log` and observed entry ledgers. The initial candidate
+exposed a mobile fixed-query layout regression from Menu CSS specificity; corrected
+before the final release check. No native-store restart was performed this round.
+
 ## First Live Activity entry and whole-product consolidation plan (2026-10-22 UTC)
 
 Final query/packages image:

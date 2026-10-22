@@ -150,7 +150,7 @@ assigned to the existing cuts below; they are not a second backlog.
 The first S1 monitor is implemented and validated; see [Live Activity](LIVE_ACTIVITY.md)
 and [release evidence](../VALIDATION.md). The configured lab environment is explicit;
 remembered scope and deployment discovery are not implemented. S2/A3 remain planned.
-The compact wrapper is a migration adapter, not the final whole-product architecture.
+The compact wrapper is a migration adapter, not the final whole-product architecture. The entry now consolidates environment/signal/Pause in one bar, reveals Apply for drafts, and collapses mobile navigation; first-record viewport bounds are tested.
 
 | Existing cut | Whole-product migration and what it replaces | Deletion/parity gate |
 | --- | --- | --- |
