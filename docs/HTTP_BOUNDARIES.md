@@ -655,6 +655,50 @@ the default planning clock, whose implementation is unchanged. Publication remai
 an explicit effect; no source dependency or generic endpoint policy was added.
 Hegel shared-JSON byte/Unicode/integer properties pass. No UI/SSE/Quint protocol or
 running image changed; existing frames remain applicable. Final deployed-journey
-acceptance stays open. Next adopt native measurement/registry JSON behind its own
-wire contracts, preserving `one JSON object required`, custody/publication ordering
-and existing status policies; other route owners remain queued.
+acceptance stays open. Native measurement/registry adoption below is now delivered behind its own
+wire contracts. Fixed exploration JSON is next; other route owners remain queued.
+
+
+## Native measurement and registry JSON adoption
+
+`registerMeasurements` now uses `httpjson.Decode` with its existing 65,536-byte
+limit and `one JSON object required` trailing-input message, plus `httpjson.Write`
+for JSON/no-store responses. This covers native planning, YAML publication,
+metric discovery and measurement execution; registry/workflow GET responses share
+the writer. Validation, default planning time, file-only publication policy,
+15-second execution contexts, source errors, lifecycle custody and status mapping
+remain in the route/source owners. The catalog's file reader still uses `io.EOF`;
+it is separate from request decoding.
+
+```mermaid
+flowchart LR
+  Request[Native POST: 64 KiB] --> Decode[Shared strict typed JSON / one value]
+  Decode --> Validate[Existing native validation]
+  Validate --> Plan[Compile only: no source or files]
+  Validate --> Publish[Explicit YAML publication: file-only sync policy]
+  Validate --> Execute[Discovery or measurement: existing 15s context]
+  Execute --> Source[Configured native source]
+  Source --> Custody[Lifecycle custody only where required]
+  Plan --> Write[Shared JSON / no-store writer]
+  Publish --> Write
+  Execute --> Write
+```
+
+`testdata/http/native-json.json` pins 68 cases across the four POST routes before
+and after adoption. Exact statuses, body bytes and JSON/cache/mux headers cover
+valid admission, malformed/null/array/unknown/nested-invalid input, second values,
+malformed tails, exact/overflow bodies, whitespace, ignored content type, empty
+objects, numeric type refusal and method refusal. Tests assert zero source reads
+for planning/publication/rejection, one injected failing read for valid execution,
+and no files except successful explicit publication. Source errors remain 502;
+no partial healthy result or custody file is substituted. The source fixture uses
+a deterministic 503 response so frozen bytes do not depend on receipt clocks.
+Positive execution, real custody clock/identity, registry/duplicate/reopen and
+workflow behavior remain covered by existing affected suites, not by that fixture.
+
+Explicit-window plan fixtures preserve exact output bytes without changing the
+default planning clock. Hegel shared-JSON properties pass. No UI/SSE/Quint protocol
+or running image changed; screenshots remain applicable. Final deployed-journey
+acceptance remains open. Next freeze/adopt fixed exploration JSON (compare,
+inventory, discovery and Explore), preserving each body/time limit and effect
+ordering. Tail's separate SSE owner is a later cut; do not buffer its responses.

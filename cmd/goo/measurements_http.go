@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/internal/httpjson"
 	"github.com/casselc/goo/internal/immutablefile"
 	"github.com/casselc/goo/measurements"
 	"gopkg.in/yaml.v3"
@@ -18,22 +18,11 @@ import (
 func registerMeasurements(mux *http.ServeMux, source measurements.Source, dir string) {
 	packagesDir := filepath.Join(dir, "measurement-packages")
 	source.CustodyDir = filepath.Join(dir, "exploration", "custody")
-	send := func(w http.ResponseWriter, code int, v any) {
-		w.Header().Set("Content-Type", "application/json")
-		w.Header().Set("Cache-Control", "no-store")
-		w.WriteHeader(code)
-		json.NewEncoder(w).Encode(v)
-	}
+	send := httpjson.Write
 	fail := func(w http.ResponseWriter, e error) { send(w, 400, map[string]string{"error": e.Error()}) }
 	decode := func(w http.ResponseWriter, r *http.Request, v any) bool {
-		d := json.NewDecoder(http.MaxBytesReader(w, r.Body, 65536))
-		d.DisallowUnknownFields()
-		if e := d.Decode(v); e != nil {
+		if e := httpjson.Decode(w, r, v, 65536, "one JSON object required"); e != nil {
 			fail(w, e)
-			return false
-		}
-		if d.Decode(new(any)) != io.EOF {
-			fail(w, fmt.Errorf("one JSON object required"))
 			return false
 		}
 		return true

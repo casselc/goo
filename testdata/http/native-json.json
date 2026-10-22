@@ -1,0 +1,977 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "/measurement-packages/plan/valid",
+      "method": "POST",
+      "path": "/measurement-packages/plan",
+      "body": "{\"fromMs\":100000,\"toMs\":220000,\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"plan\":{\"sql\":\"SELECT mapUpdate(ResourceAttributes,map('service.name',toString(ServiceName))) AS resource, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schema_url, ResourceSchemaUrl AS resource_schema_url, MetricName AS name, MetricUnit AS unit, Attributes AS attributes, toString(toUnixTimestamp64Nano(StartTimeUnix)) AS start_ns, toString(toUnixTimestamp64Nano(TimeUnix)) AS end_ns, Flags AS flags, toString(Value) AS value FROM otel_metrics_gauge WHERE TimeUnix\\u003e=fromUnixTimestamp64Milli({p0:Int64}) AND TimeUnix\\u003cfromUnixTimestamp64Milli({p1:Int64}) AND ResourceAttributes['deployment.environment.name']={p2:String} AND ServiceName IN ({p3:String}) AND ScopeName={p4:String} AND ScopeVersion={p5:String} AND ScopeSchemaUrl={p6:String} AND MetricName={p7:String} AND MetricUnit={p8:String} ORDER BY TimeUnix LIMIT 10001 FORMAT JSONEachRow\",\"parameters\":{\"p0\":\"100000\",\"p1\":\"220000\",\"p2\":\"prod\",\"p3\":\"api\",\"p4\":\"ordinary.runtime\",\"p5\":\"\",\"p6\":\"\",\"p7\":\"process.cpu.utilization\",\"p8\":\"1\"},\"revision\":\"71739b47fde74d4c2870a8639c07058c767c08ab0b6fb0857f8b1083e683067f\"},\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"fromMs\":100000,\"toMs\":220000},\"revision\":\"71739b47fde74d4c2870a8639c07058c767c08ab0b6fb0857f8b1083e683067f\",\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"}\n"
+    },
+    {
+      "name": "/measurement-packages/plan/empty",
+      "method": "POST",
+      "path": "/measurement-packages/plan",
+      "body": "",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "/measurement-packages/plan/null",
+      "method": "POST",
+      "path": "/measurement-packages/plan",
+      "body": "null",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "/measurement-packages/plan/array",
+      "method": "POST",
+      "path": "/measurement-packages/plan",
+      "body": "[]",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type struct { YAML string \\\"json:\\\\\\\"yaml\\\\\\\"\\\"; FromMS int64 \\\"json:\\\\\\\"fromMs\\\\\\\"\\\"; ToMS int64 \\\"json:\\\\\\\"toMs\\\\\\\"\\\"; FromNS string \\\"json:\\\\\\\"fromNS\\\\\\\"\\\"; ToNS string \\\"json:\\\\\\\"toNS\\\\\\\"\\\" }\"}\n"
+    },
+    {
+      "name": "/measurement-packages/plan/truncated",
+      "method": "POST",
+      "path": "/measurement-packages/plan",
+      "body": "{",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"unexpected EOF\"}\n"
+    },
+    {
+      "name": "/measurement-packages/plan/unknown",
+      "method": "POST",
+      "path": "/measurement-packages/plan",
+      "body": "{\"sql\":\"SELECT 1\"}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"sql\\\"\"}\n"
+    },
+    {
+      "name": "/measurement-packages/plan/nested-invalid",
+      "method": "POST",
+      "path": "/measurement-packages/plan",
+      "body": "{\"yaml\":7}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal number into Go struct field .yaml of type string\"}\n"
+    },
+    {
+      "name": "/measurement-packages/plan/second-value",
+      "method": "POST",
+      "path": "/measurement-packages/plan",
+      "body": "{\"fromMs\":100000,\"toMs\":220000,\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"} {}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"one JSON object required\"}\n"
+    },
+    {
+      "name": "/measurement-packages/plan/malformed-tail",
+      "method": "POST",
+      "path": "/measurement-packages/plan",
+      "body": "{\"fromMs\":100000,\"toMs\":220000,\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"} x",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"one JSON object required\"}\n"
+    },
+    {
+      "name": "/measurement-packages/plan/whitespace",
+      "method": "POST",
+      "path": "/measurement-packages/plan",
+      "body": "{\"fromMs\":100000,\"toMs\":220000,\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"} \n\t",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"plan\":{\"sql\":\"SELECT mapUpdate(ResourceAttributes,map('service.name',toString(ServiceName))) AS resource, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schema_url, ResourceSchemaUrl AS resource_schema_url, MetricName AS name, MetricUnit AS unit, Attributes AS attributes, toString(toUnixTimestamp64Nano(StartTimeUnix)) AS start_ns, toString(toUnixTimestamp64Nano(TimeUnix)) AS end_ns, Flags AS flags, toString(Value) AS value FROM otel_metrics_gauge WHERE TimeUnix\\u003e=fromUnixTimestamp64Milli({p0:Int64}) AND TimeUnix\\u003cfromUnixTimestamp64Milli({p1:Int64}) AND ResourceAttributes['deployment.environment.name']={p2:String} AND ServiceName IN ({p3:String}) AND ScopeName={p4:String} AND ScopeVersion={p5:String} AND ScopeSchemaUrl={p6:String} AND MetricName={p7:String} AND MetricUnit={p8:String} ORDER BY TimeUnix LIMIT 10001 FORMAT JSONEachRow\",\"parameters\":{\"p0\":\"100000\",\"p1\":\"220000\",\"p2\":\"prod\",\"p3\":\"api\",\"p4\":\"ordinary.runtime\",\"p5\":\"\",\"p6\":\"\",\"p7\":\"process.cpu.utilization\",\"p8\":\"1\"},\"revision\":\"71739b47fde74d4c2870a8639c07058c767c08ab0b6fb0857f8b1083e683067f\"},\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"fromMs\":100000,\"toMs\":220000},\"revision\":\"71739b47fde74d4c2870a8639c07058c767c08ab0b6fb0857f8b1083e683067f\",\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"}\n"
+    },
+    {
+      "name": "/measurement-packages/plan/exact-limit",
+      "method": "POST",
+      "path": "/measurement-packages/plan",
+      "body": "{\"fromMs\":100000,\"toMs\":220000,\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"}",
+      "padTo": 65536,
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"plan\":{\"sql\":\"SELECT mapUpdate(ResourceAttributes,map('service.name',toString(ServiceName))) AS resource, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schema_url, ResourceSchemaUrl AS resource_schema_url, MetricName AS name, MetricUnit AS unit, Attributes AS attributes, toString(toUnixTimestamp64Nano(StartTimeUnix)) AS start_ns, toString(toUnixTimestamp64Nano(TimeUnix)) AS end_ns, Flags AS flags, toString(Value) AS value FROM otel_metrics_gauge WHERE TimeUnix\\u003e=fromUnixTimestamp64Milli({p0:Int64}) AND TimeUnix\\u003cfromUnixTimestamp64Milli({p1:Int64}) AND ResourceAttributes['deployment.environment.name']={p2:String} AND ServiceName IN ({p3:String}) AND ScopeName={p4:String} AND ScopeVersion={p5:String} AND ScopeSchemaUrl={p6:String} AND MetricName={p7:String} AND MetricUnit={p8:String} ORDER BY TimeUnix LIMIT 10001 FORMAT JSONEachRow\",\"parameters\":{\"p0\":\"100000\",\"p1\":\"220000\",\"p2\":\"prod\",\"p3\":\"api\",\"p4\":\"ordinary.runtime\",\"p5\":\"\",\"p6\":\"\",\"p7\":\"process.cpu.utilization\",\"p8\":\"1\"},\"revision\":\"71739b47fde74d4c2870a8639c07058c767c08ab0b6fb0857f8b1083e683067f\"},\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"fromMs\":100000,\"toMs\":220000},\"revision\":\"71739b47fde74d4c2870a8639c07058c767c08ab0b6fb0857f8b1083e683067f\",\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"}\n"
+    },
+    {
+      "name": "/measurement-packages/plan/over-limit-trailing",
+      "method": "POST",
+      "path": "/measurement-packages/plan",
+      "body": "{\"fromMs\":100000,\"toMs\":220000,\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"}",
+      "padTo": 65537,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"one JSON object required\"}\n"
+    },
+    {
+      "fillBytes": 65536,
+      "suffix": "\"}",
+      "name": "/measurement-packages/plan/over-limit-value",
+      "method": "POST",
+      "path": "/measurement-packages/plan",
+      "body": "{\"yaml\":\"",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"http: request body too large\"}\n"
+    },
+    {
+      "name": "/measurement-packages/plan/ignored-content-type",
+      "method": "POST",
+      "path": "/measurement-packages/plan",
+      "body": "{\"fromMs\":100000,\"toMs\":220000,\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"}",
+      "contentType": "text/plain",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"plan\":{\"sql\":\"SELECT mapUpdate(ResourceAttributes,map('service.name',toString(ServiceName))) AS resource, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schema_url, ResourceSchemaUrl AS resource_schema_url, MetricName AS name, MetricUnit AS unit, Attributes AS attributes, toString(toUnixTimestamp64Nano(StartTimeUnix)) AS start_ns, toString(toUnixTimestamp64Nano(TimeUnix)) AS end_ns, Flags AS flags, toString(Value) AS value FROM otel_metrics_gauge WHERE TimeUnix\\u003e=fromUnixTimestamp64Milli({p0:Int64}) AND TimeUnix\\u003cfromUnixTimestamp64Milli({p1:Int64}) AND ResourceAttributes['deployment.environment.name']={p2:String} AND ServiceName IN ({p3:String}) AND ScopeName={p4:String} AND ScopeVersion={p5:String} AND ScopeSchemaUrl={p6:String} AND MetricName={p7:String} AND MetricUnit={p8:String} ORDER BY TimeUnix LIMIT 10001 FORMAT JSONEachRow\",\"parameters\":{\"p0\":\"100000\",\"p1\":\"220000\",\"p2\":\"prod\",\"p3\":\"api\",\"p4\":\"ordinary.runtime\",\"p5\":\"\",\"p6\":\"\",\"p7\":\"process.cpu.utilization\",\"p8\":\"1\"},\"revision\":\"71739b47fde74d4c2870a8639c07058c767c08ab0b6fb0857f8b1083e683067f\"},\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"fromMs\":100000,\"toMs\":220000},\"revision\":\"71739b47fde74d4c2870a8639c07058c767c08ab0b6fb0857f8b1083e683067f\",\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"}\n"
+    },
+    {
+      "name": "/measurement-packages/plan/empty-object",
+      "method": "POST",
+      "path": "/measurement-packages/plan",
+      "body": "{}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "/measurement-packages/plan/method-refusal",
+      "method": "PUT",
+      "path": "/measurement-packages/plan",
+      "body": "{\"fromMs\":100000,\"toMs\":220000,\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"}",
+      "status": 405,
+      "headers": {
+        "Allow": "POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    },
+    {
+      "name": "/measurement-packages/plan/wrong-number-type",
+      "method": "POST",
+      "path": "/measurement-packages/plan",
+      "body": "{\"fromMs\":9007199254740993.5}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal number 9007199254740993.5 into Go struct field .fromMs of type int64\"}\n"
+    },
+    {
+      "name": "/measurement-packages/valid",
+      "method": "POST",
+      "path": "/measurement-packages",
+      "body": "{\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"}",
+      "status": 201,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"revision\":\"71739b47fde74d4c2870a8639c07058c767c08ab0b6fb0857f8b1083e683067f\",\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"}\n"
+    },
+    {
+      "name": "/measurement-packages/empty",
+      "method": "POST",
+      "path": "/measurement-packages",
+      "body": "",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "/measurement-packages/null",
+      "method": "POST",
+      "path": "/measurement-packages",
+      "body": "null",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "/measurement-packages/array",
+      "method": "POST",
+      "path": "/measurement-packages",
+      "body": "[]",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type struct { YAML string \\\"json:\\\\\\\"yaml\\\\\\\"\\\" }\"}\n"
+    },
+    {
+      "name": "/measurement-packages/truncated",
+      "method": "POST",
+      "path": "/measurement-packages",
+      "body": "{",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"unexpected EOF\"}\n"
+    },
+    {
+      "name": "/measurement-packages/unknown",
+      "method": "POST",
+      "path": "/measurement-packages",
+      "body": "{\"sql\":\"SELECT 1\"}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"sql\\\"\"}\n"
+    },
+    {
+      "name": "/measurement-packages/nested-invalid",
+      "method": "POST",
+      "path": "/measurement-packages",
+      "body": "{\"yaml\":7}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal number into Go struct field .yaml of type string\"}\n"
+    },
+    {
+      "name": "/measurement-packages/second-value",
+      "method": "POST",
+      "path": "/measurement-packages",
+      "body": "{\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"} {}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"one JSON object required\"}\n"
+    },
+    {
+      "name": "/measurement-packages/malformed-tail",
+      "method": "POST",
+      "path": "/measurement-packages",
+      "body": "{\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"} x",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"one JSON object required\"}\n"
+    },
+    {
+      "name": "/measurement-packages/whitespace",
+      "method": "POST",
+      "path": "/measurement-packages",
+      "body": "{\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"} \n\t",
+      "status": 201,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"revision\":\"71739b47fde74d4c2870a8639c07058c767c08ab0b6fb0857f8b1083e683067f\",\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"}\n"
+    },
+    {
+      "name": "/measurement-packages/exact-limit",
+      "method": "POST",
+      "path": "/measurement-packages",
+      "body": "{\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"}",
+      "padTo": 65536,
+      "status": 201,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"revision\":\"71739b47fde74d4c2870a8639c07058c767c08ab0b6fb0857f8b1083e683067f\",\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"}\n"
+    },
+    {
+      "name": "/measurement-packages/over-limit-trailing",
+      "method": "POST",
+      "path": "/measurement-packages",
+      "body": "{\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"}",
+      "padTo": 65537,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"one JSON object required\"}\n"
+    },
+    {
+      "fillBytes": 65536,
+      "suffix": "\"}",
+      "name": "/measurement-packages/over-limit-value",
+      "method": "POST",
+      "path": "/measurement-packages",
+      "body": "{\"yaml\":\"",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"http: request body too large\"}\n"
+    },
+    {
+      "name": "/measurement-packages/ignored-content-type",
+      "method": "POST",
+      "path": "/measurement-packages",
+      "body": "{\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"}",
+      "contentType": "text/plain",
+      "status": 201,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"revision\":\"71739b47fde74d4c2870a8639c07058c767c08ab0b6fb0857f8b1083e683067f\",\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"}\n"
+    },
+    {
+      "name": "/measurement-packages/empty-object",
+      "method": "POST",
+      "path": "/measurement-packages",
+      "body": "{}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "/measurement-packages/method-refusal",
+      "method": "PUT",
+      "path": "/measurement-packages",
+      "body": "{\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: api-utilization-fixture\\ntitle: API utilization\\nkind: gauge\\nenvironment: prod\\nlookbackMinutes: 2\\nmaxGapMs: 30000\\ngrain: per-stream\\nsource:\\n    services:\\n        - api\\n    scope: ordinary.runtime\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: process.cpu.utilization\\n    unit: \\\"1\\\"\\n\"}",
+      "status": 405,
+      "headers": {
+        "Allow": "GET, HEAD, POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    },
+    {
+      "name": "/measurement-packages/wrong-number-type",
+      "method": "POST",
+      "path": "/measurement-packages",
+      "body": "{\"fromMs\":9007199254740993.5}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"fromMs\\\"\"}\n"
+    },
+    {
+      "name": "/metric-discovery/valid",
+      "method": "POST",
+      "path": "/metric-discovery",
+      "body": "{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":100000,\"toMs\":220000}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"bounded measurement source HTTP 503 / payload limit\"}\n"
+    },
+    {
+      "name": "/metric-discovery/empty",
+      "method": "POST",
+      "path": "/metric-discovery",
+      "body": "",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "/metric-discovery/null",
+      "method": "POST",
+      "path": "/metric-discovery",
+      "body": "null",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require versioned named package, explicit environment, 1..120 minute lookback and 1..600000 ms gap/freshness\"}\n"
+    },
+    {
+      "name": "/metric-discovery/array",
+      "method": "POST",
+      "path": "/metric-discovery",
+      "body": "[]",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type measurements.DiscoveryQuestion\"}\n"
+    },
+    {
+      "name": "/metric-discovery/truncated",
+      "method": "POST",
+      "path": "/metric-discovery",
+      "body": "{",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"unexpected EOF\"}\n"
+    },
+    {
+      "name": "/metric-discovery/unknown",
+      "method": "POST",
+      "path": "/metric-discovery",
+      "body": "{\"sql\":\"SELECT 1\"}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"sql\\\"\"}\n"
+    },
+    {
+      "name": "/metric-discovery/nested-invalid",
+      "method": "POST",
+      "path": "/metric-discovery",
+      "body": "{\"namespace\":{\"unknown\":true}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"unknown\\\"\"}\n"
+    },
+    {
+      "name": "/metric-discovery/second-value",
+      "method": "POST",
+      "path": "/metric-discovery",
+      "body": "{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":100000,\"toMs\":220000} {}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"one JSON object required\"}\n"
+    },
+    {
+      "name": "/metric-discovery/malformed-tail",
+      "method": "POST",
+      "path": "/metric-discovery",
+      "body": "{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":100000,\"toMs\":220000} x",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"one JSON object required\"}\n"
+    },
+    {
+      "name": "/metric-discovery/whitespace",
+      "method": "POST",
+      "path": "/metric-discovery",
+      "body": "{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":100000,\"toMs\":220000} \n\t",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"bounded measurement source HTTP 503 / payload limit\"}\n"
+    },
+    {
+      "name": "/metric-discovery/exact-limit",
+      "method": "POST",
+      "path": "/metric-discovery",
+      "body": "{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":100000,\"toMs\":220000}",
+      "padTo": 65536,
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"bounded measurement source HTTP 503 / payload limit\"}\n"
+    },
+    {
+      "name": "/metric-discovery/over-limit-trailing",
+      "method": "POST",
+      "path": "/metric-discovery",
+      "body": "{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":100000,\"toMs\":220000}",
+      "padTo": 65537,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"one JSON object required\"}\n"
+    },
+    {
+      "fillBytes": 65536,
+      "suffix": "\"}",
+      "name": "/metric-discovery/over-limit-value",
+      "method": "POST",
+      "path": "/metric-discovery",
+      "body": "{\"yaml\":\"",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"http: request body too large\"}\n"
+    },
+    {
+      "name": "/metric-discovery/ignored-content-type",
+      "method": "POST",
+      "path": "/metric-discovery",
+      "body": "{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":100000,\"toMs\":220000}",
+      "contentType": "text/plain",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"bounded measurement source HTTP 503 / payload limit\"}\n"
+    },
+    {
+      "name": "/metric-discovery/empty-object",
+      "method": "POST",
+      "path": "/metric-discovery",
+      "body": "{}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require versioned named package, explicit environment, 1..120 minute lookback and 1..600000 ms gap/freshness\"}\n"
+    },
+    {
+      "name": "/metric-discovery/method-refusal",
+      "method": "PUT",
+      "path": "/metric-discovery",
+      "body": "{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":100000,\"toMs\":220000}",
+      "status": 405,
+      "headers": {
+        "Allow": "POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    },
+    {
+      "name": "/metric-discovery/wrong-number-type",
+      "method": "POST",
+      "path": "/metric-discovery",
+      "body": "{\"fromMs\":9007199254740993.5}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal number 9007199254740993.5 into Go struct field DiscoveryQuestion.fromMs of type int64\"}\n"
+    },
+    {
+      "name": "/measurements/valid",
+      "method": "POST",
+      "path": "/measurements",
+      "body": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"fromMs\":100000,\"toMs\":220000}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"bounded measurement source HTTP 503 / payload limit\"}\n"
+    },
+    {
+      "name": "/measurements/empty",
+      "method": "POST",
+      "path": "/measurements",
+      "body": "",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "/measurements/null",
+      "method": "POST",
+      "path": "/measurements",
+      "body": "null",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require versioned named package, explicit environment, 1..120 minute lookback and 1..600000 ms gap/freshness\"}\n"
+    },
+    {
+      "name": "/measurements/array",
+      "method": "POST",
+      "path": "/measurements",
+      "body": "[]",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type measurements.Question\"}\n"
+    },
+    {
+      "name": "/measurements/truncated",
+      "method": "POST",
+      "path": "/measurements",
+      "body": "{",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"unexpected EOF\"}\n"
+    },
+    {
+      "name": "/measurements/unknown",
+      "method": "POST",
+      "path": "/measurements",
+      "body": "{\"sql\":\"SELECT 1\"}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"sql\\\"\"}\n"
+    },
+    {
+      "name": "/measurements/nested-invalid",
+      "method": "POST",
+      "path": "/measurements",
+      "body": "{\"definition\":{\"unknown\":true}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"unknown\\\"\"}\n"
+    },
+    {
+      "name": "/measurements/second-value",
+      "method": "POST",
+      "path": "/measurements",
+      "body": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"fromMs\":100000,\"toMs\":220000} {}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"one JSON object required\"}\n"
+    },
+    {
+      "name": "/measurements/malformed-tail",
+      "method": "POST",
+      "path": "/measurements",
+      "body": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"fromMs\":100000,\"toMs\":220000} x",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"one JSON object required\"}\n"
+    },
+    {
+      "name": "/measurements/whitespace",
+      "method": "POST",
+      "path": "/measurements",
+      "body": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"fromMs\":100000,\"toMs\":220000} \n\t",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"bounded measurement source HTTP 503 / payload limit\"}\n"
+    },
+    {
+      "name": "/measurements/exact-limit",
+      "method": "POST",
+      "path": "/measurements",
+      "body": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"fromMs\":100000,\"toMs\":220000}",
+      "padTo": 65536,
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"bounded measurement source HTTP 503 / payload limit\"}\n"
+    },
+    {
+      "name": "/measurements/over-limit-trailing",
+      "method": "POST",
+      "path": "/measurements",
+      "body": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"fromMs\":100000,\"toMs\":220000}",
+      "padTo": 65537,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"one JSON object required\"}\n"
+    },
+    {
+      "fillBytes": 65536,
+      "suffix": "\"}",
+      "name": "/measurements/over-limit-value",
+      "method": "POST",
+      "path": "/measurements",
+      "body": "{\"yaml\":\"",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"http: request body too large\"}\n"
+    },
+    {
+      "name": "/measurements/ignored-content-type",
+      "method": "POST",
+      "path": "/measurements",
+      "body": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"fromMs\":100000,\"toMs\":220000}",
+      "contentType": "text/plain",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"bounded measurement source HTTP 503 / payload limit\"}\n"
+    },
+    {
+      "name": "/measurements/empty-object",
+      "method": "POST",
+      "path": "/measurements",
+      "body": "{}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require versioned named package, explicit environment, 1..120 minute lookback and 1..600000 ms gap/freshness\"}\n"
+    },
+    {
+      "name": "/measurements/method-refusal",
+      "method": "PUT",
+      "path": "/measurements",
+      "body": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"api-utilization-fixture\",\"title\":\"API utilization\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":30000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"api\"],\"scope\":\"ordinary.runtime\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"process.cpu.utilization\",\"unit\":\"1\"}},\"fromMs\":100000,\"toMs\":220000}",
+      "status": 405,
+      "headers": {
+        "Allow": "POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    },
+    {
+      "name": "/measurements/wrong-number-type",
+      "method": "POST",
+      "path": "/measurements",
+      "body": "{\"fromMs\":9007199254740993.5}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal number 9007199254740993.5 into Go struct field Question.fromMs of type int64\"}\n"
+    }
+  ]
+}

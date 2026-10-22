@@ -1,5 +1,35 @@
 # Validation record
 
+## C2 native measurement/registry JSON adoption (2026-10-22 UTC)
+
+[Native JSON contract and diagram](docs/HTTP_BOUNDARIES.md#native-measurement-and-registry-json-adoption)
+record shared bounded typed decoding and JSON/no-store writing. Native validation,
+64 KiB limits, `one JSON object required`, source deadlines, custody and file-only
+YAML publication remain in their existing owners.
+
+Actual checks:
+
+- All 68 static native JSON fixtures pass before extraction (0.050s): exact statuses,
+  body bytes and selected headers across planning/publication/discovery/execution,
+  malformed/null/array/unknown/nested-invalid/second-value input, exact/overflow
+  bounds, whitespace, content-type behavior, numeric type refusal and mux refusal.
+  Source-read counters enforce rejection/planning/publication before reads. Valid
+  execution uses a deterministic injected 503 backend and retains 502 responses;
+  file assertions permit only successful explicit publication. Plan windows are fixed.
+- After extraction, race suites pass for HTTP routes (3.170s), native measurements
+  (3.248s) and lifecycle (5.929s), including the same wire fixtures and existing
+  positive execution, dependency isolation, registry/duplicate/reopen, workflow and
+  custody clock/identity contracts.
+- Hegel's 100 shared planning-JSON cases pass (0.079s).
+- `go test ./...` passes. This JSON-only change does not require a new live database
+  check; existing gated live tests skip without their configured URL variables.
+- Whitespace and local Markdown targets pass.
+
+Evidence: `artifacts/c2-native-json-{before,race,hegel,root}.log`.
+No UI/SSE/Quint protocol changed; no screenshots or running images were regenerated.
+Fixed exploration JSON is next; other JSON owners and C2 final deployed-journey
+acceptance remain open.
+
 ## C2 telemetry package JSON adoption (2026-10-22 UTC)
 
 [Telemetry JSON contract and diagram](docs/HTTP_BOUNDARIES.md#telemetry-package-json-adoption)

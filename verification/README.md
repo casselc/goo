@@ -961,3 +961,8 @@ Telemetry package JSON uses the shared decoder/responder behind 68 exact before/
 after wire cases in `testdata/http/telemetry.json`. Hegel planning-JSON properties
 apply unchanged; route tests separately prove no files from planning/rejection
 and preserve explicit publication. See [telemetry JSON adoption](../docs/HTTP_BOUNDARIES.md#telemetry-package-json-adoption).
+
+Native measurement/registry JSON adopts the same helpers behind 68 frozen cases
+in `testdata/http/native-json.json`, retaining its distinct trailing-input message.
+Tests count source reads and file effects; existing positive execution/custody and
+publication fixtures remain separate. See [native JSON adoption](../docs/HTTP_BOUNDARIES.md#native-measurement-and-registry-json-adoption).
