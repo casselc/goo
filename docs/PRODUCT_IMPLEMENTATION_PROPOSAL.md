@@ -117,7 +117,7 @@ to this S3, and mixed-signal/population enrichment remains deferred below.
 
 | Cut | Deliverable | Acceptance before advancing |
 | --- | --- | --- |
-| S1 — next | Fresh blank Explore auto-connects one bounded active-signal monitor using an explicit valid configured/previous environment. Offer the already-supported Logs/Spans switch; reuse the existing `/api/tail` owner and passive record/attribute components. Put compact rows first, with a single scope/connection strip, chosen facet pills and honest buffer statistics. Keep question/capture forms below or in contextual actions. | Existing log and span selectors retain their typed source contract. One active connection and no prerequisite population/aggregate read; abort reader, reconnect timer and watchdog on leave/hide/signal change; old generations cannot publish. Missing environment prompts scope selection, never silent all-environment reads. Saved/deep-link routes remain inert. Focus/inspection and intentional pause persist on return; scrolling away pauses transport as well as follow, preserving the buffer/anchor without hiding continuity warnings; resume is explicit and shows the new-window gap. Show empty/loading/stale/limited/gap/disconnected distinctly. Real logs and spans, desktop/mobile, keyboard, bounded Bombadil actions and source-request counts validate the entry; 429/source failure retains last-good rows with unavailable/gap state, not healthy emptiness. |
+| S1 — implemented with limits | Fresh blank Explore auto-connects one bounded active-signal monitor using an explicit valid configured/previous environment. Offer the already-supported Logs/Spans switch; reuse the existing `/api/tail` owner and passive record/attribute components. Put compact rows first, with a single scope/connection strip, chosen facet pills and honest buffer statistics. Keep question/capture forms below or in contextual actions. | Existing log and span selectors retain their typed source contract. One active connection and no prerequisite population/aggregate read; abort reader, reconnect timer and watchdog on leave/hide/signal change; old generations cannot publish. Missing environment prompts scope selection, never silent all-environment reads. Saved/deep-link routes remain inert. Focus/inspection and intentional pause persist on return; scrolling away pauses transport as well as follow, preserving the buffer/anchor without hiding continuity warnings; resume is explicit and shows the new-window gap. Show empty/loading/stale/limited/gap/disconnected distinctly. Real logs and spans, desktop/mobile, keyboard, bounded Bombadil actions and source-request counts validate the entry; 429/source failure retains last-good rows with unavailable/gap state, not healthy emptiness. |
 | S2 | Stream interaction shapes scope: local inspection with minimal qualified attributes, chosen environment/facet pills, staged selector edits and explicit Apply starting a new generation. Show trace/span ancestry only from actually held exact IDs/parent relations, with explicit missing/ambiguous-parent, cycle and depth-limit states; deeper context reads remain named actions. Expose “Investigate this window” as a deliberate fixed-question reread, and keep shared inspector/retained-parent return. | Never mix old/new selectors or treat current buffer as full population. No hidden reads/publications from local inspection, breadcrumb rendering or staging. Paused anchor/focus survives updates and navigation; resume is explicit, starts a new bounded read and shows a continuity gap. Reread wording distinguishes fresh results from held rows. Hegel state/swarm and Quint observed traces/rejecting controls cover owner transitions, scope drift and obsolete publication. |
 | S3 — capability-gated | Exact retained tail selection only after a server-owned capability proves connection membership, canonical records, per-row read basis/window, expiry and retry identity. Reuse existing retention/citation contracts where their prerequisites genuinely fit. | Current connection-local observation handles are not durable event IDs or a live-page `resultToken`. Do not call the native page-retention API with fabricated membership or substitute a rerun. Test duplicate/late rows, eviction, expiry, changed selector, lost acknowledgement and correction before advertising exact capture. Until then offer explicit reread or existing supported evidence paths. |
 
@@ -137,7 +137,45 @@ retargeting, route/background disposal and no automatic restart of a paused stre
 Update the existing tail/recent-entry contracts, diagram and actual storyboard
 frames rather than creating a second independent “firehose” application.
 
-The next round is S1/S2, followed by A3; S3 waits for its membership capability.
+### Whole-product consolidation through the same flow
+
+The subsequent [whole-product design](STREAM_FIRST_WHOLE_PRODUCT_DESIGN.md) and
+[architecture](STREAM_FIRST_WHOLE_PRODUCT_ARCHITECTURE.md) reviews extend the
+stream-first direction beyond the landing page. Their shared spine is **observe →
+narrow → inspect → investigate a fixed scope → explain/preserve → reuse**. Services,
+Operations, Definitions and Saved are alternate entrances to that flow, not new
+copies of the complete query/editor/capture workspace. These recommendations are
+assigned to the existing cuts below; they are not a second backlog.
+
+The first S1 monitor is implemented and validated; see [Live Activity](LIVE_ACTIVITY.md)
+and [release evidence](../VALIDATION.md). The configured lab environment is explicit;
+remembered scope and deployment discovery are not implemented. S2/A3 remain planned.
+The compact wrapper is a migration adapter, not the final whole-product architecture.
+
+| Existing cut | Whole-product migration and what it replaces | Deletion/parity gate |
+| --- | --- | --- |
+| S1 → S2 | Treat the compact stream wrapper and legacy-detail disclosure as a migration adapter. Extract a supplied-record row/context presenter and common inspector; use them for tail, fixed records and frozen saved records rather than mounting a full read-only query editor to inspect one record. | Keep fixed queries reachable explicitly. Delete duplicate record/detail bodies, competing action rows and CSS that hides their controls only after timestamps, typed attributes, trace continuations, selection, keyboard/mobile and exact source basis match. Saved record inspection makes no source read. |
+| S2 + A3 | One application-level scope/mode/state/body/action composition, first across Activity/fixed exploration and one service-record result. Services/Operations offer explicit scoped Activity or typed fixed/native continuations. A workflow-local investigation context retains applied scope, execution mode, selected item and return anchor. | Live/paused/fixed/frozen modes remain visibly distinct; family AST/results, native semantics and immutable references are not flattened. Navigation consumes typed continuation intents instead of reparenting another owner's DOM. Back restores the paused parent without starting a stream or rerunning a source. No global mutable store prerequisite. Contextualize global `#minutes` to new fixed questions so it cannot imply the live 60-second horizon; avoid stacking outer record/measurement tabs and stream pickers as simultaneous modes. |
+| A3 + B2 | Standardize the scope/mode bar, staged/applied chips, selected-evidence actions, busy/disabled reasons and qualified field labels. Extract only proven request-owner mechanics and versioned continuation conversions; keep execution, capture and draft transitions in typed owners. | One relevant primary action per scope, no simultaneous parent/child executor, generation-safe completion and no hidden execution on staging/disclosure. Extend Go/JS fixtures and existing Hegel/Quint models when protocol ownership changes. Replace old helper paths only after equivalent consumers migrate. |
+| B1 | Definitions become compact browse/manage rows with a selected contextual editor; Saved has typed library sections and one selected artifact/notes body. Share rows, evidence headers and exact citation presenters through explicit adapters rather than repeating every catalog/editor on each page. | Same-title distinct identities, parallel revision heads, branch histories, disabled optional stores, bounded search scope, unsaved drafts and pinned old reviews survive. Selecting a row never runs it. Remove eager per-revision meaning/editor mounts and duplicate catalogs after selected-entry parity. Do not merge backend heads or migrate stores to obtain common layout. Meaning/tags and pending recovery appear beside the selected typed target, not as copied telemetry attributes or inferred training labels; native-only recovery stays native-only. |
+| D1 | Reuse a two-sided comparison composition and selected-item presentation across stored, fresh and rolling comparisons; contextual baseline/capture actions appear at the owning comparison/selection. | Preserve independently named windows/read bases, compatibility refusal and unknown/gap states. Delete repeated comparison chrome and baseline/capture toolbars after action parity; keep distinct execution and publication protocols. |
+| C1/C2 | Keep bounded publication/HTTP/transport extraction behind frozen identity/response fixtures. Whole-product control cleanup does not require a platform/service split or backend migration. | Existing cut-specific hash/error/SSE/source tests remain mandatory; these mechanics do not block S1/S2 or justify moving semantic kernels into a universal evaluator. |
+
+Cross-surface acceptance follows real ordinary OTel data: fresh Activity → stage/
+apply a facet → inspect without fetching → explicitly open fixed scope → compare/
+preserve supported evidence → add an exact citation → reopen from Saved → reuse a
+definition. Include alternate Services and Definitions entry points, unsupported
+native capabilities, expired references, a failed optional store and old deep links.
+Examples enter the same real Activity/fixed/native paths rather than another demo
+workbench. Keep Operations in navigation until service/definition-context parity
+exists for cross-service packages, expert use, sample workflows and direct links;
+then reassess demotion with the old route preserved. A change is complete only when the superseded controls/compositions are removed
+or have a named compatibility consumer and removal condition, affected actual
+storyboards/diagrams/screenshots are regenerated, and tests distinguish local
+inspection from execution and reread from exact custody. Do not hide uncertainty
+or remove advanced functionality merely to achieve a cleaner screenshot.
+
+The next round is S2 and A3; S3 waits for its membership capability.
 A1–A3 and S1–S3 are bounded cuts, not one unreviewable rewrite. B–F are subsequent
 bounded cuts in the same queue. Backend mechanics C1/C2 may run alongside B only
 with disjoint ownership and frozen fixtures; they do not block the first compact

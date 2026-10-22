@@ -84,3 +84,12 @@ mobile containment and Quint replay with rejecting mutations. Hegel generates
 changing overlapping multiset polls and late arrivals against the Go tracker.
 The existing source is not a durable append log; guaranteed catch-up, ingestion
 clocks, production tenancy and baseline-versus-live measures remain future work.
+
+## Compact Live Activity composition
+
+Fresh entry reuses this transport with compact supplied rows and application-owned
+inspection: [Live Activity](LIVE_ACTIVITY.md). Scroll-away pauses transport; Resume
+shows the new-window gap. Reconnect retains the last-good buffer until the first
+successful replacement batch. Explicit scope changes clear the old buffer. The
+HTTP proxy closes upstream reads on downstream disconnect; the four-reader
+admission limit is unchanged.

@@ -1,5 +1,7 @@
 # User journeys and storyboards
 
+[Journeys 102–103](../../journeys/stream-entry.spec.js) cover fresh live entry, scoped logs/spans, source-free inspection, explicit resume gaps, inert saved links, scroll anchoring, empty/missing scope and reconnect failure. [Contract and flow diagram](../LIVE_ACTIVITY.md). Frames: [desktop](screenshots/102a-live-entry.png), [inspection](screenshots/102b-paused-inspection.png), [mobile](screenshots/102c-mobile-live-entry.png), [scroll anchor](screenshots/103a-paused-scroll-anchor.png). The hidden-document event is injected; the OTLP records and normal source reads are real.
+
 [Journey 90](../../journeys/population-workspace.spec.js) exercises generic cross-service OTel populations, excluded resource/attribute groups, missing-versus-empty selectors, paired range filtering, explicit companion filters, column/layout changes, configuration save/reopen/run, partial failure, cancellation and fresh-window staging. [Storyboard, diagram and frames](../POPULATION_WORKSPACE.md).
 
 [Journeys 88–89](../../journeys/linked-timeline.spec.js) cover a generic OTel service timeline, source-free shared range preview, Apply/reset across record and native widgets, mobile layout, Quint trace validation, Bombadil exploration and standalone range-component conformance. [Storyboard and frames](../LINKED_TIMELINE.md).

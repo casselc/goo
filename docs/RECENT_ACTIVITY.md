@@ -1,5 +1,7 @@
 # Recent activity in Explore
 
+Fresh Explore now starts with [Live Activity](LIVE_ACTIVITY.md). The fixed-window population canvas below remains available through Questions, charts and saved views or the inert `#questions` entry. It is not a prerequisite for the live monitor.
+
 The first slice of the [recent-activity design](LIVE_EXPLORATION_DESIGN.md) adds
 **Show recent activity** as a direct entry into aligned span/log exploration.
 Choose the environment, lookback, signal and any filters, then run it. The action

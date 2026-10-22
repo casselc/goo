@@ -1,5 +1,7 @@
 # Semantic properties and model conformance
 
+Live entry uses `TestHegelEntryIntentStateSwarm` against the actual JavaScript intent gate. Journeys 102/103 feed observed request counts and lifecycle transitions into `stream_entry.qnt` through quint-go (`GOO_STREAM_ENTRY_LEDGER`); five rejecting controls catch hidden reads, duplicate startup, missing resume gaps and overflow. `GOO_ENTRY_BOMBADIL=1` enables the bounded stream-entry browser actor. See [Live Activity](../docs/LIVE_ACTIVITY.md).
+
 The optional [Bombadil coordinator](../docs/BOMBADIL_TESTING.md) complements these
 semantic checks. `GOO_CROSS_APP_QUINT=1 npm run test:cross-app` from the repository
 root validates a real report → source readiness → goo display → exploration ledger

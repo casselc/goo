@@ -226,7 +226,7 @@ its S1–S3 cuts may group or defer the capability slices below.
 | Exact stream custody | Server-issued bounded tail membership capabilities and explicit retain-selected integration, preserving original record/read window/ordinal/identity basis. | Expiry, duplicate payload occurrences, late arrival, replaced connection, stale selection and lost acknowledgment/reload all preserve intent or fail explicitly. Existing retained evidence/document APIs keep their hashes and clocks. |
 | Aggregate strip/reuse | Optional typed rolling aggregate summary, pinned live comparison, saved monitor configuration and interaction-led question publication. | Population versus buffer measures cannot be confused; saved configuration opens paused unless explicitly saved/opened as a monitor action; state/shared source adapters and component owners stay separate. |
 
-Do not block S1 on full genealogy, dual-signal aggregation, a new storage engine,
+Do not block the root monitor on full genealogy, dual-signal aggregation, a new storage engine,
 virtualization framework or exact training dataset export. Do not declare the
 stream-first product delivered by merely relocating the current full tail panel.
 
@@ -282,7 +282,7 @@ continuations of the stream, not a second persistent stacked entry.
 6. Show a reported parent, missing parent, duplicate/conflicting parent, cycle,
    invalid IDs and OTel link. Only valid observed parent edges form breadcrumbs;
    expanding context is an independently accounted source read.
-7. Once S4 exists, retain two equal-payload occurrences from the paused stream,
+7. Once exact stream custody exists, retain two equal-payload occurrences from the paused stream,
    replace/expire the connection and lose the acknowledgment. Assert membership,
    request intent and recovered IDs through the existing native recovery path.
 

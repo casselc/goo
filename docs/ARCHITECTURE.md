@@ -251,3 +251,8 @@ adapter uses `GooDistributions.mountFacets`, which shares the existing facet and
 comparison mechanics without constructing a second count/chart/measure workspace.
 Recent timeline controls and mobile facets are source-free disclosures. The full
 single-question distribution and service timeline compositions remain available.
+
+
+## Fresh live entry
+
+[Live Activity](LIVE_ACTIVITY.md) classifies visit intent before subscribing, reuses the existing bounded tail core and keeps its local inspector separate from fixed execution. Saved/shared entry remains inert. The [whole-product architecture review](STREAM_FIRST_WHOLE_PRODUCT_ARCHITECTURE.md) identifies the next shared record/context extraction and removal gates; its broader refactoring is proposed, not completed by this entry slice.

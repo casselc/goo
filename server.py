@@ -1,6 +1,9 @@
 import base64
 import json
 import os
+import select
+import socket
+import threading
 import time
 import urllib.error
 import urllib.parse
@@ -55,7 +58,7 @@ class Handler(BaseHTTPRequestHandler):
         elif self.path in ('/time-range.css','/evidence-summary.css','/bucket-heatmap.css','/product.css', '/components.css','/waterfall.css','/time-bars.css','/chart-frame.css','/value-timeline.css'):
             self.send_response(200); self.send_header('Content-Type', 'text/css; charset=utf-8'); self.end_headers()
             self.wfile.write((Path(__file__).parent / 'ui' / self.path[1:]).read_bytes())
-        elif self.path in ('/pending-saves.js','/meaning.js','/retention.js','/population-workspace.js','/time-range.js','/service-timeline.js','/trace-journey.js','/population-selection.js','/investigation-trail.js','/evidence-summary.js','/evidence-scope.js','/bucket-heatmap.js','/value-timeline.js','/live-comparison.js','/chart-frame.js','/time-bars.js','/waterfall.js','/tail.js','/components.js','/comparison-visual.js','/service-identity.js','/service-dashboard.js','/distributed-services.js','/comparison-breakdown.js', '/fresh-comparison.js', '/window-discovery.js', '/evidence-comparison.js', '/service-browser.js', '/question-session.js', '/numeric-measures.js', '/grouped-time-series.js', '/question-scope.js', '/followups.js', '/guided-measurements.js', '/measurements.js', '/example-questions.js', '/recipes.js', '/documents.js', '/deployments.js', '/queries.js', '/namespace.js', '/captures.js', '/inventory.js', '/workspace.js', '/attributes.js', '/discovery.js', '/visualizations.js', '/workflows.js', '/operations.js', '/histograms.js', '/ratios.js', '/fleet.js', '/investigations.js', '/exploration.js', '/distributions.js', '/telemetry-packages.js'):
+        elif self.path in ('/stream-entry.js','/pending-saves.js','/meaning.js','/retention.js','/population-workspace.js','/time-range.js','/service-timeline.js','/trace-journey.js','/population-selection.js','/investigation-trail.js','/evidence-summary.js','/evidence-scope.js','/bucket-heatmap.js','/value-timeline.js','/live-comparison.js','/chart-frame.js','/time-bars.js','/waterfall.js','/tail.js','/components.js','/comparison-visual.js','/service-identity.js','/service-dashboard.js','/distributed-services.js','/comparison-breakdown.js', '/fresh-comparison.js', '/window-discovery.js', '/evidence-comparison.js', '/service-browser.js', '/question-session.js', '/numeric-measures.js', '/grouped-time-series.js', '/question-scope.js', '/followups.js', '/guided-measurements.js', '/measurements.js', '/example-questions.js', '/recipes.js', '/documents.js', '/deployments.js', '/queries.js', '/namespace.js', '/captures.js', '/inventory.js', '/workspace.js', '/attributes.js', '/discovery.js', '/visualizations.js', '/workflows.js', '/operations.js', '/histograms.js', '/ratios.js', '/fleet.js', '/investigations.js', '/exploration.js', '/distributions.js', '/telemetry-packages.js'):
             self.send_response(200); self.send_header('Content-Type', 'application/javascript; charset=utf-8'); self.end_headers()
             self.wfile.write((Path(__file__).parent / 'ui' / self.path[1:]).read_bytes())
         else: self.send_error(404)
@@ -72,10 +75,30 @@ class Handler(BaseHTTPRequestHandler):
                     self.send_response(200); self.send_header('Content-Type', 'text/event-stream')
                     self.send_header('Cache-Control', 'no-store'); self.send_header('X-Accel-Buffering', 'no')
                     self.end_headers(); started = True
-                    while True:
-                        line = response.readline()
-                        if not line: break
-                        self.wfile.write(line); self.wfile.flush()
+                    # A downstream abort must release the upstream slot immediately,
+                    # even while the upstream reader waits for its next SSE frame.
+                    finished = threading.Event()
+                    upstream = response.fp.raw._sock
+                    def watch_disconnect():
+                        while not finished.is_set():
+                            try:
+                                readable, _, _ = select.select([self.connection], [], [], 0.1)
+                                if readable and not self.connection.recv(1, socket.MSG_PEEK):
+                                    try: upstream.shutdown(socket.SHUT_RDWR)
+                                    except OSError: pass
+                                    return
+                                if readable: finished.wait(0.1)
+                            except (OSError, ValueError): return
+                    watcher = threading.Thread(target=watch_disconnect, daemon=True)
+                    watcher.start()
+                    try:
+                        while True:
+                            line = response.readline()
+                            if not line: break
+                            self.wfile.write(line); self.wfile.flush()
+                    finally:
+                        finished.set()
+                        watcher.join(timeout=0.25)
             except (BrokenPipeError, ConnectionResetError): pass
             except urllib.error.HTTPError as exc:
                 if not started: self.json_response(exc.code, json.loads(exc.read()))

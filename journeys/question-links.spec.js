@@ -16,12 +16,12 @@ test('49 share fixed questions, reopen explicitly, and traverse history without 
  await page.setViewportSize({width:390,height:844});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'docs/journeys/screenshots/49c-mobile-resume.png',fullPage:true});
  await page.goto(base+'/#question=%zz');await expect(page.locator('#exploreStatus')).toContainText('Cannot restore question');expect(reads).toBe(checkpoint);expect(errors).toEqual([]);fs.mkdirSync('artifacts/question-links',{recursive:true});fs.writeFileSync('artifacts/question-links/ledger.json',JSON.stringify({question:q,ledger},null,2));
  await verifyWithGo(require('node:path').resolve('artifacts/question-links'),'TestQuintQuestionLinksLive',{GOO_QUESTION_LINKS_LEDGER:require('node:path').resolve('artifacts/question-links/ledger.json')});
- if(process.env.GOO_QUESTION_LINKS_BOMBADIL==='1'){const actor=await startBombadil({dir:require('node:path').resolve('artifacts/question-links/bombadil-'+Date.now()),url:base+'/#explore',specification:'verification/bombadil/question-links.ts',seconds:30});try{await actor.finish()}finally{await actor.stop()}}
+ if(process.env.GOO_QUESTION_LINKS_BOMBADIL==='1'){const actor=await startBombadil({dir:require('node:path').resolve('artifacts/question-links/bombadil-'+Date.now()),url:base+'/#questions',specification:'verification/bombadil/question-links.ts',seconds:30});try{await actor.finish()}finally{await actor.stop()}}
 });
 
 test('49 shared unrun drafts pin the sender window before the first source read',async({page})=>{
  let reads=0;page.on('request',r=>{if(r.method()==='POST'&&r.url().endsWith('/api/explore'))reads++});
- await page.goto(base+'/#explore');await page.locator('#exploreShareQuestion').click();const q=readQuestionLink(new URL(await page.locator('#exploreQuestionLink').inputValue()).hash).question;
+ await page.goto(base+'/#questions');await page.locator('#exploreShareQuestion').click();const q=readQuestionLink(new URL(await page.locator('#exploreQuestionLink').inputValue()).hash).question;
  await expect(page.locator('#exploreQuestionState')).toContainText(new Date(q.fromMs).toISOString());expect(reads).toBe(0);
  const response=page.waitForResponse(r=>r.url().endsWith('/api/explore')&&r.request().method()==='POST');await page.locator('#exploreRun').click();const data=await(await response).json();await expect(page.locator('#exploration')).toHaveAttribute('data-question-phase','applied');expect(data.question.fromMs).toBe(q.fromMs);expect(data.question.toMs).toBe(q.toMs);expect(reads).toBe(1);
 });

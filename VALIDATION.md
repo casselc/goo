@@ -1,5 +1,41 @@
 # Validation record
 
+## First Live Activity entry and whole-product consolidation plan (2026-10-22 UTC)
+
+Final query/packages image:
+`sha256:3399ec9c523d0b2fac85402da4af78a887542a44c12dc543aa3d89ae1120b134`.
+
+Fresh entry now opens one bounded log/span monitor with explicit environment
+scope, compact UTC rows, source-free paused inspection and explicit gap-bearing
+resume. Fixed/saved links remain inert. See [contract and flow](docs/LIVE_ACTIVITY.md).
+Design and architecture agents completed whole-product reviews; the planner merged
+their removal/parity gates into S2/A3 and the existing queue. This ships S1 with
+limits, not the planned shared record/inspector or facet interaction refactor.
+
+Completed checks:
+
+- Frontend suite: 32 test files pass; JavaScript/Python syntax checks pass.
+- Hegel actual entry-gate state/swarm campaign passes (80 campaigns × 24 steps).
+- Real Chromium journeys 101, 66, 93, 102 and 103 pass together: retained evidence,
+  legacy tail, fixed recent activity, fresh stream entry and scroll/reconnect.
+  Observed entry ledgers pass Quint/quint-go with five rejecting controls;
+  journey 102 also runs the bounded Bombadil actor. Updated desktop/mobile frames
+  are linked from the [storyboard index](docs/journeys/README.md).
+- A final focused journey 103 rerun also passes empty/missing environment scope
+  assertions, with no request on a missing scope. Evidence: `artifacts/stream-entry-final-scope.log`.
+- Local SSE cancellation check: eight rapid aborted subscriptions return 200;
+  four held streams are admitted and the fifth receives 429. Capacity unchanged.
+- Deployed source/binary hashes match; all 13 services running; prior pending queue
+  IDs and native review citations preserved; cgroup OOM/kill counters zero.
+  Native restart verification is carried forward from the prior retention round;
+  no new XTDB restart is claimed.
+
+Evidence: `artifacts/stream-entry-release.log`, `stream-entry-unit.log`,
+`stream-entry-hegel.log`, `stream-entry-proxy-cancel.json`,
+`stream-entry-health.json` and the observed ledgers under `artifacts/stream-entry/`.
+Background lifecycle input and HTTP 429 are deliberately injected in journey 103;
+normal telemetry and source reads use the real running lab.
+
 ## Stream-first entry review (2026-10-22 UTC)
 
 Product/design and architecture agents reviewed the current tail/source/UI code at

@@ -1,0 +1,15 @@
+spec: stream_entry.qnt
+module: stream_entry
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  connect:
+    expect: 'reads == {{.obs.reads}} and gap == {{.obs.gap}} and coherent == {{.obs.coherent}}'
+  pause:
+    expect: 'reads == {{.obs.reads}} and gap == {{.obs.gap}} and coherent == {{.obs.coherent}}'
+  hold:
+    expect: 'reads == {{.obs.reads}} and gap == {{.obs.gap}} and coherent == {{.obs.coherent}}'
+  stored:
+    expect: 'reads == {{.obs.reads}} and gap == {{.obs.gap}} and coherent == {{.obs.coherent}}'
+  resume:
+    expect: 'reads == {{.obs.reads}} and gap == {{.obs.gap}} and coherent == {{.obs.coherent}}'
