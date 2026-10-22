@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/casselc/goo/internal/sourcehttp"
 	"github.com/casselc/goo/measurement"
 )
 
@@ -136,12 +137,7 @@ func FetchHTTP(ctx context.Context, client *http.Client, endpoint, user, passwor
 	query.Set("max_result_rows", "1001")
 	query.Set("result_overflow_mode", "throw")
 	address.RawQuery = query.Encode()
-	request, err := http.NewRequestWithContext(ctx, http.MethodPost, address.String(), strings.NewReader(sql))
-	if err != nil {
-		return nil, err
-	}
-	request.SetBasicAuth(user, password)
-	response, err := client.Do(request)
+	response, err := sourcehttp.Post(ctx, client, address.String(), user, password, sql)
 	if err != nil {
 		return nil, err
 	}
@@ -149,11 +145,11 @@ func FetchHTTP(ctx context.Context, client *http.Client, endpoint, user, passwor
 	if response.StatusCode != 200 {
 		return nil, fmt.Errorf("ClickHouse source returned HTTP %d", response.StatusCode)
 	}
-	data, err := io.ReadAll(io.LimitReader(response.Body, (8<<20)+1))
+	data, oversize, err := sourcehttp.ReadBounded(response.Body, 8<<20)
 	if err != nil {
 		return nil, err
 	}
-	if len(data) > 8<<20 {
+	if oversize {
 		return nil, fmt.Errorf("source payload exceeds 8 MiB; no partial evaluation")
 	}
 	decoder := json.NewDecoder(strings.NewReader(string(data)))

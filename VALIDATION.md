@@ -1,5 +1,30 @@
 # Validation record
 
+## C2 prebuilt HTTP transport adoption (2026-10-22 UTC)
+
+[Prebuilt transport contract and diagram](docs/HTTP_BOUNDARIES.md#prebuilt-http-transport-adoption)
+record adoption of shared POST/auth/context and bounded reads only. Raw parameter
+values, status-before-body ordering, closure, typed decoding, window/row limits,
+deduplication, evaluation identity and warnings stay family-owned.
+
+Actual checks:
+
+- New prebuilt transport contracts pass before extraction (0.683s): request bytes,
+  exact settings/auth, unchanged complex parameters, empty/valid/duplicate payloads,
+  exact/overflow 8 MiB and 1,000-row boundaries, malformed JSON, unread non-200
+  bodies, body closure, cancellation and error identity.
+- After extraction, race suites pass for prebuilt (7.269s) and HTTP routes (4.585s)
+  with the gated readonly ClickHouse test enabled. The new integration test executes
+  the actual `FetchHTTP` query and evaluator on a deliberately absent scope/fixed
+  window; it inserts nothing and does not prove positive live-population coverage.
+- Hegel's 100 generated shared bounded-read cases pass (0.019s).
+- Full `go test ./...` passes. Gated live checks skip without their URL variable.
+
+Evidence: `artifacts/c2-prebuilt-transport-{before,race,hegel,root}.log`.
+No UI/SSE/Quint protocol changed; no screenshots or running images were regenerated.
+C2 remains active: operation spans next, then counters/histograms and remaining
+route-specific JSON adoption. Final deployed-journey acceptance remains open.
+
 ## C2 remaining-work acceptance audit (2026-10-22 UTC)
 
 [Audit and ordered completion proposal](docs/HTTP_BOUNDARIES.md#c2-acceptance-audit--2026-10-22)

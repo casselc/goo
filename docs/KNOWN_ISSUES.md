@@ -8,7 +8,8 @@ into retention/document citation owners, while request/card read bases remain
 per-operation values. Configuration status does not prove database availability;
 document files reopen without the optional store. Native and record source HTTP mechanics
 now use shared POST/bounded-read primitives; the [acceptance audit](HTTP_BOUNDARIES.md#c2-acceptance-audit--2026-10-22)
-identifies four remaining readers and local JSON owners, with prebuilt transport next. Status/error ordering, escaping and row limits remain family-specific.
+identified four readers; prebuilt transport is now adopted, leaving operation spans
+next, then counters/histograms and local JSON owners. Status/error ordering, escaping and row limits remain family-specific.
 Recipes/dashboard now share bounded JSON decoding/writing behind exact wire
 fixtures; other route adoption and transport consolidation remain queued. ClickHouse/XTDB environment mutation after startup is not a reload.
 Live comparison drafts remain registration-local and expiring; persisted captures

@@ -159,8 +159,8 @@ The full HTTP race suite
 retains budget, SSE, capture and optional-store tests.
 
 C2 remains active. Pure planning JSON and native/record transport adoption are
-delivered. The acceptance audit below identifies prebuilt HTTP transport as the
-next bounded cut. Transport adoption proceeds one family at a time, preserving parameter escaping,
+delivered. The acceptance audit below records the remaining adoption sequence; prebuilt transport is
+now delivered and operation spans are next. Transport adoption proceeds one family at a time, preserving parameter escaping,
 read limits, basis/identity and non-2xx/oversize/cancellation behavior. Python proxy
 removal, changing custody/duplicate policy and universal endpoint budgets are not
 part of these cuts.
@@ -442,3 +442,43 @@ extraction. Their presence is not a reason to build a universal transport owner.
 
 D1 comparison presentation remains queued after bounded C2 acceptance. This audit
 does not introduce a new evaluator, broaden query budgets or change public UI flow.
+
+
+## Prebuilt HTTP transport adoption
+
+The first remaining-reader cut from the audit is delivered. `prebuilt.FetchHTTP`
+now uses `sourcehttp.Post` and `ReadBounded`. It retains the explicit client contract,
+raw URL-encoded parameter values, readonly/query settings, status-before-body
+ordering, deferred response closure and exact byte/status errors. Typed JSON
+stream decoding, explicit-window validation, duplicate/conflict detection, the
+1,000-span evaluation bound, result identity and declared-schema/sampling warnings
+remain in the prebuilt adapter/evaluator. No record/native escaping was imported.
+
+```mermaid
+flowchart LR
+  Binding[HTTP expansion and explicit scope binding] --> Query[Prebuilt query / raw typed parameters]
+  Query --> Post[Shared POST / auth / context]
+  Post --> CH[ClickHouse]
+  CH --> Status[Prebuilt status check before body read]
+  Status --> Read[Shared bounded read: 8 MiB plus one]
+  Read --> Decode[Prebuilt typed JSON / window checks]
+  Decode --> Evaluate[1000 raw spans / identity / dedup / evaluation]
+  Evaluate --> Receipt[Existing results / basis / warnings]
+```
+
+`TestPrebuiltTransportContract` passed before and after extraction. It pins verbatim
+SQL, exact URL settings/auth, unmodified complex parameter values, empty/valid/
+duplicate reads, exact/overflow byte and row limits, malformed JSON, unread 201/503
+bodies, close-once behavior and read-error identity. Transport errors and cancelled
+contexts are checked separately; existing semantic tests retain conflict, missing
+outcome and exclusive upper-window refusal.
+
+`TestClickHousePrebuiltTransportIntegration` uses the existing gated ClickHouse
+variables and executes `FetchHTTP` against the real lab table with a deliberately
+absent scope and fixed window. It validates the query/decoder/empty evaluation path
+without inserting data or claiming positive-population coverage. The affected
+HTTP suite also keeps injected positive fixtures. Hegel bounded-read properties
+pass for the shared primitive. No public UI/SSE/Quint protocol or running image
+changed; screenshots remain applicable. The final deployed-journey gate remains
+open. Three readers remain: operation spans next, then counters and histograms;
+local JSON-owner adoption remains queued as described in the audit.

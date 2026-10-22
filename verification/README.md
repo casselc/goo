@@ -932,3 +932,9 @@ pass before/after shared-mechanics adoption. They preserve record-specific
 status-before-read, object validation and 1,001-row behavior. The readonly gated
 record integration test roundtrips every ASCII control plus DEL against ClickHouse;
 see [record transport ownership](../docs/HTTP_BOUNDARIES.md#record-source-transport-adoption).
+
+Prebuilt transport now also adopts the bounded-read helper behind pre-extraction
+contracts in `prebuilt/source_transport_contract_test.go`, preserving raw parameter
+values, status-before-body and family evaluation. Its gated readonly ClickHouse
+check exercises a deliberately empty real-table scope, not positive live data.
+See [prebuilt transport adoption](../docs/HTTP_BOUNDARIES.md#prebuilt-http-transport-adoption).
