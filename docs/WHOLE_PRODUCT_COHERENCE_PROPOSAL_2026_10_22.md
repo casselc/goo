@@ -1,6 +1,10 @@
 # Whole-product coherence proposal — 2026-10-22
 
-Status: review and proposed sequence, not implemented behavior or an additional
+Follow-through: the accepted bounded [Activity analysis handoff](ACTIVITY_ANALYSIS.md)
+is now implemented. Broader population/Saved and explicit blank-authoring work
+remain proposed. The review below records its original baseline and rationale.
+
+Status at review: review and proposed sequence, not implemented behavior or an additional
 authorized backlog. Reviewed baseline: `f54d07c`. The
 [active implementation plan](IMPLEMENTATION_PLAN.md) remains authoritative until
 the proposed sequencing is adopted.

@@ -43,12 +43,13 @@ flowchart LR
   URL[URL and visit intent] --> Gate[Fresh-entry gate]
   Gate -->|fresh and visible| Monitor[One active log or span monitor]
   Gate -->|saved or fixed| Fixed[Stored or staged viewer]
+  Monitor -->|Analyze applied scope: stage last completed window| Staged
   Monitor -->|Inspect: local| Held[Paused buffer and inspector]
   Monitor -->|scroll / leave / hide| Held
   Held -->|explicit Resume with gap| Monitor
   Held -->|Include / Exclude: local draft| Draft[Qualified filter chips]
   Draft -->|Apply: new scoped read| Monitor
-  Draft -->|Open fixed investigation: no read| Staged[Fixed question draft]
+  Draft -->|Analyze observation window: no read| Staged[Fixed question draft]
   Staged -->|Run explicitly| Context[Fixed source results]
   Staged -->|Return: no read| Held
   Context -->|Return: suspend fixed owner, no read| Held
@@ -166,3 +167,11 @@ to Activity suspends/detaches it, and reopening restores the same draft. Old rec
 question/step/view links restore their own editor without execution. The initial
 live environment remains the explicit local lab default and does not depend on a
 hidden fixed input. B1 follows this bounded cut.
+
+## Contextual fixed analysis
+
+[Activity analysis](ACTIVITY_ANALYSIS.md) adds a compact scope/window continuation
+using the last completed tail read, including an empty window. The inspector
+continuation retains the selected observation’s original window and staged
+filters. Both stage before Run, disclose editing separately and return to the
+paused parent without resubscribing. Neither preserves held rows as evidence.

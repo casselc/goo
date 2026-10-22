@@ -11,7 +11,8 @@ happened with evidence you can inspect and preserve.**
 [The fresh whole-product coherence proposal](docs/WHOLE_PRODUCT_COHERENCE_PROPOSAL_2026_10_22.md)
 reconciles independent architecture and running-product usability reviews. It
 recommends a continuous Activity → analysis → population → investigation flow;
-these recommendations are proposed, not shipped features or a second backlog.
+the [contextual Activity analysis handoff](docs/ACTIVITY_ANALYSIS.md) is now
+implemented; the broader recommendations remain proposed.
 
 Ask a question → inspect its evidence → capture and explain it → reuse the
 definition. Start from instrumented code or unfamiliar OpenTelemetry data.
@@ -218,7 +219,10 @@ docker compose up --build -d
 docker compose logs -f collector reservations consumer
 ```
 
-Open **http://localhost:8088**. Traffic starts automatically. Wait 20–40 seconds, then select **Run query**. Services bind host ports only to loopback; credentials in this project are disposable local credentials.
+Open **http://localhost:8088**. Traffic starts automatically. Wait 20–40 seconds for telemetry. Explore opens
+live logs by default; choose Logs/Spans and an environment to narrow the stream.
+Inspect a record or select **Analyze this scope/window** to stage a fixed analysis,
+then explicitly **Run analysis**. Services bind host ports only to loopback; credentials in this project are disposable local credentials.
 
 ```sh
 python3 scripts/smoke.py

@@ -1,0 +1,30 @@
+const {test,expect}=require('@playwright/test');
+const {randomBytes}=require('node:crypto');
+const {source}=require('./support/cross-app');
+const base=process.env.GOO_QUERY_URL||'http://127.0.0.1:8088';
+test('Activity stages its applied scope and completed window before explicit analysis',async({page,request})=>{
+ page.setDefaultTimeout(15000);
+ const environment='analysis-'+randomBytes(4).toString('hex');
+ const attrs=o=>Object.entries(o).map(([key,stringValue])=>({key,value:{stringValue}}));
+ expect((await request.post('http://127.0.0.1:4318/v1/logs',{data:{resourceLogs:[{resource:{attributes:attrs({'service.name':'ordinary-worker','deployment.environment.name':environment})},scopeLogs:[{logRecords:[{timeUnixNano:String(BigInt(Date.now()-500)*1000000n),body:{stringValue:'analysis candidate'},attributes:attrs({region:'west'}),severityText:'INFO'}]}]}]}})).ok()).toBe(true);
+ await expect.poll(async()=>Number((await source(request,"SELECT count() AS n FROM default.otel_logs WHERE ResourceAttributes['deployment.environment.name']={env:String} FORMAT JSONEachRow",{param_env:environment}))[0].n),{timeout:45000}).toBe(1);
+ const streams=[],reads=[],writes=[],errors=[];
+ page.on('pageerror',e=>errors.push(e.message));
+ page.on('request',r=>{if(r.method()!=='POST')return;const u=new URL(r.url()).pathname;if(u==='/api/tail')streams.push(r.postDataJSON());else if(u==='/api/explore')reads.push(r.postDataJSON());else if(!u.startsWith('/api/queries/'))writes.push(u)});
+ const shell=page.locator('.stream-entry'),tail=shell.locator('.live-tail'),analyze=shell.getByRole('button',{name:'Analyze this scope/window',exact:true});
+ await page.goto(base+'/');await shell.getByLabel('Live environment').fill(environment);await shell.getByRole('button',{name:'Apply scope',exact:true}).click();await expect(tail.locator('tbody tr')).toHaveCount(1);
+ await tail.getByRole('button',{name:'Inspect',exact:true}).click();await shell.getByRole('button',{name:'Include attribute:region from record',exact:true}).click();
+ const count=streams.length;await analyze.click();await expect(shell).toContainText('Apply scope before analyzing');expect(reads).toHaveLength(0);expect(streams).toHaveLength(count);
+ await shell.getByRole('button',{name:'Apply scope',exact:true}).click();await expect(tail).toHaveAttribute('data-state',/unknown|partial/);await shell.getByRole('button',{name:'Pause stream',exact:true}).click();
+ const held=await tail.locator('tbody').textContent(),toMs=Number(await tail.getAttribute('data-last-to')),before=streams.length;
+ await analyze.click();await expect(shell).toBeHidden();await expect(page.locator('#exploreRun')).toHaveText('Run analysis');await expect(page.locator('#exploreRun')).toBeFocused();await expect(page.locator('#exploreQuestionState')).toContainText(new Date(toMs).toISOString());
+ await expect(page.locator('#discoverySearch')).toBeHidden();await expect(page.getByRole('button',{name:'Show recent activity',exact:true})).toBeHidden();expect(reads).toHaveLength(0);expect(streams).toHaveLength(before);expect(writes).toEqual([]);
+ await page.getByRole('button',{name:'Edit analysis',exact:true}).click();await expect(page.locator('#discoverySearch')).toBeVisible();expect(reads).toHaveLength(0);await page.getByRole('button',{name:'Hide analysis controls',exact:true}).click();
+ await page.setViewportSize({width:390,height:844});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'docs/journeys/screenshots/115a-staged-activity-analysis.png',fullPage:true});
+ await page.locator('#exploreRun').click();await expect(page.locator('#exploration')).toHaveAttribute('data-question-phase','applied');await expect(page.locator('#exploreRun')).toHaveText('Rerun fixed window');
+ expect(reads).toHaveLength(1);expect(reads[0]).toMatchObject({environment,signal:'logs',fromMs:toMs-60000,toMs,where:streams.at(-1).where});expect(streams).toHaveLength(before);await page.screenshot({path:'docs/journeys/screenshots/115b-fixed-activity-analysis.png',fullPage:true});
+ await page.getByRole('button',{name:'Return to paused activity',exact:true}).click();await expect(tail).toHaveAttribute('data-state','paused');expect(await tail.locator('tbody').textContent()).toBe(held);await expect(analyze).toBeFocused();expect(reads).toHaveLength(1);expect(streams).toHaveLength(before);expect(writes).toEqual([]);expect(errors).toEqual([]);
+ // An empty, completed span window still defines a valid scope; do not invent a window from row times.
+ await shell.getByLabel('Live signal').selectOption('spans');await expect(tail).toHaveAttribute('data-state',/unknown|partial/);await expect(tail.locator('tbody tr')).toHaveCount(0);await shell.getByRole('button',{name:'Pause stream',exact:true}).click();const spanTo=Number(await tail.getAttribute('data-last-to'));
+ await analyze.click();expect(reads).toHaveLength(1);await page.locator('#exploreRun').click();await expect(page.locator('#exploration')).toHaveAttribute('data-question-phase','applied');expect(reads.at(-1)).toMatchObject({signal:'spans',environment,fromMs:spanTo-60000,toMs:spanTo});expect(errors).toEqual([]);
+});

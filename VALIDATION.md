@@ -1,5 +1,48 @@
 # Validation record
 
+## Contextual Activity analysis handoff (2026-10-22 UTC)
+
+[Activity analysis](docs/ACTIVITY_ANALYSIS.md) implements the accepted bounded
+handoff from the whole-product review. Scope analysis stages the applied selector
+in its last completed 60-second source window, including an empty window. Record
+analysis retains the selected observation's original window and staged filters.
+Both show a compact staged scope, explicit Run analysis and optional editing;
+returning restores the paused parent without subscribing. No API/storage contract
+or capture identity changes. Explicit blank authoring, broader population controls
+and Saved restructuring remain follow-up work.
+
+Actual checks:
+
+- All 39 Node test files pass (2.23s); targeted final stream-entry/tail checks and
+  syntax checks pass after the window-reset/disclosure changes.
+- New real-OTel journey 115 passes, including qualified applied predicates, dirty
+  scope refusal, exact fixed bounds, no source/publication on staging/disclosure,
+  explicit reads, empty span window, mobile containment and restored parent focus.
+- Existing journeys 104–106 and both journey-49 cases pass: empty/missing typed
+  filters, pending/completed fixed return, stale completion rejection, same record
+  presentation in live/fixed and source-free shared-link history. Their existing
+  Go/Quint observed ledgers/rejecting controls pass. Initial 104 UI assertions
+  passed but its verifier exceeded the existing 60-second cold-compilation limit
+  after disposable cache cleanup. Four other cases passed in that run (2.5m);
+  the warmed rerun of 104 plus 115 passed (28.1s).
+- New Bombadil activity-analysis campaign passes (25-second budget), exercising
+  stage → disclose → return, staged-draft/paused-return/no-eager-editor and
+  containment invariants. Existing live-filter/question-link actors match the
+  renamed actions; those campaigns were not separately rerun this round.
+- Fourteen affected/new real storyboard PNGs are refreshed; new mobile staged and
+  fixed-result frames were inspected. Contract, live-flow diagram, README and
+  active-plan follow-through are updated. Markdown local targets and
+  `git diff --check` pass.
+
+Browser checks used the edited Python/UI server on loopback `8098` with the
+existing real Go/ClickHouse/collector services. No mocked telemetry or publication
+was used by the new journey. Existing capture checks may publish their owned test
+artifacts. The Compose image on `8088` was not rebuilt/deployed this round.
+Disposable Go/npm build caches were reclaimed for disk headroom; telemetry volumes,
+retained evidence, old acceptance artifacts and running images were preserved.
+No broad backend/Hegel suite was rerun for this presentation/continuation change.
+
+
 ## Whole-product architecture and usability review (2026-10-22 UTC)
 
 Independent architecture and design/usability agents reviewed baseline `f54d07c`.

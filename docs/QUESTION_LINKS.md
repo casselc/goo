@@ -9,7 +9,7 @@ evidence basis or credentials. Attribute values and environment names are visibl
 to anyone receiving the URL; the fragment is not an access-control mechanism.
 
 Opening the link, reloading it, or using browser Back/Forward restores a draft
-without a telemetry request. **Run again** explicitly reads its original fixed
+without a telemetry request. **Run question** explicitly reads its original fixed
 window. Filters remain editable; **Use fresh window** stages a new lookback.
 Returning through history clears previous live evidence so it cannot appear to
 answer the restored question. Existing explicit service drilldowns still run.
@@ -24,7 +24,7 @@ sequenceDiagram
     UI-->>A: Versioned URL with fixed scope
     A->>B: Open question URL
     B->>B: Validate and restore draft, no source read
-    B->>CH: Run again (explicit)
+    B->>CH: Run question (explicit)
     CH-->>B: New evidence for original fixed question
 ```
 
@@ -49,7 +49,7 @@ properties run through the actual JavaScript with Hegel; Bombadil explores resto
 Back and Forward; the observed read ledger is checked with quint-go and rejecting
 mutations. See VALIDATION.md for executed checks.
 
-![A shared question reopens with fixed scope and an explicit Run again action](journeys/screenshots/49a-reopened-question.png)
+![A shared question reopens with fixed scope and an explicit Run question action](journeys/screenshots/49a-reopened-question.png)
 
 ![Share the question separately from captured evidence](journeys/screenshots/49b-share-question.png)
 

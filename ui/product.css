@@ -1410,3 +1410,9 @@ td details {
  .dashboard-native-table>table>tbody>tr>td::before{content:attr(data-label);grid-column:1;grid-row:1;color:var(--muted);font-size:.65rem}
  .dashboard-native-table>table>tbody>tr>td>*{grid-column:2;min-width:0;max-width:100%}
 }
+
+/* Activity continuation: scope and one Run action before optional authoring. */
+.activity-analysis:not(.analysis-editing) > .query-workbench,
+.activity-analysis:not(.analysis-editing) > .recent-entry-hint,
+.activity-analysis:not(.analysis-editing) > .exploration-scope > label,
+.activity-analysis:not(.analysis-editing) > .exploration-scope > :is(.recent-activity-run,[id$=exploreFreshWindow],[id$=exploreShareQuestion],[id$=exploreAddStep],[id$=exploreTail]){display:none}

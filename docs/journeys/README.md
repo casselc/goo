@@ -990,7 +990,7 @@ opening a service; saved inventory 32 retains its original environment-wide scop
 
 ## 49 — Resume a fixed question
 
-`question-links.spec.js`: reopen a question without evidence, explicitly Run again,
+`question-links.spec.js`: reopen a question without evidence, explicitly Run question,
 share with a second browser, traverse history without reads, reject malformed input
 and inspect mobile layout. Frames: `49a-reopened-question.png`,
 `49b-share-question.png`, `49c-mobile-resume.png`.
@@ -1594,3 +1594,19 @@ preserves exact strings; fresh preview accepts the baseline without source reads
 [Mobile native wire/default scope](screenshots/114a-native-wire-defaults-and-exact-scope.png).
 Its Bombadil actor permits only source-free preview/close; existing mixed-step,
 linked-evidence and fresh-comparison journeys retain their observed model checks.
+
+## 115. Continue from Activity into fixed analysis
+
+[Executable journey](../../journeys/activity-analysis.spec.js) ingests ordinary
+OTel logs, stages a filter, proves scope Analyze requires Apply, and then stages
+the exact last completed window. Inspecting/editing the staged question performs
+no telemetry read or publication. Run reads the fixed selector once; Return
+restores the paused buffer and focus without resubscribing. An empty span window
+also stages without inventing bounds from rows.
+
+[Compact staged analysis](screenshots/115a-staged-activity-analysis.png) ·
+[Fixed analysis result](screenshots/115b-fixed-activity-analysis.png).
+The [contract](../ACTIVITY_ANALYSIS.md) distinguishes this applied-scope action
+from the inspector's original-observation-window action. The bounded
+[Bombadil actor](../../verification/bombadil/activity-analysis.ts) stages,
+discloses editing and returns; it never executes or publishes a question.
