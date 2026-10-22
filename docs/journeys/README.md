@@ -1,5 +1,15 @@
 # User journeys and storyboards
 
+[Journey 105](../../journeys/paused-return.spec.js): inspect a held generic log →
+stage a field filter → open a fixed child → return while a real response is held →
+release that response without replacing the parent → reopen/run the retained fixed
+editor → return on mobile → explicitly Apply/Resume. It checks source counts,
+selected identity, draft scope, viewport/inspector scroll and focus. Frames:
+[pending child](screenshots/105a-pending-fixed-return.png),
+[returned selection](screenshots/105b-returned-paused-selection.png),
+[mobile return](screenshots/105c-mobile-paused-return.png).
+The deliberate transport delay holds an actual source response; data is not mocked.
+
 [Journey 104](../../journeys/live-filters.spec.js): observe four ordinary logs →
 inspect west → stage Include without fetching → Apply one matching row → stage
 Exclude and Apply east/empty (missing stays excluded) → remove the chip and Apply →

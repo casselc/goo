@@ -262,4 +262,4 @@ application owner. Shared `GooAttributes` emits typed Include/Exclude intents;
 chip edits pause locally, Apply starts a new tail generation, and the inspector's
 fixed continuation stages the original row read window in `GooExploration` without
 fetching. Only the existing Run action rereads it. This is the first S2 interaction
-cut; record-body deduplication and retained-parent return are still planned.
+cut; record-body deduplication remains planned. The existing trail now exposes suspend/resume of its retained fixed view; Live Activity uses these to cancel hidden work and restore its paused parent without a read.

@@ -1,5 +1,47 @@
 # Validation record
 
+## Return from fixed work to paused activity (2026-10-22 UTC)
+
+Query/packages image:
+`sha256:3c1e708b13a748d673388a897f89df8429470592ae30356b6a452b25acda2ea4`.
+
+The existing header action now returns to a retained paused activity after fixed
+or trace work. It preserves scope drafts, rows, selection, page/table/inspector
+scroll and selected-row focus. Fixed work is suspended/detached before restoration;
+return itself does not fetch or resume. The fixed action uses the shared inspector
+action slot, outside its scrolling body. Reload drops this tab-local parent; shared
+record presentation and ancestry remain open. [Contract/diagram](docs/LIVE_ACTIVITY.md)
+and [storyboards](docs/journeys/README.md).
+
+Actual checks:
+
+- Frontend suite: 32 test files pass; JavaScript syntax/document links/whitespace pass.
+- Actual JavaScript Hegel entry/filter state campaigns pass (80 cases × 24 steps
+  each). Existing typed selector and fresh-entry ownership contracts are preserved.
+- Journey 105 passes with a delayed real source response, pending-query cancellation,
+  restored completed-query navigation, mobile layout, unchanged selected identity,
+  draft predicates and keyboard focus. It proves preservation of table position,
+  page scroll at 444px and nonzero inspector scroll at 50px in the final ledger.
+- Its final observed Quint protocol counts both tail and fixed requests: four
+  intended tail connections plus two explicit fixed reads; Return and releasing
+  the cancelled response leave the combined count unchanged. Five rejecting
+  controls still fail as intended. Final focused run: 23.2s.
+- Compatibility journeys 85, 86, 104, 102 and 103 pass together (2.7m), including
+  bounded question-trail retention/branching, generic service diagnosis, filtering,
+  fixed/saved-link intent, explicit resume gaps, scroll/background pause and both
+  Bombadil actors. The updated filter actor opens a fixed child and returns to
+  the same paused selection. Screenshots are regenerated from the final image.
+- Deployed source/binary hashes match (including the shared trail adapter); all
+  13 services run; old pending queue IDs and exact native review citations survive;
+  OOM kills zero. No native-store restart was performed this round.
+
+Evidence: `artifacts/paused-return-unit.log`, `paused-return-hegel.log`,
+`paused-return-compatibility.log`, `paused-return-final-focused.log`,
+`paused-return-health.json` and ledgers under `artifacts/paused-return/`.
+The held response is fetched from the real source, then deliberately delayed at
+Playwright's transport boundary. The compatibility background event/HTTP 429 are
+injected inputs; ordinary OTel/source reads use the real lab.
+
 ## Live attribute filters and fixed-window staging (2026-10-22 UTC)
 
 Query/packages image:

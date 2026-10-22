@@ -6,6 +6,8 @@ module stream_entry {
  var coherent: bool
  action init = all {reads'=INITIAL,paused'=false,gap'=false,coherent'=true}
  action connect = all {reads'=reads+1,paused'=false,gap'=false,coherent'=true}
+ // An explicit fixed child read increments the count while its retained parent stays paused.
+ action fixedRead = all {paused,reads'=reads+1,paused'=true,gap'=gap,coherent'=true}
  action pause = all {reads'=reads,paused'=true,gap'=gap,coherent'=true}
  action hold = all {reads'=reads,paused'=paused,gap'=gap,coherent'=true}
  action stored = all {reads'=reads,paused'=true,gap'=false,coherent'=true}

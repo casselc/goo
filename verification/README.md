@@ -1,5 +1,7 @@
 # Semantic properties and model conformance
 
+Journey 105 adds observed source-free parent returns and cancellation of a delayed real fixed response to the entry Quint protocol. Its ledger counts both tail and fixed requests; `fixedRead` permits an explicit child read while the parent remains paused, and local returns must keep that total unchanged. The shared Bombadil filter actor also opens a fixed child and returns to the same paused selection.
+
 Journey 104 and `verification/bombadil/live-filters.ts` cover live filter staging and explicit fixed-query continuation. `TestHegelLiveFilterStateSwarm` checks applied-selector isolation, exact namespace/value identity, deduplication and immutable snapshots against the actual JavaScript filter model.
 
 Live entry uses `TestHegelEntryIntentStateSwarm` against the actual JavaScript intent gate. Journeys 102/103 feed observed request counts and lifecycle transitions into `stream_entry.qnt` through quint-go (`GOO_STREAM_ENTRY_LEDGER`); five rejecting controls catch hidden reads, duplicate startup, missing resume gaps and overflow. `GOO_ENTRY_BOMBADIL=1` enables the bounded stream-entry browser actor. See [Live Activity](../docs/LIVE_ACTIVITY.md).

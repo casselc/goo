@@ -49,6 +49,8 @@ flowchart LR
   Draft -->|Apply: new scoped read| Monitor
   Draft -->|Open fixed investigation: no read| Staged[Fixed question draft]
   Staged -->|Run explicitly| Context[Fixed source results]
+  Staged -->|Return: no read| Held
+  Context -->|Return: suspend fixed owner, no read| Held
   Held -->|Open trace: named read| Context
   Fixed -->|Open live activity| Monitor
 ```
@@ -91,8 +93,8 @@ predicate in the selected row's original 60-second read window. It does not fetc
 the existing Run action explicitly rereads that fixed question. It is not a
 capture or an assertion of complete source coverage.
 
-Supplied-row ancestry, a common record presenter across all surfaces and retained-
-parent return after a fixed investigation remain S2/A3 work.
+Supplied-row ancestry and a common record presenter across all surfaces remain
+S2/A3 work. The paused parent return described below is implemented.
 The legacy advanced editor is a temporary compatibility consumer; the
 [whole-product reviews](STREAM_FIRST_WHOLE_PRODUCT_DESIGN.md) and
 [active queue](IMPLEMENTATION_PLAN.md) name its replacement/removal gates.
@@ -122,3 +124,26 @@ empty-string fixed query. It checks exact typed selectors and request counts;
 fixed-question staging. Hegel state/swarm campaigns run the actual JavaScript
 filter model; observed browser transitions use the entry Quint protocol. The
 Bombadil filter actor scopes the lab, inspects a record and stages a predicate.
+
+## Return to paused activity
+
+Opening a fixed investigation or trace from Live Activity retains one parent in
+this tab: applied/draft scope, held rows, selected inspector and local scroll
+positions. The existing header action becomes **Return to paused activity**.
+Returning suspends and detaches the fixed owner, aborting in-flight fixed queries and invalidating pending
+context generations before restoring the parent. It does not fetch or resume. Focus returns to
+the selected row button when available. Apply and Resume remain explicit new reads.
+
+Opening Questions/charts from the parent restores the retained fixed editor without
+rerunning it. A query cancelled by returning remains cancelled until Run. The
+existing question trail keeps its own bounded views; this adds no durable evidence
+store, replay cursor or browser Back history. Reload drops the parent. Starting a
+new live scope or resuming invalidates the old return anchor. A trace context is a
+named source read, not inferred ancestry.
+
+[Journey 105](../journeys/paused-return.spec.js) holds a real source response at the
+browser transport boundary, returns while it is pending, then releases it to verify
+it cannot replace the paused parent. It also covers completed fixed results,
+selection/draft/scroll retention and mobile return. Its Quint ledger counts both live and fixed reads, so Return must preserve the
+combined count. The shared Bombadil filter actor
+now stages a fixed child and returns to the same selection.

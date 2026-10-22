@@ -418,3 +418,8 @@ qualified recorded-field intents. `facetHint` optionally supplies local staging
 feedback; existing consumers keep their default wording. The viewer does not
 subscribe or fetch. The application owns draft/applied filters, chips, Apply and
 the explicit fixed-query continuation.
+
+Live Activity supplies its fixed-investigation action through the shared
+`GooUI.inspector` action slot, outside the scrolling attribute body. The application
+retains the inspector DOM and selected observation when a fixed child is active;
+its return action does not ask display components to fetch or reconstruct records.
