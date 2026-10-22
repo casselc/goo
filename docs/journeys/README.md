@@ -1610,3 +1610,19 @@ The [contract](../ACTIVITY_ANALYSIS.md) distinguishes this applied-scope action
 from the inspector's original-observation-window action. The bounded
 [Bombadil actor](../../verification/bombadil/activity-analysis.ts) stages,
 discloses editing and returns; it never executes or publishes a question.
+
+## 116. Compare a staged population to its current population
+
+[Executable journey](../../journeys/population-context.spec.js) emits four ordinary
+OTel spans with missing, empty, west and east region values. It inspects each
+signal's applied selector without reads, stages missing-or-empty values, and
+compares the two-record selection with the full four-record baseline despite a
+two-record inspection page. The companion's predicate is preserved; each configured signal is read once,
+with no extra baseline read. The comparison opens
+visibly on mobile. Restore starting population explicitly rereads the exact
+original fixed questions.
+
+[Selection actions](screenshots/116a-population-selection-actions.png) ·
+[Comparison](screenshots/116b-selected-population-comparison.png).
+The [population contract](../POPULATION_WORKSPACE.md#contextual-selection-comparison-and-restoration)
+keeps selection-versus-current separate from a future exact complement operation.

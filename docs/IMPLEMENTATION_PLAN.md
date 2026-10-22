@@ -13,8 +13,9 @@ The [2026-10-22 whole-product coherence proposal](WHOLE_PRODUCT_COHERENCE_PROPOS
 is a fresh architecture/design review of `f54d07c`. It proposes a contextual
 Activity-to-analysis handoff and population workflow ahead of broad comparison
 consolidation, plus a simpler Saved entrance. The user accepted continuing with the contextual handoff. Its bounded
-[Activity analysis cut](ACTIVITY_ANALYSIS.md) is delivered; population workflow
-and Saved restructuring remain recommendations, not completed features.
+[Activity analysis cut](ACTIVITY_ANALYSIS.md) is delivered. Population workflow
+is partially implemented through the contextual selection/comparison/restoration
+cut below; broader population controls and Saved restructuring remain follow-up.
 
 The user has authorized incorporating the product, architecture and design reviews
 and working through the resulting tasks. This is the single active queue; the
@@ -24,6 +25,7 @@ research remains deferred, rather than becoming an automatic commitment.
 
 | Cut | Deliverable and deliberate consolidation | Acceptance before advancing |
 | --- | --- | --- |
+| P2 — bounded population continuation delivered | Per-signal scope disclosure, staged selection versus supplied-current comparison and explicit reread of starting questions. | [Contract and journey 116](POPULATION_WORKSPACE.md#contextual-selection-comparison-and-restoration). Preserve full aggregates, parent/companion predicates, source-free staging and exact fixed windows. Broader field controls, arbitrary widening and exact selection-versus-rest remain D2 work. |
 | P1 — bounded contextual handoff delivered | Analyze the applied Activity scope in its last completed window, or the selected observation in its original window; stage before Run, disclose editing and return to the paused parent. | [Contract and bounded acceptance](ACTIVITY_ANALYSIS.md). Explicit blank authoring and broader population/Saved consolidation remain follow-up work; do not merge execution owners. |
 | 0 — closed | Native retained catalog, exact review citations and browser-local native retry recovery. | Delivered evidence is recorded in [VALIDATION.md](../VALIDATION.md). Preserve native-only recovery, distinct store/search clocks and pinned historical reviews. |
 | A1 — delivered applied-result portion; blank entry superseded by S1/S2 | Compact Explore: extract the existing distribution/facet body from enclosing workflow chrome; compose one applied scope/result/action region; disclose mobile facets; remove redundant hidden controls and their CSS overrides after parity. | Real desktop/mobile useful visual and first-record positions; stream-first entry follows S1/S2 below; keyboard/touch, staged/applied scope, explicit partial/unknown state, no reads on local disclosure, delayed response rejection. Refresh affected storyboard frames and bounded Bombadil actions. |

@@ -1416,3 +1416,8 @@ td details {
 .activity-analysis:not(.analysis-editing) > .recent-entry-hint,
 .activity-analysis:not(.analysis-editing) > .exploration-scope > label,
 .activity-analysis:not(.analysis-editing) > .exploration-scope > :is(.recent-activity-run,[id$=exploreFreshWindow],[id$=exploreShareQuestion],[id$=exploreAddStep],[id$=exploreTail]){display:none}
+
+/* One inspectable applied scope beside the staged population selection. */
+.population-scope-context{font-size:12px;margin:6px 0;overflow-wrap:anywhere}
+.population-scope-context p{margin:5px 0;color:var(--muted)}
+.population-selection>.controls{gap:6px;flex-wrap:wrap}

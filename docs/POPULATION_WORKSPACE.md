@@ -214,3 +214,52 @@ state/swarm rules also mutate tail settings while retaining immutable histories.
 
 ![Live population and baseline](journeys/screenshots/92a-population-live-baseline.png)
 ![Mobile live population](journeys/screenshots/92b-mobile-population-live.png)
+
+## Contextual selection, comparison and restoration
+
+The compact **Applied population** disclosure exposes each signal's selector;
+staged configurations say **Configured population** instead. A failed signal is
+marked unavailable. Disclosure itself performs no source read. Existing fixed
+UTC bounds and independent source bases remain visible in their owning views.
+
+The staged facet tray now groups Apply, Open and **Compare selection to current**
+with Undo/Clear. Compare uses the current supplied **full aggregates** as baseline
+for the selected signals, then explicitly reads the selected fixed questions.
+Unselected companion predicates remain unchanged. It opens the resulting Compare
+view, including the facet disclosure on mobile. Only applied, nonnumeric,
+single-field breakdowns are supported; unavailable actions explain the limit.
+This is selection versus current, with possible overlap, not selection versus
+rest or an inferred anomaly/causality result. Missing/empty field meanings, unknown
+source states and full denominators retain their existing Go contracts.
+
+The in-memory baseline is not reread merely to perform this continuation. Saving
+a view still stores **questions**, not aggregate evidence: reopening/rerunning a
+saved baseline configuration retains its existing independent-source-read rules.
+Use Capture comparison for the existing explicit durable capture operation.
+
+**Restore starting population**, inside the scope disclosure, explicitly rereads
+the original fixed questions, including selectors, grouping and window. It does
+not expand beyond the starting scope, restore an old source basis or undo a draft
+selection. Undo/Clear concern the draft; restoration concerns executed questions.
+Returning from a retained child still restores its paused parent without a read.
+
+```mermaid
+flowchart LR
+  Current[Applied questions and full aggregates] --> Draft[Stage typed facets locally]
+  Draft --> Apply[Apply selected fixed questions]
+  Draft --> Compare[Hold supplied baseline and read selection]
+  Draft --> Child[Open staged child with parent retained]
+  Compare --> View[Visible comparison with independent bases]
+  Apply --> Restore[Explicitly reread starting questions]
+  View --> Restore
+```
+
+[Journey 116](../journeys/population-context.spec.js) checks a four-record
+population with a two-record page, missing/empty selection, exact parent and
+companion predicates, no baseline reread and explicit restoration.
+[Selection actions](journeys/screenshots/116a-population-selection-actions.png) ·
+[Visible comparison](journeys/screenshots/116b-selected-population-comparison.png).
+Journey 96 retains observed Go/Quint ledger validation; its expanded
+[Bombadil actor](../verification/bombadil/facet-selection.ts) adds compare/restore
+to staged selection and parent-return exploration. Actual checks and limits are
+recorded in [VALIDATION.md](../VALIDATION.md).

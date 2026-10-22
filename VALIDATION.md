@@ -1,5 +1,53 @@
 # Validation record
 
+
+## Contextual population selection and restoration (2026-10-22 UTC)
+
+The bounded population continuation in [the contract](docs/POPULATION_WORKSPACE.md#contextual-selection-comparison-and-restoration)
+adds inspectable per-signal selectors, selection-versus-current comparison and
+explicit starting-question restoration. Compare holds supplied full aggregates,
+reads configured selected questions once per signal, and opens the comparison
+visibly. There is no new predicate evaluator, exact complement, API or custody
+contract. Saved baseline settings still store questions, not these held aggregates.
+
+Actual checks:
+
+- All 39 Node test files pass (13.49s), with syntax and whitespace checks passing.
+- Real-OTel journeys 96 and 116 pass together (1.6m). Journey 116 verifies four
+  matching spans with a two-record page, missing-or-empty selection, full baseline
+  count four versus selected count two, preservation of the parent predicate and
+  independent companion, no extra baseline source read, visible mobile comparison
+  and exact starting-query restoration. Initial test wording expected the raw
+  column name; it was corrected to the existing human-readable Service label.
+- Journey 96 preserves staged selection/Undo/Clear, retained child return, baseline
+  comparison, saved-view reopening and missing/empty exclusion behavior. Its first
+  run tried using a collapsed mobile facet after rerender; it now explicitly
+  reopens the disclosure. Its observed `TestQuintFacetLedger` passes (9.80s),
+  including the existing rejecting mutations.
+- The expanded 35-second Bombadil facet campaign passes and actually executes
+  compare-staged-population and restore-starting-population after parent return.
+  Existing bounded depth/live/overflow and completion properties remain checked.
+- `TestHegelFacetSelection` passes (2.97s) using the writable workspace XDG cache.
+  The first attempt used the read-only default home cache and failed before
+  running properties; setting `XDG_CACHE_HOME=/workspace/.cache` resolved it.
+- Six real storyboard PNGs are added/refreshed, including the new mobile selection
+  and visible comparison; the comparison frame was inspected. README, active plan,
+  journey index and population-flow diagram describe the bounded delivered scope.
+  Markdown local targets resolve and `git diff --check` passes.
+
+Checks used edited UI/Python on loopback 8098 against the existing Go, ClickHouse
+and collector. The running Compose image on 8088 was not rebuilt. Test telemetry
+and saved view definitions are real; no mocked UI/source data was used.
+
+Disk recovery preceded edits: the filesystem was full. With demo traffic briefly
+paused, three orphaned temporary compiler directories were removed (no active Go
+compiler), one identified 92.15 MB disposable Docker source-context cache was
+pruned, and only ClickHouse debug log archives `.2.gz` through `.8.gz` were removed.
+Current/recent debug logs, error logs, telemetry volumes, evidence, historical test
+artifacts and running/rollback images remain. Traffic was restored; approximately
+700 MB remained after acceptance. No volume/global image prune was performed.
+
+
 ## Contextual Activity analysis handoff (2026-10-22 UTC)
 
 [Activity analysis](docs/ACTIVITY_ANALYSIS.md) implements the accepted bounded
