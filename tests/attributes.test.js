@@ -44,3 +44,12 @@ test('field properties withhold non-JSON values without coercion or executable h
  assert.equal(isJSONValue(JSON.parse('{"__proto__":"literal","value":null}')),true);
  assert.equal(isJSONValue({nested:['900719925474099300',null,false,'']}),true);
 });
+
+test('shared record fields retain namespaces and exact strings without inferring absence',()=>{
+ const {commonGroups}=require('../ui/attributes'),records=[{ServiceName:'api',ResourceAttributes:{region:'west'},Attributes:{region:'',large:'9007199254740993',null:null,flag:false,one:'x'}},{ServiceName:'worker',ResourceAttributes:{region:'west'},Attributes:{region:'',large:'9007199254740993',null:null,flag:false}}],before=structuredClone(records),model=commonGroups(records);
+ assert.equal(model[0].entries.some(e=>e.key==='ServiceName'),false);assert.equal(model[1].entries[0].value,'west');assert.deepEqual(model[2].entries.map(e=>e.key),['region','large']);assert.equal(model[2].entries[0].value,'');model[1].entries[0].field.kind='attribute';assert.deepEqual(records,before);assert.throws(()=>commonGroups([]));assert.throws(()=>commonGroups(Array(21).fill(records[0])));assert.equal(commonGroups([{Attributes:{a:'x'}},{Attributes:{a:'y'}}])[2].entries.length,0);
+});
+
+test('record population actions withhold values the typed query cannot represent',()=>{
+ const {selectable}=require('../ui/attributes'),field={kind:'attribute',key:'region'};for(const value of [null,false,1,'x'.repeat(1025),'雪'.repeat(400),'a\0b','\ud800'])assert.equal(selectable({field,value}),false);assert.equal(selectable({field,value:'x'.repeat(1024)}),true);assert.equal(selectable({field,value:'😀'}),true);assert.equal(selectable({field:{kind:'attribute',key:'雪'.repeat(50)},value:'ok'}),false);
+});

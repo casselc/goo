@@ -1,5 +1,8 @@
 # Display component library
 
+The attribute adapter exposes optional Include/Exclude callbacks and `mountShared`; `commonGroups` preserves namespaces and only offers supported exact strings. Display elements remain passive. Bounded row marks/provenance are page-owned application state; see [record contract](RECORD_POPULATIONS.md).
+
+
 Categorical selection intent and the compact tray are application-owned; existing passive facet rows receive optional Include/Exclude callbacks. See [facet contract](FACET_SELECTION.md).
 
 

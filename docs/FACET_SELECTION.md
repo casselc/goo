@@ -1,5 +1,7 @@
 # Staged categorical populations
 
+[Record inspectors and shared selected fields](RECORD_POPULATIONS.md) feed the same staged owner.
+
 Recent activity facets support Include (the value button) and Exclude (the minus
 button). These gestures pause live updates and stage intent in a compact sticky tray that stays visible while browsing facets;
 they do not read telemetry or alter the displayed measurements. Click the same

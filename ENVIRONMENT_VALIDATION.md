@@ -1,5 +1,16 @@
 # Cloud baseline validation — 2026-10-16
 
+Record-population deployment (2026-10-22 UTC): query/packages use image
+`sha256:742ec802dd2670b871f275bd5630c7bfde4a1e2738d9c38964b898dd70067938`.
+All 12 services run with traffic restored; served assets/server/binary match the
+workspace, prior Redis pending IDs remain preserved (15 pending after traffic
+resumed), and OOM/OOM-kill counters remain zero. Thirteen browser journeys passed
+on this image, including the new record workflow and its Quint/Bombadil checks;
+a targeted documentation-capture rerun also passed. Evidence:
+`artifacts/record-population-{health,coverage}.json` and
+`artifacts/record-population-{release,storyboards}.log`.
+
+
 Categorical-selection deployment (2026-10-21 UTC): query/packages use image
 `sha256:dc5d7e229dddf7135f10767416279932be32df9878933317291830ef8c5daba7`.
 All 12 services run with traffic restored; served UI/server/binary hashes match

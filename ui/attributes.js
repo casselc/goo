@@ -11,6 +11,13 @@
   return [{name:'Record fields',entries:entries(recordFields)},{name:'Resource attributes',entries:entries(record.ResourceAttributes,'resource')},
    {name:record.Body!==undefined?'Log attributes':'Span attributes',entries:entries(record.Attributes||record.SpanAttributes||record.LogAttributes,'attribute')}];
  }
+ // Shared recorded string values only: absence, null and coercion never imply a predicate.
+ function selectable(entry){const value=entry.value,key=entry.field?.key;return ['column','resource','attribute'].includes(entry.field?.kind)&&typeof value==='string'&&typeof key==='string'&&key.length>0&&new TextEncoder().encode(value).length<=1024&&new TextEncoder().encode(key).length<=128&&!/[\u0000\uD800-\uDFFF]/u.test(value)&&!/[\u0000\uD800-\uDFFF]/u.test(key)}
+ function commonGroups(records){
+  if(!Array.isArray(records)||!records.length||records.length>20)throw Error('Select 1–20 captured page observations.');
+  const models=records.map(groups),identity=e=>JSON.stringify([e.field?.kind,e.field?.key,e.value]);
+  return models[0].map((group,i)=>{const sets=models.slice(1).map(m=>new Set(m[i].entries.filter(e=>selectable(e)).map(identity)));return {name:group.name,entries:group.entries.filter(e=>selectable(e)&&sets.every(s=>s.has(identity(e)))).map(e=>structuredClone(e))}});
+ }
  function matches(entry,query){const q=query.toLocaleLowerCase();return entry.key.toLocaleLowerCase().includes(q)||(text(entry.value)||'').toLocaleLowerCase().includes(q)}
  function renderValue(value,depth=0){
   const kind=type(value);
@@ -61,8 +68,8 @@
   if(!global.customElements.get('goo-field-value'))global.customElements.define('goo-field-value',GooFieldValue);
   if(!global.customElements.get('goo-attribute-list'))global.customElements.define('goo-attribute-list',GooAttributeList);
  }
- function mount(container,record,{onFilter,onBreakdown,canRefine=()=>true,raw=true}={}){
-  const model=groups(record),total=model.reduce((n,g)=>n+g.entries.length,0),root=node('goo-attribute-list',undefined,'attribute-viewer');
+ function mountModel(container,record,model,{onFilter,onBreakdown,onFacet,canRefine=()=>true,raw=true}={}){
+  const total=model.reduce((n,g)=>n+g.entries.length,0),root=node('goo-attribute-list',undefined,'attribute-viewer');
   const tools=node('div',undefined,'attribute-tools'),label=node('label','Find an attribute'),search=node('input');search.type='search';search.placeholder='Search keys and values';search.setAttribute('aria-label','Search attribute keys and values');label.append(search);
   const scopeLabel=node('label','Scope'),scope=node('select');scope.setAttribute('aria-label','Attribute scope');
   for(const name of ['All scopes',...model.map(g=>g.name)]){const option=node('option',name);option.value=name;scope.append(option)}scopeLabel.append(scope);
@@ -75,6 +82,7 @@
     for(const entry of entries){const row=node('div',undefined,'attribute-row'),key=node('span',entry.key,'attribute-key'),value=node('div',undefined,'attribute-value'),actions=node('div',undefined,'attribute-actions');row.dataset.key=entry.key;row.setAttribute('role','group');row.setAttribute('aria-label',group.name+': '+entry.key);
      value.append(valueNode(entry.value));
      const copyButton=node('button','Copy');copyButton.type='button';copyButton.setAttribute('aria-label','Copy value for '+entry.key);copyButton.onclick=()=>copy(entry.value,entry.key);actions.append(copyButton);
+     if(selectable(entry)&&onFacet)for(const mode of ['include','exclude']){const action=node('button',mode==='include'?'Include':'Exclude');action.type='button';action.disabled=!canRefine();action.setAttribute('aria-label',(mode==='include'?'Include ':'Exclude ')+entry.field.kind+':'+entry.field.key+' from record');action.onclick=()=>{if(!canRefine())return;onFacet(structuredClone(entry.field),entry.value,mode);status.textContent='Staged '+mode+' for '+entry.field.kind+':'+entry.field.key+'. Apply or Open in the selection tray; displayed measurements are unchanged.'};actions.append(action)}
      if(entry.field&&typeof entry.value==='string'&&onFilter){const filter=node('button','Filter and run');filter.type='button';filter.disabled=!canRefine();filter.title=filter.disabled?'Choose All filters to narrow this question.':'Read a fresh result with this exact value in the fixed window';filter.setAttribute('aria-label','Filter and run by '+entry.field.kind+':'+entry.field.key);filter.onclick=()=>onFilter(entry.field,entry.value);actions.append(filter)}
      if(entry.field&&onBreakdown){const breakdown=node('button','Break down and run');breakdown.type='button';breakdown.setAttribute('aria-label','Break down and run by '+entry.field.kind+':'+entry.field.key);breakdown.onclick=()=>onBreakdown(entry.field);actions.append(breakdown)}
      row.append(key,value,actions);section.append(row);
@@ -85,6 +93,8 @@
   if(raw){const detail=node('details',undefined,'raw-record');detail.append(node('summary','Raw record'),node('pre',JSON.stringify(record,null,2)));root.append(detail)}
   return root;
  }
+ function mount(container,record,options={}){return mountModel(container,record,groups(record),options)}
+ function mountShared(container,records,options={}){return mountModel(container,null,commonGroups(records),{...options,raw:false})}
  function disclosure(record,options={}){
   const detail=node('details',undefined,'record-attributes'),host=node('div');detail.append(node('summary','Captured attributes'),host);
   // Keep raw evidence available without constructing thousands of primary-view
@@ -92,5 +102,5 @@
   const raw=node('details',undefined,'raw-record');raw.append(node('summary','Raw record'),node('pre',JSON.stringify(record,null,2)));detail.append(raw);
   let built=false;detail.addEventListener('toggle',()=>{if(detail.open&&!built){built=true;mount(host,record,{...options,raw:false})}});return detail;
  }
- const api={groups,type,text,matches,fieldModel,isJSONValue,mount,disclosure};if(typeof module!=='undefined')module.exports=api;else global.GooAttributes=api;
+ const api={groups,commonGroups,selectable,type,text,matches,fieldModel,isJSONValue,mount,mountShared,disclosure};if(typeof module!=='undefined')module.exports=api;else global.GooAttributes=api;
 })(typeof window==='undefined'?globalThis:window);

@@ -1,5 +1,8 @@
 # Architecture
 
+[Record population gestures](RECORD_POPULATIONS.md) reuse the attribute viewer and typed selection owner. Shared-field discovery is local string intersection; query evaluation remains in Go. [Whole-product annotations](PRODUCT_ANNOTATIONS_DESIGN.md) are proposed sidecars on typed entities, definitions and evidence; observation labels require exact fixed-record freezing.
+
+
 [Categorical selection](FACET_SELECTION.md) constructs bounded typed predicates in the population adapter, then delegates validation/compilation and measurement to Go. Staging and child return are source-free.
 
 

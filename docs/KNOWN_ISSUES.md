@@ -1,11 +1,14 @@
 # Known issues and gaps
 
+[Bounded page-record selection](RECORD_POPULATIONS.md) and inspector/shared-field population actions are implemented. Durable annotation targets, exact selected-record freezing and [whole-product annotations, training labels and dataset exports](PRODUCT_ANNOTATIONS_DESIGN.md) remain proposed.
+
+
 Recent activity supports [staged categorical selections](FACET_SELECTION.md). General predicate complements, automatic difference scoring and durable selection history remain future work.
 
 
 The [recent-entry canvas](RECENT_ACTIVITY.md) now includes
 [horizontal time brushing and bounded retained child populations](RANGE_DRILLDOWNS.md).
-Heatmap rectangle selection, record-selection trays, persistent branches,
+Heatmap rectangle selection, cross-page/durable record selection, persistent branches,
 arbitrary field columns and automatic anomaly/difference scoring remain proposed.
 Saved exploration views retain their existing staged presentation and do not
 automatically start live updates.

@@ -1,5 +1,8 @@
 # Implementation plan
 
+The [whole-product annotation design](PRODUCT_ANNOTATIONS_DESIGN.md) recommends a shared typed target/revision contract and first metadata slice across scoped services, saved definitions and investigation revisions. Reviewed evidence labels and datasets follow; observation labels need exact freezing, while existing durable targets do not. No shared annotation/export API is implemented.
+
+
 Recent exploration now includes [staged categorical populations](FACET_SELECTION.md); arbitrary complements and automated population-difference ranking remain proposed.
 
 

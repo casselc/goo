@@ -185,8 +185,8 @@ where representable; annotations are optional enrichment, not entry requirements
 | --- | --- | --- |
 | One scope/mode bar | Question scope, evidence summary and workspace history | Consolidated owner state; compact draft/applied/live/paused indication. |
 | Linked time and value selection | Time range, time bars, value timeline, bucket heatmap | Horizontal brush/UTC handles are delivered; rectangle selection and wider linked gestures remain. |
-| Compact facets and filters | Facet list, attributes, typed query AST | Categorical Include/Exclude, grouping, batch Apply and Undo are delivered; extend the intent contract to attribute/series entry points. |
-| Record selection and field chooser | Native table, typed field values, bounded tail | Stable owner selection, local selection tray, arbitrary supported columns and compact reorder UI. |
+| Compact facets and filters | Facet list, attributes, typed query AST | Categorical and recent-record attribute/shared-field selections are delivered; series and other owner entry points remain. |
+| Record selection and field chooser | Native table, typed field values, bounded tail | Bounded page selection/shared-field gestures are delivered; cross-page identity, arbitrary supported columns and compact reorder UI remain. |
 | Inspector and scope continuation | Existing inspector shell, trace waterfall and workspace history | Bounded population parent/child retention is delivered; inspector-wide retention and explicit widening proposals remain. |
 | Comparable populations | Shared comparison display, distributions and live comparison | Adjacent scope headers and optional compatible overlays; exact complement and difference ranking need Go support. |
 | Reuse and evidence | Saved views, packages, capture and documents adapters | One action vocabulary and staged multi-intent capture with partial results. |

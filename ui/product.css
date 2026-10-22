@@ -1277,3 +1277,8 @@ td details {
 .facet-exclude {padding:0 .35rem;min-height:1.5rem;font-size:.85rem}
 
 .population-selection .controls > button {width:auto;flex:0 1 auto}
+
+.record-selection {border:1px solid var(--border);border-radius:6px;padding:.5rem;margin:.4rem 0;font-size:12px;overflow-wrap:anywhere}
+.record-selection > p {margin:0 0 .35rem}
+.record-selection > details {margin-top:.35rem}
+.record-row input[type=checkbox] {width:16px;height:16px;vertical-align:middle;margin:.25rem .4rem .25rem 0}

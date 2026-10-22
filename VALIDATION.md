@@ -1,5 +1,53 @@
 # Validation record
 
+## Record-derived populations and product annotation design (2026-10-22 UTC)
+
+Query/packages image: `sha256:742ec802dd2670b871f275bd5630c7bfde4a1e2738d9c38964b898dd70067938`.
+All 12 services run with traffic restored. Served assets (including attributes),
+server and binary hashes match the workspace. Prior Redis pending IDs remain
+preserved (15 pending at the check after traffic resumed); OOM/OOM-kill counters
+remain zero. Evidence: `artifacts/record-population-health.json`.
+
+- Root Go tests and all 29 frontend test files passed. Generated Hegel shared-field
+  cases passed against Go compilation/reference matching, alongside the existing
+  immutable-view state/swarm campaign. Field inspection preserves namespaces,
+  exact strings and empty values; it withholds absent/non-string/mismatched fields
+  and values outside the typed predicate's UTF-8/byte constraints.
+- All 13 browser journeys passed on this image: passive components (63–65,
+  including both SSR/SPA 63 cases), legacy inspector/facets (29), and population,
+  comparison, tail, recent-entry, retained-range and categorical workflows (90–97).
+  Affected documentation frames were regenerated. A targeted 97 rerun then focused
+  the parent facet view on Distribution for the documentation captures; baseline
+  comparison remains explicitly exercised after applying the derived question.
+- Real OTLP journey 97 passed inspector Include/Exclude without source reads,
+  shared-field intersection of two observations from different services, exact
+  session provenance, staged child/run/return, retained row checks/search/baseline,
+  two-record population versus four-record baseline, mobile layout, a 20-of-22
+  observation bound, reset on refresh and rejection of obsolete read/shared-set
+  actions. Selected rows never provide aggregate counts or durable event identity.
+- Quint/quint-go accepted the observed read/depth/provenance trace and rejected
+  eight controls: hidden preview/return reads, changed companion environment,
+  lost predicate, wrong return depth, changed provenance source, duplicate
+  observations and out-of-window event time. The retained-population model is reused.
+- Bombadil produced 822 trace records with zero violations; all five actions
+  executed (recent/select/shared-field-and-open/return/clear), reaching the applied
+  parent. Selection is bounded per materialized page; viewport, no-live-tail and
+  exception/rejection invariants passed. Evidence:
+  `artifacts/record-population-coverage.json` and the final actor trace.
+- The separately requested design-agent pass is a whole-product source/design
+  review, not implemented annotation functionality or customer research. It covers
+  all current workspaces and developer/test/export surfaces, with typed targets,
+  revision/origin contracts, diagrams, proposed cross-surface journeys and a first
+  shared metadata slice. Shared annotation storage, task labels, exact fixed-record
+  freezing and dataset exports remain proposed. No training data was published.
+
+Evidence: `artifacts/record-population-{go,unit,hegel,browser,release,storyboards,image}.log`,
+`artifacts/record-population/*/{ledger.json,TestQuintRecordPopulationLedger.log,bombadil/trace.jsonl}`.
+See [implemented record workflow](docs/RECORD_POPULATIONS.md),
+[whole-product annotation proposal](docs/PRODUCT_ANNOTATIONS_DESIGN.md), and its
+[observation-specific design supplement](docs/TRAINING_ANNOTATIONS_DESIGN.md).
+
+
 ## Staged categorical populations (2026-10-21 UTC)
 
 Query/packages final image: `sha256:dc5d7e229dddf7135f10767416279932be32df9878933317291830ef8c5daba7`.

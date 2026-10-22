@@ -62,3 +62,9 @@ have different controls while sharing the same capture and notes workflow.
 
 Use this test before adding another top-level destination, preset or editor.
 Improve the common loop before adding another isolated demonstration.
+
+The proposed [whole-product annotation model](PRODUCT_ANNOTATIONS_DESIGN.md)
+adds reusable meaning to this loop through scoped entity context, versioned
+definitions, investigation assertions and exact evidence targets. Training
+examples are a reviewed projection of that meaning, not the sole purpose of
+annotation or a separate mandatory workflow.

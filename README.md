@@ -1,5 +1,21 @@
 # goo — Grammar of Observability
 
+**Turn telemetry into shared definitions of system behavior, and investigate what
+happened with evidence you can inspect and preserve.**
+
+Ask a question → inspect its evidence → capture and explain it → reuse the
+definition. Start from instrumented code or unfamiliar OpenTelemetry data.
+[The product essence](docs/PRODUCT_ESSENCE.md) describes this common loop and the
+criteria for keeping the workbench coherent. The [core primitives review](docs/CORE_PRIMITIVES.md)
+sets the next consolidation priorities; [shared scope and checked transforms](docs/QUESTION_SCOPE.md)
+now connect recipe and follow-up planning.
+
+[Record-to-population exploration](docs/RECORD_POPULATIONS.md) adds staged inspector attributes and bounded shared-field selection over captured rows.
+
+
+The proposed [whole-product annotation model](docs/PRODUCT_ANNOTATIONS_DESIGN.md) connects meaning across services, definitions, investigations, measurements and evidence. Shared typed targets and revision history support later reviewed labels and dataset exports; annotation storage is not implemented.
+
+
 Staged categorical [facet selections](docs/FACET_SELECTION.md) add Include/Exclude, Undo/Clear and retained population drilldowns to recent activity.
 
 
@@ -11,15 +27,6 @@ Staged categorical [facet selections](docs/FACET_SELECTION.md) add Include/Exclu
 
 [Linked service timelines](docs/LINKED_TIMELINE.md) align span activity, errors, latency, logs and native streams. Preview a UTC range without reads, then explicitly apply it to every overview widget or open the selected span/log question.
 
-**Turn telemetry into shared definitions of system behavior, and investigate what
-happened with evidence you can inspect and preserve.**
-
-Ask a question → inspect its evidence → capture and explain it → reuse the
-definition. Start from instrumented code or unfamiliar OpenTelemetry data.
-[The product essence](docs/PRODUCT_ESSENCE.md) describes this common loop and the
-criteria for keeping the workbench coherent. The [core primitives review](docs/CORE_PRIMITIVES.md)
-sets the next consolidation priorities; [shared scope and checked transforms](docs/QUESTION_SCOPE.md)
-now connect recipe and follow-up planning.
 [One Services catalog](docs/UNIFIED_SERVICE_CATALOG.md) now connects the existing
 span, log and native metric discovery paths through one searchable entry.
 [Automatic service overviews](docs/SERVICE_DASHBOARDS.md) compose span/log activity,

@@ -695,3 +695,12 @@ against Go compilation/reference matching). `TestQuintFacetLedger` consumes
 hidden preview/return reads, changed companion environment, lost predicate and
 incorrect return depth. Optional `GOO_FACET_BOMBADIL=1` runs
 `verification/bombadil/facet-selection.ts` over real ingested telemetry.
+
+Record-to-population verification: `TestHegelSharedRecordFields` checks 60
+generated shared/mismatched/missing/non-string cases against Go query compilation
+and reference matching. `TestQuintRecordPopulationLedger` consumes
+`GOO_RECORD_LEDGER` from journey 97, reusing the retained-population model and
+rejecting eight controls involving hidden reads, source/predicate/depth changes,
+provenance source changes, duplicate observations and out-of-window event time.
+Optional `GOO_RECORD_BOMBADIL=1` checks the per-page selection bound, viewport,
+no-live-tail and completion/exception properties.

@@ -1348,3 +1348,14 @@ checks mobile layout and combining fields across an explicit breakdown read.
 Hegel checks construction against Go matching/compilation, Quint replays the
 observed depth/read ledger with five rejecting controls, and optional
 `GOO_FACET_BOMBADIL=1` exercises the categorical actor.
+
+## 97. Derive a population from captured records
+
+[Contract, process diagram and generated storyboards](../RECORD_POPULATIONS.md).
+`journeys/record-population.spec.js` verifies inspector Include/Exclude, shared
+fields across two selected observations, exact session provenance, retained
+parent navigation, baseline comparison, 20-of-22 selection bounds, refresh reset,
+stale-action rejection and mobile layout over real OTLP data. Optional
+`GOO_RECORD_BOMBADIL=1` runs selection/shared-field/open/return/clear actions.
+The related [training-label proposal](../TRAINING_ANNOTATIONS_DESIGN.md) has
+conceptual journeys only; annotation persistence/export is not implemented.
