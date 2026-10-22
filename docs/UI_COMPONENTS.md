@@ -451,8 +451,15 @@ contracts. [Ownership and invalidation](SAVED_RECORD_PRESENTATION.md).
 `GooRecordResults` uses one cached inspector per supplied table instead of an inline
 attribute disclosure on every row. Only an open inspector's detail slot takes up
 space. Selection precedes Inspect, then existing context follow-ups. Typed viewer
-callbacks retain owner-specific permissions and source semantics. The standalone
-noncompact tail and native-window disclosures remain compatibility consumers.
+callbacks retain owner-specific permissions and source semantics. Standalone tails now share the cached record inspector, and native identity uses a shared lazy stream inspector or the body of an existing selected-point inspector.
 Distribution comparison buttons stay hidden until a single-field nonnumeric
 breakdown or retained baseline supplies a comparison context; draft invalidation
 preserves a baseline's Clear action.
+
+`GooAttributes.streamRecord` snapshots qualified OTel identity without adding a
+record timestamp or measurement values. `mountStream` supplies typed fields to an
+existing inspector. `streamInspection` lazily composes that identity with the shared
+selected-item shell and an Inspect stream button. These are application adapters,
+not custom elements or source clients. Native lists/service summaries/comparisons/
+support previews share them. The older `disclosure` export remains for compatibility
+with external callers; application consumers have migrated.

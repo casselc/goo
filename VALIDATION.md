@@ -1,5 +1,66 @@
 # Validation record
 
+## Standalone tail and native identity inspection (2026-10-22 UTC)
+
+Final query/packages image:
+`sha256:0772f866195494ba396be40bbe69ae7e4fece7ace9f05bd55d7a446732fc59dc`.
+Native checks first ran on `e6067667`; the final image changes only tail pointer-focus
+handling and restores summary-before-actions ordering. Final tail checks run on
+`0772f866`; served source hashes verify the common native assets are unchanged.
+
+Standalone log/span tails pause before opening one cached record inspector, using
+the common detail body and bounded supplied-parent context. Close/reopen retains
+local search/body scroll; explicit resume/reset/scope replacement clears that owner.
+Live Activity retains its callback inspector without a duplicate local panel.
+Original observation windows and new-window continuity gaps remain distinct.
+
+Native measurement stream lists, service summaries, supported-window previews,
+native window comparisons and live counters share a lazy stream-identity inspector.
+Existing native point inspectors mount the same typed identity directly. Name/unit,
+resource versus attribute namespaces, scope/version and both schema URLs retain exact
+values; no record timestamp, fleet aggregation or source read is invented. The old
+attribute-disclosure export remains for compatibility, without application call sites.
+Other aggregate/native result layouts remain separate work.
+[Contract/ownership diagram](docs/RECORD_PRESENTATION.md#standalone-tails-and-native-identity).
+
+Completed checks:
+
+- All 33 frontend test files pass on final source, including native identity
+  namespace separation, empty/exact large strings, absent schema and non-mutation.
+  JavaScript syntax, changed local Markdown links and whitespace pass.
+- Existing Hegel tail overlap/multiplicity state, native-window comparison and
+  supported-window properties pass (100 cases each; 0.25s).
+- Ten distinct real-source browser journeys pass across the rounds: 54, 55, 59,
+  66, 72, 74, 77, 92, 102 and 103. These cover identity inspection without reads,
+  native values/gaps/bounds, supported-window recapture/recovery, exact receipts,
+  service summaries, tail retention, pause/resume/disconnect, retained search and
+  close-to-opener focus. Native mobile and final mobile tail frames are regenerated
+  and visually reviewed. Existing Quint/quint-go ledgers and their rejecting controls
+  pass; they validate documented observed accounting/state, not trace completeness.
+- Native-window, service-dashboard, supported-window and tail Bombadil campaigns
+  pass after the verification corrections below. The service actor exercises the
+  shared timeline and native identity; the native actor exercises identity before
+  broader exploration. Tail observation invariants target the standalone owner.
+- The final tail batch passes all four checks together (66, 92, 102, 103), with
+  tail and entry Bombadil enabled. The pointer fix preserves keyboard pause and
+  explicit resume while preventing a pause notice from moving the pressed button.
+- Final served asset/server/binary hashes match source. All 13 services run after
+  traffic restoration; pre-existing pending queue IDs, retained manifests/reviews,
+  pinned document citations and current catalogs survive. Cgroup OOM counts remain
+  zero. No package/XTDB restart was performed this round.
+
+Initial campaigns caught stale assumptions: the tail actor mixed a hidden Live
+Activity tail's state with standalone rows; the service actor required superseded
+per-widget time bars rather than the shared timeline; the supported-window fixture
+expected a v2 receipt. These now target the correct owner/current timeline and v3
+receipt. The added mobile tail case then caught a real pause-status reflow between
+pointer focus and click. Standalone tails now share Live Activity's pointer focus
+guard; keyboard focus still pauses immediately. Corrected checks all pass.
+
+Evidence: `artifacts/tail-native-final-unit.log`, `tail-native-hegel.log`,
+`tail-native-journeys.log`, `tail-native-corrected.log`, `tail-native-final-tail.log`,
+`tail-native-health.json` and associated journey/Bombadil ledgers.
+
 ## Single record inspector and contextual comparison controls (2026-10-22 UTC)
 
 Query/packages image:

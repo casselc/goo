@@ -69,7 +69,7 @@ the application owns tables, columns, viewports and action layouts.
 ## Adoption and remaining work
 
 The duplicate time/service/log/span formatters in `tail.js` and `exploration.js`
-are removed. Both primary inspectors now compose the same detail body. Fixed/frozen and context record tables use Inspect record as their single attribute entry point; duplicate inline disclosures are removed. The older noncompact standalone tail and native window evidence keep their existing disclosures until equivalent inspection actions are available.
+are removed. Both primary inspectors now compose the same detail body. Fixed/frozen and context record tables use Inspect record as their single attribute entry point; duplicate inline disclosures are removed. Standalone tails now compose the same record detail in one cached inspector. Native stream identity uses the shared inspector shell without pretending a stream is a log/span record.
 Stored record pages now use the dedicated saved owner; the hidden record editor is
 removed. The shared `GooRecordPresentation.table` helper now supplies native headers, row
 cells, qualified time/service/summary content and responsive cell labels to Live,
@@ -137,4 +137,39 @@ flowchart LR
   Detail -->|stage or explicit run| Refine[Existing owner refinement actions]
   Detail -->|named follow-up| Context[Independent trace or surrounding-log read]
   Detail -->|Close: focus to opener| Rows
+```
+
+## Standalone tails and native identity
+
+Standalone log/span tails now expose Inspect on each retained observation. The tail
+application pauses transport before inspection, supplies the same record detail
+and reported local ancestry, and retains search/body scroll across local close and
+reopen. Original read-window bounds remain separate from current wall time. Resume,
+reset, scope replacement and disposal clear the local inspector; resume still
+announces a new-window continuity gap. Pointer focus on buttons defers the pause notice until click, preventing status reflow from swallowing the click; keyboard focus still pauses immediately. The record summary stays before row actions. Applications supplying `onInspect` (Live
+Activity) retain their own selected-record owner, without a second inspector.
+
+Native measurement stream lists, service native summaries, fixed/live comparisons
+and supported-window previews share `GooAttributes.streamInspection`. It snapshots
+supplied OTel identity (name, unit, resource, attributes, scope/version and both
+schema URLs), then lazily mounts typed search, Copy and raw identity in the shared
+shell. Close returns focus; reopening retains search. There are no query/refinement
+callbacks, telemetry reads or evaluation changes. Native timeline selections already
+have an inspector, so they mount the same identity fields directly inside it;
+there is no inspector inside another inspector.
+
+The legacy `GooAttributes.disclosure` helper remains exported for compatibility,
+but application call sites have migrated. Other aggregate/native result layouts
+and durable navigation/catalog work remain separate cuts.
+
+```mermaid
+flowchart LR
+  Tail[Standalone tail application] -->|pause / supply retained observation| Record[Shared cached record inspector]
+  Entry[Live Activity owner] -->|existing callback| Record
+  Native[Supplied native stream identity] --> Identity[Shared identity presenter]
+  Identity --> Stream[Lazy stream identity inspector]
+  Identity --> Point[Existing native point inspector body]
+  Record --> Local[Search / copy / local reported context]
+  Stream --> Fields[Typed identity fields only]
+  Point --> Fields
 ```

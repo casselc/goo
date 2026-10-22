@@ -1,8 +1,11 @@
 import {always,eventually} from '@antithesishq/bombadil';
 import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
 export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
-const state=extract(({document})=>{const card=document.querySelector('#documentCards [data-kind=comparison]'),result=card?.querySelector('.evidence-comparison-result');return{exists:!!card,state:result?.getAttribute('data-state'),text:result?.textContent||''}});
+const state=extract(({document})=>{const card=document.querySelector('#documentCards [data-kind=comparison]'),result=card?.querySelector('.evidence-comparison-result');return{inspected:document.documentElement.dataset.nativeIdentityInspected==='true',exists:!!card,state:result?.getAttribute('data-state'),text:result?.textContent||'',identity:!card?.querySelector('.record-attributes')&&[...document.querySelectorAll('.stream-inspection')].every(root=>root.querySelectorAll('.ui-inspector').length===1)}});
 export const ready=eventually(()=>state.current.text.includes('Rate change (comparison − baseline): 2 {request}/s')).within(10,'seconds');
+export const identityExercised=eventually(()=>state.current.inspected).within(20,'seconds');
+export const sharedStreamIdentity=always(()=>state.current.identity);
 export const frozenDecision=always(()=>!state.current.state||state.current.state==='comparable');
 const reopen=registerCustomAction('goo.reopenNativeWindow',async(document)=>{(document.querySelector('#documentCards [data-kind=comparison] .evidence-comparison > button')as HTMLButtonElement)?.click()});
-export const inspect=actions(()=>state.current.state==='comparable'?[reopen()]:['Wait']);
+const identity=registerCustomAction('goo.inspectNativeIdentity',async(document)=>{const root=document.querySelector('.native-window .stream-inspection');root?.querySelector<HTMLButtonElement>('button')?.click();const search=root?.querySelector<HTMLInputElement>('input[type=search]');if(search){search.value='service.instance.id';search.dispatchEvent(new Event('input'))}root?.querySelector<HTMLButtonElement>('button[aria-label="Close selected item details"]')?.click();if(root)document.documentElement.dataset.nativeIdentityInspected='true'});
+export const inspect=actions(()=>state.current.state==='comparable'?state.current.inspected?[identity(),reopen()]:[identity()]:['Wait']);

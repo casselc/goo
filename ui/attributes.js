@@ -95,6 +95,16 @@
  }
  function mount(container,record,options={}){return mountModel(container,record,groups(record),options)}
  function mountShared(container,records,options={}){return mountModel(container,null,commonGroups(records),{...options,raw:false})}
+ // Native identity stays separate from record time and measurement values.
+ function streamRecord(stream){const s=structuredClone(stream);return {name:s.name,unit:s.unit,ResourceAttributes:s.resource,Attributes:s.attributes,scope:s.scope,version:s.version,schema:s.schemaURL,resourceSchema:s.resourceSchemaURL}}
+ function mountStream(container,stream){return mount(container,streamRecord(stream))}
+ // Application adapter for an already supplied native stream; no source client.
+ function streamInspection(stream){
+  const snapshot=structuredClone(stream),root=node('div',undefined,'stream-inspection'),button=node('button','Inspect stream'),panel=node('section'),inspector=global.GooUI.inspector(panel,{onClose:()=>button.setAttribute('aria-expanded','false')});
+  button.type='button';button.setAttribute('aria-expanded','false');
+  // The shared shell owns close-to-opener focus and local body/scroll retention.
+  button.onclick=()=>{if(!inspector.has('stream')){const content=node('div');content.append(node('p','Supplied stream identity only; inspection does not reread telemetry.','evidence-note'));mountStream(content,snapshot);inspector.show({key:'stream',title:'Native stream identity',description:snapshot.name+' ['+snapshot.unit+']',content,opener:button})}else inspector.show({key:'stream',title:'Native stream identity',opener:button});button.setAttribute('aria-expanded','true')};root.append(button,panel);return root;
+ }
  function disclosure(record,options={}){
   const detail=node('details',undefined,'record-attributes'),host=node('div');detail.append(node('summary','Captured attributes'),host);
   // Keep raw evidence available without constructing thousands of primary-view
@@ -102,5 +112,5 @@
   const raw=node('details',undefined,'raw-record');raw.append(node('summary','Raw record'),node('pre',JSON.stringify(record,null,2)));detail.append(raw);
   let built=false;detail.addEventListener('toggle',()=>{if(detail.open&&!built){built=true;mount(host,record,{...options,raw:false})}});return detail;
  }
- const api={groups,commonGroups,selectable,type,text,matches,fieldModel,isJSONValue,mount,mountShared,disclosure};if(typeof module!=='undefined')module.exports=api;else global.GooAttributes=api;
+ const api={groups,commonGroups,selectable,type,text,matches,fieldModel,isJSONValue,mount,mountShared,streamRecord,mountStream,streamInspection,disclosure};if(typeof module!=='undefined')module.exports=api;else global.GooAttributes=api;
 })(typeof window==='undefined'?globalThis:window);

@@ -1,5 +1,16 @@
 # User journeys and storyboards
 
+[Standalone tail and native identity inspection](../RECORD_PRESENTATION.md#standalone-tails-and-native-identity)
+now share the selected-item shell. Journey 66 pauses on a retained log, searches
+its typed fields, closes to the opener and reopens with cached search without a new
+source request. Journey 92 preserves a held span population during trace inspection
+and disconnect/reconnect. Journey 54 inspects native identity across exact-window
+comparisons, preserving search and focus without reading telemetry. Journeys 55/59
+inspect the same identity from supported-window previews and service summaries.
+Native navigation/timeline journeys retain independent value/coverage semantics.
+Tail and native-window Bombadil actors now inspect the new entry points and reject
+legacy inline attribute disclosures in these surfaces. Updated [paused tail](screenshots/66b-bounded-tail-keyboard-pause.png), [mobile tail](screenshots/66c-mobile-live-tail.png) and [mobile native identity](screenshots/54f-mobile-stream-identity.png) frames show the real inspection flows.
+
 The [shared record inspection cut](../RECORD_PRESENTATION.md#compact-record-inspection)
 removes duplicate inline disclosures from fixed/saved/context tables. Journey 29
 now opens the single inspector, searches qualified typed fields, copies multiline
