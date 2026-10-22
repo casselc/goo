@@ -45,7 +45,11 @@ flowchart LR
   Monitor -->|Inspect: local| Held[Paused buffer and inspector]
   Monitor -->|scroll / leave / hide| Held
   Held -->|explicit Resume with gap| Monitor
-  Held -->|Open trace: named read| Context[Fixed trace context]
+  Held -->|Include / Exclude: local draft| Draft[Qualified filter chips]
+  Draft -->|Apply: new scoped read| Monitor
+  Draft -->|Open fixed investigation: no read| Staged[Fixed question draft]
+  Staged -->|Run explicitly| Context[Fixed source results]
+  Held -->|Open trace: named read| Context
   Fixed -->|Open live activity| Monitor
 ```
 
@@ -72,9 +76,23 @@ completed poll while the next connection is unavailable.
 
 ## Deliberate limits and migration seam
 
-S1 offers environment/signal selection and local inspection. Facet Include/Exclude,
-chosen field pills, supplied-row ancestry, fixed-window child staging and shared
-record presentation are the next S2/A3 consolidation, not implemented here.
+The first S2 interaction cut adds Include/Exclude through the shared typed
+attribute viewer, removable filter chips and explicit Apply. Predicates are exact
+recorded strings, qualified by column/resource/attribute namespace, AND-combined
+and bounded to 16. Empty string is a recorded value; absence is not coerced to it.
+Exclude uses the existing `ne` predicate: the field must exist and differ.
+
+Staging or removing filters pauses transport and retains the held rows/inspector.
+Draft chips are marked; the previous applied environment/signal is shown and its
+selector is available in the tooltip. Apply replaces the buffer with a new scoped
+read. Resume refuses an unapplied scope; changing signals clears signal-specific
+filters. Opening a fixed investigation from the inspector stages the drafted
+predicate in the selected row's original 60-second read window. It does not fetch;
+the existing Run action explicitly rereads that fixed question. It is not a
+capture or an assertion of complete source coverage.
+
+Supplied-row ancestry, a common record presenter across all surfaces and retained-
+parent return after a fixed investigation remain S2/A3 work.
 The legacy advanced editor is a temporary compatibility consumer; the
 [whole-product reviews](STREAM_FIRST_WHOLE_PRODUCT_DESIGN.md) and
 [active queue](IMPLEMENTATION_PLAN.md) name its replacement/removal gates.
@@ -96,3 +114,11 @@ The HTTP proxy watches downstream disconnects and closes the upstream SSE socket
 promptly, releasing its existing admission slot. `python3 scripts/check_tail_disconnect.py`
 checks eight rapid aborts and the unchanged four-reader limit (fifth reader: HTTP 429).
 Run this local-lab check without another active monitor.
+
+Journey 104 follows four real generic OTel logs (west, east, empty and missing
+attribute) through Include, Exclude, chip removal, explicit Resume and a staged
+empty-string fixed query. It checks exact typed selectors and request counts;
+[frames and storyboards](journeys/README.md) show draft, mobile filtered stream and
+fixed-question staging. Hegel state/swarm campaigns run the actual JavaScript
+filter model; observed browser transitions use the entry Quint protocol. The
+Bombadil filter actor scopes the lab, inspects a record and stages a predicate.

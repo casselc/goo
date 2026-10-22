@@ -1,5 +1,47 @@
 # Validation record
 
+## Live attribute filters and fixed-window staging (2026-10-22 UTC)
+
+Query/packages image:
+`sha256:2cea13a255fbc260911b61963a105edcfc02077ee2fc89adfa94a5a221f9f503`.
+
+The first S2 interaction cut reuses the shared attribute viewer for typed Include/
+Exclude, removable draft chips and explicit Apply. Drafts pause without changing
+held records; Resume refuses a changed scope. The inspector stages a fixed query
+in its original read window without fetching; Run explicitly rereads it. Signal
+changes clear signal-specific filters. Shared record presentation, ancestry and
+retained-parent return remain planned. See [contract/diagram](docs/LIVE_ACTIVITY.md)
+and [storyboards](docs/journeys/README.md).
+
+Actual checks:
+
+- Frontend suite: all 32 test files pass, including namespace/empty-value identity,
+  draft/applied isolation, immutable snapshots and bounded predicate state.
+- Hegel: actual JavaScript entry-gate and filter state campaigns pass, each with
+  80 cases and 24 stateful steps (`artifacts/live-filters-hegel.log`).
+- Real Chromium journey 104 passes (48.5s), including the dedicated Bombadil
+  filter actor and observed Quint/quint-go replay with five rejecting controls.
+  Its ledger records six intended tail connections, one explicit fixed query,
+  zero unexpected publications/aggregate reads and zero page errors. Exclude
+  returns east and empty while excluding absent region; fixed staging preserves
+  the empty-string predicate. The filtered mobile first row is at 262px.
+- Compatibility journeys 66, 93, 102 and 103 pass on this same image, including
+  the existing entry Bombadil actor, keyboard/scroll/background pauses, explicit
+  resume gaps, fixed/saved-link intent and desktop/mobile compactness.
+- Deployed source/binary hashes match; all 13 services run; old pending queue IDs,
+  pinned native review citations and retained evidence survive; OOM kills zero.
+  No native-store restart was performed this round.
+
+Evidence: `artifacts/live-filters-unit.log`, `live-filters-hegel.log`,
+`live-filters-final-release.log` (four compatibility passes; the new actor's first
+URL setup failed), `live-filters-focused.log` (corrected journey 104 passes),
+`live-filters-health.json` and ledgers under `artifacts/live-filters/`.
+The first candidate exposed a mobile focus-induced toolbar reflow that displaced
+Inspect before pointer-up. The corrected compact adapter leaves pointer-button
+pause to its click handler; keyboard focus still pauses. Frames are regenerated
+from the final image. The compatibility background event and HTTP 429 remain
+injected inputs; normal telemetry/source reads use the real local lab.
+
 ## Compact live-entry controls (2026-10-22 UTC)
 
 Query/packages image:

@@ -412,3 +412,9 @@ never interpreted as HTML. Optional `interactive` emits `goo-tag-select` with an
 exact tag; the application owns filtering. Mount performs no fetch, subscription,
 publication or navigation. The editor and optional XTDB adapter remain application
 code; see the [annotation contract](WORKBENCH_ANNOTATIONS.md).
+
+The Live Activity adapter reuses `GooAttributes.mount(container, record, {onFacet, facetHint})` for
+qualified recorded-field intents. `facetHint` optionally supplies local staging
+feedback; existing consumers keep their default wording. The viewer does not
+subscribe or fetch. The application owns draft/applied filters, chips, Apply and
+the explicit fixed-query continuation.

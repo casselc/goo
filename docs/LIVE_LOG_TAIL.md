@@ -93,3 +93,9 @@ shows the new-window gap. Reconnect retains the last-good buffer until the first
 successful replacement batch. Explicit scope changes clear the old buffer. The
 HTTP proxy closes upstream reads on downstream disconnect; the four-reader
 admission limit is unchanged.
+
+Compact tail row buttons pause in their click handler. Pointer focus on a button
+leaves that handler in control so a pause/resume toolbar reflow cannot displace the
+button before pointer-up; keyboard focus and focus elsewhere still pause. An
+application `onResume` callback can return `false` to refuse a new read while scope
+changes are unapplied. Journey 104 exercises inspection after mobile Resume.

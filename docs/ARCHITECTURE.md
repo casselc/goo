@@ -256,3 +256,10 @@ single-question distribution and service timeline compositions remain available.
 ## Fresh live entry
 
 [Live Activity](LIVE_ACTIVITY.md) classifies visit intent before subscribing, reuses the existing bounded tail core and keeps its local inspector separate from fixed execution. Saved/shared entry remains inert. The [whole-product architecture review](STREAM_FIRST_WHOLE_PRODUCT_ARCHITECTURE.md) identifies the next shared record/context extraction and removal gates; its broader refactoring is proposed, not completed by this entry slice.
+
+Live Activity now keeps signal-local `ScopeFilters` draft/applied predicates in its
+application owner. Shared `GooAttributes` emits typed Include/Exclude intents;
+chip edits pause locally, Apply starts a new tail generation, and the inspector's
+fixed continuation stages the original row read window in `GooExploration` without
+fetching. Only the existing Run action rereads it. This is the first S2 interaction
+cut; record-body deduplication and retained-parent return are still planned.
