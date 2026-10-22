@@ -1,7 +1,8 @@
 # Product implementation proposal
 
-Prepared 2026-10-22. **Proposal for review, not an approved backlog or a claim that
-these features are implemented.** This reconciles the latest whole-product
+Prepared 2026-10-22; integrated after the architecture/design reviews. **The user
+has authorized working through the bounded active queue below. This is not a claim
+that queued features are implemented, or approval of every long-term research idea.** This reconciles the latest whole-product
 usability review with earlier product, interaction, component and semantic plans.
 It recommends a small delivery queue rather than implementing every historical
 “next” paragraph.
@@ -12,7 +13,7 @@ clear Explore entry, a clean saved-work boundary, and a revision-aware library.
 Follow with useful general observability improvements—native-instrument browsing,
 comparison leads and explicit capabilities—through those same workflows.
 
-Follow-up [architecture](ARCHITECTURE_REFACTORING_REVIEW.md) and [design](DESIGN_REFACTORING_REVIEW.md) reviews identify source-backed refactoring and consolidation opportunities for these milestones.
+The [architecture](ARCHITECTURE_REFACTORING_REVIEW.md) and [design](DESIGN_REFACTORING_REVIEW.md) findings are incorporated in the single active queue below. Their original recommendation status is historical; they do not create parallel refactoring backlogs.
 
 ## Basis, authority and current boundary
 
@@ -39,7 +40,7 @@ frontend and race checks, Hegel state/swarm, real OTLP journeys 99–101, Quint
 rejecting controls, a bounded Bombadil campaign, expanded mobile catalog checks,
 and Go/XTDB restart recovery. The [validation record](../VALIDATION.md) contains
 the exact image and evidence; milestone 0 is closed for this round. This does not
-approve the subsequent proposed milestones.
+imply that the subsequent queued milestones have shipped.
 
 The journal is browser-local, native-only, bounded to 16 entries and 16 KiB per
 request, and does not coordinate cross-tab edits. Ordinary document drafts remain
@@ -59,7 +60,7 @@ part of this delivery.
 | Full stored group comparison and readable geometry, [comparison review](COMPARISON_PRODUCT_REVIEW.md) | [Captured breakdowns](COMPARISON_BREAKDOWNS.md) and [visual comparisons](VISUAL_COMPARISONS.md) are delivered. | Error/latency ranking, log-appropriate columns, numeric comparison support and a common presentation shell. Statistical attribution is not implemented. |
 | Numeric-looking attributes are strings / arbitrary measures absent | Declared int64/uint64 bindings, invalid-input coverage and Go/ClickHouse execution exist in [numeric planning](NUMERIC_ATTRIBUTE_PLANNING.md). | Floating/decimal expressions, multiple measures, unit conversion, numeric cohorts and broader backend lowering. Never restore coercion-to-zero behavior. |
 | General captures, baseline-pair persistence, narrative and question cards, [collaboration research](COLLABORATIVE_INVESTIGATIONS_RESEARCH.md) | [General captures](GENERAL_CAPTURES.md), [saved comparisons](SAVED_COMPARISONS.md), typed steps and linked capture histories exist. | A cohesive case outline, durable drafts, authenticated editing and a shared activity/audit contract. Earlier “baseline persistence remains future” text is stale for supported comparisons. |
-| Shared tags/notes and exact displayed-record freezing, [annotation design](PRODUCT_ANNOTATIONS_DESIGN.md) | Shared typed metadata and optional saved/live-page retention are delivered at `290e101`; native catalog/citations/journal are delivered in the current round, with final release checks outstanding. | Other signal fragments, task-specific reviewed labels, historical cutoff queries, dataset/export policy and cross-store search. Do not rebuild the shared assertion store. |
+| Shared tags/notes and exact displayed-record freezing, [annotation design](PRODUCT_ANNOTATIONS_DESIGN.md) | Shared typed metadata and optional saved/live-page retention are delivered at `290e101`; native catalog/citations/journal are delivered and release-validated in the current round. | Other signal fragments, task-specific reviewed labels, historical cutoff queries, dataset/export policy and cross-store search. Do not rebuild the shared assertion store. |
 | Native bitemporal store evaluation, [storage spike](ANNOTATION_STORAGE_SPIKE.md) | Optional XTDB adapter is implemented and tested locally; normal metadata remains file-backed. | Measured operational/conformance work, multi-node visibility and explicit historical bases. No evidence yet justifies migrating all metadata, adding Minigraf in parallel, or building a ClickHouse external-source connector. |
 | Databricks translation, [compatibility research](DATABRICKS_METRIC_VIEWS.md) | [Offline prepared-fact compiler](PORTABLE_COMPILER.md) emits bounded metric-view artifacts; this is not raw-OTel or live-warehouse parity. | Extend a typed supported subset, preparation/provenance and physical data conformance. Local artifact checks cannot establish Databricks execution. |
 
@@ -70,19 +71,73 @@ implemented subsets above. Historical Python compatibility issues M01–M07 are
 not a description of the newer Go kernels. Preserve the history, but stop using
 it as an undifferentiated active queue.
 
-## Proposed delivery queue
+## Active implementation queue
 
-Milestone 0 closes the already-authorized delivery. Milestones 1–6 below are the
-recommended sequence for subsequent approval. Each should ship
-as bounded changes; the whole list is not one rewrite.
+The user has authorized incorporating the product, architecture and design reviews
+and working through the resulting tasks. This is the single active queue; the
+reviews provide rationale, not additional independent backlogs. Complete each
+bounded cut and its evidence before taking the next. Later capability-dependent
+research remains deferred, rather than becoming an automatic commitment.
+
+| Cut | Deliverable and deliberate consolidation | Acceptance before advancing |
+| --- | --- | --- |
+| 0 — closed | Native retained catalog, exact review citations and browser-local native retry recovery. | Delivered evidence is recorded in [VALIDATION.md](../VALIDATION.md). Preserve native-only recovery, distinct store/search clocks and pinned historical reviews. |
+| A1 — active, applied-result portion implemented | Compact Explore: extract the existing distribution/facet body from enclosing workflow chrome; compose one applied scope/result/action region; disclose mobile facets; remove redundant hidden controls and their CSS overrides after parity. | Real desktop/mobile useful visual and first-record positions; one primary recent action; keyboard/touch, staged/applied scope, explicit partial/unknown state, no reads on local disclosure, delayed response rejection. Refresh affected storyboard frames and bounded Bombadil actions. |
+| A2 — delivered | Clean live/saved ownership: leave the live operation editor in Operations; use a read-only operation receipt presenter in Saved with explicit continuation. Extract pure versioned route/link/step helpers where this change touches them. | Old hashes, IDs and receipt reopen still work; navigation/reopen does not execute sources; dirty drafts and retained-parent focus survive return; live and saved owners are not reparented. Go/JS fixtures protect exact bounds, missing/empty and optional defaults where protocol helpers move. |
+| A3 | Apply the compact scope/result composition to one service surface; add a record/capture transformation beside existing `GooEvidenceScope` adapters and adopt it in documents/captures. Consolidate only the CSS owned by these compositions. | Two real adopted surfaces share display facts rather than a universal result object; changed-read and coverage caveats stay visible; clocks remain separate; standalone/nested mobile and SSR/pre-definition SPA component checks remain source-free. |
+| B1 | Compact revision-aware library rows, initially record and native measurement definitions; then documents/retained catalog where compatible. Mount rich meaning/review detail only for selected entries. Split touched retention code into client/basis, catalog, citation and recovery owners without changing intents. | Same-title unrelated entries, explicit families, parallel heads, optional store unavailable, pagination/local search bounds, stale responses and exact old pinned review remain correct; selecting is not execution. Preserve retry body/key and await-token propagation. Mechanical formatting is a separate change. |
+| B2 | Shared pure browser protocol fixtures and qualified-field/presence display helpers; adopt applied chips and definition summaries. Extract a tiny request-owner helper only after comparing two adapters with matching begin/invalidate/current/dispose mechanics. | Golden Go/JS conformance preserves family differences and stored identities; Hegel state/swarm plus observed Quint traces reject obsolete completion and hidden publication; parent restoration and draft guards survive. Do not add a global mutable store. |
+| C1 | Freeze identity/response fixtures, then extract immutable-file publication mechanics only. Each store retains validation, digest/canonicalization, lineage and catalog rules. | Byte-identical IDs, large integers, duplicate publication, reopen, corrupt/truncated rejection, parent mismatch and no overwrite. Do not claim power-loss durability without fault evidence. Delete old mechanics after parity. |
+| C2 | Inventory endpoint effects/policies and inject explicit startup dependencies; consolidate strict JSON/response helpers with per-route limits. Then extract bounded ClickHouse HTTP transport, one source family at a time. | Preserve method/status/error/body-limit compatibility, typed escaping, cancellation, non-2xx/oversize handling, family basis and limits. GET/comparison/capture execution is accounted for; SSE retains independent lifetime/no-store/disconnect semantics. Embedded and real-source journeys pass. No Python proxy removal in this cut. |
+| D1 | Unify two-sided comparison presentation, complete fitting inspector adoption and share count-series geometry where two real consumers agree. Add meaningful error/latency ranking and log-appropriate columns. | Independently named windows/bases; incompatible units/kinds remain refused; exact table fallback, common domains, large values and known-to-unknown updates; explicit source continuation and keyboard return. Stored/reread/live execution owners remain separate. |
+| D2 | Bounded population operations: supported column chooser/order, time-duration rectangle with keyboard equivalent, explicit scope widening and exact selection-versus-rest complement. | Typed Go operations preserve parent predicate, range/presence/overlap semantics and full totals independent of paging. Real journey captures/reopens selected evidence; Hegel properties and Quint rejecting controls cover changed execution/selection protocols. No generic predicate-algebra rewrite. |
+| E1 | Native instrument discovery within existing entry points; explicit capability planning for one pinned HTTP-server convention plus generic fallback, then one database-pool or messaging case. Add typed relations and coverage only with an actual supporting source. | Ordinary non-Go, manifest-free and custom OTel data work; missing/empty identities, units, temporality, batch and unsupported cases are honest; static declaration/observed data/verified support remain distinct. No inferred trace completeness or fleet percentiles. |
+| F1 — prerequisite-gated | Broaden recovery or exact retained targets only for one concrete supported write/fragment after its server idempotency and source-membership contract exists. Inject exact-reference resolution/clocks without making file document loading depend on XTDB. | Lost acknowledgements/reload preserve intent, IDs and distinct clocks; unsupported writes do not inherit native-journal promises; current-head search differs from pinned/history reads. Select a concrete review task before adding formal labels/export. |
+
+The first delivered cut separates live/saved operation ownership (A2) and implements the applied-result portion of A1: facet-only composition, compact timeline controls and mobile facet disclosure. Blank-entry action consolidation remains active in A1. Actual checks and image identity are in [VALIDATION.md](../VALIDATION.md).
+
+A1–A3 are the first product round, not one unreviewable rewrite. B–F are subsequent
+bounded cuts in the same queue. Backend mechanics C1/C2 may run alongside B only
+with disjoint ownership and frozen fixtures; they do not block the first compact
+release. Reorder later cuts when a real usage result changes their value, and
+record the reason here instead of opening another “next” list.
+
+For every cut: update its current contract, affected architecture/process diagram,
+real user storyboard/screenshots, README/issue status and actual validation record.
+Use Playwright for layout and actual source behavior, bounded Bombadil for reachable
+actions/invariants, Hegel for meaningful semantic/state interleavings, and existing
+Quint/quint-go replay plus rejecting controls for changed protocols. Cosmetic CSS
+needs browser evidence, not mirrored semantic tests. Passive components must not
+fetch, subscribe, navigate or publish. Remove superseded paths only after parity;
+any temporary adapter needs a named consumer and removal condition.
+
+### Explicit deferrals, not executable backlog
+
+Shared-team authorization/isolation/quotas require a shared deployment target.
+Formal review-task vocabularies, adjudication and dataset exports require a concrete
+training/evaluation task and exact target/membership policy. Durable multi-client
+history, cross-store global search, native metric/fleet live extensions, whole-
+dashboard custody and additional numeric families need their own capability and
+usage evidence. Keep local defaults meanwhile.
+
+Do not start a framework migration, universal evaluator/result schema, DataFusion
+integration, CRDT whiteboard, broad XTDB migration, Minigraf installation, ClickHouse
+external connector, Python proxy/lab removal, or CEL/KCL runtime selection merely
+to complete this queue. Preserve existing typed kernels, old artifacts, optional
+Go weaving, non-Go OTel support and the runnable compatibility lab.
+
+## Product rationale for the integrated queue
+
+The original milestones 1–6 below explain product outcomes behind active cuts
+A–F. Their wider possibilities are not separate tasks: follow the bounded cuts
+and explicit deferrals above. Milestone 0 is closed.
 
 ### 0. Close the current evidence-continuity release
 
 **Outcome:** an exact live selection survives uncertainty, can be found again,
 and can support an investigation without silently following later interpretations.
 
-Complete the remaining mobile-expanded-catalog check and final documentation/
-health checks. Preserve the now-tested behavior: catalog tags follow current
+Release checks are complete. Preserve the now-tested behavior: catalog tags follow current
 active revision heads while a saved document continues to cite its old exact
 review; a lost initial save or correction response recovers across actual reload
 with its original request key. State the bounds of browser storage, source-page
@@ -305,7 +360,7 @@ that a feature could be valuable.
 | --- | --- |
 | Compact entry, one primary action, mobile facets, bounded charts, human axis units | **Next: 1.** Latest observed whole-product friction. |
 | Saved/live separation, action vocabulary, compact case outline and relevant time editor | **Next: 2.** Preserve all historical IDs and capabilities. |
-| Native retained catalog, pinned review citation, native retry journal | **Delivered this round; release gate 0.** Finish final checks; do not reschedule. |
+| Native retained catalog, pinned review citation, native retry journal | **Delivered and validated: 0.** Do not reschedule. |
 | Cross-store search, broader document/draft recovery, search/index quotas | **Partial: 2/6 and deployment gate.** Native catalog is not a global file/native index or durable resume for every draft. |
 | Revision-aware definition library, native browse-first entry, contextual example entry | **Next: 3.** Keep exact revisions and typed bindings. |
 | Remaining table/stat/chart adoption, small multiples, field tokens, comparison shell | **Consolidate in 1–4.** Reuse existing elements; do not create seven new generic components. |
@@ -379,9 +434,10 @@ into that index.
 
 ## Decisions and proposed defaults
 
-No additional decision is required to recommend milestone 1. The existing product
-essence and latest review provide a clear compact-first default. This document
-itself does not authorize implementation of subsequent milestones.
+The user has authorized progressing through the integrated active queue. Start
+A1/A2 with the existing compact-first and local deployment defaults; no further
+confirmation is needed for those bounded changes. Broader capability-dependent
+work remains deferred until its stated evidence or target exists.
 
 Three choices materially affect later scope:
 

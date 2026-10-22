@@ -103,3 +103,22 @@ and immutable configuration semantics.
 ![Recent activity and service facets](journeys/screenshots/93a-recent-activity.png)
 ![Mobile recent activity](journeys/screenshots/93b-mobile-recent-activity.png)
 ![Log-only recent activity](journeys/screenshots/93c-log-only-activity.png)
+
+## Compact applied composition
+
+The population adapter now mounts `GooDistributions.mountFacets` rather than a
+complete single-question result workspace. It shares facet/search/comparison
+behavior with the original composition, but never creates duplicate count,
+timeline or measure-summary sections. Population owns those totals and timelines;
+the old CSS rules hiding the redundant sections have been removed.
+
+Recent activity puts secondary span/log shortcuts inside **Filters and measures**,
+leaving Service near the result scope. Facets are native disclosures, initially
+closed when rendered on narrow screens. Timeline range inputs/actions are under
+**Select a time range**; selecting a chart interval opens the controls for the
+preview. Disclosing or switching these supplied-data views reads no telemetry.
+The full timeline composition remains available to service dashboards.
+
+This is the first applied-result portion of queue A1. The blank Explore entry's
+competing recent/fixed execution controls and broader action consolidation remain
+open; this slice does not claim to finish every A1 acceptance item.

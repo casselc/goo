@@ -237,3 +237,17 @@ custom elements remain display-only. See the [process diagram and limits](WORKBE
 The [whole-product usability review](WHOLE_PRODUCT_USABILITY_REVIEW.md) proposes
 entry/action/layout consolidation across these existing adapters. It is a review
 of the preceding runtime, not a claim those structural changes are implemented.
+
+
+## Application composition ownership
+
+[Live and saved operations](LIVE_SAVED_OWNERSHIP.md) now have separate destinations
+and selection controllers. Workspace navigation never reparents the live editor.
+`GooOperations.overview` renders supplied operation evidence for both owners;
+saved component IDs are scoped. No receipt hash or Go semantic contract changes.
+
+Population owns its applied scope, total, timeline and record page. Its facet
+adapter uses `GooDistributions.mountFacets`, which shares the existing facet and
+comparison mechanics without constructing a second count/chart/measure workspace.
+Recent timeline controls and mobile facets are source-free disclosures. The full
+single-question distribution and service timeline compositions remain available.

@@ -1,97 +1,89 @@
 # Implementation plan
 
-The [reconciled product proposal](PRODUCT_IMPLEMENTATION_PROPOSAL.md) classifies historical unfinished work against current implementation and recommends the next delivery sequence. It is a proposal for review, not blanket approval of its milestones. Follow-up [architecture](ARCHITECTURE_REFACTORING_REVIEW.md) and [design](DESIGN_REFACTORING_REVIEW.md) reviews examine incremental refactoring opportunities.
+Updated 2026-10-22 after the user authorized incorporating the product, architecture
+and design reviews and working through the resulting tasks. The
+[consolidated product proposal](PRODUCT_IMPLEMENTATION_PROPOSAL.md) holds the
+reconciliation, detailed rationale and source links. This active index replaces
+competing historical “next” lists; the history below preserves past scope, not
+additional current commitments.
 
+## Active implementation queue
 
-Current annotation slice: retained-evidence catalog, exact review citations and browser-local pending native-save recovery; see [contract](WORKBENCH_ANNOTATIONS.md). The [whole-product usability review](WHOLE_PRODUCT_USABILITY_REVIEW.md) recommends entry-point/result-density/action consolidation next. Historical cutoffs, multi-node lag verification, cross-store search, reviewed labels and dataset exports remain proposed. [Storage decision and connector options](ANNOTATION_STORAGE_SPIKE.md).
+The user has authorized incorporating the product, architecture and design reviews
+and working through the resulting tasks. This is the single active queue; the
+reviews provide rationale, not additional independent backlogs. Complete each
+bounded cut and its evidence before taking the next. Later capability-dependent
+research remains deferred, rather than becoming an automatic commitment.
 
+| Cut | Deliverable and deliberate consolidation | Acceptance before advancing |
+| --- | --- | --- |
+| 0 — closed | Native retained catalog, exact review citations and browser-local native retry recovery. | Delivered evidence is recorded in [VALIDATION.md](../VALIDATION.md). Preserve native-only recovery, distinct store/search clocks and pinned historical reviews. |
+| A1 — active, applied-result portion implemented | Compact Explore: extract the existing distribution/facet body from enclosing workflow chrome; compose one applied scope/result/action region; disclose mobile facets; remove redundant hidden controls and their CSS overrides after parity. | Real desktop/mobile useful visual and first-record positions; one primary recent action; keyboard/touch, staged/applied scope, explicit partial/unknown state, no reads on local disclosure, delayed response rejection. Refresh affected storyboard frames and bounded Bombadil actions. |
+| A2 — delivered | Clean live/saved ownership: leave the live operation editor in Operations; use a read-only operation receipt presenter in Saved with explicit continuation. Extract pure versioned route/link/step helpers where this change touches them. | Old hashes, IDs and receipt reopen still work; navigation/reopen does not execute sources; dirty drafts and retained-parent focus survive return; live and saved owners are not reparented. Go/JS fixtures protect exact bounds, missing/empty and optional defaults where protocol helpers move. |
+| A3 | Apply the compact scope/result composition to one service surface; add a record/capture transformation beside existing `GooEvidenceScope` adapters and adopt it in documents/captures. Consolidate only the CSS owned by these compositions. | Two real adopted surfaces share display facts rather than a universal result object; changed-read and coverage caveats stay visible; clocks remain separate; standalone/nested mobile and SSR/pre-definition SPA component checks remain source-free. |
+| B1 | Compact revision-aware library rows, initially record and native measurement definitions; then documents/retained catalog where compatible. Mount rich meaning/review detail only for selected entries. Split touched retention code into client/basis, catalog, citation and recovery owners without changing intents. | Same-title unrelated entries, explicit families, parallel heads, optional store unavailable, pagination/local search bounds, stale responses and exact old pinned review remain correct; selecting is not execution. Preserve retry body/key and await-token propagation. Mechanical formatting is a separate change. |
+| B2 | Shared pure browser protocol fixtures and qualified-field/presence display helpers; adopt applied chips and definition summaries. Extract a tiny request-owner helper only after comparing two adapters with matching begin/invalidate/current/dispose mechanics. | Golden Go/JS conformance preserves family differences and stored identities; Hegel state/swarm plus observed Quint traces reject obsolete completion and hidden publication; parent restoration and draft guards survive. Do not add a global mutable store. |
+| C1 | Freeze identity/response fixtures, then extract immutable-file publication mechanics only. Each store retains validation, digest/canonicalization, lineage and catalog rules. | Byte-identical IDs, large integers, duplicate publication, reopen, corrupt/truncated rejection, parent mismatch and no overwrite. Do not claim power-loss durability without fault evidence. Delete old mechanics after parity. |
+| C2 | Inventory endpoint effects/policies and inject explicit startup dependencies; consolidate strict JSON/response helpers with per-route limits. Then extract bounded ClickHouse HTTP transport, one source family at a time. | Preserve method/status/error/body-limit compatibility, typed escaping, cancellation, non-2xx/oversize handling, family basis and limits. GET/comparison/capture execution is accounted for; SSE retains independent lifetime/no-store/disconnect semantics. Embedded and real-source journeys pass. No Python proxy removal in this cut. |
+| D1 | Unify two-sided comparison presentation, complete fitting inspector adoption and share count-series geometry where two real consumers agree. Add meaningful error/latency ranking and log-appropriate columns. | Independently named windows/bases; incompatible units/kinds remain refused; exact table fallback, common domains, large values and known-to-unknown updates; explicit source continuation and keyboard return. Stored/reread/live execution owners remain separate. |
+| D2 | Bounded population operations: supported column chooser/order, time-duration rectangle with keyboard equivalent, explicit scope widening and exact selection-versus-rest complement. | Typed Go operations preserve parent predicate, range/presence/overlap semantics and full totals independent of paging. Real journey captures/reopens selected evidence; Hegel properties and Quint rejecting controls cover changed execution/selection protocols. No generic predicate-algebra rewrite. |
+| E1 | Native instrument discovery within existing entry points; explicit capability planning for one pinned HTTP-server convention plus generic fallback, then one database-pool or messaging case. Add typed relations and coverage only with an actual supporting source. | Ordinary non-Go, manifest-free and custom OTel data work; missing/empty identities, units, temporality, batch and unsupported cases are honest; static declaration/observed data/verified support remain distinct. No inferred trace completeness or fleet percentiles. |
+| F1 — prerequisite-gated | Broaden recovery or exact retained targets only for one concrete supported write/fragment after its server idempotency and source-membership contract exists. Inject exact-reference resolution/clocks without making file document loading depend on XTDB. | Lost acknowledgements/reload preserve intent, IDs and distinct clocks; unsupported writes do not inherit native-journal promises; current-head search differs from pinned/history reads. Select a concrete review task before adding formal labels/export. |
 
-The [whole-product annotation design](PRODUCT_ANNOTATIONS_DESIGN.md) recommends a shared typed target/revision contract and first metadata slice across scoped services, saved definitions and investigation revisions. Reviewed evidence labels and datasets follow; observation labels need exact freezing, while existing durable targets do not. The initial shared annotation API and optional native retained-evidence spike are implemented; reviewed labels and dataset exports remain proposed.
+Current cut: facet-only composition, compact applied timeline/mobile facets, and independent saved operation presentation. A2 ownership was separated alongside A1 because navigation previously moved the live editor. Blank-entry action consolidation remains in A1; this does not mark A1 complete. See [recent activity](RECENT_ACTIVITY.md) and [operation ownership](LIVE_SAVED_OWNERSHIP.md).
 
+A1–A3 are the first product round, not one unreviewable rewrite. B–F are subsequent
+bounded cuts in the same queue. Backend mechanics C1/C2 may run alongside B only
+with disjoint ownership and frozen fixtures; they do not block the first compact
+release. Reorder later cuts when a real usage result changes their value, and
+record the reason here instead of opening another “next” list.
 
-Recent exploration now includes [staged categorical populations](FACET_SELECTION.md); arbitrary complements and automated population-difference ranking remain proposed.
+For every cut: update its current contract, affected architecture/process diagram,
+real user storyboard/screenshots, README/issue status and actual validation record.
+Use Playwright for layout and actual source behavior, bounded Bombadil for reachable
+actions/invariants, Hegel for meaningful semantic/state interleavings, and existing
+Quint/quint-go replay plus rejecting controls for changed protocols. Cosmetic CSS
+needs browser evidence, not mirrored semantic tests. Passive components must not
+fetch, subscribe, navigate or publish. Remove superseded paths only after parity;
+any temporary adapter needs a named consumer and removal condition.
 
+### Explicit deferrals, not executable backlog
 
-## Next whole-product interaction priority
+Shared-team authorization/isolation/quotas require a shared deployment target.
+Formal review-task vocabularies, adjudication and dataset exports require a concrete
+training/evaluation task and exact target/membership policy. Durable multi-client
+history, cross-store global search, native metric/fleet live extensions, whole-
+dashboard custody and additional numeric families need their own capability and
+usage evidence. Keep local defaults meanwhile.
 
-The [recent-activity design pass](LIVE_EXPLORATION_DESIGN.md) sets the next sequence:
-one compact Explore entry canvas, unified selection with retained parent state,
-adjacent population comparisons, then composable capture/reuse. This supersedes
-adding a standalone tail-to-investigation panel. Existing semantic contracts and
-immutable artifacts remain; broader record selection, persistent branching and
-capture composition remain proposed.
+Do not start a framework migration, universal evaluator/result schema, DataFusion
+integration, CRDT whiteboard, broad XTDB migration, Minigraf installation, ClickHouse
+external connector, Python proxy/lab removal, or CEL/KCL runtime selection merely
+to complete this queue. Preserve existing typed kernels, old artifacts, optional
+Go weaving, non-Go OTel support and the runnable compatibility lab.
 
-The first [recent-entry slice](RECENT_ACTIVITY.md) now implements the direct
-planner entry and compact chart/facet/record composition. The first
-[time brushing / retained-child slice](RANGE_DRILLDOWNS.md) adds source-free
-selection, explicit child execution and paused-parent restoration. Rectangle
-selection, record trays, comparison consolidation and capture/reuse follow; this
-does not imply that all four design stages are delivered.
+## Reconciliation of previous top-level next items
 
-Implemented: general span/log population exploration with paired record pages, checked companion selectors, shared time selection, and immutable saved views carrying layout/columns. [Contract and sequence](POPULATION_WORKSPACE.md). Subsequent slices include arbitrary native-stream composition and broader saved dashboard layouts.
-
-Implemented: [aligned service telemetry with linked time selection](LINKED_TIMELINE.md). Next general-purpose slices: arbitrary population/cross-service timelines and saved multi-widget dashboard composition; these are not implemented by this service-level milestone.
-
-Implemented: [population → trace → finding](TRACE_FINDINGS.md), including bounded Go-selected page examples, explicit two-capture staging, partial-failure recovery, compact service disclosures and a generic OTel storyboard. Next: declared trace coverage/anchor-retention diagnostics and validation of late evidence changes; no automatic completeness or causality inference.
-
-## Current example standardization
-
-[Shared measurement packages](MEASUREMENT_PACKAGES.md) now connect gauges,
-reset-aware counters, native histograms and live lifecycle preparation to general
-captures, ordered notes and reusable YAML definitions. Twelve defaults and five
-validated data-only workflows cover reservations, checkout and reports. Both Go
-examples emit actual trace-correlated OTLP logs. The specialized Python views
-remain a labelled compatibility lab, not the primary implementation.
-
-Next: production logging SDK/provider configuration, user-authored workflows,
-additional metric kinds/expressions, explicit fleet policies and durable source
-coverage contracts. Raw-source preparation/lowering to Databricks is still future.
-Historical milestones below retain their original scope; they are not a claim
-that these remaining integrations are complete.
-
-## Current consolidation priority
-
-The [core primitives review](CORE_PRIMITIVES.md) supersedes feature-by-feature
-ordering above: first unify resolved scope and checked question transforms across
-recipes/follow-ups, then typed measures and capability-aware planning. Preserve
-existing wire formats, immutable receipts and specialized metric/lifecycle kernels.
-OTel semantic-convention profiles are a first-class input across all six primitives,
-with explicit version/unit/identity bindings and generic fallback for custom data.
-The first [scope/transform slice](QUESTION_SCOPE.md) now supplies checked shared
-planning metadata for recipes/follow-ups, with adapters for typed capture questions.
-The first typed record-measure lowering and bounded split-time-chart slice is now
-implemented ([contract](RECORD_MEASURES.md)). General numeric expressions,
-convention-profile resolution and backend capability negotiation remain subsequent
-work. [Numeric attribute measures](NUMERIC_ATTRIBUTE_PLANNING.md) now provide
-declared integer bindings, exact reference/ClickHouse execution, coverage states,
-Explore controls, capture validation and optional YAML persistence. Existing
-definitions retain their previous representation when numeric measures are off.
-
-## Next interaction consolidation
-
-The [entry-point design spike](ENTRY_POINTS_DESIGN_SPIKE.md) reviews the running
-app and proposes one scoped question workbench, consistent question/evidence/
-investigation vocabulary and contextual one-gesture drilldowns through a shared
-executor. The first [question-workbench slice](QUESTION_WORKBENCH.md) is now implemented. It consolidates
-Explore's three competing query actions, exposes draft versus applied scope,
-clarifies capture/reuse semantics and preserves incident bounds when Services
-opens metric discovery. Broader navigation changes remain proposed. Keep current routes and typed kernels during the change;
-catalog/navigation migrations follow only after equivalent workflows exist.
-
-## Service overview delivery and next product slices
-
-The [automatic service dashboard slice](SERVICE_DASHBOARDS.md) implements a pure
-Go planner, bounded typed widgets, matching declaration revisions and a local
-distributed relationship table. Next priorities from the whole-product review:
-
-1. Namespace-aware identity and registered operation-span cards are implemented;
-   see [service identity](SERVICE_IDENTITY.md). Declared-only catalog membership
-   now retains explicit presence states and independent registry provenance.
-2. Add deliberate instance navigation without changing service-level populations.
-3. Exact reported-edge populations are implemented; see [reported edges](REPORTED_EDGES.md).
-   Add separately typed async links before a graphical topology view.
-4. Unify investigation outlines and broader definition entry points; a frozen
-   whole-dashboard artifact needs its own explicit custody contract.
+- General span/log population timelines and saved population views are implemented
+  ([population workspace](POPULATION_WORKSPACE.md)); arbitrary native composition
+  and whole-dashboard custody remain separate, not another record workspace.
+- Log SSE, rolling record/native-counter comparison, general captures, saved
+  comparisons, and declared integer attribute measures have delivered subsets.
+  Do not treat historical all-or-nothing statements as the active backlog.
+- Existing evidence summary, inspector, facets, tables, attributes, waterfall,
+  heatmap and chart-frame elements need adoption/coherent ownership, not initial
+  reimplementation. Definition rows and result/comparison composition belong to
+  A/B/D above, not separate component projects.
+- The retained-evidence catalog, exact review citations and native-only browser
+  retry journal are complete. Ordinary page-local document drafts, file/native
+  cross-store search, historical cutoffs, formal labels and exports remain limits.
+- Service namespace identity, declared-operation cards and reported edges exist.
+  Instance navigation, typed async relationships, coverage and capability planning
+  are demand-led E work; no causality or completeness inference is implied.
+- Shared measurement packages and the generic examples remain the primary path;
+  Python reservations remain a labelled compatibility lab. Additional kinds,
+  expressions, logging-provider production settings, user workflows and warehouse
+  preparation are not all prerequisites for the first compact UI round.
 
 ## Earlier plan and milestone history
 

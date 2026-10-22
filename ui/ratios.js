@@ -2,7 +2,7 @@
 (function(global){
  function node(tag,text){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;}
  function label(i){return i.state==='ok'?`${i.percent.toFixed(2)}% (${i.errors}/${i.calls})`:i.state==='no_data'?'No data · zero traffic':`Unknown · ${i.reason}`;}
- function render(container,data,choose){
+ function render(container,data,choose,{prefix=''}={}){
   let selected;const choices=new Map();
   container.hidden=false;container.replaceChildren(node('summary','Operation error ratios'),node('p','Calls, errors and error rate share one counter evidence basis. Every declared outcome must have a valid aligned interval. Missing telemetry stays unknown; zero traffic is no data. Span links are contextual, not exact counter contributors.'));
   for(const entry of data.ratios){
@@ -26,7 +26,7 @@
    }
    const explain=node('details');explain.append(node('summary','Ratio policy and evidence basis'),node('pre',JSON.stringify({contract:entry.contract,policy:entry.result.policy,basis:entry.result.basis,counterBasis:entry.result.counterBasis},null,2)));container.append(explain);
   }
-  const selection=node('section');selection.id='errorRatioSelection';container.append(selection);
+  const selection=node('section');selection.id=prefix+'errorRatioSelection';container.append(selection);
   return {getState:()=>selected,restore:key=>{if(choices.has(key)){container.open=true;choices.get(key).click()}}};
  }
  const api={label,render};if(typeof module!=='undefined')module.exports=api;else global.GooRatios=api;

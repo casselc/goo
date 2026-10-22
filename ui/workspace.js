@@ -52,7 +52,6 @@
   let current='';const buttons=[...document.querySelectorAll('[data-workspace]')],panels=[...document.querySelectorAll('[data-workspace-panel]')];
   function navigate(route,{writeHash=true,focus=false}={}){if(!Object.hasOwn(routes,route))route='explore';current=route;for(const panel of panels)panel.hidden=panel.dataset.workspacePanel!==route;for(const button of buttons){if(button.dataset.workspace===route)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')}
    document.getElementById('workspaceTitle').textContent=routes[route].title;document.getElementById('workspaceDescription').textContent=routes[route].description;document.title=routes[route].title+' · goo';
-   const operations=document.getElementById('operations'),host=document.getElementById(route==='investigations'?'savedEvidenceHost':'liveEvidenceHost');if(route==='operations'||route==='investigations')host.append(operations);
    if(writeHash&&routeFromHash(location.hash)!==route)history.pushState(null,'','#'+route);if(focus)document.getElementById('workspaceTitle').focus({preventScroll:true});if(route==='examples')onExamples?.();global.dispatchEvent(new CustomEvent('goo:workspace',{detail:{route}}));
   }
   for(const button of buttons)button.onclick=()=>navigate(button.dataset.workspace,{focus:true});global.addEventListener('popstate',()=>navigate(routeFromHash(location.hash),{writeHash:false}));global.addEventListener('hashchange',()=>navigate(routeFromHash(location.hash),{writeHash:false}));navigate(routeFromHash(location.hash),{writeHash:false});

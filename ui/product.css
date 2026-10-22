@@ -600,7 +600,7 @@ td details {
 #operationPackage {
   max-width:400px;
 }
-#liveEvidenceHost:empty,#savedEvidenceHost:empty {
+#liveEvidenceHost:empty {
   display:none;
 }
 .app-footer {
@@ -1185,10 +1185,6 @@ td details {
 .population-workspace input[type=checkbox]{width:14px;height:14px;min-width:14px;min-height:0;padding:0;margin:0;flex:0 0 14px}.population-workspace>.controls>details{align-self:flex-start}.population-workspace>.controls>details label{display:flex;align-items:center;gap:7px;min-width:0;padding:4px 0;font-size:12px}.population-workspace>.evidence-note{border:0;background:transparent;padding:0;margin:6px 0;font-size:11px}.population-workspace .population-records{gap:10px}.population-workspace .population-records>section{padding:8px 0;border:0;border-top:1px solid var(--border);border-radius:0;box-shadow:none;background:transparent}.population-workspace .population-records h4{font-size:13px;margin:4px 0}.population-workspace .population-count{margin:4px 0 8px}.population-workspace>.controls{align-items:center}.population-workspace .population-save>label{display:flex;align-items:center;gap:8px;font-size:12px;margin:6px 0}.population-workspace .population-save input{flex:1;min-width:0}.population-workspace>details>label:has(input[type=checkbox]){display:flex;align-items:center;gap:7px;font-size:12px}@media(max-width:700px){.population-workspace{padding:8px}.population-workspace .telemetry-table>caption{display:block;width:auto;max-width:none;padding:8px 6px}.population-workspace .telemetry-table .record-row>td{grid-template-columns:65px minmax(0,1fr);gap:6px;padding:5px 6px}.population-workspace .telemetry-table .record-detail-row>td{padding:4px 6px 8px}}
 
 /* Population owns its timeline and record tables; distribution owns facets/comparisons. */
-.population-breakdown > .result-summary > .record-count,
-.population-breakdown > .time-chart,
-.population-breakdown > .duration-summary,
-.population-breakdown > .result-tabs [id$="resultRecords"] { display:none }
 .population-breakdown > .result-summary { margin:.35rem 0; padding:0; border:0 }
 .population-breakdown .comparison-controls { gap:.35rem; flex-wrap:wrap }
 .population-breakdown .facet-toolbar { margin:.4rem 0 }
@@ -1299,3 +1295,25 @@ td details {
 /* Catalog fields remain bounded when UTC date controls share a narrow row. */
 .retained-catalog .controls>label{display:grid;gap:4px;min-width:0}
 .retained-catalog .controls input{min-width:0;max-width:100%;box-sizing:border-box}
+
+.population-facets>summary{font-size:12px;font-weight:600;cursor:pointer;margin-bottom:6px}
+
+/* Applied recent results own the compact timeline; range editing stays explicit. */
+.compact-timeline .timeline-range-tools{margin:6px 0;font-size:12px}
+.compact-timeline .service-timeline-lane{grid-template-columns:150px minmax(0,1fr);gap:8px;padding:3px 0}
+.compact-timeline .service-timeline-lane>div{font-size:11px}
+.recent-settings>label{display:inline-grid;gap:4px;margin:6px;max-width:100%;font-size:12px}
+.recent-settings>label input{max-width:100%;box-sizing:border-box}
+.recent-mode.population-open .discovery-search{padding:0;margin:0}
+.recent-mode.population-open .discovery-search>.section-heading:has([hidden]){display:none}
+.recent-mode.population-open .discovery-controls{margin:0;gap:6px}
+@media(max-width:800px){
+ .compact-timeline .service-timeline-lane{grid-template-columns:100px minmax(0,1fr);gap:6px}
+ .compact-timeline .value-timeline-scale{font-size:9px}
+ .recent-canvas .population-facets{margin:0}
+}
+
+.recent-mode.population-open>.exploration-scope{margin-block:8px}
+.compact-timeline>.timeline-plots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 14px}
+.compact-timeline .timeline-plots>.service-timeline-lane{min-width:0}
+@media(max-width:800px){.compact-timeline>.timeline-plots{grid-template-columns:minmax(0,1fr);gap:0}}

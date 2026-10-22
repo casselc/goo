@@ -5,7 +5,7 @@
 Retained evidence now has tag/environment/literal-service/capture-time browsing
 and exact review citations in documents. Catalog scans and browser pending-request
 storage are bounded; multi-tab journal coordination and server-owned recovery are
-not implemented. See the [whole-product usability recommendations](WHOLE_PRODUCT_USABILITY_REVIEW.md) for broader consolidation work, still proposed.
+not implemented. The [active consolidation queue](IMPLEMENTATION_PLAN.md) now tracks the reviews. Separate live/saved operation ownership and compact applied population composition are implemented; blank-entry action consolidation, service adoption and revision-aware catalogs remain open.
 
 Optional XTDB retention now accepts selected exact live result pages as well as
 saved captures, with idempotent initial/correction requests and await-token

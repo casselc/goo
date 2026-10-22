@@ -6,7 +6,7 @@ happened with evidence you can inspect and preserve.**
 Ask a question → inspect its evidence → capture and explain it → reuse the
 definition. Start from instrumented code or unfamiliar OpenTelemetry data.
 [The product essence](docs/PRODUCT_ESSENCE.md) describes this common loop and the
-criteria for keeping the workbench coherent. The [current whole-product usability review](docs/WHOLE_PRODUCT_USABILITY_REVIEW.md) and [reconciled implementation proposal](docs/PRODUCT_IMPLEMENTATION_PROPOSAL.md) prioritize simpler entry points, compact results and consistent evidence actions. The [core primitives review](docs/CORE_PRIMITIVES.md)
+criteria for keeping the workbench coherent. The [current whole-product usability review](docs/WHOLE_PRODUCT_USABILITY_REVIEW.md) and [reconciled implementation proposal](docs/PRODUCT_IMPLEMENTATION_PROPOSAL.md) prioritize simpler entry points, compact results and consistent evidence actions. The [live/saved ownership contract](docs/LIVE_SAVED_OWNERSHIP.md) describes the first consolidation cut. The [core primitives review](docs/CORE_PRIMITIVES.md)
 sets the next consolidation priorities; [shared scope and checked transforms](docs/QUESTION_SCOPE.md)
 now connect recipe and follow-up planning.
 

@@ -86,3 +86,12 @@ inventory evidence now use a separate typed receipt, local catalog and bounded
 stored record bank under the same volume. See [GENERAL_CAPTURES.md](GENERAL_CAPTURES.md)
 for stable paging, fixed-plan refresh, link semantics and limits. Neither format
 automatically archives independently expanded context or a browser baseline pair.
+
+
+### Independent operation receipt presentation
+
+Saved operation captures render in their own supplied-data presenter; they do not
+replace or move the live Operations editor. **Open live Operations** returns to
+its existing package/lookback/selection without querying or staging the receipt
+as new live evidence. Fixed-question refresh still explicitly publishes a child.
+See [ownership and process diagram](LIVE_SAVED_OWNERSHIP.md).

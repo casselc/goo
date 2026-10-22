@@ -1,5 +1,42 @@
 # Validation record
 
+## First product consolidation cut (2026-10-22 UTC)
+
+Final query/packages image:
+`sha256:c131da17eb70440bc2d703cbac98f311359750c157f2cba83b33386cd36bf2f3`.
+
+- The planning agent integrated the product, architecture and design reviews into
+  one active A–F queue. A2 live/saved operation ownership is delivered. The applied-
+  result part of A1 is delivered; blank-entry action consolidation remains open.
+- The frontend suite and JavaScript syntax checks pass. Four Hegel campaigns pass:
+  operation heatmap selection, facet selection, population view state/swarm and
+  brush/population scope. Go kernels and persisted artifact protocols did not change.
+- Final-image journeys 101, 19 and 94 pass; journey 93 passes after making its
+  rounded 1,250-pixel desktop target inclusive. The final focused 19 rerun also
+  preserves an unsaved investigation title/note and live evidence/selection across
+  capture publication and navigation. Full receipt reload blocks browser source
+  APIs; a real late span still produces an explicit child without changing its parent.
+- Journey 93 measures first record positions of 1,250px desktop and 1,775px mobile
+  in its fixture (the review baseline measured approximately 1,585/3,053px).
+  It checks no overflow, no duplicate facet overview sections, no reads on facet
+  disclosures, explicit partial/no-data behavior and rejection of obsolete responses.
+  Layout figures describe these viewports/content, not every dataset.
+- Observed Quint ledgers pass for retained evidence, recent activity and range
+  drilldowns. Bounded Bombadil campaigns pass for range selection, recent activity,
+  and workspace live/saved ownership. An additional recent campaign explicitly
+  closes/reopens facets and reaches its completion invariant.
+- All 13 services run with traffic restored; served UI/server/binary hashes match
+  the workspace and query/packages use the same final image. Previously recorded
+  Redis pending IDs remain preserved (15 pending); OOM/OOM-kill counters remain zero.
+  Existing pinned native review resolution still works after the packages restart.
+
+Evidence: `artifacts/compact-unit.log`, `artifacts/compact-hegel.log`,
+`artifacts/compact-browser-final.log` (three passed; initial strict desktop boundary
+failed), `artifacts/compact-recent-final.log`, `artifacts/ownership-draft-final.log`,
+`artifacts/ownership-bombadil.log`, `artifacts/compact-facets-bombadil.log`,
+`artifacts/compact-layout-health.json` and the journey ledger directories.
+Affected 19/93/94/101 storyboard frames are refreshed from the running app.
+
 ## Retained-evidence library and continuity (2026-10-22 UTC)
 
 Final query/packages image: `sha256:5f0ea7394c034065f8c70fb297edabdacfe049b00e6d512d972e983b81a889a8`.

@@ -290,7 +290,7 @@ volume persistence. The journey ingests a labelled late fixture span via real
 OTLP in the old event window; reopening still shows the original capture/trace.
 Refreshing makes a successor with the same question and selection, includes the
 late observation and compares separate bases. The old receipt stays unchanged.
-No browser operation/metric fetches are permitted during reopen.
+No browser operation/metric fetches are permitted during reopen. Saved evidence has its own presenter: the live Operations package/evidence/selection survives saving and return navigation unchanged. A full reload verifies the saved receipt path.
 
 - [Saved receipt](screenshots/19a-saved-fixed-evidence-receipt.png)
 - [Reopened trace context](screenshots/19b-reopened-trace-context.png)
@@ -1440,3 +1440,8 @@ mutations. Bombadil explores readonly catalog, pending and citation controls.
 ![Search current retained evidence metadata](screenshots/101c-retained-evidence-catalog.png)
 ![Reopen the original review on mobile](screenshots/101d-mobile-pinned-review.png)
 ![Browse the retained catalog on mobile](screenshots/101e-mobile-retained-catalog.png)
+
+
+The recent-activity journey 93 also checks compact desktop/mobile first-record
+positions, absence of duplicate facet-workspace summaries, and source-free facet
+disclosures. Its timeline opens range controls when a chart preview is selected.
