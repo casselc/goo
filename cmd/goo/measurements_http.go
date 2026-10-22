@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/internal/immutablefile"
 	"github.com/casselc/goo/measurements"
 	"gopkg.in/yaml.v3"
 	"io"
@@ -179,29 +180,7 @@ func registerMeasurements(mux *http.ServeMux, client *http.Client, dir string) {
 			return
 		}
 		b, _ := yaml.Marshal(d)
-		if e = os.MkdirAll(packagesDir, 0700); e != nil {
-			fail(w, e)
-			return
-		}
-		f, e := os.CreateTemp(packagesDir, ".package-")
-		if e != nil {
-			fail(w, e)
-			return
-		}
-		name := f.Name()
-		defer os.Remove(name)
-		if _, e = f.Write(b); e == nil {
-			e = f.Sync()
-		}
-		closeErr := f.Close()
-		if e == nil {
-			e = closeErr
-		}
-		if e != nil {
-			fail(w, e)
-			return
-		}
-		if e = os.Link(name, filepath.Join(packagesDir, measurements.Hash(d)+".yaml")); e != nil && !os.IsExist(e) {
+		if _, e = immutablefile.PublishFileOnly(packagesDir, measurements.Hash(d)+".yaml", ".package-", b); e != nil {
 			fail(w, e)
 			return
 		}

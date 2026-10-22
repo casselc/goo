@@ -91,3 +91,23 @@ func TestExclusivePublicationPreservesLinkErrorAndWinner(t *testing.T) {
 		t.Fatal("scratch leaked", e)
 	}
 }
+
+func TestFileOnlyPublicationRetainsWinner(t *testing.T) {
+	dir := t.TempDir()
+	created, e := PublishFileOnly(dir, "object.yaml", ".package-", []byte("original"))
+	if e != nil || !created {
+		t.Fatal(created, e)
+	}
+	created, e = PublishFileOnly(dir, "object.yaml", ".package-", []byte("replacement"))
+	if e != nil || created {
+		t.Fatal(created, e)
+	}
+	got, e := os.ReadFile(filepath.Join(dir, "object.yaml"))
+	if e != nil || string(got) != "original" {
+		t.Fatal("winner overwritten", e)
+	}
+	entries, e := os.ReadDir(dir)
+	if e != nil || len(entries) != 1 {
+		t.Fatal("scratch leaked", e)
+	}
+}

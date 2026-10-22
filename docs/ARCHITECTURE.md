@@ -1,10 +1,13 @@
 # Architecture
 
 [Immutable publication](IMMUTABLE_PUBLICATION.md) shares write/sync/link mechanics
-between reusable telemetry packages, workbench artifacts and capture stores.
+across reusable telemetry packages, workbench artifacts, capture stores, lifecycle
+custody and native YAML. The latter two retain explicit file-only sync.
 Investigation captures retain exclusive collision errors; other adopters accept
-existing names and verify through their family loaders. Family stores retain
-validation, encoding, digests, lineage, catalogs and reload integrity checks.
+existing names and retain their family-specific reload behavior. Native YAML POST
+returns the submitted definition without reloading an existing winner. Family
+stores retain validation, encoding, digests, lineage, catalogs and existing
+reload integrity checks.
 The documented inventory keeps digest/custody/native YAML differences explicit.
 
 [Native presentation](NATIVE_PRESENTATION.md) shares supplied latest values and coverage across measurements, services and native comparisons. Go evaluation and application read/custody owners remain separate.

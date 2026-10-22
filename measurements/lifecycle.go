@@ -3,6 +3,7 @@ package measurements
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/internal/immutablefile"
 	"github.com/casselc/goo/lifecycle"
 	"os"
 	"path/filepath"
@@ -46,23 +47,7 @@ func observe(dir string, event lifecycle.Event, at time.Time) (lifecycle.Event, 
 	}
 	event.ReceivedTimeNS = strconv.FormatInt(at.UnixNano(), 10)
 	data, _ := json.Marshal(event)
-	f, e := os.CreateTemp(dir, ".custody-")
-	if e != nil {
-		return event, e
-	}
-	name := f.Name()
-	defer os.Remove(name)
-	if _, e = f.Write(data); e == nil {
-		e = f.Sync()
-	}
-	closeErr := f.Close()
-	if e != nil {
-		return event, e
-	}
-	if closeErr != nil {
-		return event, closeErr
-	}
-	if e = os.Link(name, path); e != nil && !os.IsExist(e) {
+	if _, e := immutablefile.PublishFileOnly(dir, id+".json", ".custody-", data); e != nil {
 		return event, e
 	}
 	return load()

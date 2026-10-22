@@ -1,5 +1,45 @@
 # Validation record
 
+## C1 custody/native YAML fixtures and bounded consolidation completion (2026-10-22 UTC)
+
+[Publication contract, diagram and acceptance audit](docs/IMMUTABLE_PUBLICATION.md)
+now cover all six Go temporary-write/link publication paths. Lifecycle custody and
+native YAML use explicit file-only sync; directory sync was not added. Their
+validation, event/definition identity, clocks, winner verification and HTTP policies
+remain in their callers. Old write/sync/link copies are removed. Bounded C1 is
+delivered; C2 endpoint-policy/startup inventory is next.
+
+Actual checks:
+
+- Custody and native YAML fixtures pass before extraction (measurements 0.017s,
+  HTTP routes 0.014s). They pin event identity/bytes and exact decimal business and
+  received clocks, plus native canonical YAML/revision, exact POST response JSON,
+  201 status and JSON/no-store headers. Fresh registry reopen, invalid YAML/request
+  fields/trailing JSON, duplicate/no-overwrite and corrupt existing-winner behavior
+  are checked after adoption with the same fixtures.
+- Custody ignores caller-supplied received time, preserves its first winner even
+  when a later call proposes an earlier clock, and separates changed business
+  payloads. Sixteen concurrent distinct observation times all return one winning
+  event/clock. Corrupt event/truncated/non-integer-clock files are refused without
+  repair. Existing received-time trust boundaries are explicitly pinned: a valid
+  integer clock edit is not detected by the business-event hash.
+- Race-enabled suites pass for immutablefile (1.245s), measurements (1.775s), HTTP
+  routes (2.638s), exploration (5.303s), investigations (1.114s), workbench (1.723s).
+  Existing native/lifecycle/capture/parent/duplicate tests remain included.
+- Expanded Hegel publication checks pass: 100 generated sequences (0.324s), choosing
+  either initial sync policy and checking idempotent, file-only and exclusive
+  duplicates while retaining first bytes. All 13 root packages pass `go test ./...`.
+  Whitespace and changed local Markdown targets pass.
+- Native YAML POST retains its historical 201 submitted-definition response even
+  for a corrupt existing winner; it does not repair or verify that file, and GET
+  registry then reports 400. This refactor pins that compatibility behavior rather
+  than implying hardening. Investigation unknown-field policy is also unchanged.
+
+No UI or execution-state protocol changed; no screenshots/browser/Quint campaign
+was regenerated for this filesystem-only cut. The deployed stack was not rebuilt.
+No sync-failure injection, power-loss experiment, tamper-evident custody or native
+duplicate repair is claimed. Follow-up policy changes require separate contracts.
+
 ## C1 capture publication adoption and frozen evidence contracts (2026-10-22 UTC)
 
 [Publication contract and diagram](docs/IMMUTABLE_PUBLICATION.md) now cover both

@@ -1,0 +1,1 @@
+{"event_id":"event-1","kind":"accepted","environment":"prod","tenant_id":"tenant-a","service_name":"api","subject_id":"job-1","release":"v2","event_time_ns":"1700000000123456789","received_time_ns":"1792700000000000123"}

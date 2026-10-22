@@ -1,0 +1,16 @@
+apiVersion: goo/measurement-package/v1alpha1
+name: api-utilization-fixture
+title: API utilization
+kind: gauge
+environment: prod
+lookbackMinutes: 2
+maxGapMs: 30000
+grain: per-stream
+source:
+    services:
+        - api
+    scope: ordinary.runtime
+    version: ""
+    schemaURL: ""
+    metric: process.cpu.utilization
+    unit: "1"

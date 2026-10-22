@@ -16,15 +16,25 @@ func TestHegelImmutablePublicationSequence(t *testing.T) {
 		size := hegel.Draw(tc, hegel.Integers(0, 4096))
 		value := hegel.Draw(tc, hegel.Integers(0, 255))
 		attempts := hegel.Draw(tc, hegel.Integers(2, 12))
+		fileOnlyFirst := hegel.Draw(tc, hegel.Integers(0, 1)) == 1
 		winner := bytes.Repeat([]byte{byte(value)}, size)
 		for i := 0; i < attempts; i++ {
 			input := winner
 			if i > 0 {
 				input = bytes.Repeat([]byte{byte(value + i)}, size+i)
 			}
-			created, e := immutablefile.Publish(dir, "winner.json", ".draft-", input)
+			var created bool
+			var e error
+			if i == 0 && fileOnlyFirst {
+				created, e = immutablefile.PublishFileOnly(dir, "winner.json", ".custody-", input)
+			} else {
+				created, e = immutablefile.Publish(dir, "winner.json", ".draft-", input)
+			}
 			if e != nil || created != (i == 0) {
 				tc.Fatal("publication outcome", i, created, e)
+			}
+			if created, e := immutablefile.PublishFileOnly(dir, "winner.json", ".custody-", input); e != nil || created {
+				tc.Fatal("file-only duplicate outcome", created, e)
 			}
 			if e := immutablefile.PublishNew(dir, "winner.json", ".capture-", input); !os.IsExist(e) {
 				tc.Fatal("exclusive duplicate accepted", e)

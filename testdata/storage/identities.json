@@ -2,5 +2,7 @@
   "deploymentID": "27eb5364557d1cc91607b85a1aef7648292c1fa86e5d04b1830b8217120aa29d",
   "telemetryPackageRevision": "43a532240894e6dd79035d01b1d9211349867dab246070cab492cab4c1cd3f6a",
   "explorationCaptureID": "69e93d1f5736a8ec4ab6296e5f549d30893d1785644487ed2d9370e3c14a858e",
-  "investigationCaptureID": "861bfa127df692b1119f95ebb2b7feb8f57d549bbcc4b92095d457f855b74353"
+  "investigationCaptureID": "861bfa127df692b1119f95ebb2b7feb8f57d549bbcc4b92095d457f855b74353",
+  "lifecycleCustodyID": "dd92a28a97c468bf3c9592fde5816927baf4dd965961d4799299f940842dde16",
+  "nativeMeasurementRevision": "71739b47fde74d4c2870a8639c07058c767c08ab0b6fb0857f8b1083e683067f"
 }

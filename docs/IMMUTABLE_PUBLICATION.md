@@ -1,11 +1,14 @@
-# Immutable file publication — C1 package/workbench/capture adoption
+# Immutable file publication — bounded C1 delivered
 
 Reusable telemetry packages (`exploration.PackageStore`) and workbench artifacts
 (`workbench.Store`) share `internal/immutablefile.Publish`. Exploration captures
-now use that path too; investigation captures use its exclusive `PublishNew` entry.
+use that path too; investigation captures use its exclusive `PublishNew` entry.
+Lifecycle custody and native YAML publication use `PublishFileOnly`, which syncs
+the file and links without adding a directory sync.
 This is filesystem mechanics only. Callers provide trusted directory/name/prefix and already encoded
 bytes; they retain validation, size limits, identity, canonicalization, lineage,
-catalog rules and authoritative reloads. No stored schema or HTTP response changes.
+catalog rules and existing winner verification. Native YAML POST deliberately
+retains its existing lack of winner reload. No stored schema or HTTP response changes.
 
 Before extraction, `testdata/storage` froze one reusable OTel span package and one
 deployment marker. Package revision hashes cover the definition bytes; deployment
@@ -30,16 +33,19 @@ sequenceDiagram
     File->>Disk: Remove temporary sibling
     File-->>Caller: Original link error
   else New winner or accepted existing name
-    File->>Disk: Sync containing directory
+    opt Directory-sync policy
+      File->>Disk: Sync containing directory
+    end
     File->>Disk: Remove temporary sibling
     File-->>Caller: created flag + error
   end
-  Caller->>Caller: Apply family duplicate policy and reload/check identity
+  Caller->>Caller: Apply family duplicate policy and existing winner checks
 ```
 
 `created=false, err=nil` means a name already existed, not that it contained valid
-or matching bytes. The idempotent consumers retain their previous duplicate policy:
-keep the winner and let the family loader check it. Workbench's private publisher
+or matching bytes. Idempotent consumers keep the winner. Package, workbench and exploration
+consumers retain verified reloads. Custody reloads the event; native YAML POST
+returns the submitted definition without a stored-file check. Workbench's private publisher
 alone does not validate the winner; its public create methods subsequently load it.
 Investigation captures instead retain their original exclusive link error through
 `PublishNew`; a collision returns the actual `*os.LinkError` without a directory
@@ -49,7 +55,7 @@ created objects; existing permissions are not changed. Deferred temporary cleanu
 and its ignored removal errors retain the previous behavior. Sync calls do not
 establish power-loss durability; no crash/power-loss experiment is claimed.
 
-## Store inventory and remaining C1 work
+## Store inventory and compatibility policies
 
 | Owner | Current contract | Adoption |
 | --- | --- | --- |
@@ -57,14 +63,15 @@ establish power-loss durability; no crash/power-loss experiment is claimed.
 | Reusable telemetry packages | Typed definition hash, 32 KiB limit, idempotent duplicate then verified reload | Shared publication mechanics; package golden fixture |
 | Exploration captures | Embedded exact evidence, family digest/plan/parent checks, 24 MiB limit, duplicate then reload | Shared idempotent publication; exact capture/page fixtures |
 | Investigation captures | Number-preserving embedded JSON digest, 24 MiB limit, parent question compatibility, duplicate link is an error | Shared exclusive publication; number-preserving capture fixture |
-| Lifecycle first-observation custody | Identity excludes received time; first winner supplies custody time; no directory sync today | Existing writer retained; pin clock and race behavior before adoption |
-| Native measurement YAML route | Validated typed definition identity, YAML bytes; existing winner accepted; no directory sync/reload today | Existing writer retained; pin route response and corruption behavior before adoption |
+| Lifecycle first-observation custody | Identity excludes received time; first winner supplies custody time; no directory sync today | Shared file-only publication; exact event/clock fixture and distinct-clock race |
+| Native measurement YAML route | Validated typed definition identity, YAML bytes; existing winner accepted; no directory sync/reload today | Shared file-only publication; canonical YAML/revision/HTTP response fixtures |
 
-Existing store tests cover branching/parent mismatch and exact large embedded
-integers; the initial two golden fixtures are not exhaustive identity coverage for all
-workbench families or evidence stores. C1 remains active for lifecycle custody
-and native YAML boundaries; their current absence of directory sync requires an explicit compatibility decision before
-adoption. Broader per-family fixture coverage remains bounded, not exhaustive.
+Existing tests retain branching/parent mismatch, exact large embedded integers and
+family-specific validation. Golden fixtures cover selected examples, not every
+artifact subtype. All six Go temporary-write/link paths now use this helper;
+C1's bounded mechanics consolidation is delivered. No reader, hash, schema,
+catalog, HTTP response or trust policy was unified. C2 endpoint-policy/startup
+inventory is next in the active plan.
 
 ## Verification
 
@@ -100,3 +107,42 @@ Both fixture tests passed on the old writers before migration. They now accompan
 the same affected race suite and generated duplicate-write sequences; Hegel also
 requires exclusive duplicate attempts to return an existence error on every step.
 No new UI or execution-state protocol is introduced.
+
+## Custody and native YAML continuation fixtures
+
+The lifecycle fixture pins an exact business timestamp and the first Goo observation
+clock as decimal nanosecond strings. Identity excludes received time; caller-supplied
+received time is ignored. Reobserve with an earlier proposed clock preserves the
+existing winner. Changing the business payload creates independent custody. Sixteen
+concurrent distinct observation times must all return one winning event/clock.
+Truncated payloads, changed business identity and non-integer received clocks are
+refused without repair. This is trusted local custody: a syntactically valid integer
+edit to received time is not detected by the event hash. The fixture records that
+existing boundary rather than implying tamper-evident custody.
+
+The native fixture uses an ordinary `api` gauge definition with an OTel-style
+metric name. It pins canonical YAML bytes, typed revision, exact POST JSON, 201
+status and JSON/no-store headers. A fresh registry reopens the package. Invalid
+YAML, unknown request fields and trailing JSON remain 400. Duplicate publication
+keeps existing bytes and returns the same submitted-definition response. Even a
+corrupt existing winner retains that historical POST response; registry GET
+subsequently reports 400. This is not verification or repair of an existing package.
+
+Both fixture sets passed before replacing their writers. `PublishFileOnly` retains
+file sync and intentionally omits directory sync for these callers. The generated
+publication campaign now chooses either syncing policy for the initial winner and
+checks idempotent, file-only and exclusive duplicates throughout each sequence.
+These checks do not inject sync failures or simulate power loss.
+
+| Bounded C1 acceptance | Evidence / scope |
+| --- | --- |
+| Identity and response parity before extraction | Selected golden fixtures across all six publication families; exact capture-page and native POST response bytes |
+| Exact integers and clocks | Raw uint64 evidence, native nanosecond question checks, custody event/observation strings |
+| Duplicate/no-overwrite and reopen | Idempotent/exclusive/file-only policies, fresh loaders/registry and retained corrupt winners |
+| Family validation and lineage | Existing parent/plan/branch tests; strict versus permissive decoders and native duplicate limitations remain explicit |
+| Proven shared mechanics | One temporary-write/file-sync/link implementation, caller-specific directory-sync and collision policy; old copies removed |
+| Concurrency and generated sequences | Race-enabled affected suites, complete-winner competition, distinct custody clock race and 100 Hegel sequences |
+
+Power-loss durability, tamper-evident custody and native duplicate repair remain
+outside this mechanical extraction. Any policy change needs its own explicit
+contract and validation.

@@ -13,17 +13,24 @@ import (
 // replaced. A successful link may precede a directory-sync error, so an error is
 // not proof of non-publication. This is not a power-loss durability guarantee.
 func Publish(dir, name, prefix string, data []byte) (created bool, err error) {
-	return publish(dir, name, prefix, data, true)
+	return publish(dir, name, prefix, data, true, true)
 }
 
 // PublishNew refuses an existing final name with the original link error.
 // Unlike Publish, it does not sync the directory after a collision.
 func PublishNew(dir, name, prefix string, data []byte) error {
-	_, err := publish(dir, name, prefix, data, false)
+	_, err := publish(dir, name, prefix, data, false, true)
 	return err
 }
 
-func publish(dir, name, prefix string, data []byte, acceptExisting bool) (created bool, err error) {
+// PublishFileOnly keeps the idempotent link policy but omits directory sync.
+// It preserves the historical custody/YAML write contract; callers still own
+// winner verification. Successful return does not establish crash durability.
+func PublishFileOnly(dir, name, prefix string, data []byte) (bool, error) {
+	return publish(dir, name, prefix, data, true, false)
+}
+
+func publish(dir, name, prefix string, data []byte, acceptExisting, syncDirectory bool) (created bool, err error) {
 	if err = os.MkdirAll(dir, 0700); err != nil {
 		return false, err
 	}
@@ -48,6 +55,9 @@ func publish(dir, name, prefix string, data []byte, acceptExisting bool) (create
 		return false, err
 	}
 	created = err == nil
+	if !syncDirectory {
+		return created, nil
+	}
 	d, err := os.Open(dir)
 	if err != nil {
 		return created, err

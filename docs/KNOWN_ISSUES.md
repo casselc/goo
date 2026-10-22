@@ -1,13 +1,14 @@
 # Known issues and gaps
 
-[C1 immutable publication](IMMUTABLE_PUBLICATION.md) now has workbench, reusable
-telemetry package and both capture-store adopters. Capture fixtures pin distinct
-digests/duplicate policies, exact evidence integers and page response. Lifecycle
-custody and native YAML publication still have separate writers and require their
-own identity/response/duplicate fixtures before migration. Investigation capture
-loading retains its historical permissive unknown-field policy; exploration
-capture envelopes remain strict. No power-loss durability
-guarantee follows from file and directory sync calls.
+[Bounded C1 publication consolidation](IMMUTABLE_PUBLICATION.md) is delivered for
+all six Go publication paths. Family validation, identity, catalogs and duplicate
+policies remain separate. Custody and native YAML retain file-only sync (no directory
+sync). Custody verifies business identity but does not detect a valid integer edit
+to its received clock. Native YAML POST retains its existing success response for a
+corrupt existing winner without repair; registry GET then refuses that file.
+Investigation capture loading retains permissive unknown-field behavior while
+exploration capture envelopes remain strict. These compatibility boundaries are
+pinned, not hardened by the refactor. No power-loss durability is claimed.
 
 ## Current annotation retention boundaries
 
