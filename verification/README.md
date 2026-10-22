@@ -938,3 +938,9 @@ contracts in `prebuilt/source_transport_contract_test.go`, preserving raw parame
 values, status-before-body and family evaluation. Its gated readonly ClickHouse
 check exercises a deliberately empty real-table scope, not positive live data.
 See [prebuilt transport adoption](../docs/HTTP_BOUNDARIES.md#prebuilt-http-transport-adoption).
+
+Operation spans also use the bounded-read primitive behind before/after contracts
+in `annotations/source_transport_contract_test.go`. Raw parameters, typed rows,
+status-before-body, exact duration strings and conformance stay adapter-owned.
+The gated readonly real-table check uses an absent service and fixed window;
+see [operation-span adoption](../docs/HTTP_BOUNDARIES.md#operation-span-transport-adoption).

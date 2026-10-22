@@ -160,7 +160,7 @@ retains budget, SSE, capture and optional-store tests.
 
 C2 remains active. Pure planning JSON and native/record transport adoption are
 delivered. The acceptance audit below records the remaining adoption sequence; prebuilt transport is
-now delivered and operation spans are next. Transport adoption proceeds one family at a time, preserving parameter escaping,
+now delivered along with operation spans; counters are next. Transport adoption proceeds one family at a time, preserving parameter escaping,
 read limits, basis/identity and non-2xx/oversize/cancellation behavior. Python proxy
 removal, changing custody/duplicate policy and universal endpoint budgets are not
 part of these cuts.
@@ -480,5 +480,47 @@ without inserting data or claiming positive-population coverage. The affected
 HTTP suite also keeps injected positive fixtures. Hegel bounded-read properties
 pass for the shared primitive. No public UI/SSE/Quint protocol or running image
 changed; screenshots remain applicable. The final deployed-journey gate remains
-open. Three readers remain: operation spans next, then counters and histograms;
+open. At the prebuilt cut three readers remained; operation spans are now adopted below,
+leaving counters and histograms;
 local JSON-owner adoption remains queued as described in the audit.
+
+
+## Operation-span transport adoption
+
+`annotations.FetchOperations` now uses shared `sourcehttp.Post` and `ReadBounded`.
+The explicit client, raw URL-encoded parameters, readonly/query flags,
+status-before-body check, deferred closure and exact errors remain adapter-owned.
+Typed row decoding still refuses more than 1,000 raw spans before conformance;
+window checks, conflicting identities, duplicate handling, subject events,
+manifest/schema declarations, integer strings and evidence basis are unchanged.
+
+```mermaid
+flowchart LR
+  Manifest[Manifest and explicit operation source] --> Query[Operation SQL / raw typed parameters]
+  Query --> Post[Shared POST / auth / context]
+  Post --> CH[ClickHouse]
+  CH --> Status[Operation status check before body read]
+  Status --> Read[Shared bounded read: 8 MiB plus one]
+  Read --> Decode[Typed operation rows / 1000-span guard]
+  Decode --> Observe[Conformance / dedup / subject events / basis]
+  Observe --> Receipt[Existing operation receipt and exact span strings]
+```
+
+Before/after transport contracts pin SQL/auth/exact query settings, unchanged
+complex parameter values, empty/valid/duplicate reads, exact and overflow byte/row
+boundaries, malformed JSON, unread 201/503 bodies, close-once behavior, read-error
+identity, transport errors and cancellation. Valid spans retain duration strings
+above JavaScript's safe integer range. Existing source tests retain out-of-window,
+negative duration, kind/scope/parent identity and conflicting-copy refusals.
+
+`TestClickHouseOperationTransportIntegration` uses the existing gated ClickHouse
+variables to execute the actual operation query, decoder and conformance path on
+a deliberately absent service in a fixed window. It inserts nothing and proves
+empty-path integration, not positive live-population coverage. Positive fixtures
+remain in source and injected HTTP/investigation tests. Shared Hegel byte/read-error
+properties pass. No UI/SSE/Quint protocol or running image changed; screenshots
+remain applicable and the final deployed-journey gate remains open.
+
+Two ClickHouse readers remain unadopted: counters next, then histograms. Their
+body-read-before-status and immediate-close policies differ from operation spans
+and must be frozen independently. Remaining local JSON owners stay queued.

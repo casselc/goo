@@ -1,5 +1,32 @@
 # Validation record
 
+## C2 operation-span HTTP transport adoption (2026-10-22 UTC)
+
+[Operation-span contract and diagram](docs/HTTP_BOUNDARIES.md#operation-span-transport-adoption)
+record adoption of shared POST/auth/context and bounded body mechanics. Raw
+parameters, status-before-body, closure, typed decoding, row/window limits,
+conformance, events, deduplication, exact integer strings and basis remain local.
+
+Actual checks:
+
+- New transport contracts pass before extraction (0.173s), pinning SQL/auth/exact
+  settings and complex raw parameters, empty/valid/duplicate payloads, exact/overflow
+  8 MiB and 1,000-span boundaries, malformed JSON, unread non-200 bodies, closure,
+  cancellation and error identity. Exact duration strings above 2^53 are preserved.
+- After extraction, race suites pass for annotations (8.791s), HTTP routes (5.888s)
+  and investigations (cached), with the gated readonly real ClickHouse test enabled.
+  The new test executes `FetchOperations` against an absent service/fixed window:
+  real query/decoder/empty conformance integration, without inserts or positive live
+  population claims. Existing fixtures cover positive evidence and semantic refusals.
+- Hegel's 100 shared bounded-read payload/budget/error cases pass (0.042s).
+- `go test ./...` passes. Gated live checks skip without their URL variable.
+- Whitespace and local Markdown targets pass.
+
+Evidence: `artifacts/c2-operation-transport-{before,race,hegel,root}.log`.
+No UI/SSE/Quint protocol changed, no screenshots were regenerated and no running
+image was rebuilt. C2 remains active: counter transport next, then histogram and
+route-specific JSON adoption. Final deployed-journey acceptance remains open.
+
 ## C2 prebuilt HTTP transport adoption (2026-10-22 UTC)
 
 [Prebuilt transport contract and diagram](docs/HTTP_BOUNDARIES.md#prebuilt-http-transport-adoption)

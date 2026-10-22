@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/casselc/goo/identity"
+	"github.com/casselc/goo/internal/sourcehttp"
 	"io"
 	"net/http"
 	"net/url"
@@ -152,12 +153,7 @@ func FetchOperations(ctx context.Context, client *http.Client, endpoint, user, p
 	q.Set("max_result_rows", "1001")
 	q.Set("result_overflow_mode", "throw")
 	address.RawQuery = q.Encode()
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, address.String(), strings.NewReader(sql))
-	if err != nil {
-		return nil, err
-	}
-	req.SetBasicAuth(user, password)
-	response, err := client.Do(req)
+	response, err := sourcehttp.Post(ctx, client, address.String(), user, password, sql)
 	if err != nil {
 		return nil, err
 	}
@@ -165,11 +161,11 @@ func FetchOperations(ctx context.Context, client *http.Client, endpoint, user, p
 	if response.StatusCode != 200 {
 		return nil, fmt.Errorf("ClickHouse source returned HTTP %d", response.StatusCode)
 	}
-	data, err := io.ReadAll(io.LimitReader(response.Body, (8<<20)+1))
+	data, oversize, err := sourcehttp.ReadBounded(response.Body, 8<<20)
 	if err != nil {
 		return nil, err
 	}
-	if len(data) > 8<<20 {
+	if oversize {
 		return nil, fmt.Errorf("source exceeds 8 MiB; no partial totals")
 	}
 	rows := []OperationRow{}
