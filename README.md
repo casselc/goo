@@ -13,7 +13,7 @@ now connect recipe and follow-up planning.
 [Record-to-population exploration](docs/RECORD_POPULATIONS.md) adds staged inspector attributes and bounded shared-field selection over captured rows.
 
 
-The proposed [whole-product annotation model](docs/PRODUCT_ANNOTATIONS_DESIGN.md) connects meaning across services, definitions, investigations, measurements and evidence. Shared typed targets and revision history support later reviewed labels and dataset exports; annotation storage is not implemented.
+[Shared tags, notes and optional retained evidence](docs/WORKBENCH_ANNOTATIONS.md) attach authored context across services, definitions and investigations. Select exact live-page observations to retain them in optional XTDB, then review with retry-safe revisions. The broader [annotation model](docs/PRODUCT_ANNOTATIONS_DESIGN.md) covers proposed reviewed labels and dataset exports.
 
 
 Staged categorical [facet selections](docs/FACET_SELECTION.md) add Include/Exclude, Undo/Clear and retained population drilldowns to recent activity.

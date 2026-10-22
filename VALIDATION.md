@@ -1,5 +1,59 @@
 # Validation record
 
+## Exact live-page retention and retry visibility (2026-10-22 UTC)
+
+Final query/packages image:
+`sha256:82f34d996ca95120aebdb56439398286f48ad0ef23271694b8b74bb383e737d8`.
+All 13 services run with traffic restored; served UI/server/binary hashes match the
+workspace. Previously recorded Redis pending IDs remain preserved (16 pending at
+the final check), and OOM/OOM-kill counters remain zero. Evidence:
+`artifacts/live-retention-health.json`.
+
+- Full root Go tests pass, including actual XTDB integration with concurrent
+  correction retries, rollback, changed-intent rejection, fresh-connection await
+  tokens and recovery without an ephemeral source page. Controlled-clock cache
+  tests cover exact expiry, entry/byte bounds, immutable input/output and concurrent
+  readers. The HTTP failure check proves unavailable recovery is not treated as an
+  absent commit. Race checks pass for exploration, retention and workbench; native
+  integration is separately opt-in and was enabled for the full root suite.
+- All 30 frontend test files pass. Hegel annotation/selection properties and the
+  new result-page state/swarm campaign pass: older reads remain unchanged across
+  new pages, caller mutations and selections of equal-payload occurrences. Quint
+  typechecking, Python compilation, wrapper syntax and changed-doc local links pass.
+- Final-image journeys 100 and 97 pass with fresh storyboard frames. Journey 100
+  seeds 102 real OTLP spans, selects a page observation, ingests an earlier event
+  later, loses committed save/correction responses, recovers the same revisions,
+  carries await tokens on reload, and rejects changed request intent. Browser
+  telemetry APIs are blocked while reopening; ClickHouse itself remains running.
+  Paging/refresh clear membership. Its observed ledger passes quint-go replay and
+  nine negative controls, including changed source token/scope/member content,
+  hidden reads/publications, broken history and duplicate publication on retry.
+  Journey 97 also passes its existing observed-trace model and Bombadil campaign.
+- Journeys 98/99 and both new journey-100 Bombadil campaigns pass on the preceding
+  image with identical UI and successful-save paths. The final image additionally
+  handles unavailable request recovery; journey 100 and the root HTTP check were
+  rerun after that change. Bombadil exercises native review and live selection →
+  unpublished draft → clear, observing that drafting publishes no native POST.
+  The initial journey-100 fixture incorrectly assumed descending row order; it was
+  corrected to insert an earlier event after the original read, without changing
+  the product's query ordering or weakening the assertions.
+- After the browser wrapper restored traffic, both Go and XTDB were restarted.
+  The original page cache was gone, but the same committed request recovered the
+  original annotation and exact canonical manifest. A new request against the
+  unavailable token returned 410; native history stayed at two revisions. Saved
+  capture evidence also survived the native restart. Evidence:
+  `artifacts/live-retention-restart.json` and the health record above.
+
+Live custody is bounded to two minutes, 64 pages / 64 MiB and 2 MiB per page;
+selection publication remains explicit. Native initial/correction retries are
+idempotent. Await tokens are read lower bounds on fresh connections, with tab-local
+UI persistence; multi-node lag, cross-client basis sharing and exact historical
+cutoffs remain unverified/unimplemented. File-backed annotation writes retain their
+existing API. Cross-store catalogs, durable unacknowledged drafts, reviewed labels
+and dataset export remain future work. See the [contract](docs/WORKBENCH_ANNOTATIONS.md).
+
+Logs: `artifacts/live-retention-{go,unit,race,hegel,browser,browser-final,release,model-final,image-final}.log`.
+
 ## Shared annotations and optional XTDB retained evidence (2026-10-22 UTC)
 
 Query/packages image: `sha256:22e51f29cc819afc8258905aa855b51da2aa60ed395cbbf221a86d09862c9744`.

@@ -1391,3 +1391,29 @@ shutdown of ClickHouse or a completed native external-source connector.
 ![Evidence retained in XTDB](screenshots/99b-xtdb-retained-evidence.png)
 ![Review correction history](screenshots/99c-retained-evidence-review-history.png)
 ![Mobile retained evidence](screenshots/99d-mobile-retained-evidence.png)
+
+
+## 100. Retain the observation selected from live activity
+
+Implemented: [executable journey](../../journeys/live-retention.spec.js), optional
+XTDB overlay required. Emit 102 ordinary OTel spans and open recent activity.
+Select one displayed row, then ingest a later span: the selected page stays fixed.
+Explicitly retain the selected observation with its original token/question/basis;
+no save-capture step or source reread occurs. Lose the successful native response,
+retry the same intent, and recover the original annotation. Repeat that response
+loss for a correction and verify exactly two review revisions.
+
+Reload with a committed await-token lower bound while browser telemetry APIs are
+blocked. Inspect the exact retained attributes and compact mobile view. Returning
+to activity shows the late span on a new read; pagination and refresh clear row
+selection. ClickHouse remains running and no source records are deleted. Root Go
+clock tests separately check expired pages/capacity; native tests recover a committed
+request without its ephemeral page. The observed Quint ledger verifies original
+membership and rejects token/scope/member mutations in addition to the existing
+hidden-read/publication/history controls and a duplicated retry publication. Bombadil covers both review history and
+live selection → unpublished draft → clear, observing native POST count.
+
+![Select an observation from live activity](screenshots/100a-live-page-retention.png)
+![Retained live observation and explicit provenance](screenshots/100b-frozen-live-observation.png)
+![Idempotent review revision history](screenshots/100c-idempotent-review-history.png)
+![Compact mobile retained observation](screenshots/100d-mobile-live-evidence.png)

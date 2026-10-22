@@ -1,6 +1,19 @@
 # Known issues and gaps
 
-[Bounded page-record selection](RECORD_POPULATIONS.md) and inspector/shared-field population actions are implemented. Shared service/artifact tags and notes plus optional XTDB retention of selected **saved-capture** records are implemented in the [annotation slice](WORKBENCH_ANNOTATIONS.md). Exact freezing of earlier live result pages and [whole-product annotations, training labels and dataset exports](PRODUCT_ANNOTATIONS_DESIGN.md) remain proposed.
+## Current annotation retention boundaries
+
+Optional XTDB retention now accepts selected exact live result pages as well as
+saved captures, with idempotent initial/correction requests and await-token
+propagation on fresh connections. Live pages expire after two minutes and are
+process-local/capability-addressed; refresh or pagination clears selection. An
+already committed save can be recovered after expiry with its unchanged request.
+Tab-local successful receipts survive reload, but unacknowledged drafts and
+cross-client basis sharing are not durable. No production auth/redaction/deletion,
+cross-store tag catalog, historical-cutoff UI, reviewed labels or dataset export
+is implied. See [contract](WORKBENCH_ANNOTATIONS.md).
+
+
+[Bounded page-record selection](RECORD_POPULATIONS.md) and inspector/shared-field population actions are implemented. Shared service/artifact tags and notes plus optional XTDB retention of selected **live-page or saved-capture** records are implemented in the [annotation slice](WORKBENCH_ANNOTATIONS.md). Exact live-page freezing is implemented; richer [whole-product review, training labels and dataset exports](PRODUCT_ANNOTATIONS_DESIGN.md) remain proposed.
 
 
 Recent activity supports [staged categorical selections](FACET_SELECTION.md). General predicate complements, automatic difference scoring and durable selection history remain future work.

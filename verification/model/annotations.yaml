@@ -7,3 +7,5 @@ actions:
     expect: 'reads == {{.obs.reads}} and published == {{.obs.published}} and coherent == {{.obs.coherent}}'
   publish:
     expect: 'reads == {{.obs.reads}} and published == {{.obs.published}} and coherent == {{.obs.coherent}}'
+  retry:
+    expect: 'reads == {{.obs.reads}} and published == {{.obs.published}} and coherent == {{.obs.coherent}}'

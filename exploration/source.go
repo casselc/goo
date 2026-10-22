@@ -19,6 +19,7 @@ import (
 )
 
 type Result struct {
+	ResultToken       string             `json:"resultToken,omitempty"`
 	TraceExamples     *TraceExampleSet   `json:"traceExamples,omitempty"`
 	Numeric           *NumericSummary    `json:"numeric,omitempty"`
 	GroupedTimeSeries []TimeSeriesGroup  `json:"groupedTimeSeries,omitempty"`

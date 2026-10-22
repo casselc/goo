@@ -1,8 +1,10 @@
 package verification
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"github.com/casselc/goo/exploration"
 	"github.com/casselc/goo/identity"
 	"github.com/casselc/goo/retention"
 	"github.com/casselc/goo/workbench"
@@ -92,6 +94,7 @@ func TestQuintAnnotationLedger(t *testing.T) {
 	}
 	check := func(mutation int) bool {
 		var l struct {
+			Original                                       *exploration.Result
 			ManifestJSON                                   string
 			Service, Left, Right, Correction, ViewRevision *workbench.MeaningRevision
 			Manifest                                       *retention.Manifest
@@ -126,6 +129,16 @@ func TestQuintAnnotationLedger(t *testing.T) {
 				l.Revisions.Items = l.Revisions.Items[1:]
 			}
 		}
+		if l.Original != nil {
+			switch mutation {
+			case 5:
+				l.Original.ResultToken = "foreign"
+			case 6:
+				l.Original.Question.Environment = "foreign"
+			case 7:
+				l.Original.Rows = nil
+			}
+		}
 		coherent := true
 		if l.Service != nil {
 			for _, r := range []*workbench.MeaningRevision{l.Service, l.Left, l.Right, l.Correction, l.ViewRevision} {
@@ -135,6 +148,23 @@ func TestQuintAnnotationLedger(t *testing.T) {
 		}
 		if l.Manifest != nil {
 			coherent = coherent && l.Manifest.Validate() == nil && l.Revisions != nil
+			if l.Original != nil {
+				coherent = coherent && l.Manifest.Origin == "result-page" && l.Manifest.Capture.ID == l.Original.ResultToken && reflect.DeepEqual(l.Manifest.Capture.Question.Explore, &l.Original.Question) && l.Manifest.Basis == l.Original.Basis
+				for _, member := range l.Manifest.Members {
+					if member.Index < 0 || member.Index >= len(l.Original.Rows) {
+						coherent = false
+						continue
+					}
+					var a, b any
+					da := json.NewDecoder(bytes.NewReader(member.Row))
+					da.UseNumber()
+					ea := da.Decode(&a)
+					db := json.NewDecoder(bytes.NewReader(l.Original.Rows[member.Index]))
+					db.UseNumber()
+					eb := db.Decode(&b)
+					coherent = coherent && ea == nil && eb == nil && reflect.DeepEqual(a, b)
+				}
+			}
 			ids := map[string]bool{}
 			parents := map[string]bool{}
 			for _, item := range l.Revisions.Items {
@@ -152,6 +182,14 @@ func TestQuintAnnotationLedger(t *testing.T) {
 		}
 		if l.Service == nil && l.Manifest == nil {
 			coherent = false
+		}
+		if mutation == 8 {
+			for i := range l.Events {
+				if l.Events[i].Action == "retry" {
+					l.Events[i].Published++
+					break
+				}
+			}
 		}
 		if mutation >= 0 {
 			for i := range l.Events {
@@ -186,7 +224,13 @@ func TestQuintAnnotationLedger(t *testing.T) {
 	if !check(-1) {
 		t.Fatal("observed trace rejected")
 	}
-	for i := 0; i < 5; i++ {
+	controls := 5
+	var source struct{ Original *exploration.Result }
+	json.Unmarshal(raw, &source)
+	if source.Original != nil {
+		controls = 9
+	}
+	for i := 0; i < controls; i++ {
 		if check(i) {
 			t.Fatal("negative control accepted", i)
 		}

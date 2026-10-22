@@ -4,11 +4,12 @@ package retention
 import (
 	"bytes"
 	"context"
+	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
-	"fmt"
+
 	"sort"
 	"strconv"
 	"time"
@@ -20,6 +21,8 @@ import (
 
 const MaxBytes = 2 << 20
 
+var ErrRequestNotFound = errors.New("retention request has not committed")
+
 // The JSON payload is retained as text to preserve exact numeric encodings and
 // missing/empty distinctions. Indexed columns are independent projections.
 type Member struct {
@@ -28,6 +31,7 @@ type Member struct {
 	Row   json.RawMessage `json:"row"`
 }
 type Manifest struct {
+	Origin        string                     `json:"origin,omitempty"`
 	Version       int                        `json:"version"`
 	ID            string                     `json:"id"`
 	Capture       exploration.CaptureReceipt `json:"capture"`
@@ -45,6 +49,7 @@ type Receipt struct {
 }
 type Store struct {
 	URL          string
+	AwaitToken   string
 	beforeCommit func() error
 }
 
@@ -82,11 +87,28 @@ func Select(c *exploration.SavedCapture, indexes []int) (Manifest, error) {
 	m.ID = hash(raw)
 	return m, nil
 }
+
+// SelectResult preserves the exact page question, including its original offset.
+func SelectResult(c *exploration.SavedCapture, indexes []int) (Manifest, error) {
+	m, e := Select(c, indexes)
+	if e != nil {
+		return m, e
+	}
+	m.Origin = "result-page"
+	m.Coverage = "selected live page observations; counts and groups are separate reads; population completeness unknown"
+	m.ID = ""
+	raw, e := json.Marshal(m)
+	if e != nil || len(raw) > MaxBytes {
+		return Manifest{}, errors.New("selected evidence exceeds 2 MiB")
+	}
+	m.ID = hash(raw)
+	return m, nil
+}
 func (m Manifest) Validate() error {
 	id := m.ID
 	m.ID = ""
 	raw, e := json.Marshal(m)
-	if e != nil || len(raw) > MaxBytes || hash(raw) != id || m.Version != 1 || !workbench.ID.MatchString(m.Capture.ID) || m.Capture.Question.Validate() != nil || len(m.Members) < 1 || len(m.Members) > 20 {
+	if e != nil || len(raw) > MaxBytes || hash(raw) != id || m.Version != 1 || (m.Origin != "" && m.Origin != "result-page") || !workbench.ID.MatchString(m.Capture.ID) || m.Capture.Question.Validate() != nil || len(m.Members) < 1 || len(m.Members) > 20 {
 		return errors.New("invalid retained manifest")
 	}
 	last := -1
@@ -107,6 +129,16 @@ func (s Store) connect(ctx context.Context) (*pgx.Conn, error) {
 	c, e := pgx.ConnectConfig(ctx, config)
 	if e != nil {
 		return nil, errors.New("XTDB unavailable")
+	}
+	if s.AwaitToken != "" {
+		if len(s.AwaitToken) > 16384 {
+			c.Close(ctx)
+			return nil, errors.New("read basis exceeds bound")
+		}
+		if _, e = c.Exec(ctx, "SET AWAIT_TOKEN = $1", s.AwaitToken); e != nil {
+			c.Close(ctx)
+			return nil, errors.New("invalid or unavailable read basis")
+		}
 	}
 	return c, nil
 }
@@ -287,34 +319,138 @@ func (s Store) Annotations(ctx context.Context, id string) (*workbench.MeaningPa
 	}
 	return p, nil
 }
+
+// Correct is the Go convenience API; HTTP callers use CorrectOnce with a stable key.
 func (s Store) Correct(ctx context.Context, id string, in workbench.MeaningInput) (*workbench.MeaningRevision, error) {
-	if in.Target.Kind != "evidence" || in.Target.ID != id {
-		return nil, errors.New("annotation requires exact retained-evidence target")
+	var key [32]byte
+	if _, e := rand.Read(key[:]); e != nil {
+		return nil, e
 	}
-	p, e := s.Annotations(ctx, id)
+	r, e := s.CorrectOnce(ctx, id, in, hex.EncodeToString(key[:]))
 	if e != nil {
 		return nil, e
 	}
-	found := false
-	for _, v := range p.Items {
-		found = found || v.Revision.ID == in.Parent
-	}
-	if in.Parent != "" && !found {
-		return nil, errors.New("parent not found for retained evidence")
-	}
-	r, e := workbench.PrepareMeaning(in)
-	if e != nil {
-		return nil, e
+	return r.MeaningRevision, nil
+}
+
+// CorrectOnce atomically reserves a request intent and appends its assertion.
+// The receipt is stable across lost responses and concurrent identical retries.
+type CorrectionReceipt struct {
+	*workbench.MeaningRevision
+	AwaitToken string `json:"awaitToken"`
+}
+
+func (s Store) CorrectOnce(ctx context.Context, id string, in workbench.MeaningInput, key string) (*CorrectionReceipt, error) {
+	if !workbench.ID.MatchString(key) || in.Target.Kind != "evidence" || in.Target.ID != id {
+		return nil, errors.New("exact evidence target and request ID required")
 	}
 	c, e := s.connect(ctx)
 	if e != nil {
 		return nil, e
 	}
 	defer c.Close(ctx)
-	raw, _ := json.Marshal(r)
-	_, e = c.Exec(ctx, `INSERT INTO goo_annotations (_id,target,parent,state,payload) VALUES ($1,$2,$3,$4,$5)`, r.ID, id, r.Parent, r.State, string(raw))
-	if e != nil {
-		return nil, fmt.Errorf("publish correction: %w", e)
+	if _, e = c.Exec(ctx, "CREATE TABLE goo_annotation_requests (_id,intent,payload)"); e != nil {
+		return nil, e
 	}
-	return r, nil
+	intentRaw, _ := json.Marshal(in)
+	intent := hash(intentRaw)
+	existing := func() (*CorrectionReceipt, error) {
+		var previous, raw string
+		if e := c.QueryRow(ctx, "SELECT intent,payload FROM goo_annotation_requests WHERE _id=$1", key).Scan(&previous, &raw); e != nil {
+			return nil, e
+		}
+		if previous != intent {
+			return nil, errors.New("request ID already used for another annotation intent")
+		}
+		var r workbench.MeaningRevision
+		if json.Unmarshal([]byte(raw), &r) != nil || workbench.ValidateMeaningRevision(r) != nil {
+			return nil, errors.New("invalid correction receipt")
+		}
+		out := &CorrectionReceipt{MeaningRevision: &r}
+		e := c.QueryRow(ctx, "SHOW AWAIT_TOKEN").Scan(&out.AwaitToken)
+		return out, e
+	}
+	if r, err := existing(); err == nil {
+		return r, nil
+	} else if !errors.Is(err, pgx.ErrNoRows) {
+		return nil, err
+	}
+	if _, e = load(ctx, c, id); e != nil {
+		return nil, e
+	}
+	if in.Parent != "" {
+		var parent string
+		if e = c.QueryRow(ctx, "SELECT target FROM goo_annotations WHERE _id=$1", in.Parent).Scan(&parent); e != nil || parent != id {
+			return nil, errors.New("parent not found for retained evidence")
+		}
+	}
+	r, e := workbench.PrepareMeaning(in)
+	if e != nil {
+		return nil, e
+	}
+	raw, _ := json.Marshal(r)
+	tx, e := c.Begin(ctx)
+	if e != nil {
+		return nil, e
+	}
+	defer tx.Rollback(ctx)
+	if _, e = tx.Exec(ctx, "ASSERT NOT EXISTS (SELECT 1 FROM goo_annotation_requests WHERE _id=$1)", key); e != nil {
+		return nil, e
+	}
+	if _, e = tx.Exec(ctx, `INSERT INTO goo_annotations (_id,target,parent,state,payload) VALUES ($1,$2,$3,$4,$5)`, r.ID, id, r.Parent, r.State, string(raw)); e != nil {
+		return nil, e
+	}
+	if _, e = tx.Exec(ctx, "INSERT INTO goo_annotation_requests (_id,intent,payload) VALUES ($1,$2,$3)", key, intent, string(raw)); e != nil {
+		return nil, e
+	}
+	if s.beforeCommit != nil {
+		if e = s.beforeCommit(); e != nil {
+			return nil, e
+		}
+	}
+	if e = tx.Commit(ctx); e != nil {
+		if previous, err := existing(); err == nil {
+			return previous, nil
+		}
+		return nil, e
+	}
+	out := &CorrectionReceipt{MeaningRevision: r}
+	e = c.QueryRow(ctx, "SHOW AWAIT_TOKEN").Scan(&out.AwaitToken)
+	return out, e
+}
+
+// RecoverSelection allows an already-committed publication to be recovered even
+// after its ephemeral source page expired. It cannot create new evidence.
+func (s Store) RecoverSelection(ctx context.Context, key, sourceID string, live bool, indexes []int, tags []string, note string) (*Receipt, error) {
+	if !workbench.ID.MatchString(key) {
+		return nil, errors.New("invalid request ID")
+	}
+	c, e := s.connect(ctx)
+	if e != nil {
+		return nil, e
+	}
+	defer c.Close(ctx)
+	var raw string
+	if e = c.QueryRow(ctx, "SELECT payload FROM goo_capture_requests WHERE _id=$1", key).Scan(&raw); e != nil {
+		if errors.Is(e, pgx.ErrNoRows) {
+			return nil, ErrRequestNotFound
+		}
+		return nil, e
+	}
+	var r Receipt
+	if json.Unmarshal([]byte(raw), &r) != nil || r.Manifest.Validate() != nil {
+		return nil, errors.New("invalid stored request")
+	}
+	m := r.Manifest
+	if m.Capture.ID != sourceID || (m.Origin == "result-page") != live || len(indexes) != len(m.Members) {
+		return nil, errors.New("request source differs from committed selection")
+	}
+	indexes = append([]int{}, indexes...)
+	sort.Ints(indexes)
+	for i, index := range indexes {
+		if index != m.Members[i].Index {
+			return nil, errors.New("request indexes differ from committed selection")
+		}
+	}
+	return s.Publish(ctx, m, tags, note, key)
 }

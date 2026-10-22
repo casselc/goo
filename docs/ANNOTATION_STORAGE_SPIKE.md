@@ -103,7 +103,7 @@ historical replay must not silently issue a fresh telemetry query.
 The user's follow-up proposes retaining selected ClickHouse records in XTDB when
 annotating them. This materially broadens the useful role: XTDB could hold both
 authored meaning and the bounded evidence that meaning refers to, while ClickStack
-continues to serve large live populations. The bounded direct-write experiment is now implemented for selected saved-capture observations; live-result freezing and continuous ingestion remain proposed.
+continues to serve large live populations. The bounded direct-write experiment is now implemented for selected saved-capture and exact live-page observations, with idempotent correction receipts and await-token propagation on new connections. Continuous ingestion and multi-node lag verification remain proposed.
 
 The current official external-source docs describe **ingestion**, rather than
 remote query federation: a secondary database subscribes to an upstream feed,

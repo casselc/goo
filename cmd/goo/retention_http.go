@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/casselc/goo/exploration"
 	"github.com/casselc/goo/retention"
 	"github.com/casselc/goo/workbench"
@@ -50,22 +51,56 @@ func registerRetention(mux *http.ServeMux, dir string) {
 			return
 		}
 		var in struct {
-			RequestID string   `json:"requestID"`
-			CaptureID string   `json:"captureID"`
-			Indexes   []int    `json:"indexes"`
-			Tags      []string `json:"tags"`
-			Note      string   `json:"note"`
+			RequestID   string   `json:"requestID"`
+			CaptureID   string   `json:"captureID"`
+			ResultToken string   `json:"resultToken"`
+			Indexes     []int    `json:"indexes"`
+			Tags        []string `json:"tags"`
+			Note        string   `json:"note"`
 		}
 		if e := decode(w, r, &in); e != nil {
 			fail(w, 400, e)
 			return
 		}
-		c, e := captures.Load(in.CaptureID)
+		if !workbench.ID.MatchString(in.RequestID) {
+			fail(w, 400, errors.New("request ID must be 64 lowercase hex characters"))
+			return
+		}
+		if (in.CaptureID == "") == (in.ResultToken == "") {
+			fail(w, 400, errors.New("choose exactly one saved capture or live result page"))
+			return
+		}
+		var c *exploration.SavedCapture
+		var e error
+		if in.ResultToken != "" {
+			c, e = resultSnapshots.Load(in.ResultToken)
+		} else {
+			c, e = captures.Load(in.CaptureID)
+		}
 		if e != nil {
-			fail(w, 400, e)
+			// A successful earlier save remains recoverable after page expiry.
+			sourceID := in.CaptureID
+			if in.ResultToken != "" {
+				sourceID = in.ResultToken
+			}
+			ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
+			defer cancel()
+			recovered, err := store.RecoverSelection(ctx, in.RequestID, sourceID, in.ResultToken != "", in.Indexes, in.Tags, in.Note)
+			if err == nil {
+				reply(w, 201, recovered)
+				return
+			}
+			if !errors.Is(err, retention.ErrRequestNotFound) {
+				fail(w, 502, fmt.Errorf("request recovery unavailable; preserve the draft and retry unchanged: %w", err))
+				return
+			}
+			fail(w, 410, e)
 			return
 		}
 		m, e := retention.Select(c, in.Indexes)
+		if in.ResultToken != "" && e == nil {
+			m, e = retention.SelectResult(c, in.Indexes)
+		}
 		if e != nil {
 			fail(w, 400, e)
 			return
@@ -80,12 +115,18 @@ func registerRetention(mux *http.ServeMux, dir string) {
 		reply(w, 201, v)
 	})
 	mux.HandleFunc("GET /retained-evidence/{id}", func(w http.ResponseWriter, r *http.Request) {
+		for key, values := range r.URL.Query() {
+			if key != "awaitToken" || len(values) != 1 || len(values[0]) > 16384 {
+				fail(w, 400, errors.New("unsupported retained evidence read basis"))
+				return
+			}
+		}
 		if !available(w) {
 			return
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
 		defer cancel()
-		v, e := store.Load(ctx, r.PathValue("id"))
+		v, e := (retention.Store{URL: url, AwaitToken: r.URL.Query().Get("awaitToken")}).Load(ctx, r.PathValue("id"))
 		if e != nil {
 			fail(w, 404, e)
 			return
@@ -99,7 +140,7 @@ func registerRetention(mux *http.ServeMux, dir string) {
 	mux.HandleFunc("GET /retained-evidence/{id}/annotations", func(w http.ResponseWriter, r *http.Request) {
 		q := r.URL.Query()
 		for key, values := range q {
-			if len(values) != 1 || (key != "target" && key != "history") {
+			if len(values) != 1 || (key != "target" && key != "history" && key != "awaitToken") {
 				fail(w, 400, errors.New("unsupported retained annotation query"))
 				return
 			}
@@ -123,7 +164,7 @@ func registerRetention(mux *http.ServeMux, dir string) {
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
 		defer cancel()
-		v, e := store.Annotations(ctx, r.PathValue("id"))
+		v, e := (retention.Store{URL: url, AwaitToken: q.Get("awaitToken")}).Annotations(ctx, r.PathValue("id"))
 		if e != nil {
 			fail(w, 404, e)
 			return
@@ -144,14 +185,18 @@ func registerRetention(mux *http.ServeMux, dir string) {
 		if !available(w) {
 			return
 		}
-		var in workbench.MeaningInput
+		var in struct {
+			workbench.MeaningInput
+			RequestID  string `json:"requestID"`
+			AwaitToken string `json:"awaitToken"`
+		}
 		if e := decode(w, r, &in); e != nil {
 			fail(w, 400, e)
 			return
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
 		defer cancel()
-		v, e := store.Correct(ctx, r.PathValue("id"), in)
+		v, e := (retention.Store{URL: url, AwaitToken: in.AwaitToken}).CorrectOnce(ctx, r.PathValue("id"), in.MeaningInput, in.RequestID)
 		if e != nil {
 			fail(w, 400, e)
 			return

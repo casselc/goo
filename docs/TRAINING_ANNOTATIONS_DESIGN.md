@@ -1,9 +1,8 @@
 # Observability exploration as a source of training examples
 
 > Implemented foundation: [cross-product tags/notes and optional retention of selected
-> saved-capture observations](WORKBENCH_ANNOTATIONS.md). Reviewed training labels,
-> vocabularies, dataset exports and exact freezing of earlier live results below
-> remain proposed.
+> saved-capture or exact live-page observations](WORKBENCH_ANNOTATIONS.md). Reviewed
+> training labels, vocabularies and dataset exports below remain proposed.
 
 
 Observation-focused design note, 2026-10-22 UTC. Its delivery sequence applies to

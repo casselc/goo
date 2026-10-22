@@ -11,6 +11,8 @@ import (
 	"time"
 )
 
+var resultSnapshots exploration.ResultSnapshots
+
 func registerExploration(mux *http.ServeMux, client *http.Client) {
 	registerRecipes(mux)
 	registerTail(mux, client)
@@ -143,6 +145,11 @@ func registerExploration(mux *http.ServeMux, client *http.Client) {
 		if e != nil {
 			fail(502, e)
 			return
+		}
+		if token, err := resultSnapshots.Freeze(result); err == nil {
+			result.ResultToken = token
+		} else {
+			result.Warnings = append(result.Warnings, "Live selection retention unavailable: "+err.Error())
 		}
 		json.NewEncoder(w).Encode(result)
 	})

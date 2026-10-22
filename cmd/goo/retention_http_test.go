@@ -33,3 +33,22 @@ func TestRetentionHTTPOptionalAndServerOwned(t *testing.T) {
 		}
 	}
 }
+
+func TestRetentionRecoveryDoesNotTreatUnavailableStoreAsAbsentCommit(t *testing.T) {
+	t.Setenv("GOO_XTDB_URL", "postgres://xtdb@127.0.0.1:1/xtdb?sslmode=disable")
+	mux := http.NewServeMux()
+	registerRetention(mux, t.TempDir())
+	w := httptest.NewRecorder()
+	body := `{"requestID":"` + strings.Repeat("a", 64) + `","resultToken":"` + strings.Repeat("b", 64) + `","indexes":[0],"tags":["review"],"note":"original draft"}`
+	mux.ServeHTTP(w, httptest.NewRequest("POST", "/retained-evidence", strings.NewReader(body)))
+	if w.Code != 502 || !strings.Contains(w.Body.String(), "retry unchanged") || strings.Contains(w.Body.String(), "run the question") {
+		t.Fatal(w.Code, w.Body.String())
+	}
+	for _, path := range []string{"/retained-evidence/" + strings.Repeat("a", 64) + "?awaitToken=x&awaitToken=y", "/retained-evidence/" + strings.Repeat("a", 64) + "?untrusted=x"} {
+		w = httptest.NewRecorder()
+		mux.ServeHTTP(w, httptest.NewRequest("GET", path, nil))
+		if w.Code != 400 {
+			t.Fatal(w.Code, w.Body.String())
+		}
+	}
+}

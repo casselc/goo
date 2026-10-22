@@ -1,6 +1,6 @@
 # Architecture
 
-[Record population gestures](RECORD_POPULATIONS.md) reuse the attribute viewer and typed selection owner. Shared-field discovery is local string intersection; query evaluation remains in Go. [Whole-product annotations](PRODUCT_ANNOTATIONS_DESIGN.md) are proposed sidecars on typed entities, definitions and evidence; observation labels require exact fixed-record freezing.
+[Record population gestures](RECORD_POPULATIONS.md) reuse the attribute viewer and typed selection owner. Shared-field discovery is local string intersection; query evaluation remains in Go. [Shared annotations](WORKBENCH_ANNOTATIONS.md) attach exact-target revision sidecars; optional native retention freezes selected server-owned observations. The broader reviewed-label design remains proposed.
 
 
 [Categorical selection](FACET_SELECTION.md) constructs bounded typed predicates in the population adapter, then delegates validation/compilation and measurement to Go. Staging and child return are source-free.
@@ -204,13 +204,18 @@ immutable parent-linked revisions in `workbench/meaning.go`. UI adapters share
 assertions name an applicability window; exact saved artifacts do not manufacture
 one. Active heads derive from parent edges, preserving parallel reviews.
 
-The optional `retention` Go package writes selected **server-owned saved-capture**
-observations and their initial annotation atomically into XTDB through pgx. Native
-member projections support joins while exact JSON payloads remain retained. Request
-receipts support recovery after an uncertain initial save response. The capture
-store, live ClickStack source and native evidence store remain distinct boundaries;
-reopening native retained evidence does not read either live telemetry or the
-original capture file. The [contract and sequence diagram](WORKBENCH_ANNOTATIONS.md)
-identify prototype limits, including cross-store search, correction retry keys and
-cross-node await-token propagation. No ClickHouse external-source connector is
-implemented.
+The optional `retention` Go package writes selected **server-owned live-page or
+saved-capture** observations and their initial annotation atomically into XTDB
+through pgx. `exploration/result_snapshots.go` holds bounded exact result pages
+for two minutes; client records never become authoritative evidence. Refresh and
+paging create new tokens, while original page indexes remain stable until expiry.
+Native member projections support joins while exact JSON payloads remain retained.
+Initial and correction request receipts recover uncertain responses without
+additional revisions. New connections apply the caller's XTDB await-token lower
+bound; the UI retains it across reloads in the same tab. This does not pin a
+historical knowledge cutoff. The capture store, ephemeral pages, live ClickStack
+source and native evidence store remain distinct boundaries; reopening retained
+evidence reads neither live telemetry nor the original capture/page. The
+[contract and process diagram](WORKBENCH_ANNOTATIONS.md) identify limits including
+cross-store search, cross-client basis sharing and authentication. No ClickHouse
+external-source connector is implemented.

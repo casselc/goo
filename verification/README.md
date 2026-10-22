@@ -293,7 +293,7 @@ cancels and out-of-order publish/fail completions. It executes the real JavaScri
 session and compares every snapshot to an independent Go oracle (100 requested
 sequences, 25 steps). `model/question_session.qnt` models generation/phase/publication
 ownership; the live `TestQuintQuestionWorkbenchLive` checks observed transitions,
-typed questions and service-discovery/capture custody with eight rejecting controls.
+typed questions and service-discovery/capture custody with nine rejecting controls, including a duplicate publication on retry.
 Run storyboard 45 with `GOO_QUESTION_BOMBADIL=1` through the standard journey wrapper.
 The new Bombadil actor is source-free and bounded; existing discovery campaigns
 now target the single Run action and preserve authored OR with AND shortcuts.
@@ -731,3 +731,17 @@ They cover native system-time cutoff queries, exact record payloads, independent
 review branches, a staged transaction interrupted before commit, idempotent retry
 and concurrent request recovery. The optional Compose overlay and prototype limits
 are in [the annotation contract](../docs/WORKBENCH_ANNOTATIONS.md).
+
+## Exact live-page retention
+
+`TestHegelResultSnapshotStateSwarm` generates read/select-old/reject-foreign
+sequences and checks immutable page bytes, exact numeric tokens, original offsets
+and equal-payload occurrences. Root Go tests use a controlled clock for TTL,
+capacity and byte bounds, plus concurrent cache readers. Native opt-in tests cover
+correction rollback, concurrent identical retries, changed-intent rejection,
+expired-page committed-receipt recovery and await-token reads on new connections.
+Journey 100 records the actual original result and canonical retained manifest;
+`TestQuintAnnotationLedger` validates token/question/basis/member continuity and
+retry transitions, with nine rejecting controls, including a duplicate publication on retry. This small model does not prove
+multi-node replica behavior or production isolation. The live-retention Bombadil
+campaign observes native POST count while selecting, drafting and clearing.
