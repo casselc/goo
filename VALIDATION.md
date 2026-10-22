@@ -1,5 +1,47 @@
 # Validation record
 
+## S2/A3 acceptance audit and contextual lookback (2026-10-22 UTC)
+
+Image: `sha256:67f1090a47789aeeda843e997e9530f3c6143302462caf870bc63bb79b22474b`.
+The [acceptance audit](docs/S2_A3_ACCEPTANCE.md) maps active S2/A3 criteria to
+implementation and existing validation. Bounded A3 service-record/receipt adoption
+is delivered. S2's fixed-editor mount removal gate remains open: fresh Activity
+still eagerly mounts the complete fixed editor beneath its disclosure. Explicit/lazy
+fixed authoring with draft/link/paused-return parity is next, followed by B1.
+Native comparison work stays D1. Historical validation entries are not rewritten
+as if this audit reran all earlier campaigns.
+
+Navigation now hides the new-read lookback on Saved and labels its purpose on
+Services, Operations, Definitions HTTP preview and Examples. It preserves the input
+value and fixed/saved bounds; navigation performs no source execution. No new
+query/capture protocol or semantic evaluator was introduced.
+
+Checks on this image:
+
+- All 33 frontend test files pass; JavaScript syntax, whitespace and changed local
+  Markdown links pass.
+- Real telemetry journeys 107, 102 and 103 pass together (2.1m): source-free saved
+  inspection/route changes, unchanged default, explicit trace/log context, delayed
+  result rejection, one fresh monitor, scroll/background pause and explicit resume.
+  Existing Quint/quint-go ledgers and rejecting controls pass, including the
+  scroll/background ledger in 51.37s. No new semantic property campaign was added
+  for this display-only navigation change; earlier Hegel evidence is cited explicitly
+  in the audit rather than claimed as rerun.
+- The existing Bombadil workspace actions execute 27 navigations in the 30-second
+  campaign, with zero violations and the new Saved-lookback-hidden invariant.
+- Final Saved journey rerun passes (28.0s) after correcting only the screenshot
+  scroll position. The top-of-page frame is visually reviewed.
+- Served source hashes match, all 13 services run after traffic restoration, old
+  pending IDs and retained evidence/review citations survive; OOM kills remain zero.
+  No XTDB restart test was performed this round.
+- Affected Saved and Activity storyboards are regenerated; the added top-of-page
+  Saved frame documents the missing misleading lookback. Presenter/flow ownership
+  is shown in the audit diagram; the eager editor gate is explicitly unimplemented.
+
+Evidence: `artifacts/scope-context-unit.log`, `scope-context-journeys.log`,
+`scope-context-saved-final.log`, `scope-context-bombadil.log`,
+`scope-context-bombadil/trace.jsonl`, `scope-context-health.json` and existing journey ledger directories.
+
 ## Supported-window native previews (2026-10-22 UTC)
 
 Image: `sha256:43635ed83d33894a1b39957c8e63334ea76fbf484c4bd524a79b07144e3689b6`.

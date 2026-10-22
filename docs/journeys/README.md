@@ -1,5 +1,7 @@
 # User journeys and storyboards
 
+Journey 107 now checks contextual lookback labels across routes, hides the default on Saved, and preserves its value without source reads. [Mobile Saved without a misleading lookback](screenshots/107d-saved-scope-without-lookback.png). The [acceptance audit](../S2_A3_ACCEPTANCE.md) distinguishes delivered A3 from the remaining S2 editor-mount gate.
+
 [Shared native values and coverage](../NATIVE_PRESENTATION.md): Journey 59 opens
 service coverage without a source request, including [desktop](screenshots/59g-shared-native-coverage.png)
 and [mobile](screenshots/59h-mobile-native-coverage.png). Journey 54 opens

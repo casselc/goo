@@ -16,6 +16,8 @@ comparison leads and explicit capabilities—through those same workflows.
 
 The [architecture](ARCHITECTURE_REFACTORING_REVIEW.md) and [design](DESIGN_REFACTORING_REVIEW.md) findings are incorporated in the single active queue below. Their original recommendation status is historical; they do not create parallel refactoring backlogs.
 
+Current acceptance reconciliation: [S2/A3 audit](S2_A3_ACCEPTANCE.md). A3 is delivered; finish S2’s eager fixed-editor mount removal gate before B1. Comparison presentation remains D1, rather than an ad hoc next step.
+
 ## Basis, authority and current boundary
 
 This is a documentation/source reconciliation, not another live usability study or

@@ -151,3 +151,15 @@ it cannot replace the paused parent. It also covers completed fixed results,
 selection/draft/scroll retention and mobile return. Its Quint ledger counts both live and fixed reads, so Return must preserve the
 combined count. The shared Bombadil filter actor
 now stages a fixed child and returns to the same selection.
+
+## Contextual lookback and consolidation gate
+
+The top-level lookback is a default for a new explicit read, not the horizon of
+held Activity or saved evidence. Navigation hides it on Saved; Services, Operations,
+Definitions HTTP preview and Examples name the read it configures. The input value
+is retained across routes. Fixed questions retain their own bounds.
+
+The [S2/A3 acceptance audit](S2_A3_ACCEPTANCE.md) records the remaining S2 gate:
+`entry-advanced` still wraps an eagerly mounted fixed query editor. Explicit/lazy
+fixed authoring must preserve old links, drafts and paused-parent return before
+that adapter can be removed. B1 follows this gate.

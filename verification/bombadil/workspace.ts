@@ -4,12 +4,15 @@ import { extract, actions, registerCustomAction } from '@antithesishq/bombadil/b
 export { noUncaughtExceptions, noUnhandledPromiseRejections } from '@antithesishq/bombadil/browser/defaults/properties';
 
 const shell = extract(({ document }) => ({
+  savedLookbackHidden: document.querySelector('#minutes')?.closest<HTMLElement>('.scope-control')?.hidden === true,
   liveOwned: document.querySelector('#operations')?.closest('[data-workspace-panel]')?.getAttribute('data-workspace-panel') === 'operations',
   savedHasEditor: !!document.querySelector('[data-workspace-panel=investigations] #operationPackage'),
   ready: !!document.querySelector('[data-workspace][aria-current="page"]'),
   selected: [...document.querySelectorAll('[data-workspace][aria-current="page"]')].map(e => e.getAttribute('data-workspace')),
   visible: [...document.querySelectorAll<HTMLElement>('[data-workspace-panel]')].filter(e => !e.hidden).map(e => e.dataset.workspacePanel),
 }));
+
+export const savedHasNoLiveLookback = always(() => !shell.current.ready || shell.current.selected[0] !== 'investigations' || shell.current.savedLookbackHidden);
 
 export const liveAndSavedOwnership = always(() => !shell.current.ready || (shell.current.liveOwned && !shell.current.savedHasEditor));
 
