@@ -818,3 +818,13 @@ the live-filter campaign checks zero before/after fixed authoring and exactly on
 while its fixed child is open.
 Existing entry-intent and live-filter Hegel state/swarm campaigns protect the
 unchanged selector/source protocol; they do not model every DOM lifecycle detail.
+
+## Compact definition libraries
+
+`TestHegelDefinitionLibraryProperties` generates 200 supplied catalogs and page
+configurations, checking typed exact identities, no title-based collapse, complete
+filtered paging, missing matches and non-mutation. Journey 110 checks selected
+editor/annotation drafts, exact revision actions, delayed real list response
+rejection and failed-refresh retention; existing annotation journey 98 replays
+its real Quint ledger and rejecting controls. The definition-library Bombadil
+actor inspects, filters and pages without invoking source or publication actions.

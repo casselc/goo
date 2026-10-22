@@ -1,0 +1,10 @@
+import{always,eventually}from'@antithesishq/bombadil';
+import{extract,actions,registerCustomAction}from'@antithesishq/bombadil/browser';
+export{noUncaughtExceptions,noUnhandledPromiseRejections}from'@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document,window})=>({ready:document.querySelectorAll('.definition-row').length>0,overflow:document.documentElement.scrollWidth>window.innerWidth,libraries:Array.from(document.querySelectorAll('.definition-library')).map(lib=>({rows:lib.querySelectorAll('.definition-row').length,meaning:lib.querySelectorAll('.meaning-panel').length,key:lib.querySelector('.ui-inspector:not([hidden])')?.getAttribute('data-key')}))}));
+export const ready=eventually(()=>state.current.ready).within(15,'seconds');
+export const bounded=always(()=>!state.current.overflow&&state.current.libraries.every(l=>l.rows<=25&&l.meaning<=1&&(!l.key||/^(record|measurement):[a-f0-9]{64}$/.test(l.key))));
+const inspect=registerCustomAction('goo.inspectDefinition',async(document)=>{const rows=Array.from(document.querySelectorAll<HTMLButtonElement>('.definition-row button'));if(rows.length){const i=Number(document.documentElement.dataset.libraryIndex||0);rows[i%rows.length].click();document.documentElement.dataset.libraryIndex=String(i+1)}});
+const filter=registerCustomAction('goo.filterDefinitions',async(document)=>{for(const id of ['packageLibrarySearch','measurementDefinitionSearch']){const e=document.getElementById(id)as HTMLInputElement;e.value=e.value?'':'no-such-loaded-definition';e.dispatchEvent(new Event('input',{bubbles:true}))}});
+const page=registerCustomAction('goo.pageDefinitions',async(document)=>{const buttons=Array.from(document.querySelectorAll<HTMLButtonElement>('.definition-library > .controls button')).filter(b=>!b.disabled);if(buttons.length)buttons[0].click()});
+export const explore=actions(()=>state.current.ready?[inspect(),filter(),page()]:[filter(),'Wait']);

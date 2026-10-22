@@ -469,3 +469,12 @@ formatting and comparison-window coverage. It composes existing stats, UTC times
 and disclosures, with styles in `native-presentation.css`. It has no source client or
 query/evidence state. Service coverage remains compact and collapsed; measurement
 stream details retain latest versus whole-window distinctions. Supported-window previews also compose its window values and coverage with the existing stream inspector; discovery and explicit recapture remain owned by `GooWindowDiscovery`. [Contract and diagram](NATIVE_PRESENTATION.md).
+
+## Definition library presenter
+
+`GooDefinitionLibrary` is an application presenter over supplied typed revisions,
+composing compact rows and the existing inspector. It has no source client or
+authoring lifecycle. Paging/search is local to the loaded catalog; details are
+created on selection and cached with the inspector's existing bounded lifecycle.
+Record and native adapters retain distinct execution/refresh semantics. Styles live
+in `definition-library.css`. See [contract and diagram](DEFINITION_LIBRARY.md).

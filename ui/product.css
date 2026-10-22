@@ -773,7 +773,6 @@ td details {
 #packageYAML {min-height:270px;font-size:12px}
 #packagePreviewResult pre {max-height:260px}
 #packageDraftSetup .controls>label {flex:1 1 160px}
-#telemetryPackageLibrary {max-height:360px;overflow:auto;padding-right:4px}
 #packageHandoffResult p {font-size:12px}
 #packageGoTemplate {border:1px solid var(--border);border-radius:7px;padding:16px;background:var(--bg)}
 .evidence-note,#packageStatus {overflow-wrap:anywhere}

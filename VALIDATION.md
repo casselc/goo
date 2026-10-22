@@ -1,5 +1,58 @@
 # Validation record
 
+## Compact record/native definition rows — first B1 slice (2026-10-22 UTC)
+
+Final image: `sha256:0d60f896bc4f2a15b893b7f8cd56b368c4f71d6bc6a755dece2086ecb7684f08`.
+`GooDefinitionLibrary` now composes compact typed exact-revision rows, local loaded-
+catalog search/paging and one selected inspector in both Definitions catalogs.
+Record annotation panels mount only in selected detail; the inspector's bounded
+cache preserves visited local drafts. Selection does not validate/execute/publish or
+replace the package editor draft. Same-title definitions remain separate. Explicit
+Edit/Explore/Preview actions retain their existing typed owner contracts. Native
+refreshes now reject older responses; failed refreshes retain old rows/detail.
+
+This is a bounded first B1 cut, not completion of the whole milestone. The fixed
+reusable-question list and compatible document/retained catalog adoption remain
+open, as does subsequent touched retention-owner separation. No backend cursor,
+family/lineage inference, global search or new recovery promise is introduced.
+[Contract and ownership diagram](docs/DEFINITION_LIBRARY.md).
+
+Actual checks:
+
+- All 33 frontend test files pass on final source. Added pure checks cover typed
+  exact IDs, same-title independence, local literal search/page boundaries and
+  non-mutation. JavaScript/Python syntax, whitespace and changed Markdown links pass.
+- Hegel: 200 generated catalog/page configurations pass (0.475s), including empty
+  catalogs, typed keys, complete filtered paging, bounds and non-mutation. This is
+  a supplied-data property campaign, not a complete DOM or lineage model.
+- Initial image `5e487426`: journeys 98/40/110 pass (1.9m). Screenshot review found
+  that the old whole-catalog height limit clipped selected detail. It is removed;
+  only the shared row list now scrolls. An empty selected-status bar is hidden.
+- Final image: all five journeys pass together (2.8m): 98 annotations/parallel heads/
+  history, 40 native preview/service handoff/abandoned reads, 110 exact same-title
+  record/native selection and draft retention, 24 real Python OTel package reuse,
+  and 25 nested log-package import/refinement. No source manifest is required.
+- Journey 110 additionally checks close-to-row keyboard focus, selected detail
+  outside a filter, zero source/publication calls from selection, delayed real
+  catalog-response rejection, forced failed-refresh retention and mobile inspector
+  containment. Real Go APIs supply definitions; only the catalog failure boundary
+  is injected. Existing source reads remain explicit in the reuse journeys.
+- Final Bombadil campaigns pass: library inspection/filter/paging (264 steps) and
+  annotation draft/history (85 steps), with zero violations. The existing real
+  annotation Quint/quint-go replay and rejecting controls pass (15.32s); publication,
+  parallel heads and pinned revision semantics retain their existing owners.
+- Affected storyboards are regenerated; desktop and corrected mobile library
+  frames are visually reviewed. Served assets/server/binary hashes match source;
+  all 13 services run after traffic restoration. Old pending IDs, retained manifests,
+  annotation history and pinned document citations survive; OOM kills remain zero.
+  No XTDB restart test was performed in this round.
+
+Evidence: `artifacts/definition-library-unit.log`, `definition-library-final-unit.log`,
+`definition-library-hegel.log`, `definition-library-journeys.log`,
+`definition-library-final.log`, `definition-library-health.json`,
+`artifacts/definition-library/library-2237a710/` and
+`artifacts/annotations/annotations-11da5486/` (real ledger/model/Bombadil evidence).
+
 ## Explicit/lazy fixed authoring — S2 mount gate (2026-10-22 UTC)
 
 Image: `sha256:31c65cf004b22fac9a8672ebf30cbd346c20b016cc7331642e296140ddd24113`.

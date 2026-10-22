@@ -18,7 +18,7 @@ Comparison work belongs to D1; it is not the immediate successor to these cuts.
 
 ## Remaining work has an owner
 
-- **B1, next:** compact record/native definition revision rows with only the selected
+- **B1, active:** the [Definitions row slice](DEFINITION_LIBRARY.md) is delivered; further fixed-question/document/retained catalog adoption remains open. The contract is compact record/native definition revision rows with only the selected
   editor/meaning/review mounted. Preserve unrelated same-title definitions, families,
   parallel heads, dirty drafts, old links and source-free selection. Start with these
   two definition families before extending to compatible document/retained catalogs.

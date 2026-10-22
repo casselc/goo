@@ -1,5 +1,11 @@
 # User journeys and storyboards
 
+[Journey 110](../../journeys/definition-library.spec.js) explores compact record/native
+revision libraries with unrelated same-title definitions. It preserves selected
+annotation/editor drafts, rejects a delayed older real catalog response, and checks
+source-free selection and mobile containment. [Selected revisions](screenshots/110a-selected-definition-revisions.png) · [Mobile rows](screenshots/110b-mobile-definition-rows.png).
+See [the library contract](../DEFINITION_LIBRARY.md) for cache/search bounds and remaining B1 work.
+
 [Journey 109](../../journeys/lazy-authoring.spec.js) checks that fresh Activity has
 no fixed-editor DOM. Opening authoring creates one without a source query, returning
 to paused Activity detaches it, and reopening restores the same draft/DOM identity.

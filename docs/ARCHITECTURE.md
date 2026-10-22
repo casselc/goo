@@ -309,3 +309,13 @@ editor. `GooRecordResults` supplies record/group tables and named context action
 to both owners, with independent generations and retained evidence bases. Capture
 switch/leave/document transitions invalidate old context publication. See the
 [updated ownership diagram](SAVED_RECORD_PRESENTATION.md).
+
+## Selected definition revision libraries
+
+The first [B1 library slice](DEFINITION_LIBRARY.md) shares loaded-catalog paging,
+compact rows and a cached inspector between record and native Definitions adapters.
+List fetch/refresh generations, compiler previews, execution and authoring stay in
+typed adapters. Selection preserves exact family/revision identity; it does not
+replace the editor draft or infer lineage from a name/title. Record annotation
+panels mount only in selected detail; their existing publication/basis owners are
+unchanged. Only the row list scrolls; the inspector sits outside that viewport.
