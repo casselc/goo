@@ -806,3 +806,15 @@ versus unavailable, coverage counts and non-mutation. Native comparison properti
 and counter/histogram state campaigns protect evaluation separately. Existing browser
 Quint ledgers retain their observed protocol limits; no exhaustive native UI model
 is implied. See [presentation contract](../docs/NATIVE_PRESENTATION.md).
+
+## Lazy fixed-authoring boundary
+
+Journey 109 checks absent editor DOM on fresh Activity, source-free explicit mounting,
+same draft/DOM identity after paused return and inert deep-link staging. Journeys
+102/105 assert the lazy mount boundary during real tail/fixed-read transitions and
+reuse the existing observed Quint ledger with rejecting controls. The entry Bombadil
+campaign now asserts zero eager fixed editors during its pause-only exploration;
+the live-filter campaign checks zero before/after fixed authoring and exactly one
+while its fixed child is open.
+Existing entry-intent and live-filter Hegel state/swarm campaigns protect the
+unchanged selector/source protocol; they do not model every DOM lifecycle detail.

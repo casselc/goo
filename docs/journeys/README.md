@@ -1,6 +1,13 @@
 # User journeys and storyboards
 
-Journey 107 now checks contextual lookback labels across routes, hides the default on Saved, and preserves its value without source reads. [Mobile Saved without a misleading lookback](screenshots/107d-saved-scope-without-lookback.png). The [acceptance audit](../S2_A3_ACCEPTANCE.md) distinguishes delivered A3 from the remaining S2 editor-mount gate.
+[Journey 109](../../journeys/lazy-authoring.spec.js) checks that fresh Activity has
+no fixed-editor DOM. Opening authoring creates one without a source query, returning
+to paused Activity detaches it, and reopening restores the same draft/DOM identity.
+Record deep links stage an editor without execution. [Explicit fixed authoring](screenshots/109a-explicit-fixed-authoring.png).
+Journeys 102 and 105 additionally check the lazy mount boundary during real stream
+inspection and fixed-read return, with existing Quint ledgers and rejecting controls.
+
+Journey 107 now checks contextual lookback labels across routes, hides the default on Saved, and preserves its value without source reads. [Mobile Saved without a misleading lookback](screenshots/107d-saved-scope-without-lookback.png). The [acceptance audit](../S2_A3_ACCEPTANCE.md) records bounded S2/A3 delivery.
 
 [Shared native values and coverage](../NATIVE_PRESENTATION.md): Journey 59 opens
 service coverage without a source request, including [desktop](screenshots/59g-shared-native-coverage.png)

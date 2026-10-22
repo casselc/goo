@@ -9,6 +9,12 @@ executed and followed into evidence.
 
 ## Start and run
 
+Fresh Activity does not mount this editor. Open **Questions, charts and saved views**
+or follow a supported fixed continuation to mount it. The trail registers navigation
+independently; shared record/step/view links still restore without execution.
+Returning to paused Activity retains the fixed draft in a suspended/detached view;
+reopening restores the same editor. See the [S2/A3 acceptance audit](S2_A3_ACCEPTANCE.md).
+
 Explore has one primary **Run question** action. Service, duration, severity and
 message shortcuts, advanced attribute filters, breakdowns and measures build the
 same draft. Editing them does not read telemetry. Advanced filters and measures

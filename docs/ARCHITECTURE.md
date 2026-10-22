@@ -257,6 +257,26 @@ single-question distribution and service timeline compositions remain available.
 
 ## Fresh live entry
 
+The investigation trail now registers handlers without constructing a fixed editor
+on fresh Activity or unrelated initial routes. Explicit fixed authoring, record
+question/step/view links and supported service/package/trace continuations mount
+one. First legacy continuation events are delivered once after mounting; later
+ones restore the retained owner. Mounting itself never executes telemetry. Existing
+continuations keep their original staged-versus-explicit-read behavior. Suspended
+editors keep their draft/DOM identity; they are not rebuilt on paused Activity return.
+
+```mermaid
+flowchart LR
+  Fresh[Fresh Activity] --> Tail[One bounded tail; no fixed editor]
+  Fixed[Explicit authoring / record link / continuation] --> Trail[Trail ensures one editor]
+  Trail --> Stage[Stage fixed scope / retain draft]
+  Stage --> Run[Explicit read under existing typed owner]
+  Stage --> Return[Paused Activity return]
+  Return --> Hold[Detach / suspend retained editor]
+  Hold --> Reopen[Explicit reopen: same draft and DOM]
+  Reopen --> Stage
+```
+
 [Live Activity](LIVE_ACTIVITY.md) classifies visit intent before subscribing, reuses the existing bounded tail core and keeps its local inspector separate from fixed execution. Saved/shared entry remains inert. The [whole-product architecture review](STREAM_FIRST_WHOLE_PRODUCT_ARCHITECTURE.md) identifies the next shared record/context extraction and removal gates; its broader refactoring is proposed, not completed by this entry slice.
 
 Live Activity now keeps signal-local `ScopeFilters` draft/applied predicates in its
@@ -266,7 +286,7 @@ fixed continuation stages the original row read window in `GooExploration` witho
 fetching. Only the existing Run action rereads it. The existing trail exposes
 suspend/resume of its retained fixed view; Live Activity uses these to cancel hidden
 work and restore its paused parent without a read. Shared record bodies are now
-implemented as described below; wider table-shell consolidation remains planned.
+implemented with the shared table shell described below.
 
 The [shared record presentation](RECORD_PRESENTATION.md) adapter now removes
 parallel row-formatting paths from Live and fixed results. Its custom elements

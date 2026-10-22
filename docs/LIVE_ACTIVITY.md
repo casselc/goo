@@ -159,7 +159,10 @@ held Activity or saved evidence. Navigation hides it on Saved; Services, Operati
 Definitions HTTP preview and Examples name the read it configures. The input value
 is retained across routes. Fixed questions retain their own bounds.
 
-The [S2/A3 acceptance audit](S2_A3_ACCEPTANCE.md) records the remaining S2 gate:
-`entry-advanced` still wraps an eagerly mounted fixed query editor. Explicit/lazy
-fixed authoring must preserve old links, drafts and paused-parent return before
-that adapter can be removed. B1 follows this gate.
+The [S2/A3 acceptance audit](S2_A3_ACCEPTANCE.md) records the delivered mount gate:
+fresh Activity contains no fixed query editor. The trail registers navigation without
+constructing one; explicit authoring or a supported continuation creates it. Return
+to Activity suspends/detaches it, and reopening restores the same draft. Old record
+question/step/view links restore their own editor without execution. The initial
+live environment remains the explicit local lab default and does not depend on a
+hidden fixed input. B1 follows this bounded cut.

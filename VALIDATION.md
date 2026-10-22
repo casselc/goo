@@ -1,5 +1,59 @@
 # Validation record
 
+## Explicit/lazy fixed authoring — S2 mount gate (2026-10-22 UTC)
+
+Image: `sha256:31c65cf004b22fac9a8672ebf30cbd346c20b016cc7331642e296140ddd24113`.
+Fresh Activity and unrelated initial routes now register trail continuations without
+constructing the fixed query editor. Explicit authoring, supported record links and
+service/package/trace continuations mount it. Paused return suspends/detaches the
+retained editor; reopening restores the same draft/DOM identity. First legacy
+continuation events reach the new owner once. Native measurement links retain their
+own owner; source reads, immutable evidence clocks and typed kernels are unchanged.
+The explicit local live environment no longer depends on a hidden fixed input.
+
+The [acceptance audit](docs/S2_A3_ACCEPTANCE.md), active queue, README, contracts and
+architecture diagram now mark bounded S2/A3 delivered. **B1 is next**; D1 comparison
+work and S3 capability-gated tail custody retain their existing positions.
+
+Actual checks:
+
+- All 33 frontend test files pass; changed JS syntax, local Markdown links and
+  whitespace pass.
+- Existing Hegel entry-intent and live-filter state/swarm campaigns pass (80 × 24
+  each, 1.31s). These protect selector/source ownership, not every DOM mount detail.
+- Six focused browser tests pass (2.2m): new 109 lazy mount/draft identity and
+  source-free fixed staging, paused return 105, both question-link 49 cases, and
+  Activity 102/103. Real OTLP/ClickHouse-backed surrounding journeys retain existing
+  read counts, anchors/focus, cancellation, resume gaps and inert saved links.
+- Compatibility journeys 31, 50, 104 and 106 pass on the same image, covering first
+  service/package continuations, mixed record/native steps, typed live filtering,
+  supplied-parent context and passive SSR/detached-property/reconnect behavior.
+  Updated saved-operation journey 22 passes separately (12.4s; 15.6s runner): zero
+  source reads on reopen, one editor and exactly two trace/log reads on expansion,
+  original bounds/basis and unchanged saved receipt. Eleven distinct browser tests
+  pass across these runs. Existing Quint/quint-go observed ledgers and rejecting
+  controls pass for the exercised protocols; no universal DOM model is implied.
+- Four enabled Bombadil campaigns pass: entry (631 steps, no eager editor), live
+  filters (533 steps, zero/one/zero editor lifecycle), inventory (565 steps) and
+  mixed investigation steps (166 steps). No violations.
+- Affected real storyboards are regenerated, including new explicit-authoring
+  frame 109a. Key desktop/mobile Activity, authoring and trace-context frames are
+  visually reviewed. Source asset hashes, application images and all 13 services
+  match after traffic restoration. Old pending IDs and retained evidence/reviews/
+  pinned citations survive; cgroup OOM kills remain zero. No XTDB restart was tested.
+
+The initial compatibility batch had four passes and one stale journey failure:
+22 still expected the saved receipt/waterfall in the live Operations panel, despite
+the earlier live/Saved ownership split. Its selectors now target the saved owner,
+its context wording matches the existing separate-finding action, and stronger
+read-count/completed-log-basis assertions protect the lazy continuation. The full
+journey rerun passes with its original timeouts and receipt/bounds checks intact.
+
+Evidence: `artifacts/lazy-authoring-unit.log`, `lazy-authoring-hegel.log`,
+`lazy-authoring-focused.log`, `lazy-authoring-compatibility.log`,
+`lazy-authoring-operation-final.log`, `lazy-authoring-health.json`, and the
+corresponding real journey/model/Bombadil ledgers.
+
 ## S2/A3 acceptance audit and contextual lookback (2026-10-22 UTC)
 
 Image: `sha256:67f1090a47789aeeda843e997e9530f3c6143302462caf870bc63bb79b22474b`.
