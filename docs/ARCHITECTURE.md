@@ -347,3 +347,13 @@ The B2 service namespace continuation shares `GooServiceIdentity.label` with
 annotation summaries, preserving the existing selector/key/name owners. Shared
 Go/JS namespace wire fixtures pin wildcard, missing, empty and literal populations
 without changing native bindings or server digests. See the [namespace flow](FIELD_PRESENTATION.md#service-namespace-identity--b2-continuation).
+
+
+## Shared question protocol — B2 continuation
+
+The existing pure step/link/capture helpers remain in `workspace.js`, separate from
+its DOM navigation mount. Go/JS fixtures now pin accepted/refused record/native
+steps, exact bounds and native definition digests across actual browser serialization.
+Native reuse comparison has its own cloned Go-default projection; record predicate
+identity rules are not used to normalize native definitions. Publication and source
+owners are unchanged. See the [wire/default flow](QUESTION_PROTOCOL.md).

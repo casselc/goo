@@ -885,3 +885,16 @@ Journey 60 adds ordinary OTel span/gauge populations for literal `missing` and
 controls; its actor checks distinct labels when the service-list table is present.
 Existing Hegel namespace isolation and entry/live-filter state/swarm campaigns
 protect unchanged logical selector and ownership semantics.
+
+
+## Native/shared-question wire fixtures — B2 continuation
+
+`question-steps.json` freezes 16 accepted/refused wire cases. Root Go checks typed
+validation/canonical output, invokes actual JS link round trips and pins native
+measurement digests. JS checks comparison equivalence against Go canonical forms,
+changed selectors, family separation and exact bounds. The expanded investigation
+Hegel property adds exact native strings above 2^53 and default-alias checks.
+Journey 114 uses real OTel gauge data and Go-canonical capture metadata; its actor
+checks source-free preview/close and permits no POSTs. Existing mixed-step and
+fresh/linked journeys validate actual observed ledgers with rejecting controls;
+no universal browser validator or complete UI state model is claimed.

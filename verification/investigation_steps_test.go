@@ -12,6 +12,7 @@ import (
 	"os"
 	"os/exec"
 	"reflect"
+	"strconv"
 	"testing"
 )
 
@@ -25,17 +26,21 @@ func TestHegelInvestigationSteps(t *testing.T) {
 		t.Fatal(e)
 	}
 	hegel.Test(t, func(tc *hegel.T) {
-		from := hegel.Draw(tc, hegel.Integers(100000, 1000000))
+		from := 1700000000000 + hegel.Draw(tc, hegel.Integers(100000, 1000000))
 		width := hegel.Draw(tc, hegel.Integers(1, 7200000))
 		q := measurements.Question{Definition: d, FromMS: int64(from), ToMS: int64(from + width)}
+		if hegel.Draw(tc, hegel.Integers(0, 1)) == 1 {
+			q.FromNS = strconv.FormatInt(q.FromMS*1000000+123, 10)
+			q.ToNS = strconv.FormatInt(q.ToMS*1000000-456, 10)
+		}
 		input, _ := json.Marshal(q)
-		script := `const assert=require('node:assert/strict'),w=require('../ui/workspace');const q=JSON.parse(process.argv[1]),s=w.measurementStep(q),r=w.recordStep({signal:'spans',environment:q.definition.environment,fromMs:q.fromMs,toMs:q.toMs,limit:100,offset:0});assert(w.sameWindow(r.scope,s.scope));assert(!w.sameWindow(r.scope,{...s.scope,toMs:s.scope.toMs+1}));const actual=w.readStepLink(w.stepLink(s));q.definition.source.unit='mutated';assert.notEqual(actual.measurement.source.unit,'mutated');process.stdout.write(JSON.stringify(actual));`
+		script := `const assert=require('node:assert/strict'),w=require('../ui/workspace');const q=JSON.parse(process.argv[1]),s=w.measurementStep(q),r=w.recordStep({signal:'spans',environment:q.definition.environment,fromMs:q.fromMs,toMs:q.toMs,limit:100,offset:0});assert.equal(w.sameWindow(r.scope,s.scope),!q.fromNS);assert(!w.sameWindow(r.scope,{...s.scope,toMs:s.scope.toMs+1}));const actual=w.readStepLink(w.stepLink(s)),empty=w.captureQuestion(actual),omitted=structuredClone(actual);empty.measurement.definition.source.version='';empty.measurement.definition.source.schemaURL='';delete omitted.measurement.source.version;delete omitted.measurement.source.schemaURL;assert.deepEqual(w.evidenceDifference(omitted,empty),[]);empty.measurement.definition.source.version='different';assert(w.evidenceDifference(omitted,empty).includes('Question definition differs'));q.definition.source.unit='mutated';assert.notEqual(actual.measurement.source.unit,'mutated');process.stdout.write(JSON.stringify(actual));`
 		out, e := exec.Command("node", "-e", script, string(input)).CombinedOutput()
 		if e != nil {
 			tc.Fatalf("actual JS: %s %v", out, e)
 		}
 		var step workbench.Step
-		if json.Unmarshal(out, &step) != nil || step.Validate() != nil || !reflect.DeepEqual(step.Measurement, &d) || step.Scope.FromMS != q.FromMS || step.Scope.ToMS != q.ToMS {
+		if json.Unmarshal(out, &step) != nil || step.Validate() != nil || !reflect.DeepEqual(step.Measurement, &d) || step.Scope.FromMS != q.FromMS || step.Scope.ToMS != q.ToMS || step.Scope.FromNS != q.FromNS || step.Scope.ToNS != q.ToNS {
 			tc.Fatal("step roundtrip changed native identity or scope")
 		}
 	}, options(100)...)

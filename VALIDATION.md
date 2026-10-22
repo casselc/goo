@@ -1,5 +1,50 @@
 # Validation record
 
+## Shared question/native wire fixtures — bounded B2 completion (2026-10-22 UTC)
+
+Final query/packages image:
+`sha256:712f64c2c394716fa558c266096fd3425ecf40e54e16ed1180b1380a7c1c1254`.
+[Shared-question protocol and acceptance audit](docs/QUESTION_PROTOCOL.md) records
+this cut. Native evidence comparison now recognizes known Go zero/omitempty wire
+defaults without rewriting stored definitions, digests or exact nanosecond bounds.
+Seven valid fixture pairs falsely differed on the previous implementation; all
+seven match with the fix. Changed selectors, units, namespaces, family and exact
+windows remain distinct. Browser step guards also reject null/array native sources.
+
+Actual checks:
+
+- All 39 frontend test files pass through `npm run test:visualizations`. Sixteen
+  shared protocol fixtures (nine accepted, seven refused) pass actual Go/Node link
+  round trips, typed equality, canonical JSON and pinned native definition digests.
+  The root fixture test passes (0.182s). JS syntax and whitespace checks pass.
+- Expanded Hegel investigation-step properties generate millisecond and exact
+  native scopes above JS safe integer range, preserving native bindings and
+  distinguishing changed metadata. These pass with the question-link and
+  question-session state/swarm campaigns (36.997s).
+- Five real browser tests pass together on the final image: fresh comparison 57,
+  mixed investigation steps 50, both linked-evidence 51 tests, and new native wire
+  journey 114. Ordinary OTel gauge telemetry is captured with exact sub-millisecond
+  bounds; omitted metadata drafts match canonical saved evidence without an
+  implicit source read. Explicit document save and baseline preview preserve scope.
+  Affected desktop/mobile screenshots were regenerated; frame 114a was inspected.
+- Fresh comparison, mixed steps and linked evidence retain their actual observed
+  Quint/quint-go ledgers and rejecting controls. The three enabled Bombadil
+  campaigns pass: fresh comparison (446 records), mixed steps (157) and native
+  protocol preview/close (425), with no violating records. The native actor reaches
+  stage 2 with matching evidence, exact string bounds, zero POSTs and no overflow.
+  These bounded checks do not claim exhaustive browser/Go validator parity.
+- An initial run found one stale linked-evidence assertion expecting raw ISO clock
+  text. It now verifies readable UTC plus the original precise datetime/title for
+  both source-read and custody clocks. The full final run passes after this fix.
+- Post-wrapper health verifies 13 running services, restored traffic, all 14 original
+  pending IDs preserved (15 total), exact retained/live manifests and review
+  histories, pinned citation/read basis, current catalog, XTDB health, final served
+  source/server/binary hashes and zero OOM kills. No XTDB restart experiment was run.
+
+Bounded B2 is delivered. Source-execution and retained-catalog adapters have distinct
+lifetimes, so no generic request helper was forced. C1 store-specific identity and
+publication fixtures are next; family validation/canonicalization stay authoritative.
+
 ## Service namespace wire fixtures and shared labels — B2 continuation (2026-10-22 UTC)
 
 Final query/packages image:

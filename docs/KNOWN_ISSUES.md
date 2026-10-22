@@ -492,3 +492,9 @@ scopes and annotation summaries. Named labels are quoted to distinguish literal
 sentinel text from missing/empty modes. Shared namespace fixtures cover logical
 membership and record predicates, not all native/envelope protocols or server
 artifact digests; those retain their existing contracts.
+
+
+B2 now includes [shared-question/native wire fixtures](QUESTION_PROTOCOL.md) and
+comparison-only Go-default equivalence for canonical native capture reuse. Go still
+owns full definition validation; the fixture set is bounded. The bounded B2 acceptance
+audit is complete; store-specific publication consolidation is the next cut.

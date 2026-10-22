@@ -23,7 +23,7 @@ Comparison work belongs to D1; it is not the immediate successor to these cuts.
   share passive rows/inspectors. Retained snapshots preserve current-head tag clocks;
   pinned review citations, original retry intents and read bounds retain their own
   owners. Client/basis, catalog, citation and explicit recovery are separated.
-- **B2, active:** the [record-field and service namespace presentation/Go-JS wire fixtures](FIELD_PRESENTATION.md) are delivered; broader native/envelope protocol work remains. Request-owner extraction requires matching adapter lifetimes.
+- **B2, bounded consolidation delivered:** [field/service namespace helpers](FIELD_PRESENTATION.md) and [shared-question/native fixtures and acceptance audit](QUESTION_PROTOCOL.md). Existing source and metadata owner lifetimes differ, so no generic request helper was forced. C1 is next.
 - **D1:** remaining aggregate/native comparison compositions and fitting inspector
   adoption. The recent native presenter is useful groundwork, not completion of D1.
 - **E1:** broader native instrument discovery and explicit convention capabilities.

@@ -502,3 +502,10 @@ changes only the sentence prefix. This is display-only: selection keys, predicat
 native bindings and server artifact digests retain their existing owners. Shared
 [namespace fixtures](FIELD_PRESENTATION.md#service-namespace-identity--b2-continuation)
 protect wildcard/missing/present-empty and literal sentinel separation.
+
+
+Shared question helpers in `GooWorkspace` retain separate record/native payloads.
+The private native comparison projection accounts for known Go zero/omitempty
+binding defaults on a clone; it does not rewrite input/storage or validate full
+native definitions. Both document evidence matching and fresh-baseline eligibility
+consume `evidenceDifference`. See [wire fixtures and scope rules](QUESTION_PROTOCOL.md).

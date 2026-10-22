@@ -52,8 +52,8 @@ while asserting unchanged draft/applied selectors and empty-default identity.
 
 ## B2 scope and request-owner comparison
 
-B2 remains active for broader cross-language protocol fixtures and qualified
-identity/presence adoption. This slice does not introduce a shared request owner.
+The [shared-question/native continuation and acceptance audit](QUESTION_PROTOCOL.md)
+complete bounded B2. This slice does not introduce a shared request owner.
 The inspected fixed exploration owner combines `GooQuestionSession`, abortable
 source reads, active-visit checks and retained drafts. The retained catalog owns
 metadata generations and cursors; it preserves an older selected snapshot and
@@ -95,5 +95,5 @@ Journey 60 now ingests ordinary OTel spans and gauge streams for six namespaces,
 including both literal sentinel names. It checks scoped native/record isolation,
 separate visible labels, existing declared operation bindings, real observed Quint
 traces and an expanded Bombadil label invariant. Journey 98 retains exact service
-annotation and saved revision behavior. Broader native/envelope protocol fixtures
-remain B2 work; this slice does not create a generic request owner.
+annotation and saved revision behavior. The [shared-question/native wire continuation](QUESTION_PROTOCOL.md) supplies the
+next bounded protocol coverage; no generic request owner is introduced.

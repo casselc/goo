@@ -1,0 +1,815 @@
+{
+  "cases": [
+    {
+      "canonical": {
+        "version": 1,
+        "kind": "measurement",
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "view": "Overview",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "ordinary-utilization",
+          "title": "Ordinary utilization",
+          "kind": "gauge",
+          "environment": "prod",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "api"
+            ],
+            "scope": "ordinary.runtime",
+            "version": "",
+            "schemaURL": "",
+            "metric": "process.utilization",
+            "unit": "1"
+          }
+        }
+      },
+      "definitionRevision": "f8fc326ebe1d81d15f0670229dd4c30d5bce4161a20cd160221f54f096b57992",
+      "input": {
+        "kind": "measurement",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "environment": "prod",
+          "grain": "per-stream",
+          "kind": "gauge",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "name": "ordinary-utilization",
+          "source": {
+            "metric": "process.utilization",
+            "scope": "ordinary.runtime",
+            "services": [
+              "api"
+            ],
+            "unit": "1"
+          },
+          "title": "Ordinary utilization"
+        },
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "version": 1,
+        "view": "Overview"
+      },
+      "name": "native omitted string defaults",
+      "valid": true
+    },
+    {
+      "canonical": {
+        "version": 1,
+        "kind": "measurement",
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "view": "Overview",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "ordinary-utilization",
+          "title": "Ordinary utilization",
+          "kind": "gauge",
+          "environment": "prod",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "api"
+            ],
+            "scope": "ordinary.runtime",
+            "version": "",
+            "schemaURL": "",
+            "metric": "process.utilization",
+            "unit": "1"
+          }
+        }
+      },
+      "definitionRevision": "f8fc326ebe1d81d15f0670229dd4c30d5bce4161a20cd160221f54f096b57992",
+      "input": {
+        "kind": "measurement",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "environment": "prod",
+          "grain": "per-stream",
+          "kind": "gauge",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "name": "ordinary-utilization",
+          "source": {
+            "attributes": {},
+            "metric": "process.utilization",
+            "schemaURL": "",
+            "scope": "ordinary.runtime",
+            "services": [
+              "api"
+            ],
+            "unit": "1",
+            "version": ""
+          },
+          "title": "Ordinary utilization"
+        },
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "version": 1,
+        "view": "Overview"
+      },
+      "name": "native explicit string defaults",
+      "valid": true
+    },
+    {
+      "canonical": {
+        "version": 1,
+        "kind": "measurement",
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001001,
+          "fromNS": "1700000000000000123",
+          "toNS": "1700000001000000456"
+        },
+        "view": "Overview",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "ordinary-utilization",
+          "title": "Ordinary utilization",
+          "kind": "gauge",
+          "environment": "prod",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "grain": "per-stream",
+          "source": {
+            "namespace": {
+              "mode": "value"
+            },
+            "services": [
+              "api"
+            ],
+            "scope": "ordinary.runtime",
+            "version": "",
+            "schemaURL": "",
+            "metric": "process.utilization",
+            "unit": "1"
+          }
+        }
+      },
+      "definitionRevision": "1e4a437c9c3b5647ec60fde9c7529f265e251501bf816245798af012a0240405",
+      "input": {
+        "kind": "measurement",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "environment": "prod",
+          "grain": "per-stream",
+          "kind": "gauge",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "name": "ordinary-utilization",
+          "source": {
+            "metric": "process.utilization",
+            "namespace": {
+              "mode": "value",
+              "value": ""
+            },
+            "scope": "ordinary.runtime",
+            "services": [
+              "api"
+            ],
+            "unit": "1"
+          },
+          "title": "Ordinary utilization"
+        },
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "fromNS": "1700000000000000123",
+          "toMs": 1700000001001,
+          "toNS": "1700000001000000456"
+        },
+        "version": 1,
+        "view": "Overview"
+      },
+      "name": "exact empty namespace",
+      "valid": true
+    },
+    {
+      "canonical": {
+        "version": 1,
+        "kind": "measurement",
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "view": "Overview",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "ordinary-utilization",
+          "title": "Ordinary utilization",
+          "kind": "gauge",
+          "environment": "prod",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "api"
+            ],
+            "scope": "ordinary.runtime",
+            "version": "1.0",
+            "schemaURL": "https://opentelemetry.io/schemas/1.30.0",
+            "metric": "process.utilization",
+            "unit": "1"
+          }
+        }
+      },
+      "definitionRevision": "f5c1bc2f7e4468697e2261da21a2e789d79c318c450e985cec6532553f54b9b6",
+      "input": {
+        "kind": "measurement",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "environment": "prod",
+          "grain": "per-stream",
+          "kind": "gauge",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "name": "ordinary-utilization",
+          "source": {
+            "metric": "process.utilization",
+            "schemaURL": "https://opentelemetry.io/schemas/1.30.0",
+            "scope": "ordinary.runtime",
+            "services": [
+              "api"
+            ],
+            "unit": "1",
+            "version": "1.0"
+          },
+          "title": "Ordinary utilization"
+        },
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "version": 1,
+        "view": "Overview"
+      },
+      "name": "named metadata selectors",
+      "valid": true
+    },
+    {
+      "canonical": {
+        "version": 1,
+        "kind": "measurement",
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "view": "Overview",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "ordinary-utilization",
+          "title": "Ordinary utilization",
+          "kind": "gauge",
+          "environment": "prod",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "api"
+            ],
+            "scope": "ordinary.runtime",
+            "version": "",
+            "schemaURL": "",
+            "metric": "process.utilization",
+            "unit": "s"
+          }
+        }
+      },
+      "definitionRevision": "970df69d54451b62c67be99da80aede016264691a6d8a5f5bb81a31568292bca",
+      "input": {
+        "kind": "measurement",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "environment": "prod",
+          "grain": "per-stream",
+          "kind": "gauge",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "name": "ordinary-utilization",
+          "source": {
+            "metric": "process.utilization",
+            "scope": "ordinary.runtime",
+            "services": [
+              "api"
+            ],
+            "unit": "s"
+          },
+          "title": "Ordinary utilization"
+        },
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "version": 1,
+        "view": "Overview"
+      },
+      "name": "different unit",
+      "valid": true
+    },
+    {
+      "canonical": {
+        "version": 1,
+        "kind": "measurement",
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "view": "Overview",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "ordinary-utilization",
+          "title": "Ordinary utilization",
+          "kind": "counter",
+          "environment": "prod",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "api"
+            ],
+            "scope": "ordinary.runtime",
+            "version": "",
+            "schemaURL": "",
+            "metric": "process.utilization",
+            "unit": "1"
+          }
+        }
+      },
+      "definitionRevision": "3a4554522dc534fd4465c84511d8d1b3f3df73a3bb962fb025bba722aa1bbb98",
+      "input": {
+        "kind": "measurement",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "environment": "prod",
+          "grain": "per-stream",
+          "kind": "counter",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "name": "ordinary-utilization",
+          "source": {
+            "metric": "process.utilization",
+            "scope": "ordinary.runtime",
+            "services": [
+              "api"
+            ],
+            "unit": "1"
+          },
+          "title": "Ordinary utilization"
+        },
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "version": 1,
+        "view": "Overview"
+      },
+      "name": "different native kind",
+      "valid": true
+    },
+    {
+      "canonical": {
+        "version": 1,
+        "kind": "measurement",
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "view": "Overview",
+        "measurement": {
+          "histogramBucketMs": 1000,
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "ordinary-utilization",
+          "title": "Ordinary utilization",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "api"
+            ],
+            "scope": "ordinary.runtime",
+            "version": "",
+            "schemaURL": "",
+            "metric": "process.utilization",
+            "unit": "1"
+          }
+        }
+      },
+      "definitionRevision": "cccba76e65066c1f92f1ca5f9c3e78ba2b80193e6b630176f0c064b091777203",
+      "input": {
+        "kind": "measurement",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "environment": "prod",
+          "grain": "per-stream",
+          "histogramBucketMs": 1000,
+          "kind": "histogram",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "name": "ordinary-utilization",
+          "source": {
+            "metric": "process.utilization",
+            "scope": "ordinary.runtime",
+            "services": [
+              "api"
+            ],
+            "unit": "1"
+          },
+          "title": "Ordinary utilization"
+        },
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "version": 1,
+        "view": "Overview"
+      },
+      "name": "histogram bucket binding",
+      "valid": true
+    },
+    {
+      "canonical": {
+        "version": 1,
+        "kind": "record",
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "view": "Records",
+        "record": {
+          "signal": "logs",
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000,
+          "where": {
+            "field": {
+              "kind": "attribute",
+              "key": "region"
+            },
+            "op": "eq"
+          },
+          "limit": 100,
+          "offset": 0
+        }
+      },
+      "input": {
+        "kind": "record",
+        "record": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "limit": 100,
+          "offset": 0,
+          "signal": "logs",
+          "toMs": 1700000001000,
+          "where": {
+            "field": {
+              "key": "region",
+              "kind": "attribute"
+            },
+            "op": "eq"
+          }
+        },
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "version": 1,
+        "view": "Records"
+      },
+      "name": "record empty predicate",
+      "valid": true
+    },
+    {
+      "input": {
+        "kind": "measurement",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "environment": "prod",
+          "grain": "per-stream",
+          "kind": "gauge",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "name": "ordinary-utilization",
+          "source": {
+            "metric": "process.utilization",
+            "scope": "ordinary.runtime",
+            "services": [
+              "api"
+            ],
+            "unit": "1"
+          },
+          "title": "Ordinary utilization"
+        },
+        "record": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "limit": 100,
+          "offset": 0,
+          "signal": "logs",
+          "toMs": 1700000001000,
+          "where": {
+            "field": {
+              "key": "region",
+              "kind": "attribute"
+            },
+            "op": "eq"
+          }
+        },
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "version": 1,
+        "view": "Overview"
+      },
+      "name": "reject mixed families",
+      "valid": false
+    },
+    {
+      "input": {
+        "kind": "measurement",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "environment": "other",
+          "grain": "per-stream",
+          "kind": "gauge",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "name": "ordinary-utilization",
+          "source": {
+            "metric": "process.utilization",
+            "scope": "ordinary.runtime",
+            "services": [
+              "api"
+            ],
+            "unit": "1"
+          },
+          "title": "Ordinary utilization"
+        },
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "version": 1,
+        "view": "Overview"
+      },
+      "name": "reject foreign native environment",
+      "valid": false
+    },
+    {
+      "input": {
+        "kind": "measurement",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "environment": "prod",
+          "grain": "per-stream",
+          "kind": "gauge",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "name": "ordinary-utilization",
+          "source": {
+            "metric": "process.utilization",
+            "namespace": {
+              "mode": "value",
+              "value": ""
+            },
+            "scope": "ordinary.runtime",
+            "services": [
+              "api"
+            ],
+            "unit": "1"
+          },
+          "title": "Ordinary utilization"
+        },
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "fromNS": "01700000000000000123",
+          "toMs": 1700000001001,
+          "toNS": "1700000001000000456"
+        },
+        "version": 1,
+        "view": "Overview"
+      },
+      "name": "reject noncanonical exact bound",
+      "valid": false
+    },
+    {
+      "input": {
+        "kind": "record",
+        "record": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "limit": 100,
+          "offset": 0,
+          "signal": "logs",
+          "toMs": 1700000001000,
+          "where": {
+            "field": {
+              "key": "region",
+              "kind": "attribute"
+            },
+            "op": "eq"
+          }
+        },
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "fromNS": "1700000000000000000",
+          "toMs": 1700000001000,
+          "toNS": "1700000001000000000"
+        },
+        "version": 1,
+        "view": "Records"
+      },
+      "name": "reject exact record scope",
+      "valid": false
+    },
+    {
+      "input": {
+        "kind": "record",
+        "record": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "limit": 100,
+          "offset": 0,
+          "signal": "logs",
+          "toMs": 1700000001000,
+          "where": {
+            "field": {
+              "key": "region",
+              "kind": "attribute"
+            },
+            "op": "eq"
+          }
+        },
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001001
+        },
+        "version": 1,
+        "view": "Records"
+      },
+      "name": "reject record scope drift",
+      "valid": false
+    },
+    {
+      "name": "reject null native binding",
+      "input": {
+        "kind": "measurement",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "environment": "prod",
+          "grain": "per-stream",
+          "kind": "gauge",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "name": "ordinary-utilization",
+          "source": null,
+          "title": "Ordinary utilization"
+        },
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "version": 1,
+        "view": "Overview"
+      },
+      "valid": false
+    },
+    {
+      "name": "reject array native binding",
+      "input": {
+        "kind": "measurement",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "environment": "prod",
+          "grain": "per-stream",
+          "kind": "gauge",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "name": "ordinary-utilization",
+          "source": [],
+          "title": "Ordinary utilization"
+        },
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "version": 1,
+        "view": "Overview"
+      },
+      "valid": false
+    },
+    {
+      "canonical": {
+        "version": 1,
+        "kind": "measurement",
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "view": "Overview",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "ordinary-utilization",
+          "title": "Ordinary utilization",
+          "kind": "gauge",
+          "environment": "prod",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "api"
+            ],
+            "scope": "ordinary.runtime",
+            "version": "",
+            "schemaURL": "",
+            "metric": "process.utilization",
+            "unit": "1"
+          }
+        }
+      },
+      "definitionRevision": "f8fc326ebe1d81d15f0670229dd4c30d5bce4161a20cd160221f54f096b57992",
+      "input": {
+        "kind": "measurement",
+        "measurement": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "environment": "prod",
+          "grain": "per-stream",
+          "kind": "gauge",
+          "lookbackMinutes": 1,
+          "maxGapMs": 1000,
+          "name": "ordinary-utilization",
+          "source": {
+            "metric": "process.utilization",
+            "scope": "ordinary.runtime",
+            "services": [
+              "api"
+            ],
+            "unit": "1",
+            "attributes": null,
+            "namespace": null,
+            "exactStream": null,
+            "version": null,
+            "schemaURL": null
+          },
+          "title": "Ordinary utilization",
+          "histogramBucketMs": null,
+          "lifecycle": null
+        },
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1700000000000,
+          "toMs": 1700000001000
+        },
+        "version": 1,
+        "view": "Overview"
+      },
+      "name": "nullable omitted native options",
+      "valid": true
+    }
+  ],
+  "version": 1
+}

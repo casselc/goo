@@ -1585,3 +1585,12 @@ populations using real OTel spans and gauges, including literal `missing` and
 checks distinct catalog labels, scoped native values, record question links and
 declared operation bindings, plus the existing observed Quint/rejecting controls
 and expanded Bombadil label invariant. [Namespace catalog](screenshots/60a-namespace-service-identities.png).
+
+
+[Journey 114](../../journeys/question-protocol.spec.js) captures a real ordinary
+OTel gauge with exact native bounds, links its Go-canonical receipt to an authored
+draft with omitted native defaults and verifies no false definition drift. Saving
+preserves exact strings; fresh preview accepts the baseline without source reads.
+[Mobile native wire/default scope](screenshots/114a-native-wire-defaults-and-exact-scope.png).
+Its Bombadil actor permits only source-free preview/close; existing mixed-step,
+linked-evidence and fresh-comparison journeys retain their observed model checks.
