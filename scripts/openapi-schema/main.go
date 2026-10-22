@@ -173,6 +173,10 @@ func main() {
 	}{}, false)
 	// Inline request envelopes mirror their handlers. Their nested exported types
 	// above are reflected; fixture conformance and route coverage run in CI.
+	root("DocumentRequest", struct {
+		Parent   string                  `json:"parent"`
+		Document workbench.DocumentInput `json:"document"`
+	}{}, true)
 	root("RecipeRequest", struct {
 		ID       string            `json:"id"`
 		Question exploration.Query `json:"question"`

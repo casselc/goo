@@ -17,3 +17,9 @@ port and closes that server afterward, leaving the running lab untouched.
 The screenshot comes from the executable journey, not a mock. API behavior is
 verified separately by the [OpenAPI contract checks](../API.md#updating-and-checking)
 and Go wire/SSE tests. The main observability UI and its running image are unchanged.
+
+To exercise the rebuilt deployed server instead, run
+`GOO_API_DOCS_URL=http://127.0.0.1:8088/api-docs node scripts/check_api_docs.cjs`.
+The same filtering, schema/limit disclosure and desktop/mobile checks apply.
+See [API acceptance](../API_ACCEPTANCE.md) for the separate real telemetry and
+saved/retained-evidence journeys.

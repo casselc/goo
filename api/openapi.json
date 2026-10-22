@@ -1189,7 +1189,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DocumentInput"
+                "$ref": "#/components/schemas/DocumentRequest"
               }
             }
           }
@@ -3724,7 +3724,18 @@
             }
           }
         },
-        "x-schema-coverage": "typed"
+        "x-schema-coverage": "typed",
+        "requestBody": {
+          "required": true,
+          "description": "Send {} through the browser proxy, which requires a positive Content-Length; direct Go ignores the cancellation body.",
+          "content": {
+            "application/json": {
+              "schema": {},
+              "example": {}
+            }
+          }
+        },
+        "x-browser-body-limit-bytes": 16384
       }
     },
     "/tail": {
@@ -4598,6 +4609,39 @@
       },
       "DocumentList": {
         "$ref": "#/components/schemas/workbench.DocumentList"
+      },
+      "DocumentRequest": {
+        "anyOf": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "document": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/workbench.DocumentInputInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "parent": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
       },
       "EvidenceComparison": {
         "$ref": "#/components/schemas/exploration.EvidenceComparison"
@@ -18374,6 +18418,7 @@
     "Direct operation GET validation uses http.Error text/plain with JSON-looking text; browser re-encodes errors as JSON.",
     "Direct tail early errors omit Cache-Control; proxy early JSON errors include no-store.",
     "Python GET prefix routing can forward unsupported suffixes; these are not supported operations.",
+    "Malformed non-JSON upstream HTTP errors now return JSON 502 instead of disconnecting; valid JSON errors preserve status.",
     "No generated handlers, semantic validator replacement, API stability guarantee or new authorization layer is introduced."
   ]
 }

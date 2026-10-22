@@ -12,11 +12,15 @@ identified four additional readers; all are now adopted, including histograms.
 Telemetry/native/fixed exploration JSON is adopted behind frozen wire cases.
 The [OpenAPI contract](API.md) now inventories 64 operations and documents direct-Go
 versus browser-proxy limits, headers and SSE differences. Those discrepancies are
-preserved, not repaired by documentation. Further mechanical JSON migration is
-paused for broader executed API and proxy fixture coverage. Dynamic telemetry row
+preserved, not repaired by documentation. Further mechanical JSON migration remains paused;
+[executed API acceptance](API_ACCEPTANCE.md) now covers proxy and saved/retained flows. Dynamic telemetry row
 payloads remain open; structural schemas do not enforce all domain/capability rules.
-The docs routes require the current Python checkout/image; the running lab image
-has not been rebuilt. Final C2 deployed integration acceptance remains open.
+The local query/packages images now serve the current docs/spec and backend.
+Remaining C2 endpoint/branch coverage is open; selected deployed API and browser
+acceptance does not prove every route or fault mode. Non-JSON upstream HTTP errors
+now return JSON 502 rather than disconnecting; documented limit/header differences
+remain. Docker still reports the existing XTDB container unhealthy despite successful
+native-store and review/citation checks; healthcheck status is not availability proof.
 ClickHouse/XTDB environment mutation after startup is not a reload.
 Live comparison drafts remain registration-local and expiring; persisted captures
 reopen without a source, while old draft tokens do not survive a new owner.

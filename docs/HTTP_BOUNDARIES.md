@@ -767,3 +767,22 @@ Next broaden executed request/response coverage for saved/capture/retention owne
 and add browser-proxy fixtures for the recorded limit/header/serialization gaps.
 The spec records existing behavior rather than normalizing it. Final deployed
 source/browser acceptance remains open; the lab image was not rebuilt in this cut.
+
+
+## Observed and deployed API continuation
+
+[API acceptance](API_ACCEPTANCE.md) adds actual capture/live-freeze/document and
+optional native XTDB observations, schema-validates real proxy HTTP responses,
+and records readonly/deployed browser checks. These complement frozen byte fixtures
+and do not replace semantic/effect assertions. The document request envelope and
+browser cancellation body are corrected in the spec. Non-JSON upstream HTTP errors
+now return JSON 502 through GET/POST/pre-stream tail handling; valid JSON status/
+body behavior and existing limit/header differences stay unchanged.
+
+Query/packages are rebuilt with the source-bound CGO-disabled Go stage, optional
+build-only CA trust and smaller toolchain image. The deployed docs/spec match the
+checkout. The initial capture journey exposed a stale hidden-control gesture;
+it now changes lookback through Explore and returns to Saved, preserving frozen
+evidence. See VALIDATION.md for actual rerun outcomes and scope. Remaining C2
+endpoint/branch coverage and policy decisions remain open, rather than assuming
+that schema presence establishes full API acceptance.

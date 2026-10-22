@@ -6,6 +6,8 @@ happened with evidence you can inspect and preserve.**
 [API contract and usage](docs/API.md) · [OpenAPI 3.1](api/openapi.json) ·
 [Browsable API docs](http://localhost:8088/api-docs) (requires the current Python server).
 
+[Executed API acceptance](docs/API_ACCEPTANCE.md) covers browser proxy contracts, saved/retained workflows and the rebuilt local lab.
+
 Ask a question → inspect its evidence → capture and explain it → reuse the
 definition. Start from instrumented code or unfamiliar OpenTelemetry data.
 [The product essence](docs/PRODUCT_ESSENCE.md) describes this common loop and the

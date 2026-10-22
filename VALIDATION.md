@@ -1,5 +1,76 @@
 # Validation record
 
+## API proxy/observed workflows and rebuilt lab acceptance (2026-10-22 UTC)
+
+[Executed API acceptance](docs/API_ACCEPTANCE.md) extends the OpenAPI baseline.
+Actual workflow observations caught the initial document-envelope schema error;
+`DocumentRequest` now wraps `document` and `parent`. Browser cancellation documents
+its required nonempty body (`{}`), although direct Go ignores it. Proxy tests found
+and fixed non-JSON upstream HTTP errors disconnecting clients: GET, POST and
+pre-stream tail now return JSON 502; valid JSON errors retain their status.
+
+Actual checks:
+
+- Ten Python API/docs/proxy tests pass (1.350s), including real loopback HTTP on
+  both sides of the proxy, exact/overflow browser byte limits, rejected empty body,
+  query/UUID forwarding, Retry-After omission, text/plain error re-encoding,
+  malformed upstream fallback and idle SSE upstream closure within two seconds
+  of browser abort. Twenty actual proxy JSON responses conform to OpenAPI.
+- `TestAPISavedEvidenceObservedContracts` passes with race detection and real XTDB
+  (1.17s test, 2.211s package): 19 actual handler observations cover capture,
+  live draft, source-free/idempotent freeze, reopen/receipt/list, document/save/read,
+  optional-store refusal/status, retained publication/correction, manifest/current/
+  pinned review, pinned citation and offline file-document reopen. After holding
+  the draft the source is unavailable; any telemetry reread fails the test.
+- The no-XTDB branch also passes and exports 12 observations (0.013s package),
+  explicitly skipping positive native-store/correction/citation operations.
+  CI executes this branch plus real loopback proxy observations and schema checks.
+- The standard OpenAPI validator, route checks, 236 frozen cases, rejecting controls,
+  19 saved and 20 proxy observations pass. The artifact has 325 schemas and still
+  covers 64 operations. Schema/spec regeneration is byte-identical.
+- `go test ./...` passes. No workbench execution protocol changed; existing model
+  checks accompany the deployed journeys rather than adding a new state model.
+- Docker Compose config/build succeeds with build-only CA trust and compact,
+  source-bound Go 1.27.2 Alpine stage (CGO disabled). This also fixes the prior
+  build omitting `internal` packages. Only query/packages are recreated; retained
+  storage and telemetry volumes are preserved.
+- Deployed readonly API smoke passes after restart: running spec equals checkout,
+  seven actual catalog/status/error/discovery/record responses validate. The final
+  span scope reports 134 source records and a 10-row page; no records are published
+  by this smoke. The earlier pre-journey scope had 278 records, reflecting real data.
+- The API-docs Chromium journey passes against the actual rebuilt server at desktop
+  and mobile sizes, including all 64 operations, filtering/disclosure and limits,
+  no horizontal page overflow and no page errors.
+- Deployed core investigation (1.2m) and retained-evidence (20.9s) journeys pass,
+  including their Go/Quint verification. Initial capture execution failed on a stale
+  test gesture filling hidden `#minutes` in Saved. The repaired journey switches to
+  Explore, edits lookback, returns to Saved and verifies frozen evidence unchanged;
+  its rerun passes (41.1s test, 43.2s run), including its Go/Quint capture ledger.
+  Capture actions now fail after 15s instead of waiting the full 4-minute test budget.
+  Fourteen actual core/capture/retention storyboard frames are refreshed. The first
+  failure trace remains in `artifacts/api-first-capture-failure`.
+- Traffic is restored and 13 services are running. All 20 pre-existing stale pending
+  stream IDs remain; final pending total was 21 while traffic was active. Query and
+  packages report OOM=false. Existing XTDB Docker health status remains unhealthy,
+  despite successful native-store tests and the deployed retention journey.
+- Whitespace/local Markdown targets pass. Hosted CI itself was not observed here.
+
+Deployed query image: `sha256:d50addcab97b8172c9829881d9b38cf9d235657ae8327ba95f7bee84976a58e2`.
+Deployed packages image: `sha256:8be05161c8a0b4e5ed7a9e393f2280c6d3534b1e792c6307155ef54158d2b3d9`.
+The earlier `712f64c2…` image remains available for rollback.
+
+Build recovery: the initial Debian toolchain/VFS build exhausted disk. A verified
+1.2 GiB disposable compiler cache, exact unused failed-toolchain/source cache IDs
+and one untagged intermediate image created by this task were removed. No global
+prune, volume deletion or ledger cleanup occurred. The compact build succeeds;
+final disk headroom is about 1.6 GiB. CA trust is mounted for downloads only, with
+TLS verification enabled and no session CA copied into image layers.
+
+Evidence: `artifacts/api-{proxy,observed-validation,saved-contract,saved-base,contract-root,deployed-readonly,deployed-docs,deployed-journeys,deployed-capture-rerun,deploy-build-final}.log`
+and the ignored observed JSON/Quint ledgers. This is bounded deployed acceptance,
+not every endpoint/fault branch. Remaining investigation/authoring/comparison API
+observations and explicit proxy-policy decisions stay queued.
+
 ## OpenAPI contract, CI conformance and browsable docs (2026-10-22 UTC)
 
 [API contract/limitations](docs/API.md) and the [executable docs journey](docs/journeys/API_DOCS.md)

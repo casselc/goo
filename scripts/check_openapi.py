@@ -3,6 +3,7 @@ No source/database calls. Request schemas cover decoding shape; Go still owns
 semantic validation, byte budgets, capability lifetimes and effects.
 """
 import ast
+import argparse
 import copy
 import json
 import re
@@ -98,5 +99,27 @@ def check(spec):
     print(f'OpenAPI valid: {len(routes)} Go operations; {responses} fixture responses, {requests} admitted requests, {mux_refusals} mux refusals; negative controls and SSE schemas pass')
 
 
+def check_observed(spec, path):
+    observations = json.loads(Path(path).read_text())
+    assert len(observations) >= 12, 'Saved workflow observations missing'
+    for case in observations:
+        op = spec['paths'][case['path']][case['method'].lower()]
+        status = str(case['status'])
+        assert status in op['responses'], (case['path'], status)
+        validator(spec, op['responses'][status]['content']['application/json']['schema']).validate(case['response'])
+        if case.get('request') is not None and 'requestBody' in op:
+            validator(spec, op['requestBody']['content']['application/json']['schema']).validate(case['request'])
+    print(f"Observed API workflow: {len(observations)} real handler responses conform (including optional XTDB only when configured)")
+
+
 if __name__ == '__main__':
-    check(json.loads((ROOT / 'api/openapi.json').read_text()))
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--observations')
+    parser.add_argument('--proxy-observations')
+    args = parser.parse_args()
+    spec = json.loads((ROOT / 'api/openapi.json').read_text())
+    check(spec)
+    if args.observations:
+        check_observed(spec, args.observations)
+    if args.proxy_observations:
+        check_observed(spec, args.proxy_observations)

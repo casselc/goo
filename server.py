@@ -31,6 +31,14 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(code); self.send_header('Content-Type', 'application/json')
         self.send_header('Cache-Control', 'no-store'); self.end_headers(); self.wfile.write(body)
 
+    def upstream_error(self, exc):
+        try:
+            payload = json.loads(exc.read())
+        except (ValueError, UnicodeDecodeError):
+            self.json_response(502, {'error': 'upstream returned a non-JSON error response'})
+            return
+        self.json_response(exc.code, payload)
+
     def do_GET(self):
         if self.path in ('/api-docs', '/openapi.json'):
             resource = 'index.html' if self.path == '/api-docs' else 'openapi.json'
@@ -48,7 +56,7 @@ class Handler(BaseHTTPRequestHandler):
                 with urllib.request.urlopen(endpoint + ('?' + parsed.query if parsed.query else ''), timeout=90) as response:
                     self.json_response(200, json.load(response))
             except urllib.error.HTTPError as exc:
-                self.json_response(exc.code, json.loads(exc.read()))
+                self.upstream_error(exc)
             except Exception as exc: self.json_response(502, {'error': str(exc)})
         elif self.path == '/api/example-questions':
             self.json_response(200, [{'name':p.stem, 'yaml':p.read_text()} for p in sorted((Path(__file__).parent / 'examples/telemetry').glob('*.yaml'))])
@@ -108,7 +116,7 @@ class Handler(BaseHTTPRequestHandler):
                         watcher.join(timeout=0.25)
             except (BrokenPipeError, ConnectionResetError): pass
             except urllib.error.HTTPError as exc:
-                if not started: self.json_response(exc.code, json.loads(exc.read()))
+                if not started: self.upstream_error(exc)
             except Exception as exc:
                 if not started: self.json_response(400 if isinstance(exc, ValueError) else 502, {'error': str(exc)})
             return
@@ -121,7 +129,7 @@ class Handler(BaseHTTPRequestHandler):
                 request = urllib.request.Request(endpoint, data=self.rfile.read(length), headers={'Content-Type': 'application/json', 'X-Goo-Query-ID': self.headers.get('X-Goo-Query-ID', '')})
                 with urllib.request.urlopen(request, timeout=90) as response:
                     self.json_response(response.status, json.load(response))
-            except urllib.error.HTTPError as exc: self.json_response(exc.code, json.loads(exc.read()))
+            except urllib.error.HTTPError as exc: self.upstream_error(exc)
             except ValueError as exc: self.json_response(400, {'error': str(exc)})
             except Exception as exc: self.json_response(502, {'error': str(exc)})
             return

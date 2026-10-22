@@ -146,7 +146,66 @@ route policy lives in [scripts/build_openapi.py](../scripts/build_openapi.py).
 Route discovery is an inventory aid, not authority to invent an endpoint policy:
 new routes must have reviewed effects, request/response roots, limits, supported
 statuses and fixture coverage. Extensions describe current behavior and do not
-change runtime enforcement. Remaining work is to broaden executed fixture coverage
-beyond the four current JSON groups, add browser-proxy contract fixtures, and
-complete C2's deployed integration acceptance. The spec pauses further mechanical
+change runtime enforcement. Executed coverage now also includes the capture/live-freeze/document workflow and
+browser proxy contracts. The optional local XTDB branch covers retention, correction,
+pinned review and source-free document reopen. Broader endpoint/branch coverage and
+the remaining C2 acceptance work are still explicit gaps. The spec pauses further mechanical
 JSON migration while those contracts become the common API reference.
+
+
+## Observed workflow and proxy contracts
+
+`TestAPISavedEvidenceObservedContracts` exports actual handler observations when
+`GOO_API_OBSERVATIONS` is set. Its base branch has 12 responses: source-backed
+capture and live draft, source-free/idempotent freeze, capture/receipt/list reads,
+document publication/reopen/list, and optional-store status/refusal. With
+`GOO_XTDB_TEST_URL`, seven more responses cover real retention, correction, manifest,
+current/pinned review, pinned document creation and offline file reopen. The test
+refuses any telemetry read after the source is marked unavailable. CI runs the
+base branch; the real XTDB branch requires the lab explicitly.
+
+`tests/test_api_proxy.py` puts real HTTP servers on both sides of the Python
+proxy. It checks exact/overflow browser limits using the spec's byte ceilings,
+query-string and cancellation-ID forwarding, deliberately unforwarded Retry-After,
+JSON re-encoding of text/plain Go errors, early tail headers and idle upstream
+closure within two seconds of browser abort. It can export 20 actual proxy JSON
+responses using `GOO_PROXY_OBSERVATIONS`. Both observation files are validated by:
+
+```sh
+python scripts/check_openapi.py --observations /path/saved.json --proxy-observations /path/proxy.json
+```
+
+These tests found and corrected two contract issues: `/documents` takes an outer
+`{document, parent}` envelope, and browser cancellation requires a nonempty body
+(send `{}`) even though Go ignores it. They also found a runtime bug: non-JSON
+upstream HTTP errors previously disconnected clients while handling the error.
+GET, POST and pre-stream tail now return a bounded-description JSON 502 instead;
+valid JSON errors retain their status. No backend error body is echoed by this
+fallback. Existing limit/header differences remain unchanged.
+
+`scripts/check_deployed_api.py` validates the running spec against the checkout
+and performs readonly real API checks. The API-docs browser journey can target the
+running lab with `GOO_API_DOCS_URL=http://127.0.0.1:8088/api-docs`; otherwise it
+starts its own ephemeral server. These are distinct from synthetic loopback data.
+
+## Managed lab rebuild
+
+The Go build now binds source read-only in one build step, so `internal` packages
+are included and VFS builders avoid copying a complete toolchain for each package.
+The same Go version uses the smaller Alpine build image; the binary stays
+CGO-disabled and the runtime remains Python slim. Go caches are disposable build
+mounts. For a managed TLS proxy, use an optional trusted combined CA bundle:
+
+```sh
+GOO_BUILD_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt docker compose -f compose.yaml -f compose.xtdb.yaml -f compose.build-ca.yaml build query packages
+docker compose -f compose.yaml -f compose.xtdb.yaml up -d --no-deps --no-build query packages
+```
+
+The overlay mounts trust only for dependency downloads and keeps certificate
+verification enabled; it does not copy certificates into layers or alter runtime
+configuration. Omit the XTDB overlay if the optional store is not deployed. Build
+and recreate only these two owned services; preserve telemetry volumes, stream
+entries, capture ledgers and the previous image for rollback.
+
+[Executed API conformance and deployed acceptance](API_ACCEPTANCE.md) records the
+workflow layers, replay commands, fixes, build recovery and remaining coverage.

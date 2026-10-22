@@ -982,3 +982,12 @@ actual Go wire fixtures and the reset/gap SSE fixture. Go remains authoritative
 for semantic validity, source/custody effects and capability lifetimes. The
 standalone API docs journey checks the real Python handler without lab traffic.
 Existing Hegel/Quint/Bombadil workbench models are unchanged by this docs surface.
+
+Observed API continuation: `TestAPISavedEvidenceObservedContracts` exports 12 actual
+base responses or 19 with a real XTDB URL, while refusing source reads after the
+live draft is held. Proxy loopback tests export 20 responses and check idle SSE
+abort cleanup. `scripts/check_openapi.py --observations ... --proxy-observations ...`
+validates both. CI runs base observations; local native-store/deployed coverage is
+recorded separately in [API acceptance](../docs/API_ACCEPTANCE.md). Existing deployed
+core/capture/retention journeys retain their Quint ledger checks and rejecting
+controls. No new workbench protocol/model transition was introduced.

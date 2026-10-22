@@ -258,6 +258,39 @@
   "DocumentList": {
     "$ref": "#/components/schemas/workbench.DocumentList"
   },
+  "DocumentRequest": {
+    "anyOf": [
+      {
+        "additionalProperties": false,
+        "properties": {
+          "document": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.DocumentInputInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "parent": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
   "EvidenceComparison": {
     "$ref": "#/components/schemas/exploration.EvidenceComparison"
   },

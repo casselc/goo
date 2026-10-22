@@ -1,0 +1,12 @@
+# Optional managed-environment build trust. The CA bundle is mounted only while
+# downloading dependencies, never copied into the image. Runtime config unchanged.
+services:
+  query:
+    build:
+      secrets: [build_ca]
+  packages:
+    build:
+      secrets: [build_ca]
+secrets:
+  build_ca:
+    file: ${GOO_BUILD_CA_BUNDLE:?Set GOO_BUILD_CA_BUNDLE to the trusted combined CA bundle}

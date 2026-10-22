@@ -18,7 +18,7 @@ requests = {
  '/compare':'CompareRequest','/inventory':'InventoryRequest','/discovery':'InventoryRequest','/explore':'RecordQuery','/tail':'TailSelector',
  '/measurements':'NativeQuestion','/metric-discovery':'MetricDiscoveryRequest','/measurement-packages/plan':'NativePlanRequest','/measurement-packages':'YAMLRequest',
  '/telemetry-packages':'YAMLRequest','/telemetry-packages/draft':'TelemetryDraftRequest','/telemetry-packages/numeric-plan':'NumericPlanRequest','/telemetry-packages/plan':'TelemetryPlanRequest',
- '/recipes':'RecipeRequest','/dashboards/plan':'DashboardRequest','/population/plan':'PopulationRequest','/annotations':'MeaningInput','/exploration-views':'ExplorationView','/deployments':'DeploymentInput','/documents':'DocumentInput',
+ '/recipes':'RecipeRequest','/dashboards/plan':'DashboardRequest','/population/plan':'PopulationRequest','/annotations':'MeaningInput','/exploration-views':'ExplorationView','/deployments':'DeploymentInput','/documents':'DocumentRequest',
  '/captures':'CaptureRequest','/captures/live':'LiveComparisonRequest','/captures/comparisons':'SaveComparisonRequest','/investigations':'InvestigationRequest','/retained-evidence':'RetainRequest','/retained-evidence/{id}/annotations':'CorrectRequest',
 }
 responses = {
@@ -79,7 +79,7 @@ spec = {
  'info':{'title':'goo observability API','version':'0.1.0','description':'Current development API. Browser server prefixes paths with /api; direct Go server uses unprefixed paths. Python-only operations override servers. Wire-shape schemas describe encoding, not all domain validation. Semantic constraints, custody and source effects remain authoritative in Go. Unknown input fields are rejected; null and omitted fields can decode and then fail domain validation. No authentication is implemented by this lab; cancellation IDs are local capabilities, not authorization.'},
  'servers':[{'url':'http://localhost:8088/api','description':'Browser Python proxy (default local lab)'},{'url':'http://localhost:8089','description':'Direct Go service; Go-specific limits/headers apply'}],
  'paths':{},'components':{'schemas':schemas},
- 'x-contract-notes':['Direct Go accepts any request Content-Type; application/json is the supported client encoding.','Python reparses/reserializes JSON and enforces Content-Length before Go; fixture byte equality describes direct Go, not browser serialization.','Browser proxy: dashboard plan 16 KiB vs Go 256 KiB; metric discovery 16 KiB vs Go 64 KiB; annotations/deployments 16 KiB vs Go 128 KiB.','Direct operation GET validation uses http.Error text/plain with JSON-looking text; browser re-encodes errors as JSON.','Direct tail early errors omit Cache-Control; proxy early JSON errors include no-store.','Python GET prefix routing can forward unsupported suffixes; these are not supported operations.','No generated handlers, semantic validator replacement, API stability guarantee or new authorization layer is introduced.'],
+ 'x-contract-notes':['Direct Go accepts any request Content-Type; application/json is the supported client encoding.','Python reparses/reserializes JSON and enforces Content-Length before Go; fixture byte equality describes direct Go, not browser serialization.','Browser proxy: dashboard plan 16 KiB vs Go 256 KiB; metric discovery 16 KiB vs Go 64 KiB; annotations/deployments 16 KiB vs Go 128 KiB.','Direct operation GET validation uses http.Error text/plain with JSON-looking text; browser re-encodes errors as JSON.','Direct tail early errors omit Cache-Control; proxy early JSON errors include no-store.','Python GET prefix routing can forward unsupported suffixes; these are not supported operations.','Malformed non-JSON upstream HTTP errors now return JSON 502 instead of disconnecting; valid JSON errors preserve status.', 'No generated handlers, semantic validator replacement, API stability guarantee or new authorization layer is introduced.'],
 }
 route_source={}
 for file in sorted((ROOT/'cmd/goo').glob('*http.go')):
@@ -118,7 +118,10 @@ for (method,path),(file,block) in sorted(route_source.items()):
   op['responses'][status]={'description':'Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.','content':{'application/json':{'schema':ref('Error')}}}
  if method=='get' and path in ('/http-package','/operation-packages','/operations','/counter-rates','/histograms'):
   op['responses']['400']['content']['text/plain']={'schema':{'type':'string'},'example':'{"error":"unsupported query parameter"}\n'}
- if path=='/queries/{id}/cancel':op['responses']['200']['content']['application/json']['schema']=ref('Cancellation');op['x-schema-coverage']='typed'
+ if path=='/queries/{id}/cancel':
+  op['responses']['200']['content']['application/json']['schema']=ref('Cancellation');op['x-schema-coverage']='typed'
+  op['requestBody']={'required':True,'description':'Send {} through the browser proxy, which requires a positive Content-Length; direct Go ignores the cancellation body.','content':{'application/json':{'schema':{},'example':{}}}}
+  op['x-browser-body-limit-bytes']=16384
  if path=='/captures/live': op['responses']['201']={'description':'Freeze held draft without rereading source.','content':{'application/json':{'schema':ref('CapturePage')}}}
  spec['paths'].setdefault(path,{})[method]=op
 
