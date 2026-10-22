@@ -1547,3 +1547,15 @@ mutations. Bombadil explores readonly catalog, pending and citation controls.
 The recent-activity journey 93 also checks compact desktop/mobile first-record
 positions, absence of duplicate facet-workspace summaries, and source-free facet
 disclosures. Its timeline opens range controls when a chart preview is selected.
+
+### 112 — Inspect investigation revisions before opening
+
+[Executable storyboard](../../journeys/document-library.spec.js): create same-title
+unrelated roots and a preserved child revision through the real API; follow server
+cursors and search within each page; inspect the exact child and parent without
+replacing a pending editor note. Explicit Open refuses the pending draft. Filtering
+retains the selected detail. Revert then Open loads the exact child without telemetry
+execution. [Mobile frame](screenshots/112a-investigation-revision-inspection.png).
+Journey 36 retains the deployed-app evidence path and the Quint ledger with rejecting
+controls; its optional Bombadil actor now explores revision browse/inspect/close as
+well as draft edits, with bounded rows and exact document selection invariants.

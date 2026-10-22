@@ -1,5 +1,46 @@
 # Validation record
 
+## Investigation revision library — B1 continuation (2026-10-22 UTC)
+
+Final query/packages image:
+`sha256:7b3be499773ffc22114720dd62dacd53d38645b30e3e5404141941c111bb8924`.
+Investigation revisions now share compact typed rows and a selected metadata
+inspector. Opening the editor remains explicit and retains pending-note/dirty/busy
+guards. Server cursors remain owned by documents; local row controls and search
+state their current-server-page boundary. Exact IDs, preserved parent branches and
+UTC custody timestamps remain visible. B1 remains active for retained catalogs and
+touched retention owners. [Contract and diagram](docs/DEFINITION_LIBRARY.md).
+
+Actual checks:
+
+- Frontend test suite passes (35 file-level results); JavaScript syntax, whitespace
+  and changed local Markdown links pass.
+- Hegel supplied-catalog properties pass 200 cases including document, record and
+  measurement typed identities, bounded paging, literal search and non-mutation
+  (0.260s). This is not an exhaustive DOM model.
+- Four final real-browser journeys pass together (1.4m): 36 deployment context and
+  frozen evidence/narrative revisions; 110 Definitions draft/identity/stale-refresh
+  compatibility; 111 fixed reusable plan ownership; 112 new document inspection.
+  Journey 112 follows real server cursors, inspects a preserved child while an
+  editor note is pending, checks guarded explicit Open, page-scoped filtering,
+  failed-refresh retention, mobile containment and zero telemetry/publication reads.
+- Updated context Bombadil actor passes with 421 records and all required stages;
+  411 observed snapshots have catalog rows and 231 have a selected document.
+  Browse/inspect/close actions preserve base revision, exact references and note
+  guards; invariants check bounded rows and typed exact selection.
+- Journey 36's actual app/evidence/narrative Quint/quint-go ledger passes with its
+  four rejecting controls (12.47s). Existing model scope is unchanged.
+- Affected journey screenshots were regenerated, including new mobile frame 112a.
+  Final post-wrapper health verifies 13 running services, restored traffic, all 14
+  preserved pending IDs, exact existing retained manifests/reviews/pinned document
+  citation/current catalog, optional XTDB health, served source/server/binary hashes
+  and zero cgroup OOM kills. No new XTDB restart experiment was performed.
+
+Local evidence: `artifacts/document-library-final.log`,
+`document-library-final-unit.log`, `document-library-hegel.log`,
+`document-library-health.json`, and `artifacts/context-notes/1b1cb58e/`.
+
+
 ## Shared fixed reusable-question library — B1 continuation (2026-10-22 UTC)
 
 Final image: `sha256:3864ab2b82b7d572b9a1bce50748059e114d046ffb434dca671a536f128bef23`.

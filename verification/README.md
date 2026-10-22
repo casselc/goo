@@ -835,3 +835,13 @@ queries a source. The existing core workflow actor now selects the shared revisi
 row before Run and checks bounded rows/exact selected keys. Journey 33 retains its
 real full-population reuse Quint ledger and rejecting controls; these do not claim
 an exhaustive model of every inspector state.
+
+Journey 112 exercises real document roots/branches through server cursor pages,
+metadata inspection with a pending note, guarded explicit Open, page-scoped search,
+failed catalog refresh retention and mobile layout without telemetry reads. The
+Hegel catalog generator now includes document as well as record/measurement typed
+identities. The context-notes Bombadil actor includes browse/inspect/close actions,
+checks at most 25 local rows and exact typed document selection, while retaining its
+immutable base/reference/draft invariants. Journey 36 still validates real observed
+app/evidence/narrative transitions with Quint/quint-go and rejecting controls; the
+catalog DOM is not claimed as a new exhaustive formal model.

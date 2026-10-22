@@ -1,7 +1,8 @@
 # Compact definition libraries
 
 B1 adopts one supplied-data presenter in the record telemetry-package and native
-measurement catalogs on Definitions and the fixed reusable-question list. Each compact row retains its exact
+measurement catalogs on Definitions, the fixed reusable-question list and the
+investigation revision catalog. Each compact row retains its exact
 revision; selecting it opens one detail with explicit Edit/Explore or Preview actions.
 Selection itself does not validate, execute telemetry, publish annotations or replace
 the package editor draft. Native Preview retains its existing source-free compiler
@@ -11,7 +12,7 @@ The application adapters own list requests, refresh generations, authoring and
 execution. `GooDefinitionLibrary` owns only loaded-row paging/search and the shared
 inspector. There are 25 displayed rows per page; search covers the loaded catalog,
 not a global index or all evidence. Its pure page model preserves order, exact IDs,
-missing matches and typed record/measurement identity without merging titles/names.
+missing matches and typed record/measurement/document identity without merging titles/names.
 Native and record refreshes reject older responses. A failed refresh retains old
 rows and the selected detail, with an unavailable notice.
 
@@ -29,10 +30,11 @@ flowchart LR
   Records[Record package adapter] --> Data[Supplied typed immutable revisions]
   Native[Native measurement adapter] --> Data
   Fixed[Fixed reusable-question adapter] --> Data
+  Documents[Document catalog / server cursor owner] --> Data
   Data --> Rows[Compact loaded-catalog rows / paging / local search]
   Rows --> Inspect[Explicit selection: one cached inspector detail]
   Inspect --> Meaning[Selected record annotation panel]
-  Inspect --> Actions[Explicit Edit / Explore / Preview]
+  Inspect --> Actions[Explicit Edit / Explore / Preview / Open revision]
   Actions --> Owners[Existing typed compiler / editor / source owners]
 ```
 
@@ -62,3 +64,14 @@ B1 remains open: compatible document/retained catalogs,
 selected contextual editors and touched retention-owner separation remain subsequent
 B1 cuts. Backend catalogs still return their existing revision arrays; this slice
 adds no server cursor, family/lineage API, inferred head, global search or store migration.
+
+Investigation rows inspect already supplied revision metadata without opening the
+editor or loading referenced evidence. The separate **Open investigation revision**
+action retains the document owner's pending-note/dirty/busy guards. Inspection can
+therefore coexist with a pending draft; an explicit refused open leaves it intact.
+Rows show UTC custody time; the inspector carries the full selected and parent IDs.
+Titles never imply family membership or a latest head. The server's **More revisions**
+cursor remains separate from the presenter's 25-row local pages. Search explicitly
+covers only the current server page. Selected detail survives local filtering or a
+server-page change; unavailable refreshes preserve existing rows. Retained evidence
+catalog ownership, retry journals and pinned review citations remain the next B1 cut.
