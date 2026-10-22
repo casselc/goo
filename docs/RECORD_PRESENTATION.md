@@ -69,15 +69,15 @@ the application owns tables, columns, viewports and action layouts.
 ## Adoption and remaining work
 
 The duplicate time/service/log/span formatters in `tail.js` and `exploration.js`
-are removed. Both primary inspectors now compose the same detail body. Existing
-inline attribute disclosure and full read-only saved editors remain named compatibility
-consumers; remove them only after entry-point, selection, evidence-basis and paging
-parity. The shared `GooRecordPresentation.table` helper now supplies native headers, row
+are removed. Both primary inspectors now compose the same detail body. Existing inline attribute disclosure remains a named compatibility consumer.
+Stored record pages now use the dedicated saved owner; the hidden record editor is
+removed. The shared `GooRecordPresentation.table` helper now supplies native headers, row
 cells, qualified time/service/summary content and responsive cell labels to Live,
 fixed/frozen and Services observations. It returns detached rows: application owners
 retain insertion, observation identity, selection, actions, ordering and viewports.
 It does not add sort/filter controls or move source execution into display elements.
-Other Services aggregate/native layouts and saved-editor removal remain separate cuts.
+Other Services aggregate/native layouts remain separate cuts. See the
+[saved owner contract](SAVED_RECORD_PRESENTATION.md).
 
 Journey 106 uses the same real generic OTel logs/spans in Live and fixed results,
 compares the display projections, expands local context without requests and checks

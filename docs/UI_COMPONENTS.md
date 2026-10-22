@@ -441,3 +441,9 @@ The pure `GooEvidenceScope.record` adapter now supplies frozen record facts to
 capture pages and document references. Metadata-only references retain unavailable
 source/page fields rather than borrowing custody time or totals from displayed
 rows. [Contract and remaining editor-removal gates](SAVED_RECORD_PRESENTATION.md).
+
+`GooRecordResults` shares application-owned record/group tables and explicit
+trace/log context between Live/fixed and Saved. It composes passive components;
+it is not itself a source-free web component. `GooSavedRecords` renders stored
+values without a query editor/session/tail and preserves page/retention/package
+contracts. [Ownership and invalidation](SAVED_RECORD_PRESENTATION.md).

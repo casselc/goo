@@ -29,17 +29,37 @@ required to reread. The saved receipt remains unchanged. Inventory and measureme
 continuations retain their family-specific behavior. Rerun fixed question still
 explicitly captures a new revision and preserves its predecessor.
 
-The capture owner supplies the shared summary, so its embedded saved record viewer
-suppresses its repeated introduction and scope block. Existing stored-page controls,
-record inspection/selection, distributions, reusable-question creation, trace/log
-context and retention continue through that viewer. Trace/log context remains a
-separately named live read; it does not amend the stored capture.
+The capture owner supplies the shared summary. `GooSavedRecords` now mounts only
+stored result views, page controls, shared record inspection/selection, distributions,
+package creation and explicit context. It creates no query builder, numeric measure
+composer, question session or tail. Numeric/grouped results are rendered from their
+stored values rather than repopulating hidden controls.
 
-This is the first saved-result consolidation cut, not full editor removal. The
-hidden read-only editor remains a named compatibility consumer until result,
-selection, numeric/grouped measures, paging, trace/surrounding context and package
-creation are extracted with parity. Do not infer that all capture families now use
-one universal result model or execution owner.
+`GooRecordResults` is the shared application module for record/group tables and
+trace/surrounding-log context. Live/fixed Explore and Saved instantiate independent
+owners. Passive record/attribute/chart elements still have no source client. Context
+reads enter through an explicit application callback, preserve their own query/basis,
+and never amend a capture. Close returns focus to the original row action.
+
+Switching captures, leaving Saved or opening a document invalidates pending context
+publication. Stored primary rows remain independently owned. Generation invalidation
+rejects old completions; this extraction adds no new upstream abort guarantee.
+Legacy callers of `GooExploration.mount({readOnly:true})` delegate directly to the
+saved owner before constructing an editor. The old saved paint/state path and live
+editor's unused saved pager are removed. Other capture families keep their existing
+presenters and execution contracts.
+
+```mermaid
+flowchart LR
+  Live[Live/fixed query owner] --> Shared[Shared record results and context]
+  Stored[Stored-page owner: no editor] --> Shared
+  Stored --> Views[Stored distributions / numeric and grouped results]
+  Shared --> Passive[Passive record and attribute components]
+  Shared -->|named context action only| Read[Independent trace/log read]
+  Read -->|current generation only| Context[Separate context result and basis]
+  Switch[Capture switch / leave / document] --> Invalidate[Invalidate context generation]
+  Invalidate --> Context
+```
 
 Journeys 32, 41, 45 and 50 cover capture paging/revisions, document reference reuse,
 fixed staging and independently owned query drafts. The capture Bombadil actor
@@ -52,3 +72,10 @@ Saved record tables reuse the shared responsive record rows and now give native
 captions the full mobile width. Journey 32 checks caption height as well as page
 overflow; screenshot review remains necessary because narrow wrapping can pass
 an overflow-only assertion.
+
+Journey 107 uses real generic OTel spans and logs to prove the saved owner has no
+query controls, follows wider trace and surrounding-log context explicitly, returns
+keyboard focus, and rejects a held real response after switching captures. Every
+source request and local transition is replayed through the existing Quint
+read/history protocol with four rejecting controls. This validates read accounting
+and observed coherence, not a new model of all trace completeness semantics.

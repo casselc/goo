@@ -788,3 +788,13 @@ Its Bombadil actor opens scope and checks summary identity/count/custody/page
 against the immutable receipt while traversing saved pages. Journeys 41/45/50
 cover document and fixed-draft compatibility; existing capture Hegel state/swarm
 and Quint capture/investigation protocols remain the validation basis.
+
+Journey 107 exercises the extracted saved owner with real generic OTel records:
+no query builder/control nodes, local inspection, explicit all-service trace/log
+reads, keyboard close return, surrounding logs, capture switching and rejection of
+a held real context completion. `TestQuintSavedOwnerLedger` replays every observed
+source read/local transition through the existing read/history model and requires
+four counter/read/coherence mutations to fail. It does not model trace completeness.
+The capture Bombadil invariant now requires absent editor nodes, rather than hidden
+controls. Captured paging/retention/package and numeric/grouped compatibility keep
+their existing Hegel/Quint campaigns.

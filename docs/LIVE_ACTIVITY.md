@@ -97,7 +97,8 @@ capture or an assertion of complete source coverage.
 Live and fixed results now share record summaries and detail composition, with
 bounded parent context from supplied span relationships. Live, fixed/frozen pages
 and held service observations now share the record-table builder; aggregate/native
-service layouts and saved-editor removal remain separate work. The paused parent return described below is implemented.
+service layouts remain separate work. Saved record pages now have a dedicated
+owner without a hidden editor; Live/fixed and Saved share record/context rendering. The paused parent return described below is implemented.
 The legacy advanced editor is a temporary compatibility consumer; the
 [whole-product reviews](STREAM_FIRST_WHOLE_PRODUCT_DESIGN.md) and
 [active queue](IMPLEMENTATION_PLAN.md) name its replacement/removal gates.

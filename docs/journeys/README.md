@@ -1,5 +1,13 @@
 # User journeys and storyboards
 
+[Journey 107](../../journeys/saved-owner.spec.js): open real stored spans without
+query controls → inspect locally → explicitly expand cross-service trace/log context
+→ close to the opener → open a filtered saved log → read surrounding logs → hold
+a real response, switch captures and reject its late publication. Frames:
+[explicit trace](screenshots/107a-saved-explicit-trace.png),
+[log context](screenshots/107b-saved-log-context.png),
+[mobile saved owner](screenshots/107c-mobile-saved-owner.png).
+
 Journeys 32/41/45/50 now exercise [shared saved-record scope](../SAVED_RECORD_PRESENTATION.md)
 in captures and document references. Journey 32 verifies source/custody/count facts,
 page offsets and source-free fixed staging before an explicit Run. Existing frames

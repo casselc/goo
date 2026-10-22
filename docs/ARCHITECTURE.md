@@ -281,3 +281,9 @@ The [saved record presenter](SAVED_RECORD_PRESENTATION.md) maps capture pages an
 metadata-only document references to shared frozen display facts. The capture owner
 supplies the single scope summary; its compatibility viewer retains paging and
 context reads. A record's fixed continuation stages a draft; Run owns the fresh read.
+
+Stored record pages now use `GooSavedRecords`, independent of the live query
+editor. `GooRecordResults` supplies record/group tables and named context actions
+to both owners, with independent generations and retained evidence bases. Capture
+switch/leave/document transitions invalidate old context publication. See the
+[updated ownership diagram](SAVED_RECORD_PRESENTATION.md).

@@ -1,5 +1,60 @@
 # Validation record
 
+## Dedicated saved record owner and shared context (2026-10-22 UTC)
+
+Query/packages image:
+`sha256:2bbc7023bb0946ebea0213d4cb2e14a1af0214b1c3d73b33e50fb17168842f85`.
+
+Saved record pages now mount `GooSavedRecords` with no query editor, measure
+composer, question session or tail. Stored paging, distributions, grouped/numeric
+values, record selection/retention and package creation retain their existing
+contracts. `GooRecordResults` shares record/group tables and explicit trace/log
+context with Live/fixed Explore. The old saved paint/state path and Live's unused
+saved pager are removed; legacy readOnly callers delegate before editor setup.
+Capture switch/leave/document transitions invalidate pending context publication.
+Read bases remain independent; generation invalidation adds no upstream abort
+promise. [Contract/diagrams](docs/SAVED_RECORD_PRESENTATION.md) and
+[actual storyboards](docs/journeys/README.md).
+
+Actual checks:
+
+- Frontend suite: 33 test files pass after extraction and teardown correction.
+- Hegel passes: supplied-parent properties (200), entry state/swarm (80 × 24),
+  and capture state/swarm (60 × 15), including local source fixtures.
+- Twelve real-source journeys pass together on the corrected image (8.3m):
+  32, 85, 86, 34, 43, 100, 44, 105, 106, 107, 102 and 103. These cover exact
+  stored paging/revisions and process restart, numeric/grouped/chart results,
+  package reuse, retention, retained navigation and Live/fixed pause/return.
+  Capture, entry and live-retention Bombadil campaigns and existing Quint ledgers
+  pass. The capture actor now requires absent editor controls rather than hidden ones.
+- Journey 107 passes (28.7s): absent query controls, local inspection, explicit
+  wider trace/log reads, focus return, surrounding logs and rejection of a held real
+  response after capture switching. Every source read/local transition passes the
+  existing Quint/quint-go read/history protocol with four rejecting controls.
+  This checks observed accounting/coherence, not trace completeness.
+- Deployed asset/server/binary hashes match source; all 13 services run after
+  traffic restoration. Pre-existing pending queue IDs, retained manifests, native
+  review history and pinned citations survive; cgroup OOM kills remain zero.
+  Packages restart is exercised by journey 32; XTDB was not restarted this round.
+- JavaScript/Python syntax, changed Markdown local links and whitespace pass.
+  Affected storyboards/screenshots are regenerated; new context/mobile frames
+  are visually reviewed. The held response is real source data delayed at the
+  Playwright transport boundary; UI data is not substituted.
+
+Initial retained-view checks caught teardown resolving context IDs through the
+whole document after detachment. The shared context owner now resolves its own DOM
+subtree. A date-input fixture rejected redundant fractional zeros; its string is
+canonicalized without changing the selected instant. A legacy fixed-query fixture
+now enters the explicit question route.
+
+Unused build cache and dangling images verified to descend from the task base
+were reclaimed to resolve workspace disk pressure. Running images, tagged bases,
+application volumes and queue data were preserved.
+
+Evidence: `artifacts/saved-owner-final-unit.log`, `saved-owner-hegel.log`,
+`saved-owner-focused.log`, `saved-owner-release.log`, `saved-owner-health.json`
+and ledgers under `artifacts/saved-owner/`.
+
 ## Shared saved-record scope and deliberate continuation (2026-10-22 UTC)
 
 Query/packages image:
