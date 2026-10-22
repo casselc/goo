@@ -8,6 +8,11 @@ happened with evidence you can inspect and preserve.**
 
 [Executed API acceptance](docs/API_ACCEPTANCE.md) covers browser proxy contracts, saved/retained workflows and the rebuilt local lab.
 
+[The fresh whole-product coherence proposal](docs/WHOLE_PRODUCT_COHERENCE_PROPOSAL_2026_10_22.md)
+reconciles independent architecture and running-product usability reviews. It
+recommends a continuous Activity → analysis → population → investigation flow;
+these recommendations are proposed, not shipped features or a second backlog.
+
 Ask a question → inspect its evidence → capture and explain it → reuse the
 definition. Start from instrumented code or unfamiliar OpenTelemetry data.
 [The product essence](docs/PRODUCT_ESSENCE.md) describes this common loop and the

@@ -9,6 +9,12 @@ additional current commitments.
 
 ## Active implementation queue
 
+The [2026-10-22 whole-product coherence proposal](WHOLE_PRODUCT_COHERENCE_PROPOSAL_2026_10_22.md)
+is a fresh architecture/design review of `f54d07c`. It proposes a contextual
+Activity-to-analysis handoff and population workflow ahead of broad comparison
+consolidation, plus a simpler Saved entrance. These are recommendations for the
+next planning decision; this review has not silently reordered the queue below.
+
 The user has authorized incorporating the product, architecture and design reviews
 and working through the resulting tasks. This is the single active queue; the
 reviews provide rationale, not additional independent backlogs. Complete each

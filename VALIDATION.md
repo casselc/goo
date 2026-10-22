@@ -1,5 +1,20 @@
 # Validation record
 
+## Whole-product architecture and usability review (2026-10-22 UTC)
+
+Independent architecture and design/usability agents reviewed baseline `f54d07c`.
+The [reconciled proposal](docs/WHOLE_PRODUCT_COHERENCE_PROPOSAL_2026_10_22.md)
+links their evidence and explicitly separates delivered behavior from proposals.
+The design agent performed read-only Chromium walkthroughs across the deployed
+surfaces. Fresh Activity opened one tail; held-row inspection made no API request;
+fixed staging read recipe metadata but no telemetry and published nothing.
+Services/comparison execution was not repeated; the narrow-screen check covered
+Measurements only. The review records these limits explicitly.
+
+This round changes documentation only; no runtime regression suite, deployment
+or new capability acceptance is claimed. All 426 local link targets in the six
+changed/new documents resolve, and `git diff --check` passes.
+
 ## API proxy/observed workflows and rebuilt lab acceptance (2026-10-22 UTC)
 
 [Executed API acceptance](docs/API_ACCEPTANCE.md) extends the OpenAPI baseline.
