@@ -1,5 +1,33 @@
 # Validation record
 
+## C2 telemetry package JSON adoption (2026-10-22 UTC)
+
+[Telemetry JSON contract and diagram](docs/HTTP_BOUNDARIES.md#telemetry-package-json-adoption)
+record shared 64 KiB typed decoding and JSON/no-store writing. Planning/publication
+validation, default planning clock, YAML/handoff, revisions and store effects stay
+local. Trailing input retains `require one JSON object` and existing 400 behavior.
+
+Actual checks:
+
+- All 68 static wire fixtures pass before extraction (0.196s), freezing statuses,
+  exact bodies and selected headers across draft/numeric/package planning and
+  publication, including valid, malformed, unknown/nested-invalid, null/array,
+  second/trailing values, exact/overflow bytes, ignored content type and mux refusal.
+  Explicit-window success fixtures are deterministic. Each case verifies plans and
+  rejected input leave an empty registry; successful publication creates one file.
+- After extraction, race suites pass for HTTP routes (2.280s) and exploration
+  (5.312s), including the same wire fixtures, existing generated-Go authoring,
+  numeric capability, publication identity/duplicate/reopen and other HTTP regressions.
+- Hegel's 100 generated shared planning-JSON cases pass (0.025s).
+- `go test ./...` passes. No live database check was required for this JSON-only
+  change; existing gated live tests skip without their configured URL variables.
+- Whitespace and local Markdown targets pass.
+
+Evidence: `artifacts/c2-telemetry-json-{before,race,hegel,root}.log`.
+No UI/SSE/Quint protocol changed, no screenshots were regenerated and no running
+image was rebuilt. Native measurement/registry JSON is next; other JSON owners and
+C2's final deployed-journey acceptance remain open.
+
 ## C2 histogram HTTP transport adoption (2026-10-22 UTC)
 
 [Histogram transport contract and diagram](docs/HTTP_BOUNDARIES.md#histogram-transport-adoption)

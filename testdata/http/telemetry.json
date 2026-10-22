@@ -1,0 +1,977 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "/telemetry-packages/draft/valid",
+      "method": "POST",
+      "path": "/telemetry-packages/draft",
+      "body": "{\"lookbackMinutes\":5,\"name\":\"ordinary-jobs\",\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0},\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\"}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"measurePlan\":{\"scope\":{\"family\":\"explore\",\"signal\":\"logs\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"log-record\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"measures\":[{\"id\":\"count\",\"operator\":\"count\",\"outputType\":\"uint64\",\"unit\":\"{record}\",\"merge\":\"sum\"}],\"dimensions\":[],\"bucketMs\":0,\"groupTimeSeries\":false},\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]},\"revision\":\"27408237e9ed3c77bac67e9b73bebc2a0aff3ece2f661cfb8fd8267c79a266b5\",\"yaml\":\"apiVersion: goo/telemetry-package/v1alpha1\\nname: ordinary-jobs\\ntitle: Ordinary 雪 \\u003cjobs\\u003e\\nsource:\\n    adapter: clickhouse.otel/v1\\n    signal: logs\\n    environment: ordinary\\nmeasure: captured-record-count\\nlookbackMinutes: 5\\nviews:\\n    - records\\n    - trace-context\\n\",\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0},\"plan\":{\"rows\":\"SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, LogAttributes AS Attributes, Body, SeverityText FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY Timestamp, TraceId, SpanId, ServiceName, Body, SeverityText, toString(ResourceAttributes), toString(LogAttributes) LIMIT 101 OFFSET 0 FORMAT JSONEachRow\",\"count\":\"SELECT toString(count()) AS count FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 FORMAT JSONEachRow\",\"fields\":\"SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -\\u003e concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -\\u003e concat('attribute:', k), mapKeys(LogAttributes)))) AS field FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY field LIMIT 129 FORMAT JSONEachRow\",\"parameters\":{\"environment\":\"ordinary\",\"from\":\"1000\",\"to\":\"61000\"}},\"handoff\":{\"fields\":[{\"kind\":\"column\",\"key\":\"service\"}],\"notes\":[\"Use the package directly over existing OTel telemetry in any language; goo annotations are optional.\",\"Fields below are referenced by the definition, not proof that every selected record supplies them. Preserve missing/empty distinctions and predicate meaning.\",\"No source function, event identity, outcome policy, complete coverage, SLI or native metric is inferred from trace samples.\"]},\"warnings\":[\"Definition revision identifies configuration, not captured evidence. Applying it performs a fresh live read.\",\"Counts are captured records, including retries and exporter duplicates; sampling/completeness remain unknown. No business outcome or SLO is inferred.\",\"Supported record measures include counts, span durations, recorded status and bounded split time charts. Native metrics, lifecycle rules, arbitrary numeric expressions and Databricks lowering are separate contracts.\"]}\n"
+    },
+    {
+      "name": "/telemetry-packages/draft/empty",
+      "method": "POST",
+      "path": "/telemetry-packages/draft",
+      "body": "",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/draft/null",
+      "method": "POST",
+      "path": "/telemetry-packages/draft",
+      "body": "null",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"signal must be spans or logs\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/draft/array",
+      "method": "POST",
+      "path": "/telemetry-packages/draft",
+      "body": "[]",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type struct { Question exploration.Query \\\"json:\\\\\\\"question\\\\\\\"\\\"; Name string \\\"json:\\\\\\\"name\\\\\\\"\\\"; Title string \\\"json:\\\\\\\"title\\\\\\\"\\\"; Lookback int \\\"json:\\\\\\\"lookbackMinutes\\\\\\\"\\\" }\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/draft/truncated",
+      "method": "POST",
+      "path": "/telemetry-packages/draft",
+      "body": "{",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"unexpected EOF\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/draft/unknown",
+      "method": "POST",
+      "path": "/telemetry-packages/draft",
+      "body": "{\"sql\":\"SELECT 1\"}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"sql\\\"\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/draft/nested-invalid",
+      "method": "POST",
+      "path": "/telemetry-packages/draft",
+      "body": "{\"question\":{\"unknown\":true}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"unknown\\\"\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/draft/second-value",
+      "method": "POST",
+      "path": "/telemetry-packages/draft",
+      "body": "{\"lookbackMinutes\":5,\"name\":\"ordinary-jobs\",\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0},\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\"} {}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require one JSON object\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/draft/malformed-tail",
+      "method": "POST",
+      "path": "/telemetry-packages/draft",
+      "body": "{\"lookbackMinutes\":5,\"name\":\"ordinary-jobs\",\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0},\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\"} x",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require one JSON object\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/draft/whitespace",
+      "method": "POST",
+      "path": "/telemetry-packages/draft",
+      "body": "{\"lookbackMinutes\":5,\"name\":\"ordinary-jobs\",\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0},\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\"} \n\t",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"measurePlan\":{\"scope\":{\"family\":\"explore\",\"signal\":\"logs\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"log-record\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"measures\":[{\"id\":\"count\",\"operator\":\"count\",\"outputType\":\"uint64\",\"unit\":\"{record}\",\"merge\":\"sum\"}],\"dimensions\":[],\"bucketMs\":0,\"groupTimeSeries\":false},\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]},\"revision\":\"27408237e9ed3c77bac67e9b73bebc2a0aff3ece2f661cfb8fd8267c79a266b5\",\"yaml\":\"apiVersion: goo/telemetry-package/v1alpha1\\nname: ordinary-jobs\\ntitle: Ordinary 雪 \\u003cjobs\\u003e\\nsource:\\n    adapter: clickhouse.otel/v1\\n    signal: logs\\n    environment: ordinary\\nmeasure: captured-record-count\\nlookbackMinutes: 5\\nviews:\\n    - records\\n    - trace-context\\n\",\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0},\"plan\":{\"rows\":\"SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, LogAttributes AS Attributes, Body, SeverityText FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY Timestamp, TraceId, SpanId, ServiceName, Body, SeverityText, toString(ResourceAttributes), toString(LogAttributes) LIMIT 101 OFFSET 0 FORMAT JSONEachRow\",\"count\":\"SELECT toString(count()) AS count FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 FORMAT JSONEachRow\",\"fields\":\"SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -\\u003e concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -\\u003e concat('attribute:', k), mapKeys(LogAttributes)))) AS field FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY field LIMIT 129 FORMAT JSONEachRow\",\"parameters\":{\"environment\":\"ordinary\",\"from\":\"1000\",\"to\":\"61000\"}},\"handoff\":{\"fields\":[{\"kind\":\"column\",\"key\":\"service\"}],\"notes\":[\"Use the package directly over existing OTel telemetry in any language; goo annotations are optional.\",\"Fields below are referenced by the definition, not proof that every selected record supplies them. Preserve missing/empty distinctions and predicate meaning.\",\"No source function, event identity, outcome policy, complete coverage, SLI or native metric is inferred from trace samples.\"]},\"warnings\":[\"Definition revision identifies configuration, not captured evidence. Applying it performs a fresh live read.\",\"Counts are captured records, including retries and exporter duplicates; sampling/completeness remain unknown. No business outcome or SLO is inferred.\",\"Supported record measures include counts, span durations, recorded status and bounded split time charts. Native metrics, lifecycle rules, arbitrary numeric expressions and Databricks lowering are separate contracts.\"]}\n"
+    },
+    {
+      "name": "/telemetry-packages/draft/exact-limit",
+      "method": "POST",
+      "path": "/telemetry-packages/draft",
+      "body": "{\"lookbackMinutes\":5,\"name\":\"ordinary-jobs\",\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0},\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\"}",
+      "padTo": 65536,
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"measurePlan\":{\"scope\":{\"family\":\"explore\",\"signal\":\"logs\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"log-record\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"measures\":[{\"id\":\"count\",\"operator\":\"count\",\"outputType\":\"uint64\",\"unit\":\"{record}\",\"merge\":\"sum\"}],\"dimensions\":[],\"bucketMs\":0,\"groupTimeSeries\":false},\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]},\"revision\":\"27408237e9ed3c77bac67e9b73bebc2a0aff3ece2f661cfb8fd8267c79a266b5\",\"yaml\":\"apiVersion: goo/telemetry-package/v1alpha1\\nname: ordinary-jobs\\ntitle: Ordinary 雪 \\u003cjobs\\u003e\\nsource:\\n    adapter: clickhouse.otel/v1\\n    signal: logs\\n    environment: ordinary\\nmeasure: captured-record-count\\nlookbackMinutes: 5\\nviews:\\n    - records\\n    - trace-context\\n\",\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0},\"plan\":{\"rows\":\"SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, LogAttributes AS Attributes, Body, SeverityText FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY Timestamp, TraceId, SpanId, ServiceName, Body, SeverityText, toString(ResourceAttributes), toString(LogAttributes) LIMIT 101 OFFSET 0 FORMAT JSONEachRow\",\"count\":\"SELECT toString(count()) AS count FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 FORMAT JSONEachRow\",\"fields\":\"SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -\\u003e concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -\\u003e concat('attribute:', k), mapKeys(LogAttributes)))) AS field FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY field LIMIT 129 FORMAT JSONEachRow\",\"parameters\":{\"environment\":\"ordinary\",\"from\":\"1000\",\"to\":\"61000\"}},\"handoff\":{\"fields\":[{\"kind\":\"column\",\"key\":\"service\"}],\"notes\":[\"Use the package directly over existing OTel telemetry in any language; goo annotations are optional.\",\"Fields below are referenced by the definition, not proof that every selected record supplies them. Preserve missing/empty distinctions and predicate meaning.\",\"No source function, event identity, outcome policy, complete coverage, SLI or native metric is inferred from trace samples.\"]},\"warnings\":[\"Definition revision identifies configuration, not captured evidence. Applying it performs a fresh live read.\",\"Counts are captured records, including retries and exporter duplicates; sampling/completeness remain unknown. No business outcome or SLO is inferred.\",\"Supported record measures include counts, span durations, recorded status and bounded split time charts. Native metrics, lifecycle rules, arbitrary numeric expressions and Databricks lowering are separate contracts.\"]}\n"
+    },
+    {
+      "name": "/telemetry-packages/draft/over-limit-trailing",
+      "method": "POST",
+      "path": "/telemetry-packages/draft",
+      "body": "{\"lookbackMinutes\":5,\"name\":\"ordinary-jobs\",\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0},\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\"}",
+      "padTo": 65537,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require one JSON object\"}\n"
+    },
+    {
+      "fillBytes": 65536,
+      "suffix": "\"}",
+      "name": "/telemetry-packages/draft/over-limit-value",
+      "method": "POST",
+      "path": "/telemetry-packages/draft",
+      "body": "{\"yaml\":\"",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"http: request body too large\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/draft/ignored-content-type",
+      "method": "POST",
+      "path": "/telemetry-packages/draft",
+      "body": "{\"lookbackMinutes\":5,\"name\":\"ordinary-jobs\",\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0},\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\"}",
+      "contentType": "text/plain",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"measurePlan\":{\"scope\":{\"family\":\"explore\",\"signal\":\"logs\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"log-record\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"measures\":[{\"id\":\"count\",\"operator\":\"count\",\"outputType\":\"uint64\",\"unit\":\"{record}\",\"merge\":\"sum\"}],\"dimensions\":[],\"bucketMs\":0,\"groupTimeSeries\":false},\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]},\"revision\":\"27408237e9ed3c77bac67e9b73bebc2a0aff3ece2f661cfb8fd8267c79a266b5\",\"yaml\":\"apiVersion: goo/telemetry-package/v1alpha1\\nname: ordinary-jobs\\ntitle: Ordinary 雪 \\u003cjobs\\u003e\\nsource:\\n    adapter: clickhouse.otel/v1\\n    signal: logs\\n    environment: ordinary\\nmeasure: captured-record-count\\nlookbackMinutes: 5\\nviews:\\n    - records\\n    - trace-context\\n\",\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0},\"plan\":{\"rows\":\"SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, LogAttributes AS Attributes, Body, SeverityText FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY Timestamp, TraceId, SpanId, ServiceName, Body, SeverityText, toString(ResourceAttributes), toString(LogAttributes) LIMIT 101 OFFSET 0 FORMAT JSONEachRow\",\"count\":\"SELECT toString(count()) AS count FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 FORMAT JSONEachRow\",\"fields\":\"SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -\\u003e concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -\\u003e concat('attribute:', k), mapKeys(LogAttributes)))) AS field FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY field LIMIT 129 FORMAT JSONEachRow\",\"parameters\":{\"environment\":\"ordinary\",\"from\":\"1000\",\"to\":\"61000\"}},\"handoff\":{\"fields\":[{\"kind\":\"column\",\"key\":\"service\"}],\"notes\":[\"Use the package directly over existing OTel telemetry in any language; goo annotations are optional.\",\"Fields below are referenced by the definition, not proof that every selected record supplies them. Preserve missing/empty distinctions and predicate meaning.\",\"No source function, event identity, outcome policy, complete coverage, SLI or native metric is inferred from trace samples.\"]},\"warnings\":[\"Definition revision identifies configuration, not captured evidence. Applying it performs a fresh live read.\",\"Counts are captured records, including retries and exporter duplicates; sampling/completeness remain unknown. No business outcome or SLO is inferred.\",\"Supported record measures include counts, span durations, recorded status and bounded split time charts. Native metrics, lifecycle rules, arbitrary numeric expressions and Databricks lowering are separate contracts.\"]}\n"
+    },
+    {
+      "name": "/telemetry-packages/draft/empty-object",
+      "method": "POST",
+      "path": "/telemetry-packages/draft",
+      "body": "{}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"signal must be spans or logs\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/draft/method-refusal",
+      "method": "PUT",
+      "path": "/telemetry-packages/draft",
+      "body": "{\"lookbackMinutes\":5,\"name\":\"ordinary-jobs\",\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0},\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\"}",
+      "status": 405,
+      "headers": {
+        "Allow": "GET, HEAD, POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    },
+    {
+      "name": "/telemetry-packages/draft/wrong-number-type",
+      "method": "POST",
+      "path": "/telemetry-packages/draft",
+      "body": "{\"fromMs\":9007199254740993.5,\"lookbackMinutes\":1.5}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"fromMs\\\"\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/numeric-plan/valid",
+      "method": "POST",
+      "path": "/telemetry-packages/numeric-plan",
+      "body": "{\"binding\":{\"field\":{\"kind\":\"attribute\",\"key\":\"db.response.returned_rows\"},\"type\":\"uint64\",\"unit\":\"{row}\",\"parse\":\"canonical-decimal\"},\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"scope\":{\"family\":\"explore\",\"signal\":\"logs\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"log-record\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"binding\":{\"field\":{\"kind\":\"attribute\",\"key\":\"db.response.returned_rows\"},\"type\":\"uint64\",\"unit\":\"{row}\",\"parse\":\"canonical-decimal\"},\"operators\":[\"sum\",\"min\",\"max\",\"mean\"],\"executable\":true,\"diagnostics\":[],\"coverage\":[\"valid\",\"missing\",\"empty\",\"invalid\"],\"meanDenominator\":\"valid\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/numeric-plan/empty",
+      "method": "POST",
+      "path": "/telemetry-packages/numeric-plan",
+      "body": "",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/numeric-plan/null",
+      "method": "POST",
+      "path": "/telemetry-packages/numeric-plan",
+      "body": "null",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"signal must be spans or logs\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/numeric-plan/array",
+      "method": "POST",
+      "path": "/telemetry-packages/numeric-plan",
+      "body": "[]",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type struct { Question exploration.Query \\\"json:\\\\\\\"question\\\\\\\"\\\"; Binding exploration.NumericBinding \\\"json:\\\\\\\"binding\\\\\\\"\\\" }\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/numeric-plan/truncated",
+      "method": "POST",
+      "path": "/telemetry-packages/numeric-plan",
+      "body": "{",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"unexpected EOF\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/numeric-plan/unknown",
+      "method": "POST",
+      "path": "/telemetry-packages/numeric-plan",
+      "body": "{\"sql\":\"SELECT 1\"}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"sql\\\"\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/numeric-plan/nested-invalid",
+      "method": "POST",
+      "path": "/telemetry-packages/numeric-plan",
+      "body": "{\"question\":{\"unknown\":true}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"unknown\\\"\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/numeric-plan/second-value",
+      "method": "POST",
+      "path": "/telemetry-packages/numeric-plan",
+      "body": "{\"binding\":{\"field\":{\"kind\":\"attribute\",\"key\":\"db.response.returned_rows\"},\"type\":\"uint64\",\"unit\":\"{row}\",\"parse\":\"canonical-decimal\"},\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}} {}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require one JSON object\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/numeric-plan/malformed-tail",
+      "method": "POST",
+      "path": "/telemetry-packages/numeric-plan",
+      "body": "{\"binding\":{\"field\":{\"kind\":\"attribute\",\"key\":\"db.response.returned_rows\"},\"type\":\"uint64\",\"unit\":\"{row}\",\"parse\":\"canonical-decimal\"},\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}} x",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require one JSON object\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/numeric-plan/whitespace",
+      "method": "POST",
+      "path": "/telemetry-packages/numeric-plan",
+      "body": "{\"binding\":{\"field\":{\"kind\":\"attribute\",\"key\":\"db.response.returned_rows\"},\"type\":\"uint64\",\"unit\":\"{row}\",\"parse\":\"canonical-decimal\"},\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}} \n\t",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"scope\":{\"family\":\"explore\",\"signal\":\"logs\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"log-record\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"binding\":{\"field\":{\"kind\":\"attribute\",\"key\":\"db.response.returned_rows\"},\"type\":\"uint64\",\"unit\":\"{row}\",\"parse\":\"canonical-decimal\"},\"operators\":[\"sum\",\"min\",\"max\",\"mean\"],\"executable\":true,\"diagnostics\":[],\"coverage\":[\"valid\",\"missing\",\"empty\",\"invalid\"],\"meanDenominator\":\"valid\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/numeric-plan/exact-limit",
+      "method": "POST",
+      "path": "/telemetry-packages/numeric-plan",
+      "body": "{\"binding\":{\"field\":{\"kind\":\"attribute\",\"key\":\"db.response.returned_rows\"},\"type\":\"uint64\",\"unit\":\"{row}\",\"parse\":\"canonical-decimal\"},\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}}",
+      "padTo": 65536,
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"scope\":{\"family\":\"explore\",\"signal\":\"logs\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"log-record\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"binding\":{\"field\":{\"kind\":\"attribute\",\"key\":\"db.response.returned_rows\"},\"type\":\"uint64\",\"unit\":\"{row}\",\"parse\":\"canonical-decimal\"},\"operators\":[\"sum\",\"min\",\"max\",\"mean\"],\"executable\":true,\"diagnostics\":[],\"coverage\":[\"valid\",\"missing\",\"empty\",\"invalid\"],\"meanDenominator\":\"valid\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/numeric-plan/over-limit-trailing",
+      "method": "POST",
+      "path": "/telemetry-packages/numeric-plan",
+      "body": "{\"binding\":{\"field\":{\"kind\":\"attribute\",\"key\":\"db.response.returned_rows\"},\"type\":\"uint64\",\"unit\":\"{row}\",\"parse\":\"canonical-decimal\"},\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}}",
+      "padTo": 65537,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require one JSON object\"}\n"
+    },
+    {
+      "fillBytes": 65536,
+      "suffix": "\"}",
+      "name": "/telemetry-packages/numeric-plan/over-limit-value",
+      "method": "POST",
+      "path": "/telemetry-packages/numeric-plan",
+      "body": "{\"yaml\":\"",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"http: request body too large\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/numeric-plan/ignored-content-type",
+      "method": "POST",
+      "path": "/telemetry-packages/numeric-plan",
+      "body": "{\"binding\":{\"field\":{\"kind\":\"attribute\",\"key\":\"db.response.returned_rows\"},\"type\":\"uint64\",\"unit\":\"{row}\",\"parse\":\"canonical-decimal\"},\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}}",
+      "contentType": "text/plain",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"scope\":{\"family\":\"explore\",\"signal\":\"logs\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"log-record\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"binding\":{\"field\":{\"kind\":\"attribute\",\"key\":\"db.response.returned_rows\"},\"type\":\"uint64\",\"unit\":\"{row}\",\"parse\":\"canonical-decimal\"},\"operators\":[\"sum\",\"min\",\"max\",\"mean\"],\"executable\":true,\"diagnostics\":[],\"coverage\":[\"valid\",\"missing\",\"empty\",\"invalid\"],\"meanDenominator\":\"valid\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/numeric-plan/empty-object",
+      "method": "POST",
+      "path": "/telemetry-packages/numeric-plan",
+      "body": "{}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"signal must be spans or logs\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/numeric-plan/method-refusal",
+      "method": "PUT",
+      "path": "/telemetry-packages/numeric-plan",
+      "body": "{\"binding\":{\"field\":{\"kind\":\"attribute\",\"key\":\"db.response.returned_rows\"},\"type\":\"uint64\",\"unit\":\"{row}\",\"parse\":\"canonical-decimal\"},\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}}",
+      "status": 405,
+      "headers": {
+        "Allow": "GET, HEAD, POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    },
+    {
+      "name": "/telemetry-packages/numeric-plan/wrong-number-type",
+      "method": "POST",
+      "path": "/telemetry-packages/numeric-plan",
+      "body": "{\"fromMs\":9007199254740993.5,\"lookbackMinutes\":1.5}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"fromMs\\\"\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/plan/valid",
+      "method": "POST",
+      "path": "/telemetry-packages/plan",
+      "body": "{\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]},\"fromMs\":1000,\"toMs\":61000}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"measurePlan\":{\"scope\":{\"family\":\"explore\",\"signal\":\"logs\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"log-record\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"measures\":[{\"id\":\"count\",\"operator\":\"count\",\"outputType\":\"uint64\",\"unit\":\"{record}\",\"merge\":\"sum\"}],\"dimensions\":[],\"bucketMs\":0,\"groupTimeSeries\":false},\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]},\"revision\":\"27408237e9ed3c77bac67e9b73bebc2a0aff3ece2f661cfb8fd8267c79a266b5\",\"yaml\":\"apiVersion: goo/telemetry-package/v1alpha1\\nname: ordinary-jobs\\ntitle: Ordinary 雪 \\u003cjobs\\u003e\\nsource:\\n    adapter: clickhouse.otel/v1\\n    signal: logs\\n    environment: ordinary\\nmeasure: captured-record-count\\nlookbackMinutes: 5\\nviews:\\n    - records\\n    - trace-context\\n\",\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0},\"plan\":{\"rows\":\"SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, LogAttributes AS Attributes, Body, SeverityText FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY Timestamp, TraceId, SpanId, ServiceName, Body, SeverityText, toString(ResourceAttributes), toString(LogAttributes) LIMIT 101 OFFSET 0 FORMAT JSONEachRow\",\"count\":\"SELECT toString(count()) AS count FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 FORMAT JSONEachRow\",\"fields\":\"SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -\\u003e concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -\\u003e concat('attribute:', k), mapKeys(LogAttributes)))) AS field FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY field LIMIT 129 FORMAT JSONEachRow\",\"parameters\":{\"environment\":\"ordinary\",\"from\":\"1000\",\"to\":\"61000\"}},\"handoff\":{\"fields\":[{\"kind\":\"column\",\"key\":\"service\"}],\"notes\":[\"Use the package directly over existing OTel telemetry in any language; goo annotations are optional.\",\"Fields below are referenced by the definition, not proof that every selected record supplies them. Preserve missing/empty distinctions and predicate meaning.\",\"No source function, event identity, outcome policy, complete coverage, SLI or native metric is inferred from trace samples.\"]},\"warnings\":[\"Definition revision identifies configuration, not captured evidence. Applying it performs a fresh live read.\",\"Counts are captured records, including retries and exporter duplicates; sampling/completeness remain unknown. No business outcome or SLO is inferred.\",\"Supported record measures include counts, span durations, recorded status and bounded split time charts. Native metrics, lifecycle rules, arbitrary numeric expressions and Databricks lowering are separate contracts.\"]}\n"
+    },
+    {
+      "name": "/telemetry-packages/plan/empty",
+      "method": "POST",
+      "path": "/telemetry-packages/plan",
+      "body": "",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/plan/null",
+      "method": "POST",
+      "path": "/telemetry-packages/plan",
+      "body": "null",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"provide YAML or definition, not both\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/plan/array",
+      "method": "POST",
+      "path": "/telemetry-packages/plan",
+      "body": "[]",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type main.telemetryPlanRequest\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/plan/truncated",
+      "method": "POST",
+      "path": "/telemetry-packages/plan",
+      "body": "{",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"unexpected EOF\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/plan/unknown",
+      "method": "POST",
+      "path": "/telemetry-packages/plan",
+      "body": "{\"sql\":\"SELECT 1\"}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"sql\\\"\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/plan/nested-invalid",
+      "method": "POST",
+      "path": "/telemetry-packages/plan",
+      "body": "{\"definition\":{\"unknown\":true}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"unknown\\\"\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/plan/second-value",
+      "method": "POST",
+      "path": "/telemetry-packages/plan",
+      "body": "{\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]},\"fromMs\":1000,\"toMs\":61000} {}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require one JSON object\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/plan/malformed-tail",
+      "method": "POST",
+      "path": "/telemetry-packages/plan",
+      "body": "{\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]},\"fromMs\":1000,\"toMs\":61000} x",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require one JSON object\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/plan/whitespace",
+      "method": "POST",
+      "path": "/telemetry-packages/plan",
+      "body": "{\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]},\"fromMs\":1000,\"toMs\":61000} \n\t",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"measurePlan\":{\"scope\":{\"family\":\"explore\",\"signal\":\"logs\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"log-record\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"measures\":[{\"id\":\"count\",\"operator\":\"count\",\"outputType\":\"uint64\",\"unit\":\"{record}\",\"merge\":\"sum\"}],\"dimensions\":[],\"bucketMs\":0,\"groupTimeSeries\":false},\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]},\"revision\":\"27408237e9ed3c77bac67e9b73bebc2a0aff3ece2f661cfb8fd8267c79a266b5\",\"yaml\":\"apiVersion: goo/telemetry-package/v1alpha1\\nname: ordinary-jobs\\ntitle: Ordinary 雪 \\u003cjobs\\u003e\\nsource:\\n    adapter: clickhouse.otel/v1\\n    signal: logs\\n    environment: ordinary\\nmeasure: captured-record-count\\nlookbackMinutes: 5\\nviews:\\n    - records\\n    - trace-context\\n\",\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0},\"plan\":{\"rows\":\"SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, LogAttributes AS Attributes, Body, SeverityText FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY Timestamp, TraceId, SpanId, ServiceName, Body, SeverityText, toString(ResourceAttributes), toString(LogAttributes) LIMIT 101 OFFSET 0 FORMAT JSONEachRow\",\"count\":\"SELECT toString(count()) AS count FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 FORMAT JSONEachRow\",\"fields\":\"SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -\\u003e concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -\\u003e concat('attribute:', k), mapKeys(LogAttributes)))) AS field FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY field LIMIT 129 FORMAT JSONEachRow\",\"parameters\":{\"environment\":\"ordinary\",\"from\":\"1000\",\"to\":\"61000\"}},\"handoff\":{\"fields\":[{\"kind\":\"column\",\"key\":\"service\"}],\"notes\":[\"Use the package directly over existing OTel telemetry in any language; goo annotations are optional.\",\"Fields below are referenced by the definition, not proof that every selected record supplies them. Preserve missing/empty distinctions and predicate meaning.\",\"No source function, event identity, outcome policy, complete coverage, SLI or native metric is inferred from trace samples.\"]},\"warnings\":[\"Definition revision identifies configuration, not captured evidence. Applying it performs a fresh live read.\",\"Counts are captured records, including retries and exporter duplicates; sampling/completeness remain unknown. No business outcome or SLO is inferred.\",\"Supported record measures include counts, span durations, recorded status and bounded split time charts. Native metrics, lifecycle rules, arbitrary numeric expressions and Databricks lowering are separate contracts.\"]}\n"
+    },
+    {
+      "name": "/telemetry-packages/plan/exact-limit",
+      "method": "POST",
+      "path": "/telemetry-packages/plan",
+      "body": "{\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]},\"fromMs\":1000,\"toMs\":61000}",
+      "padTo": 65536,
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"measurePlan\":{\"scope\":{\"family\":\"explore\",\"signal\":\"logs\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"log-record\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"measures\":[{\"id\":\"count\",\"operator\":\"count\",\"outputType\":\"uint64\",\"unit\":\"{record}\",\"merge\":\"sum\"}],\"dimensions\":[],\"bucketMs\":0,\"groupTimeSeries\":false},\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]},\"revision\":\"27408237e9ed3c77bac67e9b73bebc2a0aff3ece2f661cfb8fd8267c79a266b5\",\"yaml\":\"apiVersion: goo/telemetry-package/v1alpha1\\nname: ordinary-jobs\\ntitle: Ordinary 雪 \\u003cjobs\\u003e\\nsource:\\n    adapter: clickhouse.otel/v1\\n    signal: logs\\n    environment: ordinary\\nmeasure: captured-record-count\\nlookbackMinutes: 5\\nviews:\\n    - records\\n    - trace-context\\n\",\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0},\"plan\":{\"rows\":\"SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, LogAttributes AS Attributes, Body, SeverityText FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY Timestamp, TraceId, SpanId, ServiceName, Body, SeverityText, toString(ResourceAttributes), toString(LogAttributes) LIMIT 101 OFFSET 0 FORMAT JSONEachRow\",\"count\":\"SELECT toString(count()) AS count FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 FORMAT JSONEachRow\",\"fields\":\"SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -\\u003e concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -\\u003e concat('attribute:', k), mapKeys(LogAttributes)))) AS field FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY field LIMIT 129 FORMAT JSONEachRow\",\"parameters\":{\"environment\":\"ordinary\",\"from\":\"1000\",\"to\":\"61000\"}},\"handoff\":{\"fields\":[{\"kind\":\"column\",\"key\":\"service\"}],\"notes\":[\"Use the package directly over existing OTel telemetry in any language; goo annotations are optional.\",\"Fields below are referenced by the definition, not proof that every selected record supplies them. Preserve missing/empty distinctions and predicate meaning.\",\"No source function, event identity, outcome policy, complete coverage, SLI or native metric is inferred from trace samples.\"]},\"warnings\":[\"Definition revision identifies configuration, not captured evidence. Applying it performs a fresh live read.\",\"Counts are captured records, including retries and exporter duplicates; sampling/completeness remain unknown. No business outcome or SLO is inferred.\",\"Supported record measures include counts, span durations, recorded status and bounded split time charts. Native metrics, lifecycle rules, arbitrary numeric expressions and Databricks lowering are separate contracts.\"]}\n"
+    },
+    {
+      "name": "/telemetry-packages/plan/over-limit-trailing",
+      "method": "POST",
+      "path": "/telemetry-packages/plan",
+      "body": "{\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]},\"fromMs\":1000,\"toMs\":61000}",
+      "padTo": 65537,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require one JSON object\"}\n"
+    },
+    {
+      "fillBytes": 65536,
+      "suffix": "\"}",
+      "name": "/telemetry-packages/plan/over-limit-value",
+      "method": "POST",
+      "path": "/telemetry-packages/plan",
+      "body": "{\"yaml\":\"",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"http: request body too large\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/plan/ignored-content-type",
+      "method": "POST",
+      "path": "/telemetry-packages/plan",
+      "body": "{\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]},\"fromMs\":1000,\"toMs\":61000}",
+      "contentType": "text/plain",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"measurePlan\":{\"scope\":{\"family\":\"explore\",\"signal\":\"logs\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"log-record\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"measures\":[{\"id\":\"count\",\"operator\":\"count\",\"outputType\":\"uint64\",\"unit\":\"{record}\",\"merge\":\"sum\"}],\"dimensions\":[],\"bucketMs\":0,\"groupTimeSeries\":false},\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]},\"revision\":\"27408237e9ed3c77bac67e9b73bebc2a0aff3ece2f661cfb8fd8267c79a266b5\",\"yaml\":\"apiVersion: goo/telemetry-package/v1alpha1\\nname: ordinary-jobs\\ntitle: Ordinary 雪 \\u003cjobs\\u003e\\nsource:\\n    adapter: clickhouse.otel/v1\\n    signal: logs\\n    environment: ordinary\\nmeasure: captured-record-count\\nlookbackMinutes: 5\\nviews:\\n    - records\\n    - trace-context\\n\",\"question\":{\"signal\":\"logs\",\"environment\":\"ordinary\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0},\"plan\":{\"rows\":\"SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, LogAttributes AS Attributes, Body, SeverityText FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY Timestamp, TraceId, SpanId, ServiceName, Body, SeverityText, toString(ResourceAttributes), toString(LogAttributes) LIMIT 101 OFFSET 0 FORMAT JSONEachRow\",\"count\":\"SELECT toString(count()) AS count FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 FORMAT JSONEachRow\",\"fields\":\"SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -\\u003e concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -\\u003e concat('attribute:', k), mapKeys(LogAttributes)))) AS field FROM otel_logs WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY field LIMIT 129 FORMAT JSONEachRow\",\"parameters\":{\"environment\":\"ordinary\",\"from\":\"1000\",\"to\":\"61000\"}},\"handoff\":{\"fields\":[{\"kind\":\"column\",\"key\":\"service\"}],\"notes\":[\"Use the package directly over existing OTel telemetry in any language; goo annotations are optional.\",\"Fields below are referenced by the definition, not proof that every selected record supplies them. Preserve missing/empty distinctions and predicate meaning.\",\"No source function, event identity, outcome policy, complete coverage, SLI or native metric is inferred from trace samples.\"]},\"warnings\":[\"Definition revision identifies configuration, not captured evidence. Applying it performs a fresh live read.\",\"Counts are captured records, including retries and exporter duplicates; sampling/completeness remain unknown. No business outcome or SLO is inferred.\",\"Supported record measures include counts, span durations, recorded status and bounded split time charts. Native metrics, lifecycle rules, arbitrary numeric expressions and Databricks lowering are separate contracts.\"]}\n"
+    },
+    {
+      "name": "/telemetry-packages/plan/empty-object",
+      "method": "POST",
+      "path": "/telemetry-packages/plan",
+      "body": "{}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"provide YAML or definition, not both\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/plan/method-refusal",
+      "method": "PUT",
+      "path": "/telemetry-packages/plan",
+      "body": "{\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]},\"fromMs\":1000,\"toMs\":61000}",
+      "status": 405,
+      "headers": {
+        "Allow": "GET, HEAD, POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    },
+    {
+      "name": "/telemetry-packages/plan/wrong-number-type",
+      "method": "POST",
+      "path": "/telemetry-packages/plan",
+      "body": "{\"fromMs\":9007199254740993.5,\"lookbackMinutes\":1.5}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal number 9007199254740993.5 into Go struct field telemetryPlanRequest.fromMs of type int64\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/valid",
+      "method": "POST",
+      "path": "/telemetry-packages",
+      "body": "{\"yaml\":\"apiVersion: goo/telemetry-package/v1alpha1\\nname: ordinary-jobs\\ntitle: Ordinary 雪 \\u003cjobs\\u003e\\nsource:\\n    adapter: clickhouse.otel/v1\\n    signal: logs\\n    environment: ordinary\\nmeasure: captured-record-count\\nlookbackMinutes: 5\\nviews:\\n    - records\\n    - trace-context\\n\"}",
+      "status": 201,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"revision\":\"27408237e9ed3c77bac67e9b73bebc2a0aff3ece2f661cfb8fd8267c79a266b5\",\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]}}\n"
+    },
+    {
+      "name": "/telemetry-packages/empty",
+      "method": "POST",
+      "path": "/telemetry-packages",
+      "body": "",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/null",
+      "method": "POST",
+      "path": "/telemetry-packages",
+      "body": "null",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/array",
+      "method": "POST",
+      "path": "/telemetry-packages",
+      "body": "[]",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type struct { YAML string \\\"json:\\\\\\\"yaml\\\\\\\"\\\" }\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/truncated",
+      "method": "POST",
+      "path": "/telemetry-packages",
+      "body": "{",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"unexpected EOF\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/unknown",
+      "method": "POST",
+      "path": "/telemetry-packages",
+      "body": "{\"sql\":\"SELECT 1\"}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"sql\\\"\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/nested-invalid",
+      "method": "POST",
+      "path": "/telemetry-packages",
+      "body": "{\"yaml\":7}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal number into Go struct field .yaml of type string\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/second-value",
+      "method": "POST",
+      "path": "/telemetry-packages",
+      "body": "{\"yaml\":\"apiVersion: goo/telemetry-package/v1alpha1\\nname: ordinary-jobs\\ntitle: Ordinary 雪 \\u003cjobs\\u003e\\nsource:\\n    adapter: clickhouse.otel/v1\\n    signal: logs\\n    environment: ordinary\\nmeasure: captured-record-count\\nlookbackMinutes: 5\\nviews:\\n    - records\\n    - trace-context\\n\"} {}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require one JSON object\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/malformed-tail",
+      "method": "POST",
+      "path": "/telemetry-packages",
+      "body": "{\"yaml\":\"apiVersion: goo/telemetry-package/v1alpha1\\nname: ordinary-jobs\\ntitle: Ordinary 雪 \\u003cjobs\\u003e\\nsource:\\n    adapter: clickhouse.otel/v1\\n    signal: logs\\n    environment: ordinary\\nmeasure: captured-record-count\\nlookbackMinutes: 5\\nviews:\\n    - records\\n    - trace-context\\n\"} x",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require one JSON object\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/whitespace",
+      "method": "POST",
+      "path": "/telemetry-packages",
+      "body": "{\"yaml\":\"apiVersion: goo/telemetry-package/v1alpha1\\nname: ordinary-jobs\\ntitle: Ordinary 雪 \\u003cjobs\\u003e\\nsource:\\n    adapter: clickhouse.otel/v1\\n    signal: logs\\n    environment: ordinary\\nmeasure: captured-record-count\\nlookbackMinutes: 5\\nviews:\\n    - records\\n    - trace-context\\n\"} \n\t",
+      "status": 201,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"revision\":\"27408237e9ed3c77bac67e9b73bebc2a0aff3ece2f661cfb8fd8267c79a266b5\",\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]}}\n"
+    },
+    {
+      "name": "/telemetry-packages/exact-limit",
+      "method": "POST",
+      "path": "/telemetry-packages",
+      "body": "{\"yaml\":\"apiVersion: goo/telemetry-package/v1alpha1\\nname: ordinary-jobs\\ntitle: Ordinary 雪 \\u003cjobs\\u003e\\nsource:\\n    adapter: clickhouse.otel/v1\\n    signal: logs\\n    environment: ordinary\\nmeasure: captured-record-count\\nlookbackMinutes: 5\\nviews:\\n    - records\\n    - trace-context\\n\"}",
+      "padTo": 65536,
+      "status": 201,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"revision\":\"27408237e9ed3c77bac67e9b73bebc2a0aff3ece2f661cfb8fd8267c79a266b5\",\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]}}\n"
+    },
+    {
+      "name": "/telemetry-packages/over-limit-trailing",
+      "method": "POST",
+      "path": "/telemetry-packages",
+      "body": "{\"yaml\":\"apiVersion: goo/telemetry-package/v1alpha1\\nname: ordinary-jobs\\ntitle: Ordinary 雪 \\u003cjobs\\u003e\\nsource:\\n    adapter: clickhouse.otel/v1\\n    signal: logs\\n    environment: ordinary\\nmeasure: captured-record-count\\nlookbackMinutes: 5\\nviews:\\n    - records\\n    - trace-context\\n\"}",
+      "padTo": 65537,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require one JSON object\"}\n"
+    },
+    {
+      "fillBytes": 65536,
+      "suffix": "\"}",
+      "name": "/telemetry-packages/over-limit-value",
+      "method": "POST",
+      "path": "/telemetry-packages",
+      "body": "{\"yaml\":\"",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"http: request body too large\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/ignored-content-type",
+      "method": "POST",
+      "path": "/telemetry-packages",
+      "body": "{\"yaml\":\"apiVersion: goo/telemetry-package/v1alpha1\\nname: ordinary-jobs\\ntitle: Ordinary 雪 \\u003cjobs\\u003e\\nsource:\\n    adapter: clickhouse.otel/v1\\n    signal: logs\\n    environment: ordinary\\nmeasure: captured-record-count\\nlookbackMinutes: 5\\nviews:\\n    - records\\n    - trace-context\\n\"}",
+      "contentType": "text/plain",
+      "status": 201,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"revision\":\"27408237e9ed3c77bac67e9b73bebc2a0aff3ece2f661cfb8fd8267c79a266b5\",\"definition\":{\"apiVersion\":\"goo/telemetry-package/v1alpha1\",\"name\":\"ordinary-jobs\",\"title\":\"Ordinary 雪 \\u003cjobs\\u003e\",\"source\":{\"adapter\":\"clickhouse.otel/v1\",\"signal\":\"logs\",\"environment\":\"ordinary\"},\"measure\":\"captured-record-count\",\"lookbackMinutes\":5,\"views\":[\"records\",\"trace-context\"]}}\n"
+    },
+    {
+      "name": "/telemetry-packages/empty-object",
+      "method": "POST",
+      "path": "/telemetry-packages",
+      "body": "{}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "/telemetry-packages/method-refusal",
+      "method": "PUT",
+      "path": "/telemetry-packages",
+      "body": "{\"yaml\":\"apiVersion: goo/telemetry-package/v1alpha1\\nname: ordinary-jobs\\ntitle: Ordinary 雪 \\u003cjobs\\u003e\\nsource:\\n    adapter: clickhouse.otel/v1\\n    signal: logs\\n    environment: ordinary\\nmeasure: captured-record-count\\nlookbackMinutes: 5\\nviews:\\n    - records\\n    - trace-context\\n\"}",
+      "status": 405,
+      "headers": {
+        "Allow": "GET, HEAD, POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    },
+    {
+      "name": "/telemetry-packages/wrong-number-type",
+      "method": "POST",
+      "path": "/telemetry-packages",
+      "body": "{\"fromMs\":9007199254740993.5,\"lookbackMinutes\":1.5}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"fromMs\\\"\"}\n"
+    }
+  ]
+}

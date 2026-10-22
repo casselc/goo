@@ -956,3 +956,8 @@ Histogram transport completes the audited ClickHouse helper adoption behind
 read/status/overflow precedence, immediate closure, exact bucket counts above 2^53
 and no partial later-contract success. The gated readonly histogram-table test
 uses an absent service; see [histogram adoption](../docs/HTTP_BOUNDARIES.md#histogram-transport-adoption).
+
+Telemetry package JSON uses the shared decoder/responder behind 68 exact before/
+after wire cases in `testdata/http/telemetry.json`. Hegel planning-JSON properties
+apply unchanged; route tests separately prove no files from planning/rejection
+and preserve explicit publication. See [telemetry JSON adoption](../docs/HTTP_BOUNDARIES.md#telemetry-package-json-adoption).

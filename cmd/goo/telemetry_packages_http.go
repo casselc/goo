@@ -1,14 +1,13 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"time"
 
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/internal/httpjson"
 )
 
 type telemetryPlanRequest struct {
@@ -21,22 +20,11 @@ type telemetryPlanRequest struct {
 
 func registerTelemetryPackages(mux *http.ServeMux, dir string) {
 	store := exploration.PackageStore{Dir: dir}
-	send := func(w http.ResponseWriter, code int, value any) {
-		w.Header().Set("Content-Type", "application/json")
-		w.Header().Set("Cache-Control", "no-store")
-		w.WriteHeader(code)
-		json.NewEncoder(w).Encode(value)
-	}
+	send := httpjson.Write
 	fail := func(w http.ResponseWriter, code int, e error) { send(w, code, map[string]string{"error": e.Error()}) }
 	decode := func(w http.ResponseWriter, r *http.Request, v any) bool {
-		d := json.NewDecoder(http.MaxBytesReader(w, r.Body, 64<<10))
-		d.DisallowUnknownFields()
-		if e := d.Decode(v); e != nil {
+		if e := httpjson.Decode(w, r, v, 64<<10, "require one JSON object"); e != nil {
 			fail(w, 400, e)
-			return false
-		}
-		if d.Decode(new(any)) != io.EOF {
-			fail(w, 400, fmt.Errorf("require one JSON object"))
 			return false
 		}
 		return true

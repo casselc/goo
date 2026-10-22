@@ -160,7 +160,7 @@ retains budget, SSE, capture and optional-store tests.
 
 C2 remains active. Pure planning JSON and native/record transport adoption are
 delivered. The acceptance audit below records the remaining adoption sequence; prebuilt transport is
-now delivered along with operation spans, counters and histograms; pure telemetry planning JSON is next. Transport adoption proceeds one family at a time, preserving parameter escaping,
+now delivered along with operation spans, counters and histograms; telemetry package JSON is now adopted below. Transport adoption proceeds one family at a time, preserving parameter escaping,
 read limits, basis/identity and non-2xx/oversize/cancellation behavior. Python proxy
 removal, changing custody/duplicate policy and universal endpoint budgets are not
 part of these cuts.
@@ -611,6 +611,50 @@ changed; screenshots remain applicable and the final deployed-journey gate stays
 All six audited readers now share only POST/auth/context and bounded-body mechanics:
 native measurements, record exploration, prebuilt HTTP, operation spans, counters
 and histograms. Their status ordering, parameter policy, decoding and semantics
-remain distinct. Next freeze the pure telemetry planning JSON wire contracts before
-adopting the shared decoder/responder. Other JSON owners and final deployed
+remain distinct. Telemetry package JSON adoption below is now delivered.
+Other JSON owners and final deployed
 acceptance remain within C2; this transport completion does not close the milestone.
+
+
+## Telemetry package JSON adoption
+
+`registerTelemetryPackages` now uses `httpjson.Decode` with its existing 64 KiB
+ceiling and `require one JSON object` trailing-input message, plus `httpjson.Write`
+for its existing JSON/no-store response envelope. The owner shares these mechanics
+between draft, numeric-plan, package-plan and publication; all four POST routes
+were frozen before adoption. GET responses also use the same writer. Domain
+validation, YAML parsing, default planning clock, annotation handoff, canonical
+revision/storage and publication/registry status mapping stay local.
+
+```mermaid
+flowchart LR
+  Request[Telemetry package POST: 64 KiB] --> Decode[Shared strict typed JSON / one value]
+  Decode --> Validate[Existing route validation]
+  Validate --> Plan[Draft / numeric capability / package plan: no source or write]
+  Validate --> Publish[Explicit publication only: existing immutable package store]
+  Plan --> Write[Shared JSON / no-store writer]
+  Publish --> Write
+  Decode --> Failure[Existing 400 error envelope]
+  Failure --> Write
+```
+
+`testdata/http/telemetry.json` freezes 68 cases across the four POST routes:
+valid results, empty/null/array/truncated input, unknown/nested-invalid fields,
+second values, malformed tails, whitespace, exact/over-limit bodies, overflow
+inside the first value, ignored content type, empty objects, invalid numeric types
+and method refusal. Compact fill/padding reconstructs large requests. Tests compare
+status, exact response bytes and content-type/cache/mux headers. Each request gets
+an empty temporary registry: plans and rejected requests leave it empty; successful
+publication creates exactly one file. Existing authoring/generated-Go, numeric
+capability and storage identity/duplicate/reopen tests remain in the affected suite.
+
+The 68 cases passed before and after extraction. A null value still reaches domain
+validation; unknown fields and a second value still fail with existing errors.
+The successful cases use explicit windows so their frozen bytes do not depend on
+the default planning clock, whose implementation is unchanged. Publication remains
+an explicit effect; no source dependency or generic endpoint policy was added.
+Hegel shared-JSON byte/Unicode/integer properties pass. No UI/SSE/Quint protocol or
+running image changed; existing frames remain applicable. Final deployed-journey
+acceptance stays open. Next adopt native measurement/registry JSON behind its own
+wire contracts, preserving `one JSON object required`, custody/publication ordering
+and existing status policies; other route owners remain queued.
