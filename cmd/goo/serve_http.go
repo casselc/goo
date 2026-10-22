@@ -210,7 +210,7 @@ func serveHTTP(args []string) error {
 	})
 	registerInvestigations(mux, plans, client, *captureDir)
 	registerDashboards(mux, ordered)
-	registerExploration(mux, client)
+	registerExploration(mux, explorationSourceFromEnvironment(client))
 	registerCaptures(mux, client, *captureDir)
 	registerWorkbench(mux, *captureDir)
 	registerTelemetryPackages(mux, filepath.Join(*captureDir, "telemetry-packages"))

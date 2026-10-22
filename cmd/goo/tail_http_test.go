@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"github.com/casselc/goo/exploration"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -16,9 +17,8 @@ func TestTailHTTPValidationFramesAndDisconnect(t *testing.T) {
 		io.WriteString(w, "{\"timestamp_ns\":\"100\",\"Body\":\"hello\"}\n")
 	}))
 	defer source.Close()
-	t.Setenv("CLICKHOUSE_URL", source.URL)
 	mux := http.NewServeMux()
-	registerTail(mux, source.Client())
+	registerTail(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()})
 	for _, s := range []string{`{"environment":"prod","sql":"select 1"}`, `{"environment":""}`, `{"environment":"prod","signal":"metrics"}`, `{"environment":"prod"} {}`} {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest("POST", "/tail", strings.NewReader(s)))
@@ -49,9 +49,8 @@ func TestTailAdmissionAndReleasedCancellation(t *testing.T) {
 	defer source.Close()
 	// Keep the source read pending after the initial reset so all four slots are held.
 
-	t.Setenv("CLICKHOUSE_URL", source.URL)
 	mux := http.NewServeMux()
-	registerTail(mux, source.Client())
+	registerTail(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()})
 	server := httptest.NewServer(mux)
 	defer server.Close()
 	var cancels []context.CancelFunc

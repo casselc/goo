@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"github.com/casselc/goo/exploration"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -20,9 +21,8 @@ func TestExplorationHTTPValidationAndSourceFailure(t *testing.T) {
 			fmt.Fprintln(w, `{"count":"0"}`)
 		}
 	}))
-	t.Setenv("CLICKHOUSE_URL", source.URL)
 	mux := http.NewServeMux()
-	registerExploration(mux, source.Client())
+	registerExploration(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()})
 	call := func(body string) *httptest.ResponseRecorder {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest("POST", "/explore", bytes.NewBufferString(body)))
@@ -48,7 +48,7 @@ func TestExplorationHTTPValidationAndSourceFailure(t *testing.T) {
 
 func TestCohortComparisonHTTPRejectsDriftAndUnknownPayloads(t *testing.T) {
 	mux := http.NewServeMux()
-	registerExploration(mux, http.DefaultClient)
+	registerExploration(mux, exploration.Source{Client: http.DefaultClient})
 	cohort := `{"question":{"signal":"spans","environment":"local","fromMs":1,"toMs":60001,"limit":100,"groupBy":[{"kind":"attribute","key":"region"}]},"basis":"client-capture","count":"2","state":"observed","groups":[{"g0":"east","count":"2"}]}`
 	valid := `{"baseline":` + cohort + `,"selection":` + cohort + `}`
 	for _, tc := range []struct {
@@ -68,9 +68,8 @@ func TestCohortComparisonHTTPRejectsDriftAndUnknownPayloads(t *testing.T) {
 
 func TestInventoryHTTPStrictScopeAndUnavailable(t *testing.T) {
 	source := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {}))
-	t.Setenv("CLICKHOUSE_URL", source.URL)
 	mux := http.NewServeMux()
-	registerExploration(mux, source.Client())
+	registerExploration(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()})
 	call := func(body string) *httptest.ResponseRecorder {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest("POST", "/inventory", strings.NewReader(body)))

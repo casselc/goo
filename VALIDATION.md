@@ -1,5 +1,42 @@
 # Validation record
 
+## C2 exploration and tail startup dependency injection (2026-10-22 UTC)
+
+[HTTP boundary inventory/diagram](docs/HTTP_BOUNDARIES.md#startup-dependencies-native-and-explorationtail-adoption)
+now includes record sources. `registerExploration` and `registerTail` receive a
+configured `exploration.Source`; `explorationSourceFromEnvironment` resolves the
+existing endpoint fallback, credentials and client at startup. Inventory, service
+discovery, Explore and SSE no longer reread process environment. Native startup
+wiring is unchanged. Bounded query and streaming owners remain separate.
+
+Actual checks:
+
+- Existing exploration/inventory/comparison/tail validation, source-failure,
+  framing/disconnect and admission/cancellation tests pass before injection
+  (0.121s). They retain their assertions after switching test wiring to explicit
+  source values. Tail still has four slots, reset/batch/gap framing, 60s context,
+  two-second polling and per-write deadlines; record contexts remain 15s/30s/55s.
+- A new loopback test holds two independently configured routers/backends at once.
+  It checks inventory/discovery/Explore and actual SSE reset/batch frames, endpoint
+  and credential isolation, readonly parameters, client use and stream headers.
+  Mutating the caller's source value does not redirect the registered owner.
+  An ambient trap receives zero reads; exercising one router leaves the other's
+  source counter unchanged. Invalid and already-cancelled record requests avoid
+  backend reads, retaining 400/502 responses respectively.
+- Startup tests pin localhost fallback, configured credential/client fields and
+  snapshot behavior after environment mutation. Configuration mutation is not a
+  record/tail reload API. All credential values used by tests are local fixtures.
+- `go test -race ./cmd/goo` passes (2.925s), retaining native source injection,
+  32 planning wire fixtures, query budgets, optional-store and capture contracts.
+  `go test ./...` passes. Whitespace and changed local Markdown targets pass.
+
+No source transport, decoder, public query/stream protocol or UI changed. No new
+Hegel/Quint model or screenshot was needed for this dependency wiring cut; existing
+stream/query state contracts are exercised by the HTTP suite. The running stack
+was not rebuilt. Result-page snapshots remain process-global and tail slot budgets
+remain registration-local. C2 is active; capture/live-comparison dependencies are
+next, followed by operation readers and remaining optional-store configuration.
+
 ## C2 frozen pure planning JSON contracts and shared mechanics (2026-10-22 UTC)
 
 [Pure planning adoption contract/diagram](docs/HTTP_BOUNDARIES.md#pure-planning-json-adoption)

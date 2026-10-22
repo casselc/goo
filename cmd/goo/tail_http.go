@@ -7,11 +7,10 @@ import (
 	"github.com/casselc/goo/exploration"
 	"io"
 	"net/http"
-	"os"
 	"time"
 )
 
-func registerTail(mux *http.ServeMux, client *http.Client) {
+func registerTail(mux *http.ServeMux, source exploration.Source) {
 	slots := make(chan struct{}, 4)
 	mux.HandleFunc("POST /tail", func(w http.ResponseWriter, r *http.Request) {
 		fail := func(code int, message string) {
@@ -66,11 +65,6 @@ func registerTail(mux *http.ServeMux, client *http.Client) {
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 60*time.Second)
 		defer cancel()
-		endpoint := os.Getenv("CLICKHOUSE_URL")
-		if endpoint == "" {
-			endpoint = "http://localhost:8123"
-		}
-		source := exploration.Source{Endpoint: endpoint, User: os.Getenv("CLICKHOUSE_USER"), Password: os.Getenv("CLICKHOUSE_PASSWORD"), Client: client}
 		tracker := exploration.TailTracker{}
 		ticker := time.NewTicker(2 * time.Second)
 		defer ticker.Stop()

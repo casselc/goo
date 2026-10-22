@@ -69,7 +69,7 @@ Go's behavior. SSE emits reset/stream events and must preserve flush, cancellati
 continuity caveats and disconnect handling. Do not route streaming through a
 buffered JSON responder or silently standardize these policies in a refactor.
 
-## Startup dependencies: delivered native slice
+## Startup dependencies: native and exploration/tail adoption
 
 `nativeMeasurementSourceFromEnvironment` resolves native ClickHouse endpoint,
 credentials and the HTTP client at startup. Empty endpoint retains
@@ -77,7 +77,11 @@ credentials and the HTTP client at startup. Empty endpoint retains
 `measurements.Source` value; handlers no longer read ClickHouse environment
 variables. Its custody directory remains derived from the supplied server data
 root. Registration copies source strings; the HTTP client remains a shared pointer.
-Process environment mutation is not a native configuration reload mechanism.
+Process environment mutation is not a configuration reload mechanism for these
+adopted families. `explorationSourceFromEnvironment` also resolves a typed
+`exploration.Source` at startup. `registerExploration` passes that configured value
+to inventory, service discovery, Explore and tail registration. Record query
+timeouts and the separate tail slots/context/poll/write lifetime are unchanged.
 
 ```mermaid
 flowchart LR
@@ -91,10 +95,18 @@ flowchart LR
   Run --> CH[ClickHouse adapter]
   Run --> Custody[Lifecycle first-observation files]
   Pure --> Files[Definition files where requested]
+  Env --> RecordWiring[Record source wiring]
+  Client --> RecordWiring
+  RecordWiring --> RecordSource[Configured exploration.Source value]
+  RecordSource --> RecordRegister[Register exploration and tail routes]
+  RecordRegister --> Queries[Inventory / discovery / Explore]
+  RecordRegister --> SSE[Tail: own slots and streaming lifetime]
+  Queries --> CH
+  SSE --> CH
 ```
 
-This is one adopted family. Inline operation GET handlers, exploration/captures/
-investigations/tail still resolve ClickHouse environment at request time. Retention
+Inline operation GET handlers, captures/live comparisons and investigations
+still resolve ClickHouse environment at request time. Retention
 snapshots `GOO_XTDB_URL` on registration, while document citation checks currently
 read it at request time. Definitions/workflow paths still depend on working
 directory; result snapshots remain process-global and live comparison drafts remain
@@ -107,11 +119,18 @@ Two injected backends return different gauge values with distinct credentials;
 an ambient trap source receives zero requests. Tests prove injected client use,
 source-free planning, native/discovery routing, invalid-input rejection before reads,
 request cancellation and absence of gauge/discovery lifecycle files. Startup tests
-pin default endpoint and configuration snapshot behavior. The full HTTP race suite
+pin default endpoint and configuration snapshot behavior. Record dependency tests
+keep two routers/backends registered simultaneously, proving inventory, discovery,
+Explore and tail use their own endpoint, credentials and client. Caller source
+mutation does not redirect a registration; an ambient trap receives no reads.
+Invalid and cancelled record queries avoid backend reads. Actual SSE reset/batch
+frames, no-store/no-buffering headers and disconnect are exercised with injected
+sources. The full HTTP race suite
 retains budget, SSE, capture and optional-store tests.
 
 C2 remains active. The pure planning adoption below is delivered. Next migrate
-additional source families to injected startup dependencies. Bounded ClickHouse
+capture/live-comparison source dependencies, then operation readers and remaining
+optional-store configuration. Bounded ClickHouse
 transport extraction follows one family at a time, preserving parameter escaping,
 read limits, basis/identity and non-2xx/oversize/cancellation behavior. Python proxy
 removal, changing custody/duplicate policy and universal endpoint budgets are not
