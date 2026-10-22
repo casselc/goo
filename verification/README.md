@@ -972,3 +972,13 @@ Fixed exploration JSON uses shared mechanics behind 68 frozen cases in
 source routes' 16 KiB budgets, exact large counts, source-free rejection/comparison
 and 15/30/55-second source deadlines. Positive source/snapshot behavior stays in
 existing tests; see [fixed exploration adoption](../docs/HTTP_BOUNDARIES.md#fixed-exploration-json-adoption).
+
+## OpenAPI HTTP contract
+
+[API.md](../docs/API.md) documents generation and checks for OpenAPI 3.1, all Go
+routes and Python-only API operations. CI validates the 236 frozen HTTP cases,
+56 admitted requests and rejecting unknown-field/error/SSE controls; it executes
+actual Go wire fixtures and the reset/gap SSE fixture. Go remains authoritative
+for semantic validity, source/custody effects and capability lifetimes. The
+standalone API docs journey checks the real Python handler without lab traffic.
+Existing Hegel/Quint/Bombadil workbench models are unchanged by this docs surface.

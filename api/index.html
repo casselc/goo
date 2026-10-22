@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>goo API</title>
+<style>
+:root{font:15px system-ui;color:#dde5ef;background:#101722;color-scheme:dark}body{max-width:1100px;margin:32px auto;padding:0 20px}h1{font-size:26px;margin-bottom:8px}p{color:#aebcd0;line-height:1.5}a{color:#8ecbff}input{box-sizing:border-box;width:100%;padding:12px;background:#182333;border:1px solid #344357;border-radius:6px;margin:12px 0}details{border-bottom:1px solid #344357;padding:12px 0}summary{cursor:pointer;display:flex;gap:12px;align-items:center;flex-wrap:wrap}code{font-family:ui-monospace,monospace}summary strong{font-size:12px;min-width:42px;color:#a4d8b3}summary span{margin-left:auto;font-size:12px;color:#aebcd0}pre{overflow:auto;background:#182333;padding:14px;border-radius:6px;max-height:450px;font-size:12px}label{display:block}nav{display:flex;gap:20px;flex-wrap:wrap}.note{border-left:3px solid #d7ac68;padding-left:12px}h2{font-size:17px;margin-top:26px}select{padding:8px;max-width:100%}
+</style></head><body>
+<h1>goo API</h1><p>Questions, telemetry, and saved evidence. Browse the current HTTP contract and expand an operation to inspect its schemas.</p>
+<nav><a href="/openapi.json">Download OpenAPI 3.1</a><a href="https://github.com/casselc/goo/blob/work/docs/API.md">Contract and limitations</a></nav>
+<p class="note">Read-only documentation. Endpoint effects distinguish source reads, plans, and publication. Wire schemas do not replace domain validation.</p>
+<label for="server">Server boundary</label><select id="server"></select>
+<label for="search">Find an operation</label><input id="search" type="search" placeholder="Filter by path, method, or effect" autocomplete="off">
+<p id="status" role="status">Loading API contract…</p><main id="operations"></main>
+<script>
+const el=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
+fetch('/openapi.json').then(r=>{if(!r.ok)throw Error(`HTTP ${r.status}`);return r.json();}).then(spec=>{
+ const servers=document.querySelector('#server'),root=document.querySelector('#operations'),search=document.querySelector('#search'),status=document.querySelector('#status');
+ for(const s of spec.servers){const option=el('option',`${s.description} — ${s.url}`);option.value=s.url;servers.append(option);}
+ const render=()=>{root.replaceChildren();let count=0;
+ for(const [path,item] of Object.entries(spec.paths)){for(const [method,op] of Object.entries(item)){
+ if(!['get','post','put','delete','patch'].includes(method))continue;
+ const text=`${method} ${path} ${op['x-effects']}`;
+ if(!text.toLowerCase().includes(search.value.toLowerCase()))continue;
+ const detail=el('details'),summary=el('summary');summary.append(el('strong',method.toUpperCase()),el('code',path),el('span',op['x-effects']));detail.append(summary,el('p',op.description||op.summary));
+ const allowed=op.servers||spec.servers,chosen=allowed.find(s=>s.url===servers.value)||allowed[0];detail.append(el('p',`URL: ${chosen.url}${path}${chosen.url===servers.value?'':' (operation-specific server)'}`));
+ if(op['x-go-body-limit-bytes'])detail.append(el('p',`Request bytes: Go ${op['x-go-body-limit-bytes'].toLocaleString()}; browser ${op['x-browser-body-limit-bytes'].toLocaleString()}.`));
+ detail.append(el('p',`Schema coverage: ${op['x-schema-coverage']}.`));
+ const shape=el('details'),head=el('summary','Operation contract');shape.append(head,el('pre',JSON.stringify(op,null,2)));detail.append(shape);root.append(detail);count++;
+ }}status.textContent=`${count} operations · OpenAPI ${spec.openapi}`;};
+ search.addEventListener('input',render);servers.addEventListener('change',render);render();
+ const defs=el('details');defs.append(el('summary',`Wire schemas (${Object.keys(spec.components.schemas).length})`),el('pre',JSON.stringify(spec.components.schemas,null,2)));root.after(defs);
+}).catch(error=>{document.querySelector('#status').textContent=`Could not load API contract: ${error.message}`;});
+</script></body></html>

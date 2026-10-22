@@ -32,7 +32,14 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header('Cache-Control', 'no-store'); self.end_headers(); self.wfile.write(body)
 
     def do_GET(self):
-        if self.path == '/api/package': self.json_response(200, PACKAGE)
+        if self.path in ('/api-docs', '/openapi.json'):
+            resource = 'index.html' if self.path == '/api-docs' else 'openapi.json'
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html; charset=utf-8' if resource.endswith('.html') else 'application/json')
+            self.send_header('Cache-Control', 'no-store')
+            self.end_headers()
+            self.wfile.write((Path(__file__).parent / 'api' / resource).read_bytes())
+        elif self.path == '/api/package': self.json_response(200, PACKAGE)
         elif self.path.startswith(('/api/retained-evidence','/api/annotations','/api/exploration-views','/api/http-package', '/api/operations', '/api/operation-packages', '/api/counter-rates', '/api/histograms', '/api/investigations', '/api/captures', '/api/telemetry-packages', '/api/measurement-packages', '/api/investigation-workflows', '/api/recipes', '/api/documents', '/api/deployments')):
             try:
                 parsed = urllib.parse.urlsplit(self.path)

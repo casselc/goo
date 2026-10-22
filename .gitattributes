@@ -1,0 +1,2 @@
+# SSE frames intentionally end in a blank line, including the final frame.
+testdata/http/*.sse whitespace=-blank-at-eof

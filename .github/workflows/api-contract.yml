@@ -1,0 +1,27 @@
+name: API contract
+on:
+  push:
+  pull_request:
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements-api.txt
+      - name: Regenerate wire shapes and API; refuse drift
+        run: |
+          go run ./scripts/openapi-schema api/go-schemas.json
+          python scripts/build_openapi.py
+          git diff --exit-code -- api/
+      - name: Validate spec, routes, fixtures and rejecting controls
+        run: python scripts/check_openapi.py
+      - name: Execute actual wire fixtures
+        run: go test ./cmd/goo -run 'Test(APITailSSEWireContract|PlanningHTTPWireFixtures|TelemetryHTTPWireFixtures|NativeJSONHTTPWireFixtures|ExplorationJSONHTTPWireFixtures)$' -count=1
+      - name: Exercise browsable documentation routes
+        run: python -m unittest discover -s tests -p test_api_docs.py -v

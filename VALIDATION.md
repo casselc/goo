@@ -1,5 +1,47 @@
 # Validation record
 
+## OpenAPI contract, CI conformance and browsable docs (2026-10-22 UTC)
+
+[API contract/limitations](docs/API.md) and the [executable docs journey](docs/journeys/API_DOCS.md)
+record 64 operations: 58 Go operations, five Python-only /api operations and Python
+/health. The OpenAPI 3.1 artifact has 324 schemas, typed Go request/response
+envelopes, explicit dynamic payloads, effects, separate Go/browser byte limits and
+schema-linked SSE events. Runtime domain validation is unchanged.
+
+Actual checks:
+
+- The standard OpenAPI validator accepts the spec and its local references. Route
+  coverage matches all 58 Go registrations/cancellation operations. All 236 frozen
+  HTTP cases are accounted for: 222 documented responses validate, 56 admitted
+  request payloads validate, and 14 default mux refusals are checked separately.
+  Unknown-field, wrong error type and malformed SSE controls are rejected.
+- Actual Go reset/source-unavailable gap frames match `testdata/http/tail.sse` and
+  validate against event schemas. Batch examples/negative controls also validate;
+  existing loopback tail tests retain actual batch/disconnect behavior.
+- All four HTTP fixture groups and the new SSE contract pass under race detection
+  (HTTP package 1.503s). `go test ./...` passes, including the schema-generator
+  package. No new semantic/state transition required Hegel/Quint/Bombadil changes.
+- Python API/docs tests pass (5 tests, 0.528s), including source-free legacy explain,
+  explicit query evidence, invalid queries and the actual handler's docs/spec routes.
+- The real Chromium documentation journey passes at 1280x900 and 390x844: all
+  64 operations load, filtering/disclosure and displayed limits work, no mobile
+  horizontal page overflow and no page errors. A real tail-contract screenshot
+  is saved in `docs/journeys/screenshots/api-docs-tail.png`.
+- Go schema generation plus spec assembly is byte-identical on regeneration.
+  CI now refuses generated drift and runs spec/route/fixture/negative-control,
+  wire/SSE and Python documentation-route checks. The hosted CI workflow itself
+  has not been observed running in this session.
+- Whitespace and local Markdown targets pass. Isolated validation dependencies are
+  pinned in `requirements-api.txt`, outside application runtime dependencies.
+
+Evidence: `artifacts/openapi-{contract,python,wire-race,browser,root}.log`.
+No telemetry was inserted and the main workbench UI/protocol was unchanged. The
+docs journey serves this checkout's actual Python handler on an ephemeral port;
+the existing lab image was not rebuilt, so its server does not yet serve these new
+docs routes. Browser-proxy wire fixtures, broader executed coverage for remaining
+API owners and C2 final deployed integration acceptance remain open. Further
+mechanical JSON adoption is paused for that API contract work.
+
 ## C2 fixed exploration JSON adoption (2026-10-22 UTC)
 
 [Fixed exploration contract and diagram](docs/HTTP_BOUNDARIES.md#fixed-exploration-json-adoption)

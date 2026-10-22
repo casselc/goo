@@ -744,3 +744,26 @@ existing frames remain applicable and final deployed-journey acceptance stays op
 Next freeze/adopt tail request decoding only, preserving early-error headers,
 slots, streaming headers, flush/deadline/disconnect and independent lifetime.
 Capture/live/investigation/workbench/retention JSON owners remain queued.
+
+
+## OpenAPI contract adoption
+
+The user-approved [OpenAPI 3.1 contract and usage guide](API.md) is now the shared
+HTTP reference, complementing this ownership/effect inventory. It covers all 58
+Go operations, five Python-only /api operations and Python /health, with reflected
+Go wire shapes, authored endpoint policy, request byte limits, schema-linked SSE
+events and explicit browser/direct-Go differences. JSON Schema checks do not
+replace semantic kernels or behavior tests.
+
+CI regenerates the checked-in schemas/spec, refuses drift, checks operation coverage,
+validates all 236 existing JSON wire cases (222 operation responses and 14 mux
+refusals), and validates 56 admitted requests with negative controls. Actual tail
+reset/gap bytes have a Go wire fixture plus event-schema checks. The separate
+[API docs journey](journeys/API_DOCS.md) exercises the real Python docs/download
+routes, filtering and desktop/mobile behavior without touching the running lab.
+
+This direction pauses the queued tail/remaining-owner mechanical JSON adoptions.
+Next broaden executed request/response coverage for saved/capture/retention owners
+and add browser-proxy fixtures for the recorded limit/header/serialization gaps.
+The spec records existing behavior rather than normalizing it. Final deployed
+source/browser acceptance remains open; the lab image was not rebuilt in this cut.

@@ -1,0 +1,3 @@
+# Isolated API documentation/contract checks; no application runtime dependency.
+openapi-spec-validator==0.7.2
+jsonschema==4.26.0
