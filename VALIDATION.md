@@ -1,5 +1,40 @@
 # Validation record
 
+## C2 capture/live-comparison source dependency injection (2026-10-22 UTC)
+
+[Capture dependency ownership and diagram](docs/HTTP_BOUNDARIES.md#capture-and-live-comparison-dependency-ownership)
+now document configured source values for saved capture and live comparison.
+Startup constructs one record source for exploration/tail and capture/live routes.
+Neither capture handler rereads ClickHouse environment. Source adapters, storage
+roots, lineage checks, 55-second read contexts, draft budgets and freeze semantics
+remain in their existing owners.
+
+Actual checks:
+
+- Existing capture/paging, live comparison exact freeze/admission/replacement and
+  native-window source-free checks pass before migration (0.059s). They retain
+  assertions after switching registration tests to explicit source values.
+- A new loopback test holds two capture routers, backends and storage roots at
+  once, with distinct source totals and credentials. It checks capture/live reads,
+  readonly/client wiring, isolation from caller source-value mutation and zero
+  requests to an ambient trap endpoint. Changed refresh questions retain 409
+  before source reads; already-cancelled captures retain 502 without backend reads.
+- After both backends close, each owner refuses the other's token (410), freezes
+  its own held snapshot without source reads (201), and returns the same receipt
+  on repeat freeze. Fresh registrations reopen both original/frozen captures from
+  disk while their prior draft tokens return 410. Source counters stay unchanged.
+- `go test -race ./cmd/goo` passes (2.044s), including existing native/record/SSE
+  injection, 32 planning wire fixtures, query budgets, optional-store and capture
+  contracts. `go test ./...` passes. Whitespace and changed local Markdown targets
+  pass. The frozen store/identity contracts and capture source adapters are unchanged.
+
+No public execution-state, stream, persistence or UI protocol changed; no new
+Hegel/Quint model or screenshot was needed for this source-wiring cut. The running
+stack was not rebuilt. Drafts remain expiring registration-local capabilities;
+injection does not make them durable or global. C2 remains active; operation GET
+and investigation source dependencies are next, followed by optional-store wiring
+and bounded source transport adoption with its own evidence.
+
 ## C2 exploration and tail startup dependency injection (2026-10-22 UTC)
 
 [HTTP boundary inventory/diagram](docs/HTTP_BOUNDARIES.md#startup-dependencies-native-and-explorationtail-adoption)

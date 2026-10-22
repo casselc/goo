@@ -8,16 +8,15 @@ import (
 	"github.com/casselc/goo/exploration"
 	"io"
 	"net/http"
-	"os"
 	"path/filepath"
 	"reflect"
 	"strconv"
 	"time"
 )
 
-func registerCaptures(mux *http.ServeMux, client *http.Client, dir string) {
+func registerCaptures(mux *http.ServeMux, source exploration.Source, dir string) {
 	store := exploration.CaptureStore{Dir: filepath.Join(dir, "exploration")}
-	registerLiveComparison(mux, client, store)
+	registerLiveComparison(mux, source, store)
 	reply := func(w http.ResponseWriter, code int, value any) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Cache-Control", "no-store")
@@ -212,11 +211,6 @@ func registerCaptures(mux *http.ServeMux, client *http.Client, dir string) {
 			fail(w, 400, e)
 			return
 		}
-		endpoint := os.Getenv("CLICKHOUSE_URL")
-		if endpoint == "" {
-			endpoint = "http://localhost:8123"
-		}
-		source := exploration.Source{Endpoint: endpoint, User: os.Getenv("CLICKHOUSE_USER"), Password: os.Getenv("CLICKHOUSE_PASSWORD"), Client: client}
 		ctx, cancel := context.WithTimeout(r.Context(), 55*time.Second)
 		defer cancel()
 		c, e := store.Create(ctx, source, in.Title, in.Question, in.Parent)

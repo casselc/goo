@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"sync"
 	"time"
 
@@ -17,7 +16,7 @@ import (
 
 // Bounded, expiring, process-local snapshot capabilities. Restart loses drafts,
 // never published captures. Repeated freezes of a token return the same receipt.
-func registerLiveComparison(mux *http.ServeMux, client *http.Client, store exploration.CaptureStore) {
+func registerLiveComparison(mux *http.ServeMux, source exploration.Source, store exploration.CaptureStore) {
 	type draft struct {
 		snapshot *exploration.SavedCapture
 		expires  time.Time
@@ -78,11 +77,6 @@ func registerLiveComparison(mux *http.ServeMux, client *http.Client, store explo
 			fail(w, 404, e)
 			return
 		}
-		endpoint := os.Getenv("CLICKHOUSE_URL")
-		if endpoint == "" {
-			endpoint = "http://localhost:8123"
-		}
-		source := exploration.Source{Endpoint: endpoint, User: os.Getenv("CLICKHOUSE_USER"), Password: os.Getenv("CLICKHOUSE_PASSWORD"), Client: client}
 		ctx, cancel := context.WithTimeout(r.Context(), 55*time.Second)
 		defer cancel()
 		var snapshot *exploration.SavedCapture

@@ -210,8 +210,9 @@ func serveHTTP(args []string) error {
 	})
 	registerInvestigations(mux, plans, client, *captureDir)
 	registerDashboards(mux, ordered)
-	registerExploration(mux, explorationSourceFromEnvironment(client))
-	registerCaptures(mux, client, *captureDir)
+	recordSource := explorationSourceFromEnvironment(client)
+	registerExploration(mux, recordSource)
+	registerCaptures(mux, recordSource, *captureDir)
 	registerWorkbench(mux, *captureDir)
 	registerTelemetryPackages(mux, filepath.Join(*captureDir, "telemetry-packages"))
 	server := &http.Server{Addr: *listen, Handler: newQueryBudget(mux, 4), ReadHeaderTimeout: 5 * time.Second, WriteTimeout: 90 * time.Second}

@@ -1,13 +1,14 @@
 # Known issues and gaps
 
 [C2 HTTP boundaries](HTTP_BOUNDARIES.md) inventories current route effects/limits.
-Native measurement and exploration/tail endpoint/credentials/client are injected
-from startup. Capture/live-comparison and operation readers retain request-time
-environment reads, and document citation
-checks and retention registration still resolve XTDB at different lifetimes.
+Native measurement, exploration/tail and capture/live-comparison sources are
+injected from startup. Operation readers retain request-time environment reads;
+document citation checks and retention registration still resolve XTDB at different lifetimes.
 Recipes/dashboard now share bounded JSON decoding/writing behind exact wire
 fixtures; other route adoption and transport consolidation remain queued. Native
-and record/tail environment mutation after registration is not a configuration reload.
+and record/tail/capture environment mutation after registration is not a reload.
+Live comparison drafts remain registration-local and expiring; persisted captures
+reopen without a source, while old draft tokens do not survive a new owner.
 
 [Bounded C1 publication consolidation](IMMUTABLE_PUBLICATION.md) is delivered for
 all six Go publication paths. Family validation, identity, catalogs and duplicate

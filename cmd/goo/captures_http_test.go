@@ -33,10 +33,9 @@ func TestCaptureHTTPServerCustodyAndSourceFreePaging(t *testing.T) {
 		}
 	}))
 	defer source.Close()
-	t.Setenv("CLICKHOUSE_URL", source.URL)
 	dir := t.TempDir()
 	mux := http.NewServeMux()
-	registerCaptures(mux, source.Client(), dir)
+	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, dir)
 	call := func(method, path, body string) *httptest.ResponseRecorder {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest(method, path, bytes.NewBufferString(body)))
@@ -70,7 +69,7 @@ func TestCaptureHTTPServerCustodyAndSourceFreePaging(t *testing.T) {
 	source.Close()
 	// New handler/store instance simulates process restart; source is now unavailable.
 	mux = http.NewServeMux()
-	registerCaptures(mux, source.Client(), dir)
+	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, dir)
 	registerWorkbench(mux, dir)
 	metadata := call("GET", "/captures/"+first.Receipt.ID+"/receipt", "")
 	var brief struct {

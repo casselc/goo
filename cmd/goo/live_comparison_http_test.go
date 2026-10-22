@@ -26,9 +26,8 @@ func TestLiveComparisonHTTPExactFreezeAndBoundedCapabilities(t *testing.T) {
 		}
 	}))
 	defer source.Close()
-	t.Setenv("CLICKHOUSE_URL", source.URL)
 	mux := http.NewServeMux()
-	registerCaptures(mux, source.Client(), t.TempDir())
+	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, t.TempDir())
 	call := func(path string, body any) *httptest.ResponseRecorder {
 		b, _ := json.Marshal(body)
 		w := httptest.NewRecorder()

@@ -82,6 +82,11 @@ adopted families. `explorationSourceFromEnvironment` also resolves a typed
 `exploration.Source` at startup. `registerExploration` passes that configured value
 to inventory, service discovery, Explore and tail registration. Record query
 timeouts and the separate tail slots/context/poll/write lifetime are unchanged.
+The same startup record-source value now also feeds `registerCaptures` and its
+`registerLiveComparison` child. This source carries endpoint/credentials/client for
+record, inventory, comparison and native capture adapters; custody paths remain
+derived by the capture store. No request-time ClickHouse lookup remains in either
+capture handler.
 
 ```mermaid
 flowchart LR
@@ -103,10 +108,20 @@ flowchart LR
   RecordRegister --> SSE[Tail: own slots and streaming lifetime]
   Queries --> CH
   SSE --> CH
+  RecordSource --> CaptureRegister[Register capture / live-comparison routes]
+  Root --> CaptureRegister
+  CaptureRegister --> CaptureRead[Execute capture / refresh]
+  CaptureRegister --> LiveRead[Read fresh comparison evidence]
+  CaptureRead --> CH
+  LiveRead --> CH
+  LiveRead --> Draft[Registration-local expiring draft]
+  Draft --> Freeze[Freeze held evidence without source reread]
+  CaptureRead --> CaptureFiles[Immutable capture files / native custody]
+  Freeze --> CaptureFiles
 ```
 
-Inline operation GET handlers, captures/live comparisons and investigations
-still resolve ClickHouse environment at request time. Retention
+Inline operation GET handlers and investigations still resolve ClickHouse
+environment at request time. Retention
 snapshots `GOO_XTDB_URL` on registration, while document citation checks currently
 read it at request time. Definitions/workflow paths still depend on working
 directory; result snapshots remain process-global and live comparison drafts remain
@@ -125,12 +140,17 @@ Explore and tail use their own endpoint, credentials and client. Caller source
 mutation does not redirect a registration; an ambient trap receives no reads.
 Invalid and cancelled record queries avoid backend reads. Actual SSE reset/batch
 frames, no-store/no-buffering headers and disconnect are exercised with injected
-sources. The full HTTP race suite
+sources. Capture dependency tests likewise hold two routers/backends at once and
+check distinct captured/live totals, auth/readonly/client wiring, no ambient reads
+and pre-source refresh/cancellation rejection. After both backends close, own draft
+freezes are source-free/idempotent, foreign tokens are refused, persisted captures
+reopen in a new registration, and old draft tokens do not survive that registration.
+The full HTTP race suite
 retains budget, SSE, capture and optional-store tests.
 
 C2 remains active. The pure planning adoption below is delivered. Next migrate
-capture/live-comparison source dependencies, then operation readers and remaining
-optional-store configuration. Bounded ClickHouse
+operation GET/investigation source dependencies, then remaining optional-store
+configuration. Bounded ClickHouse
 transport extraction follows one family at a time, preserving parameter escaping,
 read limits, basis/identity and non-2xx/oversize/cancellation behavior. Python proxy
 removal, changing custody/duplicate policy and universal endpoint budgets are not
@@ -179,3 +199,20 @@ unknown fields, second values and the JSON/no-store response. Existing HTTP race
 checks retain pure planning/registry declaration behavior and unrelated native,
 SSE, budget, retention and capture contracts. No source or persistence dependency
 was added to these planning routes. Other JSON route families are not yet adopted.
+
+## Capture and live comparison dependency ownership
+
+`serveHTTP` constructs one configured record source for exploration/tail and
+capture/live registration. Source values are copied into each owner; their HTTP
+client remains shared. Environment mutation is not hot reconfiguration. Storage
+roots, lineage validation, 55-second source-read context, live draft budgets and
+expiry/replacement rules retain their existing owners. Freeze checks the held
+server-side draft before any source branch; repeated freeze uses its published
+receipt. Backend unavailability does not turn a held snapshot into a new read.
+
+A new registration can reopen persisted capture evidence without its source, but
+its draft map starts empty. Source injection does not make capabilities global,
+make drafts durable, remove expiry, infer complete source data or change native
+measurement semantics. Existing capture bank/page/receipt/comparison tests, exact
+live freeze/admission/replacement checks and source-free native-window tests are
+retained with explicit source wiring. No transport or UI protocol changed.
