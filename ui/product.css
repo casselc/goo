@@ -1399,3 +1399,7 @@ td details {
 
 /* Saved record pages own responsive caption width, as Services does for its page. */
 @media(max-width:700px){.saved-record-evidence .telemetry-table>caption{display:block;width:auto;max-width:none;padding:8px 10px}}
+
+/* Detail rows occupy space only while their shared inspector is mounted. */
+.telemetry-table .record-detail-row[hidden] {display:none}
+.comparison-controls[hidden] {display:none}

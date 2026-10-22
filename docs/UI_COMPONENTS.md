@@ -440,10 +440,19 @@ service observations adopt it. Aggregate/native tables retain their own schemas.
 The pure `GooEvidenceScope.record` adapter now supplies frozen record facts to
 capture pages and document references. Metadata-only references retain unavailable
 source/page fields rather than borrowing custody time or totals from displayed
-rows. [Contract and remaining editor-removal gates](SAVED_RECORD_PRESENTATION.md).
+rows. [Saved owner contract](SAVED_RECORD_PRESENTATION.md).
 
 `GooRecordResults` shares application-owned record/group tables and explicit
 trace/log context between Live/fixed and Saved. It composes passive components;
 it is not itself a source-free web component. `GooSavedRecords` renders stored
 values without a query editor/session/tail and preserves page/retention/package
 contracts. [Ownership and invalidation](SAVED_RECORD_PRESENTATION.md).
+
+`GooRecordResults` uses one cached inspector per supplied table instead of an inline
+attribute disclosure on every row. Only an open inspector's detail slot takes up
+space. Selection precedes Inspect, then existing context follow-ups. Typed viewer
+callbacks retain owner-specific permissions and source semantics. The standalone
+noncompact tail and native-window disclosures remain compatibility consumers.
+Distribution comparison buttons stay hidden until a single-field nonnumeric
+breakdown or retained baseline supplies a comparison context; draft invalidation
+preserves a baseline's Clear action.

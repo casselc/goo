@@ -1,4 +1,4 @@
-const {openFilters}=require('./explore');
+const {openFilters,inspectedRecords}=require('./explore');
 const { expect } = require('@playwright/test');
 const fs = require('node:fs/promises');
 const path = require('node:path');
@@ -74,7 +74,7 @@ async function inspectScenario({ page, request, result, startedAt, frameName }) 
   const evidence = { result, readiness, reads: {} };
   const rendered = {};
   for (const signal of ['spans', 'logs']) {
-    await page.goto(goo + '/#explore');
+    await page.goto(goo + '/#questions');
     if (await page.locator('#exploreContextClose').isVisible()) await page.locator('#exploreContextClose').click();
     await page.locator('#exploreClear').click();
     await page.locator('#exploreSignal').selectOption(signal);
@@ -96,7 +96,7 @@ async function inspectScenario({ page, request, result, startedAt, frameName }) 
     expect(oracle.rows.length).toBeGreaterThan(0); expect(oracle.rows.length).toBeLessThanOrEqual(100);
     expect(shown.data.state).toBe('observed'); expect(shown.data.count).toBe(String(oracle.rows.length));
     await expect(page.locator('#exploreStatus')).toContainText(`${oracle.rows.length} matching captured ${signal}`);
-    rendered[signal] = (await page.locator('#exploreRows details pre').allTextContents()).map(JSON.parse);
+    rendered[signal] = await inspectedRecords(page);
     expect(members(rendered[signal], signal)).toEqual(members(oracle.rows, signal));
     const displayedQuestion = JSON.parse(await page.locator('#exploreExplain').textContent()).question;
     expect(displayedQuestion).toEqual(q);
@@ -105,17 +105,15 @@ async function inspectScenario({ page, request, result, startedAt, frameName }) 
   const observed = summarizeCaptured(rendered.spans, rendered.logs);
   expect(observed.meaning).toBe(expectedMeaning[result.scenario]);
   evidence.observed = observed;
-  // Exercise the actual disclosure, then leave the full log sequence visible
-  // for documentation instead of allowing one expanded JSON row to obscure it.
+  // Exercise the actual inspector, then close it to show the full log sequence.
   const body = result.scenario === 'missing' ? 'reservation.stalled' : 'reservation.terminal';
-  const row = page.locator('#exploreRows .record-detail-row').filter({ hasText: body }).first();
-  const disclosure = row.getByText('Captured attributes', { exact: true });
-  await disclosure.click();
+  const opener=page.locator('#exploreRows .record-row').filter({hasText:body}).first().getByRole('button',{name:'Inspect record',exact:true});
+  await opener.click();const row=page.locator('#exploreRows .ui-inspector');
   const key = result.scenario === 'missing' ? 'app.scenario' : 'app.outcome';
   const attribute = row.locator('.attribute-row').filter({ has: page.locator('.attribute-key').filter({ hasText: new RegExp('^' + key.replaceAll('.', '\\.') + '$') }) });
   await expect(attribute).toBeVisible();
   await expect(attribute.locator('.attribute-value-text')).toHaveText(result.scenario === 'missing' ? 'missing' : result.scenario === 'retry' ? 'confirmed' : 'rejected');
-  await disclosure.click();
+  await row.getByRole('button',{name:'Close selected item details',exact:true}).click();await expect(opener).toBeFocused();
   await page.screenshot({ path: path.join('docs/journeys/screenshots', frameName), fullPage: true });
   return evidence;
 }

@@ -1,7 +1,20 @@
 # User journeys and storyboards
 
+The [shared record inspection cut](../RECORD_PRESENTATION.md#compact-record-inspection)
+removes duplicate inline disclosures from fixed/saved/context tables. Journey 29
+now opens the single inspector, searches qualified typed fields, copies multiline
+and long values exactly, runs a breakdown/filter and inspects linked logs on desktop
+and mobile. Journeys 32/45 exercise saved inspection and fixed refinement through
+that same entry point; 97 retains multi-record shared-field actions. Updated
+inspection/capture Bombadil actors require no duplicate disclosure and at most one
+visible inspector/detail slot per table. These actors do not add source actions to
+display components. Cross-app report and generated retry/reject/missing-terminal
+campaign helpers now inspect each supplied record's raw evidence through the same
+UI instead of reading the removed per-row JSON disclosure. Fixed-query campaigns
+enter the explicit Questions route; fresh Explore retains its live-entry behavior.
+
 [Journey 107](../../journeys/saved-owner.spec.js): open real stored spans without
-query controls → inspect locally → explicitly expand cross-service trace/log context
+query controls → inspect locally, close to the opener and reopen with retained search → explicitly expand cross-service trace/log context
 → close to the opener → open a filtered saved log → read surrounding logs → hold
 a real response, switch captures and reject its late publication. Frames:
 [explicit trace](screenshots/107a-saved-explicit-trace.png),

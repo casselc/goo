@@ -1,4 +1,4 @@
-const {openFilters}=require('./explore');
+const {openFilters,inspectedRecords}=require('./explore');
 const { expect } = require('@playwright/test');
 const fs = require('node:fs/promises');
 const path = require('node:path');
@@ -44,7 +44,7 @@ async function inspectReport({ page, request, report, ledger, record, frameName 
     ledger.discovery = { sql: discoverySQL, parameters: discoveryParameters, rows: discovery };
 
     // Use ordinary UI controls; observe the actual frozen question sent by goo.
-    await page.goto(goo + '/#explore');
+    await page.goto(goo + '/#questions');
     // Navigating to the current hash may keep the document and inspector alive.
     // A revisit explicitly closes context and starts a fresh trace selection.
     if (await page.locator('#exploreContextClose').isVisible()) await page.locator('#exploreContextClose').click();
@@ -84,7 +84,7 @@ async function inspectReport({ page, request, report, ledger, record, frameName 
     expect(result.rows.map(row => row.SpanId).sort().join(',')).toBe(members);
     await expect(page.locator('#exploreStatus')).toContainText(`${rows.length} matching captured spans`);
     // Check rendered records, not just the response used to populate them.
-    const rendered = await page.locator('#exploreRows details pre').allTextContents();
+    const rendered = (await inspectedRecords(page)).map(record=>JSON.stringify(record));
     expect(rendered.map(text => JSON.parse(text).SpanId).sort().join(',')).toBe(members);
     expect(rendered.map(text => JSON.parse(text).TraceId)).toEqual(rows.map(() => trace));
     const displayedQuestion = JSON.parse(await page.locator('#exploreExplain').textContent()).question;

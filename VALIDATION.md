@@ -1,5 +1,55 @@
 # Validation record
 
+## Single record inspector and contextual comparison controls (2026-10-22 UTC)
+
+Query/packages image:
+`sha256:0baa43164b7c08ade2be1efd05caa34f8f4a797f42f926da66a654544c2f041b`.
+
+Fixed/frozen and linked/surrounding-log tables now use the shared cached inspector
+as their single attribute entry point. Duplicate inline disclosures are removed;
+closed detail slots occupy no space. Selection precedes inspection and existing
+follow-ups. Typed search, exact Copy, raw evidence, owner-permitted refinement and
+retention contracts remain. Legacy standalone noncompact tail/native-window
+attribute disclosures remain compatibility consumers. Comparison buttons are hidden
+without a single-field nonnumeric breakdown or retained baseline; retained baseline
+Clear remains reachable while a question is draft. No source API/core semantics change.
+
+Completed checks:
+
+- Frontend suite: all 33 test files pass; JavaScript syntax and changed local
+  Markdown links/whitespace pass.
+- Hegel entry state/swarm (80 × 24) and capture state/swarm (60 × 15) pass,
+  including local source fixtures (47.6s).
+- Eight real-source journeys pass together (7.1m): 32, 35, 44, 45, 97, 106,
+  107 and 29. These cover stored paging/revisions and actual package restart,
+  error/latency comparison, numeric/grouped coverage/package reuse, fixed
+  refinement, shared-field selection, Live/fixed presentation, saved context
+  switching and keyboard/mobile typed inspection. Existing Quint/quint-go ledgers
+  pass, including negative controls where defined.
+- Updated capture and inspection Bombadil campaigns pass. Both now exercise the
+  single inspector and require absent duplicate disclosures, at most one visible
+  inspector and no visible empty detail slot per table. Actual screenshot frames
+  are regenerated; saved desktop/mobile frames are visually reviewed.
+
+- Four continuation runs pass together (4.2m): cross-app report/Bombadil with
+  Quint enabled (26), generated retry/rejection/missing-terminal workload and
+  observed Quint checkpoints (28), investigation follow-ups (42), and strengthened
+  saved inspection/cache/focus assertions (107). Helpers now read each rendered
+  record through the real inspector rather than the removed inline JSON. Fixed
+  campaigns use the explicit Questions route; fresh Explore keeps its live intent.
+- Final deployed asset/server/binary hashes match source; all 13 services run after
+  traffic restoration. Pre-existing pending queue IDs, retained manifests/reviews,
+  pinned document citations and current catalogs survive; cgroup OOM counts are zero.
+  Packages restart was exercised by journey 32; XTDB was not restarted this round.
+
+The runs use actual source telemetry, not substituted UI records. Existing Quint
+protocols validate their documented observed accounting/state boundaries, not full
+trace completeness. Other aggregate/native layouts and legacy standalone-tail
+inspection remain separate work.
+
+Evidence: `artifacts/inspector-unit.log`, `inspector-hegel.log`,
+`inspector-focused.log`, `inspector-continuations.log`, `inspector-health.json`.
+
 ## Dedicated saved record owner and shared context (2026-10-22 UTC)
 
 Query/packages image:

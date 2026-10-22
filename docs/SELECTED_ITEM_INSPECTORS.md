@@ -33,9 +33,7 @@ or guarantee retention after source replacement.
   trace workspace still owns independent context questions, bases and pagination. Selecting a span there retains the existing automatic linked-log read; the shared shell adds no reads and closing it does not refresh logs.
 - Record tables offer Inspect record for both spans and logs. The panel appears beside the selected row in its detail cell and supplies
   event time, attributes, scope/basis disclosure and existing trace/surrounding-log
-  continuation actions. Local inspection is source-free. Existing inline attribute
-  disclosures/refinement remain available; this milestone does not remove them or
-  redesign the outer trace/surrounding-log workspaces.
+  continuation actions. Local inspection is source-free. The shared record-results tables now remove duplicate inline attribute disclosures after preserving search/copy/raw/refinement actions in this inspector. Closed detail rows occupy no space. Legacy standalone tail/native-window disclosures remain; the outer trace/surrounding-log workspaces retain their independent read contracts.
 - Native selections retain their exact timestamp bounds, stream attributes,
   bucket counts, diagnostics and unknown-versus-zero distinctions. Closing retains
   plot/grid selection without changing a histogram layout or source question.

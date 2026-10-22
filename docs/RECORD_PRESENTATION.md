@@ -2,7 +2,7 @@
 
 Live Activity and the existing fixed record table now use the same display adapter
 and passive elements. Consumers of that table (including its frozen record pages)
-also receive the shared formatting; this does not replace their full query editor.
+also receive the shared formatting; Saved mounts its own result owner without a query editor.
 Services now exposes its existing supporting span page through a collapsed, locally
 inspectable observation table. Aggregate/native widgets keep their own layouts.
 
@@ -69,7 +69,7 @@ the application owns tables, columns, viewports and action layouts.
 ## Adoption and remaining work
 
 The duplicate time/service/log/span formatters in `tail.js` and `exploration.js`
-are removed. Both primary inspectors now compose the same detail body. Existing inline attribute disclosure remains a named compatibility consumer.
+are removed. Both primary inspectors now compose the same detail body. Fixed/frozen and context record tables use Inspect record as their single attribute entry point; duplicate inline disclosures are removed. The older noncompact standalone tail and native window evidence keep their existing disclosures until equivalent inspection actions are available.
 Stored record pages now use the dedicated saved owner; the hidden record editor is
 removed. The shared `GooRecordPresentation.table` helper now supplies native headers, row
 cells, qualified time/service/summary content and responsive cell labels to Live,
@@ -114,3 +114,27 @@ Journey 46 now exercises held-page inspection, shared summaries/context, UTC,
 source-free disclosure and desktop/mobile layouts. Its Bombadil actor inspects
 held records before following a convention suggestion. Existing entry/fixed
 journeys cover the other shared-table consumers.
+
+## Compact record inspection
+
+Selection (where supported), Inspect record and existing context follow-ups have a
+consistent order in fixed/frozen and linked/surrounding-log tables. Only the selected
+row has a visible detail slot. Closing removes its layout space and returns focus;
+switching records preserves the inspector cache, search and body scroll. Search,
+scoped typed fields, raw record, exact Copy, Include/Exclude, Filter and run and
+Break down and run use the same owner-supplied callbacks as the removed disclosure.
+Saved and context rows expose only their allowed actions. Inspection never reads.
+
+Comparison controls are hidden without a single-field, nonnumeric breakdown or a
+retained baseline. A retained baseline remains visible during draft changes so it
+can still be cleared. Existing comparison tabs and unsupported numeric diagnostics
+retain their contracts; this is not a new comparison capability.
+
+```mermaid
+flowchart LR
+  Rows[Compact supplied rows] -->|Inspect: local| Detail[One cached selected-record inspector]
+  Detail --> Fields[Typed fields / search / copy / raw record]
+  Detail -->|stage or explicit run| Refine[Existing owner refinement actions]
+  Detail -->|named follow-up| Context[Independent trace or surrounding-log read]
+  Detail -->|Close: focus to opener| Rows
+```

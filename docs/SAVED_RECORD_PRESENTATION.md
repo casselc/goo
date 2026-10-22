@@ -39,7 +39,7 @@ stored values rather than repopulating hidden controls.
 trace/surrounding-log context. Live/fixed Explore and Saved instantiate independent
 owners. Passive record/attribute/chart elements still have no source client. Context
 reads enter through an explicit application callback, preserve their own query/basis,
-and never amend a capture. Close returns focus to the original row action.
+and never amend a capture. Inspect record is the single attribute entry point in these tables; duplicate inline disclosures are removed. Close hides the detail slot and returns focus to the original row action. Selection and retention remain separate from inspection.
 
 Switching captures, leaving Saved or opening a document invalidates pending context
 publication. Stored primary rows remain independently owned. Generation invalidation

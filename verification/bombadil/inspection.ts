@@ -20,14 +20,16 @@ const inspection = extract(({ document }) => ({
   typed: [...document.querySelectorAll('goo-field-value')].every(el=>['present','missing','unknown','unavailable'].includes(el.getAttribute('data-value-state')||'')),
   ready: !!document.querySelector('#exploreRun'),
   busy: document.querySelector<HTMLButtonElement>('#exploreRun')?.disabled,
-  records: !!document.querySelector('#exploreRows .record-attributes'),
-  viewer: !!document.querySelector('#exploreRows .record-attributes[open] .attribute-viewer'),
+  records: !!document.querySelector('#exploreRows [data-inspect-record]'),
+  viewer: !!document.querySelector('#exploreRows .ui-inspector:not([hidden]) .attribute-viewer'),
   trace: !document.querySelector<HTMLElement>('#exploreContext')?.hidden,
   nearby: !document.querySelector<HTMLElement>('#surroundingContext')?.hidden,
   nearbyAvailable: !!document.querySelector('#exploreRows button[aria-label^="Surrounding logs for"]'),
   selected: document.querySelectorAll('#exploreTrace .waterfall-row[aria-pressed="true"]').length,
   counts: [...document.querySelectorAll('.attribute-count')].map(e => e.textContent || ''),
 }));
+const recordDetails=extract(({document})=>{const root=document.getElementById('exploreRows');return !root||root.querySelectorAll('.record-attributes').length===0&&root.querySelectorAll('.ui-inspector:not([hidden])').length<=1&&[...root.querySelectorAll<HTMLElement>('.record-detail-row:not([hidden])')].every(row=>!!row.querySelector('.ui-inspector:not([hidden])'));});
+export const singleRecordDetail=always(()=>recordDetails.current);
 export const becomesReady = eventually(() => inspection.current.ready).within(10, 'seconds');
 export const oneContextInspector = always(() => !(inspection.current.trace && inspection.current.nearby));
 export const waterfallRowsMatchSuppliedEvidence = always(() => inspection.current.waterfalls);
@@ -43,8 +45,7 @@ const act = registerCustomAction('goo.inspect', async (document, _window, action
   if (action === 'radius') {const select=document.querySelector<HTMLSelectElement>('#surroundingRadius');if(select){select.selectedIndex=(select.selectedIndex+1)%select.options.length;select.dispatchEvent(new Event('change'));}}
   if (action === 'query') click('#exploreRun');
   if (action === 'open') {
-    const detail = document.querySelector<HTMLDetailsElement>('#exploreRows .record-attributes');
-    if (detail) detail.open = true;
+    document.querySelector<HTMLButtonElement>('#exploreRows [data-inspect-record]')?.click();
   }
   if (action === 'trace') [...document.querySelectorAll<HTMLButtonElement>('#exploreRows .record-row button')].find(b=>b.textContent?.startsWith('Expand trace '))?.click();
   if (action === 'select' || action === 'nextSpan') {

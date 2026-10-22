@@ -13,8 +13,10 @@ const capture=extract(({document})=>{
  const display=(el('captureEvidenceSummary')?.querySelector('goo-evidence-summary')as any)?.data;const summaryCoherent=!evidence||display?.mode==='frozen'&&display.facts.find((x:any)=>x.label==='Source records')?.value===receipt.count&&display.details.find((x:any)=>x.label==='Capture ID')?.value===evidence.receipt.id&&display.details.find((x:any)=>x.label==='Stored custody time')?.value===evidence.receipt.capturedAt&&display.details.find((x:any)=>x.label==='Displayed page')?.value===rowCount+' records · offset '+evidence.question.offset;
  const ids=[...document.querySelectorAll('[id]')].map(e=>e.id);
  return {summaryCoherent,version:'goo.captures.v1',stage:document.documentElement.dataset.gooCaptureStage||'initial',ready:!!receipt&&!!evidence,loading,scope,accounting,stable,uniqueIDs:new Set(ids).size===ids.length,readonly:!el('savedexploreBuilder')&&!el('savedexploreRun')&&!el('savedexploreSaveCapture')&&!document.querySelector('#captureExploreEvidence .query-workbench'),offset:evidence?.question?.offset||0,
- next:!(el('savedexploreNext') as HTMLButtonElement)?.disabled,previous:!(el('savedexplorePrevious') as HTMLButtonElement)?.disabled,viewer:!!document.querySelector('#savedexploreRows .record-attributes[open] .attribute-viewer'),receipt,evidence,rowCount};
+ next:!(el('savedexploreNext') as HTMLButtonElement)?.disabled,previous:!(el('savedexplorePrevious') as HTMLButtonElement)?.disabled,viewer:!!document.querySelector('#savedexploreRows .ui-inspector:not([hidden]) .attribute-viewer'),receipt,evidence,rowCount};
 });
+const recordDetails=extract(({document})=>{const root=document.getElementById('savedexploreRows');return !root||root.querySelectorAll('.record-attributes').length===0&&root.querySelectorAll('.ui-inspector:not([hidden])').length<=1&&[...root.querySelectorAll<HTMLElement>('.record-detail-row:not([hidden])')].every(row=>!!row.querySelector('.ui-inspector:not([hidden])'));});
+export const singleRecordDetail=always(()=>recordDetails.current);
 export const ready=eventually(()=>capture.current.ready).within(10,'seconds');
 export const complete=eventually(()=>capture.current.stage==='complete').within(25,'seconds');
 export const frozenSummaryMatchesReceipt=always(()=>capture.current.loading||capture.current.summaryCoherent);
@@ -27,7 +29,7 @@ const act=registerCustomAction('goo.captures',async(document,_window,command:str
  const el=(id:string)=>document.getElementById(id),click=(id:string)=>el(id)?.click();
  if(command==='remember'){const receipt=JSON.parse(el('captureGeneralReceipt')?.textContent||'null'),evidence=JSON.parse(el('savedexploreExplain')?.textContent||'null');document.documentElement.dataset.gooCaptureGolden=JSON.stringify({receipt,question:evidence.question,rows:[...document.querySelectorAll('#savedexploreRows .record-row')].map(r=>[...r.querySelectorAll(':scope > td')].map(c=>c.textContent))})}
  if(command==='scope'){const details=document.querySelector<HTMLDetailsElement>('#captureEvidenceSummary goo-evidence-summary > details');if(details)details.open=!details.open}if(command==='next')click('savedexploreNext');if(command==='previous')click('savedexplorePrevious');if(command==='distribution')click('savedresultDistribution');if(command==='records')click('savedresultRecords');
- if(command==='inspect'){const detail=document.querySelector<HTMLDetailsElement>('#savedexploreRows .record-attributes');if(detail)detail.open=true}
+ if(command==='inspect'){document.querySelector<HTMLButtonElement>('#savedexploreRows [data-inspect-record]')?.click()}
  if(command==='search'){const search=document.querySelector<HTMLInputElement>('#savedexploreRows .attribute-viewer input[type="search"]');if(search){search.value='duration';search.dispatchEvent(new Event('input',{bubbles:true}))}}
  if(next)document.documentElement.dataset.gooCaptureStage=next;
 });
