@@ -24,7 +24,7 @@ func TestNativeMeasurementStartupDefaultsAndSnapshot(t *testing.T) {
 	t.Setenv("CLICKHOUSE_USER", "fixture-user")
 	t.Setenv("CLICKHOUSE_PASSWORD", "fixture-secret")
 	client := &http.Client{}
-	s := nativeMeasurementSourceFromEnvironment(client)
+	s := clickHouseConnectionFromEnvironment(client).measurementSource()
 	if s.Endpoint != "http://localhost:8123" || s.User != "fixture-user" || s.Password != "fixture-secret" || s.Client != client {
 		t.Fatal("startup defaults changed")
 	}

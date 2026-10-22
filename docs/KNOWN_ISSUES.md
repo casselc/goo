@@ -1,12 +1,12 @@
 # Known issues and gaps
 
 [C2 HTTP boundaries](HTTP_BOUNDARIES.md) inventories current route effects/limits.
-Native measurement, exploration/tail and capture/live-comparison sources are
-injected from startup. Operation readers retain request-time environment reads;
-document citation checks and retention registration still resolve XTDB at different lifetimes.
+All Go HTTP ClickHouse endpoint/credential/client configuration is now resolved by
+one startup snapshot and injected into native, record, tail, capture, operation GET
+and investigation owners. Document citation checks and retention registration still
+resolve XTDB at different lifetimes; optional-store wiring is next.
 Recipes/dashboard now share bounded JSON decoding/writing behind exact wire
-fixtures; other route adoption and transport consolidation remain queued. Native
-and record/tail/capture environment mutation after registration is not a reload.
+fixtures; other route adoption and transport consolidation remain queued. ClickHouse environment mutation after registration is not a reload.
 Live comparison drafts remain registration-local and expiring; persisted captures
 reopen without a source, while old draft tokens do not survive a new owner.
 

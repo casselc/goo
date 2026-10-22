@@ -19,7 +19,7 @@ func TestExplorationStartupDefaultsAndSnapshot(t *testing.T) {
 	t.Setenv("CLICKHOUSE_USER", "record-fixture")
 	t.Setenv("CLICKHOUSE_PASSWORD", "local-only")
 	client := &http.Client{}
-	s := explorationSourceFromEnvironment(client)
+	s := clickHouseConnectionFromEnvironment(client).explorationSource()
 	t.Setenv("CLICKHOUSE_URL", "http://example.invalid")
 	t.Setenv("CLICKHOUSE_USER", "other")
 	t.Setenv("CLICKHOUSE_PASSWORD", "other")

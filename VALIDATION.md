@@ -1,5 +1,47 @@
 # Validation record
 
+## C2 operation readers/investigations and unified startup connection (2026-10-22 UTC)
+
+[Operation adoption contract/diagram](docs/HTTP_BOUNDARIES.md#operation-get-and-investigation-adoption)
+records the extracted `registerOperationReads` and injected investigation connection.
+One `clickHouseConnectionFromEnvironment` snapshot now supplies all Go HTTP
+ClickHouse routes, replacing the separate native/record environment builders.
+Typed adapters, operation plans, HTTP instrumentation bindings, custody and source
+transport remain family-owned. Server startup now loads/validates configuration
+and registers route families without embedding their GET implementations.
+
+Actual checks:
+
+- Existing operation investigation trusted-source/optional-error/offline-reopen
+  tests pass before migration (0.018s). After moving the unchanged GET handlers,
+  and before changing connection wiring, 11 exact validation cases plus the
+  declaration response pass (0.012s). Error text, 400 status, text/plain/no-store/
+  nosniff headers remain pinned; source failures retain 502 JSON.
+- New tests hold two operation/investigation registrations with distinct backends,
+  credentials and clients at once. All four source-reading GET endpoints execute
+  against the assigned backend, including default HTTP window/package selections.
+  Declarations remain source-free; readonly/auth/client wiring is checked. Caller
+  connection mutation and ambient trap configuration do not redirect requests.
+- Already-cancelled GETs avoid backend reads. Investigations retain revision and
+  parent-question 409 checks before reads. After backend closure, fresh handlers
+  reopen persisted captures with no plan registry and no telemetry requests.
+  Existing optional-rate/histogram errors and failed-refresh receipt checks remain.
+- Shared startup tests pin configured/default endpoint, credentials, client and
+  typed source adapters against later environment mutation. Inspection finds
+  ClickHouse environment reads only in the startup connection constructor among
+  HTTP/dependency files. This snapshot is configuration, not a shared query engine.
+- `go test -race ./cmd/goo` passes on final cases (2.180s); `go test ./...` passes.
+  Existing 32 planning wire fixtures, native/record/capture source injection,
+  query-budget, tail and optional-store tests remain included. Whitespace and
+  changed local Markdown targets pass.
+
+No public query/execution-state, JSON/SSE policy or UI changed; no new Hegel/Quint
+model or screenshot was required for this wiring/registration cut. The running
+stack was not rebuilt. GET readers keep incoming contexts/shared client timeout
+and remain outside the POST query budget. C2 remains active: optional XTDB
+configuration lifetimes are next, followed by bounded transport extraction and its
+own parity/integration evidence.
+
 ## C2 capture/live-comparison source dependency injection (2026-10-22 UTC)
 
 [Capture dependency ownership and diagram](docs/HTTP_BOUNDARIES.md#capture-and-live-comparison-dependency-ownership)

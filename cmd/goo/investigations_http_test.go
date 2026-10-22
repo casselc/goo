@@ -21,13 +21,12 @@ func TestCaptureHTTPTrustedSourcesAndOfflineReopen(t *testing.T) {
 		}
 	}))
 	defer source.Close()
-	t.Setenv("CLICKHOUSE_URL", source.URL)
 	plan, e := annotations.LoadOperationPackage("../../config/operations/checkout.yaml")
 	if e != nil {
 		t.Fatal(e)
 	}
 	mux := http.NewServeMux()
-	registerInvestigations(mux, map[string]*annotations.OperationPlan{"checkout": plan}, source.Client(), t.TempDir())
+	registerInvestigations(mux, map[string]*annotations.OperationPlan{"checkout": plan}, clickHouseConnection{Endpoint: source.URL, Client: source.Client()}, t.TempDir())
 	call := func(method, path string, body any) *httptest.ResponseRecorder {
 		b, _ := json.Marshal(body)
 		r := httptest.NewRequest(method, path, bytes.NewReader(b))

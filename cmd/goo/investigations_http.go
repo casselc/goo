@@ -7,10 +7,9 @@ import (
 	"github.com/casselc/goo/investigations"
 	"io"
 	"net/http"
-	"os"
 )
 
-func registerInvestigations(mux *http.ServeMux, plans map[string]*annotations.OperationPlan, client *http.Client, dir string) {
+func registerInvestigations(mux *http.ServeMux, plans map[string]*annotations.OperationPlan, connection clickHouseConnection, dir string) {
 	store := investigations.Store{Dir: dir}
 	reply := func(w http.ResponseWriter, code int, v any) {
 		w.Header().Set("Content-Type", "application/json")
@@ -71,13 +70,8 @@ func registerInvestigations(mux *http.ServeMux, plans map[string]*annotations.Op
 			fail(w, 409, fmt.Errorf("package revision unavailable; original capture remains reopenable"))
 			return
 		}
-		endpoint := os.Getenv("CLICKHOUSE_URL")
-		if endpoint == "" {
-			endpoint = "http://localhost:8123"
-		}
-		user, password := os.Getenv("CLICKHOUSE_USER"), os.Getenv("CLICKHOUSE_PASSWORD")
 		q := in.Question
-		operations, e := plan.Fetch(r.Context(), client, endpoint, user, password, q.FromMS, q.ToMS)
+		operations, e := plan.Fetch(r.Context(), connection.Client, connection.Endpoint, connection.User, connection.Password, q.FromMS, q.ToMS)
 		if e != nil {
 			fail(w, 502, e)
 			return
@@ -86,7 +80,7 @@ func registerInvestigations(mux *http.ServeMux, plans map[string]*annotations.Op
 		evidence.Operations, _ = json.Marshal(operations)
 		for _, view := range plan.Definition.Views {
 			if (view == "counter-rates" || view == "error-ratios" || view == "fleet-coverage") && evidence.Rates == nil && evidence.Errors["rates"] == "" {
-				v, e := plan.FetchRates(r.Context(), client, endpoint, user, password, q.FromMS, q.ToMS)
+				v, e := plan.FetchRates(r.Context(), connection.Client, connection.Endpoint, connection.User, connection.Password, q.FromMS, q.ToMS)
 				if e != nil {
 					evidence.Errors["rates"] = e.Error()
 				} else {
@@ -94,7 +88,7 @@ func registerInvestigations(mux *http.ServeMux, plans map[string]*annotations.Op
 				}
 			}
 			if view == "histogram-heatmap" {
-				v, e := plan.FetchHistograms(r.Context(), client, endpoint, user, password, q.FromMS, q.ToMS)
+				v, e := plan.FetchHistograms(r.Context(), connection.Client, connection.Endpoint, connection.User, connection.Password, q.FromMS, q.ToMS)
 				if e != nil {
 					evidence.Errors["histograms"] = e.Error()
 				} else {

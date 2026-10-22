@@ -71,28 +71,28 @@ buffered JSON responder or silently standardize these policies in a refactor.
 
 ## Startup dependencies: native and exploration/tail adoption
 
-`nativeMeasurementSourceFromEnvironment` resolves native ClickHouse endpoint,
-credentials and the HTTP client at startup. Empty endpoint retains
-`http://localhost:8123`. `registerMeasurements` receives an existing
-`measurements.Source` value; handlers no longer read ClickHouse environment
-variables. Its custody directory remains derived from the supplied server data
-root. Registration copies source strings; the HTTP client remains a shared pointer.
-Process environment mutation is not a configuration reload mechanism for these
-adopted families. `explorationSourceFromEnvironment` also resolves a typed
-`exploration.Source` at startup. `registerExploration` passes that configured value
-to inventory, service discovery, Explore and tail registration. Record query
-timeouts and the separate tail slots/context/poll/write lifetime are unchanged.
-The same startup record-source value now also feeds `registerCaptures` and its
-`registerLiveComparison` child. This source carries endpoint/credentials/client for
-record, inventory, comparison and native capture adapters; custody paths remain
-derived by the capture store. No request-time ClickHouse lookup remains in either
-capture handler.
+`clickHouseConnectionFromEnvironment` now resolves endpoint, credentials and the
+shared HTTP client once at startup for every Go HTTP ClickHouse route. Empty
+endpoint retains `http://localhost:8123`. `measurementSource()` and
+`explorationSource()` produce existing family adapters; they do not compile or
+execute queries. This replaces the earlier separate native/record environment
+builders without introducing a common semantic evaluator or transport.
+
+`registerMeasurements` still derives custody under the supplied data root.
+`registerExploration` shares the configured record source with tail registration;
+`registerCaptures` shares it with live comparison. Query timeouts, tail slots and
+streaming lifetime, capture roots and expiring draft maps retain their owners.
+The extracted `registerOperationReads` receives startup plans, HTTP expansion,
+instrumentation binding and connection value. `registerInvestigations` receives
+plans, connection and storage root. No Go HTTP handler rereads ClickHouse process
+configuration. Environment mutation is not a reload API. Source strings are copied;
+the HTTP client remains shared.
 
 ```mermaid
 flowchart LR
-  Env[Startup environment] --> Wiring[Native source wiring]
-  Client[Shared HTTP client] --> Wiring
-  Wiring --> Source[Configured measurements.Source value]
+  Env[Startup environment] --> Connection[ClickHouse connection snapshot]
+  Client[Shared HTTP client] --> Connection
+  Connection --> Source[Configured measurements.Source value]
   Root[Server data root] --> Register[Register native routes]
   Source --> Register
   Register --> Pure[Definition plan / registry routes]
@@ -100,9 +100,7 @@ flowchart LR
   Run --> CH[ClickHouse adapter]
   Run --> Custody[Lifecycle first-observation files]
   Pure --> Files[Definition files where requested]
-  Env --> RecordWiring[Record source wiring]
-  Client --> RecordWiring
-  RecordWiring --> RecordSource[Configured exploration.Source value]
+  Connection --> RecordSource[Configured exploration.Source value]
   RecordSource --> RecordRegister[Register exploration and tail routes]
   RecordRegister --> Queries[Inventory / discovery / Explore]
   RecordRegister --> SSE[Tail: own slots and streaming lifetime]
@@ -118,10 +116,14 @@ flowchart LR
   Draft --> Freeze[Freeze held evidence without source reread]
   CaptureRead --> CaptureFiles[Immutable capture files / native custody]
   Freeze --> CaptureFiles
+  Connection --> OperationGET[Operation GET registrations]
+  Connection --> Investigation[Investigation capture registration]
+  OperationGET --> CH
+  Investigation --> CH
+  Investigation --> InvestigationFiles[Immutable operation captures]
 ```
 
-Inline operation GET handlers and investigations still resolve ClickHouse
-environment at request time. Retention
+Operation GET readers and investigations now also use the startup snapshot. Retention
 snapshots `GOO_XTDB_URL` on registration, while document citation checks currently
 read it at request time. Definitions/workflow paths still depend on working
 directory; result snapshots remain process-global and live comparison drafts remain
@@ -149,9 +151,8 @@ The full HTTP race suite
 retains budget, SSE, capture and optional-store tests.
 
 C2 remains active. The pure planning adoption below is delivered. Next migrate
-operation GET/investigation source dependencies, then remaining optional-store
-configuration. Bounded ClickHouse
-transport extraction follows one family at a time, preserving parameter escaping,
+remaining optional-store configuration. Bounded ClickHouse transport extraction
+follows one family at a time, preserving parameter escaping,
 read limits, basis/identity and non-2xx/oversize/cancellation behavior. Python proxy
 removal, changing custody/duplicate policy and universal endpoint budgets are not
 part of these cuts.
@@ -216,3 +217,29 @@ make drafts durable, remove expiry, infer complete source data or change native
 measurement semantics. Existing capture bank/page/receipt/comparison tests, exact
 live freeze/admission/replacement checks and source-free native-window tests are
 retained with explicit source wiring. No transport or UI protocol changed.
+
+## Operation GET and investigation adoption
+
+`registerOperationReads` holds the existing `/http-package`, `/operation-packages`,
+`/operations`, `/counter-rates` and `/histograms` handlers outside startup loading.
+Parameter validation, defaults, source bindings, current-window versus explicit-window
+semantics and response/error styles are unchanged. Eleven validation cases and the
+declaration response were checked after moving the unchanged handlers and before
+changing their connection wiring. In particular, `http.Error` validation failures
+retain JSON-looking text, text/plain content type, no-store and nosniff headers.
+Source failures remain 502 JSON, not zero-valued successful evidence.
+
+Two simultaneously registered operation/investigation routers use distinct injected
+backends/credentials/clients with an ambient trap receiving no reads. All four
+source-reading GET routes execute through the assigned client; `/operation-packages`
+is source-free. Already-cancelled GET requests avoid backend reads. Investigations
+keep revision/parent checks before reads and reopen exact stored receipts from a
+fresh registration even after backend closure and with no loaded plan registry.
+The existing optional-rate/histogram-error and failed-refresh receipt tests remain.
+These GET routes keep incoming request contexts and the shared client timeout;
+this refactor does not enroll them in the global POST query budget.
+
+All Go HTTP ClickHouse configuration is now centralized at startup. Optional XTDB
+configuration still has differing registration/request lifetimes, and definition
+files/result snapshots still have the documented working-directory/process-global
+boundaries. C2 remains active; source transport has not been consolidated.

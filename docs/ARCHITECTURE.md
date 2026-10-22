@@ -2,9 +2,10 @@
 
 [HTTP boundary inventory](HTTP_BOUNDARIES.md) distinguishes pure planning, source
 execution, custody/publication, optional XTDB and SSE lifetimes. Native measurement
-and exploration/tail/capture/live-comparison registration receive configured
-source values from startup. Query, SSE and held-draft owners retain distinct
-lifetimes; operation readers still have separately documented dependencies. Recipes and
+and record/operation/capture registrations receive configured source or connection
+values from one startup snapshot. Query, SSE and held-draft owners retain distinct
+lifetimes. Operation GET registration is separate from startup loading; its source
+bindings and investigation lineage remain family-owned. Recipes and
 dashboard planning share explicit-policy bounded JSON decoding/writing;
 semantic validation, status mapping and SSE lifetimes remain in their owners.
 Source transport extraction remains queued.
