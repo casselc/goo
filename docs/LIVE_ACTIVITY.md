@@ -19,8 +19,9 @@ UTC time is compact, with the full UTC timestamp and exact nanoseconds in the
 row tooltip. Logs show body/severity; spans show name/duration/reported status.
 Inspect uses the held record and attributes without a source request. Open trace
 is a separately named source continuation using that row's original read window.
-No ancestry is inferred from arrival order or a shared trace ID; richer reported-
-parent presentation remains S2 work.
+No ancestry is inferred from arrival order or a shared trace ID. The shared detail
+view follows only supplied, exact reported parent links with explicit limits. See
+[record presentation](RECORD_PRESENTATION.md).
 
 ## Intent and ownership
 
@@ -93,8 +94,9 @@ predicate in the selected row's original 60-second read window. It does not fetc
 the existing Run action explicitly rereads that fixed question. It is not a
 capture or an assertion of complete source coverage.
 
-Supplied-row ancestry and a common record presenter across all surfaces remain
-S2/A3 work. The paused parent return described below is implemented.
+Live and fixed results now share record summaries and detail composition, with
+bounded parent context from supplied span relationships. Wider Services adoption
+and a common record-table shell remain S2/A3 work. The paused parent return described below is implemented.
 The legacy advanced editor is a temporary compatibility consumer; the
 [whole-product reviews](STREAM_FIRST_WHOLE_PRODUCT_DESIGN.md) and
 [active queue](IMPLEMENTATION_PLAN.md) name its replacement/removal gates.

@@ -68,7 +68,7 @@
   if(!global.customElements.get('goo-field-value'))global.customElements.define('goo-field-value',GooFieldValue);
   if(!global.customElements.get('goo-attribute-list'))global.customElements.define('goo-attribute-list',GooAttributeList);
  }
- function mountModel(container,record,model,{onFilter,onBreakdown,onFacet,canRefine=()=>true,raw=true,facetHint}={}){
+ function mountModel(container,record,model,{onFilter,onBreakdown,onFacet,canRefine=()=>true,raw=true,facetHint,renderField}={}){
   const total=model.reduce((n,g)=>n+g.entries.length,0),root=node('goo-attribute-list',undefined,'attribute-viewer');
   const tools=node('div',undefined,'attribute-tools'),label=node('label','Find an attribute'),search=node('input');search.type='search';search.placeholder='Search keys and values';search.setAttribute('aria-label','Search attribute keys and values');label.append(search);
   const scopeLabel=node('label','Scope'),scope=node('select');scope.setAttribute('aria-label','Attribute scope');
@@ -80,7 +80,7 @@
    for(const group of model){if(scope.value!=='All scopes'&&scope.value!==group.name)continue;const entries=group.entries.filter(e=>matches(e,search.value));found+=entries.length;if(!entries.length)continue;
     const section=node('div',undefined,'attribute-group'),heading=node('h4',group.name);heading.append(node('span',String(entries.length),'attribute-group-count'));section.append(heading);
     for(const entry of entries){const row=node('div',undefined,'attribute-row'),key=node('span',entry.key,'attribute-key'),value=node('div',undefined,'attribute-value'),actions=node('div',undefined,'attribute-actions');row.dataset.key=entry.key;row.setAttribute('role','group');row.setAttribute('aria-label',group.name+': '+entry.key);
-     value.append(valueNode(entry.value));
+     value.append(renderField?.(entry)||valueNode(entry.value));
      const copyButton=node('button','Copy');copyButton.type='button';copyButton.setAttribute('aria-label','Copy value for '+entry.key);copyButton.onclick=()=>copy(entry.value,entry.key);actions.append(copyButton);
      if(selectable(entry)&&onFacet)for(const mode of ['include','exclude']){const action=node('button',mode==='include'?'Include':'Exclude');action.type='button';action.disabled=!canRefine();action.setAttribute('aria-label',(mode==='include'?'Include ':'Exclude ')+entry.field.kind+':'+entry.field.key+' from record');action.onclick=()=>{if(!canRefine())return;onFacet(structuredClone(entry.field),entry.value,mode);status.textContent=facetHint||'Staged '+mode+' for '+entry.field.kind+':'+entry.field.key+'. Apply or Open in the selection tray; displayed measurements are unchanged.'};actions.append(action)}
      if(entry.field&&typeof entry.value==='string'&&onFilter){const filter=node('button','Filter and run');filter.type='button';filter.disabled=!canRefine();filter.title=filter.disabled?'Choose All filters to narrow this question.':'Read a fresh result with this exact value in the fixed window';filter.setAttribute('aria-label','Filter and run by '+entry.field.kind+':'+entry.field.key);filter.onclick=()=>onFilter(entry.field,entry.value);actions.append(filter)}

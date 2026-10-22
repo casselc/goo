@@ -1,5 +1,53 @@
 # Validation record
 
+## Shared Live/fixed record presentation (2026-10-22 UTC)
+
+Query/packages image:
+`sha256:fcbb123a8793f112711c3e0399fc247b23cfbd3c4ee7d0492ed0f4a5e79ec807`.
+
+Live and fixed/frozen record tables now share UTC timestamps, qualified service
+names, severity/body and individual span status/duration. Their inspectors compose
+the same passive detail body and typed attribute viewer. Reported span parents are
+resolved only within supplied same-trace records, with explicit missing, ambiguous,
+invalid, cycle and depth-limit states. Logs show correlation IDs without ancestry.
+Inspection/disclosure never performs a wider read. [Contract and diagram](docs/RECORD_PRESENTATION.md)
+and [actual storyboards](docs/journeys/README.md).
+
+Actual checks:
+
+- Frontend suite: 33 test files pass; syntax and whitespace checks pass.
+- Hegel: 200 generated supplied-parent cases pass against the actual JavaScript,
+  covering permutation/cross-trace independence, bounded unique paths, reported
+  edges and non-mutation. Existing entry/filter state campaigns also pass
+  (80 cases × 24 steps each).
+- Real Chromium journey 106 passes (24.3s): generic OTel logs and spans have the
+  same display projection in Live and fixed results. A foreign trace with the same
+  span ID cannot supply a parent. Local inspection/context expansion and fixed
+  staging make no request; Run remains an explicit read. Mobile and standalone
+  SSR/detached-property/reconnect checks pass, including no component API calls.
+  Its observed Quint/quint-go entry/fixed-read ledger and five rejecting controls pass.
+- Nine compatibility journeys pass together (4.2m): 85, 86, 104, 100, 66,
+  105, 93, 102 and 103. They cover fixed/frozen records, bounded trail navigation,
+  typed filters, exact live-page retention through late arrivals/response loss,
+  keyboard/scroll/background pauses, explicit resume gaps and retained paused return.
+  The filter, entry and live-retention Bombadil campaigns pass. Affected actual
+  screenshots are regenerated from this image.
+- Served asset/server/binary hashes match source; all 13 services run after the
+  traffic generator is restored. Pre-existing pending queue IDs, exact retained
+  manifests, native review history and pinned citations survive. Cgroup OOM kills
+  remain zero. No native-store restart was performed this round; earlier restart
+  evidence is carried forward explicitly.
+
+Wider Services adoption, a common table shell, removal of inline attribute
+compatibility consumers and removal of the full saved editor remain open. The
+shared display does not merge Live/fixed/frozen source ownership or evidence bases.
+The journey uses real local OTel/source reads; component-gallery fixtures are
+synthetic and do not stand in for the integration journey.
+
+Evidence: `artifacts/record-presentation-unit.log`, `record-presentation-hegel.log`,
+`record-presentation-focused.log`, `record-presentation-compatibility.log`,
+`record-presentation-health.json` and ledgers under `artifacts/record-presentation/`.
+
 ## Return from fixed work to paused activity (2026-10-22 UTC)
 
 Query/packages image:

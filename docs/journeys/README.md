@@ -1,5 +1,14 @@
 # User journeys and storyboards
 
+[Journey 106](../../journeys/record-presentation.spec.js): inspect a real log in
+Live → stage/run a fixed query → compare the same presentation and local detail →
+return → repeat for a span with a held parent and an unrelated same-ID span →
+inspect mobile → verify standalone server-rendered/SPA components without APIs.
+Frames: [shared log detail](screenshots/106a-shared-log-detail.png),
+[reported span context](screenshots/106b-shared-span-context.png),
+[mobile record](screenshots/106c-mobile-shared-record.png).
+[Display contract and diagram](../RECORD_PRESENTATION.md).
+
 [Journey 105](../../journeys/paused-return.spec.js): inspect a held generic log →
 stage a field filter → open a fixed child → return while a real response is held →
 release that response without replacing the parent → reopen/run the retained fixed

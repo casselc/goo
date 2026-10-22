@@ -765,3 +765,10 @@ pinned old review versus later correction, current catalog tags, pending counts
 and publication/read transitions. Eight negative controls must fail. Its Bombadil
 campaign explores readonly citation/catalog/pending surfaces; it does not claim
 production multi-tab synchronization or multi-node replica conformance.
+
+Journey 106 compares real log/span presentation between Live and fixed results,
+asserts source-free detail/context expansion and exercises SSR, detached property
+updates, reconnect, text safety and mobile display in the standalone reference.
+`TestHegelRecordPresentationProperties` generates supplied parent graphs for order/
+cross-trace invariance, explicit-edge validity, bounded unique paths, non-mutation
+and exact time/individual-duration display. [Contract](../docs/RECORD_PRESENTATION.md).

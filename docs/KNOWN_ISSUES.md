@@ -5,7 +5,7 @@
 Retained evidence now has tag/environment/literal-service/capture-time browsing
 and exact review citations in documents. Catalog scans and browser pending-request
 storage are bounded; multi-tab journal coordination and server-owned recovery are
-not implemented. The [active consolidation queue](IMPLEMENTATION_PLAN.md) now tracks the reviews. Separate live/saved operation ownership and compact applied population composition are implemented; the first bounded live entry now has a compact scope/action bar and collapsed mobile navigation. Typed live attribute filters and fixed-window staging are implemented. Paused-parent return is tab-local and source-free; reload does not retain it. Shared record/context presentation, ancestry, service adoption and revision-aware catalogs remain open. See [Live Activity](LIVE_ACTIVITY.md) for current limits.
+not implemented. The [active consolidation queue](IMPLEMENTATION_PLAN.md) now tracks the reviews. Separate live/saved operation ownership and compact applied population composition are implemented; the first bounded live entry now has a compact scope/action bar and collapsed mobile navigation. Typed live attribute filters and fixed-window staging are implemented. Paused-parent return is tab-local and source-free; reload does not retain it. Live/fixed record and detail presentation now share bounded supplied-parent context; it is not a complete trace. Wider service adoption, a common table shell, saved-editor removal and revision-aware catalogs remain open. See [Live Activity](LIVE_ACTIVITY.md) for current limits.
 
 Optional XTDB retention now accepts selected exact live result pages as well as
 saved captures, with idempotent initial/correction requests and await-token

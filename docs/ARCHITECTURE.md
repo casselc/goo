@@ -261,5 +261,13 @@ Live Activity now keeps signal-local `ScopeFilters` draft/applied predicates in 
 application owner. Shared `GooAttributes` emits typed Include/Exclude intents;
 chip edits pause locally, Apply starts a new tail generation, and the inspector's
 fixed continuation stages the original row read window in `GooExploration` without
-fetching. Only the existing Run action rereads it. This is the first S2 interaction
-cut; record-body deduplication remains planned. The existing trail now exposes suspend/resume of its retained fixed view; Live Activity uses these to cancel hidden work and restore its paused parent without a read.
+fetching. Only the existing Run action rereads it. The existing trail exposes
+suspend/resume of its retained fixed view; Live Activity uses these to cancel hidden
+work and restore its paused parent without a read. Shared record bodies are now
+implemented as described below; wider table-shell consolidation remains planned.
+
+The [shared record presentation](RECORD_PRESENTATION.md) adapter now removes
+parallel row-formatting paths from Live and fixed results. Its custom elements
+render supplied data only; application adapters retain reads, scope/basis, selection,
+fixed/trace continuations and retention. Supplied-parent context has bounded exact
+ID traversal and explicit ambiguity/missing/cycle states, with no wider lookup.

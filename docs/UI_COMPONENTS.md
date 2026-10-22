@@ -423,3 +423,10 @@ Live Activity supplies its fixed-investigation action through the shared
 `GooUI.inspector` action slot, outside the scrolling attribute body. The application
 retains the inspector DOM and selected observation when a fixed child is active;
 its return action does not ask display components to fetch or reconstruct records.
+
+Shared `goo-record-summary` and `goo-record-context` are passive supplied-record
+elements adopted by Live and fixed record presentation. The common detail body
+reuses the typed attribute viewer with an optional `renderField` callback; the
+record adapter formats only its normalized timestamp field, leaving raw Copy and
+qualified resource/attribute values intact. [Contract, SSR/SPA examples, limits and
+adoption gates](RECORD_PRESENTATION.md).

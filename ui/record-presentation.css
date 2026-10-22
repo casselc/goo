@@ -1,0 +1,12 @@
+/* Passive record content; consuming applications own tables, actions and viewports. */
+goo-record-summary{display:block;min-width:0;overflow-wrap:anywhere}
+goo-record-summary .record-label,goo-record-summary .record-duration{font-size:11px;color:var(--muted,#98a8bf)}
+goo-record-summary .record-label[data-tone=error]{color:var(--danger,#f59a9a)}
+goo-record-summary .record-label[data-tone=warn]{color:var(--warn,#e1bd77)}
+goo-record-summary .record-message{white-space:pre-wrap;overflow-wrap:anywhere}
+goo-record-summary[compact] .record-message{max-height:4.2em;overflow:hidden}
+goo-record-summary details{border:0;margin:0;padding:0}
+goo-record-context{display:block;min-width:0;margin:4px 0;font-size:11px}
+goo-record-context>details{padding-top:4px;margin-top:4px}
+goo-record-context .record-reference{display:inline-block;margin:4px 6px 4px 0;border:1px solid var(--border,#334155);border-radius:4px;padding:2px 5px;overflow-wrap:anywhere}
+.record-detail>goo-record-summary{margin-bottom:6px}

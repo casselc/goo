@@ -84,7 +84,7 @@ assigned to the existing cuts below; they are not a second backlog.
 
 The first S1 monitor is implemented and validated; see [Live Activity](LIVE_ACTIVITY.md)
 and [release evidence](../VALIDATION.md). The configured lab environment is explicit;
-remembered scope and deployment discovery are not implemented. The first S2 cut adds shared-viewer Include/Exclude, staged chips/Apply and explicit fixed-window staging. Paused-parent return now suspends fixed work and restores selection/scope/scroll without a read. Shared record presentation and ancestry remain open in S2/A3.
+remembered scope and deployment discovery are not implemented. The first S2 cut adds shared-viewer Include/Exclude, staged chips/Apply and explicit fixed-window staging. Paused-parent return now suspends fixed work and restores selection/scope/scroll without a read. Live/fixed summaries and detail bodies now share passive record presentation, including bounded supplied-parent context. Wider Services adoption, a common table shell and saved-editor removal remain open in S2/A3.
 The compact wrapper is a migration adapter, not the final whole-product architecture. The entry now consolidates environment/signal/Pause in one bar, reveals Apply for drafts, and collapses mobile navigation; first-record viewport bounds are tested.
 
 | Existing cut | Whole-product migration and what it replaces | Deletion/parity gate |
