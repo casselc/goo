@@ -1,5 +1,12 @@
 # Known issues and gaps
 
+[C2 HTTP boundaries](HTTP_BOUNDARIES.md) inventories current route effects/limits.
+Native measurement endpoint/credentials/client are now injected from startup;
+other source families retain request-time environment reads, and document citation
+checks and retention registration still resolve XTDB at different lifetimes.
+Decoder/response and transport consolidation remain queued. Native environment
+mutation after registration is not a supported configuration reload.
+
 [Bounded C1 publication consolidation](IMMUTABLE_PUBLICATION.md) is delivered for
 all six Go publication paths. Family validation, identity, catalogs and duplicate
 policies remain separate. Custody and native YAML retain file-only sync (no directory

@@ -15,9 +15,9 @@ import (
 	"time"
 )
 
-func registerMeasurements(mux *http.ServeMux, client *http.Client, dir string) {
+func registerMeasurements(mux *http.ServeMux, source measurements.Source, dir string) {
 	packagesDir := filepath.Join(dir, "measurement-packages")
-	custodyDir := filepath.Join(dir, "exploration", "custody")
+	source.CustodyDir = filepath.Join(dir, "exploration", "custody")
 	send := func(w http.ResponseWriter, code int, v any) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Cache-Control", "no-store")
@@ -195,11 +195,6 @@ func registerMeasurements(mux *http.ServeMux, client *http.Client, dir string) {
 			fail(w, e)
 			return
 		}
-		endpoint := os.Getenv("CLICKHOUSE_URL")
-		if endpoint == "" {
-			endpoint = "http://localhost:8123"
-		}
-		source := measurements.Source{Endpoint: endpoint, User: os.Getenv("CLICKHOUSE_USER"), Password: os.Getenv("CLICKHOUSE_PASSWORD"), Client: client}
 		ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
 		defer cancel()
 		result, e := source.Discover(ctx, q)
@@ -218,11 +213,6 @@ func registerMeasurements(mux *http.ServeMux, client *http.Client, dir string) {
 			fail(w, e)
 			return
 		}
-		endpoint := os.Getenv("CLICKHOUSE_URL")
-		if endpoint == "" {
-			endpoint = "http://localhost:8123"
-		}
-		source := measurements.Source{Endpoint: endpoint, User: os.Getenv("CLICKHOUSE_USER"), Password: os.Getenv("CLICKHOUSE_PASSWORD"), Client: client, CustodyDir: custodyDir}
 		ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
 		defer cancel()
 		result, e := source.Run(ctx, q, nil)

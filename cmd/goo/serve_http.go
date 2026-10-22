@@ -71,7 +71,7 @@ func serveHTTP(args []string) error {
 	source := prebuilt.HTTPSource{ScopeName: *scope, ScopeVersion: *version, SchemaURL: "https://opentelemetry.io/schemas/1.37.0"}
 	client := &http.Client{Timeout: 15 * time.Second}
 	mux := http.NewServeMux()
-	registerMeasurements(mux, client, *captureDir)
+	registerMeasurements(mux, nativeMeasurementSourceFromEnvironment(client), *captureDir)
 	mux.HandleFunc("GET /http-package", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Cache-Control", "no-store")

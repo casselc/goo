@@ -1,5 +1,11 @@
 # Architecture
 
+[HTTP boundary inventory](HTTP_BOUNDARIES.md) distinguishes pure planning, source
+execution, custody/publication, optional XTDB and SSE lifetimes. Native measurement
+registration receives a configured source from startup; other route families still
+have separately documented dependencies. No generic response or transport owner
+has replaced these contracts.
+
 [Immutable publication](IMMUTABLE_PUBLICATION.md) shares write/sync/link mechanics
 across reusable telemetry packages, workbench artifacts, capture stores, lifecycle
 custody and native YAML. The latter two retain explicit file-only sync.

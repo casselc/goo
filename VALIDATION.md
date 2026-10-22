@@ -1,5 +1,43 @@
 # Validation record
 
+## C2 endpoint inventory and native startup dependency injection (2026-10-22 UTC)
+
+[HTTP effects, policies and dependency diagram](docs/HTTP_BOUNDARIES.md) inventories
+source reads (including GET executions), pure planning, custody/file publication,
+live draft/freeze branches, optional XTDB, decoder limits and SSE/query-budget
+lifetimes. Native measurement registration now accepts `measurements.Source` from
+startup wiring. Endpoint/credentials/client are resolved once, with the existing
+localhost fallback; custody remains rooted under the configured server data path.
+Native handlers no longer reread process environment. Other families remain queued.
+
+Actual checks:
+
+- Existing native registry/preview/YAML fixture tests pass before the change
+  (0.042s) and after injection in the full HTTP race suite. Exact stored bytes,
+  revision, POST response/headers, builtin resolution and source-free plans retain
+  their existing fixture contracts.
+- Two independently injected loopback backends return distinct native gauge
+  values and instrument discovery responses. Tests check credentials, readonly
+  parameters and explicit client use. An ambient trap endpoint receives zero
+  requests; mutating the caller's source value after registration does not redirect
+  the handler. Invalid question validation and cancelled requests avoid backend
+  reads; cancellation retains the existing 502 response. Gauge/discovery calls do
+  not create lifecycle custody files.
+- Startup tests pin localhost fallback, credential/client wiring and snapshot
+  behavior after environment changes. Secrets are test-only strings, not read or
+  printed from configured runtime credentials. Native environment mutation is not
+  a configuration reload API.
+- `go test -race ./cmd/goo` passes on final source (1.853s), including existing SSE,
+  budget/cancellation, capture, retention and publication tests. `go test ./...`
+  passes across all 13 root packages. Whitespace and changed local Markdown targets
+  pass. Decoder/response helpers and ClickHouse transport are unchanged.
+
+C2 remains active: freeze two pure planning route decoder/response contracts before
+sharing matching mechanics, then inject additional families and extract bounded
+source transport with its own validation. No browser/UI/execution-state protocol
+changed; no screenshot or new Hegel/Quint campaign was needed for this dependency
+wiring cut. The running stack was not rebuilt or redeployed.
+
 ## C1 custody/native YAML fixtures and bounded consolidation completion (2026-10-22 UTC)
 
 [Publication contract, diagram and acceptance audit](docs/IMMUTABLE_PUBLICATION.md)

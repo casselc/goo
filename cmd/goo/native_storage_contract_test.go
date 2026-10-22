@@ -37,7 +37,7 @@ func TestNativeYAMLStorageContract(t *testing.T) {
 	}
 	dir := t.TempDir()
 	mux := http.NewServeMux()
-	registerMeasurements(mux, http.DefaultClient, dir)
+	registerMeasurements(mux, measurements.Source{Client: http.DefaultClient}, dir)
 	payload, _ := json.Marshal(map[string]string{"yaml": string(wire)})
 	request := func(method, path, body string) *httptest.ResponseRecorder {
 		w := httptest.NewRecorder()
@@ -56,7 +56,7 @@ func TestNativeYAMLStorageContract(t *testing.T) {
 		}
 	}
 	reopened := http.NewServeMux()
-	registerMeasurements(reopened, http.DefaultClient, dir)
+	registerMeasurements(reopened, measurements.Source{Client: http.DefaultClient}, dir)
 	w := httptest.NewRecorder()
 	reopened.ServeHTTP(w, httptest.NewRequest("GET", "/measurement-packages", nil))
 	if w.Code != 200 || !strings.Contains(w.Body.String(), ids["nativeMeasurementRevision"]) {

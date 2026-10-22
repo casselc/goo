@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/casselc/goo/measurements"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -12,7 +13,7 @@ import (
 func TestMeasurementPreviewRegistryAndWorkflowRoutes(t *testing.T) {
 	t.Chdir("../..")
 	mux := http.NewServeMux()
-	registerMeasurements(mux, http.DefaultClient, t.TempDir())
+	registerMeasurements(mux, measurements.Source{Client: http.DefaultClient}, t.TempDir())
 	request := func(method, path, body string) *httptest.ResponseRecorder {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest(method, path, strings.NewReader(body)))
@@ -52,7 +53,7 @@ func TestMeasurementPreviewRegistryAndWorkflowRoutes(t *testing.T) {
 func TestCustomMeasurementCannotShadowBuiltinWorkflow(t *testing.T) {
 	t.Chdir("../..")
 	mux := http.NewServeMux()
-	registerMeasurements(mux, http.DefaultClient, t.TempDir())
+	registerMeasurements(mux, measurements.Source{Client: http.DefaultClient}, t.TempDir())
 	data, e := os.ReadFile("config/measurements/worker-utilization.yaml")
 	if e != nil {
 		t.Fatal(e)
