@@ -917,3 +917,12 @@ whitespace and byte-budget cases against the shared decoder/writer. Run
 tests also run 32 before/after wire fixtures from `testdata/http/planning.json`;
 see [route policy and adoption boundaries](../docs/HTTP_BOUNDARIES.md#pure-planning-json-adoption).
 No new browser execution-state or Quint protocol is introduced by this extraction.
+
+## Bounded source HTTP (C2 native first adoption)
+
+`TestHegelSourceHTTPByteBounds` generates 100 binary payload/byte-budget/partial-read
+failure cases against the bounded-body primitive. Run
+`go test -run '^TestHegelSourceHTTPByteBounds$' -count=1` here. Native request/error/
+row/scanner contracts and the gated readonly real ClickHouse test live in the root
+measurements package; see [ownership and live-test variables](../docs/HTTP_BOUNDARIES.md#native-source-http-mechanics--first-transport-adoption).
+No browser execution-state or Quint protocol changed in this transport extraction.

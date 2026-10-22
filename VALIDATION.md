@@ -1,5 +1,44 @@
 # Validation record
 
+## C2 native source HTTP mechanics and readonly ClickHouse validation (2026-10-22 UTC)
+
+[Native transport contract/diagram](docs/HTTP_BOUNDARIES.md#native-source-http-mechanics--first-transport-adoption)
+records first adoption of `internal/sourcehttp.Post` and `ReadBounded`. Native
+compilation, parameter escaping/query flags, client fallback, response closure,
+status/error mapping, row/scanner guards, evaluation, basis and custody stay in
+`measurements.Source`. Other family transports are not adopted yet.
+
+Actual checks:
+
+- New native contracts pass before extraction (0.155s). They pin exact SQL/auth/
+  URL flags and escaping without input mutation, empty/raw-line behavior, exact
+  10,000-row and 8 MiB boundaries, overflows, single-line scanner failure, 201/503,
+  transport errors, cancellation and body closure. Read failure still precedes a
+  non-200 status error. All refused reads return nil rows rather than partial data.
+  The same cases pass after extraction.
+- Affected race suites pass: measurements (3.644s), HTTP routes (2.343s), including
+  native discovery, lifecycle/counter/histogram checks and existing source injection,
+  planning wire fixtures, budgets, SSE, captures and optional-store unit contracts.
+- Hegel's 100 generated payload/budget/read-error cases pass (0.021s): exact
+  in-budget bytes, consumption at most limit+1, overflow detection and no partial
+  payload on overflow/read failure. Request timeouts and body lifetime remain
+  caller-owned; the helper adds no retries or generic status policy.
+- The gated readonly real ClickHouse test passes with race detection against the
+  existing local lab (0.10s live test; 2.598s package including native contracts).
+  Complex literal-backslash/newline/tab/CR/NUL/quote/Unicode/plus/percent parameters
+  roundtrip through `numbers(3)`. A native gauge source query/evaluation passes
+  `ValidateResult`, and native instrument discovery succeeds. These scope queries
+  may legitimately have no data; no telemetry was inserted and no completeness
+  claim is made. The fixture's nil client also exercises the existing 15s fallback.
+- `go test ./...` passes. Live checks explicitly skip without
+  `GOO_CLICKHOUSE_TEST_URL`; configured local test credentials are disposable lab
+  values. Whitespace and changed local Markdown targets pass.
+
+The running application image was not rebuilt. No public query/execution-state,
+stream, stored schema or UI protocol changed, so no new browser screenshot or Quint
+model was required. C2 remains active: freeze record adapter escaping/status/row
+contracts next, then adopt only matching primitives and retain its distinct rules.
+
 ## C2 optional XTDB startup wiring and real pinned-citation isolation (2026-10-22 UTC)
 
 [Optional retention ownership and diagram](docs/HTTP_BOUNDARIES.md#optional-retention-and-document-citation-startup-wiring)

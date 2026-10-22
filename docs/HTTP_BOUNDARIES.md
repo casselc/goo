@@ -158,9 +158,9 @@ reopen in a new registration, and old draft tokens do not survive that registrat
 The full HTTP race suite
 retains budget, SSE, capture and optional-store tests.
 
-C2 remains active. The pure planning adoption below is delivered. Next migrate
-bounded native ClickHouse transport mechanics with explicit family limits, followed
-by another compatible adapter. Transport extraction proceeds one family at a time, preserving parameter escaping,
+C2 remains active. Pure planning JSON and the first native transport adoption are
+delivered. Next freeze the record adapter contract before sharing matching source
+HTTP mechanics. Transport adoption proceeds one family at a time, preserving parameter escaping,
 read limits, basis/identity and non-2xx/oversize/cancellation behavior. Python proxy
 removal, changing custody/duplicate policy and universal endpoint budgets are not
 part of these cuts.
@@ -249,7 +249,7 @@ this refactor does not enroll them in the global POST query budget.
 
 All Go HTTP ClickHouse and optional XTDB configuration is now resolved at startup.
 Definition files/result snapshots still have the documented working-directory/
-process-global boundaries. C2 remains active; source transport has not been consolidated.
+process-global boundaries. C2 remains active; the first native transport mechanics adoption below is delivered.
 
 ## Optional retention and document citation startup wiring
 
@@ -279,6 +279,54 @@ XTDB instance as well as the complete HTTP race suite with that variable enabled
 The fixture uses decimal-string timestamps matching the retained-record adapter.
 
 ClickHouse and XTDB environment mutation after startup is not a reload mechanism.
-C2's next cut is bounded native source transport mechanics, preserving each
-family's query compilation, parameter escaping, body/row limits, basis and error
-contracts. No database schema, bitemporal policy or public UI workflow changed here.
+C2's native transport cut below is delivered. The next record-adapter adoption
+must preserve query compilation, parameter escaping, body/row limits, basis and
+error contracts. No database schema, bitemporal policy or public UI workflow changed here.
+
+## Native source HTTP mechanics — first transport adoption
+
+`measurements.Source.read` now uses `internal/sourcehttp.Post` for context-bound
+POST construction, explicit Basic Auth and the supplied client, and `ReadBounded`
+for limit-plus-one body reading. The adapter still closes the body and owns its
+15-second fallback client, endpoint/query parameters, escaping, readonly/resource
+settings, exact status/limit errors, native scanner and 10,000-row guard. Query
+compilation, evaluation, native stream identity, reset/temporality, coverage, basis
+and custody have not moved. `Post` requires a non-nil caller-supplied client; it
+does not retry or change transport configuration. `ReadBounded` returns no partial
+payload on overflow/read error, with the family deciding the resulting error.
+
+Native status checking remains after bounded body reading, so a body-read error
+still precedes a non-200 status error. Other adapters may check status first; these
+two primitives permit that order rather than imposing native policy. In particular,
+record source escaping, status ordering, row validation/limits and SSE ownership
+are not adopted or normalized in this cut. This is a buffering helper, not an SSE
+reader, universal ClickHouse evaluator or query optimizer.
+
+```mermaid
+flowchart LR
+  Plan[Native compiler: SQL and typed parameters] --> Native[Native source adapter]
+  Native --> Policy[Native URL / escaping / query settings / client fallback]
+  Policy --> Post[Shared POST / auth / context primitive]
+  Post --> CH[ClickHouse]
+  CH --> Body[Response owned and closed by native adapter]
+  Body --> Read[Shared bounded read: limit plus one]
+  Read --> Guard[Native status / 8 MiB / scanner / 10000-row guards]
+  Guard --> Evaluate[Native evaluation / evidence basis / custody]
+```
+
+Before extraction, native contracts pin exact request body/auth/query flags,
+escaping (without mutating parameter maps), response closure, empty/raw-line
+behavior, exact/overflow byte and row boundaries, scanner-size failure, 201/503,
+transport/cancellation errors and read-error-before-status precedence. The same
+contracts pass after extraction. The Hegel campaign generates byte budgets and
+partial-read failures, proving exact in-budget bytes, at-most-limit-plus-one
+consumption and no partial success on error/overflow.
+
+The gated real test `TestClickHouseNativeSourceTransportIntegration` requires
+`GOO_CLICKHOUSE_TEST_URL` and optional `GOO_CLICKHOUSE_TEST_USER` /
+`GOO_CLICKHOUSE_TEST_PASSWORD`. It uses readonly queries against the local lab:
+complex escaped parameters roundtrip through `numbers(3)`, a native gauge query
+passes evaluation/result identity validation, and native instrument discovery
+succeeds. No telemetry is inserted; the gauge/discovery scope may have no data.
+Root runs without the variable explicitly skip this live check. No running app
+image was rebuilt for this code-only transport cut.

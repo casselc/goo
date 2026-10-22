@@ -6,8 +6,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/internal/sourcehttp"
 	"github.com/casselc/goo/metrics"
-	"io"
 	"math"
 	"net/http"
 	"net/url"
@@ -145,25 +145,20 @@ func (s Source) read(ctx context.Context, plan Plan) ([]json.RawMessage, error) 
 		v.Set(k, x)
 	}
 	u.RawQuery = v.Encode()
-	req, e := http.NewRequestWithContext(ctx, "POST", u.String(), strings.NewReader(plan.SQL))
-	if e != nil {
-		return nil, e
-	}
-	req.SetBasicAuth(s.User, s.Password)
 	client := s.Client
 	if client == nil {
 		client = &http.Client{Timeout: 15 * time.Second}
 	}
-	resp, e := client.Do(req)
+	resp, e := sourcehttp.Post(ctx, client, u.String(), s.User, s.Password, plan.SQL)
 	if e != nil {
 		return nil, e
 	}
 	defer resp.Body.Close()
-	b, e := io.ReadAll(io.LimitReader(resp.Body, (8<<20)+1))
+	b, oversize, e := sourcehttp.ReadBounded(resp.Body, 8<<20)
 	if e != nil {
 		return nil, e
 	}
-	if resp.StatusCode != 200 || len(b) > 8<<20 {
+	if resp.StatusCode != 200 || oversize {
 		return nil, fmt.Errorf("bounded measurement source HTTP %d / payload limit", resp.StatusCode)
 	}
 	rows := []json.RawMessage{}

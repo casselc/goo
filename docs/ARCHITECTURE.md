@@ -10,7 +10,9 @@ dashboard planning share explicit-policy bounded JSON decoding/writing;
 semantic validation, status mapping and SSE lifetimes remain in their owners.
 Retention routes and document citation checks share an injected optional XTDB URL;
 each operation receives its own read basis, and document file loading remains
-independent of XTDB. Source transport extraction remains queued.
+independent of XTDB. Native measurements now adopt shared POST/auth/context and
+bounded-body primitives, while compilation, escaping, status/row guards, evidence
+basis and custody remain in the native adapter. Record transport adoption is next.
 
 [Immutable publication](IMMUTABLE_PUBLICATION.md) shares write/sync/link mechanics
 across reusable telemetry packages, workbench artifacts, capture stores, lifecycle
