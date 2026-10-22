@@ -1,5 +1,41 @@
 # Validation record
 
+## C2 frozen pure planning JSON contracts and shared mechanics (2026-10-22 UTC)
+
+[Pure planning adoption contract/diagram](docs/HTTP_BOUNDARIES.md#pure-planning-json-adoption)
+records the bounded recipe/dashboard cut. Both routes now share typed bounded JSON
+decoding and JSON/no-store writing in `internal/httpjson`; they retain semantic
+validation, status mapping, exact byte limits and trailing-input messages. Other
+route families and streaming responders are unchanged.
+
+Actual checks:
+
+- Thirty-two frozen wire cases pass on the old handlers before extraction (0.029s)
+  and on the shared implementation. They compare exact status/body and content-type,
+  cache, Allow and nosniff headers for valid/empty/null/array/truncated input,
+  top-level/nested unknown fields, extra values/malformed tails, whitespace,
+  exact/over-limit bodies, request content-type compatibility, empty objects and
+  method refusal. Compact fill/padding fields reconstruct large request bodies.
+- Recipe's 16 KiB limit and “require one JSON object” message remain distinct from
+  dashboard's 256 KiB limit and “expected one JSON object”. First-value oversize and
+  trailing-whitespace oversize retain their different error bodies and 400 status.
+  Null still reaches domain validation. The helper does not introduce media-type
+  enforcement, generic null/duplicate rejection or universal HTTP errors.
+- HTTP race tests pass (1.879s), including all 32 fixtures, existing source-free
+  recipe plans, dashboard registry declarations and unrelated native/SSE/query
+  budget/retention/capture contracts. `go test ./...` passes; the new helper is
+  exercised through actual route fixtures rather than a mirrored root unit suite.
+- Hegel's 100 generated decoder/writer cases pass (0.033s): Unicode/escaped labels,
+  typed int64 values above JS safe range, whitespace, exact/insufficient byte limits,
+  second values, unknown fields and exact encoded JSON/no-store responses.
+  Whitespace and changed local Markdown targets pass.
+
+No source/persistence dependency or browser execution-state protocol changed; no
+new screenshot or Quint model/campaign was needed for this mechanical cut. The
+running stack was not rebuilt. Writer encode/write errors remain ignored as in the
+original routes. C2 remains active; additional source dependency injection is next,
+with further JSON adoption and bounded transport extraction still queued.
+
 ## C2 endpoint inventory and native startup dependency injection (2026-10-22 UTC)
 
 [HTTP effects, policies and dependency diagram](docs/HTTP_BOUNDARIES.md) inventories

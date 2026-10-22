@@ -3,8 +3,9 @@
 [HTTP boundary inventory](HTTP_BOUNDARIES.md) distinguishes pure planning, source
 execution, custody/publication, optional XTDB and SSE lifetimes. Native measurement
 registration receives a configured source from startup; other route families still
-have separately documented dependencies. No generic response or transport owner
-has replaced these contracts.
+have separately documented dependencies. Recipes and dashboard planning share explicit-policy bounded JSON decoding/writing;
+semantic validation, status mapping and SSE lifetimes remain in their owners.
+Source transport extraction remains queued.
 
 [Immutable publication](IMMUTABLE_PUBLICATION.md) shares write/sync/link mechanics
 across reusable telemetry packages, workbench artifacts, capture stores, lifecycle

@@ -1,4 +1,4 @@
-# HTTP effects and dependency boundaries — C2 first cut
+# HTTP effects and dependency boundaries — C2 active
 
 This inventory describes the current Go server routes, not a new API. Browser
 `/api` proxy mapping remains in Python. `serve-http` loads binding/inventory and
@@ -110,10 +110,53 @@ request cancellation and absence of gauge/discovery lifecycle files. Startup tes
 pin default endpoint and configuration snapshot behavior. The full HTTP race suite
 retains budget, SSE, capture and optional-store tests.
 
-C2 remains active. Next, freeze decoder/response cases for two pure planning routes
-and share only matching mechanics with explicit byte/message policies. Then migrate
+C2 remains active. The pure planning adoption below is delivered. Next migrate
 additional source families to injected startup dependencies. Bounded ClickHouse
 transport extraction follows one family at a time, preserving parameter escaping,
 read limits, basis/identity and non-2xx/oversize/cancellation behavior. Python proxy
 removal, changing custody/duplicate policy and universal endpoint budgets are not
-part of this cut.
+part of these cuts.
+
+## Pure planning JSON adoption
+
+Recipes and dashboard planning now use `internal/httpjson.Decode` and `Write`.
+The decoder takes an explicit byte limit and trailing-input message. It retains
+`encoding/json` typed decoding and unknown-field refusal without imposing content
+media-type checks, null rejection or duplicate-key rules. The route validates the
+decoded domain object after successful decoding; targets can be partly populated
+on error and must not be executed/published in that state. Writer behavior is the
+existing JSON content type, no-store header and newline-terminated JSON encoder;
+encoding/write errors remain ignored as in the original routes. It is not SSE or
+a universal error/status mapper.
+
+```mermaid
+flowchart LR
+  Recipe[Recipes: 16 KiB / require one JSON object] --> Decode[Shared bounded typed JSON decoder]
+  Dashboard[Dashboard: 256 KiB / expected one JSON object] --> Decode
+  Decode --> Valid[Route-specific semantic validation / pure plan]
+  Decode --> Error[Route-specific error response]
+  Valid --> Write[Shared JSON / no-store writer]
+  Error --> Write
+```
+
+`testdata/http/planning.json` pins 32 selected wire cases across the two POST
+routes and mux method refusal. It includes valid plans, empty/null/array/truncated
+input, unknown top-level/nested fields, second values, malformed tails, trailing
+whitespace, exact and over-limit bodies, ignored request content type, empty
+objects and 405 behavior. Large bodies are reconstructed from compact fill/padding
+fields. Status, exact response bytes and selected headers are compared.
+
+Both fixture sets passed on the old handlers before extraction. Recipes retain
+“require one JSON object”; dashboards retain “expected one JSON object”. Exceeding
+the body budget during the first value retains the body-too-large error; doing so
+while checking trailing whitespace retains the caller's trailing-input message.
+Both continue to use 400. Null still reaches domain validation rather than a new
+generic “must be object” guard. Default mux text/Allow headers remain outside the
+JSON writer.
+
+The Hegel campaign generates Unicode/escaped labels, exact typed int64 values above
+JS safe range, whitespace and exact/insufficient byte budgets. It checks roundtrip,
+unknown fields, second values and the JSON/no-store response. Existing HTTP race
+checks retain pure planning/registry declaration behavior and unrelated native,
+SSE, budget, retention and capture contracts. No source or persistence dependency
+was added to these planning routes. Other JSON route families are not yet adopted.

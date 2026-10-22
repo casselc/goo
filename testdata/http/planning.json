@@ -1,0 +1,463 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "recipe/valid",
+      "method": "POST",
+      "path": "/recipes",
+      "body": "{\"id\":\"errors\",\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"limit\":100,\"offset\":0}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"transform\":{\"measurePlan\":{\"scope\":{\"family\":\"explore\",\"signal\":\"spans\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"span-record\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"measures\":[{\"id\":\"count\",\"operator\":\"count\",\"outputType\":\"uint64\",\"unit\":\"{record}\",\"merge\":\"sum\"},{\"id\":\"recorded_status\",\"operator\":\"partition-count\",\"input\":{\"kind\":\"column\",\"key\":\"status_class\"},\"inputType\":\"string\",\"outputType\":\"partitioned-uint64\",\"unit\":\"{record}\",\"merge\":\"sum-aligned-partitions\"}],\"dimensions\":[{\"kind\":\"column\",\"key\":\"service\"}],\"bucketMs\":0,\"groupTimeSeries\":false},\"relation\":\"same-population\",\"origin\":{\"family\":\"explore\",\"signal\":\"spans\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"span-record\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"target\":{\"family\":\"explore\",\"signal\":\"spans\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"span-record\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"changes\":[{\"field\":\"environment\",\"effect\":\"preserved\"},{\"field\":\"window\",\"effect\":\"preserved\"},{\"field\":\"sourceBinding\",\"effect\":\"preserved\"},{\"field\":\"signal\",\"effect\":\"preserved\"},{\"field\":\"grain\",\"effect\":\"preserved\"},{\"field\":\"selector\",\"effect\":\"preserved\"},{\"field\":\"groupTimeSeries\",\"effect\":\"preserved\"},{\"field\":\"numeric\",\"effect\":\"preserved\"},{\"field\":\"groupBy\",\"effect\":\"replaced\"},{\"field\":\"measures\",\"effect\":\"replaced\"},{\"field\":\"bucketMs\",\"effect\":\"preserved\"},{\"field\":\"inspectionPage\",\"effect\":\"preserved\"}],\"preserves\":[\"Original environment\",\"Original fixed question window\",\"Source binding\",\"Signal\",\"Population grain\",\"Complete original record predicate\",\"Split time chart by breakdown\",\"Numeric binding and parsing policy\",\"Time chart interval \u2192 0 ms (0 disables chart)\",\"Inspection page \u2192 offset 0 / limit 100\"],\"replaces\":[\"Grouping \u2192 column.service\",\"Summary \u2192 ; recorded-status summary \u2192 true\"]},\"recipe\":{\"id\":\"errors\",\"title\":\"Where are recorded errors concentrated?\",\"signal\":\"spans\",\"requires\":\"Captured spans with exporter status; unknown and Unset stay visible.\",\"limits\":\"Recorded Error spans / all matching captured spans. This is not a business failure rate; retries and mixed span kinds remain in the denominator. Unset is not confirmed success.\",\"next\":\"Rank services by recorded error percentage, refine a service and inspect Error evidence. Pin a baseline to investigate a regression.\"},\"question\":{\"spanStatus\":true,\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"groupBy\":[{\"kind\":\"column\",\"key\":\"service\"}],\"limit\":100,\"offset\":0},\"plan\":{\"rows\":\"SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, SpanAttributes AS Attributes, SpanName, SpanKind, ParentSpanId, multiIf(Duration \\u003c 1000000, '[0,1) ms', Duration \\u003c 5000000, '[1,5) ms', Duration \\u003c 10000000, '[5,10) ms', Duration \\u003c 50000000, '[10,50) ms', Duration \\u003c 100000000, '[50,100) ms', Duration \\u003c 500000000, '[100,500) ms', Duration \\u003c 1000000000, '[500,1000) ms', '[1000,+inf) ms') AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -\\u003e toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans FROM otel_traces WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration LIMIT 101 OFFSET 0 FORMAT JSONEachRow\",\"count\":\"SELECT toString(count()) AS count, toString(countIf(StatusCode = 'Error')) AS status_error, toString(countIf(StatusCode = 'Ok')) AS status_ok, toString(countIf(StatusCode = 'Unset')) AS status_unset, toString(countIf(StatusCode NOT IN ('Error','Ok','Unset'))) AS status_unknown FROM otel_traces WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 FORMAT JSONEachRow\",\"groups\":\"SELECT if(1, CAST(toString(ServiceName) AS Nullable(String)), NULL) AS g0, toString(count()) AS count, toString(countIf(StatusCode = 'Error')) AS status_error, toString(countIf(StatusCode = 'Ok')) AS status_ok, toString(countIf(StatusCode = 'Unset')) AS status_unset, toString(countIf(StatusCode NOT IN ('Error','Ok','Unset'))) AS status_unknown FROM otel_traces WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 GROUP BY g0 ORDER BY g0 LIMIT 1001 FORMAT JSONEachRow\",\"fields\":\"SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -\\u003e concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -\\u003e concat('attribute:', k), mapKeys(SpanAttributes)))) AS field FROM otel_traces WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY field LIMIT 129 FORMAT JSONEachRow\",\"parameters\":{\"environment\":\"prod\",\"from\":\"0\",\"to\":\"60000\"}}}\n"
+    },
+    {
+      "name": "recipe/empty",
+      "method": "POST",
+      "path": "/recipes",
+      "body": "",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "recipe/null",
+      "method": "POST",
+      "path": "/recipes",
+      "body": "null",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"signal must be spans or logs\"}\n"
+    },
+    {
+      "name": "recipe/array",
+      "method": "POST",
+      "path": "/recipes",
+      "body": "[]",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type struct { ID string \\\"json:\\\\\\\"id\\\\\\\"\\\"; Question exploration.Query \\\"json:\\\\\\\"question\\\\\\\"\\\" }\"}\n"
+    },
+    {
+      "name": "recipe/truncated",
+      "method": "POST",
+      "path": "/recipes",
+      "body": "{",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"unexpected EOF\"}\n"
+    },
+    {
+      "name": "recipe/unknown",
+      "method": "POST",
+      "path": "/recipes",
+      "body": "{\"foreign\":true}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"foreign\\\"\"}\n"
+    },
+    {
+      "name": "recipe/nested-unknown",
+      "method": "POST",
+      "path": "/recipes",
+      "body": "{\"id\":\"errors\",\"question\":{\"foreign\":1}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"foreign\\\"\"}\n"
+    },
+    {
+      "name": "recipe/second-value",
+      "method": "POST",
+      "path": "/recipes",
+      "body": "{\"id\":\"errors\",\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"limit\":100,\"offset\":0}} {}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require one JSON object\"}\n"
+    },
+    {
+      "name": "recipe/invalid-tail",
+      "method": "POST",
+      "path": "/recipes",
+      "body": "{\"id\":\"errors\",\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"limit\":100,\"offset\":0}} x",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require one JSON object\"}\n"
+    },
+    {
+      "name": "recipe/trailing-whitespace",
+      "method": "POST",
+      "path": "/recipes",
+      "body": "{\"id\":\"errors\",\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"limit\":100,\"offset\":0}} \n\t",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"transform\":{\"measurePlan\":{\"scope\":{\"family\":\"explore\",\"signal\":\"spans\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"span-record\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"measures\":[{\"id\":\"count\",\"operator\":\"count\",\"outputType\":\"uint64\",\"unit\":\"{record}\",\"merge\":\"sum\"},{\"id\":\"recorded_status\",\"operator\":\"partition-count\",\"input\":{\"kind\":\"column\",\"key\":\"status_class\"},\"inputType\":\"string\",\"outputType\":\"partitioned-uint64\",\"unit\":\"{record}\",\"merge\":\"sum-aligned-partitions\"}],\"dimensions\":[{\"kind\":\"column\",\"key\":\"service\"}],\"bucketMs\":0,\"groupTimeSeries\":false},\"relation\":\"same-population\",\"origin\":{\"family\":\"explore\",\"signal\":\"spans\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"span-record\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"target\":{\"family\":\"explore\",\"signal\":\"spans\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"span-record\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"changes\":[{\"field\":\"environment\",\"effect\":\"preserved\"},{\"field\":\"window\",\"effect\":\"preserved\"},{\"field\":\"sourceBinding\",\"effect\":\"preserved\"},{\"field\":\"signal\",\"effect\":\"preserved\"},{\"field\":\"grain\",\"effect\":\"preserved\"},{\"field\":\"selector\",\"effect\":\"preserved\"},{\"field\":\"groupTimeSeries\",\"effect\":\"preserved\"},{\"field\":\"numeric\",\"effect\":\"preserved\"},{\"field\":\"groupBy\",\"effect\":\"replaced\"},{\"field\":\"measures\",\"effect\":\"replaced\"},{\"field\":\"bucketMs\",\"effect\":\"preserved\"},{\"field\":\"inspectionPage\",\"effect\":\"preserved\"}],\"preserves\":[\"Original environment\",\"Original fixed question window\",\"Source binding\",\"Signal\",\"Population grain\",\"Complete original record predicate\",\"Split time chart by breakdown\",\"Numeric binding and parsing policy\",\"Time chart interval \u2192 0 ms (0 disables chart)\",\"Inspection page \u2192 offset 0 / limit 100\"],\"replaces\":[\"Grouping \u2192 column.service\",\"Summary \u2192 ; recorded-status summary \u2192 true\"]},\"recipe\":{\"id\":\"errors\",\"title\":\"Where are recorded errors concentrated?\",\"signal\":\"spans\",\"requires\":\"Captured spans with exporter status; unknown and Unset stay visible.\",\"limits\":\"Recorded Error spans / all matching captured spans. This is not a business failure rate; retries and mixed span kinds remain in the denominator. Unset is not confirmed success.\",\"next\":\"Rank services by recorded error percentage, refine a service and inspect Error evidence. Pin a baseline to investigate a regression.\"},\"question\":{\"spanStatus\":true,\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"groupBy\":[{\"kind\":\"column\",\"key\":\"service\"}],\"limit\":100,\"offset\":0},\"plan\":{\"rows\":\"SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, SpanAttributes AS Attributes, SpanName, SpanKind, ParentSpanId, multiIf(Duration \\u003c 1000000, '[0,1) ms', Duration \\u003c 5000000, '[1,5) ms', Duration \\u003c 10000000, '[5,10) ms', Duration \\u003c 50000000, '[10,50) ms', Duration \\u003c 100000000, '[50,100) ms', Duration \\u003c 500000000, '[100,500) ms', Duration \\u003c 1000000000, '[500,1000) ms', '[1000,+inf) ms') AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -\\u003e toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans FROM otel_traces WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration LIMIT 101 OFFSET 0 FORMAT JSONEachRow\",\"count\":\"SELECT toString(count()) AS count, toString(countIf(StatusCode = 'Error')) AS status_error, toString(countIf(StatusCode = 'Ok')) AS status_ok, toString(countIf(StatusCode = 'Unset')) AS status_unset, toString(countIf(StatusCode NOT IN ('Error','Ok','Unset'))) AS status_unknown FROM otel_traces WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 FORMAT JSONEachRow\",\"groups\":\"SELECT if(1, CAST(toString(ServiceName) AS Nullable(String)), NULL) AS g0, toString(count()) AS count, toString(countIf(StatusCode = 'Error')) AS status_error, toString(countIf(StatusCode = 'Ok')) AS status_ok, toString(countIf(StatusCode = 'Unset')) AS status_unset, toString(countIf(StatusCode NOT IN ('Error','Ok','Unset'))) AS status_unknown FROM otel_traces WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 GROUP BY g0 ORDER BY g0 LIMIT 1001 FORMAT JSONEachRow\",\"fields\":\"SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -\\u003e concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -\\u003e concat('attribute:', k), mapKeys(SpanAttributes)))) AS field FROM otel_traces WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY field LIMIT 129 FORMAT JSONEachRow\",\"parameters\":{\"environment\":\"prod\",\"from\":\"0\",\"to\":\"60000\"}}}\n"
+    },
+    {
+      "name": "recipe/at-limit",
+      "method": "POST",
+      "path": "/recipes",
+      "body": "{\"id\":\"errors\",\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"limit\":100,\"offset\":0}}",
+      "padTo": 16384,
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"transform\":{\"measurePlan\":{\"scope\":{\"family\":\"explore\",\"signal\":\"spans\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"span-record\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"measures\":[{\"id\":\"count\",\"operator\":\"count\",\"outputType\":\"uint64\",\"unit\":\"{record}\",\"merge\":\"sum\"},{\"id\":\"recorded_status\",\"operator\":\"partition-count\",\"input\":{\"kind\":\"column\",\"key\":\"status_class\"},\"inputType\":\"string\",\"outputType\":\"partitioned-uint64\",\"unit\":\"{record}\",\"merge\":\"sum-aligned-partitions\"}],\"dimensions\":[{\"kind\":\"column\",\"key\":\"service\"}],\"bucketMs\":0,\"groupTimeSeries\":false},\"relation\":\"same-population\",\"origin\":{\"family\":\"explore\",\"signal\":\"spans\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"span-record\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"target\":{\"family\":\"explore\",\"signal\":\"spans\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"span-record\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"changes\":[{\"field\":\"environment\",\"effect\":\"preserved\"},{\"field\":\"window\",\"effect\":\"preserved\"},{\"field\":\"sourceBinding\",\"effect\":\"preserved\"},{\"field\":\"signal\",\"effect\":\"preserved\"},{\"field\":\"grain\",\"effect\":\"preserved\"},{\"field\":\"selector\",\"effect\":\"preserved\"},{\"field\":\"groupTimeSeries\",\"effect\":\"preserved\"},{\"field\":\"numeric\",\"effect\":\"preserved\"},{\"field\":\"groupBy\",\"effect\":\"replaced\"},{\"field\":\"measures\",\"effect\":\"replaced\"},{\"field\":\"bucketMs\",\"effect\":\"preserved\"},{\"field\":\"inspectionPage\",\"effect\":\"preserved\"}],\"preserves\":[\"Original environment\",\"Original fixed question window\",\"Source binding\",\"Signal\",\"Population grain\",\"Complete original record predicate\",\"Split time chart by breakdown\",\"Numeric binding and parsing policy\",\"Time chart interval \u2192 0 ms (0 disables chart)\",\"Inspection page \u2192 offset 0 / limit 100\"],\"replaces\":[\"Grouping \u2192 column.service\",\"Summary \u2192 ; recorded-status summary \u2192 true\"]},\"recipe\":{\"id\":\"errors\",\"title\":\"Where are recorded errors concentrated?\",\"signal\":\"spans\",\"requires\":\"Captured spans with exporter status; unknown and Unset stay visible.\",\"limits\":\"Recorded Error spans / all matching captured spans. This is not a business failure rate; retries and mixed span kinds remain in the denominator. Unset is not confirmed success.\",\"next\":\"Rank services by recorded error percentage, refine a service and inspect Error evidence. Pin a baseline to investigate a regression.\"},\"question\":{\"spanStatus\":true,\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"groupBy\":[{\"kind\":\"column\",\"key\":\"service\"}],\"limit\":100,\"offset\":0},\"plan\":{\"rows\":\"SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, SpanAttributes AS Attributes, SpanName, SpanKind, ParentSpanId, multiIf(Duration \\u003c 1000000, '[0,1) ms', Duration \\u003c 5000000, '[1,5) ms', Duration \\u003c 10000000, '[5,10) ms', Duration \\u003c 50000000, '[10,50) ms', Duration \\u003c 100000000, '[50,100) ms', Duration \\u003c 500000000, '[100,500) ms', Duration \\u003c 1000000000, '[500,1000) ms', '[1000,+inf) ms') AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -\\u003e toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans FROM otel_traces WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration LIMIT 101 OFFSET 0 FORMAT JSONEachRow\",\"count\":\"SELECT toString(count()) AS count, toString(countIf(StatusCode = 'Error')) AS status_error, toString(countIf(StatusCode = 'Ok')) AS status_ok, toString(countIf(StatusCode = 'Unset')) AS status_unset, toString(countIf(StatusCode NOT IN ('Error','Ok','Unset'))) AS status_unknown FROM otel_traces WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 FORMAT JSONEachRow\",\"groups\":\"SELECT if(1, CAST(toString(ServiceName) AS Nullable(String)), NULL) AS g0, toString(count()) AS count, toString(countIf(StatusCode = 'Error')) AS status_error, toString(countIf(StatusCode = 'Ok')) AS status_ok, toString(countIf(StatusCode = 'Unset')) AS status_unset, toString(countIf(StatusCode NOT IN ('Error','Ok','Unset'))) AS status_unknown FROM otel_traces WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 GROUP BY g0 ORDER BY g0 LIMIT 1001 FORMAT JSONEachRow\",\"fields\":\"SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -\\u003e concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -\\u003e concat('attribute:', k), mapKeys(SpanAttributes)))) AS field FROM otel_traces WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY field LIMIT 129 FORMAT JSONEachRow\",\"parameters\":{\"environment\":\"prod\",\"from\":\"0\",\"to\":\"60000\"}}}\n"
+    },
+    {
+      "name": "recipe/over-limit-tail",
+      "method": "POST",
+      "path": "/recipes",
+      "body": "{\"id\":\"errors\",\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"limit\":100,\"offset\":0}}",
+      "padTo": 16385,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require one JSON object\"}\n"
+    },
+    {
+      "name": "recipe/over-limit-object",
+      "method": "POST",
+      "path": "/recipes",
+      "body": "{\"foreign\":\"",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"http: request body too large\"}\n",
+      "fillBytes": 16384,
+      "suffix": "\"}"
+    },
+    {
+      "name": "recipe/content-type-ignored",
+      "method": "POST",
+      "path": "/recipes",
+      "body": "{\"id\":\"errors\",\"question\":{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"limit\":100,\"offset\":0}}",
+      "contentType": "text/plain",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"transform\":{\"measurePlan\":{\"scope\":{\"family\":\"explore\",\"signal\":\"spans\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"span-record\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"measures\":[{\"id\":\"count\",\"operator\":\"count\",\"outputType\":\"uint64\",\"unit\":\"{record}\",\"merge\":\"sum\"},{\"id\":\"recorded_status\",\"operator\":\"partition-count\",\"input\":{\"kind\":\"column\",\"key\":\"status_class\"},\"inputType\":\"string\",\"outputType\":\"partitioned-uint64\",\"unit\":\"{record}\",\"merge\":\"sum-aligned-partitions\"}],\"dimensions\":[{\"kind\":\"column\",\"key\":\"service\"}],\"bucketMs\":0,\"groupTimeSeries\":false},\"relation\":\"same-population\",\"origin\":{\"family\":\"explore\",\"signal\":\"spans\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"span-record\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"target\":{\"family\":\"explore\",\"signal\":\"spans\",\"sourceBinding\":\"clickhouse.otel-records/v1\",\"grain\":\"span-record\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"convention\":\"Unbound; no semantic-convention profile inferred\",\"schemaMetadata\":\"Unavailable in this record adapter; original resource/scope constraints remain in selector\"},\"changes\":[{\"field\":\"environment\",\"effect\":\"preserved\"},{\"field\":\"window\",\"effect\":\"preserved\"},{\"field\":\"sourceBinding\",\"effect\":\"preserved\"},{\"field\":\"signal\",\"effect\":\"preserved\"},{\"field\":\"grain\",\"effect\":\"preserved\"},{\"field\":\"selector\",\"effect\":\"preserved\"},{\"field\":\"groupTimeSeries\",\"effect\":\"preserved\"},{\"field\":\"numeric\",\"effect\":\"preserved\"},{\"field\":\"groupBy\",\"effect\":\"replaced\"},{\"field\":\"measures\",\"effect\":\"replaced\"},{\"field\":\"bucketMs\",\"effect\":\"preserved\"},{\"field\":\"inspectionPage\",\"effect\":\"preserved\"}],\"preserves\":[\"Original environment\",\"Original fixed question window\",\"Source binding\",\"Signal\",\"Population grain\",\"Complete original record predicate\",\"Split time chart by breakdown\",\"Numeric binding and parsing policy\",\"Time chart interval \u2192 0 ms (0 disables chart)\",\"Inspection page \u2192 offset 0 / limit 100\"],\"replaces\":[\"Grouping \u2192 column.service\",\"Summary \u2192 ; recorded-status summary \u2192 true\"]},\"recipe\":{\"id\":\"errors\",\"title\":\"Where are recorded errors concentrated?\",\"signal\":\"spans\",\"requires\":\"Captured spans with exporter status; unknown and Unset stay visible.\",\"limits\":\"Recorded Error spans / all matching captured spans. This is not a business failure rate; retries and mixed span kinds remain in the denominator. Unset is not confirmed success.\",\"next\":\"Rank services by recorded error percentage, refine a service and inspect Error evidence. Pin a baseline to investigate a regression.\"},\"question\":{\"spanStatus\":true,\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":0,\"toMs\":60000,\"groupBy\":[{\"kind\":\"column\",\"key\":\"service\"}],\"limit\":100,\"offset\":0},\"plan\":{\"rows\":\"SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, SpanAttributes AS Attributes, SpanName, SpanKind, ParentSpanId, multiIf(Duration \\u003c 1000000, '[0,1) ms', Duration \\u003c 5000000, '[1,5) ms', Duration \\u003c 10000000, '[5,10) ms', Duration \\u003c 50000000, '[10,50) ms', Duration \\u003c 100000000, '[50,100) ms', Duration \\u003c 500000000, '[100,500) ms', Duration \\u003c 1000000000, '[500,1000) ms', '[1000,+inf) ms') AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -\\u003e toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans FROM otel_traces WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration LIMIT 101 OFFSET 0 FORMAT JSONEachRow\",\"count\":\"SELECT toString(count()) AS count, toString(countIf(StatusCode = 'Error')) AS status_error, toString(countIf(StatusCode = 'Ok')) AS status_ok, toString(countIf(StatusCode = 'Unset')) AS status_unset, toString(countIf(StatusCode NOT IN ('Error','Ok','Unset'))) AS status_unknown FROM otel_traces WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 FORMAT JSONEachRow\",\"groups\":\"SELECT if(1, CAST(toString(ServiceName) AS Nullable(String)), NULL) AS g0, toString(count()) AS count, toString(countIf(StatusCode = 'Error')) AS status_error, toString(countIf(StatusCode = 'Ok')) AS status_ok, toString(countIf(StatusCode = 'Unset')) AS status_unset, toString(countIf(StatusCode NOT IN ('Error','Ok','Unset'))) AS status_unknown FROM otel_traces WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 GROUP BY g0 ORDER BY g0 LIMIT 1001 FORMAT JSONEachRow\",\"fields\":\"SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -\\u003e concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -\\u003e concat('attribute:', k), mapKeys(SpanAttributes)))) AS field FROM otel_traces WHERE Timestamp \\u003e= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp \\u003c fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND 1 ORDER BY field LIMIT 129 FORMAT JSONEachRow\",\"parameters\":{\"environment\":\"prod\",\"from\":\"0\",\"to\":\"60000\"}}}\n"
+    },
+    {
+      "name": "recipe/empty-object",
+      "method": "POST",
+      "path": "/recipes",
+      "body": "{}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"signal must be spans or logs\"}\n"
+    },
+    {
+      "name": "recipe/method",
+      "method": "DELETE",
+      "path": "/recipes",
+      "body": "",
+      "status": 405,
+      "headers": {
+        "Allow": "GET, HEAD, POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    },
+    {
+      "name": "dashboard/valid",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":2000},\"service\":\"api\",\"signals\":[\"logs\"]}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"version\":\"goo/service-dashboard/v2\",\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":2000},\"service\":\"api\",\"widgets\":[{\"key\":\"spans\",\"title\":\"Span activity and duration\",\"state\":\"not_observed\",\"reason\":\"Not observed in supplied inventory; coverage unknown\",\"grain\":\"span-record\"},{\"key\":\"logs\",\"title\":\"Log activity and severity\",\"state\":\"supported\",\"grain\":\"log-record\",\"query\":{\"bucketMs\":1000,\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":2000,\"where\":{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"api\"},\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}],\"limit\":100,\"offset\":0}}],\"declarations\":[],\"warnings\":[\"Metadata suggests widgets, not service health or telemetry completeness. Each widget is a separate bounded source read; no transactional snapshot is claimed.\",\"Counts are captured records, not request throughput. Generic spans include retries and mixed span kinds; unset status is not verified success.\",\"Native evaluations preserve full OTel identity, units and temporality. At most two supported instruments are loaded; selection is local to this service visit, not saved dashboard configuration.\"],\"nativeOptions\":[],\"nativeLimit\":2}\n"
+    },
+    {
+      "name": "dashboard/empty",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "dashboard/null",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "null",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"explicit environment required\"}\n"
+    },
+    {
+      "name": "dashboard/array",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "[]",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type exploration.DashboardRequest\"}\n"
+    },
+    {
+      "name": "dashboard/truncated",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"unexpected EOF\"}\n"
+    },
+    {
+      "name": "dashboard/unknown",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"foreign\":true}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"foreign\\\"\"}\n"
+    },
+    {
+      "name": "dashboard/nested-unknown",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"scope\":{\"foreign\":1}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"foreign\\\"\"}\n"
+    },
+    {
+      "name": "dashboard/second-value",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":2000},\"service\":\"api\",\"signals\":[\"logs\"]} {}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "dashboard/invalid-tail",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":2000},\"service\":\"api\",\"signals\":[\"logs\"]} x",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "dashboard/trailing-whitespace",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":2000},\"service\":\"api\",\"signals\":[\"logs\"]} \n\t",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"version\":\"goo/service-dashboard/v2\",\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":2000},\"service\":\"api\",\"widgets\":[{\"key\":\"spans\",\"title\":\"Span activity and duration\",\"state\":\"not_observed\",\"reason\":\"Not observed in supplied inventory; coverage unknown\",\"grain\":\"span-record\"},{\"key\":\"logs\",\"title\":\"Log activity and severity\",\"state\":\"supported\",\"grain\":\"log-record\",\"query\":{\"bucketMs\":1000,\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":2000,\"where\":{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"api\"},\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}],\"limit\":100,\"offset\":0}}],\"declarations\":[],\"warnings\":[\"Metadata suggests widgets, not service health or telemetry completeness. Each widget is a separate bounded source read; no transactional snapshot is claimed.\",\"Counts are captured records, not request throughput. Generic spans include retries and mixed span kinds; unset status is not verified success.\",\"Native evaluations preserve full OTel identity, units and temporality. At most two supported instruments are loaded; selection is local to this service visit, not saved dashboard configuration.\"],\"nativeOptions\":[],\"nativeLimit\":2}\n"
+    },
+    {
+      "name": "dashboard/at-limit",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":2000},\"service\":\"api\",\"signals\":[\"logs\"]}",
+      "padTo": 262144,
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"version\":\"goo/service-dashboard/v2\",\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":2000},\"service\":\"api\",\"widgets\":[{\"key\":\"spans\",\"title\":\"Span activity and duration\",\"state\":\"not_observed\",\"reason\":\"Not observed in supplied inventory; coverage unknown\",\"grain\":\"span-record\"},{\"key\":\"logs\",\"title\":\"Log activity and severity\",\"state\":\"supported\",\"grain\":\"log-record\",\"query\":{\"bucketMs\":1000,\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":2000,\"where\":{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"api\"},\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}],\"limit\":100,\"offset\":0}}],\"declarations\":[],\"warnings\":[\"Metadata suggests widgets, not service health or telemetry completeness. Each widget is a separate bounded source read; no transactional snapshot is claimed.\",\"Counts are captured records, not request throughput. Generic spans include retries and mixed span kinds; unset status is not verified success.\",\"Native evaluations preserve full OTel identity, units and temporality. At most two supported instruments are loaded; selection is local to this service visit, not saved dashboard configuration.\"],\"nativeOptions\":[],\"nativeLimit\":2}\n"
+    },
+    {
+      "name": "dashboard/over-limit-tail",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":2000},\"service\":\"api\",\"signals\":[\"logs\"]}",
+      "padTo": 262145,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "dashboard/over-limit-object",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"foreign\":\"",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"http: request body too large\"}\n",
+      "fillBytes": 262144,
+      "suffix": "\"}"
+    },
+    {
+      "name": "dashboard/content-type-ignored",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":2000},\"service\":\"api\",\"signals\":[\"logs\"]}",
+      "contentType": "text/plain",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"version\":\"goo/service-dashboard/v2\",\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":2000},\"service\":\"api\",\"widgets\":[{\"key\":\"spans\",\"title\":\"Span activity and duration\",\"state\":\"not_observed\",\"reason\":\"Not observed in supplied inventory; coverage unknown\",\"grain\":\"span-record\"},{\"key\":\"logs\",\"title\":\"Log activity and severity\",\"state\":\"supported\",\"grain\":\"log-record\",\"query\":{\"bucketMs\":1000,\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":2000,\"where\":{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"api\"},\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}],\"limit\":100,\"offset\":0}}],\"declarations\":[],\"warnings\":[\"Metadata suggests widgets, not service health or telemetry completeness. Each widget is a separate bounded source read; no transactional snapshot is claimed.\",\"Counts are captured records, not request throughput. Generic spans include retries and mixed span kinds; unset status is not verified success.\",\"Native evaluations preserve full OTel identity, units and temporality. At most two supported instruments are loaded; selection is local to this service visit, not saved dashboard configuration.\"],\"nativeOptions\":[],\"nativeLimit\":2}\n"
+    },
+    {
+      "name": "dashboard/empty-object",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"explicit environment required\"}\n"
+    },
+    {
+      "name": "dashboard/method",
+      "method": "DELETE",
+      "path": "/dashboards/plan",
+      "body": "",
+      "status": 405,
+      "headers": {
+        "Allow": "POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    }
+  ]
+}

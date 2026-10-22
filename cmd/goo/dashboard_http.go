@@ -1,11 +1,9 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/casselc/goo/annotations"
 	"github.com/casselc/goo/exploration"
-	"io"
+	"github.com/casselc/goo/internal/httpjson"
 	"net/http"
 )
 
@@ -25,16 +23,10 @@ func registerDashboards(mux *http.ServeMux, packages []*annotations.OperationPla
 	mux.HandleFunc("POST /dashboards/plan", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Cache-Control", "no-store")
-		fail := func(e error) { w.WriteHeader(400); json.NewEncoder(w).Encode(map[string]string{"error": e.Error()}) }
+		fail := func(e error) { httpjson.Write(w, 400, map[string]string{"error": e.Error()}) }
 		var in exploration.DashboardRequest
-		d := json.NewDecoder(http.MaxBytesReader(w, r.Body, 256<<10))
-		d.DisallowUnknownFields()
-		if err := d.Decode(&in); err != nil {
+		if err := httpjson.Decode(w, r, &in, 256<<10, "expected one JSON object"); err != nil {
 			fail(err)
-			return
-		}
-		if d.Decode(new(any)) != io.EOF {
-			fail(fmt.Errorf("expected one JSON object"))
 			return
 		}
 		p, err := exploration.PlanServiceDashboard(in, declarations)
@@ -42,6 +34,6 @@ func registerDashboards(mux *http.ServeMux, packages []*annotations.OperationPla
 			fail(err)
 			return
 		}
-		json.NewEncoder(w).Encode(p)
+		httpjson.Write(w, 200, p)
 	})
 }

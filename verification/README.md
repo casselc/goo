@@ -908,3 +908,12 @@ initial sync policies and file-only duplicates. Run with `go test -run
 and store golden fixtures accompany it; see the [publication contract and remaining
 store inventory](../docs/IMMUTABLE_PUBLICATION.md). No browser/Quint transition
 protocol changed in this filesystem extraction.
+
+## Bounded planning JSON (C2)
+
+`TestHegelPlanningJSONBoundaries` generates 100 Unicode/escaping, exact typed integer,
+whitespace and byte-budget cases against the shared decoder/writer. Run
+`go test -run '^TestHegelPlanningJSONBoundaries$' -count=1` in this module. Root HTTP
+tests also run 32 before/after wire fixtures from `testdata/http/planning.json`;
+see [route policy and adoption boundaries](../docs/HTTP_BOUNDARIES.md#pure-planning-json-adoption).
+No new browser execution-state or Quint protocol is introduced by this extraction.
