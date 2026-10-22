@@ -1,9 +1,9 @@
 # Implementation plan
 
-Current annotation slice: exact live-page selection, retry-safe native corrections and committed read lower bounds; see [shared metadata and optional XTDB retained evidence](WORKBENCH_ANNOTATIONS.md).
-Next acceptance work: retained-evidence catalog integration and durable recovery
-of unacknowledged drafts, followed by explicit historical review cutoffs. Multi-node
-reader-lag verification, rich labels and dataset exports remain proposed. [Storage decision and connector options](ANNOTATION_STORAGE_SPIKE.md).
+The [reconciled product proposal](PRODUCT_IMPLEMENTATION_PROPOSAL.md) classifies historical unfinished work against current implementation and recommends the next delivery sequence. It is a proposal for review, not blanket approval of its milestones. Follow-up [architecture](ARCHITECTURE_REFACTORING_REVIEW.md) and [design](DESIGN_REFACTORING_REVIEW.md) reviews examine incremental refactoring opportunities.
+
+
+Current annotation slice: retained-evidence catalog, exact review citations and browser-local pending native-save recovery; see [contract](WORKBENCH_ANNOTATIONS.md). The [whole-product usability review](WHOLE_PRODUCT_USABILITY_REVIEW.md) recommends entry-point/result-density/action consolidation next. Historical cutoffs, multi-node lag verification, cross-store search, reviewed labels and dataset exports remain proposed. [Storage decision and connector options](ANNOTATION_STORAGE_SPIKE.md).
 
 
 The [whole-product annotation design](PRODUCT_ANNOTATIONS_DESIGN.md) recommends a shared typed target/revision contract and first metadata slice across scoped services, saved definitions and investigation revisions. Reviewed evidence labels and datasets follow; observation labels need exact freezing, while existing durable targets do not. The initial shared annotation API and optional native retained-evidence spike are implemented; reviewed labels and dataset exports remain proposed.

@@ -108,7 +108,7 @@ func (m Manifest) Validate() error {
 	id := m.ID
 	m.ID = ""
 	raw, e := json.Marshal(m)
-	if e != nil || len(raw) > MaxBytes || hash(raw) != id || m.Version != 1 || (m.Origin != "" && m.Origin != "result-page") || !workbench.ID.MatchString(m.Capture.ID) || m.Capture.Question.Validate() != nil || len(m.Members) < 1 || len(m.Members) > 20 {
+	if e != nil || len(raw) > MaxBytes || hash(raw) != id || m.Version != 1 || (m.Origin != "" && m.Origin != "result-page") || !workbench.ID.MatchString(m.Capture.ID) || m.Capture.Question.Validate() != nil || m.Capture.Question.Kind != "explore" || m.Capture.Question.Explore == nil || len(m.Members) < 1 || len(m.Members) > 20 {
 		return errors.New("invalid retained manifest")
 	}
 	last := -1

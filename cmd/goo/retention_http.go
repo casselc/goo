@@ -46,6 +46,50 @@ func registerRetention(mux *http.ServeMux, dir string) {
 		return nil
 	}
 	mux.HandleFunc("GET /retained-evidence/status", func(w http.ResponseWriter, r *http.Request) { reply(w, 200, map[string]bool{"configured": url != ""}) })
+	mux.HandleFunc("GET /retained-evidence", func(w http.ResponseWriter, r *http.Request) {
+		if !available(w) {
+			return
+		}
+		q := r.URL.Query()
+		for key, values := range q {
+			if len(values) != 1 || (key != "tag" && key != "service" && key != "environment" && key != "from" && key != "to" && key != "cursor") {
+				fail(w, 400, errors.New("unsupported retained catalog query"))
+				return
+			}
+		}
+		filter := retention.CatalogQuery{Tag: q.Get("tag"), Service: q.Get("service"), Environment: q.Get("environment"), From: q.Get("from"), To: q.Get("to"), Cursor: q.Get("cursor")}
+		if e := filter.Validate(); e != nil {
+			fail(w, 400, e)
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
+		defer cancel()
+		v, e := store.Catalog(ctx, filter)
+		if e != nil {
+			fail(w, 502, e)
+			return
+		}
+		reply(w, 200, v)
+	})
+	mux.HandleFunc("GET /retained-evidence/{id}/annotations/{revision}", func(w http.ResponseWriter, r *http.Request) {
+		if !available(w) {
+			return
+		}
+		for key, values := range r.URL.Query() {
+			if key != "awaitToken" || len(values) != 1 {
+				fail(w, 400, errors.New("unsupported pinned review query"))
+				return
+			}
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
+		defer cancel()
+		v, e := (retention.Store{URL: url, AwaitToken: r.URL.Query().Get("awaitToken")}).Annotation(ctx, r.PathValue("id"), r.PathValue("revision"))
+		if e != nil {
+			fail(w, 404, e)
+			return
+		}
+		reply(w, 200, v)
+	})
 	mux.HandleFunc("POST /retained-evidence", func(w http.ResponseWriter, r *http.Request) {
 		if !available(w) {
 			return

@@ -6,14 +6,14 @@ happened with evidence you can inspect and preserve.**
 Ask a question → inspect its evidence → capture and explain it → reuse the
 definition. Start from instrumented code or unfamiliar OpenTelemetry data.
 [The product essence](docs/PRODUCT_ESSENCE.md) describes this common loop and the
-criteria for keeping the workbench coherent. The [core primitives review](docs/CORE_PRIMITIVES.md)
+criteria for keeping the workbench coherent. The [current whole-product usability review](docs/WHOLE_PRODUCT_USABILITY_REVIEW.md) and [reconciled implementation proposal](docs/PRODUCT_IMPLEMENTATION_PROPOSAL.md) prioritize simpler entry points, compact results and consistent evidence actions. The [core primitives review](docs/CORE_PRIMITIVES.md)
 sets the next consolidation priorities; [shared scope and checked transforms](docs/QUESTION_SCOPE.md)
 now connect recipe and follow-up planning.
 
 [Record-to-population exploration](docs/RECORD_POPULATIONS.md) adds staged inspector attributes and bounded shared-field selection over captured rows.
 
 
-[Shared tags, notes and optional retained evidence](docs/WORKBENCH_ANNOTATIONS.md) attach authored context across services, definitions and investigations. Select exact live-page observations to retain them in optional XTDB, then review with retry-safe revisions. The broader [annotation model](docs/PRODUCT_ANNOTATIONS_DESIGN.md) covers proposed reviewed labels and dataset exports.
+[Shared tags, notes and optional retained evidence](docs/WORKBENCH_ANNOTATIONS.md) attach authored context across services, definitions and investigations. Select exact live-page observations to retain them in optional XTDB, find them by tag/service/time, and cite an exact review in an investigation. Pending native saves can be recovered explicitly after reload. The broader [annotation model](docs/PRODUCT_ANNOTATIONS_DESIGN.md) covers proposed reviewed labels and dataset exports.
 
 
 Staged categorical [facet selections](docs/FACET_SELECTION.md) add Include/Exclude, Undo/Clear and retained population drilldowns to recent activity.

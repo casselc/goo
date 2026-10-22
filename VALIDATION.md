@@ -1,5 +1,18 @@
 # Validation record
 
+## Retained-evidence library and continuity (2026-10-22 UTC)
+
+Final query/packages image: `sha256:5f0ea7394c034065f8c70fb297edabdacfe049b00e6d512d972e983b81a889a8`.
+
+- Full root Go suite passes with actual XTDB integration enabled. Catalog checks cover exact filters, branch/withdrawal tags, half-open capture time, year-one bounds, pagination drift and immutable revision resolution. Retention/workbench race checks pass.
+- All 115 frontend checks pass. Hegel state/swarm tests exercise the actual JavaScript pending-save journal across reload, retry, acknowledgment and changed-intent rejection.
+- Journeys 99, 100 and 101 pass. The final-image 101 rerun also verifies expanded mobile catalog and pinned-review layout. Storyboard screenshots are refreshed. Lost committed responses recover the original retention/review IDs after reload, catalogs use current review tags, and documents preserve exact older reviews without source queries.
+- The observed journey ledger passes Quint trace validation and eight rejecting controls. The new Bombadil campaign passes on the preceding feature image; the final image adds catalog validation boundary fixes and a bounded mobile date-control layout.
+- After restarting Go packages and XTDB, the original pending request recovers the same commit, an unknown expired-source request returns 410, and the pinned review still resolves. All 13 services run with traffic restored, served source/binary hashes match, prior Redis pending IDs remain preserved (15 pending), and OOM-kill counters remain zero. Evidence: `artifacts/evidence-library-restart.json` and `artifacts/evidence-library-health.json`.
+- The product usability study, reconciled implementation proposal, and architecture/design refactoring reviews are documentation/source reviews with explicit boundaries; they do not establish new runtime capabilities or approve their proposed milestones.
+
+Evidence: `artifacts/evidence-library-go-all.log`, `artifacts/evidence-library-race.log`, `artifacts/evidence-library-unit.log`, `artifacts/evidence-library-hegel.log`, `artifacts/evidence-library-browser-final.log`, `artifacts/evidence-library-mobile-final.log`, and `artifacts/evidence-library/`.
+
 ## Exact live-page retention and retry visibility (2026-10-22 UTC)
 
 Final query/packages image:

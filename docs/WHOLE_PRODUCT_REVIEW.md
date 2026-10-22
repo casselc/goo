@@ -1,5 +1,9 @@
 # Whole-product design and product review
 
+Current follow-up: [2026-10-22 whole-product usability review](WHOLE_PRODUCT_USABILITY_REVIEW.md)
+adds live desktop/mobile observations and a prioritized simplification sequence.
+This earlier review remains a historical design snapshot.
+
 Reviewed 2026-10-20. **Review and proposed design; not implemented behavior.**
 This pass covers navigation, discovery, services, distributed relationships,
 exploration, measurements, manifests/packages, and saved investigations. The

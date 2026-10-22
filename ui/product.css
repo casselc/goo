@@ -1296,3 +1296,6 @@ td details {
 .retained-evidence{min-width:0;overflow-wrap:anywhere}
 .retained-evidence>details{margin:.5rem 0}
 .retained-evidence>details>div{padding:.4rem 0}
+/* Catalog fields remain bounded when UTC date controls share a narrow row. */
+.retained-catalog .controls>label{display:grid;gap:4px;min-width:0}
+.retained-catalog .controls input{min-width:0;max-width:100%;box-sizing:border-box}

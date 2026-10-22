@@ -1417,3 +1417,26 @@ live selection → unpublished draft → clear, observing native POST count.
 ![Retained live observation and explicit provenance](screenshots/100b-frozen-live-observation.png)
 ![Idempotent review revision history](screenshots/100c-idempotent-review-history.png)
 ![Compact mobile retained observation](screenshots/100d-mobile-live-evidence.png)
+
+
+## 101. Find retained evidence, recover interrupted saves and pin a review
+
+Implemented: [executable journey](../../journeys/evidence-library.spec.js), optional
+XTDB required. Emit three ordinary OTel spans, retain a selected observation and
+lose the actual committed response. Reload; the pending browser intent survives.
+Retry explicitly and recover the original annotation. Start an investigation with
+that exact review, save it, then correct the review and repeat response-loss/reload
+recovery. The document keeps its original interpretation.
+
+Search the retained catalog by current tag, environment, exact recorded service
+name and capture-time bounds. Superseded tags no longer match. Reopen the document
+and inspect its pinned evidence/review on mobile. Browser telemetry requests remain
+blocked throughout retention recovery and citation; ClickHouse stays running.
+Hegel exercises the actual journal; the observed Quint ledger rejects eight
+mutations. Bombadil explores readonly catalog, pending and citation controls.
+
+![Recover a pending native request after reload](screenshots/101a-recovered-pending-save.png)
+![Pin the original review in an investigation](screenshots/101b-pinned-review-citation.png)
+![Search current retained evidence metadata](screenshots/101c-retained-evidence-catalog.png)
+![Reopen the original review on mobile](screenshots/101d-mobile-pinned-review.png)
+![Browse the retained catalog on mobile](screenshots/101e-mobile-retained-catalog.png)

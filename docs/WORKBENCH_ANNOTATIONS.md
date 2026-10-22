@@ -141,8 +141,9 @@ returns the original revision. Concurrent different review requests preserve
 branches. Changed intent under a used key fails. Correction and request receipt
 commit atomically; interrupted transactions leave neither. The UI keeps a key
 for a failed draft, creates a fresh one for a new/cancelled draft, and disables
-editing while a save is pending. Reload/navigation recovery of an unacknowledged
-request draft remains future work.
+editing while a save is pending. A browser journal preserves native retention/review request bodies before sending
+them; acknowledged requests are removed. Reload recovery is explicit from
+**Pending evidence saves** in Saved investigations. Nothing is sent automatically.
 
 Publication and correction return an XTDB `awaitToken`. Native evidence/history
 GETs accept `?awaitToken=...`; native correction POSTs accept the same field. Each
@@ -157,8 +158,9 @@ integration tests exercise fresh connections against the local native instance.
 
 ## Prototype limits
 
-The retained-evidence catalog is separate from the file-backed global tag catalog;
-there is no cross-store search, production permissions/redaction/deletion policy,
+The retained-evidence catalog in Saved investigations is separate from the
+file-backed global tag catalog; there is no cross-store search, production
+permissions/redaction/deletion policy,
 training export or historical-cutoff UI. Live pages remain ephemeral until an
 explicit save. Selection retention covers Explore/recent-activity result tables
 and saved captures; SSE tail rows and waterfall span selections do not yet offer
@@ -206,3 +208,80 @@ page cache disappears, while the same committed request recovers its original
 annotation and exact manifest. An unknown request against that unavailable page
 returns 410 without adding an assertion. Native history remains unchanged; see
 [validation evidence](../VALIDATION.md).
+
+
+## Find, cite and recover retained evidence
+
+Saved investigations now includes **Retained evidence** and **Pending evidence
+saves**. Browsing and filtering read XTDB metadata only. Exact tag filters match
+current active revision heads: superseded or withdrawn branches do not contribute
+tags, while independent active branches remain visible. Environment comes from
+the original query; service filters match literal names in selected retained
+members, not an inferred fleet or namespace identity. Missing service names remain
+unavailable; present-empty names display distinctly. Time filters use the original
+capture/page read time, with inclusive **Captured from UTC** and exclusive
+**Captured before UTC**, not event time or annotation commit time.
+
+`GET /retained-evidence?tag=...&environment=...&service=...&from=...&to=...&cursor=...`
+returns 20 ID-ordered summaries per page. Instants use RFC3339. Catalog scans are
+bounded to 1,000 manifests / 16 MiB and 10,000 annotation revisions / 64 MiB combined
+payload. Exceeding a bound fails without presenting a partial catalog. Cursors
+fingerprint the filter and matching summaries; changed metadata or filters require
+restarting pagination. Manifest and review scans are separate reads, not a shared
+historical cutoff or a telemetry transaction.
+
+Open a retained selection, expand **Add to an investigation**, and choose an
+exact review revision. A unique current head is the default; parallel heads require
+an explicit choice. Add to the current draft, start an investigation, or load a
+saved revision destination. A saved destination receives an immutable child;
+adding to a draft still requires **Save revision**. Publication verifies the
+manifest and review exist together. Later corrections never rewrite the citation.
+
+A retained document card has `kind: "retained"`, exact `reference` (manifest ID),
+`review` (annotation revision ID), optional `caption`, and `readBasis` (XTDB await
+lower bound). This remains distinct from a general saved-capture card. Reopening
+reads the pinned review through
+`GET /retained-evidence/{id}/annotations/{revision}?awaitToken=...`; it does not
+substitute a current head. Document reads can still open their immutable references
+when XTDB is unavailable, with the reference body explicitly unavailable. The
+stored card carries its read lower bound to another client; bare evidence links
+retain the existing tab-local basis limitation.
+
+The native retry journal is browser-local storage, bounded to 16 unresolved
+requests / 512 KiB and 16 KiB per request. It contains the original selection or
+review request, key, note/tags and browser queue timestamp. That timestamp is not
+server commit time or verified authorship. Storage failure prevents a new native
+request from being sent. Lost responses retain the original intent; **Retry pending
+save** can recover the committed receipt after reload or page expiry. **Forget
+local retry** removes only the browser record; it never withdraws an annotation or
+deletes retained evidence. No automatic retry or background publication occurs.
+This prototype does not synchronize concurrent journal edits across browser tabs,
+provide server-owned pending work, or preserve ordinary unsaved document/note drafts.
+Native and file-backed document publication remain separate operations.
+
+```mermaid
+flowchart TD
+    A[Explicit native save] --> J[Preserve browser request and original key]
+    J --> N[Native idempotent publication]
+    N -->|Acknowledged| C[Remove browser pending entry]
+    N -->|Response lost| R[Reload: pending entry remains]
+    R -->|Explicit retry, same intent| N
+    N --> E[Immutable retained manifest and review history]
+    E --> K[Catalog: manifest summaries and active-head tags]
+    E --> P[Choose exact manifest and review revision]
+    P --> D[Publish investigation revision with pinned citation and read basis]
+    E --> L[Later review correction]
+    D --> O[Reopen original pinned review]
+    L --> K
+    L -. Does not rewrite .-> D
+```
+
+[Journey 101](../journeys/evidence-library.spec.js) emits ordinary OTLP spans,
+loses actual successful initial/correction responses, reloads, explicitly recovers
+the same IDs, searches by current tags/service/environment/capture time, and reopens
+the original document citation after a later correction. Browser telemetry reads
+are blocked throughout recovery/citation. Hegel state/swarm executes the actual
+JavaScript journal across stage/reload/retry/ack/change-intent sequences. The
+observed Quint ledger rejects eight mutations, including a changed citation,
+lost pending intent, superseded tags and duplicate publication on retry. Bombadil
+inspects catalog, pending saves and pinned references without implicit writes.

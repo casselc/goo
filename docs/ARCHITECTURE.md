@@ -219,3 +219,21 @@ evidence reads neither live telemetry nor the original capture/page. The
 [contract and process diagram](WORKBENCH_ANNOTATIONS.md) identify limits including
 cross-store search, cross-client basis sharing and authentication. No ClickHouse
 external-source connector is implemented.
+
+
+## Retained evidence in investigations
+
+`retention/catalog.go` enumerates bounded immutable manifests and explicit current
+review heads; metadata filtering never reads ClickStack. `ui/retention.js` owns the
+catalog, attachment actions and reference reads. Retained document cards pin both
+a manifest ID and an exact review revision with an await-token lower bound.
+`workbench/documents.go` validates the typed reference and a native resolver checks
+it before publication. Opening the file-backed narrative does not require the
+native database; resolving its reference body does. The native retry journal in
+`ui/pending-saves.js` performs no network work: application adapters persist the
+original request before sending and require explicit recovery after reload. Passive
+custom elements remain display-only. See the [process diagram and limits](WORKBENCH_ANNOTATIONS.md#find-cite-and-recover-retained-evidence).
+
+The [whole-product usability review](WHOLE_PRODUCT_USABILITY_REVIEW.md) proposes
+entry/action/layout consolidation across these existing adapters. It is a review
+of the preceding runtime, not a claim those structural changes are implemented.

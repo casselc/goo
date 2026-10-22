@@ -745,3 +745,17 @@ Journey 100 records the actual original result and canonical retained manifest;
 retry transitions, with nine rejecting controls, including a duplicate publication on retry. This small model does not prove
 multi-node replica behavior or production isolation. The live-retention Bombadil
 campaign observes native POST count while selecting, drafting and clearing.
+
+## Retained evidence catalog, citations and pending recovery
+
+`TestHegelPendingSaveStateSwarm` executes the real JavaScript journal in a persistent
+Node worker, generating stage/reload/retry/ack/changed-intent sequences and checking
+immutable request bodies and unrelated pending entries. Root tests cover catalog
+branch/withdrawal tags, exact service/environment filters, half-open capture time,
+cursor invalidation and native pinned-review resolution. Journey 101 writes a real
+browser ledger after successful responses are lost and recovered across reloads.
+`TestQuintEvidenceLibraryLedger` checks canonical manifest/review/document hashes,
+pinned old review versus later correction, current catalog tags, pending counts
+and publication/read transitions. Eight negative controls must fail. Its Bombadil
+campaign explores readonly citation/catalog/pending surfaces; it does not claim
+production multi-tab synchronization or multi-node replica conformance.

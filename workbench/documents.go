@@ -7,6 +7,8 @@ import (
 )
 
 type Card struct {
+	Review    string   `json:"review,omitempty"`
+	ReadBasis string   `json:"readBasis,omitempty"`
 	Key       string   `json:"key,omitempty"`
 	Evidence  []string `json:"evidence,omitempty"`
 	Step      *Step    `json:"step,omitempty"`
@@ -18,6 +20,9 @@ type Card struct {
 }
 
 func (c Card) Validate() error {
+	if c.Kind != "retained" && (c.Review != "" || c.ReadBasis != "") {
+		return errors.New("only retained evidence cards pin a review and read basis")
+	}
 	if c.Kind != "question" && (c.Step != nil || c.Key != "" || len(c.Evidence) > 0) {
 		return errors.New("only question cards carry a step")
 	}
@@ -45,12 +50,16 @@ func (c Card) Validate() error {
 		if !ID.MatchString(c.Reference) || !text(c.Caption, 160, false, false) || !text(c.Text, 4000, false, true) || c.Role != "" {
 			return errors.New("comparison requires an exact receipt ID and bounded finding")
 		}
+	case "retained":
+		if !ID.MatchString(c.Reference) || !ID.MatchString(c.Review) || len(c.ReadBasis) > 16384 || !text(c.Caption, 160, false, false) || c.Role != "" || c.Text != "" {
+			return errors.New("retained evidence requires exact manifest/review IDs and bounded caption/basis")
+		}
 	case "capture", "deployment":
 		if !ID.MatchString(c.Reference) || !text(c.Caption, 160, false, false) || c.Role != "" || c.Text != "" {
 			return errors.New("reference card requires an exact capture/deployment ID and optional caption")
 		}
 	default:
-		return errors.New("card kind must be question, note, capture, comparison or deployment")
+		return errors.New("card kind must be question, note, capture, retained, comparison or deployment")
 	}
 	return nil
 }
@@ -93,7 +102,7 @@ type Document struct {
 
 // Revisions deliberately branch from an explicit parent; there is no mutable
 // latest head and no silent last-write-wins update. References never requery a source.
-func (s Store) CreateDocument(in DocumentInput, parent string, checkCapture func(string) error) (*Document, error) {
+func (s Store) CreateDocument(in DocumentInput, parent string, checkCapture func(string) error, checkRetained ...func(Card) error) (*Document, error) {
 	if in.Cards == nil {
 		in.Cards = []Card{}
 	}
@@ -121,6 +130,13 @@ func (s Store) CreateDocument(in DocumentInput, parent string, checkCapture func
 			}
 		}
 		switch c.Kind {
+		case "retained":
+			if len(checkRetained) != 1 || checkRetained[0] == nil {
+				return nil, errors.New("retained evidence resolver required")
+			}
+			if e := checkRetained[0](c); e != nil {
+				return nil, errors.New("retained evidence or pinned review unavailable")
+			}
 		case "capture":
 			if checkCapture == nil {
 				return nil, errors.New("capture reference resolver required")

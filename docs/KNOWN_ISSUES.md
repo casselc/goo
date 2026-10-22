@@ -2,14 +2,20 @@
 
 ## Current annotation retention boundaries
 
+Retained evidence now has tag/environment/literal-service/capture-time browsing
+and exact review citations in documents. Catalog scans and browser pending-request
+storage are bounded; multi-tab journal coordination and server-owned recovery are
+not implemented. See the [whole-product usability recommendations](WHOLE_PRODUCT_USABILITY_REVIEW.md) for broader consolidation work, still proposed.
+
 Optional XTDB retention now accepts selected exact live result pages as well as
 saved captures, with idempotent initial/correction requests and await-token
 propagation on fresh connections. Live pages expire after two minutes and are
 process-local/capability-addressed; refresh or pagination clears selection. An
 already committed save can be recovered after expiry with its unchanged request.
-Tab-local successful receipts survive reload, but unacknowledged drafts and
-cross-client basis sharing are not durable. No production auth/redaction/deletion,
-cross-store tag catalog, historical-cutoff UI, reviewed labels or dataset export
+Native request intents now survive reload in a bounded browser retry journal;
+ordinary document/note drafts remain page-local. Document citations carry a pinned
+review and read lower bound; bare evidence links retain tab-local basis behavior. No production auth/redaction/deletion,
+unified cross-store tag search, historical-cutoff UI, reviewed labels or dataset export
 is implied. See [contract](WORKBENCH_ANNOTATIONS.md).
 
 
