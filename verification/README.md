@@ -944,3 +944,9 @@ in `annotations/source_transport_contract_test.go`. Raw parameters, typed rows,
 status-before-body, exact duration strings and conformance stay adapter-owned.
 The gated readonly real-table check uses an absent service and fixed window;
 see [operation-span adoption](../docs/HTTP_BOUNDARIES.md#operation-span-transport-adoption).
+
+Counter transport adopts the same primitive behind independent before/after tests
+in `annotations/counter_transport_contract_test.go`: body reads and immediate close
+precede status, and later-contract failures return no partial rates. Existing
+counter/fleet semantic tests remain separate. The gated readonly sum-table test
+uses an absent service; see [counter adoption](../docs/HTTP_BOUNDARIES.md#counter-transport-adoption).

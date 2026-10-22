@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/internal/sourcehttp"
 	"github.com/casselc/goo/metrics"
 	"io"
 	"math"
@@ -141,16 +142,11 @@ func (p *OperationPlan) fetchInstanceRates(ctx context.Context, client *http.Cli
 		q.Set("max_result_rows", "3001")
 		q.Set("result_overflow_mode", "throw")
 		address.RawQuery = q.Encode()
-		req, e := http.NewRequestWithContext(ctx, "POST", address.String(), strings.NewReader(sql))
+		response, e := sourcehttp.Post(ctx, client, address.String(), user, password, sql)
 		if e != nil {
 			return nil, e
 		}
-		req.SetBasicAuth(user, password)
-		response, e := client.Do(req)
-		if e != nil {
-			return nil, e
-		}
-		data, e := io.ReadAll(io.LimitReader(response.Body, (8<<20)+1))
+		data, oversize, e := sourcehttp.ReadBounded(response.Body, 8<<20)
 		response.Body.Close()
 		if e != nil {
 			return nil, e
@@ -158,7 +154,7 @@ func (p *OperationPlan) fetchInstanceRates(ctx context.Context, client *http.Cli
 		if response.StatusCode != 200 {
 			return nil, fmt.Errorf("counter source HTTP %d", response.StatusCode)
 		}
-		if len(data) > 8<<20 {
+		if oversize {
 			return nil, fmt.Errorf("counter source payload exceeds 8 MiB")
 		}
 		rows := []CounterRow{}

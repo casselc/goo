@@ -1,5 +1,33 @@
 # Validation record
 
+## C2 counter HTTP transport adoption (2026-10-22 UTC)
+
+[Counter transport contract and diagram](docs/HTTP_BOUNDARIES.md#counter-transport-adoption)
+record shared POST/auth/context and bounded-read adoption only. Counter reads and
+immediate closure still precede status checking; read errors beat status, which
+beats overflow. Baselines, per-contract evaluation, ratios, fleet isolation and
+semantic precision/temporality/reset rules remain unchanged.
+
+Actual checks:
+
+- New contracts pass before extraction (0.605s): complete SQL/auth/settings and
+  raw parameters, baseline calculation, empty/positive payloads, exact/overflow
+  8 MiB and 3,000-row boundaries, malformed JSON, cancellation/error identity,
+  error precedence, close-before-next-contract and no partial later-contract success.
+- After extraction, race suites pass for annotations (14.065s), HTTP routes (5.112s)
+  and investigations (cached), with the gated readonly ClickHouse check enabled.
+  Both rate contracts execute against the real sum table with an absent service
+  and fixed window. No inserts or positive live-data claims; positive fixtures
+  retain the cumulative delta of three and existing fleet tests still pass.
+- Hegel's 100 shared bounded-read payload/budget/error cases pass (0.064s).
+- `go test ./...` passes. Gated live checks skip without their URL variable.
+- Whitespace and local Markdown targets pass.
+
+Evidence: `artifacts/c2-counter-transport-{before,race,hegel,root}.log`.
+No UI/SSE/Quint protocol changed, screenshots were not regenerated and no running
+image was rebuilt. Histogram transport is next, then route-specific JSON adoption;
+C2's final deployed-journey acceptance remains open.
+
 ## C2 operation-span HTTP transport adoption (2026-10-22 UTC)
 
 [Operation-span contract and diagram](docs/HTTP_BOUNDARIES.md#operation-span-transport-adoption)

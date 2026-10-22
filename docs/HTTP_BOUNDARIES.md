@@ -160,7 +160,7 @@ retains budget, SSE, capture and optional-store tests.
 
 C2 remains active. Pure planning JSON and native/record transport adoption are
 delivered. The acceptance audit below records the remaining adoption sequence; prebuilt transport is
-now delivered along with operation spans; counters are next. Transport adoption proceeds one family at a time, preserving parameter escaping,
+now delivered along with operation spans and counters; histogram transport is next. Transport adoption proceeds one family at a time, preserving parameter escaping,
 read limits, basis/identity and non-2xx/oversize/cancellation behavior. Python proxy
 removal, changing custody/duplicate policy and universal endpoint budgets are not
 part of these cuts.
@@ -521,6 +521,50 @@ remain in source and injected HTTP/investigation tests. Shared Hegel byte/read-e
 properties pass. No UI/SSE/Quint protocol or running image changed; screenshots
 remain applicable and the final deployed-journey gate remains open.
 
-Two ClickHouse readers remain unadopted: counters next, then histograms. Their
-body-read-before-status and immediate-close policies differ from operation spans
-and must be frozen independently. Remaining local JSON owners stay queued.
+At the operation-span cut two readers remained. Counter adoption below is now
+delivered; histogram transport remains next. Its body-read-before-status and
+immediate-close policies must be frozen independently. Local JSON owners stay queued.
+
+
+## Counter transport adoption
+
+`OperationPlan.fetchInstanceRates` now uses shared `sourcehttp.Post` and
+`ReadBounded`. It still reads and immediately closes each received body before
+checking errors: read error precedes status; status precedes payload overflow.
+Each rate contract keeps its own query, baseline, 3,000-point guard and evaluation.
+The supplied client, raw URL-encoded parameters, readonly settings, exact errors,
+plan validation, counter temporality/reset/precision rules, basis, ratios and fleet
+peer isolation remain in their existing owners. No partial rates escape if a later
+contract fails.
+
+```mermaid
+flowchart LR
+  Plan[Validated operation plan] --> Contract[Each rate contract / baseline / raw parameters]
+  Contract --> Post[Shared POST / auth / context]
+  Post --> CH[ClickHouse]
+  CH --> Read[Shared bounded read: 8 MiB plus one]
+  Read --> Close[Counter closes response immediately]
+  Close --> Errors[Read error then status then overflow]
+  Errors --> Decode[Typed rows / 3000-point guard]
+  Decode --> Evaluate[Counter evaluation / basis / ratios]
+  Evaluate --> Fleet[Existing selected-instance and peer isolation]
+```
+
+Contracts pass before and after extraction. They pin complete SQL/auth/query
+settings, baseline parameters, unmodified complex values, empty/positive payloads,
+exact/overflow bytes and rows, malformed JSON, close-before-next-contract behavior,
+read/status/overflow precedence, transport/cancellation errors and later-contract
+failure without partial success. Positive fixtures retain a cumulative delta of
+three; existing semantic tests cover precision, flags, reset/temporality and fleet
+failure isolation.
+
+`TestClickHouseCounterTransportIntegration` uses the existing gated ClickHouse
+variables and executes both rate contracts against the real sum table for an
+absent service and fixed window. It exercises query/decoder/empty evaluation,
+without inserts or positive live-population claims. Hegel's shared bounded-read
+campaign also passes. No UI/SSE/Quint protocol or running image changed; screenshots
+remain applicable and the final deployed-journey gate stays open.
+
+Only histogram transport remains unadopted among the audited ClickHouse readers.
+Freeze its body-read-before-status, immediate closure, bucket and per-contract
+limits next. Local JSON-owner adoption remains queued.
