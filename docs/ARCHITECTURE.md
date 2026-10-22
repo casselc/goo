@@ -1,5 +1,10 @@
 # Architecture
 
+[Immutable publication](IMMUTABLE_PUBLICATION.md) shares write/sync/link mechanics
+between reusable telemetry packages and workbench artifacts. Family stores retain
+validation, encoding, digests, lineage, catalogs and reload integrity checks.
+The documented inventory keeps capture/custody/native YAML differences explicit.
+
 [Native presentation](NATIVE_PRESENTATION.md) shares supplied latest values and coverage across measurements, services and native comparisons. Go evaluation and application read/custody owners remain separate.
 
 [Record population gestures](RECORD_POPULATIONS.md) reuse the attribute viewer and typed selection owner. Shared-field discovery is local string intersection; query evaluation remains in Go. [Shared annotations](WORKBENCH_ANNOTATIONS.md) attach exact-target revision sidecars; optional native retention freezes selected server-owned observations. The broader reviewed-label design remains proposed.

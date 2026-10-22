@@ -10,6 +10,8 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+
+	"github.com/casselc/goo/internal/immutablefile"
 )
 
 var regexpRevision = regexp.MustCompile(`^[a-f0-9]{64}$`)
@@ -40,35 +42,7 @@ func (s PackageStore) Save(p TelemetryPackage) (*SavedPackage, error) {
 	if len(data) > PackageBytes {
 		return nil, fmt.Errorf("definition exceeds 32 KiB")
 	}
-	if e = os.MkdirAll(s.Dir, 0700); e != nil {
-		return nil, e
-	}
-	f, e := os.CreateTemp(s.Dir, ".package-")
-	if e != nil {
-		return nil, e
-	}
-	defer os.Remove(f.Name())
-	if _, e = f.Write(data); e != nil {
-		f.Close()
-		return nil, e
-	}
-	if e = f.Sync(); e != nil {
-		f.Close()
-		return nil, e
-	}
-	if e = f.Close(); e != nil {
-		return nil, e
-	}
-	if e = os.Link(f.Name(), filepath.Join(s.Dir, id+".json")); e != nil && !errors.Is(e, os.ErrExist) {
-		return nil, e
-	}
-	dir, e := os.Open(s.Dir)
-	if e != nil {
-		return nil, e
-	}
-	e = dir.Sync()
-	dir.Close()
-	if e != nil {
+	if _, e = immutablefile.Publish(s.Dir, id+".json", ".package-", data); e != nil {
 		return nil, e
 	}
 	return s.Load(id)

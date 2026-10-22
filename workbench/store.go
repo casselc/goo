@@ -17,6 +17,8 @@ import (
 	"time"
 	"unicode"
 	"unicode/utf8"
+
+	"github.com/casselc/goo/internal/immutablefile"
 )
 
 const MaxBytes = 128 << 10
@@ -71,35 +73,8 @@ func (s Store) publish(kind, id string, v any) error {
 	if len(b) > MaxBytes {
 		return errors.New("artifact exceeds 128 KiB")
 	}
-	dir := filepath.Join(s.Dir, kind)
-	if e = os.MkdirAll(dir, 0700); e != nil {
-		return e
-	}
-	f, e := os.CreateTemp(dir, ".draft-")
-	if e != nil {
-		return e
-	}
-	defer os.Remove(f.Name())
-	if _, e = f.Write(b); e != nil {
-		f.Close()
-		return e
-	}
-	if e = f.Sync(); e != nil {
-		f.Close()
-		return e
-	}
-	if e = f.Close(); e != nil {
-		return e
-	}
-	if e = os.Link(f.Name(), filepath.Join(dir, id+".json")); e != nil && !errors.Is(e, os.ErrExist) {
-		return e
-	}
-	d, e := os.Open(dir)
-	if e != nil {
-		return e
-	}
-	defer d.Close()
-	return d.Sync()
+	_, e = immutablefile.Publish(filepath.Join(s.Dir, kind), id+".json", ".draft-", b)
+	return e
 }
 func (s Store) ids(kind string) ([]string, error) {
 	d, e := os.Open(filepath.Join(s.Dir, kind))

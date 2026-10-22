@@ -1,5 +1,11 @@
 # Known issues and gaps
 
+[C1 immutable publication](IMMUTABLE_PUBLICATION.md) has two matching adopters:
+workbench artifacts and reusable telemetry packages. Capture stores, lifecycle
+custody and native YAML publication still have separate writers and require their
+own identity/response/duplicate fixtures before migration. No power-loss durability
+guarantee follows from file and directory sync calls.
+
 ## Current annotation retention boundaries
 
 Retained evidence now has tag/environment/literal-service/capture-time browsing

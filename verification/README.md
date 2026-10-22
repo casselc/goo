@@ -898,3 +898,12 @@ Journey 114 uses real OTel gauge data and Go-canonical capture metadata; its act
 checks source-free preview/close and permits no POSTs. Existing mixed-step and
 fresh/linked journeys validate actual observed ledgers with rejecting controls;
 no universal browser validator or complete UI state model is claimed.
+
+## Immutable publication mechanics (C1 first adoption)
+
+`TestHegelImmutablePublicationSequence` generates 100 first-winner/duplicate-write
+sequences on real temporary files. Run with `go test -run
+'^TestHegelImmutablePublicationSequence$' -count=1` in this module. Root race tests
+and store golden fixtures accompany it; see the [publication contract and remaining
+store inventory](../docs/IMMUTABLE_PUBLICATION.md). No browser/Quint transition
+protocol changed in this filesystem extraction.

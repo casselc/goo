@@ -1,5 +1,48 @@
 # Validation record
 
+## Disk cleanup and C1 immutable publication first adoption (2026-10-22 UTC)
+
+[Publication contract, diagram and store inventory](docs/IMMUTABLE_PUBLICATION.md)
+records this bounded cut. Reusable telemetry packages and workbench artifacts now
+share temporary-write/file-sync/no-replace-link/directory-sync mechanics. Family
+validation, JSON encoding, byte limits, IDs, reload integrity, lineage and catalogs
+remain in their stores. Other store writers remain queued within C1.
+
+Actual checks:
+
+- Package and deployment stored-byte/ID fixtures passed against the old publishers
+  before extraction (`c1-before-extraction.log`, 0.017s/0.016s). The same fixtures
+  pass afterward, including reopen, duplicate/no-overwrite, invalid references,
+  truncated/foreign-field/digest-mismatched files and preservation of corrupt winners.
+- `go test -race ./internal/immutablefile ./exploration ./workbench` passes. The
+  helper race test requires exactly one complete winner among 24 distinct 128 KiB
+  payloads and no temporary leaks; failure checks cover a file used as a directory
+  and a failed link after temporary writing. Existing store concurrency/branch and
+  corruption tests remain included. An initial sandbox run could not bind existing
+  httptest loopback servers; rerunning with loopback access passed (exploration
+  3.692s; helper/workbench also pass).
+- `go test ./...` passes across all 13 root packages, including HTTP route tests.
+  Hegel's 100 generated first-winner/duplicate sequences pass (0.048s), including
+  empty initial payloads and 2–12 attempts. Its initial run used an unwritable home
+  cache; the established writable XDG cache resolved that environment issue.
+- Whitespace and changed local Markdown targets pass. No UI, request-owner or
+  Quint transition protocol changed; no browser screenshots were regenerated for
+  this filesystem-only cut. No crash/power-loss durability is claimed.
+
+Cleanup removed 13 inspected dangling obsolete task UI images, then 12 explicitly
+selected unshared COPY cache layers (479.3 MB reported; VFS disk recovery roughly
+3.6 GB). The running image and a recent rollback image, all containers/volumes,
+telemetry, test ledgers and repository data were preserved. Disk usage fell from
+93% to 81%; free space was 5.8 GB after checks. No broad system/volume prune ran.
+The existing deployed stack was not rebuilt for this cut. A post-cleanup audit
+confirms 13 running services, restored traffic, all 14 original pending IDs
+(15 total), exact retained manifests/review histories/pinned citations and source
+hashes, reachable XTDB and zero OOM kills. No XTDB restart was performed.
+
+Next within C1: freeze capture-specific identity/response/parent/large-number
+fixtures before adopting matching publication mechanics; custody and native YAML
+contracts remain separate until pinned.
+
 ## Shared question/native wire fixtures — bounded B2 completion (2026-10-22 UTC)
 
 Final query/packages image:

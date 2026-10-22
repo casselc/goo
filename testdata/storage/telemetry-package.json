@@ -1,0 +1,1 @@
+{"apiVersion":"goo/telemetry-package/v1alpha1","name":"api-spans","title":"API spans","source":{"adapter":"clickhouse.otel/v1","signal":"spans","environment":"prod"},"measure":"captured-record-count","lookbackMinutes":5,"views":["records","trace-context"]}
