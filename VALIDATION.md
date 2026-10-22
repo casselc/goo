@@ -1,5 +1,40 @@
 # Validation record
 
+## Supported-window native previews (2026-10-22 UTC)
+
+Image: `sha256:43635ed83d33894a1b39957c8e63334ea76fbf484c4bd524a79b07144e3689b6`.
+Supported-window previews now compose the shared native presenter for supplied
+counter/histogram values, validated export coverage and diagnostics. Counter rates
+retain exact rational formatting; histogram P95 remains a bucket range. Unsupported
+coverage withholds values. Original/selected/excluded bounds use UTC timestamps
+with exact nanosecond tooltips; excluded duration retains its exact nanoseconds in
+a tooltip. Discovery/selection/inspection remain source-free; explicit recapture
+still performs two independent reads and preserves partial-publication recovery.
+
+Completed checks:
+
+- All 33 frontend test files pass, including exact large rational rates, zero,
+  unavailable coverage, histogram units and bucket ranges.
+- Hegel native-presentation properties (200 cases, now including supplied-window
+  values/non-mutation) and existing window-discovery support properties pass (0.27s).
+- Real OTLP counter/histogram journey 55 passes (1.2m), with exact UTC tooltip,
+  identity inspection, no-read selection, original-capture immutability, mobile
+  containment, frozen sharing and forced second-capture failure recovery checks.
+- The 30-second Bombadil support-discovery campaign passes with supplied-coverage
+  timestamp invariants. Quint/quint-go replays the real observed ledger and rejects
+  six invalid mutations (12.70s). This model checks read/capture boundaries, not every
+  rendered UI state.
+- All five affected storyboard frames are regenerated; desktop and narrow mobile
+  previews reviewed. Docs and the presenter ownership diagram are synchronized.
+- Served assets match source, both application services run the expected image,
+  all 13 services run after traffic restoration, pre-existing pending IDs and
+  retained annotations/document citations survive, and cgroup OOM kills remain zero.
+  No optional XTDB restart test was performed this round.
+
+Evidence: `artifacts/window-preview-unit.log`, `window-preview-hegel.log`,
+`window-preview-journey.log`, `window-preview-health.json`, and
+`artifacts/window-discovery/1792652961819/` (real ledger, Quint replay, Bombadil trace).
+
 ## Shared native values and coverage (2026-10-22 UTC)
 
 Final query/packages image:

@@ -1020,7 +1020,7 @@ Bombadil exploration reopens the saved native result.
 `window-discovery.spec.js` ingests real standard OTLP cumulative counters and delta
 explicit histograms with 123 ns offsets. Broad captured questions cannot assert
 complete coverage. Discovery reads stored intervals only, previews exclusions and
-requires both selections before two explicit source reads create exact captures.
+requires both selections before two explicit source reads create exact captures. Shared native previews show UTC bounds with exact nanosecond tooltips, readable durations, validated export coverage and exact-rate/histogram values. Exclusions explain missing coverage without claiming ingestion completeness.
 It compares and shares frozen evidence with a fresh browser and checks mobile
 containment. Original captures remain byte-for-byte unchanged. A forced second-capture failure
 retains the first ID and leaves the original comparison selected.
@@ -1033,7 +1033,7 @@ retains the first ID and leaves the original comparison selected.
 
 Quint observed-trace replay validates source-free discovery/selection and explicit
 two-read capture, with six rejecting mutations. Optional Bombadil exploration
-compares original captures, discovers support and toggles selections.
+compares original captures, discovers support and toggles selections while checking supplied coverage timestamps.
 
 ### 56 — Reuse comparison questions
 

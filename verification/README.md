@@ -404,7 +404,7 @@ cd verification
 go test -run 'TestHegelWindowDiscoverySupport|TestHegelSavedComparisonStateSwarm' -v .
 ```
 
-The Bombadil actor explores compare/discover/select/clear without source capture.
+The Bombadil actor explores compare/discover/select/clear without source capture and checks that each supplied preview has observed coverage and two UTC bounds. Journey 55 checks exact nanoseconds in timestamp tooltips and unchanged read counts during selection/identity inspection. `TestHegelNativePresentationProperties` additionally varies supported-window rational values and verifies unavailable coverage never presents an observed value.
 Its invariants require the original incomplete decision to remain withheld and
 the capture control to remain disabled until both scopes are selected.
 

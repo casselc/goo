@@ -468,4 +468,4 @@ with external callers; application consumers have migrated.
 formatting and comparison-window coverage. It composes existing stats, UTC timestamps
 and disclosures, with styles in `native-presentation.css`. It has no source client or
 query/evidence state. Service coverage remains compact and collapsed; measurement
-stream details retain latest versus whole-window distinctions. [Contract and diagram](NATIVE_PRESENTATION.md).
+stream details retain latest versus whole-window distinctions. Supported-window previews also compose its window values and coverage with the existing stream inspector; discovery and explicit recapture remain owned by `GooWindowDiscovery`. [Contract and diagram](NATIVE_PRESENTATION.md).

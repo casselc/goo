@@ -1,7 +1,7 @@
 # Native values and coverage
 
 `GooNativePresentation` presents supplied native results across measurement details,
-service native summaries and fixed/live native-window comparisons. It has no source
+service native summaries, fixed/live native-window comparisons and supported-window previews. It has no source
 client, query lifecycle, capture ownership or evidence clock. The Go evaluators still
 own native temporality, reset/gap handling, freshness and whole-window validity.
 
@@ -21,6 +21,8 @@ The existing exact rational-rate formatter and diagnostic explanations also live
 here. Public `GooMeasurements` diagnostic functions, `GooServiceDashboard.nativeSummary`
 and `GooLiveComparison.rateText` delegate for compatibility. Service summaries keep
 their four-stream display limit; measurement paging and evaluator inputs are unchanged.
+
+Supported-window `windowValue` consumes the supplied Go window summary, preserves exact rational counter rates and histogram P95 ranges, and withholds values when coverage is not validated. Discovery remains a retained-data operation; only Capture selected windows performs the two explicit source reads. Original scopes, selected bounds and exclusions use UTC timestamps with exact nanosecond tooltips. Durations use readable milliseconds, with exact excluded nanoseconds in a tooltip.
 
 ## Shared display
 
@@ -46,13 +48,16 @@ flowchart LR
   Presenter --> Measurements[Measurement stream details]
   Presenter --> Services[Service value and collapsed coverage]
   Presenter --> Comparisons[Fixed / live native window coverage]
+  Presenter --> Support[Supported-window values / coverage previews]
+  Retained[Stored intervals; no source read] --> Support
+  Explicit[Explicit selected-window capture] --> Go
   Presenter --> Primitives[Passive stats / UTC timestamps / native disclosures]
   Owners[Independent query / refresh / freeze owners] --> Go
 ```
 
 ## Validation boundaries
 
-Journey 59 inspects service coverage locally on desktop/mobile. Journey 54 checks
+Journey 55 checks supplied counter/histogram coverage and exact UTC tooltips before explicit recapture, including partial-publication recovery. Its Bombadil actor checks displayed coverage bounds while toggling support. Journey 59 inspects service coverage locally on desktop/mobile. Journey 54 checks
 comparison bounds and exact timestamp tooltips. Native navigation/timeline, service
 instrument selection and live-counter journeys protect the surrounding source and
 custody protocols. Updated service/native-window Bombadil invariants exercise the

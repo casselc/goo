@@ -2,6 +2,8 @@
 (function(global){
  const node=(...args)=>(typeof module!=='undefined'?require('./components'):global.GooUI).node(...args);
  const reasonDescriptions={
+  'missing-coverage':['Exports do not cover this time range.','Excluded time is not a measured zero or evidence of ingestion completeness.'],
+  'unknown-interval':['This interval cannot be evaluated.','Inspect retained exports before selecting a supported scope.'],
   'empty-distribution':['The complete bucket records zero observations.','No percentile is defined for an empty population.'],
   'missing-exact-stream':['This exact stream is missing from one window.','Inspect the full identity; matching an instrument name or replacement instance is insufficient.'],
   'unknown-observation':['No evaluated observation is available.','Inspect the fixed window and exported values; absence is not a zero.'],
@@ -50,6 +52,14 @@
  }
  function nativeSummary(data){const family=data.gauges||data.counters||data.histograms;if(!family)return [];const kind=data.gauges?'gauge':data.counters?'counter':'histogram';return family.series.slice(0,4).map(s=>latest(s,kind))}
  function rateText(value){if(typeof value!=='string'||! /^-?\d+(\/[1-9]\d*)?$/.test(value)||value.length>256)return 'Unavailable';const [a,b='1']=value.split('/'),n=BigInt(a),d=BigInt(b),v=((n<0n?-n:n)*1000n+d/2n)/d;return (n<0n&&v!==0n?'-':'')+String(v/1000n)+'.'+String(v%1000n).padStart(3,'0')}
+ function windowValue(stream,summary){
+  if(!windowCoverage(summary).validated)return 'Unavailable';
+  if(summary.rate!==undefined)return summary.delta+' increments · '+rateText(summary.rate)+' '+stream.unit+'/s';
+  const d=summary.distribution;if(!d||d.unit!==stream.unit)return 'Unavailable';
+  const formatter=typeof module!=='undefined'?require('./histograms'):global.GooHistograms;
+  return d.count+' histogram observations · '+(['bucket-bound','unbounded-upper','unbounded-lower','unbounded','no_data'].includes(d.p95?.state)?formatter.p95Label(d.p95,d.unit):'P95 unavailable');
+ }
+ function renderWindowMember(host,member){const section=node('section');section.className='native-window-member';section.append(node('p',(member.stream.resource?.['service.instance.id']||'Unknown instance')+' · '+member.stream.name+' ['+member.stream.unit+']'),node('strong',windowValue(member.stream,member.summary)));renderWindowCoverage(section,'Export coverage',member.summary);section.append(global.GooAttributes.streamInspection(member.stream));host.append(section);return section}
  function renderReasons(host,codes){
   const unique=[...new Set(codes.filter(Boolean))];if(!unique.length)return;
   const list=node('ul');list.className='native-reason-list';for(const code of unique){const info=reasonInfo(code),item=node('li');item.append(node('strong',info.title),node('span',' '+info.guidance));list.append(item)}
@@ -62,5 +72,5 @@
  }
  function windowCoverage(side){return side?{state:side.state,fromNS:side.fromNS,toNS:side.toNS,temporality:side.temporality,reasons:[...new Set(side.reasons||[])],validated:side.state==='observed'&&!(side.reasons||[]).length}:{state:'missing',reasons:[],validated:false}}
  function renderWindowCoverage(host,label,side){const m=windowCoverage(side),section=node('div');section.className='native-window-coverage';section.dataset.state=m.state;const p=node('p');if(side)p.append(label+': [',global.GooEvidenceSummary.timestamp(m.fromNS),' → ',global.GooEvidenceSummary.timestamp(m.toNS),') · '+m.temporality+' · '+m.state+' · '+(m.validated?'Validated export coverage':'Coverage not validated'));else p.textContent=label+': missing exact stream';section.append(p);renderReasons(section,m.reasons);host.append(section);return section}
- const api={reasonInfo,streamDiagnostics,latest,nativeSummary,rateText,windowCoverage,renderReasons,renderStreamDiagnostics,renderWindowCoverage};if(typeof module!=='undefined')module.exports=api;else global.GooNativePresentation=api;
+ const api={windowValue,renderWindowMember,reasonInfo,streamDiagnostics,latest,nativeSummary,rateText,windowCoverage,renderReasons,renderStreamDiagnostics,renderWindowCoverage};if(typeof module!=='undefined')module.exports=api;else global.GooNativePresentation=api;
 })(typeof window==='undefined'?globalThis:window);
