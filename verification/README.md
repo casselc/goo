@@ -918,7 +918,7 @@ tests also run 32 before/after wire fixtures from `testdata/http/planning.json`;
 see [route policy and adoption boundaries](../docs/HTTP_BOUNDARIES.md#pure-planning-json-adoption).
 No new browser execution-state or Quint protocol is introduced by this extraction.
 
-## Bounded source HTTP (C2 native first adoption)
+## Bounded source HTTP (C2 native and record adoption)
 
 `TestHegelSourceHTTPByteBounds` generates 100 binary payload/byte-budget/partial-read
 failure cases against the bounded-body primitive. Run
@@ -926,3 +926,9 @@ failure cases against the bounded-body primitive. Run
 row/scanner contracts and the gated readonly real ClickHouse test live in the root
 measurements package; see [ownership and live-test variables](../docs/HTTP_BOUNDARIES.md#native-source-http-mechanics--first-transport-adoption).
 No browser execution-state or Quint protocol changed in this transport extraction.
+
+Record transport contracts in `exploration/source_transport_contract_test.go` also
+pass before/after shared-mechanics adoption. They preserve record-specific
+status-before-read, object validation and 1,001-row behavior. The readonly gated
+record integration test roundtrips every ASCII control plus DEL against ClickHouse;
+see [record transport ownership](../docs/HTTP_BOUNDARIES.md#record-source-transport-adoption).

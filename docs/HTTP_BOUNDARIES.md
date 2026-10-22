@@ -299,7 +299,8 @@ Native status checking remains after bounded body reading, so a body-read error
 still precedes a non-200 status error. Other adapters may check status first; these
 two primitives permit that order rather than imposing native policy. In particular,
 record source escaping, status ordering, row validation/limits and SSE ownership
-are not adopted or normalized in this cut. This is a buffering helper, not an SSE
+were not adopted or normalized in the first cut; the record continuation below
+now adopts only matching mechanics. This is a buffering helper, not an SSE
 reader, universal ClickHouse evaluator or query optimizer.
 
 ```mermaid
@@ -330,3 +331,44 @@ passes evaluation/result identity validation, and native instrument discovery
 succeeds. No telemetry is inserted; the gauge/discovery scope may have no data.
 Root runs without the variable explicitly skip this live check. No running app
 image was rebuilt for this code-only transport cut.
+
+
+## Record source transport adoption
+
+`exploration.Source.read` now uses the same `Post` and `ReadBounded` primitives.
+The source still owns its URL policy, 15-second fallback client, response closing,
+parameter escaping, error mapping and JSON-object validation. Fetch, discovery,
+capture and tail callers keep their existing query and evidence semantics.
+
+| Contract | Native measurements | Record exploration |
+| --- | --- | --- |
+| Status ordering | Read body before status check | Reject non-200 before any body read |
+| Parameter controls | Named escapes for selected controls | Hex escapes for all ASCII controls and DEL |
+| Accepted rows | Raw lines, evaluated downstream | Trimmed non-null JSON objects; blank lines skipped |
+| Row budget | 10,000 | 1,001; server setting 1,002 |
+| Body budget | 8 MiB | 8 MiB |
+| Scanner failure | Nil rows with error | Accumulated slice with scanner error (existing contract) |
+
+```mermaid
+flowchart LR
+  Query[Record compiler: SQL and typed parameters] --> Policy[Record URL / escaping / readonly budgets]
+  Policy --> Post[Shared POST / auth / context]
+  Post --> CH[ClickHouse]
+  CH --> Status[Record status check before body read]
+  Status --> Read[Shared bounded read: limit plus one]
+  Read --> Rows[Record object validation / scanner / 1001-row guard]
+  Rows --> Evidence[Family counts / basis / capture or tail owner]
+```
+
+The adapter owns and closes every received response body, including rejected
+statuses. Pre-extraction contracts pin request bytes/auth/settings, input immutability,
+status-before-read precedence, read-error identity, exact/overflow byte and row
+limits, scanner failure, raw numeric spellings, invalid objects and cancellation.
+The same tests pass after adoption. `TestClickHouseRecordSourceTransportIntegration`
+uses the same gated lab variables as the native test and readonly `numbers(3)`
+queries to roundtrip backslashes, all ASCII controls, DEL, Unicode and punctuation.
+It inserts no telemetry. Hegel's shared bounded-read properties apply to both adapters.
+
+Other transports and strict-JSON route adoption still need an acceptance audit;
+C2 remains active. No UI, SSE protocol or Quint transition changed, so existing
+screenshots/storyboards remain applicable. No running app image was rebuilt.

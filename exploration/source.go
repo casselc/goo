@@ -8,7 +8,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"io"
 	"math/big"
 	"net/http"
 	"net/url"
@@ -16,6 +15,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/casselc/goo/internal/sourcehttp"
 )
 
 type Result struct {
@@ -78,16 +79,11 @@ func (s Source) read(ctx context.Context, sql string, params map[string]string) 
 		v.Set("param_"+k, encodeParameter(p))
 	}
 	endpoint.RawQuery = v.Encode()
-	req, e := http.NewRequestWithContext(ctx, "POST", endpoint.String(), strings.NewReader(sql))
-	if e != nil {
-		return nil, e
-	}
-	req.SetBasicAuth(s.User, s.Password)
 	client := s.Client
 	if client == nil {
 		client = &http.Client{Timeout: 15 * time.Second}
 	}
-	resp, e := client.Do(req)
+	resp, e := sourcehttp.Post(ctx, client, endpoint.String(), s.User, s.Password, sql)
 	if e != nil {
 		return nil, e
 	}
@@ -95,11 +91,11 @@ func (s Source) read(ctx context.Context, sql string, params map[string]string) 
 	if resp.StatusCode != 200 {
 		return nil, fmt.Errorf("exploration source HTTP %d", resp.StatusCode)
 	}
-	b, e := io.ReadAll(io.LimitReader(resp.Body, (8<<20)+1))
+	b, oversize, e := sourcehttp.ReadBounded(resp.Body, 8<<20)
 	if e != nil {
 		return nil, e
 	}
-	if len(b) > 8<<20 {
+	if oversize {
 		return nil, fmt.Errorf("source exceeds 8 MiB")
 	}
 	rows := []json.RawMessage{}

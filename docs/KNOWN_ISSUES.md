@@ -6,9 +6,9 @@ one startup snapshot and injected into native, record, tail, capture, operation 
 and investigation owners. Optional XTDB URL configuration is likewise injected
 into retention/document citation owners, while request/card read bases remain
 per-operation values. Configuration status does not prove database availability;
-document files reopen without the optional store. Native source HTTP mechanics
-now use shared POST/bounded-read primitives; record and other transport adoption
-remain queued. Status/error ordering, escaping and row limits remain family-specific.
+document files reopen without the optional store. Native and record source HTTP mechanics
+now use shared POST/bounded-read primitives; remaining transports/routes need an
+acceptance audit. Status/error ordering, escaping and row limits remain family-specific.
 Recipes/dashboard now share bounded JSON decoding/writing behind exact wire
 fixtures; other route adoption and transport consolidation remain queued. ClickHouse/XTDB environment mutation after startup is not a reload.
 Live comparison drafts remain registration-local and expiring; persisted captures

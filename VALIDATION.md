@@ -1,5 +1,31 @@
 # Validation record
 
+## C2 record source transport adoption (2026-10-22 UTC)
+
+[Record transport contract and diagram](docs/HTTP_BOUNDARIES.md#record-source-transport-adoption)
+document adoption of shared POST/auth/context and bounded-body mechanics. Record
+escaping, readonly/resource settings, status-before-body ordering, response closing,
+JSON-object validation, scanner behavior and 1,001-row guard remain in the adapter.
+Counts, evidence basis, capture and tail lifetimes are unchanged.
+
+Actual checks:
+
+- New request/response/error contracts pass before extraction (0.168s), including
+  exact/overflow 8 MiB and row limits, invalid objects, preserved uint64 spelling,
+  body closure, cancellation, read-error identity and unread non-200 bodies.
+  Scanner-size failure retains the existing non-nil empty slice plus scanner error.
+- After adoption, race suites pass for exploration (11.808s), HTTP routes (6.219s)
+  and measurements (4.951s), with both gated real-source tests enabled against the
+  existing local ClickHouse lab. The new readonly record integration test roundtrips
+  all ASCII controls, DEL, backslashes, Unicode and punctuation through `numbers(3)`.
+  No records are inserted. These tests do not establish ingestion completeness.
+- Hegel's 100 generated bounded-read payload/budget/error cases pass (0.023s).
+- `go test ./...` passes; live checks skip when their URL variable is absent.
+
+Evidence: `artifacts/c2-record-transport-{before,race,hegel,root}.log`.
+No UI/SSE/Quint protocol changed, no screenshots were regenerated and no running
+image was rebuilt. Remaining transports/routes need a C2 acceptance audit.
+
 ## C2 native source HTTP mechanics and readonly ClickHouse validation (2026-10-22 UTC)
 
 [Native transport contract/diagram](docs/HTTP_BOUNDARIES.md#native-source-http-mechanics--first-transport-adoption)
