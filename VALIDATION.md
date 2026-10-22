@@ -1,5 +1,46 @@
 # Validation record
 
+## C2 optional XTDB startup wiring and real pinned-citation isolation (2026-10-22 UTC)
+
+[Optional retention ownership and diagram](docs/HTTP_BOUNDARIES.md#optional-retention-and-document-citation-startup-wiring)
+now describe one injected optional URL snapshot shared by retention routes and
+workbench citation checks. `retentionConnection` carries no await token; each
+operation constructs a fresh store value with its request/card basis. Status,
+30-second contexts, exact references, retry/recovery and file-document loading
+retain their existing owners. Both HTTP families stop rereading process config.
+
+Actual checks:
+
+- Existing optional-store/document/population/capture checks pass before injection
+  (0.052s). After injection, HTTP tests retain unconfigured 503, configured-invalid
+  400 and configured-unavailable recovery 502 behavior, no-store status and strict
+  request validation. Independent registrations retain configured/unconfigured
+  status after ambient environment changes.
+- The local XTDB HTTP health endpoint returned 200. The new gated real-instance
+  test passes with race detection (1.91s test / 2.949s package): selected ordinary
+  records are published, a review corrected, and a document created with both old
+  and current exact review IDs plus the committed lower-bound token. Changing
+  ambient URL configuration and the caller's connection value does not redirect
+  the registered verifier.
+- Concurrent valid/invalid await-token HTTP requests return the old pinned review
+  (200) and reject the invalid basis (404), respectively. A fresh unconfigured
+  owner reopens the persisted document with exact review/basis fields; new citation
+  publication without the optional store remains refused (400). No global mutable
+  basis was introduced. During fixture preparation the retained-record adapter
+  refused a numeric timestamp; the final fixture uses its existing exporter
+  decimal-string timestamp contract, without changing product decoding.
+- The complete `go test -race ./cmd/goo` suite passes with the real XTDB test enabled
+  (3.501s), alongside source injection, 32 planning fixtures, budgets, SSE and capture
+  checks. `go test ./...` also passes; real-instance tests are explicitly gated
+  without `GOO_XTDB_TEST_URL`. Other retention-package live campaigns were not rerun
+  in this cut. Whitespace and changed local Markdown targets pass.
+
+No database schema, bitemporal semantics, public execution-state or UI protocol
+changed. No new Hegel/Quint model or screenshot was needed for configuration wiring;
+actual HTTP/XTDB isolation was checked instead. The running application was not
+rebuilt/redeployed, and no XTDB restart was performed. C2 remains active; bounded
+native source transport mechanics and parity/integration evidence are next.
+
 ## C2 operation readers/investigations and unified startup connection (2026-10-22 UTC)
 
 [Operation adoption contract/diagram](docs/HTTP_BOUNDARIES.md#operation-get-and-investigation-adoption)

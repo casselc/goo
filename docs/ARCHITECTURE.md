@@ -8,7 +8,9 @@ lifetimes. Operation GET registration is separate from startup loading; its sour
 bindings and investigation lineage remain family-owned. Recipes and
 dashboard planning share explicit-policy bounded JSON decoding/writing;
 semantic validation, status mapping and SSE lifetimes remain in their owners.
-Source transport extraction remains queued.
+Retention routes and document citation checks share an injected optional XTDB URL;
+each operation receives its own read basis, and document file loading remains
+independent of XTDB. Source transport extraction remains queued.
 
 [Immutable publication](IMMUTABLE_PUBLICATION.md) shares write/sync/link mechanics
 across reusable telemetry packages, workbench artifacts, capture stores, lifecycle

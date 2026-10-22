@@ -11,7 +11,7 @@ import (
 
 func TestPopulationConfigurationHTTP(t *testing.T) {
 	mux := http.NewServeMux()
-	registerWorkbench(mux, t.TempDir())
+	registerWorkbench(mux, t.TempDir(), retentionConnection{})
 	call := func(method, url, body string) *httptest.ResponseRecorder {
 		r := httptest.NewRequest(method, url, strings.NewReader(body))
 		w := httptest.NewRecorder()

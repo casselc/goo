@@ -10,15 +10,13 @@ import (
 	"github.com/casselc/goo/workbench"
 	"io"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strings"
 	"time"
 )
 
-func registerRetention(mux *http.ServeMux, dir string) {
-	url := os.Getenv("GOO_XTDB_URL")
-	store := retention.Store{URL: url}
+func registerRetention(mux *http.ServeMux, dir string, connection retentionConnection) {
+	store := connection.store("")
 	captures := exploration.CaptureStore{Dir: filepath.Join(dir, "exploration")}
 	reply := func(w http.ResponseWriter, code int, value any) {
 		w.Header().Set("Content-Type", "application/json")
@@ -28,7 +26,7 @@ func registerRetention(mux *http.ServeMux, dir string) {
 	}
 	fail := func(w http.ResponseWriter, code int, e error) { reply(w, code, map[string]string{"error": e.Error()}) }
 	available := func(w http.ResponseWriter) bool {
-		if url == "" {
+		if connection.URL == "" {
 			fail(w, 503, errors.New("optional XTDB retention is not configured"))
 			return false
 		}
@@ -45,7 +43,9 @@ func registerRetention(mux *http.ServeMux, dir string) {
 		}
 		return nil
 	}
-	mux.HandleFunc("GET /retained-evidence/status", func(w http.ResponseWriter, r *http.Request) { reply(w, 200, map[string]bool{"configured": url != ""}) })
+	mux.HandleFunc("GET /retained-evidence/status", func(w http.ResponseWriter, r *http.Request) {
+		reply(w, 200, map[string]bool{"configured": connection.URL != ""})
+	})
 	mux.HandleFunc("GET /retained-evidence", func(w http.ResponseWriter, r *http.Request) {
 		if !available(w) {
 			return
@@ -83,7 +83,7 @@ func registerRetention(mux *http.ServeMux, dir string) {
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
 		defer cancel()
-		v, e := (retention.Store{URL: url, AwaitToken: r.URL.Query().Get("awaitToken")}).Annotation(ctx, r.PathValue("id"), r.PathValue("revision"))
+		v, e := connection.store(r.URL.Query().Get("awaitToken")).Annotation(ctx, r.PathValue("id"), r.PathValue("revision"))
 		if e != nil {
 			fail(w, 404, e)
 			return
@@ -170,7 +170,7 @@ func registerRetention(mux *http.ServeMux, dir string) {
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
 		defer cancel()
-		v, e := (retention.Store{URL: url, AwaitToken: r.URL.Query().Get("awaitToken")}).Load(ctx, r.PathValue("id"))
+		v, e := connection.store(r.URL.Query().Get("awaitToken")).Load(ctx, r.PathValue("id"))
 		if e != nil {
 			fail(w, 404, e)
 			return
@@ -208,7 +208,7 @@ func registerRetention(mux *http.ServeMux, dir string) {
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
 		defer cancel()
-		v, e := (retention.Store{URL: url, AwaitToken: q.Get("awaitToken")}).Annotations(ctx, r.PathValue("id"))
+		v, e := connection.store(q.Get("awaitToken")).Annotations(ctx, r.PathValue("id"))
 		if e != nil {
 			fail(w, 404, e)
 			return
@@ -240,7 +240,7 @@ func registerRetention(mux *http.ServeMux, dir string) {
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
 		defer cancel()
-		v, e := (retention.Store{URL: url, AwaitToken: in.AwaitToken}).CorrectOnce(ctx, r.PathValue("id"), in.MeaningInput, in.RequestID)
+		v, e := connection.store(in.AwaitToken).CorrectOnce(ctx, r.PathValue("id"), in.MeaningInput, in.RequestID)
 		if e != nil {
 			fail(w, 400, e)
 			return

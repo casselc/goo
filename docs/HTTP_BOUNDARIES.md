@@ -121,11 +121,19 @@ flowchart LR
   OperationGET --> CH
   Investigation --> CH
   Investigation --> InvestigationFiles[Immutable operation captures]
+  Env --> RetentionConfig[Optional XTDB URL snapshot]
+  RetentionConfig --> RetentionRoutes[Retained evidence routes]
+  RetentionConfig --> Citation[Document citation verifier]
+  Basis[Request or card read basis] --> RetentionRoutes
+  Basis --> Citation
+  RetentionRoutes --> XTDB[XTDB via per-operation store value]
+  Citation --> XTDB
 ```
 
-Operation GET readers and investigations now also use the startup snapshot. Retention
-snapshots `GOO_XTDB_URL` on registration, while document citation checks currently
-read it at request time. Definitions/workflow paths still depend on working
+Operation GET readers and investigations now also use the startup snapshot.
+Optional retention and document citation checks share an injected XTDB URL snapshot
+from `retentionConnectionFromEnvironment`. Read basis is supplied separately to
+`connection.store(readBasis)` for each operation. Definitions/workflow paths still depend on working
 directory; result snapshots remain process-global and live comparison drafts remain
 registration-local. These are explicit remaining boundaries, not unified services.
 
@@ -151,8 +159,8 @@ The full HTTP race suite
 retains budget, SSE, capture and optional-store tests.
 
 C2 remains active. The pure planning adoption below is delivered. Next migrate
-remaining optional-store configuration. Bounded ClickHouse transport extraction
-follows one family at a time, preserving parameter escaping,
+bounded native ClickHouse transport mechanics with explicit family limits, followed
+by another compatible adapter. Transport extraction proceeds one family at a time, preserving parameter escaping,
 read limits, basis/identity and non-2xx/oversize/cancellation behavior. Python proxy
 removal, changing custody/duplicate policy and universal endpoint budgets are not
 part of these cuts.
@@ -239,7 +247,38 @@ The existing optional-rate/histogram-error and failed-refresh receipt tests rema
 These GET routes keep incoming request contexts and the shared client timeout;
 this refactor does not enroll them in the global POST query budget.
 
-All Go HTTP ClickHouse configuration is now centralized at startup. Optional XTDB
-configuration still has differing registration/request lifetimes, and definition
-files/result snapshots still have the documented working-directory/process-global
-boundaries. C2 remains active; source transport has not been consolidated.
+All Go HTTP ClickHouse and optional XTDB configuration is now resolved at startup.
+Definition files/result snapshots still have the documented working-directory/
+process-global boundaries. C2 remains active; source transport has not been consolidated.
+
+## Optional retention and document citation startup wiring
+
+`retentionConnectionFromEnvironment` supplies the optional URL once at server
+startup. The same immutable configuration value goes to workbench registration,
+its retained-evidence routes and document citation verification. An empty URL
+remains an unavailable optional capability; status reports configuration, not
+database health. A configured but unavailable store retains existing failure and
+recovery behavior rather than pretending a request never committed.
+
+The connection configuration contains no await token. Each read/correction uses a
+fresh `retention.Store` value with the request's explicit basis, and document
+creation verifies each retained card with its own `ReadBasis`. Thirty-second
+contexts, exact manifest/review references, retry keys and native recovery rules
+are unchanged. No mutable server-wide basis, connection pool or generic reference
+resolver was added. Stored documents reopen from local files without probing XTDB.
+
+Unit/HTTP tests cover empty versus configured-unavailable instances, status/no-store
+headers and availability-before-validation ordering independent of later ambient
+environment changes. The gated real-instance test
+`TestXTDBHTTPInjectedCitationBasisAndOfflineDocument` publishes selected ordinary
+record fixtures and a correction, creates a document with old/current exact review
+citations, concurrently checks valid/invalid bases, and reopens the file document
+with optional retention disabled. It requires `GOO_XTDB_TEST_URL`; root runs without
+that variable explicitly skip this live check. This cut ran it against the local
+XTDB instance as well as the complete HTTP race suite with that variable enabled.
+The fixture uses decimal-string timestamps matching the retained-record adapter.
+
+ClickHouse and XTDB environment mutation after startup is not a reload mechanism.
+C2's next cut is bounded native source transport mechanics, preserving each
+family's query compilation, parameter escaping, body/row limits, basis and error
+contracts. No database schema, bitemporal policy or public UI workflow changed here.

@@ -70,7 +70,7 @@ func TestCaptureHTTPServerCustodyAndSourceFreePaging(t *testing.T) {
 	// New handler/store instance simulates process restart; source is now unavailable.
 	mux = http.NewServeMux()
 	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, dir)
-	registerWorkbench(mux, dir)
+	registerWorkbench(mux, dir, retentionConnection{})
 	metadata := call("GET", "/captures/"+first.Receipt.ID+"/receipt", "")
 	var brief struct {
 		Receipt exploration.CaptureReceipt           `json:"receipt"`

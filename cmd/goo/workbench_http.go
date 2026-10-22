@@ -7,19 +7,17 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/casselc/goo/exploration"
-	"github.com/casselc/goo/retention"
 	"github.com/casselc/goo/workbench"
 )
 
-func registerWorkbench(mux *http.ServeMux, dir string) {
-	registerRetention(mux, dir)
+func registerWorkbench(mux *http.ServeMux, dir string, connection retentionConnection) {
+	registerRetention(mux, dir, connection)
 	store := workbench.Store{Dir: filepath.Join(dir, "workbench")}
 	captures := exploration.CaptureStore{Dir: filepath.Join(dir, "exploration")}
 	reply := func(w http.ResponseWriter, code int, v any) {
@@ -236,12 +234,12 @@ func registerWorkbench(mux *http.ServeMux, dir string) {
 			return
 		}
 		result, e := store.CreateDocument(in.Document, in.Parent, func(id string) error { _, e := captures.Load(id); return e }, func(card workbench.Card) error {
-			if os.Getenv("GOO_XTDB_URL") == "" {
+			if connection.URL == "" {
 				return fmt.Errorf("optional retention is not configured")
 			}
 			ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
 			defer cancel()
-			_, e := (retention.Store{URL: os.Getenv("GOO_XTDB_URL"), AwaitToken: card.ReadBasis}).Annotation(ctx, card.Reference, card.Review)
+			_, e := connection.store(card.ReadBasis).Annotation(ctx, card.Reference, card.Review)
 			return e
 		})
 		if e != nil {

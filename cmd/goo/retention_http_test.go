@@ -8,9 +8,9 @@ import (
 )
 
 func TestRetentionHTTPOptionalAndServerOwned(t *testing.T) {
-	t.Setenv("GOO_XTDB_URL", "")
+	connection := retentionConnection{}
 	mux := http.NewServeMux()
-	registerRetention(mux, t.TempDir())
+	registerRetention(mux, t.TempDir(), connection)
 	call := func(method, path, body string) *httptest.ResponseRecorder {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest(method, path, strings.NewReader(body)))
@@ -23,9 +23,9 @@ func TestRetentionHTTPOptionalAndServerOwned(t *testing.T) {
 	if w = call("POST", "/retained-evidence", `{}`); w.Code != 503 {
 		t.Fatal(w.Code)
 	}
-	t.Setenv("GOO_XTDB_URL", "postgres://xtdb@127.0.0.1:1/xtdb?sslmode=disable")
+	connection = retentionConnection{URL: "postgres://xtdb@127.0.0.1:1/xtdb?sslmode=disable"}
 	mux = http.NewServeMux()
-	registerRetention(mux, t.TempDir())
+	registerRetention(mux, t.TempDir(), connection)
 	for _, body := range []string{`{"captureID":"x","rows":[{"forged":true}]}`, `{"captureID":"x"} {}`, `{"captureID":"../escape","indexes":[0],"tags":["review"]}`, `{"captureID":"x","origin":"trusted-user"}`} {
 		w = call("POST", "/retained-evidence", body)
 		if w.Code != 400 {
@@ -35,9 +35,9 @@ func TestRetentionHTTPOptionalAndServerOwned(t *testing.T) {
 }
 
 func TestRetentionRecoveryDoesNotTreatUnavailableStoreAsAbsentCommit(t *testing.T) {
-	t.Setenv("GOO_XTDB_URL", "postgres://xtdb@127.0.0.1:1/xtdb?sslmode=disable")
+	connection := retentionConnection{URL: "postgres://xtdb@127.0.0.1:1/xtdb?sslmode=disable"}
 	mux := http.NewServeMux()
-	registerRetention(mux, t.TempDir())
+	registerRetention(mux, t.TempDir(), connection)
 	w := httptest.NewRecorder()
 	body := `{"requestID":"` + strings.Repeat("a", 64) + `","resultToken":"` + strings.Repeat("b", 64) + `","indexes":[0],"tags":["review"],"note":"original draft"}`
 	mux.ServeHTTP(w, httptest.NewRequest("POST", "/retained-evidence", strings.NewReader(body)))

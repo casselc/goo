@@ -77,7 +77,7 @@ func serveHTTP(args []string) error {
 	recordSource := connection.explorationSource()
 	registerExploration(mux, recordSource)
 	registerCaptures(mux, recordSource, *captureDir)
-	registerWorkbench(mux, *captureDir)
+	registerWorkbench(mux, *captureDir, retentionConnectionFromEnvironment())
 	registerTelemetryPackages(mux, filepath.Join(*captureDir, "telemetry-packages"))
 	server := &http.Server{Addr: *listen, Handler: newQueryBudget(mux, 4), ReadHeaderTimeout: 5 * time.Second, WriteTimeout: 90 * time.Second}
 	return server.ListenAndServe()

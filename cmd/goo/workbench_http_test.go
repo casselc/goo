@@ -10,7 +10,7 @@ import (
 
 func TestWorkbenchHTTPRejectsUntrustedReceiptsAndUnavailableLinks(t *testing.T) {
 	mux := http.NewServeMux()
-	registerWorkbench(mux, t.TempDir())
+	registerWorkbench(mux, t.TempDir(), retentionConnection{})
 	call := func(method, path, body string) *httptest.ResponseRecorder {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest(method, path, strings.NewReader(body)))
@@ -40,7 +40,7 @@ func TestWorkbenchHTTPRejectsUntrustedReceiptsAndUnavailableLinks(t *testing.T) 
 
 func TestAnnotationHTTPStrictMetadataContract(t *testing.T) {
 	mux := http.NewServeMux()
-	registerWorkbench(mux, t.TempDir())
+	registerWorkbench(mux, t.TempDir(), retentionConnection{})
 	call := func(method, path, body string) *httptest.ResponseRecorder {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest(method, path, strings.NewReader(body)))
