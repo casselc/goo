@@ -1,5 +1,20 @@
 # Validation record
 
+## C2 remaining-work acceptance audit (2026-10-22 UTC)
+
+[Audit and ordered completion proposal](docs/HTTP_BOUNDARIES.md#c2-acceptance-audit--2026-10-22)
+were checked against current production request construction, bounded reads,
+route decoders, startup environment reads and existing test names. Four ClickHouse
+readers remain unadopted: prebuilt HTTP, operation spans, counters and histograms.
+Nine HTTP files retain local request-body decoder mechanics. Existing semantic
+checks do not substitute for missing transport/wire contracts.
+
+This documentation-only cut updates stale next-step text and keeps C2 active.
+Prebuilt HTTP transport is next; remaining readers and route-specific JSON follow.
+Final deployed real-source/browser acceptance remains open. No code, model, UI or
+runtime image changed; no test suite or browser journey was rerun for this audit.
+Whitespace and local Markdown link targets were checked.
+
 ## C2 record source transport adoption (2026-10-22 UTC)
 
 [Record transport contract and diagram](docs/HTTP_BOUNDARIES.md#record-source-transport-adoption)

@@ -158,9 +158,9 @@ reopen in a new registration, and old draft tokens do not survive that registrat
 The full HTTP race suite
 retains budget, SSE, capture and optional-store tests.
 
-C2 remains active. Pure planning JSON and the first native transport adoption are
-delivered. Next freeze the record adapter contract before sharing matching source
-HTTP mechanics. Transport adoption proceeds one family at a time, preserving parameter escaping,
+C2 remains active. Pure planning JSON and native/record transport adoption are
+delivered. The acceptance audit below identifies prebuilt HTTP transport as the
+next bounded cut. Transport adoption proceeds one family at a time, preserving parameter escaping,
 read limits, basis/identity and non-2xx/oversize/cancellation behavior. Python proxy
 removal, changing custody/duplicate policy and universal endpoint budgets are not
 part of these cuts.
@@ -249,7 +249,7 @@ this refactor does not enroll them in the global POST query budget.
 
 All Go HTTP ClickHouse and optional XTDB configuration is now resolved at startup.
 Definition files/result snapshots still have the documented working-directory/
-process-global boundaries. C2 remains active; the first native transport mechanics adoption below is delivered.
+process-global boundaries. C2 remains active; native/record transport mechanics below are delivered.
 
 ## Optional retention and document citation startup wiring
 
@@ -279,7 +279,7 @@ XTDB instance as well as the complete HTTP race suite with that variable enabled
 The fixture uses decimal-string timestamps matching the retained-record adapter.
 
 ClickHouse and XTDB environment mutation after startup is not a reload mechanism.
-C2's native transport cut below is delivered. The next record-adapter adoption
+C2's native and record transport cuts below are delivered. Remaining adoptions
 must preserve query compilation, parameter escaping, body/row limits, basis and
 error contracts. No database schema, bitemporal policy or public UI workflow changed here.
 
@@ -372,3 +372,73 @@ It inserts no telemetry. Hegel's shared bounded-read properties apply to both ad
 Other transports and strict-JSON route adoption still need an acceptance audit;
 C2 remains active. No UI, SSE protocol or Quint transition changed, so existing
 screenshots/storyboards remain applicable. No running app image was rebuilt.
+
+## C2 acceptance audit — 2026-10-22
+
+This is a source/test inventory after record adoption, not evidence that the
+remaining adapters have passed extraction contracts. C2 stays active. Startup
+configuration injection is complete for the Go HTTP server; transport and JSON
+consolidation are partial.
+
+| Acceptance area | Evidence / current state | Remaining work |
+| --- | --- | --- |
+| Endpoint effects and startup dependencies | Inventory above; native, exploration/tail, capture/live, operation/investigation and optional-retention dependency tests | Preserve these boundaries in subsequent cuts; no new dependency layer needed |
+| Shared bounded source mechanics | Native and record before/after wire contracts, Hegel bounded-read properties, gated readonly ClickHouse tests | Four readers below still duplicate POST/body mechanics |
+| Strict JSON / response mechanics | Recipes/dashboard use shared helpers; 32 frozen wire cases | Other route families still decode locally; freeze each family's wire contract before adoption |
+| Family semantics and source-free reopen | Existing evaluation, capture, live-freeze, citation and dependency tests | Re-run affected tests after each adoption; helper tests alone do not prove evaluator/basis parity |
+| SSE and query budgets | Tail owns slots/deadlines/flushing; injected-source tests cover frames/disconnect | Keep early error headers and independent lifetime; no buffered response adoption |
+| Real-source/browser acceptance | Native/record readonly transport checks ran in prior cuts | Remaining adapters need their own live checks; latest backend commits have not been deployed to the lab UI, so current screenshots do not validate them |
+
+### Remaining ClickHouse transports
+
+| Reader | Current policy that extraction must preserve | Existing evidence and gap |
+| --- | --- | --- |
+| `prebuilt.FetchHTTP` | Status before body; deferred close; 8 MiB; raw parameter values URL-encoded without record/native escaping; typed JSON decoder; 1,000-span refusal in evaluation; explicit-window checks and duplicate identity | `TestLiveSourceUsesParametersAndRejectsOutOfWindow` and `TestSourceDuplicatesConflictBoundsAndMissingOutcome` cover semantic slices, not full byte/status/read-error contracts |
+| `annotations.FetchOperations` | Status before body; deferred close; 8 MiB; raw parameter values; typed rows; 1,000 raw spans; conformance/dedup and exact integer strings | `TestLiveOperationSource` covers bound query and conformance; transport boundary matrix still needed |
+| `OperationPlan.fetchInstanceRates` | Body read and immediate close before status; read error precedes status, status precedes oversize; 8 MiB; 3,000 points per contract; baseline and per-instance/fleet semantics | Rate/ratio/fleet tests exist; status/body/error precedence and byte boundaries are not frozen transport contracts |
+| `OperationPlan.fetchInstanceHistograms` | Body read and immediate close before status; same precedence as rates; 8 MiB; 1,000 points per contract; bucket layouts, temporality and reset semantics stay local | Histogram/fleet tests exist; full transport contracts still needed |
+
+All four take an explicit client; preserve that caller contract rather than adding
+a fallback during extraction. `Post` and `ReadBounded` can support each without
+moving URL settings, raw parameter handling, typed decoding or evaluation. Do not
+standardize escaping as incidental cleanup: record/native escape policies differ
+from these older readers. Any correctness change needs its own contract and cut.
+
+### Remaining JSON owners
+
+Local request-body decoders remain in `measurements_http.go`,
+`telemetry_packages_http.go`, `exploration_http.go`, `tail_http.go`,
+`captures_http.go`, `live_comparison_http.go`, `investigations_http.go`,
+`workbench_http.go` and `retention_http.go`. They mix pure planning, execution and
+publication. The helper can replace mechanics without moving effect ordering.
+Retain each route's body ceiling and exact trailing-input message (including
+retention's `expected one request`), malformed/unknown/null/second-value behavior,
+headers, method refusal, error mapping and availability-before-validation checks.
+Query-string target decoders and file/YAML readers are separate boundaries.
+
+The OTLP exporter in `instrumentation/example_logs.go`, XTDB's PostgreSQL client,
+CLI/file decoders and Python proxy are outside this bounded ClickHouse HTTP
+extraction. Their presence is not a reason to build a universal transport owner.
+
+### Ordered completion proposal
+
+1. **Next: prebuilt HTTP transport.** Freeze exact SQL/auth/query settings and
+   unmodified parameters; pin status-before-body, close/error identity,
+   exact/overflow bytes, malformed rows, cancellation and existing evaluator
+   refusals. Run before extraction, adopt only the two shared primitives, then
+   run affected race tests and a gated readonly lab query through `FetchHTTP`.
+   Keep sampling/schema/window/dedup warnings and evidence identity unchanged.
+2. Freeze/adopt operation spans; then counters and histograms separately, including
+   their different error precedence and per-contract/fleet behavior. Reuse test
+   machinery only where it preserves independently named family expectations.
+3. Adopt pure telemetry planning JSON first, with exact wire fixtures. Then group
+   remaining decoder work by owner/effect; exercise rejection-before-source/write,
+   source-free freeze/reopen, optional-store ordering and SSE headers as applicable.
+4. Before closing C2, run affected root/race/property checks and real-source
+   acceptance for adopted readers. Rebuild the lab and execute relevant existing
+   browser journeys against the completed server; refresh frames only if rendered
+   behavior changes. Record skips explicitly. A transport unit pass does not close
+   this final integration gate.
+
+D1 comparison presentation remains queued after bounded C2 acceptance. This audit
+does not introduce a new evaluator, broaden query budgets or change public UI flow.
