@@ -1693,3 +1693,12 @@ Journey 127: [contextual comparison actions](../COMPARISON_ACTIONS.md), single-s
 Journey 128: [retained activity comparison](../COMPARISON_SERIES.md), keyboard/brush selection, exact side window, explicit child read, retained return and stored/mobile continuation.
 
 Journey 69 now covers live bucket refresh before Freeze, retained alignment/selection, explicit child Run and source-free Back. Frames 129a/129b show the live series and retained selection; see [contract](../LIVE_COMPARISON.md#retained-bucket-series-during-refresh).
+
+## D1 comparison acceptance audit
+
+The [acceptance map](../D1_ACCEPTANCE.md) reconciles the comparison storyboards
+with the completed bounded milestone. Journeys 69 and 71 now close previews through
+Preview options and check focus before reopening, then reject held obsolete source
+responses. Native-window Bombadil Reopen now uses Comparison options and requires
+another observed immutable receipt read with no telemetry/comparison-engine call.
+The native-question actor also uses the actual preview menu.

@@ -75,3 +75,6 @@ returns from a comparison child while checking that no hidden source read occurs
 ![Comparison-side actions on mobile](journeys/screenshots/127a-comparison-side-actions.png)
 
 ![Stored-side record inspection](journeys/screenshots/127b-stored-side-record-inspection.png)
+
+The [D1 acceptance audit](D1_ACCEPTANCE.md) reconciles these adopted action groups
+with the retained execution owners and documented compatibility paths.

@@ -570,9 +570,10 @@ The bounded [comparison context pass](COMPARISON_CONTEXT.md) shares UTC windows,
 counts, modes and provenance across fixed/stored/live results and omits duplicate
 selectors on automatic fixed-pair results. Bounded shared actions now cover fresh
 previews and stored/saved inspection, receipt retry and finding publication.
-Count-series adoption is recorded below; broader D1 completion still needs its
-acceptance audit. Native/record units and percentile coverage retain their separate
-compatibility rules.
+Count-series adoption is recorded below; the [D1 audit](D1_ACCEPTANCE.md) now
+accepts this bounded milestone. Stored first-page inspection, absent series in old
+captures and separate native/record semantics remain explicit boundaries. E1 native
+instrument discovery is next; no unit conversion or fleet percentile is implied.
 
 [Comparison action/inspection continuation](COMPARISON_ACTIONS.md) now retains
 population comparison parents and provides in-place stored-side inspection. The

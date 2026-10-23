@@ -6169,3 +6169,30 @@ Affected journey frames were regenerated; stored mobile and saved desktop frames
 were visually reviewed. No Go, wire or publication protocol changed.
 The saved native gauge/unit-refusal case also passed: all six selected journey
 cases have passing evidence across the initial run and focused reruns.
+
+## 2026-10-23 — D1 acceptance audit
+
+[Bounded D1 is accepted](docs/D1_ACCEPTANCE.md) against the active plan. Source and
+document review mapped shared context, exact ranking, count-series geometry,
+inspection/action adoption, compatibility and distinct execution/publication owners.
+Current stored/fresh/saved evidence from the preceding milestone was reused.
+
+Ten additional journey cases passed across the audit runs: context 126, ranking
+120, passive series 128, rolling record 69, native counter 72, both span-measure
+71 cases, ordinary logs 119, whole native windows 54 and native question 114.
+The initial run was interrupted at an obsolete direct Close preview locator.
+Both rolling journeys now use Preview options and verify opener focus; their
+continuation passed, including held-response disposal and observed Quint replays.
+The question-protocol actor now uses the actual preview menu. The native-window
+actor's old direct-child Reopen selector was a no-op; its replacement opens the
+menu and requires another observed receipt GET, with no source/engine request.
+Its 30-second campaign passed against an audit document referencing real retained
+evidence. Native-counter (30 s), ordinary-log (15 s) and question-protocol (25 s)
+Bombadil campaigns also passed. All associated Quint replays/rejecting controls
+passed. Five targeted Node files and four Hegel properties/state-swarm tests passed.
+
+Affected frames were regenerated; native gap/refusal presentation was visually
+reviewed. No production code, wire or model protocol changed. First-page stored
+inspection, older captures without series and separate native metric semantics
+remain explicit limits. Active planning/known-issue docs now point to E1 native
+instrument discovery next, rather than leaving completed D1 work queued.

@@ -170,12 +170,13 @@ updates replace their inner DOM and reset disclosures; they are not a high-rate
 tailer with keyed rows, preserved focus or scroll-follow. The audit defines those
 future requirements; no SSE endpoint, tailer or framework dependency is added.
 
-A future baseline-vs-live adapter can send one paired snapshot to
-`goo-metric-comparison.data`: the baseline values remain fixed while supplied
-current values/differences and the app's visible current basis/window advance
-together. That display update is already supported; a live comparison engine,
-SSE transport, coverage semantics and high-frequency focus retention are not.
-The standalone fixture tests current-side property updates without mutating the
+Application-owned [rolling comparisons](LIVE_COMPARISON.md) now supply paired
+snapshots through the shared comparison displays: baseline values remain fixed
+while current values, basis and window advance together. The application owner
+implements polling, coverage refusals and exact Freeze; these passive components
+provide no subscription or live comparison engine. SSE comparison transport and
+high-frequency keyed-row focus retention remain separate capabilities. The
+standalone fixture tests current-side property updates without mutating the
 baseline or starting a query.
 
 ## Native tables and result states
@@ -565,3 +566,7 @@ in their application owners. See [comparison actions](COMPARISON_ACTIONS.md).
 `goo-comparison-series` (`comparison-series.js`, `time-bars.css`) renders two supplied count-interval series, with `data` JSON attributes or a cloned `.data` property and `alignment="elapsed|utc"`. It emits `goo-series-select` and `goo-series-range`; it never fetches or navigates. Exact values use a shared BigInt count domain and an expandable interval table. `comparison-series-owner.js` owns alignment controls, UTC range handles, staged continuation and explicit immutable-page reads. See [contract](COMPARISON_SERIES.md).
 
 The supplied comparison-series contract accepts an optional exact `ceiling` string. Overflow refuses bars instead of clipping. The application series owner now supports retained `create/update/rescale` controls; rolling selection stays bound to its original question while supplied chart data updates. Polling, pause, inline child navigation and Freeze remain in the live owner.
+
+The [D1 comparison acceptance audit](D1_ACCEPTANCE.md) maps the adopted context,
+count-series, action-group and inspection components to real consumers and their
+source-free display contracts. Native metric semantics remain in separate adapters.
