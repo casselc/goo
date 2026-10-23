@@ -1,5 +1,67 @@
 # Validation record
 
+## Categorical selected-versus-rest populations (2026-10-23 UTC)
+
+The existing facet tray now offers Compare with rest. A bounded generated
+categorical intent is complemented inside each selected signal's unchanged
+parent/window; the parent predicate is never negated. Missing versus empty and
+qualified fields remain distinct. The action stages a child with exact remainder
+baseline questions. Existing explicit Run, comparison, save and capture owners
+perform source reads; parent return remains source-free. Unselected companion
+questions remain intact. Separate reads do not establish an atomic snapshot.
+
+Actual checks:
+
+- All 42 Node test files pass, including source immutability, companion retention,
+  pagination reset, parent preservation and complement-specific predicate budgets.
+- Hegel generates categorical include/exclude and same-field OR combinations over
+  qualified fields, nested and unfiltered parents (60 examples; 4.5s). Both
+  questions compile through Go; exhaustive missing/empty/present record grids
+  verify no overlap and selected OR rest equals the parent.
+- Source journey 123 passes with a 20-second Bombadil campaign (57.5s). It checks
+  actual ClickHouse result memberships for a 2+2 partition and an excluded fifth
+  record, versus a one-row UI page, mobile controls, empty rest/no normalization,
+  paused-parent return, exact saved baseline configuration and comparison capture.
+- Final deployed journeys 123 and existing overlapping comparison/restoration 116
+  pass together (1.1m), including saved-view/capture reopening without record
+  reads, observed Go/Quint drilldown replay and seven rejecting controls. Mutations
+  add hidden reads, change rest environment/filters, narrow the window, alter
+  return depth or make the rest overlap the selection. Bombadil checks local
+  selection/staging/return adds no record reads after the initial explicit Run.
+- Readonly deployed API acceptance passes with matching OpenAPI and seven actual
+  handler responses. No runtime Go source or backend wire shape changed.
+- Mobile screenshot review exposed the taller sticky trail covering the sticky
+  selection summary. The mobile population tray now stays inline; browser
+  hit-testing checks its summary is unobscured. Full source polish journey passes
+  (39.5s); focused deployed journey 124 passes (6.6s) after positioning the
+  containing scroller as in the real documentation flow.
+- Actual frames 123a/b and affected 116 frames, README, queue, population contract
+  and process diagram describe this bounded capability and its limits.
+
+Deployment used the existing local Go query image with one combined UI/docs COPY
+layer. An initial six-COPY build completed but exhausted disk under Docker vfs;
+that unused image was removed and the running image tag restored before the
+single-layer rebuild/deployment. The service/data were not changed by that failed
+disk strategy. This is an asset deployment, not a fresh backend rebuild.
+Temporary source/build files and obsolete build cache are removed after checks;
+application data, volumes, compact evidence and committed frames are preserved.
+Disposable workspace Go compiler cache and all unused Docker compiler/module build
+cache were ultimately cleared to recover working space; future cold builds may
+need downloads/compilation. The final supported builder prune reported 300.5 MB.
+
+Seven older `/tmp/goo-historical-*` browser archives were outside the normal CLI
+root. A reviewed one-off application of the same classifier/TTL/pin rules expired
+32,628 raw files while SHA-256 checks verified 1,430 compact files unchanged. Per-
+archive deletion inventories and the combined `legacy-retention-applied.json`
+remain in artifacts. Allocated-block estimates did not translate to equivalent
+free filesystem space; unlinking old layered files did not resolve the shortage.
+The normal CLI root restriction remains intact. No application/system tables or
+service logs were deleted. Disk remains constrained after supported cache pruning.
+An attempted metadata-only Docker image registration was rejected by automatic
+approval review as risky; it was not executed or retried. Supported pruning was
+used instead.
+
+
 ## Explicit enclosing population time windows (2026-10-23 UTC)
 
 Applied/configured population selectors now disclose an exact UTC expansion

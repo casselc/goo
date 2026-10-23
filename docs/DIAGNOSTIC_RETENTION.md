@@ -54,3 +54,7 @@ Pin an important failure before its retention deadline with `touch <run>/.keep`.
 
 There is no background scheduler. Retention runs through the journey wrapper or
 an explicit command; producer growth can exceed the target between executions.
+
+Allocated-block reclamation is an estimate. Layered or snapshotted filesystems
+may not return equivalent free space when old files are unlinked. The CLI does
+not scan historical archives outside its dedicated root.

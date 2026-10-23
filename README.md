@@ -563,3 +563,5 @@ Raw span duration charts support [time-duration rectangle selection](docs/HEATMA
 Development browser diagnostics have [age-based retention and a 512 MiB soft budget](docs/DIAGNOSTIC_RETENTION.md). Preview with `npm run diagnostics:plan`; apply with `npm run diagnostics:prune`.
 
 Applied populations can [expand their fixed UTC window](docs/POPULATION_WORKSPACE.md#expanding-the-time-window) while retaining filters and a paused parent; opening stages before an explicit Run.
+
+Categorical populations can [compare a selection with the rest of its parent](docs/POPULATION_PARTITIONS.md), preserving filters, exact windows and a paused parent.

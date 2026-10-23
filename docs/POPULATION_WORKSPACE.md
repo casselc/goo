@@ -302,3 +302,7 @@ negative controls for hidden reads, altered filters/environment, narrowed bounds
 and invalid return depth. Bombadil exercises source-free expansion/return.
 
 ![Expanded UTC window preview](journeys/screenshots/122-expanded-window-preview.png)
+
+## Selection versus rest
+
+[Categorical partition comparisons](POPULATION_PARTITIONS.md) now stage a child whose baseline is the exact remainder of the filtered parent. Compare selection to current remains the existing overlapping comparison. Both paths use independent source reads.

@@ -1450,3 +1450,5 @@ td details {
 .population-window-expansion form>.controls>label{display:grid;flex:1 1 220px;min-width:0;max-width:100%;gap:4px}
 .population-window-expansion input{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
 .population-window-expansion button{max-width:100%;white-space:normal}
+/* A tall mobile selection tray must not sit beneath the wrapped sticky trail. */
+@media(max-width:700px){.population-workspace>.population-selection{position:static;top:auto}}

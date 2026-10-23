@@ -1671,3 +1671,7 @@ by pointer and keyboard, explicitly executes exact bounds and captures/reopens
 selected evidence. 121b covers the passive component contract.
 
 Journey 122: [explicit population time expansion](../POPULATION_WORKSPACE.md#expanding-the-time-window), source-free preview/open/return, independent selectors and explicit full-population reread.
+
+Journey 123: [selected versus rest](../POPULATION_PARTITIONS.md), missing/empty and qualified selectors, full counts with one-row pages, parent return, saved views and captures, and an empty remainder.
+
+Journey 124 checks the mobile selection summary is unobscured and its comparison action is keyboard-focusable below the wrapped investigation trail.
