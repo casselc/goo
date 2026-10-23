@@ -6196,3 +6196,44 @@ reviewed. No production code, wire or model protocol changed. First-page stored
 inspection, older captures without series and separate native metric semantics
 remain explicit limits. Active planning/known-issue docs now point to E1 native
 instrument discovery next, rather than leaving completed D1 work queued.
+
+## 2026-10-23 — first E1 observed instrument catalog
+
+Implemented the [bounded native discovery catalog](docs/NATIVE_INSTRUMENT_DISCOVERY.md):
+shared compact table, local 25-identity paging, native metadata disclosures,
+HTTP duration hints pinned to OTel semantic conventions v1.30.0 and generic exact
+binding fallback. Existing Go discovery, Preview/YAML, evaluation and custody
+protocols are unchanged. Hints remain informational and never mark data verified;
+wrong-kind candidates cannot receive histogram guidance. Missing status keys,
+wrong units/schema and unsupported non-monotonic sums remain explicit.
+
+All 45 Node test files passed. The new Hegel property exercised the actual JS hints
+for 40 examples; the type-specific refinement passed a focused Node/Hegel rerun.
+Current-source journey 130 and its supplied-catalog paging case passed, with the
+existing actual-result Quint discovery replay and three rejecting mutations and a
+25-second configured Bombadil campaign. Deployed journeys 130, passive catalog,
+39 (Python producer / package save / Run / capture) and 76 (native service selection,
+fixed scope and custody) all passed; journey 39's existing 30-second Bombadil actor
+and associated Quint replay also passed.
+
+The first new test incorrectly parsed the canonical YAML editor as JSON; it now
+checks the Go plan definition. Visual review found inherited card-grid CSS squeezing
+the table; that owning rule was replaced, then both new browser cases passed.
+An initial Bombadil configuration used an unsupported query-string app route; it
+now retains an explicit fixture scope in campaign.ts and uses the normal route.
+One deployed run started during container recreation and was stopped; after asset
+parity/readiness checks the four-case deployed suite passed. These initial runs
+are retained as diagnostics, not counted as passes.
+
+The final hint refinement is deployed as a minimal UI-only layer. No Go binary,
+OpenAPI wire, stored package or capture format changed. E1 remains partial: typed
+server-side convention capability planning, per-stream dimension coverage and a
+pool/messaging case remain queued. No fleet percentile, error denominator or
+request-rate semantics were inferred from metadata names.
+
+The final focused journey passed after the hint refinement and regenerated
+130a (compact default), 130b (mobile) and 130c (selected HTTP metadata); the compact
+default frame was visually reviewed. Current-source port 8098 was stopped, compact
+logs and the pinned upstream convention source retained, temporary staging removed,
+and supported Docker cache/dangling-image cleanup completed. Root has 5.3 GB free.
+No telemetry tables, named volumes or retained user evidence were removed.

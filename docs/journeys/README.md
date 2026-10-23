@@ -1702,3 +1702,18 @@ Preview options and check focus before reopening, then reject held obsolete sour
 responses. Native-window Bombadil Reopen now uses Comparison options and requires
 another observed immutable receipt read with no telemetry/comparison-engine call.
 The native-question actor also uses the actual preview menu.
+
+## 130 — Discover native instrument capabilities
+
+`instrument-capabilities.spec.js` starts with manifest-free, language-neutral OTLP
+HTTP histograms and custom sums. Discover is explicit; metadata disclosures remain
+local; the exact seconds binding previews without evaluation, then Run reads once
+in the fixed service window. Mismatched units and non-monotonic sums stay honest.
+`instrument-catalog-components.spec.js` checks local 25-row paging and exact Build
+intent without API requests. Quint replays actual discovery/result bindings with
+rejecting controls; the configured Bombadil actor opens metadata without evaluation.
+See [contract and ownership diagram](../NATIVE_INSTRUMENT_DISCOVERY.md).
+
+- [Observed HTTP and generic capabilities](screenshots/130a-observed-instrument-capabilities.png)
+- [Selected HTTP metadata hints](screenshots/130c-http-metadata-hints.png)
+- [Contained mobile catalog](screenshots/130b-instrument-catalog-mobile.png)

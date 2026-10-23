@@ -975,7 +975,12 @@ td details {
 .measurement-steps span {font-size:12px;color:var(--muted);margin-top:5px}
 #metricDiscovery {padding:16px;border:1px solid var(--border);border-radius:8px;background:var(--surface-raised)}
 #metricDiscovery > summary {font-weight:600;color:var(--ink)}
-#metricInstruments {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:12px}
+#metricInstruments {display:block;min-width:0}
+.instrument-catalog-table>table{min-width:42rem;table-layout:fixed;width:100%}
+.instrument-catalog-table th:first-child{width:44%}
+.instrument-catalog-table td{vertical-align:top;white-space:normal;overflow-wrap:anywhere}
+.instrument-catalog-table details{margin-top:6px}
+.instrument-catalog-table details p{font-size:12px}
 #metricInstruments:empty {display:none}
 #measurementDefinitionSearch {min-width:240px}
 #measureRun,#metricDiscover {background:var(--accent-dark);border-color:#367b6e;color:#d8fff5;font-weight:600}

@@ -1,0 +1,10 @@
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const fixture={environment:'local',service:'independent-metrics'};
+const state=extract(({document,window})=>({ready:!!document.querySelector('#metricDiscover'),stage:Number(document.documentElement.dataset.instrumentStage||0),rows:document.querySelectorAll('#metricInstruments tbody tr').length,notRun:[...document.querySelectorAll('#metricInstruments tbody tr')].every(r=>(r as HTMLElement).dataset.verification==='not-run'),effects:window.performance.getEntriesByType('resource').filter(e=>/\/api\/(measurements|captures)$/.test(new URL(e.name).pathname)).length}));
+export const noImplicitEvaluation=always(()=>state.current.effects===0&&state.current.notRun);
+export const complete=eventually(()=>state.current.stage===2).within(20,'seconds');
+const discover=registerCustomAction('goo.instrumentDiscover',async(document,window,environmentValue:string,serviceValue:string)=>{window.dispatchEvent(new CustomEvent('goo:measurements-tab'));const environment=document.getElementById('metricEnvironment')as HTMLInputElement;environment.value=environmentValue;environment.dispatchEvent(new Event('input',{bubbles:true}));const service=document.getElementById('metricService')as HTMLInputElement;service.value=serviceValue;service.dispatchEvent(new Event('input',{bubbles:true}));(document.getElementById('metricDiscover')as HTMLButtonElement)?.click();document.documentElement.dataset.instrumentStage='1'});
+const inspect=registerCustomAction('goo.instrumentMetadata',async(document)=>{for(const d of document.querySelectorAll<HTMLDetailsElement>('#metricInstruments details'))(d.querySelector('summary')as HTMLElement)?.click();document.documentElement.dataset.instrumentStage='2'});
+export const choices=actions(()=>!state.current.ready?['Wait']:state.current.stage===0?[discover(fixture.environment,fixture.service)]:state.current.stage===1&&state.current.rows>0?[inspect()]:['Wait']);

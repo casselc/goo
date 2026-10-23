@@ -570,3 +570,8 @@ The supplied comparison-series contract accepts an optional exact `ceiling` stri
 The [D1 comparison acceptance audit](D1_ACCEPTANCE.md) maps the adopted context,
 count-series, action-group and inspection components to real consumers and their
 source-free display contracts. Native metric semantics remain in separate adapters.
+
+[Native instrument discovery](NATIVE_INSTRUMENT_DISCOVERY.md) reuses `goo-table`
+for compact supplied metadata and native disclosures for hints. Its application
+adapter owns local paging and delegates Build to the measurement owner; no new
+fetching custom element or component library was introduced.

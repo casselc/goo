@@ -570,3 +570,7 @@ Categorical populations can [compare a selection with the rest of its parent](do
 Retained record comparisons share [aligned activity charts](docs/COMPARISON_SERIES.md), exact UTC interval inspection and staged selection; stored/frozen chart loading reads immutable captures explicitly.
 
 [Live record activity comparisons](docs/LIVE_COMPARISON.md#retained-bucket-series-during-refresh) now refresh requested bucket series before Freeze, retain selected UTC questions and alignment, and reuse explicit population drilldown with source-free return.
+
+The first [E1 native instrument discovery cut](docs/NATIVE_INSTRUMENT_DISCOVERY.md)
+adds a compact observed-instrument catalog, generic package fallback and pinned
+HTTP duration hints. Metadata does not imply verified coverage; Run remains explicit.

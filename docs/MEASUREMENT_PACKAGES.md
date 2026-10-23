@@ -169,3 +169,8 @@ Contextual investigation follow-ups can now pin metric discovery to an evidence
 capture's original fixed window and carry it into generated package preview.
 The workbench displays the fixed bounds; manual service/environment edits reset
 discovery to its fresh two-minute default. See INVESTIGATION_FOLLOWUPS.md.
+
+Observed instruments now use a [compact native discovery catalog](NATIVE_INSTRUMENT_DISCOVERY.md)
+with local paging, explicit generic fallback and HTTP duration metadata hints
+pinned to OTel semantic conventions v1.30.0. Hints never verify interval coverage
+or rewrite bindings; Preview, Run and Save remain separate.

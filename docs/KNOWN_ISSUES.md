@@ -583,3 +583,9 @@ is its first retained page, not a full-population membership browser.
 
 
 [Retained record activity comparisons](COMPARISON_SERIES.md) now share count geometry across fixed and explicitly loaded stored/frozen capture owners. Rolling record responses now optionally include retained series for bucketed questions, with pinned UTC selection and exact Freeze. Reconstruction of old cohort-only comparison captures remains unimplemented. Native metric series keep their existing semantics and presenters.
+
+The first [E1 native discovery catalog](NATIVE_INSTRUMENT_DISCOVERY.md) provides
+HTTP duration metadata hints and generic package fallback. It is not complete
+convention capability planning: observed dimension keys do not establish per-stream
+coverage, error denominators or verified conformance. Non-monotonic sums and
+exponential histograms remain unsupported by the existing kernels/inventory.
