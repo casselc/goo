@@ -96,9 +96,10 @@ Go planner across kinds/units and exact-stream permutations without mutating sup
 ## Remaining E1 scope
 
 This does not complete E1. Typed metadata capability plans and observed per-stream
-HTTP key presence are delivered. Temporal/value-validity coverage, verified
-error/denominator policies, a database-pool or
-messaging case and any supporting typed relations remain follow-up work. Existing
+HTTP/messaging key presence are delivered. The bounded messaging case is described below.
+A final acceptance audit must distinguish metadata-only profiles from the existing
+kernels’ interval/value validation. Verified error/denominator policies and typed
+relations require concrete supporting data; they are not offered by these profiles. Existing
 metric support limits (including unsupported non-monotonic sums and exponential
 histograms) are not widened by presentation hints. No automatic dashboard or
 persistent convention declaration is created by this cut.
@@ -140,3 +141,41 @@ missing/empty identity and the 25-stream display cap without changing totals.
 ![Observed stream presence](journeys/screenshots/131a-observed-stream-presence.png)
 
 ![Stream presence on mobile](journeys/screenshots/131b-stream-presence-mobile.png)
+
+## Messaging processing candidate
+
+The Go planner also recognizes `messaging.process.duration` against the
+[experimental v1.30.0 messaging metrics definition](https://github.com/open-telemetry/semantic-conventions/blob/v1.30.0/model/messaging/metrics.yaml).
+The pinned shape is a histogram in seconds. A millisecond instrument retains its
+eligible generic binding, without conversion or a claim to match the convention.
+The profile leaves verification `not-run`, including when a schema URL matches.
+
+The bounded presence matrix watches messaging system, operation type/name,
+destination name/template and consumer group. System is required by the pinned
+convention; processing operations must have type `process`. The matrix reports
+presence, not value conformance. Destination and consumer identity requirements
+are conditional: absent labels do not independently prove invalid telemetry.
+Arbitrary additional labels remain in the exact stream inspector, without
+expanding the matrix. Observed processing durations cannot establish unique
+message deliveries, queue lag, success, producer latency or trace relationships.
+
+```mermaid
+flowchart LR
+  OTLP[Manifest-free OTLP processing histogram] --> CH[Existing ClickStack metrics source]
+  CH --> Discover[Bounded discovery and exact stream identity]
+  Discover --> Plan[Go experimental messaging candidate and presence]
+  Plan --> UI[Passive catalog and local stream inspection]
+  UI --> Preview[Explicit package preview]
+  Preview --> Run[Explicit Run: existing duration kernel validation]
+```
+
+Journey 132 (`journeys/messaging-profile.spec.js`) emits ordinary OTLP with three
+streams and four records, including empty and missing messaging labels. The user
+scopes discovery to the consumer, opens its candidate metadata and inspects exact
+stream presence on desktop and mobile. Inspection performs no evaluation or
+publication. An independent ClickHouse identity read supplies the observed Quint
+replay oracle, with seven deliberately invalid controls; Bombadil explores the
+same manifest-free consumer through the shared discovery actions/invariants.
+
+![Messaging stream presence](journeys/screenshots/132a-messaging-stream-presence.png)
+![Messaging presence on mobile](journeys/screenshots/132b-messaging-presence-mobile.png)

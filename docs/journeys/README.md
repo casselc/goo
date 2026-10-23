@@ -1729,3 +1729,11 @@ summary totals or become verified coverage.
 
 - [Observed stream presence](screenshots/131a-observed-stream-presence.png)
 - [Mobile stream inspection](screenshots/131b-stream-presence-mobile.png)
+
+132. **Manifest-free messaging processing discovery** —
+`messaging-profile.spec.js` emits real OTLP and inspects an experimental pinned
+processing-duration candidate, conditional label presence, missing/empty identity,
+and desktop/mobile composition. Observed Quint replay uses independent source
+identities and rejecting controls. The shared Bombadil discovery actor exercises
+this consumer without implicit execution/publication. See
+[the contract and frames](../NATIVE_INSTRUMENT_DISCOVERY.md#messaging-processing-candidate).

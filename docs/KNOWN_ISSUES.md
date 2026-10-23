@@ -595,3 +595,9 @@ now replaces browser rules and reports HTTP key presence per exact observed stre
 including missing/empty identities and display truncation with full totals. This
 is not verified interval coverage or an error denominator; generic profiles do not
 inherit HTTP semantics. Plans remain `not-run` even when matching metadata exists.
+
+The messaging processing candidate uses experimental OTel v1.30.0 semantics.
+Its presence matrix does not validate operation values, destination cardinality,
+unique deliveries, queue lag, delivery success or end-to-end trace relations.
+Other messaging instruments retain generic bindings; this is not a full broker
+or consumer dashboard. Non-monotonic pool sums still require kernel support.

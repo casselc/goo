@@ -6278,3 +6278,39 @@ Final docs/API/frames were synced to the lab. Compact Go/Node logs remain under
 Temporary compiled binary/staging and scratch logs were removed; supported Docker
 cache/dangling-image cleanup completed. Root has 4.6 GB free. No telemetry tables,
 named volumes or retained user evidence were deleted.
+
+## 2026-10-23 — E1 messaging processing candidate
+
+Implemented the experimental pinned OTel v1.30.0 `messaging.process.duration`
+profile in the Go metadata planner. Exact bindings remain unchanged; seconds
+histograms match, milliseconds retain generic eligibility without conversion.
+The six-key bounded messaging presence matrix preserves missing/empty/present
+states and conditional destination/group semantics. Generic catalog copy is now
+convention-neutral; the shared presence table has a convention-neutral label.
+No new API endpoint, wire fields, kernel, implicit read or publication was added.
+
+Actual checks:
+- `go test ./measurements ./cmd/goo` passed.
+- All 45 Node tests passed; compact log in `artifacts/messaging-profile-contract`.
+- Hegel planner properties passed across both HTTP and messaging profiles,
+  instrument kinds/units, stream permutations and display limits (100 examples).
+- Deployed browser suite: HTTP explicit preview/Run, HTTP stream presence and new
+  messaging journey 132 passed. The passive catalog fixture initially failed on
+  its old HTTP-specific wording assertion; updated assertion passed a targeted
+  rerun. No product failure was hidden by this correction.
+- Messaging observed Quint replay passed against independent ClickHouse identity
+  observations, with all seven forged-plan/effect/read controls rejected. Ledger
+  and replay log: `artifacts/messaging-profile/8b6cf340d5`.
+- The 25-second Bombadil messaging discovery/disclosure campaign passed its
+  liveness, no-implicit-evaluation and not-run invariants.
+- OpenAPI conformance passed (58 Go operations, 222 fixture responses, 56 admitted
+  requests and 14 mux refusals, negative/SSE controls); actual messaging discovery
+  response also validates against the existing response schema.
+
+Frames 130/131 were refreshed and 132 desktop/mobile frames were generated from
+real ingested OTLP. The desktop messaging frame was visually reviewed. README,
+contract, journey index, diagram, active plan and known limits were updated.
+The matching Go/UI runtime is deployed locally with optional XTDB configuration
+preserved. This cut does not claim messaging value conformance, queue lag,
+delivery success or typed trace relations. Next: bounded E1 acceptance audit of
+metadata profiles versus actual kernel validation, before selecting more features.

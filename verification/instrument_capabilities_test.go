@@ -12,15 +12,19 @@ func TestHegelInstrumentCapabilityHints(t *testing.T) {
 		kind := []string{"gauge", "counter", "histogram"}[hegel.Draw(tc, hegel.Integers(0, 2))]
 		unit := []string{"s", "ms", "By", ""}[hegel.Draw(tc, hegel.Integers(0, 3))]
 		n := hegel.Draw(tc, hegel.Integers(1, 70))
-		i := measurements.Instrument{Metric: "http.server.request.duration", Kind: kind, Unit: unit, Scope: "ordinary", Supported: true, Definition: &measurements.Definition{}}
+		metric, key := "http.server.request.duration", "http.request.method"
+		if hegel.Draw(tc, hegel.Integers(0, 1)) == 1 {
+			metric, key = "messaging.process.duration", "messaging.system"
+		}
+		i := measurements.Instrument{Metric: metric, Kind: kind, Unit: unit, Scope: "ordinary", Supported: true, Definition: &measurements.Definition{}}
 		observations := []measurements.DiscoveryObservation{}
 		for k := 0; k < n; k++ {
 			attrs := map[string]string{}
 			switch k % 3 {
 			case 0:
-				attrs["http.request.method"] = "GET"
+				attrs[key] = "GET"
 			case 1:
-				attrs["http.request.method"] = ""
+				attrs[key] = ""
 			}
 			observations = append(observations, measurements.DiscoveryObservation{Resource: map[string]string{"service.instance.id": fmtInt(k)}, Attributes: attrs})
 		}

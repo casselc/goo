@@ -77,16 +77,21 @@ func observedCoverage(i Instrument, observations []DiscoveryObservation) Instrum
 		return out
 	}
 	keys := map[string]bool{}
-	if i.Metric == "http.server.request.duration" {
+	switch i.Metric {
+	case "http.server.request.duration":
 		keys["http.request.method"] = true
 		keys["http.response.status_code"] = true
+	case "messaging.process.duration":
+		for _, key := range []string{"messaging.system", "messaging.operation.type", "messaging.operation.name", "messaging.destination.name", "messaging.destination.template", "messaging.consumer.group.name"} {
+			keys[key] = true
+		}
 	}
 	streams := map[string]*ObservedStream{}
 	for _, o := range observations {
 		if o.Resource == nil || o.Attributes == nil {
 			return out
 		}
-		// The pinned HTTP profile watches two keys; arbitrary attribute cardinality
+		// Profiles watch a bounded set of keys; arbitrary attribute cardinality
 		// must not multiply this bounded coverage matrix.
 		s := metrics.Stream{Resource: cloneLabels(o.Resource), Attributes: cloneLabels(o.Attributes), ResourceSchemaURL: o.ResourceSchemaURL, Scope: i.Scope, Version: i.Version, SchemaURL: i.SchemaURL, Name: i.Metric, Unit: i.Unit}
 		id := Hash(s)
@@ -155,6 +160,24 @@ func PlanInstrument(i Instrument, observations []DiscoveryObservation) Instrumen
 	}
 	if !p.Eligible && len(p.Reasons) == 0 {
 		p.Reasons = append(p.Reasons, "No valid package binding is available from the current kernels.")
+	}
+	if i.Metric == "messaging.process.duration" {
+		p.Profile = "messaging-process-duration"
+		p.Title = "Messaging processing duration candidate"
+		p.RuleSet = HTTPRuleSet + " (messaging: experimental)"
+		p.ShapeMatches = i.Kind == "histogram" && i.Unit == "s"
+		if !p.ShapeMatches {
+			p.Hints = append(p.Hints, "The pinned messaging processing convention requires a histogram in unit s. Retain the generic binding if eligible; no automatic conversion is applied.")
+		}
+		p.Hints = append(p.Hints,
+			"Schema and name are metadata only; convention conformance is unverified. No schema migration is inferred.",
+			"Inspect messaging.system and operation type per stream. The convention requires processing operations with messaging.operation.type=process; presence alone does not validate that value.",
+			"Destination name and template are conditional attributes, not universal requirements. Missing destination or consumer group does not establish invalid telemetry.",
+			"Processing observations do not establish unique deliveries, queue lag, delivery success, producer latency or an end-to-end trace relation.")
+		if p.Eligible && i.Kind == "histogram" {
+			p.Hints = append(p.Hints, "Run can evaluate retained duration histograms per exact stream. Interval coverage and values still require validation; no fleet percentile or throughput is inferred.")
+		}
+		return p
 	}
 	if i.Metric != "http.server.request.duration" {
 		p.Hints = append(p.Hints, "Generic exact metric binding; no application convention is inferred.")

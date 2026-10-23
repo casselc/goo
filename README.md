@@ -579,3 +579,5 @@ Native discovery now receives versioned Go capability plans and per-stream HTTP
 key presence from the same bounded read, with explicit missing/empty values and
 full totals independent of the 25-stream display cap. Browser rules are removed;
 metadata presence remains distinct from verified metric coverage.
+
+Native discovery now includes an [experimental pinned messaging processing candidate](docs/NATIVE_INSTRUMENT_DISCOVERY.md#messaging-processing-candidate), with exact stream presence and explicit package preview/Run.

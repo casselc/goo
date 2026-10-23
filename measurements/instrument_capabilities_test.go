@@ -90,3 +90,46 @@ func TestInstrumentCoverageMissingAndEmptyInstancesStayDistinct(t *testing.T) {
 		t.Fatal("partial identity became complete coverage")
 	}
 }
+
+func TestMessagingProcessingProfilePreservesGenericBindingsAndConditionalPresence(t *testing.T) {
+	q := DiscoveryQuestion{Environment: "test", Service: "consumer", FromMS: 1000, ToMS: 2000}
+	for _, unit := range []string{"s", "ms"} {
+		rows := []json.RawMessage{}
+		for _, attrs := range []map[string]string{{"messaging.system": "kafka", "messaging.operation.type": "process"}, {"messaging.system": "", "messaging.destination.name": "orders"}, {}} {
+			b, _ := json.Marshal(map[string]any{"kind": "histogram", "scope": "ordinary.messaging", "metric": "messaging.process.duration", "unit": unit, "temporality": 1, "resource": map[string]string{"service.name": "consumer"}, "attributes": attrs})
+			rows = append(rows, b)
+		}
+		result, err := discoverRows(q, rows)
+		if err != nil {
+			t.Fatal(err)
+		}
+		i := result.Instruments[0]
+		p := i.CapabilityPlan
+		if p.Profile != "messaging-process-duration" || p.ShapeMatches != (unit == "s") || !p.Eligible || p.Verification != "not-run" {
+			t.Fatalf("%+v", p)
+		}
+		if p.Coverage.TotalStreams != 3 || len(p.Coverage.Dimensions) != 6 {
+			t.Fatal(p.Coverage)
+		}
+		for _, d := range p.Coverage.Dimensions {
+			if d.Present+d.Empty+d.Missing != 3 {
+				t.Fatal(d)
+			}
+			if d.Key == "messaging.system" && (d.Present != 1 || d.Empty != 1 || d.Missing != 1) {
+				t.Fatal(d)
+			}
+		}
+		legacy := []json.RawMessage{json.RawMessage(`{"kind":"histogram","scope":"ordinary.messaging","metric":"messaging.process.duration","unit":"` + unit + `","temporality":1}`)}
+		old, err := discoverRows(q, legacy)
+		if err != nil || !reflect.DeepEqual(i.Definition, old.Instruments[0].Definition) {
+			t.Fatal("profile changed binding", err)
+		}
+	}
+	i := Instrument{Metric: "messaging.process.duration", Kind: "counter", Unit: "s"}
+	if p := PlanInstrument(i, nil); p.ShapeMatches || p.Eligible {
+		t.Fatal(p)
+	}
+	if p := PlanInstrument(Instrument{Metric: "custom.messaging.process.duration"}, nil); p.Profile != "generic" || len(p.Coverage.Dimensions) != 0 {
+		t.Fatal(p)
+	}
+}
