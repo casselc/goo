@@ -1681,3 +1681,6 @@ Journey 125: [whole-condition population broadening](../POPULATION_BROADENING.md
 Journey 126: [passive comparison context](../COMPARISON_CONTEXT.md), server HTML and early/detached SPA properties, exact clocks/counts, unknown transitions, source-free disclosure, keyboard focus and mobile layout. Existing journeys 120, 52, 53, 57, 69 and 72 exercise its real fixed/stored/fresh/live/native adoption.
 
 Journey 127: [contextual comparison actions](../COMPARISON_ACTIONS.md), single-signal inspection of either side, retained comparison/ranking/focus, missing versus empty, shared stored record inspection and obsolete-response rejection.
+
+
+Journey 128: [retained activity comparison](../COMPARISON_SERIES.md), keyboard/brush selection, exact side window, explicit child read, retained return and stored/mobile continuation.

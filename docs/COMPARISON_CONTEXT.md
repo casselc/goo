@@ -29,8 +29,7 @@ Compare controls; the parent owns preview/capture/retry. Editable stored compari
 retain their selectors; saved receipts keep their explicit reopen control. Capture,
 freeze, baseline replacement and linking remain application actions, not component
 lifecycle effects. [Contextual actions and retained side inspection](COMPARISON_ACTIONS.md) now reuse
-the shared action group and record inspector. Broader cross-surface action adoption
-and count-series consolidation remain D1 follow-up work.
+the shared action group and record inspector. [Retained activity series](COMPARISON_SERIES.md) now share count geometry across fixed and explicitly loaded stored/frozen captures. Broader cross-surface action adoption and rolling bucket transport remain D1 follow-up work.
 
 ```mermaid
 flowchart LR

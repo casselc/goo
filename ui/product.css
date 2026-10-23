@@ -1461,3 +1461,8 @@ td details {
 .comparison-inspection>section{min-width:0;border-block:1px solid var(--border,#303b4b);padding-block:8px}
 .comparison-inspection>section>h5{margin-block:6px}
 .comparison-inspection .ui-inspector{margin-top:8px}
+
+/* Application controls around the passive supplied-series chart. */
+.comparison-series-owner{min-width:0;margin-block:12px}
+.comparison-series-owner>label{font-size:11px}
+.comparison-series-owner>div>goo-time-range{margin-block:8px}

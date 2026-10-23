@@ -14,3 +14,29 @@ goo-time-bars .time-axis{display:flex;justify-content:space-between;gap:1rem;col
 goo-time-bars .time-axis>span{min-width:0}
 goo-time-bars .time-axis>span:last-child{text-align:right}
 goo-time-bars[density=compact] figcaption,goo-time-bars[density=compact] .time-bars-scale,goo-time-bars[density=compact] .time-axis{font-size:10px}
+
+/* Two supplied populations share geometry and a count domain, never resampled. */
+goo-comparison-series{display:block;min-width:0}
+goo-comparison-series figure{margin:8px 0}
+goo-comparison-series figcaption,goo-comparison-series p{font-size:11px;overflow-wrap:anywhere}
+goo-comparison-series .comparison-series-plot{height:120px;position:relative;isolation:isolate;border-bottom:1px solid var(--border,#465365)}
+goo-comparison-series .comparison-series-window{position:absolute;inset-block:0;border:1px dashed #8294aa;background:transparent;z-index:-1}
+goo-comparison-series .comparison-series-mark{position:absolute;inset-block:0;min-width:0;padding:0;border:0;border-radius:0;background:transparent}
+goo-comparison-series .comparison-series-mark::after{content:'';position:absolute;bottom:0;left:3%;width:44%;height:var(--height);background:#75b9ff;min-height:1px}
+goo-comparison-series .comparison-series-mark[data-side="1"]::after{left:51%;background:#f2ae60}
+goo-comparison-series .comparison-series-mark[data-side="1"]{clip-path:inset(0 0 0 50%)}
+goo-comparison-series .comparison-series-mark[data-side="0"]{clip-path:inset(0 50% 0 0)}
+goo-comparison-series .comparison-series-mark[data-count="0"]::after{height:1px}
+goo-comparison-series .comparison-series-mark:is([data-state="unknown"],[data-state="unavailable"])::after{height:100%;background:repeating-linear-gradient(135deg,#465365,#465365 3px,#98a8bf 3px,#98a8bf 5px)}
+goo-comparison-series .comparison-series-mark:focus-visible::after{outline:2px solid var(--ink,#fff);outline-offset:1px}
+
+goo-comparison-series .comparison-series-plot::after{content:'';position:absolute;inset-block:0;left:var(--selection-left,0);width:var(--selection-width,0);background:#79ddc644;pointer-events:none;outline:1px solid #79ddc6}
+
+goo-comparison-series .comparison-series-gap{position:absolute;inset-block:0;background:repeating-linear-gradient(135deg,transparent,transparent 7px,#8294aa55 7px,#8294aa55 8px);border:1px dashed #8294aa;pointer-events:none}
+goo-comparison-series .comparison-series-gap[data-side="0"]{clip-path:inset(0 50% 0 0)}
+goo-comparison-series .comparison-series-gap[data-side="1"]{clip-path:inset(0 0 0 50%)}
+
+goo-comparison-series .comparison-series-table{max-width:100%;overflow:auto}
+goo-comparison-series table{width:100%;border-collapse:collapse;font-size:11px}
+goo-comparison-series :is(td,th){padding:4px;text-align:left;white-space:nowrap}
+goo-comparison-series summary{font-size:11px;cursor:pointer}

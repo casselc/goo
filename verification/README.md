@@ -997,3 +997,6 @@ controls. No new workbench protocol/model transition was introduced.
 staging/return and exact read counts; coherence additionally pins each selected
 side’s complete question, original UTC window, parent predicate and qualified
 missing/empty group. Six rejecting controls cover hidden reads and changed scope.
+
+
+Retained comparison series: `TestHegelComparisonSeriesGeometry` checks the actual JS BigInt domain and bounded brush properties. Journey 128 supplies `GOO_COMPARISON_SERIES_LEDGER` to `TestQuintComparisonSeriesLedger`, replaying `population_drilldown.qnt` with five rejecting controls. `GOO_COMPARISON_SERIES_BOMBADIL=1` enables the 25-second alignment/selection/stage/Back actor.

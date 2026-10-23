@@ -566,3 +566,5 @@ Development browser diagnostics have [age-based retention and a 512 MiB soft bud
 Applied populations can [expand their fixed UTC window](docs/POPULATION_WORKSPACE.md#expanding-the-time-window) while retaining filters and a paused parent; opening stages before an explicit Run.
 
 Categorical populations can [compare a selection with the rest of its parent](docs/POPULATION_PARTITIONS.md), preserving filters, exact windows and a paused parent.
+
+Retained record comparisons share [aligned activity charts](docs/COMPARISON_SERIES.md), exact UTC interval inspection and staged selection; stored/frozen chart loading reads immutable captures explicitly.

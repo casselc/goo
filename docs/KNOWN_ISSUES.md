@@ -577,3 +577,6 @@ population comparison parents and provides in-place stored-side inspection. The
 legacy single-question row action still refines/rereads; full-capture navigation
 from receipts remains separate from retained inline Back. Stored inline inspection
 is its first retained page, not a full-population membership browser.
+
+
+[Retained record activity comparisons](COMPARISON_SERIES.md) now share count geometry across fixed and explicitly loaded stored/frozen capture owners. Rolling responses still omit series; live bucket polling and reconstruction of old cohort-only comparison captures remain unimplemented. Native metric series keep their existing semantics and presenters.

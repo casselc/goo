@@ -560,3 +560,6 @@ handlers/disabled states; the helper owns only disclosure/Escape behavior. Popul
 comparison children and stored comparison pages reuse the existing record table,
 record detail presenter and `GooUI.inspector`, with reads and retained-parent state
 in their application owners. See [comparison actions](COMPARISON_ACTIONS.md).
+
+
+`goo-comparison-series` (`comparison-series.js`, `time-bars.css`) renders two supplied count-interval series, with `data` JSON attributes or a cloned `.data` property and `alignment="elapsed|utc"`. It emits `goo-series-select` and `goo-series-range`; it never fetches or navigates. Exact values use a shared BigInt count domain and an expandable interval table. `comparison-series-owner.js` owns alignment controls, UTC range handles, staged continuation and explicit immutable-page reads. See [contract](COMPARISON_SERIES.md).

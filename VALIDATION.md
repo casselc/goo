@@ -6056,3 +6056,42 @@ journey 72 passed again (1.1 min). Both retain their observed Quint validation a
 exact frozen-side checks. Regenerated affected record/native storyboard frames and
 visually confirmed removal of the empty frame after Back. No read/write protocol
 changed in this display-only follow-up.
+
+
+## 2026-10-23 — retained activity comparison geometry
+
+Implemented a passive two-population record-count interval chart with a shared exact domain, UTC/elapsed alignment, unknown/gap/zero distinctions, exact table, keyboard inspection and side-bounded brush intent. Application adapters reuse UTC range handles and retained child navigation; explicit stored loading reads immutable capture pages only. Rolling series remain a frozen-capture continuation; no Go runtime or API wire shape changes. All 44 Node test files and `TestHegelComparisonSeriesGeometry` passed (40 generated examples, 3.02 s). Initial real-source journey passed in 10.9 s; final model/Bombadil/deployed acceptance follows after execution. See [contract and storyboard](docs/COMPARISON_SERIES.md).
+
+Source continuation acceptance: journey 127 and standalone component 128 passed;
+a test-only numeric CSS selector in journey 69 was corrected. The subsequent source
+suite for rolling records and both saved record/native comparisons passed all
+three tests in 2.6 min, including the live Bombadil campaign and existing observed
+Quint replay. The new two-test series/component suite passed in 1.3 min, with
+25-second Bombadil exploration and observed Quint replay plus five rejecting
+controls (13.88 s). Final deployed series replay also passed (14.88 s), now
+selecting an observed baseline interval and rejecting a delayed stored response
+after comparison invalidation. All 44 Node files passed on final application
+code, and Hegel geometry was rerun successfully (2.84 s). Final deployed suite
+results are recorded below after completion.
+
+Deployed acceptance: all 12 selected tests passed in 6.6 min: new passive and
+real-source series journeys 128; retained inspection 127; ranking 120; legacy
+error/latency 35; stored records/native gauges 52; fresh continuation 57; rolling
+records 69; native counters 72; saved records/native decisions 53. Fixed 25-second,
+stored 30-second, live 30-second and saved comparison Bombadil campaigns passed.
+Observed Quint replays and rejecting controls passed, including the updated
+baseline-interval ledger. Saved charts load without source reads; frozen live
+chart counts remain seven after source advancement to eight. Actual affected
+storyboard frames were regenerated, including new desktop/mobile/frozen frames;
+all three new frames were visually reviewed. Final packaging moves the application
+control rules to product.css while retaining passive chart rules in time-bars.css.
+The final image smoke and cleanup are recorded below after execution.
+
+Final packaged image: both series/component journeys passed again in 1.0 min,
+including mobile exact-table overflow, the selected-side label, source-free stage
+and return, delayed-response rejection, observed Quint validation and the 25-second
+Bombadil campaign with its new geometry/unknown-value invariant. No further source
+or backend changes were made. The temporary source server was stopped. Supported
+Docker cache/image pruning removed unused build records and dangling image metadata;
+root filesystem remains at 7.2 GB free. Retained user captures, telemetry tables and
+volumes were preserved. Final docs/screenshots are synced to the running query UI.

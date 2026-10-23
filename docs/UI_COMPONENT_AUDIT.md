@@ -365,3 +365,5 @@ with local search, typed snapshot values and a passive attribute-list shell.
 The existing adapter retains scope/search/copy/filter actions. Automatic field
 mapping, source-backed facet requests and streaming value patches remain outside
 the components. See [current contracts](UI_COMPONENTS.md).
+
+Retained comparison series now share a passive count-interval plot and exact table across local population and immutable capture adapters. Alignment/range controls stay with the application owner and reuse `goo-time-range`; source, custody and child navigation owners remain separate. See [bounded contract](COMPARISON_SERIES.md).
