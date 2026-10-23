@@ -86,3 +86,7 @@ content-bound immutable configuration identity. Actual results: [VALIDATION](../
 No mutable aliases, automatic startup preference, arbitrary predicate-branch
 editor, service-selector satisfiability inference, access control, durable browser
 draft or cross-store evidence search is added by this cut.
+
+Saved predicate trees can now be edited through the shared [Filters
+editor](FILTER_EDITOR.md), including AND/OR, missing keys and present-empty
+strings. Edits stay staged; invalid input blocks source actions and saving.

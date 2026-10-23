@@ -6911,3 +6911,55 @@ API, fixed-view contracts and telemetry execution are unchanged.
 
 The final deployed stream adapter matches the race-tested checkout bytes after
 recreation; the original native API/image contents remain inherited unchanged.
+
+## Shared staged predicate editing — 2026-10-23
+
+The [shared editor](docs/FILTER_EDITOR.md) now handles typed conditions and bounded
+AND/OR trees in Activity and fixed population/saved configurations. Editing is
+source-free; Activity preserves held observations until explicit Apply, and fixed
+editing opens a staged child before Run. Empty string remains distinct from a
+missing attribute. Signal-specific columns and exact decimal uint64 literals use
+the existing Go query contract; no API or schema migration is introduced.
+
+- Five focused Node files pass, covering type/budget refusal, missing/empty wire
+  normalization, exact integers, immutable applied drafts, existing tail state and
+  rolling/fixed configuration compatibility. Python compilation and JS syntax
+  checks pass. Native `go test ./exploration ./workbench` passes, with local HTTP
+  sockets available; the initial sandboxed attempt could not open those sockets.
+- Hegel runs 80 sampled nested predicate round trips, checking independent native
+  membership for absent, present-empty and nonmatching values before/after JSON.
+- Final real-source journey 148 passes: ordinary OTLP logs independently counted
+  in ClickHouse, direct typed tree editing, nested groups, invalid scope blocking,
+  invalid-input preservation through environment changes, keyboard Apply, mobile
+  overflow, actual rolling publication/reload, fixed child staging and explicit
+  source Run. No successful source or publication responses are mocked.
+- Actual staged configuration observations pass the existing Quint-go replay and
+  its four rejecting controls (hidden read, fabricated row, absent explicit Start,
+  invalid layout). This checks the bounded staging contract, not every editor
+  navigation history. Expanded Bombadil runs 30 seconds and passes staged-empty,
+  paused, invalid-Apply, overflow, progress and exception invariants while changing
+  group mode, presence operators, nested groups and invalid/fixed fields.
+- Saved-view obsolete-response journey 147 also passes. The two final isolated
+  browser journeys complete in 56.9 seconds. Earlier development runs corrected
+  an expected child Run label and a field-input locator after autocomplete changed
+  its accessible role; final checks use labels and bounded action timeouts.
+- Desktop/mobile editor screenshots are generated from the running real-source
+  app. Shared component styles and Activity layout overrides are separated.
+
+The local query/packages image is
+`sha256:dc95c5bace71b06159115da4d5099e472b67bf848cf997c73290417df50a41cd`.
+Only query/packages are recreated; telemetry/evidence volumes remain. All five
+served JS/CSS assets match the tested checkout bytes. Compact native/property/
+browser/deployment logs live in `artifacts/filter-editor-integration`; observed
+ledger/Quint/Bombadil outputs are under `artifacts/filter-editor/filters-e5baf3e8`.
+Unused Docker build cache cleanup reclaims 1.591 GB without pruning volumes.
+
+The older single-question builder and numeric attribute transforms remain outside
+this cut. Fixed editor drafts belong to the disclosed edit controls; saving the
+configured parent preserves its configured query until an edited child is opened.
+
+Deployed fresh-entry journeys 102–103 also pass (53.6 seconds), preserving one
+automatic stream, paused inspection, explicit resume, scroll anchors, mobile
+layout and background handling. Their actual documentation frames are regenerated.
+Final documentation/frames are synchronized after these read-only checks; owned
+image staging is removed, and reusable Go/module caches remain.

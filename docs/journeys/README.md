@@ -688,3 +688,14 @@ configuration inspection. [Contract and diagram](../ACTIVITY_VIEWS.md).
 Journey [147](../../journeys/activity-view-race.spec.js) delays an actual committed
 configuration-save response while another view opens. Releasing it preserves the
 newer draft's keep/discard controls and title, with no telemetry reads.
+
+## 148 — Write a filter before a matching observation exists
+
+Open a saved Activity configuration paused. In Filters, edit OR conditions for
+missing versus empty release, exercise a nested group and correct an invalid
+column. No telemetry is read. Apply with the keyboard, inspect the two matching
+ordinary OTel records, and save/reopen the exact selector. In a fixed saved view,
+edit the same tree and open a child; only explicit Run reads it. Desktop/mobile
+frames: [148a](screenshots/148a-filter-editor.png),
+[148b](screenshots/148b-mobile-filters.png). Executable journey:
+`journeys/filter-editor.spec.js`; [semantics and boundaries](../FILTER_EDITOR.md).

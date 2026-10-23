@@ -889,3 +889,9 @@ staging, explicit Start, shared Saved and environment-filtered Services librarie
 clipboard sharing and draft guards. Fixed view hashes/contracts are unchanged.
 This closes the bounded persistent Activity layout/scope omission recorded in D2;
 arbitrary transforms and predicate-branch editing remain outside that acceptance.
+
+The user-approved [shared filter editor](FILTER_EDITOR.md) extends D2 with bounded
+typed AND/OR branch editing. Activity and fixed population/saved configurations
+share the supplied AST editor. Activity applies explicitly; fixed edits open a
+staged child before Run. Numeric attribute transforms and replacement of the
+older single-question builder remain outside this cut.

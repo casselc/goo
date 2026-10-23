@@ -658,3 +658,8 @@ views. Shared revision-library display appears in Saved and Services. The stream
 adapter restores configuration through `GooTail.stage`; Start alone opens SSE.
 No observations or capabilities cross the configuration boundary. The linked
 flow diagram documents publication, staging and later separate retention.
+
+The [shared predicate editor](FILTER_EDITOR.md) is a supplied-input helper, reused
+by Activity and fixed population adapters. It normalizes Go's empty-value wire
+shape but does not evaluate, read or publish telemetry. Activity owns draft/apply;
+fixed adapters stage child configurations and retain their parent's source basis.

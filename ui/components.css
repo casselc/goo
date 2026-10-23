@@ -202,3 +202,7 @@ goo-comparison-context{display:block;margin-block:8px;min-width:0}
 .comparison-context-side .evidence-summary-facts dd{font-size:12px;overflow-wrap:anywhere}
 goo-comparison-context>small{display:block;font-size:10px;margin-top:4px;color:var(--muted,#a7b5c9)}
 @media(max-width:600px){.comparison-context-sides{grid-template-columns:1fr}}
+
+/* Shared supplied predicate editor; app owners retain execution controls. */
+.filter-editor{max-width:100%;min-width:0}.filter-editor fieldset{border:1px solid var(--border,#ccd4df);border-radius:4px;padding:.35rem;margin:.3rem 0;min-width:0;display:flex;gap:.3rem;align-items:center;flex-wrap:wrap}.filter-editor fieldset fieldset{flex-basis:100%;margin-left:.5rem}.filter-editor legend{font-size:.75rem}.filter-editor input{width:10rem;min-width:0;max-width:100%}.filter-editor select{max-width:100%}.filter-editor small{font-size:.75rem}.filter-editor p{font-size:.8rem;margin:.3rem 0}@media(max-width:600px){.filter-editor input{width:8rem}.filter-editor fieldset fieldset{margin-left:0}}
+.filter-editor legend{color:var(--muted)}

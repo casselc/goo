@@ -665,3 +665,10 @@ record-column picker projects both streamed and staged layouts. Configuration
 reads, clipboard sharing and library paging stay in `GooActivityViews`; scope and
 draft lifetime stay in `GooStreamEntry`. `GooTail.stage` prepares local display
 without a subscription. No display component fetches or starts telemetry.
+
+`GooFilterEditor.mount(host, {where, signal, onChange})` is the shared supplied
+predicate editor for Activity and fixed population adapters. `set` restores a
+supplied tree; `snapshot` returns detached local input. It emits normalized
+predicates or a validation error and never reads or executes. Styles live in
+`components.css`; adapters retain execution and custody. See [contract and
+journey](FILTER_EDITOR.md).

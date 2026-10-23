@@ -651,3 +651,10 @@ explicit after reopen. Service relevance is an exact environment filter, not
 Boolean selector satisfiability or evidence of matching telemetry. Catalog search
 is limited to the loaded 20-item page. Mutable aliases, team access control and
 automatic startup preferences remain unsupported.
+
+Shared [typed predicate editing](FILTER_EDITOR.md) now covers Activity and fixed
+population/saved views. Column suggestions are local signal metadata; arbitrary
+OTel attribute/resource keys can be entered without a matching record. Numeric
+attribute transforms and consolidation of the older single-question builder are
+still open. Fixed editor drafts are distinct from their configured parent until
+opened as a child; configured view publication retains the parent selector.

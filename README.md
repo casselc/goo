@@ -592,3 +592,7 @@ Origin-aware Go catalog/read views and shared review/correction/pinned-document
 resolution now support tail evidence. Public origin-aware read/catalog routes and
 compact UTC/provenance/citation inspectors are implemented. SSE capabilities and
 exact tail selection/browser retry remain follow-up work.
+
+Activity and fixed population views share a [staged filter editor](docs/FILTER_EDITOR.md)
+for typed conditions, nested AND/OR, missing keys and present-empty values, even
+before a matching record appears. Apply/Start or Run explicitly reads the scope.
