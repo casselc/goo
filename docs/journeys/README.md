@@ -1648,3 +1648,8 @@ Journey 118 (`journeys/record-columns.spec.js`) covers live observed field
 selection, fixed-window layout handoff, staged field predicates and saved
 population layouts. Frames 118a–c show live, saved and mobile records. Optional
 `GOO_RECORD_COLUMNS_BOMBADIL=1` runs bounded local layout exploration.
+
+Frame 118d and journey 118 also cover reopened saved record-field exclusion,
+missing/empty preservation, selected-child staging/Run/return and observed
+Quint trace validation. The field Bombadil campaign additionally stages an
+exclusion after local column changes and checks that no source read follows.

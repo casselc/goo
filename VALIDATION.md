@@ -1,5 +1,34 @@
 # Validation record
 
+## Reopened population record filtering (2026-10-23 UTC)
+
+Review of the field-picker cut found that reopened saved populations received
+column layouts but not the staged record-field callbacks available to recent
+activity. Both now use the same record options and existing selection owner;
+the duplicate presentation-specific option branch is removed. Saved definitions
+and query evaluation remain unchanged. Exclude retains missing and present-empty
+observations, Open selected facets stages an independent child, and Back restores
+the supplied parent without rereading it.
+
+Actual checks:
+
+- All 40 Node test files pass; the existing Hegel facet-selection property passes
+  (4.0s), including missing/empty exclusion and parent/companion preservation.
+- The deployed journey 118 and server/property component case pass together
+  (59.0s), including real OTLP logs, source-free staging, explicit child execution,
+  parent restoration and explicit Apply. Its observed Go/Quint facet ledger passes
+  (11.6s), with all five rejecting controls. The existing model/selector semantics
+  are reused; no new query protocol or predicate evaluator was introduced.
+- The extended 30-second Bombadil campaign reaches six actions, including a saved
+  record-field exclusion after show/hide/order changes, with no violations and
+  unchanged source reads after the initial population execution.
+- Final deployed regression run passes all four population/field-picker cases
+  together (1.3m), including the existing cross-service and comparison/restoration
+  journeys. Their refreshed frames and observed validators are retained.
+- Query image rebuilt with the existing CA overlay and activated locally. Frame
+  118d documents the two retained missing/empty records after excluding `west`;
+  README, component behavior, planning and process notes describe the same owner.
+
 ## Observed record field layouts (2026-10-23 UTC)
 
 [Record fields](docs/RECORD_COLUMNS.md) adds a passive field picker and supplied-row

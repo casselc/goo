@@ -11,7 +11,8 @@ additional current commitments.
 
 The bounded [record-field layout cut](RECORD_COLUMNS.md) adds supplied-row field
 discovery, local show/hide/order, staged Include/Exclude and saved population
-layouts. Arbitrary transforms, source-wide schema discovery and persisted live
+layouts. Reopened saved population records now use the same staged facet and
+child-population owner as recent records. Arbitrary transforms, source-wide schema discovery and persisted live
 preferences remain follow-up work; this does not complete the broader D2 scope.
 
 The [2026-10-22 whole-product coherence proposal](WHOLE_PRODUCT_COHERENCE_PROPOSAL_2026_10_22.md)

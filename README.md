@@ -545,3 +545,7 @@ Record pages now offer a compact [observed-field picker](docs/RECORD_COLUMNS.md)
 column visibility/order and explicit Include/Exclude intents. Population view
 configuration accepts optional ordered `fieldColumns` (up to eight qualified
 fields); saved layouts do not change query predicates or capture evidence.
+
+Reopened population views share the same staged record-field filtering and
+selected-population drilldown as recent activity; see the
+[record-field journey](docs/RECORD_COLUMNS.md).

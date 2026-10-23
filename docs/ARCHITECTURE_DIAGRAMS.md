@@ -1210,3 +1210,7 @@ flowchart LR
 The picker never reads a source or publishes evidence. Saved field layouts are
 configuration alongside the original fixed questions. See the
 [executable field storyboard](RECORD_COLUMNS.md).
+
+Reopened population record fields now dispatch to the same staged facet owner
+as recent records. Its child owner retains the parent, stages before Run and
+restores it without rereading; field controls do not create another query owner.

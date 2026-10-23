@@ -19,7 +19,7 @@ On Activity, a supported recorded string value offers Include/Exclude. This
 pauses the stream and stages the existing scope tray; **Apply scope** performs
 the read. **Analyze this scope/window** carries the field layout into the staged
 fixed question. Its Run action reads the completed fixed bounds. In primary
-fixed results, Include/Exclude stages a predicate and focuses Run. Population
+fixed results, Include/Exclude stages a predicate and focuses Run. Recent and reopened saved population
 records delegate the same intent to their existing facet-selection owner. These
 actions do not treat missing as an empty string or infer complement populations.
 
@@ -45,3 +45,12 @@ local hide/show/reordering after an explicit population read.
 
 ![Held live records with chosen fields](journeys/screenshots/118a-live-record-fields.png)
 ![Saved population field layout](journeys/screenshots/118b-saved-record-fields.png)
+
+Reopened saved populations also expose staged record-field Include/Exclude and
+shared-field selection. Open selected facets stages an independent child; Run
+reads it, and Back restores the supplied parent without another read. Excluding
+a present string retains missing and empty observations through the existing
+population selector semantics. Journey 118 now records this child/return protocol
+for Go/Quint validation with five rejecting controls.
+
+![Applied exclusion retains missing and empty values](journeys/screenshots/118d-saved-record-field-exclusion.png)
