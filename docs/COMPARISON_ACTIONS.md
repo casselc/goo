@@ -15,6 +15,11 @@ and original action focus without telemetry reads. Child records use the existin
 shared record table and inspector. The existing depth and predicate budgets apply;
 no baseline window is silently applied to an independent companion signal.
 
+Fresh-window previews also reuse the shared action group: Capture before publication,
+Compare retained capture afterward, and Close under Preview options. Opening focuses
+the baseline selector; closing restores the opener. Preview/retry/menu changes do
+not read telemetry. The separate live execution group remains explicit.
+
 Stored, fresh and saved comparisons offer the same two-side inspection entrance.
 It explicitly reads the selected immutable capture's first stored page and renders
 its supplied rows with the common record presenter/inspector. Full aggregate counts
@@ -37,6 +42,8 @@ domains and exact displayed freeze keep their existing protocols. These action g
 
 ```mermaid
 flowchart LR
+  V[Fresh preview action group] -->|Capture once| S[Stored comparison side]
+  V -->|Retry without source read| S
   F[Fixed comparison group and side] --> C[Staged single-signal child]
   C -->|Explicit Run| R[Source records and shared inspector]
   C -->|Back without reads| F

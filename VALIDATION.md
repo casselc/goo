@@ -6134,3 +6134,15 @@ retained user captures were deleted. Docs/spec and frames are synced to the lab.
 Cleanup completed through the existing diagnostic-retention policy and supported
 Docker prune commands. Expired raw recordings were removed; compact ledgers,
 results and retention audit remain. Root filesystem has 7.4 GB free after cleanup.
+
+## 2026-10-23 — fresh comparison action-group adoption
+
+Fresh previews now use the shared action group with Capture/retained-retry states,
+Close in Preview options, selector focus on open and opener focus on close.
+Journey 57 passed against real OTLP/ClickHouse for records and native gauges,
+including one source read per capture, injected stored-comparison failure/retry
+without recapture, immutable originals, saved finding reopen and mobile overflow.
+The observed Quint replay passed with six rejecting mutations; all 44 Node test
+files passed. Frames 57a–d were regenerated and the preview frame visually reviewed.
+The 30-second Bombadil campaign passed; a second 30-second campaign also passed
+with contextual-action invariants and the options disclosure exercised. No source/receipt protocol changed.

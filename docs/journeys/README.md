@@ -1078,7 +1078,8 @@ new question.
 ### 57 — Resume with fresh evidence
 
 `fresh-comparison.spec.js` captures real HTTP server spans and OTel memory gauges.
-It previews fresh scope without telemetry reads, rejects changed-definition prior
+It checks baseline focus on entry and opener focus after closing through Preview
+options, then previews fresh scope without telemetry reads, rejects changed-definition prior
 evidence, selects a frozen baseline and performs one new capture. A forced
 comparison failure is retried without recapture. The finding is saved and shared
 with a fresh browser; original questions, evidence links and captures are unchanged.
@@ -1090,7 +1091,7 @@ with a fresh browser; original questions, evidence links and captures are unchan
 
 Quint replays observed reads and saved evidence relationships with six rejecting
 mutations. Optional Bombadil exploration opens/closes previews and selects prior
-evidence without capturing.
+evidence without capturing, while checking one visible fixed capture/retry action.
 
 ## 58 — Locate a change by captured attribute
 

@@ -807,3 +807,8 @@ pausing/navigation/disconnect lifecycle, captured full-population baseline
 comparison and source-free saved live settings. Acceptance: real OTLP journey 92,
 legacy tail/population regressions, Hegel state history, observed Quint ledger,
 Bombadil start/pause, and updated desktop/mobile frames.
+
+The fresh-window preview now also uses the shared comparison action group: one
+Capture/retained-retry command position and Preview options for Close, with selector
+focus on entry and opener focus on return. This bounded D1 adoption preserves
+separate fixed, stored and live execution owners; broader consolidation remains queued.

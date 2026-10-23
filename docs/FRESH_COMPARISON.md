@@ -1,6 +1,10 @@
 # Compare a saved question with a fresh window
 
 A saved question with linked evidence offers **Compare with a fresh window**.
+Opening it focuses the baseline selector and hides the redundant opener. The shared
+action group shows **Capture and compare** before capture, then **Compare retained
+capture** for source-free retries. **Preview options → Close preview** restores
+focus to the opener. Live comparison retains its own explicit execution controls.
 Save any draft edits first. Opening the preview performs no telemetry read: it
 fixes a proposed window ending at preview time, keeps the saved question's duration
 and definition, and loads metadata for linked captures.
