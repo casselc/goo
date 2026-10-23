@@ -231,3 +231,13 @@ response types are reflected in the OpenAPI schema. See
 Exploration predicates also accept `column:timestamp_ns` as UInt64 event time for
 exact [time/duration region partitions](REGION_PARTITIONS.md). It uses the existing
 typed predicate wire shape; it is not a new endpoint or an ingestion clock.
+
+
+Tail evidence currently has Go-only `ReadEvidence` / `CatalogEvidence` views.
+The public manifest and catalog endpoints still return v1 capture/result-page
+shapes; no new route or response union is registered. Shared annotation/history/
+correction and document validation methods can resolve tail IDs created through
+the backend publisher, preserving existing meaning-revision wire shapes. The
+browser's retained-manifest/citation inspector still requires the planned explicit
+tail presentation adapter. No SSE membership capability or publication route is
+advertised. See [the origin boundaries](TAIL_SELECTION_CUSTODY.md#shared-origin-readers-and-review-lifecycle).

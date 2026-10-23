@@ -43,6 +43,14 @@ func TestTailManifestProperties(t *testing.T) {
 		if e = manifest.Validate(); e != nil {
 			tc.Fatal(e)
 		}
+		view := retention.Evidence{Origin: "tail-selection", Tail: &manifest}
+		if view.Validate() != nil {
+			tc.Fatal("tail origin rejected")
+		}
+		view.Origin = "saved-capture"
+		if view.Validate() == nil {
+			tc.Fatal("tail masqueraded as captured evidence")
+		}
 		raw, _ := json.Marshal(manifest)
 		var restored retention.TailManifest
 		if json.Unmarshal(raw, &restored) != nil || restored.Validate() != nil || !reflect.DeepEqual(manifest, restored) {

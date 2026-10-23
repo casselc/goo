@@ -1054,3 +1054,9 @@ and rehashed invalid provenance using Hegel. With `GOO_XTDB_TEST_URL`,
 `TestQuintObservedTailPublication` replays actual publish/recover/conflict/absent
 outcomes against `model/tail_publication.yaml`, including four rejecting controls.
 This does not cover the still-unwired SSE, HTTP or shared catalog readers.
+
+`TestQuintObservedTailReviews` uses real optional XTDB reads after publication,
+correction, withdrawal and original-request retry. `model/tail_reviews.yaml` checks
+head/active counts, current catalog visibility and immutable original manifest/
+pinned review, with four rejecting controls. `TestTailManifestProperties` also
+checks the typed origin view cannot masquerade as a captured result page.

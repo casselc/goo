@@ -2,7 +2,6 @@ package retention
 
 import (
 	"context"
-	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"github.com/casselc/goo/workbench"
@@ -166,18 +165,15 @@ func catalogPage(q CatalogQuery, manifests []Manifest, revisions []workbench.Mea
 		if q.Environment != "" && q.Environment != environment || q.From != "" && at.Before(from) || q.To != "" && !at.Before(to) || q.Tag != "" && !tags[m.ID][q.Tag] {
 			continue
 		}
-		services := map[string]bool{}
+		records := make([]json.RawMessage, 0, len(m.Members))
 		for _, member := range m.Members {
-			var row struct {
-				Service *string `json:"ServiceName"`
-			}
-			if e = json.Unmarshal(member.Row, &row); e != nil {
-				return nil, e
-			}
-			if row.Service != nil {
-				services[*row.Service] = true
-			}
+			records = append(records, member.Row)
 		}
+		services, e := retainedServices(records)
+		if e != nil {
+			return nil, e
+		}
+
 		if q.Service != "" && !services[q.Service] {
 			continue
 		}
@@ -192,39 +188,13 @@ func catalogPage(q CatalogQuery, manifests []Manifest, revisions []workbench.Mea
 		sort.Strings(item.Tags)
 		items = append(items, item)
 	}
-	sort.Slice(items, func(i, j int) bool { return items[i].ID < items[j].ID })
 	filter := q
 	filter.Cursor = ""
-	raw, _ := json.Marshal(struct {
-		Query CatalogQuery
-		Items []CatalogItem
-	}{filter, items})
-	fingerprint := hash(raw)
-	cursor := struct {
-		After       string
-		Fingerprint string
-	}{}
-	if q.Cursor != "" {
-		raw, e := base64.RawURLEncoding.DecodeString(q.Cursor)
-		if e != nil || json.Unmarshal(raw, &cursor) != nil || !workbench.ID.MatchString(cursor.After) || cursor.Fingerprint != fingerprint {
-			return nil, errors.New("catalog changed or filter differs; restart browsing")
-		}
+	page, next, e := paginateCatalog(filter, q.Cursor, items, func(item CatalogItem) string { return item.ID })
+	if e != nil {
+		return nil, e
 	}
-	page := &CatalogPage{Items: []CatalogItem{}}
-	for _, item := range items {
-		if item.ID <= cursor.After {
-			continue
-		}
-		if len(page.Items) == 20 {
-			cursor.After = page.Items[19].ID
-			cursor.Fingerprint = fingerprint
-			raw, _ := json.Marshal(cursor)
-			page.NextCursor = base64.RawURLEncoding.EncodeToString(raw)
-			break
-		}
-		page.Items = append(page.Items, item)
-	}
-	return page, nil
+	return &CatalogPage{Items: page, NextCursor: next}, nil
 }
 
 func (s Store) Annotation(ctx context.Context, id, revision string) (*workbench.MeaningRevision, error) {
@@ -236,16 +206,5 @@ func (s Store) Annotation(ctx context.Context, id, revision string) (*workbench.
 		return nil, e
 	}
 	defer c.Close(ctx)
-	if _, e = load(ctx, c, id); e != nil {
-		return nil, e
-	}
-	var raw string
-	if e = c.QueryRow(ctx, "SELECT payload FROM goo_annotations WHERE _id=$1 AND target=$2", revision, id).Scan(&raw); e != nil {
-		return nil, e
-	}
-	var r workbench.MeaningRevision
-	if json.Unmarshal([]byte(raw), &r) != nil || r.Target.ID != id || r.Target.Kind != "evidence" || workbench.ValidateMeaningRevision(r) != nil {
-		return nil, errors.New("invalid pinned review")
-	}
-	return &r, nil
+	return evidenceAnnotation(ctx, c, id, revision)
 }

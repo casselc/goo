@@ -130,3 +130,20 @@ func TestXTDBCatalogAndPinnedDocument(t *testing.T) {
 		t.Fatal("offline narrative read requires native DB", e)
 	}
 }
+
+// Frozen from the pre-origin-aware implementation at b8f6ddc, before extracting
+// shared pagination. Review creation clocks are absent from this catalog cursor.
+func TestLegacyCatalogCursorBytes(t *testing.T) {
+	manifests := []Manifest{}
+	reviews := []workbench.MeaningRevision{}
+	for i := 0; i < 25; i++ {
+		m, r := catalogFixture(i)
+		manifests = append(manifests, m)
+		reviews = append(reviews, r)
+	}
+	p, e := catalogPage(CatalogQuery{}, manifests, reviews, nil)
+	const expected = "eyJBZnRlciI6ImMxNzA5MzVhYThmMjFkYWJkN2MyM2Q1YTY2MzYxYjM2ZTMxNjA1YjU2NmM0MTI3OTQxNDhlYzQ5ODU0NTZjMmYiLCJGaW5nZXJwcmludCI6IjI4MzQ0NjVlNzc1M2JlZDJmN2JhNTNiZDY4YTFmNjVjOGVmNDFlNzc1M2NiNDI0N2M3NTZjNzFmMWE5YzAyMDIifQ"
+	if e != nil || p.NextCursor != expected {
+		t.Fatal("legacy cursor bytes changed", e, p)
+	}
+}

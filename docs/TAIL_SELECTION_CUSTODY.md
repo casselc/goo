@@ -1,10 +1,11 @@
 # Exact Activity selection: backend custody prerequisites
 
-Status: the bounded Go membership bank, typed tail manifest and idempotent XTDB
-publisher are implemented and tested as backend libraries, **unwired to SSE and
-HTTP**. Existing tail UI and v1 retention origins are unchanged. Public exact
-Activity retention, shared catalog/citation integration and the browser retry
-journal are not yet available.
+Status: the bounded membership bank and typed idempotent XTDB publisher are Go
+backend libraries, **unwired to SSE and publication HTTP**. Origin-aware Go
+catalog/read views and shared review/correction/pinned-document resolution are now
+implemented. The public manifest/catalog routes and browser citation inspector
+still require captured result pages. Exact Activity selection and browser retry
+recovery are not yet available.
 
 The concrete task is to preserve up to 20 observed Activity log/span occurrences
 without rereading telemetry. This is observation custody, not unique physical-event
@@ -77,8 +78,12 @@ flowchart LR
   Bank --> Expiry[Read-anchored expiry or capacity refusal]
   Draft --> Origin[Implemented typed tail manifest]
   Origin --> Publish[Implemented atomic XTDB publisher and retry ledger]
-  Publish --> Read[Explicit LoadTail origin resolver]
-  Read -. planned integration .-> Catalog[Shared catalog and exact citations]
+  Publish --> Read[ReadEvidence: explicit origin view]
+  Read --> Catalog[CatalogEvidence: named capture or custody clock]
+  Read --> Reviews[Shared review history, correction and exact pinned revisions]
+  Reviews --> Document[File document with exact evidence/review IDs]
+  Catalog -. planned presentation .-> UI[Public origin adapters and Activity selection UI]
+  Document -. planned presentation .-> UI
 ```
 
 ## Implemented backend publication and retry contract
@@ -94,19 +99,21 @@ Request data is deeply owned before sorting/database access.
 `goo_tail_evidence` and `goo_tail_requests` hold the typed manifest and receipt in
 one asserted transaction. A receipt includes the initial meaning revision,
 independent custody clock and returned XTDB read basis. The initial revision lives
-inside that immutable receipt; shared annotation history/corrections are **not yet
-wired** for this origin. A before-commit interruption rolls back both tables; a
+inside that immutable receipt. Shared annotation history and corrections now
+resolve this origin without copying or rewriting that initial revision. A before-commit interruption rolls back both tables; a
 commit followed by lost acknowledgement recovers the same original receipt.
-`LoadTail` is the explicit backend origin resolver. Existing `Load`, catalog,
-correction and pinned-review paths continue to require v1 captures/result pages.
-Their formats, hashes and validators are unchanged.
+`LoadTail` remains a strict typed reader; `ReadEvidence` now resolves all supported
+origins explicitly. Existing `Load` and the HTTP-owned `Catalog` continue to require
+v1 captures/result pages. Their formats, hashes, validators and cursor bytes remain
+unchanged. Shared `Annotations`, `Annotation` and `CorrectOnce` now also support
+tail evidence, including exact review resolution during document creation.
 
 This bounded cut intentionally isolates the new protocol before extracting shared
 transaction mechanics: existing v1 request hashes bind a manifest, whereas tail
 requests must bind references before proof resolution. Combining those protocols
-prematurely would risk changing legacy retry identity. Shared catalog, exact
-citations and pinned review reads must explicitly understand the new origin before
-the UI advertises durable evidence.
+prematurely would risk changing legacy retry identity. Shared backend catalog and exact review readers now understand the origin. Public
+manifest/catalog adapters and citation presentation must do so before the UI
+advertises durable Activity evidence.
 
 A proposed `POST /retained-tail-evidence` request contains a version, client request
 ID, original connection/selector, bounded token/handle references, tags and note.
@@ -167,7 +174,7 @@ storyboards remain the implemented interaction.
 - Observed Quint replay executes issue → resolve members → expire → refuse through
   the real bank. Four controls reject wrong counts, forged availability, changed
   member windows and accepting expired proof. This is a membership model, not a
-  model of an unimplemented durable publisher.
+  model of the separate durable publisher.
 - Existing XTDB interruption, concurrent recovery and expired fixed-page recovery
   integration checks pass. Legacy origin/HTTP guards remain strict.
 
@@ -188,7 +195,56 @@ Actual commands/results and retained artifacts are in [VALIDATION.md](../VALIDAT
   four altered-output controls must be rejected. This bounded model does not prove
   HTTP, catalog, correction, SSE or browser behavior.
 
-Next: integrate the tail origin into shared read/citation/correction contracts with
-compatibility fixtures, then issue server capabilities through SSE and connect
-selection/retry UI. The planned storyboard above remains unimplemented; no UI or
-screenshots changed in this library milestone.
+## Shared origin readers and review lifecycle
+
+`ReadEvidence` returns a validated origin discriminant (`saved-capture`,
+`result-page`, or `tail-selection`) and exactly one original typed manifest. It
+never synthesizes a `SavedCapture`, aggregate count or fixed question for tail rows.
+Only definite absence permits trying another origin; unavailable/corrupt data and
+ambiguous IDs fail instead of falling back successfully.
+
+`CatalogEvidence` is a separate Go catalog for all supported origins. It shares
+pagination/cursor mechanics and exact service extraction with the legacy catalog;
+the previous catalog's cursor bytes are frozen in a compatibility fixture.
+Each item names its clock: `captured-at` for v1, `retained-at` for the earliest
+recorded custody timestamp among tail publication receipts. This is recorded
+application-clock metadata, not an inferred first ingestion/commit time. `From/To`
+filter that named clock with half-open bounds; event time and per-poll read clocks
+remain in the original manifest. Missing and empty services remain distinct.
+Tags come from active review heads. Changing origin/filter or returned catalog
+metadata invalidates the cursor; no atomic cross-query snapshot is claimed.
+
+Tail roots remain in their original immutable request receipts; corrections use
+existing `goo_annotations` and idempotent correction requests. New tail requests
+add a `manifest_id` lookup projection without changing intent hashes or receipt
+bytes. Old requests without that projection are decoded under explicit bounds,
+not migrated on read. A complete history merges and deduplicates roots/revisions,
+keeps branch heads/withdrawals distinct and rejects missing parents. Pinning a
+review resolves the exact revision, not the current head. Retrying original
+publication after a withdrawal still returns its original receipt; it does not
+reactivate a review or change the manifest.
+
+| Backend scan | Bound/refusal |
+| --- | --- |
+| Combined origin manifest catalog | 1,000 manifests / 16 MiB; fail without a partial catalog. |
+| Tail receipt roots (all for catalog; matching or unprojected for a target) | 1,000 requests / 16 MiB; fail instead of silently omitting old roots. |
+| Shared catalog annotations | 10,000 revisions / 64 MiB including manifest bytes. |
+| Target history | 1,000 unique merged revisions; shared annotation input also limited to 1,000 / 16 MiB. |
+
+The native integration fixture removes its own request's projection to exercise
+the old row shape, verifies history/correction/pinning and confirms the original
+receipt payload never changes. File documents can resolve/preserve these exact
+IDs through the shared backend resolver and load offline. Their existing browser
+citation inspector still expects a captured manifest; its tail adapter remains
+planned. Unknown/cross-target review IDs, unavailable stores and missing custody
+roots are refused.
+
+Observed Quint replay executes actual publish → correct → withdraw → retry-original
+reads from XTDB. It checks heads, active state, catalog visibility, exact pinned
+review and unchanged manifest, with four rejecting controls. Hegel additionally
+rejects relabeling a typed tail view as a capture. Pure catalog fixtures cover
+clock/filter boundaries, missing/empty services, pagination and stale cursors.
+
+Next: implement explicit public read/catalog and citation presentation adapters,
+then issue SSE capabilities and connect selection/retry UI. No Activity browser
+journey or screenshots are claimed by this backend milestone.

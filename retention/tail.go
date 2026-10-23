@@ -119,7 +119,7 @@ func (s Store) PublishTail(ctx context.Context, bank *exploration.TailMembership
 		return nil, e
 	}
 	defer c.Close(ctx)
-	for _, ddl := range []string{"CREATE TABLE goo_tail_evidence (_id,payload)", "CREATE TABLE goo_tail_requests (_id,intent,payload)"} {
+	for _, ddl := range []string{"CREATE TABLE goo_tail_evidence (_id,payload)", "CREATE TABLE goo_tail_requests (_id,intent,payload,manifest_id)"} {
 		if _, e = c.Exec(ctx, ddl); e != nil {
 			return nil, e
 		}
@@ -181,7 +181,7 @@ func (s Store) PublishTail(ctx context.Context, bank *exploration.TailMembership
 		{"ASSERT NOT EXISTS (SELECT 1 FROM goo_tail_requests WHERE _id=$1)", []any{in.RequestID}},
 		{"ASSERT NOT EXISTS (SELECT 1 FROM goo_tail_evidence WHERE _id=$1 AND payload<>$2)", []any{m.ID, string(manifest)}},
 		{"INSERT INTO goo_tail_evidence (_id,payload) SELECT $1,$2 WHERE NOT EXISTS (SELECT 1 FROM goo_tail_evidence WHERE _id=$1)", []any{m.ID, string(manifest)}},
-		{"INSERT INTO goo_tail_requests (_id,intent,payload) VALUES ($1,$2,$3)", []any{in.RequestID, intent, string(raw)}},
+		{"INSERT INTO goo_tail_requests (_id,intent,payload,manifest_id) VALUES ($1,$2,$3,$4)", []any{in.RequestID, intent, string(raw), m.ID}},
 	} {
 		if _, e = tx.Exec(ctx, statement.sql, statement.args...); e != nil {
 			return nil, e
@@ -221,15 +221,18 @@ func (s Store) LoadTail(ctx context.Context, id string) (*TailManifest, error) {
 		return nil, e
 	}
 	defer c.Close(ctx)
+	return loadTail(ctx, c, id)
+}
+func loadTail(ctx context.Context, c *pgx.Conn, id string) (*TailManifest, error) {
 	var raw string
-	if e = c.QueryRow(ctx, "SELECT payload FROM goo_tail_evidence WHERE _id=$1", id).Scan(&raw); e != nil {
+	if e := c.QueryRow(ctx, "SELECT payload FROM goo_tail_evidence WHERE _id=$1", id).Scan(&raw); e != nil {
 		return nil, e
 	}
 	var m TailManifest
 	if len(raw) > MaxBytes || json.Unmarshal([]byte(raw), &m) != nil || m.ID != id {
 		return nil, errors.New("invalid tail manifest")
 	}
-	if e = m.Validate(); e != nil {
+	if e := m.Validate(); e != nil {
 		return nil, e
 	}
 	return &m, nil

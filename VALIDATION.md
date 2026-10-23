@@ -6557,3 +6557,60 @@ Next: adopt the explicit tail origin in shared catalog/citation/correction/pinne
 read contracts with compatibility fixtures, then wire server-issued capabilities
 and the selection/retry UI. This milestone does not advertise public exact Activity
 retention or classifier/training functionality.
+
+## 2026-10-23 — origin-aware tail catalog and shared review readers
+
+Implemented Go `ReadEvidence` / `CatalogEvidence` with explicit saved-capture,
+result-page and tail-selection origins. Tail evidence retains its typed manifest;
+no synthetic captured page/question is created. Catalog items explicitly name
+capture or recorded-custody clocks. Shared history, exact review resolution and
+idempotent corrections now support initial tail reviews retained in request
+receipts, including older rows without lookup projections. Public manifest/catalog
+routes and browser inspectors remain v1; no live selection/publication route is
+added. See the updated diagram and boundaries in `docs/TAIL_SELECTION_CUSTODY.md`.
+
+Actual checks:
+
+- `GOO_XTDB_TEST_URL=… go test -race ./retention -count=1 -v` passed against local
+  XTDB on 15432, including all existing retention integration tests and the new
+  shared-reader integration. The new fixture removes its own request projection
+  to emulate the previous publisher, resolves its root review, publishes/retries
+  a correction, pins the old revision, validates an exact document citation and
+  loads the file document offline. It verifies immutable original receipt/manifest
+  bytes, expired-bank independence, unknown/cross-target review and parent refusal,
+  unavailable-store refusal and legacy catalog isolation.
+- Pure catalog checks cover explicit clock boundaries, exact origin/service/tag
+  filters, missing/empty service identity, 20-item pagination, stale/cross-filter
+  cursors, duplicate identities, missing custody and branch withdrawal behavior.
+  Shared pagination/service extraction replaces duplication. A byte fixture was
+  frozen by running the original catalog function from commit `b8f6ddc` before
+  extraction; the new implementation reproduces that legacy cursor exactly.
+  The temporary reference implementation was removed after capturing the fixture.
+- `go test ./exploration ./cmd/goo -count=1` passed, including existing HTTP wire
+  fixtures. Optional ClickHouse source integration was not enabled; these results
+  do not claim ClickHouse or deployed-browser acceptance.
+- In `verification`, with the real XTDB opt-in,
+  `go test -run 'Test(TailManifestProperties|QuintObservedTailReviews|QuintObservedTailPublication)$' -v -count=1`
+  passed. Hegel runs 50 manifest properties, now including typed-origin refusal.
+  Actual observed Quint review replay executes publish → correct → withdraw →
+  retry-original and checks current heads/active state/catalog visibility,
+  immutable pinned review and original observation bytes. Four altered traces
+  are rejected. The separate durable-publication replay and its four controls
+  also passed. The existing membership state/swarm suite is unchanged.
+- OpenAPI conformance passed: 58 Go operations, 222 response fixtures, 56 admitted
+  requests, 14 mux refusals, negative controls and SSE schemas. No public response
+  union or new route was added; meaning-revision wire shapes are unchanged.
+- `git diff --check` passed. Documentation, plan, API boundary notes and the custody
+  diagram distinguish shared backend support from the pending browser adapters.
+  No UI changed; no browser/Bombadil run, screenshots or runtime image rebuild is
+  claimed. Existing lab containers were left running unchanged.
+
+Compact logs are in `artifacts/tail-shared-readers/{race,go,models,openapi}.txt`.
+No temporary source/reference implementation, staging directory or owned background
+process remains. No telemetry, retained evidence or Docker volume was deleted.
+
+Next: explicit public manifest/catalog and citation presentation adapters, followed
+by SSE-issued capabilities and the Activity selection/retry workflow. Initial tail
+roots use bounded receipt scans (1,000 requests / 16 MiB); exceeding that budget
+refuses instead of returning a partial review history/catalog. Recorded custody
+metadata is not an ingestion clock or a claim of an atomic cross-query snapshot.

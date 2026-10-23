@@ -1,0 +1,13 @@
+spec: tail_reviews.qnt
+module: tail_reviews
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  publish:
+    expect: 'heads == {{.obs.heads}} and active == {{.obs.active}} and visible == {{.obs.visible}} and immutable == {{.obs.immutable}}'
+  correct:
+    expect: 'heads == {{.obs.heads}} and active == {{.obs.active}} and visible == {{.obs.visible}} and immutable == {{.obs.immutable}}'
+  withdraw:
+    expect: 'heads == {{.obs.heads}} and active == {{.obs.active}} and visible == {{.obs.visible}} and immutable == {{.obs.immutable}}'
+  retry_original:
+    expect: 'heads == {{.obs.heads}} and active == {{.obs.active}} and visible == {{.obs.visible}} and immutable == {{.obs.immutable}}'

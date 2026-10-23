@@ -286,39 +286,7 @@ func (s Store) Annotations(ctx context.Context, id string) (*workbench.MeaningPa
 		return nil, e
 	}
 	defer c.Close(ctx)
-	if _, e = load(ctx, c, id); e != nil {
-		return nil, e
-	}
-	rows, e := c.Query(ctx, `SELECT payload FROM goo_annotations WHERE target=$1 ORDER BY _id LIMIT 1001`, id)
-	if e != nil {
-		return nil, e
-	}
-	defer rows.Close()
-	all := []*workbench.MeaningRevision{}
-	parents := map[string]bool{}
-	for rows.Next() {
-		var raw string
-		if e = rows.Scan(&raw); e != nil {
-			return nil, e
-		}
-		var r workbench.MeaningRevision
-		if json.Unmarshal([]byte(raw), &r) != nil || r.Target.ID != id || r.Target.Kind != "evidence" || workbench.ValidateMeaningRevision(r) != nil {
-			return nil, errors.New("invalid assertion")
-		}
-		all = append(all, &r)
-		parents[r.Parent] = true
-	}
-	if rows.Err() != nil {
-		return nil, rows.Err()
-	}
-	if len(all) > 1000 {
-		return nil, errors.New("annotation history exceeds prototype bound")
-	}
-	p := &workbench.MeaningPage{Items: []workbench.MeaningItem{}}
-	for _, r := range all {
-		p.Items = append(p.Items, workbench.MeaningItem{Revision: r, Head: !parents[r.ID]})
-	}
-	return p, nil
+	return evidenceReviews(ctx, c, id)
 }
 
 // Correct is the Go convenience API; HTTP callers use CorrectOnce with a stable key.
@@ -376,15 +344,15 @@ func (s Store) CorrectOnce(ctx context.Context, id string, in workbench.MeaningI
 	} else if !errors.Is(err, pgx.ErrNoRows) {
 		return nil, err
 	}
-	if _, e = load(ctx, c, id); e != nil {
+	if _, e = readEvidence(ctx, c, id); e != nil {
 		return nil, e
 	}
 	if in.Parent != "" {
-		var parent string
-		if e = c.QueryRow(ctx, "SELECT target FROM goo_annotations WHERE _id=$1", in.Parent).Scan(&parent); e != nil || parent != id {
+		if _, e = evidenceAnnotation(ctx, c, id, in.Parent); e != nil {
 			return nil, errors.New("parent not found for retained evidence")
 		}
 	}
+
 	r, e := workbench.PrepareMeaning(in)
 	if e != nil {
 		return nil, e

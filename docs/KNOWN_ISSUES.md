@@ -630,6 +630,10 @@ occurrence identity, expiry and idempotency; connection-local handles are insuff
 bank, currently unwired. Tail SSE still issues no capability and public retention
 still rejects tail references. Process-local proofs expire from original read time
 and disappear on restart. The typed backend publisher now supports durable
-committed-request recovery without those proofs, but shared catalog/citation/
-correction readers and SSE/browser integration remain unwired. Existing v1 captured/result-page manifests cannot represent
-mixed-poll tail provenance and remain unchanged.
+committed-request recovery without those proofs. Origin-aware backend catalog/read
+views and shared correction/pinned-review resolution are implemented. Public
+manifest/catalog presentation, browser citation rendering and SSE selection/retry
+integration remain unwired. Old unprojected tail requests require bounded receipt
+scans (1,000 / 16 MiB); exceeding those bounds refuses rather than omitting roots.
+Existing v1 captured/result-page manifests cannot represent mixed-poll tail
+provenance and remain unchanged.
