@@ -29,7 +29,7 @@ integrity checks. Reopening an investigation automatically loads these receipts;
 it does not invoke the current comparison engine or query telemetry. Even the
 **Reopen saved comparison** retry reads the snapshot. A later engine revision must
 not silently redefine an old decision. The current algorithm is
-`goo/evidence-comparison/v2`; version 1 receipts remain readable without
+`goo/evidence-comparison/v3`; version 1 and 2 receipts remain readable without
 reevaluation.
 
 Saved cards reuse the existing comparison renderer, including both original
@@ -102,3 +102,13 @@ Saved question cards now offer [Compare with a fresh window](FRESH_COMPARISON.md
 with explicit scope preview and baseline selection before one new source read.
 The resulting comparison can be saved as a finding without changing the original
 question scope or linking fresh evidence as if it answered the old fixed question.
+
+### Shared comparison commands
+
+Both stored-side inspection buttons use the labelled comparison action group.
+Saved cards put Reopen under Comparison options, including after a failed receipt
+read. Reopen disables while pending and keeps keyboard focus on the options summary.
+It fetches the immutable comparison receipt; it does not execute the comparison
+engine or telemetry. Finding publication remains explicit in its own action group.
+Journey 53 checks stored inspection/Back focus, an injected receipt outage and
+recovery, source-free sharing and incompatible native units.

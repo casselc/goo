@@ -14,7 +14,7 @@ selectors and stored breakdown columns; span-only error/latency controls are
 omitted for logs. Missing captured span measures retain their unavailable state.
 The bounded ranking continuation is now delivered: shared exact count/share/error/
 latency ordering, support/coverage display and saved population metric persistence.
-The bounded [comparison context composition](COMPARISON_CONTEXT.md) now shares side labels, modes, full counts, UTC windows and evidence disclosure across fixed, stored/fresh/saved and live owners. Automatic fixed-pair results omit duplicate capture selectors; [contextual actions and retained side inspection](COMPARISON_ACTIONS.md) now cover population child inspection, immutable stored-side records/native results and compact live commands. [Retained count-series geometry](COMPARISON_SERIES.md) now shares fixed and explicitly loaded stored/frozen capture charts with UTC/elapsed alignment and staged side inspection. [Rolling bucket transport and pinned selection](LIVE_COMPARISON.md#retained-bucket-series-during-refresh) now reuse the same chart with fixed domains, explicit child reads and exact-series Freeze. Broader action adoption remains queued.
+The bounded [comparison context composition](COMPARISON_CONTEXT.md) now shares side labels, modes, full counts, UTC windows and evidence disclosure across fixed, stored/fresh/saved and live owners. Automatic fixed-pair results omit duplicate capture selectors; [contextual actions and retained side inspection](COMPARISON_ACTIONS.md) now cover population child inspection, immutable stored-side records/native results and compact live commands. [Retained count-series geometry](COMPARISON_SERIES.md) now shares fixed and explicitly loaded stored/frozen capture charts with UTC/elapsed alignment and staged side inspection. [Rolling bucket transport and pinned selection](LIVE_COMPARISON.md#retained-bucket-series-during-refresh) now reuse the same chart with fixed domains, explicit child reads and exact-series Freeze. The bounded action adoption now also covers fresh previews and stored/saved commands, with receipt-only Reopen under contextual options and finding publication kept explicit. Broader D1 scope remains subject to its acceptance audit.
 
 The bounded [record-field layout cut](RECORD_COLUMNS.md) adds supplied-row field
 discovery, local show/hide/order, staged Include/Exclude and saved population
@@ -812,3 +812,8 @@ The fresh-window preview now also uses the shared comparison action group: one
 Capture/retained-retry command position and Preview options for Close, with selector
 focus on entry and opener focus on return. This bounded D1 adoption preserves
 separate fixed, stored and live execution owners; broader consolidation remains queued.
+
+Stored/saved comparison action adoption is delivered alongside the fresh preview:
+shared side commands, contextual saved-receipt retry, and grouped finding/receipt
+commands. This closes the bounded action pass; the next step is a D1 acceptance
+audit before advancing to E1, rather than further cosmetic toolbar changes.

@@ -6146,3 +6146,26 @@ The observed Quint replay passed with six rejecting mutations; all 44 Node test
 files passed. Frames 57a–d were regenerated and the preview frame visually reviewed.
 The 30-second Bombadil campaign passed; a second 30-second campaign also passed
 with contextual-action invariants and the options disclosure exercised. No source/receipt protocol changed.
+
+## 2026-10-23 — stored/saved comparison action adoption
+
+Stored, fresh and saved side inspection now shares one labelled action group; saved
+Reopen is under Comparison options. Finding publication and receipt continuation
+commands reuse the same passive action primitive. Saved retries close the menu
+explicitly before disabling their button, retain summary focus and fetch only the
+immutable receipt. Manual/fresh execution controls and hidden fixed-pair selectors
+retain their existing owners.
+
+All 44 Node test files passed. The first browser run passed population/stored
+inspection, stored spans and fresh-preview journeys, including their Quint replays
+and the 30-second stored Bombadil campaign. A stale native selector timed out after
+the inspection buttons moved outside the result body; its corrected isolated
+rerun passed. The saved outage test found a real disabled-button/menu-close issue;
+that run was stopped, the retry handler corrected, and the saved record journey
+then passed its outage/retry, inspection/Back focus, publication/context recovery,
+sharing and mobile checks. Its Quint replay and updated 30-second Bombadil campaign
+passed, checking no source or comparison-engine reads and hidden pair selectors.
+Affected journey frames were regenerated; stored mobile and saved desktop frames
+were visually reviewed. No Go, wire or publication protocol changed.
+The saved native gauge/unit-refusal case also passed: all six selected journey
+cases have passing evidence across the initial run and focused reruns.

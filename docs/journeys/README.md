@@ -1028,6 +1028,12 @@ and a changed-context receipt by ID, and saves native unit incompatibility.
 the frozen incompatible decision. Ledger replay uses Quint with six rejecting
 controls; the optional Bombadil actor reopens stored comparison cards.
 
+Journey 53 also covers the shared stored comparison action group: inspect a
+baseline, return keyboard focus, inject a saved-receipt outage and recover through
+Comparison options without comparison-engine or telemetry execution. Saved
+Bombadil actions open the actual options disclosure and assert hidden fixed-pair
+selectors and no source reads.
+
 ### 54 — Compare complete native windows
 
 `native-windows.spec.js` ingests standard OTLP sums and explicit histograms, then

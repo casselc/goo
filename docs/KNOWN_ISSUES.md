@@ -568,9 +568,11 @@ noncategorical complements remain outside this cut. See
 
 The bounded [comparison context pass](COMPARISON_CONTEXT.md) shares UTC windows,
 counts, modes and provenance across fixed/stored/live results and omits duplicate
-selectors on automatic fixed-pair results. Broader D1 action-toolbar/inspector and
-count-series consolidation remain queued. Native/record units and percentile
-coverage retain their separate compatibility rules.
+selectors on automatic fixed-pair results. Bounded shared actions now cover fresh
+previews and stored/saved inspection, receipt retry and finding publication.
+Count-series adoption is recorded below; broader D1 completion still needs its
+acceptance audit. Native/record units and percentile coverage retain their separate
+compatibility rules.
 
 [Comparison action/inspection continuation](COMPARISON_ACTIONS.md) now retains
 population comparison parents and provides in-place stored-side inspection. The

@@ -20,6 +20,15 @@ Compare retained capture afterward, and Close under Preview options. Opening foc
 the baseline selector; closing restores the opener. Preview/retry/menu changes do
 not read telemetry. The separate live execution group remains explicit.
 
+Stored, fresh and saved comparisons put both side-inspection buttons in one
+labelled **Stored comparison actions** group. Saved receipts keep **Reopen saved
+comparison** under **Comparison options**, available after receipt-read failure
+and disabled while reopening. Retry returns focus to the options summary. Manual
+pairs keep their explicit Compare captures control; fresh previews retain their
+existing outer retry. Fixed-pair selectors stay hidden. Finding entry and explicit
+Add comparison publication remain together in a separate shared action group;
+receipt-side Open/Add question commands also use that primitive.
+
 Stored, fresh and saved comparisons offer the same two-side inspection entrance.
 It explicitly reads the selected immutable capture's first stored page and renders
 its supplied rows with the common record presenter/inspector. Full aggregate counts
@@ -48,6 +57,8 @@ flowchart LR
   C -->|Explicit Run| R[Source records and shared inspector]
   C -->|Back without reads| F
   S[Stored comparison side] -->|Explicit immutable page GET| P[Stored rows or native result]
+  S -->|Comparison options: Reopen| Q[Immutable saved receipt]
+  S -->|Explicit Add comparison| W[Publish receipt then stage finding]
   P --> I[Shared record inspector]
   P -->|Back without source reads| S
   L[Live action group] --> O[Existing refresh / pause / exact-freeze owner]

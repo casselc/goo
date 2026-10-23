@@ -32,7 +32,7 @@ Staged categorical [facet selections](docs/FACET_SELECTION.md) add Include/Exclu
 
 
 [Population exploration and saved views](docs/POPULATION_WORKSPACE.md) bring aligned charts and matching span/log pages to arbitrary cross-service selectors. Portable filters are retained; independent companion selectors are explicit. [Broaden a population](docs/POPULATION_BROADENING.md) by removing a whole condition in a staged child, retaining its paused parent.
-[Consistent comparison context](docs/COMPARISON_CONTEXT.md) shows independently named UTC windows, full counts and read provenance across fixed, saved/fresh and live comparisons using the same passive web component. [Comparison actions](docs/COMPARISON_ACTIONS.md) retain either population side in a child or inspect stored evidence in place, with source-free Back. Fresh-window previews use the same action group with capture/retry states and keyboard return.
+[Consistent comparison context](docs/COMPARISON_CONTEXT.md) shows independently named UTC windows, full counts and read provenance across fixed, saved/fresh and live comparisons using the same passive web component. [Comparison actions](docs/COMPARISON_ACTIONS.md) retain either population side in a child or inspect stored evidence in place, with source-free Back. Fresh-window previews use the same action group with capture/retry states and keyboard return. Stored/saved comparisons share side commands, with saved-receipt Reopen under Comparison options and explicit finding publication.
 The staged selection offers comparison against the supplied current aggregates,
 with inspectable per-signal scope and explicit restoration of the starting population. Saved views retain fixed queries, layout and columns, and reopen without source reads.
 
