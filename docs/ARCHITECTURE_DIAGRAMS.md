@@ -1214,3 +1214,8 @@ configuration alongside the original fixed questions. See the
 Reopened population record fields now dispatch to the same staged facet owner
 as recent records. Its child owner retains the parent, stages before Run and
 restores it without rereading; field controls do not create another query owner.
+
+Comparison display now shares a pure signal-capability adapter between live
+measure selection and stored breakdown columns. Questions and receipts supply
+the signal; captured measure availability remains a separate display state. No
+source reads, comparison arithmetic or evidence publication move into this adapter.

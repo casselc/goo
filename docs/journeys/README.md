@@ -1653,3 +1653,9 @@ Frame 118d and journey 118 also cover reopened saved record-field exclusion,
 missing/empty preservation, selected-child staging/Run/return and observed
 Quint trace validation. The field Bombadil campaign additionally stages an
 exclusion after local column changes and checks that no source read follows.
+
+Journey 119 (`journeys/log-comparison.spec.js`) covers ordinary log comparisons,
+full groups versus bounded row pages, missing/empty groups, source-free stored
+comparison and mobile focused-question access. Frames 119a–c document live,
+stored and mobile surfaces. Set `GOO_LOG_COMPARISON_BOMBADIL=1` for its bounded
+stored-comparison campaign.

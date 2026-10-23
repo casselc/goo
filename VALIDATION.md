@@ -1,5 +1,36 @@
 # Validation record
 
+## Signal-appropriate log comparisons (2026-10-23 UTC)
+
+The bounded D1 presentation cut shares a pure record-signal capability adapter
+between live comparison controls and stored breakdown columns. Logs use full
+count/share comparisons without span duration/status choices or empty span-measure
+columns. Span measures absent from a capture retain unavailable states. Query
+predicates, full totals, comparison arithmetic/ranking and receipts are unchanged.
+
+Actual checks:
+
+- All 41 Node test files pass, including signal capability versus data presence.
+- Ordinary OTLP log journey 119 passes with a 15-second Bombadil campaign (26.8s):
+  previous-window comparison, three-record groups versus a one-row inspection
+  page, distinct missing/empty values, stored comparison without telemetry POSTs,
+  exact five-column breakdown and mobile focused-question access. Bombadil checks
+  comparison/scroll completion, five log columns and no `/api/explore` reads.
+- Existing real span journey 58 passes (30.5s), including captured mean/error
+  columns, complete groups beyond retained pages, exact focused questions,
+  immutable sharing and observed Go/Quint validation with rejecting controls.
+- A first mobile assertion omitted vertical scrolling. The first Bombadil
+  resource counter also counted a metadata catalog GET as execution; the actor
+  now checks the record execution endpoint, while Playwright separately checks
+  source/capture POSTs. These harness failures were corrected and rerun.
+- Final deployed span regression also passes (30.7s), including its observed
+  validator, after the shared control initialization was finalized.
+- Final rebuilt/deployed log journey and Bombadil campaign pass (23.5s),
+  including capability initialization before comparison starts. The query image
+  uses the established CA overlay; 2.8 GB remains free after rebuilding.
+- Frames 119a–c and refreshed span frames document the running app. Contract,
+  README, planning, architecture notes and known gaps reflect the bounded cut.
+
 ## Diagnostic cleanup (2026-10-23 UTC)
 
 Free space rose from 509 MB to 6.4 GB. Byte-identical diagnostic PNG/JPEG files

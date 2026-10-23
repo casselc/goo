@@ -521,3 +521,8 @@ The private native comparison projection accounts for known Go zero/omitempty
 binding defaults on a clone; it does not rewrite input/storage or validate full
 native definitions. Both document evidence matching and fresh-baseline eligibility
 consume `evidenceDifference`. See [wire fixtures and scope rules](QUESTION_PROTOCOL.md).
+
+`GooComparisonBreakdown.recordMeasures(baselineQuestion, selectionQuestion)`
+is the shared display-only signal-capability adapter for live comparison choices
+and stored breakdown columns. It distinguishes unsupported log span measures from
+missing captured span data. It performs no source or capability discovery reads.

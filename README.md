@@ -549,3 +549,7 @@ fields); saved layouts do not change query predicates or capture evidence.
 Reopened population views share the same staged record-field filtering and
 selected-population drilldown as recent activity; see the
 [record-field journey](docs/RECORD_COLUMNS.md).
+
+[Log comparisons](docs/COMPARISON_BREAKDOWNS.md) show full captured counts and
+population-share changes without span-only latency/status controls. Span
+comparisons retain their captured measures and explicit unavailable states.

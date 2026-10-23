@@ -7,7 +7,10 @@ The same group comparator powers live exploration and immutable evidence.
 
 A comparison shows overall results first, then **Where did the change happen?**
 with a union of values, both counts, population-share change in percentage points,
-recorded error fractions and mean durations where captured. Ranking is by absolute
+recorded error fractions and mean durations for spans where captured. Log
+comparisons show count/share columns and focused-question links, without span-only
+error/latency columns. Span measures missing from a capture remain explicitly
+unavailable; log severity is not interpreted as span status. Ranking is by absolute
 share change. Missing attributes and present empty strings remain distinct.
 A one-sided group has zero captured records on the absent side, with unavailable
 latency/error share. Missing telemetry is not health or a causal explanation.
@@ -52,3 +55,20 @@ Story [58](journeys/README.md) uses real OTLP HTTP spans with 1200/1300 matching
 records, exceeding the 1000 retained inspection-row limit. Review rationale is in
 [comparison review](COMPARISON_PRODUCT_REVIEW.md); broader service/default dashboard
 priorities are in the [whole-product review](WHOLE_PRODUCT_REVIEW.md).
+
+## Signal-appropriate comparison presentation
+
+Both live comparison controls and stored breakdown tables use the same pure
+`GooComparisonBreakdown.recordMeasures` signal-capability adapter. Log comparisons
+use population share; their redundant one-choice measure selector is hidden.
+Span selectors retain their supported measures and disable ones lacking captured
+data. Presentation does not alter either fixed question, count, grouping, receipt
+or comparison ranking. Log breakdowns retain local horizontal scrolling on mobile.
+
+Journey 119 ingests ordinary OTLP logs in two windows, compares full counts despite
+a one-row exploration page, checks missing/empty group identity and opens stored
+comparisons without telemetry execution. Bombadil exercises stored comparison and
+local horizontal scrolling; the existing span journey 58 retains its observed
+Quint recapture/share protocol and rejecting controls.
+
+![Stored log comparison](journeys/screenshots/119b-stored-log-comparison.png)

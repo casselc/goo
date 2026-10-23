@@ -423,8 +423,9 @@ dashboard snapshots remain future work.
 
 Breakdown ranking currently uses absolute population-share change. A group with
 large latency/error change and little share movement may rank later; alternate
-error/latency ranking is planned. Log breakdowns explicitly show unavailable
-span-measure columns; hiding unsupported columns remains polish work.
+error/latency ranking is planned. Log breakdowns now omit unsupported span-measure columns, and live log
+comparison controls use population share without a span-measure selector. Span
+measures absent from captured data remain explicitly unavailable.
 
 Namespace-aware service identity and registered operation-span dashboard cards
 are implemented; see [service identity](SERVICE_IDENTITY.md). Trace schema URL

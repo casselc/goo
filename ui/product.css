@@ -1437,3 +1437,5 @@ td details {
 .recent-canvas .record-fields-toolbar>.population-count{flex:1;min-width:0;margin:0;font-size:11px}
 .recent-canvas .record-fields-toolbar>goo-record-columns{flex:0 0 auto;margin:0}
 .recent-canvas .record-fields-toolbar:has(goo-record-columns>details[open]){display:block}
+
+.comparison-breakdown>.scroll>table[data-signal=logs]{min-width:40rem}
