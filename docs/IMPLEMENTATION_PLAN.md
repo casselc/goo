@@ -12,7 +12,9 @@ additional current commitments.
 The bounded D1 log-comparison cut uses shared signal capabilities for live
 selectors and stored breakdown columns; span-only error/latency controls are
 omitted for logs. Missing captured span measures retain their unavailable state.
-Broader ranking and comparison composition remain queued.
+The bounded ranking continuation is now delivered: shared exact count/share/error/
+latency ordering, support/coverage display and saved population metric persistence.
+Broader comparison composition remains queued.
 
 The bounded [record-field layout cut](RECORD_COLUMNS.md) adds supplied-row field
 discovery, local show/hide/order, staged Include/Exclude and saved population

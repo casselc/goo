@@ -1659,3 +1659,9 @@ full groups versus bounded row pages, missing/empty groups, source-free stored
 comparison and mobile focused-question access. Frames 119a–c document live,
 stored and mobile surfaces. Set `GOO_LOG_COMPARISON_BOMBADIL=1` for its bounded
 stored-comparison campaign.
+
+Journey 120 (`comparison-ranking.spec.js`) ingests ordinary spans and demonstrates
+low-share error/latency regression discovery, saved error/count ranking reopening,
+full-population support independent of row limits, source-free stored ranking and
+mobile access. Frames 120a/b show live error and stored mean ranking. Enable
+`GOO_RANKING_BOMBADIL=1` for local rank-choice exploration.

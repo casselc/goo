@@ -1,0 +1,9 @@
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document,window})=>({start:[...document.querySelectorAll<HTMLButtonElement>('.evidence-comparison button')].some(b=>b.textContent==='Compare captures'&&!b.disabled),ready:!!document.querySelector('.comparison-breakdown select'),stage:Number(document.documentElement.dataset.rankingStage||0),reads:window.performance.getEntriesByType('resource').filter(e=>new URL(e.name).pathname==='/api/explore').length,top:document.querySelector('tr[data-group-value]')?.getAttribute('data-group-value'),coverage:document.querySelectorAll('tr[data-ranking-coverage=unavailable]').length}));
+export const local=always(()=>state.current.reads===0);
+export const exactOrder=always(()=>state.current.stage<2||state.current.stage===4?true:state.current.top==='"regression"'&&state.current.coverage===2);
+export const complete=eventually(()=>state.current.stage===4).within(15,'seconds');
+const step=registerCustomAction('goo.rankGroups',async(document,_window,stage:number)=>{if(stage===0)[...document.querySelectorAll<HTMLButtonElement>('.evidence-comparison button')].find(b=>b.textContent==='Compare captures')!.click();else{const select=document.querySelector<HTMLSelectElement>('[aria-label="Rank captured groups by"]')!;select.value=['','mean','error-rate','count'][stage];select.dispatchEvent(new Event('change',{bubbles:true}))}document.documentElement.dataset.rankingStage=String(stage+1)});
+export const choices=actions(()=>state.current.stage===0&&state.current.start?[step(0)]:state.current.stage>0&&state.current.stage<4&&state.current.ready?[step(state.current.stage)]:['Wait']);

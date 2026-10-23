@@ -75,7 +75,19 @@ func (m *viewMachine) RuleBreakdown(tc hegel.TestCase) {
 	baseline := *q
 	baseline.FromMS = 0
 	baseline.ToMS = 1000
-	m.draft.Breakdowns = map[string]workbench.ExplorationBreakdown{q.Signal: {Metric: "p95", ComparisonMetric: "p95", Baseline: &baseline}}
+	m.draft.Breakdowns = map[string]workbench.ExplorationBreakdown{q.Signal: {Metric: "p95", ComparisonMetric: "count", Baseline: &baseline}}
+}
+func (m *viewMachine) RuleComparisonRanking(tc hegel.TestCase) {
+	for signal, config := range m.draft.Breakdowns {
+		choices := []string{"share", "count", "mean", "p95", "p99", "error-rate"}
+		for i, metric := range choices {
+			if config.ComparisonMetric == metric {
+				config.ComparisonMetric = choices[(i+1)%len(choices)]
+				break
+			}
+		}
+		m.draft.Breakdowns[signal] = config
+	}
 }
 func (m *viewMachine) RuleClearBaseline(tc hegel.TestCase) {
 	m.draft.Breakdowns = nil

@@ -421,9 +421,11 @@ now execute bounded typed widgets within Services. Instance navigation,
 graphical topology, async/declaration edges and complete
 dashboard snapshots remain future work.
 
-Breakdown ranking currently uses absolute population-share change. A group with
-large latency/error change and little share movement may rank later; alternate
-error/latency ranking is planned. Log breakdowns now omit unsupported span-measure columns, and live log
+Comparison breakdowns now offer local count/share ranking and recorded
+error/mean/p95/p99 ranking for spans, preserving full counts and missing-last
+coverage. Ranking is descriptive; support thresholds and statistical significance
+are not implemented. Stored receipt ranking is local, while saved population
+views retain their selected comparison metric. Log breakdowns now omit unsupported span-measure columns, and live log
 comparison controls use population share without a span-measure selector. Span
 measures absent from captured data remain explicitly unavailable.
 

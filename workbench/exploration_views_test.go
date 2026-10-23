@@ -156,3 +156,17 @@ func TestExplorationViewFieldColumns(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestExplorationViewCountComparisonRanking(t *testing.T) {
+	q := exploration.Query{Signal: "logs", Environment: "prod", FromMS: 1000, ToMS: 2000, Limit: 1, GroupBy: []exploration.Field{{Kind: "attribute", Key: "region"}}}
+	v := ExplorationView{Version: 1, Title: "Count changes", Queries: []exploration.Query{q}, Layout: "charts-records", Columns: []string{"utc", "summary"}, Breakdowns: map[string]ExplorationBreakdown{"logs": {Metric: "count", ComparisonMetric: "count"}}}
+	s := Store{Dir: t.TempDir()}
+	saved, err := s.CreateExplorationView(v)
+	if err != nil {
+		t.Fatal(err)
+	}
+	loaded, err := s.LoadExplorationView(saved.ID)
+	if err != nil || loaded.Breakdowns["logs"].ComparisonMetric != "count" || loaded.Queries[0].Limit != 1 {
+		t.Fatal("ranking or bounded page changed", err)
+	}
+}

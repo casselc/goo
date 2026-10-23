@@ -1219,3 +1219,17 @@ Comparison display now shares a pure signal-capability adapter between live
 measure selection and stored breakdown columns. Questions and receipts supply
 the signal; captured measure availability remains a separate display state. No
 source reads, comparison arithmetic or evidence publication move into this adapter.
+
+## Captured comparison ranking
+
+```mermaid
+flowchart LR
+  A[Full captured aggregates and totals] --> R[Pure exact rational ranking]
+  R --> L[Live comparison owner]
+  R --> S[Stored breakdown owner]
+  L --> V[Explicit saved view configuration]
+  S --> P[Local presentation only]
+```
+
+Missing measures remain unknown; comparable groups rank by absolute change.
+Display choices do not read sources or alter fixed questions or immutable receipts.

@@ -214,3 +214,7 @@ Record pages now offer a compact [observed-field picker](RECORD_COLUMNS.md) with
 column visibility/order and explicit Include/Exclude intents. Population view
 configuration accepts optional ordered `fieldColumns` (up to eight qualified
 fields); saved layouts do not change query predicates or capture evidence.
+
+Saved exploration-view breakdown `comparisonMetric` now also accepts `count`.
+It remains display configuration alongside share/mean/p95/p99/error-rate; no
+query semantics or receipt formats change. Go owns semantic validation.

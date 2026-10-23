@@ -526,3 +526,10 @@ consume `evidenceDifference`. See [wire fixtures and scope rules](QUESTION_PROTO
 is the shared display-only signal-capability adapter for live comparison choices
 and stored breakdown columns. It distinguishes unsupported log span measures from
 missing captured span data. It performs no source or capability discovery reads.
+
+`GooComparisonBreakdown.difference`, `compareRows` and `rankRows` are shared pure
+presentation functions over supplied comparison rows and full population totals.
+They use BigInt rational differences, return unknown for missing/zero-support
+measures and preserve input order/data. Live and stored owners apply them without
+source reads. Supported keys are share/count/error-rate/mean/p95/p99; eligibility
+still comes from record-signal capability and captured coverage.

@@ -10,8 +10,9 @@ with a union of values, both counts, population-share change in percentage point
 recorded error fractions and mean durations for spans where captured. Log
 comparisons show count/share columns and focused-question links, without span-only
 error/latency columns. Span measures missing from a capture remain explicitly
-unavailable; log severity is not interpreted as span status. Ranking is by absolute
-share change. Missing attributes and present empty strings remain distinct.
+unavailable; log severity is not interpreted as span status. Default ranking is by absolute share change. The local ranking selector also
+offers count change and, for spans, recorded error rate and mean/p95/p99 duration
+change. Missing attributes and present empty strings remain distinct.
 A one-sided group has zero captured records on the absent side, with unavailable
 latency/error share. Missing telemetry is not health or a causal explanation.
 Detailed question scope and receipt metadata are under a disclosure.
@@ -72,3 +73,35 @@ local horizontal scrolling; the existing span journey 58 retains its observed
 Quint recapture/share protocol and rejecting controls.
 
 ![Stored log comparison](journeys/screenshots/119b-stored-log-comparison.png)
+
+## Rank descriptive changes
+
+Live comparison and stored breakdowns share exact rational ranking over complete
+captured aggregates. Error rate/mean differences use their own denominators;
+percentile changes use each population's captured quantile. Counts retain their
+integer precision. No percentile averaging or float conversion defines ordering.
+Descending absolute change includes both increases and decreases. Missing/zero-
+support measures rank last; stable namespace-preserving value identity breaks ties.
+Missing-key and present-empty groups remain distinct. One-sided count/share change
+is valid; one-sided error/latency change is unavailable.
+
+Count and sample support remain visible beside measures. Stored rank selection
+highlights paired bars for the selected measure using one domain across all rows
+and both sides; count ranking uses a common count domain. Missing bars are marked
+unavailable. Duration labels are rounded for display; ranking uses exact values.
+A coverage note reports comparable groups, without calling change significant or
+causal. These are descriptive leads, with no minimum-support/significance filter.
+
+Changing rank never reads telemetry or alters the two questions, full totals or
+receipts. Saved population views retain the live `comparisonMetric` and baseline
+configuration, including `count`; reopening stages before an explicit Run.
+Stored-evidence rank choices are local presentation and reset on reopening the
+receipt; they do not rewrite immutable evidence or document cards.
+
+Journey 120 documents a two-span regression with unchanged population share,
+saved/reopened error/count rankings, one-row inspection pages versus full groups,
+and source-free local stored ranking. Hegel checks ordering/purity and saved-view
+state/swarm transitions; Bombadil exercises local rank choices without record reads.
+
+![Error ranking reveals a low-share regression](journeys/screenshots/120a-ranked-error-regression.png)
+![Stored latency ranking retains support and unavailable rows](journeys/screenshots/120b-ranked-captured-latency.png)

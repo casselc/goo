@@ -95,7 +95,7 @@ func (v ExplorationView) Validate() error {
 		if config.Metric != "count" && config.Metric != "error-rate" && config.Metric != "mean" && config.Metric != "p95" && config.Metric != "p99" && config.Metric != "max" && config.Metric != "numeric-mean" && config.Metric != "numeric-sum" && config.Metric != "numeric-min" && config.Metric != "numeric-max" {
 			return errors.New("unsupported breakdown ranking")
 		}
-		if config.ComparisonMetric != "share" && config.ComparisonMetric != "error-rate" && config.ComparisonMetric != "mean" && config.ComparisonMetric != "p95" && config.ComparisonMetric != "p99" {
+		if config.ComparisonMetric != "share" && config.ComparisonMetric != "count" && config.ComparisonMetric != "error-rate" && config.ComparisonMetric != "mean" && config.ComparisonMetric != "p95" && config.ComparisonMetric != "p99" {
 			return errors.New("unsupported comparison metric")
 		}
 		if b := config.Baseline; b != nil {

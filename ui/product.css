@@ -1439,3 +1439,8 @@ td details {
 .recent-canvas .record-fields-toolbar:has(goo-record-columns>details[open]){display:block}
 
 .comparison-breakdown>.scroll>table[data-signal=logs]{min-width:40rem}
+
+.comparison-ranked-column{background:color-mix(in srgb,var(--accent) 7%,transparent)}
+.comparison-ranked-column>div+div{margin-top:6px}
+.comparison-breakdown>.scroll>table :is(th,td):first-child{min-width:110px}
+.comparison-breakdown>.scroll>table :is(th,td):last-child{min-width:135px}

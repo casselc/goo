@@ -1,5 +1,52 @@
 # Validation record
 
+## Descriptive comparison ranking (2026-10-23 UTC)
+
+Shared pure ranking now orders live and stored groups by exact absolute count,
+share, recorded error-rate or mean/p95/p99 changes. It preserves full support
+counts and unknown/zero-support measures, ranks missing comparisons last and
+uses stable value-identity ties. Stored selected-measure bars share one domain;
+rounded duration labels retain raw values in tooltips. Live selected ranking and
+baseline configuration round-trip through saved exploration views, including the
+newly admitted `count` metric. Stored receipt choices remain local presentation.
+Questions, comparison arithmetic, receipts and row-page-independent totals remain
+unchanged. No significance/support-threshold or causal claim is introduced.
+
+Actual checks:
+
+- All 42 Node test files pass. New cases cover low-share regressions, values above
+  64-bit precision, rational rates/means, missing-last behavior, stable missing/
+  empty identity and source-row immutability.
+- All root Go packages pass. Saved count-ranking/reopen validation passes, and
+  existing OpenAPI checks retain 58 Go operations, 222 responses, 56 admitted
+  requests, 14 mux refusals and rejecting/SSE controls.
+- Hegel ordering/purity and saved-view state/swarm properties pass (4.0s), including
+  rank-choice changes across immutable saved revisions. They reuse the existing
+  store protocol; no new evidence clock or execution model is introduced.
+- Ordinary OTel journey 120 passes with its 20-second Bombadil campaign (39.5s):
+  a two-span regression with unchanged population share, a one-row page versus
+  23 matching spans, mean/p95/p99/error sorting, missing one-sided measures,
+  source-free local choices, count/error saved-view reopening and mobile access.
+  Bombadil checks exact fixture ordering, unknown coverage and no record reads.
+- The final rebuilt/deployed journey and Bombadil campaign also pass (32.1s).
+  The deployed API contract matches the checkout and all seven readonly real
+  handler responses pass without publishing records.
+- Existing span capture/share and ordinary-log journeys pass together (50.8s),
+  including their observed Go/Quint validation and rejecting controls. Log
+  controls now offer the two supported share/count choices.
+- Browser review found cramped value/action columns; their minimum widths now
+  retain readable labels with local scrolling. Frames 120a/b and affected
+  comparison frames, README, process/component notes, API semantics and the active
+  plan describe this bounded cut.
+
+Cleanup before work removed unused build cache (reported 601.5 MB), increasing
+free space from 2.9 to 4.7 GB. Intermediate obsolete regular build layers were
+also reclaimed while preserving Go cache mounts. Application data, all volumes,
+receipts, traces and documentation artifacts were retained. Post-work cleanup
+removed obsolete regular build layers/dangling images, stopped the temporary
+source UI and removed the editing script. Compiler/module cache mounts remain;
+final free space is approximately 4.6 GB.
+
 ## Signal-appropriate log comparisons (2026-10-23 UTC)
 
 The bounded D1 presentation cut shares a pure record-signal capability adapter

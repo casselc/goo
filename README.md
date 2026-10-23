@@ -553,3 +553,7 @@ selected-population drilldown as recent activity; see the
 [Log comparisons](docs/COMPARISON_BREAKDOWNS.md) show full captured counts and
 population-share changes without span-only latency/status controls. Span
 comparisons retain their captured measures and explicit unavailable states.
+
+[Comparison ranking](docs/COMPARISON_BREAKDOWNS.md#rank-descriptive-changes)
+now reveals count/share and span error/latency changes with full support counts
+and explicit missing measures. Saved population views retain the selected ranking.
