@@ -1802,3 +1802,23 @@ not physical event identity or a complete trace/population.
 ![Recovered retained Activity](screenshots/139b-retained-activity.png)
 
 ![Compact mobile selection](screenshots/139c-mobile-selection.png)
+
+### 140–145 — Activity retention under failure
+
+[Executable matrix](../../journeys/tail-acceptance.spec.js) and
+[bounded acceptance](../ACTIVITY_RETENTION_ACCEPTANCE.md): actual isolated Go/Python
+owners over real OTLP/ClickHouse and optional XTDB exercise local expiry,
+unconfigured/failed configuration checks, actual database transport failure,
+browser quota refusal, genuine 64-batch capacity exhaustion and proof loss on a
+real Go restart. Submitted retries preserve intent; inspection survives failure.
+Quint replays the observed outage/retry ledger with rejecting controls. Bombadil
+explores capacity-refused inspection. Keyboard/mobile focus and no hidden source
+reads are checked. Only the failed configuration GET and local journal quota are
+browser fault injections; successful streams/publications are real.
+
+![Expired local selection on mobile](screenshots/140a-expired-selection-mobile.png)
+![Unconfigured retention](screenshots/141a-unconfigured-retention.png)
+![Save awaiting acknowledgment](screenshots/142a-pending-save.png)
+![Capacity-refused stream](screenshots/144a-capacity-unavailable.png)
+![Definitely uncommitted proof](screenshots/145a-proof-unavailable.png)
+![Mobile original-request recovery](screenshots/145b-mobile-recovery.png)

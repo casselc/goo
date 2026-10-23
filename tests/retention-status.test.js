@@ -1,0 +1,8 @@
+const{test}=require('node:test'),assert=require('node:assert/strict'),{failure,availability}=require('../ui/retention-status');
+test('HTTP uncertainty, definitely uncommitted proof and local refusal stay distinct',()=>{
+ for(const status of [0,500,502,504]){const v=failure({status,message:'transport down',attempted:true},{tail:true,journaled:true});assert.equal(v.state,'pending');assert.match(v.message,/outcome is unknown/);assert.doesNotMatch(v.message,/was not committed|expired/)}
+ const expired=failure({status:410,attempted:true},{tail:true,journaled:true});assert.equal(expired.state,'uncommitted');assert.match(expired.message,/was not committed/);assert.match(expired.message,/unchanged request/);
+ assert.equal(failure({status:410},{tail:false}).state,'pending');assert.match(failure({status:410},{tail:true,localInspection:true}).message,/Local inspection remains available/);const saved=failure({status:410},{tail:true,journaled:true,inRecovery:true});assert.doesNotMatch(saved.message,/Local inspection|Saved contains/);assert.match(saved.message,/Retry keeps the original request/);assert.equal(failure({status:409},{tail:true}).state,'conflict');assert.equal(failure({status:503}).state,'unconfigured');assert.equal(failure({status:400,message:'invalid'}).state,'refused');
+ const local=failure({attempted:false,message:'Journal quota'});assert.equal(local.state,'local');assert.match(local.message,/not sent/);assert.doesNotMatch(local.message,/Saved contains|outcome is unknown/);
+ assert.match(availability('unconfigured'),/not configured/);assert.match(availability('unavailable'),/could not be checked/);
+});

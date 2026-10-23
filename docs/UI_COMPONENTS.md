@@ -594,3 +594,10 @@ reference-only intent handed to `GooRetentionClient`. Shared display components 
 not issue proof or publish. Each row/snapshot keeps its own read provenance.
 `GooPendingSaves` stores immutable `/tail` intents separately from fixed pages;
 `GooRetentionRecovery` reuses the native retry panel and shared retained readers.
+
+`GooRetentionStatus` is shared pure application policy for save-failure messages,
+configuration states and explicit uncertainty. Activity and Saved recovery use it;
+`GooRetentionClient` retains HTTP status and pre-send storage refusal metadata.
+Periodic Activity expiry updates preserve the committed link's DOM/focus and do
+not repeatedly replace unchanged live status text. No new fetching display element
+or universal execution owner is introduced.

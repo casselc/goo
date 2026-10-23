@@ -298,7 +298,11 @@ note, including after reload. The UI locks edits after submission and exposes
 recovery under Saved. Expiry prevents a new local intent, not retry of an already
 submitted one. Forgetting a retry does not undo a commit.
 
-Next: audit this bounded interaction in the primary compact Activity entry and
-expand coverage of operational outage/capacity messaging as needed. No distributed
-capability store, authentication identity, ingestion replay or physical event ID
-is claimed.
+The [bounded Activity acceptance](ACTIVITY_RETENTION_ACCEPTANCE.md) now covers
+primary-entry failure messages, configuration recheck, browser expiry, real store
+transport failure, capacity refusal and restart/proof loss, plus mobile keyboard
+retry. A tag or note is required before a new save. Shared status policy preserves
+HTTP status and whether transport was attempted; uncertainty is never relabeled as
+expiry. Submitted retry stays immutable and is not disabled by local expiry.
+No distributed capability store, authentication identity, ingestion replay or
+physical event ID is claimed.

@@ -637,3 +637,10 @@ observation continues. Old unprojected tail requests require bounded receipt
 scans (1,000 / 16 MiB); exceeding those bounds refuses rather than omitting roots.
 Existing v1 captured/result-page manifests cannot represent mixed-poll tail
 provenance and remain unchanged.
+
+The [bounded Activity retention acceptance](ACTIVITY_RETENTION_ACCEPTANCE.md) now
+covers client expiry, configuration failures, actual database transport outages,
+capacity exhaustion and proof loss on process restart with keyboard/mobile retry.
+Browser-clock advancement does not advance server proof expiry; backend/Hegel
+checks cover that separate clock. Conflict/refusal messages have unit coverage;
+no browser concurrency campaign or distributed bank guarantee is claimed.

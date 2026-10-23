@@ -6766,3 +6766,68 @@ owned build staging is removed, preserving telemetry and XTDB volumes.
 The final deployed API docs browser check passed all 67 operations, filtered
 stream/content disclosures, body-limit display, desktop capture, mobile overflow
 and page-error checks (`api-docs-final.txt`).
+
+## Bounded Activity retention failure acceptance — 2026-10-23
+
+[Acceptance contract](docs/ACTIVITY_RETENTION_ACCEPTANCE.md) now closes the bounded
+S3/F1 interaction. Shared pure `GooRetentionStatus` distinguishes unsent local
+failure, unknown commit outcome, unconfigured retention, refusal/conflict and
+server-confirmed unavailable uncommitted proof. The client preserves HTTP status
+and pre-send refusal metadata without changing journal bodies. Activity explains
+configuration/expiry and the existing required tag-or-note contract before sending;
+rows remain inspectable when proof is unavailable. Check retention only reads
+configuration. Periodic expiry updates preserve unchanged live text and the
+committed link DOM; retry/clear preserve keyboard focus. Old selection completions
+cannot replace a newer selection's status. Saved recovery shares the status policy
+but does not promise held observations after reload.
+
+Executed checks:
+
+- Six real browser scenarios (140–145) passed in 1.4 minutes: browser-clock expiry
+  with no publication, actual unconfigured owner/failed check/recheck, real XTDB
+  TCP transport failure, local journal quota refusal, genuine 64-batch capacity
+  exhaustion and actual Go restart losing uncommitted proof. Retry after browser
+  expiry sends unchanged intent and succeeds against restored real storage while
+  server proof remains valid. Source reads after paused selection remain zero.
+  The final Saved-context wording/mobile keyboard test was repeated and passed.
+- The instances run the actual Go CLI and Python proxy over independently checked
+  OTLP/ClickHouse records. A TCP forwarder breaks only their XTDB connection; no
+  successful SSE/publication payload is mocked. Only a failed configuration GET
+  and local storage quota are browser fault injections. Owned children, sockets
+  and temporary stores close in `finally`. Initial browser checks exposed and
+  corrected the new asset's missing Python allowlist entry and an empty annotation
+  submission that was refused before reaching storage.
+- Hegel's actual membership state/swarm (70 histories × 30 steps) and observed
+  membership Quint replay passed. The observed 142 browser outage/retry ledger
+  passes Quint replay; five controls reject false 410, hidden source reads,
+  disabled submitted retry, changed refs and publication before acknowledgment.
+  Its expiry/pending/retry fields come from browser observations. Bombadil's
+  25-second capacity-refused inspection campaign passed its no-selection,
+  no-overflow, inspection-progress and exception invariants.
+- Four focused Node test files passed; Python docs handler's two checks and syntax
+  checks passed. Existing OpenAPI conformance remains 61 Go / 67 total operations,
+  222 frozen responses, 56 admitted requests, 14 mux refusals and SSE controls.
+  The final deployed API docs browser check passed all 67 operations, desktop
+  capture, mobile layout and no page errors. Five deployed UI assets match the
+  checkout byte-for-byte.
+
+Screenshots 140–145 and the acceptance diagram, README, current plan, known issues,
+component ownership and storyboards are synchronized. Compact checks live in
+`artifacts/activity-retention-acceptance`; observed per-scenario ledgers, verification
+logs and Bombadil output live under `artifacts/tail-acceptance`.
+
+The final query/packages image is
+`sha256:a430e567509531187c791750802292295b25abcc8ec3a5f8bf8d0f1c0a1ea570`.
+Only query/packages are recreated. Intermediate image/tag and unused regular build
+cache are removed through Docker CLI; telemetry, evidence and retention volumes
+are preserved. Owned staging is removed after final checks. Browser time advance
+is not server proof expiry; native checks retain that separate obligation.
+Conflict/refusal messages have unit coverage, without claiming a browser
+concurrency-conflict or distributed-bank campaign.
+
+Final deployed compatibility check: journeys 66, 99 and 139 all passed, covering
+late/duplicate bounded live streaming, fixed retained evidence/review history,
+and actual commit/response-loss/reload retry with unchanged receipt identity.
+Affected legacy frames were regenerated. These run against the final image above;
+no runtime source changes followed the checks. Documentation-only files/frames
+are synchronized afterward without another code rebuild.
