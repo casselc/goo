@@ -1,0 +1,9 @@
+spec: instrument_presence.qnt
+module: instrument_presence
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  discover:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and effects == {{.obs.effects}}'
+  inspect:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and effects == {{.obs.effects}}'

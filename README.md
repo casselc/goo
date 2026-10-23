@@ -574,3 +574,8 @@ Retained record comparisons share [aligned activity charts](docs/COMPARISON_SERI
 The first [E1 native instrument discovery cut](docs/NATIVE_INSTRUMENT_DISCOVERY.md)
 adds a compact observed-instrument catalog, generic package fallback and pinned
 HTTP duration hints. Metadata does not imply verified coverage; Run remains explicit.
+
+Native discovery now receives versioned Go capability plans and per-stream HTTP
+key presence from the same bounded read, with explicit missing/empty values and
+full totals independent of the 25-stream display cap. Browser rules are removed;
+metadata presence remains distinct from verified metric coverage.

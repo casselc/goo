@@ -6237,3 +6237,44 @@ default frame was visually reviewed. Current-source port 8098 was stopped, compa
 logs and the pinned upstream convention source retained, temporary staging removed,
 and supported Docker cache/dangling-image cleanup completed. Root has 5.3 GB free.
 No telemetry tables, named volumes or retained user evidence were removed.
+
+## 2026-10-23 — typed Go discovery plans and observed stream presence
+
+Go now owns `goo/instrument-capability-plan/v1alpha1` in the additive discovery
+`capabilityPlan` field. Browser convention rules were removed; unknown/missing plan
+versions withhold Build. The same bounded source read retains exact resource,
+attribute and resource-schema identity. HTTP method/status presence distinguishes
+nonempty, empty and missing keys per exact stream; generic profiles retain identity
+without HTTP assumptions. The first 25 sorted streams are displayed, with omitted
+counts; totals use all held streams. Missing/empty instances remain distinct and
+missing source identity metadata reports unavailable presence. Existing definition
+IDs/bindings and request/source budgets are preserved. Plans never claim verified
+conformance, error policies, value validity or temporal coverage.
+
+`go test ./measurements ./cmd/goo` passed; added identity/cap tests also passed.
+All 45 Node test files passed. The revised Hegel test runs the actual Go planner for
+100 examples, including permutations and cap-independent totals. OpenAPI was
+regenerated and passed 58 Go-operation conformance checks with 222 fixture responses,
+56 admitted requests, 14 mux refusals and negative/SSE controls. Actual Go discovery
+responses from journeys 130 and 131 validated against the reflected response schema.
+
+Five deployed cases passed in 2.8 minutes: real instrument discovery/Run (130),
+local catalog paging, mixed per-stream presence (131), Python producer/discovery/
+package save/Run/capture (39), and service-native scope/custody (76). Journeys 130
+and 39 retained their Quint rejecting controls and passed 25-/30-second Bombadil
+campaigns. The new presence Quint trace passed against independent ClickHouse
+identity rows and rejected seven mutations: stream/count/attribute/instance facts,
+eligibility, effects and extra reads. Discovery/disclosure did not execute or publish
+measurements. Existing package and capture paths remained separate.
+
+Actual frames 130/131 and affected legacy journeys were refreshed; desktop stream
+presence was visually reviewed. Matching Go/UI images are deployed to query and
+packages with the optional XTDB startup configuration preserved. Per-stream
+presence is not the full E1 completion: temporal/value verification, a pool/messaging
+case and supporting typed relations remain follow-up work.
+
+Final docs/API/frames were synced to the lab. Compact Go/Node logs remain under
+`artifacts/server-capability-contract`; live ledgers remain with their journeys.
+Temporary compiled binary/staging and scratch logs were removed; supported Docker
+cache/dangling-image cleanup completed. Root has 4.6 GB free. No telemetry tables,
+named volumes or retained user evidence were deleted.

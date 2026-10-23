@@ -589,3 +589,9 @@ HTTP duration metadata hints and generic package fallback. It is not complete
 convention capability planning: observed dimension keys do not establish per-stream
 coverage, error denominators or verified conformance. Non-monotonic sums and
 exponential histograms remain unsupported by the existing kernels/inventory.
+
+[E1 typed planning](NATIVE_INSTRUMENT_DISCOVERY.md#typed-server-plan-and-observed-stream-presence)
+now replaces browser rules and reports HTTP key presence per exact observed stream,
+including missing/empty identities and display truncation with full totals. This
+is not verified interval coverage or an error denominator; generic profiles do not
+inherit HTTP semantics. Plans remain `not-run` even when matching metadata exists.

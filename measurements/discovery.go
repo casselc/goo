@@ -18,18 +18,19 @@ type DiscoveryQuestion struct {
 	ToMS        int64               `json:"toMs"`
 }
 type Instrument struct {
-	Kind        string      `json:"kind"`
-	Scope       string      `json:"scope"`
-	Version     string      `json:"version"`
-	SchemaURL   string      `json:"schemaURL"`
-	Metric      string      `json:"metric"`
-	Unit        string      `json:"unit"`
-	Temporality int         `json:"temporality"`
-	Monotonic   bool        `json:"monotonic"`
-	Dimensions  []string    `json:"dimensions"`
-	Records     int         `json:"records"`
-	Supported   bool        `json:"supported"`
-	Definition  *Definition `json:"definition,omitempty"`
+	CapabilityPlan *InstrumentCapabilityPlan `json:"capabilityPlan,omitempty"`
+	Kind           string                    `json:"kind"`
+	Scope          string                    `json:"scope"`
+	Version        string                    `json:"version"`
+	SchemaURL      string                    `json:"schemaURL"`
+	Metric         string                    `json:"metric"`
+	Unit           string                    `json:"unit"`
+	Temporality    int                       `json:"temporality"`
+	Monotonic      bool                      `json:"monotonic"`
+	Dimensions     []string                  `json:"dimensions"`
+	Records        int                       `json:"records"`
+	Supported      bool                      `json:"supported"`
+	Definition     *Definition               `json:"definition,omitempty"`
 }
 type DiscoveryResult struct {
 	Question    DiscoveryQuestion `json:"question"`
@@ -65,7 +66,7 @@ func (s Source) Discover(ctx context.Context, q DiscoveryQuestion) (*DiscoveryRe
 		if kind == "counter" {
 			mono = "IsMonotonic"
 		}
-		parts = append(parts, fmt.Sprintf("SELECT '%s' AS kind, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schemaURL, MetricName AS metric, MetricUnit AS unit, %s AS temporality, %s AS monotonic, mapKeys(Attributes) AS dimensions FROM otel_metrics_%s WHERE TimeUnix>=fromUnixTimestamp64Milli({from:Int64}) AND TimeUnix<fromUnixTimestamp64Milli({to:Int64}) AND ServiceName={service:String} AND ResourceAttributes['deployment.environment.name']={environment:String}", kind, tempo, mono, table)+namespaceSQL)
+		parts = append(parts, fmt.Sprintf("SELECT '%s' AS kind, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schemaURL, MetricName AS metric, MetricUnit AS unit, %s AS temporality, %s AS monotonic, mapKeys(Attributes) AS dimensions, mapUpdate(ResourceAttributes,map('service.name',toString(ServiceName))) AS resource, Attributes AS attributes, ResourceSchemaUrl AS resourceSchemaURL FROM otel_metrics_%s WHERE TimeUnix>=fromUnixTimestamp64Milli({from:Int64}) AND TimeUnix<fromUnixTimestamp64Milli({to:Int64}) AND ServiceName={service:String} AND ResourceAttributes['deployment.environment.name']={environment:String}", kind, tempo, mono, table)+namespaceSQL)
 	}
 	// A single global limit bounds all families. Exceeding it fails without publishing a partial catalog.
 	sql := "SELECT * FROM (" + parts[0] + " UNION ALL " + parts[1] + " UNION ALL " + parts[2] + ") LIMIT 10001 FORMAT JSONEachRow"
@@ -79,11 +80,17 @@ func discoverRows(q DiscoveryQuestion, rows []json.RawMessage) (*DiscoveryResult
 	out := &DiscoveryResult{Question: q, Instruments: []Instrument{}, Records: len(rows), Warning: "Observed metadata only; not a complete instrument or dimension inventory. No fleet aggregation is implied. Empty version/schema values are exact matches. Counter and histogram support is restricted by the measurement kernels."}
 	groups := map[string]*Instrument{}
 	dims := map[string]map[string]bool{}
+	observations := map[string][]DiscoveryObservation{}
 	for _, row := range rows {
-		var i Instrument
-		if e := json.Unmarshal(row, &i); e != nil {
+		var raw struct {
+			Instrument
+			DiscoveryObservation
+		}
+		if e := json.Unmarshal(row, &raw); e != nil {
 			return nil, e
 		}
+		i := raw.Instrument
+		i.CapabilityPlan = nil
 		keys := i.Dimensions
 		i.Dimensions = nil
 		i.Records = 0
@@ -94,6 +101,7 @@ func discoverRows(q DiscoveryQuestion, rows []json.RawMessage) (*DiscoveryResult
 			dims[key] = map[string]bool{}
 		}
 		groups[key].Records++
+		observations[key] = append(observations[key], raw.DiscoveryObservation)
 		for _, k := range keys {
 			dims[key][k] = true
 		}
@@ -118,6 +126,8 @@ func discoverRows(q DiscoveryQuestion, rows []json.RawMessage) (*DiscoveryResult
 				i.Supported = false
 			}
 		}
+		plan := PlanInstrument(*i, observations[k])
+		i.CapabilityPlan = &plan
 		out.Instruments = append(out.Instruments, *i)
 	}
 	return out, nil

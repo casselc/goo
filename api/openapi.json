@@ -12982,6 +12982,120 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.Definition"
       },
+      "measurements.DimensionCoverage": {
+        "properties": {
+          "empty": {
+            "type": "integer"
+          },
+          "key": {
+            "type": "string"
+          },
+          "missing": {
+            "type": "integer"
+          },
+          "present": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "key",
+          "present",
+          "empty",
+          "missing"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.DimensionCoverage"
+      },
+      "measurements.DimensionCoverageInput": {
+        "additionalProperties": false,
+        "properties": {
+          "empty": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "missing": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "present": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.DimensionCoverage"
+      },
+      "measurements.DimensionPresence": {
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "state"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.DimensionPresence"
+      },
+      "measurements.DimensionPresenceInput": {
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.DimensionPresence"
+      },
       "measurements.DiscoveryQuestion": {
         "properties": {
           "environment": {
@@ -13116,6 +13230,16 @@
       },
       "measurements.Instrument": {
         "properties": {
+          "capabilityPlan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.InstrumentCapabilityPlan"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "definition": {
             "anyOf": [
               {
@@ -13186,9 +13310,345 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.Instrument"
       },
+      "measurements.InstrumentCapabilityPlan": {
+        "properties": {
+          "coverage": {
+            "$ref": "#/components/schemas/measurements.InstrumentCoverage"
+          },
+          "eligible": {
+            "type": "boolean"
+          },
+          "hints": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "profile": {
+            "type": "string"
+          },
+          "reasons": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "ruleSet": {
+            "type": "string"
+          },
+          "shapeMatches": {
+            "type": "boolean"
+          },
+          "title": {
+            "type": "string"
+          },
+          "verification": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "profile",
+          "title",
+          "shapeMatches",
+          "eligible",
+          "verification",
+          "reasons",
+          "hints",
+          "coverage"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.InstrumentCapabilityPlan"
+      },
+      "measurements.InstrumentCapabilityPlanInput": {
+        "additionalProperties": false,
+        "properties": {
+          "coverage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.InstrumentCoverageInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "eligible": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "hints": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reasons": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "ruleSet": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "shapeMatches": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verification": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.InstrumentCapabilityPlan"
+      },
+      "measurements.InstrumentCoverage": {
+        "properties": {
+          "dimensions": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/measurements.DimensionCoverage"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "omittedStreams": {
+            "type": "integer"
+          },
+          "state": {
+            "type": "string"
+          },
+          "streams": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/measurements.ObservedStream"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "totalStreams": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "state",
+          "totalStreams",
+          "omittedStreams",
+          "dimensions",
+          "streams"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.InstrumentCoverage"
+      },
+      "measurements.InstrumentCoverageInput": {
+        "additionalProperties": false,
+        "properties": {
+          "dimensions": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/measurements.DimensionCoverageInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "omittedStreams": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "streams": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/measurements.ObservedStreamInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "totalStreams": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.InstrumentCoverage"
+      },
       "measurements.InstrumentInput": {
         "additionalProperties": false,
         "properties": {
+          "capabilityPlan": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/measurements.InstrumentCapabilityPlanInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "definition": {
             "anyOf": [
               {
@@ -13580,6 +14040,111 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.LifecycleBinding"
+      },
+      "measurements.ObservedStream": {
+        "properties": {
+          "dimensions": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/measurements.DimensionPresence"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "instance": {
+            "type": "string"
+          },
+          "records": {
+            "type": "integer"
+          },
+          "stream": {
+            "$ref": "#/components/schemas/metrics.Stream"
+          }
+        },
+        "required": [
+          "id",
+          "stream",
+          "records",
+          "instance",
+          "dimensions"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.ObservedStream"
+      },
+      "measurements.ObservedStreamInput": {
+        "additionalProperties": false,
+        "properties": {
+          "dimensions": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/measurements.DimensionPresenceInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "instance": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "records": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/metrics.StreamInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.ObservedStream"
       },
       "measurements.Plan": {
         "properties": {

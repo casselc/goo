@@ -1,10 +1,12 @@
 # Observed native instruments and HTTP duration hints
 
-Implemented first E1 cut: compact discovery in the existing Measurements surface,
+Implemented E1 discovery and typed-plan continuation in the existing Measurements surface,
 including the existing service-to-discovery handoff. No manifest, goo annotations
 or Go-specific instrumentation is required. The Go discovery adapter still owns
-bounded source reads, supported bindings and exact package generation. This cut
-adds informational browser presentation, not a new semantic planner or API.
+bounded source reads, supported bindings and exact package generation. It now also
+supplies a versioned metadata capability plan and observed per-stream presence.
+The browser presents that plan; it does not classify conventions independently.
+This is metadata planning, not verification of metric values or time coverage.
 
 ## User flow
 
@@ -58,7 +60,7 @@ Declared manifests continue to have their existing separate service inventory ro
 flowchart LR
   S[Service scope or explicit Measurements scope] -->|Discover explicitly| G[Existing Go metric discovery]
   G --> O[Observed identities and exact package candidates]
-  O --> H[Pure versioned metadata hints]
+  O --> H[Go typed capability plan and stream presence]
   H --> T[Shared table and local metadata disclosure]
   T -->|Build package| P[Existing Go Preview and YAML editor]
   P -->|Explicit Run| R[Existing native measurement kernels]
@@ -66,8 +68,9 @@ flowchart LR
   P -->|Explicit Save| D[Package store]
 ```
 
-`ui/instrument-capabilities.js` is pure and performs no reads, publication, binding
-rewrites or verification. `ui/metric-discovery.js` owns only catalog presentation
+`ui/instrument-capabilities.js` is a pure presenter for the Go capability plan.
+It performs no reads, publication, convention classification, binding rewrites or
+verification; unsupported/missing plan versions require another discovery. `ui/metric-discovery.js` owns only catalog presentation
 and local paging, with Build passed back to the existing measurement owner.
 Discovery cancellation, generation invalidation and namespace/scope handling remain
 in `ui/measurements.js`. No component lifecycle starts a request.
@@ -82,7 +85,7 @@ then runs once in the original fixed window. It checks no writes, no page overfl
 actual Go results through the existing Quint discovery replay and rejecting controls,
 and disclosure-only Bombadil exploration. A supplied-catalog browser case checks
 local paging, exact Build intent and zero API requests. Hegel exercises the actual
-JS hint function across kinds/units/temporality without mutating supplied metadata.
+Go planner across kinds/units and exact-stream permutations without mutating supplied metadata.
 
 ![Observed instrument capabilities](journeys/screenshots/130a-observed-instrument-capabilities.png)
 
@@ -92,9 +95,48 @@ JS hint function across kinds/units/temporality without mutating supplied metada
 
 ## Remaining E1 scope
 
-This does not complete E1. Typed server-side convention capability plans, per-stream
-HTTP dimension coverage, verified error/denominator policies, a database-pool or
+This does not complete E1. Typed metadata capability plans and observed per-stream
+HTTP key presence are delivered. Temporal/value-validity coverage, verified
+error/denominator policies, a database-pool or
 messaging case and any supporting typed relations remain follow-up work. Existing
 metric support limits (including unsupported non-monotonic sums and exponential
 histograms) are not widened by presentation hints. No automatic dashboard or
 persistent convention declaration is created by this cut.
+
+## Typed server plan and observed stream presence
+
+`POST /metric-discovery` now adds `capabilityPlan` to each instrument. Its version is
+`goo/instrument-capability-plan/v1alpha1`; it retains `verification: not-run`.
+The Go planner owns the pinned HTTP profile, generic fallback, shape/eligibility
+and diagnostic text. The browser accepts this version without recomputing rules.
+Old clients may ignore the additive field; new clients disable Build when no
+supported plan is supplied. Request semantics and generated definition IDs remain
+unchanged. [OpenAPI](API.md) contains the reflected response types.
+
+The same bounded source query now retains resource/attribute identity and resource
+schema URL. Exact streams remain separate across resource, attributes, scope,
+version, schema, name and unit; their IDs are scoped to their parent instrument
+kind/temporality. Missing and empty instance IDs remain distinct diagnostics.
+The HTTP profile watches method/status keys and reports present-nonempty, empty
+and missing stream counts. Generic instruments retain stream identity inspection
+without inheriting HTTP assumptions. A union of keys no longer hides a missing key
+on another stream. Duplicate observations increase record counts, not stream counts.
+
+Only the first 25 sorted streams per instrument are displayed, with an explicit
+omitted count; presence totals use all streams in the bounded read. Legacy source
+fixtures without resource/attribute metadata report unavailable presence rather
+than fabricated counts. The original 10,000-row/8 MiB source budgets and overflow
+refusal remain. No extra source query is made. Presence is not interval continuity,
+valid attribute values, error classification, conformance or fleet comparability.
+
+Journey 131 ingests three HTTP streams with differing present/empty/missing keys
+and one missing instance ID. It checks all three states, exact identity, duplicate
+observation counts, disclosure-only browsing and mobile containment. Its observed
+Quint trace compares the actual server plan against independent ClickHouse identity
+rows and rejects seven mutations (counts, identities, eligibility, effects and extra
+reads). Go unit tests and Hegel cover permutation stability, exact bindings, aliasing,
+missing/empty identity and the 25-stream display cap without changing totals.
+
+![Observed stream presence](journeys/screenshots/131a-observed-stream-presence.png)
+
+![Stream presence on mobile](journeys/screenshots/131b-stream-presence-mobile.png)

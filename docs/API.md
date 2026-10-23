@@ -220,3 +220,10 @@ It remains display configuration alongside share/mean/p95/p99/error-rate; no
 query semantics or receipt formats change. Go owns semantic validation.
 
 Live record comparison responses optionally include `recordSeries: {baseline, selection}` when the saved record question requests buckets. These are existing retained `TimePoint` arrays, with question/state/read metadata on the corresponding comparison sides. The field is omitted for native and nonbucketed questions. Freeze returns those exact selection intervals without another source read.
+
+Metric discovery responses now include an optional typed `capabilityPlan` per
+instrument, version `goo/instrument-capability-plan/v1alpha1`. It reports metadata
+eligibility and bounded observed-stream presence, not value/interval verification.
+The request, source-read budget and generated package bindings are unchanged;
+response types are reflected in the OpenAPI schema. See
+[the contract](NATIVE_INSTRUMENT_DISCOVERY.md#typed-server-plan-and-observed-stream-presence).

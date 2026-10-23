@@ -1717,3 +1717,15 @@ See [contract and ownership diagram](../NATIVE_INSTRUMENT_DISCOVERY.md).
 - [Observed HTTP and generic capabilities](screenshots/130a-observed-instrument-capabilities.png)
 - [Selected HTTP metadata hints](screenshots/130c-http-metadata-hints.png)
 - [Contained mobile catalog](screenshots/130b-instrument-catalog-mobile.png)
+
+## 131 — Inspect observed stream presence
+
+`instrument-coverage.spec.js` emits three native HTTP streams with present, empty
+and missing method/status keys, duplicate observations and a missing instance ID.
+Discovery supplies the typed Go plan; local disclosures read or publish nothing.
+An independent ClickHouse identity query supplies the Quint oracle, with seven
+rejecting mutations. Missing metadata and truncated stream lists do not alter
+summary totals or become verified coverage.
+
+- [Observed stream presence](screenshots/131a-observed-stream-presence.png)
+- [Mobile stream inspection](screenshots/131b-stream-presence-mobile.png)

@@ -1003,8 +1003,13 @@ Retained comparison series: `TestHegelComparisonSeriesGeometry` checks the actua
 
 Rolling record series extend `TestQuintLiveComparisonLedger` to twelve rejecting controls, checking exact baseline/frozen arrays, pinned selection, source-free staging/return and fixed interval domain. Journey 69 and the existing live Bombadil actor execute the refresh/select/stage/Back/Freeze path; Hegel geometry covers supplied fixed domains and overflow.
 
-`TestHegelInstrumentCapabilityHints` exercises the real browser hint function
-across native kinds, units and temporality, requiring immutable metadata and no
-verified-state invention. Journey 130 reuses `TestQuintMetricDiscoveryLedger` with
+`TestHegelInstrumentCapabilityHints` exercises the real Go capability planner
+across native kinds, units and exact-stream permutations, requiring immutable
+metadata, honest presence totals and no verified-state invention. Journey 130 reuses `TestQuintMetricDiscoveryLedger` with
 actual Go discovery/result bindings and three rejecting mutations. Its configured
 Bombadil campaign retains scope in `campaign.ts` beside the compact ledger.
+
+Instrument capability Hegel checks now exercise the actual Go planner, not a
+parallel JavaScript classifier. `TestQuintInstrumentPresenceLedger` replays real
+discovery/disclosure effects against independent identity rows and rejects seven
+forgeries, including extra source reads and false key/instance coverage.
