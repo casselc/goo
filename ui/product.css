@@ -1452,3 +1452,12 @@ td details {
 .population-window-expansion button{max-width:100%;white-space:normal}
 /* A tall mobile selection tray must not sit beneath the wrapped sticky trail. */
 @media(max-width:700px){.population-workspace>.population-selection{position:static;top:auto}}
+
+/* Application-owned comparison action and inspection composition. */
+.comparison-controls>.ui-actions{margin-block:4px}
+.comparison-controls .ui-actions-body{max-width:100%;align-items:center}
+.comparison-live-actions>.ui-actions{margin-block:6px}
+.comparison-inspection{margin-block:8px;min-width:0}
+.comparison-inspection>section{min-width:0;border-block:1px solid var(--border,#303b4b);padding-block:8px}
+.comparison-inspection>section>h5{margin-block:6px}
+.comparison-inspection .ui-inspector{margin-top:8px}

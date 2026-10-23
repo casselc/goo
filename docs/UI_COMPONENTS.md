@@ -553,3 +553,10 @@ adapter; absent read/basis/custody metadata is never inferred. The existing fixe
 stored/fresh/saved and live comparison owners supply their own questions and clocks.
 The live owner retains this component across refreshes. Standalone server HTML is
 shown at `/ui-components`; journey 126 covers upgrade and unknown-state transitions.
+
+Comparison owners reuse `GooUI.actions` for compact primary commands and native
+secondary disclosure. Buttons remain caller-owned nodes and retain their existing
+handlers/disabled states; the helper owns only disclosure/Escape behavior. Population
+comparison children and stored comparison pages reuse the existing record table,
+record detail presenter and `GooUI.inspector`, with reads and retained-parent state
+in their application owners. See [comparison actions](COMPARISON_ACTIONS.md).

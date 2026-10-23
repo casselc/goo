@@ -6000,3 +6000,51 @@ saved/live/native screenshots were regenerated; mobile context and live frames
 were visually inspected. No Go runtime, query algorithm or HTTP wire shape changed.
 Temporary source server/image staging were removed; final docs/screenshots were
 synced into the running query container after acceptance.
+
+
+## 2026-10-23 — contextual comparison actions and retained inspection
+
+Population comparison rows now stage either side as a bounded single-signal child;
+Back restores the comparison/ranking and focus. Fixed/live controls reuse the
+existing action group, retain native button nodes and expose one Start/Pause command.
+Stored/fresh/saved comparisons have an explicit immutable-page side inspector using
+the shared record table and record inspector, or the existing saved native presenter.
+The previous duplicate native paired-result disclosure is removed. The new app-owner
+script is allowlisted by the Python static handler; no API wire shape changes.
+See [contract, diagram and storyboard](docs/COMPARISON_ACTIONS.md).
+
+Source journey 127 passed in 55.1 s with ordinary OTLP spans in two fixed windows,
+an independent companion, missing/empty groups and p95 ranking. It verifies explicit
+child reads, retained comparison and source-free Back, row inspector focus, stored
+side/record inspection and rejection after Back of a delayed stored response. Its
+observed Quint trace passed with six rejecting controls (14.54 s); the 20-second
+Bombadil stage/back campaign passed. All 43 Node test files passed. Initial checks
+caught a missing static-asset allowlist entry and detached action-button references;
+both were corrected. The journey fixture explicitly includes its record inspection
+column. Final deployed regression evidence follows below after execution.
+
+Deployed regression: rebuilt the query UI/static-handler layer and recreated only
+`query`. All 11 selected tests passed in 6.8 min: journey 127, fixed ranking 120,
+legacy error/latency investigation 35, stored record/native 52, fresh 57, rolling
+record 69, exact native counter 72, numeric attributes 44 and both saved comparison
+53 cases. Updated stored Bombadil actions explicitly visited inline inspection and
+returned with zero telemetry reads; live invariants enforced one visible Start/Pause
+command. Existing replay/rejecting controls remained green. A stricter journey-127
+replay also passed (24.05 s), requiring exactly three parent reads and one read per
+single-signal child, in addition to exact question/window and source-free return.
+
+Final continuation: live Freeze now exposes the same immutable baseline/comparison
+inspection in its existing action group; Start disposes it and restores Freeze for
+the next read. The source rolling-record journey passed in 1.2 min, proving inline
+inspection holds seven captured records after the source has advanced to eight.
+Rebuilt and deployed that continuation and visible-focus return behavior; final
+journeys 127, 69 and 72 all passed in 2.5 min, including frozen record/native-side
+inspection, shared record details and focus, existing exact-freeze/late-response
+checks, observed Quint traces and 20/30-second fixed/live Bombadil campaigns.
+All 43 Node test files passed on the final code. `python3 -m py_compile server.py`
+passed, and the deployed new script route returned HTTP 200. Affected actual
+storyboard frames were regenerated and the stored/frozen inspection frames were
+visually reviewed. Temporary source server/image staging were removed; final docs
+and frames were synced into the running query container. No telemetry tables,
+volumes or retained user evidence were deleted. No Go runtime or API wire shape
+changed; deeper stored paging remains an explicit full-capture continuation.

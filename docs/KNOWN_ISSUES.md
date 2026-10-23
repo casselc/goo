@@ -571,3 +571,9 @@ counts, modes and provenance across fixed/stored/live results and omits duplicat
 selectors on automatic fixed-pair results. Broader D1 action-toolbar/inspector and
 count-series consolidation remain queued. Native/record units and percentile
 coverage retain their separate compatibility rules.
+
+[Comparison action/inspection continuation](COMPARISON_ACTIONS.md) now retains
+population comparison parents and provides in-place stored-side inspection. The
+legacy single-question row action still refines/rereads; full-capture navigation
+from receipts remains separate from retained inline Back. Stored inline inspection
+is its first retained page, not a full-population membership browser.

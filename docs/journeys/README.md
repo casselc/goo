@@ -1679,3 +1679,5 @@ Journey 124 checks the mobile selection summary is unobscured and its comparison
 Journey 125: [whole-condition population broadening](../POPULATION_BROADENING.md), missing/empty OR groups, draft blocking, mobile/keyboard staging, full membership beyond one-row pages, source-free parent return and saved-view reopen.
 
 Journey 126: [passive comparison context](../COMPARISON_CONTEXT.md), server HTML and early/detached SPA properties, exact clocks/counts, unknown transitions, source-free disclosure, keyboard focus and mobile layout. Existing journeys 120, 52, 53, 57, 69 and 72 exercise its real fixed/stored/fresh/live/native adoption.
+
+Journey 127: [contextual comparison actions](../COMPARISON_ACTIONS.md), single-signal inspection of either side, retained comparison/ranking/focus, missing versus empty, shared stored record inspection and obsolete-response rejection.

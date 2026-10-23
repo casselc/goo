@@ -28,8 +28,9 @@ IDs. Their automatic result presenter now omits redundant capture selectors and
 Compare controls; the parent owns preview/capture/retry. Editable stored comparisons
 retain their selectors; saved receipts keep their explicit reopen control. Capture,
 freeze, baseline replacement and linking remain application actions, not component
-lifecycle effects. Broader action-toolbar/inspector and count-series consolidation
-remain D1 follow-up work.
+lifecycle effects. [Contextual actions and retained side inspection](COMPARISON_ACTIONS.md) now reuse
+the shared action group and record inspector. Broader cross-surface action adoption
+and count-series consolidation remain D1 follow-up work.
 
 ```mermaid
 flowchart LR

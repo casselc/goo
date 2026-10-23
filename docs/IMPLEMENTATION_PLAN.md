@@ -14,7 +14,7 @@ selectors and stored breakdown columns; span-only error/latency controls are
 omitted for logs. Missing captured span measures retain their unavailable state.
 The bounded ranking continuation is now delivered: shared exact count/share/error/
 latency ordering, support/coverage display and saved population metric persistence.
-The bounded [comparison context composition](COMPARISON_CONTEXT.md) now shares side labels, modes, full counts, UTC windows and evidence disclosure across fixed, stored/fresh/saved and live owners. Automatic fixed-pair results omit duplicate capture selectors; broader action-toolbar, inspector and count-series consolidation remain queued.
+The bounded [comparison context composition](COMPARISON_CONTEXT.md) now shares side labels, modes, full counts, UTC windows and evidence disclosure across fixed, stored/fresh/saved and live owners. Automatic fixed-pair results omit duplicate capture selectors; [contextual actions and retained side inspection](COMPARISON_ACTIONS.md) now cover population child inspection, immutable stored-side records/native results and compact live commands. Broader action adoption and count-series consolidation remain queued.
 
 The bounded [record-field layout cut](RECORD_COLUMNS.md) adds supplied-row field
 discovery, local show/hide/order, staged Include/Exclude and saved population

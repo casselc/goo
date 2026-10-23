@@ -991,3 +991,9 @@ validates both. CI runs base observations; local native-store/deployed coverage 
 recorded separately in [API acceptance](../docs/API_ACCEPTANCE.md). Existing deployed
 core/capture/retention journeys retain their Quint ledger checks and rejecting
 controls. No new workbench protocol/model transition was introduced.
+
+`TestQuintComparisonInspectionLedger` replays journey 127 via
+`GOO_COMPARISON_INSPECTION_LEDGER`. The existing drilldown model checks source-free
+staging/return and exact read counts; coherence additionally pins each selected
+side’s complete question, original UTC window, parent predicate and qualified
+missing/empty group. Six rejecting controls cover hidden reads and changed scope.
