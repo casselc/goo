@@ -533,3 +533,9 @@ They use BigInt rational differences, return unknown for missing/zero-support
 measures and preserve input order/data. Live and stored owners apply them without
 source reads. Supported keys are share/count/error-rate/mean/p95/p99; eligibility
 still comes from record-signal capability and captured coverage.
+
+`goo-bucket-heatmap[range-select]` optionally emits `goo-heatmap-range` with
+inclusive zero-based `fromColumn`, `toColumn`, `fromRow`, `toRow` indices.
+Pointer drags and Space/Shift-arrow/Enter selection share that contract; Escape
+cancels. The component never translates indices into queries or reads data.
+Native grids omit this opt-in. See [raw span adapter](HEATMAP_SELECTION.md).

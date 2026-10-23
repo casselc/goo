@@ -1665,3 +1665,7 @@ low-share error/latency regression discovery, saved error/count ranking reopenin
 full-population support independent of row limits, source-free stored ranking and
 mobile access. Frames 120a/b show live error and stored mean ranking. Enable
 `GOO_RANKING_BOMBADIL=1` for local rank-choice exploration.
+
+Journey 121: [raw-span time-duration selection](../HEATMAP_SELECTION.md) stages
+by pointer and keyboard, explicitly executes exact bounds and captures/reopens
+selected evidence. 121b covers the passive component contract.

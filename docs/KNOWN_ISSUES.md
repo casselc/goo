@@ -74,7 +74,7 @@ Recent activity supports [staged categorical selections](FACET_SELECTION.md). Ge
 
 The [recent-entry canvas](RECENT_ACTIVITY.md) now includes
 [horizontal time brushing and bounded retained child populations](RANGE_DRILLDOWNS.md).
-Heatmap rectangle selection, cross-page/durable record selection, persistent branches,
+[Raw-span heatmap rectangle selection](HEATMAP_SELECTION.md) is implemented for single duration-bucket split charts with at most 32 intervals. Cross-page/durable record selection, persistent branches,
 arbitrary field columns and automatic anomaly/difference scoring remain proposed.
 Saved exploration views retain their existing staged presentation and do not
 automatically start live updates.

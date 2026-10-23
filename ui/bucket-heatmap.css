@@ -14,3 +14,6 @@ goo-bucket-heatmap .bucket-heatmap-cell[data-state=outside]{color:var(--muted,#9
 goo-bucket-heatmap .bucket-heatmap-cell[aria-pressed=true]{outline:2px solid var(--accent,#67ddbb);outline-offset:-2px}
 goo-bucket-heatmap .bucket-heatmap-cell:focus-visible{outline:3px solid var(--warning,#f5b85d);outline-offset:-3px}
 goo-bucket-heatmap>goo-table>table th{text-transform:none;letter-spacing:normal}
+
+goo-bucket-heatmap[range-select] .bucket-heatmap-cell[data-range-selected=true]{outline:2px solid var(--accent,#67ddbb);outline-offset:-2px}
+goo-bucket-heatmap[range-select] .bucket-heatmap-cell{user-select:none}

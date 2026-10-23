@@ -557,3 +557,5 @@ comparisons retain their captured measures and explicit unavailable states.
 [Comparison ranking](docs/COMPARISON_BREAKDOWNS.md#rank-descriptive-changes)
 now reveals count/share and span error/latency changes with full support counts
 and explicit missing measures. Saved population views retain the selected ranking.
+
+Raw span duration charts support [time-duration rectangle selection](docs/HEATMAP_SELECTION.md), exact keyboard bounds and explicit selected-population execution.

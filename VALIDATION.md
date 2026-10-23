@@ -1,5 +1,49 @@
 # Validation record
 
+## Raw-span time-duration rectangle (2026-10-23 UTC)
+
+Single duration-bucket split charts now reuse the passive bucket heatmap and
+existing typed population selection form. Drag and keyboard selection stage
+whole-cell half-open UTC/duration bounds without source reads; explicit Run
+intersects parent predicates, resets paging and uses the existing Go evaluator.
+Native histogram interval semantics remain separate. At most 32 time intervals
+are drawn; other charts retain their existing form and small multiples.
+
+Actual checks:
+
+- All 42 Node test files pass, including exhaustive contiguous duration-band
+  mapping, exclusive integer-nanosecond limits and rejecting bounds/signal/state.
+- Hegel generated time/duration rectangles preserve the parent selector and
+  input data, including the shortened final time bucket and unbounded final
+  duration band (40 examples; 4.0s).
+- Ordinary OTel journey 121 passes with a 20-second Bombadil campaign (37.0s):
+  pointer/keyboard parity, no staging reads, exact predicates, full count versus
+  one displayed row, capture and source-free reopen. Bombadil checks keyboard
+  staging/cancellation, exact bounds, absence of local source reads and browser
+  errors.
+- Standalone component journeys 79/80 and 121b pass (8.1s): detached/SSR values,
+  controlled cells, reverse rectangle, Escape and removal of range behavior.
+- Documentation includes the adapter/Go process diagram, limits and frame 121.
+
+Final deployed journeys 79/80/121/121b all pass (41.0s), including the
+20-second Bombadil campaign and selecting again after returning to the paused
+parent. The handlers resolve current DOM cells because retained trail views can
+restore earlier display nodes. The prior deployed Bombadil attempt hit a Chromium
+debugger extractor timeout during a competing rebuild; the isolated final run
+passed. Existing categorical selection journey 96 passes (38.7s), including its
+observed Go/Quint trace validation and rejecting controls. The deployed readonly
+API check passes with a matching spec and all seven real handler responses.
+
+Cleanup retained application data, all volumes, receipts, traces and screenshots.
+The temporary source server and editing script were removed. Obsolete regular
+build cache and dangling images were pruned while retaining compiler/module cache
+mounts; final free disk is approximately 3.6 GB.
+
+This adds no execution/storage protocol or statistical inference. Existing
+Quint selection protocol regression is checked separately; rectangle arithmetic
+is covered by the pure Node/Hegel properties, rather than claiming a new model.
+
+
 ## Descriptive comparison ranking (2026-10-23 UTC)
 
 Shared pure ranking now orders live and stored groups by exact absolute count,

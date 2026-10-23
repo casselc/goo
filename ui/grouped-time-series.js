@@ -1,6 +1,6 @@
 /* Small multiples share a fixed captured scale. Local controls never read telemetry. */
 (function(global){
- function mount(host,data,{onSelect}={}){
+ function mount(host,data,{onSelect,onRectangle}={}){
   const node=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=String(text);return n},api=global.GooDistributions,apiNumeric=global.GooNumericMeasures;
   host.replaceChildren();host.hidden=false;host.classList.add('grouped-time-chart');host.append(node('h3','Compare breakdowns over time'));
   const controls=node('div');controls.className='controls';const label=node('label','Chart measure'),select=node('select');select.setAttribute('aria-label','Grouped chart measure');select.dataset.seriesMeasure='true';
@@ -8,6 +8,13 @@
   const searchLabel=node('label','Find a series'),search=node('input');search.type='search';search.setAttribute('aria-label','Find a captured series');searchLabel.append(search);controls.append(label,searchLabel);host.append(controls);
   const scale=node('p'),list=node('div'),status=node('p','Select an interval to inspect exact bounds, count and available duration measures.');status.setAttribute('role','status');status.className='series-interval-detail';list.className='series-grid';host.append(scale,list,status);
   const groups=data.groupedTimeSeries||[];
+  if(data.question.signal==='spans'&&data.question.groupBy?.length===1&&data.question.groupBy[0].kind==='column'&&data.question.groupBy[0].key==='duration_bucket'&&data.timeSeries?.length&&data.timeSeries.length<=32&&data.state!=='changed_between_reads'){
+   controls.hidden=scale.hidden=list.hidden=status.hidden=true;host.querySelector('h3').textContent='Span duration over time';const order=global.GooDiscovery.durationOrder,grid=node('goo-bucket-heatmap');
+   const columns=data.timeSeries.map((p,i)=>({key:String(i),label:new Date(p.fromMs).toISOString(),cells:order.map(key=>{const g=groups.find(g=>g.values[0]===key),point=g?.points.find(x=>x.fromMs===p.fromMs&&x.toMs===p.toMs);return point?{state:'observed',value:point.count}:{state:'unknown'}})}));
+   grid.data={title:'Raw span duration by UTC interval · half-open buckets',ceiling:columns.reduce((max,c)=>c.cells.reduce((n,p)=>p.value&&BigInt(p.value)>BigInt(n)?p.value:n,max),'0'),rows:order.map(key=>({key,label:key})),columns};
+   if(onRectangle){grid.setAttribute('range-select','');grid.addEventListener('goo-heatmap-range',e=>onRectangle(global.GooPopulationSelection.rectangle(data,e.detail)))}
+   host.append(grid);
+  }
   function draw(){
    const metric=select.value;let max={n:0n,d:1n};for(const g of groups)for(const p of g.points){const v=api.groupMetric(p,metric);if(v&&v.n*max.d>max.n*v.d)max=v}
    const display=p=>metric.startsWith('numeric-')?apiNumeric.format(p.numeric,metric.slice(8))+' · '+apiNumeric.coverage(p.numeric):metric==='count'?p.count:metric==='error-rate'?(p.count==='0'?'No captured data':api.percent(p.spanStatus.error,p.count)+'% recorded Error'):p.duration?.state==='observed'?api.durationMS(p.duration[metric==='mean'?'sumNs':metric==='p95'?'p95Ns':'maxNs'],metric==='mean'?p.count:'1'):'No captured data';
