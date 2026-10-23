@@ -6048,3 +6048,11 @@ visually reviewed. Temporary source server/image staging were removed; final doc
 and frames were synced into the running query container. No telemetry tables,
 volumes or retained user evidence were deleted. No Go runtime or API wire shape
 changed; deeper stored paging remains an explicit full-capture continuation.
+
+Final screenshot polish: external-command inspection owners now hide their entire
+empty pane while closed, retaining their live action buttons. Journey 69 adds an
+explicit closed-pane visibility assertion and passed again (40.7 s); native-counter
+journey 72 passed again (1.1 min). Both retain their observed Quint validation and
+exact frozen-side checks. Regenerated affected record/native storyboard frames and
+visually confirmed removal of the empty frame after Back. No read/write protocol
+changed in this display-only follow-up.
