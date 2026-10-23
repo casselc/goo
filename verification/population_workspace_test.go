@@ -50,6 +50,15 @@ func (m *viewMachine) RuleColumns(tc hegel.TestCase) {
 		m.draft.Columns = []string{"utc", "summary"}
 	}
 }
+func (m *viewMachine) RuleFieldColumns(tc hegel.TestCase) {
+	if len(m.draft.FieldColumns) == 0 {
+		m.draft.FieldColumns = []exploration.Field{{Kind: "resource", Key: "region"}, {Kind: "attribute", Key: "region"}}
+	} else if m.draft.FieldColumns[0].Kind == "resource" {
+		m.draft.FieldColumns = []exploration.Field{{Kind: "attribute", Key: "region"}, {Kind: "resource", Key: "region"}}
+	} else {
+		m.draft.FieldColumns = nil
+	}
+}
 func (m *viewMachine) RuleNarrow(tc hegel.TestCase) {
 	q := m.draft.Queries[0]
 	if q.ToMS-q.FromMS < 3 {

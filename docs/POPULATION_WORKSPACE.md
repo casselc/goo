@@ -263,3 +263,8 @@ Journey 96 retains observed Go/Quint ledger validation; its expanded
 [Bombadil actor](../verification/bombadil/facet-selection.ts) adds compare/restore
 to staged selection and parent-return exploration. Actual checks and limits are
 recorded in [VALIDATION.md](../VALIDATION.md).
+
+Record pages now offer a compact [observed-field picker](RECORD_COLUMNS.md) with local
+column visibility/order and explicit Include/Exclude intents. Population view
+configuration accepts optional ordered `fieldColumns` (up to eight qualified
+fields); saved layouts do not change query predicates or capture evidence.

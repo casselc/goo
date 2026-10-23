@@ -541,3 +541,9 @@ B2 now includes [shared-question/native wire fixtures](QUESTION_PROTOCOL.md) and
 comparison-only Go-default equivalence for canonical native capture reuse. Go still
 owns full definition validation; the fixture set is bounded. The bounded B2 acceptance
 audit is complete; store-specific publication consolidation is the next cut.
+
+Observed record field columns are bounded to eight qualified fields from supplied
+rows; this is not source-wide schema discovery. Core and added columns reorder
+within their own groups. Population layouts can be saved; live preferences remain
+page-local, empty fixed pages omit the picker, and arbitrary transforms are still
+future work. See [record field contract](RECORD_COLUMNS.md).

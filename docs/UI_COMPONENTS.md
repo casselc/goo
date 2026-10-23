@@ -1,5 +1,17 @@
 # Display component library
 
+`goo-record-columns` accepts a `model` JSON attribute for server HTML or a
+`.model` property before/after attachment: `{layout:{columns:["utc","summary"],
+fieldColumns:[]}, available:["utc","service","summary","context"], fields:[]}`.
+`available` and `fields` default to core columns and an empty supplied inventory.
+It emits bubbling `goo:record-columns` with a detached validated layout. The
+owner must apply the event and supply the next model; the element performs no
+fetch, storage or subscription. `GooRecordColumns.mount(host,table,options)`
+projects supplied record rows into the common record-table shell; `update`,
+`setLayout`, `layout` and `dispose` belong to its application adapter. Include/Exclude
+intents delegate through `onFacet`; `canRefine` guards stale owners. Styles live
+in `components.css`. See [field behavior and storyboard](RECORD_COLUMNS.md).
+
 The attribute adapter exposes optional Include/Exclude callbacks and `mountShared`; `commonGroups` preserves namespaces and only offers supported exact strings. Display elements remain passive. Bounded row marks/provenance are page-owned application state; see [record contract](RECORD_POPULATIONS.md).
 
 

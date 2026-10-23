@@ -540,3 +540,8 @@ The [population live area](docs/POPULATION_WORKSPACE.md#watching-a-population)
 can explicitly tail ordinary span/log records, pause for inspection, and compare
 full rolling populations against a captured baseline. Saved settings reopen
 without starting subscriptions; retention and continuity gaps stay visible.
+
+Record pages now offer a compact [observed-field picker](docs/RECORD_COLUMNS.md) with local
+column visibility/order and explicit Include/Exclude intents. Population view
+configuration accepts optional ordered `fieldColumns` (up to eight qualified
+fields); saved layouts do not change query predicates or capture evidence.

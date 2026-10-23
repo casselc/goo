@@ -9,6 +9,11 @@ additional current commitments.
 
 ## Active implementation queue
 
+The bounded [record-field layout cut](RECORD_COLUMNS.md) adds supplied-row field
+discovery, local show/hide/order, staged Include/Exclude and saved population
+layouts. Arbitrary transforms, source-wide schema discovery and persisted live
+preferences remain follow-up work; this does not complete the broader D2 scope.
+
 The [2026-10-22 whole-product coherence proposal](WHOLE_PRODUCT_COHERENCE_PROPOSAL_2026_10_22.md)
 is a fresh architecture/design review of `f54d07c`. It proposes a contextual
 Activity-to-analysis handoff and population workflow ahead of broad comparison

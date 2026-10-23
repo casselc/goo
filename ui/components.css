@@ -177,3 +177,12 @@ goo-latency .ui-disclosure>small{font-size:10px;color:var(--muted,#98a8bf)}
 
 goo-tag-list{display:flex;flex-wrap:wrap;gap:4px;max-width:100%}
 goo-tag-list>span,goo-tag-list>button{font:inherit;font-size:11px;padding:2px 6px;border:1px solid var(--border,#303b4b);border-radius:4px;background:var(--accent-dark,#183c36);color:var(--ink,#e3e9f3);overflow-wrap:anywhere;max-width:100%}
+
+goo-record-columns{display:block;font-size:12px;margin:5px 0}
+goo-record-columns>details{padding:0;margin:0;border:0;background:transparent}
+goo-record-columns>details>div{padding:8px;max-width:560px;border:1px solid var(--border);border-radius:6px}
+goo-record-columns input[type=search]{width:100%;margin-block:6px}
+goo-record-columns button{font-size:11px;padding:3px 6px;margin:2px}
+.record-field-choice{display:flex;align-items:center;gap:4px}
+.record-field-choice>span{flex:1;overflow-wrap:anywhere}
+td[data-record-field]{max-width:240px;overflow-wrap:anywhere;font-size:12px}

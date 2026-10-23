@@ -209,3 +209,8 @@ entries, capture ledgers and the previous image for rollback.
 
 [Executed API conformance and deployed acceptance](API_ACCEPTANCE.md) records the
 workflow layers, replay commands, fixes, build recovery and remaining coverage.
+
+Record pages now offer a compact [observed-field picker](RECORD_COLUMNS.md) with local
+column visibility/order and explicit Include/Exclude intents. Population view
+configuration accepts optional ordered `fieldColumns` (up to eight qualified
+fields); saved layouts do not change query predicates or capture evidence.

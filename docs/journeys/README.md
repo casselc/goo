@@ -1643,3 +1643,8 @@ error inside Tools instead of hiding it with the selected-case area.
 The [Saved composition contract](../SAVED_WORKSPACE.md) and
 [bounded Bombadil actor](../../verification/bombadil/saved-workspace.ts) keep
 browsing and disclosure separate from execution/publication.
+
+Journey 118 (`journeys/record-columns.spec.js`) covers live observed field
+selection, fixed-window layout handoff, staged field predicates and saved
+population layouts. Frames 118a–c show live, saved and mobile records. Optional
+`GOO_RECORD_COLUMNS_BOMBADIL=1` runs bounded local layout exploration.

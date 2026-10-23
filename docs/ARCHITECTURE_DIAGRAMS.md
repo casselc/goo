@@ -1193,3 +1193,20 @@ The [Saved work composition diagram](SAVED_WORKSPACE.md#secondary-tools-and-rele
 shows the delivered narrative/evidence/catalog/tool boundaries and relevant
 browser-local retry entrance. These remain separate from production ingestion
 and query execution.
+
+## Supplied record fields
+
+```mermaid
+flowchart LR
+  O[Application read owner] --> R[Supplied rows and fixed read basis]
+  R --> P[Passive record field picker and table projector]
+  P --> L[Local column layout]
+  P --> I[Include or Exclude intent]
+  I --> S[Owner stages scope or fixed predicate]
+  S --> E[Explicit Apply or Run]
+  L --> V[Explicit saved population configuration]
+```
+
+The picker never reads a source or publishes evidence. Saved field layouts are
+configuration alongside the original fixed questions. See the
+[executable field storyboard](RECORD_COLUMNS.md).

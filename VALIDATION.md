@@ -1,5 +1,58 @@
 # Validation record
 
+## Observed record field layouts (2026-10-23 UTC)
+
+[Record fields](docs/RECORD_COLUMNS.md) adds a passive field picker and supplied-row
+projector shared by live and fixed record tables. Core and added fields reorder
+independently, UTC/Summary remain required, and up to eight qualified fields can
+be shown. Resource/record namespaces, missing/empty values and exact string
+integers stay distinct. Include/Exclude delegates to staged owner controls.
+Activity-to-fixed handoff carries the layout; saved population configurations
+retain ordered optional `fieldColumns` without changing old omitted-field IDs.
+
+Actual checks:
+
+- All 40 Node test files pass, including the new supplied-field/presence and
+  detached-layout checks. Go `go test ./...` passes with local sockets enabled;
+  the first sandboxed run could not open httptest listeners.
+- Hegel portable-selector and view state/swarm tests pass with field selection,
+  namespace/order changes, immutable saves and historical reopening.
+- OpenAPI regeneration and validation pass: 58 Go operations, 222 fixture
+  responses, 56 admitted requests and 14 mux refusals, including rejecting
+  controls and SSE shapes. Seven Python documentation/proxy tests pass.
+- Real OTel storyboard 118 passes against the source UI with live local layout
+  changes, Include staging, fixed-window handoff, staged fixed filtering,
+  saved configuration reopening, mobile containment and attribute/property
+  composition. A bounded 30-second Bombadil campaign reached all five actions
+  with no violations and unchanged source-read count after the initial run.
+- Existing Activity and two population journeys pass with refreshed frames.
+  The final recent-entry journey passes in 26.4s, including its observed Go/Quint
+  ledger and rejecting controls. Geometry regressions were corrected by using
+  column identity for widths, moving search help into the existing disclosure,
+  and sharing one compact count/field toolbar. Picker disclosures are closed
+  explicitly before compact-layout assertions.
+- Query and package images were rebuilt with the existing build CA overlay and
+  activated locally. A deployed read-only contract check passed with matching
+  specification and seven real handler responses. A later check during the
+  final restart/load spike hit connection reset and ClickHouse HTTP 408; that
+  attempt is not a passing result. The deployed OTel/layout journey and its
+  Bombadil campaign subsequently passed (3.0m) before the environment became
+  unavailable. After recovery the unfinished server-attribute/pre-definition
+  property component test passed separately (4.5s).
+- Browser harness failures included looking for a button inside a closed
+  disclosure, retaining an analysis route while trying to start a new session,
+  expecting recent-only tabs in a reopened fixed view, and reusing a Bombadil
+  output directory. Those harness issues were corrected; campaigns now retain
+  unique per-environment evidence. Concurrent browser output-directory collisions
+  were avoided in final reruns.
+- Python compilation, JavaScript syntax, changed Markdown local targets and
+  whitespace checks pass. Unused dangling images/old build cache were reclaimed
+  after local builds; running volumes, telemetry and saved evidence were retained.
+
+Limitations: supplied-row discovery is incomplete by design; empty fixed pages
+omit the picker, live preferences remain page-local, and arbitrary transforms
+or source-wide schema discovery remain future work.
+
 
 ## Saved task composition and contextual recovery (2026-10-22 UTC)
 

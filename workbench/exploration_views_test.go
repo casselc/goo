@@ -112,3 +112,47 @@ func TestExplorationTailConfiguration(t *testing.T) {
 		t.Fatal("tail config aliased", e)
 	}
 }
+
+func TestExplorationViewFieldColumns(t *testing.T) {
+	q := exploration.Query{Signal: "logs", Environment: "prod", FromMS: 1000, ToMS: 2000, Limit: 2}
+	base := ExplorationView{Version: 1, Title: "Fields", Queries: []exploration.Query{q}, Layout: "records", Columns: []string{"summary", "utc"}}
+	s := Store{Dir: t.TempDir()}
+	old, err := s.CreateExplorationView(base)
+	if err != nil {
+		t.Fatal(err)
+	}
+	raw, _ := json.Marshal(old)
+	if strings.Contains(string(raw), "fieldColumns") {
+		t.Fatal("legacy wire changed")
+	}
+	v := base
+	v.FieldColumns = []exploration.Field{{Kind: "attribute", Key: "region"}, {Kind: "resource", Key: "region"}}
+	saved, err := s.CreateExplorationView(v)
+	if err != nil {
+		t.Fatal(err)
+	}
+	loaded, err := s.LoadExplorationView(saved.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if saved.ID == old.ID || len(loaded.FieldColumns) != 2 || loaded.FieldColumns[0] != v.FieldColumns[0] || loaded.Queries[0].Limit != 2 {
+		t.Fatal("layout or question lost")
+	}
+	v.FieldColumns = []exploration.Field{{Kind: "resource", Key: "region"}, {Kind: "attribute", Key: "region"}}
+	reordered, err := s.CreateExplorationView(v)
+	if err != nil || reordered.ID == saved.ID {
+		t.Fatal("ordered layout identity lost")
+	}
+	for _, fields := range [][]exploration.Field{{{Kind: "column", Key: "duration_ns"}}, {{Kind: "attribute", Key: "x"}, {Kind: "attribute", Key: "x"}}, {{Kind: "attribute", Key: ""}}, {{Kind: "resource", Key: strings.Repeat("é", 65)}}, make([]exploration.Field, 9)} {
+		v.FieldColumns = fields
+		if v.Validate() == nil {
+			t.Fatalf("accepted invalid fields: %#v", fields)
+		}
+	}
+	v = base
+	v.Queries = append(v.Queries, exploration.Query{Signal: "spans", Environment: "prod", FromMS: 1000, ToMS: 2000, Limit: 2})
+	v.FieldColumns = []exploration.Field{{Kind: "column", Key: "duration_ns"}}
+	if err := v.Validate(); err != nil {
+		t.Fatal(err)
+	}
+}

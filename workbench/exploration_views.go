@@ -20,14 +20,15 @@ type ExplorationBreakdown struct {
 
 // ExplorationView is reusable fixed-question configuration, never captured evidence.
 type ExplorationView struct {
-	Version    int                             `json:"version"`
-	ID         string                          `json:"id,omitempty"`
-	Title      string                          `json:"title"`
-	Queries    []exploration.Query             `json:"queries"`
-	Layout     string                          `json:"layout"`
-	Columns    []string                        `json:"columns"`
-	Tail       *ExplorationTail                `json:"tail,omitempty"`
-	Breakdowns map[string]ExplorationBreakdown `json:"breakdowns,omitempty"`
+	Version      int                             `json:"version"`
+	ID           string                          `json:"id,omitempty"`
+	Title        string                          `json:"title"`
+	Queries      []exploration.Query             `json:"queries"`
+	Layout       string                          `json:"layout"`
+	Columns      []string                        `json:"columns"`
+	FieldColumns []exploration.Field             `json:"fieldColumns,omitempty"`
+	Tail         *ExplorationTail                `json:"tail,omitempty"`
+	Breakdowns   map[string]ExplorationBreakdown `json:"breakdowns,omitempty"`
 }
 
 func (v ExplorationView) Validate() error {
@@ -53,6 +54,26 @@ func (v ExplorationView) Validate() error {
 		signals[q.Signal] = true
 		if _, e := exploration.Compile(q); e != nil {
 			return e
+		}
+	}
+
+	if len(v.FieldColumns) > 8 {
+		return errors.New("at most eight record field columns")
+	}
+	fields := map[exploration.Field]bool{}
+	for _, field := range v.FieldColumns {
+		if fields[field] {
+			return errors.New("duplicate record field column")
+		}
+		fields[field] = true
+		valid := false
+		for _, q := range v.Queries {
+			if _, err := field.Type(q.Signal); err == nil {
+				valid = true
+			}
+		}
+		if !valid {
+			return errors.New("unsupported record field column")
 		}
 	}
 
