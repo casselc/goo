@@ -873,5 +873,8 @@ read views and shared review/correction/pinned-document resolution are now teste
 including old unprojected receipts, original retry after withdrawal and frozen
 legacy cursor bytes. Explicit public content/catalog routes and compact retained/
 citation inspectors are now implemented with real OTLP/ClickHouse/XTDB journey 138,
-observed browser replay and Bombadil. Next: SSE-issued references and the bounded
-Activity selection/publication/retry journal. No public exact Activity retention is advertised yet.
+observed browser replay and Bombadil. SSE-issued references and the bounded Activity selection/publication/retry journal
+now connect these backend contracts. Journey 139 covers duplicate occurrences and
+real commit/response loss/reload retry; per-row read provenance stays separate
+from custody. Next: acceptance review of the primary compact Activity interaction
+and operational failure messaging.

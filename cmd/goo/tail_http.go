@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"github.com/casselc/goo/exploration"
@@ -10,7 +12,11 @@ import (
 	"time"
 )
 
-func registerTail(mux *http.ServeMux, source exploration.Source) {
+func registerTail(mux *http.ServeMux, source exploration.Source, banks ...*exploration.TailMembershipSnapshots) {
+	var bank *exploration.TailMembershipSnapshots
+	if len(banks) > 0 {
+		bank = banks[0]
+	}
 	slots := make(chan struct{}, 4)
 	mux.HandleFunc("POST /tail", func(w http.ResponseWriter, r *http.Request) {
 		fail := func(code int, message string) {
@@ -40,6 +46,12 @@ func registerTail(mux *http.ServeMux, source exploration.Source) {
 			fail(429, "tail capacity reached")
 			return
 		}
+		var connectionBytes [32]byte
+		if _, err := rand.Read(connectionBytes[:]); err != nil {
+			fail(500, "connection identity unavailable")
+			return
+		}
+		connection := hex.EncodeToString(connectionBytes[:])
 		flush, ok := w.(http.Flusher)
 		if !ok {
 			fail(500, "streaming unavailable")
@@ -60,7 +72,7 @@ func registerTail(mux *http.ServeMux, source exploration.Source) {
 			flush.Flush()
 			return e == nil
 		}
-		if !send("reset", map[string]any{"windowMs": exploration.TailWindowMS, "selector": selector, "continuity": "unknown", "replay": false}) {
+		if !send("reset", map[string]any{"connection": connection, "windowMs": exploration.TailWindowMS, "selector": selector, "continuity": "unknown", "replay": false}) {
 			return
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 60*time.Second)
@@ -80,7 +92,18 @@ func registerTail(mux *http.ServeMux, source exploration.Source) {
 				send("gap", map[string]string{"reason": "identity_budget"})
 				return
 			}
-			if !send("batch", map[string]any{"rows": observed, "limited": limited, "fromMs": now - exploration.TailWindowMS, "toMs": now, "observedAt": time.Now().UTC().Format(time.RFC3339Nano)}) {
+			observedAt := time.Now().UTC()
+			batch := map[string]any{"rows": observed, "limited": limited, "fromMs": now - exploration.TailWindowMS, "toMs": now, "observedAt": observedAt.Format(time.RFC3339Nano), "membershipState": "unavailable"}
+			if len(observed) == 0 {
+				batch["membershipState"] = "empty"
+			} else if bank != nil {
+				capability, err := bank.Freeze(exploration.TailMembershipBatch{Connection: connection, Selector: selector, FromMS: now - exploration.TailWindowMS, ToMS: now, ObservedAt: observedAt, Limited: limited, Rows: observed})
+				if err == nil {
+					batch["membershipState"] = "available"
+					batch["membership"] = capability
+				}
+			}
+			if !send("batch", batch) {
 				return
 			}
 			select {

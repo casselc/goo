@@ -2,9 +2,9 @@
 (function(global){
  const storageKey='goo.pending-native-saves.v1',id=/^[a-f0-9]{64}$/;
  function entry(path,body,createdAt=new Date().toISOString()){
-  if(!/^\/(?:[a-f0-9]{64}\/annotations)?$/.test(path||'/')||!body||!id.test(body.requestID)||typeof createdAt!=='string'||!Number.isFinite(Date.parse(createdAt)))throw Error('Invalid pending save');
+  if(!/^\/(?:tail|[a-f0-9]{64}\/annotations)?$/.test(path||'/')||!body||!id.test(body.requestID)||typeof createdAt!=='string'||!Number.isFinite(Date.parse(createdAt)))throw Error('Invalid pending save');
   const raw=JSON.stringify(body);if(new TextEncoder().encode(raw).length>16384)throw Error('Pending save exceeds request bound');
-  const value=JSON.parse(raw);if(path&&path!=='/'){if(!value.target||value.target.kind!=='evidence'||!id.test(value.target.id)||path!=='/'+value.target.id+'/annotations')throw Error('Pending review target differs')}else if(!Array.isArray(value.indexes)||value.indexes.length<1||value.indexes.length>20||(!!value.captureID===!!value.resultToken)||!id.test(value.captureID||value.resultToken))throw Error('Invalid pending selection');
+  const value=JSON.parse(raw);if(path==='/tail'){if(value.version!=='goo/tail-evidence/v1alpha1'||!id.test(value.connection)||!value.selector||!Array.isArray(value.refs)||value.refs.length<1||value.refs.length>20||value.refs.some(r=>!id.test(r.token)||!/^([a-f0-9]{64}):([1-9][0-9]{0,3})$/.test(r.key))||new Set(value.refs.map(r=>r.key)).size!==value.refs.length||Object.keys(value).some(k=>!['version','requestID','connection','selector','refs','tags','note'].includes(k)))throw Error('Invalid pending Activity selection')}else if(path&&path!=='/'){if(!value.target||value.target.kind!=='evidence'||!id.test(value.target.id)||path!=='/'+value.target.id+'/annotations')throw Error('Pending review target differs')}else if(!Array.isArray(value.indexes)||value.indexes.length<1||value.indexes.length>20||(!!value.captureID===!!value.resultToken)||!id.test(value.captureID||value.resultToken))throw Error('Invalid pending selection');
   return {version:1,path:path||'/',body:value,createdAt};
  }
  function intent(e){const b={...e.body};delete b.awaitToken;return JSON.stringify([e.path,b])}

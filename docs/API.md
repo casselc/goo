@@ -249,3 +249,14 @@ and unconfigured optional store (503). No telemetry read or publication occurs.
 The browser catalog/inspector/citation adapter now uses these origin-aware reads.
 No SSE membership capability or tail publication route is registered yet. See
 [the origin boundaries](TAIL_SELECTION_CUSTODY.md#public-read-and-presentation-adapters).
+
+Activity preservation uses `POST /retained-evidence/tail` with a typed
+`TailIntent` (version, requestID, connection, selector, token/key refs, tags, note).
+No client rows, read clocks or windows are accepted. `/tail` reset includes a
+random connection ID; batch `membershipState` is available/unavailable/empty, and
+only available batches carry token/expiry/basis metadata. Expiry is anchored to
+the original read, not browser selection. Existing page retention stays separate.
+201 returns the original typed tail receipt on both commit and unchanged retry;
+409 rejects changed intent; 410 means definitely uncommitted proof is unavailable;
+502 retains retryable storage uncertainty; 503 means optional XTDB is unconfigured.
+Committed recovery precedes membership lookup and never rereads telemetry.

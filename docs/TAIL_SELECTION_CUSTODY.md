@@ -1,10 +1,8 @@
 # Exact Activity selection: backend custody prerequisites
 
-Status: membership and typed idempotent XTDB publication remain **unwired to SSE
-and publication HTTP**. Origin-aware public read/catalog routes, retained inspectors,
-review corrections and pinned document citations now support tail evidence. The
-Activity stream still cannot issue/select/preserve exact occurrences through the
-browser; that selection/retry workflow is the next integration.
+Status: the shared membership bank is injected into the SSE issuer and the typed
+HTTP publisher. Activity supports a bounded local selection and immutable browser
+retry intent. Origin-aware reads, reviews and pinned citations remain shared.
 
 The concrete task is to preserve up to 20 observed Activity log/span occurrences
 without rereading telemetry. This is observation custody, not unique physical-event
@@ -20,17 +18,19 @@ identity, complete trace capture, a population denominator or classifier trainin
 | `Store.Publish` / `RecoverSelection` | Transactional request-intent binding, atomic receipt publication, committed-request recovery after source-page expiry, and distinct read/custody clocks. | `RecoverSelection` verifies capture/result-page indexes. It cannot recover tail references without a new origin-specific contract. |
 | Native browser retry journal | Reuse the immutable-intent lifecycle after a server publisher supports it. | Browser state does not establish server membership or make arbitrary writes idempotent. |
 
-Current `/tail` reset/batch payloads issue no membership capability. Current
-`GooTail.snapshot()` omits per-row provenance from its public handoff. `/retained-evidence`
-accepts only saved capture IDs or fixed result tokens and indexes; it rejects client
-records and tail-reference fields. These boundaries remain enforced.
+`/tail` resets issue a random connection identity; nonempty batches advertise
+`membershipState` and an optional frozen capability. Normal observation continues
+when issuance capacity is unavailable. Each browser row retains the original
+connection, reference, read window, read clock, limited/late state and expiry.
+`POST /retained-evidence/tail` accepts only `TailIntent` references. The legacy
+page-retention route still rejects client records and tail fields.
 
 ## Implemented Go primitive
 
 `exploration.NewTailMembershipSnapshots(clock)` creates an isolated process-local
-bank. It is constructed explicitly; no global bank or route is registered. Its
+bank. Startup constructs it explicitly and injects the same instance into both owners. Its
 only issuer is intended to be the server's existing validated source-poll path.
-Calling it with arbitrary browser record payloads is not an admissible integration.
+Only trusted poll results enter Freeze; browser payloads never do.
 
 `Freeze(TailMembershipBatch)` freezes connection ID, normalized selector, original
 half-open read window, observed/read clock, limited flag and emitted `TailRow`s.
@@ -72,7 +72,7 @@ connection must not silently rebind it.
 ```mermaid
 flowchart LR
   Poll[Existing bounded source poll] --> Tracker[Existing TailTracker occurrences]
-  Tracker -. planned server issuer .-> Bank[Implemented membership bank: unwired]
+  Tracker --> Bank[Shared server membership bank]
   Bank --> Draft[Exact ephemeral selection draft]
   Bank --> Expiry[Read-anchored expiry or capacity refusal]
   Draft --> Origin[Implemented typed tail manifest]
@@ -83,7 +83,8 @@ flowchart LR
   Reviews --> Document[File document with exact evidence/review IDs]
   Catalog --> UI[Public catalog and retained/citation inspectors]
   Document --> UI
-  UI -. planned .-> Select[Activity selection and immutable retry journal]
+  Select[Activity selection and immutable retry journal] --> Publish
+  UI --> Select
 ```
 
 ## Implemented backend publication and retry contract
@@ -111,11 +112,10 @@ tail evidence, including exact review resolution during document creation.
 This bounded cut intentionally isolates the new protocol before extracting shared
 transaction mechanics: existing v1 request hashes bind a manifest, whereas tail
 requests must bind references before proof resolution. Combining those protocols
-prematurely would risk changing legacy retry identity. Shared backend catalog and exact review readers now understand the origin. Public
-manifest/catalog adapters and citation presentation must do so before the UI
-advertises durable Activity evidence.
+prematurely would risk changing legacy retry identity. Shared backend catalog and exact review readers now understand the origin. Public manifest/catalog adapters and citation presentation now share those
+origin contracts before Activity promotes a selection to durable evidence.
 
-A proposed `POST /retained-tail-evidence` request contains a version, client request
+The implemented `POST /retained-evidence/tail` request contains a version, client request
 ID, original connection/selector, bounded token/handle references, tags and note.
 It contains no client rows, hashes, basis, read windows or clocks to trust. The
 server constructs those fields from its bank. The request ID binds the normalized
@@ -129,19 +129,19 @@ requires a different request, never silently changing a pending retry.
 | Definitely uncommitted and proof valid | Resolve all members, validate the new manifest, atomically publish evidence + request intent + receipt. Record custody time independently of each read clock. |
 | Definitely uncommitted and proof unavailable | Refuse expired/unavailable membership. Do not create a replacement source read or accept a client payload. |
 | Request store unavailable / commit outcome unknown | Preserve the same pending intent and return retryable unavailability. Absence of a response is not proof of no commit; do not generate a new ID or claim simple expiry. |
-| Issuance capacity exhausted | Future SSE should mark exact-preservation capability unavailable while normal observation can continue. Never advertise a capability that was not frozen. |
+| Issuance capacity exhausted | SSE marks exact-preservation capability unavailable while normal observation can continue. Never advertise a capability that was not frozen. |
 
 The existing saved/result-page transaction tests verify the reusable mechanics:
 interruption leaves no partial publication, concurrent attempts converge, and an
 already committed selection can be recovered after page expiry. They do **not**
 prove durable tail publication. The tail publisher now separately passes lost-ack, changed-intent, expiry,
-unavailable-store and concurrent retry checks. These backend guarantees do not
-claim the unwired browser journal or public origin readers are implemented.
+unavailable-store and concurrent retry checks. The HTTP and browser adapters now exercise these guarantees separately.
 
-## Planned user storyboard — selection integration pending
+## User storyboard — exact Activity selection
 
-Steps 1–5 remain planned. The downstream read/citation portion of step 6 is now
-independently executable in journey 138 from a backend-published selection.
+Journey 139 executes live duplicate selection, actual commit with lost response,
+reload retry and retained inspection. Journey 138 independently covers downstream
+read/citation behavior.
 
 1. Activity receives server-issued connection and optional batch capability metadata.
    Each buffered observation retains its own reference/window/read clock; the latest
@@ -158,11 +158,11 @@ independently executable in journey 138 from a backend-published selection.
 6. Catalog, documents and pinned reviews reference the new origin explicitly.
    Corrections create new meaning revisions; original observation payloads stay fixed.
 
-Future Playwright/Bombadil acceptance must exercise duplicate payload occurrences,
-late observations across polls, limited batches, buffer eviction, disconnect and
-reconnect, scope changes, expiry, lost acknowledgement/reload and store outages.
-No UI screenshots are fabricated for these planned steps. Existing live-tail
-storyboards remain the implemented interaction.
+Journey 139 covers duplicate occurrence selection and lost acknowledgement/reload;
+existing live-tail journeys cover late records, bounded buffer, focus pause,
+reconnect and scope changes. Go/Hegel checks exercise expiry and capacity; actual
+XTDB tests cover committed recovery and outage precedence. A browser-controlled
+clock/outage matrix remains a follow-up, not a claim of this journey.
 
 ## Executed evidence
 
@@ -281,6 +281,24 @@ Observed Quint replay and Bombadil cover the browser read/citation/local-inspect
 cut. This does not claim browser Activity selection or browser tail-publication
 recovery. Existing page-retention journeys 99–101 remain compatibility coverage.
 
-Next: construct and inject the shared membership bank into the SSE issuer, expose
-server-issued connection/ref metadata with original per-row read clocks, then add
-the bounded selection/publication and immutable pending-intent browser workflow.
+The Activity adapter pauses on Select and holds at most 20 original references.
+It reveals retention controls only after selection. Resume/reconnect or a new
+applied scope clears the held selection when its replacement batch arrives;
+references are never rebound to a new connection. Selected records are deeply
+owned separately from the scrolling buffer. Snapshot handoffs retain per-row
+provenance rather than replacing it with the latest global poll window.
+
+`POST /retained-evidence/tail` strictly decodes at most 16 KiB, rejects client
+records/query parameters, validates intent before storage, and returns 201 on
+publication or committed recovery, 409 on changed intent, 410 on definitely absent
+membership, 502 on storage failure and 503 when XTDB is unconfigured. A storage
+outage never becomes an expiry claim. The native pending journal accepts the
+separate `/tail` intent; retries keep the same request ID, references, tags and
+note, including after reload. The UI locks edits after submission and exposes
+recovery under Saved. Expiry prevents a new local intent, not retry of an already
+submitted one. Forgetting a retry does not undo a commit.
+
+Next: audit this bounded interaction in the primary compact Activity entry and
+expand coverage of operational outage/capacity messaging as needed. No distributed
+capability store, authentication identity, ingestion replay or physical event ID
+is claimed.

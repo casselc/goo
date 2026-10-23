@@ -381,3 +381,11 @@ steps, exact bounds and native definition digests across actual browser serializ
 Native reuse comparison has its own cloned Go-default projection; record predicate
 identity rules are not used to normalize native definitions. Publication and source
 owners are unchanged. See the [wire/default flow](QUESTION_PROTOCOL.md).
+
+Activity exact retention now injects one process-local membership bank into the
+trusted SSE poll issuer and references-only publisher at startup. Issuance freezes
+original read provenance; publication first resolves committed request identity,
+then consults ephemeral proof only for a definitely new intent. The browser holds
+at most 20 original refs and journals immutable writes before sending. Shared
+origin readers/citations remain downstream of XTDB, with no telemetry reread.
+The custody flow and limits are in [Activity selection](TAIL_SELECTION_CUSTODY.md).

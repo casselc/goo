@@ -3935,6 +3935,94 @@
         "x-browser-body-limit-bytes": 16384
       }
     },
+    "/retained-evidence/tail": {
+      "post": {
+        "operationId": "post_retained_evidence_tail",
+        "summary": "POST /retained-evidence/tail",
+        "tags": [
+          "retained-evidence"
+        ],
+        "description": "Current owner: cmd/goo/retention_http.go. Effect: xtdb-publication-or-recovery. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/retention_http.go",
+        "x-effects": "xtdb-publication-or-recovery",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TailReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TailIntent"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 16384,
+        "x-browser-body-limit-bytes": 16384,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/tail": {
       "post": {
         "operationId": "post_tail",
@@ -3966,7 +4054,7 @@
                 "schema": {
                   "type": "string"
                 },
-                "example": "id: 1\nevent: reset\ndata: {\"windowMs\":60000,\"selector\":{\"environment\":\"prod\"},\"continuity\":\"unknown\",\"replay\":false}\n\n"
+                "example": "id: 1\nevent: reset\ndata: {\"connection\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"windowMs\":60000,\"selector\":{\"environment\":\"prod\"},\"continuity\":\"unknown\",\"replay\":false}\n\n"
               }
             }
           },
@@ -5480,6 +5568,22 @@
       },
       "ServiceDiscovery": {
         "$ref": "#/components/schemas/exploration.ServiceDiscovery"
+      },
+      "TailIntent": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/retention.TailIntentInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "TailMembershipCapability": {
+        "$ref": "#/components/schemas/exploration.TailMembershipCapability"
+      },
+      "TailReceipt": {
+        "$ref": "#/components/schemas/retention.TailReceipt"
       },
       "TailRow": {
         "$ref": "#/components/schemas/exploration.TailRow"
@@ -11088,6 +11192,27 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.SpanStatusSummary"
       },
+      "exploration.TailMembershipCapability": {
+        "properties": {
+          "basis": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "token",
+          "expiresAt",
+          "basis"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.TailMembershipCapability"
+      },
       "exploration.TailMembershipRef": {
         "properties": {
           "key": {
@@ -11101,6 +11226,33 @@
           "token",
           "key"
         ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.TailMembershipRef"
+      },
+      "exploration.TailMembershipRefInput": {
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.TailMembershipRef"
       },
@@ -17784,6 +17936,103 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/retention.Receipt"
       },
+      "retention.TailIntentInput": {
+        "additionalProperties": false,
+        "properties": {
+          "connection": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "refs": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/exploration.TailMembershipRefInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "requestID": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "selector": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.TailSelectorInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tags": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/retention.TailIntent"
+      },
       "retention.TailManifest": {
         "properties": {
           "id": {
@@ -17803,6 +18052,37 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/retention.TailManifest"
+      },
+      "retention.TailReceipt": {
+        "properties": {
+          "annotation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.MeaningRevision"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "awaitToken": {
+            "type": "string"
+          },
+          "manifest": {
+            "$ref": "#/components/schemas/retention.TailManifest"
+          },
+          "retainedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "manifest",
+          "annotation",
+          "retainedAt"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/retention.TailReceipt"
       },
       "workbench.Card": {
         "properties": {
@@ -19347,12 +19627,17 @@
       "TailReset": {
         "type": "object",
         "required": [
+          "connection",
           "windowMs",
           "selector",
           "continuity",
           "replay"
         ],
         "properties": {
+          "connection": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
           "windowMs": {
             "const": 60000
           },
@@ -19389,9 +19674,20 @@
           "limited",
           "fromMs",
           "toMs",
-          "observedAt"
+          "observedAt",
+          "membershipState"
         ],
         "properties": {
+          "membershipState": {
+            "enum": [
+              "available",
+              "unavailable",
+              "empty"
+            ]
+          },
+          "membership": {
+            "$ref": "#/components/schemas/TailMembershipCapability"
+          },
           "rows": {
             "type": "array",
             "items": {
@@ -19411,7 +19707,30 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "membershipState": {
+                  "const": "available"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "membership"
+              ]
+            },
+            "else": {
+              "not": {
+                "required": [
+                  "membership"
+                ]
+              }
+            }
+          }
+        ]
       },
       "LegacyQuery": {
         "type": "object",

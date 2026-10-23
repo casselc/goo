@@ -1785,3 +1785,20 @@ local XTDB/ClickStack lab. Browser Activity selection/publication is still plann
 ![Pin an Activity review in a saved investigation](screenshots/138b-pinned-activity-review.png)
 ![Browse the origin-aware retained catalog](screenshots/138c-activity-catalog.png)
 ![Read the pinned Activity citation on mobile](screenshots/138d-mobile-activity-citation.png)
+
+### 139 — Preserve exact Activity occurrences and recover a lost response
+
+[journey](../../journeys/tail-selection.spec.js) injects two identical real OTLP
+logs, independently checks ClickHouse multiplicity, receives server-issued SSE
+references, selects both and pauses. Tags/note appear only after selection.
+A real XTDB commit is allowed to finish before its browser response is dropped.
+Reloading Saved retries the unchanged journal intent and opens the same manifest,
+review and custody clock, without any telemetry source reads. Observed Quint
+replay includes rejecting controls. Bombadil selects, clears and resumes without
+publishing or generating workload. These handles describe observed multiplicity,
+not physical event identity or a complete trace/population.
+
+![Selected Activity occurrences](screenshots/139a-activity-selection.png)
+![Recovered retained Activity](screenshots/139b-retained-activity.png)
+
+![Compact mobile selection](screenshots/139c-mobile-selection.png)

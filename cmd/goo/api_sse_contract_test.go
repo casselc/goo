@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -25,7 +26,7 @@ func TestAPITailSSEWireContract(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if w.Code != 200 || w.Body.String() != string(want) {
+	if w.Code != 200 || regexp.MustCompile(`"connection":"[a-f0-9]{64}",`).ReplaceAllString(w.Body.String(), "") != regexp.MustCompile(`"connection":"[a-f0-9]{64}",`).ReplaceAllString(string(want), "") {
 		t.Fatal(w.Code, w.Body.String())
 	}
 	for k, v := range map[string]string{"Content-Type": "text/event-stream", "Cache-Control": "no-store", "X-Accel-Buffering": "no"} {

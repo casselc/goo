@@ -22,10 +22,11 @@ const operations = Object.values(require('../api/openapi.json').paths).reduce((n
     await page.getByRole('status').filter({ hasText: operations+' operations' }).waitFor();
     assert.equal(await page.locator('#operations > details').count(), operations);
     await page.getByRole('searchbox').fill('/tail');
-    assert.equal(await page.locator('#operations > details').count(), 1);
-    await page.locator('#operations > details > summary').click();
-    await page.getByText('Operation contract', { exact: true }).click();
-    await page.getByText('text/event-stream', { exact: false }).last().waitFor();
+    assert.equal(await page.locator('#operations > details').count(), 2); // stream and exact-retention tail routes
+    const tailOp=page.locator('#operations > details').filter({has:page.locator('summary > code').filter({hasText:/^\/tail$/})});
+    await tailOp.locator(':scope > summary').click();
+    await tailOp.getByText('Operation contract', { exact: true }).click();
+    await tailOp.getByText('text/event-stream', { exact: false }).last().waitFor();
     assert.match(await page.locator('#operations').innerText(), /source-read/);
     await page.screenshot({ path: path.join(root, 'docs/journeys/screenshots/api-docs-tail.png'), fullPage: false });
     await page.getByRole('searchbox').fill('/measurements');

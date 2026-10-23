@@ -139,6 +139,9 @@ func main() {
 		root(name, v, false)
 	}
 
+	root("TailIntent", retention.TailIntent{}, true)
+	root("TailReceipt", retention.TailReceipt{}, false)
+	root("TailMembershipCapability", exploration.TailMembershipCapability{}, false)
 	root("EvidenceContent", retention.EvidenceContent{}, false)
 	root("EvidenceCatalog", retention.EvidenceCatalogPage{}, false)
 	root("MeaningPage", workbench.MeaningPage{}, false)

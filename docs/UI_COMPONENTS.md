@@ -587,3 +587,10 @@ retention owner and citation owner retain those responsibilities.
 `displayJSON` preserves numeric tokens beyond browser round-trip precision as
 explicit display text; original manifest JSON remains unchanged. This is display
 representation, not conversion of stored telemetry types or query values.
+
+Activity selection remains in `GooTail`, an application adapter. It owns a bounded
+`TailSelection` of original capabilities, contextual retention controls and a
+reference-only intent handed to `GooRetentionClient`. Shared display components do
+not issue proof or publish. Each row/snapshot keeps its own read provenance.
+`GooPendingSaves` stores immutable `/tail` intents separately from fixed pages;
+`GooRetentionRecovery` reuses the native retry panel and shared retained readers.

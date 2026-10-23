@@ -15,7 +15,7 @@ reads = {'/http-package', '/operations', '/counter-rates', '/histograms', '/inve
 plans = {'/measurement-packages/plan', '/telemetry-packages/draft', '/telemetry-packages/numeric-plan', '/telemetry-packages/plan', '/recipes', '/dashboards/plan', '/population/plan', '/compare', '/explain'}
 publications = {'/measurement-packages', '/telemetry-packages', '/annotations', '/exploration-views', '/deployments', '/documents', '/captures/comparisons'}
 requests = {
- '/compare':'CompareRequest','/inventory':'InventoryRequest','/discovery':'InventoryRequest','/explore':'RecordQuery','/tail':'TailSelector',
+ '/retained-evidence/tail':'TailIntent','/compare':'CompareRequest','/inventory':'InventoryRequest','/discovery':'InventoryRequest','/explore':'RecordQuery','/tail':'TailSelector',
  '/measurements':'NativeQuestion','/metric-discovery':'MetricDiscoveryRequest','/measurement-packages/plan':'NativePlanRequest','/measurement-packages':'YAMLRequest',
  '/telemetry-packages':'YAMLRequest','/telemetry-packages/draft':'TelemetryDraftRequest','/telemetry-packages/numeric-plan':'NumericPlanRequest','/telemetry-packages/plan':'TelemetryPlanRequest',
  '/recipes':'RecipeRequest','/dashboards/plan':'DashboardRequest','/population/plan':'PopulationRequest','/annotations':'MeaningInput','/exploration-views':'ExplorationView','/deployments':'DeploymentInput','/documents':'DocumentRequest',
@@ -31,6 +31,7 @@ responses = {
  ('post','/retained-evidence'):'RetainedReceipt',('post','/retained-evidence/{id}/annotations'):'CorrectionReceipt',('get','/retained-evidence'):'RetainedCatalog',
 }
 
+responses['post','/retained-evidence/tail']='TailReceipt'
 responses.update({
  ('get','/annotations'):'MeaningPage',('get','/exploration-views'):'ExplorationViewList',('post','/exploration-views'):'ExplorationViewResult',('get','/exploration-views/{id}'):'ExplorationViewResult',
  ('get','/deployments'):'DeploymentContext',('get','/documents'):'DocumentList',('post','/captures/comparisons'):'ComparisonReceipt',('get','/captures/comparisons/{id}/receipt'):'ComparisonReceipt',
@@ -110,7 +111,7 @@ for (method,path),(file,block) in sorted(route_source.items()):
  if method=='post' and path in requests:
   op['requestBody']={'required':True,'content':{'application/json':{'schema':ref(requests[path])}}}
   op['x-go-body-limit-bytes']=go_limit(path);op['x-browser-body-limit-bytes']=browser_limit(path)
- success='201' if method=='post' and (path in publications or path in ('/captures','/investigations','/retained-evidence','/retained-evidence/{id}/annotations')) else '200'
+ success='201' if method=='post' and (path in publications or path in ('/retained-evidence/tail','/captures','/investigations','/retained-evidence','/retained-evidence/{id}/annotations')) else '200'
  model=responses.get((method,path));body=ref(model) if model else {}
  op['x-schema-coverage']='typed' if model else 'response-envelope-pending'
  op['responses'][success]={'description':'Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.','content':{'application/json':{'schema':body}}}
@@ -132,11 +133,12 @@ for (method,path),(file,block) in sorted(route_source.items()):
  if path=='/captures/live': op['responses']['201']={'description':'Freeze held draft without rereading source.','content':{'application/json':{'schema':ref('CapturePage')}}}
  spec['paths'].setdefault(path,{})[method]=op
 
-schemas['TailReset']={'type':'object','required':['windowMs','selector','continuity','replay'],'properties':{'windowMs':{'const':60000},'selector':ref('TailSelector'),'continuity':{'const':'unknown'},'replay':{'const':False}}}
+schemas['TailReset']={'type':'object','required':['connection','windowMs','selector','continuity','replay'],'properties':{'connection':{'type':'string','pattern':'^[a-f0-9]{64}$'},'windowMs':{'const':60000},'selector':ref('TailSelector'),'continuity':{'const':'unknown'},'replay':{'const':False}}}
 schemas['TailGap']={'type':'object','required':['reason'],'properties':{'reason':{'enum':['source_unavailable','identity_budget','connection_ended']}}}
-schemas['TailBatch']={'type':'object','required':['rows','limited','fromMs','toMs','observedAt'],'properties':{'rows':{'type':'array','items':ref('TailRow')},'limited':{'type':'boolean'},'fromMs':{'type':'integer'},'toMs':{'type':'integer'},'observedAt':{'type':'string','format':'date-time'}}}
+schemas['TailBatch']={'type':'object','required':['rows','limited','fromMs','toMs','observedAt','membershipState'],'properties':{'membershipState':{'enum':['available','unavailable','empty']},'membership':ref('TailMembershipCapability'),'rows':{'type':'array','items':ref('TailRow')},'limited':{'type':'boolean'},'fromMs':{'type':'integer'},'toMs':{'type':'integer'},'observedAt':{'type':'string','format':'date-time'}}}
+schemas['TailBatch']['allOf']=[{'if':{'properties':{'membershipState':{'const':'available'}}},'then':{'required':['membership']},'else':{'not':{'required':['membership']}}}]
 tail=spec['paths']['/tail']['post']
-tail['responses']['200']={'description':'SSE frames: per-connection numeric id, event (reset/batch/gap), JSON data, blank line. POST via fetch, not browser EventSource. No resumable cursor or replay guarantee.','headers':{'Cache-Control':{'schema':{'const':'no-store'}},'X-Accel-Buffering':{'schema':{'const':'no'}}},'content':{'text/event-stream':{'schema':{'type':'string'},'example':'id: 1\nevent: reset\ndata: {"windowMs":60000,"selector":{"environment":"prod"},"continuity":"unknown","replay":false}\n\n'}}}
+tail['responses']['200']={'description':'SSE frames: per-connection numeric id, event (reset/batch/gap), JSON data, blank line. POST via fetch, not browser EventSource. No resumable cursor or replay guarantee.','headers':{'Cache-Control':{'schema':{'const':'no-store'}},'X-Accel-Buffering':{'schema':{'const':'no'}}},'content':{'text/event-stream':{'schema':{'type':'string'},'example':'id: 1\nevent: reset\ndata: {"connection":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","windowMs":60000,"selector":{"environment":"prod"},"continuity":"unknown","replay":false}\n\n'}}}
 tail['x-sse-events']={'reset':ref('TailReset'),'batch':ref('TailBatch'),'gap':ref('TailGap')}
 tail['x-schema-coverage']='typed-events'
 tail['description']+=' Rolling 60-second event-time window; polling every 2 seconds; four local slots; 60-second Go lifetime; 5-second write deadlines. Proxy upstream socket timeout is 45 seconds. Disconnect releases slot. Last-Event-ID is not replay support. Gap frames after headers retain HTTP 200; abort can prevent a final frame.'

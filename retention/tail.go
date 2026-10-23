@@ -19,7 +19,7 @@ const TailEvidenceVersion = "goo/tail-evidence/v1alpha1"
 var ErrTailIntentConflict = errors.New("request ID already used for another tail intent")
 
 // TailIntent contains references only. PublishTail never accepts client records.
-// This library is deliberately not yet exposed through HTTP or SSE.
+// The HTTP adapter accepts this bounded intent, never client observation payloads.
 type TailIntent struct {
 	Version    string                          `json:"version"`
 	RequestID  string                          `json:"requestID"`
@@ -55,6 +55,8 @@ func (m TailManifest) Validate() error {
 	}
 	return m.Selection.Validate()
 }
+func (in TailIntent) Validate() error { _, _, err := normalizeTailIntent(in); return err }
+
 func normalizeTailIntent(in TailIntent) (TailIntent, string, error) {
 	raw, e := json.Marshal(in)
 	if e != nil || len(raw) > 16384 {

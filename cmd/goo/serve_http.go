@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/casselc/goo/annotations"
+	"github.com/casselc/goo/exploration"
 	"github.com/casselc/goo/prebuilt"
 	"net/http"
 	"os"
@@ -75,9 +76,10 @@ func serveHTTP(args []string) error {
 	registerInvestigations(mux, plans, connection, *captureDir)
 	registerDashboards(mux, ordered)
 	recordSource := connection.explorationSource()
-	registerExploration(mux, recordSource)
+	tailMembership := exploration.NewTailMembershipSnapshots(time.Now)
+	registerExploration(mux, recordSource, tailMembership)
 	registerCaptures(mux, recordSource, *captureDir)
-	registerWorkbench(mux, *captureDir, retentionConnectionFromEnvironment())
+	registerWorkbench(mux, *captureDir, retentionConnectionFromEnvironment(), tailMembership)
 	registerTelemetryPackages(mux, filepath.Join(*captureDir, "telemetry-packages"))
 	server := &http.Server{Addr: *listen, Handler: newQueryBudget(mux, 4), ReadHeaderTimeout: 5 * time.Second, WriteTimeout: 90 * time.Second}
 	return server.ListenAndServe()

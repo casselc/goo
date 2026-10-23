@@ -1,6 +1,6 @@
 id: 1
 event: reset
-data: {"continuity":"unknown","replay":false,"selector":{"environment":"prod"},"windowMs":60000}
+data: {"connection":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","continuity":"unknown","replay":false,"selector":{"environment":"prod"},"windowMs":60000}
 
 id: 2
 event: gap

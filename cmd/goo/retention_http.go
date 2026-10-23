@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-func registerRetention(mux *http.ServeMux, dir string, connection retentionConnection) {
+func registerRetention(mux *http.ServeMux, dir string, connection retentionConnection, banks ...*exploration.TailMembershipSnapshots) {
 	store := connection.store("")
 	captures := exploration.CaptureStore{Dir: filepath.Join(dir, "exploration")}
 	reply := func(w http.ResponseWriter, code int, value any) {
@@ -44,6 +44,43 @@ func registerRetention(mux *http.ServeMux, dir string, connection retentionConne
 		}
 		return nil
 	}
+	var bank *exploration.TailMembershipSnapshots
+	if len(banks) > 0 {
+		bank = banks[0]
+	}
+	mux.HandleFunc("POST /retained-evidence/tail", func(w http.ResponseWriter, r *http.Request) {
+		var in retention.TailIntent
+		if r.URL.RawQuery != "" {
+			fail(w, 400, errors.New("tail publication has no query parameters"))
+			return
+		}
+		if e := decode(w, r, &in); e != nil {
+			fail(w, 400, e)
+			return
+		}
+		if e := in.Validate(); e != nil {
+			fail(w, 400, e)
+			return
+		}
+		if !available(w) {
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
+		defer cancel()
+		receipt, e := store.PublishTail(ctx, bank, in)
+		if e != nil {
+			code := 502
+			if errors.Is(e, retention.ErrTailIntentConflict) {
+				code = 409
+			}
+			if errors.Is(e, exploration.ErrTailMembershipUnavailable) {
+				code = 410
+			}
+			fail(w, code, e)
+			return
+		}
+		reply(w, 201, receipt)
+	})
 	mux.HandleFunc("GET /retained-evidence/status", func(w http.ResponseWriter, r *http.Request) {
 		reply(w, 200, map[string]bool{"configured": connection.URL != ""})
 	})

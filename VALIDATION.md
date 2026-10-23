@@ -6700,3 +6700,69 @@ assets against the validated checkout. The deployed API docs browser check passe
 66 operations, typed content disclosure, mobile layout and no page errors; its
 screenshot/count assertions are updated. Documentation-only files/frames are
 synced after this final read-only check without another runtime code rebuild.
+
+## Activity membership, exact selection and retry integration — 2026-10-23
+
+Implemented one startup-injected membership bank shared by trusted SSE issuance
+and `POST /retained-evidence/tail`. Resets identify the original connection;
+nonempty batches either issue frozen capability metadata or explicitly report
+unavailable preservation while observations continue. Browser snapshots retain
+per-row connection, read window/read clock, limited/late state and expiry.
+Selecting pauses the stream and reveals compact controls for up to 20 occurrences;
+Resume replacement clears selection without rebinding references. Publication
+accepts only references and journals immutable intent before sending. Submitted
+retry remains available after expiry/reload; payload edits are locked after send.
+
+Executed checks:
+
+- `go test -race ./cmd/goo ./exploration ./retention` passed with real local XTDB.
+  New native HTTP tests prove actual source-poll issuance, exact numeric tokens,
+  connection mismatch refusal, strict input guards, committed recovery with no
+  bank after restart, changed-intent conflict and absent-proof 410. A final focused
+  race run also proves exhausted issuance capacity keeps streaming observations
+  without advertising a token.
+- Hegel membership state/swarm and durable manifest properties passed, alongside
+  observed Quint membership and actual XTDB publication replay with rejecting
+  controls. Two focused Node files passed for bounded selection/provenance,
+  expiry/connection/scope refusal, buffer independence and immutable journal reload.
+- Real browser journeys 66 and 139 passed (1.4 minutes). Journey 66 preserves late
+  duplicates, FIFO limits, focused inspection, pause/resume and reconnect semantics.
+  Journey 139 uses two actual OTLP log occurrences in ClickHouse through the
+  primary compact Activity entry, selects both, resumes/clears, selects again,
+  checks mobile overflow and commits through the real HTTP/XTDB publisher. It
+  drops the response *after* commit, reloads Saved, retries via the visible pending
+  notice and observes unchanged manifest, review and custody timestamp, with zero
+  telemetry rereads after selection. An initial test-only attempt waited on a
+  hidden Saved-tools summary; the final test uses the actual visible recovery
+  notice. No positive UI data or successful publisher response is mocked.
+- The resulting browser ledger passed observed Quint replay; five controls reject
+  extra source reads, duplicate publication count, changed custody time, changed
+  connection and altered member provenance. Bombadil's 25-second real browser run
+  selects, clears and resumes without publishing or generating workload; bounded
+  selection, pause state, overflow and exception invariants passed. Screenshots
+  139a–c and affected live-tail frames were regenerated from the running app.
+- OpenAPI conformance passed: 61 Go operations / 67 total, 222 frozen responses,
+  56 admitted requests, 14 mux refusals, updated SSE capability coherence controls
+  and 26 actual observed responses including original/recovered tail publication.
+  Native semantic validation remains authoritative beyond reflected wire shapes.
+
+Compact logs and API observations are under `artifacts/tail-selection-integration`;
+journey ledgers/model controls/Bombadil are under `artifacts/tail-selection`, with
+final primary-entry run `tail-select-73d84f71`. Capability bounds, API, architecture,
+component ownership, plan, known issues, README and storyboard are synchronized.
+The optional store remains required for publication; process-local proof disappears
+on restart. This is observation custody, not physical event identity, full trace
+capture or a population total. Browser clock-driven expiry and operational-outage
+interaction matrices remain follow-ups; backend expiry/capacity/outage checks are
+not presented as those browser scenarios.
+
+Final deployment runs query/packages image
+`sha256:e9bba8bc712aa3fc54edd74c06674602e8a0f2d2ea7f951658b4401d0c48b155`.
+Read-only post-recreate checks matched original retained manifest/custody time and
+all four affected UI assets to the tested checkout. The API docs browser assertion
+was updated to disambiguate the two `/tail` search results using the exact route
+code element. Documentation/frames are synchronized after final read-only checks;
+owned build staging is removed, preserving telemetry and XTDB volumes.
+The final deployed API docs browser check passed all 67 operations, filtered
+stream/content disclosures, body-limit display, desktop capture, mobile overflow
+and page-error checks (`api-docs-final.txt`).

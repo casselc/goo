@@ -627,13 +627,13 @@ occurrence identity, expiry and idempotency; connection-local handles are insuff
 
 
 [Activity membership prerequisites](TAIL_SELECTION_CUSTODY.md) include a tested Go
-bank, currently unwired. Tail SSE still issues no capability and public retention
-still rejects tail references. Process-local proofs expire from original read time
+bank shared by the tail SSE issuer and a separate references-only publication route. Process-local proofs expire from original read time
 and disappear on restart. The typed backend publisher now supports durable
 committed-request recovery without those proofs. Origin-aware backend catalog/read
 views, explicit public read/catalog routes, compact retained inspectors and pinned
-browser citations are implemented. SSE membership issuance and exact Activity
-selection/publication/retry integration remain unwired. Old unprojected tail requests require bounded receipt
+browser citations are implemented. Activity selection/publication/retry now uses these capabilities. The bank remains
+process-local and expiry/capacity can make new preservation unavailable; normal
+observation continues. Old unprojected tail requests require bounded receipt
 scans (1,000 / 16 MiB); exceeding those bounds refuses rather than omitting roots.
 Existing v1 captured/result-page manifests cannot represent mixed-poll tail
 provenance and remain unchanged.

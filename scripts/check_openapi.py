@@ -89,13 +89,22 @@ def check(spec):
         assert list(validator(spec, shape).iter_errors(wrong)), 'Unknown-field control accepted'
     assert list(validator(spec, {'$ref':'#/components/schemas/Error'}).iter_errors({'error':17})), 'Error type control accepted'
     for event, shape in spec['paths']['/tail']['post']['x-sse-events'].items():
-        value = {'reset': {'windowMs':60000,'selector':{'environment':'prod'},'continuity':'unknown','replay':False},
-                 'batch': {'rows':[],'limited':False,'fromMs':1000,'toMs':61000,'observedAt':'2026-10-22T00:00:00Z'},
+        value = {'reset': {'connection':'a'*64,'windowMs':60000,'selector':{'environment':'prod'},'continuity':'unknown','replay':False},
+                 'batch': {'membershipState':'empty','rows':[],'limited':False,'fromMs':1000,'toMs':61000,'observedAt':'2026-10-22T00:00:00Z'},
                  'gap': {'reason':'source_unavailable'}}[event]
         validator(spec, shape).validate(value)
         wrong = copy.deepcopy(value)
         wrong[{'reset':'replay','batch':'rows','gap':'reason'}[event]] = 123
         assert list(validator(spec, shape).iter_errors(wrong)), f'SSE {event} control accepted'
+    # A preservation claim must carry a capability; unavailable/empty must not.
+    shape=spec['paths']['/tail']['post']['x-sse-events']['batch']
+    batch={'rows':[],'limited':False,'fromMs':1000,'toMs':61000,'observedAt':'2026-10-23T00:00:00Z','membershipState':'available'}
+    assert list(validator(spec,shape).iter_errors(batch)), 'Unissued membership control accepted'
+    batch['membership']={'token':'a'*64,'expiresAt':'2026-10-23T00:02:00Z','basis':'observed-multiplicity'}
+    validator(spec,shape).validate(batch)
+    for state in ('unavailable','empty'):
+        wrong={**batch,'membershipState':state}
+        assert list(validator(spec,shape).iter_errors(wrong)), 'False membership control accepted'
     # Origin-aware content must never accept ambiguous or missing manifests.
     shape={'$ref':'#/components/schemas/EvidenceContent'}
     for wrong in ({'origin':'tail-selection','manifestJSON':'{}'},

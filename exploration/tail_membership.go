@@ -25,8 +25,8 @@ const TailMembershipBatchBytes = 1 << 20
 var ErrTailMembershipUnavailable = errors.New("tail membership expired or unavailable")
 var ErrTailMembershipCapacity = errors.New("tail membership capacity reached")
 
-// TailMembershipBatch is server read provenance. This primitive is not yet wired
-// to SSE or HTTP. Client row payloads must never be passed to Freeze.
+// TailMembershipBatch is trusted server read provenance.
+// Client row payloads must never be passed to Freeze.
 type TailMembershipBatch struct {
 	Connection string       `json:"connection"`
 	Selector   TailSelector `json:"selector"`
