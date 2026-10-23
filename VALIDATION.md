@@ -6453,3 +6453,58 @@ selection: server-issued membership, canonical payload/occurrence identity,
 read basis/window, expiry and idempotent publication must exist before exact
 retention/recovery is exposed. No native result token or membership is fabricated,
 and a reread is not substituted for selected observations.
+
+## 2026-10-23 — S3/F1 Activity membership prerequisite
+
+[The prerequisite contract](docs/TAIL_SELECTION_CUSTODY.md) records the existing
+capture/result-page boundary, a new bounded Go membership primitive, the proposed
+tail publication/retry contract and a clearly planned user storyboard/diagram.
+The primitive is unwired: no SSE field, endpoint, UI retention control or retry
+journal was enabled. Existing v1 retained manifests still reject a tail origin.
+
+`TailMembershipSnapshots` freezes server read provenance and canonical occurrence
+payloads, with an opaque capability and expiry anchored to the original read.
+Resolution is all-or-nothing across 1..20 references from one connection/selector;
+it preserves each member's window, read clock, basis and late/limited diagnostics.
+Input/output mutation, changed selectors/connections, duplicate occurrence aliases,
+missing members, expired proof, delayed reissuance and restart cannot substitute
+new evidence. Count/byte capacity refuses new issuance without evicting valid proof.
+This is ephemeral observation membership, not durable custody or physical event ID.
+
+Actual checks:
+- Go exploration, retention and Go HTTP suites passed. Initial checks caught a
+  helper naming error and a reserved Quint action name; both were corrected.
+  A sandboxed broad tail check could not bind its HTTP test listener; the
+  authorized test-server run passed. Final focused membership checks passed.
+- Membership unit tests cover exact large numeric tokens, duplicate payload
+  occurrences, per-poll clocks, late/limited flags, immutable copies, malformed/
+  oversized batches, count/byte bounds, scope, selection bounds, expiry and restart.
+- Go race detection passed concurrent issuance/resolution and all membership cases.
+- Hegel membership state/swarm passed 70 generated sequences with 30 steps and TTL
+  invariants after every action; existing tail overlap/multiplicity properties passed.
+- Observed Quint issue/resolve/expire/refuse replay passed, with four controls
+  rejecting forged counts, expired availability, member windows and accepting
+  unavailable proof. This model does not claim an unimplemented durable publisher.
+- Three real local XTDB integration checks passed: interrupted publication/retry,
+  concurrent request recovery, and recovery of an already committed selection after
+  fixed-page expiry. They verify existing saved/result-page origins only. Other
+  optional ClickHouse/XTDB integration opt-ins in the broad suite were skipped,
+  not counted as passes.
+- The existing real-OTel live-tail journey 66 passed in 1.3 minutes, including its
+  observed Quint replay and 30-second Bombadil campaign. The production tail UI/
+  transport remains unchanged; frames 66a/b/c were refreshed from the running lab.
+- Legacy HTTP rejects tail-reference fields and client rows. The v1 manifest guard
+  rejects a self-consistent hash with a fabricated tail origin.
+- OpenAPI conformance passed: 58 Go operations, 222 response fixtures, 56 admitted
+  requests, 14 mux refusals, negative/SSE controls. No public wire schema changed.
+
+Compact logs are in `artifacts/tail-membership-contract`; current live-tail
+ledgers/Bombadil evidence remain with journey 66. New public functionality is not
+advertised from this prerequisite. No runtime rebuild is needed for the unwired
+bank; current docs/storyboards are synced separately. Owned scratch logs are
+archived and cleaned; no telemetry or retained evidence is removed.
+
+Next: implement a distinct typed tail manifest/idempotent durable publisher and
+origin-aware resolution, preserving old receipt bytes. Only after committed retry,
+changed-intent, expiry, outage and concurrency checks pass should SSE-issued
+references and the browser selection/retry workflow be connected.

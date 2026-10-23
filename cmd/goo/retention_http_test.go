@@ -26,7 +26,7 @@ func TestRetentionHTTPOptionalAndServerOwned(t *testing.T) {
 	connection = retentionConnection{URL: "postgres://xtdb@127.0.0.1:1/xtdb?sslmode=disable"}
 	mux = http.NewServeMux()
 	registerRetention(mux, t.TempDir(), connection)
-	for _, body := range []string{`{"captureID":"x","rows":[{"forged":true}]}`, `{"captureID":"x"} {}`, `{"captureID":"../escape","indexes":[0],"tags":["review"]}`, `{"captureID":"x","origin":"trusted-user"}`} {
+	for _, body := range []string{`{"requestID":"` + strings.Repeat("a", 64) + `","tailRefs":[{"token":"server-only","key":"untrusted"}]}`, `{"captureID":"x","rows":[{"forged":true}]}`, `{"captureID":"x"} {}`, `{"captureID":"../escape","indexes":[0],"tags":["review"]}`, `{"captureID":"x","origin":"trusted-user"}`} {
 		w = call("POST", "/retained-evidence", body)
 		if w.Code != 400 {
 			t.Fatal(w.Code, w.Body.String())

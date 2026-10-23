@@ -1039,3 +1039,12 @@ immutable view state/swarm and observed drilldown traces for columns, expansion,
 broadening and partition operations. Journey 134 now additionally checks exact UTC
 selector display and question-trail opener focus. Its Bombadil actor requires focus
 return after source-free region staging; no new execution model is introduced.
+
+
+Tail membership prerequisite: `TestHegelTailMembershipStateSwarm` executes the real
+unwired Go bank across issuance, time advancement and resolution, with TTL checks
+after every action. `TestQuintObservedTailMembership` replays real issue/resolve/
+expire/refuse observations through `model/tail_membership.qnt`; four forged traces
+must fail. This model does not claim durable publication. Existing XTDB interruption,
+concurrent-request and expired fixed-page recovery tests separately establish
+reusable retry mechanics. See [the contract/status](../docs/TAIL_SELECTION_CUSTODY.md).

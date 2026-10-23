@@ -1,0 +1,13 @@
+spec: tail_membership.qnt
+module: tail_membership
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  issue:
+    expect: 'coherent == {{.obs.coherent}} and count == {{.obs.count}} and available == {{.obs.available}} and denied == {{.obs.denied}}'
+  resolve_members:
+    expect: 'coherent == {{.obs.coherent}} and count == {{.obs.count}} and available == {{.obs.available}} and denied == {{.obs.denied}}'
+  expire:
+    expect: 'coherent == {{.obs.coherent}} and count == {{.obs.count}} and available == {{.obs.available}} and denied == {{.obs.denied}}'
+  refuse:
+    expect: 'coherent == {{.obs.coherent}} and count == {{.obs.count}} and available == {{.obs.available}} and denied == {{.obs.denied}}'

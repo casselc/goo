@@ -360,3 +360,20 @@ func TestXTDBRecoverExpiredPageSelection(t *testing.T) {
 		}
 	}
 }
+
+func TestTailOriginCannotMasqueradeAsV1CapturedEvidence(t *testing.T) {
+	m, e := Select(sample(), []int{0})
+	if e != nil {
+		t.Fatal(e)
+	}
+	if e := m.Validate(); e != nil {
+		t.Fatal("baseline captured evidence is invalid", e)
+	}
+	m.Origin = "tail-selection"
+	m.ID = ""
+	raw, _ := json.Marshal(m)
+	m.ID = hash(raw)
+	if m.Validate() == nil {
+		t.Fatal("tail provenance accepted by the saved/result-page manifest")
+	}
+}

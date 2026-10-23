@@ -624,3 +624,11 @@ Nested Boolean branch editing, arbitrary numeric-attribute complements/transform
 source-wide field discovery and persistent Activity layouts remain outside that
 cut. Exact Activity-row retention/recovery still requires server membership,
 occurrence identity, expiry and idempotency; connection-local handles are insufficient.
+
+
+[Activity membership prerequisites](TAIL_SELECTION_CUSTODY.md) include a tested Go
+bank, currently unwired. Tail SSE still issues no capability and public retention
+still rejects tail references. Process-local proofs expire from original read time
+and disappear on restart; only a future committed-request publisher can support
+durable tail retry. Existing v1 captured/result-page manifests cannot represent
+mixed-poll tail provenance and remain unchanged.

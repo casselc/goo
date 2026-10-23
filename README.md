@@ -584,3 +584,8 @@ saved-view and immutable capture workflows.
 
 The [bounded D2 acceptance audit](docs/D2_ACCEPTANCE.md) maps record fields, chart
 selection, scope broadening and partitions to tested behavior and explicit limits.
+
+
+[Exact Activity selection prerequisites](docs/TAIL_SELECTION_CUSTODY.md) now include
+an executable Go membership bank and publication/retry contract. The bank is unwired;
+exact tail retention and browser retry recovery remain follow-up integration work.
