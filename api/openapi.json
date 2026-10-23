@@ -16,6 +16,161 @@
     }
   ],
   "paths": {
+    "/activity-views": {
+      "get": {
+        "operationId": "get_activity_views",
+        "summary": "GET /activity-views",
+        "tags": [
+          "activity-views"
+        ],
+        "description": "Current owner: cmd/goo/activity_views_http.go. Effect: saved-evidence-or-definition-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/activity_views_http.go",
+        "x-effects": "saved-evidence-or-definition-read",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          },
+          {
+            "name": "environment",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityViewList"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-schema-coverage": "typed"
+      },
+      "post": {
+        "operationId": "post_activity_views",
+        "summary": "POST /activity-views",
+        "tags": [
+          "activity-views"
+        ],
+        "description": "Current owner: cmd/goo/activity_views_http.go. Effect: file-publication-with-reference-validation. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/activity_views_http.go",
+        "x-effects": "file-publication-with-reference-validation",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityView"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivityViewRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 16384,
+        "x-browser-body-limit-bytes": 16384,
+        "x-schema-coverage": "typed"
+      }
+    },
+    "/activity-views/{id}": {
+      "get": {
+        "operationId": "get_activity_views_id",
+        "summary": "GET /activity-views/{id}",
+        "tags": [
+          "activity-views"
+        ],
+        "description": "Current owner: cmd/goo/activity_views_http.go. Effect: saved-evidence-or-definition-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/activity_views_http.go",
+        "x-effects": "saved-evidence-or-definition-read",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact revision, receipt ID or process-local capability; not an authorization credential."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityView"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-schema-coverage": "typed"
+      }
+    },
     "/annotations": {
       "get": {
         "operationId": "get_annotations",
@@ -4636,6 +4791,22 @@
   },
   "components": {
     "schemas": {
+      "ActivityView": {
+        "$ref": "#/components/schemas/workbench.ActivityView"
+      },
+      "ActivityViewList": {
+        "$ref": "#/components/schemas/workbench.ActivityViewList"
+      },
+      "ActivityViewRequest": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ActivityViewInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "CaptureList": {
         "$ref": "#/components/schemas/exploration.CaptureList"
       },
@@ -18083,6 +18254,168 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/retention.TailReceipt"
+      },
+      "workbench.ActivityView": {
+        "properties": {
+          "columns": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fieldColumns": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/exploration.Field"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "selector": {
+            "$ref": "#/components/schemas/exploration.TailSelector"
+          },
+          "title": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "version",
+          "title",
+          "selector",
+          "columns"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ActivityView"
+      },
+      "workbench.ActivityViewInput": {
+        "additionalProperties": false,
+        "properties": {
+          "columns": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fieldColumns": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/exploration.FieldInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "selector": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.TailSelectorInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ActivityView"
+      },
+      "workbench.ActivityViewList": {
+        "properties": {
+          "items": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/workbench.ActivityView"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "nextCursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ActivityViewList"
       },
       "workbench.Card": {
         "properties": {

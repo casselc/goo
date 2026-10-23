@@ -1,4 +1,20 @@
 {
+  "ActivityView": {
+    "$ref": "#/components/schemas/workbench.ActivityView"
+  },
+  "ActivityViewList": {
+    "$ref": "#/components/schemas/workbench.ActivityViewList"
+  },
+  "ActivityViewRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/workbench.ActivityViewInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
   "CaptureList": {
     "$ref": "#/components/schemas/exploration.CaptureList"
   },
@@ -13395,6 +13411,168 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/retention.TailReceipt"
+  },
+  "workbench.ActivityView": {
+    "properties": {
+      "columns": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "fieldColumns": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.Field"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "id": {
+        "type": "string"
+      },
+      "selector": {
+        "$ref": "#/components/schemas/exploration.TailSelector"
+      },
+      "title": {
+        "type": "string"
+      },
+      "version": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "version",
+      "title",
+      "selector",
+      "columns"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ActivityView"
+  },
+  "workbench.ActivityViewInput": {
+    "additionalProperties": false,
+    "properties": {
+      "columns": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "fieldColumns": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/exploration.FieldInput"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "selector": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.TailSelectorInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "title": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ActivityView"
+  },
+  "workbench.ActivityViewList": {
+    "properties": {
+      "items": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/workbench.ActivityView"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "nextCursor": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "items"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ActivityViewList"
   },
   "workbench.Card": {
     "properties": {

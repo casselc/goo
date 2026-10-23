@@ -621,8 +621,8 @@ by this operation. A selection exceeding the existing predicate budget is refuse
 
 The [bounded D2 audit](D2_ACCEPTANCE.md) accepts current population operations.
 Nested Boolean branch editing, arbitrary numeric-attribute complements/transforms,
-source-wide field discovery and persistent Activity layouts remain outside that
-cut. Exact Activity-row retention/recovery still requires server membership,
+source-wide field discovery remain outside that cut. Reusable Activity layouts
+are now separately delivered in [Activity views](ACTIVITY_VIEWS.md). Exact Activity-row retention/recovery still requires server membership,
 occurrence identity, expiry and idempotency; connection-local handles are insufficient.
 
 
@@ -644,3 +644,10 @@ capacity exhaustion and proof loss on process restart with keyboard/mobile retry
 Browser-clock advancement does not advance server proof expiry; backend/Hegel
 checks cover that separate clock. Conflict/refusal messages have unit coverage;
 no browser concurrency campaign or distributed bank guarantee is claimed.
+
+[Activity views](ACTIVITY_VIEWS.md) persist rolling selectors and column layouts,
+not browser observation buffers, capabilities or source clocks. Start remains
+explicit after reopen. Service relevance is an exact environment filter, not
+Boolean selector satisfiability or evidence of matching telemetry. Catalog search
+is limited to the loaded 20-item page. Mutable aliases, team access control and
+automatic startup preferences remain unsupported.

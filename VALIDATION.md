@@ -6831,3 +6831,83 @@ and actual commit/response-loss/reload retry with unchanged receipt identity.
 Affected legacy frames were regenerated. These run against the final image above;
 no runtime source changes followed the checks. Documentation-only files/frames
 are synchronized afterward without another code rebuild.
+
+## Reusable rolling Activity views — 2026-10-23
+
+[Activity views](docs/ACTIVITY_VIEWS.md) now preserve environment, log/span signal,
+qualified predicates and ordered core/field columns through a typed immutable
+configuration. They reuse the workbench file publisher, fixed-view presentation
+validation and shared revision-library display without changing fixed exploration
+view shapes/hashes or promising evidence. Saved has a bounded searchable library;
+Services uses the same library filtered by environment. Exact links and Copy view
+link reopen paused with empty rows and explicit Start. Scope/title/layout draft
+guards preserve current work; stale loads/saves cannot relabel a different draft.
+Staged signal edits remain unapplied, and full-selector Resume validation prevents
+silently resuming an old filter. Transient draft controls close after staging.
+
+Executed checks:
+
+- `go test -race ./workbench ./cmd/goo` passed. New source-free HTTP and store tests
+  cover strict publication, disallowed execution fields, deterministic identity,
+  integrity refusal, unsupported signals/layouts, exact environment filtering and
+  20-item pagination. Existing fixed-view/store/API guards remain unchanged.
+  Optional XTDB integration cases in that suite were not opted in; this feature
+  uses the file store and the real browser fixture runs without XTDB configuration.
+- Hegel's 50 immutable configuration property cases passed. Observed browser Quint
+  replay passed four rejecting controls for hidden reads, fabricated staged rows,
+  absent explicit Start and invalid layout. This is a bounded staged-state model,
+  not a proof of arbitrary navigation histories or service-selector satisfiability.
+- Real journey 146 passed against ordinary OTLP logs independently counted in
+  ClickHouse: supplied-field Include, reorder/add columns, real API publication,
+  actual clipboard sharing, reload, Saved and Services reopen, draft keep/discard,
+  mobile layout and explicit Start. Configuration operations performed zero
+  telemetry reads. The final repeat also changes staged signal in both directions
+  and confirms an old filter cannot resume silently. No successful source or
+  publication response is mocked. Bombadil's 25-second paused-view controls run
+  passed empty/paused, progress, exception and overflow invariants.
+- Three focused Node files passed. OpenAPI conformance passed 64 Go / 70 total
+  operations, 222 frozen responses, 56 admitted requests, 14 mux refusals and SSE
+  controls. Twenty-seven actual handler responses, including new publication/read/
+  catalog, conform. The final deployed API docs browser check passed 70 operations,
+  desktop/mobile and no page errors. A source-free deployment probe published,
+  loaded and environment-filtered a real configuration; five UI assets match the
+  checkout byte-for-byte.
+- Fixed-view compatibility journeys 90–91 passed on the final image (1.3 minutes).
+  Their baseline navigation now opens the existing Baseline options disclosure
+  when Pin moves there. An initial companion-read attempt did not complete; its
+  final rerun passed without changing the population runtime or fixed contracts.
+
+The final query/packages image is
+`sha256:e9be01683fc49b7c9e21836bf37e86a7f67b2c14b794bd7e1582f239c8c0f025`.
+Only those services are recreated; all telemetry, evidence and retention volumes
+remain. Reusable Go build cache is preserved under
+`/tmp/goo-go-build-cache-20261023`, with `/workspace/.cache/go-build` pointing there
+to free root disk space. Owned temporary servers, stores and build staging are
+cleaned; cached verification dependencies are retained. Documentation/diagrams and
+actual frames are synchronized after final checks. Compact logs/contracts live in
+`artifacts/activity-view-integration`; journey 146's ledger/verification/Bombadil
+output lives under `artifacts/activity-views`.
+
+Limits remain explicit: loaded-page search, environment-only service relevance,
+immutable content identities, no automatic startup preference, no new team access
+control, and no restoration of observations/capabilities from a view. Existing
+pending retained-evidence intents remain separate. The file configuration contains
+no captured read/custody clock or telemetry population totals.
+
+Final deployed entry compatibility: the Activity analysis-return journey and fresh
+entry journeys 102–103 all passed (59 seconds), including scoped analysis staging,
+paused-parent return, one active fresh stream, keyboard inspection, scrolling,
+backgrounding and explicit resume. Those checks preceded the obsolete-save response hardening below.
+Updated actual frames and documentation are synced afterward. Temporary build
+staging is removed; the relocated reusable Go cache is retained.
+
+Final review hardened obsolete save completion: a response from an earlier view
+generation now returns before changing the current draft-warning UI. Actual
+journey 147 passes with a real committed response held until a newer view's draft
+guard is visible, then released. The keep/discard controls and pending title
+remain intact, the selected target stages correctly, and no telemetry is read.
+The focused runtime change affects only that stale configuration response; native
+API, fixed-view contracts and telemetry execution are unchanged.
+
+The final deployed stream adapter matches the race-tested checkout bytes after
+recreation; the original native API/image contents remain inherited unchanged.
