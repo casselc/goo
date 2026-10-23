@@ -1032,3 +1032,10 @@ population-drilldown model and rejects changed read counts, bounds, scope and
 non-disjoint rest predicates. `verification/bombadil/region-partition.ts` explicitly
 loads the parent, then requires source-free staging and return. See
 [the contract](../docs/REGION_PARTITIONS.md).
+
+
+The [bounded D2 audit](../docs/D2_ACCEPTANCE.md) reuses the population properties,
+immutable view state/swarm and observed drilldown traces for columns, expansion,
+broadening and partition operations. Journey 134 now additionally checks exact UTC
+selector display and question-trail opener focus. Its Bombadil actor requires focus
+return after source-free region staging; no new execution model is introduced.

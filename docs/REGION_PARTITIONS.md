@@ -5,7 +5,7 @@ Shift + arrows and Enter. Open **Investigate a chart selection** and choose
 **Compare with rest**. The existing UTC/duration form provides the same precise
 selection without a chart gesture. Opening stages a population view; **Run
 population view** explicitly reads both sides. Back to question restores the
-paused parent chart and selection without reading telemetry.
+paused parent chart, selection and opener focus without reading telemetry.
 
 Both questions keep the parent's full environment, half-open window, predicates,
 reported-edge scope, grouping, measures and page limit. Their offsets reset to zero.
@@ -18,6 +18,8 @@ An omitted duration edge stays unbounded. Decimal milliseconds convert exactly t
 integer nanoseconds; exclusive upper edges become inclusive limits minus one.
 `column:timestamp_ns` is a typed UInt64 event-time field compiled by Go to the
 source timestamp; it is not ingestion time or a browser-generated SQL fragment.
+Selector summaries display exact UTC with nine fractional digits while preserving
+the original nanosecond predicate values.
 Both source questions retain the parent window, so the remainder includes records
 outside the chosen time slice. No counts are calculated by subtracting pages.
 
@@ -65,3 +67,5 @@ with rejecting controls; Bombadil requires actual source-free staging and return
 ![Region comparison staged on mobile](journeys/screenshots/134a-region-rest-preview.png)
 
 ![Selected region versus parent remainder](journeys/screenshots/134b-region-rest-comparison.png)
+
+The [bounded D2 audit](D2_ACCEPTANCE.md) records acceptance and retained limits.

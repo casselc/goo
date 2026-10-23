@@ -6403,3 +6403,53 @@ Compact Go/Node/property/API logs are in `artifacts/region-partition-contract`.
 No native histogram-to-span relation, numeric attribute complement, missing-value
 coercion or atomic source snapshot is claimed. Next: bounded D2 acceptance audit
 across the delivered column, selection, widening, broadening and partition flows.
+
+## 2026-10-23 — bounded D2 acceptance audit
+
+[The D2 acceptance map](docs/D2_ACCEPTANCE.md) accepts supported record columns,
+raw-span rectangle selection, enclosing time widening, whole-conjunct broadening,
+and categorical/time-duration selected-versus-rest. Arbitrary numeric attributes,
+nested Boolean editing, source-wide field discovery and persistent Activity layouts
+remain explicit boundaries. Exact Activity-row custody is still capability-gated.
+
+The source review found two small usability gaps, now fixed: typed event-timestamp
+predicates display exact UTC with nine fractional digits without changing their
+wire values, and the question trail restores an available in-view opener focus
+target on retained navigation. Attribute fields with the same name stay literal;
+invalid/out-of-range timestamp values are not coerced. Query bytes, membership,
+execution and publication owners are unchanged.
+
+Actual checks:
+- Go exploration, workbench and Go HTTP tests passed.
+- Seven Hegel checks passed: widening, whole-condition broadening, categorical
+  partition, raw-span region partition, rectangle mapping, shared record fields,
+  and immutable population-view state/swarm.
+- Baseline deployed audit: five browser cases passed in 2.7 minutes (record columns
+  and passive composition, widening, broadening and mobile selection). Configured
+  record-column/widening/broadening Bombadil campaigns and observed Quint replays
+  with rejecting controls passed.
+- After deploying the UI fixes, journeys 121, passive 121b and 134 passed in 1.1
+  minutes. Journey 134 asserts exact UTC selector text, unchanged fixed definitions,
+  a 2+3 membership partition, source-free return with opener focus, saved view
+  reopen and immutable comparison capture/reopen.
+- The region's observed Quint replay and all five rejecting controls passed.
+  Its 25-second Bombadil campaign now additionally requires opener focus to return
+  after source-free staging/navigation. Actual evidence is under
+  `artifacts/region-partition/region-361d4c66`.
+- All 45 Node files passed, including epoch zero, submillisecond timestamp edges,
+  UInt64 maximum, invalid literal handling and immutable predicate checks.
+- OpenAPI conformance passed (58 Go operations, 222 response fixtures, 56 admitted
+  requests, 14 mux refusals, negative/SSE controls). No API schema changed.
+
+Compact Go/Node/property/API/browser logs are in `artifacts/d2-acceptance`. Frames
+118/121/122/125/134 were refreshed from actual source-backed journeys. Contract,
+field-presentation guide, acceptance diagram, README, verification guide and active
+plan were updated. Matching UI fixes are deployed to the local query/packages lab,
+preserving optional XTDB startup configuration. Owned build staging/scratch logs
+are cleaned after archiving; no telemetry tables or retained captures are removed.
+
+Next is a bounded S3/F1 prerequisite assessment for exact observed Activity-row
+selection: server-issued membership, canonical payload/occurrence identity,
+read basis/window, expiry and idempotent publication must exist before exact
+retention/recovery is exposed. No native result token or membership is fabricated,
+and a reread is not substituted for selected observations.

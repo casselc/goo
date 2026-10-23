@@ -4,7 +4,7 @@ The first B2 slice shares pure record-field display helpers across live selector
 summaries, fixed filter chips and record-package instrumentation field handoffs.
 `ui/field-presentation.js` owns qualified field labels, operator labels, leaf chip
 parts and nested selector text. It never validates a source binding, changes a
-predicate, converts numeric strings, issues requests or publishes evidence.
+predicate, coerces numeric attributes, issues requests or publishes evidence.
 
 | Record predicate | Display distinction |
 | --- | --- |
@@ -14,6 +14,7 @@ predicate, converts numeric strings, issues requests or publishes evidence.
 | `eq` with literal `Empty string` | `"Empty string"`; literal text is quoted |
 | Same key in `resource` and `attribute` | Different qualified fields; neither is a fallback for the other |
 | Duration bound | Exact decimal string; no Number conversion |
+| `column:timestamp_ns` | Exact UTC with nine fractional digits; original nanosecond string unchanged |
 
 Fixed chips retain qualified `kind:key` labels. Existing live/context selector text
 retains its friendly column labels and qualified attribute family labels. Package
@@ -97,3 +98,10 @@ separate visible labels, existing declared operation bindings, real observed Qui
 traces and an expanded Bombadil label invariant. Journey 98 retains exact service
 annotation and saved revision behavior. The [shared-question/native wire continuation](QUESTION_PROTOCOL.md) supplies the
 next bounded protocol coverage; no generic request owner is introduced.
+
+
+The D2 audit adds typed event-time presentation only for `column:timestamp_ns`.
+Canonical UInt64 values show exact UTC, including submillisecond predicate edges.
+Malformed/out-of-range strings retain their literal representation; an attribute
+named timestamp_ns remains an ordinary attribute. Unit tests cover epoch zero,
+UInt64 maximum and invalid values; journey 134 checks the real staged selector.

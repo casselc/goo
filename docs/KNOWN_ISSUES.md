@@ -617,3 +617,10 @@ native span UInt64 durations and event timestamps. Both sides use independent
 source reads; no atomic membership snapshot is claimed. Numeric attributes,
 missing/invalid attribute durations and arbitrary Boolean negation remain unsupported
 by this operation. A selection exceeding the existing predicate budget is refused.
+
+
+The [bounded D2 audit](D2_ACCEPTANCE.md) accepts current population operations.
+Nested Boolean branch editing, arbitrary numeric-attribute complements/transforms,
+source-wide field discovery and persistent Activity layouts remain outside that
+cut. Exact Activity-row retention/recovery still requires server membership,
+occurrence identity, expiry and idempotency; connection-local handles are insufficient.

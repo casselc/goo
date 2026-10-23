@@ -581,3 +581,6 @@ these capabilities to real evaluation outcomes and current kernel limits.
 [Compare a time/latency region with the rest](docs/REGION_PARTITIONS.md) stages
 disjoint span populations in their original window, using existing comparison,
 saved-view and immutable capture workflows.
+
+The [bounded D2 acceptance audit](docs/D2_ACCEPTANCE.md) maps record fields, chart
+selection, scope broadening and partitions to tested behavior and explicit limits.
