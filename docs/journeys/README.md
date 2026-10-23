@@ -1669,3 +1669,5 @@ mobile access. Frames 120a/b show live error and stored mean ranking. Enable
 Journey 121: [raw-span time-duration selection](../HEATMAP_SELECTION.md) stages
 by pointer and keyboard, explicitly executes exact bounds and captures/reopens
 selected evidence. 121b covers the passive component contract.
+
+Journey 122: [explicit population time expansion](../POPULATION_WORKSPACE.md#expanding-the-time-window), source-free preview/open/return, independent selectors and explicit full-population reread.

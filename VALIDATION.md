@@ -1,5 +1,44 @@
 # Validation record
 
+## Explicit enclosing population time windows (2026-10-23 UTC)
+
+Applied/configured population selectors now disclose an exact UTC expansion
+form. It requires a strict enclosing aligned window within the existing
+120-minute/pre-2100 limits, preserves complete independent questions and resets
+paging. Opening stages through the existing child owner; Run reads explicitly.
+The parent retains its paused results/baselines and returns without a reread.
+Staged facet drafts must be applied or cleared first. No predicate removal,
+selection-versus-rest algebra, new evaluator or API operation is introduced.
+
+Actual checks:
+
+- All 42 Node test files pass, including immutable complete-question retention,
+  offset reset and invalid/narrowed/misaligned/over-budget bounds.
+- Hegel generated windows compile through Go while preserving independent
+  missing/empty field selectors and complete question copies (40 examples; 3.6s).
+- Source journey 122 passes with its 20-second Bombadil campaign (43.6s).
+  The final rebuilt/deployed journey also passes with saved-view save/reopen:
+  two matching spans become three after expanding backwards, with a one-row
+  inspection page; companion predicates stay exact. Editing, opening, parent
+  return and saved-view reopening do not read telemetry.
+- The observed Go/Quint drilldown trace passes; six negative controls reject
+  preview/return reads, companion environment drift, changed filters, narrowed
+  bounds and invalid return depth. Bombadil opens/edits/stages/returns locally
+  while checking no source reads beyond the initial explicit Run.
+- The deployed readonly API check passes: matching OpenAPI plus all seven real
+  handler responses. No backend wire change or Databricks instance is required.
+- The first mobile check found datetime-input overflow; scoped grid/flex sizing
+  fixes it, and the final mobile journey passes. Frame 122 shows the actual
+  compact UTC preview. The existing journey 116 needed its parent-summary CSS
+  locator scoped after adding a nested disclosure; this is a test composition
+  change, not altered comparison execution. Its final deployed rerun passes (21.1s).
+
+README, active plan, population contract/process diagram, journey index and
+known limits are synchronized. Cleanup removes only obsolete build layers/images
+and eligible test recordings; application data and durable evidence are retained.
+The temporary source UI is stopped.
+
+
 ## Development browser diagnostic retention (2026-10-23 UTC)
 
 Added a dry-run-first artifacts-only cleanup command, age-based raw recording

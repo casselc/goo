@@ -556,3 +556,5 @@ rows; this is not source-wide schema discovery. Core and added columns reorder
 within their own groups. Population layouts can be saved; live preferences remain
 page-local, empty fixed pages omit the picker, and arbitrary transforms are still
 future work. See [record field contract](RECORD_COLUMNS.md).
+
+Population scope widening currently expands an enclosing aligned UTC window, within the 120-minute query limit. Removing arbitrary predicates and exact selection-versus-rest remain planned; see [time expansion](POPULATION_WORKSPACE.md#expanding-the-time-window).

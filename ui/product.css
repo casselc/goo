@@ -1444,3 +1444,9 @@ td details {
 .comparison-ranked-column>div+div{margin-top:6px}
 .comparison-breakdown>.scroll>table :is(th,td):first-child{min-width:110px}
 .comparison-breakdown>.scroll>table :is(th,td):last-child{min-width:135px}
+/* Applied-population widening is a local staged form, including on narrow views. */
+.population-window-expansion{min-width:0;max-width:100%}
+.population-window-expansion form>.controls{display:flex;flex-wrap:wrap;min-width:0}
+.population-window-expansion form>.controls>label{display:grid;flex:1 1 220px;min-width:0;max-width:100%;gap:4px}
+.population-window-expansion input{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+.population-window-expansion button{max-width:100%;white-space:normal}

@@ -268,3 +268,37 @@ Record pages now offer a compact [observed-field picker](RECORD_COLUMNS.md) with
 column visibility/order and explicit Include/Exclude intents. Population view
 configuration accepts optional ordered `fieldColumns` (up to eight qualified
 fields); saved layouts do not change query predicates or capture evidence.
+
+## Expanding the time window
+
+Inside **Applied population selectors → Expand time window**, edit exact UTC
+bounds to enclose the current fixed window. The preview keeps every applied
+signal's predicates, environment, measures and reported-edge binding. It resets
+paging and requires a strict expansion within the existing 120-minute/pre-2100
+query limits. Misaligned signal windows are refused. Apply or clear staged
+facets first, so widening cannot silently discard an unapplied filter draft.
+
+**Open expanded population** stages an independent child using the existing
+population owner; it does not read telemetry. **Run selected population** performs
+the explicit reads. The parent stays paused, retains its result/baseline and
+returns without a reread. Child depth remains bounded to three. Save the child
+as an ordinary exploration view to reuse its queries; it is configuration, not
+frozen evidence. Expansion does not remove filters or compute selection-versus-rest.
+
+```mermaid
+flowchart LR
+  A[Applied independent signal questions] --> B[Preview wider enclosing UTC bounds]
+  B -->|Open: no source read| C[Staged child population]
+  C -->|Explicit Run| D[Existing Go validation and independent reads]
+  D --> E[Save reusable view]
+  C -->|Back: no source read| A
+```
+
+Journey 122 uses ordinary OTel spans inside and before the original window,
+checks the companion's independent missing-key selector, full counts versus a
+one-record page, mobile layout and paused-parent return. Hegel checks generated
+query widening against Go compilation; observed Quint drilldown validation uses
+negative controls for hidden reads, altered filters/environment, narrowed bounds
+and invalid return depth. Bombadil exercises source-free expansion/return.
+
+![Expanded UTC window preview](journeys/screenshots/122-expanded-window-preview.png)
