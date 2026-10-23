@@ -6614,3 +6614,89 @@ by SSE-issued capabilities and the Activity selection/retry workflow. Initial ta
 roots use bounded receipt scans (1,000 requests / 16 MiB); exceeding that budget
 refuses instead of returning a partial review history/catalog. Recorded custody
 metadata is not an ingestion clock or a claim of an atomic cross-query snapshot.
+
+## 2026-10-23 — public origin reads and compact retained/citation presentation
+
+Added explicit readonly `GET /retained-evidence/catalog` and
+`GET /retained-evidence/{id}/content`. They expose the typed origin, named
+capture/custody clock and exact manifest JSON without a source read. Old v1 read
+routes, receipt bytes and catalog cursors remain supported. No tail publication
+route, SSE membership issuer or browser Activity selection/retry is added.
+
+The retained catalog/inspector and pinned citation owners now use those new reads.
+A shared display-only adapter composes existing record summaries, UTC descriptions,
+evidence summaries and attribute viewers; attributes/raw JSON stay behind local
+disclosures. Numeric tokens beyond JavaScript round-trip precision are explicit
+text in the structured display, with original numeric types/tokens retained in
+`manifestJSON`. Read windows/clocks remain per member; no source count or fixed
+question is synthesized for tail observations.
+
+Actual checks:
+
+- Real new journey 138 passed in 1.5 minutes with observed Quint replay and a
+  25-second Bombadil campaign. Preparation injects two duplicate OTLP spans into
+  the running collector/ClickHouse, polls them through the real Go source adapter,
+  freezes distinct original read windows and publishes via the typed XTDB backend.
+  Browser inspection, document pinning, correction, reload and origin-scoped
+  catalog browsing use actual Go/XTDB reads. Telemetry reads are blocked/recorded
+  during the retained workflow; none occur. Desktop/mobile frames 138a–d were
+  captured and visually inspected. The initial expanded attribute view was
+  consolidated into the compact record summary plus optional attributes.
+- Observed browser replay uses the annotation lifecycle model, with five rejecting
+  controls: extra source read, incorrect publication count, changed pinned review,
+  changed recorded custody clock and changed exact manifest. The tail Bombadil
+  actor opens/folds observation/provenance/attributes and searches locally, checking
+  two occurrences, explicit origin, no hidden fetch/write and no viewport overflow.
+- Existing real-data journeys 99, 100 and 101 passed together in 2.3 minutes,
+  including saved/fixed-live exact retention, lost acknowledgements, reload recovery,
+  idempotent review retries, pinned documents, stale catalog responses, unavailable
+  catalog preservation and mobile layout. Journey 101 includes its updated origin
+  selector Bombadil campaign and existing observed Quint replay/rejecting controls.
+  Affected 99/100/101 screenshot frames were regenerated from the running app.
+- `go test -race ./retention ./exploration ./cmd/goo -count=1` passed with the local
+  XTDB opt-in. New HTTP guards cover configuration/unavailability, invalid/repeated
+  origin and read-basis queries, unknown parameters, oversized basis and bad IDs.
+  Existing retention/catalog/correction/pinned integration checks also ran.
+- The final codec fix additionally passed
+  `go test -race ./retention ./exploration -run 'Test(Tail|XTDBTail)' -count=1` with
+  real XTDB. Formatting changes from JSON transports (whitespace, key order and
+  equivalent string escapes including Unicode) canonicalize records before
+  integrity checks; original number tokens/occurrence hashes, IDs and semantic
+  provenance guards remain protected. A nonmutating transport fixture covers
+  pretty JSON, HTML characters, Unicode escapes and integers above 2^53.
+- Hegel manifest properties (50 examples) and membership state/swarm (70 sequences
+  of 30 steps) passed; observed membership and real XTDB review Quint replay passed
+  with rejecting controls. The property/state subset was repeated after the final
+  canonical-record normalization change. No claim of an implemented SSE issuer or
+  browser publication model is made.
+- Two focused Node display-adapter tests passed, covering exact numeric tokens,
+  quoted strings, typed-origin refusal and distinct member windows without fake
+  aggregate/capture fields. JS syntax checks passed.
+- OpenAPI conformance passed: 60 Go operations (66 total), 222 frozen response
+  fixtures, 56 admitted requests, 14 mux refusals and SSE/negative controls.
+  Twenty-four actual handler observations, including both origin-aware responses
+  backed by real XTDB, conform. Complete mixed-origin and relabeled-tail controls
+  are rejected. The Python proxy's positive new-route behavior is exercised by
+  the deployed browser journey. Optional ClickHouse transport opt-ins in the Go
+  suite were skipped; the browser/fixture used actual ClickHouse separately.
+
+Compact command logs/contracts live in `artifacts/tail-public-readers`; journey 138
+stores its source-backed receipt, browser ledger, Quint controls and Bombadil run
+under `artifacts/tail-evidence/<environment>`. Existing journey ledgers remain with
+99–101. README, API contract, custody diagram, component docs, plan/known issues and
+executable storyboards are synchronized. Final local images include the validated
+Go/UI bytes; only packages/query are recreated with the XTDB overlay, preserving
+telemetry and custody volumes. Owned build staging is removed after deployment;
+no user evidence or telemetry is deleted.
+
+Next: shared bank/SSE capability issuance with per-row original provenance, then
+bounded Activity selection/publication and immutable pending-intent browser retry.
+
+Final deployment: query/packages run image
+`sha256:9c6b5eb3f015b822696bb408a6924d26880061eee4d067ee7319d7cb683c010c`.
+Readonly post-recreate checks matched the exact original manifest JSON and custody
+clock, origin-scoped catalog, v1 tail guard and all four deployed retention UI
+assets against the validated checkout. The deployed API docs browser check passed
+66 operations, typed content disclosure, mobile layout and no page errors; its
+screenshot/count assertions are updated. Documentation-only files/frames are
+synced after this final read-only check without another runtime code rebuild.

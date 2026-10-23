@@ -139,6 +139,8 @@ func main() {
 		root(name, v, false)
 	}
 
+	root("EvidenceContent", retention.EvidenceContent{}, false)
+	root("EvidenceCatalog", retention.EvidenceCatalogPage{}, false)
 	root("MeaningPage", workbench.MeaningPage{}, false)
 	root("ExplorationViewResult", workbench.ExplorationView{}, false)
 	root("ExplorationViewList", workbench.ExplorationViewList{}, false)

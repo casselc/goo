@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"sort"
+	"time"
 
 	"github.com/casselc/goo/workbench"
 	"github.com/jackc/pgx/v5"
@@ -248,4 +249,47 @@ func evidenceAnnotation(ctx context.Context, c *pgx.Conn, id, revision string) (
 		}
 	}
 	return nil, errors.New("pinned review not found for retained evidence")
+}
+
+// EvidenceContent exposes typed immutable content and its exact JSON encoding.
+// Recorded tail custody is the earliest receipt timestamp, not ingestion time.
+type EvidenceContent struct {
+	Evidence
+	ManifestJSON string `json:"manifestJSON"`
+	RetainedAt   string `json:"retainedAt,omitempty"`
+}
+
+func (s Store) Content(ctx context.Context, id string) (*EvidenceContent, error) {
+	c, e := s.connect(ctx)
+	if e != nil {
+		return nil, e
+	}
+	defer c.Close(ctx)
+	v, e := readEvidence(ctx, c, id)
+	if e != nil {
+		return nil, e
+	}
+	out := &EvidenceContent{Evidence: *v}
+	if v.Capture != nil {
+		raw, _ := json.Marshal(v.Capture)
+		out.ManifestJSON = string(raw)
+	} else {
+		raw, _ := json.Marshal(v.Tail)
+		out.ManifestJSON = string(raw)
+		receipts, e := tailReceipts(ctx, c, id)
+		if e != nil {
+			return nil, e
+		}
+		if len(receipts) == 0 {
+			return nil, errors.New("tail custody receipt unavailable")
+		}
+		at := receipts[0].RetainedAt
+		for _, r := range receipts {
+			if r.RetainedAt.Before(at) {
+				at = r.RetainedAt
+			}
+		}
+		out.RetainedAt = at.UTC().Format(time.RFC3339Nano)
+	}
+	return out, nil
 }

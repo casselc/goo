@@ -273,9 +273,43 @@ func (s *TailMembershipSnapshots) Resolve(connection string, selector TailSelect
 	return out, nil
 }
 
+// CanonicalRecords owns a normalized representation of the observation records.
+// JSON whitespace/key order/string escapes are transport details; numeric tokens
+// remain exact. This does not issue membership or change provenance.
+func (d TailSelectionDraft) CanonicalRecords() (TailSelectionDraft, error) {
+	if len(d.Members) < 1 || len(d.Members) > 20 {
+		return d, errors.New("invalid tail member count")
+	}
+	d.Members = append([]TailSelectionMember(nil), d.Members...)
+	inputBytes := 0
+	for _, m := range d.Members {
+		inputBytes += len(m.Record)
+		if inputBytes > 2<<20 {
+			return d, errors.New("tail selection exceeds byte budget")
+		}
+	}
+	for i, m := range d.Members {
+		if m.FromMS < 0 || m.ToMS > 9223372036854 || m.FromMS != m.ToMS-TailWindowMS {
+			return d, errors.New("invalid tail member read window")
+		}
+
+		row, e := canonicalTailMember(TailRow{Key: m.Ref.Key, Record: m.Record, Late: m.Late}, m.FromMS, m.ToMS)
+		if e != nil {
+			return d, e
+		}
+		d.Members[i].Record = row.Record
+	}
+	return d, nil
+}
+
 // Validate checks the durable shape of a resolved draft without requiring live
 // capabilities. It cannot establish membership; only Resolve may issue a draft.
 func (d TailSelectionDraft) Validate() error {
+	var err error
+	d, err = d.CanonicalRecords()
+	if err != nil {
+		return err
+	}
 	digest := d.Digest
 	d.Digest = ""
 	raw, err := json.Marshal(d)
@@ -293,10 +327,7 @@ func (d TailSelectionDraft) Validate() error {
 		if !validTailConnection(m.Ref.Token) || !validTailConnection(m.Basis) || order <= previous || seen[m.Ref.Key] || m.FromMS < 0 || m.ToMS > 9223372036854 || m.FromMS != m.ToMS-TailWindowMS || m.ObservedAt.IsZero() || m.ObservedAt.Before(time.UnixMilli(m.ToMS)) {
 			return errors.New("invalid tail member provenance")
 		}
-		row, e := canonicalTailMember(TailRow{Key: m.Ref.Key, Record: m.Record, Late: m.Late}, m.FromMS, m.ToMS)
-		if e != nil || !bytes.Equal(row.Record, m.Record) {
-			return errors.New("invalid canonical tail member")
-		}
+
 		seen[m.Ref.Key] = true
 		previous = order
 	}

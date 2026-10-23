@@ -631,9 +631,9 @@ bank, currently unwired. Tail SSE still issues no capability and public retentio
 still rejects tail references. Process-local proofs expire from original read time
 and disappear on restart. The typed backend publisher now supports durable
 committed-request recovery without those proofs. Origin-aware backend catalog/read
-views and shared correction/pinned-review resolution are implemented. Public
-manifest/catalog presentation, browser citation rendering and SSE selection/retry
-integration remain unwired. Old unprojected tail requests require bounded receipt
+views, explicit public read/catalog routes, compact retained inspectors and pinned
+browser citations are implemented. SSE membership issuance and exact Activity
+selection/publication/retry integration remain unwired. Old unprojected tail requests require bounded receipt
 scans (1,000 / 16 MiB); exceeding those bounds refuses rather than omitting roots.
 Existing v1 captured/result-page manifests cannot represent mixed-poll tail
 provenance and remain unchanged.

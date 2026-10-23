@@ -38,8 +38,15 @@ responses.update({
  ('get','/investigation-workflows'):'WorkflowList',('get','/operation-packages'):'OperationPackageList',('get','/recipes'):'RecipeList',('get','/telemetry-packages'):'TelemetryPackageList',
  ('get','/retained-evidence/{id}'):'RetainedManifest',('get','/retained-evidence/{id}/annotations'):'MeaningPage',('get','/retained-evidence/{id}/annotations/{revision}'):'MeaningRevision',('post','/captures/live'):'LiveComparisonDraft',
 })
+# The reflected nullable fields are constrained to a discriminated origin union.
+schemas['retention.EvidenceContent']['oneOf']=[
+ {'properties':{'origin':{'enum':['saved-capture','result-page']},'capture':{'not':{'type':'null'}}},'required':['capture'],'not':{'required':['tail']}},
+ {'properties':{'origin':{'const':'tail-selection'},'tail':{'not':{'type':'null'}},'retainedAt':{'type':'string','minLength':1,'format':'date-time'}},'required':['tail','retainedAt'],'not':{'required':['capture']}}
+]
 schemas['RetentionStatus']={'type':'object','required':['configured'],'properties':{'configured':{'type':'boolean'}}}
 responses['get','/retained-evidence/status']='RetentionStatus'
+responses['get','/retained-evidence/catalog']='EvidenceCatalog'
+responses['get','/retained-evidence/{id}/content']='EvidenceContent'
 # Native registry responses are envelopes rather than Definition directly.
 schemas['NativePackage'] = {'type':'object','required':['definition','revision','yaml'],'properties':{'definition':ref('measurements.Definition'),'revision':{'type':'string'},'yaml':{'type':'string'}}}
 schemas['NativePlan'] = {'allOf':[ref('NativePackage'),{'type':'object','required':['question','plan'],'properties':{'question':ref('measurements.Question'),'plan':ref('measurements.Plan')}}]}

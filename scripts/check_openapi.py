@@ -96,6 +96,12 @@ def check(spec):
         wrong = copy.deepcopy(value)
         wrong[{'reset':'replay','batch':'rows','gap':'reason'}[event]] = 123
         assert list(validator(spec, shape).iter_errors(wrong)), f'SSE {event} control accepted'
+    # Origin-aware content must never accept ambiguous or missing manifests.
+    shape={'$ref':'#/components/schemas/EvidenceContent'}
+    for wrong in ({'origin':'tail-selection','manifestJSON':'{}'},
+                  {'origin':'unknown','capture':{},'manifestJSON':'{}'},
+                  {'origin':'tail-selection','capture':{},'tail':{},'retainedAt':'2026-10-23T00:00:00Z','manifestJSON':'{}'}):
+        assert list(validator(spec,shape).iter_errors(wrong)), 'Origin union control accepted'
     print(f'OpenAPI valid: {len(routes)} Go operations; {responses} fixture responses, {requests} admitted requests, {mux_refusals} mux refusals; negative controls and SSE schemas pass')
 
 
@@ -109,6 +115,15 @@ def check_observed(spec, path):
         validator(spec, op['responses'][status]['content']['application/json']['schema']).validate(case['response'])
         if case.get('request') is not None and 'requestBody' in op:
             validator(spec, op['requestBody']['content']['application/json']['schema']).validate(case['request'])
+    contents=[c['response'] for c in observations if c['path']=='/retained-evidence/{id}/content' and c['status']==200]
+    capture=next((c for c in contents if c['origin']!='tail-selection'),None)
+    tail=next((c for c in contents if c['origin']=='tail-selection'),None)
+    if capture and tail:
+        shape=spec['paths']['/retained-evidence/{id}/content']['get']['responses']['200']['content']['application/json']['schema']
+        ambiguous={**tail,'capture':capture['capture']}
+        assert list(validator(spec,shape).iter_errors(ambiguous)), 'Complete mixed-origin control accepted'
+        mislabeled={**tail,'origin':'saved-capture'}
+        assert list(validator(spec,shape).iter_errors(mislabeled)), 'Relabeled tail control accepted'
     print(f"Observed API workflow: {len(observations)} real handler responses conform (including optional XTDB only when configured)")
 
 

@@ -2138,6 +2138,119 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/retained-evidence/catalog": {
+      "get": {
+        "operationId": "get_retained_evidence_catalog",
+        "summary": "GET /retained-evidence/catalog",
+        "tags": [
+          "retained-evidence"
+        ],
+        "description": "Current owner: cmd/goo/retention_http.go. Effect: xtdb-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/retention_http.go",
+        "x-effects": "xtdb-read",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          },
+          {
+            "name": "environment",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          },
+          {
+            "name": "origin",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          },
+          {
+            "name": "service",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          },
+          {
+            "name": "tag",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvidenceCatalog"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-schema-coverage": "typed"
+      }
+    },
     "/retained-evidence/status": {
       "get": {
         "operationId": "get_retained_evidence_status",
@@ -2479,6 +2592,90 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MeaningRevision"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-schema-coverage": "typed"
+      }
+    },
+    "/retained-evidence/{id}/content": {
+      "get": {
+        "operationId": "get_retained_evidence_id_content",
+        "summary": "GET /retained-evidence/{id}/content",
+        "tags": [
+          "retained-evidence"
+        ],
+        "description": "Current owner: cmd/goo/retention_http.go. Effect: xtdb-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/retention_http.go",
+        "x-effects": "xtdb-read",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact revision, receipt ID or process-local capability; not an authorization credential."
+          },
+          {
+            "name": "awaitToken",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvidenceContent"
                 }
               }
             }
@@ -4643,8 +4840,14 @@
           }
         ]
       },
+      "EvidenceCatalog": {
+        "$ref": "#/components/schemas/retention.EvidenceCatalogPage"
+      },
       "EvidenceComparison": {
         "$ref": "#/components/schemas/exploration.EvidenceComparison"
+      },
+      "EvidenceContent": {
+        "$ref": "#/components/schemas/retention.EvidenceContent"
       },
       "ExplorationView": {
         "anyOf": [
@@ -10885,6 +11088,22 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.SpanStatusSummary"
       },
+      "exploration.TailMembershipRef": {
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "token",
+          "key"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.TailMembershipRef"
+      },
       "exploration.TailRow": {
         "properties": {
           "key": {
@@ -10902,6 +11121,108 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.TailRow"
+      },
+      "exploration.TailSelectionDraft": {
+        "properties": {
+          "connection": {
+            "type": "string"
+          },
+          "digest": {
+            "type": "string"
+          },
+          "members": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/exploration.TailSelectionMember"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "selector": {
+            "$ref": "#/components/schemas/exploration.TailSelector"
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "digest",
+          "connection",
+          "selector",
+          "members"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.TailSelectionDraft"
+      },
+      "exploration.TailSelectionMember": {
+        "properties": {
+          "basis": {
+            "type": "string"
+          },
+          "fromMs": {
+            "type": "integer"
+          },
+          "late": {
+            "type": "boolean"
+          },
+          "limited": {
+            "type": "boolean"
+          },
+          "observedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "record": {},
+          "ref": {
+            "$ref": "#/components/schemas/exploration.TailMembershipRef"
+          },
+          "toMs": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "ref",
+          "fromMs",
+          "toMs",
+          "observedAt",
+          "basis",
+          "limited",
+          "late",
+          "record"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.TailSelectionMember"
+      },
+      "exploration.TailSelector": {
+        "properties": {
+          "environment": {
+            "type": "string"
+          },
+          "signal": {
+            "type": "string"
+          },
+          "where": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.Predicate"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "environment"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.TailSelector"
       },
       "exploration.TailSelectorInput": {
         "additionalProperties": false,
@@ -17186,6 +17507,181 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/retention.CorrectionReceipt"
       },
+      "retention.EvidenceCatalogItem": {
+        "properties": {
+          "at": {
+            "type": "string"
+          },
+          "clock": {
+            "type": "string"
+          },
+          "environment": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "observations": {
+            "type": "integer"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "services": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tags": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "origin",
+          "at",
+          "clock",
+          "environment",
+          "services",
+          "tags",
+          "observations"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/retention.EvidenceCatalogItem"
+      },
+      "retention.EvidenceCatalogPage": {
+        "properties": {
+          "items": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/retention.EvidenceCatalogItem"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "nextCursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/retention.EvidenceCatalogPage"
+      },
+      "retention.EvidenceContent": {
+        "properties": {
+          "capture": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/retention.Manifest"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "manifestJSON": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "retainedAt": {
+            "type": "string"
+          },
+          "tail": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/retention.TailManifest"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "origin",
+          "manifestJSON"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/retention.EvidenceContent",
+        "oneOf": [
+          {
+            "properties": {
+              "origin": {
+                "enum": [
+                  "saved-capture",
+                  "result-page"
+                ]
+              },
+              "capture": {
+                "not": {
+                  "type": "null"
+                }
+              }
+            },
+            "required": [
+              "capture"
+            ],
+            "not": {
+              "required": [
+                "tail"
+              ]
+            }
+          },
+          {
+            "properties": {
+              "origin": {
+                "const": "tail-selection"
+              },
+              "tail": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "retainedAt": {
+                "type": "string",
+                "minLength": 1,
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "tail",
+              "retainedAt"
+            ],
+            "not": {
+              "required": [
+                "capture"
+              ]
+            }
+          }
+        ]
+      },
       "retention.Manifest": {
         "properties": {
           "basis": {
@@ -17287,6 +17783,26 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/retention.Receipt"
+      },
+      "retention.TailManifest": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "selection": {
+            "$ref": "#/components/schemas/exploration.TailSelectionDraft"
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "id",
+          "selection"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/retention.TailManifest"
       },
       "workbench.Card": {
         "properties": {

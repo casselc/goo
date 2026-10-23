@@ -575,3 +575,15 @@ source-free display contracts. Native metric semantics remain in separate adapte
 for compact supplied metadata and native disclosures for hints. Its application
 adapter owns local paging and delegates Build to the measurement owner; no new
 fetching custom element or component library was introduced.
+
+
+Retained content now shares the display-only `GooRetentionPresentation` adapter:
+`model`, `summary` and `observations` consume supplied typed-origin content and its
+exact JSON string. They compose existing `goo-record-summary`, shared UTC record
+descriptions, `goo-evidence-summary` and structured attribute viewers. Attributes
+are disclosed locally after the compact record/provenance view. No fetch, source
+lifecycle, navigation or publication belongs to this adapter. The catalog,
+retention owner and citation owner retain those responsibilities.
+`displayJSON` preserves numeric tokens beyond browser round-trip precision as
+explicit display text; original manifest JSON remains unchanged. This is display
+representation, not conversion of stored telemetry types or query values.

@@ -42,6 +42,11 @@ type TailReceipt struct {
 }
 
 func (m TailManifest) Validate() error {
+	var err error
+	m.Selection, err = m.Selection.CanonicalRecords()
+	if err != nil {
+		return err
+	}
 	id := m.ID
 	m.ID = ""
 	raw, e := json.Marshal(m)

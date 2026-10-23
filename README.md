@@ -589,5 +589,6 @@ selection, scope broadening and partitions to tested behavior and explicit limit
 [Exact Activity selection prerequisites](docs/TAIL_SELECTION_CUSTODY.md) now include
 a tested Go membership bank, typed tail manifest and idempotent XTDB publisher.
 Origin-aware Go catalog/read views and shared review/correction/pinned-document
-resolution now support tail evidence. Public manifest/catalog presentation, SSE
-capabilities and exact tail selection/browser retry remain follow-up work.
+resolution now support tail evidence. Public origin-aware read/catalog routes and
+compact UTC/provenance/citation inspectors are implemented. SSE capabilities and
+exact tail selection/browser retry remain follow-up work.

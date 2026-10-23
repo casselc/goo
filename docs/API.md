@@ -7,7 +7,7 @@ searchable and self-contained: no CDN, telemetry query or API execution widget.
 They run from the current checkout; an older container image must be rebuilt to
 serve these routes.
 
-The spec inventories 64 supported operations: 58 Go operations, five Python-only
+The spec inventories 66 supported operations: 60 Go operations, five Python-only
 `/api` operations and the Python root `/health` probe. Go paths are unprefixed on
 port 8089; the browser proxy exposes them under `/api` on port 8088. Python-only
 operations override the server list. `/api-docs`, `/openapi.json`, the UI, static
@@ -233,11 +233,19 @@ exact [time/duration region partitions](REGION_PARTITIONS.md). It uses the exist
 typed predicate wire shape; it is not a new endpoint or an ingestion clock.
 
 
-Tail evidence currently has Go-only `ReadEvidence` / `CatalogEvidence` views.
-The public manifest and catalog endpoints still return v1 capture/result-page
-shapes; no new route or response union is registered. Shared annotation/history/
-correction and document validation methods can resolve tail IDs created through
-the backend publisher, preserving existing meaning-revision wire shapes. The
-browser's retained-manifest/citation inspector still requires the planned explicit
-tail presentation adapter. No SSE membership capability or publication route is
-advertised. See [the origin boundaries](TAIL_SELECTION_CUSTODY.md#shared-origin-readers-and-review-lifecycle).
+Origin-aware retained reads now have two explicit routes:
+
+| Route | Response and effect |
+| --- | --- |
+| `GET /retained-evidence/catalog` | `EvidenceCatalog`: saved-capture/result-page/tail-selection metadata and named capture/custody clocks. Optional origin and existing exact filters; metadata only. |
+| `GET /retained-evidence/{id}/content` | `EvidenceContent`: exactly one capture/tail manifest plus exact `manifestJSON`, and tail recorded custody time. Optional bounded `awaitToken` read lower bound. |
+
+Legacy `GET /retained-evidence` and `GET /retained-evidence/{id}` keep their v1
+shapes. Review/correction and exact document validation keep existing meaning wire
+shapes. The new response union is reflected and constrained in OpenAPI; actual
+handler observations cover both origins and reject complete mixed-origin values.
+Content reads distinguish definite absence (404), unavailable/corrupt store (502)
+and unconfigured optional store (503). No telemetry read or publication occurs.
+The browser catalog/inspector/citation adapter now uses these origin-aware reads.
+No SSE membership capability or tail publication route is registered yet. See
+[the origin boundaries](TAIL_SELECTION_CUSTODY.md#public-read-and-presentation-adapters).

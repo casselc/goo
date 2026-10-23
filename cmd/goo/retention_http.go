@@ -8,6 +8,7 @@ import (
 	"github.com/casselc/goo/exploration"
 	"github.com/casselc/goo/retention"
 	"github.com/casselc/goo/workbench"
+	"github.com/jackc/pgx/v5"
 	"io"
 	"net/http"
 	"path/filepath"
@@ -86,6 +87,59 @@ func registerRetention(mux *http.ServeMux, dir string, connection retentionConne
 		v, e := connection.store(r.URL.Query().Get("awaitToken")).Annotation(ctx, r.PathValue("id"), r.PathValue("revision"))
 		if e != nil {
 			fail(w, 404, e)
+			return
+		}
+		reply(w, 200, v)
+	})
+
+	mux.HandleFunc("GET /retained-evidence/catalog", func(w http.ResponseWriter, r *http.Request) {
+		if !available(w) {
+			return
+		}
+		q := r.URL.Query()
+		for key, values := range q {
+			if len(values) != 1 || (key != "tag" && key != "service" && key != "environment" && key != "from" && key != "to" && key != "cursor" && key != "origin") {
+				fail(w, 400, errors.New("unsupported evidence catalog query"))
+				return
+			}
+		}
+		filter := retention.EvidenceCatalogQuery{CatalogQuery: retention.CatalogQuery{Tag: q.Get("tag"), Service: q.Get("service"), Environment: q.Get("environment"), From: q.Get("from"), To: q.Get("to"), Cursor: q.Get("cursor")}, Origin: q.Get("origin")}
+		if e := filter.Validate(); e != nil {
+			fail(w, 400, e)
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
+		defer cancel()
+		v, e := store.CatalogEvidence(ctx, filter)
+		if e != nil {
+			fail(w, 502, e)
+			return
+		}
+		reply(w, 200, v)
+	})
+	mux.HandleFunc("GET /retained-evidence/{id}/content", func(w http.ResponseWriter, r *http.Request) {
+		for key, values := range r.URL.Query() {
+			if key != "awaitToken" || len(values) != 1 || len(values[0]) > 16384 {
+				fail(w, 400, errors.New("unsupported evidence content read basis"))
+				return
+			}
+		}
+		if !workbench.ID.MatchString(r.PathValue("id")) {
+			fail(w, 400, errors.New("invalid evidence ID"))
+			return
+		}
+		if !available(w) {
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
+		defer cancel()
+		v, e := connection.store(r.URL.Query().Get("awaitToken")).Content(ctx, r.PathValue("id"))
+		if e != nil {
+			if errors.Is(e, pgx.ErrNoRows) {
+				fail(w, 404, errors.New("evidence not found"))
+			} else {
+				fail(w, 502, e)
+			}
 			return
 		}
 		reply(w, 200, v)

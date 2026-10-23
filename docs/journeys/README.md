@@ -1754,3 +1754,34 @@ OTLP partition at exact time/duration boundaries with a one-row inspection page,
 source-free mobile staging and parent return, reusable configuration and immutable
 comparison evidence. Hegel/Quint and Bombadil guard membership and ownership.
 See [the contract and frames](../REGION_PARTITIONS.md).
+
+
+## 138. Inspect and cite retained Activity observations
+
+Implemented: [executable journey](../../journeys/tail-evidence.spec.js), optional
+local XTDB/ClickStack lab. Browser Activity selection/publication is still planned.
+
+1. Preparation ingests two duplicate span occurrences through OTLP into ClickHouse.
+   The [development fixture helper](../../scripts/tail-evidence-fixture/main.go)
+   polls actual source data through the Go adapter, freezes separate read windows
+   and publishes through the typed backend into XTDB. No UI data is mocked and no
+   client-record publication endpoint is added.
+2. Open that retained selection: see Activity origin and recorded custody time,
+   then inspect an occurrence's compact service/event-time/status/duration summary.
+   Read time, poll window, basis and occurrence ordinal remain distinct. Attributes
+   disclose locally; UTC event timestamps retain exact nanoseconds in tooltips.
+3. Start and save an investigation with the original review pinned. Revise the
+   review on the retained selection and reopen the document: the citation keeps
+   its original review and read lower bound.
+4. Browse retained metadata scoped to the environment and Activity origin. Selecting
+   metadata does not fetch records/reviews; opening is explicit. Inspect the mobile
+   citation without horizontal overflow or telemetry reads.
+5. Observed Quint replay rejects extra source reads/publications, changed pinned
+   review, custody clock or exact manifest. Bombadil opens/folds provenance and
+   attributes, searches locally and checks occurrence count, origin, no writes/
+   reads and layout. Existing journeys 99–101 cover the v1 page/citation paths.
+
+![Compact retained Activity provenance](screenshots/138a-retained-activity-provenance.png)
+![Pin an Activity review in a saved investigation](screenshots/138b-pinned-activity-review.png)
+![Browse the origin-aware retained catalog](screenshots/138c-activity-catalog.png)
+![Read the pinned Activity citation on mobile](screenshots/138d-mobile-activity-citation.png)

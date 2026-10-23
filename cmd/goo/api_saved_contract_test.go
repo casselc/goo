@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -114,6 +115,28 @@ func TestAPISavedEvidenceObservedContracts(t *testing.T) {
 			t.Fatal(err)
 		}
 		call("GET", "/retained-evidence/"+receipt.Manifest.ID+"?awaitToken="+url.QueryEscape(receipt.AwaitToken), "/retained-evidence/{id}", nil, 200)
+
+		call("GET", "/retained-evidence/catalog?tag=api:contract", "/retained-evidence/catalog", nil, 200)
+		call("GET", "/retained-evidence/"+receipt.Manifest.ID+"/content?awaitToken="+url.QueryEscape(receipt.AwaitToken), "/retained-evidence/{id}/content", nil, 200)
+		now := time.UnixMilli(60000)
+		bank := exploration.NewTailMembershipSnapshots(func() time.Time { return now })
+		selector := exploration.TailSelector{Signal: "spans", Environment: "prod"}
+		tracker := exploration.TailTracker{}
+		rows, err := tracker.Observe(frozen.Explore.Rows)
+		if err != nil {
+			t.Fatal(err)
+		}
+		cap, err := bank.Freeze(exploration.TailMembershipBatch{Connection: key, Selector: selector, FromMS: 0, ToMS: 60000, ObservedAt: now, Rows: rows})
+		if err != nil {
+			t.Fatal(err)
+		}
+		tail, err := (retention.Store{URL: address}).PublishTail(context.Background(), bank, retention.TailIntent{Version: retention.TailEvidenceVersion, RequestID: fmt.Sprintf("%064x", time.Now().UnixNano()), Connection: key, Selector: selector, Refs: []exploration.TailMembershipRef{{Token: cap.Token, Key: rows[0].Key}}, Tags: []string{"api:tail-contract"}, Note: "Exact observed contract"})
+		if err != nil {
+			t.Fatal(err)
+		}
+		call("GET", "/retained-evidence/"+tail.Manifest.ID+"/content?awaitToken="+url.QueryEscape(tail.AwaitToken), "/retained-evidence/{id}/content", nil, 200)
+		call("GET", "/retained-evidence/catalog?origin=tail-selection&tag=api:tail-contract", "/retained-evidence/catalog", nil, 200)
+		call("GET", "/retained-evidence/"+tail.Manifest.ID, "/retained-evidence/{id}", nil, 404)
 		correction := map[string]any{"requestID": fmt.Sprintf("%064x", time.Now().UnixNano()), "awaitToken": receipt.AwaitToken, "target": workbench.MeaningTarget{Kind: "evidence", ID: receipt.Manifest.ID}, "parent": receipt.Annotation.ID, "tags": []string{"api:contract"}, "note": "Corrected interpretation", "state": "active"}
 		raw = call("POST", "/retained-evidence/"+receipt.Manifest.ID+"/annotations", "/retained-evidence/{id}/annotations", correction, 201)
 		var corrected retention.CorrectionReceipt

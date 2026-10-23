@@ -1,6 +1,7 @@
 package retention
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -19,7 +20,7 @@ func tailFixture(t *testing.T) (*exploration.TailMembershipSnapshots, *time.Time
 	t.Helper()
 	now := time.Now().UTC().Truncate(time.Millisecond)
 	bank := exploration.NewTailMembershipSnapshots(func() time.Time { return now })
-	raw := json.RawMessage(`{"timestamp_ns":"` + strconv.FormatInt(now.Add(-time.Second).UnixNano(), 10) + `","n":18446744073709551615}`)
+	raw := json.RawMessage(`{"timestamp_ns":"` + strconv.FormatInt(now.Add(-time.Second).UnixNano(), 10) + `","n":18446744073709551615,"Body":"<check> café 🤝"}`)
 	tracker := exploration.TailTracker{}
 	rows, e := tracker.Observe([]json.RawMessage{raw, raw})
 	if e != nil {
@@ -210,5 +211,52 @@ func TestTailManifestMixedPollProvenance(t *testing.T) {
 	}
 	if !late || !limited {
 		t.Fatal("mixed-poll provenance collapsed")
+	}
+}
+
+func TestTailManifestWhitespaceTransport(t *testing.T) {
+	bank, _, in := tailFixture(t)
+	draft, e := bank.Resolve(in.Connection, in.Selector, in.Refs)
+	if e != nil {
+		t.Fatal(e)
+	}
+	m := TailManifest{Version: TailEvidenceVersion, Selection: *draft}
+	raw, _ := json.Marshal(m)
+	m.ID = hash(raw)
+	pretty, _ := json.MarshalIndent(m, "", "  ")
+	var proxy map[string]any
+	decoder := json.NewDecoder(bytes.NewReader(pretty))
+	decoder.UseNumber()
+	if e = decoder.Decode(&proxy); e != nil {
+		t.Fatal(e)
+	}
+	var encoded bytes.Buffer
+	encoder := json.NewEncoder(&encoded)
+	encoder.SetEscapeHTML(false)
+	encoder.SetIndent("", "  ")
+	if e = encoder.Encode(proxy); e != nil {
+		t.Fatal(e)
+	}
+	pretty = bytes.ReplaceAll(encoded.Bytes(), []byte("café 🤝"), []byte(`caf\u00e9 \ud83e\udd1d`))
+
+	var transported TailManifest
+	if json.Unmarshal(pretty, &transported) != nil {
+		t.Fatal("invalid fixture transport")
+	}
+	var fields map[string]json.RawMessage
+	if e = json.Unmarshal(transported.Selection.Members[0].Record, &fields); e != nil {
+		t.Fatal(e)
+	}
+	transported.Selection.Members[0].Record = json.RawMessage(`{"timestamp_ns":` + string(fields["timestamp_ns"]) + `,"n":` + string(fields["n"]) + `,"Body":` + string(fields["Body"]) + `}`)
+	before := append([]byte(nil), transported.Selection.Members[0].Record...)
+	if e = transported.Validate(); e != nil {
+		t.Fatal("JSON transport formatting invalidated canonical proof", e)
+	}
+	if !bytes.Equal(before, transported.Selection.Members[0].Record) {
+		t.Fatal("validator rewrote caller-owned transport bytes")
+	}
+
+	if transported.ID != m.ID || !strings.Contains(string(transported.Selection.Members[0].Record), "18446744073709551615") {
+		t.Fatal("transport changed identity or numeric tokens")
 	}
 }

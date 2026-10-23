@@ -1,11 +1,10 @@
 # Exact Activity selection: backend custody prerequisites
 
-Status: the bounded membership bank and typed idempotent XTDB publisher are Go
-backend libraries, **unwired to SSE and publication HTTP**. Origin-aware Go
-catalog/read views and shared review/correction/pinned-document resolution are now
-implemented. The public manifest/catalog routes and browser citation inspector
-still require captured result pages. Exact Activity selection and browser retry
-recovery are not yet available.
+Status: membership and typed idempotent XTDB publication remain **unwired to SSE
+and publication HTTP**. Origin-aware public read/catalog routes, retained inspectors,
+review corrections and pinned document citations now support tail evidence. The
+Activity stream still cannot issue/select/preserve exact occurrences through the
+browser; that selection/retry workflow is the next integration.
 
 The concrete task is to preserve up to 20 observed Activity log/span occurrences
 without rereading telemetry. This is observation custody, not unique physical-event
@@ -82,8 +81,9 @@ flowchart LR
   Read --> Catalog[CatalogEvidence: named capture or custody clock]
   Read --> Reviews[Shared review history, correction and exact pinned revisions]
   Reviews --> Document[File document with exact evidence/review IDs]
-  Catalog -. planned presentation .-> UI[Public origin adapters and Activity selection UI]
-  Document -. planned presentation .-> UI
+  Catalog --> UI[Public catalog and retained/citation inspectors]
+  Document --> UI
+  UI -. planned .-> Select[Activity selection and immutable retry journal]
 ```
 
 ## Implemented backend publication and retry contract
@@ -138,7 +138,10 @@ prove durable tail publication. The tail publisher now separately passes lost-ac
 unavailable-store and concurrent retry checks. These backend guarantees do not
 claim the unwired browser journal or public origin readers are implemented.
 
-## Planned user storyboard — not implemented
+## Planned user storyboard — selection integration pending
+
+Steps 1–5 remain planned. The downstream read/citation portion of step 6 is now
+independently executable in journey 138 from a backend-published selection.
 
 1. Activity receives server-issued connection and optional batch capability metadata.
    Each buffered observation retains its own reference/window/read clock; the latest
@@ -234,9 +237,8 @@ reactivate a review or change the manifest.
 The native integration fixture removes its own request's projection to exercise
 the old row shape, verifies history/correction/pinning and confirms the original
 receipt payload never changes. File documents can resolve/preserve these exact
-IDs through the shared backend resolver and load offline. Their existing browser
-citation inspector still expects a captured manifest; its tail adapter remains
-planned. Unknown/cross-target review IDs, unavailable stores and missing custody
+IDs through the shared backend resolver and load offline. The browser citation inspector now uses explicit origin-aware content and labels
+Activity custody separately from captured-page time. Unknown/cross-target review IDs, unavailable stores and missing custody
 roots are refused.
 
 Observed Quint replay executes actual publish → correct → withdraw → retry-original
@@ -245,6 +247,40 @@ review and unchanged manifest, with four rejecting controls. Hegel additionally
 rejects relabeling a typed tail view as a capture. Pure catalog fixtures cover
 clock/filter boundaries, missing/empty services, pagination and stale cursors.
 
-Next: implement explicit public read/catalog and citation presentation adapters,
-then issue SSE capabilities and connect selection/retry UI. No Activity browser
-journey or screenshots are claimed by this backend milestone.
+## Public read and presentation adapters
+
+- `GET /retained-evidence/catalog` mounts `CatalogEvidence`, with bounded filters
+  and an explicit origin selector. The original `GET /retained-evidence` stays v1,
+  preserving its response shape and cursor bytes.
+- `GET /retained-evidence/{id}/content` returns a discriminated origin, exactly one
+  typed capture/tail manifest, `manifestJSON`, and tail `retainedAt`. Invalid scope
+  or read-basis queries refuse; definite absence is 404, unavailable/corrupt storage
+  is 502, and an unconfigured optional store is 503. It accepts the existing bounded
+  `awaitToken` read lower bound. It does not reread telemetry.
+- `manifestJSON` preserves exact record numeric tokens through the Python proxy and
+  browser. Typed JSON fields remain conventional JSON numbers. The display adapter
+  reads the exact string and shows numeric tokens that JavaScript cannot round-trip
+  as explicit text, with the original JSON retained in a closed disclosure.
+  Whitespace-only transport formatting does not invalidate a manifest or change
+  its ID; canonical record handles, exact number tokens and semantic guards remain.
+- The existing retained catalog, record inspector and document citation owners use
+  these new read routes. They share `GooRetentionPresentation`, existing record
+  summaries/UTC timestamps, evidence summaries and attribute viewers. Opening a
+  supplied observation, its provenance or its attributes remains local. Initial
+  detail shows the record summary; attributes and raw manifest remain optional.
+- Catalog times explicitly distinguish page capture from Activity recorded custody.
+  Each tail observation keeps its own source-read time/window/basis/late/limited
+  state. Pinned citations continue showing the original review after corrections.
+
+Journey [138](../journeys/tail-evidence.spec.js) starts with two actual duplicate
+OTLP spans captured in ClickHouse. The development fixture helper polls through
+the trusted Go source adapter and publishes observed members with different read
+windows to real XTDB. It does not accept client rows or add a publication route.
+The browser then inspects, cites, corrects, reopens and catalogs that evidence.
+Observed Quint replay and Bombadil cover the browser read/citation/local-inspection
+cut. This does not claim browser Activity selection or browser tail-publication
+recovery. Existing page-retention journeys 99–101 remain compatibility coverage.
+
+Next: construct and inject the shared membership bank into the SSE issuer, expose
+server-issued connection/ref metadata with original per-row read clocks, then add
+the bounded selection/publication and immutable pending-intent browser workflow.

@@ -1060,3 +1060,10 @@ correction, withdrawal and original-request retry. `model/tail_reviews.yaml` che
 head/active counts, current catalog visibility and immutable original manifest/
 pinned review, with four rejecting controls. `TestTailManifestProperties` also
 checks the typed origin view cannot masquerade as a captured result page.
+
+`TestQuintTailContentLedger` consumes journey 138's real browser ledger through
+`GOO_TAIL_CONTENT_LEDGER`. It reuses the annotation lifecycle model with five
+rejecting controls for source reads, publication counts, pinned revision, recorded
+custody time and exact manifest. `verification/bombadil/tail-evidence.ts` exercises
+local provenance/attribute disclosures and search without source reads or writes.
+The existing evidence-library actor also exercises the new origin selector.
