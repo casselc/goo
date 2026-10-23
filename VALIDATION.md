@@ -5961,3 +5961,42 @@ selection controls also passed. The strengthened Hegel retained-condition check
 passed all 40 cases (2.151 s). No backend runtime source changed. The temporary
 source server and image staging were removed after validation; current ClickHouse
 console rotation remained active and the disk retained over 10 GB available.
+
+
+## 2026-10-23 — shared comparison context, bounded D1 composition
+
+Fixed population, stored/fresh/saved and live record/native-counter owners now
+supply independently clocked sides to a passive `goo-comparison-context`, composed
+from existing evidence summaries. Context shows full counts, modes and half-open UTC
+windows; disclosure retains exact bounds/read/basis/custody without inferring absent
+metadata. Fixed baseline read time stays local rather than changing wire snapshots.
+Automatic fixed-pair results omit duplicate capture selectors. Existing shared scales,
+unknown states, compatibility refusal and separate execution/freeze owners remain.
+The [contract and diagram](docs/COMPARISON_CONTEXT.md) record bounded scope and follow-ups.
+
+Initial source checks: all 43 Node test files passed. Journey 126 passed against the
+checkout handler in 3.7 s, including server/pre-definition/detached inputs, exact large
+counts and nanosecond bounds, distinct clocks, property cloning, focus preservation,
+known-to-unavailable updates, malformed fallback and 390 px layout with zero API
+requests. Seven real-source comparison journeys passed in 2.7 min (120, 52 records
+and native gauge, 57 fresh capture, 69 rolling record and two 53 saved comparison
+cases), including their existing Quint ledgers and the live 30-second Bombadil
+campaign. Final retained-live-context/label/caller assertions and deployed evidence
+are recorded below after execution.
+
+Deployed acceptance: rebuilt the query UI/docs asset layer and recreated only
+`query`; all 13 selected Playwright tests passed against port 8088 in 4.0 min.
+These cover journey 126; four existing standalone component contracts; fixed
+ranking 120; stored record/native comparisons 52; fresh continuation 57; rolling
+record 69; exact native-counter windows/gap refusal 72; and both saved comparison
+53 cases. Assertions explicitly verify shared sides/modes, omitted automatic-pair
+selectors, the same live component instance and open disclosure across refresh,
+exact displayed freeze, source-free stored inspection and incompatible-unit refusal.
+Existing Quint replay and rejecting controls passed, including live record (11.37 s)
+and native counter (21.31 s). Updated 30-second stored/live Bombadil campaigns
+passed with context-mode and shared-domain invariants. All 43 Node files passed
+again on the final implementation. Actual affected component/fixed/stored/fresh/
+saved/live/native screenshots were regenerated; mobile context and live frames
+were visually inspected. No Go runtime, query algorithm or HTTP wire shape changed.
+Temporary source server/image staging were removed; final docs/screenshots were
+synced into the running query container after acceptance.

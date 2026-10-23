@@ -186,3 +186,19 @@ goo-record-columns button{font-size:11px;padding:3px 6px;margin:2px}
 .record-field-choice{display:flex;align-items:center;gap:4px}
 .record-field-choice>span{flex:1;overflow-wrap:anywhere}
 td[data-record-field]{max-width:240px;overflow-wrap:anywhere;font-size:12px}
+
+/* Supplied comparison context, shared by fixed, retained and live owners. */
+goo-comparison-context{display:block;margin-block:8px;min-width:0}
+.comparison-context-sides{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.comparison-context-side{min-width:0;border:1px solid var(--border,#303b4b);border-radius:7px;padding:8px}
+.comparison-context-side>h5{margin:0 0 5px;font-size:13px}
+.comparison-context-side[data-side=baseline]>h5{color:#79aafa}
+.comparison-context-side[data-side=selection]>h5{color:#f5b85d}
+.comparison-context-side>goo-evidence-summary{border:0;background:transparent;padding:0;margin:0}
+.comparison-context-side .evidence-summary-facts{display:block}
+.comparison-context-side .evidence-summary-facts>div{margin-block:4px}
+.comparison-context-side .evidence-summary-facts>div:first-child{display:flex;align-items:baseline;gap:8px}
+.comparison-context-side .evidence-summary-facts>div:first-child dd{font-weight:600}
+.comparison-context-side .evidence-summary-facts dd{font-size:12px;overflow-wrap:anywhere}
+goo-comparison-context>small{display:block;font-size:10px;margin-top:4px;color:var(--muted,#a7b5c9)}
+@media(max-width:600px){.comparison-context-sides{grid-template-columns:1fr}}

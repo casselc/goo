@@ -11,8 +11,8 @@
  const rateText=(...args)=>(typeof module!=='undefined'?require('./native-presentation'):global.GooNativePresentation).rateText(...args);
  function mount(host,{baseline,current=()=>true,onLink,kind='record'}){
   const n=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e},section=n('section'),heading=n('h4',kind==='counter'?'Live counter rate':'Live record measures'),controls=n('div'),start=n('button','Start live comparison'),pause=n('button','Pause live comparison'),freeze=n('button','Freeze displayed result'),rescale=n('button','Rescale comparison'),status=n('p','Uses the baseline question and duration. Full-population reads; independent of the log tail.'),scope=n('details'),output=n('goo-chart-frame'),receipt=n('p'),link=n('button','Add frozen result to investigation');
-  if(kind==='counter')status.textContent='Requires a baseline with one complete exact OTel stream. Refresh follows the latest observed export endpoint; gaps, resets and stale endpoints withhold rates.';const scopeText=n('p');scope.append(n('summary','Baseline window and source read'),scopeText);scope.hidden=true;output.hidden=true;section.className='live-comparison';section.dataset.baseline=baseline;controls.className='controls';status.setAttribute('role','status');controls.append(start,pause,freeze,rescale);section.append(heading,controls,status,scope,output,receipt,link);link.hidden=true;host.append(section);pause.disabled=freeze.disabled=rescale.disabled=true;
-  let generation=0,active=false,timer,controller,last=null,ceiling=null,latencyCeiling=null,rateCeiling=null,busy=false;
+  if(kind==='counter')status.textContent='Requires a baseline with one complete exact OTel stream. Refresh follows the latest observed export endpoint; gaps, resets and stale endpoints withhold rates.';const scopeText=n('p');scope.append(n('summary','Live source policy and read'),scopeText);scope.hidden=true;output.hidden=true;section.className='live-comparison';section.dataset.baseline=baseline;controls.className='controls';status.setAttribute('role','status');controls.append(start,pause,freeze,rescale);section.append(heading,controls,status,scope,output,receipt,link);link.hidden=true;host.append(section);pause.disabled=freeze.disabled=rescale.disabled=true;
+  let generation=0,active=false,timer,controller,last=null,ceiling=null,latencyCeiling=null,rateCeiling=null,busy=false,comparisonContext=null;
   const valid=()=>section.isConnected&&current(),emit=phase=>{section.dataset.phase=phase;output.setAttribute('state',displayState(phase,last?.comparison));global.dispatchEvent(new CustomEvent('goo:live-comparison-state',{detail:{phase,baseline,generation,token:last?.token||null,basis:last?.basis||null,readAt:last?.comparison.selection.readAt||null}}))};
   function stop(){active=false;generation++;clearTimeout(timer);controller?.abort();pause.disabled=true;start.disabled=false;freeze.disabled=!last||busy||Date.now()>=Date.parse(last.expiresAt);emit('paused')}
   function renderCounter(r){
@@ -22,7 +22,7 @@
    output.setAttribute('state',displayState('current',r));scope.hidden=false;
    const width=BigInt(output.dataset.toNs)-BigInt(output.dataset.fromNs);
    output.setAttribute('window-label',(last.native?.endpointNS?'Export ended ':'No observed endpoint · searched to ')+new Date(Number(BigInt(output.dataset.toNs)/1000000n)).toISOString()+' · '+global.GooUI.durationMS(String(width))+' window');
-   scopeText.textContent='Current exact native scope ['+output.dataset.fromNs+', '+output.dataset.toNs+') ns · source read '+b.readAt+' · basis '+last.basis+' · endpoint policy '+last.native?.policy+' · export age '+(last.native?.endpointNS?global.GooUI.durationMS(last.native.lagNS):'unknown');
+   scopeText.textContent='Endpoint policy '+(last.native?.policy||'unavailable')+' · export age '+(last.native?.endpointNS?global.GooUI.durationMS(last.native.lagNS):'unknown')+'. Exact window and read basis are shown with their comparison side.';
    const coverage=n('details');coverage.append(n('summary','Stream identity and window coverage'));output.append(coverage);
    for(const item of r.nativeWindows||[]){if(global.GooAttributes)coverage.append(global.GooAttributes.streamInspection(item.stream));for(const [label,s]of[['Baseline',item.baseline],['Current',item.selection]])global.GooNativePresentation.renderWindowCoverage(coverage,label,s);global.GooNativePresentation.renderReasons(coverage,item.reasons)}
    const reasons=[...(last.native?.reasons||[]),...(r.nativeWindows||[]).flatMap(x=>[...x.reasons,...(x.selection?.reasons||[])])];
@@ -30,35 +30,35 @@
    const visual=global.GooComparisonVisual,values=[w.baseline.rate,w.selection.rate],max=visual.maximum(values);if(rateCeiling===null)rateCeiling=max;
    rescale.disabled=visual.maximum([max,rateCeiling])===rateCeiling;
    if(!rescale.disabled){output.append(n('p','Counter rate exceeds the fixed axis (0–'+rateText(rateCeiling)+'). Rescale explicitly to view both bars.'));return}
-   const figure=visual.pair(output,{title:'Validated counter rate',values,display:values.map(v=>rateText(v)+' '+w.stream.unit+'/s'),ceiling:rateCeiling,unit:w.stream.unit+'/s',delta:rateText(w.rateDifference),labels:['Frozen baseline','Latest export window']});figure.dataset.measure='counter-rate';output.dataset.scaleMax=rateCeiling;
+   const figure=visual.pair(output,{title:'Validated counter rate',values,display:values.map(v=>rateText(v)+' '+w.stream.unit+'/s'),ceiling:rateCeiling,unit:w.stream.unit+'/s',delta:rateText(w.rateDifference),labels:['Baseline','Comparison']});figure.dataset.measure='counter-rate';output.dataset.scaleMax=rateCeiling;
    const exact=n('details');exact.append(n('summary','Exact increments and rates'));for(const [label,s]of[['Baseline',w.baseline],['Current',w.selection]])exact.append(n('p',label+' · '+s.delta+' validated increments · exact rate '+s.rate+' '+w.stream.unit+'/s'));exact.append(n('p','Exact current − baseline: '+w.rateDifference+' '+w.stream.unit+'/s'));output.append(exact,n('small','One exact OTel stream. No fleet aggregation or inference of missing increments. Retained observations do not establish ingestion completeness.'));
   }
   function render(){
-   output.hidden=false;for(const child of Array.from(output.children))if(!child.hasAttribute('data-chart-frame-chrome'))child.remove();
+   output.hidden=false;for(const child of Array.from(output.children))if(!child.hasAttribute('data-chart-frame-chrome')&&child!==comparisonContext)child.remove();
    output.removeAttribute('data-scale-max');output.setAttribute('heading','Baseline and rolling current');output.setAttribute('unit','record population');
    if(!last)return;
-   const r=last.comparison;if(r.selection.receipt.question.measurement){renderCounter(r);return}const a=r.baseline,b=r.selection,q=b.receipt.question.explore,view=measureView(r);
+   const r=last.comparison,contextData={sides:[['Baseline',r.baseline,'frozen'],['Comparison',r.selection,'live']].map(([label,s,mode])=>({label,data:global.GooEvidenceScope.comparisonContextSide(s.receipt.question.explore||s.receipt.question.measurement,{mode,state:s.state,count:s.count,readAt:s.readAt,basis:mode==='live'?last.basis:undefined,...(mode==='frozen'?{capturedAt:s.receipt.capturedAt}:{})})}))};if(comparisonContext)comparisonContext.data=contextData;else comparisonContext=global.GooComparisonVisual.context(output,contextData);if(r.selection.receipt.question.measurement){renderCounter(r);return}const a=r.baseline,b=r.selection,q=b.receipt.question.explore,view=measureView(r);
    output.dataset.basis=last.basis||'';output.dataset.readAt=b.readAt;output.dataset.fromMs=q.fromMs;output.dataset.toMs=q.toMs;
    output.setAttribute('state',displayState('current',r));scope.hidden=false;
-   scopeText.textContent='Baseline ['+new Date(a.receipt.question.explore.fromMs).toISOString()+', '+new Date(a.receipt.question.explore.toMs).toISOString()+') · source read '+b.readAt+' · basis '+(last.basis||'unavailable')+' · coverage unknown';
+   scopeText.textContent='The baseline remains frozen. Rolling comparison reads are independent of the bounded tail; source completeness is unknown.';
    output.setAttribute('window-label','['+new Date(q.fromMs).toISOString()+', '+new Date(q.toMs).toISOString()+')');
    if(r.state!=='comparable'){output.append(n('p',r.state+' · '+r.differences.join(' · ')+' · numeric comparison withheld'));if(b.state==='no_data')output.append(n('p','No matching records in the rolling current window. Latency and recorded error share are unavailable.'));else if(a.state==='no_data')output.append(n('p','No matching records in the baseline window. Numeric comparison is unavailable.'));rescale.disabled=true;return}
    const max=global.GooComparisonVisual.maximum([a.count,b.count]);if(ceiling===null)ceiling=max;
    const countOverflow=BigInt(max)>BigInt(ceiling);
    if(countOverflow)output.append(n('p','Current count exceeds the fixed axis (0–'+ceiling+'). Rescale explicitly to view both bars.'));
-   else{const counts=global.GooComparisonVisual.pair(output,{title:'Matching source records',values:[a.count,b.count],labels:['Frozen baseline','Rolling current'],unit:'records',delta:r.countDifference,ceiling});counts.dataset.measure='record-count';output.dataset.scaleMax=ceiling}
+   else{const counts=global.GooComparisonVisual.pair(output,{title:'Matching source records',values:[a.count,b.count],labels:['Baseline','Comparison'],unit:'records',delta:r.countDifference,ceiling});counts.dataset.measure='record-count';output.dataset.scaleMax=ceiling}
    let latencyOverflow=false;
    if(view.latency){
     if(latencyCeiling===null)latencyCeiling=view.latency.maximumNs;
     latencyOverflow=BigInt(view.latency.maximumNs)>BigInt(latencyCeiling);
     if(latencyOverflow){const message=n('p','Span latency exceeds the fixed axis (0–'+global.GooUI.durationMS(latencyCeiling)+'). Rescale explicitly to view percentiles.');message.dataset.latencyOverflow='true';output.append(message)}
     else{const pair=n('div');pair.className='live-latency-pair';pair.dataset.latencyCeilingNs=latencyCeiling;
-     for(const [title,summary,side]of[['Frozen baseline',view.latency.baseline,'baseline'],['Rolling current',view.latency.current,'current']]){const element=n('goo-latency');element.dataset.side=side;element.ceilingNs=latencyCeiling;element.heading=title;element.headingLevel=5;element.summary=summary;pair.append(element)}
+     for(const [title,summary,side]of[['Baseline',view.latency.baseline,'baseline'],['Comparison',view.latency.current,'current']]){const element=n('goo-latency');element.dataset.side=side;element.ceilingNs=latencyCeiling;element.heading=title;element.headingLevel=5;element.summary=summary;pair.append(element)}
      output.append(pair,n('small','Span latency · mean and exact p50 / p95 / p99, shared fixed scale. Source records, not end-to-end request latency.'))}
    }else if(q.summary==='span-duration')output.append(n('p','Span latency unavailable for this snapshot.'));
    if(view.status){const {baseline:x,current:y}=view.status,pct=global.GooDistributions.percent;
     const values=[pct(x.error,x.count),pct(y.error,y.count)];
-    const figure=global.GooComparisonVisual.pair(output,{title:'Recorded error share',values,display:[values[0]+'% · '+x.error+'/'+x.count+' spans',values[1]+'% · '+y.error+'/'+y.count+' spans'],unit:'%',ceiling:'100',delta:view.status.delta+' pp',labels:['Frozen baseline','Rolling current']});figure.dataset.measure='recorded-error-share';
+    const figure=global.GooComparisonVisual.pair(output,{title:'Recorded error share',values,display:[values[0]+'% · '+x.error+'/'+x.count+' spans',values[1]+'% · '+y.error+'/'+y.count+' spans'],unit:'%',ceiling:'100',delta:view.status.delta+' pp',labels:['Baseline','Comparison']});figure.dataset.measure='recorded-error-share';
     const details=n('details');details.append(n('summary','Recorded status coverage'));
     for(const [label,s]of[['Baseline',x],['Current',y]])details.append(n('p',label+' · Error '+s.error+' · Ok '+s.ok+' · Unset '+s.unset+' · Unknown '+s.unknown+' / '+s.count+' spans'));
     details.append(n('p','All matching spans form the denominator. Unset and unknown are not success. Sampling and telemetry completeness remain unknown.'));output.append(details);

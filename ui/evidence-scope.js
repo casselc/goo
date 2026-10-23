@@ -32,6 +32,14 @@
   else details.push({label:'Record predicate',value:JSON.stringify(q.where||{})});
   return {mode:'frozen',state:side.state||'unknown',facts,details,notice:'Independent stored read · source completeness unverified.'};
  }
+ // Supplied definitions and read metadata only; never infer completeness or custody.
+ function comparisonContextSide(q,{mode='fixed',state='unknown',count,readAt,basis,capturedAt}={}){
+  const from=q.fromNS??String(BigInt(q.fromMs)*1000000n),to=q.toNS??String(BigInt(q.toMs)*1000000n);
+  const facts=[{label:'Source records',value:String(count??'Unavailable')},{label:'Window · UTC',value:'['+from+', '+to+')',format:'unix-ns-range'}];
+  const details=[{label:'Environment',value:q.environment||q.definition?.environment||'Unavailable'},clock('Source read',readAt||'Unavailable in supplied metadata'),{label:'Evidence basis',value:basis||'Unavailable in supplied metadata'}];
+  if(capturedAt)details.push(clock('Stored custody time',capturedAt));
+  return {mode,state:state==='changed_between_reads'?'unknown':state,facts,details,notice:''};
+ }
  function element(data){const e=document.createElement('goo-evidence-summary');e.data=data;return e}
- const api={measurement,record,serviceWidget,comparisonSide,element};if(typeof module!=='undefined')module.exports=api;else global.GooEvidenceScope=api;
+ const api={measurement,record,serviceWidget,comparisonSide,comparisonContextSide,element};if(typeof module!=='undefined')module.exports=api;else global.GooEvidenceScope=api;
 })(typeof window==='undefined'?globalThis:window);

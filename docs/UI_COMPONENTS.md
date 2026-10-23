@@ -539,3 +539,17 @@ inclusive zero-based `fromColumn`, `toColumn`, `fromRow`, `toRow` indices.
 Pointer drags and Space/Shift-arrow/Enter selection share that contract; Escape
 cancels. The component never translates indices into queries or reads data.
 Native grids omit this opt-in. See [raw span adapter](HEATMAP_SELECTION.md).
+
+`goo-comparison-context` is a passive two-side composition of `goo-evidence-summary`.
+Its `data` JSON attribute or detached/connected `.data` property accepts
+`{sides:[{label:"Baseline",data:evidenceSummary},{label:"Comparison",data:evidenceSummary}]}`.
+Both summaries use the existing evidence-summary contract, preserving full string
+counts, fixed/live/frozen modes, exact UTC windows and separate source/custody clocks.
+It validates both supplied sides, clones property input/output, preserves open
+provenance disclosures and keyboard focus across property updates, and shows a
+fallback for invalid data. It performs no reads, navigation, subscriptions or writes.
+`GooEvidenceScope.comparisonContextSide(question,metadata)` is the application-side
+adapter; absent read/basis/custody metadata is never inferred. The existing fixed,
+stored/fresh/saved and live comparison owners supply their own questions and clocks.
+The live owner retains this component across refreshes. Standalone server HTML is
+shown at `/ui-components`; journey 126 covers upgrade and unknown-state transitions.

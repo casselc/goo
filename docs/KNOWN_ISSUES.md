@@ -565,3 +565,9 @@ Population broadening now supports removing whole direct conjuncts in a staged
 child. Nested OR/AND groups stay atomic; arbitrary nested branch editing and
 noncategorical complements remain outside this cut. See
 [the bounded contract](POPULATION_BROADENING.md).
+
+The bounded [comparison context pass](COMPARISON_CONTEXT.md) shares UTC windows,
+counts, modes and provenance across fixed/stored/live results and omits duplicate
+selectors on automatic fixed-pair results. Broader D1 action-toolbar/inspector and
+count-series consolidation remain queued. Native/record units and percentile
+coverage retain their separate compatibility rules.
