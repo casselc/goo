@@ -5912,3 +5912,21 @@ historical pending IDs preserved (14 pending entries at the final check). Traffi
 was restored. Only unused Docker build caches/dangling images were reclaimed;
 no data volumes or stream entries were reset. Cgroup OOM and OOM-kill counters
 remained zero.
+
+
+## 2026-10-23 — bounded ClickHouse console logs and disk recovery
+
+A read-only Docker storage inventory identified a 13.4 GB ClickHouse JSON console
+log. Preserved its last 200 lines in `/tmp/goo-clickhouse-console-tail.log`, then
+removed and recreated only the ClickHouse container using Compose, retaining the
+existing named database volume. `compose.yaml` now sets `json-file` rotation to
+`max-size: 10m`, `max-file: 3`. No application tables or volumes were deleted.
+
+`docker compose config --quiet` passed. The recreated container became healthy;
+its inspected logging configuration matched the limits, and a live system-table
+query found the existing nine default-database tables. The UI returned HTTP 200.
+Actual main-filesystem availability rose from approximately zero to 13 GB after
+restart. Development venv and onboarding image staging were also relocated to
+`/tmp` with original-path symlinks; file-size inventories matched and imports of
+chdb, pandas and pyarrow passed. Those relocations alone recovered little main-disk
+space; removal of the oversized console log provided the substantial recovery.

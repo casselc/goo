@@ -1,6 +1,6 @@
 # Known issues and gaps
 
-[Diagnostic retention](DIAGNOSTIC_RETENTION.md) now expires raw browser recordings, with a 512 MiB soft budget, active/pinned protection and explicit Bombadil outcomes. Compact ledgers/results/logs remain. Legacy outcomes use a 72-hour policy; direct Playwright invocations require explicit pruning. This does not configure ClickHouse logging retention.
+[Diagnostic retention](DIAGNOSTIC_RETENTION.md) now expires raw browser recordings, with a 512 MiB soft budget, active/pinned protection and explicit Bombadil outcomes. Compact ledgers/results/logs remain. Legacy outcomes use a 72-hour policy; direct Playwright invocations require explicit pruning. ClickHouse Docker console logs now rotate at 10 MB × 3 files; internal system-table and file-log retention remain separate.
 
 Latest diagnostic cleanup recovered space from 509 MB to 6.4 GB by hardlinking
 byte-identical raw browser screenshots and removing unused build cache. All
@@ -10,8 +10,8 @@ Local disk maintenance: internal ClickHouse text/stack-trace/processor-profile
 histories grew beyond 5 GB, in addition to a large debug file, and exhausted the
 shared development filesystem. The named diagnostic histories were cleared and
 the current debug file was reduced to its latest 20 MB; application OTel tables,
-query audit/error logs, saved evidence and retry data were preserved. Logging
-level/retention budgets still need a bounded configuration change. See
+query audit/error logs, saved evidence and retry data were preserved. Docker console logging is now bounded at 10 MB × 3 files. Internal system-table
+and file-log retention budgets still need a separate configuration change. See
 [actual cleanup evidence](../VALIDATION.md).
 
 [C2 HTTP boundaries](HTTP_BOUNDARIES.md) inventories current route effects/limits.
