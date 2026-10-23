@@ -5930,3 +5930,34 @@ restart. Development venv and onboarding image staging were also relocated to
 `/tmp` with original-path symlinks; file-size inventories matched and imports of
 chdb, pandas and pyarrow passed. Those relocations alone recovered little main-disk
 space; removal of the oversized console log provided the substantial recovery.
+
+
+## 2026-10-23 — staged whole-condition population broadening
+
+The existing applied-scope disclosure now offers whole direct-conjunct removal,
+including an entire nested OR group. It stages a child and preserves parent results,
+companion questions and fixed UTC scope; Go owns query validation and evaluation.
+See [the bounded contract and diagram](docs/POPULATION_BROADENING.md).
+
+All 42 JavaScript test files passed. The initial real-source journey 125 passed
+against the source Python handler and deployed Go/ClickHouse/collector in 1.6 min,
+including 390 px overflow/keyboard/draft-blocking checks, full membership beyond a
+one-row UI page, paused parent return, saved configuration and reopen. Its observed
+Quint drilldown trace passed with six rejecting controls (15.37 s), and the bounded
+20-second Bombadil disclosure/stage/back campaign passed. Hegel's 40 generated
+cases passed Go compilation and membership monotonicity for missing/empty values,
+qualified fields, nested ORs and last-condition removal (2.731 s). A strengthened
+retained-condition assertion and deployed last-condition browser check follow below.
+Actual desktop/mobile storyboard frames 125a/125b were inspected.
+
+Deployed continuation: rebuilt the query UI/docs as a single asset layer over its
+existing runtime and recreated only `query`. Journeys 125, 123 and 124 passed
+against port 8088 in 1.7 min. Journey 125 additionally removed the last condition:
+its explicit Run found all five fixture records inside the unchanged environment/
+window, omitted `where`, and retained the exact independent log query. Its deployed
+Quint trace and all six rejecting controls passed (14.87 s); the 20-second Bombadil
+campaign passed. Existing selected-versus-rest comparisons and unobscured mobile
+selection controls also passed. The strengthened Hegel retained-condition check
+passed all 40 cases (2.151 s). No backend runtime source changed. The temporary
+source server and image staging were removed after validation; current ClickHouse
+console rotation remained active and the disk retained over 10 GB available.

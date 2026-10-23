@@ -560,3 +560,8 @@ future work. See [record field contract](RECORD_COLUMNS.md).
 Population scope widening currently expands an enclosing aligned UTC window, within the 120-minute query limit. Removing arbitrary predicates and exact selection-versus-rest remain planned; see [time expansion](POPULATION_WORKSPACE.md#expanding-the-time-window).
 
 [Categorical selection-versus-rest](POPULATION_PARTITIONS.md) is now implemented inside a fixed filtered parent. General numeric/range complements remain planned. Partition queries are logically disjoint over a fixed record state; independent reads are not a transactional snapshot.
+
+Population broadening now supports removing whole direct conjuncts in a staged
+child. Nested OR/AND groups stay atomic; arbitrary nested branch editing and
+noncategorical complements remain outside this cut. See
+[the bounded contract](POPULATION_BROADENING.md).

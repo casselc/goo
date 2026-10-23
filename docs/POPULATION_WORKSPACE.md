@@ -306,3 +306,5 @@ and invalid return depth. Bombadil exercises source-free expansion/return.
 ## Selection versus rest
 
 [Categorical partition comparisons](POPULATION_PARTITIONS.md) now stage a child whose baseline is the exact remainder of the filtered parent. Compare selection to current remains the existing overlapping comparison. Both paths use independent source reads.
+
+[Whole-condition broadening](POPULATION_BROADENING.md) now stages a child without one direct conjunct, preserving OR groups, independent companions and the fixed UTC window.
