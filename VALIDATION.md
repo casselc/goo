@@ -1,5 +1,17 @@
 # Validation record
 
+## Diagnostic cleanup (2026-10-23 UTC)
+
+Free space rose from 509 MB to 6.4 GB. Byte-identical diagnostic PNG/JPEG files
+under the ignored session-artifact directory now share hardlinks: 103,175
+replacements reclaimed 4,370,828,871 bytes. Every screenshot filename remains
+available and every replacement was SHA-256 matched before linking; trace, ledger,
+log and committed documentation paths were retained. The local artifact manifest
+records canonical paths and hashes. Removing unused Docker build cache reclaimed
+another reported 1.121 GB. Running images/containers, all volumes, application
+telemetry, immutable evidence, model traces and documentation screenshots were
+preserved. Internal ClickHouse diagnostic tables were measured but not truncated.
+
 ## Reopened population record filtering (2026-10-23 UTC)
 
 Review of the field-picker cut found that reopened saved populations received

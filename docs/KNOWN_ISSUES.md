@@ -1,5 +1,9 @@
 # Known issues and gaps
 
+Latest diagnostic cleanup recovered space from 509 MB to 6.4 GB by hardlinking
+byte-identical raw browser screenshots and removing unused build cache. All
+screenshot paths/bytes, traces and application evidence were retained.
+
 Local disk maintenance: internal ClickHouse text/stack-trace/processor-profile
 histories grew beyond 5 GB, in addition to a large debug file, and exhausted the
 shared development filesystem. The named diagnostic histories were cleared and
