@@ -6095,3 +6095,42 @@ or backend changes were made. The temporary source server was stopped. Supported
 Docker cache/image pruning removed unused build records and dangling image metadata;
 root filesystem remains at 7.2 GB free. Retained user captures, telemetry tables and
 volumes were preserved. Final docs/screenshots are synced to the running query UI.
+
+## 2026-10-23 — rolling record bucket comparisons
+
+The live response now optionally exposes the already-retained baseline/selection
+TimePoint arrays for questions requesting buckets. Nonbucketed record questions and
+native metrics retain their response behavior. Existing source reads, draft budgets
+and immutable Freeze ownership remain unchanged. The shared chart accepts a supplied
+fixed ceiling and refuses overflow; the live owner retains its chart/controls,
+alignment and original selected UTC question across refreshes. A paused inline child
+reuses the existing population and record owners, reads only after Run, and restores
+the retained comparison/focus on Back. See [contract and diagram](docs/LIVE_COMPARISON.md#retained-bucket-series-during-refresh).
+
+Go handler/exploration tests passed, including one existing bucket aggregate read,
+exact baseline arrays and source-free Freeze after the source closes. Reflected
+OpenAPI and the actual bucketed handler response validate; existing conformance
+covers 222 fixture responses, 56 admitted requests and 14 mux refusals. All 44 Node
+files passed; Hegel fixed-domain/large-count/brush properties passed (2.80 s).
+The first deployed live/standalone pair passed in 1.6 min, including automatic
+refresh with retained UTC selection, overflow/rescale, explicit child read and
+source-free Back, stale retained data, exact series Freeze after a late arrival,
+and obsolete-response rejection. The observed Quint replay passed with twelve
+rejecting controls (30.96 s). Final campaign/regression evidence follows below.
+
+Final deployed acceptance: all eight selected tests passed in 5.9 min: passive and
+fixed comparison series 128; rolling records 69; native counter windows 72; both
+live span-measure/no-data cases 71; both saved record/native comparison cases 53.
+The 25-second fixed and 30-second live Bombadil campaigns passed. The live actor
+explicitly selected an interval, staged it, returned without reading, froze and
+linked evidence; fixed-domain and unknown-value invariants remained green. The
+updated live Quint replay passed with all twelve rejecting controls (32.99 s).
+Affected actual storyboard frames were regenerated and both new live/selection
+frames were visually reviewed. The new Go runtime and matching UI are deployed;
+the optional XTDB startup configuration was preserved. Temporary staging/scripts
+and the compiled binary were removed; no telemetry tables, named volumes or
+retained user captures were deleted. Docs/spec and frames are synced to the lab.
+
+Cleanup completed through the existing diagnostic-retention policy and supported
+Docker prune commands. Expired raw recordings were removed; compact ledgers,
+results and retention audit remain. Root filesystem has 7.4 GB free after cleanup.

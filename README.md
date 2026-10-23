@@ -568,3 +568,5 @@ Applied populations can [expand their fixed UTC window](docs/POPULATION_WORKSPAC
 Categorical populations can [compare a selection with the rest of its parent](docs/POPULATION_PARTITIONS.md), preserving filters, exact windows and a paused parent.
 
 Retained record comparisons share [aligned activity charts](docs/COMPARISON_SERIES.md), exact UTC interval inspection and staged selection; stored/frozen chart loading reads immutable captures explicitly.
+
+[Live record activity comparisons](docs/LIVE_COMPARISON.md#retained-bucket-series-during-refresh) now refresh requested bucket series before Freeze, retain selected UTC questions and alignment, and reuse explicit population drilldown with source-free return.

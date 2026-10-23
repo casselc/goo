@@ -129,7 +129,11 @@ func registerLiveComparison(mux *http.ServeMux, source exploration.Source, store
 		}
 		delete(drafts, in.Replace)
 		drafts[key] = &draft{snapshot: snapshot, expires: expiry, size: len(raw)}
-		reply(w, 200, map[string]any{"token": key, "expiresAt": expiry.UTC().Format(time.RFC3339Nano), "comparison": comparison, "basis": liveBasis(snapshot), "baselineBasis": liveBasis(baseline), "native": native})
+		out := map[string]any{"token": key, "expiresAt": expiry.UTC().Format(time.RFC3339Nano), "comparison": comparison, "basis": liveBasis(snapshot), "baselineBasis": liveBasis(baseline), "native": native}
+		if series := exploration.RetainedRecordSeries(baseline, snapshot); series != nil {
+			out["recordSeries"] = series
+		}
+		reply(w, 200, out)
 	})
 }
 

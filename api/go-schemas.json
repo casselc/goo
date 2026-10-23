@@ -394,6 +394,16 @@
           }
         ]
       },
+      "recordSeries": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.RecordSeriesPair"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "token": {
         "type": "string"
       }
@@ -6000,6 +6010,42 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.RecordMeasurePlan"
+  },
+  "exploration.RecordSeriesPair": {
+    "properties": {
+      "baseline": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.TimePoint"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "selection": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.TimePoint"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "baseline",
+      "selection"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.RecordSeriesPair"
   },
   "exploration.ReportedEdge": {
     "properties": {

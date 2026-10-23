@@ -37,3 +37,17 @@ func (s CaptureStore) FreezeSnapshot(snapshot *SavedCapture) (*SavedCapture, err
 	c.CapturedAt = time.Now().UTC().Format(time.RFC3339Nano)
 	return s.publish(c)
 }
+
+// RecordSeriesPair contains already-retained aggregates, never inspection-page counts.
+// Questions, source states and read clocks remain on the comparison's named sides.
+type RecordSeriesPair struct {
+	Baseline  []TimePoint `json:"baseline"`
+	Selection []TimePoint `json:"selection"`
+}
+
+func RetainedRecordSeries(baseline, selection *SavedCapture) *RecordSeriesPair {
+	if baseline == nil || selection == nil || baseline.Explore == nil || selection.Explore == nil || baseline.Explore.Question.BucketMS == 0 || selection.Explore.Question.BucketMS == 0 {
+		return nil
+	}
+	return &RecordSeriesPair{Baseline: baseline.Explore.TimeSeries, Selection: selection.Explore.TimeSeries}
+}

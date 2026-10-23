@@ -7,6 +7,8 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"reflect"
 	"strings"
 	"sync/atomic"
 	"testing"
@@ -54,6 +56,11 @@ func TestLiveComparisonHTTPExactFreezeAndBoundedCapabilities(t *testing.T) {
 	if w.Code != 200 {
 		t.Fatal(w.Code, w.Body.String())
 	}
+	var unbucketed map[string]any
+	json.Unmarshal(w.Body.Bytes(), &unbucketed)
+	if _, ok := unbucketed["recordSeries"]; ok {
+		t.Fatal("unrequested buckets added")
+	}
 	json.Unmarshal(w.Body.Bytes(), &first)
 	if len(first.Token) != 64 || first.Comparison.Baseline.Receipt.ID != baseline.Receipt.ID {
 		t.Fatal(first)
@@ -94,5 +101,73 @@ func TestLiveComparisonHTTPExactFreezeAndBoundedCapabilities(t *testing.T) {
 	}
 	if w = call("/captures/live", map[string]string{"freeze": "unknown"}); w.Code != 410 {
 		t.Fatal(w.Code)
+	}
+}
+
+func TestLiveComparisonRetainedSeriesFreezeWithoutReread(t *testing.T) {
+	var reads, seriesReads atomic.Int64
+	source := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		reads.Add(1)
+		sql, _ := io.ReadAll(r.Body)
+		switch {
+		case strings.Contains(string(sql), "GROUP BY from_ms"):
+			seriesReads.Add(1)
+			fmt.Fprintf(w, `{"from_ms":%q,"count":"5"}`+"\n", r.URL.Query().Get("param_from"))
+		case strings.Contains(string(sql), "count()"):
+			fmt.Fprintln(w, `{"count":"5"}`)
+		case !strings.Contains(string(sql), "SELECT DISTINCT"):
+			fmt.Fprintln(w, `{"timestamp_ns":"1000000001","duration_ns":"0"}`)
+		}
+	}))
+	defer source.Close()
+	mux := http.NewServeMux()
+	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, t.TempDir())
+	call := func(body any) *httptest.ResponseRecorder {
+		b, _ := json.Marshal(body)
+		w := httptest.NewRecorder()
+		mux.ServeHTTP(w, httptest.NewRequest("POST", "/captures/live", bytes.NewReader(b)))
+		return w
+	}
+	b, _ := json.Marshal(map[string]any{"title": "Bucket baseline", "question": map[string]any{"kind": "explore", "explore": map[string]any{"signal": "spans", "environment": "prod", "fromMs": 1000, "toMs": 61000, "limit": 1, "bucketMs": 10000}}})
+	w := httptest.NewRecorder()
+	mux.ServeHTTP(w, httptest.NewRequest("POST", "/captures", bytes.NewReader(b)))
+	if w.Code != 201 {
+		t.Fatal(w.Code, w.Body.String())
+	}
+	var baseline exploration.CapturePage
+	json.Unmarshal(w.Body.Bytes(), &baseline)
+	beforeSeries := seriesReads.Load()
+	w = call(map[string]string{"baseline": baseline.Receipt.ID})
+	if w.Code != 200 {
+		t.Fatal(w.Code, w.Body.String())
+	}
+	var draft struct {
+		Token        string
+		RecordSeries exploration.RecordSeriesPair
+	}
+	if e := json.Unmarshal(w.Body.Bytes(), &draft); e != nil {
+		t.Fatal(e)
+	}
+	if seriesReads.Load() != beforeSeries+1 || len(draft.RecordSeries.Selection) != 6 || len(draft.RecordSeries.Baseline) != 6 || draft.RecordSeries.Selection[0].Count != "5" || draft.RecordSeries.Selection[1].State != "no_data" {
+		t.Fatal("series not retained full aggregates", draft)
+	}
+	if !reflect.DeepEqual(draft.RecordSeries.Baseline, baseline.Explore.TimeSeries) {
+		t.Fatal("baseline series changed")
+	}
+	if path := os.Getenv("GOO_LIVE_SERIES_RESPONSE"); path != "" {
+		if e := os.WriteFile(path, w.Body.Bytes(), 0600); e != nil {
+			t.Fatal(e)
+		}
+	}
+	before := reads.Load()
+	source.Close()
+	w = call(map[string]string{"freeze": draft.Token})
+	if w.Code != 201 {
+		t.Fatal(w.Code, w.Body.String())
+	}
+	var frozen exploration.CapturePage
+	json.Unmarshal(w.Body.Bytes(), &frozen)
+	if reads.Load() != before || !reflect.DeepEqual(draft.RecordSeries.Selection, frozen.Explore.TimeSeries) {
+		t.Fatal("freeze changed displayed series")
 	}
 }

@@ -218,3 +218,5 @@ fields); saved layouts do not change query predicates or capture evidence.
 Saved exploration-view breakdown `comparisonMetric` now also accepts `count`.
 It remains display configuration alongside share/mean/p95/p99/error-rate; no
 query semantics or receipt formats change. Go owns semantic validation.
+
+Live record comparison responses optionally include `recordSeries: {baseline, selection}` when the saved record question requests buckets. These are existing retained `TimePoint` arrays, with question/state/read metadata on the corresponding comparison sides. The field is omitted for native and nonbucketed questions. Freeze returns those exact selection intervals without another source read.

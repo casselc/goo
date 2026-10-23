@@ -5,7 +5,7 @@ record-count intervals. Fixed population comparisons retain their aggregate seri
 locally, outside the strict comparison request. Stored, fresh and saved capture
 comparisons offer **Show captured activity comparison** when both record questions
 requested buckets. Frozen rolling comparisons offer the same explicit continuation.
-It reads only the two immutable capture pages. Missing retained series produce an
+That continuation reads only the two immutable capture pages. Bucketed rolling record questions also supply these arrays during their existing refresh, before Freeze. Missing retained series produce an
 explanation rather than a new telemetry query.
 
 Both populations use one count domain. **Elapsed from each start** aligns their
@@ -72,10 +72,8 @@ while requiring a constant source-read count.
 
 ## Boundaries
 
-Rolling comparison responses currently retain scalar aggregates, not time series.
-This cut supports their **frozen capture** continuation; it does not add live bucket
-polling. Native metrics retain their existing exact-stream/unit/temporality charts;
+[Rolling record comparisons](LIVE_COMPARISON.md#retained-bucket-series-during-refresh) now reuse this chart before Freeze when the stored question requests time buckets. Their existing read supplies the retained arrays; selection remains pinned to its original UTC question across refreshes. Native metrics retain their existing exact-stream/unit/temporality charts;
 this component does not convert native endpoints into record counts. Older saved
 population-comparison envelopes contain only cohort aggregates, so this cut cannot
 reconstruct missing series. Stored chart loading is explicit and retains the
-existing capture-page size and provenance constraints. No backend wire shape changes.
+existing capture-page size and provenance constraints. The live response now optionally supplies `recordSeries`; stored capture formats are unchanged.

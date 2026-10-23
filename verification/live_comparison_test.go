@@ -24,9 +24,14 @@ func TestQuintLiveComparisonLedger(t *testing.T) {
 	}
 	check := func(mutation int) bool {
 		var l struct {
-			Baseline      exploration.CapturePage
-			First, Second struct {
-				Comparison exploration.EvidenceComparison
+			SelectedQuestion                                 exploration.Query
+			SelectedRange                                    struct{ Selection struct{ FromMS, ToMS int64 } }
+			BeforeStage, AfterStage, AfterChild, AfterReturn int
+			RetainedSeries                                   struct{ Ceiling string }
+			Baseline                                         exploration.CapturePage
+			First, Second                                    struct {
+				Comparison   exploration.EvidenceComparison
+				RecordSeries *exploration.RecordSeriesPair
 			}
 			Frozen, Reopened                   exploration.CapturePage
 			SourceCount, AxisBefore, AxisAfter string
@@ -50,14 +55,35 @@ func TestQuintLiveComparisonLedger(t *testing.T) {
 			l.Reopened.Receipt.ID = "other"
 		case 5:
 			l.ObsoleteBars = 2
+		case 6:
+			l.Second.RecordSeries.Selection[0].Count = "999"
+		case 7:
+			l.SelectedQuestion.FromMS = l.Second.Comparison.Selection.Receipt.Question.Explore.FromMS
+		case 8:
+			l.AfterReturn++
+		case 9:
+			l.AfterStage++
+		case 10:
+			l.RetainedSeries.Ceiling = "999"
+		case 11:
+			l.First.RecordSeries.Baseline[0].Count = "999"
 		}
 		sink := &qobs.MemorySink{}
 		rec := qobs.NewRecorder(sink)
 		record := func(a string, b bool) { rec.Record(context.Background(), a, nil, "obs.coherent", b) }
 		first := l.First.Comparison
-		record("observe", first.Baseline.Receipt.ID == l.Baseline.Receipt.ID && first.Baseline.Count == "2" && first.Selection.Count == "4" && first.Selection.Receipt.Question.Explore.ToMS-first.Selection.Receipt.Question.Explore.FromMS == 120000)
-		record("axis", l.AxisBefore == "4" && l.AxisAfter == "7")
-		record("stale", l.Stale)
+		seriesOK := l.First.RecordSeries != nil && l.Second.RecordSeries != nil
+		if seriesOK {
+			seriesOK = reflect.DeepEqual(l.First.RecordSeries.Baseline, l.Baseline.Explore.TimeSeries) && reflect.DeepEqual(l.Second.RecordSeries.Baseline, l.Baseline.Explore.TimeSeries) && reflect.DeepEqual(l.Second.RecordSeries.Selection, l.Frozen.Explore.TimeSeries) && exploration.ValidateTimeSeries(*first.Selection.Receipt.Question.Explore, l.First.RecordSeries.Selection) == nil
+		}
+		expected := *first.Selection.Receipt.Question.Explore
+		expected.FromMS = l.SelectedRange.Selection.FromMS
+		expected.ToMS = l.SelectedRange.Selection.ToMS
+		expected.Offset = 0
+		selectedOK := reflect.DeepEqual(expected, l.SelectedQuestion) && l.BeforeStage == 0 && l.AfterStage == 0 && l.AfterChild == 1 && l.AfterReturn == 1
+		record("observe", seriesOK && first.Baseline.Receipt.ID == l.Baseline.Receipt.ID && first.Baseline.Count == "2" && first.Selection.Count == "4" && first.Selection.Receipt.Question.Explore.ToMS-first.Selection.Receipt.Question.Explore.FromMS == 120000)
+		record("axis", l.AxisBefore == "4" && l.AxisAfter == "7" && l.RetainedSeries.Ceiling == "7")
+		record("stale", l.Stale && selectedOK)
 		record("freeze", l.Frozen.Explore.CapturedAt == l.Second.Comparison.Selection.ReadAt && reflect.DeepEqual(l.Frozen.Receipt.Question, l.Second.Comparison.Selection.Receipt.Question) && l.Frozen.Explore.Count == "7" && l.SourceCount == "8" && l.Frozen.Explore.Question.ToMS-l.Frozen.Explore.Question.FromMS == 120000)
 		record("reopen", reflect.DeepEqual(l.Reopened, l.Frozen))
 		record("discard", l.ObsoleteBars == 0 && l.ObsoletePhase == "")
@@ -74,7 +100,7 @@ func TestQuintLiveComparisonLedger(t *testing.T) {
 	if !check(-1) {
 		t.Fatal("actual live comparison trace rejected")
 	}
-	for i := 0; i < 6; i++ {
+	for i := 0; i < 12; i++ {
 		if check(i) {
 			t.Fatal("mutation accepted", i)
 		}

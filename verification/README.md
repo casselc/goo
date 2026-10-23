@@ -1000,3 +1000,5 @@ missing/empty group. Six rejecting controls cover hidden reads and changed scope
 
 
 Retained comparison series: `TestHegelComparisonSeriesGeometry` checks the actual JS BigInt domain and bounded brush properties. Journey 128 supplies `GOO_COMPARISON_SERIES_LEDGER` to `TestQuintComparisonSeriesLedger`, replaying `population_drilldown.qnt` with five rejecting controls. `GOO_COMPARISON_SERIES_BOMBADIL=1` enables the 25-second alignment/selection/stage/Back actor.
+
+Rolling record series extend `TestQuintLiveComparisonLedger` to twelve rejecting controls, checking exact baseline/frozen arrays, pinned selection, source-free staging/return and fixed interval domain. Journey 69 and the existing live Bombadil actor execute the refresh/select/stage/Back/Freeze path; Hegel geometry covers supplied fixed domains and overflow.

@@ -563,3 +563,5 @@ in their application owners. See [comparison actions](COMPARISON_ACTIONS.md).
 
 
 `goo-comparison-series` (`comparison-series.js`, `time-bars.css`) renders two supplied count-interval series, with `data` JSON attributes or a cloned `.data` property and `alignment="elapsed|utc"`. It emits `goo-series-select` and `goo-series-range`; it never fetches or navigates. Exact values use a shared BigInt count domain and an expandable interval table. `comparison-series-owner.js` owns alignment controls, UTC range handles, staged continuation and explicit immutable-page reads. See [contract](COMPARISON_SERIES.md).
+
+The supplied comparison-series contract accepts an optional exact `ceiling` string. Overflow refuses bars instead of clipping. The application series owner now supports retained `create/update/rescale` controls; rolling selection stays bound to its original question while supplied chart data updates. Polling, pause, inline child navigation and Freeze remain in the live owner.

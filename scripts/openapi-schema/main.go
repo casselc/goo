@@ -164,6 +164,7 @@ func main() {
 		Summary            map[string]string          `json:"summary"`
 	}{}, false)
 	root("LiveComparisonDraft", struct {
+		RecordSeries  *exploration.RecordSeriesPair   `json:"recordSeries,omitempty"`
 		Token         string                          `json:"token"`
 		ExpiresAt     string                          `json:"expiresAt"`
 		Comparison    *exploration.EvidenceComparison `json:"comparison"`

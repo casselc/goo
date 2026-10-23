@@ -1684,3 +1684,5 @@ Journey 127: [contextual comparison actions](../COMPARISON_ACTIONS.md), single-s
 
 
 Journey 128: [retained activity comparison](../COMPARISON_SERIES.md), keyboard/brush selection, exact side window, explicit child read, retained return and stored/mobile continuation.
+
+Journey 69 now covers live bucket refresh before Freeze, retained alignment/selection, explicit child Run and source-free Back. Frames 129a/129b show the live series and retained selection; see [contract](../LIVE_COMPARISON.md#retained-bucket-series-during-refresh).

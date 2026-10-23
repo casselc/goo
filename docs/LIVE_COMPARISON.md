@@ -179,3 +179,61 @@ The observed ledger is replayed through Quint with seven rejecting mutations.
 Hegel generates exact-width counter windows and boundary-crossing refusals.
 The native Bombadil actor exercises preview, selection, start, freeze and link,
 and checks rational geometry and exact-window ordering.
+
+## Retained bucket series during refresh
+
+Record questions requesting `bucketMs` now display their retained baseline and
+rolling interval series before Freeze. The existing live read already computes
+these aggregates; its optional `recordSeries` response contains those exact arrays.
+No extra telemetry query or baseline reread is added. Count-only questions without
+buckets and native metric responses omit this field and retain their existing UI.
+See the shared [record activity chart contract](COMPARISON_SERIES.md).
+
+The first supplied series establishes a shared interval-count domain, independent
+of the whole-population count domain. Both remain fixed until **Rescale comparison**.
+Overflow withholds interval bars; it does not clip them, silently change scale or
+replace unknown values with zero. Absolute UTC uses the union of the two current
+windows; elapsed alignment retains the baseline duration. Stale reads keep the old
+series and read clocks. A changed-between-reads side has unknown interval values.
+
+The application retains the chart owner, alignment control and UTC selection across
+refreshes. A selection pins its original UTC question; it does not slide with the
+next rolling window. Its range handles and source-read tooltip remain attached to
+that selected question. **Stage selected interval** pauses polling and opens the
+existing population/record owners in an inline child. It reads nothing until
+**Run selected population**. This is a fresh read of the selected question, not a
+claim that its rows still match the earlier interval count. **Back to live comparison**
+restores the retained chart, selection and keyboard focus without a source read.
+Resume remains explicit. Hidden-page and navigation cancellation also suspend the
+child. The reusable display component owns no transport, navigation or custody.
+
+Freeze still publishes the server-held snapshot without rereading telemetry. Its
+stored series is exactly the selection array sent in that displayed response,
+including zero/no-data buckets and any requested per-bucket measures. Native
+counter reset/unit/coverage semantics remain in their existing owner.
+
+```mermaid
+flowchart LR
+  B[Frozen baseline with requested buckets] --> R[Existing rolling source read]
+  R --> D[Held snapshot and capability]
+  D --> S[Optional retained series response]
+  S --> P[Passive chart with fixed count domain]
+  P --> Q[Pin original UTC selection]
+  Q --> C[Pause and stage child]
+  C --> E[Explicit Run]
+  E --> K[Back without reread]
+  K --> P
+  D --> F[Freeze exact displayed arrays]
+```
+
+Journey 69 now exercises automatic rolling refresh, interval overflow/rescale,
+retained UTC alignment and selection, explicit child read/return, stale reads,
+exact freeze after late arrivals, and obsolete-response disposal. Its observed
+Quint replay includes twelve rejecting controls for series, scope, reads and
+custody. The live Bombadil actor also selects, stages and returns before freezing,
+with shared-domain and source-free-selection invariants. Hegel checks large exact
+counts and fixed-domain overflow against the actual JavaScript model.
+
+![Live retained intervals](journeys/screenshots/129a-live-buckets.png)
+
+![Retained selection after refresh and return](journeys/screenshots/129b-retained-selection.png)
