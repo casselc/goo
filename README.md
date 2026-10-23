@@ -571,13 +571,9 @@ Retained record comparisons share [aligned activity charts](docs/COMPARISON_SERI
 
 [Live record activity comparisons](docs/LIVE_COMPARISON.md#retained-bucket-series-during-refresh) now refresh requested bucket series before Freeze, retain selected UTC questions and alignment, and reuse explicit population drilldown with source-free return.
 
-The first [E1 native instrument discovery cut](docs/NATIVE_INSTRUMENT_DISCOVERY.md)
-adds a compact observed-instrument catalog, generic package fallback and pinned
-HTTP duration hints. Metadata does not imply verified coverage; Run remains explicit.
-
-Native discovery now receives versioned Go capability plans and per-stream HTTP
-key presence from the same bounded read, with explicit missing/empty values and
-full totals independent of the 25-stream display cap. Browser rules are removed;
-metadata presence remains distinct from verified metric coverage.
-
-Native discovery now includes an [experimental pinned messaging processing candidate](docs/NATIVE_INSTRUMENT_DISCOVERY.md#messaging-processing-candidate), with exact stream presence and explicit package preview/Run.
+[Native instrument discovery](docs/NATIVE_INSTRUMENT_DISCOVERY.md) provides a
+compact observed catalog, generic package bindings and Go-planned HTTP/messaging
+convention candidates. Exact stream presence preserves missing/empty values and
+full bounded totals independently of display limits. Preview and Run are explicit;
+metadata remains unverified. The [E1 acceptance audit](docs/E1_ACCEPTANCE.md) maps
+these capabilities to real evaluation outcomes and current kernel limits.

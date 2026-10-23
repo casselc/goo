@@ -601,3 +601,12 @@ Its presence matrix does not validate operation values, destination cardinality,
 unique deliveries, queue lag, delivery success or end-to-end trace relations.
 Other messaging instruments retain generic bindings; this is not a full broker
 or consumer dashboard. Non-monotonic pool sums still require kernel support.
+
+
+The [bounded E1 audit](E1_ACCEPTANCE.md) accepts discovery/metadata planning, not
+convention verification. Native Run currently requires nonempty instance IDs and
+fails the whole matching input on invalid identity. The ClickStack counter adapter
+refuses fractional or >=2^53 values, even if metadata permits preview. Summary and
+exponential histograms are not inventoried. Discovery excludes exports exactly at
+its end; interval evaluation includes that endpoint and bounded preceding context.
+Discovery and Run row counts can differ without changing the fixed question.

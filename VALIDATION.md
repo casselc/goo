@@ -6314,3 +6314,46 @@ The matching Go/UI runtime is deployed locally with optional XTDB configuration
 preserved. This cut does not claim messaging value conformance, queue lag,
 delivery success or typed trace relations. Next: bounded E1 acceptance audit of
 metadata profiles versus actual kernel validation, before selecting more features.
+
+## 2026-10-23 — bounded E1 acceptance audit
+
+[The acceptance map](docs/E1_ACCEPTANCE.md) accepts native discovery and the pinned
+HTTP/messaging metadata candidates, with explicit kernel and inventory limits.
+No application/runtime or wire behavior changed in this audit. The active queue,
+README, discovery contract, journey index and verification guide now agree on the
+accepted boundary and next D2 time/latency selection-versus-rest cut.
+
+Actual checks:
+- `go test ./metrics ./measurements ./cmd/goo` passed. The new generated-binding
+  acceptance matrix covers HTTP/messaging/custom durations in s/ms, observed and
+  incomplete coverage, no-recorded-value, no-data, malformed buckets, missing and
+  empty instances, mixed temporality and boundary-crossing intervals. A focused
+  continuation also proves one invalid identity prevents a partial valid result.
+- Seven verification checks passed: both candidate properties, optional identity,
+  counter/histogram Hegel state/swarm and observed Quint counter/histogram traces.
+- Real OTLP journey 133 passed in 1.2 minutes. Two full-window exports evaluate as
+  observed; one export remains unknown over the full question. Missing instance
+  identity and a fractional custom counter each return 502, clear the result and
+  disable capture. All four catalog plans stay not-run. Preview performs no
+  evaluation; four explicit Runs and zero writes were observed.
+- The observed and unknown results each passed the existing Quint discovery replay
+  and its three rejecting controls. The 25-second configured Bombadil inspection
+  campaign passed on the unidentified consumer without implicitly evaluating it.
+- OpenAPI conformance passed (58 Go operations, 222 response fixtures, 56 admitted
+  requests, 14 mux refusals, negative/SSE controls). All four actual discovery and
+  successful/error evaluation payloads match the current schemas.
+
+Compact Go/property logs are in `artifacts/e1-acceptance`; actual outcomes, both
+replay ledgers and Bombadil evidence are in
+`artifacts/instrument-acceptance/979f1f08c3`. Four real desktop frames were generated;
+unknown and refused frames were visually reviewed. Prior unchanged UI/metadata
+journeys and their mobile frames remain current. No build image was needed.
+Temporary property logs were archived and removed; no telemetry or retained
+captures were deleted.
+
+The audit explicitly carries forward nonempty-instance requirements, integer
+counter adapter precision limits, unsupported summary/exponential inventory and
+non-monotonic sums, metadata-only conformance and differing discovery/evaluation
+export boundary reads. No queue lag, error denominator, fleet percentile or trace
+completeness guarantee is claimed. Next is the existing D2 population workflow,
+not a new convention catalog or generalized kernel migration.

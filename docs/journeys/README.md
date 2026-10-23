@@ -1737,3 +1737,13 @@ and desktop/mobile composition. Observed Quint replay uses independent source
 identities and rejecting controls. The shared Bombadil discovery actor exercises
 this consumer without implicit execution/publication. See
 [the contract and frames](../NATIVE_INSTRUMENT_DISCOVERY.md#messaging-processing-candidate).
+
+
+133. **Candidate versus evaluated evidence** — `instrument-acceptance.spec.js`
+emits manifest-free OTLP across ordinary consumers and a custom counter. Explicit
+Preview/Run keeps complete processing windows observed, incomplete coverage
+unknown, and refuses missing identity or unsupported precision. Refusals clear the
+result and disable capture; metadata remains not-run. The existing Quint discovery
+replay validates observed/unknown results and rejecting controls; Bombadil
+inspects an unidentified candidate without executing it. Four real frames and the
+[acceptance map](../E1_ACCEPTANCE.md) document the boundaries.

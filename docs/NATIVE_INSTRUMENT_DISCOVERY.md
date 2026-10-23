@@ -1,4 +1,4 @@
-# Observed native instruments and HTTP duration hints
+# Native instrument discovery and convention candidates
 
 Implemented E1 discovery and typed-plan continuation in the existing Measurements surface,
 including the existing service-to-discovery handoff. No manifest, goo annotations
@@ -19,7 +19,8 @@ The compact table shows instrument name, observed kind/unit/count and whether a
 package can be previewed. Up to 25 identities appear per local page. More/Previous
 appear only when needed; paging and Metadata and support disclosures read no
 sources and publish nothing. The shared `goo-table` contains horizontal overflow
-on narrow screens. Unknown or unsupported instruments remain visible.
+on narrow screens. Unsupported shapes in these inventoried families remain visible. Summary and
+exponential-histogram tables are outside this inventory.
 
 Build measurement package sends the existing exact definition to the existing Go
 preview validator. It does not execute or save a measurement. Preview canonicalizes
@@ -50,8 +51,8 @@ The hints distinguish:
 Missing status dimensions withhold an HTTP error-rate suggestion. Even when a status
 key is observed, no error policy, denominator or error-rate view is invented.
 Latency remains native histogram bucket ranges per compatible exact stream; request
-rates and fleet percentiles are not inferred. An absent HTTP duration name is
-reported as not observed in this bounded window, not as missing instrumentation.
+rates and fleet percentiles are not inferred. The catalog summarizes supplied convention candidates; a generic-only catalog
+does not imply missing HTTP or messaging instrumentation.
 Declared manifests continue to have their existing separate service inventory role.
 
 ## Ownership
@@ -93,12 +94,11 @@ Go planner across kinds/units and exact-stream permutations without mutating sup
 
 ![Contained catalog on mobile](journeys/screenshots/130b-instrument-catalog-mobile.png)
 
-## Remaining E1 scope
+## Acceptance and limits
 
-This does not complete E1. Typed metadata capability plans and observed per-stream
-HTTP/messaging key presence are delivered. The bounded messaging case is described below.
-A final acceptance audit must distinguish metadata-only profiles from the existing
-kernels’ interval/value validation. Verified error/denominator policies and typed
+The [E1 acceptance audit](E1_ACCEPTANCE.md) accepts bounded native discovery,
+HTTP/messaging metadata profiles and observed stream presence. It distinguishes
+preview eligibility from the existing kernels’ interval/value validation. Verified error/denominator policies and typed
 relations require concrete supporting data; they are not offered by these profiles. Existing
 metric support limits (including unsupported non-monotonic sums and exponential
 histograms) are not widened by presentation hints. No automatic dashboard or
@@ -108,7 +108,7 @@ persistent convention declaration is created by this cut.
 
 `POST /metric-discovery` now adds `capabilityPlan` to each instrument. Its version is
 `goo/instrument-capability-plan/v1alpha1`; it retains `verification: not-run`.
-The Go planner owns the pinned HTTP profile, generic fallback, shape/eligibility
+The Go planner owns the pinned HTTP/messaging profiles, generic fallback, shape/eligibility
 and diagnostic text. The browser accepts this version without recomputing rules.
 Old clients may ignore the additive field; new clients disable Build when no
 supported plan is supplied. Request semantics and generated definition IDs remain
@@ -179,3 +179,11 @@ same manifest-free consumer through the shared discovery actions/invariants.
 
 ![Messaging stream presence](journeys/screenshots/132a-messaging-stream-presence.png)
 ![Messaging presence on mobile](journeys/screenshots/132b-messaging-presence-mobile.png)
+
+
+Journey 133 (`journeys/instrument-acceptance.spec.js`) completes explicit messaging
+Preview/Run with fully covered and incomplete windows, then refuses unidentified
+streams and fractional custom counters. Preview and metadata inspection do not
+evaluate telemetry; every catalog stays `not-run` after execution. Refusals leave
+no result to capture. The [acceptance map](E1_ACCEPTANCE.md) records these boundaries
+and the inventory's half-open export window versus Run's interval-boundary reads.

@@ -1013,3 +1013,13 @@ Instrument capability Hegel checks now exercise the actual Go planner, not a
 parallel JavaScript classifier. `TestQuintInstrumentPresenceLedger` replays real
 discovery/disclosure effects against independent identity rows and rejects seven
 forgeries, including extra source reads and false key/instance coverage.
+
+
+E1 acceptance: `TestHegelInstrumentCandidateDoesNotPromoteEvidence` varies actual
+histogram observations under the same metadata candidate; missing time/values
+stay unknown and invalid identities/counts are refused. Existing counter/histogram
+state/swarm and observed Quint checks remain the kernel authorities. Journey 133
+reuses `TestQuintMetricDiscoveryLedger` separately for observed and unknown real
+results (three rejecting controls each) and configures the existing Bombadil
+inspection actor for a consumer with missing instance identity. No new model or
+browser-side convention classifier is introduced. See [the audit](../docs/E1_ACCEPTANCE.md).
