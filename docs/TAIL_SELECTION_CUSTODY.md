@@ -1,8 +1,9 @@
-# Exact Activity selection: membership prerequisite
+# Exact Activity selection: backend custody prerequisites
 
-Status: a bounded Go membership primitive is implemented and tested, **unwired to
-SSE and HTTP**. Existing tail UI and retention origins are unchanged. This document
-specifies the next integration; exact Activity retention and its browser retry
+Status: the bounded Go membership bank, typed tail manifest and idempotent XTDB
+publisher are implemented and tested as backend libraries, **unwired to SSE and
+HTTP**. Existing tail UI and v1 retention origins are unchanged. Public exact
+Activity retention, shared catalog/citation integration and the browser retry
 journal are not yet available.
 
 The concrete task is to preserve up to 20 observed Activity log/span occurrences
@@ -74,18 +75,38 @@ flowchart LR
   Tracker -. planned server issuer .-> Bank[Implemented membership bank: unwired]
   Bank --> Draft[Exact ephemeral selection draft]
   Bank --> Expiry[Read-anchored expiry or capacity refusal]
-  Draft -. next integration .-> Origin[New typed tail manifest adapter]
-  Origin -. planned .-> Publish[Idempotent durable publication and receipt]
-  Publish -. explicit integration .-> Catalog[Origin-aware catalog and exact citations]
+  Draft --> Origin[Implemented typed tail manifest]
+  Origin --> Publish[Implemented atomic XTDB publisher and retry ledger]
+  Publish --> Read[Explicit LoadTail origin resolver]
+  Read -. planned integration .-> Catalog[Shared catalog and exact citations]
 ```
 
-## Publication and retry contract — proposed next cut
+## Implemented backend publication and retry contract
 
-Use a distinct typed tail manifest/receipt alongside current v1 capture/result-page
-receipts. Preserve old bytes, hashes and validators. Reuse transactional publication
-mechanics behind origin-specific validation; do not relax v1 to accept missing
-captures. Catalog, exact-reference/citation resolution and pinned review reads must
-explicitly understand the new origin before the UI advertises durable evidence.
+`retention.TailManifest` (`goo/tail-evidence/v1alpha1`) embeds the exact resolved
+selection, with a deterministic immutable ID and structural/integrity validation.
+`Store.PublishTail` accepts only `TailIntent`: a version, request ID, original
+connection/selector, bounded references, tags and note. It resolves server proof;
+it never accepts a client draft or record payload. Reference ordering and omitted
+`logs` normalize before intent hashing. Tags and note bind exactly as supplied.
+Request data is deeply owned before sorting/database access.
+
+`goo_tail_evidence` and `goo_tail_requests` hold the typed manifest and receipt in
+one asserted transaction. A receipt includes the initial meaning revision,
+independent custody clock and returned XTDB read basis. The initial revision lives
+inside that immutable receipt; shared annotation history/corrections are **not yet
+wired** for this origin. A before-commit interruption rolls back both tables; a
+commit followed by lost acknowledgement recovers the same original receipt.
+`LoadTail` is the explicit backend origin resolver. Existing `Load`, catalog,
+correction and pinned-review paths continue to require v1 captures/result pages.
+Their formats, hashes and validators are unchanged.
+
+This bounded cut intentionally isolates the new protocol before extracting shared
+transaction mechanics: existing v1 request hashes bind a manifest, whereas tail
+requests must bind references before proof resolution. Combining those protocols
+prematurely would risk changing legacy retry identity. Shared catalog, exact
+citations and pinned review reads must explicitly understand the new origin before
+the UI advertises durable evidence.
 
 A proposed `POST /retained-tail-evidence` request contains a version, client request
 ID, original connection/selector, bounded token/handle references, tags and note.
@@ -106,9 +127,9 @@ requires a different request, never silently changing a pending retry.
 The existing saved/result-page transaction tests verify the reusable mechanics:
 interruption leaves no partial publication, concurrent attempts converge, and an
 already committed selection can be recovered after page expiry. They do **not**
-prove durable tail publication. A tail publisher must separately pass lost-ack,
-changed-intent, expiry, unavailable-store and concurrent retry tests against its
-new manifest before it is connected to the browser journal.
+prove durable tail publication. The tail publisher now separately passes lost-ack, changed-intent, expiry,
+unavailable-store and concurrent retry checks. These backend guarantees do not
+claim the unwired browser journal or public origin readers are implemented.
 
 ## Planned user storyboard — not implemented
 
@@ -151,3 +172,23 @@ storyboards remain the implemented interaction.
   integration checks pass. Legacy origin/HTTP guards remain strict.
 
 Actual commands/results and retained artifacts are in [VALIDATION.md](../VALIDATION.md).
+
+### Typed publisher evidence
+
+- Unit checks preserve mixed-poll windows/read clocks, late/limited flags, duplicate
+  occurrences and exact numbers; canonical draft/manifest validation rejects a
+  semantically invalid member even after both integrity digests are recomputed.
+- Actual XTDB tests roll back an interrupted transaction with no partial evidence,
+  lose the post-commit acknowledgement, discard the bank and recover the original
+  annotation/manifest/custody clock. Changed intent conflicts; absent expired proof
+  refuses; concurrent publication converges. An unavailable store is never reported
+  as expired proof. `LoadTail` resolves the origin and the v1 reader refuses it.
+- Hegel checks durable serialization and validity after ephemeral proof expiry.
+  Observed Quint replay uses actual XTDB publish/recover/conflict/absent outcomes;
+  four altered-output controls must be rejected. This bounded model does not prove
+  HTTP, catalog, correction, SSE or browser behavior.
+
+Next: integrate the tail origin into shared read/citation/correction contracts with
+compatibility fixtures, then issue server capabilities through SSE and connect
+selection/retry UI. The planned storyboard above remains unimplemented; no UI or
+screenshots changed in this library milestone.

@@ -48,9 +48,10 @@ type Receipt struct {
 	AwaitToken   string                     `json:"awaitToken"`
 }
 type Store struct {
-	URL          string
-	AwaitToken   string
-	beforeCommit func() error
+	URL             string
+	AwaitToken      string
+	beforeCommit    func() error
+	afterTailCommit func() error // test seam: committed write, acknowledgement lost
 }
 
 func hash(b []byte) string { v := sha256.Sum256(b); return hex.EncodeToString(v[:]) }

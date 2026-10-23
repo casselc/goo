@@ -272,3 +272,33 @@ func (s *TailMembershipSnapshots) Resolve(connection string, selector TailSelect
 	out.Digest = tailMembershipHash(out)
 	return out, nil
 }
+
+// Validate checks the durable shape of a resolved draft without requiring live
+// capabilities. It cannot establish membership; only Resolve may issue a draft.
+func (d TailSelectionDraft) Validate() error {
+	digest := d.Digest
+	d.Digest = ""
+	raw, err := json.Marshal(d)
+	if err != nil || len(raw) > 2<<20 || digest != tailMembershipHash(d) || d.Version != TailMembershipVersion || !validTailConnection(d.Connection) || len(d.Members) < 1 || len(d.Members) > 20 {
+		return errors.New("invalid tail selection draft")
+	}
+	selector, _, err := tailScope(d.Selector, d.Members[0].ToMS)
+	if err != nil || tailMembershipHash(selector) != tailMembershipHash(d.Selector) {
+		return errors.New("invalid tail selector")
+	}
+	seen := map[string]bool{}
+	previous := ""
+	for _, m := range d.Members {
+		order := m.Ref.Token + "/" + m.Ref.Key
+		if !validTailConnection(m.Ref.Token) || !validTailConnection(m.Basis) || order <= previous || seen[m.Ref.Key] || m.FromMS < 0 || m.ToMS > 9223372036854 || m.FromMS != m.ToMS-TailWindowMS || m.ObservedAt.IsZero() || m.ObservedAt.Before(time.UnixMilli(m.ToMS)) {
+			return errors.New("invalid tail member provenance")
+		}
+		row, e := canonicalTailMember(TailRow{Key: m.Ref.Key, Record: m.Record, Late: m.Late}, m.FromMS, m.ToMS)
+		if e != nil || !bytes.Equal(row.Record, m.Record) {
+			return errors.New("invalid canonical tail member")
+		}
+		seen[m.Ref.Key] = true
+		previous = order
+	}
+	return nil
+}

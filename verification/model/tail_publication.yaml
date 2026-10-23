@@ -1,0 +1,13 @@
+spec: tail_publication.qnt
+module: tail_publication
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  publish:
+    expect: 'durable == {{.obs.durable}} and refused == {{.obs.refused}}'
+  recover:
+    expect: 'durable == {{.obs.durable}} and refused == {{.obs.refused}}'
+  conflict:
+    expect: 'durable == {{.obs.durable}} and refused == {{.obs.refused}}'
+  absent:
+    expect: 'durable == {{.obs.durable}} and refused == {{.obs.refused}}'

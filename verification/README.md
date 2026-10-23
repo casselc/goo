@@ -1048,3 +1048,9 @@ expire/refuse observations through `model/tail_membership.qnt`; four forged trac
 must fail. This model does not claim durable publication. Existing XTDB interruption,
 concurrent-request and expired fixed-page recovery tests separately establish
 reusable retry mechanics. See [the contract/status](../docs/TAIL_SELECTION_CUSTODY.md).
+
+Tail custody follow-up: `TestTailManifestProperties` checks immutable serialization
+and rehashed invalid provenance using Hegel. With `GOO_XTDB_TEST_URL`,
+`TestQuintObservedTailPublication` replays actual publish/recover/conflict/absent
+outcomes against `model/tail_publication.yaml`, including four rejecting controls.
+This does not cover the still-unwired SSE, HTTP or shared catalog readers.

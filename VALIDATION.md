@@ -6508,3 +6508,52 @@ Next: implement a distinct typed tail manifest/idempotent durable publisher and
 origin-aware resolution, preserving old receipt bytes. Only after committed retry,
 changed-intent, expiry, outage and concurrency checks pass should SSE-issued
 references and the browser selection/retry workflow be connected.
+
+## 2026-10-23 — typed tail evidence and durable backend publication
+
+Implemented `retention.TailIntent`, `TailManifest`, `TailReceipt`, `Store.PublishTail`
+and the explicit `LoadTail` origin reader. They are library APIs only: no new HTTP
+route, SSE capability, browser action, shared catalog/citation or correction support.
+The v1 capture/result-page schema, hashes, tables and strict origin guards remain
+unchanged. Dedicated tail tables atomically hold the manifest and request receipt;
+initial annotation and custody clock live inside that immutable receipt.
+
+Actual checks:
+
+- `go test ./retention ./exploration ./cmd/goo -count=1 -v` passed with
+  `GOO_XTDB_TEST_URL` pointing at the disposable local XTDB on port 15432.
+  All retention integration tests ran, including legacy catalog/pinned documents,
+  correction/read basis, interrupted/concurrent publication and expired fixed-page
+  recovery. The optional ClickHouse source transport integration test was skipped.
+- Native tail integration proves no partial manifest after an interrupted transaction,
+  actual post-commit acknowledgement loss, recovery with no bank and after expiry,
+  unchanged durable identities/clocks, changed note/tags/connection/selector/member
+  set conflicts, absent expired proof refusal and concurrent receipt convergence.
+  A connection outage is distinct from proof expiry. `LoadTail` succeeds while the
+  existing v1 reader refuses the new origin.
+- `go test -race ./retention ./exploration -run 'Test(Tail|XTDBTail)' -count=1 -v`
+  passed. After tightening reference syntax and extending conflict cases, the
+  retention subset was run again under `-race` and passed.
+- In the separate verification module,
+  `go test -run 'Test(TailManifestProperties|QuintObservedTailPublication|HegelTailMembershipStateSwarm|QuintObservedTailMembership)$' -v -count=1`
+  passed with the real XTDB opt-in. Hegel runs 50 durable-manifest property examples
+  and 70 membership state/swarm sequences. Observed Quint replay exercises real
+  publication/recovery/conflict/expired-absence outcomes with four rejecting controls;
+  membership replay retains its four independent controls.
+- Canonical member validation rejects invalid provenance even after recomputing
+  both integrity digests. Unit checks preserve distinct mixed-poll read windows,
+  clocks, basis and late/limited flags, duplicate ordinals and exact JSON integers.
+  Normalization owns request data before sorting; no caller slice is mutated.
+- `git diff --check` passed. No public wire contract or presentation changed, so no
+  OpenAPI regeneration, browser/Bombadil run, screenshots or runtime image build
+  is claimed. The custody diagram/storyboard status, README, plan and known issues
+  identify the backend-only boundary.
+
+Compact logs: `artifacts/tail-publication-contract/{go,models,race,publisher-final}.txt`.
+No new build staging or background process remains; only these bounded logs are
+retained. No telemetry, volumes or user evidence was deleted.
+
+Next: adopt the explicit tail origin in shared catalog/citation/correction/pinned
+read contracts with compatibility fixtures, then wire server-issued capabilities
+and the selection/retry UI. This milestone does not advertise public exact Activity
+retention or classifier/training functionality.

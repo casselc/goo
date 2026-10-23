@@ -587,5 +587,6 @@ selection, scope broadening and partitions to tested behavior and explicit limit
 
 
 [Exact Activity selection prerequisites](docs/TAIL_SELECTION_CUSTODY.md) now include
-an executable Go membership bank and publication/retry contract. The bank is unwired;
-exact tail retention and browser retry recovery remain follow-up integration work.
+a tested Go membership bank, typed tail manifest and idempotent XTDB publisher.
+These backend libraries remain unwired to SSE/HTTP; shared origin readers and
+exact tail selection/browser retry recovery are follow-up integration work.

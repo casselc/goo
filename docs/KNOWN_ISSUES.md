@@ -629,6 +629,7 @@ occurrence identity, expiry and idempotency; connection-local handles are insuff
 [Activity membership prerequisites](TAIL_SELECTION_CUSTODY.md) include a tested Go
 bank, currently unwired. Tail SSE still issues no capability and public retention
 still rejects tail references. Process-local proofs expire from original read time
-and disappear on restart; only a future committed-request publisher can support
-durable tail retry. Existing v1 captured/result-page manifests cannot represent
+and disappear on restart. The typed backend publisher now supports durable
+committed-request recovery without those proofs, but shared catalog/citation/
+correction readers and SSE/browser integration remain unwired. Existing v1 captured/result-page manifests cannot represent
 mixed-poll tail provenance and remain unchanged.
