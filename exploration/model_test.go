@@ -79,3 +79,27 @@ func TestTraceContextDropsSearchRestrictions(t *testing.T) {
 		t.Fatal("zero trace accepted")
 	}
 }
+
+func TestTimestampPredicateUsesExactTypedSourceColumn(t *testing.T) {
+	for _, signal := range []string{"spans", "logs"} {
+		f := Field{Kind: "column", Key: "timestamp_ns"}
+		q := basic()
+		q.Signal = signal
+		q.Where = &Predicate{Field: &f, Op: "gte", Value: "1700000000000000001"}
+		plan, err := Compile(q)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !strings.Contains(plan.Count, "toUInt64(toUnixTimestamp64Nano(Timestamp))") || strings.Contains(plan.Count, q.Where.Value) || !strings.Contains(plan.Count, "UInt64") {
+			t.Fatal(plan)
+		}
+		if !Match(q.Where, map[Field]string{f: "1700000000000000001"}) || Match(q.Where, map[Field]string{f: "1700000000000000000"}) {
+			t.Fatal("timestamp precision lost")
+		}
+		q.Where.Op = "eq"
+		q.Where.Value = "01"
+		if !Match(q.Where, map[Field]string{f: "1"}) {
+			t.Fatal("numeric equality diverged")
+		}
+	}
+}

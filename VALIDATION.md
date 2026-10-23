@@ -6357,3 +6357,49 @@ non-monotonic sums, metadata-only conformance and differing discovery/evaluation
 export boundary reads. No queue lag, error denominator, fleet percentile or trace
 completeness guarantee is claimed. Next is the existing D2 population workflow,
 not a new convention catalog or generalized kernel migration.
+
+## 2026-10-23 — D2 time/duration region versus rest
+
+Implemented [Compare with rest](docs/REGION_PARTITIONS.md) in the existing raw-span
+selection form. Unlike the original narrow-window action, both new questions keep
+the full parent window and parent predicates. A typed `column:timestamp_ns` UInt64
+field lets Go compile event-time range predicates with bound parameters. Generated
+integer-nanosecond complements preserve exclusive edges without page subtraction.
+The existing trail stages an existing population view; comparison, save and capture
+remain in their current owners. No new endpoint or generic Boolean negation API.
+
+Actual checks:
+- `go test ./exploration ./cmd/goo` passed, including exact typed event timestamps,
+  logs/spans compilation and numeric equality precision.
+- All 45 Node files passed. New pure checks cover parent/window preservation,
+  reported-edge scope, exact bounds, zero and unsupported selections.
+- Hegel time/duration partition, rectangle and categorical partition properties
+  passed. The new transform is executed in Node and both outputs compiled/matched
+  by Go at time/duration boundaries and UInt64 extremes. One redundant ad hoc run
+  omitted XDG_CACHE_HOME and hit the read-only home cache; the configured primary
+  run and corrected focused run passed.
+- Legacy journey 121 and passive 121b passed. Journey 134 verified a real OTLP
+  2+3 partition of five parent spans with a one-row inspection page. Exact time/
+  duration upper edges and zero duration go to the expected side; an excluded
+  owner stays excluded. Mobile staging and Back perform no source reads. Saved
+  view reopen stages; immutable comparison capture reopens without source reads.
+- Observed Quint replay passed with five rejecting controls for changed scope,
+  bounds, rest membership and hidden reads. Actual ledger:
+  `artifacts/region-partition/region-2e5d238f`.
+- The initial new Bombadil campaign timed out because its shared question link
+  staged without Run. The corrected actor explicitly reads the parent once,
+  requires actual population staging, then returns without another read. The
+  25-second campaign passed; journey 134 and categorical journey 123 both passed
+  the focused continuation (1.4 minutes).
+- OpenAPI conformance passed (58 Go operations, 222 response fixtures, 56 admitted
+  requests, 14 mux refusals, negative/SSE controls). The actual timestamp-based
+  comparison request also validates against the existing wire schema.
+
+The matching Go/UI image is deployed locally, preserving optional XTDB startup
+configuration and existing data volumes. Frames 121/123 were refreshed and new
+134 desktop/mobile frames were generated and visually reviewed. Contract, diagram,
+README, API notes, verification guide, journey index and active plan were updated.
+Compact Go/Node/property/API logs are in `artifacts/region-partition-contract`.
+No native histogram-to-span relation, numeric attribute complement, missing-value
+coercion or atomic source snapshot is claimed. Next: bounded D2 acceptance audit
+across the delivered column, selection, widening, broadening and partition flows.

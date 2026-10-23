@@ -577,3 +577,7 @@ convention candidates. Exact stream presence preserves missing/empty values and
 full bounded totals independently of display limits. Preview and Run are explicit;
 metadata remains unverified. The [E1 acceptance audit](docs/E1_ACCEPTANCE.md) maps
 these capabilities to real evaluation outcomes and current kernel limits.
+
+[Compare a time/latency region with the rest](docs/REGION_PARTITIONS.md) stages
+disjoint span populations in their original window, using existing comparison,
+saved-view and immutable capture workflows.

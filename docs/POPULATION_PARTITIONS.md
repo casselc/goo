@@ -31,8 +31,9 @@ with no remainder produces a no-data comparison, not a normalized healthy zero.
 The action requires applied nonnumeric, one-field breakdowns for selected signals
 and an available child slot. Existing node/depth budgets apply independently to
 both generated questions; over-budget complements are refused before a read.
-No automatic widening or removal of parent filters occurs. Numeric ranges,
-heatmap rectangles and arbitrary predicate complements are outside this slice.
+No automatic widening or removal of parent filters occurs. The [time/latency region continuation](REGION_PARTITIONS.md) adds a separate
+generated rectangle complement. Arbitrary numeric attributes and general predicate
+complements remain outside these bounded operations.
 
 Save the child as an exploration view to retain the selected queries and exact
 rest baseline configuration. Reopening stages without telemetry reads. Capture

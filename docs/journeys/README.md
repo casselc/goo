@@ -1747,3 +1747,10 @@ result and disable capture; metadata remains not-run. The existing Quint discove
 replay validates observed/unknown results and rejecting controls; Bombadil
 inspects an unidentified candidate without executing it. Four real frames and the
 [acceptance map](../E1_ACCEPTANCE.md) document the boundaries.
+
+
+134. **Time/latency region versus rest** — `region-partition.spec.js` checks a real
+OTLP partition at exact time/duration boundaries with a one-row inspection page,
+source-free mobile staging and parent return, reusable configuration and immutable
+comparison evidence. Hegel/Quint and Bombadil guard membership and ownership.
+See [the contract and frames](../REGION_PARTITIONS.md).

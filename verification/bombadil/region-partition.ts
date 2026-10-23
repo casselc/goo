@@ -1,0 +1,10 @@
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document,window})=>({phase:Number(document.documentElement.dataset.regionPhase||0),started:!!document.documentElement.dataset.regionStarted,ready:!!document.querySelector('#exploreRun'),cell:!!document.querySelector('#timeChart button[data-column="0"][data-row="[5,10) ms"]'),reads:window.performance.getEntriesByType('resource').filter(e=>new URL(e.name).pathname==='/api/explore').length}));
+export const localStaging=always(()=>state.current.reads<=1);
+export const completed=eventually(()=>state.current.phase===2).within(20,'seconds');
+const run=registerCustomAction('goo.regionRun',async(document)=>{document.documentElement.dataset.regionStarted='1';(document.querySelector('#exploreRun')as HTMLButtonElement)?.click()});
+const select=registerCustomAction('goo.regionSelect',async(document,window)=>{const el=document.querySelector('#timeChart goo-bucket-heatmap');el?.dispatchEvent(new CustomEvent('goo-heatmap-range',{bubbles:true,detail:{fromColumn:0,toColumn:0,fromRow:2,toRow:2}}));const b=[...document.querySelectorAll<HTMLButtonElement>('#timeChart button')].find(b=>b.textContent==='Compare with rest');if(!b||b.disabled)throw Error('Region rest action unavailable');b.click();if(!document.querySelector('.population-workspace[data-phase=staged]'))throw Error('Region was not staged');document.documentElement.dataset.regionPhase='1'});
+const back=registerCustomAction('goo.regionBack',async(document)=>{[...document.querySelectorAll<HTMLButtonElement>('button')].find(b=>b.textContent==='Back to question')?.click();document.documentElement.dataset.regionPhase='2'});
+export const choices=actions(()=>state.current.phase===0&&!state.current.started&&state.current.ready?[run()]:state.current.phase===0&&state.current.cell?[select()]:state.current.phase===1?[back()]:['Wait']);

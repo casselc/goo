@@ -227,3 +227,7 @@ eligibility and bounded observed-stream presence, not value/interval verificatio
 The request, source-read budget and generated package bindings are unchanged;
 response types are reflected in the OpenAPI schema. See
 [the contract](NATIVE_INSTRUMENT_DISCOVERY.md#typed-server-plan-and-observed-stream-presence).
+
+Exploration predicates also accept `column:timestamp_ns` as UInt64 event time for
+exact [time/duration region partitions](REGION_PARTITIONS.md). It uses the existing
+typed predicate wire shape; it is not a new endpoint or an ingestion clock.

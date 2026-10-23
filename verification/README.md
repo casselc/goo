@@ -1023,3 +1023,12 @@ reuses `TestQuintMetricDiscoveryLedger` separately for observed and unknown real
 results (three rejecting controls each) and configures the existing Bombadil
 inspection actor for a consumer with missing instance identity. No new model or
 browser-side convention classifier is introduced. See [the audit](../docs/E1_ACCEPTANCE.md).
+
+Time/duration partitions: `TestHegelTimeDurationPartition` executes the actual JS
+transform, compiles both sides with Go and checks disjointness/coverage using Go's
+reference interpreter at exact timestamp/duration edges and UInt64 extremes.
+`TestQuintRegionPartitionLedger` replays journey 134 through the existing
+population-drilldown model and rejects changed read counts, bounds, scope and
+non-disjoint rest predicates. `verification/bombadil/region-partition.ts` explicitly
+loads the parent, then requires source-free staging and return. See
+[the contract](../docs/REGION_PARTITIONS.md).

@@ -19,7 +19,7 @@ question. Parent predicates, environment and reported-edge scope remain intact;
 paging resets to zero. Exclusive upper duration bounds become inclusive integer
 nanosecond limits minus one. The ordinary investigation trail retains the parent
 paused in this tab. Compare uses the original supplied aggregates as baseline,
-not a disjoint rest-of-population complement. Existing capture, question-link,
+not a disjoint rest-of-population complement. A separate [Compare with rest action](REGION_PARTITIONS.md) now stages a disjoint comparison in the full parent window. Existing capture, question-link,
 package and saved exploration actions compose with the resulting typed question.
 Selection rectangles themselves are not persisted presentation state.
 
@@ -41,6 +41,6 @@ upgrade, reverse selection, cancellation and removal of range behavior.
 ![Time-duration selection preview](journeys/screenshots/121-heatmap-rectangle.png)
 
 This bounded D2 cut does not add arbitrary scope widening, a generic predicate
-algebra, exact selection-versus-rest, native bucket-to-trace inference or a new
+algebra, native bucket-to-trace inference or a new
 measurement evaluator. Questions with more than 32 time intervals retain their
 existing charts and keyboard-editable selection form.

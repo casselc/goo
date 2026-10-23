@@ -38,7 +38,7 @@ type Query struct {
 	Offset          int             `json:"offset" yaml:"offset"`
 }
 
-var columns = map[string]string{"service": "string", "trace_id": "string", "span_id": "string", "scope": "string", "scope_version": "string", "name": "string", "kind": "string", "status": "string", "duration_ns": "uint64", "duration_bucket": "string", "status_class": "string", "body": "string", "severity": "string"}
+var columns = map[string]string{"service": "string", "trace_id": "string", "span_id": "string", "scope": "string", "scope_version": "string", "name": "string", "kind": "string", "status": "string", "duration_ns": "uint64", "timestamp_ns": "uint64", "duration_bucket": "string", "status_class": "string", "body": "string", "severity": "string"}
 
 func (f Field) Type(signal string) (string, error) {
 	if f.Kind == "column" {
@@ -210,7 +210,7 @@ func Match(p *Predicate, values map[Field]string) bool {
 	if !exists {
 		return false
 	}
-	if p.Field.Kind == "column" && p.Field.Key == "duration_ns" && (p.Op == "eq" || p.Op == "ne") {
+	if p.Field.Kind == "column" && (p.Field.Key == "duration_ns" || p.Field.Key == "timestamp_ns") && (p.Op == "eq" || p.Op == "ne") {
 		a, e := strconv.ParseUint(v, 10, 64)
 		b, e2 := strconv.ParseUint(p.Value, 10, 64)
 		return e == nil && e2 == nil && (p.Op == "eq" && a == b || p.Op == "ne" && a != b)

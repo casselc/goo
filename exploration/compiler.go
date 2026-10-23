@@ -27,7 +27,7 @@ func (c *compiler) param(value, typ string) string {
 }
 func (c *compiler) field(f Field) (value, present string) {
 	if f.Kind == "column" {
-		mapping := map[string]string{"service": "ServiceName", "trace_id": "TraceId", "span_id": "SpanId", "scope": "ScopeName", "scope_version": "ScopeVersion", "name": "SpanName", "kind": "SpanKind", "status": "StatusCode", "duration_ns": "Duration", "body": "Body", "severity": "SeverityText"}
+		mapping := map[string]string{"service": "ServiceName", "trace_id": "TraceId", "span_id": "SpanId", "scope": "ScopeName", "scope_version": "ScopeVersion", "name": "SpanName", "kind": "SpanKind", "status": "StatusCode", "duration_ns": "Duration", "timestamp_ns": "toUInt64(toUnixTimestamp64Nano(Timestamp))", "body": "Body", "severity": "SeverityText"}
 		if f.Key == "status_class" {
 			return statusClassSQL(), "1"
 		}

@@ -610,3 +610,10 @@ refuses fractional or >=2^53 values, even if metadata permits preview. Summary a
 exponential histograms are not inventoried. Discovery excludes exports exactly at
 its end; interval evaluation includes that endpoint and bounded preceding context.
 Discovery and Run row counts can differ without changing the fixed question.
+
+
+[Time/latency region partitions](REGION_PARTITIONS.md) are limited to required
+native span UInt64 durations and event timestamps. Both sides use independent
+source reads; no atomic membership snapshot is claimed. Numeric attributes,
+missing/invalid attribute durations and arbitrary Boolean negation remain unsupported
+by this operation. A selection exceeding the existing predicate budget is refused.
