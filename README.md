@@ -559,3 +559,5 @@ now reveals count/share and span error/latency changes with full support counts
 and explicit missing measures. Saved population views retain the selected ranking.
 
 Raw span duration charts support [time-duration rectangle selection](docs/HEATMAP_SELECTION.md), exact keyboard bounds and explicit selected-population execution.
+
+Development browser diagnostics have [age-based retention and a 512 MiB soft budget](docs/DIAGNOSTIC_RETENTION.md). Preview with `npm run diagnostics:plan`; apply with `npm run diagnostics:prune`.

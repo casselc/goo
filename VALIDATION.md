@@ -1,5 +1,43 @@
 # Validation record
 
+## Development browser diagnostic retention (2026-10-23 UTC)
+
+Added a dry-run-first artifacts-only cleanup command, age-based raw recording
+expiry and a 512 MiB soft budget. Successful recordings expire after 24 hours
+(or after two quiet hours under budget pressure), explicit failures after seven
+days and legacy/unknown recordings after 72 hours. Pins, active markers and
+fresh bundle files protect recordings. Compact evidence/logs and unknown formats
+remain; symlinks are not followed. Bombadil records outcomes atomically, and the
+journey wrapper prunes after restoring traffic without replacing the test status.
+Application telemetry, stores, receipts, documents and committed screenshots are
+outside the tool's root and are not cleaned.
+
+Actual checks and application:
+
+- Seven filesystem/wrapper tests pass: deadline boundaries, budget precedence,
+  pins/active runs/fresh logs, symlinks, changed bundles, hardlink accounting,
+  compact/model evidence preservation, and traffic restoration with simultaneous
+  test and cleanup failures. Bash/Node syntax and whitespace checks pass.
+- Applied the reviewed plan: 69 expired bundles, 23,792 raw files removed, zero
+  skipped files; 1,185,822,637 logical bytes and an estimated 202,919,936 allocated
+  bytes reclaimed. Hardlinks explain the difference. The compressed deletion
+  inventory is under `artifacts/retention/20261023T020321Z-79185304.jsonl.gz`.
+- SHA-256 checks verify all 3,517 inventoried compact files remain unchanged.
+- Real ordinary-OTel journey 121 and its 20-second Bombadil campaign pass (36.3s).
+  Its outcome file reports passed and no active marker remains. A deliberately
+  nonexistent Bombadil specification exits unsuccessfully, reports failed and
+  clears its active marker as well. This validates both metadata branches.
+- A subsequent dry run proposes no further deletion. After the verification
+  campaign, retained raw files occupy about 419 MB physically, under 512 MiB.
+  No Docker image rebuild or application retention change was needed.
+
+The budget covers raw recordings, not the entire artifacts directory. Recent
+failed/unknown runs and pins can exceed it; reports expose that condition. Logs
+and compact ledgers remain unbounded, and there is no background scheduler.
+Direct Playwright calls need explicit pruning. See
+[policy and commands](docs/DIAGNOSTIC_RETENTION.md).
+
+
 ## Raw-span time-duration rectangle (2026-10-23 UTC)
 
 Single duration-bucket split charts now reuse the passive bucket heatmap and

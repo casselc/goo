@@ -104,6 +104,8 @@ async function startBombadil({ dir, url, specification, seconds }) {
     'darwin-arm64': 'bombadil-darwin-arm64' }[process.platform + '-' + process.arch];
   expect(nativeName).toBeTruthy();
   const logs = [], startedAt = Date.now();
+  const activeFile = path.join(dir, '.active');
+  await fs.writeFile(activeFile, JSON.stringify({startedAt, owner:'bombadil'}), {flag:'wx'});
   const processHandle = spawn(path.resolve('node_modules/@antithesishq/bombadil/binaries', nativeName), [
     'browser', 'test', '--headless', '--no-sandbox', '--time-limit', seconds + 's',
     '--exit-on-violation', '--output-path', dir, url, specification,
@@ -112,8 +114,20 @@ async function startBombadil({ dir, url, specification, seconds }) {
   processHandle.stderr.on('data', data => logs.push(data.toString()));
   let exited = false;
   const finished = new Promise(resolve => {
-    processHandle.on('error', error => { exited = true; resolve({ error: error.message }); });
-    processHandle.on('close', (code, signal) => { exited = true; resolve({ code, signal, startedAt, endedAt: Date.now() }); });
+    let completing = false;
+    const complete = async result => {
+      if (completing) return; completing = true; exited = true;
+      try {
+        const record = {...result, startedAt, endedAt:Date.now(), status:result.code===0?'passed':'failed'};
+        const temporary = path.join(dir, 'run-result.json.tmp');
+        await fs.writeFile(temporary, JSON.stringify(record, null, 2));
+        await fs.rename(temporary, path.join(dir, 'run-result.json'));
+        await fs.rm(activeFile, {force:true});
+        resolve(record);
+      } catch (error) { resolve({error:error.message}); }
+    };
+    processHandle.on('error', error => complete({error:error.message}));
+    processHandle.on('close', (code, signal) => complete({code, signal}));
   });
   const save = () => fs.writeFile(path.join(dir, 'process.log'), logs.join(''));
   return {

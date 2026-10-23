@@ -21,7 +21,9 @@
     "test:context-campaign": "GOO_CONTEXT_BOMBADIL=1 bash scripts/run_journeys.sh journeys/context-notes.spec.js",
     "test:recipes-campaign": "GOO_RECIPES_BOMBADIL=1 bash scripts/run_journeys.sh journeys/recipes.spec.js",
     "test:measurements-campaign": "GOO_MEASUREMENTS_BOMBADIL=1 bash scripts/run_journeys.sh journeys/measurements.spec.js",
-    "test:smoke": "bash scripts/run_journeys.sh --smoke"
+    "test:smoke": "bash scripts/run_journeys.sh --smoke",
+    "diagnostics:plan": "python3 scripts/retain_diagnostics.py",
+    "diagnostics:prune": "python3 scripts/retain_diagnostics.py --apply"
   },
   "devDependencies": {
     "@antithesishq/bombadil": "0.7.9",

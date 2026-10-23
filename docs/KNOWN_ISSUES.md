@@ -1,5 +1,7 @@
 # Known issues and gaps
 
+[Diagnostic retention](DIAGNOSTIC_RETENTION.md) now expires raw browser recordings, with a 512 MiB soft budget, active/pinned protection and explicit Bombadil outcomes. Compact ledgers/results/logs remain. Legacy outcomes use a 72-hour policy; direct Playwright invocations require explicit pruning. This does not configure ClickHouse logging retention.
+
 Latest diagnostic cleanup recovered space from 509 MB to 6.4 GB by hardlinking
 byte-identical raw browser screenshots and removing unused build cache. All
 screenshot paths/bytes, traces and application evidence were retained.

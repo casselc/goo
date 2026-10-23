@@ -16,6 +16,9 @@ restore() {
       result=1
     fi
   fi
+  if ! python3 scripts/retain_diagnostics.py --apply; then
+    echo 'Diagnostic retention failed; test exit status is preserved. Run npm run diagnostics:plan.' >&2
+  fi
   exit "$result"
 }
 trap restore EXIT
