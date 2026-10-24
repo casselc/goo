@@ -32,7 +32,7 @@
  function step(s){
   object(s,['version','kind','scope','view','record','measurement']);object(s.scope,['environment','fromMs','toMs','fromNS','toNS']);text(s.scope.environment,128);requireThat(s.scope.environment!=='');integer(s.scope.fromMs,0,4102444799999);integer(s.scope.toMs,s.scope.fromMs+1,Math.min(s.scope.fromMs+7200000,4102444799999));
   if(s.kind==='record'){record(s.record);requireThat(!s.measurement);text(s.record.environment,128)}else if(s.kind==='measurement'){native(s.measurement);requireThat(!s.record)}else throw Error('Unsupported question step');
-  const protocol=typeof module!=='undefined'?require('./workspace'):global.GooWorkspace;protocol.validateStep(s);
+  const protocol=typeof module!=='undefined'?require('./question-protocol'):global.GooQuestionProtocol;protocol.validateStep(s);
  }
  function card(c){
   object(c,['kind','review','readBasis','key','evidence','step','role','text','reference','caption']);optional(c,'caption',v=>text(v,160));optional(c,'text',v=>text(v,4000,true));

@@ -1,12 +1,12 @@
 /* Application adapters connect Go-selected page examples to explicit evidence custody. */
 (function(global){
- const workspace=()=>global.GooWorkspace||(typeof module!=='undefined'?require('./workspace'):null);
+ const protocol=()=>global.GooQuestionProtocol||(typeof module!=='undefined'?require('./question-protocol'):null);
  // Reference continuity checks only the returned retained page, never unseen pages.
  function anchorContinuity(page,traceID,spanID){
   const unavailable=reason=>({state:'unavailable',text:'Selected trace/span reference: unavailable ('+reason+').'});
   if(!/^[a-f0-9]{32}$/.test(traceID||'')||/^0+$/.test(traceID)||!/^[a-f0-9]{16}$/.test(spanID||'')||/^0+$/.test(spanID))return unavailable('usable selected span reference missing');
   const r=page?.explore;let step;
-  try{step=workspace().questionFromEvidence(page?.receipt).step;const q=step.record;if(step.kind!=='record'||q.signal!=='spans'||q.where?.all?.length!==1||q.where.all[0].field?.kind!=='column'||q.where.all[0].field.key!=='trace_id'||q.where.all[0].op!=='eq'||q.where.all[0].value!==traceID||!r?.question||workspace().evidenceDifference(step,{kind:'explore',explore:r.question}).length)return unavailable('returned page scope does not match the trace capture');}catch{return unavailable('trace capture page unavailable');}
+  try{step=protocol().questionFromEvidence(page?.receipt).step;const q=step.record;if(step.kind!=='record'||q.signal!=='spans'||q.where?.all?.length!==1||q.where.all[0].field?.kind!=='column'||q.where.all[0].field.key!=='trace_id'||q.where.all[0].op!=='eq'||q.where.all[0].value!==traceID||!r?.question||protocol().evidenceDifference(step,{kind:'explore',explore:r.question}).length)return unavailable('returned page scope does not match the trace capture');}catch{return unavailable('trace capture page unavailable');}
   if(!['observed','no_data'].includes(r.state)||!Array.isArray(r.rows))return unavailable('retained page rows unavailable or read changed');
   const usable=row=>row&&typeof row==='object'&&!Array.isArray(row)&&/^[a-f0-9]{32}$/.test(row.TraceId||'')&&!/^0+$/.test(row.TraceId)&&/^[a-f0-9]{16}$/.test(row.SpanId||'')&&!/^0+$/.test(row.SpanId);
   const matches=r.rows.filter(row=>usable(row)&&row.TraceId===traceID&&row.SpanId===spanID).length;
@@ -17,10 +17,10 @@
  function findingCards({population,trace,text,traceID,spanID='',populationBasis,traceBasis,tracePage}){
   if(typeof text!=='string'||!text.trim()||new TextEncoder().encode(text).length>3000)throw Error('Enter a finding of at most 3000 UTF-8 bytes.');
   if(!/^[a-f0-9]{32}$/.test(traceID)||/^0+$/.test(traceID)||spanID&&(!/^[a-f0-9]{16}$/.test(spanID)||/^0+$/.test(spanID)))throw Error('Invalid trace reference.');
-  const a=workspace().questionFromEvidence(population),b=workspace().questionFromEvidence(trace);
+  const a=protocol().questionFromEvidence(population),b=protocol().questionFromEvidence(trace);
   if(population.id===trace.id||a.step.kind!=='record'||b.step.kind!=='record'||b.step.record.signal!=='spans')throw Error('Two distinct record captures are required.');
   const p=a.step.scope,t=b.step.scope,q=b.step.record;
-  if(!workspace().sameWindow(p,t)||q.where?.all?.length!==1||q.where.all[0].field?.kind!=='column'||q.where.all[0].field.key!=='trace_id'||q.where.all[0].op!=='eq'||q.where.all[0].value!==traceID)throw Error('Trace capture differs from the selected population environment, window or exact trace reference.');
+  if(!protocol().sameWindow(p,t)||q.where?.all?.length!==1||q.where.all[0].field?.kind!=='column'||q.where.all[0].field.key!=='trace_id'||q.where.all[0].op!=='eq'||q.where.all[0].value!==traceID)throw Error('Trace capture differs from the selected population environment, window or exact trace reference.');
   const basis=v=>/^[a-f0-9]{64}$/.test(v||'')?v:'unavailable';
   return [{...a,key:population.id,caption:'Selected population'},{...b,key:trace.id,caption:'Expanded trace context'},{kind:'note',role:'finding',text:text.trim()+'\n\nTrace reference: '+traceID+(spanID?' / '+spanID:'')+'\nObserved population basis: '+basis(populationBasis)+'\nObserved trace basis: '+basis(traceBasis)+'\nLinked captures are later explicit reads; trace completeness remains unverified.\n'+anchorContinuity(tracePage?.receipt?.id===trace.id?tracePage:null,traceID,spanID).text}];
  }

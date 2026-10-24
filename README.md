@@ -77,8 +77,9 @@ flowchart LR
 
 [Architecture and process diagrams](docs/ARCHITECTURE_DIAGRAMS.md) cover compilation,
 production services and telemetry custody. [Display component contracts](docs/UI_COMPONENTS.md)
-describe passive elements usable in server-rendered HTML or an SPA. Source reads,
-subscriptions, scope and publication remain application-owned.
+describe passive elements usable in server-rendered HTML or an SPA. The [shared question protocol](docs/QUESTION_PROTOCOL.md) separates reusable intent
+from workspace navigation. Source reads, subscriptions, scope and publication
+remain application-owned.
 
 ## API and development
 

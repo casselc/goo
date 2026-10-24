@@ -13,6 +13,48 @@ compares authored and canonical capture questions in both directions, preserving
 input objects. These are selected protocol examples, not a complete browser copy
 of the Go validators. Go remains authoritative for full definition/source validation.
 
+## Pure protocol owner — N1 continuation
+
+`ui/question-protocol.js` is the canonical browser/Node owner for record/native
+steps, versioned links, fixed-scope checks, capture-question projection and
+comparison-only default equivalence. `ui/workspace.js` owns navigation/layout and
+reexports the identical function references for existing consumers. Load the
+protocol script before workspace in server HTML; CommonJS consumers may require
+the protocol directly. Neither module executes a source query or publication at
+load time. Navigation runs only when its application owner mounts workspace.
+
+The extraction preserves every moved function body, error string, legacy
+`#question=` decoding and the existing 16,000/48,000-character transport budgets.
+These browser guards remain selected transport checks, not a replacement for Go
+semantic validation. Frozen fixture bytes and native definition digests stay the
+same. There is no new normalization of stored definitions or evidence.
+
+Evidence comparison still resolves `question-session.identity` lazily at call
+time, with its existing pre-session stable fallback. It neither creates a Session
+nor makes the protocol depend on a mounted UI. Session lifecycle/generation,
+source requests, immutable publication and browser-local draft storage retain
+their separate owners. Recovery validation, trace findings and fresh comparison
+now import the pure protocol directly; other existing owners can keep the
+workspace compatibility surface.
+
+```mermaid
+flowchart LR
+  Nav[Workspace navigation / layout] -->|Compatibility exports: same references| Protocol[Pure question / step / link protocol]
+  Owners[Recovery / trace finding / fresh comparison owners] --> Protocol
+  Protocol -->|Lazy identity lookup only| Identity[Question-session identity helper]
+  Protocol --> Wire[Unchanged versioned question transport]
+  Wire --> Go[Go semantic validation / native definition digest]
+  Owners -->|Separate explicit actions| Effects[Source reads / capture / publication]
+```
+
+Existing storyboards 114, 169 and 87 exercise real native reuse, exact bounds,
+source-free explicit recovery and retained-page trace continuity through this
+owner. The shared Go/JS fixture worker and Hegel mixed-step campaign now exercise
+both canonical entry and compatibility-reference identity; isolated browser tests
+check loading without DOM/history/fetch/Session globals and lazy identity before
+and after question-session loads. No new state model is introduced for the
+unchanged function movement; existing live Quint rejecting controls remain in use.
+
 ## Native default equivalence during reuse
 
 Go's native `Binding` has string scope/version/schema selectors. A valid native
@@ -23,7 +65,7 @@ namespace value defaults and known optional null fields may serialize as omitted
 
 Previously a shared authored draft could differ textually from its canonical saved
 capture and show **Question definition differs**, despite the same Go binding.
-`GooWorkspace.evidenceDifference` now compares a cloned native definition using
+`GooQuestionProtocol.evidenceDifference` (also reexported by `GooWorkspace`) compares a cloned native definition using
 only those known Go zero/omitempty defaults. Record comparison retains its existing
 record predicate/paging default rules; it is not applied to native definitions.
 Scope/environment/family checks remain separate. Neither stored definitions nor
@@ -86,6 +128,6 @@ two actually matching adapters rather than forcing those owners together.
 | No forced request abstraction | Source execution and retained metadata adapters were compared; their abort/visit/snapshot/cursor lifetimes differ, so the conditional extraction is not justified |
 
 This closes bounded B2. It does not claim exhaustive protocol validation or every
-future presentation adoption. The next active cut is C1: freeze store-specific
-identity/response fixtures, then extract immutable-file publication mechanics while
-retaining each family's validation, canonicalization and lineage rules.
+future presentation adoption. At B2 closeout the next cut was C1: freezing store-specific identity/response
+fixtures and extracting immutable-file mechanics without changing family semantics.
+That cut is now historical; the [current roadmap](ROADMAP_2026_10_24.md) owns status.

@@ -8027,7 +8027,7 @@ Actual checks:
   prelude pass (1.05s). Quint protocol fixture and eight rejecting controls pass
   (16.07s). These helper/protocol tests do not substitute for browser effects.
 - Final real journey169 passes (1.1minutes) with ordinary OTLP/ClickHouse evidence,
-  exact parent/capture references, pending edit buffers and destination, zeroAPI
+  exact parent/capture references, pending edit buffers and destination, zero API
   requests on each Restore, explicit real receipt detail loading/noPOST, server
   commit followed by dropped actual response, reload with sticky uncertainty,
   separate acknowledged publication, corrupt-payload discard and mobile layout.
@@ -8081,3 +8081,37 @@ Independent whole-product/documentation review approved M5 with no blocking
 findings and independently resolved 726 relative targets across the four entry/index
 documents. The finite M1–M5 queue is complete; deferred proposals remain separate
 from this round. Final reviewed closeout is recorded in git history.
+
+
+## 2026-10-24 — N1 pure question protocol continuation
+
+Extracted the question/step/link helper block from workspace into
+`ui/question-protocol.js`. An exact comparison with the prior committed block
+confirms every moved function body is unchanged. Workspace retains routes/mount
+and compatibility exports reference the same functions. Recovery validation,
+trace finding and fresh comparison use the canonical owner directly; lazy session
+identity lookup and its pre-session fallback remain unchanged. No source/request,
+publication, model-validation language or stored wire schema was introduced.
+
+Checks: five targeted Node suites pass, including seven canonical protocol tests
+for frozen examples, exact compatibility refs, no-DOM/no-Session browser loading,
+lazy fallback and existing 16000/48000 transport budgets. Go's 16 shared fixtures
+pass (0.091s), with actual canonical Node round trips and pinned native hashes.
+Hegel's 100 mixed-step cases pass (6.12s) through actual JavaScript canonical owner
+and compatibility refs. An initial Hegel invocation could not use the default
+read-only home cache; rerunning with XDG_CACHE_HOME=/workspace/.cache passed.
+Python route compilation and whitespace checks pass. Frozen protocol and API
+fixture files are unchanged.
+
+Real collector/ClickHouse journeys 114, 169 and 87 pass together (3 tests, 2.1 minutes).
+Native reuse preserves omitted/default-equivalent bindings and exact sub-ms scope;
+Restore still issues zero API requests; findings retain their bounded page-only
+reference diagnostic. Existing observed Quint ledgers/rejecting controls pass
+(recovery: 18.85s), and the native reuse/recovery Bombadil campaigns both pass (code 0).
+Evidence: `artifacts/question-protocol/wire-e8b6e08b`,
+`artifacts/investigation-draft/draft-29f9d86200`, and
+`artifacts/trace-finding/finding-0bd64c4841`. Their 114/169/87 frames are regenerated
+from the running app. Protocol ownership diagram, README/component references and
+current planning docs are synchronized. The frontend was restarted for the new
+static route; native executable/images and telemetry/capture/XTDB state are unchanged.
+Independent milestone review approved the final code/docs and actual evidence with no blocking findings.

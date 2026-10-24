@@ -704,3 +704,9 @@ The filter editor accepts optional `onGroup(field, opener)` and `canGroup()` for
 The filter editor now accepts `grouping`, controlled `setGrouping(fields)`, detached `suggestions()`, and an optional third `onGroup(field, opener, mode)` argument (`replace`, `add`, `remove`). Add prevents duplicates and a third field; chips emit removal intent without changing filters. See [two-field composition](COMPOSED_GROUPING.md).
 
 [`goo-grouping-control`](GROUPING_CONTROL.md) is a passive native picker/chip/custom-key element with JSON attribute/property input, cloned state, `goo:grouping-intent`, HTML/SPA/detached support and scoped `grouping-control.css`. It performs no reads or saves. The filter editor supplies labels, field inventory, availability and signal validation.
+
+
+The [shared question protocol](QUESTION_PROTOCOL.md#pure-protocol-owner--n1-continuation)
+is application infrastructure rather than a display element: `question-protocol.js`
+owns pure intent/link helpers, workspace retains navigation, and source/state
+owners remain separate. No component lifecycle gains reads or publication.
