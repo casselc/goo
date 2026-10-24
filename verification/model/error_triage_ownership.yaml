@@ -1,0 +1,21 @@
+spec: error_triage_ownership.qnt
+module: error_triage_ownership
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  stage:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  open:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  dirty_open:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  applied_old_open:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  reopen:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  hidden_open:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  return:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  resumed_old_open:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'

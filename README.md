@@ -31,6 +31,8 @@ seconds for telemetry. Published lab ports bind to loopback. The `lab` /
    scope, then **Apply scope**. Configure columns to keep useful context visible.
 3. **Pause** to inspect a record and its reported trace/span ancestry. Supplied
    ancestry is bounded; it does not establish a complete trace.
+   **Investigate → Errors & exceptions** stages an ordinary fixed question; Run
+   explicitly reads service/type counts and the matching records.
 4. Use **Investigate → Explain this window** to pause a completed Activity window
    and stage an explanation. Brush the held-observation guide, then choose the
    preceding equal-width window or explicitly load a saved capture's **scope**.
@@ -69,11 +71,21 @@ optional reservation lab.
 | [Activity](docs/LIVE_ACTIVITY.md) | Compact logs/spans, readable UTC, facets, columns, inspection, retention and [completed-window explanation staging](docs/ACTIVITY_EXPLANATIONS.md) | Held occurrences guide selection; explanation Run rereads both scopes, including a saved baseline scope |
 | [Fixed analysis](docs/NUMERIC_ATTRIBUTE_PLANNING.md) | Counts, [typed numeric filters](docs/TYPED_NUMERIC_FILTERS.md), numeric measures/coverage, [integer distributions](docs/NUMERIC_HISTOGRAMS.md), two-field grouping, charts, [numeric comparisons](docs/NUMERIC_COMPARISONS.md) and [aligned distributions](docs/DISTRIBUTION_COMPARISONS.md) | Canonical int64/uint64 interpretation and matching bindings are explicit; broader types and conversions remain separate |
 | [Population explanations](docs/POPULATION_EXPLANATIONS.md) | Contextual field/value share differences, exact observed captures and reusable fixed-scope requests | Explicit fields, independent reads and bounded groups; descriptive differences do not establish causes |
+| [Recorded error triage](docs/ERROR_TRIAGE.md) | Standard span exception events, reported status, intrinsic log severity, service/type groups and passive exception details | Counts are records, not issues or exception-event totals; recorded evidence is not inferred application failure |
 | [Services](docs/SERVICE_DASHBOARDS.md) | Discovery-driven service views and reported relationships | Missing signals and reported links do not establish health or complete topology |
 | [Trace findings](docs/TRACE_FINDINGS.md) | Waterfalls, bounded examples and preserved trace-page anchor diagnostics | Matching reported IDs prove neither unique occurrence nor unchanged attributes/complete traces |
 | [Native instruments](docs/NATIVE_INSTRUMENT_DISCOVERY.md) | Supported gauge, counter and histogram plans with unit/reset/temporality semantics | Unsupported instruments, missing identity and incompatible merges stay explicit |
 | [Saved work](docs/INVESTIGATION_DRAFT_RECOVERY.md) | Immutable evidence/revisions, reusable questions and bounded same-tab draft recovery | Browser storage can fail/expire; an unknown save may already have committed |
 | [Annotations](docs/WORKBENCH_ANNOTATIONS.md) | Tags/notes, exact references and optional XTDB-retained evidence | No shared-draft concurrency, trained classifier or production authorization is implied |
+
+Error triage acceptance is complete: ET1 `982b9e9`, ET2 `0c4ab38`, real OTel
+179 spans/logs, ownership, native/model checks and a 55-second actor pass. Actual
+[span groups](docs/journeys/screenshots/179a-spans-error-evidence-groups.png),
+[log groups](docs/journeys/screenshots/179a-logs-error-evidence-groups.png) and
+[mobile details](docs/journeys/screenshots/179b-spans-reported-exception-detail.png)
+are retained. Passive SSR/SPA checks use supplied synthetic data, separately from
+OTLP acceptance. Final review/push and corrected supplemental-log evidence are
+recorded in [VALIDATION.md](VALIDATION.md).
 
 The semantic core is Go, with a Python lab/proxy and framework-neutral display
 Web Components. Source adapters lower typed questions to parameterized ClickHouse

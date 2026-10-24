@@ -1321,3 +1321,52 @@ Reviewed journey 178 frames: [spans](journeys/screenshots/178a-spans-activity-ex
 [logs](journeys/screenshots/178a-logs-activity-explanation.png),
 [mobile spans](journeys/screenshots/178b-spans-mobile-explanation.png), and
 [mobile logs](journeys/screenshots/178b-logs-mobile-explanation.png).
+
+
+## Recorded error evidence to the shared investigation flow
+
+[Bounded triage](ERROR_TRIAGE.md) uses ordinary OTel data. ET1 source is deployed
+in `982b9e9` and ET2 in `0c4ab38`. ET3 real OTel browser, ownership, native/model
+and actor acceptance is complete. Standalone SSR/SPA tests use supplied synthetic
+data; they are separate from ordinary OTel journeys.
+
+```mermaid
+flowchart TB
+  OTel[Ordinary OTel spans and logs] --> Adapter[Typed physical-source adapter]
+  Adapter --> Span[Named exception events: presence and unique reported type/state]
+  Adapter --> Log[Intrinsic severity number and independent exact text / structured attributes]
+  Activity[Completed applied Activity window and selector] --> Stage[Explicit Errors and exceptions staging: pause]
+  Span --> Rule[Inspectable reported-evidence predicates]
+  Log --> Rule
+  Rule --> Stage
+  Stage --> Fixed[Existing fixed question: no hidden read]
+  Fixed --> Run[Explicit Run]
+  Run --> Aggregates[Independent full record counts / service and type groups / timeline]
+  Run --> Page[Bounded record page]
+  Aggregates --> Group[Inspect exact group: stage service and type]
+  Aggregates --> Service[Compare within service: stage one type dimension]
+  Group --> Fixed
+  Service --> Compare[Existing baseline / previous-window comparison]
+  Page --> Details[Passive goo-exception-details: supplied data only]
+  Fixed --> Capture[Explicit immutable capture / reusable question package]
+  Capture --> Notes[Existing investigation notes and evidence references]
+```
+
+One span remains one matching record even with repeated exception events. No
+event-array expansion or arbitrary first type is introduced. Empty type values
+remain distinct from unreported/multiple values; null groups say **No unique
+reported exception type**. Neither event presence, severity nor status becomes
+an inferred health result, deduplicated issue, fingerprint or resolution state.
+
+The passive component supports SSR `data` and SPA `.data` supply; inspection and
+local disclosure never execute queries. Type/state projection refuses malformed
+array alignment. Old non-opt-in row SQL and valid capture identities remain
+unchanged; raw-event Databricks lowering is a separate, unsupported contract.
+
+Actual journey 179 frames: [span groups](journeys/screenshots/179a-spans-error-evidence-groups.png),
+[log groups](journeys/screenshots/179a-logs-error-evidence-groups.png),
+[span details](journeys/screenshots/179b-spans-reported-exception-detail.png),
+[log details](journeys/screenshots/179b-logs-reported-exception-detail.png), and
+[passive supplied-data components](journeys/screenshots/179c-passive-exception-details-components.png).
+The last frame is a synthetic SSR/SPA contract example. Final validation, including
+the corrected supplemental-log API probes, remains authoritative in VALIDATION.md.

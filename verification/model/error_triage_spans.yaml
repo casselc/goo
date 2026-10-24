@@ -1,0 +1,49 @@
+spec: error_triage.qnt
+module: error_triage
+constants: {INITIAL: '0', TRACE_READS: '3'}
+invariants: [safety]
+actions:
+  stage:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  open:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  held_inspect:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  presets:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  triage_stage:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  triage_run:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  fixed_inspect:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  trace_inspect:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  capture:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  reopen:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  captured_question_stage:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  captured_question_run:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  group_stage:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  group_run:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  group_return:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  parent_again:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  service_stage:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  service_run:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  previous:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  save_question:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  notes:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'
+  capture_reload:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and streams == {{.obs.streams}} and writes == {{.obs.writes}}'

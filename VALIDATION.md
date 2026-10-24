@@ -8774,18 +8774,18 @@ old row SQL and valid source-capture hashes. All field/presence consumers share
 CanBeMissing; null fixed-column groups are refused while map/new derived nulls work.
 
 This intentionally tightens caller-held /compare validation: null fixed service
-previously admitted malformed input and now returns400. The HTTP regression proves
-legacy present fixed and missing map groups still200, new exception null/empty200,
-malformed fixed null400, and zero source reads. API/known-limits docs explicitly
+previously admitted malformed input and now returns 400. The HTTP regression proves
+legacy present fixed and missing map groups still return 200, new exception null/empty return 200,
+malformed fixed null returns 400, and zero source reads. API/known-limits docs explicitly
 record this distinction rather than claiming all previously admitted payloads
 remain valid. Existing valid frozen fixtures and Go capture tests pass unchanged.
 
-Broad Go suites pass: exploration1.034s, cmd/goo.621s, workbench.261s. Targeted field
+Broad Go suites pass: exploration 1.034s, cmd/goo 0.621s, workbench 0.261s. Targeted field
 unit tests and independent review pass. Real ClickHouse inline/read-only parity
 passes .09s, covering all reporting states, duplicate-record accounting, empty/null,
 non-exception shadows, Unicode/quotes, array mismatch refusal and numeric severity
 17–24 with noncanonical text. No fixture tables were mutated. The explicit HTTP
-boundary test passes .012s. Node field guards/hints and all66 Node files pass; full
+boundary test passes .012s. Node field guards/hints and all 66 Node files pass; full
 Activity/inspector/browser acceptance remains ET2/ET3 work.
 
 ## Error triage — ET2 shared UI and passive details (2026-10-24)
@@ -8811,9 +8811,84 @@ valid details are not attached across unaligned arrays. Source values remain
 literal case-preserving text; UTC clocks retain exact tooltips, stacktraces are
 local disclosures, and occurrence/string display bounds are explicit.
 
-All66 Node files pass after the staged-link correction (3.153s). Both actual-style
+All 66 Node files pass after the staged-link correction (3.153s). Both actual-style
 synthetic component browser cases pass (2.4s/6.8s), covering SSR/early/detached
 properties, safe text, missing/empty/malformed data, local Show more, large-input
 bounds and zero API calls. These supplied-data component tests do not replace
 journey179's real OTLP integration. Independent source and actual desktop/mobile
 frame review approve ET2; final native replay and closeout remain ET3 evidence.
+
+## Error triage — ET3 actual OTel and independent acceptance (2026-10-24)
+
+Real journey 179 span/log mains pass in 1.3 minutes (41.2s/35.8s). Ordinary OTel
+fixtures cover handled exceptions with Ok status, Error without an event, duplicate
+same-type events, missing/empty/multiple types, non-exception attribute shadows,
+all numeric severity 17–24 bands, canonical text and structured exception data.
+Independent fixture oracles verify 180 span and 260 log records beyond the 100-row page,
+nullable service/type groups, every time bucket, trace scopes and supplied event
+nanoseconds. Repeated events do not expand record counts. Explicit group/service
+links stage without reads; Run performs new evidence reads. Previous-window
+comparison, exact captures/full stored hashes, reusable packages, investigation
+notes, reload, paused return and focus pass with zero page errors.
+
+The independent stale-owner journey passes in 10.8s, including scope, Apply, resume
+and navigation boundaries with no accidental reads/URL transitions. Both supplied
+SSR/SPA component browser cases pass in 2.4s/6.8s under actual component/product styles,
+including properties upgraded after definition, detached updates, cloned snapshots,
+attribute updates, disclosure retention, literal HTML-shaped text, bounds, malformed
+arrays, 390px no-overflow and zero API calls. Their 179c frame is explicitly a
+synthetic standalone display fixture; 179a/b for both signals are actual OTLP frames.
+
+The fresh 55-second Bombadil campaign passes exit0 (56.9s Playwright), exercising
+all 11 phases. Actual terminal observations verify parent/group/timeline totals of 180 and
+100 displayed rows, handled-Ok evidence, selected-service child count 61, exact scope, two source
+requests, one stream, paused visible Activity and Investigate focus. Source-free
+staging and record-grain accounting remain invariant. Raw process, acceptance
+summary and trace are under error-triage-74d615d81d/bombadil.
+
+Independent native actual checks pass, each with guaranteed-changed rejecting
+controls and separate stdlib/raw-fact versus finite-lifecycle validation:
+
+- Spans d2ace37ca6: baseline + 33 controls, 23.51s.
+- Logs c0de66f5dc: corrected actual baseline + 33 controls, 20.09s.
+- Ownership 5c76f5e2eb: baseline + 14 controls, 10.85s.
+- Hegel: 70 generated cases (latest4.95s) cover 12 event corpora per case, exact
+  deduplication/type-state rules, name-only presence versus alignment-required
+  type projection, malformed alignment, all seven template modes, parent exclusion
+  and exact uint64 severity boundaries. Both finite Quint models typecheck.
+
+Actual logs rule supplements were initially mislabeled by a draft harness that
+indexed a flattened default OR tree: status was numeric severity only (160 records), while type was
+literal ERROR (20 records). The independent oracle rejected that evidence. The corrected
+supplements execute the public explicit rule helpers against the same fixed applied
+scope, obtaining 200 status/severity and 80 structured-type matches, validated against independent raw facts.
+Only top-level rules observations changed; deep comparison preserves all other
+browser/source/capture/lifecycle fields. Original rejected ledger and native log
+remain beside rule-read-correction.json with request/helper/ledger hashes. Native
+semantic guards were not relaxed. Earlier browser harness failures corrected the
+known Activity Analysis-staged copy and TimePoint observed/no_data enum; neither
+changed application semantics or weakened the source-free/read-count assertions.
+
+Native logs are adjacent to ledgers/full capture files under
+artifacts/error-triage/error-triage-{d2ace37ca6,c0de66f5dc,5c76f5e2eb}; exact links
+and commands are in verification/README.md. Full stored capture SHA256 and source
+memberships are independent of public-page limits/formatting. Canonical comparison
+hashes/rational ranking and original scopes are verified independently. Finite
+Quint/qobs replay proves agreement with these observed schedules/effects, not all
+interleavings, complete telemetry or database isolation.
+
+Existing Activity explanation span/log mains pass against the final source/UI:
+two tests in 59.5s (29.9s/26.6s), retaining exact observed-save/retry/reuse, nullable
+filters and paused-return behavior. OpenAPI remains 75 operations / 69 Go;
+222 frozen responses, 56 admitted requests, 14 mux refusals and negative/SSE schema controls
+pass. All 66 Node files, source-specific Go/ClickHouse parity and HTTP nullable
+boundary tests pass. Evidence: error-triage-activity-regression.log,
+error-triage-openapi.log, error-triage-node-final.log and error-triage-http.log.
+
+Independent review approved the actual compact span/log group tables and details,
+case-preserving values, unique-versus-missing labels, UTC times, staged links and
+passive component composition. Source commits 982b9e9/0c4ab38 remain separate from
+acceptance/docs. Final ET3 review approved with no blockers after all native logs
+and corrected supplemental evidence were inspected. README, diagrams, roadmap,
+backlog, guide, component contracts and storyboards are synchronized; final push
+is reported from actual git state.

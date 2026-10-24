@@ -1271,3 +1271,92 @@ including the spans `native-initial-rejection-transcript.txt` and ownership
 `native-rawmessage-diagnostic.txt`. Successful stdout retains some raw-format
 comparison debug labels; these are not the structural comparison invariants.
 Current test diagnostics report only the actual structural/hash guards.
+
+Error triage (journey 179) adds
+`TestHegelErrorTriageProjectionAndRules`. Seventy generated examples each cover
+twelve ordinary span-event shapes, independent nullable type projection,
+repetition/reversal invariance and mismatched-array refusal by the combined
+type/state projection. Names-only exception presence remains independently
+knowable when attribute alignment is unavailable. All seven supported
+span/log rule modes cross the JavaScript template → Go typed query boundary and
+are checked against an independent raw-fact oracle, including parent-scope
+exclusion, case-sensitive names/text and exact uint64 severity boundaries. A
+handled exception event is evidence; the property does not label the span failed
+unless a selected rule actually says so. The source adapter's real ClickHouse
+parity checks remain separate. Live journey/model acceptance is not claimed by
+this generated test.
+
+`TestQuintErrorTriageLiveLedger` is opt-in with `GOO_ERROR_TRIAGE_LEDGER` and
+requires an actual `scope-capture.json` copied read-only beside that ledger.
+Its independent ordinary-OTLP oracle checks error-rule membership, record-based
+counts, nullable service/type groups, every time bucket, event names/attributes/
+nanosecond times, trace IDs and the supplied exception inspector details. It
+checks exact parent/inspection/within-service/previous scopes, count-comparison
+shares and ordering, comparison basis, full stored capture SHA256 and retained
+memberships, the public capture prefix, reusable YAML intent and evidence-note
+references. Main observed lifecycle replay has an explicit three-read trace
+branch for spans; logs do not invent a corresponding trace action.
+
+`TestQuintErrorTriageOwnershipLedger` is opt-in with
+`GOO_ERROR_TRIAGE_OWNERSHIP_LEDGER`. It checks stale open attempts after a dirty
+scope, applying a new scope, hiding the owner and resuming Activity: before/after
+URLs, hidden panels, source-free counters and explicit stream starts. No actual
+fixture acceptance is implied when these opt-in tests skip.
+
+For these checks the independent semantic oracle rejects corrupted arithmetic,
+source scopes and capture contents before running Quint. Quint replays the valid
+source ledger and lifecycle mutations that preserve those source facts. This
+avoids repeatedly invoking the model checker on already-invalid arithmetic and
+keeps the two forms of evidence distinct. The models cover observed finite action
+orders and logical browser API effects, not all schedules, internal SQL read
+counts, telemetry completeness or failure/incident causation. Supplemental state
+and alternate-rule API reads are recorded separately from browser action counters.
+
+Actual journey 179 acceptance:
+
+| Evidence | Native result | Retained stdout |
+| --- | --- | --- |
+| [Spans main ledger](../artifacts/error-triage/error-triage-d2ace37ca6/ledger.json) | Baseline accepted; all 33 changed controls rejected; 23.51s | [Spans log](../artifacts/error-triage/error-triage-d2ace37ca6/native-validation.txt) |
+| [Logs main ledger](../artifacts/error-triage/error-triage-c0de66f5dc/ledger.json) | Baseline accepted; all 33 changed controls rejected; 20.09s | [Logs log](../artifacts/error-triage/error-triage-c0de66f5dc/native-validation.txt) |
+| [Stale owner ledger](../artifacts/error-triage/error-triage-5c76f5e2eb/ownership.json) | Baseline accepted; all 14 changed controls rejected; 10.85s | [Ownership log](../artifacts/error-triage/error-triage-5c76f5e2eb/native-validation.txt) |
+
+Both Quint models typecheck. The final generated projection/rule property passes
+70 examples in 4.95s; opt-in entrypoints skip honestly without their artifact
+environment variables. Main spans replay contains twenty-two actions and ten
+source operations, including three explicit trace reads. Logs contains twenty-one
+actions and seven source operations. Both contain one stream and two explicit
+publications (reusable question and evidence notes). Ownership replays eight
+actions with zero telemetry reads/publications and three explicit stream starts.
+The main full-population counts are 180 spans and 260 logs, versus a 100-record
+page. Duplicate exception events count as one captured span. The fresh expanded
+trace has one captured span and no captured linked logs in this fixture; this is
+bounded evidence, not a complete-trace or telemetry-completeness guarantee.
+
+The independent native oracle initially rejected the logs ledger's supplemental
+rule reads. The harness indexed a normalized, flattened OR expression: the read
+labeled `status` actually selected only severity numbers 17–24 (160), while the
+read labeled `type` selected the literal severity `ERROR` (20). The main UI
+observation, source capture and comparison already passed. The harness reran only
+those supplemental actual API requests using the public rule helpers; the
+independent oracle remained unchanged. Correct full-rule counts are 200 for
+status evidence and 80 for structured type/message/stack evidence. They overlap,
+so the default combined population is 260, not their sum.
+
+The [rejected original ledger](../artifacts/error-triage/error-triage-c0de66f5dc/ledger-rejected-rule-indexing.json),
+[initial rejection](../artifacts/error-triage/error-triage-c0de66f5dc/native-validation-rejected-rule-indexing.txt)
+and [actual API correction metadata](../artifacts/error-triage/error-triage-c0de66f5dc/rule-read-correction.json)
+are retained. Correction metadata records the original/new ledger hashes and
+actual query requests; all other main/lifecycle fields remained identical. No
+application semantics or native rule/source/hash guard changed to accept it.
+
+From `verification/`, with the configured Go toolchain and writable Go/Hegel
+caches:
+
+```sh
+GOO_ERROR_TRIAGE_LEDGER=../artifacts/error-triage/error-triage-d2ace37ca6/ledger.json \
+  go test -run '^TestQuintErrorTriageLiveLedger$' -v .
+GOO_ERROR_TRIAGE_LEDGER=../artifacts/error-triage/error-triage-c0de66f5dc/ledger.json \
+  go test -run '^TestQuintErrorTriageLiveLedger$' -v .
+GOO_ERROR_TRIAGE_OWNERSHIP_LEDGER=../artifacts/error-triage/error-triage-5c76f5e2eb/ownership.json \
+  go test -run '^TestQuintErrorTriageOwnershipLedger$' -v .
+```

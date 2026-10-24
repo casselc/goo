@@ -546,3 +546,41 @@ resume and replacement withdraw obsolete results/tokens; hiding or leaving cance
 pending work. Component lifecycle owns no subscription. **Save observed explanation**
 promotes the exact held observation through the existing bounded snapshot bank and
 immutable capture store, without rereading either population.
+
+
+## Recorded error triage over ordinary telemetry
+
+[Error triage](ERROR_TRIAGE.md) reuses applied Activity scope, existing fixed
+questions, count/group/time reads and captured investigation work. ET1 is deployed
+in `982b9e9`, and ET2 staging/passive details in `0c4ab38`. ET3 acceptance is
+complete: real OTel spans/logs, ownership, native/model rejecting controls and
+actor checks pass. The passive SSR/SPA cases use supplied synthetic data, not
+OTLP. [Actual frames and evidence](journeys/README.md) distinguish these checks;
+VALIDATION.md records corrected supplemental-log probes and final review/push.
+
+`exploration/exception_fields.go` projects one span record from named `exception`
+events. Event presence is names-only; type/state projection requires aligned
+name/attribute arrays. A nullable type exists only for one distinct reported
+`exception.type`, including a present empty value. Unreported or multiple types
+have no unique type, with a separate reporting-state field. Grouping counts
+records once without exploding events or choosing the first type. Logs retain raw
+severity text and gain intrinsic numeric severity; explicit rules preserve the
+independent reported signals without inferring failures or issue identity.
+
+Derived row aliases appear only when requested, preserving non-opt-in row SQL
+and valid legacy captures. Shared nullable-field rules allow missing map keys and
+`column:exception_type`; caller-held `/compare` groups with null nonnullable fixed
+columns now return 400 instead of accepting malformed logical-source data.
+
+The Activity adapter stages and pauses; the fixed owner executes only explicit
+Run. Existing group links stage exact service/type questions, and service-scoped
+single-type grouping enters existing comparison controls. Captures, reusable YAML
+packages and investigation notes retain those typed scopes and evidence.
+
+The passive `goo-exception-details` Web Component accepts supplied `{record,signal}`
+through SSR's JSON `data` attribute or a cloned SPA `.data` property, including
+pre-definition assignment. It shows bounded local event/structured-log evidence,
+UTC times, messages and disclosed stack traces; lifecycle and disclosure do not
+fetch, subscribe or publish. Source policy and query lifetime remain in owners.
+Raw nested-event Databricks lowering remains unsupported; prepared-fact export
+requires an explicit grain/alignment/nullability contract.

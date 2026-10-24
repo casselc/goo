@@ -1,6 +1,6 @@
 # Recorded error and exception triage
 
-Implementation and live acceptance are in progress. The Activity entrance stages
+Implemented and independently reviewed after actual source/UI/model acceptance. The Activity entrance stages
 ordinary log/span questions in the existing fixed exploration workflow. Counts
 measure matching records, not unique requests, exception-event counts, failures,
 issues or instrumentation completeness. No manifest or application-specific
@@ -89,11 +89,35 @@ continues to require declared prepared facts; this does not add raw nested-event
 lowering. A future prepared-fact adapter must preserve record grain, exact event
 names, alignment refusal and nullable unique-type states before aggregation.
 
-ET1: Go/reference/ClickHouse field parity, intrinsic severity and nullable presence,
+ET1 delivered in `982b9e9`: Go/reference/ClickHouse field parity, intrinsic severity and nullable presence,
 legacy row/capture compatibility, protocol/editor/hint support and bounded errors.
-ET2: compact Activity handoff, reusable group continuations and passive exception
-details, with no parallel workbench or automatic reads. ET3: real ordinary OTel
+ET2 delivered in `0c4ab38`: compact Activity handoff, reusable group continuations and passive exception
+details, with no parallel workbench or automatic reads. ET3 delivered after actual acceptance: real ordinary OTel
 journeys, full aggregate oracles, malformed/multiple/no-data cases, saved reuse,
 annotations, Hegel properties, finite Quint replay/rejecting controls, Bombadil,
 reviewed screenshots and synchronized documentation. Review and commit validated
 milestones, then push the completed round.
+
+## Storyboard 179
+
+The [executable journey](../journeys/error-triage.spec.js) ingests ordinary OTel
+spans with named exception events and logs with numeric/text/structured evidence.
+It verifies full record counts beyond the page, exact groups and time intervals,
+handled exceptions, group/service staged continuations, trace details, comparison,
+reusable questions, captures and investigation notes. Separate supplied-data
+[component cases](../journeys/exception-details-components.spec.js) check passive
+SSR and SPA composition; they are not simulated OTLP integration evidence.
+
+| Frame | Evidence |
+| --- | --- |
+| [Span service/type groups](journeys/screenshots/179a-spans-error-evidence-groups.png) | Empty and no-unique types remain distinct; counts measure spans once |
+| [Log service/type groups](journeys/screenshots/179a-logs-error-evidence-groups.png) | Explicit severity/structured evidence over log records |
+| [Reported span exception](journeys/screenshots/179b-spans-reported-exception-detail.png) | Supplied event type, message and UTC time; stacktrace remains disclosed locally |
+| [Reported log exception](journeys/screenshots/179b-logs-reported-exception-detail.png) | Structured attribute evidence through the same passive element |
+| [Standalone supplied-data component](journeys/screenshots/179c-passive-exception-details-components.png) | Explicit synthetic SSR/SPA fixture with actual component styles; separate from the real-source frames |
+
+Both signals, source-free stale-owner cases, passive component cases and the
+55-second Bombadil campaign pass. Independent Hegel/raw-fact/Quint checks reject
+80 changed controls across the two main and ownership ledgers. The existing
+Activity explanation mains also pass. See [VALIDATION.md](../VALIDATION.md) for
+exact results, corrected supplemental probe history, model scope and publication.

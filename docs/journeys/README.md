@@ -1994,3 +1994,34 @@ timeout. Direct exact native validation (14.34s) and a fresh actor (25s) passed
 separately. These are separate successful checks, not a successful combined
 invocation. Final acceptance commit, review and push status are recorded in
 VALIDATION.md; no additional commit ID is inferred here.
+
+
+179 — **ET1–ET3 acceptance complete**:
+[Recorded error/exception triage](../ERROR_TRIAGE.md), ET1 `982b9e9` and ET2
+`0c4ab38`, uses ordinary OTel named span events, reported status, numeric/canonical
+log severity and structured attributes. The existing fixed workflow counts records
+once by service/type, stages exact group or service-scoped single-type questions,
+and reuses captures, packages and investigation notes without inventing issues.
+
+Real OTel spans (41.2s), logs (35.8s), ownership (10.8s) and a 55-second/11-phase
+actor pass. Passive SSR/SPA component cases pass (2.4s/6.8s) on supplied synthetic
+data; they are not OTLP acceptance. Actual frames:
+
+| Frame | Evidence |
+| --- | --- |
+| [Span groups](screenshots/179a-spans-error-evidence-groups.png) | Ordinary span error/event record-grain groups |
+| [Log groups](screenshots/179a-logs-error-evidence-groups.png) | Numeric/text/structured log evidence rules |
+| [Span exception details](screenshots/179b-spans-reported-exception-detail.png) | Supplied named events and distinct reporting states |
+| [Log exception details](screenshots/179b-logs-reported-exception-detail.png) | Supplied structured exception attributes |
+| [Passive component contracts](screenshots/179c-passive-exception-details-components.png) | Synthetic SSR/SPA data supply and local disclosure |
+
+Native checks pass spans (23.51s, 33 rejecting controls), corrected logs (20.09s,
+33) and ownership (10.85s, 14): 80 controls in total. Seventy Hegel examples pass
+(latest 4.95s). Existing 178 Activity explanation logs/spans regressions both pass
+(59.5s). OpenAPI 69 Go/75 total operations and frozen 222 responses, 56 requests
+and 14 refusals pass.
+
+Supplemental log probes were corrected through actual API requests after a
+harness flattening/index mistake. The original rejected ledger remains retained;
+all other observations are unchanged. VALIDATION.md records these outcomes and
+the final acceptance commit/review/push status.

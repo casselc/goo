@@ -1,5 +1,32 @@
 # Known issues and gaps
 
+
+[Recorded error/exception triage](ERROR_TRIAGE.md) is delivered: ET1 `982b9e9`,
+ET2 `0c4ab38` and ET3 real OTel/browser/native/model/actor acceptance pass. Actual
+[groups](journeys/screenshots/179a-spans-error-evidence-groups.png) and
+[details](journeys/screenshots/179b-logs-reported-exception-detail.png) are retained.
+Passive SSR/SPA cases use supplied synthetic records. Supplemental log probes were
+corrected through actual API requests after a harness flattening/index mistake;
+the original rejected ledger is retained and other observations are unchanged.
+Exact outcomes and final review/push status are in VALIDATION.md.
+
+Span rules combine explicit reported status, named exception events or nonempty
+`error.type`; log rules use severity number 17–24, exact canonical error/fatal text
+labels or nonempty structured error/exception attributes. Casing, arbitrary
+messages and conflicting severity signals are not reconciled into outcomes.
+Counts are matching records, not issue identities or exception-event counts. A
+unique reported event type may be empty; unreported/multiple types remain nullable
+and separately classified. Event presence is names-only, while type/state refuses
+misaligned arrays. No first-event guess, event explosion or cross-window issue
+lifecycle is provided. Non-opt-in row SQL and valid legacy captures stay unchanged.
+
+Nullable guards intentionally tighten `/compare`: null values for nonnullable
+fixed columns such as `column:service`, previously accepted in caller-held groups,
+now return 400. Missing map keys and nullable `column:exception_type` remain valid.
+Standard span-event attributes are not aliases for record-level `exception.*`
+attributes. Offline Databricks export still requires prepared facts rather than
+raw nested-event lowering.
+
 [Population explanations](POPULATION_EXPLANATIONS.md) now have contextual field
 controls and exact observed-result capture. They compare explicitly chosen fields,
 not automatically discovered causes: one to six fields, up to fourteen independent

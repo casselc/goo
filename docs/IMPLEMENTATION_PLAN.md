@@ -1019,7 +1019,7 @@ Bombadil campaign and the existing Activity latency regression components. The
 combined regression wrapper timeout and successful isolated checks are recorded
 explicitly in VALIDATION.md. Final review and publication use actual git history.
 
-### Recorded error and exception triage (active)
+### Recorded error and exception triage (delivered)
 
 Approved [error triage contract](ERROR_TRIAGE.md): ET1 adds exact event-derived
 span fields and intrinsic log severity with reference/ClickHouse parity and
@@ -1029,3 +1029,10 @@ exception detail across inspectors. ET3 validates ordinary OTLP events/logs,
 record-grain counting, full groups beyond the page, saved evidence/reuse/notes,
 lifecycle/ownership and model/property/Bombadil evidence. No inferred health,
 arbitrary first exception, message-based fingerprint or new issue store.
+
+ET1 is delivered in `982b9e9`; ET2 shared UI/component work in `0c4ab38`. ET3
+passes actual log/span journeys, stale-owner and passive SSR/SPA cases, the
+55-second Bombadil campaign, 70 Hegel examples, native replay with 33+33+14
+rejecting controls and the prior Activity explanation mains. Independent review
+approved the source, actual frames and corrected supplemental-rule probe evidence;
+final publication is recorded in VALIDATION.md and git history.
