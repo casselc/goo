@@ -610,3 +610,5 @@ Raw-span duration breakdowns include a [brushable latency histogram](docs/LATENC
 [Optional Activity latency](docs/ACTIVITY_LATENCY.md) adds explicit/manual or 10/30-second full-scope span distributions above the stream. Brush to pause and stage a duration filter, then Apply or stage a fixed comparison with the remainder.
 
 [Captured latency baselines](docs/ACTIVITY_BASELINE.md) compare an immutable saved duration distribution with Activity using shared bins and independent clocks. Baseline selection/clearing reads stored evidence only; Activity retains its explicit source cadence.
+
+[Saved Activity baseline references](docs/SAVED_ACTIVITY_BASELINE.md) preserve a chosen immutable capture alongside rolling scope and columns. Reopen stays paused and source-free; Start and Show latency remain explicit.

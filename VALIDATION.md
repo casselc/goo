@@ -7339,3 +7339,68 @@ density, significance, completeness or authenticated caller-cohort provenance.
 Capture this window explicitly rereads before storage; it is not a verbatim freeze
 of the current browser snapshot. Long legal selectors retain exact query data while
 the context presenter bounds its textual summary.
+
+
+## Baseline references in saved Activity views (2026-10-24 UTC)
+
+[Saved Activity baseline references](docs/SAVED_ACTIVITY_BASELINE.md) add the
+optional `baselineCapture` ID to version-1 configuration. Omission/empty preserves
+legacy serialization and hashes. Publication validates a stored same-environment
+raw-span duration distribution with complete native cohort accounting and a real
+read clock; GET/catalog validate configuration without resolving evidence. The
+reference is distinct from loaded data, observations, clocks, cadence and startup.
+Reopen stages only configuration; Start and Show latency remain explicit.
+
+Actual checks:
+
+- Native workbench, HTTP and duration-profile tests pass (three packages). They
+  pin legacy wire projection/identity, reference-bound hashes, old-view integrity,
+  clear/replacement, invalid IDs/signals, wrong environment/field, missing capture,
+  unsupported buckets/read state/time, explicit no-data and source-free publication.
+  HTTP unit fixtures close their source before configuration requests and verify
+  the read counter does not advance. Removing a disposable unit capture leaves
+  the saved configuration and its catalog readable. No live evidence was deleted.
+- Four focused Node files pass: saved configuration, baseline, Activity refresh
+  and stream-entry contracts. Syntax and diff checks pass. Hegel generates 50
+  pin/replace/clear identity round trips, preserving old revisions and returning
+  to the exact legacy identity on clear (0.1s).
+- Source 158 and existing late-save race 147 pass together (1.0m), with real
+  ordinary OTLP spans in ClickHouse. A four-span captured baseline is selected
+  over five current spans and saved as only its exact reference. Reload adds no
+  stream/aggregate, receipt or comparison request, and retains zero observed rows.
+  Explicit Start then Show loads current counts and original evidence. A committed
+  delayed save cannot erase a newer Clear. A failed stored-receipt transport can
+  be retried without a new Activity source read; the old view remains unchanged.
+- The locally deployed 158 and legacy saved-view 146 checks pass (1.8m). 146
+  retains its Saved/Services library, sharing, field layout and explicit-start
+  contracts for views without baselines. Actual staged, restored and mobile
+  documentation frames are refreshed, with no mobile document overflow.
+- quint-go replays actual 158 reopen/retry counters and exact saved identities.
+  Six controls reject hidden source/receipt/comparison reads, altered reference,
+  lost Clear and implicit start. Its 25-second Bombadil campaign explores the
+  staged saved view, verifying zero rows and zero source/receipt/comparison reads,
+  progress, layout and uncaught-error invariants. No successful integration
+  responses were mocked; the delayed save uses an actual route.fetch response,
+  and route.abort is an explicit negative transport test.
+- OpenAPI and reflected Go schemas are regenerated: no operation added, with 64
+  Go/70 total operations. The offline validator passes 222 frozen responses,
+  56 admitted requests, 14 mux refusals and negative/SSE controls. The readonly
+  deployed check passes seven real handler responses with a matching spec. Three
+  actual saved/cleared/old-view response bodies from 158 also conform to the new
+  schema. Semantic reference validation remains in Go rather than JSON Schema.
+- Four served UI assets and the regenerated spec match checkout; the installed
+  native executable SHA-256 matches the validated static build. README, diagrams,
+  component/ownership contracts, planning, limits and actual frames are synchronized.
+
+Local deployment atomically replaces the Go executable and restarts only packages,
+then updates query UI assets/spec. Existing Docker images are unchanged; a fresh
+image build was not performed. Application volumes, OTel data, stored captures,
+XTDB records and query/audit histories are preserved. Owned build staging is removed
+while reusable compiler/module caches and compact logs/ledgers under
+artifacts/saved-baseline-round and per-run directories remain.
+
+Reference availability is checked at publication, without a cross-store deletion
+transaction. Missing evidence later does not invalidate a view; loading reports
+unavailability and keeps the ID for explicit retry or clear. New publication with
+an unavailable/incompatible reference refuses. Only the pin persists: no automatic
+monitor, stored cadence, copied snapshot, capability or clock is introduced.

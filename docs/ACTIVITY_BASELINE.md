@@ -49,7 +49,7 @@ comparison until a suitable baseline is chosen or cleared.
 capture dialog. Confirming explicitly rereads the displayed fixed question and
 stores a new capture; it does not freeze the browser snapshot verbatim. Cancel
 publishes nothing. Saved view/capture formats, retention membership and OpenAPI
-operations are unchanged. Panel/baseline choices are tab-local and ephemeral.
+operations are unchanged. Panel/cadence choices remain tab-local. The selected exact capture reference can now be persisted in an [Activity view](SAVED_ACTIVITY_BASELINE.md); reopening does not start or resolve it.
 
 ```mermaid
 sequenceDiagram

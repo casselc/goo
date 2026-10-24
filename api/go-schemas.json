@@ -13414,6 +13414,9 @@
   },
   "workbench.ActivityView": {
     "properties": {
+      "baselineCapture": {
+        "type": "string"
+      },
       "columns": {
         "anyOf": [
           {
@@ -13465,6 +13468,16 @@
   "workbench.ActivityViewInput": {
     "additionalProperties": false,
     "properties": {
+      "baselineCapture": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "columns": {
         "anyOf": [
           {

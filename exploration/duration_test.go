@@ -1,6 +1,7 @@
 package exploration
 
 import (
+	"encoding/json"
 	"math"
 	"strings"
 	"testing"
@@ -26,5 +27,27 @@ func TestDurationPartitionBoundaries(t *testing.T) {
 	q.Signal = "logs"
 	if _, e = Compile(q); e == nil {
 		t.Fatal("log duration accepted")
+	}
+}
+
+func TestDurationDistributionContract(t *testing.T) {
+	r := Result{Question: Query{Signal: "spans", Environment: "prod", FromMS: 1000, ToMS: 61000, Limit: 100, GroupBy: []Field{{Kind: "column", Key: "duration_bucket"}}}, State: "observed", Count: "1", Basis: "unit-fixture", CapturedAt: "2026-10-24T00:00:01Z", Groups: []json.RawMessage{json.RawMessage(`{"g0":"[0,1) ms","count":"1"}`)}}
+	if e := ValidateDurationDistribution(&r); e != nil {
+		t.Fatal(e)
+	}
+	for _, mutate := range []func(*Result){func(r *Result) {
+		r.Groups = []json.RawMessage{json.RawMessage(`{"g0":"not a duration bucket","count":"1"}`)}
+	}, func(r *Result) { r.Groups = []json.RawMessage{json.RawMessage(`{"g0":null,"count":"1"}`)} }, func(r *Result) { r.Count = "2" }, func(r *Result) { r.State = "changed_between_reads" }, func(r *Result) { r.CapturedAt = "" }, func(r *Result) { r.Question.Signal = "logs" }} {
+		bad := r
+		mutate(&bad)
+		if ValidateDurationDistribution(&bad) == nil {
+			t.Fatal("unsupported baseline distribution accepted", bad)
+		}
+	}
+	r.State = "no_data"
+	r.Count = "0"
+	r.Groups = nil
+	if e := ValidateDurationDistribution(&r); e != nil {
+		t.Fatal("empty baseline must remain explicit no-data", e)
 	}
 }

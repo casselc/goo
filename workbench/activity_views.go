@@ -9,17 +9,21 @@ import (
 // ActivityView stores a rolling selector and presentation, without observations,
 // fixed windows, membership capabilities or an execution instruction.
 type ActivityView struct {
-	Version      int                      `json:"version"`
-	ID           string                   `json:"id,omitempty"`
-	Title        string                   `json:"title"`
-	Selector     exploration.TailSelector `json:"selector"`
-	Columns      []string                 `json:"columns"`
-	FieldColumns []exploration.Field      `json:"fieldColumns,omitempty"`
+	Version         int                      `json:"version"`
+	ID              string                   `json:"id,omitempty"`
+	Title           string                   `json:"title"`
+	Selector        exploration.TailSelector `json:"selector"`
+	Columns         []string                 `json:"columns"`
+	FieldColumns    []exploration.Field      `json:"fieldColumns,omitempty"`
+	BaselineCapture string                   `json:"baselineCapture,omitempty"`
 }
 
 func (v ActivityView) Validate() error {
 	if v.Version != 1 || !text(v.Title, 120, true, false) {
 		return errors.New("require version 1 and bounded Activity view title")
+	}
+	if v.BaselineCapture != "" && (!ID.MatchString(v.BaselineCapture) || v.Selector.Signal != "spans") {
+		return errors.New("baselineCapture requires an exact capture ID and span selector")
 	}
 	if err := v.Selector.Query(60000).Validate(); err != nil {
 		return err

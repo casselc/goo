@@ -1,6 +1,6 @@
 # Reusable Activity views
 
-Activity views save a rolling log/span selector and record-column layout. Open a
+Activity views save a rolling log/span selector, record-column layout and optional exact captured latency baseline reference. Open a
 view from its exact share link, Saved, or a service's environment-scoped library;
 then explicitly Start stream. Opening, inspection, sharing and reload do not read
 telemetry. The view contains no fixed time window, observations, totals, read or
@@ -33,7 +33,7 @@ Service names/namespaces remain ordinary typed OTel resource fields in selectors
 ## Contracts and ownership
 
 `workbench.ActivityView` version 1 contains title, `exploration.TailSelector`,
-columns and optional field columns. The immutable file publisher, ID hashing,
+columns, optional field columns and optional `baselineCapture`. Omitted/empty references preserve the original version-1 serialization and IDs; publication validates referenced stored evidence without source reads. The immutable file publisher, ID hashing,
 integrity reads, bounded catalog and existing fixed-view layout validation are
 reused. Tail-selector validation uses its existing validation window internally;
 that question is never saved or executed. Fixed exploration views keep their
@@ -90,3 +90,5 @@ draft or cross-store evidence search is added by this cut.
 Saved predicate trees can now be edited through the shared [Filters
 editor](FILTER_EDITOR.md), including AND/OR, missing keys and present-empty
 strings. Edits stay staged; invalid input blocks source actions and saving.
+
+[Saved baseline references](SAVED_ACTIVITY_BASELINE.md) extend modified-view and late-save guards. Reopen stages the reference without a receipt read; Start and Show latency remain explicit. Missing evidence does not hide the immutable configuration.

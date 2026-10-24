@@ -1,0 +1,10 @@
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document,window})=>({ready:[...document.querySelectorAll<HTMLButtonElement>('button')].some(b=>b.textContent==='Start stream'&&!b.hidden),rows:document.querySelectorAll('.stream-entry .live-tail tbody>tr').length,reference:document.querySelector('.activity-baseline>details>summary')?.textContent?.includes('saved capture'),step:Number(document.documentElement.dataset.savedBaselineStep||0),reads:window.performance.getEntriesByType('resource').filter(e=>/\/api\/(tail|explore|compare|captures)(\/|\?|$)/.test(new URL(e.name).pathname)).length,overflow:document.documentElement.scrollWidth>window.innerWidth}));
+export const stagedOnly=always(()=>state.current.reads===0&&state.current.rows===0);
+export const fits=always(()=>!state.current.overflow);
+export const completed=eventually(()=>state.current.step===2&&state.current.reference).within(20,'seconds');
+const inspect=registerCustomAction('goo.savedBaselineInspect',async(document)=>{const d=document.querySelector('.activity-view-options')as HTMLDetailsElement;d.open=true;if(!d.textContent?.includes('captured latency baseline'))throw Error('Saved baseline configuration was not disclosed');document.documentElement.dataset.savedBaselineStep='1'});
+const close=registerCustomAction('goo.savedBaselineClose',async(document)=>{(document.querySelector('.activity-view-options')as HTMLDetailsElement).open=false;document.documentElement.dataset.savedBaselineStep='2'});
+export const choices=actions(()=>state.current.ready&&state.current.step===0?[inspect()]:state.current.step===1?[close()]:['Wait']);

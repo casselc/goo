@@ -8,6 +8,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 ref = lambda name: {'$ref': '#/components/schemas/' + name}
 schemas = json.loads((ROOT / 'api/go-schemas.json').read_text())
+for name in ('workbench.ActivityView','workbench.ActivityViewInput'):
+ schemas[name]['properties']['baselineCapture']['description']='Optional exact immutable raw-span duration capture ID. Publication verifies stored evidence and same environment; opening a view stages configuration without loading evidence or starting telemetry. Omitted/empty preserves legacy identity.'
+
 schemas['Error'] = {'type': 'object', 'required': ['error'], 'properties': {'error': {'type': 'string'}, 'hint': {'type': 'string'}}, 'additionalProperties': True}
 schemas['Cancellation'] = {'type': 'object', 'required': ['state'], 'properties': {'state': {'const': 'cancellation-requested'}}}
 # API policy is deliberately authored, not inferred from HTTP verbs.

@@ -734,3 +734,5 @@ controls and runs a source-free Bombadil editor campaign.
 156: [Captured Activity latency baseline](../ACTIVITY_BASELINE.md), real OTLP/ClickHouse, frozen 4 versus moving 5→6 counts despite a late baseline arrival, stored-only selection/clear, actual cadence, independent clocks, selector/window differences, no-data, two stale-response paths, negative comparison fault/retry, capture preview cancellation, desktop/mobile frames, Hegel, Quint and Bombadil.
 
 157: Synthetic passive paired-histogram row contract: aligned readable bins, exact supplied percentages, common scale, semantic headers, source-free rendering and mobile composition.
+
+158: [Saved Activity baseline reference](../SAVED_ACTIVITY_BASELINE.md), real OTLP/ClickHouse, exact reference save, source/receipt/comparison-free reload, explicit Start/Show, preserved old views, clear-versus-delayed-save guard, unavailable receipt/retry, actual desktop/mobile frames and staged-only Bombadil/Quint checks.

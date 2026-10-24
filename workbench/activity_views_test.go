@@ -75,3 +75,57 @@ func TestActivityViewValidationAndEnvironmentPaging(t *testing.T) {
 		}
 	}
 }
+
+func TestActivityBaselineReferenceIdentityAndLegacyBytes(t *testing.T) {
+	s := Store{Dir: t.TempDir()}
+	v := activityFixture()
+	// The old wire projection pins pre-extension content IDs and permits no new default field.
+	legacy := struct {
+		Version      int                      `json:"version"`
+		ID           string                   `json:"id,omitempty"`
+		Title        string                   `json:"title"`
+		Selector     exploration.TailSelector `json:"selector"`
+		Columns      []string                 `json:"columns"`
+		FieldColumns []exploration.Field      `json:"fieldColumns,omitempty"`
+	}{v.Version, "", v.Title, v.Selector, v.Columns, v.FieldColumns}
+	want, e := digest(legacy)
+	if e != nil {
+		t.Fatal(e)
+	}
+	old, e := s.CreateActivityView(v)
+	if e != nil || old.ID != want {
+		t.Fatal("legacy identity drift", e)
+	}
+	v.Selector.Signal = "spans"
+	v.BaselineCapture = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+	a, e := s.CreateActivityView(v)
+	if e != nil {
+		t.Fatal(e)
+	}
+	v.BaselineCapture = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+	b, e := s.CreateActivityView(v)
+	if e != nil || a.ID == b.ID {
+		t.Fatal("baseline not bound to view identity", e)
+	}
+	loaded, e := s.LoadActivityView(a.ID)
+	if e != nil || loaded.BaselineCapture != a.BaselineCapture {
+		t.Fatal("reference changed", e)
+	}
+	loaded.BaselineCapture = b.BaselineCapture
+	raw, _ := json.Marshal(loaded)
+	os.WriteFile(filepath.Join(s.Dir, "activity-views", a.ID+".json"), raw, 0600)
+	if _, e = s.LoadActivityView(a.ID); e == nil {
+		t.Fatal("accepted reference tampering")
+	}
+	for _, bad := range []string{"x", "https://other/#capture=" + a.BaselineCapture} {
+		v.BaselineCapture = bad
+		if v.Validate() == nil {
+			t.Fatal("accepted invalid reference")
+		}
+	}
+	v.BaselineCapture = a.BaselineCapture
+	v.Selector.Signal = "logs"
+	if v.Validate() == nil {
+		t.Fatal("logs accepted latency baseline")
+	}
+}

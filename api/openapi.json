@@ -18257,6 +18257,10 @@
       },
       "workbench.ActivityView": {
         "properties": {
+          "baselineCapture": {
+            "type": "string",
+            "description": "Optional exact immutable raw-span duration capture ID. Publication verifies stored evidence and same environment; opening a view stages configuration without loading evidence or starting telemetry. Omitted/empty preserves legacy identity."
+          },
           "columns": {
             "anyOf": [
               {
@@ -18308,6 +18312,17 @@
       "workbench.ActivityViewInput": {
         "additionalProperties": false,
         "properties": {
+          "baselineCapture": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional exact immutable raw-span duration capture ID. Publication verifies stored evidence and same environment; opening a view stages configuration without loading evidence or starting telemetry. Omitted/empty preserves legacy identity."
+          },
           "columns": {
             "anyOf": [
               {

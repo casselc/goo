@@ -2,6 +2,8 @@ package main
 
 import (
 	"errors"
+	"fmt"
+	"github.com/casselc/goo/exploration"
 	"github.com/casselc/goo/internal/httpjson"
 	"github.com/casselc/goo/workbench"
 	"net/http"
@@ -10,6 +12,7 @@ import (
 
 func registerActivityViews(mux *http.ServeMux, dir string) {
 	store := workbench.Store{Dir: filepath.Join(dir, "workbench")}
+	captures := exploration.CaptureStore{Dir: filepath.Join(dir, "exploration")}
 	fail := func(w http.ResponseWriter, e error) { httpjson.Write(w, 400, map[string]string{"error": e.Error()}) }
 	mux.HandleFunc("POST /activity-views", func(w http.ResponseWriter, r *http.Request) {
 		var in workbench.ActivityView
@@ -20,6 +23,26 @@ func registerActivityViews(mux *http.ServeMux, dir string) {
 		if e := httpjson.Decode(w, r, &in, 16384, "expected one Activity view"); e != nil {
 			fail(w, e)
 			return
+		}
+		if e := in.Validate(); e != nil {
+			fail(w, e)
+			return
+		}
+		if in.BaselineCapture != "" {
+			c, e := captures.Load(in.BaselineCapture)
+			if e != nil {
+				fail(w, fmt.Errorf("baseline capture unavailable: %w", e))
+				return
+			}
+			q := c.Question.Explore
+			if c.Question.Kind != "explore" || q == nil || q.Environment != in.Selector.Environment {
+				fail(w, errors.New("baseline capture must use this environment"))
+				return
+			}
+			if e = exploration.ValidateDurationDistribution(c.Explore); e != nil {
+				fail(w, fmt.Errorf("invalid baseline distribution: %w", e))
+				return
+			}
 		}
 		v, e := store.CreateActivityView(in)
 		if e != nil {
