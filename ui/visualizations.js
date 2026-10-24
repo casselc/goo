@@ -16,7 +16,7 @@
       element.selectedIndex=index;
       const key=String(index);if(inspector.has(key)){inspector.show({key,title:r.SpanName,opener:line});return}
       const content=node('div'),description=node('div'),view=global.GooRecordPresentation.describe(r,'spans');description.append(global.GooRecordPresentation.service(r),' · ',node('span',view.duration));if(facts?.[index]?.length){for(const fact of facts[index])description.append(' · ',node('span',fact.label+': '+fact.value))}else description.append(' · ',node('span',view.label));if(r.timestamp_ns)description.append(' · ',global.GooRecordPresentation.timestamp(r));
-      global.GooRecordPresentation.attributes(content,r);
+      global.GooExceptionDetail?.mount(content,r,'spans');global.GooRecordPresentation.attributes(content,r);
       const actions=[];for(const action of relatedActions?.(r)||[]){const button=node('button',action.label);button.onclick=action.select;actions.push(button)}
       for(let i=0;i<(r.linked_traces||[]).length;i++){
         const targetTrace=r.linked_traces[i],targetSpan=(r.linked_spans||[])[i];

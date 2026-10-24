@@ -8787,3 +8787,33 @@ non-exception shadows, Unicode/quotes, array mismatch refusal and numeric severi
 17–24 with noncanonical text. No fixture tables were mutated. The explicit HTTP
 boundary test passes .012s. Node field guards/hints and all66 Node files pass; full
 Activity/inspector/browser acceptance remains ET2/ET3 work.
+
+## Error triage — ET2 shared UI and passive details (2026-10-24)
+
+Activity now freezes its completed applied window for Errors & exceptions, exposing
+an exact editable reported-evidence rule and type-source presets before staging
+ordinary fixed exploration. Full service/type groups and existing time charts
+count records once. Shared grouped-record rendering accepts supplied question href
+links: Inspect group preserves service/type membership; Compare within service
+retains the error rule and exact service while grouping one type for existing
+baseline/previous-window controls. Both use the existing staged-link trail path,
+with no hidden read. The first button callback implementation was caught in source
+review because goo:open-question runs immediately; it was corrected to native
+question links before the accepted live mains. Other event consumers are unchanged.
+
+The passive goo-exception-details element is reused in Activity, fixed/captured
+record and waterfall inspection. It supports SSR JSON attributes, cloned detached
+SPA properties, predefinition upgrades, reconnect/attribute updates and outer
+open-state retention, with no fetch/subscription/navigation. Normalized log
+Attributes and named span-event arrays stay distinct. Misaligned or malformed
+names/metadata are explicitly partial/unavailable, never a known-zero assertion;
+valid details are not attached across unaligned arrays. Source values remain
+literal case-preserving text; UTC clocks retain exact tooltips, stacktraces are
+local disclosures, and occurrence/string display bounds are explicit.
+
+All66 Node files pass after the staged-link correction (3.153s). Both actual-style
+synthetic component browser cases pass (2.4s/6.8s), covering SSR/early/detached
+properties, safe text, missing/empty/malformed data, local Show more, large-input
+bounds and zero API calls. These supplied-data component tests do not replace
+journey179's real OTLP integration. Independent source and actual desktop/mobile
+frame review approve ET2; final native replay and closeout remain ET3 evidence.

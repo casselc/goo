@@ -2,7 +2,7 @@
 (function(global){
  const presentation=()=>typeof module!=='undefined'?require('./field-presentation'):global.GooFieldPresentation;
  const maps=new Set(['ResourceAttributes','Attributes','SpanAttributes','LogAttributes']);
- const columns={ServiceName:'service',SpanName:'name',TraceId:'trace_id',SpanId:'span_id',ScopeName:'scope',ScopeVersion:'scope_version',StatusCode:'status',SpanKind:'kind',duration_ns:'duration_ns',duration_bucket:'duration_bucket',Body:'body',SeverityText:'severity'};
+ const columns={ServiceName:'service',SpanName:'name',TraceId:'trace_id',SpanId:'span_id',ScopeName:'scope',ScopeVersion:'scope_version',StatusCode:'status',SpanKind:'kind',duration_ns:'duration_ns',duration_bucket:'duration_bucket',Body:'body',SeverityText:'severity',severity_number:'severity_number',exception_event:'exception_event',exception_type:'exception_type',exception_type_state:'exception_type_state'};
  const node=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n};
  function type(value){return value===null?'null':Array.isArray(value)?'array':typeof value}
  function text(value){return typeof value==='string'?value:JSON.stringify(value)}

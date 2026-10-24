@@ -743,3 +743,34 @@ adds an opt-in exact nonnegative rational value format; old uint defaults remain
 unchanged. See the synthetic SSR reference at `/ui-components` and executable
 `journeys/aligned-histogram-components.spec.js` for attribute, detached-property,
 retained-child, mobile and zero-source-effect contracts.
+
+## Supplied exception details
+
+`goo-exception-details` is a passive display element exported by
+`ui/exception-detail.js`, styled by `ui/exception-detail.css`. It accepts the
+standard `data` JSON attribute or detached/connected `.data` property:
+
+```html
+<goo-exception-details data='{"signal":"logs","record":{"timestamp_ns":"1792800000123456789","Attributes":{"exception.type":"IOError","exception.message":"Read failed"}}}'></goo-exception-details>
+```
+
+The envelope is `{signal: "logs" | "spans", record: suppliedRecord}`. Span records
+use the existing `event_names`, `event_times_ns` and `event_attributes` arrays;
+log records use normalized `Attributes` (legacy `LogAttributes` only when the
+normalized field is absent). Named span exception events stay separate from span
+attributes. Property inputs/getters are detached copies, predefinition properties
+upgrade on connection, and redraw preserves the outer disclosure's open state.
+No fetch, query, subscription, navigation, grouping, evidence publication or parent
+window selection occurs in the element. `GooExceptionDetail.mount` remains a
+compatibility composition wrapper used by shared record and waterfall inspectors.
+
+Missing/malformed arrays or nonstring exception metadata show partial/unavailable
+states rather than a known-zero exception claim. Misaligned attributes are not
+attached to event names; aligned type/message data can remain visible when event
+time is unavailable. The element inspects at most 1,000 supplied events, shows five
+occurrences initially with local Show more, and truncates individual displayed
+strings at 65,536 characters with a visible marker. Stacktraces are disclosed
+locally as literal text. Those are display bounds, not source/group cardinality
+limits or evidence of complete telemetry. UTC formatting retains the exact supplied
+nanosecond time in a tooltip. The standalone synthetic component tests are separate
+from journey 179's actual OTLP integration screenshots.
