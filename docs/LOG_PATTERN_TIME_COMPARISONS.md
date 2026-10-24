@@ -1,6 +1,6 @@
 # Log patterns across time
 
-Implementation and acceptance in progress. This extends [log-pattern exploration](LOG_PATTERNS.md)
+Implemented with reviewed source and real OTel/browser/native acceptance. This extends [log-pattern exploration](LOG_PATTERNS.md)
 using existing fixed questions, population comparison and capture owners.
 
 From an applied log-pattern result, stage a comparison against the previous
@@ -36,6 +36,9 @@ the completed reads. They do not establish first occurrence, resolution,
 statistical anomaly, causality or telemetry completeness. Unclassified groups do
 not claim a common message shape. The existing 1,000-group per-side bound refuses
 excessive cardinality; no top-K result stands in for the full population.
+The aligned union can contain 2,000 distinct identities. Initial display is 20
+rows with an explicit show-more action; ranking, totals and visual scales still
+use the full union. This display limit does not change either population.
 
 ## Interaction and evidence
 
@@ -66,8 +69,21 @@ flowchart LR
 ```
 
 No new ingestion processor, query endpoint, store or normalization version is
-required. Independent reads are not a transactional snapshot. Acceptance will
-include ordinary OTel logs, unequal windows, saved-scope late arrivals, unchanged
+required. Independent reads are not a transactional snapshot. Acceptance covers
+ordinary OTel logs, unequal windows, saved-scope late arrivals, unchanged
 capture custody, empty/unavailable states, stale ownership, actual desktop/mobile
 frames, Bombadil, generated properties and finite trace validation with rejecting
-controls. Executed results will be recorded after source review and deployment.
+controls. Finite replay validates observed schedules, not every interleaving or
+complete telemetry. See [journey 183](../journeys/183-log-pattern-time-comparisons-storyboard.md).
+
+Reviewed source: `6482198` validates canonical comparison groups, `d5def6e`
+provides the exact pure arithmetic model, and `cc81fbf` integrates staged baseline
+choice, shared presentation, fresh-read capture labels and storage-only reopen.
+`a29fbd2` corrects unavailable-share ranking copy. All 72 Node files, three real
+browser cases, the 55-second actor and all 93 native rejecting controls pass.
+Generated checks cover 150 examples, 240 metric projections and 640 rejected
+response mutations; a separate boundary case retains the full 2,000-group union.
+The saved baseline advances from 400 to 412 records on reread while original
+stored bytes remain unchanged. Final desktop/mobile/empty frames and durable
+replay modes are in the storyboard; [VALIDATION.md](../VALIDATION.md) records
+actual receipts, observer corrections and evidence limits.

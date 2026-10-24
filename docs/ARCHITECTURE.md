@@ -644,7 +644,7 @@ display adapters decode identities for labels, while typed predicates retain
 the exact canonical IDs. No sampled classifier, ingestion processor, ML model
 or independent pattern store is introduced. The process diagram is in the guide.
 
-### Pattern comparison across time (implementation in progress)
+### Pattern comparison across time
 
 [Time comparisons](LOG_PATTERN_TIME_COMPARISONS.md) reuse complete fixed-query
 cohorts and the existing population owner. Baseline selection stages questions;

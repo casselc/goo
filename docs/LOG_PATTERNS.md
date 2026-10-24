@@ -14,6 +14,12 @@ disjoint selected/rest pair over the whole parent, grouped by service. Run reads
 both independently. These descriptive comparisons do not infer issues or causes.
 Existing capture, saved scope and reusable YAML owners retain the same questions.
 
+[Compare patterns across time](LOG_PATTERN_TIME_COMPARISONS.md) stages a previous
+window or an explicitly loaded saved baseline scope. Run rereads both; aligned
+counts, rates and shares retain each side's duration and full denominator. The
+original saved capture stays unchanged. One-sided patterns mean not observed in
+that read, rather than first-ever occurrence or resolution.
+
 ## Immutable profile v1
 
 `column:body_pattern_v1` is a log-only derived field. Every log contributes once.

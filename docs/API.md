@@ -412,3 +412,12 @@ not predicate values. Existing grouping, time series, comparisons, captures
 and YAML carry this field without new operations or wire-shape changes.
 Unreferenced row SQL and older captures remain unchanged. See the
 [profile contract](LOG_PATTERNS.md) for byte limits and immutable semantics.
+
+Caller-held `/api/compare` pattern groups also require canonical profile IDs,
+including on empty or changed-read branches. This validation does not authenticate
+caller-supplied source metadata. [Time comparisons](LOG_PATTERN_TIME_COMPARISONS.md)
+stage ordinary fixed scopes and reuse existing explore/compare/capture operations.
+Counts, per-second rates and shares are display calculations over complete
+validated groups, with each side's original window and population denominator.
+Saved baseline scope selection does not reuse saved totals; explicit Run rereads
+both scopes. Reopening a captured comparison uses stored aggregates and clocks.

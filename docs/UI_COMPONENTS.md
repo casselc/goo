@@ -820,7 +820,7 @@ queries. Inactive/hidden/detached links block both default navigation and event
 propagation so the global trail cannot stage stale intent. Display elements do
 not normalize source bodies, fetch examples or infer issues.
 
-### Pattern time comparisons (implementation in progress)
+### Pattern time comparisons
 
 `ui/log-pattern-comparison.js` contains a pure model over complete supplied
 cohorts and their validated comparison. It binds source bases, counts, states and

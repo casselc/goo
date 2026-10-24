@@ -1659,3 +1659,145 @@ to its actual ledger, using the Go/cache environment above and the corresponding
 `TestQuintLogPatternLiveLedger`, `TestQuintLogPatternOwnershipLedger` or
 `TestQuintLogPatternCardinalityLedger` entrypoint. Without its actual ledger each
 entrypoint explicitly skips.
+
+### Log-pattern comparisons across time (183)
+
+`TestHegelLogPatternComparisonCanonicalBoundary` checks the narrow existing count
+comparison protocol for 70 generated valid pairs, including known-empty and
+changed-read states. Malformed pattern IDs are injected into either side with
+positive group counts equal to that side's population count; the rejection must
+specifically identify `body_pattern_v1`. This prevents unrelated count/state
+errors from masking a missing canonical-ID guard, including when the untouched
+opposite side is empty or changed. Legacy service distributions still accept
+arbitrary exact string values. Adaptive bucket widths keep generated scopes from
+1 ms through 120 minutes valid.
+
+`TestHegelLogPatternComparisonExactClientModel` invokes the actual client module
+through Node for 80 generated pairs and all three metric orderings. Independent
+standard-library `big.Int`/`big.Rat` arithmetic checks the full identity union,
+counts, per-second rates, percentage shares, current-minus-baseline differences
+and exact ordering. Cases exceed 2^53, use unequal-duration windows with equal
+rates, include an empty side with known zero rates and undefined shares, and
+include changed-read accounting mismatches. Unknown evidence preserves reported
+counts but cannot infer missing-side zeros, rates, shares, differences or absence.
+The property also checks immutable input/output snapshots, exact adjacent previous
+windows and the original questions retained by pure planning.
+
+The generated campaigns passed in **17.416s**: **150 examples, 240 metric
+projections and 640 malformed response-binding controls**. Those controls reject
+mismatched source bases, counts, states, result rows, environments, windows,
+canonical identities and distribution fields. Stdout is retained in
+[log-pattern-comparison-properties.txt](../artifacts/log-pattern-comparison-properties.txt).
+These generated cases are pure API/model evidence. Separate actual source reads,
+capture custody and finite observed UI lifecycle acceptance are recorded below.
+
+```sh
+cd verification
+PATH=/workspace/.toolchains/go/bin:$PATH GOPATH=/workspace/.go \
+GOMODCACHE=/tmp/goo-module-cache GOCACHE=/workspace/.cache/go-build \
+XDG_CACHE_HOME=/workspace/.cache GOTOOLCHAIN=local GOMAXPROCS=2 \
+go test -run '^TestHegelLogPatternComparison' -v .
+```
+
+`TestLogPatternComparisonFullTwoThousandUnion` separately checks the actual API
+and client model with 1,000 distinct groups on each side and a 2,000-identity union.
+The independent exact-rate/order oracle requires every identity rather than a
+combined 1,000-group truncation. This deterministic boundary passed in **0.862s**;
+stdout is retained in
+[log-pattern-comparison-union.txt](../artifacts/log-pattern-comparison-union.txt).
+The property campaigns above used the legacy Go-cache profile; the reproduction
+profile shown here follows the environment's current module/build-cache paths.
+
+The actual across-time acceptance passed independently against ordinary raw log
+fixtures. `TestQuintLogPatternTimeLiveLedger` derives each side's complete pattern
+set separately from its exact fixed selector and half-open event-time window,
+then verifies the full identity union, raw source pages, group/time totals, exact
+counts/rates/shares/deltas, all three metric orderings, DOM exact attributes and
+shared visual scales. The common shape has 320 records over the saved 120-second
+scope and 160 over the current 60-second scope: both rates are exactly **8/3 logs/s**,
+while count bars have a 2:1 ratio. Exact values and titles remain rational strings;
+CSS bar widths independently follow the display contract's floor to hundredths
+of a percentage point. Shares use a fixed shared 0–100% axis.
+
+The original saved capture deliberately groups by service. Loading its scope
+preserves its original selector/window, then replaces presentation with the same
+pattern profile for explicit fresh reads. Its original **400** source records and
+all 191,983 stored bytes remain unchanged after 12 late baseline-only logs become
+visible. The actual fresh baseline contains **412**, with current **400**. Both
+source-read clocks follow the actual ready probe, while linked source-capture
+clocks establish the comparison capture's later fresh reads. Native checks retain
+the complete original capture's typed receipt hash, raw file SHA256, receipt ID,
+400-record membership, public-page prefix and before/after byte equality. Fresh
+comparison payloads are complete and independently hash-validated; paginated
+linked source pages are validated as pages rather than falsely rehashed as full
+captures. Reusable configuration retains exact questions rather than observed
+counts.
+
+`TestQuintLogPatternTimeEmptyLedger` verifies a real zero-record preceding gap:
+its rates and counts are known zero, shares and share differences are undefined,
+and the complete other-side group union remains visible despite the API's empty
+`no_data` row array. `TestQuintLogPatternTimeOwnershipLedger` verifies two real
+upstream successful reads whose deliveries are respectively aborted or held across
+navigation. Failed delivery produces no comparison protocol, comparison section
+or absence labels. A held response cannot publish after return; explicit recovery
+rereads both scopes. A retained hidden-but-connected side link cannot navigate,
+stage another question or read source data.
+
+The finite models replay **20 main, 3 empty and 7 ownership actions**. The main
+trace accounts for nine logical source API operations, three pure comparison
+calls, one configuration write and six storage-only GETs. Storage GETs include the
+saved scope, freshly captured side pages, and reopened comparison/side pages.
+Staging, metric changes, side/parent return, scope loading and reopening do not
+add source reads. These are observed API/effect sequences, not internal SQL counts
+or proofs of every browser schedule. Independent raw-fact arithmetic, scope,
+custody and presentation checks run before replay. Generated changed-read cases
+exercise unknown semantics; the actual failure journey records transport loss
+rather than manufacturing inconsistent source telemetry.
+
+All **93 guaranteed-changed serialized controls** were rejected:
+
+- Main baseline plus 55 controls: **40.999s**.
+- Known-empty baseline plus 18 controls: **9.250s**.
+- Failed/held ownership baseline plus 20 controls: **9.897s**.
+
+Controls cover unequal-window denominator errors, count/rate confusion, lost
+negative signs, missing union/unclassified groups, incorrect absence or
+unavailability, exact source scopes, late data beyond an inspection page,
+capture-byte/hash/custody mutation, stale read clocks, configuration drift,
+independent side scales, clipped/rounded exact labels and hidden source effects.
+
+Initial observer diagnostics are retained. The old custody helper assumed a
+literal `docker cp` description; this fixture records the actual read-only query
+container capture-store transport instead. The 183 checker validates that actual
+description together with all original bytes/hashes/membership/clocks. The first
+visual oracle also assumed unquantized CSS widths and a fitted percentage domain;
+it now independently calculates the documented hundredth-percent floor and fixed
+0–100% share domain. Exact rational model/data/title checks were unchanged. No
+application code or raw fixture evidence was modified to pass these checks.
+
+- [Main ledger](../artifacts/log-pattern-time/log-pattern-time-d9bcc1b3fe/ledger.json),
+  [native validation](../artifacts/log-pattern-time/log-pattern-time-d9bcc1b3fe/native-validation.txt)
+  and [original capture custody](../artifacts/log-pattern-time/log-pattern-time-d9bcc1b3fe/capture-custody.json).
+- [Known-empty ledger](../artifacts/log-pattern-time/log-pattern-time-568c93a96c/empty.json)
+  and [native validation](../artifacts/log-pattern-time/log-pattern-time-568c93a96c/native-validation.txt).
+- [Failed/held ownership ledger](../artifacts/log-pattern-time/log-pattern-time-519626dc3b/ownership.json)
+  and [native validation](../artifacts/log-pattern-time/log-pattern-time-519626dc3b/native-validation.txt).
+- [Initial observer rejection](../artifacts/log-pattern-time/log-pattern-time-d9bcc1b3fe/native-validation-rejected-custody-frozen-assumptions.txt)
+  and [isolated diagnostic](../artifacts/log-pattern-time/log-pattern-time-d9bcc1b3fe/native-validation-diagnostic.txt).
+
+Reproduce one actual checker at a time using the tested module/build-cache profile:
+
+```sh
+cd verification
+PATH=/workspace/.toolchains/go/bin:$PATH GOPATH=/workspace/.go \
+GOMODCACHE=/tmp/goo-module-cache GOCACHE=/workspace/.cache/go-build \
+XDG_CACHE_HOME=/workspace/.cache GOTOOLCHAIN=local GOMAXPROCS=2 \
+GOO_LOG_PATTERN_TIME_LEDGER=../artifacts/log-pattern-time/log-pattern-time-d9bcc1b3fe/ledger.json \
+go test -run '^TestQuintLogPatternTimeLiveLedger$' -v .
+```
+
+Use `GOO_LOG_PATTERN_TIME_EMPTY_LEDGER` with
+`TestQuintLogPatternTimeEmptyLedger`, or
+`GOO_LOG_PATTERN_TIME_OWNERSHIP_LEDGER` with
+`TestQuintLogPatternTimeOwnershipLedger`, for the respective receipts above.
+Without the appropriate actual ledger each entrypoint explicitly skips.

@@ -1,0 +1,19 @@
+spec: log_pattern_time_ownership.qnt
+module: log_pattern_time_ownership
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  current_run:
+    expect: 'coherent == {{.obs.coherent}} and sourceOperations == {{.obs.sourceOperations}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and captureGets == {{.obs.captureGets}}'
+  failure_stage:
+    expect: 'coherent == {{.obs.coherent}} and sourceOperations == {{.obs.sourceOperations}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and captureGets == {{.obs.captureGets}}'
+  failure_delivered:
+    expect: 'coherent == {{.obs.coherent}} and sourceOperations == {{.obs.sourceOperations}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and captureGets == {{.obs.captureGets}}'
+  held_run:
+    expect: 'coherent == {{.obs.coherent}} and sourceOperations == {{.obs.sourceOperations}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and captureGets == {{.obs.captureGets}}'
+  held_return:
+    expect: 'coherent == {{.obs.coherent}} and sourceOperations == {{.obs.sourceOperations}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and captureGets == {{.obs.captureGets}}'
+  recovered_run:
+    expect: 'coherent == {{.obs.coherent}} and sourceOperations == {{.obs.sourceOperations}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and captureGets == {{.obs.captureGets}}'
+  stale_side:
+    expect: 'coherent == {{.obs.coherent}} and sourceOperations == {{.obs.sourceOperations}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and captureGets == {{.obs.captureGets}}'

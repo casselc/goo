@@ -1075,14 +1075,16 @@ ownership, 1,100-pattern refusal, 55-second actor, 220 generated cases/1,400
 state steps and 65 native controls pass. Final independent review approved
 source, visuals, custody and post-deployment equivalence.
 
-### Log-pattern comparisons across time (in progress)
+### Log-pattern comparisons across time (delivered)
 
 [Contract](LOG_PATTERN_TIME_COMPARISONS.md). PT1 validates canonical profile IDs
 in caller-held comparison groups. PT2 stages previous-window or saved baseline
 scopes without telemetry reads and reuses the existing population Run for two
 independent reads. The shared display aligns exact counts, rates and shares with
 honest zero/unavailable states, contextual side drilldown and explicitly labeled
-fresh-read capture. PT3 requires real unequal-window/saved-reread journeys,
-unchanged original custody, compact desktop/mobile frames, Bombadil, generated
-properties and finite replay with rejecting controls. Independent source and
-acceptance review precede publication.
+fresh-read capture. PT1/PT2 source is `6482198`/`d5def6e`/`cc81fbf`, with display
+copy closeout `a29fbd2`. PT3 passes all 72 Node files, three ordinary OTel browser
+cases, the 55-second actor, 150 generated examples and 93 native rejecting
+controls over 20/3/7-action finite traces. Source-free mobile and explicit empty
+replay verify final frames and unchanged original custody. Final review and
+publication are recorded from actual git state in VALIDATION.md.

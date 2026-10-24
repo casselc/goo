@@ -1,0 +1,11 @@
+spec: log_pattern_time_empty.qnt
+module: log_pattern_time_empty
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  current_run:
+    expect: 'coherent == {{.obs.coherent}} and sourceOperations == {{.obs.sourceOperations}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and captureGets == {{.obs.captureGets}}'
+  empty_stage:
+    expect: 'coherent == {{.obs.coherent}} and sourceOperations == {{.obs.sourceOperations}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and captureGets == {{.obs.captureGets}}'
+  empty_run:
+    expect: 'coherent == {{.obs.coherent}} and sourceOperations == {{.obs.sourceOperations}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and captureGets == {{.obs.captureGets}}'

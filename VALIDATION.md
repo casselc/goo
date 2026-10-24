@@ -9198,3 +9198,70 @@ Independent review recomputed the raw hash and approved the final source,
 semantics, visuals, actor, property/native evidence and deployment equivalence;
 no blocker remains. Acceptance/docs are committed separately and published to
 the authorized origin/work after actual git-state verification.
+
+## Log-pattern comparisons across time — PT1/PT2/PT3 acceptance
+
+Reviewed source: `6482198` (canonical comparison groups), `d5def6e` (exact pure
+arithmetic), `cc81fbf` (existing UI/source/evidence integration). The backend
+focused test and exploration/cmd/goo/workbench regressions pass; all 72 Node
+files pass in 6.35s. Generated checks pass 150 examples and 240 model projections,
+rejecting 640 changed response controls. A separate 1,000-groups-per-side case
+preserves the full 2,000-pattern union and passes in 0.862s.
+
+First frozen actual OTel browser run passes all three cases in 1.0m: main 35.2s,
+known-empty baseline 12.6s, and failed/held-response ownership 12.1s. Main ledger
+`artifacts/log-pattern-time/log-pattern-time-d9bcc1b3fe/ledger.json` verifies
+source-free staging, independent current/baseline reads, counts/rates/shares,
+exact side drilldown and source-free Back, saved baseline late arrivals from
+400 to 412 records, fresh-read comparison capture, storage-only reopen with
+source clocks, and reusable view staging/reread. The 120-second baseline's
+320 common-shape records and 60-second current's 160 have equal exact 8/3
+records/second, with equal bar widths and distinct count geometry.
+
+Original saved baseline `f49c38e3aee5fe60bcdfd7ab7b469fcc97e80a3acd6d4c06478e88c29ecf12b8`
+remains 191983 bytes, raw SHA256
+`0786c7f3ec619ec37aa87e0488bdbab4e0db854f8ba4b6058d4c4d60860ce826`.
+Complete stored before/after bytes and custody receipts are adjacent to the
+ledger. This is full payload identity, not a claim that the bounded stored record
+page contains all matching logs. Empty and ownership receipts are respectively
+`log-pattern-time-568c93a96c/empty.json` and
+`log-pattern-time-519626dc3b/ownership.json` under the same artifact root.
+
+Actual desktop frames show comparable bars and honest unavailable shares.
+The reviewed display-only fix `a29fbd2` no longer claims a ranking when all share
+differences are unavailable; known zero differences remain comparable. Targeted
+pure/view Node tests pass in 0.269s. Focused actual-frame replay passes: mobile
+mode reads stored evidence with zero source operations; empty mode performs
+exactly three Explore operations. Final title/selector and all patterns fit the
+390×3600 documentation viewport without sticky overlap or page overflow. Original
+capture bytes remain unchanged. Two initial source-free framing diagnostics are
+retained; no positive telemetry was fabricated. Both custody helpers now select
+the explicit local Docker socket and clear endpoint/context/TLS selectors. The
+accepted main used the earlier helper; the hardened replay independently verifies
+the same raw stored bytes. The separated upper shortcut remains useful navigation
+to baseline controls farther down the Distribution panel; visual review approved it.
+
+The 55-second Bombadil campaign passes (test 58.8s), 13 phases and 860 snapshots,
+with four logical source operations and one pure comparison protocol. It checks
+source-free staging, full paired counts, local measure changes, bounded absence
+labels, exact rate/shared-scale geometry, side drilldown and source-free Back.
+Actual summary is
+`artifacts/log-pattern-time/log-pattern-time-3bedfcfee4/bombadil/acceptance-summary.json`.
+The accepted main and actor ran on `cc81fbf`; the subsequent copy fix changes no
+arithmetic, source operation or captured evidence.
+
+Independent native/finite checks pass all 93 guaranteed serialized-change controls:
+main baseline +55 controls in 40.999s, known-empty +18 in 9.250s, and failed/held
+ownership +20 in 9.897s. Exact stdout is adjacent to each actual ledger as
+native-validation.txt. Quint/qobs mappings cover the observed 20/3/7-action
+schedules; they do not prove exhaustive interleavings or complete telemetry.
+Initial observer diagnostics are retained: an inherited transport-description
+prefix, a data-derived rather than fixed 0–100% share axis, and unquantized widths
+were corrected to the actual documented contracts. Expected 0.01% CSS flooring
+uses independent integer arithmetic; exact rational/model/identity/custody checks
+were not relaxed, and no source/fixture/ledger data changed.
+
+Independent final review approved source, semantics, visuals, native evidence and
+documentation, and recomputed the original and after-file hashes. No blocker or
+additional application work remains open. Publication uses the authorized
+origin/work; the completed round reports its actual commit and remote verification.

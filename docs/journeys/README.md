@@ -2126,3 +2126,24 @@ from the 100-record page. Source-read time, original window and captured evidenc
 remain distinct; invalid UTF-8 has raw Go/ClickHouse tests, not a fabricated
 OTLP JSON browser case. Final review and post-deployment equivalence are recorded
 in VALIDATION.md.
+
+## 183 — Log patterns across time
+
+[Storyboard and replay commands](../../journeys/183-log-pattern-time-comparisons-storyboard.md),
+[executable journey](../../journeys/log-pattern-time-comparisons.spec.js) and
+[comparison contract](../LOG_PATTERN_TIME_COMPARISONS.md). Stage a previous or
+saved scope, Run both independently, inspect exact count/rate/share changes,
+drill into either side and reopen fresh-read comparison evidence from storage.
+
+| Frame | Actual evidence |
+| --- | --- |
+| [Unequal-window rates](screenshots/183a-unequal-window-pattern-rates.png) | Baseline 320 logs over 120 seconds and current 160 over 60 seconds have equal 8/3 rates and equal bars |
+| [Frozen mobile comparison](screenshots/183b-mobile-pattern-time-comparison.png) | Source-free replay, unobscured title/selector, full pattern union and both sides |
+| [Empty baseline shares](screenshots/183c-empty-baseline-share-unavailable.png) | Known zero counts with unavailable shares/differences and honest stable-order copy |
+
+All three browser cases and the 55-second, 13-phase Bombadil campaign pass.
+The saved baseline reread advances from 400 to 412 logs while original stored
+bytes stay unchanged. The durable visual replay distinguishes source-free
+mobile mode from an explicit three-operation empty-window reread. Initial
+framing diagnostics are retained. Independent native/finite-model acceptance
+and final publication status are recorded in VALIDATION.md.
