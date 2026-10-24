@@ -13,6 +13,26 @@ Reopen/reuse are source-free, while another Run is a new observation. Journey 17
 legacy 174/176 checks pass. Actual frames and final review/push status are linked
 from VALIDATION.md; these checks do not relax the limits above.
 
+
+[Activity window explanations](ACTIVITY_EXPLANATIONS.md) are source-approved in
+`cdd5a88`, with retained-visit fix `a6533a6`. Journey 178 spans (39.0s), logs
+(31.0s), browser ownership (26.1s) and the 60-second actor pass. Actual
+[desktop](journeys/screenshots/178a-spans-activity-explanation.png) and
+[mobile](journeys/screenshots/178b-logs-mobile-explanation.png) frames are reviewed.
+AE2 acceptance is complete: native spans/logs/ownership/baseline replay and
+rejecting controls, 70 Hegel examples and the separately run 155 native/actor
+checks pass. The combined 155 wrapper timed out at 60 seconds; successful browser
+assertions and separate reruns are distinguished in VALIDATION.md. Acceptance
+verifies baseline rereads changing from 240 to 241 records with selection 248,
+while original stored/public capture bytes remain unchanged. Entry requires
+a clean applied scope and a completed 60-second window; a zero-row completed
+window is valid. The held-occurrence brush guides time selection only. A previous
+window or explicitly loaded saved capture supplies a baseline **scope**, and Run
+rereads both populations. Saved counts are not frozen baseline statistics. The
+originating capture link/clocks are UI provenance and its ID is not retained in the
+saved explanation. Scope/resume/navigation invalidate staged work; paused return
+never starts a subscription automatically.
+
 [Diagnostic retention](DIAGNOSTIC_RETENTION.md) now expires raw browser recordings, with a 512 MiB soft budget, active/pinned protection and explicit Bombadil outcomes. Compact ledgers/results/logs remain. Legacy outcomes use a 72-hour policy; direct Playwright invocations require explicit pruning. ClickHouse Docker console logs now rotate at 10 MB × 3 files; internal system-table and file-log retention remain separate.
 
 Latest diagnostic cleanup recovered space from 509 MB to 6.4 GB by hardlinking

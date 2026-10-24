@@ -1183,3 +1183,91 @@ main verifier also passed the prior `population-explanation-bb8dfc9ade` ledger
 effect contract. An initial native assumption that unknown observation tokens
 returned HTTP 410 was corrected to the established HTTP 409 promotion contract;
 the initial diagnostic log remains beside that earlier ledger.
+
+Activity explanations (journey 178) use the existing explanation engine over
+fixed Activity scopes. `TestHegelActivityExplanationScopeRoundTrip` generates
+nested nullable string and typed integer predicates for logs/spans, including
+integers above binary64 precision. It checks Go JSON round trips, preservation
+of original saved scopes, adjacent equal-width previous windows and bounded brush
+windows through the existing count planner and parameterized SQL boundary. This
+does not duplicate the JavaScript scope helper; its unit tests live with that
+helper.
+
+`TestQuintActivityExplanationLiveLedger` is opt-in with
+`GOO_ACTIVITY_EXPLANATION_LEDGER`. The independent source-fact oracle checks the
+actual held-row chart as a sample, fixed complete-window and brushed queries,
+original saved capture scopes, exact counts/shares/rank, immutable capture hashes,
+late-arrival versus observed-result promotion, fresh reuse and side-filter
+membership. A finite Quint replay checks the observed action order and browser
+API effect counts. These are browser request counts, not internal SQL reads,
+and neither replay nor complete aggregate results prove transactional snapshots
+or complete telemetry. Actual source-ledger validation is required; absent an
+environment variable the test skips.
+
+`TestQuintActivityExplanationOwnershipLedger` is opt-in with
+`GOO_ACTIVITY_EXPLANATION_OWNERSHIP_LEDGER`. Its observed held-response journey
+covers resume, navigation and dirty-scope cancellation, saved-scope GET ownership,
+fresh Run and a late side-filter plan. The independent oracle checks four actual
+explanation results and the typed filter. The finite model checks the seventeen
+actions and API effects; captured DOM snapshots must show no stale field rows or
+staged link, and an interrupted saved-scope loader must become usable again. It
+is a replay of these observed schedules, not an exhaustive concurrency proof.
+
+These Activity tests require the read-only copied full stored original capture
+as `scope-capture.json` beside the ledger. A public capture page contains only
+100 retained records and cannot reconstruct the original hash. The oracle hashes
+the full stored representation, verifies every retained row against emitted
+facts and compares the public prefix structurally. Raw JSON record formatting may
+change across browser transport; structural comparison uses `json.Number`, while
+custody hashing retains the actual complete stored representation.
+
+`TestActivityExplanationSavedBaselineLedger`, enabled by
+`GOO_ACTIVITY_EXPLANATION_SAVED_BASELINE_LEDGER`, checks the supplemental actual
+API observation after one late record arrives in the saved baseline's original
+window. It verifies the exact original baseline query, the fresh explanation's
+new baseline count, unchanged selection count, independent exact field/rank
+results, and byte-identical original capture files before/after. This API-only
+record has no invented browser lifecycle replay.
+
+From `verification/`, run the relevant entrypoint against its retained artifact
+(use the configured Go toolchain and writable Go/Hegel caches):
+
+```sh
+GOO_ACTIVITY_EXPLANATION_LEDGER=../artifacts/activity-explanations/activity-explanation-a79a034c19/ledger.json \
+  go test -run '^TestQuintActivityExplanationLiveLedger$' -v .
+GOO_ACTIVITY_EXPLANATION_LEDGER=../artifacts/activity-explanations/activity-explanation-8bbd9d4587/ledger.json \
+  go test -run '^TestQuintActivityExplanationLiveLedger$' -v .
+GOO_ACTIVITY_EXPLANATION_OWNERSHIP_LEDGER=../artifacts/activity-explanations/activity-explanation-4b586590f2/ownership.json \
+  go test -run '^TestQuintActivityExplanationOwnershipLedger$' -v .
+GOO_ACTIVITY_EXPLANATION_SAVED_BASELINE_LEDGER=../artifacts/activity-explanations/activity-explanation-a79a034c19/saved-baseline-late-arrival.json \
+  go test -run '^TestActivityExplanationSavedBaselineLedger$' -v .
+```
+
+Actual journey 178 acceptance:
+
+| Evidence | Native result | Retained stdout |
+| --- | --- | --- |
+| [Spans main ledger](../artifacts/activity-explanations/activity-explanation-a79a034c19/ledger.json) | Baseline accepted; all 25 changed controls rejected; 200.18s | [Main log](../artifacts/activity-explanations/activity-explanation-a79a034c19/native-validation.txt) |
+| [Logs main ledger](../artifacts/activity-explanations/activity-explanation-8bbd9d4587/ledger.json) | Baseline accepted; all 25 changed controls rejected; 189.83s | [Main log](../artifacts/activity-explanations/activity-explanation-8bbd9d4587/native-validation.txt) |
+| [Held ownership ledger](../artifacts/activity-explanations/activity-explanation-4b586590f2/ownership.json) | Baseline accepted; all 16 changed controls rejected; 79.54s | [Ownership log](../artifacts/activity-explanations/activity-explanation-4b586590f2/native-validation.txt) |
+| [Saved baseline late arrival](../artifacts/activity-explanations/activity-explanation-a79a034c19/saved-baseline-late-arrival.json) | Baseline accepted; all 8 changed controls rejected; 4.61s | [Supplemental log](../artifacts/activity-explanations/activity-explanation-a79a034c19/native-saved-baseline-validation.txt) |
+
+The generated ledgers and copied original source captures are local artifacts.
+Both Quint models typecheck; the generated scope property passes 70 examples.
+Main ledgers contain nineteen actions, five explicit source operations, two
+promotions, one pure side plan and one stream. Ownership contains seventeen
+actions, four explicit source operations, one pure plan and three explicit stream
+starts. The supplemental baseline changes from 240 to 241 after an actual late
+arrival; the selection remains 248 and the original stored capture bytes stay
+identical. No capture page or held sample supplies the fresh explanation totals.
+
+Initial native diagnostics exposed test representation assumptions: a public page
+cannot rehash a full retained capture, raw JSON row formatting can change through
+browser/held-response transport, and an omitted tail signal means logs. The
+completed checks require full stored original captures and exact hashes, compare
+public record values structurally with exact numeric decoding, and normalize the
+existing logs default. Initial diagnostics are retained beside the ledgers,
+including the spans `native-initial-rejection-transcript.txt` and ownership
+`native-rawmessage-diagnostic.txt`. Successful stdout retains some raw-format
+comparison debug labels; these are not the structural comparison invariants.
+Current test diagnostics report only the actual structural/hash guards.

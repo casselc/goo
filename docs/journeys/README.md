@@ -1961,3 +1961,36 @@ Native replay has 21 main and 11 ownership rejecting controls; the 60-second
 Bombadil campaign completes ten phases with two source runs, one observed
 promotion and one pure plan. Legacy journeys 174/176 pass. Final artifact review
 and push status are recorded in VALIDATION.md.
+
+
+178 — **AE2 browser, visual, native/model and actor acceptance complete**:
+[Explain a completed Activity window](../ACTIVITY_EXPLANATIONS.md), implemented
+in `cdd5a88` with retained-visit ownership fixed in `a6533a6`, reuses the shared
+Go explanation engine from compact Activity. Corrected real-source tests pass
+spans (39.0s), logs (31.0s) and browser ownership (26.1s); the bounded actor passes
+60 seconds through 12 phases. Independent visual review found no blocker in these actual frames:
+
+| Frame | Observed flow |
+| --- | --- |
+| [Spans Activity explanation](screenshots/178a-spans-activity-explanation.png) | Completed applied window, held-occurrence guide and explicit explanation |
+| [Logs Activity explanation](screenshots/178a-logs-activity-explanation.png) | The same fixed-scope flow over ordinary logs |
+| [Mobile spans](screenshots/178b-spans-mobile-explanation.png) | Compact paired explanation at mobile width |
+| [Mobile logs](screenshots/178b-logs-mobile-explanation.png) | Logs comparison with the same compact ownership and scope cues |
+
+The journey exercises explicit pause/time brush, previous-window or saved-capture
+scope baselines, fresh reads of both populations, exact observed Save, side
+drilldown and source-free paused return. Ownership checks cover Apply/resume/
+navigation cancellation and late responses. The held guide is not a full-population
+chart; a saved capture supplies scope, not frozen baseline counts. Its originating
+link is UI context and is not an ID retained in the saved explanation payload.
+
+Native observed-ledger checks pass: spans 200.18s with 25 rejecting controls,
+logs 189.83s with 25, ownership 79.54s with 16, and baseline 4.61s with eight:
+74 rejecting controls in total. Seventy Hegel examples pass. The baseline late-arrival check reads 240 then 241
+records against selection 248; stored/public capture bytes remain unchanged.
+
+Journey 155 browser assertions passed, followed by a 60-second combined-wrapper
+timeout. Direct exact native validation (14.34s) and a fresh actor (25s) passed
+separately. These are separate successful checks, not a successful combined
+invocation. Final acceptance commit, review and push status are recorded in
+VALIDATION.md; no additional commit ID is inferred here.

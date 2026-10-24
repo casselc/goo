@@ -1,0 +1,39 @@
+spec: activity_explanation_ownership.qnt
+module: activity_explanation_ownership
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  stage:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  open:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  resume_held:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  resume_released:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  resume_reopen:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  navigation_held:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  navigation_released:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  navigation_reopen:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  scope_held:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  scope_released:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  scope_reopen:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  load_held:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  load_return:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  load_fresh:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  fresh_run:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  filter_held:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  filter_released:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'

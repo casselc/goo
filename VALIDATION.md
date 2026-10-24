@@ -8683,3 +8683,81 @@ cross-visit control aliasing. All 63 Node files pass again (2.980 seconds), and 
 rerun spans journey passes with zero page errors (39.0 seconds). Logs and delayed
 ownership acceptance continue separately. The initial failed evidence is retained
 in artifacts/activity-explanations-first.log.
+
+## Activity explanations — AE2 actual source, custody and lifecycle acceptance (2026-10-24)
+
+Corrected journey 178 passes all three real-source cases in 1.7 minutes: spans
+39.0s, logs 31.0s and delayed ownership 26.1s. Ordinary OTLP records require no goo
+manifest. Checks freeze the actual completed applied window rather than the held
+row extent, independently verify all six sampled chart bins, compare full counts
+beyond the 100-row buffer, preserve selected and preceding windows/complete
+selectors, and stage saved baseline scopes without a source read. Explicit Run
+uses the shared exact field/rank engine; field edits and side plans do not query
+telemetry. Tests prove observed Save after eight late selected records, lost-ack
+retry identity, immutable reopen, explicit fresh reuse, nullable side membership,
+source-free paused return, visible Investigate focus and zero page errors.
+
+Held actual explanation/filter/GET responses cannot publish across resume,
+navigation or dirty scope. Interrupted saved-scope loading becomes usable on
+return. A supplemental ordinary late baseline record changes the fresh baseline
+240→241 while selection stays 248; the original full stored capture bytes and
+public GET response stay unchanged. This is saved-scope rereading, not reuse of
+frozen per-field counts or a server-atomic snapshot.
+
+Independent native acceptance passes:
+
+- Spans: baseline + 25 changed controls, 200.18s; fixture a79a034c19.
+- Logs: baseline + 25 changed controls, 189.83s; fixture 8bbd9d4587.
+- Ownership: baseline + 16 changed controls, 79.54s; fixture 4b586590f2.
+- Saved-baseline arrival: baseline + 8 changed controls, 4.61s; spans fixture.
+- Hegel scope properties: 70 generated examples, 0.05s; both finite Quint models
+  typecheck. Absent live-ledger environment variables correctly skip opt-in tests.
+
+The independent stdlib/big.Int/big.Rat oracle checks raw fixture membership,
+exact field shares/rank, typed scopes/filters and custody/hash clocks. Original
+source captures are SHA256-checked from actual full stored JSON, not reconstructed
+from a 100-row public page. Full retained membership is validated separately from
+the exact public prefix/hasMore metadata. RawMessage transport formatting is
+compared structurally with UseNumber; full stored bytes and hashes retain exact
+checks. Initial verifier assumptions about page/full-capture representation and
+JSON formatting were corrected without dropping guards; diagnostic failures are
+retained. Finite Quint/qobs replay checks the observed API effects and schedules,
+not all concurrency interleavings, telemetry completeness or database isolation.
+Logs are adjacent to ledgers under artifacts/activity-explanations/activity-
+explanation-{a79a034c19,8bbd9d4587,4b586590f2}/; verification/README.md gives exact paths.
+
+The 60-second 178 Bombadil campaign passes all twelve phases, including start,
+brush, run, exact observed promotion, pure side plan, explicit inspection and
+paused return. Terminal coverage confirms two source requests, one stream, one
+promotion, one pure plan, unchanged saved result, visible paused Activity and
+matching side scope. Its fixture is activity-explanation-c019b87937/bombadil.
+
+Existing Activity latency regression 155 completed all browser assertions on the
+deployed lab. Its combined invocation did NOT pass: first the wrong system `go`
+was selected; after PATH correction the helper's 60-second outer deadline expired
+under concurrent model checks. The exact captured ledger (live-latency-12af2eb0)
+then passed the unchanged native checker in isolation in 14.34s. Its existing
+25-second Bombadil actor passed on fresh ordinary fixture activity-latency-
+regression-916db705, with five held rows, one aggregate read, paused Activity,
+Apply scope visible, no overflow and no page errors. These component successes
+are recorded separately, not reported as a passing combined test invocation.
+An initial 178 actor parse error was corrected before the accepted campaign.
+
+All 63 Node test files pass after the fixed-owner lookup repair (2.980s). Actual
+178 desktop/mobile frames for both signals are visually reviewed, showing compact
+paired shares, preserved raw casing, explicit sampled-versus-full populations and
+separate saved/fresh read clocks. README, architecture/process diagrams, guide,
+roadmap/backlog, known limitations and executable storyboards are synchronized.
+
+Disk recovery copied and validated three closed compressed ClickHouse debug
+archives to /tmp/goo-clickhouse-debug-archive-20261024, then archived the active
+debug file there and retained its latest 20 MiB in place. Application telemetry,
+query audit/system tables and immutable captures were not deleted or rewritten.
+Workspace headroom recovered from about 255 MiB to over 1 GiB.
+
+Independent milestone review approved AE1 and AE2 with no remaining blockers after
+inspecting the final source/lifecycle fixes, all four native acceptance logs,
+actual desktop/mobile frames, the 178 actor and isolated 155 regression results.
+Source changes are committed separately as cdd5a88 (Activity entry/owner) and
+a6533a6 (retained fixed-visit lookup); acceptance/docs publication is recorded in
+git history and the final remote commit report.

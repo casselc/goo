@@ -514,3 +514,35 @@ inequality is valid-only. Physical map/column choices remain in source adapters.
 The existing editor, protocol/recovery guard and field presenter preserve authored
 intent; they do not evaluate captured source values. Query/capture/definition and
 read-time versus immutable-custody owners retain their existing lifetimes.
+
+
+## Activity explanations reuse the population engine
+
+[Activity explanation staging](ACTIVITY_EXPLANATIONS.md) is source-approved in
+`cdd5a88`, with retained-visit ownership fixed in `a6533a6`. Journey 178 spans/logs,
+browser ownership and its 60-second actor pass; the reviewed
+[desktop](journeys/screenshots/178a-spans-activity-explanation.png) and
+[mobile](journeys/screenshots/178b-spans-mobile-explanation.png) frames show this flow.
+AE2 acceptance is complete, including native main/ownership/baseline rejecting
+controls and 70 Hegel examples. Journey 155 native/actor checks passed separately
+after a combined-wrapper timeout; see [executed validation](../VALIDATION.md).
+`stream-entry.js` supplies the last
+completed applied 60-second window and selector. `activity-explanation.js` pauses
+the stream and optional latency updates, then stages that scope in the existing
+explanation owner. Its compact held-occurrence chart guides a fixed time brush;
+its displayed occurrences never define full counts or the window boundaries.
+
+The default baseline is the immediately preceding equal-width window. An explicit
+capture metadata load can instead supply the original same-signal/environment
+query window and selector. This is scope reuse: **Run explanation** independently
+rereads both populations through the shared Go count/group engine. Frozen capture
+counts are not substituted for that baseline read. The originating capture link
+and original source/custody clocks are UI context; the saved explanation retains
+its request and newly observed aggregates, without that originating capture ID.
+
+Opening, brushing, choosing fields and paused return do not execute telemetry
+queries. Loading a saved scope is an explicit metadata request. Scope edits, Apply,
+resume and replacement withdraw obsolete results/tokens; hiding or leaving cancels
+pending work. Component lifecycle owns no subscription. **Save observed explanation**
+promotes the exact held observation through the existing bounded snapshot bank and
+immutable capture store, without rereading either population.

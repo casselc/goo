@@ -1002,7 +1002,7 @@ rejecting controls, the 60-second/ten-phase Bombadil campaign and legacy 174/176
 pass. Final artifact review and push are recorded in VALIDATION.md rather than
 inferred from implementation status.
 
-### Activity population explanations (active)
+### Activity population explanations (delivered)
 
 Approved [Activity explanation contract](ACTIVITY_EXPLANATIONS.md): AE1 adds a
 compact contextual entrance from a completed Activity window, checked time brushing
@@ -1011,3 +1011,10 @@ AE2 validates actual telemetry, immutable observed Save, scope continuity,
 source-free return and stale-owner rejection through browser/property/model and
 Bombadil checks. Saved baseline scopes are explicitly reread, not presented as
 frozen field counts. Complete and independently review both gates before push.
+
+AE1 is delivered in `cdd5a88`; the retained fixed-visit ownership fix is delivered
+in `a6533a6`. AE2 passes actual log/span and delayed-ownership journeys, independent
+full-capture/field/rank oracles and Quint replay, 70 Hegel examples, a 60-second
+Bombadil campaign and the existing Activity latency regression components. The
+combined regression wrapper timeout and successful isolated checks are recorded
+explicitly in VALIDATION.md. Final review and publication use actual git history.

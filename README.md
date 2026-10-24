@@ -31,9 +31,11 @@ seconds for telemetry. Published lab ports bind to loopback. The `lab` /
    scope, then **Apply scope**. Configure columns to keep useful context visible.
 3. **Pause** to inspect a record and its reported trace/span ancestry. Supplied
    ancestry is bounded; it does not establish a complete trace.
-4. Use **Investigate → Analyze this scope/window** for a fixed question, then
-   explicitly **Run analysis**. Group fields, brush charts or compare a selected
-   population with its remainder or a baseline.
+4. Use **Investigate → Explain this window** to pause a completed Activity window
+   and stage an explanation. Brush the held-observation guide, then choose the
+   preceding equal-width window or explicitly load a saved capture's **scope**.
+   Run rereads both fixed populations; saved counts are not the baseline.
+   **Analyze this scope/window** opens broader fixed analysis before an explicit Run.
 5. Use **Explain this selection/comparison** to compare up to six chosen fields.
    **Run explanation** reads full aggregates; value actions stage an original-side
    question. **Save observed explanation** preserves that exact run without rereading.
@@ -41,6 +43,17 @@ seconds for telemetry. Published lab ports bind to loopback. The `lab` /
    view/definition. **Reuse explanation request** stages its fields and fixed
    scopes before another explicit Run. Saved Activity views reopen paused before
    **Start**; same-tab draft recovery never retries a save automatically.
+
+Activity explanation staging (`cdd5a88`, retained-visit fix `a6533a6`) passes
+journey 178 logs/spans, browser ownership and a 60-second actor. Reviewed frames:
+[spans](docs/journeys/screenshots/178a-spans-activity-explanation.png),
+[logs](docs/journeys/screenshots/178a-logs-activity-explanation.png),
+[mobile spans](docs/journeys/screenshots/178b-spans-mobile-explanation.png),
+[mobile logs](docs/journeys/screenshots/178b-logs-mobile-explanation.png).
+AE2 acceptance is complete: native replay/rejecting controls, 70 Hegel examples
+and the separately validated journey 155 paths pass. Execution details, the
+combined-wrapper timeout and final review/push status are in [VALIDATION.md](VALIDATION.md).
+See [scope and clock boundaries](docs/ACTIVITY_EXPLANATIONS.md).
 
 ![Recent Activity entry](docs/journeys/screenshots/102a-live-entry.png)
 
@@ -53,7 +66,7 @@ optional reservation lab.
 
 | Surface | Available now | Boundary |
 | --- | --- | --- |
-| [Activity](docs/LIVE_ACTIVITY.md) | Compact logs/spans, readable UTC, facets, columns, inspection and retained selections | Bounded live pages are not a durable replay cursor or completeness proof |
+| [Activity](docs/LIVE_ACTIVITY.md) | Compact logs/spans, readable UTC, facets, columns, inspection, retention and [completed-window explanation staging](docs/ACTIVITY_EXPLANATIONS.md) | Held occurrences guide selection; explanation Run rereads both scopes, including a saved baseline scope |
 | [Fixed analysis](docs/NUMERIC_ATTRIBUTE_PLANNING.md) | Counts, [typed numeric filters](docs/TYPED_NUMERIC_FILTERS.md), numeric measures/coverage, [integer distributions](docs/NUMERIC_HISTOGRAMS.md), two-field grouping, charts, [numeric comparisons](docs/NUMERIC_COMPARISONS.md) and [aligned distributions](docs/DISTRIBUTION_COMPARISONS.md) | Canonical int64/uint64 interpretation and matching bindings are explicit; broader types and conversions remain separate |
 | [Population explanations](docs/POPULATION_EXPLANATIONS.md) | Contextual field/value share differences, exact observed captures and reusable fixed-scope requests | Explicit fields, independent reads and bounded groups; descriptive differences do not establish causes |
 | [Services](docs/SERVICE_DASHBOARDS.md) | Discovery-driven service views and reported relationships | Missing signals and reported links do not establish health or complete topology |

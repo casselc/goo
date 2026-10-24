@@ -1276,3 +1276,48 @@ promotes the exact held typed result; expiry/refusal never executes another quer
 The immutable payload omits the token and raw inspection pages. Capture custody
 time is separate from the source read clocks/bases. A new Run after reuse produces
 a separate observation and cannot rewrite earlier evidence.
+
+
+## Activity window to observed explanation
+
+Source-approved in `cdd5a88`, with retained-visit ownership fixed in `a6533a6`.
+Live journey 178 spans/logs, browser ownership and a 60-second actor pass, and
+visual review found no blocker in its actual desktop/mobile frames. AE2 acceptance
+is complete, including native main/ownership/baseline rejecting controls and 70
+Hegel examples. Journey 155 native/actor checks passed as separate runs after a
+combined-wrapper timeout; [validation](../VALIDATION.md) records the exact results
+and final review/push status.
+The existing [population explanation engine](POPULATION_EXPLANATIONS.md) executes
+the pair; Activity adds scope staging and a held-occurrence guide.
+
+```mermaid
+flowchart TB
+  Activity[Compact Activity stream] --> Completed[Last completed applied 60-second window and selector]
+  Completed --> Pause[Explicit Explain this window: pause stream and latency updates]
+  Pause --> Guide[Held-occurrence chart: local time brush only]
+  Guide --> Selected[Stage fixed selected window and original selector]
+  Selected --> Previous[Adjacent preceding equal-width baseline]
+  Capture[Explicit saved capture metadata load] --> Scope[Reuse original query scope and window]
+  Previous --> Pair[Shared explanation owner: staged baseline and selection]
+  Scope --> Pair
+  Capture -.-> Provenance[UI link and original source / custody clocks]
+  Pair --> Run[Explicit Run explanation]
+  Run --> Go[Shared Go engine: independently reread both full populations]
+  Go --> Observed[New aggregates, independent clocks and held result token]
+  Observed --> Save[Explicit Save observed explanation]
+  Save --> Durable[Immutable request and observed aggregates: no source reread]
+  Durable --> Reuse[Stage saved request before another explicit Run]
+  Reuse --> Pair
+```
+
+The chart counts bounded held occurrences, not full population counts or rates.
+Even when a saved scope supplies the baseline, Run reads fresh aggregates for both
+sides. The originating capture ID remains UI provenance; it is not retained in the
+explanation payload. Opening, brushing and field edits perform no automatic source
+read. Paused return restores the held context; Apply/resume/replacement invalidate
+staged work, and hidden or abandoned operations cannot attach late responses.
+
+Reviewed journey 178 frames: [spans](journeys/screenshots/178a-spans-activity-explanation.png),
+[logs](journeys/screenshots/178a-logs-activity-explanation.png),
+[mobile spans](journeys/screenshots/178b-spans-mobile-explanation.png), and
+[mobile logs](journeys/screenshots/178b-logs-mobile-explanation.png).
