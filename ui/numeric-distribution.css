@@ -8,3 +8,14 @@
 .numeric-distribution :is(th,td){padding:4px 8px;text-align:left;white-space:nowrap}
 .numeric-distribution-selection{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
 .numeric-distribution-selection p{flex-basis:100%;margin:4px 0}
+goo-aligned-histogram{display:block;min-width:0}
+.aligned-histogram-scroll{max-width:100%;overflow-x:auto;overflow-y:visible}
+.aligned-histogram-side{margin-block:6px}
+.aligned-histogram-side[data-side=baseline]{--accent:#79aafa}
+.aligned-histogram-side[data-side=selection]{--accent:#f2ae60}
+goo-aligned-histogram details{max-width:100%;overflow-x:auto}
+goo-aligned-histogram table{font-size:11px;border-collapse:collapse;font-variant-numeric:tabular-nums}
+goo-aligned-histogram :is(th,td){padding:4px 8px;white-space:nowrap;text-align:left}
+goo-aligned-histogram p{font-size:11px;overflow-wrap:anywhere}
+.aligned-numeric-coverage p{margin:3px 0;font-size:11px}
+.numeric-summary-disclosure{margin-block:8px}

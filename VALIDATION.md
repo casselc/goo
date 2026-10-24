@@ -8452,3 +8452,23 @@ coverage exclusions, empty/unknown states, range partitions and legacy intent.
 OpenAPI validates 72 operations / 66 Go operations and unchanged frozen wire
 fixtures. No source SQL kernel changed; actual telemetry/UI acceptance follows.
 Evidence: `artifacts/distribution-comparison-{go,http-workbench,aggregate-properties}.log`.
+
+## Distribution comparisons — DC2 reusable display and owners (2026-10-24)
+
+The passive aligned histogram composes existing time bars with shared global keys,
+union cropping, common count/share scales and opt-in exact rational values. Live,
+stored and reusable-view owners retain explicit distribution intent and complete
+payloads; legacy numeric output is not silently upgraded. Paired shapes and compact
+coverage come first, with numeric summaries disclosed below. Zero/one categorical
+breakdown supports side planning; two-field stored distributions remain displayable
+with an explicit unavailable range capability rather than an unexpected failure.
+
+Independent source review approved the integration. Actual browser validation
+caught missing controls after action-bar replacement; both controls now remain
+mounted. Review caught stored-view global listener retention; pending-only listeners
+and a pending-only removal observer now clean up on completion/cancel/removal, with
+25-cycle and stale-response tests. Full Node suite passes (61 test files). The
+synthetic standalone SSR/SPA/retained-rational-gesture case passes, including
+compact extents fitting mobile and wide extents scrolling without page overflow.
+Compact plots now use only the per-bin minimum, removing an unnecessary 440px
+floor that hid a peak on mobile. Default integer time bars remain unchanged.

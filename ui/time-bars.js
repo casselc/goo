@@ -1,15 +1,16 @@
 /* Supplied count-bar snapshots. Question scope and source actions belong to adapters. */
 (function(global){
  const uint=value=>typeof value==='string'&&/^(0|[1-9][0-9]*)$/.test(value)&&value.length<=128;
+ function rational(value){if(typeof value!=='string'||value.length>256||!/^(0|[1-9]\d*)(?:\/([1-9]\d*))?$/.test(value))return null;const [n,d='1']=value.split('/');return {n:BigInt(n),d:BigInt(d)}}
  function model(data){
-  if(!data||!uint(data.ceiling)||!Array.isArray(data.points)||data.points.length>256)return {state:'unavailable',points:[]};
-  const ceiling=BigInt(data.ceiling),keys=new Set(),points=[];
+  if(!data||!(data.valueFormat==='rational'?rational(data.ceiling):uint(data.ceiling))||!Array.isArray(data.points)||data.points.length>256)return {state:'unavailable',points:[]};
+  const parse=data.valueFormat==='rational'?rational:v=>uint(v)?{n:BigInt(v),d:1n}:null,ceiling=parse(data.ceiling),keys=new Set(),points=[];
   for(const p of data.points){
    if(!p||typeof p.key!=='string'||!p.key||p.key.length>512||keys.has(p.key)||typeof p.label!=='string')return {state:'unavailable',points:[]};keys.add(p.key);
    const state=p.state||'observed';if(!['observed','no_data','unknown','unavailable'].includes(state))return {state:'unavailable',points:[]};
-   const known=state==='observed'||state==='no_data';if(known&&(!uint(p.value)||BigInt(p.value)>ceiling||state==='no_data'&&p.value!=='0'))return {state:'unavailable',points:[]};
-   const value=known?p.value:null,positive=known&&BigInt(value)>0n;
-   points.push({key:p.key,label:p.label,state,value,positive,height:positive&&ceiling>0n?Number(BigInt(value)*10000n/ceiling)/100:0,...(typeof p.href==='string'?{href:p.href}:{})});
+   const known=state==='observed'||state==='no_data',parsed=known?parse(p.value):null;if(known&&(!parsed||parsed.n*ceiling.d>ceiling.n*parsed.d||state==='no_data'&&parsed.n!==0n))return {state:'unavailable',points:[]};
+   const value=known?p.value:null,positive=known&&parsed.n>0n;
+   points.push({key:p.key,label:p.label,state,value,positive,height:positive&&ceiling.n>0n?Number(parsed.n*ceiling.d*10000n/(parsed.d*ceiling.n))/100:0,...(typeof p.href==='string'?{href:p.href}:{})});
   }
   return {state:'observed',title:typeof data.title==='string'?data.title:'Captured records over time',unit:typeof data.unit==='string'?data.unit:'records',ceiling:data.ceiling,fromLabel:typeof data.fromLabel==='string'?data.fromLabel:'',toLabel:typeof data.toLabel==='string'?data.toLabel:'',interactive:data.interactive===true,points};
  }
@@ -54,5 +55,5 @@
   }
   if(!global.customElements.get('goo-time-bars'))global.customElements.define('goo-time-bars',GooTimeBars);
  }
- const api={model,safeHref};if(typeof module!=='undefined')module.exports=api;else global.GooTimeBars=api;
+ const api={model,safeHref,rational};if(typeof module!=='undefined')module.exports=api;else global.GooTimeBars=api;
 })(typeof window==='undefined'?globalThis:window);

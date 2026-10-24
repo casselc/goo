@@ -18,7 +18,7 @@
   constructor({request=(...args)=>global.fetch(...args),canAct=()=>true}={}){this.request=request;this.canAct=canAct;this.generation=0;this.active=true}
   cancel(){this.generation++;this.controller?.abort()}
   invalidate(){this.cancel();this.active=false}
-  async plan(body){if(!this.active||!this.canAct())return null;this.cancel();const token=this.generation;this.controller=new AbortController();const request=this.request,response=await request('/api/numeric-histograms/selection',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:this.controller.signal}),value=await response.json();if(!this.active||token!==this.generation||!this.canAct())return null;if(!response.ok)throw Error(value.error||'Numeric selection unavailable');return value}
+  async plan(body,path='/api/numeric-histograms/selection'){if(!this.active||!this.canAct())return null;this.cancel();const token=this.generation;this.controller=new AbortController();const request=this.request,response=await request(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:this.controller.signal}),value=await response.json();if(!this.active||token!==this.generation||!this.canAct())return null;if(!response.ok)throw Error(value.error||'Numeric selection unavailable');return value}
  }
  function mount(host,data,{open,readOnly=false,canAct=()=>true}={}){
   if(!data.question?.numericHistogram)return false;const node=global.GooUI.node,m=model(data),section=node('section',undefined,'numeric-distribution');section.setAttribute('aria-label','Numeric value distribution');host.append(section);
