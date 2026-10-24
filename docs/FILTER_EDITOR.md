@@ -137,3 +137,5 @@ Observed sample fields and typed conditions now offer [explicit counted value lo
 [OTel field hints](OTEL_FIELD_HINTS.md) now enrich supplied observations, typed-field suggestions and counted headings with readable names and local meaning-based search. Exact keys, legacy spellings, staged actions, scope invalidation and sample limits are preserved.
 
 [Observed-field grouping](OBSERVED_GROUPING.md) now stages exact one-field breakdowns through owner callbacks. Activity freezes its completed applied window; fixed questions stage a draft; population views stage children with companions intact. Choosing a field does not execute a query.
+
+[Two-field grouping composition](COMPOSED_GROUPING.md) now offers Add to grouping and removable chips. Grouping-only drafts retain same-scope observations; filter/scope changes and saved reopen still withdraw them. Owners execute only on Run.

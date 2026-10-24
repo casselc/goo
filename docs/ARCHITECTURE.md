@@ -697,3 +697,5 @@ The [record renderer audit](RECORD_RENDERER_AUDIT_2026_10_24.md) keeps custody, 
 [OTel field hints](OTEL_FIELD_HINTS.md) add an advisory exact-qualified-key lookup to the shared field presenter. Filter and attribute adapters reuse it for names, descriptions and local search. Source adapters, query types, saved identities and execution owners remain separate; recognizing a name never rewrites a key or infers schema compliance.
 
 [Observed grouping](OBSERVED_GROUPING.md) reuses the existing regroup transform across Activity and fixed owners. The field browser emits exact field/opener intent; app adapters freeze or retain scope, stage drafts/children and preserve companion questions. Go remains the execution validator; no source client lives in the editor.
+
+[Two-field composition](COMPOSED_GROUPING.md) keeps exact ordered grouping transforms in the population/query owner. Same-membership grouping drafts can hold scoped observation metadata, while explicit reads, changed scope and saved reopen withdraw it. Unread population drafts update in place; applied parents remain separate. No observation metadata enters saved query schemas.

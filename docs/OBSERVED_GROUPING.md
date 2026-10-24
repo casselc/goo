@@ -76,6 +76,6 @@ without another source query.
 ![Fixed grouping staged before Run](journeys/screenshots/166a-grouping-staged.png)
 ![Grouped child on mobile](journeys/screenshots/166b-mobile-grouped-child.png)
 
-This cut supports one selected grouping field. Adding a second field, grouping
-arbitrary numeric transforms, and preserving held rows as a new aggregate remain
-outside this action.
+The original cut supported one selected grouping field. Its two-field follow-up is delivered below. Arbitrary numeric transforms and preserving held rows as a new aggregate remain outside these actions.
+
+Follow-up delivered: [two-field composition](COMPOSED_GROUPING.md) now adds Add to grouping and removable chips while retaining the single-field replacement action. Unread population children compose in place; applied views still preserve a parent.

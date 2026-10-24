@@ -711,3 +711,5 @@ Operation waterfalls use optional `goo-trace-waterfall.data.facts`: an array mat
 `GooFieldPresentation.hint(field)` and `searchText(field)` provide optional shared display metadata for [OTel field discovery](OTEL_FIELD_HINTS.md). Filter/attribute adapters own their existing source-free browse and explicit action behavior; passive component lifecycles add no reads. Hints use literal text, retain exact keys, return detached metadata and fall back when unavailable.
 
 The filter editor accepts optional `onGroup(field, opener)` and `canGroup()` for supplied observed fields, with `syncGrouping()` for owner availability updates. Grouping emits detached intent, preserves the filter tree and adds no source reads. Exact behavior and owner contracts are in [observed grouping](OBSERVED_GROUPING.md).
+
+The filter editor now accepts `grouping`, controlled `setGrouping(fields)`, detached `suggestions()`, and an optional third `onGroup(field, opener, mode)` argument (`replace`, `add`, `remove`). Add prevents duplicates and a third field; chips emit removal intent without changing filters. See [two-field composition](COMPOSED_GROUPING.md).

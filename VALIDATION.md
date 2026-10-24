@@ -7842,3 +7842,53 @@ required. The local static UI is deployed; existing telemetry, receipts, XTDB an
 volumes are preserved. Disposable test owners remove only their own stores.
 Compact browser ledgers, Quint logs and Bombadil outcomes are under
 artifacts/observed-grouping; Node results are under artifacts/observed-grouping-round.
+
+
+## Compose two grouping fields — 2026-10-24
+
+[Two-field composition](docs/COMPOSED_GROUPING.md) adds exact ordered Add/remove
+intent and controlled chips without a new query grammar. Grouping-only drafts
+retain scoped observations from their originating read; fresh reads, changed
+scope and saved reopen withdraw that sample. Unread population children update
+in place, preserving the applied parent and companion questions.
+
+Actual checks:
+- Five Node suites passed across grouping transforms, field wire presentation,
+  filter validation, suggestions and OTel hints. The new composition case covers
+  order, duplicate/third-field refusal, namespace distinction, removal to zero,
+  paging reset, split-timeline clearing and detached parent/companion data.
+- `TestHegelComposedGroupingStateSwarm` passed with 100 generated 24-step samples
+  over add/remove/replace/refusal and detached mutations. Original nested filters,
+  exact clocks, bucket width and independent companion groupings remain intact.
+- Real-data journey 167 passed over four OTLP spans and a companion log. Activity
+  and fixed analysis compose before Run; a saved two-signal view opens one child
+  and edits its unread draft in place. UI save/reopen preserves both fields but
+  no observation sample. Exactly seven explicit source requests occur. An
+  independent ClickHouse compound-key oracle verifies counts and missing routes,
+  including both field orders and the exact legacy key despite a conflicting
+  current-key value.
+- `TestQuintComposedGroupingLedger` accepted observed read/query traces and rejected
+  nine mutations: hidden read, changed bounds, alias substitution, changed
+  companion, dropped filter, retained split timeline, third field, changed order
+  and wrong aggregate count. The 25-second mobile Bombadil actor reads once and
+  adds/removes/re-adds the second field without another source read.
+- The controlled synthetic browser contract passed for keyboard Add, duplicate
+  and capacity guards, exact callback modes, chip removal to zero, unchanged
+  filters and no API requests. Existing one-field grouping journey 166 and its
+  contract, plus OTel discovery journey 165 and its contract, also passed.
+- Existing population-workspace journey 91 passed against the deployed UI,
+  including the older breakdown dropdown, filter/compare flows and saved restore.
+
+Initial browser test attempts targeted controls inside unopened save/field
+disclosures; those selectors were corrected to use the visible disclosure path.
+Diff review also corrected an accidental variable reference in the existing
+population breakdown dropdown handler before the dedicated regression check.
+Only completed passing runs above are acceptance evidence.
+
+Screenshots 167 and affected 165/166 frames are regenerated from the app. README,
+architecture/component docs and the active plan link the updated process diagram
+and executable storyboard. No API/schema, saved format, native executable or
+Docker image changes were required. Static assets are deployed locally; existing
+telemetry, captures, XTDB and volumes are preserved. Test owners remove their own
+stores. Compact results are in artifacts/composed-grouping and
+artifacts/composed-grouping-round.
