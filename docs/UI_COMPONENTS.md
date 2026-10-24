@@ -834,3 +834,20 @@ The application owner stages baseline scopes and executes reads. Display adapter
 reuse compact tables and shared comparison visuals; their measure changes and
 ranking remain local. The same arithmetic serves live-result and immutable saved
 comparison presentation. [Contract](LOG_PATTERN_TIME_COMPARISONS.md).
+
+### Supplied-page trace breakdown
+
+`goo-trace-page-breakdown` consumes `{rows, truncated}` through a bounded JSON
+attribute or a detached `.data` property, preserving pre-upgrade properties.
+`selectedIndex` and `selectedGroupIndex` are controlled presentation properties.
+The component emits `goo-trace-page-row` and `goo-trace-page-group` intents; the
+application validates ownership and visible controls before accepting them.
+It does not fetch, subscribe, navigate, or publish.
+
+The [exact Go/JavaScript model](TRACE_PAGE_TIMING.md) covers at most 1,000 supplied
+rows. The component's JSON attribute is bounded to 65,536 string code units.
+Exact millisecond text and nanosecond tooltips retain tiny nonzero values and
+sums beyond uint64. Shared comparison bars use a common scale, explicit partial
+subtotals and known-row coverage. Group identities distinguish missing, empty
+and literal labels. The application adapter keeps the selected-span summary in
+the existing inspector and coordinates page and full-query highlights.

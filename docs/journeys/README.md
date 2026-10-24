@@ -2147,3 +2147,24 @@ bytes stay unchanged. The durable visual replay distinguishes source-free
 mobile mode from an explicit three-operation empty-window reread. Initial
 framing diagnostics are retained. Independent native/finite-model acceptance
 and final publication status are recorded in VALIDATION.md.
+
+## 184 — Observed trace-page latency
+
+[Storyboard](../../journeys/184-trace-latency-breakdown-storyboard.md),
+[executable ordinary OTel journey](../../journeys/trace-page-breakdown.spec.js),
+[synthetic passive-component cases](../../journeys/trace-page-breakdown-components.spec.js)
+and [interval contract](../TRACE_PAGE_TIMING.md).
+
+| Frame | Actual evidence |
+| --- | --- |
+| [Desktop page breakdown](screenshots/184a-observed-page-latency.png) | Readable service/operation groups, inclusive/outside sums, known coverage and equal-width tracks |
+| [Mobile page breakdown](screenshots/184b-mobile-observed-page-latency.png) | Compact responsive cards, full labels and physically comparable tracks |
+
+Real overlap/nesting, duplicate IDs, cycles, missing parents, outside-child timing
+and 126-span paging pass. Main shows 100ms inclusive, a 70ms direct-child union
+and 30ms outside observed children, without double-subtracting overlap or
+grandchildren. Group/disclosure actions are local; selecting a row retains the
+existing linked-log read. Raw capture reopening preserves all 8651 stored bytes.
+The 55-second actor reaches all nine phases; independent properties and all 80
+native rejecting controls pass. Initial guard/layout defects and harness
+diagnostics remain recorded separately from accepted evidence in VALIDATION.md.

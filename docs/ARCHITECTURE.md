@@ -655,3 +655,20 @@ for duration-normalized rates and all-record shares. Stored-evidence adapters
 load immutable full group aggregates from storage, never infer them from a record
 page, and do not start telemetry reads. Source and evidence ownership remain in
 application adapters; no display element subscribes or fetches.
+
+## Supplied-page trace interval accounting
+
+[Trace page timing](TRACE_PAGE_TIMING.md) is a source-free Go projection over
+existing public span rows, mirrored in the passive JavaScript display with exact
+parity tests. No new endpoint, query flag or persisted capture field is needed.
+Reported IDs resolve unique direct-parent edges; ambiguous or incompatible
+intervals remain unavailable locally. Union length uses exact integer intervals,
+and nullable service/operation groups retain original row indexes and separate
+known/unavailable measure coverage. Group sums may overlap across spans.
+
+The component emits controlled selection intents. The waterfall application
+adapter validates current ownership and visible local controls, then coordinates
+page/aggregate highlights and the existing inspector. Its separate target-level
+linked-log listener has the same generation and visibility guard. A closed or
+superseded component cannot bypass it through a retained native button. Existing
+full-query aggregates remain independent of this bounded-page calculation.

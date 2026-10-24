@@ -9265,3 +9265,82 @@ Independent final review approved source, semantics, visuals, native evidence an
 documentation, and recomputed the original and after-file hashes. No blocker or
 additional application work remains open. Publication uses the authorized
 origin/work; the completed round reports its actual commit and remote verification.
+
+## Trace page interval breakdown — TP1/TP2/TP3 acceptance
+
+Reviewed source: `c1c29ef` defines the exact Go model, JavaScript projection and
+11 shared fixtures; `3934986` integrates the passive component; `94722e7` fixes
+closed-control eligibility and the narrow inspector layout. Targeted Go checks
+pass 0.020s and independent source review passes 0.017s; exploration/cmd/goo/
+workbench regressions pass 1.104s/0.640s/0.259s. All 74 Node files pass, latest
+fix-round run 5.32s. No endpoint, query flag or persisted capture field is added.
+
+Expanded independent checks pass 4.592s: 80 endpoint/grid interval properties
+with translation/scaling/permutation, 70 whole Go/JavaScript DTO and independent
+malformed-graph cases, eight deterministic authority boundaries and a grouped
+sum beyond uint64. Interval arithmetic uses exact strings; render-only geometry
+uses the shared hundredth-percent quantization. A preliminary parity observer
+compared byte JSON as base64 instead of RawMessage and was corrected before
+the live campaign, without changing application outputs.
+
+Actual ordinary OTel graphs/partial-page acceptance passes 12.3s using ledger
+`artifacts/trace-page-breakdown/trace-breakdown-382ef74648/graphs.json`. OTel
+preserves duplicate span rows and cycles; 126 matching spans page as 100+26.
+Missing ancestors remain local diagnostics, outliving children withhold the
+affected parent, and a child's unavailable residual does not invalidate an
+otherwise usable ancestor interval. Core semantics are unchanged by the later
+owner/style fixes, so this accepted case was not repeated.
+
+On final source, main passes 11.2s, explicitly synthetic passive SSR/pre-upgrade/
+detached/controlled selection passes 1.7s, and ownership passes 4.8s. The ownership
+ledger was refined to record the observed after-URL directly, rather than reuse
+the already asserted before-URL; that focused rerun passes 9.2s. Final main is
+`trace-breakdown-36054c3400/ledger.json` and final ownership is
+`trace-breakdown-96fed1dbe0/ownership.json` under the same artifact root.
+Main records five logical source operations: initial Run, expanded spans and
+existing linked logs, selected-span linked logs, and explicit capture. Group
+highlights/disclosures and raw capture reopen add none. Those are API operations,
+not underlying ClickHouse query counts.
+
+First-run diagnostics remain under `first-failure-diagnostics`: capture was
+blocked by the normally open mobile trace inspector (harness now closes it), and
+the synthetic upgrade started from a JSON document (now declared standalone
+HTML). The real closed-disclosure bug showed nonempty rectangles under closed
+details in Chromium; explicit ancestor checks now reject those controls before
+selection, inspection or linked-log reads. Provisional clipped-label frames are
+retained. Scoped container layout, wrapped headers and equal 23% duration columns
+now pass strict label and physical-track geometry checks: 145.640625px tracks on
+desktop and 144.609375px on mobile. Final frames are visually approved.
+
+The 55-second Bombadil campaign passes (test 56.3s), all nine phases and 931
+snapshots, ending at four source operations, five supplied rows and exact root
+100ms inclusive / 70ms child union / 30ms outside observed children. Summary is
+`trace-breakdown-200cd7ae7c/bombadil/acceptance-summary.json`.
+
+Original captured raw evidence
+`de613dc3648092b7bd4a1ad1e7379506a34255df66d75771fe190c7c3e5ad64a`
+remains 8651 bytes, raw SHA256
+`f5baae3da9a4d968dde7fcc2c7ab05c7be4e47fd42f981d78c5665edb82dc452`.
+Saved raw-record reopen is source-free; expanding trace context from that saved
+table still reads fresh evidence. A stored-waterfall UI is not delivered here.
+
+Initial native preflight correctly distinguished the existing derived `duration_ms` display
+alias from authoritative nanoseconds, and browser-normalized JSON from raw
+stored `GET \/checkout` escapes. The observer validates the alias separately,
+semantic public/full data equality, full stored typed identity and original raw
+byte hashes. No fixture or application change is made to satisfy those checks.
+
+Expanded native/finite acceptance passes all 80 guaranteed-changed controls:
+main +38 in 7.415s, graphs +26 in 6.927s, final ownership +16 in 5.903s. Six
+controls explicitly submit incorrect counters/action orders to Quint and require
+rejection, independently of raw-data semantic rejection. Exact stdout is adjacent
+to each actual ledger as native-validation.txt. The 7/6/3-action mappings cover
+observed source/selection/capture lifecycles, not every interleaving or trace
+completeness. Raw facts, direct-child intervals, local uncertainty, group coverage,
+actual display values/bars, row identity, query aggregates, source effects and
+full stored capture identity are validated independently before finite replay.
+
+Independent final review approved source, visuals, properties, actor, native
+evidence and documentation, and recomputed both original/after capture hashes.
+No remaining blocker or application task is open. Publication uses the authorized
+origin/work; the completed round reports its actual commit and remote verification.

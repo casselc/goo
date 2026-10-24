@@ -1,0 +1,17 @@
+spec: trace_page_graphs.qnt
+module: trace_page_graphs
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  observe_missing_parent:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_outside_parent:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_grandchild_outside_child:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_duplicate_identity:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_parent_cycle:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_bounded_page:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'

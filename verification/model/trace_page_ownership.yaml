@@ -1,0 +1,11 @@
+spec: trace_page_ownership.qnt
+module: trace_page_ownership
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  observe_closed_controls:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_hidden_controls:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_return_current:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'

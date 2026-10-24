@@ -421,3 +421,13 @@ Counts, per-second rates and shares are display calculations over complete
 validated groups, with each side's original window and population denominator.
 Saved baseline scope selection does not reuse saved totals; explicit Run rereads
 both scopes. Reopening a captured comparison uses stored aggregates and clocks.
+
+## Trace page display projection
+
+[Observed page timing](TRACE_PAGE_TIMING.md) adds no HTTP operation, query flag or
+capture field. `exploration.AnalyzeTracePage` defines exact direct-child interval
+accounting over public row fields `timestamp_ns`/`duration_ns`; the passive client
+projection consumes existing source or stored rows. It does not augment saved
+capture bytes or substitute bounded page sums for the independent query aggregate.
+Row selection retains the existing linked-log action; disclosure/group display
+does not issue telemetry requests.

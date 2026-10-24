@@ -1801,3 +1801,38 @@ Use `GOO_LOG_PATTERN_TIME_EMPTY_LEDGER` with
 `GOO_LOG_PATTERN_TIME_OWNERSHIP_LEDGER` with
 `TestQuintLogPatternTimeOwnershipLedger`, for the respective receipts above.
 Without the appropriate actual ledger each entrypoint explicitly skips.
+
+### Trace-page latency breakdown (184)
+
+`trace_page_breakdown_test.go` and `trace_page_oracle_test.go` check supplied-page interval coverage independently of the normative merging implementation. The endpoint-cell partition oracle is cross-checked against unit-grid occupancy on small integer intervals. Eighty generated pages exercise overlap, zero-length intervals, translation beyond binary64 precision, safe trillion-fold scaling, input immutability and permutation (240 transformed pages plus 240 permutations). Seventy further generated cases compare the whole normative Go/actual-Node DTO and the independent graph oracle, including duplicates, cycles, missing parents, outside intervals, overflow, malformed fields and nullable versus empty group labels. Eight deterministic authority boundaries include links that must never create child edges; a separate group-sum case exceeds uint64 without wrapping. The expanded campaign passed **4.592s**; [actual stdout](../artifacts/trace-page-breakdown-properties.txt).
+
+The actual-ledger native checks independently validate source membership, raw physical timestamps/durations/parent IDs/attribute namespaces, all page-local interval measures, exact reason sets, group indexes and known/unknown counts. Full-query inclusive duration/status aggregates remain separate from page-only coverage. DOM checks bind exact values, shared group maxima, knownness, exact titles, independently floored 0.01% CSS widths, equal physical track widths and unclipped desktop/mobile labels. The physically preserved duplicate IDs, cycles, outside-parent timing and the 126-record query split into pages of 100 and 26 all passed. A child's unavailable residual does not poison an otherwise valid ancestor edge; a parent outside the supplied page does not invalidate the row's own child coverage.
+
+All three actual ledgers passed, with **80 guaranteed-changed rejecting controls**. Each control checks that serialized evidence changed before requiring rejection. Six controls are also replayed through Quint: an unexpected source effect and wrong action order for each lifecycle.
+
+| Check | Actual artifact | Rejected controls | Result |
+| --- | --- | ---: | --- |
+| `TestQuintTracePageBreakdownLiveLedger` | [main ledger](../artifacts/trace-page-breakdown/trace-breakdown-36054c3400/ledger.json), [stdout](../artifacts/trace-page-breakdown/trace-breakdown-36054c3400/native-validation.txt) | 38 | PASS 7.415s |
+| `TestQuintTracePageGraphsLedger` | [graph/page ledger](../artifacts/trace-page-breakdown/trace-breakdown-382ef74648/graphs.json), [stdout](../artifacts/trace-page-breakdown/trace-breakdown-382ef74648/native-validation.txt) | 26 | PASS 6.927s |
+| `TestQuintTracePageOwnershipLedger` | [ownership ledger](../artifacts/trace-page-breakdown/trace-breakdown-96fed1dbe0/ownership.json), [stdout](../artifacts/trace-page-breakdown/trace-breakdown-96fed1dbe0/native-validation.txt) | 16 | PASS 5.903s |
+
+The three qobs/Quint model pairs have **7 / 6 / 3 observed actions**. Main effects are search 1, trace expansion plus its existing linked-log read 3, source-free group highlight/clear 3, selected-row linked-log read 4, explicit fresh capture 5, and source-free reopen 5. The six graph cases reach 20 logical source operations, including the second trace page and its existing linked-log read. Ownership's three actions retain the three-read setup while closed/hidden controls remain inert and a current group highlight resumes without a source read. Raw event names map to `observe_`-prefixed model actions. These finite replays check recorded owner/source discipline, not every possible application schedule or internal SQL request count.
+
+The main capture retains all five actual records. Its complete stored representation is **8,651 bytes**, raw SHA256 `f5baae3da9a4d968dde7fcc2c7ab05c7be4e47fd42f981d78c5665edb82dc452`, receipt `de613dc3648092b7bd4a1ad1e7379506a34255df66d75771fe190c7c3e5ad64a`. Before/after bytes are identical. The native check hashes the complete typed representation from the stored bytes, validates raw SHA/length, original question/membership and custody-after-source clocks, then checks the saved/reopened public payload against it semantically.
+
+Initial observer rejections are preserved in [the first diagnostic](../artifacts/trace-page-breakdown/trace-breakdown-36054c3400/native-validation-rejected-initial-observer.txt), [isolated guards](../artifacts/trace-page-breakdown/trace-breakdown-36054c3400/native-validation-diagnostic.txt) and [capture investigation](../artifacts/trace-page-breakdown/trace-breakdown-36054c3400/native-validation-diagnostic-details.txt). The existing waterfall enriches raw rows with a non-authoritative `duration_ms` Number alias. The final oracle validates exactly that derived conversion, removes only that alias for comparison, and still checks every authoritative raw field. Browser JSON roundtripping also removes ClickHouse's raw-row slash escape in `GET \/checkout`; public semantic equality therefore does not reproduce the original raw-message hash. The complete stored typed digest does reproduce the receipt. Neither correction changes application code or fixture evidence, and no full-capture hash guard was dropped. Temporary diagnostic output helpers were removed.
+
+Reproduce serially after browser/actor ownership is released (each live entrypoint skips if its artifact environment variable is absent):
+
+```sh
+cd /workspace/goo/verification
+export PATH=/workspace/.toolchains/go/bin:$PATH GOPATH=/workspace/.go
+export GOMODCACHE=/tmp/goo-module-cache GOCACHE=/workspace/.cache/go-build
+export XDG_CACHE_HOME=/workspace/.cache GOTOOLCHAIN=local GOMAXPROCS=2
+go test -run '^Test(HegelTracePage|TracePageBreakdownAuthority)' -v .
+GOO_TRACE_PAGE_LEDGER=/workspace/goo/artifacts/trace-page-breakdown/trace-breakdown-36054c3400/ledger.json go test -run '^TestQuintTracePageBreakdownLiveLedger$' -v .
+GOO_TRACE_PAGE_GRAPHS_LEDGER=/workspace/goo/artifacts/trace-page-breakdown/trace-breakdown-382ef74648/graphs.json go test -run '^TestQuintTracePageGraphsLedger$' -v .
+GOO_TRACE_PAGE_OWNERSHIP_LEDGER=/workspace/goo/artifacts/trace-page-breakdown/trace-breakdown-96fed1dbe0/ownership.json go test -run '^TestQuintTracePageOwnershipLedger$' -v .
+```
+
+Observed coverage is not CPU/self time, complete exclusive time or a critical path; trace completeness remains unverified. Inclusive group sums may overlap in time. No new endpoint, query, persistence format or source completeness claim is introduced by this verification.

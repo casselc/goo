@@ -1,9 +1,9 @@
 # Trace page interval breakdown
 
-Approved contract; implementation and acceptance are in progress. The existing
-waterfall will gain a compact breakdown of the supplied span page, with exact
-span selection and service/operation highlights. No new query, store or capture
-wire field is introduced.
+Implemented with reviewed source and actual OTel/browser/native acceptance. The
+existing waterfall includes a compact breakdown of the supplied span page, with exact
+span selection and service/operation highlights. No new query type, endpoint,
+store or capture wire field is introduced.
 
 ## What is measured
 
@@ -53,6 +53,11 @@ The Go pure model defines the interval contract and supports server rendering or
 other Go consumers. A parity-tested JavaScript display projection consumes the
 same supplied rows. Passive web components emit row/group selection intents;
 application adapters own highlighting, inspection, navigation and any reads.
+Opening disclosures and highlighting groups are local. Selecting a diagnostic
+row uses the existing span-inspection action, including its existing explicit
+linked-log read. There is no additional latency-evaluator query. Current-owner
+guards reject hidden, closed, detached or superseded controls before selection,
+inspection or that linked-log read.
 
 Group only these supplied rows by exact service/operation tuples. Missing values,
 present empty strings and literal placeholder-looking names remain distinct.
@@ -65,9 +70,11 @@ spans and groups; do not normalize them into shares of trace wall time.
 Keep the existing all-matching service/operation aggregate visibly separate: it
 is an independent source query, whereas this breakdown explains a bounded page.
 Display durations in readable units with exact nanoseconds in tooltips. Preserve
-original row identities, waterfall geometry and async-link behavior. Opening a
-stored page derives presentation from its stored rows without changing captured
-bytes or claiming newly captured measurements.
+original row identities, waterfall geometry and async-link behavior. The passive
+component can project supplied stored rows without changing captured bytes or
+claiming newly captured measurements. The current saved-capture surface reopens
+the raw record table source-free; its **Expand trace** action still performs the
+existing fresh context read. This milestone does not add a stored-waterfall UI.
 
 ```mermaid
 flowchart LR
@@ -81,9 +88,21 @@ flowchart LR
   W --> D
 ```
 
-Acceptance requires deterministic ordinary OTel spans with overlapping/nested
+Acceptance covers deterministic ordinary OTel spans with overlapping/nested
 children, malformed and partial graphs, exact Go/JavaScript parity and independent
 generated interval oracles, passive SSR/SPA cases, real source/stored journeys,
 Bombadil, finite trace replay with rejecting controls, updated actual frames and
-independent source/design/evidence review. Executed results will be recorded in
-VALIDATION.md; these requirements are not claims of completed checks.
+independent source/design/evidence review. Finite replay validates observed
+schedules rather than exhaustive interleavings, complete traces or synchronized
+clocks. Executed receipts and diagnostics are in [VALIDATION.md](../VALIDATION.md).
+
+Reviewed source is `c1c29ef` (Go model, JavaScript projection and shared fixtures)
+and `3934986` (passive display and application integration). `94722e7` adds the
+explicit closed-ancestor guard and inspector-width layout with equal physical
+bar tracks. All 74 Node files, real main/graph/ownership journeys, synthetic
+SSR/SPA and the 55-second actor pass. Independent properties cover 150 generated
+examples and eight authority boundaries; all 80 native rejecting controls pass
+over 7/6/3-action observed traces. Raw capture bytes remain unchanged. The
+[storyboard](../journeys/184-trace-latency-breakdown-storyboard.md) links final
+desktop/mobile frames and distinguishes real source evidence from synthetic
+component tests.

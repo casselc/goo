@@ -1089,12 +1089,15 @@ controls over 20/3/7-action finite traces. Source-free mobile and explicit empty
 replay verify final frames and unchanged original custody. Final review and
 publication are recorded from actual git state in VALIDATION.md.
 
-### Trace page interval breakdown (in progress)
+### Trace page interval breakdown (delivered)
 
 [Contract](TRACE_PAGE_TIMING.md). TP1 defines an exact Go projection over supplied
 span rows, direct-child interval unions, local uncertainty and page-only grouped
 sums. TP2 adds a parity-tested passive component beside the existing waterfall,
-with exact row/group highlighting and selected-span detail. TP3 requires ordinary
-OTel overlap/nesting/partial/ambiguous cases, source-free stored projection,
-unchanged capture bytes, passive SSR/SPA, Hegel properties, Bombadil, finite
-replay and actual frames. Source, design and evidence reviews precede publication.
+with exact row/group highlighting and selected-span detail. TP1/TP2 source is
+`c1c29ef`/`3934986`, with closed-control/layout fix `94722e7`. TP3 passes ordinary
+OTel overlap/nesting/partial/ambiguous cases, unchanged raw capture reopen,
+synthetic passive SSR/SPA, all 74 Node files, 150 generated examples, the 55-second
+actor and 80 rejecting controls over 7/6/3-action finite traces. A stored-waterfall
+UI is not added; saved-table trace expansion remains a fresh read. Final actual
+frames, review and publication are recorded in VALIDATION.md.

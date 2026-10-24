@@ -601,7 +601,13 @@ stages shared questions separately. Leaving stops tail subscriptions and invalid
 pending publications. Service diagnosis counts matching mixed-kind captured spans,
 not verified requests or service health. Duration selection is for record
 populations; native histogram cells have no inferred trace membership. Trace
-breakdown sums are inclusive and can overlap. Deployment context reads remain
+breakdown sums are inclusive and can overlap. The
+[observed-page timing projection](TRACE_PAGE_TIMING.md) adds exact direct-child
+unions and outside-duration subtotals with explicit known/unknown coverage, not
+CPU time, complete exclusive time or a critical path. Its row/group sums can
+also overlap; omitted pages and missing spans remain unknown. Saved raw-record
+reopen is source-free, while expanding its trace still performs a fresh read;
+a stored-waterfall UI is not added. Deployment context reads remain
 explicit and independent of telemetry and captured custody. Convention capability
 explanations offer existing binding authoring; no general schema resolver is added.
 

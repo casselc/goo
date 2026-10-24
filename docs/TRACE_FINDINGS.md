@@ -16,6 +16,14 @@ Changed-between-reads evidence withholds examples. Capture pagination recomputes
 examples from each frozen page; older captures without this metadata stay usable
 without silently acquiring newly derived evidence.
 
+Expanded trace waterfalls include an [observed-page interval breakdown](TRACE_PAGE_TIMING.md).
+It unions each span's observed direct-child intervals, preserving unavailable
+calculations for ambiguous identities or incompatible timing. Page-only grouped
+inclusive/outside sums retain coverage counts and exact row highlights, separate
+from the full-query aggregate. Selecting a diagnostic row uses the existing span
+inspector and linked-log read. Group highlighting and disclosures are local;
+missing children do not become verified exclusive time or a critical path.
+
 Opening an example uses the existing trace expansion: the environment and fixed
 window stay unchanged, while population filters are replaced by an exact trace-ID
 predicate so other services can appear. The original question and observed basis

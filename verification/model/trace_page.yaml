@@ -1,0 +1,19 @@
+spec: trace_page.qnt
+module: trace_page
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  observe_run:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_expand:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_group_highlight:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_group_clear:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_row_select:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_capture:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_reopen:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
