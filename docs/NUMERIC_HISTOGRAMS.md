@@ -1,6 +1,6 @@
 # Exact integer distributions
 
-Implementation in progress. This extends the explicit numeric attribute binding;
+Implemented in the Go adapter and fixed/saved question UI. This extends the explicit numeric attribute binding;
 it does not infer types or units from OTel attribute names. The existing record
 question remains the unit of scope and reuse.
 
@@ -33,7 +33,9 @@ and preserves the original selector, source and fixed window.
 The rest is the whole parent minus the selected valid numeric range: it includes
 missing, empty and invalid values. The planner also supplies explicit count-only
 comparison queries, removing numeric arithmetic and other measure requests while
-preserving predicates. Comparing those populations uses independent source reads;
+preserving predicates. These projections share the first declared breakdown field,
+or service when the parent has none; selected/rest drilldown questions retain
+the original grouping. Comparing those populations uses independent source reads;
 it does not establish a transactional snapshot or a numeric mean comparison.
 Run remains explicit after staging. Source-read disagreement disables selection.
 
@@ -66,3 +68,31 @@ flowchart LR
 3. Real telemetry journey, screenshots, property/model trace checks and Bombadil
    actions/invariants; update documentation to implemented behavior only after
    acceptance, then commit and push validated work.
+
+## Storyboard 174 — ordinary telemetry to reusable numeric populations
+
+Executable journey: [numeric-histogram.spec.js](../journeys/numeric-histogram.spec.js).
+
+1. An operator opens a fixed question over ordinary OTel spans, declares an int64
+   `work.items` binding and enables **Show distribution**. These edits stage
+   configuration without reading telemetry.
+2. Run reads the full population and shows coverage next to the distribution.
+   The exact-bin disclosure includes zero-count gaps and both integer extremes,
+   even though the inspection table shows only its first 100 rows.
+3. Space, Shift+arrow and Enter select adjacent bins above JavaScript's safe
+   integer limit. The selected range/count stays exact; this gesture performs
+   neither a source read nor a planner request.
+4. Run selected population asks Go to derive checked predicates, then opens the
+   selected population. Stage count comparison with rest instead stages the
+   existing population workspace. Run there reads selected and rest independently;
+   their counts partition the parent, including nonvalid values in the rest.
+5. Save a capture and build reusable YAML. A fresh use preserves the optional
+   histogram request; reopening saved evidence uses stored bins and does not read
+   telemetry. The mobile chart scrolls within its panel rather than expanding
+   the page. Invalid-only and no-data populations show coverage without fake bars.
+6. A separate lifecycle case delays an actual planner response, leaves the
+   question and returns. The old response must not open a population. A new
+   gesture can plan again without re-reading the parent.
+
+Backend and live-browser acceptance are complete. Final model replay and
+Bombadil campaign evidence is tracked in VALIDATION.md.

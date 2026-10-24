@@ -13,9 +13,10 @@
  function namespace(v){object(v,['mode','value']);requireThat(['missing','value'].includes(v.mode));optional(v,'value',x=>text(x,128));requireThat(v.mode!=='missing'||!v.value)}
  function field(v){object(v,['kind','key']);requireThat(['column','attribute','resource'].includes(v.kind));text(v.key,128);requireThat(v.key!=='')}
  function record(q){
-  object(q,['reportedEdge','numeric','groupTimeSeries','spanStatus','bucketMs','summary','signal','environment','fromMs','toMs','where','groupBy','limit','offset']);
+  object(q,['reportedEdge','numeric','numericHistogram','groupTimeSeries','spanStatus','bucketMs','summary','signal','environment','fromMs','toMs','where','groupBy','limit','offset']);
   const walk=(p,depth=0,state={n:0})=>{object(p,['all','any','field','numeric','op','value']);requireThat(depth<=4&&++state.n<=32);if(p.all||p.any){requireThat(!(p.all&&p.any)&&!p.field&&!p.numeric&&!p.op&&!p.value);const list=p.all||p.any;requireThat(Array.isArray(list)&&list.length>0);for(const c of list)walk(c,depth+1,state)}else if(p.numeric){const protocol=typeof module!=='undefined'?require('./question-protocol'):global.GooQuestionProtocol;protocol.validateNumericPredicate(p)}else{field(p.field);requireThat(['eq','ne','contains','exists','missing','gte','lte'].includes(p.op));optional(p,'value',x=>text(x,1024))}};
   optional(q,'where',x=>walk(x));optional(q,'groupBy',a=>{requireThat(Array.isArray(a)&&a.length<=2);a.forEach(field)});
+  optional(q,'numericHistogram',v=>{object(v,['binning']);requireThat(!!q.numeric&&v.binning==='powers-of-two')});
   optional(q,'numeric',v=>{object(v,['field','type','unit','parse']);field(v.field);requireThat(['attribute','resource'].includes(v.field.kind)&&['int64','uint64'].includes(v.type)&&v.parse==='canonical-decimal');text(v.unit,64)});
   optional(q,'reportedEdge',v=>{object(v,['parent','child','discoveryNamespace']);for(const key of ['parent','child']){object(v[key],['service','namespace']);text(v[key].service,128);namespace(v[key].namespace)}optional(v,'discoveryNamespace',namespace)});
   for(const key of ['groupTimeSeries','spanStatus'])optional(q,key,v=>requireThat(typeof v==='boolean'));

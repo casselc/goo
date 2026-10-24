@@ -389,3 +389,26 @@ func TestClickHouseNumericHistogramParity(t *testing.T) {
 		}
 	}
 }
+
+func TestNumericHistogramComparisonDimension(t *testing.T) {
+	for _, fields := range [][]Field{nil, {{Kind: "attribute", Key: "region"}}, {{Kind: "attribute", Key: "region"}, {Kind: "resource", Key: "service.namespace"}}} {
+		q := histogramQuestion("uint64")
+		q.GroupBy = fields
+		plan, e := PlanNumericHistogramSelection(q, 0, 1)
+		if e != nil {
+			t.Fatal(e)
+		}
+		expected := Field{Kind: "column", Key: "service"}
+		if len(fields) > 0 {
+			expected = fields[0]
+		}
+		for _, projected := range []Query{plan.Comparison.Baseline, plan.Comparison.Selection} {
+			if len(projected.GroupBy) != 1 || projected.GroupBy[0] != expected {
+				t.Fatal("comparison requires shared dimension", projected.GroupBy)
+			}
+		}
+		if !reflect.DeepEqual(plan.Selected.GroupBy, fields) || !reflect.DeepEqual(plan.Rest.GroupBy, fields) {
+			t.Fatal("range question grouping changed")
+		}
+	}
+}

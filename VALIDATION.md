@@ -8272,3 +8272,24 @@ checks. OpenAPI validates 71 operations / 65 Go operations. Local HTTP regressio
 checks require the managed environment's elevated loopback permission; the first
 sandbox-only attempt failed to listen and was rerun successfully with that access.
 Evidence: `artifacts/numeric-histogram-{go,clickhouse,properties}.log`.
+
+## Integer distribution controls and continuation (2026-10-24)
+
+The existing numeric form now opts into exact distributions; supplied count bars,
+all-bin disclosure and staged range gestures reuse the display/component and
+population owners. Links, session identity, recovery, immutable display and package
+reuse preserve the optional request. Binding errors disable Run without latching
+an error after repair. Pending plans are canceled on navigation, draft change and
+replacement; retained return allows a new selection. Count projections use one
+shared declared breakdown, defaulting to service name for ungrouped parents.
+
+Independent UI/architecture review approved the source-free ownership and
+projection contract. All 59 Node suites passed; subsequent targeted lifecycle/
+binding suites passed. Go histogram/HTTP continuation tests and updated Hegel
+properties (zero/one/two grouping dimensions) passed. Two actual journey 174 cases
+passed: full 200-span oracle/100-row-page acceptance, selected/rest explicit reads,
+invalid/no-data, capture/YAML reuse, mobile saved display, and a delayed real planner
+response across workspace departure/return. The first browser attempts exposed
+fetch receiver binding, missing comparison dimension and missing leave suspension;
+all were corrected and the two cases passed in 31 seconds. Final model/Bombadil
+acceptance and updated comparison framing are separate below.

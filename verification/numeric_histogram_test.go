@@ -123,8 +123,9 @@ func histogramCheck(b exploration.NumericBinding, values []*string) error {
 	}
 	return nil
 }
-func histogramRangeCheck(b exploration.NumericBinding, from, to int) error {
+func histogramRangeCheck(b exploration.NumericBinding, from, to int, grouping ...exploration.Field) error {
 	q := histogramParent(b)
+	q.GroupBy = grouping
 	before, _ := json.Marshal(q)
 	plan, e := exploration.PlanNumericHistogramSelection(q, from, to)
 	if e != nil {
@@ -141,6 +142,18 @@ func histogramRangeCheck(b exploration.NumericBinding, from, to int) error {
 		if _, e := exploration.Compile(child); e != nil {
 			return e
 		}
+	}
+	expectedDimension := exploration.Field{Kind: "column", Key: "service"}
+	if len(q.GroupBy) > 0 {
+		expectedDimension = q.GroupBy[0]
+	}
+	for _, projected := range []exploration.Query{plan.Comparison.Baseline, plan.Comparison.Selection} {
+		if len(projected.GroupBy) != 1 || projected.GroupBy[0] != expectedDimension {
+			return fmt.Errorf("comparison dimension differs from declared projection")
+		}
+	}
+	if !reflect.DeepEqual(plan.Selected.GroupBy, q.GroupBy) || !reflect.DeepEqual(plan.Rest.GroupBy, q.GroupBy) {
+		return fmt.Errorf("comparison projection changed selected/rest grouping")
 	}
 	if plan.Comparison.Baseline.Numeric != nil || plan.Comparison.Selection.Numeric != nil || plan.Comparison.Baseline.NumericHistogram != nil || plan.Comparison.Selection.NumericHistogram != nil || !reflect.DeepEqual(plan.Comparison.Baseline.Where, plan.Rest.Where) || !reflect.DeepEqual(plan.Comparison.Selection.Where, plan.Selected.Where) {
 		return fmt.Errorf("comparison changed cohort or retained measure instead of record counts")
@@ -230,7 +243,11 @@ func TestHegelNumericHistogramRangePartition(t *testing.T) {
 		count := len(histogramOracleEdges(typ)) - 1
 		from := hegel.Draw(tc, hegel.Integers(0, count-1))
 		to := hegel.Draw(tc, hegel.Integers(from+1, count))
-		if e := histogramRangeCheck(b, from, to); e != nil {
+		grouping := []exploration.Field{{Kind: "attribute", Key: "region"}, {Kind: "resource", Key: "service.namespace"}}[:hegel.Draw(tc, hegel.Integers(0, 2))]
+		if len(grouping) == 0 {
+			grouping = nil
+		}
+		if e := histogramRangeCheck(b, from, to, grouping...); e != nil {
 			tc.Fatal(e)
 		}
 	}, options(100)...)

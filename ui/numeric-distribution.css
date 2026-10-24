@@ -1,0 +1,10 @@
+.numeric-distribution{min-width:0;margin-block:12px}
+.numeric-distribution p,.numeric-distribution small{font-size:11px;overflow-wrap:anywhere}
+.numeric-distribution-scroll{overflow-x:auto;max-width:100%}
+.numeric-distribution goo-time-bars{min-width:440px}
+.numeric-distribution goo-time-bars .time-bar{min-width:4px}
+.numeric-distribution details{max-width:100%;overflow-x:auto}
+.numeric-distribution table{font-size:11px;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.numeric-distribution :is(th,td){padding:4px 8px;text-align:left;white-space:nowrap}
+.numeric-distribution-selection{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.numeric-distribution-selection p{flex-basis:100%;margin:4px 0}

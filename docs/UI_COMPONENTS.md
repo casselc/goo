@@ -717,3 +717,10 @@ filter editor rather than adding a second authoring panel. Explicit integer/unit
 controls remain application intent; common field labels render the declared
 interpretation. Scoped numeric threshold styles preserve full integer visibility
 on mobile; no display element evaluates source values or starts requests.
+
+The [integer distribution adapter](NUMERIC_HISTOGRAMS.md) reuses `goo-time-bars`
+for supplied categorical counts over unequal numeric ranges, preserving exact
+original bin keys. The adapter owns coverage/schema checks, the exact-bin table,
+selection planning and population handoff. The element still has no numeric
+parser, source access or query ownership. Its name does not imply a temporal
+axis; caller-supplied labels declare the numeric domain and count semantics.

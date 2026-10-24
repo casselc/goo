@@ -162,3 +162,8 @@ share canonical parsing but have their own explicit binding; choosing a filter
 does not silently add or change an aggregate measure. Count/duration comparisons
 and time-chart children preserve those predicates, while sum/mean measure
 comparisons remain unsupported.
+
+The optional [integer distribution](NUMERIC_HISTOGRAMS.md) uses this same binding
+and same-read coverage. It introduces no second field/type/unit form. Range
+selection becomes typed numeric predicates; count comparison with the rest is an
+explicit measure projection, not a comparison of numeric sums or means.

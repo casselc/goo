@@ -236,6 +236,13 @@ func PlanNumericHistogramSelection(parent Query, fromBin, toBin int) (*NumericHi
 		v.NumericHistogram = nil
 		v.Summary = ""
 		v.SpanStatus = false
+		// Existing cohort comparison requires one shared distribution dimension.
+		// Keep the first declared dimension, or use the service-name distribution.
+		if len(v.GroupBy) == 0 {
+			v.GroupBy = []Field{{Kind: "column", Key: "service"}}
+		} else {
+			v.GroupBy = v.GroupBy[:1]
+		}
 		return v
 	}
 	out.Comparison = NumericHistogramComparisonQueries{Baseline: project(out.Rest), Selection: project(out.Selected)}
