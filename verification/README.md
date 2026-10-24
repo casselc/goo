@@ -1095,3 +1095,19 @@ reopen and no-read gestures, then replays observed phases with quint-go. Eightee
 mutations must be rejected. The Bombadil `numeric-histograms.ts` actor explicitly
 runs the real fixture once and then explores keyboard bins, exact details,
 configuration edits/repair and departure without additional source reads.
+
+`TestHegelNumericComparisonExactRationalsAndCoverage` uses an independent
+standard-library canonical integer parser and big.Int/big.Rat summary oracle for
+100 generated signed/unsigned cohort comparisons. Deterministic companion tests
+cover integer extrema, non-dyadic means/coverage deltas, absent groups, unavailable
+and changed-read states, binding mismatches, detachment and legacy count requests.
+
+`TestQuintNumericComparisonLiveLedger` consumes journey 175's actual OTel/source
+ledger through `GOO_NUMERIC_COMPARISON_LEDGER`. Its independent oracle checks
+record identity, exact totals/groups, rational arithmetic and coverage, previous
+windows, selected/rest partitions, logs/uint64, saved/reusable evidence and
+source-free staging/reopen. Twenty-two corruption controls must change the input
+and be rejected through qobs/Quint replay. The `numeric-comparisons.ts` Bombadil
+actor explores supplied ranking and coverage, stages a fixed question, explicitly
+reads once, pins numeric evidence and edits/repairs an invalid binding; its terminal
+coverage record proves those actions occurred without additional source reads.

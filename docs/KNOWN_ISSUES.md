@@ -86,7 +86,7 @@ automatically start live updates.
 
 Population live tails are bounded recent event-time observations, not ingestion cursors or complete traces. Reconnect/resume exposes a continuity gap. Full-population live comparison uses independent reads over the baseline duration; its window may differ from the 60-second inspection tail. Saved settings never auto-subscribe. See [live contract](POPULATION_WORKSPACE.md#watching-a-population).
 
-Service-overview time selections scope that overview and its span/log follow-up links. Supporting discovery inventory retains its original window. General cross-service span/log populations and saved exploration views are now supported in the [population workspace](POPULATION_WORKSPACE.md). Discovered per-signal breakdowns and saved baseline comparisons are supported; numeric-measure summary comparisons remain unsupported; typed-filtered record populations retain existing count/duration comparisons. Arbitrary native-stream composition and saved multi-widget dashboards remain future work. Native crossing intervals are omitted, never split or interpolated. See [contract](LINKED_TIMELINE.md).
+Service-overview time selections scope that overview and its span/log follow-up links. Supporting discovery inventory retains its original window. General cross-service span/log populations and saved exploration views are now supported in the [population workspace](POPULATION_WORKSPACE.md). Discovered per-signal breakdowns and saved baseline comparisons are supported; [numeric-measure comparisons](NUMERIC_COMPARISONS.md) require matching explicit bindings; typed-filtered record populations retain existing count/duration comparisons. Arbitrary native-stream composition and saved multi-widget dashboards remain future work. Native crossing intervals are omitted, never split or interpolated. See [contract](LINKED_TIMELINE.md).
 
 Trace examples rank valid linked spans on a bounded record page, not complete traces or the full matching population. Findings link two later independent reads. Selected reported trace/span references are checked only against the returned retained trace page; a page miss does not establish absence from the capture, and matching IDs prove neither uniqueness nor unchanged attributes or complete traces. See [trace finding contract](TRACE_FINDINGS.md).
 
@@ -425,8 +425,8 @@ Lifecycle question cards do not offer this comparison action.
 ## Captured breakdowns and automatic dashboard scope
 
 [Stored one-field group comparisons](COMPARISON_BREAKDOWNS.md) now reuse complete
-aggregates. Numeric/two-field comparisons and arbitrary regrouping of old evidence
-remain unsupported; new dimensions require explicit source recapture. Automatic
+aggregates. [Numeric comparisons](NUMERIC_COMPARISONS.md) use matching integer bindings.
+Two-field breakdown comparisons and arbitrary regrouping of old evidence remain unsupported; new dimensions require explicit source recapture. Automatic
 [service overviews and a distributed relationship table](SERVICE_DASHBOARDS.md)
 now execute bounded typed widgets within Services. Instance navigation,
 graphical topology, async/declaration edges and complete

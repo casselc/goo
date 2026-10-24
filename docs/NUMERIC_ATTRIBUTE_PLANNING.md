@@ -129,8 +129,9 @@ plan/execute/inspect/capture/reuse/reopen steps with rejecting numeric mutations
 Bombadil explores local measures/search with frozen-evidence/coverage invariants.
 This fixture is integration evidence, not production traffic or OTel completeness.
 
-Next: multiple named measures, explicit decimal/float policies, unit conversions
-and numeric cohort comparisons. Databricks raw-source lowering remains future work.
+[Numeric cohort comparisons](NUMERIC_COMPARISONS.md) now preserve exact arithmetic
+and coverage. Multiple named measures, explicit decimal/float policies, unit
+conversions and Databricks raw-source lowering remain future work.
 
 ## Field guidance — reviewed 2026-10-24
 
@@ -160,10 +161,11 @@ and immutable capture reuse. Updated frames 44a–44c show the running applicati
 record populations independently of this question-level numeric measure. They
 share canonical parsing but have their own explicit binding; choosing a filter
 does not silently add or change an aggregate measure. Count/duration comparisons
-and time-chart children preserve those predicates, while sum/mean measure
-comparisons remain unsupported.
+and time-chart children preserve those predicates. Matching numeric bindings now
+support [sum/mean/extrema comparisons](NUMERIC_COMPARISONS.md).
 
 The optional [integer distribution](NUMERIC_HISTOGRAMS.md) uses this same binding
 and same-read coverage. It introduces no second field/type/unit form. Range
 selection becomes typed numeric predicates; count comparison with the rest is an
-explicit measure projection, not a comparison of numeric sums or means.
+explicit measure projection. A separate numeric comparison action preserves the
+binding and compares arithmetic/coverage over the same selected/rest populations.

@@ -8377,3 +8377,51 @@ Change labels and use normal page scrolling. Stronger final browser geometry
 checks pass for all eight supplied value cells, exact text/tooltips, shared domains,
 visible labels and no internal vertical crop. Default positive displays are
 unchanged. Desktop/mobile screenshots 175a–c are actual running-app evidence.
+
+## Numeric comparisons — NC3 actual telemetry/model closeout (2026-10-24)
+
+The original frozen journey 175 and its delayed-real-comparison case both passed
+on the first run (54.1 seconds total). The fixture emits 768 ordinary OTel records
+(384 spans and 384 logs) over current/previous windows, with full population
+aggregates independent of 100-row inspection pages. Shared/one-sided/unparsed
+service groups include negative and true-zero values, >2^53 and integer extrema,
+missing/empty/invalid values and exact fractional mean changes. Assertions cover
+numeric pin/change/ranking, previous adjacent fixed window, selected/rest numeric
+planning and two explicit reads, capture/reopen, reusable saved view reopen/Run,
+actual logs/uint64, six compatibility refusals and unknown/unavailable/legacy modes.
+
+Semantic ledger:
+`artifacts/numeric-comparisons/numeric-comparison-0b26a85d7f/ledger.json`.
+Its native independent stdlib/big.Int/big.Rat oracle accepted the actual source
+observations and rejected 22 changed corruption controls through qobs/quint-go
+`grouped_series` trace replay (55.52 seconds). Output: `native-validation.txt`.
+One initial negative control was a no-op (writing zero over an actual zero coverage
+PP delta); the retained diagnostic is not a passing run. The control now guarantees
+a different value, and every control asserts it changes serialized input before
+checking rejection. No semantic oracle was weakened.
+
+The actual 45-second Bombadil actor passes all ten recorded phases: mean/sum/min/
+max ranking, coverage, fixed-question staging, one explicit read, numeric pinning,
+invalid binding and repair. Its terminal coverage proves complete/read1 and max
+reads1; no other source read is allowed. Evidence is in the semantic ledger's
+`bombadil/{process.log,run-result.json,coverage.json,trace.jsonl}` and
+`artifacts/numeric-comparison-bombadil.log`. The held real comparison response
+cannot revive an edited draft; its ledger is under `numeric-comparison-late-abad0df596`.
+
+Final display-only acceptance uses
+`artifacts/numeric-comparisons/numeric-comparison-e285ea24c5/ledger.json`.
+The frozen main case passes in 28.5 seconds, including all eight mobile metric
+cells horizontally and vertically within the supplied figure/scroll area, exact
+full labels/tooltips and no inherited internal height crop. Screenshots 175a–c
+were regenerated and visually inspected; mobile 175b shows all four complete
+Baseline/Comparison/Change rows. The earlier semantic/model/actor receipts remain
+valid; the final patch changes only signed component layout. Source/Node checks
+pass, local documentation links and `git diff --check` pass, and the API-doc browser
+check passes 71 operations with no page errors/mobile overflow. Final independent
+architecture/UI review approved the feature with no remaining blockers.
+
+Limits: explicit canonical int64/uint64 bindings only, identical namespace/key,
+type/unit/parse, no inferred units/conversions or statistical/causal claims.
+Live pin/previous comparisons retain one breakdown field; stored capture numeric
+totals also work without grouping. Two-field group comparisons and averaging
+percentiles are not introduced. Separate source reads remain separate evidence.

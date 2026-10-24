@@ -129,8 +129,9 @@ Run selected population is explicit. Capture preserves that question, and reusab
 YAML retains its binding/threshold for a separate fresh-window read. Reopening the
 capture returns its original stored bytes/question/count without querying telemetry.
 These are count/duration populations filtered by numeric attributes; comparisons
-of numeric measure summaries and arbitrary numeric-value chart brushing remain
-separate work.
+of numeric measure summaries and numeric-value chart brushing are now delivered
+through [numeric comparisons](NUMERIC_COMPARISONS.md) and
+[integer histograms](NUMERIC_HISTOGRAMS.md), with the same explicit bindings.
 
 The actual ledger is checked with an independent integer oracle, exact full
 counts, page sizes, unique fixture timestamp membership, raw attribute/resource

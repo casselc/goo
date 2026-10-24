@@ -1,6 +1,6 @@
 # Numeric measure comparisons
 
-Implementation in progress. This extends the existing record comparison flow to
+Implemented and independently reviewed. This extends the existing record comparison flow to
 explicit integer attribute measures. It uses existing source aggregates and
 passive comparison components; it adds no query language or automatic source read.
 
@@ -70,7 +70,7 @@ flowchart LR
   I --> A
 ```
 
-## Review gates
+## Delivered review gates
 
 NC1: Go validation, exact comparison, legacy compatibility and saved evidence;
 independent semantic review plus property/source parity checks.
@@ -81,3 +81,42 @@ range continuation; component/protocol tests and independent UI review.
 NC3: Ordinary OTel live journey with capture/reopen, explicit source-read counts,
 negative/zero/nonvalid and large-integer cases, screenshots, native model replay
 and Bombadil; final review, commit and push.
+
+## Storyboard 175 — compare populations without losing numeric meaning
+
+Executable [journey](../journeys/numeric-comparisons.spec.js) emits ordinary OTel
+spans and logs with a unique environment, shared and one-sided service groups,
+negative/zero/large integer values and missing/empty/invalid inputs. No goo
+annotations are needed.
+
+1. Open a fixed numeric question with a service breakdown. Run reads the complete
+   population independently of its 100-row inspection page. Pin captures the
+   supplied aggregate as an in-memory baseline; filter edits remain source-free.
+2. Run the selected population. Mean/sum/min/max show exact selected-minus-baseline
+   changes, including a fractional mean delta, with coverage beside the values.
+   Changing the ranking is local and keeps exact group arithmetic. One-sided and
+   unparsed groups show unavailable arithmetic rather than invented zeroes.
+3. Compare previous window explicitly reads the adjacent fixed window using the
+   same binding. Both source windows/read details remain visible.
+4. Capture the comparison and reopen it without telemetry or comparison requests.
+   Mobile metric rows place labelled baseline and comparison values together,
+   preserving exact tooltips, shared signed scales and visible zero points.
+5. Brush an integer histogram and stage numeric comparison with the rest. Go
+   derives the exact same partitions as the count action, retaining the numeric
+   binding. Run reads the two populations; a saved exploration view preserves the
+   baseline and ranking but requires an explicit Run when reopened.
+6. Direct actual-source cases cover logs and uint64 extremes; strict compatibility
+   refusals, empty/all-invalid and changed-read cases verify unavailable/unknown
+   behavior. A separate case delays a real comparison response, edits the draft
+   and confirms that the old response cannot revive it.
+
+![Signed numeric populations and exact deltas](journeys/screenshots/175a-signed-numeric-populations.png)
+
+![Frozen comparison with both sides visible on mobile](journeys/screenshots/175b-mobile-frozen-numeric-comparison.png)
+
+![Numeric range compared with the whole remainder](journeys/screenshots/175c-numeric-range-versus-rest.png)
+
+Validation: NC1 `8c67196`, NC2 `dcb62e4`; real journey/model/Bombadil and final
+mobile evidence are recorded in [VALIDATION.md](../VALIDATION.md). Legacy frozen
+comparisons keep their original count-only result rather than acquiring numeric
+arithmetic on reopen.

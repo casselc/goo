@@ -724,3 +724,10 @@ original bin keys. The adapter owns coverage/schema checks, the exact-bin table,
 selection planning and population handoff. The element still has no numeric
 parser, source access or query ownership. Its name does not imply a temporal
 axis; caller-supplied labels declare the numeric domain and count semantics.
+
+The [numeric comparison adapter](NUMERIC_COMPARISONS.md) adds an opt-in
+`signed: true, scale: per-row` mode to `goo-metric-comparison`. Each supplied
+metric row shares an exact signed rational domain across both sides and anchors
+at zero. Existing positive/default displays retain their original scale. Numeric
+parsing, compatibility, source reads and custody stay in their existing owners;
+the display converts only bounded layout ratios to pixels.

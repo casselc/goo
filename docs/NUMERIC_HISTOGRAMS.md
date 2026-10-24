@@ -36,7 +36,9 @@ comparison queries, removing numeric arithmetic and other measure requests while
 preserving predicates. These projections share the first declared breakdown field,
 or service when the parent has none; selected/rest drilldown questions retain
 the original grouping. Comparing those populations uses independent source reads;
-it does not establish a transactional snapshot or a numeric mean comparison.
+it does not establish a transactional snapshot. A separate
+[Stage numeric comparison with rest](NUMERIC_COMPARISONS.md) action retains the
+numeric binding and compares mean/sum/extrema with coverage.
 Run remains explicit after staging. Source-read disagreement disables selection.
 
 Questions, immutable captures, links and reusable YAML carry the optional
