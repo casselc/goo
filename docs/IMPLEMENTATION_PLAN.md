@@ -942,7 +942,7 @@ The approved [two-field composition cut](COMPOSED_GROUPING.md) adds ordered Add/
 
 The approved [grouping consolidation](GROUPING_CONTROL.md) replaces separate fixed/population dropdowns with one passive display element and canonical owner state. Manual, custom-key and observed-field intents stage through the existing owners. Saved contracts and Go execution validation are unchanged.
 
-### Integer distribution and range populations (active)
+### Integer distribution and range populations (delivered)
 
 The next approved cut is [exact numeric histograms](NUMERIC_HISTOGRAMS.md), built
 on typed attribute predicates and the existing numeric measure binding. H1 adds
@@ -952,3 +952,7 @@ telemetry, saved/reusable configuration, exact boundaries, source-free gestures
 and count comparison with property/model and browser exploration checks. Each
 step receives independent review before publication. Numeric measure comparisons,
 custom bin authoring and inferred OTel types remain separate work.
+
+H1 (`965de9b`) and H2 (`3923f07`) are delivered after independent review. H3
+actual telemetry, retained-component regression, model replay and Bombadil
+acceptance passed; see VALIDATION.md and the final acceptance commit in git log.

@@ -7,3 +7,22 @@ test('154 passive supplied bars support range intent, cancellation, SSR and deta
  await el.evaluate(e=>e.removeAttribute('range-select'));await bars.nth(0).focus();await page.keyboard.press('Space');await page.keyboard.press('Shift+ArrowRight');await page.keyboard.press('Enter');expect(await page.evaluate(()=>window.ranges.length)).toBe(2);await expect(el.locator('[data-range-selected=true]')).toHaveCount(0);
  await el.evaluate(e=>{const copy=e.data;copy.points[1].value='0';if(e.data.points[1].value!=='9007199254740993')throw Error('Leaked mutable snapshot');const ssr=document.createElement('goo-time-bars');ssr.id='ssr';ssr.setAttribute('data',JSON.stringify(e.data));ssr.setAttribute('range-select','');document.body.append(ssr)});await expect(page.locator('#ssr .time-bar')).toHaveCount(3);expect(reads).toEqual([]);
 });
+
+test('174 retained count bars keep exact range intent after reconnect and saved-child restoration',async({page})=>{
+ const reads=[],errors=[];page.on('request',r=>reads.push(r.url()));page.on('pageerror',e=>errors.push(e.message));
+ await page.setContent('<!doctype html><html><body><h1>Synthetic retained component contract</h1><goo-time-bars id="retained" range-select></goo-time-bars></body></html>');
+ await page.evaluate(()=>{const el=document.querySelector('#retained');el.data={title:'Exact supplied integer bins',ceiling:'9007199254740993',interactive:true,points:[{key:'118',value:'9007199254740993',label:'[9007199254740992, 18014398509481984)'},{key:'119',value:'0',label:'[18014398509481984, 36028797018963968)'},{key:'120',value:'1',label:'[36028797018963968, 72057594037927936)'}]};window.ranges=[];window.singles=[];el.addEventListener('goo-time-range',e=>window.ranges.push(e.detail));el.addEventListener('goo-time-select',e=>window.singles.push(e.detail))});
+ await page.addScriptTag({path:path.resolve('ui/time-bars.js')});await page.addStyleTag({path:path.resolve('ui/time-bars.css')});
+ const el=page.locator('#retained'),bars=el.locator('button.time-bar');await expect(bars).toHaveCount(3);
+ await bars.nth(0).focus();await page.keyboard.press('Space');await page.keyboard.press('Shift+ArrowRight');await page.keyboard.press('Enter');expect(await page.evaluate(()=>window.ranges)).toEqual([{fromKey:'118',toKey:'119'}]);
+ // The investigation trail deliberately restores the original display children
+ // after custom-element reconnect. Both native handlers and pointer capture
+ // must bind to that retained plot, not to a discarded reconnect render.
+ await el.evaluate(element=>{window.savedBars=[...element.querySelectorAll('button')];const children=[...element.childNodes];element.remove();document.body.append(element);element.replaceChildren(...children)});
+ expect(await el.evaluate(element=>[...element.querySelectorAll('button')].every((bar,i)=>bar===window.savedBars[i]))).toBe(true);
+ await bars.nth(1).focus();await page.keyboard.press('Escape');await page.keyboard.press('Space');await page.keyboard.press('Shift+ArrowRight');await page.keyboard.press('Enter');
+ expect(await page.evaluate(()=>window.ranges)).toEqual([{fromKey:'118',toKey:'119'},{fromKey:'119',toKey:'120'}]);expect(await page.evaluate(()=>window.singles)).toEqual([]);await expect(bars.nth(2)).toBeFocused();
+ expect(await el.locator('[data-range-selected=true]').evaluateAll(nodes=>nodes.map(n=>n.dataset.key))).toEqual(['119','120']);
+ const first=await bars.nth(0).boundingBox(),last=await bars.nth(2).boundingBox();await page.mouse.move(first.x+first.width/2,first.y+first.height/2);await page.mouse.down();await page.mouse.move(last.x+last.width/2,last.y+last.height/2);await page.mouse.up();
+ expect(await page.evaluate(()=>window.ranges.at(-1))).toEqual({fromKey:'118',toKey:'120'});expect(await page.evaluate(()=>window.singles)).toEqual([]);await expect(bars.nth(0)).toHaveAttribute('data-count','9007199254740993');expect(await el.locator('[data-range-selected=true]').count()).toBe(3);expect(reads).toEqual([]);expect(errors).toEqual([]);
+});

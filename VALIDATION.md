@@ -8293,3 +8293,45 @@ response across workspace departure/return. The first browser attempts exposed
 fetch receiver binding, missing comparison dimension and missing leave suspension;
 all were corrected and the two cases passed in 31 seconds. Final model/Bombadil
 acceptance and updated comparison framing are separate below.
+
+## Integer distributions — final live/model acceptance (2026-10-24)
+
+All four frozen browser cases pass in 31.4 seconds: main journey 174, delayed
+real-planner navigation, prior range journey 154 and a focused passive-component
+regression. The latter detaches/reconnects a chart and restores its cached children
+like the investigation trail, then verifies exact keyboard and pointer ranges.
+Model validation caught an earlier retained handler bound to replaced children:
+Back had silently changed a two-bin range to a one-bin click, with coincidentally
+equal counts. The shared component now resolves current plot children for gestures;
+strict exact-range equality remains in the browser and native acceptance checks.
+
+Final actual ledger:
+`artifacts/numeric-histograms/numeric-histogram-92542b1183/ledger.json`.
+Its 200 ordinary OTel spans produce complete 128-bin signed counts/coverage beyond
+a 100-row inspection page. Selected and comparison queries agree exactly on
+bins `[118,120)` / `[9007199254740992,36028797018963968)`; selected/rest counts
+are 8/192. Invalid-only/no-data, full exact-bin DOM, source-free share/brush/Back,
+capture/YAML fresh reuse and frozen reopen are checked. Screenshots 174a–c are
+actual; 174b is a cropped 1100×713 comparison in Record count mode, 174c is mobile.
+The delayed planner ledger is under `numeric-histogram-lifecycle-b79c36f812`.
+
+`TestQuintNumericHistogramLiveLedger` independently accepts the final ledger and
+rejects all 18 mutations through qobs/Quint replay (48.94 seconds). The earlier
+mismatched-range ledger is retained as rejected evidence; it is not a passing
+fixture. The independent oracle uses standard-library canonical integer parsing,
+arbitrary-precision binning/membership/counts, source fixture rows, scope/window
+and capture equality. Full output: `native-validation.txt` beside the final ledger.
+
+The standalone 45-second Bombadil actor passes against that actual fixed question:
+one explicit source Run, keyboard range, exact bins, local checkbox changes,
+invalid binding/repair and departure, with zero additional POST effects. All
+custom actions are recorded in `bombadil/process.log`; `run-result.json` is passed.
+Final Node run passes 228 tests. Updated API-doc browser check passes 71 operations,
+desktop/mobile containment and no page errors; changed local documentation links
+and `git diff --check` pass. Independent final architecture/UI review cleared
+source ownership, exact semantics, restored interaction and acceptance coverage.
+
+Limits: fixed powers-of-two categorical ranges only; no density/linear numeric
+axis, custom bins, numeric mean/sum cohort comparison, inferred types/units or
+transactional multi-read snapshot. Count comparison uses the first declared
+breakdown or service name; selected/rest drilldowns preserve authored grouping.

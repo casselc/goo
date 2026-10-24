@@ -35,20 +35,20 @@
      if(tag==='button'){bar.setAttribute('aria-pressed',String(this.selectedKey===p.key));bar.addEventListener('click',e=>{if(this._ignoreClick&&e.detail>0){this._ignoreClick=false;return}this.dispatchEvent(new CustomEvent('goo-time-select',{bubbles:true,detail:{key:p.key}}))})}else if(href&&this.selectedKey===p.key)bar.setAttribute('aria-current','true');
      if(p.state==='no_data')bar.classList.add('no-data');bars.append(bar)
     }
-    const axis=node('div',undefined,'time-axis');axis.append(node('span',m.fromLabel),node('span',m.toLabel));figure.append(caption,scale,bars,axis);this.append(figure);if(m.interactive&&this.hasAttribute('range-select')&&!m.points.some(p=>p.href))this.bindRange(m,bars);
+    const axis=node('div',undefined,'time-axis');axis.append(node('span',m.fromLabel),node('span',m.toLabel));figure.append(caption,scale,bars,axis);this.append(figure);if(m.interactive&&this.hasAttribute('range-select')&&!m.points.some(p=>p.href))this.bindRange(m);
    }
 
-   bindRange(m,plot){
-    const bars=[...plot.children];let anchor=null,end=null,committed=null,pointer=null;
-    const at=e=>{const b=e.target.closest?.('.time-bar');return b&&plot.contains(b)?bars.indexOf(b):-1};
-    const paint=()=>{const range=anchor===null?committed:[Math.min(anchor,end),Math.max(anchor,end)];bars.forEach((b,i)=>{b.dataset.rangeSelected=String(!!range&&i>=range[0]&&i<=range[1])})};
-    const release=()=>{if(pointer!==null&&plot.hasPointerCapture(pointer))plot.releasePointerCapture(pointer);pointer=null};
-    const commit=()=>{if(anchor===null)return;committed=[Math.min(anchor,end),Math.max(anchor,end)];this.dispatchEvent(new CustomEvent('goo-time-range',{bubbles:true,detail:{fromKey:m.points[committed[0]].key,toKey:m.points[committed[1]].key}}));anchor=end=null;paint()};
+   bindRange(m){
+    const currentPlot=()=>this.querySelector(':scope > .time-bars-figure > .time-bars');const currentBars=()=>[...(currentPlot()?.children||[])];let anchor=null,end=null,committed=null,pointer=null;
+    const at=e=>{const b=e.target.closest?.('.time-bar');return b&&currentPlot()?.contains(b)?currentBars().indexOf(b):-1};
+    const paint=()=>{const range=anchor===null?committed:[Math.min(anchor,end),Math.max(anchor,end)];currentBars().forEach((b,i)=>{b.dataset.rangeSelected=String(!!range&&i>=range[0]&&i<=range[1])})};
+    const release=()=>{const live=currentPlot();if(pointer!==null&&live?.hasPointerCapture(pointer))live.releasePointerCapture(pointer);pointer=null};
+    const commit=()=>{if(anchor===null)return;const bars=currentBars();if(bars.length!==m.points.length||!bars[anchor]||!bars[end]||bars.some((b,i)=>b.dataset.key!==m.points[i]?.key)){anchor=end=null;return}committed=[Math.min(anchor,end),Math.max(anchor,end)];this.dispatchEvent(new CustomEvent('goo-time-range',{bubbles:true,detail:{fromKey:bars[committed[0]].dataset.key,toKey:bars[committed[1]].dataset.key}}));anchor=end=null;paint()};
     const cancel=()=>{release();anchor=end=null;paint()};this._clearRange=()=>{committed=null;cancel()};
-    this.onpointerdown=e=>{const i=at(e);if(e.button!==0||e.pointerType==='touch'||i<0)return;this._ignoreClick=false;anchor=end=i;pointer=e.pointerId;plot.setPointerCapture(pointer);paint();e.preventDefault()};
-    this.onpointermove=e=>{if(pointer!==e.pointerId)return;const x=e.clientX;let nearest=0,distance=Infinity;bars.forEach((b,i)=>{const r=b.getBoundingClientRect(),d=Math.abs(x-(r.left+r.width/2));if(d<distance){distance=d;nearest=i}});end=nearest;paint()};
-    this.onpointerup=e=>{if(pointer!==e.pointerId)return;release();this._ignoreClick=true;commit()};this.onpointercancel=cancel;plot.onlostpointercapture=()=>{if(pointer!==null)cancel()};
-    this.onkeydown=e=>{const i=at(e);if(i<0)return;if(e.key==='Escape'){cancel();e.preventDefault();return}if(e.key===' '){e.preventDefault();e.stopPropagation();if(anchor===null){anchor=end=i;paint()}else{end=i;commit()}return}if(e.shiftKey&&['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();anchor=anchor??i;end=Math.max(0,Math.min(bars.length-1,i+(e.key==='ArrowRight'?1:-1)));bars[end].focus();paint()}if(e.key==='Enter'&&anchor!==null){e.preventDefault();e.stopPropagation();end=i;commit()}};
+    this.onpointerdown=e=>{const i=at(e);if(e.button!==0||e.pointerType==='touch'||i<0)return;this._ignoreClick=false;anchor=end=i;pointer=e.pointerId;currentPlot().onlostpointercapture=()=>{if(pointer!==null)cancel()};currentPlot().setPointerCapture(pointer);paint();e.preventDefault()};
+    this.onpointermove=e=>{if(pointer!==e.pointerId)return;const x=e.clientX;let nearest=0,distance=Infinity;currentBars().forEach((b,i)=>{const r=b.getBoundingClientRect(),d=Math.abs(x-(r.left+r.width/2));if(d<distance){distance=d;nearest=i}});end=nearest;paint()};
+    this.onpointerup=e=>{if(pointer!==e.pointerId)return;release();this._ignoreClick=true;commit()};this.onpointercancel=cancel;
+    this.onkeydown=e=>{const i=at(e);if(i<0)return;if(e.key==='Escape'){cancel();e.preventDefault();return}if(e.key===' '){e.preventDefault();e.stopPropagation();if(anchor===null){anchor=end=i;paint()}else{end=i;commit()}return}if(e.shiftKey&&['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();anchor=anchor??i;end=Math.max(0,Math.min(currentBars().length-1,i+(e.key==='ArrowRight'?1:-1)));currentBars()[end].focus();paint()}if(e.key==='Enter'&&anchor!==null){e.preventDefault();e.stopPropagation();end=i;commit()}};
    }
 
   }

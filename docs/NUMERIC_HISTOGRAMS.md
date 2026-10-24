@@ -59,7 +59,7 @@ flowchart LR
   Q --> Y[Reusable YAML and immutable evidence]
 ```
 
-## Milestones
+## Delivered milestones
 
 1. Exact Go bins, same-read ClickHouse aggregation and checked range/complement
    planning, with legacy omission and source parity review.
@@ -94,5 +94,14 @@ Executable journey: [numeric-histogram.spec.js](../journeys/numeric-histogram.sp
    question and returns. The old response must not open a population. A new
    gesture can plan again without re-reading the parent.
 
-Backend and live-browser acceptance are complete. Final model replay and
-Bombadil campaign evidence is tracked in VALIDATION.md.
+Backend and live-browser acceptance, native property/model replay and the
+Bombadil campaign pass. Executed evidence and limitations are recorded in
+[VALIDATION.md](../VALIDATION.md).
+
+Captured frames from the live journey:
+
+![Exact keyboard range over the full signed integer domain](journeys/screenshots/174a-exact-numeric-keyboard-range.png)
+
+![Selected records compared with the whole remainder](journeys/screenshots/174b-selected-versus-rest-counts.png)
+
+![Frozen distribution on a narrow mobile viewport](journeys/screenshots/174c-mobile-frozen-numeric-distribution.png)

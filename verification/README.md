@@ -1075,3 +1075,23 @@ The existing evidence-library actor also exercises the new origin selector.
 `TestHegelActivityBaselineAccounting` generates 40 exact large-count comparisons through Go and the JS result guard, with wrong-basis/incomplete-group controls. `TestQuintActivityBaselineLedger` consumes `GOO_ACTIVITY_BASELINE_LEDGER` from journey 156, checks immutable receipt/full-population counts and replays source-read versus choose/clear actions through `model/activity_baseline.yaml`; five mutations reject hidden reads and baseline drift.
 
 `TestHegelSavedActivityBaselineIdentity` generates 50 pin/replace/clear round trips and checks old identities. `TestQuintSavedActivityBaselineLedger` consumes `GOO_SAVED_ACTIVITY_BASELINE_LEDGER` from 158 and checks configuration identity plus source/receipt/comparison-free reopen and source-free retry; six controls reject reads, reference drift, lost clear and implicit start.
+
+`TestHegelNumericHistogramExactPartition` and
+`TestHegelNumericHistogramRangePartition` generate canonical signed/unsigned
+values, nonvalid parse states, grouping dimensions and selected/rest ranges.
+Independent standard-library parsing and arbitrary-precision boundaries check
+coverage, exact bin counts, full partition, immutable scope and safe sentinels.
+`TestNumericHistogramDomainEdgesAndRefusal` adds every derived boundary ±1 and
+invalid geometry/index controls. Run these in the verification module:
+
+```sh
+go test -run 'Test(HegelNumericHistogram|NumericHistogramDomain)' -count=1
+```
+
+`TestQuintNumericHistogramLiveLedger` reads an actual journey 174 ledger through
+`GOO_NUMERIC_HISTOGRAM_LEDGER`, checks source fixture membership, complete bins,
+exact selected/rest and comparison query ranges, capture/YAML reuse, retained
+reopen and no-read gestures, then replays observed phases with quint-go. Eighteen
+mutations must be rejected. The Bombadil `numeric-histograms.ts` actor explicitly
+runs the real fixture once and then explores keyboard bins, exact details,
+configuration edits/repair and departure without additional source reads.
