@@ -14,6 +14,7 @@
  }
  // Shared recorded string values only: absence, null and coercion never imply a predicate.
  function selectable(entry){const value=entry.value,key=entry.field?.key;return ['column','resource','attribute'].includes(entry.field?.kind)&&typeof value==='string'&&typeof key==='string'&&key.length>0&&new TextEncoder().encode(value).length<=1024&&new TextEncoder().encode(key).length<=128&&!/[\u0000\uD800-\uDFFF]/u.test(value)&&!/[\u0000\uD800-\uDFFF]/u.test(key)}
+ function plottable(field){return ['attribute','resource'].includes(field?.kind)&&selectable({field,value:''})}
  // Bounded supplied observations, never population coverage or inferred map availability.
  function suggestionData(records=[],fields=[]){
   const rows=records.slice(0,100),catalog=new Map();let limited=records.length>100;
@@ -83,7 +84,7 @@
   if(!global.customElements.get('goo-field-value'))global.customElements.define('goo-field-value',GooFieldValue);
   if(!global.customElements.get('goo-attribute-list'))global.customElements.define('goo-attribute-list',GooAttributeList);
  }
- function mountModel(container,record,model,{onFilter,onBreakdown,onFacet,canRefine=()=>true,raw=true,facetHint,renderField}={}){
+ function mountModel(container,record,model,{onFilter,onBreakdown,onFacet,onPlot,canRefine=()=>true,canPlot=canRefine,raw=true,facetHint,renderField}={}){
   const total=model.reduce((n,g)=>n+g.entries.length,0),root=node('goo-attribute-list',undefined,'attribute-viewer');
   const tools=node('div',undefined,'attribute-tools'),label=node('label','Find an attribute'),search=node('input');search.type='search';search.placeholder='Search keys and values';search.setAttribute('aria-label','Search attribute keys and values');label.append(search);
   const scopeLabel=node('label','Scope'),scope=node('select');scope.setAttribute('aria-label','Attribute scope');
@@ -99,6 +100,7 @@
      value.append(renderField?.(entry)||valueNode(entry.value));
      const copyButton=node('button','Copy');copyButton.type='button';copyButton.setAttribute('aria-label','Copy value for '+entry.key);copyButton.onclick=()=>copy(entry.value,entry.key);actions.append(copyButton);
      if(selectable(entry)&&onFacet)for(const mode of ['include','exclude']){const action=node('button',mode==='include'?'Include':'Exclude');action.type='button';action.disabled=!canRefine();action.setAttribute('aria-label',(mode==='include'?'Include ':'Exclude ')+entry.field.kind+':'+entry.field.key+' from record');action.onclick=()=>{if(!canRefine())return;onFacet(structuredClone(entry.field),entry.value,mode);status.textContent=facetHint||'Staged '+mode+' for '+entry.field.kind+':'+entry.field.key+'. Apply or Open in the selection tray; displayed measurements are unchanged.'};actions.append(action)}
+     if(onPlot&&plottable(entry.field)){const plot=node('button','Plot values');plot.type='button';plot.disabled=!canPlot();plot.setAttribute('aria-label','Plot values of '+entry.field.kind+':'+entry.field.key);plot.title='Declare a numeric type and unit, then stage a full-population distribution. No source read until Run.';plot.onclick=()=>{if(canPlot())onPlot(structuredClone(entry.field),plot)};actions.append(plot)}
      if(entry.field&&typeof entry.value==='string'&&onFilter){const filter=node('button','Filter and run');filter.type='button';filter.disabled=!canRefine();filter.title=filter.disabled?'Choose All filters to narrow this question.':'Read a fresh result with this exact value in the fixed window';filter.setAttribute('aria-label','Filter and run by '+entry.field.kind+':'+entry.field.key);filter.onclick=()=>onFilter(entry.field,entry.value);actions.append(filter)}
      if(entry.field&&onBreakdown){const breakdown=node('button','Break down and run');breakdown.type='button';if(h)breakdown.title='Group by '+h.label+' · '+entry.field.kind+':'+entry.field.key;breakdown.setAttribute('aria-label','Break down and run by '+entry.field.kind+':'+entry.field.key);breakdown.onclick=()=>onBreakdown(entry.field);actions.append(breakdown)}
      row.append(key,value,actions);section.append(row);
@@ -128,5 +130,5 @@
   const raw=node('details',undefined,'raw-record');raw.append(node('summary','Raw record'),node('pre',JSON.stringify(record,null,2)));detail.append(raw);
   let built=false;detail.addEventListener('toggle',()=>{if(detail.open&&!built){built=true;mount(host,record,{...options,raw:false})}});return detail;
  }
- const api={suggestionData,groups,commonGroups,selectable,type,text,matches,fieldModel,isJSONValue,mount,mountShared,streamRecord,mountStream,streamInspection,disclosure};if(typeof module!=='undefined')module.exports=api;else global.GooAttributes=api;
+ const api={plottable,suggestionData,groups,commonGroups,selectable,type,text,matches,fieldModel,isJSONValue,mount,mountShared,streamRecord,mountStream,streamInspection,disclosure};if(typeof module!=='undefined')module.exports=api;else global.GooAttributes=api;
 })(typeof window==='undefined'?globalThis:window);
