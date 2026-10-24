@@ -1,0 +1,9 @@
+spec: log_patterns_cardinality.qnt
+module: log_patterns_cardinality
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  high_cardinality_stage:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'
+  high_cardinality_refused:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'

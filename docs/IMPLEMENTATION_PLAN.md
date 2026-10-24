@@ -1063,3 +1063,14 @@ staging, lifecycle guards and compact shared controls. CP2 actual span/log, owne
 raw/capture/model and visual acceptance passes, including all 96 changed
 rejecting controls and 70 generated client-to-Go examples. Existing arithmetic
 and API contracts are unchanged. Final review approved the complete round.
+
+### Log-pattern exploration (delivered)
+
+[Contract](LOG_PATTERNS.md). LP1 `630429a` adds the versioned collision-safe
+log column, strict predicates, explicit unclassified states and Go/ClickHouse
+parity. LP2 `d52cb38` integrates Activity, full counts/local ranking, selected
+trends, service/rest comparison and existing capture/YAML owners. `06f116b`
+bounds all UTF-8 branches without changing the profile mapping. Actual main,
+ownership, 1,100-pattern refusal, 55-second actor, 220 generated cases/1,400
+state steps and 65 native controls pass. Final independent review approved
+source, visuals, custody and post-deployment equivalence.

@@ -1,0 +1,11 @@
+spec: log_patterns_ownership.qnt
+module: log_patterns_ownership
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  original_run:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'
+  hidden_owner:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'
+  dirty_owner:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'

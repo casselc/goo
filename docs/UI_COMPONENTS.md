@@ -808,3 +808,14 @@ parsing guidance. Standard numeric editors keep their existing defaults.
 clean authority, optional provenance, pause and stage callbacks. Hidden tabs
 invalidate open dialogs permanently; disconnected hosts cannot confirm. Scope,
 navigation, publication and source requests stay in the application owners.
+
+### Log-pattern display
+
+The [log-pattern adapter](LOG_PATTERNS.md) reuses compact tables and existing
+volume charts. Counts/shares derive from the complete bounded group result;
+local frequency sort and search do not query. Labels visibly escape controls
+and literal token markers, while record inspection discloses exact identities.
+Open links stage canonical equality; service comparisons use exact selected/rest
+queries. Inactive/hidden/detached links block both default navigation and event
+propagation so the global trail cannot stage stale intent. Display elements do
+not normalize source bodies, fetch examples or infer issues.

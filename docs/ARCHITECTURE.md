@@ -627,3 +627,19 @@ window, inspector and opener. Run uses the existing source adapter and custody
 owners. Hidden/disconnected or obsolete dialog owners cannot publish staging.
 No display component, new API, numeric cast policy or evidence store owns this
 continuation. The flow diagram is in the contextual contract.
+
+## Log-pattern projection
+
+The [versioned body profile](LOG_PATTERNS.md) is a derived logical log column in
+the existing Go source adapter. Reference and ClickHouse lowering map one body
+to one collision-safe identity; the stored Body is not rewritten. Length is
+checked before UTF-8 validation or tokenization, preserving bounded evaluation
+with short-circuiting disabled. Empty/oversize/invalid inputs contribute explicit
+unclassified buckets rather than truncated apparent shapes.
+
+Activity stages the applied completed window. Existing fixed queries own full
+counts/groups and overall time series; per-pattern children and selected/rest
+service comparisons reuse the same query/capture/publication paths. Shared
+display adapters decode identities for labels, while typed predicates retain
+the exact canonical IDs. No sampled classifier, ingestion processor, ML model
+or independent pattern store is introduced. The process diagram is in the guide.

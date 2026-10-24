@@ -9120,3 +9120,81 @@ selectors cleared; its unchanged stored bytes were verified separately after
 that command-path hardening. Syntax/help checks pass. Exact command, mode effects
 and container requirements are in the storyboard. No accepted main or actor was
 rerun for this utility, and no application source changed after b4d88db.
+
+
+## Log-pattern exploration — LP1/LP2 acceptance
+
+Reviewed source is committed/deployed in `630429a` (canonical v1 projection),
+`d52cb38` (existing UI/ownership flows), and `06f116b` (bounded SQL validation).
+Every matching log contributes once; raw Body is not rewritten. Literal hex
+segments and digit markers are collision-safe, IDs are canonical and log-only,
+unclassified states are explicit, and unreferenced source SQL/old captures
+remain unchanged. Overall volume and selected-pattern timelines are delivered;
+per-row arbitrary-pattern sparklines and issue/anomaly inference are not claimed.
+
+Go source/reference/strict ID tests and actual inline ClickHouse parity pass
+(0.103s initially, CH about 0.08s). Broad exploration/cmd/goo/workbench regressions
+pass 2.636s/1.443s/0.852s. All 70 Node files pass (latest complete source run 5.09s
+plus targeted final guard/enum tests). Escaped-label changes preserve numeric
+identities. Protocol bounds run before pattern traversal; malformed/cyclic/deep
+intent refuses, and stale native links stop propagation as well as navigation.
+
+Independent Hegel tests pass 0.270s: 80 manual byte-projection cases, 70 canonical
+predicate/compiler cases and 70x20 state/swarm steps, totaling 220 generated
+examples and 1,400 state steps. The oracle uses an independent UTF-8/ASCII scanner
+and literal encoder. An initial observer label expectation was updated to the
+reviewed visible control/Cf/line-separator escaping policy before live acceptance;
+identity expectations were unchanged. Ordinary OTLP JSON cannot carry raw invalid
+UTF-8, so that bucket is tested with Go/raw ClickHouse values instead.
+
+All three first frozen browser cases pass in 41.6s: main 28.9s, stale hidden-but-
+connected/dirty-link ownership 4.5s, actual 1,100-pattern refusal2.4s. Main actual
+7e40a8e9f4 matches 382 logs in 27 groups, selected 128/rest 254. The two-service
+contrast is 116:12 versus 12:242. Counts, raw messages, local frequency sorting,
+selected timeline, service comparison, capture, saved reopen, YAML save/fresh
+reuse and paused focus return pass. The reusable definition intentionally uses
+a fresh 3-minute window, yielding 400 logs; it does not reuse captured totals.
+Seven named logical source operations are separate from the one Activity SSE
+stream and underlying ClickHouse subqueries.
+
+Fresh Bombadil cf4a74ceb7 passes 55s (test 56.6s), all 13 phases and 907 snapshots.
+It records four logical source operations and one pure comparison protocol,
+full 400-source group accounting, unchanged raw text, applied partition and
+no label execution. Actual 182a/b/c desktop, saved-mobile and refusal frames
+were independently approved as compact/readable with full counts, escaped labels
+and honest unclassified states.
+
+Independent finite/native validation passes all 65 serialized-changed controls:
+
+- Main 7e40a8e9f4: baseline + 41 controls, 40.885s.
+- Ownership 7e3f5ef9fc: baseline + 12 controls, 11.270s.
+- Cardinality bccde52ccd: baseline + 12 controls, 6.712s.
+
+Exact stdout, ledger, complete scope-capture.json and custody are adjacent under
+artifacts/log-patterns. Guards cover original selector/window, raw Body/derived
+ID/classification, full groups/overall trend, exact shares/partitions, meaningful
+service contrast, complete typed/raw capture hashes/custody and fresh reuse.
+Finite Quint/qobs replay covers the observed 16/3/2-action schedules; it does not
+prove all interleavings, complete telemetry or transactional isolation. One
+initial native observer used the superseded UI enum oversized instead of the
+final Go/JS oversize; its rejected diagnostic is preserved. All semantic guards
+were already true; only that stale observer alias was corrected.
+
+Final boundedness review found UTF-8 validation still received an oversized raw
+body despite bounded tokenization. The SQL now caps first, including all branches
+when short-circuit evaluation is disabled. Focused Go+actual ClickHouse tests
+pass 0.079s, including 64KiB valid/invalid bodies with evaluation disabled. The
+fixture uses query-local readonly=2 (writes still forbidden) because the runtime
+adapter's readonly=1 correctly rejects settings changes; runtime policy and
+persistent settings are unchanged. This optimization preserves every profile
+identity and classification.
+
+After deploying 06f116b, one actual same-scope query matches archived question,
+count 382, groups 27, timeSeries, raw rows, fields and state exactly. The original
+public capture page is identical. Actual stored bytes remain 222507 with SHA256
+808ea28381d0d788991e3f5c820d970d100c76c7c39f380bae5d57af11c1033f.
+The bounded-sql-equivalence.json receipt is adjacent to the main ledger.
+Independent review recomputed the raw hash and approved the final source,
+semantics, visuals, actor, property/native evidence and deployment equivalence;
+no blocker remains. Acceptance/docs are committed separately and published to
+the authorized origin/work after actual git-state verification.

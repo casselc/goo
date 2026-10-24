@@ -402,3 +402,13 @@ membership/window/edge predicates, reset pagination and replaced presentation
 measures. Existing explore, selection, comparison, capture and reusable-package
 operations retain their contracts. Dialog opening/editing/confirmation performs
 no telemetry request; saved-origin Run is a fresh read of the retained scope.
+
+## Versioned log-body pattern field
+
+`column:body_pattern_v1` is log-only and always present, including explicit
+unclassified `lp1:e/o/u` buckets. Exact eq/ne predicates require a canonical
+profile identity, at most 518 bytes; contains is refused. Display labels are
+not predicate values. Existing grouping, time series, comparisons, captures
+and YAML carry this field without new operations or wire-shape changes.
+Unreferenced row SQL and older captures remain unchanged. See the
+[profile contract](LOG_PATTERNS.md) for byte limits and immutable semantics.

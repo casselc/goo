@@ -2101,3 +2101,28 @@ all 128 exact displayed bins against the archived result, and pans the actual
 520px chart to its right edge in a 260px viewport. The 382-record scope and
 original captured bytes remain unchanged. The storyboard pairs this with 181b
 and distinguishes it from source-free 181c saved attribute evidence.
+
+
+## 182 — Full-window log patterns
+
+[Storyboard](../../journeys/182-log-patterns-storyboard.md) and
+[profile contract](../LOG_PATTERNS.md). Investigate → Log patterns pauses and
+stages the completed applied log scope. Run measures inferred ASCII digit-run
+shapes, exact counts/shares and overall volume; opening one shape stages its
+records/timeline. Service/rest comparisons preserve the full parent and include
+unclassified bodies.
+
+| Frame | Actual evidence |
+| --- | --- |
+| [Full log-pattern population](screenshots/182a-full-population-log-patterns.png) | 382 matching logs and 27 complete groups, with safe labels and exact totals |
+| [Saved mobile pattern view](screenshots/182b-saved-log-patterns-mobile.png) | Retained counts, explicit unclassified buckets and fresh-read links |
+| [Cardinality refusal](screenshots/182c-pattern-cardinality-refusal.png) | Actual 1,100-pattern source refuses without partial totals |
+
+Main/ownership/cardinality pass on their first browser run (28.9s/4.5s/2.4s).
+The 55-second actor completes all 13 phases. Independent native main/ownership/
+cardinality checks reject all 65 changed controls; 220 generated cases and
+1,400 state steps pass. Full raw capture bytes/custody are retained separately
+from the 100-record page. Source-read time, original window and captured evidence
+remain distinct; invalid UTF-8 has raw Go/ClickHouse tests, not a fabricated
+OTLP JSON browser case. Final review and post-deployment equivalence are recorded
+in VALIDATION.md.

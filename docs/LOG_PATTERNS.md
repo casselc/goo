@@ -1,6 +1,6 @@
 # Log-pattern exploration
 
-Source is implemented and independently reviewed; live acceptance is in progress.
+Implemented and independently reviewed, with real OTel browser and native acceptance.
 
 From logs in Activity, choose **Investigate → Log patterns**. This pauses the
 stream and stages its completed applied window with the original filters.
@@ -77,3 +77,24 @@ Unrequested source SQL and older capture payloads retain their prior behavior.
 Business-event windows, source-read time and immutable capture custody remain
 separate; matching aggregates do not establish transactional isolation or
 complete telemetry.
+
+## Acceptance
+
+[Journey 182](../journeys/182-log-patterns-storyboard.md) covers ordinary OTLP
+logs from Activity through local sorting, unchanged raw messages, selected trend,
+service comparison, capture and reusable YAML. Of 400 matching fixture logs,
+the actual original window contains 382, producing 27 groups. The selected
+frequent shape contains 128 records; the rest contains 254. Service compositions
+116:12 and 12:242 demonstrate a descriptive contrast without causal claims.
+
+Actual desktop/mobile/refusal frames are in the [journey index](journeys/README.md).
+The first browser pass, 55-second actor, 220 generated cases/1,400 state steps,
+and all 65 native rejection controls pass. A 1,100-pattern source is explicitly
+refused without partial totals. Invalid UTF-8 is tested at the raw Go/ClickHouse
+boundary; the Unicode browser fixture is not misrepresented as invalid bytes.
+
+Source commits are `630429a`, `d52cb38` and bounded SQL hardening `06f116b`.
+All SQL UTF-8 checks and splitting receive capped input even when short-circuit
+evaluation is disabled. The final deployment produces identical actual results
+and preserves the stored capture's raw byte hash. [VALIDATION.md](../VALIDATION.md)
+and [verification](../verification/README.md) record receipts and model limits.

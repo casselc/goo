@@ -1556,3 +1556,106 @@ matching `TestQuintContextualNumericPlotLiveLedger`,
 `TestQuintContextualNumericPlotOwnershipLedger` or
 `TestQuintContextualNumericPlotPopulationLedger` entrypoint. Without a ledger these
 tests explicitly skip rather than claiming live acceptance.
+
+### Versioned log body patterns (182)
+
+`TestHegelLogPatternIndependentProjection` uses a manual UTF-8 byte scanner,
+independent of the production regexp/encoder. It checks maximal ASCII digit-run
+boundaries, lossless lowercase-hex literal segments, literal-marker collisions,
+non-ASCII digits, signed/decimal/UUID punctuation, control characters and Unicode,
+256-byte limits and explicit empty/oversize/invalid-UTF8 sentinels. Oversize takes
+precedence over invalid UTF-8. Sentinel groups remain explicitly unclassified;
+sharing `lp1:o` does not imply that long bodies share a text pattern.
+
+`TestHegelLogPatternCanonicalPredicateBoundary` independently validates whole IDs:
+lowercase even-length hex chunks without digit bytes, no empty interior chunks,
+and a nonempty UTF-8 representative of at most 256 bytes. It covers malformed,
+uppercase, digit-literal, invalid-UTF8, overlong and adjacent-marker forms, logs-only
+field validation, exact eq/ne complements and rejection of encoded-substring
+filters. The default query retains overall bucketed record counts without the
+optional grouped-time-series cap. `TestHegelLogPatternRecordStateSwarm` schedules
+append/replace/freeze operations and independently checks all-record grouping and
+frozen source-body custody after each step.
+
+The generated campaigns passed in **0.270s**: 80 projection examples, 70 canonical
+predicate examples and 70 stateful examples with 20 scheduled steps each,
+**220 examples and 1,400 state steps** total. Stdout is retained in
+[log-pattern-properties.txt](../artifacts/log-pattern-properties.txt).
+The [initial label-contract diagnostic](../artifacts/log-pattern-properties-rejected-label-contract.txt)
+records a concurrent display-contract update: raw control/Cf/line-separator
+characters now render escaped, while identities and source bodies are unchanged.
+The independent label expectation follows that explicit display contract.
+
+Malformed physical UTF-8 is a native/source-adapter concern: OTLP JSON cannot
+represent it as an ordinary source string. Generated malformed byte cases do not
+claim live UI evidence for `lp1:u`. The separate actual journey, immutable full capture and finite observed-lifecycle
+acceptance are recorded below.
+
+```sh
+cd verification
+PATH=/workspace/.toolchains/go/bin:$PATH GOPATH=/workspace/.go \
+GOCACHE=/workspace/.cache/go XDG_CACHE_HOME=/workspace/.cache GOTOOLCHAIN=local \
+go test -run '^TestHegelLogPattern' -v .
+```
+
+`TestQuintLogPatternLiveLedger` independently filters raw fixture records by the
+actual originating fixed Activity window and full namespace/team/service predicate.
+It verifies complete pattern-group totals, each padded overall time bucket, unique
+raw page identities, unchanged body/attribute/resource/timestamp/trace fields,
+optional derived pattern projections, decoded labels and exact all-record share
+fractions. The actual original window contained **382 logs across 27 groups**;
+the selected text shape contained **128**, and its whole-parent rest contained
+**254**, including empty and oversize bodies. Their service distributions differ.
+Neither the 100-row inspection page nor source examples define those totals.
+Fresh three-minute grammar reuse contained 400 matching logs; the original fixed
+capture retained its original scope and counts.
+
+Full stored capture bytes are independently hashed both as the typed receipt
+representation and as the copied raw file, with receipt ID, byte count and custody
+clocks checked. The 222,507-byte source capture holds every one of its 382 matching
+records; its public page is checked as the exact retained prefix. The main finite
+model replays 16 actual actions and seven logical source requests, one comparison,
+one publication and one stream subscription. Sorting, raw inspection, drill
+staging, back navigation, reopening and reuse authoring remain source-free.
+Those logical HTTP requests are not a count of internal ClickHouse SQL statements.
+
+`TestQuintLogPatternOwnershipLedger` replays three actions against the real hidden
+or dirty fixed-question owner: retained links stay inert after invalidation, with
+unchanged URL/stage counts and no additional source reads. The hidden owner remains
+connected in the recorded observation. `TestQuintLogPatternCardinalityLedger`
+independently derives 1,100 distinct valid patterns, checks the ungrouped ready
+probe against the exact same scope and the actual grouped refusal HTTP 502, and
+requires the absence of count, rows, groups and time-series payloads. Its two-action
+model allows one explicit failed read; no partial top list becomes evidence.
+
+Final native acceptance passed with **65 guaranteed-changed negative controls**:
+main baseline plus 41 controls in **40.885s**, ownership plus 12 in **11.270s**,
+and cardinality plus 12 in **6.712s**. Every control changed serialized evidence
+and was rejected. They cover raw-body/identity/group/time corruption, duplicate
+rows/groups, rounded or wrong-denominator shares, scope drift, lost unclassified
+rest, altered service comparison, capture/hash/custody mutation, stale owners,
+extra source effects, and partial high-cardinality payloads.
+
+The finite models cover the observed action sequences and effects; they are not
+proofs of every browser schedule, all source telemetry, or the evaluator. Raw-fact
+normalization, membership, counts, fractions and hashes are checked independently
+before replay. The first native display guard retained the obsolete UI state name
+`oversized`; the deployed UI matches the Go contract `oversize`. That diagnostic is
+preserved, and the final oracle uses the agreed state without changing application
+code, source facts or semantic expectations.
+
+- [Main ledger](../artifacts/log-patterns/log-patterns-7e40a8e9f4/ledger.json),
+  [native validation](../artifacts/log-patterns/log-patterns-7e40a8e9f4/native-validation.txt)
+  and [full capture custody](../artifacts/log-patterns/log-patterns-7e40a8e9f4/capture-custody.json).
+- [Ownership ledger](../artifacts/log-patterns/log-patterns-7e3f5ef9fc/ownership.json)
+  and [native validation](../artifacts/log-patterns/log-patterns-7e3f5ef9fc/native-validation.txt).
+- [High-cardinality refusal ledger](../artifacts/log-patterns/log-patterns-bccde52ccd/cardinality.json)
+  and [native validation](../artifacts/log-patterns/log-patterns-bccde52ccd/native-validation.txt).
+- [Initial display-state diagnostic](../artifacts/log-patterns/log-patterns-7e40a8e9f4/native-validation-rejected-ui-state-alias.txt).
+
+Reproduce the native checks individually with `GOO_LOG_PATTERN_LEDGER`,
+`GOO_LOG_PATTERN_OWNERSHIP_LEDGER` or `GOO_LOG_PATTERN_CARDINALITY_LEDGER` pointing
+to its actual ledger, using the Go/cache environment above and the corresponding
+`TestQuintLogPatternLiveLedger`, `TestQuintLogPatternOwnershipLedger` or
+`TestQuintLogPatternCardinalityLedger` entrypoint. Without its actual ledger each
+entrypoint explicitly skips.

@@ -778,3 +778,11 @@ filtering to the clicked value. Saved-origin execution rereads the source;
 original capture bytes remain unchanged. Implicit numeric inference, unit
 conversion, complete live ingestion and cross-signal numeric measures remain
 outside this continuation.
+
+[Log-pattern v1](LOG_PATTERNS.md) now supports deterministic ASCII digit-run
+shapes over valid UTF-8 bodies up to 256 bytes, with explicit unclassified buckets
+and full matching counts. Over 1,000 groups refuses the whole request. Overall
+volume and exact selected-shape timelines are supported; per-pattern fleet
+sparklines, fuzzy clustering, long-body normalization and inferred issues/causes
+remain outside this profile. Standard OTLP JSON cannot exercise invalid UTF-8;
+that state has raw Go/ClickHouse parity evidence only.

@@ -1,0 +1,37 @@
+spec: log_patterns.qnt
+module: log_patterns
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  activity_start:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'
+  patterns_stage:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'
+  patterns_run:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'
+  sort_local:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'
+  raw_inspection:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'
+  pattern_trend_stage:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'
+  pattern_trend_run:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'
+  pattern_back:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'
+  comparison_stage:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'
+  comparison_run:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'
+  capture:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'
+  reopen:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'
+  reuse_stage:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'
+  reuse_save:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'
+  reuse_run:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'
+  return_paused:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}} and streams == {{.obs.streams}}'
