@@ -5,10 +5,14 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
+	"net/url"
 	"os"
 	"reflect"
 	"strings"
 	"testing"
+	"time"
 )
 
 func logPatternBodies() []string {
@@ -167,6 +171,58 @@ func TestClickHouseLogPatternParity(t *testing.T) {
 		}
 		if len(rows) != expected {
 			t.Fatal("exact partition", op, len(rows), expected)
+		}
+	}
+}
+
+func TestLogPatternSQLCapsBeforeUTF8Validation(t *testing.T) {
+	sql := logPatternSQL()
+	if strings.Contains(sql, "isValidUTF8(Body)") || !strings.Contains(sql, "isValidUTF8(if(length(Body) <= 256, Body, ''))") {
+		t.Fatal("UTF-8 validation must receive only capped input", sql)
+	}
+}
+func TestClickHouseLogPatternLongBodiesWithoutShortCircuit(t *testing.T) {
+	endpoint := os.Getenv("GOO_CLICKHOUSE_TEST_URL")
+	if endpoint == "" {
+		t.Skip("GOO_CLICKHOUSE_TEST_URL not configured")
+	}
+	bodies := []string{strings.Repeat("雪1", 16384), string([]byte{0xff}) + strings.Repeat("x", 65536), "ok12", string([]byte{0xff})}
+	inline := " FROM (SELECT number AS n, [repeat('雪1', 16384), concat(unhex('ff'), repeat('x', 65536)), 'ok12', unhex('ff')][number+1] AS Body FROM numbers(4))"
+	// readonly=2 forbids writes while allowing this query-local setting. The
+	// production adapter's readonly=1 correctly refuses any settings mutation.
+	endpointURL, e := url.Parse(endpoint)
+	if e != nil {
+		t.Fatal(e)
+	}
+	settings := endpointURL.Query()
+	settings.Set("readonly", "2")
+	endpointURL.RawQuery = settings.Encode()
+	sql := "SELECT toString(n) AS n, " + logPatternSQL() + " AS identity" + inline + " ORDER BY toUInt64(n) SETTINGS short_circuit_function_evaluation='disable' FORMAT JSONEachRow"
+	request, e := http.NewRequest("POST", endpointURL.String(), strings.NewReader(sql))
+	if e != nil {
+		t.Fatal(e)
+	}
+	request.SetBasicAuth(os.Getenv("GOO_CLICKHOUSE_TEST_USER"), os.Getenv("GOO_CLICKHOUSE_TEST_PASSWORD"))
+	response, e := (&http.Client{Timeout: 3 * time.Second}).Do(request)
+	if e != nil {
+		t.Fatal(e)
+	}
+	defer response.Body.Close()
+	raw, e := io.ReadAll(io.LimitReader(response.Body, 4096))
+	if e != nil || response.StatusCode != 200 {
+		t.Fatalf("read-only fixture: status=%d error=%v response=%s", response.StatusCode, e, raw)
+	}
+	rows := strings.Split(strings.TrimSpace(string(raw)), "\n")
+	if e != nil || len(rows) != len(bodies) {
+		t.Fatal(e, len(rows))
+	}
+	for i, row := range rows {
+		var got struct{ Identity string }
+		if e := json.Unmarshal([]byte(row), &got); e != nil {
+			t.Fatal(e)
+		}
+		if want := ReferenceLogPattern(bodies[i]).Identity; got.Identity != want {
+			t.Fatalf("long body without short circuit %d: %q != %q", i, got.Identity, want)
 		}
 	}
 }

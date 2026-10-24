@@ -110,7 +110,8 @@ func DecodeLogPattern(identity string) (LogPattern, error) {
 }
 func logPatternSQL() string {
 	// All branches remain bounded even when ClickHouse does not short-circuit.
-	bounded := "if(length(Body) <= 256 AND isValidUTF8(Body), Body, '')"
+	capped := "if(length(Body) <= 256, Body, '')"
+	bounded := "if(isValidUTF8(" + capped + "), " + capped + ", '')"
 	shape := "concat('lp1:p:', arrayStringConcat(arrayMap(p -> lower(hex(p)), splitByRegexp('[0-9]+', " + bounded + ")), 'n'))"
-	return "multiIf(length(Body) > 256, 'lp1:o', NOT isValidUTF8(Body), 'lp1:u', Body = '', 'lp1:e', " + shape + ")"
+	return "multiIf(length(Body) > 256, 'lp1:o', NOT isValidUTF8(" + capped + "), 'lp1:u', Body = '', 'lp1:e', " + shape + ")"
 }
