@@ -8672,3 +8672,14 @@ visible-summary focus restoration and asset ordering. Review fixed delayed GET
 Load-button recovery, latest-generation completion guards and explicit suspended
 state reset. No endpoint or Go evaluator changed. Real stream/browser/model and
 Bombadil acceptance remain AE2 work, not implied by source approval.
+
+The first AE2 spans/logs journeys completed the explanation/save/drilldown/reuse
+checks but failed their final page-error guard. Existing fixed visits resolved
+owned controls through document.getElementById after the investigation trail had
+detached their container, causing a null status lookup on workspace exit. The
+reviewed fix resolves owned prefixed controls through their own container, keeping
+only the shared lookback/minutes control document-scoped. This also prevents
+cross-visit control aliasing. All 63 Node files pass again (2.980 seconds), and the
+rerun spans journey passes with zero page errors (39.0 seconds). Logs and delayed
+ownership acceptance continue separately. The initial failed evidence is retained
+in artifacts/activity-explanations-first.log.
