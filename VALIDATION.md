@@ -8115,3 +8115,32 @@ from the running app. Protocol ownership diagram, README/component references an
 current planning docs are synchronized. The frontend was restarted for the new
 static route; native executable/images and telemetry/capture/XTDB state are unchanged.
 Independent milestone review approved the final code/docs and actual evidence with no blocking findings.
+
+
+## 2026-10-24 — N2 API and architecture contract restoration
+
+Restored genuine API and architecture contracts displaced by copied known-issues
+history in c45caec, preserving each file's unique subsequent suffix. Current
+headers distinguish implemented architecture from the partly implemented target,
+Python 8088 `/api` proxy from direct Go 8089, the pure question protocol from
+workspace navigation, M2 native duplicate winner verification and M4 bounded
+ordinary recovery from native retry journals. No application/schema/API fixture
+or runtime behavior changed for this documentation step. The signature scan now
+finds `# Known issues and gaps` only in its legitimate KNOWN_ISSUES owner.
+
+Independent spec inventory: 70 operations, of which 64 have Go ownership, five
+are Python-only `/api` operations, and one is Python root `/health`. The existing
+offline OpenAPI checker passes: 64 Go routes, 222 fixture responses, 56 admitted
+requests, 14 mux refusals, rejecting controls and SSE schemas. This is structural
+and frozen-wire validation, not a new live environment acceptance claim. The
+running frontend wording permits current local code/asset installation plus
+restart instead of incorrectly requiring an image rebuild in every case.
+
+The repair checked 90 local file targets, 15 outgoing Markdown anchors and two
+incoming anchors; all resolve. Independent milestone review inspected current
+contracts, separately counted the operation ownership and resolved all 90 targets,
+with no blocking findings. Whitespace checks pass. Reports are retained under
+`artifacts/continuation-2026-10-24`; temporary candidates were removed after review.
+No screenshots were generated for this documentation-only step; N1's real-browser
+frames/evidence remain the current acceptance. N1 and N2 are delivered; remaining
+semantic and external deployment proposals stay separately bounded in the roadmap.
