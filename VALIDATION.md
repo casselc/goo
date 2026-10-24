@@ -7959,3 +7959,32 @@ withdrawal, numeric coverage and immutable capture/reuse. Native
 pass; compact evidence is in `artifacts/numeric-measures/numeric-e7dedfec`.
 Frames 44a–44c are regenerated. Independent milestone review approved code and
 final evidence with no blocking findings. No API/schema or backend change.
+
+## 2026-10-24 — M2 native measurement publication winner validation
+
+Native `POST /measurement-packages` now validates an existing immutable winner
+before reporting duplicate success: regular file, bounded 32 KiB read, validated
+package and requested semantic revision. Invalid, unavailable, oversized or
+wrong-revision winners return the existing JSON 400 convention without overwrite,
+repair or source reads. Valid duplicate 201 response bytes and file-only sync are
+unchanged. This deliberately replaces the historical corrupt-winner POST-success
+fixture; earlier C1 records describe the policy before this fix.
+
+Checks executed with Go from `/workspace/.toolchains/go/bin`,
+`GOMODCACHE=/tmp/goo-module-cache`, `GOCACHE=/workspace/.cache/go-build`,
+`GOTOOLCHAIN=local`, `GOMAXPROCS=2`, `TMPDIR=/tmp`:
+
+- `go test ./cmd/goo ./internal/immutablefile ./measurements` passed with local
+  httptest sockets allowed (0.702s, cached, 0.612s respectively). The initial
+  sandbox attempt failed because unrelated httptest servers could not bind;
+  it was rerun with the needed local-socket permission.
+- `go test ./cmd/goo -run '^TestNativeYAML' -count=1` passed after final boundary
+  cases (0.268s). Cases cover corrupt and wrong-identity winners, empty and
+  non-file winners, preserved noncanonical valid YAML, exactly 32768 bytes accepted
+  and 32769 refused, 16 simultaneous valid duplicates, fresh registry reopen and
+  absence of scratch files.
+- `git diff --check` passed.
+
+No Docker build, live telemetry mutation, browser deployment or new screenshot was
+needed for this backend-only conflict correction. Independent milestone review approved the final patch with no blocking findings; no power-loss durability or hostile external file-mutation guarantee
+is added.

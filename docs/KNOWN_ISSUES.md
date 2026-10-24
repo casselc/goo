@@ -43,8 +43,9 @@ reopen without a source, while old draft tokens do not survive a new owner.
 all six Go publication paths. Family validation, identity, catalogs and duplicate
 policies remain separate. Custody and native YAML retain file-only sync (no directory
 sync). Custody verifies business identity but does not detect a valid integer edit
-to its received clock. Native YAML POST retains its existing success response for a
-corrupt existing winner without repair; registry GET then refuses that file.
+to its received clock. Native YAML POST now refuses an invalid, unavailable,
+oversized or wrong-revision existing winner with 400; it preserves the file without
+repair. Valid duplicate success and file-only sync remain unchanged (M2).
 Investigation capture loading retains permissive unknown-field behavior while
 exploration capture envelopes remain strict. These compatibility boundaries are
 pinned, not hardened by the refactor. No power-loss durability is claimed.

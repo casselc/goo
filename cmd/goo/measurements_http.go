@@ -169,9 +169,17 @@ func registerMeasurements(mux *http.ServeMux, source measurements.Source, dir st
 			return
 		}
 		b, _ := yaml.Marshal(d)
-		if _, e = immutablefile.PublishFileOnly(packagesDir, measurements.Hash(d)+".yaml", ".package-", b); e != nil {
+		revision := measurements.Hash(d)
+		created, e := immutablefile.PublishFileOnly(packagesDir, revision+".yaml", ".package-", b)
+		if e != nil {
 			fail(w, e)
 			return
+		}
+		if !created {
+			if e := verifyMeasurementPackageWinner(filepath.Join(packagesDir, revision+".yaml"), revision); e != nil {
+				fail(w, e)
+				return
+			}
 		}
 		send(w, 201, item(d))
 	})
@@ -211,4 +219,35 @@ func registerMeasurements(mux *http.ServeMux, source measurements.Source, dir st
 		}
 		send(w, 200, result)
 	})
+}
+
+// A duplicate publication is successful only when its immutable winner remains
+// a valid package with the requested identity. Never repair or replace it here.
+func verifyMeasurementPackageWinner(path, revision string) error {
+	const limit = 32768
+	invalid := func() error {
+		return fmt.Errorf("existing measurement package is unavailable, invalid, or has a different revision")
+	}
+	info, e := os.Lstat(path)
+	if e != nil || !info.Mode().IsRegular() || info.Size() > limit {
+		return invalid()
+	}
+	f, e := os.Open(path)
+	if e != nil {
+		return invalid()
+	}
+	defer f.Close()
+	info, e = f.Stat()
+	if e != nil || !info.Mode().IsRegular() || info.Size() > limit {
+		return invalid()
+	}
+	b, e := io.ReadAll(io.LimitReader(f, limit+1))
+	if e != nil || len(b) > limit {
+		return invalid()
+	}
+	d, e := measurements.Read(string(b))
+	if e != nil || measurements.Hash(d) != revision {
+		return invalid()
+	}
+	return nil
 }

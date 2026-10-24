@@ -7,8 +7,9 @@ Lifecycle custody and native YAML publication use `PublishFileOnly`, which syncs
 the file and links without adding a directory sync.
 This is filesystem mechanics only. Callers provide trusted directory/name/prefix and already encoded
 bytes; they retain validation, size limits, identity, canonicalization, lineage,
-catalog rules and existing winner verification. Native YAML POST deliberately
-retains its existing lack of winner reload. No stored schema or HTTP response changes.
+catalog rules and existing winner verification. The original C1 extraction preserved
+native YAML POST's lack of winner reload. M2 now validates that existing winner before
+reporting success; the shared helper and stored schema remain unchanged.
 
 Before extraction, `testdata/storage` froze one reusable OTel span package and one
 deployment marker. Package revision hashes cover the definition bytes; deployment
@@ -45,7 +46,8 @@ sequenceDiagram
 `created=false, err=nil` means a name already existed, not that it contained valid
 or matching bytes. Idempotent consumers keep the winner. Package, workbench and exploration
 consumers retain verified reloads. Custody reloads the event; native YAML POST
-returns the submitted definition without a stored-file check. Workbench's private publisher
+validates the existing regular file with a bounded 32 KiB read, package validation
+and expected revision check before returning the submitted-definition response. Workbench's private publisher
 alone does not validate the winner; its public create methods subsequently load it.
 Investigation captures instead retain their original exclusive link error through
 `PublishNew`; a collision returns the actual `*os.LinkError` without a directory
@@ -124,9 +126,12 @@ The native fixture uses an ordinary `api` gauge definition with an OTel-style
 metric name. It pins canonical YAML bytes, typed revision, exact POST JSON, 201
 status and JSON/no-store headers. A fresh registry reopens the package. Invalid
 YAML, unknown request fields and trailing JSON remain 400. Duplicate publication
-keeps existing bytes and returns the same submitted-definition response. Even a
-corrupt existing winner retains that historical POST response; registry GET
-subsequently reports 400. This is not verification or repair of an existing package.
+keeps valid existing bytes and returns the same submitted-definition response.
+M2 deliberately revises the historical corrupt-winner success policy: an invalid,
+unavailable, oversized or wrong-revision winner returns 400 without repair or
+overwrite. A valid noncanonical representation and an exactly 32 KiB package remain
+accepted. Concurrent valid duplicates reopen successfully and leave no scratch files.
+This is caller-side winner verification, not a crash-durability guarantee.
 
 Both fixture sets passed before replacing their writers. `PublishFileOnly` retains
 file sync and intentionally omits directory sync for these callers. The generated
