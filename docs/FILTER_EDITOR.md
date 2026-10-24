@@ -133,3 +133,5 @@ then explores and stages without executing another query.
 ![Mobile observed values](journeys/screenshots/150b-mobile-observed-fields.png)
 
 Observed sample fields and typed conditions now offer [explicit counted value lookup](FILTER_VALUES.md). This separate read covers the applied fixed scope; choosing a counted entry stages a predicate, while sample browsing and typing remain source-free.
+
+[OTel field hints](OTEL_FIELD_HINTS.md) now enrich supplied observations, typed-field suggestions and counted headings with readable names and local meaning-based search. Exact keys, legacy spellings, staged actions, scope invalidation and sample limits are preserved.

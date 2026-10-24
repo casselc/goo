@@ -220,3 +220,8 @@ goo-comparison-context>small{display:block;font-size:10px;margin-top:4px;color:v
 .comparison-histogram-rows .comparison-value{font-size:11px;margin-bottom:2px}
 .comparison-histogram-rows .comparison-bar-track{height:6px}
 .comparison-histogram-rows figcaption{font-size:12px;margin-bottom:6px}
+
+/* Optional supplied semantic hints; exact field keys and owner actions stay intact. */
+.field-hint-label{font:11px system-ui;color:var(--muted,#98a8bf)}
+goo-attribute-list .field-hint-label{display:block}
+.filter-observations .field-hint-description{display:block;color:var(--muted,#98a8bf);margin:.25rem 0;overflow-wrap:anywhere}

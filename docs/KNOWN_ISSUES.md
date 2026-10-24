@@ -683,3 +683,5 @@ Fixed/saved and explicit context record tables now adopt the [compact mobile lay
 Service observation rows are a bounded held page rather than a complete trace or the overview timeline selection. Their compact presentation adds no selection/preservation protocol; Open fixed question stages the original supporting scope before explicit Run.
 
 The [renderer audit](RECORD_RENDERER_AUDIT_2026_10_24.md) fixes Operations' primary raw-nanosecond display and waterfall attribute formatting. [Operation status](OPERATION_STATUS.md) now retains and labels reported status separately from declared outcome; older captures explicitly show Not retained. Retained JSON and domain-specific renderers remain deliberate separate presentations.
+
+[OTel field hints](OTEL_FIELD_HINTS.md) now cover a curated set of service, HTTP, RPC, database and messaging keys plus error/status context. They describe conventional meaning without validating source compliance or rewriting older keys. Custom keys remain discoverable; aliases are not unioned, numeric-looking attributes retain string semantics, and full registry/schema migration remains unsupported.

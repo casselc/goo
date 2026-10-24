@@ -7753,3 +7753,48 @@ Docker images. Existing telemetry, receipts, XTDB and volumes are preserved.
 Compact ledgers/results/logs are under artifacts/operation-status and
 artifacts/operation-status-round; the fixture’s disposable owner is removed.
 Screenshots 09/10/19/67 and new 164 frames reflect the running UI.
+
+
+## OTel-aware observed field discovery — 2026-10-24
+
+[OTel field hints](docs/OTEL_FIELD_HINTS.md) now enrich supplied observations,
+field datalists, counted headings and cached attribute inspectors through one
+advisory display catalog. Exact qualified keys, literal values, legacy spellings
+and query/source ownership remain intact. Original exporter-key search remains
+available alongside names and descriptions. No source query, API or saved schema
+was added.
+
+Actual checks:
+- Twenty Node tests across field hints, field wire fixtures, attribute inspection,
+  filter validation and observed suggestions passed. They cover exact namespaces,
+  detached metadata, unknown lookalikes, unchanged legacy predicates, original
+  exporter-key search and refusal to coerce status attributes into numeric filters.
+- `TestHegelOTelFieldHints` passed with generated namespace/key/value combinations
+  against actual JavaScript. Recognizing a key never grows the supplied field
+  list, rewrites predicates or changes missing/empty/string semantics.
+- Real-data journey 165 passed over current, legacy and custom OTLP spans with an
+  independent ClickHouse membership oracle. Activity pauses/browses/stages;
+  fixed questions inspect and explicitly group/filter; fixed population edits
+  stage children. The original bounds and exact legacy keys survive execution.
+- The existing Quint staging replay passed with four rejecting mutations for a
+  hidden read, changed predicate, changed window and changed environment. The
+  25-second mobile Bombadil actor performed one explicit read, found both HTTP
+  method spellings and staged the exact legacy key without another source read.
+- The synthetic detached-adapter browser contract passed: optional metadata,
+  no emitted edit on supplied updates, cloned input, retained disclosure/focus,
+  keyboard selection and exact grouping callback intent without API requests.
+- Existing real attribute-inspection (29), observed-suggestion (150) and counted-value (151) journeys passed,
+  including failed/obsolete reads, missing/empty values, saved reopening and
+  source-free child staging.
+
+Screenshots 165 document the new workflow; affected existing storyboards are
+regenerated from the local UI. The field catalog is a bounded advisory subset
+checked against the dependency's cached OTel registries, not a schema validator,
+backend convention resolver, migration engine or full semantic-convention catalog.
+Raw exporter status does not become business/HTTP outcome policy.
+
+Only static UI/docs assets change in the local deployment. Native executable and
+Docker images are unchanged. Test owners remove their disposable stores; existing
+application telemetry, receipts, XTDB and volumes are preserved. Compact ledgers,
+Quint logs and Bombadil outcomes are under artifacts/otel-field-hints; Node results
+are under artifacts/otel-field-hints-round.

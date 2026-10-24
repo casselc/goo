@@ -902,7 +902,7 @@ tree, supplied field suggestions retained, invalid drafts guarded, fixed bounds
 retained through filter/environment edits, and shared links staged before Run.
 Broader automatic suggestions from Activity/discovery remain follow-up work.
 
-Bounded [observed field/value discovery](FILTER_EDITOR.md#observed-fields-and-values) is delivered across Activity, single questions and fixed/saved views. Existing reads supply scoped metadata and record samples; there is no new suggestion query. Full-source top values/cardinality and semantic-convention enrichment remain future work.
+Bounded [observed field/value discovery](FILTER_EDITOR.md#observed-fields-and-values) is delivered across Activity, single questions and fixed/saved views. Existing reads supply scoped metadata and record samples; there is no new suggestion query. Counted value lookup is delivered below; approximate top-K/cardinality remains future work. The bounded semantic-convention enrichment is now delivered in the OTel hints cut below.
 
 [Explicit counted field values](FILTER_VALUES.md) now extend bounded samples using the existing full-scope grouping path. Activity freezes its completed window; single/fixed owners retain applied scope, invalidate stale reads and stage selection. Groupings above 1,000 are refused rather than truncated. Approximate large-cardinality/top-K and persistent lookup captures remain future work.
 
@@ -928,3 +928,5 @@ The approved [fixed/saved compact record adoption](COMPACT_MOBILE_RECORDS.md#fix
 The [record-renderer audit](RECORD_RENDERER_AUDIT_2026_10_24.md) inventories the remaining domain/custody/diagram renderers. Operation UTC/duration and action labels are aligned, while waterfall and retained attributes share the root timestamp adapter. Its operation outcome/status follow-up is delivered below, including compatibility and saved evidence.
 
 The renderer audit’s semantic follow-up is delivered in [independent operation status](OPERATION_STATUS.md): exact optional exporter status, separate declared outcome, truthful legacy absence, immutable explicit refresh, and raw-status-only waterfall error color. Further outcome policy and historical backfill remain outside this cut.
+
+The approved [OTel field discovery cut](OTEL_FIELD_HINTS.md) enriches supplied fields across Activity, fixed editors and cached inspectors using one advisory display catalog. Exact namespace/key identity, independently labeled legacy spellings, explicit reads and source-bound suggestion invalidation are preserved. Full registry/schema migration and inferred query policies remain outside this cut.
