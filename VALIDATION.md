@@ -8006,3 +8006,48 @@ Bombadil example/finding composer exploration passes. Compact evidence:
 `artifacts/trace-finding/finding-37347835f1`. Frames87b/c and the trace findings
 sequence diagram are regenerated/updated. No capture schema or saved bytes change.
 Independent milestone review approved the final code/docs/evidence with no blocking findings.
+
+
+## 2026-10-24 — M4 explicit ordinary investigation recovery
+
+The ordinary editor checkpoints bounded authored content to tab-local
+sessionStorage (256 KiB, seven-day expiry); exact parent/reference IDs and pending
+note/link buffers survive reload. Restore/Discard are explicit and preserve
+unknown-save state without replaying publication. Native retry journals are unchanged.
+
+Actual checks:
+
+- Nine standalone Node helper tests pass; documents/journey JS syntax, Python
+  static-route compilation and diff checks pass. Tests cover recursive unknown
+  fields, current native fixtures, UTF-8/size/version/path/expiry, composer
+  destinations, storage denial/quota, independent tab snapshots, detached input,
+  checkpoint drift and exact acknowledgment cleanup.
+- Hegel invokes the actual production JavaScript Journal through a persistent
+  Node bridge: 60 state/swarm sequences ×24 steps plus a high-risk transition
+  prelude pass (1.05s). Quint protocol fixture and eight rejecting controls pass
+  (16.07s). These helper/protocol tests do not substitute for browser effects.
+- Final real journey169 passes (1.1minutes) with ordinary OTLP/ClickHouse evidence,
+  exact parent/capture references, pending edit buffers and destination, zeroAPI
+  requests on each Restore, explicit real receipt detail loading/noPOST, server
+  commit followed by dropped actual response, reload with sticky uncertainty,
+  separate acknowledged publication, corrupt-payload discard and mobile layout.
+  Full-page boot catalogs are explicitly accounted separately from Restore;
+  automatic parent/evidence reads are withheld.
+- Three race/fault journeys170 and trace-finding87 pass together (4tests,45.3s).
+  They verify a real held acknowledgment cannot hide/overwrite a newer checkpoint,
+  local removeItem failure retains the known saved revision, quota denial retains
+  the editor, and explicit reload/Discard/Open preserves trace-finding behavior.
+- Observed journey169 ledger passes native `TestQuintInvestigationDraftLedger`
+  with seven mutations of the actual browser facts (15.43s). A35second Bombadil
+  create/reload/Restore/Revert/reload/Discard campaign passes (code0), with no
+  publication or source/reference reads offered by that actor. Compact evidence:
+  `artifacts/investigation-draft/draft-254c34d3f1`.
+
+The live tests exposed and corrected a redundant Restore navigation/catalog GET,
+a hidden same-route recovery disclosure, a hidden postDiscard parent action and
+pending-buffer/late-ack safety gaps found during independent review. Frames169a–d
+and87b/c are generated from the running application; the recovery process diagram
+and storyboard are synchronized. This is same-tab convenience, not durable/shared
+recovery, secret scanning or exactly-once ordinary publication. Browser storage
+can fail or disappear; restored unknown saves may already exist on the server.
+Independent milestone review approved final code, model/browser evidence and documentation with no remaining blocking findings.

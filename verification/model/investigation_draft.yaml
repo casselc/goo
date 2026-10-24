@@ -1,0 +1,25 @@
+spec: investigation_draft.qnt
+module: investigation_draft
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  checkpoint:
+    expect: 'pending == {{.obs.pending}} and unknown == {{.obs.unknown}} and coherent == {{.obs.coherent}}'
+  reload:
+    expect: 'pending == {{.obs.pending}} and unknown == {{.obs.unknown}} and coherent == {{.obs.coherent}}'
+  restore:
+    expect: 'pending == {{.obs.pending}} and unknown == {{.obs.unknown}} and coherent == {{.obs.coherent}}'
+  uncertain:
+    expect: 'pending == {{.obs.pending}} and unknown == {{.obs.unknown}} and coherent == {{.obs.coherent}}'
+  restoreUnknown:
+    expect: 'pending == {{.obs.pending}} and unknown == {{.obs.unknown}} and coherent == {{.obs.coherent}}'
+  editUnknown:
+    expect: 'pending == {{.obs.pending}} and unknown == {{.obs.unknown}} and coherent == {{.obs.coherent}}'
+  lateAck:
+    expect: 'pending == {{.obs.pending}} and unknown == {{.obs.unknown}} and coherent == {{.obs.coherent}}'
+  saveSuccess:
+    expect: 'pending == {{.obs.pending}} and unknown == {{.obs.unknown}} and coherent == {{.obs.coherent}}'
+  discard:
+    expect: 'pending == {{.obs.pending}} and unknown == {{.obs.unknown}} and coherent == {{.obs.coherent}}'
+  invalid:
+    expect: 'pending == {{.obs.pending}} and unknown == {{.obs.unknown}} and coherent == {{.obs.coherent}}'

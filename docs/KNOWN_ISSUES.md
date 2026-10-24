@@ -63,7 +63,8 @@ propagation on fresh connections. Live pages expire after two minutes and are
 process-local/capability-addressed; refresh or pagination clears selection. An
 already committed save can be recovered after expiry with its unchanged request.
 Native request intents now survive reload in a bounded browser retry journal;
-ordinary document/note drafts remain page-local. Document citations carry a pinned
+ordinary investigation drafts now support explicit bounded same-tab reload recovery
+([contract](INVESTIGATION_DRAFT_RECOVERY.md)), separate from native retry intents. Document citations carry a pinned
 review and read lower bound; bare evidence links retain tab-local basis behavior. No production auth/redaction/deletion,
 unified cross-store tag search, historical-cutoff UI, reviewed labels or dataset export
 is implied. See [contract](WORKBENCH_ANNOTATIONS.md).
@@ -86,7 +87,7 @@ Population live tails are bounded recent event-time observations, not ingestion 
 
 Service-overview time selections scope that overview and its span/log follow-up links. Supporting discovery inventory retains its original window. General cross-service span/log populations and saved exploration views are now supported in the [population workspace](POPULATION_WORKSPACE.md). Discovered per-signal breakdowns and saved baseline comparisons are supported; numeric cohort comparisons remain unsupported. Arbitrary native-stream composition and saved multi-widget dashboards remain future work. Native crossing intervals are omitted, never split or interpolated. See [contract](LINKED_TIMELINE.md).
 
-Trace examples rank valid linked spans on a bounded record page, not complete traces or the full matching population. Findings link two later independent reads; automatic verification that an original anchor survived those reads remains future work. See [trace finding contract](TRACE_FINDINGS.md).
+Trace examples rank valid linked spans on a bounded record page, not complete traces or the full matching population. Findings link two later independent reads. Selected reported trace/span references are checked only against the returned retained trace page; a page miss does not establish absence from the capture, and matching IDs prove neither uniqueness nor unchanged attributes or complete traces. See [trace finding contract](TRACE_FINDINGS.md).
 
 This list describes the current code at handoff. Items are observations or missing features, not completed fixes.
 
@@ -308,8 +309,9 @@ Question-first briefs and direct capture destinations now exist. A selected save
 revision receives an immutable child; current drafts require an explicit save.
 There is still no mutable latest head, automatic branch merge, multi-user presence
 or production authorization. Capture and document publication are separate, so
-attachment failure retains a saved capture for retry. Drafts are page-local until
-saved. Capture-card scope reads validate the stored capture and return only receipt
+attachment failure retains a saved capture for retry. Ordinary drafts support explicit same-tab session recovery; closing the tab, storage
+denial, expiry and byte limits remain boundaries. Recovery never publishes or retries
+a save, and an unknown acknowledgment may already have created a revision. Capture-card scope reads validate the stored capture and return only receipt
 metadata; local disk integrity checks still read its bounded stored evidence.
 
 
