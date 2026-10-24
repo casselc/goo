@@ -3,7 +3,7 @@
 Implemented bounded continuation from the 2026-10-22 whole-product reviews.
 This changes the handoff, not the record query, capture or tail protocol.
 
-**Analyze this scope/window** stages the applied live selector and the last
+**Investigate → Analyze this scope/window** stages the applied live selector and the last
 completed source-read window. It requires applied filters/environment and works
 when that completed window contained no rows. It never constructs a window from
 record timestamps or the current clock. A new scope clears the previous window.
@@ -23,8 +23,10 @@ claiming an investigation from Activity is a restored shared question.
 **Return to paused activity** restores the parent buffer, scroll and focus without
 resubscribing. Existing fixed drafts remain in the bounded in-memory trail;
 returning suspends a running fixed owner and rejects obsolete completions.
-Question tools/saved views remain a secondary explicit entrance. A separate blank
-New question flow and broader population/Saved restructuring remain future cuts.
+The same Investigate menu opens the retained fixed editor through **Build fixed
+question**. Rolling configurations live in Views. [Navigation and focus
+contracts](ACTIVITY_NAVIGATION.md) keep these entrances separate; a separate blank
+New question flow remains outside this cut.
 
 ## Ownership
 

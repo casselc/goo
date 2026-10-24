@@ -915,3 +915,10 @@ The approved [Activity captured baseline](ACTIVITY_BASELINE.md) cut reuses saved
 The approved [saved Activity baseline reference](SAVED_ACTIVITY_BASELINE.md) cut preserves an exact capture ID in version-1 configuration, with source-free publication checks/reopen, explicit stream/aggregate actions, immutable old IDs, stale-save guards and unavailable-reference retry. Panel/cadence persistence and cross-store deletion transactions remain outside this cut.
 
 The approved Activity-entry saved-view discovery cut embeds the existing library under Views, filtered by applied environment. Draft isolation, canceled/stale catalog responses and cleared cross-environment inspectors retain source-free staging and explicit Start. Search remains loaded-page only; arbitrary selector relevance and automatic startup remain outside the cut. See [storyboard](ACTIVITY_VIEWS.md#activity-entry-storyboard-159).
+
+The approved [Activity navigation consolidation](ACTIVITY_NAVIGATION.md) groups scope analysis and retained fixed authoring under Investigate, alongside the existing Views menu. The duplicated below-stream entrance is hidden during Activity. Source-free staging/return, explicit execution, opener focus and draft identity remain the acceptance boundaries.
+
+Next proposed usability cut: compact mobile Activity record rows and row actions,
+using the shared record/table primitives. The current navigation screenshots show
+stacked core fields and full-width actions; verify standalone and nested responsive
+styles, keyboard selection/inspection, timestamps and first-row visibility together.

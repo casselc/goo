@@ -670,3 +670,10 @@ The editor now offers scoped observed field/value suggestions from existing read
 [Activity baseline comparison](ACTIVITY_BASELINE.md) accepts complete saved raw-span duration distributions in the same environment. Different selectors/window widths are disclosed, not equated. The catalog covers explicit 20-receipt pages; a workspace capture link can address a known baseline directly. The pin can be saved as an exact Activity-view reference; this does not persist copied results or add automatic subscriptions. Capture this window explicitly rereads before storage.
 
 Activity’s Views menu now exposes the existing catalog by applied environment. This is exact environment relevance across log/span configurations, without Boolean predicate matching or proof of telemetry. Draft edits retain the applied catalog; search covers only the loaded 20-item page.
+
+Activity fixed-question entrances are consolidated under Investigate. Build fixed question restores the bounded in-memory editor; it does not guarantee a fresh blank question or durable draft. Reopened saved views still require Start; scope analysis requires a completed stream window.
+
+Mobile Activity rows still stack core cells and full-width row actions under the
+shared responsive table rules. Compacting that presentation while preserving
+readable UTC times, keyboard actions and occurrence selection is a follow-up to
+the navigation consolidation; the new mobile frames show the current behavior.

@@ -738,3 +738,5 @@ controls and runs a source-free Bombadil editor campaign.
 158: [Saved Activity baseline reference](../SAVED_ACTIVITY_BASELINE.md), real OTLP/ClickHouse, exact reference save, source/receipt/comparison-free reload, explicit Start/Show, preserved old views, clear-versus-delayed-save guard, unavailable receipt/retry, actual desktop/mobile frames and staged-only Bombadil/Quint checks.
 
 159: [Activity saved-view discovery](../ACTIVITY_VIEWS.md#activity-entry-storyboard-159), real OTLP/ClickHouse, source-free inline browsing, applied/draft environment isolation, existing keep/discard navigation, actual delayed catalog refusal, cleared inspector, loaded-page search, mobile frames, explicit Start and Bombadil/Quint controls.
+
+109 now exercises the [consolidated Activity navigation](../ACTIVITY_NAVIGATION.md): folded Investigate, keyboard authoring, source-free paused return/opener focus, retained editor identity/draft, mobile frames, observed Quint controls and Bombadil reopen/edit/return exploration. Existing 102/104–106, 111, scope-analysis and record-column journeys retain their distinct read/selection contracts through the new entry.

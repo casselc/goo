@@ -14,6 +14,20 @@ func TestQuintStreamEntryLedger(t *testing.T) {
 	if name == "" {
 		t.Skip("observed browser ledger required")
 	}
+	validateStreamEntryLedger(t, name, []int{0, 1, 2, 3, 4})
+}
+
+// Navigation holds and pauses; it never resumes, so no resume mutation is claimed.
+func TestQuintActivityNavigationLedger(t *testing.T) {
+	name := os.Getenv("GOO_ACTIVITY_NAVIGATION_LEDGER")
+	if name == "" {
+		t.Skip("observed Activity navigation ledger required")
+	}
+	validateStreamEntryLedger(t, name, []int{0, 2, 3, 4})
+}
+
+func validateStreamEntryLedger(t *testing.T, name string, mutations []int) {
+	t.Helper()
 	raw, e := os.ReadFile(name)
 	if e != nil {
 		t.Fatal(e)
@@ -72,7 +86,7 @@ func TestQuintStreamEntryLedger(t *testing.T) {
 	if !check(-1) {
 		t.Fatal("observed entry rejected")
 	}
-	for i := 0; i < 5; i++ {
+	for _, i := range mutations {
 		if check(i) {
 			t.Fatal("negative control accepted", i)
 		}

@@ -7451,3 +7451,53 @@ The bounded browser-diagnostic retention pass removes 13,434 expired raw files
 (418,689,024 allocated bytes), preserving compact logs, observed ledgers and its
 compressed audit. Active/new recordings remain within their retention lifetime;
 no application store, OTel data or dependency cache is included.
+
+## Consolidated Activity investigation entry — 2026-10-24
+
+Activity groups applied-window analysis and retained fixed authoring under a folded
+Investigate menu. Views continues to own rolling configurations. The duplicated
+below-stream question/saved entrance is hidden during Activity, and the obsolete
+disclosure transition handler is removed. Build pauses/remembers the parent before
+resuming the existing editor; return restores Investigate focus without reading.
+Scope and record analysis retain their different windows, filters and openers.
+
+Checks and evidence:
+
+- Six focused Node cases pass. The existing Hegel entry-intent state/swarm check
+  passes 80 cases of 24 actions against the actual JavaScript gate (0.66s).
+- Journey 109 passes keyboard disclosure/action activation, no eager editor,
+  source-free authoring/return, singleton editor identity, retained draft, opener
+  focus, mobile overflow and fixed-link staging. Its observed quint-go trace uses
+  the existing entry model with four applicable rejecting controls. The full entry
+  and paused-return checks keep their additional Resume-gap control; no Resume
+  coverage is claimed for a navigation trace that never resumes.
+- Existing root entry/backgrounding (102–103), pending/completed paused return
+  (105), scope analysis, reusable revision library (111), field layouts/SSR (118)
+  and inline Activity catalog (159) pass through the consolidated entrance.
+  They include real ordinary OTLP/ClickHouse reads, source counters, held actual
+  responses, desktop/mobile viewport checks and observed-model rejection controls.
+- Broader checks exposed older test assumptions: the new folded saved-view
+  inspector requires selectors scoped to the direct record-inspector owner;
+  Go's existing empty-value projection omits the value field; and a collector
+  delivery repeated a log payload (independently counted as two in ClickHouse).
+  Filter/presentation assertions now check the current wire shape plus the actual
+  present-empty result, and independent source occurrence counts without removing
+  repeated records. Related retention selector bindings are updated; the broader
+  retention fault campaign is not rerun for this navigation-only cut.
+- Corrected real-source filter (104) and record-presentation (106) journeys pass
+  together (1.3m). Filtering matches only the present-empty record; supplied log
+  and span presentation remains identical across paused Activity and fixed reads.
+- Three 25-second Bombadil campaigns pass: new keyboard-flow-equivalent navigation
+  actions retain the draft and singleton editor without source execution; the
+  updated filter actor retains the correct record selection through fixed return;
+  the updated analysis actor opens Investigate, stages/edits analysis and returns
+  paused. All retain layout/progress and uncaught-exception invariants.
+- Actual frames, README, flow/ownership documentation, planning and the executable
+  navigation storyboard are updated. Mobile record cells/actions still use their
+  existing stacked responsive presentation; compacting those is the next proposed
+  usability cut, explicitly recorded in planning and known issues.
+
+Local deployment updates static navigation assets only. Native binary, API/schema,
+Docker images, telemetry, retained evidence, XTDB and dependency caches are unchanged.
+Compact results/ledgers remain under artifacts/activity-navigation-round and the
+per-journey artifact directories. No successful integration responses are mocked.

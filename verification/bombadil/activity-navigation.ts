@@ -1,0 +1,11 @@
+import{always,eventually}from'@antithesishq/bombadil';
+import{extract,actions,registerCustomAction}from'@antithesishq/bombadil/browser';
+export{noUncaughtExceptions,noUnhandledPromiseRejections}from'@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document,window})=>({step:Number(document.documentElement.dataset.navigationStep||0),ready:[...document.querySelectorAll('button')].some(b=>b.textContent==='Start stream'),editors:document.querySelectorAll('#exploreRun').length,draft:(document.querySelector('#exploreEnvironment')as HTMLInputElement)?.value,rows:document.querySelectorAll('.stream-entry .live-tail tbody>tr').length,source:window.performance.getEntriesByType('resource').filter(e=>/\/api\/(tail|explore|compare|captures)(\/|$)/.test(new URL(e.name).pathname)).length,overflow:document.documentElement.scrollWidth>window.innerWidth}));
+export const sourceFree=always(()=>state.current.rows===0&&state.current.source===0);
+export const singleEditor=always(()=>state.current.editors<=1);
+export const draftSurvives=always(()=>state.current.step!==4||state.current.draft==='nav-draft');
+export const fits=always(()=>!state.current.overflow);
+export const progress=eventually(()=>state.current.step===5).within(20,'seconds');
+const act=registerCustomAction('goo.activityNavigation',async(document,_window,next:number)=>{const menu=document.querySelector('.entry-investigate-options')as HTMLDetailsElement;if(next===1)menu.open=true;if(next===2||next===4){menu.open=true;[...menu.querySelectorAll<HTMLButtonElement>('button')].find(b=>b.textContent==='Build fixed question')!.click();if(next===2){const input=document.querySelector('#exploreEnvironment')as HTMLInputElement;input.value='nav-draft';input.dispatchEvent(new Event('input',{bubbles:true}))}}if(next===3||next===5)[...document.querySelectorAll<HTMLButtonElement>('button')].find(b=>b.textContent==='Return to paused activity')!.click();document.documentElement.dataset.navigationStep=String(next)});
+export const choices=actions(()=>state.current.step===0?!state.current.ready?['Wait']:[act(1)]:state.current.step<5?[act(state.current.step+1)]:['Wait']);

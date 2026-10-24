@@ -139,7 +139,7 @@ Returning suspends and detaches the fixed owner, aborting in-flight fixed querie
 context generations before restoring the parent. It does not fetch or resume. Focus returns to
 the selected row button when available. Apply and Resume remain explicit new reads.
 
-Opening Questions/charts from the parent restores the retained fixed editor without
+Choosing Investigate → Build fixed question from the parent restores the retained fixed editor without
 rerunning it. A query cancelled by returning remains cancelled until Run. The
 existing question trail keeps its own bounded views; this adds no durable evidence
 store, replay cursor or browser Back history. Reload drops the parent. Starting a
@@ -175,3 +175,5 @@ using the last completed tail read, including an empty window. The inspector
 continuation retains the selected observation’s original window and staged
 filters. Both stage before Run, disclose editing separately and return to the
 paused parent without resubscribing. Neither preserves held rows as evidence.
+
+[Activity navigation](ACTIVITY_NAVIGATION.md) consolidates current-window analysis and fixed authoring under the folded Investigate menu. Rolling configuration discovery remains in Views; the duplicated below-stream question/saved entrance is hidden while Activity is active.

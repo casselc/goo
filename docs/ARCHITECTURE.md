@@ -683,3 +683,5 @@ Latency distribution interaction reuses passive `goo-time-bars` range intent. `l
 Activity views now have an optional exact `baselineCapture` reference. Go publication resolves and validates stored duration evidence; GET/catalog validate only configuration integrity. The baseline owner stages the ID separately from loaded data, and resolves it after explicit current-window loading. Legacy omitted-field hashes remain unchanged. [Reference flow](SAVED_ACTIVITY_BASELINE.md).
 
 Activity’s Views menu reuses the configuration-library adapter with explicit applied-environment and visibility inputs. Scope changes cancel publication and clear the passive library’s rows/inspector cache. No telemetry, baseline receipt, source clock or subscription is loaded by browsing. [Flow and storyboard](ACTIVITY_VIEWS.md#activity-entry-storyboard-159).
+
+The [Activity navigation adapter](ACTIVITY_NAVIGATION.md) now exposes fixed-window staging and retained authoring through one Investigate disclosure. It pauses/remembers before mounting the existing fixed owner and hides the old entrance during Activity; parent return and explicit execution contracts are unchanged.

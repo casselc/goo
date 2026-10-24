@@ -14,7 +14,7 @@ test('Activity stages its applied scope and completed window before explicit ana
  const shell=page.locator('.stream-entry'),tail=shell.locator('.live-tail'),analyze=shell.getByRole('button',{name:'Analyze this scope/window',exact:true});
  await page.goto(base+'/');await shell.getByLabel('Live environment').fill(environment);await shell.getByRole('button',{name:'Apply scope',exact:true}).click();await expect(tail.locator('tbody tr')).toHaveCount(1);
  await tail.getByRole('button',{name:'Inspect',exact:true}).click();await shell.getByRole('button',{name:'Include attribute:region from record',exact:true}).click();
- const count=streams.length;await analyze.click();await expect(shell).toContainText('Apply scope before analyzing');expect(reads).toHaveLength(0);expect(streams).toHaveLength(count);
+ await page.locator('.entry-investigate-options>summary').click();const count=streams.length;await analyze.click();await expect(shell).toContainText('Apply scope before analyzing');expect(reads).toHaveLength(0);expect(streams).toHaveLength(count);
  await shell.getByRole('button',{name:'Apply scope',exact:true}).click();await expect(tail).toHaveAttribute('data-state',/unknown|partial/);await shell.getByRole('button',{name:'Pause stream',exact:true}).click();
  const held=await tail.locator('tbody').textContent(),toMs=Number(await tail.getAttribute('data-last-to')),before=streams.length;
  await analyze.click();await expect(shell).toBeHidden();await expect(page.locator('#exploreRun')).toHaveText('Run analysis');await expect(page.locator('#exploreRun')).toBeFocused();await expect(page.locator('#exploreQuestionState')).toContainText(new Date(toMs).toISOString());
