@@ -8253,3 +8253,22 @@ policies or unit conversion. The installed native backend and static assets are
 current; no images were rebuilt and existing telemetry, captures, XTDB and volumes
 were preserved. The owned temporary backend build copy is removed after acceptance.
 Final documentation check resolves 785 relative targets and 43 Markdown anchors with no failures; whitespace checks pass.
+
+## Exact integer histograms — backend milestone (2026-10-24)
+
+Implemented deterministic 65-bin uint64 / 128-bin int64 powers-of-two distributions
+in the main numeric/count aggregate, exact decimal boundaries/counts, full schema
+and coverage validation, package/capture preservation and source-free half-open
+bin selection planning. Count comparison projections retain selectors and remove
+measure requests. Nonvalid values remain in the remainder; max+1 sentinels never
+become predicate thresholds. Independent architecture review found no backend
+blockers. UI and live journey acceptance are tracked separately below.
+
+Validation: histogram unit/HTTP tests, exploration/cmd/workbench regression suites,
+real ClickHouse parity over spans/logs × attribute/resource × signed/unsigned
+(full signed 128-bin SQL, including integer extrema and nonvalid parse states),
+three native property tests with 200 Hegel campaigns and deterministic edge±1
+checks. OpenAPI validates 71 operations / 65 Go operations. Local HTTP regression
+checks require the managed environment's elevated loopback permission; the first
+sandbox-only attempt failed to listen and was rerun successfully with that access.
+Evidence: `artifacts/numeric-histogram-{go,clickhouse,properties}.log`.

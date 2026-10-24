@@ -96,6 +96,27 @@ func registerWorkbench(mux *http.ServeMux, dir string, connection retentionConne
 		}
 		reply(w, 200, v)
 	})
+	mux.HandleFunc("POST /numeric-histograms/selection", func(w http.ResponseWriter, r *http.Request) {
+		var in struct {
+			Parent  exploration.Query `json:"parent"`
+			FromBin *int              `json:"fromBin"`
+			ToBin   *int              `json:"toBin"`
+		}
+		if e := decode(w, r, &in); e != nil {
+			fail(w, 400, e)
+			return
+		}
+		if in.FromBin == nil || in.ToBin == nil {
+			fail(w, 400, fmt.Errorf("fromBin and toBin are required"))
+			return
+		}
+		plan, e := exploration.PlanNumericHistogramSelection(in.Parent, *in.FromBin, *in.ToBin)
+		if e != nil {
+			fail(w, 400, e)
+			return
+		}
+		reply(w, 200, plan)
+	})
 	mux.HandleFunc("POST /population/plan", func(w http.ResponseWriter, r *http.Request) {
 		var in exploration.PopulationRequest
 		if e := decode(w, r, &in); e != nil {

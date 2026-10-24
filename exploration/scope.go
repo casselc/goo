@@ -216,6 +216,9 @@ func describeScopeChanges(origin, target CaptureQuestion, a, b QuestionScope, re
 			grouping = "none"
 		}
 		add("numeric", "Numeric binding and parsing policy", reflect.DeepEqual(origin.Explore.Numeric, target.Explore.Numeric))
+		if x.NumericHistogram != nil || y.NumericHistogram != nil {
+			add("numericHistogram", "Numeric histogram binning", reflect.DeepEqual(x.NumericHistogram, y.NumericHistogram))
+		}
 		add("groupBy", "Grouping → "+grouping, reflect.DeepEqual(x.GroupBy, y.GroupBy))
 		add("measures", fmt.Sprintf("Summary → %s; recorded-status summary → %t", y.Summary, y.SpanStatus), x.Summary == y.Summary && x.SpanStatus == y.SpanStatus)
 		add("bucketMs", fmt.Sprintf("Time chart interval → %d ms (0 disables chart)", y.BucketMS), x.BucketMS == y.BucketMS)

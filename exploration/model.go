@@ -23,20 +23,21 @@ type Predicate struct {
 	Value   string          `json:"value,omitempty" yaml:"value,omitempty"`
 }
 type Query struct {
-	ReportedEdge    *ReportedEdge   `json:"reportedEdge,omitempty" yaml:"reportedEdge,omitempty"`
-	Numeric         *NumericBinding `json:"numeric,omitempty" yaml:"numeric,omitempty"`
-	GroupTimeSeries bool            `json:"groupTimeSeries,omitempty" yaml:"groupTimeSeries,omitempty"`
-	SpanStatus      bool            `json:"spanStatus,omitempty" yaml:"spanStatus,omitempty"`
-	BucketMS        int64           `json:"bucketMs,omitempty" yaml:"bucketMs,omitempty"`
-	Summary         string          `json:"summary,omitempty" yaml:"summary,omitempty"`
-	Signal          string          `json:"signal" yaml:"signal"`
-	Environment     string          `json:"environment" yaml:"environment"`
-	FromMS          int64           `json:"fromMs" yaml:"fromMs"`
-	ToMS            int64           `json:"toMs" yaml:"toMs"`
-	Where           *Predicate      `json:"where,omitempty" yaml:"where,omitempty"`
-	GroupBy         []Field         `json:"groupBy,omitempty" yaml:"groupBy,omitempty"`
-	Limit           int             `json:"limit" yaml:"limit"`
-	Offset          int             `json:"offset" yaml:"offset"`
+	NumericHistogram *NumericHistogramSpec `json:"numericHistogram,omitempty" yaml:"numericHistogram,omitempty"`
+	ReportedEdge     *ReportedEdge         `json:"reportedEdge,omitempty" yaml:"reportedEdge,omitempty"`
+	Numeric          *NumericBinding       `json:"numeric,omitempty" yaml:"numeric,omitempty"`
+	GroupTimeSeries  bool                  `json:"groupTimeSeries,omitempty" yaml:"groupTimeSeries,omitempty"`
+	SpanStatus       bool                  `json:"spanStatus,omitempty" yaml:"spanStatus,omitempty"`
+	BucketMS         int64                 `json:"bucketMs,omitempty" yaml:"bucketMs,omitempty"`
+	Summary          string                `json:"summary,omitempty" yaml:"summary,omitempty"`
+	Signal           string                `json:"signal" yaml:"signal"`
+	Environment      string                `json:"environment" yaml:"environment"`
+	FromMS           int64                 `json:"fromMs" yaml:"fromMs"`
+	ToMS             int64                 `json:"toMs" yaml:"toMs"`
+	Where            *Predicate            `json:"where,omitempty" yaml:"where,omitempty"`
+	GroupBy          []Field               `json:"groupBy,omitempty" yaml:"groupBy,omitempty"`
+	Limit            int                   `json:"limit" yaml:"limit"`
+	Offset           int                   `json:"offset" yaml:"offset"`
 }
 
 var columns = map[string]string{"service": "string", "trace_id": "string", "span_id": "string", "scope": "string", "scope_version": "string", "name": "string", "kind": "string", "status": "string", "duration_ns": "uint64", "timestamp_ns": "uint64", "duration_bucket": "string", "status_class": "string", "body": "string", "severity": "string"}
@@ -55,6 +56,11 @@ func (f Field) Type(signal string) (string, error) {
 	return "string", nil
 }
 func (q Query) Validate() error {
+	if q.NumericHistogram != nil {
+		if e := q.NumericHistogram.Validate(q.Numeric, q.Signal); e != nil {
+			return e
+		}
+	}
 	if q.ReportedEdge != nil {
 		if q.Signal != "spans" {
 			return fmt.Errorf("reported edges require spans")

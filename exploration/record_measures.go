@@ -19,13 +19,14 @@ type RecordMeasure struct {
 	Merge       string `json:"merge"`
 }
 type RecordMeasurePlan struct {
-	Numeric          *NumericBinding `json:"numeric,omitempty"`
-	Scope            QuestionScope   `json:"scope"`
-	Measures         []RecordMeasure `json:"measures"`
-	Dimensions       []Field         `json:"dimensions"`
-	BucketMS         int64           `json:"bucketMs"`
-	GroupTimeSeries  bool            `json:"groupTimeSeries"`
-	PercentilePolicy string          `json:"percentilePolicy,omitempty"`
+	NumericHistogram *NumericHistogramSpec `json:"numericHistogram,omitempty"`
+	Numeric          *NumericBinding       `json:"numeric,omitempty"`
+	Scope            QuestionScope         `json:"scope"`
+	Measures         []RecordMeasure       `json:"measures"`
+	Dimensions       []Field               `json:"dimensions"`
+	BucketMS         int64                 `json:"bucketMs"`
+	GroupTimeSeries  bool                  `json:"groupTimeSeries"`
+	PercentilePolicy string                `json:"percentilePolicy,omitempty"`
 }
 
 func (q Query) RecordMeasures() (RecordMeasurePlan, error) {
@@ -38,7 +39,7 @@ func (q Query) RecordMeasures() (RecordMeasurePlan, error) {
 		b := *q.Numeric
 		binding = &b
 	}
-	return RecordMeasurePlan{Numeric: binding, Scope: scope, Measures: recordMeasures(q), Dimensions: append([]Field{}, q.GroupBy...), BucketMS: q.BucketMS, GroupTimeSeries: q.GroupTimeSeries, PercentilePolicy: func() string {
+	return RecordMeasurePlan{NumericHistogram: detached(q.NumericHistogram), Numeric: binding, Scope: scope, Measures: recordMeasures(q), Dimensions: append([]Field{}, q.GroupBy...), BucketMS: q.BucketMS, GroupTimeSeries: q.GroupTimeSeries, PercentilePolicy: func() string {
 		if q.Summary != "" {
 			return "exact-high: floor(p*N), clamped to N-1; no interpolation"
 		}
@@ -67,6 +68,10 @@ func recordMeasures(q Query) []RecordMeasure {
 			}
 			out = append(out, RecordMeasure{ID: v.id, Operator: v.op, Input: &f, InputType: b.Type, OutputType: v.typ, Unit: unit, Merge: v.merge})
 		}
+		if q.NumericHistogram != nil {
+			f := b.Field
+			out = append(out, RecordMeasure{ID: "numeric_histogram", Operator: "histogram", Input: &f, InputType: b.Type, OutputType: "partitioned-uint64", Unit: b.Unit, Merge: "sum-aligned-bins"})
+		}
 	}
 	return out
 }
@@ -75,6 +80,7 @@ func recordMeasures(q Query) []RecordMeasure {
 // this bounded typed model; user-defined operators/casts are intentionally absent.
 func recordAggregateSQL(q Query) (string, error) {
 	q.Numeric = nil
+	q.NumericHistogram = nil
 	return lowerRecordMeasures(recordMeasures(q))
 }
 func lowerRecordMeasures(measures []RecordMeasure) (string, error) {

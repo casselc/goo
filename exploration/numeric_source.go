@@ -138,6 +138,9 @@ func ValidateNumericResult(r *Result) error {
 		return fmt.Errorf("missing result")
 	}
 	b := r.Question.Numeric
+	if e := validateOptionalNumericHistogram(r.Question, r.NumericHistogram, r.Numeric); e != nil {
+		return e
+	}
 	if e := validateOptionalNumeric(b, r.Numeric, r.Count); e != nil {
 		return e
 	}

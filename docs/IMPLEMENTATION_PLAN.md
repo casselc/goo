@@ -941,3 +941,14 @@ The approved [observed-field grouping cut](OBSERVED_GROUPING.md) adds source-fre
 The approved [two-field composition cut](COMPOSED_GROUPING.md) adds ordered Add/remove intent and controlled chips across Activity analysis, fixed drafts and population children. Same-scope observations remain ephemeral; unread child edits stay in place; saved reopen retains configuration only. Numeric grouping transforms remain outside the cut.
 
 The approved [grouping consolidation](GROUPING_CONTROL.md) replaces separate fixed/population dropdowns with one passive display element and canonical owner state. Manual, custom-key and observed-field intents stage through the existing owners. Saved contracts and Go execution validation are unchanged.
+
+### Integer distribution and range populations (active)
+
+The next approved cut is [exact numeric histograms](NUMERIC_HISTOGRAMS.md), built
+on typed attribute predicates and the existing numeric measure binding. H1 adds
+same-read powers-of-two bins and checked selected/rest planning. H2 reuses the
+numeric form, passive chart and staged population continuation. H3 verifies real
+telemetry, saved/reusable configuration, exact boundaries, source-free gestures
+and count comparison with property/model and browser exploration checks. Each
+step receives independent review before publication. Numeric measure comparisons,
+custom bin authoring and inferred OTel types remain separate work.

@@ -134,7 +134,7 @@ func main() {
 	for name, v := range inputs {
 		root(name, v, true)
 	}
-	outputs := map[string]any{"RecordResult": exploration.Result{}, "InventoryResult": exploration.InventoryResult{}, "ServiceDiscovery": exploration.ServiceDiscovery{}, "CompareResult": exploration.CohortComparison{}, "PackagePlan": exploration.PackagePlan{}, "NumericPlan": exploration.NumericPlan{}, "SavedPackage": exploration.SavedPackage{}, "RecipePlan": exploration.RecipePlan{}, "DashboardPlan": exploration.DashboardPlan{}, "NativeResult": measurements.Result{}, "MetricDiscoveryResult": measurements.DiscoveryResult{}, "CapturePage": exploration.CapturePage{}, "CaptureList": exploration.CaptureList{}, "InvestigationCapture": investigations.Capture{}, "LiveOperations": annotations.LiveOperations{}, "LiveRates": annotations.LiveRates{}, "LiveHistograms": annotations.LiveHistograms{}, "LiveHTTPResult": prebuilt.LiveHTTPResult{}, "MeaningRevision": workbench.MeaningRevision{}, "Document": workbench.Document{}, "Deployment": workbench.Deployment{}, "RetainedReceipt": retention.Receipt{}, "CorrectionReceipt": retention.CorrectionReceipt{}, "RetainedCatalog": retention.CatalogPage{}, "PopulationPlan": exploration.PopulationPlan{}, "TailRow": exploration.TailRow{}}
+	outputs := map[string]any{"RecordResult": exploration.Result{}, "InventoryResult": exploration.InventoryResult{}, "ServiceDiscovery": exploration.ServiceDiscovery{}, "CompareResult": exploration.CohortComparison{}, "PackagePlan": exploration.PackagePlan{}, "NumericPlan": exploration.NumericPlan{}, "SavedPackage": exploration.SavedPackage{}, "RecipePlan": exploration.RecipePlan{}, "DashboardPlan": exploration.DashboardPlan{}, "NativeResult": measurements.Result{}, "MetricDiscoveryResult": measurements.DiscoveryResult{}, "CapturePage": exploration.CapturePage{}, "CaptureList": exploration.CaptureList{}, "InvestigationCapture": investigations.Capture{}, "LiveOperations": annotations.LiveOperations{}, "LiveRates": annotations.LiveRates{}, "LiveHistograms": annotations.LiveHistograms{}, "LiveHTTPResult": prebuilt.LiveHTTPResult{}, "MeaningRevision": workbench.MeaningRevision{}, "Document": workbench.Document{}, "Deployment": workbench.Deployment{}, "RetainedReceipt": retention.Receipt{}, "CorrectionReceipt": retention.CorrectionReceipt{}, "RetainedCatalog": retention.CatalogPage{}, "PopulationPlan": exploration.PopulationPlan{}, "NumericHistogramSelection": exploration.NumericHistogramSelection{}, "TailRow": exploration.TailRow{}}
 	for name, v := range outputs {
 		root(name, v, false)
 	}
@@ -195,6 +195,11 @@ func main() {
 		Name     string            `json:"name"`
 		Title    string            `json:"title"`
 		Lookback int               `json:"lookbackMinutes"`
+	}{}, true)
+	root("NumericHistogramSelectionRequest", struct {
+		Parent  exploration.Query `json:"parent"`
+		FromBin int               `json:"fromBin"`
+		ToBin   int               `json:"toBin"`
 	}{}, true)
 	root("NumericPlanRequest", struct {
 		Question exploration.Query          `json:"question"`

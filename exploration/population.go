@@ -55,6 +55,7 @@ func PlanPopulation(in PopulationRequest) (*PopulationPlan, error) {
 	other.GroupBy = nil
 	other.GroupTimeSeries = false
 	other.Numeric = nil
+	other.NumericHistogram = nil
 	if in.Companion != nil {
 		other = *in.Companion
 		if other.Signal == q.Signal || other.Environment != q.Environment || other.FromMS != q.FromMS || other.ToMS != q.ToMS {

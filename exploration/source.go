@@ -20,6 +20,7 @@ import (
 )
 
 type Result struct {
+	NumericHistogram  *NumericHistogram  `json:"numericHistogram,omitempty"`
 	ResultToken       string             `json:"resultToken,omitempty"`
 	TraceExamples     *TraceExampleSet   `json:"traceExamples,omitempty"`
 	Numeric           *NumericSummary    `json:"numeric,omitempty"`
@@ -152,6 +153,10 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 		if e != nil {
 			return nil, e
 		}
+	}
+	r.NumericHistogram, e = decodeNumericHistogram(count[0], q, r.Numeric)
+	if e != nil {
+		return nil, e
 	}
 	if q.Summary == "span-duration" {
 		r.Duration, e = DecodeDurationSummary(count[0])

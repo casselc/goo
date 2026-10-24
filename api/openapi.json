@@ -3955,6 +3955,64 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/numeric-histograms/selection": {
+      "post": {
+        "operationId": "post_numeric_histograms_selection",
+        "summary": "POST /numeric-histograms/selection",
+        "tags": [
+          "numeric-histograms"
+        ],
+        "description": "Current owner: cmd/goo/workbench_http.go. Effect: pure-plan-or-supplied-summary. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/workbench_http.go",
+        "x-effects": "pure-plan-or-supplied-summary",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NumericHistogramSelection"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NumericHistogramSelectionRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 131072,
+        "x-browser-body-limit-bytes": 131072,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/population/plan": {
       "post": {
         "operationId": "post_population_plan",
@@ -5391,6 +5449,52 @@
       },
       "NativeResult": {
         "$ref": "#/components/schemas/measurements.Result"
+      },
+      "NumericHistogramSelection": {
+        "$ref": "#/components/schemas/exploration.NumericHistogramSelection"
+      },
+      "NumericHistogramSelectionRequest": {
+        "anyOf": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "fromBin": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "parent": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.QueryInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "toBin": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
       },
       "NumericPlan": {
         "$ref": "#/components/schemas/exploration.NumericPlan"
@@ -9785,6 +9889,141 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.NumericDiagnostic"
       },
+      "exploration.NumericHistogram": {
+        "properties": {
+          "binning": {
+            "type": "string"
+          },
+          "bins": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/exploration.NumericHistogramBin"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "binning",
+          "bins"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.NumericHistogram"
+      },
+      "exploration.NumericHistogramBin": {
+        "properties": {
+          "count": {
+            "type": "string"
+          },
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "from",
+          "to",
+          "count"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.NumericHistogramBin"
+      },
+      "exploration.NumericHistogramComparisonQueries": {
+        "properties": {
+          "baseline": {
+            "$ref": "#/components/schemas/exploration.Query"
+          },
+          "selection": {
+            "$ref": "#/components/schemas/exploration.Query"
+          }
+        },
+        "required": [
+          "baseline",
+          "selection"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.NumericHistogramComparisonQueries"
+      },
+      "exploration.NumericHistogramSelection": {
+        "properties": {
+          "binning": {
+            "type": "string"
+          },
+          "comparison": {
+            "$ref": "#/components/schemas/exploration.NumericHistogramComparisonQueries"
+          },
+          "from": {
+            "type": "string"
+          },
+          "fromBin": {
+            "type": "integer"
+          },
+          "parent": {
+            "$ref": "#/components/schemas/exploration.Query"
+          },
+          "rest": {
+            "$ref": "#/components/schemas/exploration.Query"
+          },
+          "selected": {
+            "$ref": "#/components/schemas/exploration.Query"
+          },
+          "to": {
+            "type": "string"
+          },
+          "toBin": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "parent",
+          "selected",
+          "rest",
+          "comparison",
+          "fromBin",
+          "toBin",
+          "binning",
+          "from",
+          "to"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.NumericHistogramSelection"
+      },
+      "exploration.NumericHistogramSpec": {
+        "properties": {
+          "binning": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "binning"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.NumericHistogramSpec"
+      },
+      "exploration.NumericHistogramSpecInput": {
+        "additionalProperties": false,
+        "properties": {
+          "binning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.NumericHistogramSpec"
+      },
       "exploration.NumericPlan": {
         "properties": {
           "binding": {
@@ -10321,6 +10560,16 @@
               }
             ]
           },
+          "numericHistogram": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.NumericHistogramSpec"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "offset": {
             "type": "integer"
           },
@@ -10447,6 +10696,23 @@
                 "anyOf": [
                   {
                     "$ref": "#/components/schemas/exploration.NumericBindingInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "numericHistogram": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.NumericHistogramSpecInput"
                   },
                   {
                     "type": "null"
@@ -10862,6 +11128,16 @@
               }
             ]
           },
+          "numericHistogram": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.NumericHistogramSpec"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "percentilePolicy": {
             "type": "string"
           },
@@ -11053,6 +11329,16 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/exploration.NumericSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "numericHistogram": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.NumericHistogram"
               },
               {
                 "type": "null"
@@ -11675,6 +11961,16 @@
               }
             ]
           },
+          "numericHistogram": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.NumericHistogramSpec"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "reportedEdge": {
             "anyOf": [
               {
@@ -11832,6 +12128,23 @@
                 "anyOf": [
                   {
                     "$ref": "#/components/schemas/exploration.NumericBindingInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "numericHistogram": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.NumericHistogramSpecInput"
                   },
                   {
                     "type": "null"

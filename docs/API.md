@@ -8,7 +8,7 @@ The running server must include the current routes and assets; changing the
 checkout alone does not update an existing process. Rebuild an older image, or
 use the supported local code/asset installation and restart procedure.
 
-The spec inventories 70 supported operations: 64 Go operations, five Python-only
+The spec inventories 71 supported operations: 65 Go operations, five Python-only
 `/api` operations and the Python root `/health` probe. Go paths are unprefixed on
 port 8089; the browser proxy exposes them under `/api` on port 8088. Python-only
 operations override the server list. `/api-docs`, `/openapi.json`, the UI, static
@@ -312,3 +312,7 @@ SQL lowering. State operators partition missing/empty/invalid/valid values;
 comparisons, including ne, match valid values only. The feature adds no route and changes no existing omitted-field bytes. Shared
 editor/protocol and real telemetry capture/reuse acceptance are documented in
 the linked TF2/TF3 contract.
+
+The source-free `POST /numeric-histograms/selection` planner derives exact integer
+range and remainder questions from half-open bin indices. Its `/api` proxy has
+the same contract. See [integer distributions](NUMERIC_HISTOGRAMS.md).

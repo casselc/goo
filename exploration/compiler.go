@@ -121,7 +121,11 @@ func compile(q Query, rowLimit int) (Plan, error) {
 	if q.Numeric != nil {
 		aggregate += ", " + c.numericSQL(*q.Numeric)
 	}
-	p.Count = "SELECT " + aggregate + base + " FORMAT JSONEachRow"
+	countAggregate := aggregate
+	if q.NumericHistogram != nil {
+		countAggregate += ", " + c.numericHistogramSQL(*q.Numeric)
+	}
+	p.Count = "SELECT " + countAggregate + base + " FORMAT JSONEachRow"
 
 	if q.BucketMS != 0 {
 		c.params["bucketMs"] = strconv.FormatInt(q.BucketMS, 10)
