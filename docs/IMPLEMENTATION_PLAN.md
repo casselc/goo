@@ -1,5 +1,10 @@
 # Implementation plan
 
+> Current priority/status index: [2026-10-24 roadmap](ROADMAP_2026_10_24.md) and
+> [review-gated execution backlog](BACKLOG_2026_10_24.md). The long milestone record
+> below is implementation history; conflicting old Next labels are superseded.
+
+
 Updated 2026-10-23 after the user authorized incorporating the product, architecture
 and design reviews and working through the resulting tasks. The
 [consolidated product proposal](PRODUCT_IMPLEMENTATION_PROPOSAL.md) holds the
