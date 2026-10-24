@@ -1,6 +1,6 @@
 # Aligned numeric distribution comparisons
 
-Implementation in progress. This extends the existing numeric baseline flow with
+Implemented and independently reviewed. This extends the existing numeric baseline flow with
 exact aligned integer histograms. No new binning policy, numeric type inference,
 query language or automatic source subscription is introduced.
 
@@ -52,7 +52,9 @@ accessible and avoids clipping data inside a fixed-height comparison panel.
 Mouse or keyboard range selection stages a side and global bin indices without
 reading sources or planning queries. The pure Go comparison-selection planner
 validates the full comparison, chooses the requested side's original question and
-derives exact typed predicates. Explicit Run opens that side's records; the other
+derives exact typed predicates. In the population workspace, Open range stages a child without a source read;
+its explicit Run opens that side's records. Fixed/captured question continuations
+use their existing explicit-open behavior. The other
 side's selector/window is never silently substituted. Empty ranges and unknown
 reads cannot be executed. Pending plans are canceled on mode change, new selection,
 draft change, navigation and replacement; retained return permits new gestures.
@@ -75,7 +77,7 @@ Existing two-field stored captures can display paired distributions, with range
 execution explicitly unavailable until grouping is edited. No grouping is silently
 added or discarded. Native histogram layout alignment/rebinning is separate.
 
-## Review gates
+## Delivered review gates
 
 DC1: exact validation/comparison, side selection, legacy preservation and stored
 intent/versioning; Go tests plus independent properties and architecture review.
@@ -86,3 +88,41 @@ checks and independent UI review.
 
 DC3: ordinary OTel shape-change storyboards, actual side drilldowns and capture/
 view reopen, model trace/rejection controls and Bombadil; final review, commit/push.
+
+## Storyboard 176 — isolate a changed shape
+
+Executable [live journey](../journeys/distribution-comparisons.spec.js) uses ordinary
+OTel spans/logs with compact numeric ranges so the two shapes are visibly distinct.
+A separate resource attribute exercises integer extremes and parsing boundaries.
+
+1. Enable the existing numeric histogram, Run baseline and pin its distribution.
+   Change the population and Run; Compare distributions opts into aligned counts
+   and all-record shares. Toggling the scale is local, with explicit excluded
+   coverage and an inspectable exact-bin table.
+2. Capture and reload the explicit distribution comparison without source reads.
+   A reusable view retains both independently fixed questions and distribution
+   intent; reopening stages configuration and Run reads both sides explicitly.
+3. Keyboard selection on the baseline chart stages global bounds. Open baseline
+   range asks Go for a checked plan and stages the existing child workspace.
+   Run reads the baseline's original selector/window narrowed to that range.
+   Back restores the parent without reading it again.
+4. Pointer selection on the comparison chart follows the same flow using the
+   comparison side's distinct selector/window. Neither side's question is swapped
+   or rounded. Empty/unknown populations and invalid comparison payloads refuse
+   execution; all-invalid positive populations retain known zero shares.
+5. New v5 stored-evidence receipts freeze explicit distribution meaning; v4 numeric
+   decisions and older general captures retain their original output. Aggregate-only
+   comparisons work without fabricated categorical groups.
+6. A separate journey delays a real planner response, leaves the owner and returns.
+   The old plan cannot create a child or read telemetry; a new range can stage and
+   Run explicitly. A separate synthetic passive-component journey verifies SSR,
+   detached SPA properties, retained gestures and mobile layout without telemetry.
+
+![Aligned population shapes on a common share scale](journeys/screenshots/176a-real-population-shape-change.png)
+
+![Compact distributions fit a mobile viewport](journeys/screenshots/176b-mobile-frozen-shapes.png)
+
+![Exact side-range intent before a source read](journeys/screenshots/176c-exact-side-range-intent.png)
+
+DC1 `07a6fa9` and DC2 `aa96720` are committed. Actual source, model, actor and
+final display evidence is recorded in [VALIDATION.md](../VALIDATION.md).

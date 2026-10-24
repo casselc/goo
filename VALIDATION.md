@@ -8472,3 +8472,61 @@ synthetic standalone SSR/SPA/retained-rational-gesture case passes, including
 compact extents fitting mobile and wide extents scrolling without page overflow.
 Compact plots now use only the per-bin minimum, removing an unnecessary 440px
 floor that hid a peak on mobile. Default integer time bars remain unchanged.
+
+## Distribution comparisons — DC3 actual shapes and ownership (2026-10-24)
+
+The frozen real journey 176 and its delayed-plan case pass (main 55.5 seconds,
+late 11.3 seconds). The fixture emits 512 ordinary OTel span/log records with
+visibly distinct compact numeric populations. Each primary side has 128 records,
+104 valid values and 8 missing/8 empty/8 invalid values. Exact full 128-bin counts
+and all-record shares are verified beyond 100-row inspection pages; a resource
+attribute separately exercises int64/uint64 extrema and canonical parsing.
+
+Semantic ledger: `artifacts/distribution-comparisons/distribution-comparison-51a36697e4/ledger.json`.
+Its independent stdlib/big.Int/Rat oracle checks actual row identity, full bins,
+coverage/shares, both original side selectors/windows, aggregate-only mode,
+unknown/empty/all-invalid behavior, compatibility refusals, saved view/general
+capture reuse and explicit v5 versus unchanged v4 decisions. qobs/quint-go replay
+accepts the observations and rejects 25 changed controls (73.89 seconds).
+The initial verifier incorrectly expected frozen plots to disable explicit side
+continuation; that expectation is corrected to the documented interactive behavior,
+while immutable data and zero-read reopen/toggle guards remain unchanged. The
+initial rejected log is retained; final `native-validation.txt` passes.
+
+Late ledger: `artifacts/distribution-comparisons/distribution-comparison-cfacc838b5/late.json`.
+The new `distribution_lifecycle` model accepts the actual held-plan/navigation/
+retained-return sequence and rejects 11 controls (36.82 seconds). Open range is a
+pure plan and staged child; the child's Run performs its source read. Early browser
+tests incorrectly expected an immediate read and were corrected to assert the
+stronger staging boundary. The canceled original plan cannot create a child or
+read telemetry; a new other-side range remains usable after return.
+
+The finite 45-second Bombadil campaign passes all ten recorded phases with terminal
+complete state, max three explicit source reads and one pure planner, frozen parent
+payload, exact chosen side and retained new `[8,32)` intent. Artifacts are beside
+the semantic ledger in `bombadil/{process.log,run-result.json,trace.jsonl,coverage.json}`.
+
+Final display ledger:
+`artifacts/distribution-comparisons/distribution-comparison-e105babeb3/ledger.json`.
+Its main case passes with all 22 bars of the compact 11-bin extent visible on mobile:
+both panels share left 50px/width 290px, with no horizontal overflow or vertical
+clipping. Source/display assertions remain intact. A cold load of 104 successful
+static requests exceeded the original 15-second navigation budget despite a ready
+question and no page errors; navigation alone now permits 45 seconds, retaining
+15-second action budgets and explicit readiness assertions. The earlier semantic,
+late and actor evidence remains valid after the purely geometric width fix.
+
+The standalone passive SSR/detached-SPA/retained-rational-gesture test passes in
+6.1 seconds, including compact fit, intentionally scrollable wide bins, no page
+overflow, malformed-data refusal and zero POST effects. Full Node suite passes
+61 files. API-doc browser checks pass 72 operations with no page errors/mobile
+overflow; local documentation links and diff checks pass. Screenshots 176a–c are
+actual and visually reviewed: clean paired core, both mobile peaks and exact range
+intent. Final independent architecture/UI review approved DC2/DC3 without blockers.
+
+Limits: explicit matching canonical integer bindings and fixed powers-of-two bins;
+no arbitrary/native histogram rebinning, density inference, transactional snapshot
+or causal/statistical claim. Live comparisons/range execution support zero or one
+categorical grouping; two-field stored shapes display with an explicit inspection
+capability limitation. Count/share display choice is ephemeral; comparison intent,
+source questions and full evidence persist.

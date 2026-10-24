@@ -26,6 +26,7 @@ future priority. Earlier audits are dated design inputs, not another execution q
 | `goo-field-value`, `goo-attribute-list` | JSON `value` / `.value`, explicit presence; caller-owned field list | Typed-value section below; [source](../ui/attributes.js). |
 | `goo-metric-comparison`, `goo-comparison-context` | `data` JSON / `.data` | Supplied paired values and independent side clocks; [comparison context](COMPARISON_CONTEXT.md). |
 | `goo-trace-waterfall` | `data` / `.data`, controlled `selected-index` / `.selectedIndex` | [Waterfall](UI_WATERFALL.md); supplied spans, not complete-trace inference. |
+| `goo-aligned-histogram` | `data` JSON / `.data`, count/share mode, optional range intent | [Aligned distributions](DISTRIBUTION_COMPARISONS.md); supplied exact paired bins, no source ownership. |
 | `goo-time-bars` | `data` / `.data`, controlled key and optional range intent | [Time bars](UI_TIME_BARS.md); exact supplied count domain. |
 | `goo-chart-frame` | Heading/unit/window/state attributes or `.data`; caller-owned children | [Chart frame](UI_CHART_FRAME.md). |
 | `goo-value-timeline` | `data` / `.data`, controlled key, optional brush intent | [Native timelines](NATIVE_TIMELINES.md). |
@@ -731,3 +732,14 @@ metric row shares an exact signed rational domain across both sides and anchors
 at zero. Existing positive/default displays retain their original scale. Numeric
 parsing, compatibility, source reads and custody stay in their existing owners;
 the display converts only bounded layout ratios to pixels.
+
+`goo-aligned-histogram` composes two passive count-bar elements with the same
+global bin keys, union-cropped extent and count ceiling (or 0–100% population-share
+scale). It accepts explicit integer type/unit, valid-count pair and the supplied
+Go distribution output; its optional interactive mode emits `goo-aligned-range`
+with `{side,fromBin,toBin}` using half-open global indices. It neither constructs
+queries nor fetches. Missing/unknown shares remain unavailable. `goo-time-bars`
+adds an opt-in exact nonnegative rational value format; old uint defaults remain
+unchanged. See the synthetic SSR reference at `/ui-components` and executable
+`journeys/aligned-histogram-components.spec.js` for attribute, detached-property,
+retained-child, mobile and zero-source-effect contracts.

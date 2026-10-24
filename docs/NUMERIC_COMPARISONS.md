@@ -120,3 +120,8 @@ Validation: NC1 `8c67196`, NC2 `dcb62e4`; real journey/model/Bombadil and final
 mobile evidence are recorded in [VALIDATION.md](../VALIDATION.md). Legacy frozen
 comparisons keep their original count-only result rather than acquiring numeric
 arithmetic on reopen.
+
+[Aligned distribution comparison](DISTRIBUTION_COMPARISONS.md) adds explicit
+paired histograms over the same bindings, with all-record population shares and
+side-specific range inspection. Older numeric comparisons keep their original
+meaning unless distribution intent is explicitly requested.

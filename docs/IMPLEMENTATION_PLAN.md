@@ -971,7 +971,7 @@ NC1 is delivered in `8c67196`; NC2 live/stored display in `dcb62e4`. NC3 actual 
 property/model/Bombadil acceptance are delivered after independent review;
 see VALIDATION.md and the final commits in git history.
 
-### Aligned distribution comparisons (active)
+### Aligned distribution comparisons (delivered)
 
 Approved [distribution comparison contract](DISTRIBUTION_COMPARISONS.md): DC1
 establishes exact aligned bins, all-record share denominators, explicit side
@@ -979,3 +979,6 @@ planning and legacy intent/version preservation; DC2 reuses passive display/rang
 components and existing baseline/saved-view owners; DC3 exercises ordinary OTel
 shape changes, saved reopen, side drilldowns and stale-response controls through
 browser, property/model and Bombadil acceptance. Review and commit each gate.
+
+DC1 `07a6fa9`, DC2 `aa96720` and DC3 actual OTel/property/model/Bombadil and
+passive/mobile acceptance are delivered after independent review; see VALIDATION.md.

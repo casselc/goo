@@ -107,3 +107,8 @@ Captured frames from the live journey:
 ![Selected records compared with the whole remainder](journeys/screenshots/174b-selected-versus-rest-counts.png)
 
 ![Frozen distribution on a narrow mobile viewport](journeys/screenshots/174c-mobile-frozen-numeric-distribution.png)
+
+[Aligned comparisons](DISTRIBUTION_COMPARISONS.md) now compare two complete
+histograms with common keys/scales and exact all-record shares. Their paired chart
+can stage an interval and explicitly open either original side. This is separate
+from the single-histogram count/numeric comparison-with-rest actions above.

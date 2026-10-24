@@ -1,0 +1,21 @@
+spec: distribution_lifecycle.qnt
+module: distribution_lifecycle
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  stage:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and protocols == {{.obs.protocols}} and planners == {{.obs.planners}}'
+  apply:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and protocols == {{.obs.protocols}} and planners == {{.obs.planners}}'
+  brush:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and protocols == {{.obs.protocols}} and planners == {{.obs.planners}}'
+  held:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and protocols == {{.obs.protocols}} and planners == {{.obs.planners}}'
+  return:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and protocols == {{.obs.protocols}} and planners == {{.obs.planners}}'
+  fresh_brush:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and protocols == {{.obs.protocols}} and planners == {{.obs.planners}}'
+  fresh_stage:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and protocols == {{.obs.protocols}} and planners == {{.obs.planners}}'
+  fresh_run:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and protocols == {{.obs.protocols}} and planners == {{.obs.planners}}'

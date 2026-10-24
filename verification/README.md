@@ -1111,3 +1111,20 @@ and be rejected through qobs/Quint replay. The `numeric-comparisons.ts` Bombadil
 actor explores supplied ranking and coverage, stages a fixed question, explicitly
 reads once, pins numeric evidence and edits/repairs an invalid binding; its terminal
 coverage record proves those actions occurred without additional source reads.
+
+`TestHegelDistributionComparisonExactSharesAndSidePlans` and companion distribution tests
+use independently parsed integers, derived exact bin bounds and big.Int/Rat
+arithmetic to check all-record denominators, zero/unknown distinctions, matched
+side scopes, aggregate-only versus categorical modes and legacy hashes.
+
+`TestQuintDistributionComparisonLiveLedger` consumes journey 176 through
+`GOO_DISTRIBUTION_COMPARISON_LEDGER`; it independently checks the actual OTel
+records, full histograms, exact shares/coverage, union-cropped display, chosen-side
+plans/reads and immutable general/v5/v4 receipts. Twenty-five changed corruption
+controls must reject. `TestQuintDistributionComparisonLateLedger` reads
+`GOO_DISTRIBUTION_COMPARISON_LATE_LEDGER` and replays the actual ownership sequence
+through `model/distribution_lifecycle.yaml`; eleven controls reject hidden reads,
+scope substitution, stale plans and lost return behavior. Open stages a population
+child; its Run performs the source read. The finite Bombadil actor records all ten
+phases and a terminal coverage receipt proving two initial side reads, one explicit
+child read, one pure planner and a retained second selection.
