@@ -685,3 +685,5 @@ Activity views now have an optional exact `baselineCapture` reference. Go public
 Activity’s Views menu reuses the configuration-library adapter with explicit applied-environment and visibility inputs. Scope changes cancel publication and clear the passive library’s rows/inspector cache. No telemetry, baseline receipt, source clock or subscription is loaded by browsing. [Flow and storyboard](ACTIVITY_VIEWS.md#activity-entry-storyboard-159).
 
 The [Activity navigation adapter](ACTIVITY_NAVIGATION.md) now exposes fixed-window staging and retained authoring through one Investigate disclosure. It pauses/remembers before mounting the existing fixed owner and hides the old entrance during Activity; parent return and explicit execution contracts are unchanged.
+
+[Compact mobile records](COMPACT_MOBILE_RECORDS.md) are a supplied presentation opt-in shared by SSR and SPA tables. Responsive styles stay with the record component; legacy tail formatting excludes opt-in tables. Existing Activity owners retain selection, query windows, timestamps, navigation and source execution.

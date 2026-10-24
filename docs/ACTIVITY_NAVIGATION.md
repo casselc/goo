@@ -71,6 +71,6 @@ Actual run outcomes are recorded in [VALIDATION](../VALIDATION.md).
 ![Investigate actions](journeys/screenshots/109d-investigate-actions.png)
 ![Mobile paused Activity](journeys/screenshots/109c-mobile-activity-actions.png)
 
-The mobile frames show the existing stacked record-row presentation. A follow-up
-will assess compact row/action styling; this cut changes the investigation entry
-and parent transition.
+Activity now uses the [compact mobile record layout](COMPACT_MOBILE_RECORDS.md),
+with UTC/service together and inline row actions. The navigation and parent
+transition remain owned by the stream adapter.

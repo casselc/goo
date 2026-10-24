@@ -10,3 +10,23 @@ goo-record-context{display:block;min-width:0;margin:4px 0;font-size:11px}
 goo-record-context>details{padding-top:4px;margin-top:4px}
 goo-record-context .record-reference{display:inline-block;margin:4px 6px 4px 0;border:1px solid var(--border,#334155);border-radius:4px;padding:2px 5px;overflow-wrap:anywhere}
 .record-detail>goo-record-summary{margin-bottom:6px}
+
+/* Opt-in supplied record rows, shared by SSR tables and application adapters. */
+@media(max-width:700px){
+ goo-table[record-layout=compact]>table{display:block;min-width:0;width:100%}
+ goo-table[record-layout=compact]>table>thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+ goo-table[record-layout=compact]>table>tbody{display:block}
+ goo-table[record-layout=compact]>table>tbody>tr{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:2px 8px;padding:6px;border-bottom:1px solid var(--border,#2b3545)}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core],goo-table[record-layout=compact]>table>tbody>tr>td[data-record-field]{min-width:0;max-width:100%;padding:0;border:0;white-space:normal;overflow-wrap:anywhere}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core]{display:block}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core]::before{content:none}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=utc]{grid-column:1;grid-row:1;white-space:nowrap;font-size:11px}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=service]{grid-column:2;grid-row:1;font-size:11px}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=summary],goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=context]{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core]>goo-record-summary{flex:1 1 100%;min-width:0}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core]>button{display:inline-flex;width:auto;min-height:28px;min-width:28px;margin:0;padding:3px 8px;font-size:11px;align-items:center;justify-content:center}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-field]{grid-column:1/-1;display:flex;gap:4px 8px;align-items:baseline;flex-wrap:wrap;font-size:11px}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-field]::before{content:attr(data-label);color:var(--muted,#98a8bf);font-size:10px}
+ goo-table[record-layout=compact] goo-record-summary[compact]{display:flex;gap:2px 6px;flex-wrap:wrap;align-items:baseline}
+ goo-table[record-layout=compact] goo-record-summary[compact]>.record-message{flex:1 1 60%;min-width:0}
+}

@@ -96,7 +96,8 @@ async function inspectReport({ page, request, report, ledger, record, frameName 
     await page.screenshot({ path: path.join(frames, frameName), fullPage: true });
 }
 
-async function startBombadil({ dir, url, specification, seconds }) {
+async function startBombadil({ dir, url, specification, seconds, width, height }) {
+  if(width!==undefined||height!==undefined){expect(Number.isInteger(width)&&width>=240&&width<=2560).toBe(true);expect(Number.isInteger(height)&&height>=320&&height<=2560).toBe(true)}
   await fs.mkdir(dir, { recursive: true });
   const nativeName = { 'linux-x64': 'bombadil-linux-x64', 'linux-arm64': 'bombadil-linux-arm64',
     'darwin-arm64': 'bombadil-darwin-arm64' }[process.platform + '-' + process.arch];
@@ -106,7 +107,7 @@ async function startBombadil({ dir, url, specification, seconds }) {
   await fs.writeFile(activeFile, JSON.stringify({startedAt, owner:'bombadil'}), {flag:'wx'});
   const processHandle = spawn(path.resolve('node_modules/@antithesishq/bombadil/binaries', nativeName), [
     'browser', 'test', '--headless', '--no-sandbox', '--time-limit', seconds + 's',
-    '--exit-on-violation', '--output-path', dir, url, specification,
+    '--exit-on-violation', '--output-path', dir, ...(width===undefined?[]:['--width',String(width),'--height',String(height)]), url, specification,
   ], { stdio: ['ignore', 'pipe', 'pipe'], timeout: (seconds + 30) * 1000, killSignal: 'SIGINT' });
   processHandle.stdout.on('data', data => logs.push(data.toString()));
   processHandle.stderr.on('data', data => logs.push(data.toString()));
@@ -116,7 +117,7 @@ async function startBombadil({ dir, url, specification, seconds }) {
     const complete = async result => {
       if (completing) return; completing = true; exited = true;
       try {
-        const record = {...result, startedAt, endedAt:Date.now(), status:result.code===0?'passed':'failed'};
+        const record = {...result, startedAt, endedAt:Date.now(), status:result.code===0?'passed':'failed',...(width===undefined?{}:{viewport:{width,height}})};
         const temporary = path.join(dir, 'run-result.json.tmp');
         await fs.writeFile(temporary, JSON.stringify(record, null, 2));
         await fs.rename(temporary, path.join(dir, 'run-result.json'));

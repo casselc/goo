@@ -918,7 +918,9 @@ The approved Activity-entry saved-view discovery cut embeds the existing library
 
 The approved [Activity navigation consolidation](ACTIVITY_NAVIGATION.md) groups scope analysis and retained fixed authoring under Investigate, alongside the existing Views menu. The duplicated below-stream entrance is hidden during Activity. Source-free staging/return, explicit execution, opener focus and draft identity remain the acceptance boundaries.
 
-Next proposed usability cut: compact mobile Activity record rows and row actions,
-using the shared record/table primitives. The current navigation screenshots show
-stacked core fields and full-width actions; verify standalone and nested responsive
-styles, keyboard selection/inspection, timestamps and first-row visibility together.
+The approved [compact mobile Activity cut](COMPACT_MOBILE_RECORDS.md) adds a shared
+passive record-layout opt-in, separates legacy responsive rules and retains exact
+UTC timestamps, occurrence actions, columns, source-free paused return and desktop
+table behavior. Standalone SSR/SPA and nested composition are checked together.
+
+Next proposed adoption: evaluate the compact record layout in fixed and saved record views, retaining their context/action cells, exact window/evidence provenance, selected fields and explicit-read contracts.

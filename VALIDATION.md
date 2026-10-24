@@ -7501,3 +7501,62 @@ Local deployment updates static navigation assets only. Native binary, API/schem
 Docker images, telemetry, retained evidence, XTDB and dependency caches are unchanged.
 Compact results/ledgers remain under artifacts/activity-navigation-round and the
 per-journey artifact directories. No successful integration responses are mocked.
+
+## Compact mobile Activity records — 2026-10-24
+
+Shared record tables can now opt into `record-layout="compact"`; Activity's existing
+compact presenter emits it. At <=700 px, supplied core fields group UTC/service,
+summary and inline actions. Qualified extra fields retain labels and refinement;
+hidden columns remain hidden. Desktop keeps normal tables and configured order.
+Responsive component styles own the layout; legacy application tail rules now
+exclude opt-in tables, including when application styles load last.
+
+Actual checks:
+
+- Focused record-presentation/record-column Node checks, JS/TS syntax and diff
+  checks pass. Hegel passes 200 supplied-record cases over the actual JavaScript
+  presenter, preserving exact time, durations and bounded reported ancestry (0.21s).
+- Real OTLP/ClickHouse journey 160 passes. Twelve ordinary traced worker logs are
+  independently counted. The browser explicitly stages/starts/pauses a saved view;
+  widths 320/390/700 produce grid rows measured at 89.69 px for these short records,
+  aligned UTC/service and inline actions with >=28 px targets. 701/1024 retain
+  table-row display. No measured width overflows the document.
+- Keyboard occurrence selection and inspection retain original exact timestamp,
+  selected occurrence, opener focus and paused parent through fixed-question
+  staging/return. Added qualified fields, hidden Service, field refinement and
+  removing a draft add no source read. Explicit Resume supplies the second source
+  start and a disclosed gap. quint-go validates observed events with the existing
+  entry model and all five rejecting controls.
+- 160's 25-second Bombadil campaign passes at an explicitly configured 390×844
+  viewport. Its actual width/row geometry, bounded rows, paused selection/inspection,
+  progress and <=one source start are checked. The shared campaign runner accepts
+  an optional validated width/height pair and records it only when supplied; old
+  callers retain their default flags/result shape.
+- Synthetic passive contract 161 passes after correcting the stylesheet collision:
+  SSR and detached/reinserted SPA records, long values, exact focusable timestamps,
+  exposed column headers, keyboard action listeners and zero API requests across
+  the same five widths. Application styles deliberately load after component
+  styles. Tables without the opt-in retain the legacy mobile layout.
+- 161, real record-column journey 118, its SSR/property-upgrade check and real
+  entry/scroll/backgrounding journeys 102–103 pass together (five tests, 1.6m).
+  Actual mobile/desktop frames, component reference, README, design/ownership flow,
+  storyboard, plan and known issues are synchronized. Journey 109 also passes
+  (43.4s), refreshing the existing navigation frames while retaining source-free
+  draft/editor identity, focus, its observed model controls and default-size
+  Bombadil behavior.
+
+This is a display change. It adds no query, source adapter, selection/preservation
+protocol, saved configuration field, clock or subscription. The initial passive
+check correctly rejected the old application's stylesheet override; that conflict
+was fixed by separating the layouts rather than accepting the stacked result.
+No successful integration responses were mocked in the new 160/161 checks. Existing
+103 retains its explicit synthetic 429 transport refusal.
+
+Local deployment updates static assets/reference only; native binary and Docker
+images are unchanged. Application telemetry, captures, XTDB, volumes and reusable
+caches are preserved. Compact browser/model results remain in
+artifacts/mobile-records-round and the per-journey directories.
+
+Long arbitrary values and extra fields may expand rows. This cut accepts compact
+Activity rows, not fixed-height virtualization; fixed/saved tables retain their
+existing layout until separately adopted.

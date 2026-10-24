@@ -673,7 +673,7 @@ Activity’s Views menu now exposes the existing catalog by applied environment.
 
 Activity fixed-question entrances are consolidated under Investigate. Build fixed question restores the bounded in-memory editor; it does not guarantee a fresh blank question or durable draft. Reopened saved views still require Start; scope analysis requires a completed stream window.
 
-Mobile Activity rows still stack core cells and full-width row actions under the
-shared responsive table rules. Compacting that presentation while preserving
-readable UTC times, keyboard actions and occurrence selection is a follow-up to
-the navigation consolidation; the new mobile frames show the current behavior.
+[Compact mobile Activity rows](COMPACT_MOBILE_RECORDS.md) now group UTC/service,
+summary and inline actions using an opt-in passive layout. Long values and selected
+fields may still grow rows; no constant-height or virtualization guarantee is made.
+Legacy tails without the opt-in retain their prior stacked layout.
