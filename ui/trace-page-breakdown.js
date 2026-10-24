@@ -1,6 +1,6 @@
 /* Pure page interval reference plus supplied-data display. No reads or navigation. */
 (function(global){
- const version='goo/trace-page-breakdown/v1',max=(1n<<64n)-1n,validID=(v,n)=>typeof v==='string'&&new RegExp('^[a-f0-9]{'+n+'}$').test(v)&&!/^0+$/.test(v),wellFormed=s=>[...s].map(c=>{const n=c.codePointAt(0);return n>=0xd800&&n<=0xdfff?'\ufffd':c}).join('');
+ const version='goo/trace-page-breakdown/v1',max=(1n<<64n)-1n,validID=(v,n)=>typeof v==='string'&&v.length===n&&new RegExp('^[a-f0-9]{'+n+'}$').test(v)&&!/^0+$/.test(v),wellFormed=s=>[...s].map(c=>{const n=c.codePointAt(0);return n>=0xd800&&n<=0xdfff?'\ufffd':c}).join('');
  function ns(s){if(typeof s!=='string'||s.length>20||/\s/u.test(s)||!/^(0|[1-9][0-9]*)$/.test(s))return null;const n=BigInt(s);return n<=max?n:null}
  function compareLabel(a,b){if(a===null)return b===null?0:-1;if(b===null)return 1;const x=new TextEncoder().encode(a),y=new TextEncoder().encode(b);for(let i=0;i<Math.min(x.length,y.length);i++)if(x[i]!==y[i])return x[i]-y[i];return x.length-y.length}
  function analyze(rows,truncated=false){if(!Array.isArray(rows)||rows.length>1000||typeof truncated!=='boolean')throw Error('Use at most 1,000 supplied page rows and an explicit truncation flag.');const out={version,state:rows.length?'observed':'no_data',truncated,rows:[],groups:[]},nodes=[],keys=new Map(),add=(i,reason)=>{if(!out.rows[i].reasons.includes(reason))out.rows[i].reasons.push(reason)};

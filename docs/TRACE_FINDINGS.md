@@ -83,3 +83,12 @@ and a falsely reported anchor outcome. No capture wire schema or old bytes chang
 ![Bounded trace example](journeys/screenshots/87a-bounded-trace-example.png)
 ![Trace and authored finding](journeys/screenshots/87b-trace-finding.png)
 ![Saved evidence and finding](journeys/screenshots/87c-saved-trace-finding.png)
+
+## Related supplied-page comparison
+
+The approved [trace-page comparison cut](TRACE_COMPARISON.md) is in progress. It
+uses an explicitly held reference page and a separately expanded current trace.
+Repeated service/operation labels remain ambiguous; a unique reported label and
+kind is only an alignment candidate. The existing finding publication path and
+stored capture fields remain unchanged. See the current roadmap for acceptance
+status before treating the new UI as delivered.

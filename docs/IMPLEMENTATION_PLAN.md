@@ -1101,3 +1101,15 @@ synthetic passive SSR/SPA, all 74 Node files, 150 generated examples, the 55-sec
 actor and 80 rejecting controls over 7/6/3-action finite traces. A stored-waterfall
 UI is not added; saved-table trace expansion remains a fresh read. Final actual
 frames, review and publication are recorded in VALIDATION.md.
+
+### Contextual trace-page comparisons (in progress)
+
+The user approved comparing an explicitly inspected trace page against a held
+reference. TC1 freezes pure Go/JavaScript page-label matching, exact interval
+deltas and uncertainty. TC2 adds a passive equal-scale comparison and contextual
+in-memory reference ownership to the existing record-results adapter. TC3 closes
+actual OTel journeys, generated/raw-fact/model checks, Bombadil, current frames
+and independent review before publication. This adds no API or capture format.
+Repeated operations remain ambiguous; unique labels do not prove equivalent
+invocations. Automatic representative selection and stored comparison replay
+remain outside this cut.
