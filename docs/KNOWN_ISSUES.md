@@ -770,3 +770,11 @@ and intrinsic log severity. Compatibility note: `/compare` now rejects null grou
 for nonnullable fixed columns such as service (HTTP 400), previously admitted as
 caller-supplied summaries. Null map keys and derived exception_type remain valid;
 valid legacy source captures/hashes and unrequested row SQL remain unchanged.
+
+[Contextual Plot values](CONTEXTUAL_NUMERIC_PLOTS.md) now stages explicit numeric
+distributions from Activity, applied fixed results, retained saved scopes and
+population fields. It preserves originating membership/window rather than
+filtering to the clicked value. Saved-origin execution rereads the source;
+original capture bytes remain unchanged. Implicit numeric inference, unit
+conversion, complete live ingestion and cross-signal numeric measures remain
+outside this continuation.

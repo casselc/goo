@@ -1449,3 +1449,110 @@ GOO_DECIMAL_NUMERIC_LEDGER=../artifacts/decimal-numerics/decimal-numerics-6cf7ac
 GOO_DECIMAL_NUMERIC_LEDGER=../artifacts/decimal-numerics/decimal-numerics-630ae6e1cc/ledger.json \
   go test -run '^TestQuintDecimalNumericLiveLedger$' -v .
 ```
+
+### Contextual numeric plot scope (181)
+
+`TestHegelContextualNumericPlotScope` invokes the actual client-side
+`numeric-plot.plotQuestion` helper through Node for 70 generated cases, then
+checks the resulting query through the Go wire/compiler boundary. The independent
+checks preserve fixed windows, environment/signal, nested nullable predicates,
+exact integer thresholds above 2^53, qualified attribute/resource namespaces and
+reported-edge identities with explicit namespace presence. They require the
+numeric declaration and powers-of-two histogram while clearing previous grouping,
+time buckets, duration/status summaries and pagination offsets. Mutating the
+returned predicate and numeric field must leave both original parent and supplied
+binding unchanged. This checks authoring and custody, rather than rerunning the
+decimal arithmetic campaigns above.
+
+The generated campaign passed in 4.74s; stdout is retained in
+[contextual-numeric-plot-properties.txt](../artifacts/contextual-numeric-plot-properties.txt).
+Generated requests are not production source-read or browser-lifecycle evidence;
+the separate actual journey acceptance is recorded below.
+
+```sh
+cd verification
+PATH=/workspace/.toolchains/go/bin:$PATH GOPATH=/workspace/.go \
+GOCACHE=/workspace/.cache/go XDG_CACHE_HOME=/workspace/.cache GOTOOLCHAIN=local \
+go test -run '^TestHegelContextualNumericPlotScope$' -v .
+```
+
+`TestQuintContextualNumericPlotLiveLedger` consumes the actual journey ledger,
+ordinary raw OTel fixture facts, full stored capture bytes and custody sidecar.
+It independently applies the originating SSE batch's fixed half-open window and
+original predicate to the fixture, then checks every completed plot's count,
+coverage/coefficient summary, all 128 histogram bins, unique inspection-page IDs,
+raw strings/timestamps/resources, qualified namespaces and selected/rest partition.
+Spans expose both `Attributes` and `SpanAttributes`; both must exactly match the
+fixture. Logs expose `Attributes` in their public source DTO. Neither sample
+rows nor the fixture corpus size define the all-record measurement population.
+The actual original windows contained **387 spans and 382 logs**, from 400 emitted
+records per signal, with 27 records in each selected coefficient range.
+
+Final native acceptance passed against those exact ledgers: spans baseline plus
+34 guaranteed-changed negative controls in **37.494s**, logs plus 34 in
+**43.569s**, ownership plus 14 in **8.277s**, and the two-signal population
+supplement plus 14 in **21.532s**. All **96** controls changed the serialized
+ledger and were rejected. Controls cover scope/window and namespace drift,
+stale presentation measures, duplicate/raw-corrupted inspection rows,
+summary/scale/bin corruption, missing excluded rest, altered comparison means,
+full stored-capture identity/raw/hash/custody corruption, wrong source endpoints,
+and hidden source reads during source-free interactions. Ownership and population
+controls also reject stale dialog evidence, changed companion queries and extra
+reads when staging or returning.
+
+Each Activity/fixed/discovery/saved origin must preserve its exact parent membership
+and fixed window while removing prior presentation measures. The saved origin
+remains linked to the original frozen capture question; the newly declared
+resource plot runs separately. Full stored capture payloads retain every matching
+record, independently validate their typed receipt SHA256, and match the public
+inspection-page prefix. Raw file SHA256, byte count, receipt identity and copy/read
+clocks are checked against read-only custody sidecars.
+
+The main finite Quint model replays 18 actual actions: opening, declaring,
+cancelling, brushing, staging and reopening remain source-free; explicit executions
+account for nine source requests, two pure planners, one comparison and one stream
+subscription. The capture action contains the separately observed parent rerun and
+capture reread. The ownership model replays four actual actions with no fixed
+source reads, including navigation, dirty scope and resume invalidating retained
+confirmation buttons. `TestQuintContextualNumericPlotPopulationLedger` separately
+checks the two-signal population owner: its eight actions preserve both original
+queries and companion UI identity while staging a single-signal child from a span
+record or observed log resource field. Its four reads are two parent queries and
+one per explicitly run child.
+
+These are finite observed action/effect replays, not proofs of all browser schedules,
+telemetry completeness, original OTLP scalar types or the evaluator implementation.
+Raw-fact arithmetic, membership and hashes are checked independently before replay;
+no production evaluator predicts an expected result. The existing decimal parser
+property campaigns remain the arithmetic campaign rather than being repeated for
+this authoring feature.
+
+Initial control diagnostics are retained. A physical span-attribute mutation first
+exposed a verifier blind spot: its generic attribute map was checked while the
+redundant physical map was ignored. The oracle was strengthened to check both.
+The subsequent logs baseline correctly revealed that the logs public DTO has no
+`LogAttributes` field; the guard and mutations now target the actual exposed maps.
+Neither correction changed application code, source semantics or fixture results.
+
+- [Spans ledger](../artifacts/contextual-plots/contextual-plot-073c7ceb02/ledger.json),
+  [native validation](../artifacts/contextual-plots/contextual-plot-073c7ceb02/native-validation.txt),
+  [full capture custody](../artifacts/contextual-plots/contextual-plot-073c7ceb02/capture-custody.json).
+- [Logs ledger](../artifacts/contextual-plots/contextual-plot-f339d8d5ac/ledger.json),
+  [native validation](../artifacts/contextual-plots/contextual-plot-f339d8d5ac/native-validation.txt),
+  [full capture custody](../artifacts/contextual-plots/contextual-plot-f339d8d5ac/capture-custody.json).
+- [Ownership ledger](../artifacts/contextual-plots/contextual-plot-334d9637c4/ownership.json)
+  and [native validation](../artifacts/contextual-plots/contextual-plot-334d9637c4/native-validation.txt).
+- [Two-signal population ledger](../artifacts/contextual-plots/contextual-plot-06a76e3f3d/population.json)
+  and [native validation](../artifacts/contextual-plots/contextual-plot-06a76e3f3d/native-validation.txt).
+- [Initial span control rejection](../artifacts/contextual-plots/contextual-plot-073c7ceb02/native-validation-rejected-physical-map-control.txt)
+  and [logs DTO guard rejection](../artifacts/contextual-plots/contextual-plot-f339d8d5ac/native-validation-rejected-nonexistent-log-physical-map.txt).
+
+Reproduce the opt-in live checks individually by setting
+`GOO_CONTEXTUAL_NUMERIC_PLOT_LEDGER`,
+`GOO_CONTEXTUAL_NUMERIC_PLOT_OWNERSHIP_LEDGER` or
+`GOO_CONTEXTUAL_NUMERIC_PLOT_POPULATION_LEDGER` to the respective actual ledger
+above, with the same Go/cache environment as the generated command. Run only the
+matching `TestQuintContextualNumericPlotLiveLedger`,
+`TestQuintContextualNumericPlotOwnershipLedger` or
+`TestQuintContextualNumericPlotPopulationLedger` entrypoint. Without a ledger these
+tests explicitly skip rather than claiming live acceptance.

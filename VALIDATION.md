@@ -8046,7 +8046,7 @@ Actual checks:
 The live tests exposed and corrected a redundant Restore navigation/catalog GET,
 a hidden same-route recovery disclosure, a hidden postDiscard parent action and
 pending-buffer/late-ack safety gaps found during independent review. Frames169a–d
-and87b/c are generated from the running application; the recovery process diagram
+and 87b/c are generated from the running application; the recovery process diagram
 and storyboard are synchronized. This is same-tab convenience, not durable/shared
 recovery, secret scanning or exactly-once ordinary publication. Browser storage
 can fail or disappear; restored unknown saves may already exist on the server.
@@ -9000,3 +9000,123 @@ SHA256 digests against their custody receipts. No remaining feature blocker was
 identified. Source milestones are `ff187e3`, `e6b7a10` and `2a7a8ef`; this
 acceptance round is committed separately and published to the authorized
 `origin/work` target after checking actual git state.
+
+
+## Contextual Plot values — CP1 source and ownership checks
+
+Source milestone `b4d88db` is independently approved and deployed. Attribute and
+observed-field Plot actions open one shared compact declaration, then stage the
+existing numeric/histogram question. The exact originating selector/window/edge
+constraint is preserved; grouping/presentation and pagination reset explicitly.
+Field namespaces remain distinct, same-field explicit bindings may be reused,
+and raw samples never infer type/unit/scale. Activity row windows retain their
+original applied selector epoch; discovery uses the completed applied window.
+Saved scopes stage fresh reads while their original evidence stays immutable.
+
+All 69 Node files pass (latest 7.58s), Python server compilation passes and
+actual /numeric-plot.js/css return 200 with correct MIME types. No Go API or
+numeric semantics changed. Independent Hegel client-to-Go boundary checks pass
+70 generated examples (4.74s): the actual JS transformation runs in Node, then
+Go validates/compiles the resulting question; independent checks preserve
+WHERE/window/env/namespace/reported edges, deep isolation and exact typed
+parameters. They include missing/value service namespaces and >2^53 literals.
+This is generated semantic evidence; actual live campaign acceptance is separate.
+
+Actual ownership (12.1s) and explicitly synthetic hidden/detached-owner (4.1s)
+checks pass. The dialog's connected-owner/visibility guard refuses obsolete
+confirmation; hiding invalidates permanently and open-only listeners are cleaned
+up. Contextual-only compacting removes duplicate field controls and discloses
+detailed parsing rules, retaining visible scope/provenance and explicit Run.
+The ordinary numeric editor and existing facet eligibility remain unchanged.
+
+Draft181 browser harnesses needed corrections to existing owner contracts:
+Activity's precise Analysis-staged copy instead of generic fixed copy; querying
+a closed dialog by retained DOM reference; actual stage.requested instead of
+assuming Activity rewrites its route; exact Resume/trail labels; actual SSE batch
+window provenance; present empty/invalid map entries and normalized Attributes;
+and original Plot-opener focus on return. Full draft diagnostics are preserved
+outside Playwright's disposable output. Numeric, scope, no-read, immutability and
+source-count assertions are retained. Source-stage acceptance was pending at
+that point; the completed main/actor/native/visual checks are recorded below.
+
+CP2 actual acceptance passes: both full real OTel mains in 2.4 minutes (spans about 1.2 minutes,
+logs about 1.1 minutes). Each emits 400 ordinary records; exact original poll windows
+match 387 spans and 382 logs. Full totals/bins/captures derive only those matching
+records, independent of 100-row inspection pages. Both selected intervals contain
+27 records. Each main records nine named explore/capture source operations,
+two pure range planners, one pure comparison protocol and one separately tracked
+Activity SSE lifetime. Dialog actions, Back and immutable capture reopening
+initiate no additional telemetry request.
+
+The focused two-signal population case passes in 19.1s: both record and observed-field
+Plot origins stage a single-signal child, retain the other signal's original
+question and same parent DOM node, then read explicitly and return without a
+read. Four explicit explore operations are recorded. Ownership passes in 12.1s with
+zero explore operations and separately tracked explicit stream starts/resumes;
+synthetic hidden/detached lifecycle acceptance passes in 4.1s. The 50-second Bombadil
+campaign passes(test 51.5s), all 12 phases, 821 snapshots and maximum two explore
+reads. Its terminal guard requires the actual visible histogram as well as
+full-scope coverage and 128 exact bins. The first actor draft selected a hidden
+Activity dialog; the corrected observer selects only dialog[open], retaining
+all source/fact/terminal guards.
+
+Independent final native acceptance passes all 96 guaranteed-changed controls:
+
+- Spans073c7ceb02: baseline + 34 controls, 37.494s.
+- Logsf339d8d5ac: baseline + 34 controls, 43.569s.
+- Ownership334d9637c4: baseline + 14 controls, 8.277s.
+- Population06a76e3f3d: baseline + 14 controls, 21.532s.
+
+Final logs are adjacent native-validation.txt files under artifacts/contextual-plots.
+Main guards independently check exact originating windows/predicates, map
+namespaces and raw record uniqueness, parse partitions, all 128 coefficient bins,
+selected/rest complements, exact rational comparison and display values, source
+request effects, complete typed and raw stored capture hashes/bytes/custody clocks,
+and unchanged parent/captured scopes. Finite native Quint/qobs replay covers 18
+main, 4 ownership and 8 population actions. It validates these observed schedules
+and effects, not all interleavings, transactional isolation or complete telemetry.
+
+An initial corruption control exposed a verifier blind spot: spans retain both
+Attributes and SpanAttributes, but the observer checked only the normalized map.
+The finalized oracle checks both against independent raw facts with a fresh
+decode per map. Logs actually retain only normalized Attributes, so their
+control targets that declared map rather than inventing a nonexistent physical
+SpanAttributes/LogAttributes map. Original rejected diagnostics are preserved.
+Production data, budgets and arithmetic were unchanged; no rejecting control was
+removed or made a no-op. Final frozen-oracle campaigns above were rerun.
+
+Mains retain complete scope-capture.json and capture-custody.json adjacent to
+their ledgers. Source-free desktop181c frames reopen the actual immutable
+attribute captures with receipt equality, sourceRequests[] and full supplied
+domain fit checked. Mobile181b frames show a different fresh resource field,
+with intentional internal horizontal scrolling; they are not comparison sides.
+The storyboard labels exact scopes and each frame's provenance. Final visual
+pan/bounds closeout and independent overall review are recorded below.
+
+Final visual closeout passes for representative logs 181d with one explicit
+explore read. Exact resource scope/window/filter and all bins/summary match the
+archived real resource result (382 records). All 128 displayed rows, actual
+pan 260/520px in a 260px viewport, populated positive outlier/right bound and
+unchanged original stored capture SHA256 are checked. The raw request is kept;
+only absent versus empty groupBy is normalized to compare the editor request
+with Go's omitted-empty wire representation. An earlier spans format-only
+diagnostic is separate from the published frame. No application change or
+accepted main rerun was needed for this visual proof.
+
+Final independent overall review APPROVED source, compact declaration, retained
+scopes and focus, same-resource mobile pan, exact arithmetic, actual actor and
+all 96 native controls. The reviewer independently recomputed both stored capture
+SHA256 digests against custody receipts. No remaining blocker was identified.
+Source is committed as b4d88db; acceptance/docs are committed separately and
+published to the authorized origin/work after checking actual git state.
+
+The checked-in executable journeys/181-visual-replay.js reproduces visual
+evidence from an explicit retained ledger with mandatory saved-desktop,
+resource-right-pan or both mode. Actual representative logs both-mode replay
+passes: saved mode initiates zero telemetry requests; resource mode performs
+one explicit read with identical 382-record summary/bins and verified pan/ranges.
+The custody read uses the explicit local Docker socket with endpoint/context/TLS
+selectors cleared; its unchanged stored bytes were verified separately after
+that command-path hardening. Syntax/help checks pass. Exact command, mode effects
+and container requirements are in the storyboard. No accepted main or actor was
+rerun for this utility, and no application source changed after b4d88db.

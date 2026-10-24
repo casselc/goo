@@ -393,3 +393,12 @@ saved definitions and immutable evidence. No implicit rescaling is performed.
 Capability planning reports unsupported scale as diagnostics; execution rejects
 invalid bindings. A fractional or string-valued JSON scale is malformed transport.
 Older integer questions/results omit scale and retain their wire representation.
+
+## Contextual numeric continuation
+
+[Plot values](CONTEXTUAL_NUMERIC_PLOTS.md) adds no API operation or wire field.
+The client stages the existing numeric binding/histogram question with original
+membership/window/edge predicates, reset pagination and replaced presentation
+measures. Existing explore, selection, comparison, capture and reusable-package
+operations retain their contracts. Dialog opening/editing/confirmation performs
+no telemetry request; saved-origin Run is a fresh read of the retained scope.

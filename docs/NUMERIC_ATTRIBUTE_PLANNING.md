@@ -8,7 +8,12 @@ split charts and immutable captures. Native metric kernels remain separate.
 
 ## Declare a meaning over ordinary OTel data
 
-In Explore, expand **Numeric attribute measure** under Measures and chart. Enable
+From an inspected attribute or observed field, choose [Plot values](CONTEXTUAL_NUMERIC_PLOTS.md),
+confirm its declaration, and stage the originating fixed scope. Run reads its
+full numeric distribution. Type/unit/scale remain explicit and the selected row
+does not become a value filter.
+
+For manual configuration in Explore, expand **Numeric attribute measure** under Measures and chart. Enable
 it, choose record or resource attributes, enter a key, declare int64, uint64 or decimal64 (with scale 1–9) and
 a unit, then Run. Available keys are suggestions; custom keys can be
 entered even when bounded inventory did not discover them. Missing/empty/invalid

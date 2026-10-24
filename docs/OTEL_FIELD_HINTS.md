@@ -97,3 +97,9 @@ Full registry coverage, automatic schema migration, alias union, value validatio
 population ranking and automatic query suggestions remain outside this cut.
 
 Observed fields now also offer [Group by this field](OBSERVED_GROUPING.md). Meaning-based discovery keeps the exact key; app owners stage a fixed draft/child and require Run for full-population counts.
+
+[Plot values](CONTEXTUAL_NUMERIC_PLOTS.md) is also available on qualified
+attribute/resource keys in the inspector and observed-field browser. It collects
+an explicit numeric declaration and stages the originating scope. The hint
+catalog supplies advisory descriptions; it never infers type/unit/scale or
+changes aliases. Empty/invalid source values remain eligible field entry points.

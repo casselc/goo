@@ -1,6 +1,6 @@
 # Plot values from an attribute
 
-Source is implemented and independently reviewed; live acceptance is in progress.
+Implemented and independently reviewed, with real OTel browser and native acceptance.
 
 Open a record's attribute inspector, or browse observed fields, and choose
 **Plot values** beside an attribute or resource key. Confirm its numeric type,
@@ -69,3 +69,26 @@ fetch nor subscribe. Numeric parsing, fixed-scale arithmetic, histogram geometry
 and comparison compatibility remain governed by the existing
 [numeric](NUMERIC_ATTRIBUTE_PLANNING.md) and [decimal](FIXED_SCALE_DECIMALS.md)
 contracts. Held pages are samples, not completeness or health evidence.
+
+## Accepted journeys and evidence
+
+[Journey 181](../journeys/181-contextual-plots-storyboard.md) exercises both
+signals from Activity through fixed/discovered fields, range comparison, capture,
+saved-origin fresh plotting and paused return. Each fixture emits 400 ordinary
+OTel records; the actual original windows match 387 spans and 382 logs. A separate
+two-signal population journey verifies both record and observed-field origins
+while retaining the parent companion.
+
+[Actual frames](journeys/README.md) distinguish contextual declaration, a fresh
+mobile resource plot, and a desktop captured attribute plot. The paired mobile
+left/right views show horizontal scrolling and the positive outlier; all 128
+exact ranges are available in the chart disclosure. Their provenance is recorded
+separately, including source-free rendering and explicit fresh rereads.
+
+Acceptance passes both full mains, ownership, synthetic hidden/detached guards,
+population origins and a 50-second twelve-phase Bombadil campaign. Independent
+client-to-Go properties cover 70 generated cases. Native raw-source/capture
+validation and finite Quint/qobs replay reject all 96 corruption controls.
+[VALIDATION.md](../VALIDATION.md) and [verification](../verification/README.md)
+record actual receipts, custody hashes, observer corrections and model limits.
+Source milestone: `b4d88db`. No new numeric arithmetic or API contract is added.

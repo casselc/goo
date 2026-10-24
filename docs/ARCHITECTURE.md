@@ -609,3 +609,21 @@ flowchart LR
 Scale is part of measurement identity. Incompatible scales withhold comparison
 arithmetic. Legacy integer bindings/results omit scale. Source-read budgets,
 record grain, independent-read uncertainty and capture custody are unchanged.
+
+## Contextual numeric declaration ownership
+
+[Plot values](CONTEXTUAL_NUMERIC_PLOTS.md) is an application-owned adapter over
+the existing question, numeric binding and histogram contracts. Attribute and
+observed-field presenters emit qualified field intent only. The shared dialog
+locks that field and collects explicit type/unit/scale without parsing a sample.
+Activity, applied fixed results, immutable saved pages and population children
+supply their own exact question and lifecycle authority.
+
+The pure transformation clones membership predicates and reported-edge scope,
+resets page/presentation measures and adds one validated numeric binding/histogram.
+Native question-trail staging retains fixed/saved parents; population children
+retain their separate parent and companions; Activity preserves its paused
+window, inspector and opener. Run uses the existing source adapter and custody
+owners. Hidden/disconnected or obsolete dialog owners cannot publish staging.
+No display component, new API, numeric cast policy or evidence store owns this
+continuation. The flow diagram is in the contextual contract.

@@ -2059,3 +2059,45 @@ and full stored capture custody hashes. The first spans fresh-package attempt
 had a separately retained transient pre-execution timeout; the final mains passed
 with unchanged source budgets. VALIDATION.md records review and final publication
 status; no acceptance commit or push is inferred here.
+
+
+## 181 — Plot values from inspected and discovered fields
+
+[Storyboard](../../journeys/181-contextual-plots-storyboard.md) and
+[contract](../CONTEXTUAL_NUMERIC_PLOTS.md). Choose an attribute/resource key,
+explicitly declare numeric meaning in the compact dialog, stage its original
+fixed scope, then Run. Invalid/empty supplied values remain eligible entry points;
+the clicked value does not become an implicit filter.
+
+| Frame | Actual provenance |
+| --- | --- |
+| [Spans declaration](screenshots/181a-spans-declare-value-plot.png) | Original observation window and explicit field declaration |
+| [Logs declaration](screenshots/181a-logs-declare-value-plot.png) | The same contextual flow over ordinary OTel logs |
+| [Mobile spans resource plot](screenshots/181b-spans-full-value-distribution.png) | Fresh resource plot; chart scrolls internally |
+| [Mobile logs resource plot](screenshots/181b-logs-full-value-distribution.png) | Left edge of the pannable resource distribution |
+| [Desktop saved spans attribute plot](screenshots/181c-spans-saved-value-distribution.png) | Complete supplied domain from immutable captured attribute evidence |
+| [Desktop saved logs attribute plot](screenshots/181c-logs-saved-value-distribution.png) | Source-free saved rendering with readable full bounds |
+| [Mobile logs right pan](screenshots/181d-logs-resource-distribution-right-pan.png) | Same resource scope as 181b: visible positive outlier and exact right bound |
+
+The mobile resource plots and desktop captured attribute plots are different
+qualified fields, not baseline/comparison sides. Exact scopes and image metadata
+are retained beside the actual ledgers. Each fixture emits 400 records; the
+original observation windows match 387 spans and 382 logs, not an assumed 400.
+
+Both full signal journeys pass in 2.4 minutes. Ownership (12.1s), explicitly
+synthetic hidden/detached lifecycle (4.1s), and two-signal population origins (19.1s)
+pass. The 50-second Bombadil campaign executes all 12 phases and requires an
+actual visible full-scope histogram. Independent raw/source/capture and finite
+model replay rejects all 96 changed controls across main, ownership and population
+ledgers; 70 generated client-to-Go examples pass. Saved captures and parent
+companions stay unchanged; only explicit Run reads the plotted source.
+
+The source milestone is `b4d88db`. VALIDATION.md records observer corrections,
+actual custody/review results and publication status; screenshots alone do not
+establish complete source membership or immutable byte identity.
+
+The representative 181d resource replay performs one explicit logs read, verifies
+all 128 exact displayed bins against the archived result, and pans the actual
+520px chart to its right edge in a 260px viewport. The 382-record scope and
+original captured bytes remain unchanged. The storyboard pairs this with 181b
+and distinguishes it from source-free 181c saved attribute evidence.

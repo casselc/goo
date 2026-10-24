@@ -1052,3 +1052,14 @@ approved and deployed. FD3 acceptance passes both real OTel signals, passive
 SSR/SPA, 55-second Bombadil, 76 native rejecting controls, finite Quint/qobs
 replay and 300 generated Hegel examples with 2,100 swarm steps. Final acceptance
 commit/push status is recorded from actual git state in VALIDATION.md.
+
+### Contextual numeric plots (delivered)
+
+[Plot values](CONTEXTUAL_NUMERIC_PLOTS.md) connects inspected/discovered fields
+to the existing numeric distribution pipeline. CP1 `b4d88db` is independently
+reviewed/deployed: exact originating scopes, explicit declarations, source-free
+staging, lifecycle guards and compact shared controls. CP2 actual span/log, ownership,
+50-second Bombadil, two-signal population,
+raw/capture/model and visual acceptance passes, including all 96 changed
+rejecting controls and 70 generated client-to-Go examples. Existing arithmetic
+and API contracts are unchanged. Final review approved the complete round.

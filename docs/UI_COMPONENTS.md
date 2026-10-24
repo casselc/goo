@@ -794,3 +794,17 @@ caption strings in the passive cloned DTO. These labels format the same exact
 signed domain; they do not change bar geometry, numerical data attributes or
 exact tooltips. Decimal captions wrap fully on mobile. Integer rows omit the
 optional field and retain their existing presentation.
+
+### Contextual Plot values
+
+The [contextual numeric owner](CONTEXTUAL_NUMERIC_PLOTS.md) uses optional
+`onPlot(field, opener)` and independent `canPlot` callbacks in attribute/observed
+field presenters. Existing facet callbacks retain their own eligibility rules.
+The dialog reuses numeric controls with explicit declaration and a locked field;
+its compact presentation hides duplicated field controls and discloses detailed
+parsing guidance. Standard numeric editors keep their existing defaults.
+
+`GooNumericPlot` owns local confirmation only: supplied current question, active/
+clean authority, optional provenance, pause and stage callbacks. Hidden tabs
+invalidate open dialogs permanently; disconnected hosts cannot confirm. Scope,
+navigation, publication and source requests stay in the application owners.
