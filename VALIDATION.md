@@ -8566,3 +8566,23 @@ rerunning with this environment's XDG cache passed. Local disk recovery relocate
 and kept the latest 20 MiB of an oversized ClickHouse debug file. Application
 telemetry, query audit tables, saved evidence and rotated diagnostics were preserved;
 free workspace space recovered to about 1.3 GiB.
+
+## Population explanations — PE2 contextual UI (2026-10-24)
+
+Added contextual explanation fields to selected/rest and paired comparison flows,
+with explicit Run, exact descriptive share rows, original-side filter staging,
+observed-token Save, passive saved reopening and source-free request reuse. Pending
+work uses the existing cancellation/ownership protocol. Invalid/empty field sets
+remain disabled after cancellation/navigation; raw values preserve case. The ranked
+list uses one semantic table with shared headers and the existing 0–100% paired
+bars, rather than repeating a card/header for every value. Mobile rows label both
+sides and preserve exact-value tooltips.
+
+Independent source and actual screenshot review approved PE2 after the compact
+layout and case-preservation changes. All 62 Node test files pass (7.744 seconds).
+The full real-source journey passed before visual consolidation (50.6 seconds),
+including late arrival, lost acknowledgment/retry, immutable reopen, fresh reuse,
+nullable side filters and partial cardinality. The real delayed-response ownership
+journey passed (15.9 seconds). Final compact-layout journey, Bombadil and affected
+legacy regressions are recorded separately under PE3; no final acceptance is
+inferred merely from screenshots.
