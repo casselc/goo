@@ -819,11 +819,11 @@ td details {
  .breakdown-controls>button {width:100%}
  .facet-toolbar {align-items:start;flex-direction:column;gap:8px}
  .facet-toolbar>label {width:100%;max-width:none}
- .telemetry-table,.telemetry-table>tbody,.telemetry-table .record-row,.telemetry-table .record-detail-row {display:block}
- .telemetry-table .record-columns {display:none}
- .telemetry-table .record-row>td {display:grid;grid-template-columns:75px minmax(0,1fr);gap:10px;border:0;max-width:none;padding:6px 10px}
- .telemetry-table .record-row>td::before {content:attr(data-label);color:var(--muted);font-size:10px}
- .telemetry-table .record-row {padding-top:10px}
+ goo-table:not([record-layout=compact])>.telemetry-table,goo-table:not([record-layout=compact])>.telemetry-table>tbody,goo-table:not([record-layout=compact])>.telemetry-table .record-row,.telemetry-table .record-detail-row {display:block}
+ goo-table:not([record-layout=compact])>.telemetry-table .record-columns {display:none}
+ goo-table:not([record-layout=compact])>.telemetry-table .record-row>td {display:grid;grid-template-columns:75px minmax(0,1fr);gap:10px;border:0;max-width:none;padding:6px 10px}
+ goo-table:not([record-layout=compact])>.telemetry-table .record-row>td::before {content:attr(data-label);color:var(--muted);font-size:10px}
+ goo-table:not([record-layout=compact])>.telemetry-table .record-row {padding-top:10px}
  .telemetry-table .record-detail-row>td {display:block;padding:4px 10px 12px}
 }
 
@@ -852,7 +852,8 @@ td details {
 .severity-info {color:#a4d4e9;border-color:#426c80;background:#1c3241}
 .severity-debug {color:#b7abc9;border-color:#635372;background:#2e2638}
 .telemetry-table .record-row>td[data-record-core=context] {min-width:155px}
-.telemetry-table .record-row>td[data-record-core=context] button {display:block;margin:4px 0;max-width:100%}
+@media(min-width:701px){.telemetry-table .record-row>td[data-record-core=context] button {display:block;margin:4px 0;max-width:100%}}
+@media(max-width:700px){goo-table:not([record-layout=compact])>.telemetry-table .record-row>td[data-record-core=context] button {display:block;margin:4px 0;max-width:100%}}
 .distribution-row.trace-discovery-row {grid-template-columns:minmax(180px,35%) minmax(0,1fr) 120px auto}
 .distribution-row.trace-discovery-row>button:last-child {font-size:12px;background:transparent;white-space:nowrap}
 :is(#surroundingContext,#savedsurroundingContext) {position:fixed;right:0;top:62px;bottom:0;width:min(850px,calc(100vw - 230px));max-width:100%;z-index:30;overflow:auto;margin:0;border-radius:0;border-width:0 0 0 1px;box-shadow:-15px 0 50px #0005;background:#151e2b;padding:24px}
@@ -874,7 +875,7 @@ td details {
 #filterComposer {margin:12px 0;border-top:1px solid var(--border);padding-top:10px}
 #filterComposer>summary {font-size:12px;color:var(--muted)}
 @media(max-width:700px){
- .telemetry-table .record-row>td>* {grid-column:2;min-width:0}
+ goo-table:not([record-layout=compact])>.telemetry-table .record-row>td>* {grid-column:2;min-width:0}
  .telemetry-table .severity-badge {justify-self:start}
 }
 
@@ -1167,7 +1168,7 @@ td details {
 .population-open>.population-covered{display:none!important}
 
 .population-open .population-single-state{display:none!important}
-.population-workspace input[type=checkbox]{width:14px;height:14px;min-width:14px;min-height:0;padding:0;margin:0;flex:0 0 14px}.population-workspace>.controls>details{align-self:flex-start}.population-workspace>.controls>details label{display:flex;align-items:center;gap:7px;min-width:0;padding:4px 0;font-size:12px}.population-workspace>.evidence-note{border:0;background:transparent;padding:0;margin:6px 0;font-size:11px}.population-workspace .population-records{gap:10px}.population-workspace .population-records>section{padding:8px 0;border:0;border-top:1px solid var(--border);border-radius:0;box-shadow:none;background:transparent}.population-workspace .population-records h4{font-size:13px;margin:4px 0}.population-workspace .population-count{margin:4px 0 8px}.population-workspace>.controls{align-items:center}.population-workspace .population-save>label{display:flex;align-items:center;gap:8px;font-size:12px;margin:6px 0}.population-workspace .population-save input{flex:1;min-width:0}.population-workspace>details>label:has(input[type=checkbox]){display:flex;align-items:center;gap:7px;font-size:12px}@media(max-width:700px){.population-workspace{padding:8px}.population-workspace .telemetry-table>caption{display:block;width:auto;max-width:none;padding:8px 6px}.population-workspace .telemetry-table .record-row>td{grid-template-columns:65px minmax(0,1fr);gap:6px;padding:5px 6px}.population-workspace .telemetry-table .record-detail-row>td{padding:4px 6px 8px}}
+.population-workspace input[type=checkbox]{width:14px;height:14px;min-width:14px;min-height:0;padding:0;margin:0;flex:0 0 14px}.population-workspace>.controls>details{align-self:flex-start}.population-workspace>.controls>details label{display:flex;align-items:center;gap:7px;min-width:0;padding:4px 0;font-size:12px}.population-workspace>.evidence-note{border:0;background:transparent;padding:0;margin:6px 0;font-size:11px}.population-workspace .population-records{gap:10px}.population-workspace .population-records>section{padding:8px 0;border:0;border-top:1px solid var(--border);border-radius:0;box-shadow:none;background:transparent}.population-workspace .population-records h4{font-size:13px;margin:4px 0}.population-workspace .population-count{margin:4px 0 8px}.population-workspace>.controls{align-items:center}.population-workspace .population-save>label{display:flex;align-items:center;gap:8px;font-size:12px;margin:6px 0}.population-workspace .population-save input{flex:1;min-width:0}.population-workspace>details>label:has(input[type=checkbox]){display:flex;align-items:center;gap:7px;font-size:12px}@media(max-width:700px){.population-workspace{padding:8px}.population-workspace .telemetry-table>caption{display:block;width:auto;max-width:none;padding:8px 6px}.population-workspace goo-table:not([record-layout=compact])>.telemetry-table .record-row>td{grid-template-columns:65px minmax(0,1fr);gap:6px;padding:5px 6px}.population-workspace .telemetry-table .record-detail-row>td{padding:4px 6px 8px}}
 
 /* Population owns its timeline and record tables; distribution owns facets/comparisons. */
 .population-breakdown > .result-summary { margin:.35rem 0; padding:0; border:0 }

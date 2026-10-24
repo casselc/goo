@@ -11,7 +11,7 @@ happened with evidence you can inspect and preserve.**
 [The fresh whole-product coherence proposal](docs/WHOLE_PRODUCT_COHERENCE_PROPOSAL_2026_10_22.md)
 reconciles independent architecture and running-product usability reviews. It
 recommends a continuous Activity → analysis → population → investigation flow;
-[compact mobile record rows](docs/COMPACT_MOBILE_RECORDS.md) keep UTC/service and actions dense. The [consolidated Investigate menu](docs/ACTIVITY_NAVIGATION.md) groups fixed-question work while Views handles rolling configurations. The [contextual Activity analysis handoff](docs/ACTIVITY_ANALYSIS.md) is now
+[compact record tables](docs/COMPACT_MOBILE_RECORDS.md) keep Activity, fixed and saved rows dense on mobile while retaining full dates, messages and evidence details. The [consolidated Investigate menu](docs/ACTIVITY_NAVIGATION.md) groups fixed-question work while Views handles rolling configurations. The [contextual Activity analysis handoff](docs/ACTIVITY_ANALYSIS.md) is now
 implemented, followed by [Saved task composition](docs/SAVED_WORKSPACE.md)
 and bounded population continuation; the broader recommendations remain proposed.
 

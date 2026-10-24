@@ -677,3 +677,5 @@ Activity fixed-question entrances are consolidated under Investigate. Build fixe
 summary and inline actions using an opt-in passive layout. Long values and selected
 fields may still grow rows; no constant-height or virtualization guarantee is made.
 Legacy tails without the opt-in retain their prior stacked layout.
+
+Fixed/saved and explicit context record tables now adopt the [compact mobile layout](COMPACT_MOBILE_RECORDS.md#fixedsaved-adoption-storyboard-162). Expanded messages and inspection rows may grow vertically; full event dates remain accessible and visible on desktop. Service-held observation tables still use their existing layout.

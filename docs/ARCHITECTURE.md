@@ -687,3 +687,5 @@ Activity’s Views menu reuses the configuration-library adapter with explicit a
 The [Activity navigation adapter](ACTIVITY_NAVIGATION.md) now exposes fixed-window staging and retained authoring through one Investigate disclosure. It pauses/remembers before mounting the existing fixed owner and hides the old entrance during Activity; parent return and explicit execution contracts are unchanged.
 
 [Compact mobile records](COMPACT_MOBILE_RECORDS.md) are a supplied presentation opt-in shared by SSR and SPA tables. Responsive styles stay with the record component; legacy tail formatting excludes opt-in tables. Existing Activity owners retain selection, query windows, timestamps, navigation and source execution.
+
+The shared record-result owner now selects the [responsive record layout](COMPACT_MOBILE_RECORDS.md#fixedsaved-adoption-storyboard-162) for fixed, saved and explicitly read context tables. Presentation does not change stored receipts, result models or read clocks. Mobile formatting is independent from preview clipping; spanning inspectors and accessible action identities remain with the existing owner.

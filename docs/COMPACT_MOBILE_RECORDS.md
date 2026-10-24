@@ -1,6 +1,6 @@
-# Compact mobile Activity records
+# Compact mobile record tables
 
-Activity’s compact record tables now opt into the passive
+Activity, fixed-query, saved-capture and explicit context record tables use the passive
 `goo-table[record-layout="compact"]` layout. At widths through 700 px, UTC and
 service share the first line, the log/span summary follows, and existing action
 buttons share a wrapped row. Short ordinary records fit within 112 px in the
@@ -20,7 +20,11 @@ clear selected occurrences, or change selectors/windows.
 
 ## Reuse and ownership
 
-`GooRecordPresentation.table({compact:true})` emits the attribute. Server-rendered
+`GooRecordPresentation.table({compact:true})` emits the attribute for Activity.
+Fixed/saved owners use `{mobileCompact:true}` independently of message clipping: full
+UTC date text stays visible on desktop, the short mobile time is visually shown
+while the full date remains accessible, and long messages retain expansion.
+Exact `datetime`/tooltip values remain unchanged. Server-rendered
 HTML can use the same attribute with cells marked `data-record-core` or
 `data-record-field`; no SPA framework or new custom element is required. The
 component reference includes an explicitly synthetic SSR example.
@@ -28,17 +32,26 @@ component reference includes an explicitly synthetic SSR example.
 The responsive styles live in `record-presentation.css`. Older application tail
 rules now apply only to tables without this opt-in, preventing stylesheet-order
 collisions. Product CSS continues to own viewport height and surrounding layout.
+Expanded inspector rows use their existing spanning cell as a full-width block.
+Trace/inspect buttons have short visible labels while keeping exact accessible
+identity and tooltip text. The same action labels are retained in inspector follow-up
+buttons. Captions occupy the full width, and non-preview messages expand without
+inheriting the tail preview height.
+
 No fetch, listener, subscription, navigation or persistence is added to the display
-primitive. The existing Activity/tail owner still owns all actions and clocks.
+primitive. Existing Activity, fixed and saved owners still own actions and clocks.
 
 ```mermaid
 flowchart LR
   Records[Supplied OTel-shaped records] --> Table[Shared record table and existing actions]
   SSR[Server-rendered semantic table] --> Layout[Passive compact responsive layout]
+  Frozen[Saved receipt or fixed read] --> Table
   Table --> Layout
-  Layout -->|keyboard or pointer intent| Owner[Existing Activity/tail owner]
+  Layout -->|keyboard or pointer intent| Owner[Existing Activity/fixed/saved owner]
   Owner -->|explicit inspection or selection| Held[Held occurrence and original read window]
-  Held -->|fixed analysis then Return, no read| Activity[Same paused Activity]
+  Owner -->|explicit context| Context[Fresh context read in original bounds]
+  Context --> Table
+  Held -->|Activity Return, no read| Activity[Same paused Activity]
 ```
 
 ## Executable storyboards
@@ -67,3 +80,30 @@ and retains the legacy tail layout for tables without the opt-in.
 ![Chosen fields and inspection](journeys/screenshots/160b-mobile-field-inspection.png)
 
 Actual outcomes and remaining limits are recorded in [VALIDATION](../VALIDATION.md).
+
+## Fixed/saved adoption storyboard (162)
+
+The [log and span journeys](../journeys/compact-fixed-records.spec.js) each ingest
+four ordinary records of both signals and independently count them in ClickHouse.
+A fixed link stages before explicit Run. Both fixed and saved results are checked
+at 320/390/700/701/1024 px, including context-action geometry, full-width captions,
+responsive times and absence of document overflow.
+
+Saved reopen, long-message expansion, checkbox selection, inspection, field changes
+and hiding Service remain source-free. The original receipt and captured
+result are checked for exact equality after those interactions. The selected record’s
+inspector retains its original question, exact event time and evidence basis.
+Explicit Expand trace adds the existing span and linked-log reads in the original
+fixed bounds; the linked-log table uses the same compact presentation. Close
+restores opener focus. A 390×844 Bombadil campaign for each signal explores
+selection, spanning inspection, close and column changes with zero source reads.
+
+The synthetic 161 contract also exercises a population-styled fixed table with a
+spanning detail row and preserved long-message disclosure while application styles
+load last. Existing saved-owner journey 107 retains its observed Quint read/history
+protocol and four rejecting controls, including stale context cancellation.
+
+![Fixed log records](journeys/screenshots/162a-fixed-logs-mobile.png)
+![Saved log records and selected fields](journeys/screenshots/162b-saved-logs-mobile.png)
+![Fixed span records](journeys/screenshots/162a-fixed-spans-mobile.png)
+![Saved span records and selected fields](journeys/screenshots/162b-saved-spans-mobile.png)

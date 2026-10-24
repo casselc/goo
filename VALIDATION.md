@@ -7560,3 +7560,55 @@ artifacts/mobile-records-round and the per-journey directories.
 Long arbitrary values and extra fields may expand rows. This cut accepts compact
 Activity rows, not fixed-height virtualization; fixed/saved tables retain their
 existing layout until separately adopted.
+
+## Compact fixed/saved record adoption — 2026-10-24
+
+The shared result owner now opts fixed, saved and explicitly read context tables
+into the compact responsive record layout. `mobileCompact` is independent from
+`compact` message previews: full desktop dates and long-message expansion remain,
+with a short mobile rendition and full accessible timestamp in the same exact
+`time` element. Context buttons show short text while retaining exact accessible
+IDs/tooltips, including inspector follow-up actions. Spanning inspector rows stay
+full-width. Legacy telemetry-card projection excludes opt-in tables.
+
+Actual checks:
+
+- Focused record presentation/column Node checks and JS/TS syntax/diff checks pass.
+  The supplied-record Hegel campaign passes 200 cases over the actual JavaScript
+  presenter, retaining exact time, durations and bounded reported ancestry (0.25s).
+- New 162 log/span journeys each ingest four ordinary records of both signals,
+  independently counted in ClickHouse. Fixed links stage before Run; fixed and
+  saved rows are checked at 320/390/700/701/1024 px for grid/table transitions,
+  context actions, short/full times, full-width captions and document containment.
+- Saved reopen, long-message expansion, checkbox selection, spanning inspection,
+  fields and hiding Service add no source read. Exact selected event time,
+  original question and evidence basis remain in the inspector. The original
+  receipt and complete captured result compare equal after interaction. Explicit
+  Expand trace adds exactly two existing context reads in the original fixed
+  bounds; the linked-log table adopts the same layout, and Close restores focus.
+- Both new saved-view Bombadil campaigns pass at 390×844 for 25 seconds: selection,
+  inspect/close, column disclosure/hiding and selection preservation stay source-free
+  with compact rows, full-width detail, containment, progress and no uncaught errors.
+- Synthetic 161 now covers population-styled fixed tables, responsive full/short
+  dates, preserved long-message disclosure and spanning detail rows with app styles
+  loaded last. It retains the standalone SSR/SPA/legacy checks and zero API reads.
+- Final 162 log/span, 161, record-field 118 and SSR/property-upgrade, and shared
+  live-to-fixed presentation 106 pass together (six tests, 2.2m). Source-free
+  presentation equality and captured/saved field layouts remain intact.
+- Existing saved-owner journey 107 passes on the final assets (15.5s), refreshing
+  its saved/context frames and replaying actual read/history events through
+  quint-go with four rejecting controls. Its delayed actual context response
+  still cannot replace a different capture.
+- Screenshot inspection identified a narrow caption and inherited tail preview
+  height. The final component fixes use full-width captions and unbounded expanded
+  non-preview messages; new 162 assertions check both rather than accepting
+  clipped content. README, component/architecture contracts, flow and executable
+  storyboard, planning, limits and actual log/span mobile frames are updated.
+
+No query, saved schema, evidence receipt, API operation, native executable or
+Docker image changes. Deployment updates static assets only. Telemetry, stored
+captures/receipts, XTDB, volumes and reusable caches are retained. Compact results
+remain under artifacts/compact-fixed-round and per-journey directories. Successful
+new integration responses are real; no successful source/capture mocks are used.
+Long records and expanded details remain variable-height. Service-held span tables
+retain their existing presentation pending their own adoption.
