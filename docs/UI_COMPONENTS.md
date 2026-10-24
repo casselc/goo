@@ -687,3 +687,7 @@ The shared filter editor accepts `setValueLoader` and supplied `setCountedValues
 `goo-time-bars.clearRange()` withdraws painted/unfinished range state without emitting a selection or reading a source; the histogram owner uses it when exact bounds are edited.
 
 The latency histogram adapter accepts app-supplied `onBegin` and `onSelect(bounds,{count,total})` callbacks, plus a compact hint mode. Activity uses these instead of the fixed selection form. Activity's begin callback cancels its pending reads before staging a typed range; source cadence, cancellation, filters and comparison remain in `activity-latency.js`/`stream-entry.js`. See [Activity latency](ACTIVITY_LATENCY.md).
+
+Activity baseline comparison reuses `GooComparisonVisual.histogram` and supplied `goo-comparison-context` with a fixed 0–100% shape scale. App-owned `activity-baseline.js` loads stored metadata, validates native comparison accounting and publishes independent side clocks. Count/context disclosures do not fetch. [Contract](ACTIVITY_BASELINE.md).
+
+`GooComparisonVisual.histogram` now accepts `layout:'rows'` and supplied side labels. It renders a semantic table with aligned bucket labels and paired percentage bars on the same 0–100% scale, using the existing exact-string bar primitive. The original SVG layout stays the default. Journey 157 is a labeled passive fixture with no application/source requests and mobile label/overflow checks.

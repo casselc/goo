@@ -7260,3 +7260,82 @@ not an atomic aggregate/stream snapshot, completeness claim, request-latency SLI
 or native histogram-to-span relation. Hidden/paused/changed/failed scopes require
 explicit continuation; saving an Activity view retains its applied selector and
 columns, without starting or persisting this aggregate monitor.
+
+
+## Captured baseline comparison in Activity (2026-10-24 UTC)
+
+[Captured Activity baselines](docs/ACTIVITY_BASELINE.md) reuse immutable raw-span
+duration captures and the existing pure Go comparison endpoint. The live owner
+supplies each explicit/scheduled Activity read; a separate app adapter loads
+stored catalog/receipt pages, validates complete exact counts and publishes a
+shared paired display. No baseline source query, timer, new API operation, saved
+schema, backend binary or retention authority is added. Receipt loading and live
+comparison have independent cancellation generations. New source reads withdraw
+old comparisons; changed scopes, replacement/Clear and late responses cannot
+publish an obsolete pair. The selected receipt remains unchanged.
+
+Actual validation:
+
+- Four focused Node files pass: captured baseline validation/link parsing/native
+  result guard, Activity query ownership, histogram scope and comparison context.
+  JavaScript syntax, Python compile and staged/diff checks pass. Tests distinguish
+  source read from custody time, qualified missing versus empty selectors, exact
+  counts above 2^53, no-data, environment mismatch, wrong receipt/question/basis,
+  lost/changed bucket accounting and workspace-only capture links.
+- Hegel generates 40 large exact-count pairs, invokes Go CompareCohorts and checks
+  the native result in JS (7.1s). Baseline/current windows and selectors remain
+  independent; negative controls reject a changed basis or omitted group.
+- Styled source journey 156 passes (1.3m), with real OTLP/ClickHouse data and a
+  25-second Bombadil campaign. Four captured baseline spans remain four after a
+  late record raises the source window to five. Activity advances five→six at an
+  actual 10-second cadence. The stored capture reopens with unchanged content; source
+  counts are independent of the one-row Activity aggregate inspection page.
+- Final targeted deployed 156 passes (1.1m): catalog/capture-link selection,
+  independent structured source/custody clocks, native full-bin accounting,
+  old comparison response after Clear, old receipt after replacement, no-data,
+  selector/window-width differences, negative comparison transport failure/retry,
+  and capture-dialog cancellation. Use/Clear/retry do not add telemetry reads.
+  Direct links avoid dependence on where a known receipt falls in the bounded
+  catalog; capture-link parsing never fetches another workspace.
+- The existing Activity 155 regression and new passive row-layout 157 both pass
+  in the deployed regression run. Its first 156 attempt failed a test assertion
+  that expected literal ISO text instead of the application's UTC display format;
+  the final check asserts preserved structured clocks and passes. A prior run was
+  interrupted while improving fixture selection for a populated catalog. Those
+  attempts are retained as diagnostics, not reported as passing acceptance.
+- quint-go replays the actual 156 source-read and baseline choose/clear ledger
+  against the new bounded model. Five controls reject hidden reads, changing the
+  baseline to the new source count, rewritten bounds, altered basis and receipt
+  identity drift. Bombadil uses real saved-view/receipt identities, opens the
+  catalog, uses a workspace capture link and clears the result under read-budget,
+  progress, overflow and uncaught-error invariants. Driver fixture hash data is
+  consumed only by the test actor, then it navigates the normal saved-view route.
+- Shared comparison visuals gain an optional semantic row layout on a common
+  0–100% scale. All eight labels and paired percentages remain readable on mobile;
+  the existing SVG mode stays the default. 157 is explicitly a synthetic passive
+  display contract, with no application/source requests. No successful telemetry
+  responses were mocked in 156. Held receipt/comparison responses are actual
+  route.fetch results; route.abort is an explicit negative transport case.
+- Actual styled desktop/mobile/no-data frames, README, process diagram, component
+  contract, plan and limitations are updated. Five final served assets and HTML
+  registration match checkout. An incorrect stylesheet write was caught during
+  diff review, restored to the committed stylesheet plus the scoped additions,
+  and checked with the styled source/deployed runs; earlier frames were replaced.
+
+Local deployment updates query assets/allowlist and restarts only the frontend;
+Docker images remain unchanged. No native backend route or JSON schema changed.
+Working space became critical during validation. Only the measured disposable
+ClickHouse text (~506 MiB), trace (~394 MiB), and processor-profile (~123 MiB)
+histories were truncated through supported SQL, restoring about 1 GiB of headroom.
+OTel/application tables, query/part audit logs, captures, XTDB evidence and volumes
+were preserved. The size inventory and compact logs/ledgers remain under
+artifacts/activity-baseline-round and per-run directories. No Docker-internal
+filesystem edits or volume pruning were used; owned temporary staging is removed.
+
+Baseline/cadence preference is tab-local. Saved views are configuration, not frozen
+results. Same environment is required; differing selectors/windows are disclosed,
+not equated. Percentages are descriptive full-population shapes, not rates,
+density, significance, completeness or authenticated caller-cohort provenance.
+Capture this window explicitly rereads before storage; it is not a verbatim freeze
+of the current browser snapshot. Long legal selectors retain exact query data while
+the context presenter bounds its textual summary.

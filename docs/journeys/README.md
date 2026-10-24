@@ -730,3 +730,7 @@ controls and runs a source-free Bombadil editor campaign.
 153: [Latency histogram selection](../LATENCY_SELECTION.md), real OTLP/ClickHouse, reverse drag, keyboard/cancel, explicit child/rest comparison, source-free return, desktop/mobile frames and Bombadil. 154: synthetic passive count-bar range contract, SSR/detached upgrade, out-of-plot release and behavior removal.
 
 155: [Optional Activity latency](../ACTIVITY_LATENCY.md), real OTLP/ClickHouse, full counts versus one-row aggregate inspection, actual cadence and pause interval, brush/Apply, fixed remainder comparison and return, stale-response/empty/failure/retry checks, desktop/mobile frames, Hegel state sequences, Quint replay and Bombadil.
+
+156: [Captured Activity latency baseline](../ACTIVITY_BASELINE.md), real OTLP/ClickHouse, frozen 4 versus moving 5→6 counts despite a late baseline arrival, stored-only selection/clear, actual cadence, independent clocks, selector/window differences, no-data, two stale-response paths, negative comparison fault/retry, capture preview cancellation, desktop/mobile frames, Hegel, Quint and Bombadil.
+
+157: Synthetic passive paired-histogram row contract: aligned readable bins, exact supplied percentages, common scale, semantic headers, source-free rendering and mobile composition.

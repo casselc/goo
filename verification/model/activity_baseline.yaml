@@ -1,0 +1,11 @@
+spec: activity_baseline.qnt
+module: activity_baseline
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  read:
+    expect: 'reads == {{.obs.reads}} and chosen == {{.obs.chosen}} and coherent == {{.obs.coherent}}'
+  choose:
+    expect: 'reads == {{.obs.reads}} and chosen == {{.obs.chosen}} and coherent == {{.obs.coherent}}'
+  clear:
+    expect: 'reads == {{.obs.reads}} and chosen == {{.obs.chosen}} and coherent == {{.obs.coherent}}'

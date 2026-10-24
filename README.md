@@ -608,3 +608,5 @@ The shared editor now discovers [observed fields and values](docs/FILTER_EDITOR.
 Raw-span duration breakdowns include a [brushable latency histogram](docs/LATENCY_SELECTION.md): select buckets and preview counts without a source read, then explicitly inspect or compare.
 
 [Optional Activity latency](docs/ACTIVITY_LATENCY.md) adds explicit/manual or 10/30-second full-scope span distributions above the stream. Brush to pause and stage a duration filter, then Apply or stage a fixed comparison with the remainder.
+
+[Captured latency baselines](docs/ACTIVITY_BASELINE.md) compare an immutable saved duration distribution with Activity using shared bins and independent clocks. Baseline selection/clearing reads stored evidence only; Activity retains its explicit source cadence.

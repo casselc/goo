@@ -86,3 +86,5 @@ existing quint-go drilldown model with rejecting controls.
 ![Activity latency selection](journeys/screenshots/155a-activity-latency.png)
 ![Activity stream with latency](journeys/screenshots/155c-activity-latency-stream.png)
 ![Mobile Activity latency](journeys/screenshots/155b-activity-latency-mobile.png)
+
+[Captured baseline comparison](ACTIVITY_BASELINE.md) now adds a collapsed Baseline picker, stored-capture/link selection and shared normalized shape comparison to each successful Activity read. It adds no source timer and preserves the selected capture unchanged. Capture this window opens the existing explicit reread-and-save dialog.
