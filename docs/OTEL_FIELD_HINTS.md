@@ -95,3 +95,5 @@ then stages an exact legacy field on mobile without another source query.
 
 Full registry coverage, automatic schema migration, alias union, value validation,
 population ranking and automatic query suggestions remain outside this cut.
+
+Observed fields now also offer [Group by this field](OBSERVED_GROUPING.md). Meaning-based discovery keeps the exact key; app owners stage a fixed draft/child and require Run for full-population counts.

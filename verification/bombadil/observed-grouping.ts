@@ -1,0 +1,10 @@
+import{always,eventually}from'@antithesishq/bombadil';
+import{extract,actions,registerCustomAction}from'@antithesishq/bombadil/browser';
+export{noUncaughtExceptions,noUnhandledPromiseRejections}from'@antithesishq/bombadil/browser/defaults/properties';
+const s=extract(({document,window})=>({step:Number(document.documentElement.dataset.groupStep||0),ready:!!document.getElementById('exploreRun'),phase:document.getElementById('exploration')?.dataset.questionPhase,group:(document.getElementById('exploreGroup') as HTMLSelectElement)?.value,reads:window.performance.getEntriesByType('resource').filter(e=>new URL(e.name).pathname==='/api/explore').length,overflow:document.documentElement.scrollWidth>window.innerWidth}));
+export const noImplicitRead=always(()=>s.current.reads<=1);
+export const staged=always(()=>s.current.step<3||s.current.phase==='draft'&&s.current.group==='{"kind":"attribute","key":"http.route"}');
+export const fits=always(()=>!s.current.overflow);
+export const progress=eventually(()=>s.current.step===3).within(20,'seconds');
+const act=registerCustomAction('goo.stageObservedGrouping',async(document,_window,step:number)=>{if(step===1)document.getElementById('exploreRun')?.click();if(step===2){(document.getElementById('filterComposer') as HTMLDetailsElement).open=true;const panel=document.querySelector<HTMLDetailsElement>('#exploreFilterEditor .filter-observations');if(panel)panel.open=true;const search=panel?.querySelector<HTMLInputElement>('input');if(search){search.value='route template';search.dispatchEvent(new Event('input',{bubbles:true}))}const row=panel?.querySelector<HTMLDetailsElement>('[data-field="attribute:http.route"]');if(row)row.open=true}if(step===3)document.querySelector<HTMLButtonElement>('#exploreFilterEditor [aria-label="Stage grouping by attribute:http.route"]')?.click();document.documentElement.dataset.groupStep=String(step)});
+export const choices=actions(()=>{const v=s.current;if(!v.ready)return['Wait'];if(v.step===0)return[act(1)];if(v.step===1)return v.phase==='applied'?[act(2)]:['Wait'];return v.step===2?[act(3)]:['Wait']});

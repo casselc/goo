@@ -7798,3 +7798,47 @@ Docker images are unchanged. Test owners remove their disposable stores; existin
 application telemetry, receipts, XTDB and volumes are preserved. Compact ledgers,
 Quint logs and Bombadil outcomes are under artifacts/otel-field-hints; Node results
 are under artifacts/otel-field-hints-round.
+
+
+## Group directly from observed fields — 2026-10-24
+
+[Observed grouping](docs/OBSERVED_GROUPING.md) stages exact one-field breakdowns
+through the existing field discovery disclosure. Activity pauses and freezes its
+completed applied window; single questions stage a fixed draft; population views
+stage a child for one signal. Predicates, clocks, exact keys, companion questions
+and saved parent configurations stay intact. Explicit Run executes the query.
+
+Actual checks:
+- Node filter, observed-suggestion, population and OTel-hint suites passed. The
+  new transform case checks selected-signal replacement, reset paging, cleared
+  split timelines, unchanged nested selectors, cloned companions and caller data.
+- `TestHegelObservedGroupingStateSwarm` passed: repeated span/log/legacy grouping,
+  detached mutations and unknown-signal refusal retain original parents, clocks,
+  filters and companion grouping through generated 24-step interleavings.
+- Real OTLP/ClickHouse journey 166 passed: Activity keyboard staging and paused
+  return focus; replacement of a two-field/split fixed grouping; two-signal saved
+  parent/child execution; unchanged saved configuration; parent-return focus.
+  Only the seven explicit source requests occurred. An independent ClickHouse
+  grouping oracle matches the final route/missing groups and counts.
+- `TestQuintObservedGroupingLedger` replayed the actual browser request trace and
+  accepted fixed-scope pairs; six mutations were rejected: hidden read, changed
+  bounds, rewritten field, changed companion, retained split timeline and dropped
+  predicate. The 25-second mobile Bombadil campaign read once, discovered a field
+  and staged the exact grouping without another source read.
+- The synthetic browser contract passed with optional callbacks, unchanged filter
+  trees, detached intent, keyboard operation, guarded availability, signal-specific
+  field revalidation and suggestion withdrawal. OTel discovery journey 165 and
+  its detached-adapter contract also passed with grouping enabled. The existing
+  real observed-filter journey 150 passed with the final editor asset. The final
+  synthetic contract also rejected a detached action after suggestion withdrawal.
+
+A combined browser run was interrupted while updating the tests and is excluded
+from acceptance. Completed runs above supply the acceptance evidence. Screenshots
+166 and affected discovery frames are generated from the running app; docs,
+architecture and process diagrams describe explicit staging and execution.
+
+No Go API/schema, saved format, native executable or Docker image change is
+required. The local static UI is deployed; existing telemetry, receipts, XTDB and
+volumes are preserved. Disposable test owners remove only their own stores.
+Compact browser ledgers, Quint logs and Bombadil outcomes are under
+artifacts/observed-grouping; Node results are under artifacts/observed-grouping-round.
