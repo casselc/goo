@@ -72,7 +72,24 @@
           "question": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/exploration.CaptureQuestionInput"
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.CaptureQuestionInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "resultToken": {
+            "anyOf": [
+              {
+                "type": "string"
               },
               {
                 "type": "null"
@@ -368,6 +385,103 @@
   },
   "EvidenceContent": {
     "$ref": "#/components/schemas/retention.EvidenceContent"
+  },
+  "ExplanationFilterRequest": {
+    "anyOf": [
+      {
+        "additionalProperties": false,
+        "properties": {
+          "field": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.FieldInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "mode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "request": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ExplanationRequestInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "side": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "value": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "ExplanationPlan": {
+    "$ref": "#/components/schemas/exploration.ExplanationPlan"
+  },
+  "ExplanationRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/exploration.ExplanationRequestInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "ExplanationResult": {
+    "$ref": "#/components/schemas/exploration.ExplanationResult"
+  },
+  "ExplanationStagedQuestion": {
+    "properties": {
+      "question": {
+        "$ref": "#/components/schemas/exploration.Query"
+      }
+    },
+    "required": [
+      "question"
+    ],
+    "type": "object"
   },
   "ExplorationView": {
     "anyOf": [
@@ -2533,6 +2647,16 @@
           }
         ]
       },
+      "explanation": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ExplanationResult"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "explore": {
         "anyOf": [
           {
@@ -2599,6 +2723,16 @@
           }
         ]
       },
+      "explanation": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ExplanationRequest"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "explore": {
         "anyOf": [
           {
@@ -2648,6 +2782,23 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/exploration.ComparisonQuestionInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "explanation": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ExplanationRequestInput"
               },
               {
                 "type": "null"
@@ -4329,6 +4480,370 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.EvidenceSide"
+  },
+  "exploration.ExplanationFieldRead": {
+    "properties": {
+      "basis": {
+        "type": "string"
+      },
+      "readAt": {
+        "type": "string"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "state": {
+        "type": "string"
+      },
+      "values": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.ExplanationValueCount"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "state",
+      "readAt",
+      "values"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ExplanationFieldRead"
+  },
+  "exploration.ExplanationFieldResult": {
+    "properties": {
+      "baseline": {
+        "$ref": "#/components/schemas/exploration.ExplanationFieldRead"
+      },
+      "field": {
+        "$ref": "#/components/schemas/exploration.Field"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "rows": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.ExplanationRow"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "selection": {
+        "$ref": "#/components/schemas/exploration.ExplanationFieldRead"
+      },
+      "state": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "field",
+      "state",
+      "baseline",
+      "selection",
+      "rows"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ExplanationFieldResult"
+  },
+  "exploration.ExplanationLead": {
+    "properties": {
+      "fieldIndex": {
+        "type": "integer"
+      },
+      "rowIndex": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "fieldIndex",
+      "rowIndex"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ExplanationLead"
+  },
+  "exploration.ExplanationPlan": {
+    "properties": {
+      "baseline": {
+        "$ref": "#/components/schemas/exploration.Query"
+      },
+      "request": {
+        "$ref": "#/components/schemas/exploration.ExplanationRequest"
+      },
+      "selection": {
+        "$ref": "#/components/schemas/exploration.Query"
+      }
+    },
+    "required": [
+      "request",
+      "baseline",
+      "selection"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ExplanationPlan"
+  },
+  "exploration.ExplanationPopulation": {
+    "properties": {
+      "basis": {
+        "type": "string"
+      },
+      "count": {
+        "type": "string"
+      },
+      "readAt": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "count",
+      "readAt",
+      "basis"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ExplanationPopulation"
+  },
+  "exploration.ExplanationRequest": {
+    "properties": {
+      "baseline": {
+        "$ref": "#/components/schemas/exploration.Query"
+      },
+      "fields": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.Field"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "selection": {
+        "$ref": "#/components/schemas/exploration.Query"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "baseline",
+      "selection",
+      "fields"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ExplanationRequest"
+  },
+  "exploration.ExplanationRequestInput": {
+    "additionalProperties": false,
+    "properties": {
+      "baseline": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.QueryInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "fields": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/exploration.FieldInput"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "selection": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.QueryInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ExplanationRequest"
+  },
+  "exploration.ExplanationResult": {
+    "properties": {
+      "baseline": {
+        "$ref": "#/components/schemas/exploration.ExplanationPopulation"
+      },
+      "basis": {
+        "type": "string"
+      },
+      "fields": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.ExplanationFieldResult"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "ranked": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.ExplanationLead"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "readAt": {
+        "type": "string"
+      },
+      "request": {
+        "$ref": "#/components/schemas/exploration.ExplanationRequest"
+      },
+      "resultToken": {
+        "type": "string"
+      },
+      "selection": {
+        "$ref": "#/components/schemas/exploration.ExplanationPopulation"
+      },
+      "state": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      },
+      "warnings": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "version",
+      "request",
+      "state",
+      "readAt",
+      "basis",
+      "baseline",
+      "selection",
+      "fields",
+      "ranked",
+      "warnings"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ExplanationResult"
+  },
+  "exploration.ExplanationRow": {
+    "properties": {
+      "baselineCount": {
+        "type": "string"
+      },
+      "baselinePercent": {
+        "type": "string"
+      },
+      "differencePP": {
+        "type": "string"
+      },
+      "selectionCount": {
+        "type": "string"
+      },
+      "selectionPercent": {
+        "type": "string"
+      },
+      "value": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "value",
+      "baselineCount",
+      "selectionCount"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ExplanationRow"
+  },
+  "exploration.ExplanationValueCount": {
+    "properties": {
+      "count": {
+        "type": "string"
+      },
+      "value": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "value",
+      "count"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ExplanationValueCount"
   },
   "exploration.Field": {
     "properties": {
@@ -6942,6 +7457,19 @@
       },
       "environment": {
         "type": "string"
+      },
+      "explanationFields": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.Field"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
       },
       "family": {
         "type": "string"

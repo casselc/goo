@@ -42,6 +42,7 @@ type SavedComparison struct {
 	Result      *CohortComparison `json:"result"`
 }
 type CaptureQuestion struct {
+	Explanation *ExplanationRequest    `json:"explanation,omitempty"`
 	Measurement *measurements.Question `json:"measurement,omitempty"`
 	Comparison  *ComparisonQuestion    `json:"comparison,omitempty"`
 	Kind        string                 `json:"kind"`
@@ -50,10 +51,18 @@ type CaptureQuestion struct {
 }
 
 func (q CaptureQuestion) Validate() error {
+	if q.Kind != "explanation" && q.Explanation != nil {
+		return errors.New("unexpected explanation question")
+	}
 	if q.Kind != "measurement" && q.Measurement != nil {
 		return errors.New("unexpected measurement question")
 	}
 	switch q.Kind {
+	case "explanation":
+		if q.Explanation == nil || q.Measurement != nil || q.Explore != nil || q.Inventory != nil || q.Comparison != nil {
+			return errors.New("exclusive explanation question required")
+		}
+		return q.Explanation.Validate()
 	case "measurement":
 		if q.Measurement == nil || q.Explore != nil || q.Inventory != nil || q.Comparison != nil {
 			return errors.New("exclusive measurement question required")
@@ -90,6 +99,7 @@ func (q CaptureQuestion) Validate() error {
 
 // Normalized removes inspection-page position, never semantic filters or bounds.
 func (q CaptureQuestion) Normalized() CaptureQuestion {
+	q.Explanation = detached(q.Explanation)
 	if q.Inventory != nil {
 		v := *q.Inventory
 		v.Namespace = v.Namespace.Clone()
@@ -131,6 +141,7 @@ type CaptureReceipt struct {
 	Question   CaptureQuestion `json:"question"`
 }
 type SavedCapture struct {
+	Explanation *ExplanationResult   `json:"explanation,omitempty"`
 	Measurement *measurements.Result `json:"measurement,omitempty"`
 	Comparison  *SavedComparison     `json:"comparison,omitempty"`
 	CaptureReceipt
@@ -138,6 +149,7 @@ type SavedCapture struct {
 	Inventory *InventoryResult `json:"inventory,omitempty"`
 }
 type CapturePage struct {
+	Explanation     *ExplanationResult   `json:"explanation,omitempty"`
 	Measurement     *measurements.Result `json:"measurement,omitempty"`
 	Comparison      *SavedComparison     `json:"comparison,omitempty"`
 	Receipt         CaptureReceipt       `json:"receipt"`
@@ -181,6 +193,9 @@ func (s CaptureStore) Create(ctx context.Context, source Source, title string, q
 		return nil, e
 	}
 	q = q.Normalized()
+	if q.Kind == "explanation" {
+		return nil, errors.New("explanation capture requires a held observed result; saving never reruns the source")
+	}
 	if parent != "" {
 		p, e := s.Load(parent)
 		if e != nil {
@@ -258,6 +273,15 @@ func validateCapture(c *SavedCapture) error {
 	}
 	if c.Parent != "" && !regexpRevision.MatchString(c.Parent) {
 		return errors.New("invalid capture parent")
+	}
+	if c.Question.Kind != "explanation" && c.Explanation != nil {
+		return errors.New("unexpected explanation evidence")
+	}
+	if c.Question.Kind == "explanation" {
+		if c.Explanation == nil || c.Measurement != nil || c.Explore != nil || c.Inventory != nil || c.Comparison != nil || c.Explanation.ResultToken != "" || !reflect.DeepEqual(c.Question.Explanation, &c.Explanation.Request) {
+			return errors.New("invalid explanation capture envelope")
+		}
+		return ValidateExplanationResult(c.Explanation)
 	}
 	if c.Question.Kind == "measurement" {
 		if c.Explore != nil || c.Inventory != nil || c.Comparison != nil || c.Measurement == nil || !reflect.DeepEqual(c.Measurement.Question, *c.Question.Measurement) {
@@ -417,11 +441,14 @@ func (c *SavedCapture) Page(cursor string) (*CapturePage, error) {
 	if e != nil {
 		return nil, e
 	}
-	p := &CapturePage{Measurement: c.Measurement, Receipt: c.CaptureReceipt, Inventory: c.Inventory, Comparison: c.Comparison}
+	p := &CapturePage{Explanation: c.Explanation, Measurement: c.Measurement, Receipt: c.CaptureReceipt, Inventory: c.Inventory, Comparison: c.Comparison}
 	if c.Measurement != nil {
 		p.RetainedRecords = len(c.Measurement.Rows)
 	}
 	if c.Explore == nil {
+		if c.Explanation != nil && offset != 0 {
+			return nil, errors.New("explanation has no record pages")
+		}
 		if offset != 0 {
 			return nil, errors.New("inventory has no record pages")
 		}

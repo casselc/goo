@@ -130,11 +130,11 @@ func object(t reflect.Type, input bool) schema {
 }
 func root(name string, v any, input bool) { s := shape(reflect.TypeOf(v), input); schemas[name] = s }
 func main() {
-	inputs := map[string]any{"RecordQuery": exploration.Query{}, "InventoryRequest": exploration.InventoryQuestion{}, "CompareRequest": exploration.ComparisonRequest{}, "TailSelector": exploration.TailSelector{}, "DashboardRequest": exploration.DashboardRequest{}, "PopulationRequest": exploration.PopulationRequest{}, "NativeQuestion": measurements.Question{}, "MetricDiscoveryRequest": measurements.DiscoveryQuestion{}, "MeaningInput": workbench.MeaningInput{}, "ExplorationView": workbench.ExplorationView{}, "DeploymentInput": workbench.DeploymentInput{}, "DocumentInput": workbench.DocumentInput{}}
+	inputs := map[string]any{"RecordQuery": exploration.Query{}, "ExplanationRequest": exploration.ExplanationRequest{}, "InventoryRequest": exploration.InventoryQuestion{}, "CompareRequest": exploration.ComparisonRequest{}, "TailSelector": exploration.TailSelector{}, "DashboardRequest": exploration.DashboardRequest{}, "PopulationRequest": exploration.PopulationRequest{}, "NativeQuestion": measurements.Question{}, "MetricDiscoveryRequest": measurements.DiscoveryQuestion{}, "MeaningInput": workbench.MeaningInput{}, "ExplorationView": workbench.ExplorationView{}, "DeploymentInput": workbench.DeploymentInput{}, "DocumentInput": workbench.DocumentInput{}}
 	for name, v := range inputs {
 		root(name, v, true)
 	}
-	outputs := map[string]any{"RecordResult": exploration.Result{}, "InventoryResult": exploration.InventoryResult{}, "ServiceDiscovery": exploration.ServiceDiscovery{}, "CompareResult": exploration.CohortComparison{}, "PackagePlan": exploration.PackagePlan{}, "NumericPlan": exploration.NumericPlan{}, "SavedPackage": exploration.SavedPackage{}, "RecipePlan": exploration.RecipePlan{}, "DashboardPlan": exploration.DashboardPlan{}, "NativeResult": measurements.Result{}, "MetricDiscoveryResult": measurements.DiscoveryResult{}, "CapturePage": exploration.CapturePage{}, "CaptureList": exploration.CaptureList{}, "InvestigationCapture": investigations.Capture{}, "LiveOperations": annotations.LiveOperations{}, "LiveRates": annotations.LiveRates{}, "LiveHistograms": annotations.LiveHistograms{}, "LiveHTTPResult": prebuilt.LiveHTTPResult{}, "MeaningRevision": workbench.MeaningRevision{}, "Document": workbench.Document{}, "Deployment": workbench.Deployment{}, "RetainedReceipt": retention.Receipt{}, "CorrectionReceipt": retention.CorrectionReceipt{}, "RetainedCatalog": retention.CatalogPage{}, "PopulationPlan": exploration.PopulationPlan{}, "NumericHistogramSelection": exploration.NumericHistogramSelection{}, "TailRow": exploration.TailRow{}}
+	outputs := map[string]any{"RecordResult": exploration.Result{}, "ExplanationResult": exploration.ExplanationResult{}, "ExplanationPlan": exploration.ExplanationPlan{}, "InventoryResult": exploration.InventoryResult{}, "ServiceDiscovery": exploration.ServiceDiscovery{}, "CompareResult": exploration.CohortComparison{}, "PackagePlan": exploration.PackagePlan{}, "NumericPlan": exploration.NumericPlan{}, "SavedPackage": exploration.SavedPackage{}, "RecipePlan": exploration.RecipePlan{}, "DashboardPlan": exploration.DashboardPlan{}, "NativeResult": measurements.Result{}, "MetricDiscoveryResult": measurements.DiscoveryResult{}, "CapturePage": exploration.CapturePage{}, "CaptureList": exploration.CaptureList{}, "InvestigationCapture": investigations.Capture{}, "LiveOperations": annotations.LiveOperations{}, "LiveRates": annotations.LiveRates{}, "LiveHistograms": annotations.LiveHistograms{}, "LiveHTTPResult": prebuilt.LiveHTTPResult{}, "MeaningRevision": workbench.MeaningRevision{}, "Document": workbench.Document{}, "Deployment": workbench.Deployment{}, "RetainedReceipt": retention.Receipt{}, "CorrectionReceipt": retention.CorrectionReceipt{}, "RetainedCatalog": retention.CatalogPage{}, "PopulationPlan": exploration.PopulationPlan{}, "NumericHistogramSelection": exploration.NumericHistogramSelection{}, "TailRow": exploration.TailRow{}}
 	for name, v := range outputs {
 		root(name, v, false)
 	}
@@ -228,10 +228,21 @@ func main() {
 		FromNS string `json:"fromNS"`
 		ToNS   string `json:"toNS"`
 	}{}, true)
+	root("ExplanationFilterRequest", struct {
+		Request exploration.ExplanationRequest `json:"request"`
+		Field   exploration.Field              `json:"field"`
+		Value   *string                        `json:"value"`
+		Side    string                         `json:"side"`
+		Mode    string                         `json:"mode"`
+	}{}, true)
+	root("ExplanationStagedQuestion", struct {
+		Question exploration.Query `json:"question"`
+	}{}, false)
 	root("CaptureRequest", struct {
-		Title    string                      `json:"title"`
-		Question exploration.CaptureQuestion `json:"question"`
-		Parent   string                      `json:"parent"`
+		Title       string                       `json:"title"`
+		Question    *exploration.CaptureQuestion `json:"question,omitempty"`
+		Parent      string                       `json:"parent"`
+		ResultToken string                       `json:"resultToken,omitempty"`
 	}{}, true)
 	root("InvestigationRequest", struct {
 		Question  investigations.Question `json:"question"`

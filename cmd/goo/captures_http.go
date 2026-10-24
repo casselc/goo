@@ -169,9 +169,10 @@ func registerCaptures(mux *http.ServeMux, source exploration.Source, dir string)
 	})
 	mux.HandleFunc("POST /captures", func(w http.ResponseWriter, r *http.Request) {
 		var in struct {
-			Title    string                      `json:"title"`
-			Question exploration.CaptureQuestion `json:"question"`
-			Parent   string                      `json:"parent"`
+			Title       string                      `json:"title"`
+			ResultToken string                      `json:"resultToken,omitempty"`
+			Question    exploration.CaptureQuestion `json:"question"`
+			Parent      string                      `json:"parent"`
 		}
 		d := json.NewDecoder(http.MaxBytesReader(w, r.Body, 16384))
 		d.DisallowUnknownFields()
@@ -181,6 +182,52 @@ func registerCaptures(mux *http.ServeMux, source exploration.Source, dir string)
 		}
 		if d.Decode(new(any)) != io.EOF {
 			fail(w, 400, fmt.Errorf("expected one JSON object"))
+			return
+		}
+		if in.ResultToken != "" {
+			if e := exploration.ValidateCaptureTitle(in.Title); e != nil {
+				fail(w, 400, e)
+				return
+			}
+			if in.Parent != "" {
+				fail(w, 400, fmt.Errorf("observed explanation promotion cannot refresh a parent"))
+				return
+			}
+			observed, e := resultSnapshots.Load(in.ResultToken)
+			if e != nil {
+				fail(w, 409, e)
+				return
+			}
+			if observed.Question.Kind != "explanation" || observed.Explanation == nil {
+				fail(w, 400, fmt.Errorf("result token does not identify an observed explanation"))
+				return
+			}
+			if in.Question.Kind != "" {
+				if e = in.Question.Validate(); e != nil {
+					fail(w, 400, e)
+					return
+				}
+				a, _ := json.Marshal(in.Question.Normalized())
+				b, _ := json.Marshal(observed.Question.Normalized())
+				if string(a) != string(b) {
+					fail(w, 409, fmt.Errorf("observed explanation question differs from supplied question"))
+					return
+				}
+			} else if in.Question.Explanation != nil || in.Question.Explore != nil || in.Question.Measurement != nil || in.Question.Inventory != nil || in.Question.Comparison != nil {
+				fail(w, 400, fmt.Errorf("partial promotion question is invalid"))
+				return
+			}
+			saved, e := resultSnapshots.PromoteExplanation(in.ResultToken, in.Title, store)
+			if e != nil {
+				fail(w, 409, e)
+				return
+			}
+			page, e := saved.Page("")
+			if e != nil {
+				fail(w, 500, e)
+				return
+			}
+			reply(w, 201, page)
 			return
 		}
 		if in.Parent != "" {
@@ -199,7 +246,7 @@ func registerCaptures(mux *http.ServeMux, source exploration.Source, dir string)
 				fail(w, 409, fmt.Errorf("refresh cannot change the captured question"))
 				return
 			}
-			if in.Question.Kind == "" && (in.Question.Explore != nil || in.Question.Inventory != nil || in.Question.Comparison != nil || in.Question.Measurement != nil) {
+			if in.Question.Kind == "" && (in.Question.Explanation != nil || in.Question.Explore != nil || in.Question.Inventory != nil || in.Question.Comparison != nil || in.Question.Measurement != nil) {
 				fail(w, 400, fmt.Errorf("partial refresh question is invalid"))
 				return
 			}
@@ -214,6 +261,10 @@ func registerCaptures(mux *http.ServeMux, source exploration.Source, dir string)
 		}
 		if e := in.Question.Validate(); e != nil {
 			fail(w, 400, e)
+			return
+		}
+		if in.Question.Kind == "explanation" {
+			fail(w, 400, fmt.Errorf("save an observed explanation with its result token; run again explicitly to refresh"))
 			return
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 55*time.Second)

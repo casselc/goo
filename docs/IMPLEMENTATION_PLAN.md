@@ -982,3 +982,13 @@ browser, property/model and Bombadil acceptance. Review and commit each gate.
 
 DC1 `07a6fa9`, DC2 `aa96720` and DC3 actual OTel/property/model/Bombadil and
 passive/mobile acceptance are delivered after independent review; see VALIDATION.md.
+
+### Explain a selected population (active)
+
+Approved [population explanation contract](POPULATION_EXPLANATIONS.md): PE1 adds
+bounded count/group-only comparisons across explicit qualified fields, exact share
+ranking and filter plans, plus server-held promotion of the observed result. PE2
+uses existing contextual comparison/range and capture surfaces. PE3 verifies full
+actual telemetry, partial fields, late arrivals, immutable save/reuse and ownership
+through browser/property/model/Bombadil evidence. Keep old capture identities and
+numeric/distribution workflows unchanged; do not introduce inferred causal claims.

@@ -8,10 +8,11 @@ import (
 	"time"
 )
 
-var resultSnapshots exploration.ResultSnapshots
+var resultSnapshots = &exploration.ResultSnapshots{}
 
 func registerExploration(mux *http.ServeMux, source exploration.Source, banks ...*exploration.TailMembershipSnapshots) {
 	registerRecipes(mux)
+	registerPopulationExplanations(mux, source)
 	registerTail(mux, source, banks...)
 	mux.HandleFunc("POST /compare", func(w http.ResponseWriter, r *http.Request) {
 		fail := func(e error) { httpjson.Write(w, 400, map[string]string{"error": e.Error()}) }

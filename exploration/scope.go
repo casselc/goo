@@ -13,6 +13,7 @@ import (
 // Selector and Binding retain exact typed constraints, including OTel namespaces.
 // Unknown schema/convention metadata is not guessed from names or library versions.
 type QuestionScope struct {
+	ExplanationFields  []Field               `json:"explanationFields,omitempty"`
 	ReportedEdge       *ReportedEdge         `json:"reportedEdge,omitempty"`
 	Family             string                `json:"family"`
 	Signal             string                `json:"signal"`
@@ -45,6 +46,21 @@ func (q CaptureQuestion) Scope() (QuestionScope, error) {
 	}
 	s := QuestionScope{Family: q.Kind, Convention: "Unbound; no semantic-convention profile inferred", SchemaMetadata: "Unavailable in this record adapter; original resource/scope constraints remain in selector"}
 	switch q.Kind {
+	case "explanation":
+		a, e := (CaptureQuestion{Kind: "explore", Explore: &q.Explanation.Baseline}).Scope()
+		if e != nil {
+			return s, e
+		}
+		b, e := (CaptureQuestion{Kind: "explore", Explore: &q.Explanation.Selection}).Scope()
+		if e != nil {
+			return s, e
+		}
+		s.Signal = a.Signal
+		s.SourceBinding = a.SourceBinding
+		s.Grain = "explanation-pair"
+		s.Environment = a.Environment
+		s.Members = []QuestionScope{a, b}
+		s.ExplanationFields = append([]Field{}, q.Explanation.Fields...)
 	case "explore", "inventory":
 		var v Query
 		if q.Explore != nil {

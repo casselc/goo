@@ -8530,3 +8530,39 @@ or causal/statistical claim. Live comparisons/range execution support zero or on
 categorical grouping; two-field stored shapes display with an explicit inspection
 capability limitation. Count/share display choice is ephemeral; comparison intent,
 source questions and full evidence persist.
+
+## Population explanations — PE1 exact aggregate and custody semantics (2026-10-24)
+
+Added explicit versioned baseline/selection requests with one to six qualified
+fields. Source execution reads only two full counts and at most twelve full group
+queries, each with a three-second child budget under the controlled 55-second
+request. Exact rational share changes use all records; missing and empty stay
+separate, and incomplete/cardinality/byte-limited/changed fields are never ranked
+as full data. Global ranking uses references, exact ordering and deterministic ties.
+Pure include/exclude plans preserve the chosen original side and existing predicate
+limits. New explanation captures retain aggregates and request scopes, not raw pages.
+
+Typed observations share the existing two-minute/2 MiB/64-entry snapshot pool.
+Save promotes the held result without querying telemetry, strips the capability
+from durable bytes and records custody time separately. Promotion reserves a stable
+candidate before file I/O: actual publish-then-error and concurrent retry tests
+prove one capture ID/file, unchanged custody and observed facts. Expiry refuses
+saving without deleting existing evidence or silently rerunning. Old snapshot and
+capture formats omit new fields and remain compatible.
+
+Independent architecture review approved PE1 after fixing uncertain-publication
+retry identity and field-authoring Unicode guards. Full exploration/cmd/workbench
+suites pass (2.426/1.517/0.403 seconds). HTTP tests prove four source reads for one
+field, zero for plan/filter/promotion/retry/reopen, distinct null intent, malformed
+source-field refusal and cancellation admission. Five native suites pass with
+100 Hegel campaigns, independent big.Int/Rat ranking, near ties, partial bounds,
+source projection, filter partitions and snapshot compatibility. OpenAPI validates
+75 operations / 69 Go operations with existing frozen fixtures unchanged.
+Evidence: `artifacts/population-explanation-{go,http-final,properties-final}.log`.
+
+A later property invocation initially used the unwritable default Hegel cache;
+rerunning with this environment's XDG cache passed. Local disk recovery relocated
+413 MiB of generated legacy Go cache to `/tmp` with its original path symlinked,
+and kept the latest 20 MiB of an oversized ClickHouse debug file. Application
+telemetry, query audit tables, saved evidence and rotated diagnostics were preserved;
+free workspace space recovered to about 1.3 GiB.
