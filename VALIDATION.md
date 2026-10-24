@@ -7945,3 +7945,17 @@ telemetry, captures, XTDB and volumes are preserved. Tests remove only their own
 stores. Compact ledgers/results remain under artifacts/composed-grouping,
 artifacts/population-breakdown, artifacts/facet-selection and
 artifacts/grouping-consolidation-round.
+
+
+## 2026-10-24 — M1 numeric field guidance (independently approved)
+
+Node syntax and numeric-measures, OTel hints and field-presentation suites pass.
+The real collector/ClickHouse journey `journeys/numeric-measures.spec.js` passes
+with `GOO_NUMERIC_BOMBADIL=1` (1 journey, 1.4 minutes). It checks exact namespace
+labels/raw keys, explicit unchanged type/unit, source-free authoring, full binding
+and fixed bounds, scope withdrawal, canceled actual upstream response, failed-read
+withdrawal, numeric coverage and immutable capture/reuse. Native
+`TestQuintNumericLiveLedger`, its rejecting controls, and saved-numeric Bombadil
+pass; compact evidence is in `artifacts/numeric-measures/numeric-e7dedfec`.
+Frames 44a–44c are regenerated. Independent milestone review approved code and
+final evidence with no blocking findings. No API/schema or backend change.

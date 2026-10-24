@@ -3,6 +3,11 @@
 **Turn telemetry into shared definitions of system behavior, and investigate what
 happened with evidence you can inspect and preserve.**
 
+[Current reviewed roadmap](docs/ROADMAP_2026_10_24.md) · [Execution backlog](docs/BACKLOG_2026_10_24.md).
+
+Numeric authoring now provides exact namespace field guidance while keeping type
+and unit explicit; see [numeric measures](docs/NUMERIC_ATTRIBUTE_PLANNING.md).
+
 [API contract and usage](docs/API.md) · [OpenAPI 3.1](api/openapi.json) ·
 [Browsable API docs](http://localhost:8088/api-docs) (requires the current Python server).
 

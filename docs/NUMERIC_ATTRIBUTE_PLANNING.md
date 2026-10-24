@@ -10,7 +10,7 @@ split charts and immutable captures. Native metric kernels remain separate.
 
 In Explore, expand **Numeric attribute measure** under Measures and chart. Enable
 it, choose record or resource attributes, enter a key, declare int64 or uint64 and
-a unit, then Apply question. Available keys are suggestions; custom keys can be
+a unit, then Run. Available keys are suggestions; custom keys can be
 entered even when bounded inventory did not discover them. Missing/empty/invalid
 values remain visible beside arithmetic. Units label inputs; no rescaling occurs.
 
@@ -131,3 +131,26 @@ This fixture is integration evidence, not production traffic or OTel completenes
 
 Next: multiple named measures, explicit decimal/float policies, unit conversions
 and numeric cohort comparisons. Databricks raw-source lowering remains future work.
+
+## Field guidance — reviewed 2026-10-24
+
+The numeric editor shares the field-presentation catalog while retaining its own
+explicit binding controls. Attribute and resource suggestions show readable labels
+and exact raw keys in separate namespaces; custom keys remain supported. The
+returned-row semantic-convention hint is advisory: neither numeric type nor unit
+is inferred. Binding-only edits preserve the numeric editor's detached suggestion
+snapshot. Population changes, new reads and failures clear suggestions; canceled
+responses cannot restore a prior scope's inventory. Editing does not read sources.
+
+```mermaid
+flowchart LR
+  R[Successful scoped read] --> I[Detached field inventory]
+  I --> H[Exact namespace and readable hint]
+  H --> E[Explicit key / type / unit]
+  E --> G[Existing Go validation and plan]
+  S[Scope change / new read / failure] --> C[Withdraw suggestions]
+```
+
+Storyboard 44 now exercises namespace switching, unchanged explicit defaults,
+source-free edits, cancellation of an actual held response, failed-read withdrawal
+and immutable capture reuse. Updated frames 44a–44c show the running application.

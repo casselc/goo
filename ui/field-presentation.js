@@ -17,6 +17,7 @@
   ['attribute','rpc.response.status_code','RPC response status','RPC','RPC response code; interpretation depends on the RPC system, not span status.'],
   ['attribute','db.system.name','Database system','Database','Database product, such as PostgreSQL or Redis.'],
   ['attribute','db.namespace','Database namespace','Database','Database namespace being accessed; interpretation depends on the database system.'],
+  ['attribute','db.response.returned_rows','Database returned rows','Database','Reported returned-row count. Declare the numeric type and unit explicitly; this key alone does not validate its values.'],
   ['attribute','db.operation.name','Database operation','Database','Reported database operation, such as SELECT or GET.'],
   ['attribute','db.collection.name','Database collection','Database','Collection or table being accessed, where reported.'],
   ['attribute','messaging.system','Messaging system','Messaging','Messaging product or system used for this operation.'],
