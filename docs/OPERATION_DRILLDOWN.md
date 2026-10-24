@@ -86,3 +86,12 @@ go test -run 'TestHegelOperationHeatmapSelection|TestQuintObservedOperationNavig
 
 Quint reports are retained in artifacts/verification. Use the documented Go cache
 and XDG_CACHE_HOME settings in verification/README.md for native checks.
+
+Operation lists now display readable durations and UTC event times, preserving exact
+nanoseconds in tooltips and selection bounds. Short trace-action labels retain
+exact accessible IDs and metadata. Custom invocation/subject tables use the shared
+bounded table viewport; local navigation adds no operation read. The
+[renderer audit and 163 storyboard](RECORD_RENDERER_AUDIT_2026_10_24.md) record the
+deliberate difference between declared outcomes and raw span records.
+
+![Readable operation subject events](journeys/screenshots/163-readable-operation-events.png)

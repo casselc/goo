@@ -39,6 +39,7 @@
  }
  function subjectSpans(spans,subject){const members=new Set(subjectEvents(spans,subject).map(x=>x.span));return spans.filter(s=>members.has(s));}
  function node(tag,text){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;}
+ function observationTable(id,labels,label){const viewport=node('goo-table'),table=node('table'),head=node('thead'),header=node('tr'),body=node('tbody');viewport.setAttribute('density','compact');viewport.setAttribute('aria-label',label);table.id=id;for(const text of labels){const th=node('th',text);th.scope='col';header.append(th)}head.append(header);table.append(head,body);viewport.append(table);return {viewport,body}}
  function mount(container,data,{prefix=''}={}){
   const snapshot=data.spans, basis=data.conformance.basis;
   const enabled=new Set(data.package?.definition.views||['operation-overview','duration-heatmap','trace-waterfall','subject-events']);
@@ -62,7 +63,7 @@
    global.GooVisuals.waterfall(waterfall,waterfallRows(trace,data.source.service),false,undefined,'operationSpanDetails');
    subjects.replaceChildren(node('h3','Observed subject events in this trace'));
    let count=0;
-   for(const s of trace)for(const event of s.events||[]){count++;const row=node('p',`${event.timeNS} ns · ${event.name}${event.outcome?' · '+event.outcome:''} `);if(event.subject&&!event.diagnostic)row.append(subjectButton(event.subject));else row.append(node('span',event.diagnostic||'No scoped subject identity'));subjects.append(row);}
+   for(const s of trace)for(const event of s.events||[]){count++;const row=node('p');row.append(global.GooRecordPresentation.timestamp({timestamp_ns:event.timeNS}),` · ${event.name}${event.outcome?' · '+event.outcome:''} `);if(event.subject&&!event.diagnostic)row.append(subjectButton(event.subject));else row.append(node('span',event.diagnostic||'No scoped subject identity'));subjects.append(row);}
    if(!count)subjects.append(node('p','No observed subject events. Absence does not prove failure or nonexistence.'));
    waterfall.scrollIntoView({block:'nearest'});
   }
@@ -71,19 +72,19 @@
    const events=subjectEvents(snapshot,subject),spans=subjectSpans(snapshot,subject),traceIDs=new Set(spans.map(s=>s.traceID));
    subjects.replaceChildren(node('h3',`Subject ${subject.tenant}/${subject.namespace}/${subject.id}`));
    const note=node('p',`${events.length} observed event${events.length===1?'':'s'} · ${spans.length} event-bearing invocation${spans.length===1?'':'s'} · ${traceIDs.size} trace${traceIDs.size===1?'':'s'}. Scope: ${subject.environment}/${subject.service}/${subject.namespace}/${subject.tenant}. Same captured evidence and span-start window. Matching subject identity is a declared relation, not a parent edge or proof of retry, commit or durable completion.`);note.id=prefix+'operationSubjectStatus';subjects.append(note);
-   const table=node('table');table.id=prefix+'operationSubjectEvents';const header=node('tr');['Event time (ns)','Event','Reported outcome','Invocation / trace context'].forEach(t=>header.append(node('th',t)));table.append(header);
-   for(const {event,span} of events){const row=node('tr');row.append(node('td',event.timeNS),node('td',event.name),node('td',event.outcome||'not reported'));const cell=node('td'),b=node('button','Open subject trace '+span.traceID);b.onclick=()=>openTrace(span.traceID);cell.append(node('span',span.operation+' '),b);row.append(cell);table.append(row);}
-   subjects.append(table);subjects.scrollIntoView({block:'nearest'});
+   const {viewport,body}=observationTable(prefix+'operationSubjectEvents',['Event time (UTC)','Event','Reported outcome','Invocation / trace context'],'Declared subject events in captured evidence');
+   for(const {event,span} of events){const row=node('tr');const time=node('td');time.append(global.GooRecordPresentation.timestamp({timestamp_ns:event.timeNS}));row.append(time,node('td',event.name),node('td',event.outcome||'not reported'));const cell=node('td'),b=node('button','Open subject trace');b.setAttribute('aria-label','Open subject trace '+span.traceID);b.dataset.traceId=span.traceID;b.title=span.traceID;b.onclick=()=>openTrace(span.traceID);cell.append(node('span',span.operation+' '),b);row.append(cell);body.append(row);}
+   subjects.append(viewport);subjects.scrollIntoView({block:'nearest'});
   }
   function showMatches(filter){
    selectedFilter={...filter};navigation={};
    const matches=select(snapshot,filter);inspection.replaceChildren();waterfall.replaceChildren();subjects.replaceChildren();
    selectedNote.textContent=`${matches.length} matching completed spans · same captured evidence · ${new Date(data.fromMs).toISOString()} to ${new Date(data.toMs).toISOString()} · ${data.source.service}/${data.source.environment}/${data.source.instance}. Trace completeness unknown; spans outside this operation scope/window are not fetched.`;
    if(!matches.length){inspection.append(node('p','No observed spans in this selection; absence is not proof of health.'));return;}
-   const table=node('table'),header=node('tr');table.id=prefix+'operationMatches';['Operation','Outcome','Duration','Trace'].forEach(t=>header.append(node('th',t)));table.append(header);
-   for(const s of matches){const row=node('tr');row.append(node('td',s.operation),node('td',s.outcome),node('td',s.durationNS+' ns'));const cell=node('td'),button=node('button','Open trace '+s.traceID);button.dataset.spanId=s.spanID;button.onclick=()=>openTrace(s.traceID);
-   if(enabled.has('trace-waterfall'))cell.append(button);else cell.append(node('span',s.traceID));row.append(cell);table.append(row);}
-   inspection.append(table);
+   const {viewport,body}=observationTable(prefix+'operationMatches',['Operation','Outcome','Duration','Trace'],'Operation invocations in captured selection');
+   for(const s of matches){const row=node('tr');const duration=node('td',global.GooUI.durationMS(s.durationNS));duration.title=s.durationNS+' ns';row.append(node('td',s.operation),node('td',s.outcome),duration);const cell=node('td'),button=node('button','Open trace');button.setAttribute('aria-label','Open trace '+s.traceID);button.dataset.traceId=s.traceID;button.title=s.traceID;button.dataset.spanId=s.spanID;button.onclick=()=>openTrace(s.traceID);
+   if(enabled.has('trace-waterfall'))cell.append(button);else cell.append(node('span',s.traceID));row.append(cell);body.append(row);}
+   inspection.append(viewport);
   }
   function choose(filter){
    current={...filter};selection.textContent=filter.operation?`${filter.operation} · ${filter.role}${filter.outcome?' · '+filter.outcome:''}`:'All observed operations';

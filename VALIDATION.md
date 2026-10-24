@@ -7652,3 +7652,62 @@ reusable caches are preserved. Compact logs and measured/model ledgers remain
 under artifacts/service-record-layout-round and the per-journey directories.
 The page remains bounded supporting observations, separate from overview timeline
 selection and complete-trace claims; long values may still grow rows.
+
+## Renderer/action coherence audit — 2026-10-24
+
+The [audit](docs/RECORD_RENDERER_AUDIT_2026_10_24.md) inventories ordinary tables,
+waterfalls, retained custody cards, operation/subject tables and native identity
+views. Custom domains retain their semantics; visible date/unit/action drift and
+duplicated root timestamp attribute handling are fixed.
+
+Actual checks:
+
+- Focused Operations, record-presentation and retention-presentation Node checks
+  and JS/TS syntax/diff checks pass. Hegel heatmap selection (100), subject scope
+  isolation (100) and observation copy (200) cases pass with the existing Quint
+  operation-navigation kernel replay/negative control (18.13s combined). That
+  model replay uses synthetic actual-JavaScript kernel observations; it is not
+  relabeled as a real-browser trace.
+- Final real woven-operation journeys 09/10/19 pass together (three tests, 1.5m).
+  They retain exact heatmap membership, captured basis, tenant/subject isolation,
+  one operation read during local navigation, saved trace identity and immutable
+  old receipts after late-data refresh. Saved recovery now discloses the actual
+  visible Tools/by-ID entry before opening; no hidden-button click is forced.
+- New real journey 163 passes (50.3s): a fresh woven subject, independently read
+  operation evidence, exact ID metadata/accessibility, readable UTC/duration,
+  keyboard time focus and mobile table containment. Its 30-second Bombadil actor
+  passes with explicit operation selection and the real fixture trace ID, checking
+  UTC, duration, progress and at most one operation-source read. Initial actor
+  attempts exposed missing workflow/fixture setup; the final actor requires the
+  public selection step and fresh data rather than weakening progress assertions.
+- Updated 162 log/span, retained Activity 139 and passive waterfall 67 checks pass
+  together (five tests, 2.2m). Real waterfall descriptions retain service namespace;
+  timestamp attributes use UTC/exact tooltips, explicit span selection adds its
+  separately requested linked-log read, and saved results/receipts remain equal.
+  Retained observation attributes preserve original timestamps while source routes
+  are refused; 139 retains observed browser Quint publication/recovery controls.
+- Final synthetic 67 passes both cases (8.8s), with explicit adapter dependencies,
+  no API requests, controlled/detached selection, caller actions, exact timestamp
+  attributes and missing status labeled Unreported status. Display rounding uses
+  the existing shared formatter; exact duration data remains in attributes.
+- Operations now use readable UTC and duration values with exact original values
+  in tooltips and unchanged selection predicates. Short row labels keep IDs in
+  accessible names, titles and metadata. Bounded passive table viewports retain
+  mobile containment. Shared `GooRecordPresentation.attributes` preserves caller
+  options and custom field fallback; retained callers keep raw JSON suppressed.
+- README, owner/component contracts, audit inventory/flow, executable storyboards,
+  planning and actual Operations/waterfall/retained screenshots are synchronized.
+
+No query, source adapter, operation accounting, saved schema, custody protocol or
+native executable changes. The existing saved-operation journey restarts only the
+local packages process as part of its durability check, preserving its named
+volume; Docker images are unchanged. Static assets/docs are deployed. Telemetry,
+receipts, XTDB, volumes and dependency caches are preserved. Compact results live
+under artifacts/record-renderer-audit-round and per-journey directories. Successful
+integration data is real; transport refusals and committed-response loss remain
+explicit negative tests.
+
+The remaining prioritized semantic finding is explicit: normalized operation
+waterfall rows derive their StatusCode display from a declared operation outcome.
+Separating that domain outcome from raw reported status needs its own compatible
+contract change; this formatting audit does not silently alter that mapping.

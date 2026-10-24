@@ -303,6 +303,7 @@ test('09 operation error heatmap retains its evidence basis through trace drilld
  const f=chosen.filter;const expected=data.spans.filter(s=>s.operation==='checkout.reserve'&&s.role==='server'&&s.outcome==='error'&&BigInt(s.startNS)>=BigInt(f.fromNS)&&BigInt(s.startNS)<BigInt(f.toNS)&&BigInt(s.durationNS)>=BigInt(f.minNS)&&(f.maxNS===undefined||BigInt(s.durationNS)<BigInt(f.maxNS)));
  expect(expected.length).toBe(Number(f.count));
  await expect(page.locator('#operationMatches button')).toHaveCount(expected.length);
+ await expect(page.locator('#operationMatches tr').nth(1).locator('td').nth(2)).toContainText('ms');await expect(page.locator('#operationMatches tr').nth(1).locator('td').nth(2)).toHaveAttribute('title',/ ns$/);
  await expect(page.locator('#operationExplorer')).toHaveAttribute('data-basis',data.conformance.basis);
  await expect(page.locator('#operationEvidenceStatus')).toContainText(new Date(data.fromMs).toISOString());
  await frame(page,'09b-duration-cell-contributors');
@@ -349,10 +350,10 @@ test('10 scoped subject events connect related traces without merging tenants',a
  await frame(page,'10b-trace-subject-events');
  await page.getByRole('button',{name:'Follow subject demo/reservation/'+id,exact:true}).first().click();
  await expect(page.locator('#operationSubjectStatus')).toContainText('4 observed events · 2 event-bearing invocations · 2 traces');
- await expect(page.locator('#operationSubjectEvents tr')).toHaveCount(5);
+ await expect(page.locator('#operationSubjectEvents tr')).toHaveCount(5);await expect(page.locator('#operationSubjectEvents th').first()).toHaveText('Event time (UTC)');await expect(page.locator('#operationSubjectEvents time')).toHaveCount(4);const traceIDs=await page.locator('#operationSubjectEvents button').evaluateAll(nodes=>nodes.map(b=>b.dataset.traceId));expect([...new Set(traceIDs)].sort()).toEqual(related.map(s=>s.traceID).sort());for(const time of await page.locator('#operationSubjectEvents time').all()){await expect(time).toHaveAttribute('datetime',/Z$/);await expect(time).toHaveAttribute('title',/ns since Unix epoch/);await expect(time).toContainText('UTC')}
  await expect(page.locator('#operationSubjectEvents')).not.toContainText(other.traceID);
- await expect(page.locator('#operationSubjectEvents')).toContainText(related[0].traceID);
- await expect(page.locator('#operationSubjectEvents')).toContainText(related[1].traceID);
+ await expect(page.locator('#operationSubjectEvents').getByRole('button',{name:'Open subject trace '+related[0].traceID,exact:true}).first()).toBeVisible();
+ await expect(page.locator('#operationSubjectEvents').getByRole('button',{name:'Open subject trace '+related[1].traceID,exact:true}).first()).toBeVisible();
  await expect(page.locator('#operationSubjectStatus')).toContainText('not a parent edge or proof of retry, commit or durable completion');
  await expect(page.locator('#operationExplorer')).toHaveAttribute('data-basis',data.conformance.basis);
  await frame(page,'10c-scoped-subject-related-traces');
@@ -539,7 +540,7 @@ test('19 saved investigation reopens fixed evidence and refreshes late telemetry
  await page.locator('#errorRatioView').evaluate(n=>n.open=true);await page.locator('#errorRatioView section').filter({has:page.getByRole('heading',{name:'checkout.reserve / server',exact:true})}).getByRole('button',{name:'Why did errors rise?',exact:true}).first().click();
  await page.locator('#fleetCoverageView').evaluate(n=>n.open=true);await page.locator('#fleetComparison .fleet-comparison-series').filter({has:page.getByRole('heading',{name:'checkout.reserve / server',exact:true})}).getByRole('button',{name:'Explain member comparison',exact:true}).first().click();
  await page.locator('#operationHeatmap .heat-cell:not([disabled])').first().click();
- const traceButton=page.locator('#operationMatches').getByRole('button',{name:/^Open trace /}).first();const trace=(await traceButton.innerText()).replace('Open trace ','');await traceButton.click();
+ const traceButton=page.locator('#operationMatches').getByRole('button',{name:/^Open trace /}).first();const trace=await traceButton.getAttribute('data-trace-id');await traceButton.click();
  const liveSnapshot=await page.locator('#operations').innerHTML();let response=page.waitForResponse(r=>r.url().endsWith('/api/investigations')&&r.request().method()==='POST');await page.locator('#captureSave').click();const first=await(await response).json();expect(first.error).toBeUndefined();expect(first.selection.traceID).toBe(trace);expect(first.selection.filter.fromNS).toBeTruthy();expect(first.selection.filter.minNS).toBeTruthy();expect(first.selection.ratio).toBeTruthy();expect(first.selection.comparison).toBeTruthy();expect(JSON.parse(first.selection.ratio).stream.attributes['goo.operation.name']).toBe('checkout.reserve');expect(JSON.parse(first.selection.comparison).stream.attributes['goo.operation.name']).toBe('checkout.reserve');await expect(page.locator('#saved-operationMode')).toContainText(first.id.slice(0,12));await expect(page.locator('#saved-operationWaterfall')).toContainText(trace);await expect(page.locator('#documentTitle')).toHaveValue('Unpublished ownership note');await expect(page.locator('#documentText')).toHaveValue('Keep this unsaved note while inspecting operation evidence.');await expect(page.locator('#captureSave')).toBeEnabled();await expect(page.locator('#operations')).toBeHidden();expect(await page.locator('#operations').innerHTML()).toBe(liveSnapshot);await page.locator('#savedOperationLive').click();await expect(page.locator('#operations')).toBeVisible();expect(await page.locator('#operations').innerHTML()).toBe(liveSnapshot);await page.getByRole('button',{name:'Saved investigations',exact:true}).click();await expect(page.locator('#savedOperationEvidence')).toBeVisible();await page.locator('#savedInvestigations details').first().evaluate(n=>n.open=true);await page.locator('#savedInvestigations').screenshot({path:path.join(frames,'19a-saved-fixed-evidence-receipt.png')});
  // The real packages process restarts; its named volume retains the immutable receipt.
  execFileSync('docker',['compose','restart','packages'],{cwd:path.resolve('.'),stdio:'pipe'});await expect.poll(async()=>{try{return(await request.get(investigation+'/api/investigations/'+first.id)).status()}catch{return 0}},{timeout:30000}).toBe(200);
@@ -554,7 +555,7 @@ test('19 saved investigation reopens fixed evidence and refreshes late telemetry
  // A delayed genuine stored response cannot replace a newer package selection.
  let release,seen;const gate=new Promise(r=>release=r),fetched=new Promise(r=>seen=r);
  await page.route('**/api/investigations/'+next.id,async route=>{const upstream=await route.fetch();seen();await gate;await route.fulfill({response:upstream})});
- await page.locator('#captureOpen').click();await fetched;await page.getByRole('button',{name:'Operations',exact:true}).click();await page.locator('#operationPackage').selectOption('reports');release();await expect(page.locator('#captureStatus')).toContainText('saved evidence was not displayed');await expect(page.locator('#operationView')).toBeEmpty();await expect(page.locator('#operationPackage')).toHaveValue('reports');
+ for(const id of ['savedTools','savedOperationTools']){const tools=page.locator('#'+id);if(!await tools.evaluate(e=>e.open))await tools.locator(':scope>summary').click()}await page.locator('#captureOpen').click();await fetched;await page.getByRole('button',{name:'Operations',exact:true}).click();await page.locator('#operationPackage').selectOption('reports');release();await expect(page.locator('#captureStatus')).toContainText('saved evidence was not displayed');await expect(page.locator('#operationView')).toBeEmpty();await expect(page.locator('#operationPackage')).toHaveValue('reports');
 
 });
 

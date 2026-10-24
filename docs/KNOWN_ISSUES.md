@@ -681,3 +681,5 @@ Legacy tails without the opt-in retain their prior stacked layout.
 Fixed/saved and explicit context record tables now adopt the [compact mobile layout](COMPACT_MOBILE_RECORDS.md#fixedsaved-adoption-storyboard-162). Expanded messages and inspection rows may grow vertically; full event dates remain accessible and visible on desktop. Service-held observation tables now use the same layout, retaining their distinct supporting read and cached inspector.
 
 Service observation rows are a bounded held page rather than a complete trace or the overview timeline selection. Their compact presentation adds no selection/preservation protocol; Open fixed question stages the original supporting scope before explicit Run.
+
+The [renderer audit](RECORD_RENDERER_AUDIT_2026_10_24.md) fixes Operations' primary raw-nanosecond display and waterfall attribute formatting. Normalized operation waterfall rows still derive a StatusCode display from declared outcome; that distinction needs an explicit semantic follow-up. Retained JSON and domain-specific renderers remain deliberate separate presentations.

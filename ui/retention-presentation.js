@@ -19,7 +19,7 @@
   for(const member of value.members){const detail=node('details'),content=node('div');detail.className='retained-observation';detail.append(node('summary',member.label),content);let built=false;detail.addEventListener('toggle',()=>{if(!detail.open||built)return;built=true;
    const description=global.GooRecordPresentation.description(member.row);description.className='record-description';content.append(description,global.GooRecordPresentation.summary(member.row,value.signal));
    if(member.provenance){const provenance=node('goo-evidence-summary');provenance.data={mode:'frozen',state:'unknown',...member.provenance};content.append(provenance)}
-   const attributes=node('details'),fields=node('div');attributes.className='retained-attributes';attributes.append(node('summary','Observation attributes'),fields);let inspected=false;attributes.addEventListener('toggle',()=>{if(attributes.open&&!inspected){inspected=true;global.GooAttributes.mount(fields,member.row,{raw:false,renderField:entry=>entry.key==='timestamp_ns'&&!entry.field?global.GooRecordPresentation.timestamp(member.row):null})}});content.append(attributes);
+   const attributes=node('details'),fields=node('div');attributes.className='retained-attributes';attributes.append(node('summary','Observation attributes'),fields);let inspected=false;attributes.addEventListener('toggle',()=>{if(attributes.open&&!inspected){inspected=true;global.GooRecordPresentation.attributes(fields,member.row,{raw:false})}});content.append(attributes);
   });host.append(detail)}
   const raw=node('details');raw.className='retained-original-json';raw.append(node('summary','Original manifest JSON'),node('pre',value.manifestJSON));host.append(raw);
  }
