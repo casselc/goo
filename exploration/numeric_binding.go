@@ -11,6 +11,7 @@ import (
 // NumericBinding is an explicit interpretation of an exporter string map.
 // Unit labels are declarations, never inferred from an OTel attribute name.
 type NumericBinding struct {
+	Scale int    `json:"scale,omitempty" yaml:"scale,omitempty"`
 	Field Field  `json:"field" yaml:"field"`
 	Type  string `json:"type" yaml:"type"`
 	Unit  string `json:"unit" yaml:"unit"`
@@ -50,11 +51,18 @@ func PlanNumericBinding(q Query, b NumericBinding) (NumericPlan, error) {
 	} else if b.Field.Kind != "attribute" && b.Field.Kind != "resource" {
 		add("unsupported_field", "binding.field", "numeric attribute bindings require an attribute or resource map key; use the existing duration summary for duration_ns")
 	}
-	if b.Type != "int64" && b.Type != "uint64" {
-		add("unsupported_type", "binding.type", "supported declared types: int64, uint64; floats and decimals have no parsing contract yet")
+	if b.Type != "int64" && b.Type != "uint64" && b.Type != "decimal64" {
+		add("unsupported_type", "binding.type", "supported declared types: int64, uint64, decimal64; floats and arbitrary precision decimals are unsupported")
+	}
+	if b.Type == "decimal64" && (b.Scale < 1 || b.Scale > 9) || b.Type != "decimal64" && b.Scale != 0 {
+		add("invalid_scale", "binding.scale", "decimal64 requires scale 1..9; integer bindings require scale 0")
 	}
 	if b.Parse != "canonical-decimal" {
-		add("unsupported_parse", "binding.parse", "require canonical-decimal; no whitespace, exponents, fractions, plus sign or leading zeros")
+		message := "require canonical-decimal integers; no whitespace, exponents, fractions, plus sign or leading zeros"
+		if b.Type == "decimal64" {
+			message = "require canonical-decimal with exactly the declared scale of fractional digits; no whitespace, exponent, plus sign, leading zeros, negative zero or rounding"
+		}
+		add("unsupported_parse", "binding.parse", message)
 	}
 	if !validNumericUnit(b.Unit) {
 		add("invalid_unit", "binding.unit", "declare a nonempty unit label of at most 64 UTF-8 bytes without whitespace or control characters; use 1 for dimensionless values")
@@ -93,9 +101,11 @@ func parseCanonicalInteger(raw, typ string) (*big.Int, bool) {
 	return v, true
 }
 
-// NumericSummary preserves exact decimal integers. Mean is the rational Sum/Valid.
-// Empty and malformed values never contribute zero or enter the denominator.
+// NumericSummary preserves exact integer coefficients. Decimal64 human values
+// divide coefficients by 10^Scale; the human mean is Sum/(Valid*10^Scale).
+// Integers have Scale=0. Empty/invalid values never enter the valid denominator.
 type NumericSummary struct {
+	Scale   int    `json:"scale,omitempty"`
 	State   string `json:"state"`
 	Unit    string `json:"unit" yaml:"unit"`
 	Count   string `json:"count"`
@@ -118,7 +128,7 @@ func EvaluateNumericValues(b NumericBinding, values []*string) (NumericSummary, 
 	if _, err := b.Field.Type("spans"); err != nil {
 		return NumericSummary{}, err
 	}
-	if (b.Type != "int64" && b.Type != "uint64") || b.Parse != "canonical-decimal" || !validNumericUnit(b.Unit) {
+	if b.Validate("spans") != nil {
 		return NumericSummary{}, fmt.Errorf("unsupported numeric binding")
 	}
 	valid, missing, empty, invalid := int64(0), int64(0), int64(0), int64(0)
@@ -133,7 +143,7 @@ func EvaluateNumericValues(b NumericBinding, values []*string) (NumericSummary, 
 			empty++
 			continue
 		}
-		v, ok := parseCanonicalInteger(*raw, b.Type)
+		v, ok := parseNumericCoefficient(*raw, b)
 		if !ok {
 			invalid++
 			continue
@@ -147,7 +157,7 @@ func EvaluateNumericValues(b NumericBinding, values []*string) (NumericSummary, 
 			max = new(big.Int).Set(v)
 		}
 	}
-	s := NumericSummary{State: "no_valid_values", Unit: b.Unit, Count: fmt.Sprint(len(values)), Valid: fmt.Sprint(valid), Missing: fmt.Sprint(missing), Empty: fmt.Sprint(empty), Invalid: fmt.Sprint(invalid), Sum: sum.String()}
+	s := NumericSummary{Scale: b.Scale, State: "no_valid_values", Unit: b.Unit, Count: fmt.Sprint(len(values)), Valid: fmt.Sprint(valid), Missing: fmt.Sprint(missing), Empty: fmt.Sprint(empty), Invalid: fmt.Sprint(invalid), Sum: sum.String()}
 	if len(values) == 0 {
 		s.State = "no_data"
 	}

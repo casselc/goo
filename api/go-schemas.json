@@ -5669,6 +5669,9 @@
       "parse": {
         "type": "string"
       },
+      "scale": {
+        "type": "integer"
+      },
       "type": {
         "type": "string"
       },
@@ -5702,6 +5705,16 @@
         "anyOf": [
           {
             "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "scale": {
+        "anyOf": [
+          {
+            "type": "integer"
           },
           {
             "type": "null"
@@ -6628,6 +6641,9 @@
       "missing": {
         "type": "string"
       },
+      "scale": {
+        "type": "integer"
+      },
       "state": {
         "type": "string"
       },
@@ -6711,6 +6727,16 @@
         "anyOf": [
           {
             "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "scale": {
+        "anyOf": [
+          {
+            "type": "integer"
           },
           {
             "type": "null"

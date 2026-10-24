@@ -13,8 +13,11 @@ func (b NumericBinding) Validate(signal string) error {
 	if b.Field.Kind != "attribute" && b.Field.Kind != "resource" {
 		return fmt.Errorf("numeric binding requires attribute or resource field")
 	}
-	if b.Type != "int64" && b.Type != "uint64" {
-		return fmt.Errorf("numeric type must be int64 or uint64")
+	if b.Type != "int64" && b.Type != "uint64" && b.Type != "decimal64" {
+		return fmt.Errorf("numeric type must be int64, uint64 or decimal64")
+	}
+	if b.Type == "decimal64" && (b.Scale < 1 || b.Scale > 9) || b.Type != "decimal64" && b.Scale != 0 {
+		return fmt.Errorf("decimal64 requires scale 1..9; integer bindings require scale 0")
 	}
 	if b.Parse != "canonical-decimal" {
 		return fmt.Errorf("numeric parse must be canonical-decimal; no implicit conversions")
@@ -30,6 +33,9 @@ func (b NumericBinding) Validate(signal string) error {
 // Count <= UInt64 and input <= UInt64 imply |sum| < 2^128; Int256 cannot overflow.
 func (c *compiler) numericValueSQL(b NumericBinding) (raw, present, value string) {
 	raw, present = c.field(b.Field)
+	if b.Type == "decimal64" {
+		return decimalCoefficientSQL(raw, present, b.Scale)
+	}
 	cast := "toInt64OrNull"
 	if b.Type == "uint64" {
 		cast = "toUInt64OrNull"
@@ -55,6 +61,17 @@ func decodeNumeric(raw json.RawMessage, b NumericBinding, count string) (*Numeri
 	if json.Unmarshal(raw, &v) != nil {
 		return nil, fmt.Errorf("invalid numeric source row")
 	}
+	if v.Numeric != nil && b.Type == "decimal64" {
+		var wire struct {
+			Numeric map[string]json.RawMessage `json:"numeric"`
+		}
+		if json.Unmarshal(raw, &wire) != nil {
+			return nil, fmt.Errorf("invalid decimal numeric source row")
+		}
+		if _, present := wire.Numeric["scale"]; !present {
+			v.Numeric.Scale = b.Scale
+		}
+	}
 	if e := validateOptionalNumeric(&b, v.Numeric, count); e != nil {
 		return nil, e
 	}
@@ -76,8 +93,8 @@ func (s NumericSummary) Validate(b NumericBinding) error {
 	if e := b.Validate("spans"); e != nil {
 		return e
 	}
-	if s.Unit != b.Unit {
-		return fmt.Errorf("numeric unit mismatch")
+	if s.Unit != b.Unit || s.Scale != b.Scale {
+		return fmt.Errorf("numeric unit or scale mismatch")
 	}
 	counts := []string{s.Count, s.Valid, s.Missing, s.Empty, s.Invalid}
 	nums := make([]*big.Int, len(counts))
@@ -121,7 +138,7 @@ func (s NumericSummary) Validate(b NumericBinding) error {
 		return fmt.Errorf("invalid numeric max")
 	}
 	for _, v := range []*big.Int{lo, hi} {
-		if b.Type == "int64" && !v.IsInt64() || b.Type == "uint64" && !v.IsUint64() {
+		if (b.Type == "int64" || b.Type == "decimal64") && !v.IsInt64() || b.Type == "uint64" && !v.IsUint64() {
 			return fmt.Errorf("numeric extrema exceed declared type")
 		}
 	}

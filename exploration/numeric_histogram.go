@@ -40,7 +40,7 @@ func NumericHistogramEdges(typ string) ([]string, error) {
 		for n := 0; n <= 64; n++ {
 			edges = append(edges, new(big.Int).Lsh(big.NewInt(1), uint(n)).String())
 		}
-	case "int64":
+	case "int64", "decimal64":
 		for n := 63; n >= 0; n-- {
 			edges = append(edges, new(big.Int).Neg(new(big.Int).Lsh(big.NewInt(1), uint(n))).String())
 		}
@@ -49,7 +49,7 @@ func NumericHistogramEdges(typ string) ([]string, error) {
 			edges = append(edges, new(big.Int).Lsh(big.NewInt(1), uint(n)).String())
 		}
 	default:
-		return nil, fmt.Errorf("histogram requires int64 or uint64")
+		return nil, fmt.Errorf("histogram requires int64, uint64 or decimal64")
 	}
 	return edges, nil
 }
@@ -72,7 +72,7 @@ func EvaluateNumericHistogram(b NumericBinding, values []*string) (NumericHistog
 		if raw == nil {
 			continue
 		}
-		v, ok := parseCanonicalInteger(*raw, b.Type)
+		v, ok := parseNumericCoefficient(*raw, b)
 		if !ok {
 			continue
 		}
@@ -199,6 +199,10 @@ func PlanNumericHistogramSelection(parent Query, fromBin, toBin int) (*NumericHi
 	}
 	leaf := func(op, value string) Predicate {
 		b := *parent.Numeric
+		if value != "" && b.Type == "decimal64" {
+			n, _ := new(big.Int).SetString(value, 10)
+			value = formatFixedCoefficient(n, b.Scale)
+		}
 		return Predicate{Numeric: &b, Op: op, Value: value}
 	}
 	selectedParts := []Predicate{}

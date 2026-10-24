@@ -27,6 +27,14 @@ def main():
     assert plan["meanDenominator"] == "valid"
     assert plan["coverage"] == ["valid", "missing", "empty", "invalid"]
     assert [d["code"] for d in plan["diagnostics"]] == []
+    decimal = {**binding, "type": "decimal64", "scale": 2}
+    decimal_plan = call({"question": question, "binding": decimal})
+    assert decimal_plan["executable"] is True
+    assert decimal_plan["binding"] == decimal
+    for scale in (0, -1, 10):
+        rejected = call({"question": question, "binding": {**decimal, "scale": scale}})
+        assert rejected["executable"] is False
+        assert any(d["path"] == "binding.scale" for d in rejected["diagnostics"])
     bad = {**binding, "type": "float64", "parse": "or-zero", "unit": ""}
     unsupported = call({"question": question, "binding": bad})
     assert unsupported["executable"] is False
@@ -39,7 +47,7 @@ def main():
     else:
         raise AssertionError("unknown request fields accepted")
     print(json.dumps({"validPlan": plan, "unsupportedPlan": unsupported}, indent=2))
-    print("PASS: numeric preflight, unsupported diagnostics and strict proxy decoding")
+    print("PASS: integer/decimal preflight, scale diagnostics and strict proxy decoding")
 
 
 if __name__ == "__main__":

@@ -15,7 +15,7 @@ func validateNumericPredicate(p *Predicate, signal string) error {
 			return fmt.Errorf("numeric state predicate has no threshold")
 		}
 	case "eq", "ne", "gt", "gte", "lt", "lte":
-		if _, ok := parseCanonicalInteger(p.Value, p.Numeric.Type); !ok {
+		if _, ok := parseNumericCoefficient(p.Value, *p.Numeric); !ok {
 			return fmt.Errorf("numeric threshold requires canonical in-range %s decimal", p.Numeric.Type)
 		}
 	default:
@@ -31,7 +31,7 @@ func matchNumericPredicate(p *Predicate, values map[Field]string) bool {
 		return false
 	}
 	raw, present := values[p.Numeric.Field]
-	value, valid := parseCanonicalInteger(raw, p.Numeric.Type)
+	value, valid := parseNumericCoefficient(raw, *p.Numeric)
 	switch p.Op {
 	case "missing":
 		return !present
@@ -45,7 +45,7 @@ func matchNumericPredicate(p *Predicate, values map[Field]string) bool {
 	if !present || !valid {
 		return false
 	}
-	threshold, _ := parseCanonicalInteger(p.Value, p.Numeric.Type)
+	threshold, _ := parseNumericCoefficient(p.Value, *p.Numeric)
 	order := value.Cmp(threshold)
 	switch p.Op {
 	case "eq":
@@ -80,7 +80,12 @@ func (c *compiler) numericPredicate(p *Predicate) string {
 	if p.Numeric.Type == "uint64" {
 		typ = "UInt64"
 	}
-	parameter := c.param(p.Value, typ)
+	threshold := p.Value
+	if p.Numeric.Type == "decimal64" {
+		coefficient, _ := parseNumericCoefficient(p.Value, *p.Numeric)
+		threshold = coefficient.String()
+	}
+	parameter := c.param(threshold, typ)
 	op := map[string]string{"eq": "=", "ne": "!=", "gt": ">", "gte": ">=", "lt": "<", "lte": "<="}[p.Op]
 	return "ifNull((" + value + " " + op + " " + parameter + "), 0)"
 }
