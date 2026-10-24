@@ -6898,6 +6898,17 @@
           "parentSpanID": {
             "type": "string"
           },
+          "reportedStatus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional exact exporter StatusCode, independent of declared outcome. Omission means not retained in this evidence; empty and future values remain explicit unknown values. Legacy saved bytes are unchanged."
+          },
           "role": {
             "type": "string"
           },

@@ -23,8 +23,10 @@
   return [...cells.values()].sort((a,b)=>BigInt(a.bucketNS)<BigInt(b.bucketNS)?-1:BigInt(a.bucketNS)>BigInt(b.bucketNS)?1:a.band-b.band);
  }
  function waterfallRows(spans,service){
-  return spans.map(s=>({TraceId:s.traceID,SpanId:s.spanID,ParentSpanId:s.parentSpanID,timestamp_ns:s.startNS,duration_ns:s.durationNS,duration_ms:Number(BigInt(s.durationNS))/1e6,SpanName:s.operation,ServiceName:service,StatusCode:s.outcome==='ok'?'Unset':'Error',SpanAttributes:s.attributes,operationOutcome:s.outcome}));
+  return spans.map(s=>({TraceId:s.traceID,SpanId:s.spanID,ParentSpanId:s.parentSpanID,timestamp_ns:s.startNS,duration_ns:s.durationNS,duration_ms:Number(BigInt(s.durationNS))/1e6,SpanName:s.operation,ServiceName:service,...(typeof s.reportedStatus==='string'?{StatusCode:s.reportedStatus}:{}),SpanAttributes:s.attributes,operationOutcome:s.outcome}));
  }
+ // Declared outcomes and retained exporter status are independent evidence.
+ function waterfallFacts(spans){return spans.map(s=>{const retained=typeof s.reportedStatus==='string',raw=s.reportedStatus,status=!retained?'Not retained':['Ok','Error','Unset'].includes(raw)?raw:raw===''?'Unknown (empty)':'Unknown ('+raw+')';return [{label:'Declared outcome',value:typeof s.outcome==='string'?s.outcome:'Not retained'},{label:'Reported status',value:status}]})}
  // A structured tuple prevents delimiter collisions and keeps tenant/namespace scope.
  function subjectKey(subject){
   if(!subject)return null;
@@ -60,7 +62,7 @@
    waterfall.replaceChildren(node('h3','Trace '+traceID));
    const expand=node('button','Expand trace across services and find linked logs');expand.onclick=()=>global.dispatchEvent(new CustomEvent('goo:expand-trace',{detail:{traceID,basis:data.conformance.basis,question:{environment:data.source.environment,fromMs:data.fromMs,toMs:data.toMs}}}));waterfall.append(expand);
    const trace=select(snapshot,{traceID});
-   global.GooVisuals.waterfall(waterfall,waterfallRows(trace,data.source.service),false,undefined,'operationSpanDetails');
+   global.GooVisuals.waterfall(waterfall,waterfallRows(trace,data.source.service),false,undefined,'operationSpanDetails',{facts:waterfallFacts(trace)});
    subjects.replaceChildren(node('h3','Observed subject events in this trace'));
    let count=0;
    for(const s of trace)for(const event of s.events||[]){count++;const row=node('p');row.append(global.GooRecordPresentation.timestamp({timestamp_ns:event.timeNS}),` · ${event.name}${event.outcome?' · '+event.outcome:''} `);if(event.subject&&!event.diagnostic)row.append(subjectButton(event.subject));else row.append(node('span',event.diagnostic||'No scoped subject identity'));subjects.append(row);}
@@ -132,5 +134,5 @@
    box.append(node('details'));const explain=box.lastChild;explain.append(node('summary','Counter contract and evidence basis'),node('pre',JSON.stringify({contract:entry.contract,basis:entry.result.basis,fromNS:entry.result.fromNS,toNS:entry.result.toNS},null,2)));container.append(box);
   }
  }
- const api={select,distribution,waterfallRows,subjectKey,subjectEvents,subjectSpans,mount,overview,renderRates};if(typeof module!=='undefined')module.exports=api;else global.GooOperations=api;
+ const api={select,distribution,waterfallRows,waterfallFacts,subjectKey,subjectEvents,subjectSpans,mount,overview,renderRates};if(typeof module!=='undefined')module.exports=api;else global.GooOperations=api;
 })(typeof window==='undefined'?globalThis:window);

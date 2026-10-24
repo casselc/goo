@@ -19,7 +19,7 @@ test('operation, role, outcome and trace filtering compose without mutating evid
  assert.deepEqual(select(rows,{operation:'checkout.reserve',role:'server',outcome:'error',traceID:'a'}).map(s=>s.spanID),['a']);
  assert.equal(select(rows,{operation:'absent'}).length,0);
  assert.equal(JSON.stringify(rows),before);
- const out=waterfallRows(rows,'bound-service');assert.equal(out[0].timestamp_ns,String(epoch));assert.equal(out[0].duration_ns,'1');assert.equal(out[0].StatusCode,'Error');assert.equal(out[1].StatusCode,'Unset');
+ const out=waterfallRows(rows,'bound-service');assert.equal(out[0].timestamp_ns,String(epoch));assert.equal(out[0].duration_ns,'1');assert.equal(Object.hasOwn(out[0],'StatusCode'),false);assert.equal(Object.hasOwn(out[1],'StatusCode'),false);
 });
 test('subject navigation separates complete scoped identities and keeps repeated events',()=>{
  const {subjectKey,subjectEvents,subjectSpans}=require('../ui/operations.js');
@@ -34,3 +34,5 @@ test('subject navigation separates complete scoped identities and keeps repeated
  assert.notEqual(subjectKey({...subject,tenant:'a/b',id:'c'}),subjectKey({...subject,tenant:'a',id:'b/c'}));
  assert.equal(subjectEvents(rows,subject)[0].span.spanID,'2');
 });
+
+test('declared outcomes never infer reported OTel status, including old, empty and future evidence',()=>{const {waterfallFacts}=require('../ui/operations');for(const outcome of ['ok','error','panic'])for(const reportedStatus of [undefined,'','Ok','Error','Unset','VendorStatus']){const s={...span('id',0n,1n,outcome),...(reportedStatus===undefined?{}:{reportedStatus})},before=structuredClone(s),row=waterfallRows([s],'svc')[0],facts=waterfallFacts([s])[0];assert.equal(row.operationOutcome,outcome);assert.equal(row.StatusCode,reportedStatus);assert.equal(Object.hasOwn(row,'StatusCode'),reportedStatus!==undefined);assert.equal(facts[0].value,outcome);assert.equal(facts[1].value,reportedStatus===undefined?'Not retained':reportedStatus===''?'Unknown (empty)':reportedStatus==='VendorStatus'?'Unknown (VendorStatus)':reportedStatus);assert.deepEqual(s,before)}});

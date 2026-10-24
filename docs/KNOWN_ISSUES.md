@@ -682,4 +682,4 @@ Fixed/saved and explicit context record tables now adopt the [compact mobile lay
 
 Service observation rows are a bounded held page rather than a complete trace or the overview timeline selection. Their compact presentation adds no selection/preservation protocol; Open fixed question stages the original supporting scope before explicit Run.
 
-The [renderer audit](RECORD_RENDERER_AUDIT_2026_10_24.md) fixes Operations' primary raw-nanosecond display and waterfall attribute formatting. Normalized operation waterfall rows still derive a StatusCode display from declared outcome; that distinction needs an explicit semantic follow-up. Retained JSON and domain-specific renderers remain deliberate separate presentations.
+The [renderer audit](RECORD_RENDERER_AUDIT_2026_10_24.md) fixes Operations' primary raw-nanosecond display and waterfall attribute formatting. [Operation status](OPERATION_STATUS.md) now retains and labels reported status separately from declared outcome; older captures explicitly show Not retained. Retained JSON and domain-specific renderers remain deliberate separate presentations.

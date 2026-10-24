@@ -6,8 +6,8 @@
   const waterfallAPI=()=>typeof module!=='undefined'?require('./waterfall'):global.GooWaterfall;
   const layout=rows=>waterfallAPI().layout(rows);
   function node(tag, text, cls) { const n = document.createElement(tag); if (text !== undefined) n.textContent = text; if (cls) n.className = cls; return n; }
-  function waterfall(container, rows, truncated, relatedActions, detailsId = 'spanDetails') {
-    const element=node('goo-trace-waterfall');element.data={rows,truncated:!!truncated};container.append(element);
+  function waterfall(container, rows, truncated, relatedActions, detailsId = 'spanDetails', {facts} = {}) {
+    const element=node('goo-trace-waterfall');element.data={rows,truncated:!!truncated,...(facts===undefined?{}:{facts})};container.append(element);
     if(!rows.length)return element;
     const details=node('section');details.id=detailsId;container.append(details);const inspector=global.GooUI.inspector(details,{headingLevel:3});
     element.addEventListener('click',event=>{
@@ -15,7 +15,7 @@
       const index=Number(line.dataset.rowIndex),r=rows[index];if(!r)return;
       element.selectedIndex=index;
       const key=String(index);if(inspector.has(key)){inspector.show({key,title:r.SpanName,opener:line});return}
-      const content=node('div'),description=node('div'),view=global.GooRecordPresentation.describe(r,'spans');description.append(global.GooRecordPresentation.service(r),' · ',node('span',view.duration+' · '+view.label));if(r.timestamp_ns)description.append(' · ',global.GooRecordPresentation.timestamp(r));
+      const content=node('div'),description=node('div'),view=global.GooRecordPresentation.describe(r,'spans');description.append(global.GooRecordPresentation.service(r),' · ',node('span',view.duration));if(facts?.[index]?.length){for(const fact of facts[index])description.append(' · ',node('span',fact.label+': '+fact.value))}else description.append(' · ',node('span',view.label));if(r.timestamp_ns)description.append(' · ',global.GooRecordPresentation.timestamp(r));
       global.GooRecordPresentation.attributes(content,r);
       const actions=[];for(const action of relatedActions?.(r)||[]){const button=node('button',action.label);button.onclick=action.select;actions.push(button)}
       for(let i=0;i<(r.linked_traces||[]).length;i++){

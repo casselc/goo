@@ -43,7 +43,7 @@
   }
  function validData(data){
   const ns=v=>typeof v==='string'&&/^(0|[1-9][0-9]{0,19})$/.test(v)&&BigInt(v)<=18446744073709551615n;
-  return !!data&&Array.isArray(data.rows)&&data.rows.length<=1000&&(!Object.hasOwn(data,'truncated')||typeof data.truncated==='boolean')&&data.rows.every(r=>r&&ns(r.timestamp_ns)&&ns(r.duration_ns)&&['TraceId','SpanId'].every(k=>typeof r[k]==='string')&&['ParentSpanId','ServiceName','SpanName','StatusCode'].every(k=>r[k]===undefined||typeof r[k]==='string'));
+  return !!data&&Array.isArray(data.rows)&&data.rows.length<=1000&&(data.facts===undefined||Array.isArray(data.facts)&&data.facts.length===data.rows.length&&data.facts.every(f=>Array.isArray(f)&&f.length<=4&&f.every(v=>v&&typeof v.label==='string'&&typeof v.value==='string')))&&(!Object.hasOwn(data,'truncated')||typeof data.truncated==='boolean')&&data.rows.every(r=>r&&ns(r.timestamp_ns)&&ns(r.duration_ns)&&['TraceId','SpanId'].every(k=>typeof r[k]==='string')&&['ParentSpanId','ServiceName','SpanName','StatusCode'].every(k=>r[k]===undefined||typeof r[k]==='string'));
  }
  function node(tag,text,cls){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n}
  if(global.customElements&&global.HTMLElement){
@@ -64,8 +64,8 @@
     for(const span of data.spans){const r=span.row;if(trace!==r.TraceId){trace=r.TraceId;this.append(node('h3','Trace '+(trace||'(unspecified)')))}
      const line=node('button',undefined,'waterfall-row');line.type='button';line.dataset.rowIndex=String(span.index);line.dataset.spanId=r.SpanId||'';line.dataset.traceId=r.TraceId||'';
      const suffix=span.cycle?' · parent cycle':span.missingParent?' · parent outside results':'';
-     const title=`${r.ServiceName||'(service unspecified)'} · ${r.SpanName||'(span unnamed)'}${suffix}`;line.setAttribute('aria-label',title);
-     const label=node('span',title,'span-label');label.style.paddingLeft=Math.min(span.depth,12)*12+'px';
+     const title=`${r.ServiceName||'(service unspecified)'} · ${r.SpanName||'(span unnamed)'}${suffix}`;line.setAttribute('aria-label',[title,...(input.facts?.[span.index]||[]).map(f=>f.label+': '+f.value)].join(' · '));
+     const label=node('span',title,'span-label');label.style.paddingLeft=Math.min(span.depth,12)*12+'px';for(const fact of input.facts?.[span.index]||[])label.append(node('span',fact.label+': '+fact.value,'span-fact'));
      const track=node('span',undefined,'span-track'),bar=node('span',undefined,'span-bar');track.setAttribute('aria-hidden','true');bar.style.left=span.left+'%';bar.style.width=span.width+'%';bar.dataset.error=r.StatusCode==='Error'?'true':'false';track.append(bar);
      line.append(label,track,node('span',`${Number(span.duration)/1e6} ms${r.StatusCode==='Error'?' · error':''}`,'span-duration'));this.append(line);
     }this.updateSelection();

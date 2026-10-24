@@ -23,6 +23,8 @@ type OperationSource struct {
 	DeclaredSchema   string              `json:"declaredSchema"`
 }
 type OperationRow struct {
+	// Nil preserves legacy evidence that did not retain exporter status.
+	ReportedStatus  *string             `json:"reported_status,omitempty"`
 	EventTimes      []string            `json:"event_times"`
 	EventNames      []string            `json:"event_names"`
 	EventAttributes []map[string]string `json:"event_attributes"`
@@ -41,16 +43,17 @@ type OperationRow struct {
 // OperationSpan is logical evidence shared by overview, distribution and inspection.
 // Exact timestamps/durations remain decimal strings across browser transport.
 type OperationSpan struct {
-	Events       []SubjectEvent    `json:"events"`
-	TraceID      string            `json:"traceID"`
-	SpanID       string            `json:"spanID"`
-	ParentSpanID string            `json:"parentSpanID"`
-	StartNS      string            `json:"startNS"`
-	DurationNS   string            `json:"durationNS"`
-	Operation    string            `json:"operation"`
-	Role         string            `json:"role"`
-	Outcome      string            `json:"outcome"`
-	Attributes   map[string]string `json:"attributes"`
+	ReportedStatus *string           `json:"reportedStatus,omitempty"`
+	Events         []SubjectEvent    `json:"events"`
+	TraceID        string            `json:"traceID"`
+	SpanID         string            `json:"spanID"`
+	ParentSpanID   string            `json:"parentSpanID"`
+	StartNS        string            `json:"startNS"`
+	DurationNS     string            `json:"durationNS"`
+	Operation      string            `json:"operation"`
+	Role           string            `json:"role"`
+	Outcome        string            `json:"outcome"`
+	Attributes     map[string]string `json:"attributes"`
 }
 type LiveOperations struct {
 	Package *OperationPlan  `json:"package,omitempty"`
@@ -76,7 +79,7 @@ func (m Manifest) OperationQuery(s OperationSource, from, to int64) (string, map
 		return "", nil, fmt.Errorf("explicit service/environment/instance/schema binding required")
 	}
 	p := map[string]string{"from": strconv.FormatInt(from, 10), "to": strconv.FormatInt(to, 10), "service": s.Service, "environment": s.Environment, "instance": s.Instance, "scope": m.Scope, "version": m.ScopeVersion}
-	q := `SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, toString(Duration) AS duration_ns, TraceId AS trace_id, SpanId AS span_id, ParentSpanId AS parent_span_id, SpanKind AS kind, ScopeName AS scope, ScopeVersion AS version, mapUpdate(ResourceAttributes, map('service.name', toString(ServiceName))) AS resource, SpanAttributes AS attributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times, Events.Name AS event_names, Events.Attributes AS event_attributes FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND ServiceName = {service:String} AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ResourceAttributes['service.instance.id'] = {instance:String} AND ScopeName = {scope:String} AND ScopeVersion = {version:String} ORDER BY Timestamp, TraceId, SpanId LIMIT 1001 FORMAT JSONEachRow`
+	q := `SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, toString(Duration) AS duration_ns, TraceId AS trace_id, SpanId AS span_id, ParentSpanId AS parent_span_id, SpanKind AS kind, StatusCode AS reported_status, ScopeName AS scope, ScopeVersion AS version, mapUpdate(ResourceAttributes, map('service.name', toString(ServiceName))) AS resource, SpanAttributes AS attributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times, Events.Name AS event_names, Events.Attributes AS event_attributes FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND ServiceName = {service:String} AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ResourceAttributes['service.instance.id'] = {instance:String} AND ScopeName = {scope:String} AND ScopeVersion = {version:String} ORDER BY Timestamp, TraceId, SpanId LIMIT 1001 FORMAT JSONEachRow`
 	q = bindOperationNamespace(q, s.Namespace, p)
 	return q, p, nil
 }
@@ -200,7 +203,7 @@ func FetchOperations(ctx context.Context, client *http.Client, endpoint, user, p
 		if err != nil {
 			return nil, err
 		}
-		spans = append(spans, OperationSpan{Events: events, TraceID: row.TraceID, SpanID: row.SpanID, ParentSpanID: row.ParentSpanID, StartNS: row.TimestampNS, DurationNS: row.DurationNS, Operation: row.Attributes["goo.operation.name"], Role: row.Attributes["goo.operation.role"], Outcome: row.Attributes["goo.operation.outcome"], Attributes: row.Attributes})
+		spans = append(spans, OperationSpan{ReportedStatus: row.ReportedStatus, Events: events, TraceID: row.TraceID, SpanID: row.SpanID, ParentSpanID: row.ParentSpanID, StartNS: row.TimestampNS, DurationNS: row.DurationNS, Operation: row.Attributes["goo.operation.name"], Role: row.Attributes["goo.operation.role"], Outcome: row.Attributes["goo.operation.outcome"], Attributes: row.Attributes})
 	}
 	return &LiveOperations{Spans: spans, Conformance: report, Source: s, FromMS: from, ToMS: to, Query: sql, Parameters: params, DuplicateRecords: duplicates}, nil
 }

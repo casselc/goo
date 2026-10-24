@@ -12,3 +12,5 @@ goo-trace-waterfall .span-bar{position:absolute;top:4px;height:16px;background:v
 goo-trace-waterfall .span-bar[data-error=true]{background:#e7a887}
 goo-trace-waterfall .span-duration{overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
 @media(max-width:700px){goo-trace-waterfall>.waterfall-row{grid-template-columns:minmax(0,1fr)}goo-trace-waterfall .span-track{min-height:24px}}
+
+goo-trace-waterfall .span-fact{display:block;font-size:10px;color:var(--muted,#98a8bf);overflow-wrap:anywhere}

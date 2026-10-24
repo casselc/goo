@@ -2106,6 +2106,16 @@
       "parentSpanID": {
         "type": "string"
       },
+      "reportedStatus": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "role": {
         "type": "string"
       },

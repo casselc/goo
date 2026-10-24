@@ -1,0 +1,8 @@
+import{always,eventually}from'@antithesishq/bombadil';
+import{extract,actions,registerCustomAction}from'@antithesishq/bombadil/browser';
+export{noUncaughtExceptions,noUnhandledPromiseRejections}from'@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document,window})=>{const root=document.querySelector('#saved-operationWaterfall'),rows=[...(root?.querySelectorAll('.waterfall-row')||[])];return{ready:rows.length===1,valid:rows.every(r=>{const facts=r.querySelectorAll('.span-fact');return facts.length===2&&facts[0].textContent?.startsWith('Declared outcome: ')&&facts[1].textContent?.startsWith('Reported status: ')&&r.querySelector('.span-bar')?.getAttribute('data-error')===String(facts[1].textContent==='Reported status: Error')}),overflow:document.documentElement.scrollWidth>window.innerWidth,steps:Number(document.documentElement.dataset.statusSteps||0)}});
+export const truthful=always(()=>state.current.valid&&!state.current.overflow);
+export const explored=eventually(()=>state.current.ready&&state.current.steps===6).within(20,'seconds');
+const choose=registerCustomAction('goo.inspectIndependentStatus',async(document)=>{const n=Number(document.documentElement.dataset.statusSteps||0),buttons=document.querySelectorAll<HTMLButtonElement>('#saved-operationMatches button[data-trace-id]');buttons[n%buttons.length]?.click();(document.querySelector('#saved-operationWaterfall .waterfall-row') as HTMLElement)?.click();document.documentElement.dataset.statusSteps=String(n+1)});
+export const choices=actions(()=>state.current.ready&&state.current.steps<6?[choose()]:['Wait']);

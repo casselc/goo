@@ -87,7 +87,9 @@ flowchart LR
 
 Actual checks and limitations are in [VALIDATION](../VALIDATION.md).
 
-## Proposed semantic follow-up
+## Original semantic follow-up finding (resolved)
+
+The following finding records the audit before the linked follow-up.
 
 `operations.waterfallRows` currently derives a `StatusCode` display field from the
 declared operation outcome. That normalized operation outcome is not a retained
@@ -101,3 +103,5 @@ Long IDs remain available in explicit identity/context disclosures. Retained
 manifests keep exact original JSON and numeric tokens; they are not presentation
 strings or rewritten source evidence. No new query, capture schema or custody
 protocol is introduced by the implemented fixes.
+
+Follow-up delivered: [Operation status](OPERATION_STATUS.md) replaces the derived waterfall mapping with optional retained exporter status and separately labeled declared outcome. The earlier finding above records the pre-follow-up behavior.

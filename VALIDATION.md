@@ -7711,3 +7711,45 @@ The remaining prioritized semantic finding is explicit: normalized operation
 waterfall rows derive their StatusCode display from a declared operation outcome.
 Separating that domain outcome from raw reported status needs its own compatible
 contract change; this formatting audit does not silently alter that mapping.
+
+
+## Independent operation status — 2026-10-24
+
+Operation queries now retain optional exact exporter status separately from
+manifest-declared outcome. Legacy projections still omit the new field. The
+waterfall and cached inspector label both facts; only raw reported Error colors
+a bar. See [contract, diagram and storyboard](docs/OPERATION_STATUS.md).
+
+Actual checks:
+- `go test ./annotations ./investigations ./cmd/goo` passed, including the
+  exhaustive 18-case absent/empty/known/future status × declared-outcome matrix,
+  basis/conflict checks and frozen legacy JSON.
+- Node operation/visualization suites passed; Hegel exercised the actual JS
+  projection with generated independent statuses/outcomes.
+- Journey 164 passed using genuine previous/current native executables and six
+  OTLP spans, an independent ClickHouse oracle, an immutable old capture,
+  one explicit fixed-question refresh and source-free local inspection.
+- Observed Quint replay passed with five rejecting controls: hidden restore
+  read, fabricated legacy status, wrong retained status, wrong error color and
+  changed fixed bounds. The 25-second mobile Bombadil run passed, exercising
+  six trace selections and cached inspectors.
+- Six deployed browser regressions passed: heatmap drilldown (09), scoped subject
+  events (10), durable saved refresh (19), and three standalone component
+  contracts covering HTML upgrade, detached SPA updates, row-index facts,
+  literal text, cloned inputs, accessible facts and malformed-data refusal.
+- Generated OpenAPI passed 64 operations, 222 response fixtures, 56 requests,
+  14 mux refusals, negative controls and SSE checks. Deployed API contract passed
+  matching schema plus seven real handler responses, without publishing records.
+
+The first Hegel invocation hit the read-only default home cache; configuring the
+workspace cache resolved that environment issue. Its initial generated fixture
+also omitted required duration data; the fixture was corrected and the property
+passed. Neither was a product regression. Native HTTP tests require local socket
+access. The old/new compatibility test is explicitly opt-in via the two binary
+paths documented above; missing prerequisites report a skip.
+
+The local packages executable and UI/schema assets are upgraded without rebuilding
+Docker images. Existing telemetry, receipts, XTDB and volumes are preserved.
+Compact ledgers/results/logs are under artifacts/operation-status and
+artifacts/operation-status-round; the fixture’s disposable owner is removed.
+Screenshots 09/10/19/67 and new 164 frames reflect the running UI.

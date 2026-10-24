@@ -11,6 +11,8 @@ schemas = json.loads((ROOT / 'api/go-schemas.json').read_text())
 for name in ('workbench.ActivityView','workbench.ActivityViewInput'):
  schemas[name]['properties']['baselineCapture']['description']='Optional exact immutable raw-span duration capture ID. Publication verifies stored evidence and same environment; opening a view stages configuration without loading evidence or starting telemetry. Omitted/empty preserves legacy identity.'
 
+schemas['annotations.OperationSpan']['properties']['reportedStatus']['description']='Optional exact exporter StatusCode, independent of declared outcome. Omission means not retained in this evidence; empty and future values remain explicit unknown values. Legacy saved bytes are unchanged.'
+
 schemas['Error'] = {'type': 'object', 'required': ['error'], 'properties': {'error': {'type': 'string'}, 'hint': {'type': 'string'}}, 'additionalProperties': True}
 schemas['Cancellation'] = {'type': 'object', 'required': ['state'], 'properties': {'state': {'const': 'cancellation-requested'}}}
 # API policy is deliberately authored, not inferred from HTTP verbs.
