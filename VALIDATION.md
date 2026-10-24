@@ -7612,3 +7612,43 @@ remain under artifacts/compact-fixed-round and per-journey directories. Successf
 new integration responses are real; no successful source/capture mocks are used.
 Long records and expanded details remain variable-height. Service-held span tables
 retain their existing presentation pending their own adoption.
+
+## Compact service observation adoption — 2026-10-24
+
+Service detail’s held span page now selects the existing passive mobile record
+layout. Inspect uses the same short visible label and preserved accessible name
+as fixed/saved rows. Supporting query, page/count, exact timestamps, local cached
+inspector and fixed-question link remain owned by service detail.
+
+Actual checks:
+
+- Focused service-protocol/record-presentation Node checks and JS/TS syntax/diff
+  checks pass. Hegel service suggestion/scope and catalog-grain campaigns pass
+  100 cases each against the actual JavaScript module (11.69s combined).
+- Real OTLP/ClickHouse service journey 46 passes (58.8s, 1.0m invocation), including
+  its existing mixed signal catalog, native/convention preview, return and stale
+  response refusal checks. The inspector presents the same supplied record and
+  exact event time; its fixed link retains the supporting question verbatim.
+- New 320/390/700/701/1024 px measurements retain source counters. Short service
+  rows measure 87.69 px at mobile widths, aligned UTC/service, >=28 px Inspect
+  targets and no document overflow. Desktop retains table rows and full dates.
+  Keyboard Enter opens inspection; handoff, return, cached detail and Close focus
+  retain their existing source-free behavior.
+- quint-go replays the actual service catalog/browse/follow/return/preview ledger
+  with eight rejecting controls for changed scope, service identity, counts,
+  return/preview reads and fixed bounds. The 30-second Bombadil campaign passes
+  at an actual configured 390×844 viewport with the new compact-row invariant,
+  existing scope/body/layout/unsupported-kernel invariants and progress.
+- Actual desktop/mobile service and follow-up frames, README, component contract,
+  flow diagram, storyboard, plan and limits are updated. The served adapter is
+  verified against checkout. Successful source results are real; the existing
+  wrong-scope mutation is an explicit refusal test over an actual response, and
+  the delayed response also uses route.fetch rather than a fabricated result.
+
+Only the service adapter and its tests/docs change. No new component, query,
+selection/custody protocol, API/schema, native executable or Docker image is added.
+Deployment updates static assets/docs; telemetry, captures, XTDB, volumes and
+reusable caches are preserved. Compact logs and measured/model ledgers remain
+under artifacts/service-record-layout-round and the per-journey directories.
+The page remains bounded supporting observations, separate from overview timeline
+selection and complete-trace claims; long values may still grow rows.

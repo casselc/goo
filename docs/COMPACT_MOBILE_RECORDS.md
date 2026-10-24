@@ -1,6 +1,6 @@
 # Compact mobile record tables
 
-Activity, fixed-query, saved-capture and explicit context record tables use the passive
+Activity, fixed-query, saved-capture, explicit context and service observation tables use the passive
 `goo-table[record-layout="compact"]` layout. At widths through 700 px, UTC and
 service share the first line, the log/span summary follows, and existing action
 buttons share a wrapped row. Short ordinary records fit within 112 px in the
@@ -39,15 +39,16 @@ buttons. Captions occupy the full width, and non-preview messages expand without
 inheriting the tail preview height.
 
 No fetch, listener, subscription, navigation or persistence is added to the display
-primitive. Existing Activity, fixed and saved owners still own actions and clocks.
+primitive. Existing Activity, fixed, saved and service owners still own actions and clocks.
 
 ```mermaid
 flowchart LR
   Records[Supplied OTel-shaped records] --> Table[Shared record table and existing actions]
   SSR[Server-rendered semantic table] --> Layout[Passive compact responsive layout]
   Frozen[Saved receipt or fixed read] --> Table
+  ServiceHeld[Service supporting span read] --> Table
   Table --> Layout
-  Layout -->|keyboard or pointer intent| Owner[Existing Activity/fixed/saved owner]
+  Layout -->|keyboard or pointer intent| Owner[Existing application owner]
   Owner -->|explicit inspection or selection| Held[Held occurrence and original read window]
   Owner -->|explicit context| Context[Fresh context read in original bounds]
   Context --> Table
@@ -107,3 +108,20 @@ protocol and four rejecting controls, including stale context cancellation.
 ![Saved log records and selected fields](journeys/screenshots/162b-saved-logs-mobile.png)
 ![Fixed span records](journeys/screenshots/162a-fixed-spans-mobile.png)
 ![Saved span records and selected fields](journeys/screenshots/162b-saved-spans-mobile.png)
+
+## Service observation adoption (46)
+
+Service detail’s held span page uses `{mobileCompact:true}` and the same Inspect
+action wording. It retains its supporting query, count, provenance and cached
+inspector; no service query or layout component was added.
+
+[Journey 46](../journeys/service-browser.spec.js) checks 320/390/700/701/1024 px,
+keyboard inspection, readable exact UTC times, the original fixed-question link,
+source-free return, cached detail and opener focus. Source request counts stay
+unchanged during inspection and resizing. The existing service scope/convention
+Hegel properties and observed Quint protocol remain in use. Its 390×844 Bombadil
+workflow now checks compact service rows while discovering, inspecting, following
+an observed-convention question and returning.
+
+![Held service observations](journeys/screenshots/46g-held-service-spans.png)
+![Mobile service observations and inspector](journeys/screenshots/46h-mobile-service-spans.png)

@@ -678,4 +678,6 @@ summary and inline actions using an opt-in passive layout. Long values and selec
 fields may still grow rows; no constant-height or virtualization guarantee is made.
 Legacy tails without the opt-in retain their prior stacked layout.
 
-Fixed/saved and explicit context record tables now adopt the [compact mobile layout](COMPACT_MOBILE_RECORDS.md#fixedsaved-adoption-storyboard-162). Expanded messages and inspection rows may grow vertically; full event dates remain accessible and visible on desktop. Service-held observation tables still use their existing layout.
+Fixed/saved and explicit context record tables now adopt the [compact mobile layout](COMPACT_MOBILE_RECORDS.md#fixedsaved-adoption-storyboard-162). Expanded messages and inspection rows may grow vertically; full event dates remain accessible and visible on desktop. Service-held observation tables now use the same layout, retaining their distinct supporting read and cached inspector.
+
+Service observation rows are a bounded held page rather than a complete trace or the overview timeline selection. Their compact presentation adds no selection/preservation protocol; Open fixed question stages the original supporting scope before explicit Run.

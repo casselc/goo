@@ -923,4 +923,6 @@ passive record-layout opt-in, separates legacy responsive rules and retains exac
 UTC timestamps, occurrence actions, columns, source-free paused return and desktop
 table behavior. Standalone SSR/SPA and nested composition are checked together.
 
-The approved [fixed/saved compact record adoption](COMPACT_MOBILE_RECORDS.md#fixedsaved-adoption-storyboard-162) is delivered through the shared result owner, including explicit linked-log/surrounding context tables. Responsive dates and inline actions preserve full messages, spanning inspectors, selected fields, captured provenance and explicit source reads. Service-held observation tables remain a separate adoption.
+The approved [fixed/saved compact record adoption](COMPACT_MOBILE_RECORDS.md#fixedsaved-adoption-storyboard-162) is delivered through the shared result owner, including explicit linked-log/surrounding context tables. Responsive dates and inline actions preserve full messages, spanning inspectors, selected fields, captured provenance and explicit source reads. Service-held observation tables are now separately adopted through the same presenter, with source-free local inspection and exact fixed-question handoffs verified.
+
+Next proposed coherence review: inventory remaining custom record renderers and keyboard/action differences before choosing another presentation adoption.

@@ -50,6 +50,20 @@ the existing measurement planner without a telemetry read; execution and capture
 remain explicit. Resource pressure is available through emitted native instruments,
 such as process utilization gauges. The UI does not synthesize pressure from spans.
 
+## Held service observations
+
+The Span observations disclosure presents the supporting read’s held page using the
+same [compact record layout](COMPACT_MOBILE_RECORDS.md#service-observation-adoption-46)
+as Activity and fixed/saved results. UTC/service share a mobile line; summary and
+Inspect follow. Full desktop dates, exact timestamp tooltips and expandable long
+messages remain available. The inspector caches its local detail and fields.
+
+Opening, inspecting, resizing and folding this page do not execute another query.
+The displayed page and full count remain distinct, and these records do not become
+a complete trace or the selected overview timeline region. **Open fixed question**
+stages the exact supporting question; Run is explicit. Returning to Services keeps
+the held page and inspector; Close restores the Inspect opener.
+
 ## Scope and return behavior
 
 Record questions enter the shared Explore executor. Native previews enter the
@@ -73,6 +87,11 @@ flowchart TD
   Open --> Reads[Independent bounded reads]
   LogOnly --> Reads
   Reads --> Activity[Signals and captured operation names]
+  Reads --> Held[Held supporting span page]
+  Held --> Table[Shared passive responsive table]
+  Table --> Inspect[Local cached inspector: no read]
+  Inspect --> Stage[Stage exact fixed question: no read]
+  Stage -->|explicit Run| Explore
   Reads --> Fields[Source-discovered span attributes]
   Reads --> Native[Native instrument identities and support]
   Fields --> Question[Exact service + exists predicate + breakdown]

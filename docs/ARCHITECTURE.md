@@ -689,3 +689,5 @@ The [Activity navigation adapter](ACTIVITY_NAVIGATION.md) now exposes fixed-wind
 [Compact mobile records](COMPACT_MOBILE_RECORDS.md) are a supplied presentation opt-in shared by SSR and SPA tables. Responsive styles stay with the record component; legacy tail formatting excludes opt-in tables. Existing Activity owners retain selection, query windows, timestamps, navigation and source execution.
 
 The shared record-result owner now selects the [responsive record layout](COMPACT_MOBILE_RECORDS.md#fixedsaved-adoption-storyboard-162) for fixed, saved and explicitly read context tables. Presentation does not change stored receipts, result models or read clocks. Mobile formatting is independent from preview clipping; spanning inspectors and accessible action identities remain with the existing owner.
+
+[Service-held observations](SERVICE_BROWSING.md#held-service-observations) adopt the same passive responsive record table. Service detail still supplies the original supporting page, retains its inspector and stages the fixed-question link. Disclosure, inspection and resizing introduce no source read or new custody semantics.

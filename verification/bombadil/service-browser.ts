@@ -1,17 +1,19 @@
 import {always,eventually} from '@antithesishq/bombadil';
 import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
 export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
-const state=extract(({document})=>{
+const state=extract(({document,window})=>{
  const el=(id:string)=>document.getElementById(id);let evidence:any=null;try{evidence=JSON.parse(el('serviceDetail')?.querySelector('.service-source-evidence pre')?.textContent||'null')}catch{}
  const inventory=(()=>{try{return JSON.parse(el('serviceDiscoveryExplain')?.textContent||'null')}catch{return null}})();
+ const observation=document.querySelector('.service-observations tbody tr'),compact=!observation||window.innerWidth>700||window.getComputedStyle(observation).display==='grid'&&observation.getBoundingClientRect().height<140;
  const coherent=!evidence||evidence.every((r:any)=>r.question.environment===inventory?.question.environment&&r.question.fromMs===inventory?.question.fromMs&&r.question.toMs===inventory?.question.toMs);
  const observations=el('serviceDetail')?.querySelector('.service-observations'),inspector=observations?.querySelector('.ui-inspector');const localInspection=!inspector||inspector.hasAttribute('hidden')||!!inspector.querySelector('goo-record-summary')&&!!inspector.querySelector('.attribute-row[data-key=timestamp_ns] time')&&!!inspector.querySelector('goo-record-context');
- return {localInspection,inspected:!!inspector&&!inspector.hasAttribute('hidden'),stage:document.documentElement.dataset.serviceBrowserStage||'initial',ready:!!el('inventoryRun'),inventory:!!inventory,loading:!!el('serviceDetail')?.querySelector('.service-loading'),detail:el('serviceDetail')?.hidden===false,evidence:!!evidence,coherent,returning:el('serviceReturn')?.hidden===false,overflow:document.documentElement.scrollWidth>innerWidth,unsupported:[...document.querySelectorAll<HTMLButtonElement>('#serviceDetail button')].filter(b=>b.textContent==='Unsupported by current kernels').every(b=>b.disabled)};
+ return {compact,localInspection,inspected:!!inspector&&!inspector.hasAttribute('hidden'),stage:document.documentElement.dataset.serviceBrowserStage||'initial',ready:!!el('inventoryRun'),inventory:!!inventory,loading:!!el('serviceDetail')?.querySelector('.service-loading'),detail:el('serviceDetail')?.hidden===false,evidence:!!evidence,coherent,returning:el('serviceReturn')?.hidden===false,overflow:document.documentElement.scrollWidth>innerWidth,unsupported:[...document.querySelectorAll<HTMLButtonElement>('#serviceDetail button')].filter(b=>b.textContent==='Unsupported by current kernels').every(b=>b.disabled)};
 });
 export const complete=eventually(()=>state.current.stage==='complete').within(25,'seconds');
 export const fixedServiceScope=always(()=>state.current.coherent);
 export const unsupportedCannotExecute=always(()=>state.current.unsupported);
 export const heldInspectionUsesSharedBody=always(()=>state.current.localInspection);
+export const compactObservations=always(()=>state.current.compact);
 export const noOverflow=always(()=>!state.current.overflow);
 const act=registerCustomAction('goo.serviceBrowser',async(document,window,command:string)=>{
  const el=(id:string)=>document.getElementById(id),button=(text:string)=>[...document.querySelectorAll<HTMLButtonElement>('#serviceDetail button, #serviceReturn button, #serviceCatalog button')].find(b=>b.textContent===text);
