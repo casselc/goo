@@ -246,3 +246,6 @@ goo-attribute-list .field-hint-label{display:block}
  .signed-comparison .signed-metric-change span{white-space:nowrap}
 }
 @media(max-width:700px){.signed-comparison .scroll{max-height:none;overflow:visible}}
+
+/* Decimal captions retain every exact endpoint instead of mobile ellipsis. */
+.signed-comparison .comparison-row-axis.decimal-range-axis{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}
