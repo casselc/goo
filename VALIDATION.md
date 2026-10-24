@@ -8653,3 +8653,22 @@ Independent milestone review approved PE2 and PE3 with no remaining blockers aft
 the final API documentation check. The implementation is split into reviewed
 semantic/custody (`cb4f5af`), compact contextual UI (`017f32b`) and acceptance/docs
 commits; final commit IDs and remote publication are reported from git history.
+
+## Activity explanations — AE1 source and integration (2026-10-24)
+
+Added an explicit Activity Investigate entrance that freezes the applied last
+completed 60-second window and pauses streaming/latency reads. The application
+owner reuses passive time bars for bounded held-occurrence guidance and the shared
+population explanation owner for exact source results, filters, observed saves and
+reuse. Previous windows are adjacent and equal-width; saved baseline scopes use
+explicit capture GETs and retain their own original queries and clocks. Both
+scopes are reread only by explicit Run; frozen saved counts are not reused.
+
+All 63 Node test files pass (6.913 seconds), including pure window/brush bounds,
+omitted-log-signal normalization, held timestamp bin edges and saved receipt/scope
+identity refusals. Python syntax compilation and JS syntax/diff checks pass.
+Independent source review approved ownership, same-paused-window retention,
+visible-summary focus restoration and asset ordering. Review fixed delayed GET
+Load-button recovery, latest-generation completion guards and explicit suspended
+state reset. No endpoint or Go evaluator changed. Real stream/browser/model and
+Bombadil acceptance remain AE2 work, not implied by source approval.

@@ -1001,3 +1001,13 @@ is delivered**: final main/ownership browser journeys, native replay with 21+11
 rejecting controls, the 60-second/ten-phase Bombadil campaign and legacy 174/176
 pass. Final artifact review and push are recorded in VALIDATION.md rather than
 inferred from implementation status.
+
+### Activity population explanations (active)
+
+Approved [Activity explanation contract](ACTIVITY_EXPLANATIONS.md): AE1 adds a
+compact contextual entrance from a completed Activity window, checked time brushing
+and preceding/saved-scope baseline staging using the shared explanation owner.
+AE2 validates actual telemetry, immutable observed Save, scope continuity,
+source-free return and stale-owner rejection through browser/property/model and
+Bombadil checks. Saved baseline scopes are explicitly reread, not presented as
+frozen field counts. Complete and independently review both gates before push.
