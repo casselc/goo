@@ -819,3 +819,18 @@ Open links stage canonical equality; service comparisons use exact selected/rest
 queries. Inactive/hidden/detached links block both default navigation and event
 propagation so the global trail cannot stage stale intent. Display elements do
 not normalize source bodies, fetch examples or infer issues.
+
+### Pattern time comparisons (implementation in progress)
+
+`ui/log-pattern-comparison.js` contains a pure model over complete supplied
+cohorts and their validated comparison. It binds source bases, counts, states and
+canonical group unions before calculating reduced integer ratios. Counts retain
+uint64 precision; rates normalize by each fixed window, and shares retain each
+whole-population denominator. An inconsistent side leaves missing group counts
+unavailable and suppresses derived measures and presence labels. Presentation
+rounding never turns a nonzero value into an apparent zero.
+
+The application owner stages baseline scopes and executes reads. Display adapters
+reuse compact tables and shared comparison visuals; their measure changes and
+ranking remain local. The same arithmetic serves live-result and immutable saved
+comparison presentation. [Contract](LOG_PATTERN_TIME_COMPARISONS.md).

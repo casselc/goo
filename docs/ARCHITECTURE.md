@@ -643,3 +643,15 @@ service comparisons reuse the same query/capture/publication paths. Shared
 display adapters decode identities for labels, while typed predicates retain
 the exact canonical IDs. No sampled classifier, ingestion processor, ML model
 or independent pattern store is introduced. The process diagram is in the guide.
+
+### Pattern comparison across time (implementation in progress)
+
+[Time comparisons](LOG_PATTERN_TIME_COMPARISONS.md) reuse complete fixed-query
+cohorts and the existing population owner. Baseline selection stages questions;
+explicit Run owns independent source reads. The comparison boundary validates
+canonical pattern identities before returning even an empty or changed state.
+A pure display adapter aligns complete groups and computes exact integer ratios
+for duration-normalized rates and all-record shares. Stored-evidence adapters
+load immutable full group aggregates from storage, never infer them from a record
+page, and do not start telemetry reads. Source and evidence ownership remain in
+application adapters; no display element subscribes or fetches.
