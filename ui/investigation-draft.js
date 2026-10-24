@@ -21,6 +21,7 @@
   optional(q,'reportedEdge',v=>{object(v,['parent','child','discoveryNamespace']);for(const key of ['parent','child']){object(v[key],['service','namespace']);text(v[key].service,128);namespace(v[key].namespace)}optional(v,'discoveryNamespace',namespace)});
   for(const key of ['groupTimeSeries','spanStatus'])optional(q,key,v=>requireThat(typeof v==='boolean'));
   optional(q,'summary',v=>requireThat(['','span-duration'].includes(v)));optional(q,'bucketMs',v=>requireThat([0,1000,10000,60000,300000].includes(v)));
+  const checkPattern=p=>{if(p.all||p.any){(p.all||p.any).forEach(checkPattern);return}if(p.field?.kind==='column'&&p.field.key==='body_pattern_v1'){requireThat(q.signal==='logs'&&['eq','ne','exists','missing'].includes(p.op));if(['eq','ne'].includes(p.op))(typeof module!=='undefined'?require('./log-patterns'):global.GooLogPatterns).decode(p.value);else requireThat(p.value===undefined||p.value==='')}};if(q.where)checkPattern(q.where);requireThat(q.signal==='logs'||!q.groupBy?.some(f=>f.kind==='column'&&f.key==='body_pattern_v1'));
   optional(q,'limit',v=>integer(v,1,100));optional(q,'offset',v=>integer(v,0,1000));
  }
  function native(d){
