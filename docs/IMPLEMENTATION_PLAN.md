@@ -1088,3 +1088,13 @@ cases, the 55-second actor, 150 generated examples and 93 native rejecting
 controls over 20/3/7-action finite traces. Source-free mobile and explicit empty
 replay verify final frames and unchanged original custody. Final review and
 publication are recorded from actual git state in VALIDATION.md.
+
+### Trace page interval breakdown (in progress)
+
+[Contract](TRACE_PAGE_TIMING.md). TP1 defines an exact Go projection over supplied
+span rows, direct-child interval unions, local uncertainty and page-only grouped
+sums. TP2 adds a parity-tested passive component beside the existing waterfall,
+with exact row/group highlighting and selected-span detail. TP3 requires ordinary
+OTel overlap/nesting/partial/ambiguous cases, source-free stored projection,
+unchanged capture bytes, passive SSR/SPA, Hegel properties, Bombadil, finite
+replay and actual frames. Source, design and evidence reviews precede publication.

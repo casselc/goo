@@ -1,0 +1,920 @@
+[
+  {
+    "name": "overlap-nested-zero",
+    "rows": [
+      {
+        "ParentSpanId": "",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000001",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "100",
+        "timestamp_ns": "0"
+      },
+      {
+        "ParentSpanId": "0000000000000001",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000002",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "50",
+        "timestamp_ns": "10"
+      },
+      {
+        "ParentSpanId": "0000000000000001",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000003",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "40",
+        "timestamp_ns": "40"
+      },
+      {
+        "ParentSpanId": "0000000000000002",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000004",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "10",
+        "timestamp_ns": "20"
+      },
+      {
+        "ParentSpanId": "0000000000000001",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000005",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "0",
+        "timestamp_ns": "50"
+      }
+    ],
+    "truncated": false,
+    "expected": {
+      "version": "goo/trace-page-breakdown/v1",
+      "state": "observed",
+      "truncated": false,
+      "rows": [
+        {
+          "rowIndex": 0,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "100",
+          "childUnionNs": "70",
+          "outsideChildrenNs": "30",
+          "state": "available",
+          "reasons": []
+        },
+        {
+          "rowIndex": 1,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "50",
+          "childUnionNs": "10",
+          "outsideChildrenNs": "40",
+          "state": "available",
+          "reasons": []
+        },
+        {
+          "rowIndex": 2,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "40",
+          "childUnionNs": "0",
+          "outsideChildrenNs": "40",
+          "state": "available",
+          "reasons": []
+        },
+        {
+          "rowIndex": 3,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "10",
+          "childUnionNs": "0",
+          "outsideChildrenNs": "10",
+          "state": "available",
+          "reasons": []
+        },
+        {
+          "rowIndex": 4,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "0",
+          "childUnionNs": "0",
+          "outsideChildrenNs": "0",
+          "state": "available",
+          "reasons": []
+        }
+      ],
+      "groups": [
+        {
+          "service": "svc",
+          "operation": "op",
+          "rowIndexes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "inclusiveNs": "200",
+          "inclusiveKnown": 5,
+          "inclusiveUnknown": 0,
+          "outsideChildrenNs": "120",
+          "outsideKnown": 5,
+          "outsideUnknown": 0,
+          "state": "observed"
+        }
+      ]
+    }
+  },
+  {
+    "name": "child-own-residual-unknown",
+    "rows": [
+      {
+        "ParentSpanId": "",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000001",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "100",
+        "timestamp_ns": "0"
+      },
+      {
+        "ParentSpanId": "0000000000000001",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000002",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "50",
+        "timestamp_ns": "10"
+      },
+      {
+        "ParentSpanId": "0000000000000002",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000003",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "70",
+        "timestamp_ns": "5"
+      }
+    ],
+    "truncated": false,
+    "expected": {
+      "version": "goo/trace-page-breakdown/v1",
+      "state": "partial",
+      "truncated": false,
+      "rows": [
+        {
+          "rowIndex": 0,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "100",
+          "childUnionNs": "50",
+          "outsideChildrenNs": "50",
+          "state": "available",
+          "reasons": []
+        },
+        {
+          "rowIndex": 1,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "50",
+          "state": "unavailable",
+          "reasons": [
+            "child-outside-parent"
+          ]
+        },
+        {
+          "rowIndex": 2,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "70",
+          "childUnionNs": "0",
+          "outsideChildrenNs": "70",
+          "state": "available",
+          "reasons": []
+        }
+      ],
+      "groups": [
+        {
+          "service": "svc",
+          "operation": "op",
+          "rowIndexes": [
+            0,
+            1,
+            2
+          ],
+          "inclusiveNs": "220",
+          "inclusiveKnown": 3,
+          "inclusiveUnknown": 0,
+          "outsideChildrenNs": "120",
+          "outsideKnown": 2,
+          "outsideUnknown": 1,
+          "state": "partial"
+        }
+      ]
+    }
+  },
+  {
+    "name": "outside-parent",
+    "rows": [
+      {
+        "ParentSpanId": "",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000001",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "100",
+        "timestamp_ns": "0"
+      },
+      {
+        "ParentSpanId": "0000000000000001",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000002",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "20",
+        "timestamp_ns": "90"
+      }
+    ],
+    "truncated": true,
+    "expected": {
+      "version": "goo/trace-page-breakdown/v1",
+      "state": "partial",
+      "truncated": true,
+      "rows": [
+        {
+          "rowIndex": 0,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "100",
+          "state": "unavailable",
+          "reasons": [
+            "child-outside-parent"
+          ]
+        },
+        {
+          "rowIndex": 1,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "20",
+          "childUnionNs": "0",
+          "outsideChildrenNs": "20",
+          "state": "available",
+          "reasons": []
+        }
+      ],
+      "groups": [
+        {
+          "service": "svc",
+          "operation": "op",
+          "rowIndexes": [
+            0,
+            1
+          ],
+          "inclusiveNs": "120",
+          "inclusiveKnown": 2,
+          "inclusiveUnknown": 0,
+          "outsideChildrenNs": "20",
+          "outsideKnown": 1,
+          "outsideUnknown": 1,
+          "state": "partial"
+        }
+      ]
+    }
+  },
+  {
+    "name": "duplicates",
+    "rows": [
+      {
+        "ParentSpanId": "",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000001",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "100",
+        "timestamp_ns": "0"
+      },
+      {
+        "ParentSpanId": "0000000000000001",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000002",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "50",
+        "timestamp_ns": "10"
+      },
+      {
+        "ParentSpanId": "0000000000000001",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000002",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "20",
+        "timestamp_ns": "20"
+      }
+    ],
+    "truncated": false,
+    "expected": {
+      "version": "goo/trace-page-breakdown/v1",
+      "state": "partial",
+      "truncated": false,
+      "rows": [
+        {
+          "rowIndex": 0,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "100",
+          "state": "unavailable",
+          "reasons": [
+            "unusable-child-edge"
+          ]
+        },
+        {
+          "rowIndex": 1,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "50",
+          "state": "unavailable",
+          "reasons": [
+            "duplicate-identity"
+          ]
+        },
+        {
+          "rowIndex": 2,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "20",
+          "state": "unavailable",
+          "reasons": [
+            "duplicate-identity"
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "service": "svc",
+          "operation": "op",
+          "rowIndexes": [
+            0,
+            1,
+            2
+          ],
+          "inclusiveNs": "170",
+          "inclusiveKnown": 3,
+          "inclusiveUnknown": 0,
+          "outsideChildrenNs": null,
+          "outsideKnown": 0,
+          "outsideUnknown": 3,
+          "state": "partial"
+        }
+      ]
+    }
+  },
+  {
+    "name": "cycle",
+    "rows": [
+      {
+        "ParentSpanId": "0000000000000002",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000001",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "100",
+        "timestamp_ns": "0"
+      },
+      {
+        "ParentSpanId": "0000000000000001",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000002",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "20",
+        "timestamp_ns": "10"
+      }
+    ],
+    "truncated": false,
+    "expected": {
+      "version": "goo/trace-page-breakdown/v1",
+      "state": "partial",
+      "truncated": false,
+      "rows": [
+        {
+          "rowIndex": 0,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "100",
+          "state": "unavailable",
+          "reasons": [
+            "parent-cycle",
+            "unusable-child-edge"
+          ]
+        },
+        {
+          "rowIndex": 1,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "20",
+          "state": "unavailable",
+          "reasons": [
+            "parent-cycle",
+            "unusable-child-edge"
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "service": "svc",
+          "operation": "op",
+          "rowIndexes": [
+            0,
+            1
+          ],
+          "inclusiveNs": "120",
+          "inclusiveKnown": 2,
+          "inclusiveUnknown": 0,
+          "outsideChildrenNs": null,
+          "outsideKnown": 0,
+          "outsideUnknown": 2,
+          "state": "partial"
+        }
+      ]
+    }
+  },
+  {
+    "name": "missing-parent",
+    "rows": [
+      {
+        "ParentSpanId": "0000000000000003",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000001",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "10",
+        "timestamp_ns": "9007199254740993"
+      }
+    ],
+    "truncated": true,
+    "expected": {
+      "version": "goo/trace-page-breakdown/v1",
+      "state": "observed",
+      "truncated": true,
+      "rows": [
+        {
+          "rowIndex": 0,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "10",
+          "childUnionNs": "0",
+          "outsideChildrenNs": "10",
+          "state": "available",
+          "reasons": [
+            "parent-outside-page"
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "service": "svc",
+          "operation": "op",
+          "rowIndexes": [
+            0
+          ],
+          "inclusiveNs": "10",
+          "inclusiveKnown": 1,
+          "inclusiveUnknown": 0,
+          "outsideChildrenNs": "10",
+          "outsideKnown": 1,
+          "outsideUnknown": 0,
+          "state": "observed"
+        }
+      ]
+    }
+  },
+  {
+    "name": "invalid-intervals",
+    "rows": [
+      {
+        "ParentSpanId": "",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000001",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "100",
+        "timestamp_ns": "0"
+      },
+      {
+        "ParentSpanId": "0000000000000001",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000002",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "3",
+        "timestamp_ns": "01"
+      },
+      {
+        "ParentSpanId": "0000000000000001",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000003",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "1",
+        "timestamp_ns": "18446744073709551615"
+      },
+      {
+        "ParentSpanId": "0000000000000001",
+        "ServiceName": "svc",
+        "SpanId": "bad",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "2",
+        "timestamp_ns": "4"
+      }
+    ],
+    "truncated": false,
+    "expected": {
+      "version": "goo/trace-page-breakdown/v1",
+      "state": "partial",
+      "truncated": false,
+      "rows": [
+        {
+          "rowIndex": 0,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "100",
+          "state": "unavailable",
+          "reasons": [
+            "unusable-child-edge"
+          ]
+        },
+        {
+          "rowIndex": 1,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "3",
+          "state": "unavailable",
+          "reasons": [
+            "invalid-interval"
+          ]
+        },
+        {
+          "rowIndex": 2,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "1",
+          "state": "unavailable",
+          "reasons": [
+            "invalid-interval"
+          ]
+        },
+        {
+          "rowIndex": 3,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "2",
+          "state": "unavailable",
+          "reasons": [
+            "invalid-identity"
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "service": "svc",
+          "operation": "op",
+          "rowIndexes": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "inclusiveNs": "106",
+          "inclusiveKnown": 4,
+          "inclusiveUnknown": 0,
+          "outsideChildrenNs": null,
+          "outsideKnown": 0,
+          "outsideUnknown": 4,
+          "state": "partial"
+        }
+      ]
+    }
+  },
+  {
+    "name": "nullable-labels",
+    "rows": [
+      {
+        "ParentSpanId": "",
+        "SpanId": "0000000000000001",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "100",
+        "timestamp_ns": "0"
+      },
+      {
+        "ParentSpanId": "0000000000000001",
+        "ServiceName": "",
+        "SpanId": "0000000000000002",
+        "SpanName": "",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "50",
+        "timestamp_ns": "10"
+      },
+      {
+        "ParentSpanId": "0000000000000001",
+        "ServiceName": "(missing)",
+        "SpanId": "0000000000000003",
+        "SpanName": "(missing)",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "40",
+        "timestamp_ns": "40"
+      }
+    ],
+    "truncated": false,
+    "expected": {
+      "version": "goo/trace-page-breakdown/v1",
+      "state": "observed",
+      "truncated": false,
+      "rows": [
+        {
+          "rowIndex": 0,
+          "service": null,
+          "operation": null,
+          "inclusiveNs": "100",
+          "childUnionNs": "70",
+          "outsideChildrenNs": "30",
+          "state": "available",
+          "reasons": []
+        },
+        {
+          "rowIndex": 1,
+          "service": "",
+          "operation": "",
+          "inclusiveNs": "50",
+          "childUnionNs": "0",
+          "outsideChildrenNs": "50",
+          "state": "available",
+          "reasons": []
+        },
+        {
+          "rowIndex": 2,
+          "service": "(missing)",
+          "operation": "(missing)",
+          "inclusiveNs": "40",
+          "childUnionNs": "0",
+          "outsideChildrenNs": "40",
+          "state": "available",
+          "reasons": []
+        }
+      ],
+      "groups": [
+        {
+          "service": null,
+          "operation": null,
+          "rowIndexes": [
+            0
+          ],
+          "inclusiveNs": "100",
+          "inclusiveKnown": 1,
+          "inclusiveUnknown": 0,
+          "outsideChildrenNs": "30",
+          "outsideKnown": 1,
+          "outsideUnknown": 0,
+          "state": "observed"
+        },
+        {
+          "service": "",
+          "operation": "",
+          "rowIndexes": [
+            1
+          ],
+          "inclusiveNs": "50",
+          "inclusiveKnown": 1,
+          "inclusiveUnknown": 0,
+          "outsideChildrenNs": "50",
+          "outsideKnown": 1,
+          "outsideUnknown": 0,
+          "state": "observed"
+        },
+        {
+          "service": "(missing)",
+          "operation": "(missing)",
+          "rowIndexes": [
+            2
+          ],
+          "inclusiveNs": "40",
+          "inclusiveKnown": 1,
+          "inclusiveUnknown": 0,
+          "outsideChildrenNs": "40",
+          "outsideKnown": 1,
+          "outsideUnknown": 0,
+          "state": "observed"
+        }
+      ]
+    }
+  },
+  {
+    "name": "malformed-row-salvage",
+    "rows": [
+      {
+        "ParentSpanId": "",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000001",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "100",
+        "timestamp_ns": "0"
+      },
+      {
+        "ParentSpanId": "0000000000000001",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000002",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": 2,
+        "timestamp_ns": "10"
+      },
+      null,
+      {
+        "ParentSpanId": "0000000000000001",
+        "ServiceName": 2,
+        "SpanId": "0000000000000003",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "40",
+        "timestamp_ns": "40"
+      }
+    ],
+    "truncated": false,
+    "expected": {
+      "version": "goo/trace-page-breakdown/v1",
+      "state": "partial",
+      "truncated": false,
+      "rows": [
+        {
+          "rowIndex": 0,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "100",
+          "state": "unavailable",
+          "reasons": [
+            "unusable-child-edge"
+          ]
+        },
+        {
+          "rowIndex": 1,
+          "service": "svc",
+          "operation": "op",
+          "state": "unavailable",
+          "reasons": [
+            "invalid-interval"
+          ]
+        },
+        {
+          "rowIndex": 2,
+          "service": null,
+          "operation": null,
+          "state": "unavailable",
+          "reasons": [
+            "invalid-interval",
+            "invalid-identity",
+            "invalid-row"
+          ]
+        },
+        {
+          "rowIndex": 3,
+          "service": null,
+          "operation": "op",
+          "inclusiveNs": "40",
+          "state": "unavailable",
+          "reasons": [
+            "invalid-row"
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "service": null,
+          "operation": null,
+          "rowIndexes": [
+            2
+          ],
+          "inclusiveNs": null,
+          "inclusiveKnown": 0,
+          "inclusiveUnknown": 1,
+          "outsideChildrenNs": null,
+          "outsideKnown": 0,
+          "outsideUnknown": 1,
+          "state": "partial"
+        },
+        {
+          "service": null,
+          "operation": "op",
+          "rowIndexes": [
+            3
+          ],
+          "inclusiveNs": "40",
+          "inclusiveKnown": 1,
+          "inclusiveUnknown": 0,
+          "outsideChildrenNs": null,
+          "outsideKnown": 0,
+          "outsideUnknown": 1,
+          "state": "partial"
+        },
+        {
+          "service": "svc",
+          "operation": "op",
+          "rowIndexes": [
+            0,
+            1
+          ],
+          "inclusiveNs": "100",
+          "inclusiveKnown": 1,
+          "inclusiveUnknown": 1,
+          "outsideChildrenNs": null,
+          "outsideKnown": 0,
+          "outsideUnknown": 2,
+          "state": "partial"
+        }
+      ]
+    }
+  },
+  {
+    "name": "wide-sums",
+    "rows": [
+      {
+        "ParentSpanId": "",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000001",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "18446744073709551615",
+        "timestamp_ns": "0"
+      },
+      {
+        "ParentSpanId": "",
+        "ServiceName": "svc",
+        "SpanId": "0000000000000002",
+        "SpanName": "op",
+        "TraceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "duration_ns": "18446744073709551615",
+        "timestamp_ns": "0"
+      }
+    ],
+    "truncated": false,
+    "expected": {
+      "version": "goo/trace-page-breakdown/v1",
+      "state": "observed",
+      "truncated": false,
+      "rows": [
+        {
+          "rowIndex": 0,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "18446744073709551615",
+          "childUnionNs": "0",
+          "outsideChildrenNs": "18446744073709551615",
+          "state": "available",
+          "reasons": []
+        },
+        {
+          "rowIndex": 1,
+          "service": "svc",
+          "operation": "op",
+          "inclusiveNs": "18446744073709551615",
+          "childUnionNs": "0",
+          "outsideChildrenNs": "18446744073709551615",
+          "state": "available",
+          "reasons": []
+        }
+      ],
+      "groups": [
+        {
+          "service": "svc",
+          "operation": "op",
+          "rowIndexes": [
+            0,
+            1
+          ],
+          "inclusiveNs": "36893488147419103230",
+          "inclusiveKnown": 2,
+          "inclusiveUnknown": 0,
+          "outsideChildrenNs": "36893488147419103230",
+          "outsideKnown": 2,
+          "outsideUnknown": 0,
+          "state": "observed"
+        }
+      ]
+    }
+  },
+  {
+    "name": "empty",
+    "rows": [],
+    "truncated": false,
+    "expected": {
+      "version": "goo/trace-page-breakdown/v1",
+      "state": "no_data",
+      "truncated": false,
+      "rows": [],
+      "groups": []
+    }
+  }
+]
