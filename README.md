@@ -1,245 +1,113 @@
 # goo — Grammar of Observability
 
-**Turn telemetry into shared definitions of system behavior, and investigate what
-happened with evidence you can inspect and preserve.**
+Start with what is happening now. Narrow logs and spans, inspect a population,
+compare evidence, and preserve an explanation you can revisit or reuse. Goo works
+with ordinary OpenTelemetry data; application manifests and Go annotations add
+shared definitions when available.
 
-[Current reviewed roadmap](docs/ROADMAP_2026_10_24.md) · [Execution backlog](docs/BACKLOG_2026_10_24.md).
+[Reviewed roadmap](docs/ROADMAP_2026_10_24.md) · [Execution backlog](docs/BACKLOG_2026_10_24.md) ·
+[Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md)
 
-Numeric authoring now provides exact namespace field guidance while keeping type
-and unit explicit; see [numeric measures](docs/NUMERIC_ATTRIBUTE_PLANNING.md).
+## Run the local lab
 
-[API contract and usage](docs/API.md) · [OpenAPI 3.1](api/openapi.json) ·
-[Browsable API docs](http://localhost:8088/api-docs) (requires the current Python server).
-
-[Executed API acceptance](docs/API_ACCEPTANCE.md) covers browser proxy contracts, saved/retained workflows and the rebuilt local lab.
-
-[The fresh whole-product coherence proposal](docs/WHOLE_PRODUCT_COHERENCE_PROPOSAL_2026_10_22.md)
-reconciles independent architecture and running-product usability reviews. It
-recommends a continuous Activity → analysis → population → investigation flow;
-[compact record tables](docs/COMPACT_MOBILE_RECORDS.md) keep Activity, fixed/saved results and service observations dense on mobile while retaining full dates, messages and evidence details. The [consolidated Investigate menu](docs/ACTIVITY_NAVIGATION.md) groups fixed-question work while Views handles rolling configurations. The [contextual Activity analysis handoff](docs/ACTIVITY_ANALYSIS.md) is now
-implemented, followed by [Saved task composition](docs/SAVED_WORKSPACE.md)
-and bounded population continuation; the broader recommendations remain proposed.
-
-Ask a question → inspect its evidence → capture and explain it → reuse the
-definition. Start from instrumented code or unfamiliar OpenTelemetry data.
-[One grouping control](docs/GROUPING_CONTROL.md) now combines manual field selection, chips and exact-key entry, with source-free staging across fixed and population views. [Two-field composition](docs/COMPOSED_GROUPING.md) adds ordered removable grouping chips and source-free Add/remove actions across fixed analysis and population drafts. [Group an observed field](docs/OBSERVED_GROUPING.md) stages a fixed breakdown directly from discovery, preserving selectors and requiring explicit Run. [OTel field hints](docs/OTEL_FIELD_HINTS.md) let you find observed fields by meaning while preserving exact qualified keys and legacy spellings. [Operation status](docs/OPERATION_STATUS.md) now retains exporter status independently of declared outcomes, with explicit legacy absence and immutable refresh behavior. [The renderer/action audit](docs/RECORD_RENDERER_AUDIT_2026_10_24.md) aligns readable Operations units and shared timestamp inspection while retaining domain/custody boundaries. [The product essence](docs/PRODUCT_ESSENCE.md) describes this common loop and the
-criteria for keeping the workbench coherent. The [current whole-product usability review](docs/WHOLE_PRODUCT_USABILITY_REVIEW.md) and [reconciled implementation proposal](docs/PRODUCT_IMPLEMENTATION_PROPOSAL.md) prioritize simpler entry points, compact results and consistent evidence actions. The [live/saved ownership contract](docs/LIVE_SAVED_OWNERSHIP.md) describes the first consolidation cut. The [core primitives review](docs/CORE_PRIMITIVES.md)
-records earlier consolidation priorities; [shared scope and checked transforms](docs/QUESTION_SCOPE.md)
-now connect recipe and follow-up planning. The proposed [stream-first entry](docs/STREAM_FIRST_ENTRY_DESIGN.md) puts live logs/spans, compact scope pills and inspection ahead of question authoring; its [architecture review](docs/STREAM_FIRST_ENTRY_ARCHITECTURE.md) and active plan define the next cuts. The first [Live Activity entry](docs/LIVE_ACTIVITY.md) implements one active log/span monitor with compact controls and collapsible mobile navigation; typed attribute Include/Exclude and removable chips narrow the stream through explicit Apply; the inspector can stage a fixed investigation without fetching and return to the held stream without rerunning it. Live and fixed results now use [shared record presentation](docs/RECORD_PRESENTATION.md) with bounded supplied-parent context. Services now exposes its existing held span page through the same record table and inspector. [Saved record summaries](docs/SAVED_RECORD_PRESENTATION.md) also share scope/provenance between captures and document references; Open fixed question stages before Run. Saved record pages now mount a dedicated result owner rather than a hidden query editor. Fixed/saved/context tables use one inspector for attributes and refinement, with compact closed rows and comparison controls shown only for a usable breakdown or retained baseline. Standalone tails also use the cached record inspector, and native stream identity shares a lazy inspector across measurements, services and comparisons. Native values and coverage now use a [shared presenter](docs/NATIVE_PRESENTATION.md) across measurement details, services, fixed/live window comparisons and supported-window previews. [Reusable Activity views](docs/ACTIVITY_VIEWS.md) save rolling scope and record columns; the Views menu browses the applied environment using the same library as Saved and Services, and exact links reopen paused before explicit Start. Activity can now select up to 20 server-proven log/span occurrences and retain them with tags/notes; committed saves recover through the original browser retry intent without rereading telemetry. The [Activity acceptance pass](docs/ACTIVITY_RETENTION_ACCEPTANCE.md) distinguishes expiry, configuration, unsent local saves and unknown commit outcomes while keeping inspection available. The [acceptance audit](docs/S2_A3_ACCEPTANCE.md) records bounded S2/A3 as delivered: fixed authoring now mounts explicitly and retains its draft on paused return. The [B1 library consolidation](docs/DEFINITION_LIBRARY.md) uses compact record/native definition rows, fixed reusable-question/document revision rows and retained catalog snapshots with one selected detail. Retention now has separate client/basis, catalog, citation and explicit recovery owners. Bounded B2 is delivered: [shared record-field presentation and Go/JS wire fixtures](docs/FIELD_PRESENTATION.md) now cover live summaries, fixed chips and record package handoffs; service namespace labels and Go/JS identity/presence fixtures are also shared; [shared-question/native wire fixtures](docs/QUESTION_PROTOCOL.md) also protect exact bounds and Go-default reuse equivalence. [C1 publication consolidation](docs/IMMUTABLE_PUBLICATION.md) is delivered across all six Go publication paths, with frozen bytes/IDs/responses, distinct duplicate policies and explicit directory-sync versus file-only custody/YAML contracts. [C2 HTTP boundaries](docs/HTTP_BOUNDARIES.md) inventories endpoint effects, resolves Go HTTP ClickHouse and optional XTDB configuration at startup while keeping source owners, per-operation read basis and citation verification separate and shares recipe/dashboard JSON mechanics behind frozen wire fixtures; native and record source HTTP mechanics now share bounded primitives behind distinct transport contracts and real ClickHouse checks; the [C2 acceptance audit](docs/HTTP_BOUNDARIES.md#c2-acceptance-audit--2026-10-22) tracks all six audited ClickHouse transports as adopted, with telemetry package JSON also adopted behind 68 wire cases; native measurement/registry JSON is also adopted behind 68 wire cases, with fixed exploration JSON also adopted behind 68 wire cases; OpenAPI now provides the shared contract reference; further mechanical JSON migration is paused for API coverage and proxy conformance.
-
-[Record-to-population exploration](docs/RECORD_POPULATIONS.md) adds staged inspector attributes and bounded shared-field selection over captured rows.
-
-
-[Shared tags, notes and optional retained evidence](docs/WORKBENCH_ANNOTATIONS.md) attach authored context across services, definitions and investigations. Select exact live-page observations to retain them in optional XTDB, find them by tag/service/time, and cite an exact review in an investigation. Pending native saves can be recovered explicitly after reload. The broader [annotation model](docs/PRODUCT_ANNOTATIONS_DESIGN.md) covers proposed reviewed labels and dataset exports.
-
-
-Staged categorical [facet selections](docs/FACET_SELECTION.md) add Include/Exclude, Undo/Clear and retained population drilldowns to recent activity.
-
-
-[Population exploration and saved views](docs/POPULATION_WORKSPACE.md) bring aligned charts and matching span/log pages to arbitrary cross-service selectors. Portable filters are retained; independent companion selectors are explicit. [Broaden a population](docs/POPULATION_BROADENING.md) by removing a whole condition in a staged child, retaining its paused parent.
-[Consistent comparison context](docs/COMPARISON_CONTEXT.md) shows independently named UTC windows, full counts and read provenance across fixed, saved/fresh and live comparisons using the same passive web component. [Comparison actions](docs/COMPARISON_ACTIONS.md) retain either population side in a child or inspect stored evidence in place, with source-free Back. Fresh-window previews use the same action group with capture/retry states and keyboard return. Stored/saved comparisons share side commands, with saved-receipt Reopen under Comparison options and explicit finding publication. The [D1 acceptance audit](docs/D1_ACCEPTANCE.md) closes the bounded comparison milestone; native instrument discovery is next.
-The staged selection offers comparison against the supplied current aggregates,
-with inspectable per-signal scope and explicit restoration of the starting population. Saved views retain fixed queries, layout and columns, and reopen without source reads.
-
-[Show recent activity](docs/RECENT_ACTIVITY.md) opens aligned span/log exploration directly, with fresh fixed bounds, charts before records, local signal switching and desktop facets alongside compact inspection pages. Live updates remain explicit. The broader [recent-activity design](docs/LIVE_EXPLORATION_DESIGN.md) organizes the remaining selection, comparison and composable capture/reuse work.
-
-[Time-range brushing and retained drilldowns](docs/RANGE_DRILLDOWNS.md) now let a recent population preview a range, stage and run an independent child, and return to its paused parent without rereading or losing its baseline, inspector, rows or position. Keyboard handles and explicit touch-selection mode share the same source-free preview contract.
-
-[Linked service timelines](docs/LINKED_TIMELINE.md) align span activity, errors, latency, logs and native streams. Preview a UTC range without reads, then explicitly apply it to every overview widget or open the selected span/log question.
-
-[One Services catalog](docs/UNIFIED_SERVICE_CATALOG.md) now connects the existing
-span, log and native metric discovery paths through one searchable entry.
-[Automatic service overviews](docs/SERVICE_DASHBOARDS.md) compose span/log activity,
-duration/status breakdowns and supported native instruments. A distributed view
-shows resolved parent relationships and keeps uncertain boundaries explicit.
-Each widget opens a fixed question or an explicit evidence capture.
-[Service browsing](docs/SERVICE_BROWSING.md) connects observed signals, operations,
-OTel attribute suggestions and native instruments through fixed-window questions.
-[All-signal discovery](docs/METRIC_SERVICE_DISCOVERY.md) includes metric-only
-services, counting data-point records without combining metric values.
-The first [question-workbench cleanup](docs/QUESTION_WORKBENCH.md) provides one Run
-path, explicit draft/applied scope, one-gesture drilldowns and fixed-window metric
-discovery. The [design review](docs/ENTRY_POINTS_DESIGN_SPIKE.md) records the broader
-proposed interaction and navigation work.
-
-This repository currently runs as a local lab. Reservation, checkout and report
-services exercise general-purpose contracts.
-
-[Question-first investigations](docs/WORKBENCH_CONTEXT.md#question-first-investigation-workspace)
-bring the question, finding, open questions and cross-signal evidence together.
-[Typed question steps](docs/INVESTIGATION_STEPS.md) preserve record questions and
-measurement definitions in the same named investigation. Reopen either without
-executing it, then explicitly Run again. [Linked evidence histories](docs/LINKED_QUESTION_EVIDENCE.md)
-add Run and capture, show scope differences, and preserve earlier results.
-Capture directly into an investigation draft or a new child of a saved revision;
-reopen the handoff without telemetry reads, or reuse its definition against fresh
-data while retaining the original evidence.
-
-[Contextual follow-ups](docs/INVESTIGATION_FOLLOWUPS.md) connect saved evidence to
-another explicit question: duration/status breakdowns, exact trace/log links,
-fixed-window resource discovery, or a recorded evidence gap. Each preview names
-which population and time scope it keeps or replaces before any source read.
-
-[Typed record measures and split time charts](docs/RECORD_MEASURES.md) compare
-captured counts, duration and recorded status across bounded breakdown series.
-Local chart controls retain the captured scope and scale; captures and reusable
-packages preserve the chart settings and evidence separately.
-
-[Numeric attribute measures](docs/NUMERIC_ATTRIBUTE_PLANNING.md) add explicit integer
-bindings, capability diagnostics and exact sums/extrema/means with distinct coverage
-counts. Explore, charts, saved evidence and reusable YAML share the binding.
-
-The [investigation workspace](docs/PRODUCT_WORKSPACE.md) brings Explore, Services, Operations,
-Saved investigations and Definitions into one interface. Explore includes captured
-attribute distributions, pinned baseline comparisons and a trace/log inspector.
-[Examples now use ordinary telemetry packages](docs/INVESTIGATION_RECIPES.md) for
-reservations, Go checkout and Go reports. Scoped recipes retain the applied
-population while exploring duration, recorded errors or log severity. Save the
-question as a package, or capture evidence and cite it in ordered notes. The
-[measurement library](docs/MEASUREMENT_PACKAGES.md) adds typed gauges, counters,
-native histograms and scoped lifecycle outcomes to the same capture/notes flow.
-Data-only delay/retry/RED/USE/report workflows preview shared package questions;
-the original specialized lab remains available for compatibility.
-
-Explore and trace inspection share searchable, typed attribute rows, exact-value
-copying and secondary raw evidence. Scoped filter chips and searchable facets
-carry investigations from a captured value into a fixed-window breakdown. See
-[the inspection storyboard](docs/journeys/README.md#29-structured-inspection-and-filter-composition).
-
-Log discovery adds literal message/service/severity search and a separately scoped
-surrounding-log inspector. Trace discovery opens reported trace IDs from full
-matching span groups and shows fixed, full-population span-duration buckets.
-Suggested breakdowns feed directly into reusable packages. See
-[the discovery storyboard](docs/journeys/README.md#30-from-log-search-to-reusable-span-distributions).
-
-[Services](docs/SERVICE_INVENTORY.md) discovers emitting services and span names
-with full captured counts, error statuses and duration buckets. Open a fixed-window
-Explore question, then build a reusable package without a source manifest.
-
-[Investigation captures](docs/GENERAL_CAPTURES.md) preserve Explore and inventory
-questions with full aggregates and bounded stored records. Reopen without source
-queries, page immutable evidence, or refresh the same fixed question into a new
-revision. [Collaboration research](docs/COLLABORATIVE_INVESTIGATIONS_RESEARCH.md)
-compares boards, notebooks and investigation handoffs across observability tools.
-
-[Ad hoc telemetry packages](docs/TELEMETRY_PACKAGES.md) turn an Explore question
-into validated YAML, a live preview and an immutable reusable definition. They work
-over existing OTel telemetry from any language without an application manifest;
-optional Go annotation templates are reviewable exports.
-
-For the end-to-end design, start with the [architecture and process diagrams](docs/ARCHITECTURE_DIAGRAMS.md):
-source validation and weaving → application OTel SDKs → collector/ClickStack capture
-→ goo package planning and evidence-based investigations. Implemented local paths
-and illustrative production patterns are labelled separately.
-The [architecture guide](docs/ARCHITECTURE.md) describes component boundaries;
-the [implementation plan](docs/IMPLEMENTATION_PLAN.md) tracks remaining work.
-
-
-The [Go aggregate compiler pilot](docs/PORTABLE_COMPILER.md) now validates a small
-declarative measurement model, evaluates prepared facts, and emits ClickHouse
-SQL or Databricks metric-view YAML. See [project direction](PROJECT_DIRECTION.md)
-for Go/Rust and YAML+CEL/KCL preferences. The Python lab below remains the
-reference prototype; bounded Go HTTP/operation packages now serve its investigation
-UI, while the original reservation SLO preview remains separate.
-
-The [lifecycle preparer](docs/LIFECYCLE_PREPARATION.md) now turns normalized
-business events into frozen subject facts and evidence receipts. Explore the
-[executable user storyboards](docs/journeys/README.md),
-[Hegel/Quint verification](verification/README.md), and
-[bitemporal design note](docs/BITEMPORALITY.md).
-
-The [Bombadil coordinator](docs/BOMBADIL_TESTING.md) correlates a real sample-app
-request with independently captured telemetry and goo's rendered trace while a
-second browser explores navigation. Optional Quint validation checks the observed
-cross-app checkpoints. An opt-in generated campaign uses Quint MBT schedules to
-drive Bombadil app submissions and goo evidence inspections/revisits.
-The fault campaign adds Python retry, rejection and stalled-work evidence, with
-Hegel state/swarm properties and Quint checks that preserve unknown outcomes.
-
-The reference reservation example emits ClickStack-shaped OTel data: HTTP gateway → gRPC reservation service → Redis Streams → inventory consumer → OTel collector → ClickHouse. Its optional specialized reservation lab under Examples edits a validated JSON query expression and shows its compiled SQL, completion cohorts, gRPC latency, logs, spans and links, and exported metric points.
-
-The [visualization slice](docs/VISUALIZATIONS.md) adds trace waterfalls with span
-inspection and async-link navigation, plus a raw-duration heatmap whose cells
-open matching spans. The [fourth browser storyboard](docs/journeys/README.md)
-executes this path through the actual sample services.
-[Guided investigations](docs/INVESTIGATION_WORKFLOWS.md) provide outcome, retry,
-RED and USE entry points, with explicit instrumentation gaps.
-
-The [semantic package foundation](docs/SEMANTIC_PACKAGES.md) recognizes versioned
-OTel contracts in Go and proposes reusable measures/views/recipes, with explicit
-missing requirements. `go run ./cmd/goo catalog` lists the ten current profiles;
-`goo discover -inventory ...` checks supplied metadata. These proposals are not
-auto-installed dashboards or objectives. The [worker/queue adapter](docs/QUEUE_TELEMETRY.md)
-now supplies real lag, pending, worker utilization and observed wait evidence to USE.
-
-The [HTTP package expansion](docs/PACKAGE_EXPANSION.md) now turns an explicit
-binding into shared measurement/view/recipe artifacts and both backend plans.
-`goo prepare-http` classifies normalized selected server requests under that
-policy. The live adapter below also renders these descriptors;
-`scripts/check_packages.py` executes the offline CLI parity storyboard.
-
-The [live HTTP package adapter](docs/LIVE_HTTP_PACKAGE.md) now reads real OTel
-spans in Go and renders the expansion's shared aggregate descriptor in the UI.
-The [instrumentation direction](docs/INSTRUMENTATION.md) covers library discovery
-and opt-in Orchestrion/quintgo model observations at goo's semantic seams.
-
-The [goo annotation slice](docs/GOO_ANNOTATIONS.md) adds `//goo:operation`,
-`//goo:event`, source-contract manifests and opt-in `goo weave` test builds.
-Woven OTel emission and active-operation state/swarm checks are executable;
-aggregate policy stays in packages.
-
-[Tags and notes](docs/WORKBENCH_ANNOTATIONS.md) attach authored context to scoped
-services and exact saved revisions. An optional XTDB experiment retains selected
-stored observations with review history; see the contract for its current limits.
-
-## Continue in Codex
-
-Open this folder as the project root. Start with [START_HERE.md](START_HERE.md) and give Codex [CODEX_HANDOFF.md](CODEX_HANDOFF.md). [AGENTS.md](AGENTS.md) contains repository working guidance. No prior chat history is required.
-
-The runnable source is the current Python prototype. The RFCs describe the proposed next implementation; their EDN and richer expression syntax are not accepted by the current API. The handoff bundles the earlier design draft, current limitations, staged tasks, acceptance criteria, and source references.
-
-| Document | Purpose |
-| --- | --- |
-| [START_HERE.md](START_HERE.md) | Project orientation and reading order |
-| [CODEX_HANDOFF.md](CODEX_HANDOFF.md) | Ready-to-use continuation task |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Current components and target boundaries |
-| [Architecture diagrams](docs/ARCHITECTURE_DIAGRAMS.md) | Build, production telemetry flow, investigations and backend portability |
-| [Live fleet comparisons](docs/FLEET_COMPARISONS.md) | Two woven instances, actual member windows, bounded skew, loss and restart journey |
-| [Fleet coverage](docs/FLEET_COVERAGE.md) | Declared membership, supported intervals, guarded exact totals and missing-member storyboard |
-| [Operation error ratios](docs/OPERATION_ERROR_RATIOS.md) | Aligned exact calls/errors, explicit unknown/idle intervals and guided trace investigation |
-| [Native histogram semantics](docs/NATIVE_HISTOGRAMS.md) | Exact bucket deltas, aligned explicit merging, heatmap and bucket-bounded P95 |
-| [Native counter semantics](docs/NATIVE_COUNTERS.md) | Reset/gap-aware rates, evidence limits and executable storyboard |
-| [docs/IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md) | Ordered milestones and completion criteria |
-| [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md) | Specific defects, limitations, and validation gaps |
-| [docs/rfcs/0001-observability-language.md](docs/rfcs/0001-observability-language.md) | Language and resource model proposal |
-| [docs/rfcs/0002-measurement-semantics.md](docs/rfcs/0002-measurement-semantics.md) | Population, time, counting, and evidence rules |
-| [docs/design-draft.md](docs/design-draft.md) | Portable copy of the original worked design |
-| [docs/SOURCES.md](docs/SOURCES.md) | Reading list and what each source contributes |
-| [VALIDATION.md](VALIDATION.md) | Actual checks and unverified environment behavior |
-
-The core stack uses ClickHouse and the upstream OTel ClickHouse exporter with the same baseline table shape used by ClickStack. HyperDX is optional, in the `hyperdx` profile. This is a small exploratory implementation of the design, not a complete grammar interpreter or production SLO service.
-
-## Start
-
-Install Docker Engine/Desktop with Compose v2. Allow roughly 4 GB of memory and a few GB of disk for images. On Linux, ClickHouse may require `sudo sysctl -w vm.max_map_count=262144` if its startup log asks for it. Intel/AMD Linux is the primary target; image support on other architectures has not been tested.
+Install Docker with Compose v2. The lab needs roughly 4 GB of memory and several
+GB of disk. Intel/AMD Linux is the primary tested target. If ClickHouse requests
+it, configure the host's `vm.max_map_count` as described in its startup log.
 
 ```sh
+docker compose config --quiet
 docker compose up --build -d
-docker compose logs -f collector reservations consumer
-```
-
-Open **http://localhost:8088**. Traffic starts automatically. Wait 20–40 seconds for telemetry. Explore opens
-live logs by default; choose Logs/Spans and an environment to narrow the stream.
-Inspect a record or select **Analyze this scope/window** to stage a fixed analysis,
-then explicitly **Run analysis**. Services bind host ports only to loopback; credentials in this project are disposable local credentials.
-
-```sh
 python3 scripts/smoke.py
 ```
 
-The smoke script waits for startup, creates a successful reservation, waits for its mature completion, and checks that logs, spans, latency results, and native metrics have arrived through the collector.
+Open **http://localhost:8088**. Sample traffic starts automatically; allow 20–40
+seconds for telemetry. Published lab ports bind to loopback. The `lab` /
+`lab-local` credentials are disposable development credentials.
 
-## Explore
+## Follow an investigation
+
+1. **Explore** opens recent Activity logs. Choose Logs/Spans and an environment.
+2. Use record attributes, field choices or chart selections to stage a narrower
+   scope, then **Apply scope**. Configure columns to keep useful context visible.
+3. **Pause** to inspect a record and its reported trace/span ancestry. Supplied
+   ancestry is bounded; it does not establish a complete trace.
+4. Use **Investigate → Analyze this scope/window** for a fixed question, then
+   explicitly **Run analysis**. Group fields, brush charts or compare a selected
+   population with its remainder or a baseline.
+5. Capture evidence and an explanation in **Saved investigations**, or save a
+   reusable Activity view/definition. Saved Activity views reopen paused before
+   **Start**. Ordinary draft recovery offers explicit **Restore/Discard** in the
+   same tab and never retries a save automatically.
+
+![Recent Activity entry](docs/journeys/screenshots/102a-live-entry.png)
+
+Services, Operations and Definitions enter the same investigation flow with a
+service, declared behavior or reusable definition already selected. Examples
+include HTTP, database, messaging and native-metric workflows alongside the
+optional reservation lab.
+
+## Core capabilities and boundaries
+
+| Surface | Available now | Boundary |
+| --- | --- | --- |
+| [Activity](docs/LIVE_ACTIVITY.md) | Compact logs/spans, readable UTC, facets, columns, inspection and retained selections | Bounded live pages are not a durable replay cursor or completeness proof |
+| [Fixed analysis](docs/NUMERIC_ATTRIBUTE_PLANNING.md) | Counts, explicit numeric measures/coverage, two-field grouping, time charts and comparisons | Type/unit remain explicit; arbitrary numeric predicates need a separate typed Go design |
+| [Services](docs/SERVICE_DASHBOARDS.md) | Discovery-driven service views and reported relationships | Missing signals and reported links do not establish health or complete topology |
+| [Trace findings](docs/TRACE_FINDINGS.md) | Waterfalls, bounded examples and preserved trace-page anchor diagnostics | Matching reported IDs prove neither unique occurrence nor unchanged attributes/complete traces |
+| [Native instruments](docs/NATIVE_INSTRUMENT_DISCOVERY.md) | Supported gauge, counter and histogram plans with unit/reset/temporality semantics | Unsupported instruments, missing identity and incompatible merges stay explicit |
+| [Saved work](docs/INVESTIGATION_DRAFT_RECOVERY.md) | Immutable evidence/revisions, reusable questions and bounded same-tab draft recovery | Browser storage can fail/expire; an unknown save may already have committed |
+| [Annotations](docs/WORKBENCH_ANNOTATIONS.md) | Tags/notes, exact references and optional XTDB-retained evidence | No shared-draft concurrency, trained classifier or production authorization is implied |
+
+The semantic core is Go, with a Python lab/proxy and framework-neutral display
+Web Components. Source adapters lower typed questions to parameterized ClickHouse
+queries. Current typed YAML resources are supported; richer expression languages,
+arbitrary SQL execution and live Databricks acceptance remain separate work.
+
+```mermaid
+flowchart LR
+  App[Application / optional goo annotations] --> OTel[Standard OTel telemetry]
+  OTel --> Collector[Collector] --> CH[ClickHouse / ClickStack-shaped tables]
+  UI[Activity / Services / investigation UI] --> Go[Go validation and typed plans]
+  Go --> CH
+  Go --> Capture[Immutable captured evidence]
+  Capture --> UI
+  UI --> Draft[Bounded same-tab authored draft]
+  Draft -->|Explicit Save| Revision[Immutable investigation revision]
+```
+
+[Architecture and process diagrams](docs/ARCHITECTURE_DIAGRAMS.md) cover compilation,
+production services and telemetry custody. [Display component contracts](docs/UI_COMPONENTS.md)
+describe passive elements usable in server-rendered HTML or an SPA. Source reads,
+subscriptions, scope and publication remain application-owned.
+
+## API and development
+
+[API usage](docs/API.md) · [OpenAPI 3.1](api/openapi.json) ·
+[Browsable local API docs](http://localhost:8088/api-docs) ·
+[Executed API acceptance](docs/API_ACCEPTANCE.md)
+
+```sh
+go test ./...
+npm ci
+npm run test:journeys
+```
+
+Use the Go version required by each module. The separate [verification module](verification/README.md)
+contains Hegel properties/state tests, Quint modeling and quint-go trace validation.
+[Executable storyboards](docs/journeys/README.md) distinguish real OTLP integration
+journeys from synthetic component checks; Bombadil explores bounded UI actions
+and invariants. See [VALIDATION.md](VALIDATION.md) for checks actually executed.
+
+The Python compatibility lab additionally uses `requirements-dev.txt`,
+`python -m unittest discover -s tests -v` and `python tests/local_flow.py`.
+The local-flow check starts real HTTP/gRPC services against a fake Redis TCP
+server and needs ports 8081/50051 free. It is separate from the real Compose smoke.
+
+## Specialized reservation lab (optional)
+
+In Examples, expand **Specialized reservation lifecycle and resource lab**. These
+compatibility views illustrate declared business identity; the general workbench
+does not require reservation attributes.
 
 1. Query **Completion SLO**, grouped by release or scenario. Good and retried requests usually finish on v1; the v2 cohort contains late, missing, and rejected work.
 2. Click a reservation ID to inspect its processing spans. The consumer deliberately starts a separate trace linked to the producer span, so business identity works across trace IDs.
@@ -296,324 +164,29 @@ HyperDX 2.41.0 is specified explicitly. The optional profile needs MongoDB and e
 | 4318 | Collector OTLP/HTTP |
 | 8080 / 8000 | Optional HyperDX UI / API |
 
-The gRPC service and Redis stay internal to Compose. All application roles share one small Python image. ClickHouse and Redis use named volumes. No kind cluster is required.
+The gRPC service and Redis stay internal to Compose. The lab combines Python
+compatibility services/proxy with the Go semantic server and woven Go samples.
+ClickHouse and Redis use named volumes; no kind cluster is required.
 
-## Query and evidence semantics
+## Operational limits and stopping
 
-`grammar.py` validates a small expression and compiles it to fixed-source ClickHouse SQL with typed value parameters. Record counts collapse by tenant and reservation ID. Duplicate event deliveries do not multiply subject counts. Mature subjects are classified as good, bad, or unknown; recent acceptance remains pending. A missing completion becomes bad only as a demo assumption. Conflicting terminal decisions and negative durations become unknown.
-
-The initial UI shows a bounded lookback anchored on exported event Timestamp values, with recent subjects pending until the deadline plus allowance passes. It is not the fully shifted mature acceptance window from the design document. Completion summaries cover at most the latest 1000 returned subjects; row limits are exposed. Each query captures one evaluation time. The backend is read-only for queries and uses bounded result and execution limits.
-
-**Evidence is always labelled `demo-unverified`.** There is no reconciled acceptance ledger, durable outbox, sampling estimator, or coverage proof. The sample intentionally exposes the limitations of counting telemetry events. Do not promote its success percentage to a production SLO.
-
-The alarm is a single-window **preview computed on demand**. There is no scheduler, multiwindow policy, persisted alarm state, notification delivery, or IaC reconciler in this version. Source mappings are fixed to the pinned exporter’s baseline schema. The UI supports grouping and subject navigation, not automatic statistical cohort discovery or a complete trace waterfall.
-
-Redis Streams are real in Compose, but the sample consumer has no pending-entry reclamation after crashes. Data can remain pending after a restart. Use a volume reset for a clean demo. Terminal telemetry and queue acknowledgement are not transactional. All traces are retained by the sample SDK; there is no collector sampling processor.
-
-## Development checks
-
-```sh
-python3 -m venv .venv
-. .venv/bin/activate
-pip install -r requirements-dev.txt
-python -m unittest discover -s tests -v
-python tests/local_flow.py
-```
-
-The unit suite checks validation, parameter handling, no-data/unknown behavior, and real compiled SQL in embedded ClickHouse (`chdb`, bundled engine 24.8). The local flow test runs real HTTP and gRPC services against a fake Redis TCP server and decodes emitted protobuf OTLP logs, traces, and metrics. It needs free localhost ports 8081 and 50051.
-
-`scripts/smoke.py` is the separate full-stack acceptance check for the real Redis, collector/exporter, and ClickHouse 25.3 containers. Run it after Compose startup. See `VALIDATION.md` for checks performed when this package was created.
-
-## Stop and reset
+This is a development observability workbench. Telemetry absence is not health;
+source/event time, read time and immutable custody time remain distinct. Scalar
+percentiles are not averaged into fleet percentiles. Captures are bounded,
+independent reads; historical evidence is preserved rather than silently refreshed.
+The reservation lab's SLO/alarm is an on-demand preview, without scheduling or
+notifications; terminal telemetry and queue acknowledgment are not transactional.
 
 ```sh
 docker compose --profile hyperdx down
-# Explicitly discard demo data for a clean start:
-docker compose --profile hyperdx down -v
 ```
 
-## References
-
-- [ClickStack Compose deployment](https://clickhouse.com/docs/clickstack/deployment/docker-compose)
-- [ClickStack table shapes](https://clickhouse.com/docs/clickstack/ingesting-data/schemas)
-- [Pinned upstream ClickHouse exporter configuration](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/v0.123.0/exporter/clickhouseexporter)
-- [OTel messaging spans and links](https://opentelemetry.io/docs/specs/semconv/messaging/messaging-spans/)
-
-[Observed operation conformance and executable developer journey](docs/OPERATION_CONFORMANCE.md)
-connect source manifests to actual woven SDK spans and invocation overviews.
-
-[Live woven Go operations](docs/LIVE_OPERATIONS.md) now reach the collector,
-ClickHouse and the investigation UI, with an executable browser storyboard.
-
-[Operation heatmaps and trace drilldown](docs/OPERATION_DRILLDOWN.md) retain the
-selected evidence through error counts, duration cells and trace waterfalls.
-
-[Scoped subject navigation](docs/SUBJECT_NAVIGATION.md) follows declared span
-events across related traces while separating tenant and identity namespaces.
-
-[Declarative operation packages](docs/OPERATION_PACKAGES.md) now drive shared CLI/UI
-bindings and views for both checkout and a separate report-generator application.
-
-[Architecture and process diagrams](docs/ARCHITECTURE_DIAGRAMS.md) follow source/build
-contracts through standard OTel capture into package-based investigation, and show
-the separate portable measurement compiler boundary.
-
-[Native counter rates](docs/NATIVE_COUNTERS.md) add reset/gap-aware Go evaluation
-and YAML-driven live rate charts, with explicit unknown boundaries.
-
-[Native duration histograms](docs/NATIVE_HISTOGRAMS.md) add exact bucket deltas,
-per-stream heatmaps, P95 bucket bounds and explicit aligned merging in Go/CLI.
-Journey 14 captures real telemetry and contextual span navigation.
-
-[Operation error ratios](docs/OPERATION_ERROR_RATIOS.md) derive calls/errors from
-one aligned counter result and guide contextual span/trace investigation.
-
-[Declared fleet membership](docs/FLEET_COVERAGE.md) now exposes missing-member
-coverage explicitly. Exact fleet totals require compatible aligned intervals
-from every expected instance; the default lab now runs two instances and separately compares their actual windows.
-
-The second checkout instance runs at loopback **8092**. See
-[live fleet comparisons](docs/FLEET_COMPARISONS.md) for explicit tolerance and
-metric-export loss/restart controls. Exact totals retain strict boundaries.
-
-Saved operation evidence can now be reopened and refreshed as immutable revisions: [Saved investigations](docs/SAVED_INVESTIGATIONS.md). See the [general observability feature gaps and proposed order](docs/PRODUCT_GAPS.md) for the path toward broader HyperDX/Honeycomb-style exploration.
-
-[Trace findings](docs/TRACE_FINDINGS.md) connect bounded span-page examples to cross-service trace context and two explicit evidence captures, staged with an authored finding before Save revision. Service pages prioritize the overview and operation diagnosis, with supporting inventory and instruments in disclosures.
-
-[General exploration](docs/EXPLORATION_DESIGN.md) now searches captured spans/logs by discovered attributes, groups full matching record populations independently of row pages, expands traces across services and finds exact linked logs. The [JSON example](examples/exploration/errors.json) uses the same compiler through `goo plan-exploration -query examples/exploration/errors.json`.
-
-[Core workbench basics](docs/CORE_WORKBENCH.md): full-population span measures/time charts, reusable questions, service signals/reported dependencies and query controls.
-
-[Duration breakdowns](docs/GROUPED_MEASURES.md) rank full-population latency by service or attribute and retain it with saved investigations.
-[Error and latency comparisons](docs/ERROR_COMPARISONS.md) compare fixed windows, follow changed groups into traces/logs and save both populations.
-[Deployment context and investigation notes](docs/WORKBENCH_CONTEXT.md) preserve event/custody times, ordered hypotheses and exact references to saved evidence.
-
-Metric discovery in **Explore → Measurements** builds editable packages from
-ordinary OTel producers without a goo manifest. See the
-[discovery contract](docs/MEASUREMENT_PACKAGES.md#discover-instruments-without-a-goo-manifest)
-and [executable journey](journeys/metric-discovery.spec.js).
-
-Explore supports [resumable question links](docs/QUESTION_LINKS.md): share a fixed
-question, restore it without a source read, then explicitly Run again. Use captures
-to share immutable evidence.
-
-Saved question histories support [capture comparison](docs/CAPTURE_COMPARISON.md):
-compare full record summaries and exact native gauge endpoints without rereading
-telemetry, with explicit scope, definition, unit and missing-data checks.
-[Save a comparison and finding](docs/SAVED_COMPARISONS.md) in an immutable
-investigation revision, then share its exact link; reopening preserves the saved
-decision without reevaluating it.
-
-[Complete native windows](docs/NATIVE_WINDOW_COMPARISON.md) add exact counter-rate
-and histogram bucket-population comparisons, with full coverage, reset/gap and
-layout checks. Versioned saved receipts preserve the resulting decision.
-
-Native measurement APIs and shared question steps retain optional exact nanosecond
-scopes; see [scope transport](docs/NATIVE_WINDOW_COMPARISON.md#exact-scope-transport).
-The [comparison panel discovers supported windows](docs/OBSERVED_WINDOW_DISCOVERY.md)
-without a source read and captures explicitly selected sub-scopes.
-
-Comparison sides can become [reusable question cards](docs/REUSABLE_COMPARISON_QUESTIONS.md)
-with their exact scope and captured evidence already linked. Save a revision to
-share, reopen without a source read, or explicitly rerun the fixed question.
-
-Saved questions can [compare with a fresh window](docs/FRESH_COMPARISON.md): preview
-the proposed scope, choose frozen prior evidence and explicitly capture once,
-then save the comparison as a finding in the investigation.
-
-## Captured change breakdowns and product direction
-
-[Captured group comparisons](docs/COMPARISON_BREAKDOWNS.md) reuse full stored
-aggregates and open focused questions. New dimensions require explicit recapture.
-[Whole-product review](docs/WHOLE_PRODUCT_REVIEW.md) guides automatic service
-overviews and distributed relationships within Services. The first bounded slice
-is implemented; remaining graphical topology and broader dashboard recommendations
-are planned. Observed, declared and executed-supported evidence remain distinct.
-
-## Automatic service overviews
-
-[Service dashboards](docs/SERVICE_DASHBOARDS.md) now derive bounded typed widgets
-from observed signals, convention keys and native instruments. Matching registry
-contracts retain declared revision IDs. Services also offers a local distributed
-view of resolved parent relationships and diagnostics, with fixed-scope handoffs
-into questions and immutable investigation evidence. Async/declaration topology,
-whole-dashboard snapshots remain future work. Declared services without observed
-telemetry now remain visible in Services, with independent registry provenance.
-
-Service discovery now separates same-named services by OTel namespace, including
-missing and present-empty values. Dashboard cards can explore spans matching
-registered operation bindings. See [service identity](docs/SERVICE_IDENTITY.md)
-and [journey 60](docs/journeys/README.md#60-namespace-service-identity).
-
-[Reported-edge investigations](docs/REPORTED_EDGES.md) now stage exact child-span
-questions from distributed relationships. [Visual comparisons](docs/VISUAL_COMPARISONS.md)
-put aligned baseline/current values ahead of detailed provenance and assumptions.
-
-The [display component library](docs/UI_COMPONENTS.md) now provides framework-neutral
-Web Components for compact latency, exact label/value lists and grouped metric
-comparisons. The standalone `/ui-components` reference works without the app runtime;
-Services and Explore use the same display primitives.
-
-The [whole-app component audit](docs/UI_COMPONENT_AUDIT.md) prioritizes passive
-table viewports and result states, then facets and typed attribute displays.
-
-Explore and Services share passive native-table viewports and explicit result-state
-displays from the [Web Component library](docs/UI_COMPONENTS.md). Caller-owned rows
-retain focus during patches; SSE transport and live retention remain planned.
-
-The same library now provides local-search facets and typed attribute values in
-Explore and trace/log inspectors. Full-population measures retain their original
-scales when searching supplied values; filter actions remain explicit source reads.
-
-Applied log questions now offer a [live log tail](docs/LIVE_LOG_TAIL.md) with
-bounded retention, pause/resume, follow-scroll and explicit reconnect gaps.
-Reusable [trace waterfalls](docs/UI_WATERFALL.md) and
-[count-time bars](docs/UI_TIME_BARS.md) support the same framework-neutral display
-contracts; charts and tails retain their separate source semantics.
-
-Saved record questions also support an explicit [rolling record-count comparison](docs/LIVE_COMPARISON.md)
-against linked frozen evidence. Both sides share a stable axis; source failures
-retain a stale result, and freezing saves the displayed snapshot without another
-telemetry read. The passive [chart frame](docs/UI_CHART_FRAME.md) preserves native
-caller content and focus across window/state metadata updates.
-
-When a saved span question requests duration and recorded status, live comparison
-also shows compact mean/p50/p95/p99 summaries on a shared fixed percentile scale,
-and recorded Error/total share on a 0–100% scale. All measures share one window,
-source aggregate and evidence basis; freezing retains the complete displayed result.
-See [the regression storyboard](docs/journeys/README.md#71-a-service-regression-across-count-latency-and-recorded-error-share).
-
-Native counter questions now support [live exact-stream rate comparisons](docs/LIVE_COMPARISON.md#exact-stream-counter-rates).
-The current export window retains the baseline's exact duration; resets, gaps,
-changed stream identity and stale exports withhold rates. Freeze retains the
-actual displayed historical window. This slice requires one complete baseline stream. [Focus an observed stream](docs/EXACT_STREAM_SELECTION.md)
-to save/share/capture an exact source binding from a multi-stream question.
-Live gauges, histograms and fleet rates remain planned.
-
-Native results also offer [local stream search and coverage diagnostics](docs/NATIVE_STREAM_NAVIGATION.md).
-Find an instance or dimension across retained streams, isolate those needing
-review, and inspect readable gap/reset explanations with their exact codes.
-Local browsing preserves the measurement's window, totals and evidence basis.
-
-Default [service dashboards](docs/SERVICE_DASHBOARDS.md#native-service-cards-and-exact-stream-questions)
-show evaluated native interval values alongside coverage, with exact-stream
-question links and source-free browsing of the retained inventory. Counters,
-gauges and native histogram ranges remain independent per stream; no manifest
-or fleet aggregation is required.
-
-Service overviews now offer [native instrument selection](docs/SERVICE_DASHBOARDS.md#choose-native-instruments-for-this-service-visit):
-stage up to two supported observed definitions, then explicitly apply and reread
-the same fixed scope. Empty selection and restoring defaults are supported;
-selected questions use ordinary investigation and capture custody.
-
-[Native timelines](docs/NATIVE_TIMELINES.md) now show independent gauge samples,
-evaluated counter intervals and histogram interval counts in ordinary results
-and captures. Keyboard/pointer inspection is read-free; unknowns stay distinct
-from zero and histogram P95 remains a native bucket range.
-
-## Native histogram heatmaps
-
-Inspect retained intervals and compatible captured windows with [native bucket heatmaps](docs/NATIVE_HEATMAPS.md). Counts, unknowns and incompatible layouts remain distinct.
-
-## Fixed-time histograms and component reuse
-
-Histogram packages can opt into [Go-backed time buckets](docs/HISTOGRAM_TIME_BUCKETS.md), with local export/fixed-time inspection and replayable captures. The [whole-product component sweep](docs/WHOLE_PRODUCT_COMPONENT_SWEEP.md) prioritizes shared scope/evidence summaries, selected-item inspectors, existing component adoption and larger investigation compositions.
-
-## Shared evidence summaries
-
-Native captures and linked investigation evidence now share a [compact evidence summary](docs/EVIDENCE_SUMMARIES.md), with explicit population, scope, counts, result mode and separate source/storage clocks.
-
-Service widgets and saved native evidence share [compact evidence summaries](docs/EVIDENCE_SUMMARIES.md): fixed scope, independently labelled read clocks, and readable UTC timestamps with exact nanoseconds available in tooltips. Latency summaries use compact inline Mean/p50/P95/P99 values, with the positional rail and exact values in Latency details.
-
-[Comparison views](docs/COMPARISON_PRESENTATION.md) align baseline/current values on shared scales and group exact scope and read clocks into disclosures.
-
-[Selected-item inspectors](docs/SELECTED_ITEM_INSPECTORS.md) share compact trace/log/native detail layout, retained local selection state and close-to-opener focus.
-
-[Core experience refinements](docs/CORE_EXPERIENCE_REFINEMENTS.md) connect retained
-investigation visits, compact service diagnosis, chart-population comparisons,
-trace highlighting, deployment context and capability-to-binding handoffs. These
-are bounded first slices of the [product survey](docs/CORE_EXPERIENCE_PRODUCT_SURVEY.md),
-which records verified vendor sources and Honeycomb research access limits. The
-workflow document links executable journeys, screenshots and current limits.
-
-The [population workspace](docs/POPULATION_WORKSPACE.md#attribute-breakdowns-and-comparisons)
-also offers discovered-attribute breakdowns, full-population count/error/latency
-ranking and shared-scale pinned-value or previous-window comparisons. Saved views
-retain ranking and baseline questions; reopening stages configuration without
-reading telemetry. Run explicitly to refresh each independent population.
-
-The [population live area](docs/POPULATION_WORKSPACE.md#watching-a-population)
-can explicitly tail ordinary span/log records, pause for inspection, and compare
-full rolling populations against a captured baseline. Saved settings reopen
-without starting subscriptions; retention and continuity gaps stay visible.
-
-Record pages now offer a compact [observed-field picker](docs/RECORD_COLUMNS.md) with local
-column visibility/order and explicit Include/Exclude intents. Population view
-configuration accepts optional ordered `fieldColumns` (up to eight qualified
-fields); saved layouts do not change query predicates or capture evidence.
-
-Reopened population views share the same staged record-field filtering and
-selected-population drilldown as recent activity; see the
-[record-field journey](docs/RECORD_COLUMNS.md).
-
-[Log comparisons](docs/COMPARISON_BREAKDOWNS.md) show full captured counts and
-population-share changes without span-only latency/status controls. Span
-comparisons retain their captured measures and explicit unavailable states.
-
-[Comparison ranking](docs/COMPARISON_BREAKDOWNS.md#rank-descriptive-changes)
-now reveals count/share and span error/latency changes with full support counts
-and explicit missing measures. Saved population views retain the selected ranking.
-
-Raw span duration charts support [time-duration rectangle selection](docs/HEATMAP_SELECTION.md), exact keyboard bounds and explicit selected-population execution.
-
-Development browser diagnostics have [age-based retention and a 512 MiB soft budget](docs/DIAGNOSTIC_RETENTION.md). Preview with `npm run diagnostics:plan`; apply with `npm run diagnostics:prune`.
-
-Applied populations can [expand their fixed UTC window](docs/POPULATION_WORKSPACE.md#expanding-the-time-window) while retaining filters and a paused parent; opening stages before an explicit Run.
-
-Categorical populations can [compare a selection with the rest of its parent](docs/POPULATION_PARTITIONS.md), preserving filters, exact windows and a paused parent.
-
-Retained record comparisons share [aligned activity charts](docs/COMPARISON_SERIES.md), exact UTC interval inspection and staged selection; stored/frozen chart loading reads immutable captures explicitly.
-
-[Live record activity comparisons](docs/LIVE_COMPARISON.md#retained-bucket-series-during-refresh) now refresh requested bucket series before Freeze, retain selected UTC questions and alignment, and reuse explicit population drilldown with source-free return.
-
-[Native instrument discovery](docs/NATIVE_INSTRUMENT_DISCOVERY.md) provides a
-compact observed catalog, generic package bindings and Go-planned HTTP/messaging
-convention candidates. Exact stream presence preserves missing/empty values and
-full bounded totals independently of display limits. Preview and Run are explicit;
-metadata remains unverified. The [E1 acceptance audit](docs/E1_ACCEPTANCE.md) maps
-these capabilities to real evaluation outcomes and current kernel limits.
-
-[Compare a time/latency region with the rest](docs/REGION_PARTITIONS.md) stages
-disjoint span populations in their original window, using existing comparison,
-saved-view and immutable capture workflows.
-
-The [bounded D2 acceptance audit](docs/D2_ACCEPTANCE.md) maps record fields, chart
-selection, scope broadening and partitions to tested behavior and explicit limits.
-
-
-[Exact Activity selection prerequisites](docs/TAIL_SELECTION_CUSTODY.md) now include
-a tested Go membership bank, typed tail manifest and idempotent XTDB publisher.
-Origin-aware Go catalog/read views and shared review/correction/pinned-document
-resolution now support tail evidence. Public origin-aware read/catalog routes and
-compact UTC/provenance/citation inspectors are implemented. SSE capabilities and
-exact tail selection/browser retry remain follow-up work.
-
-Activity and fixed population views share a [staged filter editor](docs/FILTER_EDITOR.md)
-for typed conditions, nested AND/OR, missing keys and present-empty values, even
-before a matching record appears. Apply/Start or Run explicitly reads the scope.
-
-The single-question builder uses the same filter editor, preserving full saved
-selectors, supplied field suggestions and explicit Run. Filter/environment edits
-retain the fixed window; incompatible signal changes reset the predicates.
-
-The shared editor now discovers [observed fields and values](docs/FILTER_EDITOR.md#observed-fields-and-values) from existing applied reads. Search locally and stage literal, empty or missing-key conditions before explicit Apply/Run.
-
-[Counted field values](docs/FILTER_VALUES.md) can now be loaded explicitly beyond shown-record samples. Lookups retain the applied selector/window, expose exact missing/empty counts, and stage selections before Apply/Run.
-
-Raw-span duration breakdowns include a [brushable latency histogram](docs/LATENCY_SELECTION.md): select buckets and preview counts without a source read, then explicitly inspect or compare.
-
-[Optional Activity latency](docs/ACTIVITY_LATENCY.md) adds explicit/manual or 10/30-second full-scope span distributions above the stream. Brush to pause and stage a duration filter, then Apply or stage a fixed comparison with the remainder.
-
-[Captured latency baselines](docs/ACTIVITY_BASELINE.md) compare an immutable saved duration distribution with Activity using shared bins and independent clocks. Baseline selection/clearing reads stored evidence only; Activity retains its explicit source cadence.
-
-[Saved Activity baseline references](docs/SAVED_ACTIVITY_BASELINE.md) preserve a chosen immutable capture alongside rolling scope and columns. Reopen stays paused and source-free; Start and Show latency remain explicit.
+Named volumes preserve lab data. Removing volumes is a separate explicit reset.
+Deployment-specific authentication, tenant isolation, quotas and retention require
+a named target and acceptance checks. External Databricks/XTDB expansion and other
+proposals stay in the [reviewed backlog](docs/BACKLOG_2026_10_24.md).
+
+[Capability/design reference index](docs/CAPABILITY_GUIDE.md) ·
+[Product essence](docs/PRODUCT_ESSENCE.md) ·
+[Implementation history](docs/IMPLEMENTATION_PLAN.md) ·
+[Original handoff (historical)](START_HERE.md)

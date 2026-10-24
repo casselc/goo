@@ -1,677 +1,1868 @@
-# Known issues and gaps
+# User journeys and storyboards
 
-[Diagnostic retention](DIAGNOSTIC_RETENTION.md) now expires raw browser recordings, with a 512 MiB soft budget, active/pinned protection and explicit Bombadil outcomes. Compact ledgers/results/logs remain. Legacy outcomes use a 72-hour policy; direct Playwright invocations require explicit pruning. ClickHouse Docker console logs now rotate at 10 MB × 3 files; internal system-table and file-log retention remain separate.
+This index preserves executable storyboards and their historical acceptance
+records. Current product entry is Explore's Activity stream, with explicit staged
+analysis and preservation; use the [roadmap](../ROADMAP_2026_10_24.md) for current
+status and [README](../../README.md) for startup. A dated journey is not a request
+to reimplement its feature. Synthetic component conformance fixtures remain
+separate from real OTLP/application stories, as labeled below. Screenshots are
+generated evidence; no frames were fabricated for this documentation repair.
 
-Latest diagnostic cleanup recovered space from 509 MB to 6.4 GB by hardlinking
-byte-identical raw browser screenshots and removing unused build cache. All
-screenshot paths/bytes, traces and application evidence were retained.
+## Recent source-backed entries
 
-Local disk maintenance: internal ClickHouse text/stack-trace/processor-profile
-histories grew beyond 5 GB, in addition to a large debug file, and exhausted the
-shared development filesystem. The named diagnostic histories were cleared and
-the current debug file was reduced to its latest 20 MB; application OTel tables,
-query audit/error logs, saved evidence and retry data were preserved. Docker console logging is now bounded at 10 MB × 3 files. Internal system-table
-and file-log retention budgets still need a separate configuration change. See
-[actual cleanup evidence](../VALIDATION.md).
-
-[C2 HTTP boundaries](HTTP_BOUNDARIES.md) inventories current route effects/limits.
-All Go HTTP ClickHouse endpoint/credential/client configuration is now resolved by
-one startup snapshot and injected into native, record, tail, capture, operation GET
-and investigation owners. Optional XTDB URL configuration is likewise injected
-into retention/document citation owners, while request/card read bases remain
-per-operation values. Configuration status does not prove database availability;
-document files reopen without the optional store. Native and record source HTTP mechanics
-now use shared POST/bounded-read primitives; the [acceptance audit](HTTP_BOUNDARIES.md#c2-acceptance-audit--2026-10-22)
-identified four additional readers; all are now adopted, including histograms.
-Telemetry/native/fixed exploration JSON is adopted behind frozen wire cases.
-The [OpenAPI contract](API.md) now inventories 64 operations and documents direct-Go
-versus browser-proxy limits, headers and SSE differences. Those discrepancies are
-preserved, not repaired by documentation. Further mechanical JSON migration remains paused;
-[executed API acceptance](API_ACCEPTANCE.md) now covers proxy and saved/retained flows. Dynamic telemetry row
-payloads remain open; structural schemas do not enforce all domain/capability rules.
-The local query/packages images now serve the current docs/spec and backend.
-Remaining C2 endpoint/branch coverage is open; selected deployed API and browser
-acceptance does not prove every route or fault mode. Non-JSON upstream HTTP errors
-now return JSON 502 rather than disconnecting; documented limit/header differences
-remain. Docker still reports the existing XTDB container unhealthy despite successful
-native-store and review/citation checks; healthcheck status is not availability proof.
-ClickHouse/XTDB environment mutation after startup is not a reload.
-Live comparison drafts remain registration-local and expiring; persisted captures
-reopen without a source, while old draft tokens do not survive a new owner.
-
-[Bounded C1 publication consolidation](IMMUTABLE_PUBLICATION.md) is delivered for
-all six Go publication paths. Family validation, identity, catalogs and duplicate
-policies remain separate. Custody and native YAML retain file-only sync (no directory
-sync). Custody verifies business identity but does not detect a valid integer edit
-to its received clock. Native YAML POST retains its existing success response for a
-corrupt existing winner without repair; registry GET then refuses that file.
-Investigation capture loading retains permissive unknown-field behavior while
-exploration capture envelopes remain strict. These compatibility boundaries are
-pinned, not hardened by the refactor. No power-loss durability is claimed.
-
-## Current annotation retention boundaries
-
-Retained evidence now has tag/environment/literal-service/capture-time browsing
-and exact review citations in documents. Catalog scans and browser pending-request
-storage are bounded; multi-tab journal coordination and server-owned recovery are
-not implemented. The [active consolidation queue](IMPLEMENTATION_PLAN.md) now tracks the reviews. Separate live/saved operation ownership and compact applied population composition are implemented; the first bounded live entry now has a compact scope/action bar and collapsed mobile navigation. Typed live attribute filters and fixed-window staging are implemented. Paused-parent return is tab-local and source-free; reload does not retain it. Live/fixed record and detail presentation now share bounded supplied-parent context; it is not a complete trace. Held service observations now share the record-table shell. Saved record scope/provenance now shares a presenter with document references, and its fixed continuation stages before Run. Saved record pages now have a dedicated owner without a hidden query editor. Fixed/saved/context record tables now consolidate attributes into one inspector and hide empty comparison buttons. Standalone tails now share the record inspector; native stream identity shares a lazy inspector or an existing selected-point body. Native latest values and coverage now share a presenter across measurement details, service summaries, native-window comparisons and supported-window previews. Bounded S2/A3 adoption is delivered; fresh Activity defers fixed-editor mounting until explicit authoring/continuation, retaining drafts on return. Bounded B1 library consolidation and retention owner separation are delivered; retained catalog tags remain explicitly per-load current-head snapshots, distinct from exact pinned review citations; see the [acceptance audit](S2_A3_ACCEPTANCE.md). Other aggregate/native layouts remain D1/E1 work. See [Live Activity](LIVE_ACTIVITY.md) for current limits.
-
-Optional XTDB retention now accepts selected exact live result pages as well as
-saved captures, with idempotent initial/correction requests and await-token
-propagation on fresh connections. Live pages expire after two minutes and are
-process-local/capability-addressed; refresh or pagination clears selection. An
-already committed save can be recovered after expiry with its unchanged request.
-Native request intents now survive reload in a bounded browser retry journal;
-ordinary document/note drafts remain page-local. Document citations carry a pinned
-review and read lower bound; bare evidence links retain tab-local basis behavior. No production auth/redaction/deletion,
-unified cross-store tag search, historical-cutoff UI, reviewed labels or dataset export
-is implied. See [contract](WORKBENCH_ANNOTATIONS.md).
-
-
-[Bounded page-record selection](RECORD_POPULATIONS.md) and inspector/shared-field population actions are implemented. Shared service/artifact tags and notes plus optional XTDB retention of selected **live-page or saved-capture** records are implemented in the [annotation slice](WORKBENCH_ANNOTATIONS.md). Exact live-page freezing is implemented; richer [whole-product review, training labels and dataset exports](PRODUCT_ANNOTATIONS_DESIGN.md) remain proposed.
-
-
-Recent activity supports [staged categorical selections](FACET_SELECTION.md). General predicate complements, automatic difference scoring and durable selection history remain future work.
-
-
-The [recent-entry canvas](RECENT_ACTIVITY.md) now includes
-[horizontal time brushing and bounded retained child populations](RANGE_DRILLDOWNS.md).
-[Raw-span heatmap rectangle selection](HEATMAP_SELECTION.md) is implemented for single duration-bucket split charts with at most 32 intervals. Cross-page/durable record selection, persistent branches,
-arbitrary field columns and automatic anomaly/difference scoring remain proposed.
-Saved exploration views retain their existing staged presentation and do not
-automatically start live updates.
-
-Population live tails are bounded recent event-time observations, not ingestion cursors or complete traces. Reconnect/resume exposes a continuity gap. Full-population live comparison uses independent reads over the baseline duration; its window may differ from the 60-second inspection tail. Saved settings never auto-subscribe. See [live contract](POPULATION_WORKSPACE.md#watching-a-population).
-
-Service-overview time selections scope that overview and its span/log follow-up links. Supporting discovery inventory retains its original window. General cross-service span/log populations and saved exploration views are now supported in the [population workspace](POPULATION_WORKSPACE.md). Discovered per-signal breakdowns and saved baseline comparisons are supported; numeric cohort comparisons remain unsupported. Arbitrary native-stream composition and saved multi-widget dashboards remain future work. Native crossing intervals are omitted, never split or interpolated. See [contract](LINKED_TIMELINE.md).
-
-Trace examples rank valid linked spans on a bounded record page, not complete traces or the full matching population. Findings link two later independent reads; automatic verification that an original anchor survived those reads remains future work. See [trace finding contract](TRACE_FINDINGS.md).
-
-This list describes the current code at handoff. Items are observations or missing features, not completed fixes.
-
-## Measurement correctness
-
-| ID | Issue | Required direction |
+| Journey | Executable source | Contract / scope |
 | --- | --- | --- |
-| M01 | summarize() derives the SLO preview from at most 1000 returned subjects | Separate full-population aggregation from paginated inspection |
-| M02 | Completion lookup filters both starts and terminals using the same Timestamp lookback | Anchor eligibility on acceptance time and fetch related outcomes through the relevant deadlines and evidence cutoff |
-| M03 | Pending subjects occupy part of the lookback instead of a fully shifted mature window | Implement explicit mature cohort bounds; expose pending as a separate preview population |
-| M04 | toFloat64OrZero turns absent or malformed timestamps into zero | Validate required identities/timestamps and propagate invalid evidence |
-| M05 | Duplicate acceptance conflicts are not detected; min/any collapse inconsistent records | Define immutable event IDs, scoped subject keys, and conflict rules |
-| M06 | Completeness and clock uncertainty are not verified | Add declared assumptions and observable evidence-health inputs; retain demo-unverified until justified |
-| M07 | The completion view can show reason 'no completion' for a pending subject | Make reason and classification coherent |
-| M08 | The Python native metric view remains point listings; bounded Go operation counter rates and histogram intervals now exist | Use the bounded metric evaluators where supported; general metrics, automatic fleet discovery and SLOs remain separate |
-| M09 | Embedded SQL tests use a minimal fixture schema and an older engine than the Compose image | Check actual exporter schemas and run real container integration tests |
-
-## Language and resources
-
-[Numeric attribute measures](NUMERIC_ATTRIBUTE_PLANNING.md) now support one explicit
-int64/uint64 binding across totals, groups, charts, captures and YAML, with separate
-coverage counts and capability diagnostics. Multiple measures, numeric cohort
-comparisons, floating/decimal parsing and unit conversion remain unsupported.
-
-grammar.py still uses view-specific query branches. Grouping fields and map bindings are hardcoded. definitions/reservations.json is a small demo config and has no complete resource schema or version resolver. The original EDN package and deadline-outcome syntax are illustrative. The [Go aggregate](PORTABLE_COMPILER.md) and [lifecycle](LIFECYCLE_PREPARATION.md)
-kernels implement bounded typed models, preparation, reference evaluation and
-aggregate backend compilation. [Shared measurement packages](MEASUREMENT_PACKAGES.md)
-now connect real exporter data to the Go kernels, general captures and the UI
-through the Python proxy. Generated lifecycle SQL preparation, coordinated
-production publication, CLI plan/apply and an IaC provider remain future work.
-The Python view-specific branches remain a labelled compatibility lab.
-
-No scheduler, durable alarm state, multiwindow SLO evaluation, notification delivery, or historical correction store exists. The UI is an initial query interface, not a complete investigation workbench: an initial bounded waterfall and raw-duration heatmap are implemented (see VISUALIZATIONS.md), but general saved workspaces, unbounded/complete trace capture, general selection algebra, and statistical cohort comparison remain absent.
-
-The new raw-span heatmap aggregates the full matching span population; its cell
-inspection remains bounded at 200 spans. Trace completeness is unknown. Guided
-USE/RED entry points now include the custom queue/worker adapter and identify
-remaining CPU/memory/pool and error-rate gaps; they are not complete resource/service scorecards.
-See VISUALIZATIONS.md and INVESTIGATION_WORKFLOWS.md.
-
-The Go semantic-package registry currently performs metadata-shape recognition,
-not automatic live scanning or general expansion/compiler lowering for all proposed measures.
-A bounded HTTP server-span binding/expansion and normalized request preparer now
-exist. A bounded ClickHouse exporter adapter and shared aggregate UI now work
-for an explicit HTTP instrumentation binding (LIVE_HTTP_PACKAGE.md). General
-auto-discovery, immutable custody and prepared-table materialization remain absent. See SEMANTIC_PACKAGES.md. A supplied matching
-inventory cannot establish data completeness, freshness, health or a valid SLO.
-
-## Application and environment
-
-The consumer does not reclaim pending Redis entries after process failure. There is no durable outbox, transactional terminal telemetry, or acceptance reconciliation. A local reset can clear the demo but does not repair these semantics. Trace/span drilldown currently filters by reservation ID alone; tenant is fixed to demo in the sample. Generalized relations must carry the full scoped identity.
-
-Published ports bind to loopback. Query credentials are disposable local credentials, not scoped production identities. The server uses a read-only query setting, but the supplied database account is also the ingestion account and is not a production authorization model.
-
-The original hosted environment denied Docker startup and browser installation.
-The current cloud baseline runs the default stack and real Chromium journeys;
-see VALIDATION.md and docs/journeys/README.md. Optional HyperDX remains unverified.
-A nominally “good” sample request can miss its deadline behind the consumer's
-batch barrier under background load. Run `npm run test:smoke` for the controlled
-pause/drain/restore fixture; direct `scripts/smoke.py` assumes an otherwise quiet
-queue and may fail correctly under load. The initial background-traffic journey missed its nominal deadline while queued;
-documentation runs now pause/drain/restore the owned generator without deleting
-data. Stale pending stream entries from crashes are still not reclaimed. A
-recreated cloud container also inherited proxy defaults that routed local service
-traffic incorrectly; Compose now bypasses the proxy for its own service names.
-
-## Annotation tooling boundaries
-
-The first operation/event dialect, source-contract manifest and test-only weaving
-wrapper are implemented (GOO_ANNOTATIONS.md). Full build/dependency manifests,
-automatic live inventory scanning, generic operation aggregate compilation,
-production weaving rollout and instrumentation coverage are not implemented.
-The custom runtime lives in a separate OTel module; the existing deployed Go
-packages service remains a plain build; the separate operation sample is woven. Event delivery/dropped-event diagnostics do not
-establish durable business completion or complete absence evidence.
-
-Normalized completed operation spans can now be checked against source manifests
-and summarized per operation/role (OPERATION_CONFORMANCE.md). A separate woven
-sample now integrates collector/ClickHouse and the UI (LIVE_OPERATIONS.md);
-this does not verify completeness. Native operation contracts now validate reset/temporality and histogram compatibility; see NATIVE_COUNTERS.md and NATIVE_HISTOGRAMS.md.
-
-## Operation investigation scope
-
-Operation heatmaps and trace drilldown now share a captured, validated source
-response (OPERATION_DRILLDOWN.md). Trace inspection contains only operation spans
-in the selected resource/library/start-time window; it is not a complete
-distributed trace fetch. Empty cells do not prove health, and late-data reruns
-can change results. Local immutable operation captures now exist (SAVED_INVESTIGATIONS.md); bounded cross-service expansion now exists through the separate general exploration surface (EXPLORATION_DESIGN.md).
-General business-subject evaluation remains absent. Native histogram intervals are now supported separately.
-
-Bounded scoped subject navigation now follows declared events across traces in
-the captured operation evidence (SUBJECT_NAVIGATION.md). It joins event-bearing
-invocations only. General relation-package resolution, immutable event IDs,
-business deduplication, retry classification and durable completion remain absent.
-
-## YAML operation package boundaries
-
-Local YAML operation packages now replace the sample-specific Go binding and
-select built-in views for checkout and the separate report app (OPERATION_PACKAGES.md).
-They require the selected Go source package, load at startup, and use a fixed
-ClickHouse adapter/view vocabulary. General registry/version resolution, source-free
-contracts, CEL/KCL, deployment/apply and operation Databricks lowering remain absent.
-
-Native operation interval rates now support explicit cumulative/delta temporality,
-unknown reset/gap/boundary intervals, late-input revisions and per-stream scope
-(NATIVE_COUNTERS.md). The live sample uses cumulative metrics; delta is fixture
-tested. Automatic fleet aggregation and metric exemplars remain unsupported. Operation error ratios now use exhaustive aligned same-basis outcome counts (OPERATION_ERROR_RATIOS.md); missing members remain unknown and zero traffic is no data. Explicit aligned histogram merging is available through the Go core/CLI; it does not discover fleet membership. Counter-to-span links are time-based context only.
-
-Fixed declared fleet membership and exact compatible interval totals are now supported (FLEET_COVERAGE.md). Source observation is not completeness. The live lab now deploys both expected instances. Bounded-skew comparison is supported without shifting timestamps or asserting exact totals; automatic discovery, membership activation windows and common-window aggregation remain absent. See FLEET_COMPARISONS.md.
+| 44, M1 | [Numeric measures](../../journeys/numeric-measures.spec.js) | [Qualified numeric binding guidance](../NUMERIC_ATTRIBUTE_PLANNING.md); explicit type/unit and existing source bounds. |
+| 87, M3 | [Trace finding](../../journeys/trace-finding.spec.js) | [Retained-page anchor continuity](../TRACE_FINDINGS.md); independent capture reads, no complete-capture membership claim. |
+| 164 | [Operation status](../../journeys/operation-status.spec.js) | [Independent declared outcome and reported status](../OPERATION_STATUS.md). |
+| 165 | [OTel field hints](../../journeys/otel-field-hints.spec.js) | [Exact qualified field discovery](../OTEL_FIELD_HINTS.md#executable-storyboard-165). |
+| 166 | [Observed grouping](../../journeys/observed-grouping.spec.js) | [Source-free grouping before Run](../OBSERVED_GROUPING.md#executable-storyboard-166). |
+| 167 | [Composed grouping](../../journeys/composed-grouping.spec.js) | [Two-field composition](../COMPOSED_GROUPING.md#executable-storyboard-167). |
+| 168 | [Grouping control](../../journeys/grouping-control.spec.js) | [Passive picker and real composition](../GROUPING_CONTROL.md); the standalone component fixture is synthetic. |
+| 169, M4 | [Explicit draft recovery](../../journeys/investigation-draft.spec.js) | [Implemented bounded same-tab recovery](../INVESTIGATION_DRAFT_RECOVERY.md), independently accepted in `6aba406`; Restore reads nothing and never retries publication. |
+| 170, M4 | [Save/storage races](../../journeys/investigation-draft-races.spec.js) | Real late save acknowledgment, acknowledged-save/local-cleanup failure, and denied storage without losing authored work. |
+
+The individual feature contracts link their actual existing frames. Current-round
+executed checks and review decisions belong in [validation](../../VALIDATION.md)
+and the [review-gated backlog](../BACKLOG_2026_10_24.md).
+
+[Journey 111](../../journeys/fixed-library.spec.js) inspects same-title reusable
+revisions without execution, holds real compiler responses across selection/close/
+workspace/fixed-owner changes, refuses a mismatched compiler revision, then explicitly runs one fresh question.
+[Mobile reusable revision detail](screenshots/111a-fixed-reusable-revisions.png).
+Journey 33 additionally exercises real population measures/reuse and existing
+Bombadil/Quint ledgers through the shared rows.
+
+[Journey 110](../../journeys/definition-library.spec.js) explores compact record/native
+revision libraries with unrelated same-title definitions. It preserves selected
+annotation/editor drafts, rejects a delayed older real catalog response, and checks
+source-free selection and mobile containment. [Selected revisions](screenshots/110a-selected-definition-revisions.png) · [Mobile rows](screenshots/110b-mobile-definition-rows.png).
+See [the library contract](../DEFINITION_LIBRARY.md) for cache/search bounds and remaining B1 work.
+
+[Journey 109](../../journeys/lazy-authoring.spec.js) checks that fresh Activity has
+no fixed-editor DOM. Opening authoring creates one without a source query, returning
+to paused Activity detaches it, and reopening restores the same draft/DOM identity.
+Record deep links stage an editor without execution. [Explicit fixed authoring](screenshots/109a-explicit-fixed-authoring.png).
+Journeys 102 and 105 additionally check the lazy mount boundary during real stream
+inspection and fixed-read return, with existing Quint ledgers and rejecting controls.
+
+Journey 107 now checks contextual lookback labels across routes, hides the default on Saved, and preserves its value without source reads. [Mobile Saved without a misleading lookback](screenshots/107d-saved-scope-without-lookback.png). The [acceptance audit](../S2_A3_ACCEPTANCE.md) records bounded S2/A3 delivery.
+
+[Shared native values and coverage](../NATIVE_PRESENTATION.md): Journey 59 opens
+service coverage without a source request, including [desktop](screenshots/59g-shared-native-coverage.png)
+and [mobile](screenshots/59h-mobile-native-coverage.png). Journey 54 opens
+[comparison window coverage](screenshots/54g-shared-window-coverage.png), checking
+UTC bounds and exact nanosecond tooltips. Native navigation/timeline and live-counter
+storyboards use the same presenter while retaining their own fixed/source/custody
+contracts. Screenshot links are populated by the executable real-source journeys.
+
+[Standalone tail and native identity inspection](../RECORD_PRESENTATION.md#standalone-tails-and-native-identity)
+now share the selected-item shell. Journey 66 pauses on a retained log, searches
+its typed fields, closes to the opener and reopens with cached search without a new
+source request. Journey 92 preserves a held span population during trace inspection
+and disconnect/reconnect. Journey 54 inspects native identity across exact-window
+comparisons, preserving search and focus without reading telemetry. Journeys 55/59
+inspect the same identity from supported-window previews and service summaries.
+Native navigation/timeline journeys retain independent value/coverage semantics.
+Tail and native-window Bombadil actors now inspect the new entry points and reject
+legacy inline attribute disclosures in these surfaces. Updated [paused tail](screenshots/66b-bounded-tail-keyboard-pause.png), [mobile tail](screenshots/66c-mobile-live-tail.png) and [mobile native identity](screenshots/54f-mobile-stream-identity.png) frames show the real inspection flows.
+
+The [shared record inspection cut](../RECORD_PRESENTATION.md#compact-record-inspection)
+removes duplicate inline disclosures from fixed/saved/context tables. Journey 29
+now opens the single inspector, searches qualified typed fields, copies multiline
+and long values exactly, runs a breakdown/filter and inspects linked logs on desktop
+and mobile. Journeys 32/45 exercise saved inspection and fixed refinement through
+that same entry point; 97 retains multi-record shared-field actions. Updated
+inspection/capture Bombadil actors require no duplicate disclosure and at most one
+visible inspector/detail slot per table. These actors do not add source actions to
+display components. Cross-app report and generated retry/reject/missing-terminal
+campaign helpers now inspect each supplied record's raw evidence through the same
+UI instead of reading the removed per-row JSON disclosure. Fixed-query campaigns
+enter the explicit Questions route; fresh Explore retains its live-entry behavior.
+
+[Journey 107](../../journeys/saved-owner.spec.js): open real stored spans without
+query controls → inspect locally, close to the opener and reopen with retained search → explicitly expand cross-service trace/log context
+→ close to the opener → open a filtered saved log → read surrounding logs → hold
+a real response, switch captures and reject its late publication. Frames:
+[explicit trace](screenshots/107a-saved-explicit-trace.png),
+[log context](screenshots/107b-saved-log-context.png),
+[mobile saved owner](screenshots/107c-mobile-saved-owner.png).
+
+Journeys 32/41/45/50 now exercise [shared saved-record scope](../SAVED_RECORD_PRESENTATION.md)
+in captures and document references. Journey 32 verifies source/custody/count facts,
+page offsets and source-free fixed staging before an explicit Run. Existing frames
+32a–32f, 41a–41b and 45d document the updated surfaces.
+
+Journey 46 also opens the existing held service span page, inspects shared UTC/fields
+and reported context, closes back to its opener, and verifies no local source reads.
+Frames: [held service spans](screenshots/46g-held-service-spans.png) and
+[mobile inspection](screenshots/46h-mobile-service-spans.png).
+
+[Journey 106](../../journeys/record-presentation.spec.js): inspect a real log in
+Live → stage/run a fixed query → compare the same presentation and local detail →
+return → repeat for a span with a held parent and an unrelated same-ID span →
+inspect mobile → verify standalone server-rendered/SPA components without APIs.
+Frames: [shared log detail](screenshots/106a-shared-log-detail.png),
+[reported span context](screenshots/106b-shared-span-context.png),
+[mobile record](screenshots/106c-mobile-shared-record.png).
+[Display contract and diagram](../RECORD_PRESENTATION.md).
+
+[Journey 105](../../journeys/paused-return.spec.js): inspect a held generic log →
+stage a field filter → open a fixed child → return while a real response is held →
+release that response without replacing the parent → reopen/run the retained fixed
+editor → return on mobile → explicitly Apply/Resume. It checks source counts,
+selected identity, draft scope, viewport/inspector scroll and focus. Frames:
+[pending child](screenshots/105a-pending-fixed-return.png),
+[returned selection](screenshots/105b-returned-paused-selection.png),
+[mobile return](screenshots/105c-mobile-paused-return.png).
+The deliberate transport delay holds an actual source response; data is not mocked.
+
+[Journey 104](../../journeys/live-filters.spec.js): observe four ordinary logs →
+inspect west → stage Include without fetching → Apply one matching row → stage
+Exclude and Apply east/empty (missing stays excluded) → remove the chip and Apply →
+Resume explicitly → inspect empty → stage a fixed question without fetching → Run
+one fixed read. Frames: [draft](screenshots/104a-staged-live-filter.png),
+[filtered mobile](screenshots/104b-filtered-mobile-stream.png),
+[fixed staging](screenshots/104c-staged-fixed-investigation.png).
+[Contract](../LIVE_ACTIVITY.md). These frames are generated by the running lab.
+
+[Journeys 102–103](../../journeys/stream-entry.spec.js) cover fresh live entry, scoped logs/spans, source-free inspection, explicit resume gaps, inert saved links, scroll anchoring, empty/missing scope and reconnect failure. Entry checks require the first desktop record above 300px and the first mobile record above 340px; the mobile Menu disclosure must not start another read. [Contract and flow diagram](../LIVE_ACTIVITY.md). Frames: [desktop](screenshots/102a-live-entry.png), [inspection](screenshots/102b-paused-inspection.png), [mobile](screenshots/102c-mobile-live-entry.png), [scroll anchor](screenshots/103a-paused-scroll-anchor.png). The hidden-document event is injected; the OTLP records and normal source reads are real.
+
+[Journey 90](../../journeys/population-workspace.spec.js) exercises generic cross-service OTel populations, excluded resource/attribute groups, missing-versus-empty selectors, paired range filtering, explicit companion filters, column/layout changes, configuration save/reopen/run, partial failure, cancellation and fresh-window staging. [Storyboard, diagram and frames](../POPULATION_WORKSPACE.md).
+
+[Journeys 88–89](../../journeys/linked-timeline.spec.js) cover a generic OTel service timeline, source-free shared range preview, Apply/reset across record and native widgets, mobile layout, Quint trace validation, Bombadil exploration and standalone range-component conformance. [Storyboard and frames](../LINKED_TIMELINE.md).
+
+Journey [87](../../journeys/trace-finding.spec.js) follows a generic API population into a cross-service trace, exercises a failed second capture with retained first receipt, then stages and explicitly saves two capture-linked questions plus an authored finding. It reopens stored evidence without recapture, checks mobile overflow, validates the observed ledger with Quint/quint-go and supplies a Bombadil navigation/composer actor. [Storyboard and frames](../TRACE_FINDINGS.md).
+
+These stories explain the current prototype and guide the intended product.
+Screenshots are generated by real Playwright interactions with the running
+sample app and investigation UI; backend responses are not mocked.
+
+Run the default Compose stack, then `npm ci` and `npm run test:journeys`.
+The wrapper pauses only the demo traffic generator, drains queued work without
+deleting data, runs Chromium, and restores the generator if it was running.
+Existing stale pending entries from prior crashes are retained and reported.
+The sample does not reclaim those entries; the wrapper does not pretend to fix it.
+The cloud environment uses the installed `/usr/bin/chromium`; set `CHROMIUM_PATH`
+for another local binary. Test endpoints can be changed with `GOO_SAMPLE_URL` and
+`GOO_QUERY_URL`, but the default wrapper manages the local Compose demo only.
+
+The live app labels evidence `demo-unverified`, SLO/alarm results as previews,
+and native metrics as points. These are visible limitations, not hidden test
+exceptions. Examples uses the original bounded Python SQL templates; Explore and
+operation packages use Go.
+The new Go lifecycle accounting has separate fixtures and is not wired into it.
+
+For the source/build, telemetry and investigation paths behind these journeys, see
+[architecture and process diagrams](../ARCHITECTURE_DIAGRAMS.md). Production patterns
+and unimplemented portability steps are labelled separately.
+
+## 1. A request retries, succeeds, and crosses an async trace boundary
+
+**Question:** Did a transient attempt fail the reservation, or did the eventual
+business operation succeed?
+
+| Frame | User action and evidence | Executable check |
+| --- | --- | --- |
+| [Create retry](screenshots/01a-create-retry.png) | Submit retry scenario through the actual sample page; retain the returned ID | Real HTTP → gRPC acceptance returns an ID |
+| [Completion](screenshots/01b-retry-completion.png) | Open the investigation UI for that reservation | One subject matures to good; evidence remains unverified |
+| [Async spans](screenshots/01c-linked-consumer-spans.png) | Click the subject's spans link | Consumer work is present, with a nonempty cross-trace link |
+| [Attempt evidence](screenshots/01d-retry-log-evidence.png) | Inspect related logs | Retry and terminal events exist for the same reservation |
+
+This teaches the distinction between attempts, subjects and trace identities.
+A later UI should expose explicit scoped relations rather than correlating on
+reservation ID alone; that is a planned improvement, not current coverage.
+
+## 2. Fast acceptance does not establish eventual completion
+
+**Question:** Why can a synchronous endpoint look healthy while its asynchronous
+outcome is late, absent, or rejected?
+
+The test creates all four scenarios through the sample page, waits for mature
+outcomes, then inspects each selected subject. Frames: [good](screenshots/02-good.png),
+[late](screenshots/02-late.png), [missing](screenshots/02-missing.png),
+[rejected](screenshots/02-reject.png), and [synchronous latency](screenshots/02-synchronous-latency.png).
+Good is asserted good; the others are asserted bad under the **demo's** missing
+completion assumption. The latency view contains real synchronous observations,
+but the story does not equate a low latency number with business success.
+
+Under background traffic, even nominal good/retry requests can miss the demo
+deadline while queued behind slow work. That observed behavior motivated isolating
+the documentation workload; it was not fixed by weakening the assertions or
+clearing the stream. Capacity/queue latency remains a useful future investigation.
+
+## 3. Understand what the definition and query can claim
+
+**Question:** Which definition did I use, what SQL ran, and are these numbers rates
+or exported points?
+
+Frames: [owned package](screenshots/03a-owned-definition.png),
+[invalid expression](screenshots/03b-rejected-expression.png), and
+[metric points/explain](screenshots/03c-metric-points-and-explain.png).
+The test opens the actual package, submits an unsupported query and sees an
+error, then successfully queries metric points and opens generated SQL. The UI
+must retain its warning that the points are not derived rates.
+
+## 4. From a latency distribution to linked asynchronous work
+
+**Question:** Which calls make up this latency band, and what happened after
+synchronous acceptance?
+
+| Frame | User action and evidence | Executable check |
+| --- | --- | --- |
+| [Raw-duration heatmap](screenshots/04a-duration-heatmap.png) | Create a retry reservation, then inspect its gRPC duration distribution | Full matching span count, no percentile reconstruction |
+| [Selected cell](screenshots/04b-cell-span-details.png) | Click a populated cell and select a matching span | Returned count matches the cell; exact timestamp lies inside its half-open bounds |
+| [Reservation waterfall](screenshots/04c-reservation-waterfall.png) | Open the span's reservation to widen the investigation | Consumer work appears under its own trace; parent edges stay within each trace |
+| [Follow async link](screenshots/04d-follow-async-link.png) | Select the consumer and follow its producer reference | The referenced span's exact ID appears in the details |
+
+All four steps use real collector ingestion and ClickHouse queries. Cell queries
+preserve fixed time bounds, but are not historical evidence snapshots. Trace
+inspection remains capped at 200 spans and explicitly labels unknown completeness.
+See [visualization contracts](../VISUALIZATIONS.md).
+
+## 5. Discover the next question without losing the evidence scope
+
+**Question:** How do I choose a useful next step, and what measurements are missing?
+
+| Frame | User action and evidence | Executable check |
+| --- | --- | --- |
+| [Retry guide](screenshots/05a-guided-retry-evidence.png) | Select the retry-recovery question and inspect lifecycle evidence | The selected reservation survives the guided step into logs |
+| [USE evidence inventory](screenshots/05b-use-coverage-gaps.png) | Choose resource pressure and inspect queue/worker evidence | Queue/worker telemetry is available; CPU/memory/pool measurements remain absent; resource scope clears unsupported subject filters |
+| [RED exploration](screenshots/05c-red-volume-and-duration.png) | Choose service latency and open volume/duration | The same live raw-span heatmap opens; missing error-rate support is stated |
+
+These are navigable query templates with explanations, not automated root-cause
+diagnoses or a complete USE/RED implementation. See [workflow contracts and
+follow-on instrumentation](../INVESTIGATION_WORKFLOWS.md).
+
+## 6. Exercise a concrete adapter and discover reusable semantic packages
 
-## Saved investigation limits
+| Frame | User action and evidence | Executable check |
+| --- | --- | --- |
+| [Live worker/queue evidence](screenshots/06a-live-queue-and-workers.png) | Create a slow reservation and inspect USE resource evidence | Actual active-worker observation, all six metric rows, explicit instance identity and four plotted panels |
+| [Semantic package library](screenshots/06b-semantic-package-library.png) | Open the prebuilt library and database-pool profile | Requirements include pool wait telemetry; outputs remain labelled proposed |
 
-Local server-captured immutable revisions and fixed-question refresh now exist. A general capture catalog now exists separately. No multi-user authorization, operation-capture catalog, retention/quota, full query-session persistence or raw-metric-input replay exists. See SAVED_INVESTIGATIONS.md and PRODUCT_GAPS.md.
-
-## General exploration boundaries
+The Go `goo discover` command independently recognizes contract shapes from an
+explicit inventory. The UI library is a catalog, not an automatic live discovery
+scan. Hegel checks that wrong units, unknown versions, absent requirements or
+separate scopes cannot activate the incomplete scope's profile. See
+[semantic packages](../SEMANTIC_PACKAGES.md) and [queue contracts](../QUEUE_TELEMETRY.md).
 
-A bounded Go span/log AST, captured-record counts/groups, discovered keys and paged cross-service trace/exact-log navigation now exist. Reads are not transactional, ordinary live offset pages are not frozen, trace completeness is unknown, numeric-looking attributes remain strings, and general explorations/expanded context are not archived by operation captures. One-field distributions and fixed-window descriptive cohort comparison now exist. General chart algebra, arbitrary-field numeric casts, complete trace accumulation, live tail and production tenancy remain absent. See EXPLORATION_DESIGN.md.
+## 7. Evaluate a bound package over live OTel spans
 
-- Explore baselines are volatile browser-held captures, not durable saved operation
-  receipts. Comparison checks accounting/scope, not caller-supplied provenance;
-  it provides descriptive differences without statistical/causal claims. See
-  [workspace contract](PRODUCT_WORKSPACE.md).
-
-- Manifest-free telemetry packages now persist reusable selectors and captured-record
-  counts, but do not yet share all typed measure contracts with the aggregate
-  compiler. Source promotion is an optional Go template, not automatic function
-  inference or patching. General metrics, calculations and warehouse lowering of
-  this package kind remain future; see [contract](TELEMETRY_PACKAGES.md).
+| Frame | User action and evidence | Executable check |
+| --- | --- | --- |
+| [Shared HTTP view](screenshots/07a-live-http-package-view.png) | Create a reservation and request the controlled failing HTTP endpoint; evaluate the Go package | Real ingested success/failure routes, columns from the expansion descriptor, visible sampling/completeness warnings |
+| [Source and policy](screenshots/07b-http-source-and-policy.png) | Open the source/revision panel | Actual library binding, query parameters, content revision and explicit failure-status policy |
 
-## Exploratory UI testing boundaries
+This executes HTTP → collector → ClickHouse → Go preparation/evaluation → shared
+view rendering. It does not create a custody snapshot, materialize prepared export
+tables or deploy Databricks objects. See [source contracts](../LIVE_HTTP_PACKAGE.md).
 
-The opt-in Quint/Bombadil campaigns exercise successful reports and Python retry,
-rejection and stalled-work paths with independent source checks. Generated schedule
-replay checks observed handler effects; it does not establish deterministic browser
-scheduling, business durability or telemetry completeness. Resource/export-loss/
-late-capture generation and long-lived independent actors remain unimplemented.
-See [testing contract](BOMBADIL_TESTING.md); existing curated journeys cover their
-separately documented retry, export-loss and late-evidence scenarios.
+## 8. What did we know then, and what changed? — partly implemented
 
-Log discovery now includes literal message/service/severity controls, readable
-messages and independently scoped surrounding logs. Reported trace-ID groups and
-fixed full-population span-duration buckets are implemented. These do not supply
-root/trace latency, unique invocation counts, stable live cursors, live tail or complete
-capture. Quick search adds visible AND filters rather than silently replacing
-existing predicates. Context highlights compare captured fields; identical duplicate
-logs have no unique event identity. See the discovery section of EXPLORATION_DESIGN.md.
-
-Observed service/span-name inventory now exists, bounded to 1000 pairs and one
-environment/window. It excludes log-only services and does not infer fleet
-membership, health, dependencies, request rate or declared business operations.
-General inventory/Explore evidence can now be saved as immutable bounded receipts;
-expanded live context and unsaved browser baselines remain volatile. Explicit comparison-pair captures now exist (ERROR_COMPARISONS.md). See [contract](SERVICE_INVENTORY.md).
-
-General captures now retain full supported aggregates and up to 1,000 inspection
-records with stable stored pages. Ordinary live offsets still change with arrival
-and retention. Catalog listing is bounded and uses ID seek order, not a frozen
-catalog snapshot; quotas/indexing and team authorization remain future. Refresh
-requires the same fixed question and compiled plan; old receipts remain reopenable
-when that plan is unavailable. See [GENERAL_CAPTURES.md](GENERAL_CAPTURES.md).
-
-## Core workbench boundaries
-
-[Core basics](CORE_WORKBENCH.md) now provide full-population span-duration summaries,
-fixed record-count time charts, reusable package questions, span/log service event
-activity and reported parent links. Arbitrary numeric expressions, ingestion lag/drop evidence and production
-authorization remain absent. Typed native metric packages now exist; see
-[measurement boundaries](MEASUREMENT_PACKAGES.md).
-Per-process query limits/cancellation cover general routes, not all legacy routes
-or cross-replica/per-tenant quotas. Service discovery is a separate live read and
-is not archived by saved inventory. Event age does not establish pipeline health.
-
-[Grouped span-duration measures](GROUPED_MEASURES.md) now support complete per-group summaries/ranking. Arbitrary numeric measures remain absent. Opt-in bounded grouped time series now
-exist through the [typed record-measure adapter](RECORD_MEASURES.md). Old summary+group capture plans may require explicit new live evidence rather than refresh; count-only groups are not retroactively upgraded.
-
-[Error/latency comparison boundaries](ERROR_COMPARISONS.md): span status is exporter status, not request/business outcome policy; captured-error percentages include Unset/unknown in the denominator. Different fixed windows and saved server-read pairs now exist. Statistical attribution and custom outcome policies remain future work. Local [deployment context and ordered notes](WORKBENCH_CONTEXT.md) now exist, with explicit authored provenance, immutable branches and exact evidence references.
-
-Investigation documents currently reference general captures and local deployment receipts; legacy operation receipts and live-question cards are not supported. Marker corrections/retractions, automatic CI ingestion, verified authorship and team authorization remain future work. Drafts persist only in the current page until saved. See [contract](WORKBENCH_CONTEXT.md).
-
-## Scoped recipes and examples
-
-Three [built-in recipes](INVESTIGATION_RECIPES.md) preserve an applied population,
-with explicit source-free preview and live execution. Six example packages use
-the shared product flow. Prerequisites are declared, not automatically verified;
-repository-authored ordered workflows and live typed lifecycle packages now exist.
-UI workflow authoring and Databricks lifecycle lowering remain absent.
-The specialized reservation/Redis lab remains an explicit legacy section.
-
-
-## Shared measurement boundaries
-
-See [MEASUREMENT_PACKAGES.md](MEASUREMENT_PACKAGES.md) for source limits, required
-stream metadata, local custody semantics, display limits and example log transport.
-No metric family implies telemetry completeness. Lifecycle absence is unknown;
-first Goo observation is not warehouse ingestion. The original compatibility lab
-has different preview assumptions and is not retroactively rewritten. Package
-revision catalogs have a 256-file bound; persistent custody storage currently has
-no quota/garbage collection. Source data and custody reads are not transactional.
-
-
-Metric discovery is now implemented for a named service/environment over a
-bounded two-minute observation window. It is not fleet membership discovery or a
-complete instrument inventory. Dimension-value cardinality, exemplar navigation,
-exponential histograms, omitted metric units and missing resource-instance IDs
-remain unsupported by the package workflow. Empty optional scope version/schema
-are accepted as exact identities. See MEASUREMENT_PACKAGES.md.
-
-## Product coherence boundaries
-
-[PRODUCT_ESSENCE.md](PRODUCT_ESSENCE.md) is the organizing direction. Definitions
-now exposes searchable record and measurement package revisions, but the two
-schemas retain separate editors/catalog sections. Discovery defaults to an explicit
-two-minute service window; contextual evidence follow-ups can pin original bounds; measurement lookback/fixed bounds are separate. Full
-workspace-session persistence, a unified cross-family authoring schema and
-production multi-user collaboration remain future work.
-
-## Investigation workspace boundaries
-
-Question-first briefs and direct capture destinations now exist. A selected saved
-revision receives an immutable child; current drafts require an explicit save.
-There is still no mutable latest head, automatic branch merge, multi-user presence
-or production authorization. Capture and document publication are separate, so
-attachment failure retains a saved capture for retry. Drafts are page-local until
-saved. Capture-card scope reads validate the stored capture and return only receipt
-metadata; local disk integrity checks still read its bounded stored evidence.
-
-
-## Contextual question boundaries
-
-Evidence-card follow-ups now preserve or explicitly replace scope. Trace/log
-relationships use exact reported IDs; resource discovery is service/time context.
-The observation chooser covers the first 100 retained records. Inventory and
-comparison captures require opening an underlying supported capture. Automatic
-causal ranking, cross-signal attribute translation and completeness inference are
-not implemented. See INVESTIGATION_FOLLOWUPS.md.
-
-
-## Shared scope planning boundaries
-
-The usability [entry-point review](ENTRY_POINTS_DESIGN_SPIKE.md) found that
-Services → Discover metrics previously dropped the inventory window. The first
-[question-workbench slice](QUESTION_WORKBENCH.md) now passes those bounds and
-consolidates Explore execution with explicit draft/applied scope. Broader
-Investigation/Evidence and Library entry-point restructuring, standalone native
-browse-first discovery, navigation history and durable draft recovery remain
-proposed. [Service browsing](SERVICE_BROWSING.md) now provides scoped instrument
-previews from service detail.
-
-Recipes and follow-ups now share checked scope/transform metadata; persisted
-question and capture formats remain unchanged. OTel/custom selectors retain their
-namespaces and native bindings retain declared schema identity. Automatic convention
-profile resolution, record schema-URL projection, cross-signal attribute mapping,
-arbitrary typed numeric expressions and backend capability negotiation remain
-future work. Existing record count/duration/status controls now lower through a
-bounded typed measure plan; opt-in split charts preserve their semantics.
-Comparison scopes retain separate members; automatic comparison transforms are
-rejected. See [QUESTION_SCOPE.md](QUESTION_SCOPE.md).
-
-## Service browsing boundaries
-
-The [service detail flow](SERVICE_BROWSING.md) offers observed HTTP/database/messaging
-span questions and native instrument previews. The [unified catalog](UNIFIED_SERVICE_CATALOG.md)
-starts from all supported signals; [all-signal discovery](METRIC_SERVICE_DISCOVERY.md) now exposes log-only and
-metric-only services from gauge/sum/explicit-histogram records. Metric summary and
-exponential-histogram families remain outside the adapter. Attribute
-discovery is bounded, convention aliases are not merged, and missing observations
-do not establish instrumentation coverage or health. Service context reads can
-fail independently. Service return is local, not durable browser-history recovery.
-
-## Unified catalog boundaries
-
-[Services](UNIFIED_SERVICE_CATALOG.md) now has one discovery entry and one row per
-service. Operation inventory still reads the whole environment/window with the
-existing 1000-pair limit, then filters displayed operations by service. Its capture
-action explicitly captures that whole environment scope. Service-only operation
-inventory compilation, restoring catalog state from a link and catalog captures
-remain future work.
-
-Explore record questions now have [fixed-scope share links](QUESTION_LINKS.md) and
-source-free browser-history restoration. Unsaved keystrokes, unpreviewed native drafts, service-detail panels and
-trace-inspector state are not serialized. Validated native questions now have
-typed investigation steps, described below.
-
-[Typed investigation steps](INVESTIGATION_STEPS.md) now persist record questions
-and validated measurement definitions with fixed scope and view. Native questions
-can be shared and reopened without telemetry reads. Service-detail panels,
-inspector state, baselines and unsaved keystrokes remain local. There is no
-automatic association with a latest capture or synchronized multiuser editing.
-
-[Linked question evidence](LINKED_QUESTION_EVIDENCE.md) now supports explicit
-capture-to-step histories. Capture and document publication are separate; retained
-capture IDs support retrying a failed attachment without rereading. Histories are
-bounded to 16 references per question, with no scheduled refresh or distributed
-transaction. Matching scope is not a shared snapshot or population guarantee.
-
-## Stored capture comparison boundaries
-
-[Capture comparison](CAPTURE_COMPARISON.md) supports source-record counts, stored
-span summaries, exact-stream gauge endpoints and [complete native counter and
-histogram windows](NATIVE_WINDOW_COMPARISON.md). Full coverage, identity, unit,
-temporality and bucket compatibility are required; one unsupported member
-withholds all changes. Lifecycle cohort deltas, fleet merging, interval
-realignment and histogram rebinning remain unsupported. Different definitions, units or environments withhold all numeric
-deltas. Exploratory selection is transient until explicitly saved as a
-[comparison card](SAVED_COMPARISONS.md). Frozen receipts and document publication
-are separate; retained receipt IDs support explicit recovery. Complete comparison
-snapshots are limited to 128 KiB and fail rather than truncate. Sharing requires
-access to the same workspace; verified authorship, access control and receipt
-garbage collection remain future work.
-
-Native questions and shared steps preserve exact nanosecond scope. The comparison
-panel now offers [observed-support discovery](OBSERVED_WINDOW_DISCOVERY.md) for
-counter and explicit histogram captures, with explicit selection and rereads.
-Asynchronous streams without common boundaries, unsupported members and overflowing
-histogram populations withhold support. Discovery does not select stream subsets
-or realign intervals; the ordinary time editor still authors millisecond bounds.
-
-Typed comparison sides can now become
-[reusable question cards](REUSABLE_COMPARISON_QUESTIONS.md) with their own capture
-linked. Staging is local until revision publication; fresh-window previews retain
-the definition but do not rewrite the saved fixed scope or relink old evidence.
-Inventory/legacy pair captures are not reusable question sides.
-
-[Fresh follow-up comparison](FRESH_COMPARISON.md) uses the saved question's duration
-and definition. Native scope transport preserves nanoseconds but does not infer
-SDK export phase; incomplete fresh windows still withhold numeric differences.
-Lifecycle question cards do not offer this comparison action.
-
-## Captured breakdowns and automatic dashboard scope
-
-[Stored one-field group comparisons](COMPARISON_BREAKDOWNS.md) now reuse complete
-aggregates. Numeric/two-field comparisons and arbitrary regrouping of old evidence
-remain unsupported; new dimensions require explicit source recapture. Automatic
-[service overviews and a distributed relationship table](SERVICE_DASHBOARDS.md)
-now execute bounded typed widgets within Services. Instance navigation,
-graphical topology, async/declaration edges and complete
-dashboard snapshots remain future work.
-
-Comparison breakdowns now offer local count/share ranking and recorded
-error/mean/p95/p99 ranking for spans, preserving full counts and missing-last
-coverage. Ranking is descriptive; support thresholds and statistical significance
-are not implemented. Stored receipt ranking is local, while saved population
-views retain their selected comparison metric. Log breakdowns now omit unsupported span-measure columns, and live log
-comparison controls use population share without a span-measure selector. Span
-measures absent from captured data remain explicitly unavailable.
-
-Namespace-aware service identity and registered operation-span dashboard cards
-are implemented; see [service identity](SERVICE_IDENTITY.md). Trace schema URL
-remains declaration-only because the current exporter does not store it. These
-cards do not replace explicit operation conformance or business-outcome evaluation.
-
-Declared services without observations now remain visible in Services. Their
-metadata comes from the current registry, not a frozen deployment inventory.
-Discovery failure withholds presence claims; registry failure is shown separately.
-
-[Reported-edge questions](REPORTED_EDGES.md) now select exact resolved child records
-within the captured discovery scope. Async links, external peer inference and
-end-to-end request latency remain outside that relationship. The first
-[visual comparison pass](VISUAL_COMPARISONS.md) uses aligned scales and compact
-metrics; some signed/scientific native formats still remain exact tables.
-
-The [display component library](UI_COMPONENTS.md) is incremental. Compact latency,
-stat lists and grouped metric comparisons are adopted. Explore and Services
-share passive tables and explicit result states.
-Shared facets and typed attribute values are now adopted in Explore and
-trace/log inspection. Other table migrations remain incremental.
-Native histogram P95 remains a bucket range; this is not a new scalar percentile
-or a P90 evaluator. Light-DOM app styles must stay scoped to their owning view.
-
-A bounded log SSE tail is now implemented; see [limits](LIVE_LOG_TAIL.md).
-Durable replay/ingestion cursors, trace tails and live gauges/histograms
-remain planned. Summary property updates currently rerender inner
-DOM and reset disclosures; log-tail row patches, bounded retention and explicit gaps now live in the app
-adapter. Snapshot value components still reset disclosure state on data updates.
-
-## Rolling comparison scope
-
-Live baseline comparison displays record counts for saved span/log questions
-with windows of at most two hours, plus duration and recorded status when the
-saved span question requests them. Native counters also support exact-stream live rate comparison; gauges and
-histograms retain fixed comparison flow. Count-only captures are not silently enriched or reread as a new definition. Refresh uses bounded polling;
-only log tail currently uses SSE. Live snapshots expire after two minutes and
-are process-local until explicitly frozen. Production authentication/session
-isolation and durable live workspaces remain future work. See LIVE_COMPARISON.md.
-
-- Live native counter comparison requires a single complete baseline stream. Focus this stream now creates an explicit exact source binding. Unselected
-  definitions with additional stream membership still withhold comparison. Endpoint discovery and exact-window reads are bounded, separate
-  source reads. maxGapMs also bounds live endpoint age. Frozen fixed-window
-  evidence retains historical coverage, not a continuing freshness claim.
-  Live gauge/histogram and fleet comparisons remain unimplemented.
-
-- Exact stream selection pins all captured resource and point dimensions, including
-  service.instance.id. A restart, added resource attribute or new schema produces
-  a different stream; Goo does not auto-follow it. Focus is bounded to observed
-  native inventories, not a fleet selector. See EXACT_STREAM_SELECTION.md.
-
-- Native stream search/review filters are local over bounded retained evidence;
-  they do not discover additional source streams, revise questions, aggregate
-  fleet rates or imply health. Local filters are not saved in question links or evidence. Outer stream
-  disclosure state survives local filtering within one rendered result; nested value components retain their existing lifecycle limits.
-  Unrecognized diagnostics preserve the exact code with neutral guidance.
-
-- Compact native service values are latest evaluated endpoint/interval values,
-  not whole-window rates or fleet percentiles. A valid interval may be displayed
-  alongside incomplete whole-window coverage. Counter interval rates retain the
-  kernel's floating representation; rational full-window comparisons are separate.
-  Automatic service native selection remains capped at two supported instruments;
-  supported choices can be changed with the overview picker. Selection is local
-  to the service visit and resets on reopening. Apply explicitly rereads all
-  supported overview questions from retained metadata; it does not rediscover
-  instruments or create a transactional snapshot. Unsupported instruments remain
-  visible in Native instruments. Saved dashboard configurations remain planned.
-
-- [Native timelines](NATIVE_TIMELINES.md) are fixed retained views capped at the
-  latest 200 observations/intervals per stream. Scalar domains are labelled and
-  local to each visual snapshot, not aligned fleet or cross-stream comparisons.
-  Histogram timelines show interval counts; P95 ranges/native buckets live in
-  selection details. Historical gauge samples may be stale under the fixed
-  evaluation policy. Live gauges/histograms and timeline-driven window reruns remain planned.
-  Fixed questions may opt into [Go-evaluated time buckets](HISTOGRAM_TIME_BUCKETS.md).
-
-## Retained histogram heatmap limits
-
-Native bucket grids display the latest 32 retained intervals and at most 64 buckets per layout. These are interval columns, not equally spaced elapsed-time buckets. Oversized layouts retain their exact tables; unknown intervals have no inferred layout. Shared raw-count scales do not normalize differing window durations.
-
-## Explicit native histogram time-bucket limits
-
-Opt-in `histogramBucketMs` derives at most 200 anchored buckets per stream and 20,000 total output buckets. Exports crossing bucket boundaries are withheld, not split; narrow widths may therefore make many buckets unavailable. Final buckets can be shorter. Display grids retain the latest-32/64-native-bucket limits; no resampling, fleet merge, live histogram tail or normalized-rate heatmap is implied. Export-window coverage and time-bucket coverage are separate.
-
-## Evidence-summary adoption limits
-
-Shared evidence summaries currently cover captured measurements and their native investigation entries/cards. Fixed record/native service widgets also use compact shared summaries. Stored comparison sides now use the shared summary too. Other record and inventory presenters retain their current layouts. Receipt-only metadata lacks a full evidence basis and diagnostics; the summary leaves those unavailable and the existing Open captured evidence action exposes the full result. Display input bounds and timestamp formats fail closed; arbitrary adapter-owned interactive children are unsupported. UTC/tooltips cover summary bounds and native stream/selection timestamps; stored comparison endpoint/window clocks and fresh native previews also use UTC/tooltips. Legacy diagnostic JSON and older chart presenters may still expose raw nanoseconds.
-
-The [shared inline inspector](SELECTED_ITEM_INSPECTORS.md) retains the 32 most recent selected detail bodies per rendered result. It does not retain selection across new source results or provide cross-query navigation history. Original inline row attribute disclosures and outer trace/surrounding-log source workspaces remain separate; only their selected-item presentation is shared.
-
-## Core experience refinement boundaries
-
-The [first survey slices](CORE_EXPERIENCE_REFINEMENTS.md) retain eight Explore
-visits in one tab; reload/eviction discards them and browser URL history still
-stages shared questions separately. Leaving stops tail subscriptions and invalidates
-pending publications. Service diagnosis counts matching mixed-kind captured spans,
-not verified requests or service health. Duration selection is for record
-populations; native histogram cells have no inferred trace membership. Trace
-breakdown sums are inclusive and can overlap. Deployment context reads remain
-explicit and independent of telemetry and captured custody. Convention capability
-explanations offer existing binding authoring; no general schema resolver is added.
-
-
-B2's first [record field/display slice](FIELD_PRESENTATION.md) is delivered. Shared
-fixtures cover record predicates and omitted empty defaults; they do not yet cover
-every service/native/envelope protocol. Source owners retain their independent
-cancellation and snapshot rules; no generic request-owner abstraction was added.
-
-
-B2 now also shares service namespace label formatting between catalogs/dashboard
-scopes and annotation summaries. Named labels are quoted to distinguish literal
-sentinel text from missing/empty modes. Shared namespace fixtures cover logical
-membership and record predicates, not all native/envelope protocols or server
-artifact digests; those retain their existing contracts.
-
-
-B2 now includes [shared-question/native wire fixtures](QUESTION_PROTOCOL.md) and
-comparison-only Go-default equivalence for canonical native capture reuse. Go still
-owns full definition validation; the fixture set is bounded. The bounded B2 acceptance
-audit is complete; store-specific publication consolidation is the next cut.
-
-Observed record field columns are bounded to eight qualified fields from supplied
-rows; this is not source-wide schema discovery. Core and added columns reorder
-within their own groups. Population layouts can be saved; live preferences remain
-page-local, empty fixed pages omit the picker, and arbitrary transforms are still
-future work. See [record field contract](RECORD_COLUMNS.md).
-
-Population scope widening currently expands an enclosing aligned UTC window, within the 120-minute query limit. Removing arbitrary predicates and exact selection-versus-rest remain planned; see [time expansion](POPULATION_WORKSPACE.md#expanding-the-time-window).
-
-[Categorical selection-versus-rest](POPULATION_PARTITIONS.md) is now implemented inside a fixed filtered parent. General numeric/range complements remain planned. Partition queries are logically disjoint over a fixed record state; independent reads are not a transactional snapshot.
-
-Population broadening now supports removing whole direct conjuncts in a staged
-child. Nested OR/AND groups stay atomic; arbitrary nested branch editing and
-noncategorical complements remain outside this cut. See
-[the bounded contract](POPULATION_BROADENING.md).
-
-The bounded [comparison context pass](COMPARISON_CONTEXT.md) shares UTC windows,
-counts, modes and provenance across fixed/stored/live results and omits duplicate
-selectors on automatic fixed-pair results. Bounded shared actions now cover fresh
-previews and stored/saved inspection, receipt retry and finding publication.
-Count-series adoption is recorded below; the [D1 audit](D1_ACCEPTANCE.md) now
-accepts this bounded milestone. Stored first-page inspection, absent series in old
-captures and separate native/record semantics remain explicit boundaries. E1 native
-instrument discovery is next; no unit conversion or fleet percentile is implied.
-
-[Comparison action/inspection continuation](COMPARISON_ACTIONS.md) now retains
-population comparison parents and provides in-place stored-side inspection. The
-legacy single-question row action still refines/rereads; full-capture navigation
-from receipts remains separate from retained inline Back. Stored inline inspection
-is its first retained page, not a full-population membership browser.
-
-
-[Retained record activity comparisons](COMPARISON_SERIES.md) now share count geometry across fixed and explicitly loaded stored/frozen capture owners. Rolling record responses now optionally include retained series for bucketed questions, with pinned UTC selection and exact Freeze. Reconstruction of old cohort-only comparison captures remains unimplemented. Native metric series keep their existing semantics and presenters.
-
-The first [E1 native discovery catalog](NATIVE_INSTRUMENT_DISCOVERY.md) provides
-HTTP duration metadata hints and generic package fallback. It is not complete
-convention capability planning: observed dimension keys do not establish per-stream
-coverage, error denominators or verified conformance. Non-monotonic sums and
-exponential histograms remain unsupported by the existing kernels/inventory.
-
-[E1 typed planning](NATIVE_INSTRUMENT_DISCOVERY.md#typed-server-plan-and-observed-stream-presence)
-now replaces browser rules and reports HTTP key presence per exact observed stream,
-including missing/empty identities and display truncation with full totals. This
-is not verified interval coverage or an error denominator; generic profiles do not
-inherit HTTP semantics. Plans remain `not-run` even when matching metadata exists.
-
-The messaging processing candidate uses experimental OTel v1.30.0 semantics.
-Its presence matrix does not validate operation values, destination cardinality,
-unique deliveries, queue lag, delivery success or end-to-end trace relations.
-Other messaging instruments retain generic bindings; this is not a full broker
-or consumer dashboard. Non-monotonic pool sums still require kernel support.
-
-
-The [bounded E1 audit](E1_ACCEPTANCE.md) accepts discovery/metadata planning, not
-convention verification. Native Run currently requires nonempty instance IDs and
-fails the whole matching input on invalid identity. The ClickStack counter adapter
-refuses fractional or >=2^53 values, even if metadata permits preview. Summary and
-exponential histograms are not inventoried. Discovery excludes exports exactly at
-its end; interval evaluation includes that endpoint and bounded preceding context.
-Discovery and Run row counts can differ without changing the fixed question.
-
-
-[Time/latency region partitions](REGION_PARTITIONS.md) are limited to required
-native span UInt64 durations and event timestamps. Both sides use independent
-source reads; no atomic membership snapshot is claimed. Numeric attributes,
-missing/invalid attribute durations and arbitrary Boolean negation remain unsupported
-by this operation. A selection exceeding the existing predicate budget is refused.
-
-
-The [bounded D2 audit](D2_ACCEPTANCE.md) accepts current population operations.
-Nested Boolean branch editing, arbitrary numeric-attribute complements/transforms,
-source-wide field discovery remain outside that cut. Reusable Activity layouts
-are now separately delivered in [Activity views](ACTIVITY_VIEWS.md). Exact Activity-row retention/recovery still requires server membership,
-occurrence identity, expiry and idempotency; connection-local handles are insufficient.
-
-
-[Activity membership prerequisites](TAIL_SELECTION_CUSTODY.md) include a tested Go
-bank shared by the tail SSE issuer and a separate references-only publication route. Process-local proofs expire from original read time
-and disappear on restart. The typed backend publisher now supports durable
-committed-request recovery without those proofs. Origin-aware backend catalog/read
-views, explicit public read/catalog routes, compact retained inspectors and pinned
-browser citations are implemented. Activity selection/publication/retry now uses these capabilities. The bank remains
-process-local and expiry/capacity can make new preservation unavailable; normal
-observation continues. Old unprojected tail requests require bounded receipt
-scans (1,000 / 16 MiB); exceeding those bounds refuses rather than omitting roots.
-Existing v1 captured/result-page manifests cannot represent mixed-poll tail
-provenance and remain unchanged.
-
-The [bounded Activity retention acceptance](ACTIVITY_RETENTION_ACCEPTANCE.md) now
-covers client expiry, configuration failures, actual database transport outages,
-capacity exhaustion and proof loss on process restart with keyboard/mobile retry.
-Browser-clock advancement does not advance server proof expiry; backend/Hegel
-checks cover that separate clock. Conflict/refusal messages have unit coverage;
-no browser concurrency campaign or distributed bank guarantee is claimed.
-
-[Activity views](ACTIVITY_VIEWS.md) persist rolling selectors and column layouts,
-not browser observation buffers, capabilities or source clocks. Start remains
-explicit after reopen. Service relevance is an exact environment filter, not
-Boolean selector satisfiability or evidence of matching telemetry. Catalog search
-is limited to the loaded 20-item page. Mutable aliases, team access control and
-automatic startup preferences remain unsupported.
-
-Reusable [Activity views](ACTIVITY_VIEWS.md) use a typed rolling configuration in
-workbench's existing immutable file publisher, separate from fixed exploration
-views. Shared revision-library display appears in Saved and Services. The stream
-adapter restores configuration through `GooTail.stage`; Start alone opens SSE.
-No observations or capabilities cross the configuration boundary. The linked
-flow diagram documents publication, staging and later separate retention.
-
-Activity-view browsing adopts `GooDefinitionLibrary` with an explicit `activity`
-family and exact revisions, keeping same-title scopes distinct. The existing
-record-column picker projects both streamed and staged layouts. Configuration
-reads, clipboard sharing and library paging stay in `GooActivityViews`; scope and
-draft lifetime stay in `GooStreamEntry`. `GooTail.stage` prepares local display
-without a subscription. No display component fetches or starts telemetry.
+This is a historical investigation-UI design storyboard, not a fabricated browser
+journey or the current execution queue:
+
+1. Select a fixed cohort, definition revision, custody clock and evidence basis.
+2. Inspect an original evaluation: a mature subject has no visible completion.
+3. Advance only the evidence basis; an on-time terminal delivered later appears.
+4. Show a new generation linked to the original, with changed outcome and counts.
+5. Reopen the original receipt and reproduce its original answer.
+6. Export the same definition/facts to the longer-term platform without combining
+   generations or erasing evidence quality.
+
+The Go CLI fixtures, Hegel properties and Quint replay execute the semantic
+parts of this story, including strict cutoff boundaries and old/new snapshot
+coexistence. The live UI has no basis selector, generation comparison or Databricks
+deployment yet; no screenshots or browser-test claims are made for those steps.
+
+See [lifecycle preparation](../LIFECYCLE_PREPARATION.md),
+[bitemporal design](../BITEMPORALITY.md), and
+[verification](../../verification/README.md) for the executable lower layers.
+
+## Package-binding CLI journey
+
+The [HTTP binding storyboard](../PACKAGE_EXPANSION.md) executes a separate
+Go package workflow: recognize/bind → expand shared artifacts → prepare normalized
+server requests → evaluate/reference-SQL parity. It uses fixed fixtures and
+actual CLI/embedded ClickHouse execution. The separate live HTTP journey now renders its aggregate view descriptor. The
+fixed CLI fixture remains distinct from that real-ingestion evidence.
+
+## Annotation/weaving developer journey
+
+The [annotation storyboard](../GOO_ANNOTATIONS.md) executes real Go weaving and
+captures actual OTel SDK spans/events/metrics, checks application error/panic
+behavior and compares emitted signal contracts with the source manifest. It is
+a developer conformance journey rather than a new browser/collector journey;
+no UI mockups or additional screenshots are claimed.
+
+## Captured artifacts
+
+Named documentation PNGs live in `screenshots/`. Playwright HTML reports,
+failure screenshots and traces are generated under `artifacts/`. Screenshots
+contain synthetic demo IDs and timestamps and change on recapture. They document
+asserted behavior rather than serving as fragile pixel-perfect golden tests.
+
+## Live woven operation journey
+
+Journey 08 runs real Go success/error/panic paths through the collector and
+ClickHouse, then inspects the operation overview and evidence binding. See
+[the storyboard and captured frames](../LIVE_OPERATIONS.md).
+
+## Operation duration and trace drilldown
+
+Journey 09 follows a failed woven Go checkout through its operation error count,
+raw duration heatmap cell, exact contributing spans and parent/child trace
+waterfall. It verifies retained resource/window/basis without an additional
+operation query. See [the storyboard](../OPERATION_DRILLDOWN.md).
+
+## Scoped subject journey
+
+Journey 10 creates related Go invocations plus an identical ID in another tenant,
+then navigates trace → subject events → related traces without a new query.
+[Storyboard and captured frames](../SUBJECT_NAVIGATION.md).
+
+## Reusable package onboarding
+
+Journey 11 generates a real report in a second Go app and explores its YAML-backed
+operation/subject views. Journey 12 holds a real response to verify package
+switching discards stale evidence. [Storyboards](../OPERATION_PACKAGES.md).
+
+## Native counter rate journey
+
+Journey 13 uses actual exported cumulative counter points, inspects supported
+interval rates and their separate basis, then opens contextual spans.
+[Storyboard](../NATIVE_COUNTERS.md).
+
+## 14. Native duration histograms
+
+**Question:** What can collected metric distributions tell us without pretending
+that a percentile is an exact duration or that a metric bucket identifies spans?
+
+| Frame | User action and evidence | Executable check |
+| --- | --- | --- |
+| [Native heatmap](screenshots/14a-native-histogram-heatmap.png) | Invoke the real woven app; inspect checkout over two minutes and expand native histograms | OTLP → collector → ClickHouse → Go returns exact bucket totals; unknown intervals have no distribution |
+| [Bucket bounds](screenshots/14b-histogram-bucket-bounds.png) | Select a populated duration bucket | Exact population and whole-interval P95 bucket bounds; no interpolation or contributor claim |
+| [Context](screenshots/14c-histogram-contextual-spans.png) | Inspect histogram context | Operation/time selection uses captured spans, retaining separate metric evidence |
+
+Implemented by test `14 native histogram…` in `journeys/investigation.spec.js`.
+The live source is cumulative; delta, resets, late repair and explicit aligned
+merging have separate Go/Hegel/Quint checks. Fleet discovery and merged UI views
+remain planned. See [native histogram semantics](../NATIVE_HISTOGRAMS.md).
+
+## 15. From operation error ratios to traces
+
+**Question:** Which observed error interval deserves inspection, and what can its
+captured spans explain without claiming exact metric attribution?
+
+| Frame | User action and evidence | Executable check |
+| --- | --- | --- |
+| [Calls/errors/ratio](screenshots/15a-operation-error-ratios.png) | Run real successful and failing checkout calls; expand operation ratios | Calls/errors share one counter basis; supported percentages stay within 0–100; unknown/idle intervals have no percentage |
+| [Guided investigation](screenshots/15b-guided-error-investigation.png) | Choose “Why did errors rise?” on a populated error interval | Explicit counts and outcome choices, with no automatic cause/change claim |
+| [Contextual spans](screenshots/15c-contextual-error-spans.png) | Inspect error context | Captured checkout/server/error spans selected by interval, retaining separate evidence |
+| [Trace waterfall](screenshots/15d-error-trace-waterfall.png) | Open an available matching trace | Existing scoped waterfall contains checkout operation; switching packages clears ratio evidence |
+
+Implemented by test `15 operation error ratios…`. The live source is cumulative;
+missing/reset/gap/idle/delta semantics have independent Go/Hegel/Quint checks.
+See [error-ratio semantics](../OPERATION_ERROR_RATIOS.md). This original journey
+does not depict fleet views or change detection; the following journeys record
+the later delivered bounded fleet coverage and comparison work.
+
+## 16. Declared fleet membership and interval coverage
+
+**Question:** Does observing both instances establish a common fleet population?
+
+| Frame | User action and evidence | Executable check |
+| --- | --- | --- |
+| [Declared members](screenshots/16a-declared-fleet-members.png) | Invoke both live checkout instances; expand fleet coverage | Both declared instances observed through actual OTLP/source queries |
+| [Unknown exact total](screenshots/16b-unsupported-fleet-total.png) | Inspect an unsupported interval | Differing SDK windows leave exact fleet calls/errors/percentage unknown |
+| [Coverage explanation](screenshots/16c-fleet-coverage-explanation.png) | Explain that interval | Per-member states distinguish observation from exact alignment |
+
+Test `16 declared fleet…` checks package clearing and separate member evidence.
+Missing-member and failed-source cases retain Go/Hegel/Quint fixtures. See
+[fleet coverage](../FLEET_COVERAGE.md) and the bounded comparison journey below.
+
+## 17. Two live instances, imbalance, loss and restart
+
+**Question:** How can an operator compare independently timed telemetry and still
+recognize loss and reset without constructing an unsupported fleet percentage?
+
+| Frame | User action and evidence | Executable check |
+| --- | --- | --- |
+| [Actual windows and imbalance](screenshots/17a-actual-member-windows-and-imbalance.png) | Send more successful traffic to woven-demo and errors to woven-peer; explain a supported comparison | Actual windows/counts retained, endpoint spreads within policy, no combined percentage |
+| [Requests during metric loss](screenshots/17b-peer-serves-requests-with-metric-loss.png) | Pause peer metric exports through the sample app, then make a successful checkout | Real HTTP200 while explicit lab metric gate is off |
+| [Unknown during loss](screenshots/17c-peer-loss-stays-unknown.png) | Investigate after more than the maximum counter gap | Main has a supported interval; unmatched peer has no invented counts/percentage |
+| [Restart epoch](screenshots/17d-restart-epoch-is-not-a-comparison.png) | Resume metrics, observe the excessive gap, then restart only the local peer | Gap and new counter epoch remain unknown; raw counter cause is explained |
+
+Test `17 live peer…` restores metric export in `finally`. Restart control manages
+only the owned local Compose peer; volumes, pending entries and other services
+remain. The default stack now has twelve services and loopback8092 for the peer.
+No automatic clock correction or common-window aggregation is depicted.
+See [comparison semantics](../FLEET_COMPARISONS.md) and diagram8.
+
+## 18. A late initial response preserves an edited lookback
+
+**Question:** Can startup work silently replace an operator's chosen query window?
+
+| Frame | User action and evidence | Executable check |
+| --- | --- | --- |
+| [Edited lookback retained](screenshots/18a-edited-lookback-survives-late-response.png) | Delay the actual initial query response; edit lookback to two minutes, release it, then inspect operations | Edited input stays2 and the operation request/result spans exactly120 seconds |
+
+Test `18 late initial…` delays delivery of a real upstream response, not its data.
+This guards the shared control race found by the loss journey; source limits stay
+unchanged and excess rows still reject rather than becoming partial success.
+
+## 19. Save, reopen, refresh and compare
+
+An investigator selects checkout errors and a trace, captures a fixed window,
+and retains the receipt for handoff. The packages process restarts to demonstrate
+volume persistence. The journey ingests a labelled late fixture span via real
+OTLP in the old event window; reopening still shows the original capture/trace.
+Refreshing makes a successor with the same question and selection, includes the
+late observation and compares separate bases. The old receipt stays unchanged.
+No browser operation/metric fetches are permitted during reopen. Saved evidence has its own presenter: the live Operations package/evidence/selection survives saving and return navigation unchanged. A full reload verifies the saved receipt path.
+
+- [Saved receipt](screenshots/19a-saved-fixed-evidence-receipt.png)
+- [Reopened trace context](screenshots/19b-reopened-trace-context.png)
+- [Late-evidence revision comparison](screenshots/19c-late-evidence-successor-comparison.png)
+
+This test controls only the local Compose packages service and collector. It
+adds explicitly labelled test telemetry; no real business completion is invented.
+See [capture contract and limitations](../SAVED_INVESTIGATIONS.md).
+
+## 20. General exploration and population-safe paging
+
+A labelled collector fixture emits 123 spans across two synthetic resource names.
+The investigator discovers arbitrary keys, filters a cohort and groups a key with
+61 present-empty values and 62 missing values. A 100-row page and its 23-row
+successor keep the same full captured-record count/group results. The fixture
+also exercises an SQL-looking key as a literal, AND/OR, consistent no-data and a
+delayed genuine response discarded after a signal change. These are controlled
+telemetry records, not real service executions.
+
+- [Independent counts and missing/empty grouping](screenshots/20a-full-counts-and-missing-key-groups.png)
+- [Bounded next page](screenshots/20b-bounded-next-page.png)
+- [Trace page with parents outside the page](screenshots/20c-trace-paging-keeps-partial-context-visible.png)
+
+## 21. Real distributed trace and exact linked logs
+
+A real reservation request passes through web and gRPC. Starting with a gRPC-only
+attribute search, the investigator expands its exact trace to include the web
+parent in the same environment/time bounds. Original filters/basis remain
+separate. The UI shows the cross-service waterfall and trace-linked acceptance
+logs; clicking a span narrows logs to exact trace AND span IDs. Async consumer
+trace links are retained as references, not silently joined as parent edges.
+
+- [Cross-service waterfall and trace logs](screenshots/21a-cross-service-waterfall-and-linked-logs.png)
+- [Exact selected-span log scope](screenshots/21b-exact-span-log-scope.png)
+
+See [the query and expansion contract](../EXPLORATION_DESIGN.md).
+
+## 22. A saved operation expands independent live context
+
+The investigator reopens an immutable Go checkout capture, then explicitly
+expands its trace to live cross-service context and exact log lookup. The original
+fixed environment/time bounds and origin basis remain visible. The saved receipt
+is checked before/after and stays equal; expanded evidence has separate questions
+and bases and is not silently archived with the operation capture.
+
+- [Saved origin and independent live context](screenshots/22a-saved-question-and-independent-live-context.png)
+
+## 23. One investigation workspace from distribution to trace
+
+A labelled search-index refresh OTLP fixture supplies 12 captured records with region and outcome
+attributes, including missing and present-empty regions. The investigator groups
+by region, pins the baseline, filters to four error records and sees east rise
+from 3/12 (25%) to 3/4 (75%), a +50 percentage-point difference. Both questions
+retain identical time bounds. This is a controlled documentation population,
+not a claim about real production errors or causality.
+
+| Frame | User action and evidence |
+| --- | --- |
+| [Distribution](screenshots/23a-distribution-workspace.png) | Explore complete captured groups inside the shared product shell. |
+| [Comparison](screenshots/23b-pinned-baseline-comparison.png) | Compare two explicitly sized populations within a fixed window. |
+| [Definitions](screenshots/23c-definition-workspace.png) | Inspect contracts, then return without losing comparison state. |
+| [Mobile comparison](screenshots/23d-mobile-comparison.png) | Use the same navigation/result tabs on a 390px viewport without document overflow. |
+| [Mobile inspector](screenshots/23e-mobile-trace-inspector.png) | Open a selected trace and close with Escape. |
+
+The executable journey also checks keyboard tab navigation, distribution-value
+refinement within the pinned window, an empty selection
+without invented percentages, baseline clearing after a signal change and no
+uncaught browser errors. Earlier journeys now navigate actual workspace destinations;
+reference workflows live under Examples. See [workspace contract](../PRODUCT_WORKSPACE.md).
+
+Journey 11 also expands the real report application into the generic trace inspector,
+with report-specific attributes and no reservation-specific action.
+
+## 24. Build a package over existing Python telemetry
+
+A small real Python OTel SDK process emits six `index.refresh` spans through the
+collector. Set `GOO_PYTHON` to a Python interpreter with the project requirements
+installed; the managed-cloud default is `/workspace/.venvs/goo/bin/python`. It has no goo attributes, annotation or source manifest. This is a
+controlled SDK documentation workload, not a production business outcome. The user
+filters its cohort, groups region (including one missing key), creates a package
+and previews the same six records in the original fixed window. The saved package
+has a reusable lookback and no page offset or absolute evaluation timestamp.
+
+| Frame | Action and evidence |
+| --- | --- |
+| [Author and preview](screenshots/24a-author-existing-python-telemetry.png) | Build a definition from captured data; preview counts/groups with separate basis. |
+| [Instrumentation handoff](screenshots/24b-optional-instrumentation-handoff.png) | Choose an explicit Go operation name/role and review the optional template. |
+| [Reuse in place](screenshots/24c-reuse-package-without-source-manifest.png) | Restart the Go packages process, reopen the persisted package and explore the unchanged Python telemetry in a fresh window. |
+| [Import and revise](screenshots/24d-import-and-revise-definition.png) | Export/import YAML and save an edited revision while retaining the original. |
+| [Mobile authoring](screenshots/24e-mobile-package-authoring.png) | Author the same definition on a 390px viewport without document overflow. |
+
+The executable journey also verifies that local query refinements preserve the
+base selector without mutating the saved revision, and that delayed genuine draft/validation
+responses cannot replace edited metadata or enable saving newer, unvalidated YAML.
+The Create action reveals the editor and focuses its name field. Generated Go source is
+separately passed through the actual annotation scanner in Go tests; the browser
+does not modify the application. See [package contract](../TELEMETRY_PACKAGES.md).
+
+## 25. Import a nested log package without a source manifest
+
+A labelled OTLP log fixture represents a Node-style job logger with four records,
+ERROR/INFO severities and present/missing queue attributes. These are controlled
+collector records, not a claim that a Node SDK/service was executed. The user
+imports nested AND/OR YAML directly in Definitions, applies it to logs, and adds
+a severity refinement. Both imported breakdowns and the original selector remain
+intact; records without valid trace IDs remain unlinked. A preview of an absent
+selection returns `no_data`, without invented successes. A delayed genuine package
+apply response cannot replace a newer environment selection after leaving Definitions.
+
+- [Nested log package and two breakdowns](screenshots/25a-nested-log-package-and-two-breakdowns.png)
+
+## 26. Correlate a real application with goo during generated UI exploration
+
+Run `npm run test:cross-app`, optionally with `GOO_CROSS_APP_QUINT=1` to check the
+actual event ledger against a Quint model using the sibling quint-go tools.
+
+| Frame | User action and independently checked evidence |
+| --- | --- |
+| [Generate a real report](screenshots/26a-correlated-real-report.png) | A user submits the report app while a separate Bombadil browser explores goo navigation. The returned report ID is recorded; this is a reported outcome, not a durable job guarantee. |
+| [Find the captured trace](screenshots/26b-correlated-goo-trace.png) | A direct ClickHouse read finds its emitted subject/trace. The observer filters Explore by that trace and compares rendered IDs/counts with an independent source read over exactly the UI's frozen window, then opens the waterfall. |
+
+The coordinator retains run identity, actual source SQL/results, question/basis,
+causally ordered checkpoints and Bombadil artifacts under ignored Playwright output.
+Quint optionally checks matching identity/scope/window/count/membership and checkpoint
+order; its protocol fixture tests reject twelve mutations and incomplete runs.
+Bombadil's bounded action vocabulary currently covers navigation only. It does not
+generate application requests or check the selected trace itself; the Playwright
+observer does those checks. This exercises concurrent independent browsers, not a
+claim of deterministic distributed scheduling or complete telemetry capture.
+
+## 27. Follow a generated workload and revisit captured evidence
+
+Run `npm run test:generated-campaign` with the lab and Go/quint-go available.
+`GOO_CAMPAIGN_SEED=99` chooses another recorded schedule;
+`GOO_CROSS_APP_QUINT=1` additionally checks every evidence ledger with qobs.
+The ordinary browser suite skips this opt-in journey.
+
+The model schedules three actual report submissions, an inspection for each,
+two revisits of already inspected results, and completion. Bombadil submits through
+the app button in fresh browser profiles while another Bombadil actor explores goo.
+Returned IDs come from actual captured DOM states. The Playwright observer then
+selects the corresponding trace and compares rendered members/counts against an
+independent ClickHouse query over exactly the UI's frozen time bounds.
+
+| Frame | Action and evidence |
+| --- | --- |
+| [Bombadil's application frame](screenshots/27c-bombadil-application.jpeg) | Unchanged screenshot captured by the app actor after its real request. No second request was staged for documentation. |
+| [Generated inspection](screenshots/27a-generated-inspection.png) | A model-selected report index resolves to its actual returned identity and captured trace. |
+| [Generated revisit](screenshots/27b-generated-revisit.png) | Close the prior inspector, clear filters, and inspect a previously checked report in a fresh read. The generated seed determines ordering and target. |
+
+The driver records effects only after real handlers succeed, then quint-go
+`connect.Driver` compares all nine observed checkpoints with the generated ITF
+poststates. A complete schedule and positive workload/source/UI exercise are
+required. The artifact reader rejects missing/duplicate submissions and unstable
+identities; projection tests reject changed counts/targets, reordered and truncated
+campaigns. Plans, seed, partial observations, actor traces and evidence checks stay
+in ignored runtime artifacts. The model does not infer business outcomes, verify
+durability or claim deterministic scheduling. This report campaign remains
+success-only; the separate Python fault campaign follows below.
+
+## 28. Investigate retry, rejection and stalled work
+
+Run `npm run test:fault-campaign` with the local Compose lab and Go/quint-go.
+The wrapper pauses/restores owned background traffic and drains active work without
+deleting pre-existing stale stream entries. This opt-in journey uses the same seeded
+Quint schedule as journey 27, with three fixed fault coverage cases and two revisits.
+
+Bombadil selects a scenario and clicks the real Python app button in a fresh
+browser. The returned ID scopes independent ClickHouse reads and ordinary Explore
+span/log queries; no source annotations, backend responses or telemetry are mocked.
+Another Bombadil actor explores goo navigation concurrently. Counts, record
+identities and attributes are checked against each UI query's exact fixed window.
+
+| Frame | Question and captured evidence |
+| --- | --- |
+| [Retry then confirmation](screenshots/28-retry-captured-evidence.png) | An error attempt and retry are visible alongside the later confirmed terminal; an attempt error is not itself terminal failure. |
+| [Business rejection](screenshots/28-reject-captured-evidence.png) | A terminal log carries `rejected` even though the spans are non-error. Transport/attempt status and business outcome remain distinct. |
+| [Stalled work](screenshots/28-missing-captured-evidence.png) | A positive stalled event is present, while no terminal is captured in the bounded question. The test records `unknown-no-terminal`, without inventing success or rejection. |
+
+These labels are the test observer's interpretation of raw displayed records,
+not new goo health badges or durability claims. The Quint fault model checks each
+inspection, including explicit terminal-presence flags and question/record
+fingerprints. Hegel state/swarm checks over the actual test projection cover
+duplicates, ordering, conflicting outcomes and missing terminals. A present empty
+terminal is distinguished from absence. Missing required source evidence fails
+readiness instead of satisfying a fault case. Seed, partial observations, actor
+traces, raw source reads, UI evidence and model reports remain archived under
+`artifacts/bombadil/fault-campaigns/<run-id>/`.
+
+## 29. Structured inspection and filter composition
+
+`journeys/ui-polish.spec.js` publishes a controlled documentation fixture through
+the real OTel collector and reads it back through ClickHouse and the Go query API.
+It does not claim SDK instrumentation coverage. Six spans and a correlated log
+exercise duplicate resource/span keys, large numeric-looking strings, exact
+whitespace, Unicode, long values and HTML-like captured text.
+
+| Frame | User journey |
+| --- | --- |
+| [Structured attributes](screenshots/29a-structured-attribute-inspection.png) | Open a record, search by key/value and scope, copy exact values, expand long values and retain raw evidence as a secondary disclosure. |
+| [Facets](screenshots/29b-facets-and-explicit-empty-values.png) | Break down from an attribute, search categories without changing denominators, distinguish empty from missing and remove a filter chip. |
+| [Trace context](screenshots/29c-selected-trace-and-structured-context.png) | Expand the six captured spans across services, select a span and inspect structured fields; detailed evidence limitations remain available. |
+| [Mobile](screenshots/29d-mobile-attribute-inspection.png) | Read and search an attribute on a narrow screen without horizontal page overflow. |
+
+Assertions cover exact clipboard content, escaped text, local-search query counts,
+ALL/ANY populations, missing-value controls, duration-only ordering, selected-span
+state, Escape focus restoration and mobile layout. Pure helper tests additionally
+cover nested value types and literal searches. Counts always describe captured
+records; the fixture does not establish production completeness or sampling guarantees.
+
+## 30. From log search to reusable span distributions
+
+`journeys/discovery.spec.js` publishes a labelled OTLP documentation fixture to the
+real collector: 13 spans with exact bucket-boundary durations, 108 same-service
+logs, plus other-service/environment controls. This proves the captured query/UI
+path, not SDK instrumentation or production completeness.
+
+| Frame | User journey |
+| --- | --- |
+| [Literal log search](screenshots/30a-literal-log-search.png) | Find exact service/severity and a literal message containing regex punctuation; inspect readable messages and visible filter chips. |
+| [Surrounding logs](screenshots/30b-independent-surrounding-logs.png) | Read nearby same-service logs with different messages/severities/trace IDs in a separate bounded time context. |
+| [Matching traces](screenshots/30c-matching-traces-and-expanded-evidence.png) | Four matching error spans lead to seven captured spans across services; original filters do not silently constrain expanded context. |
+| [Duration distribution](screenshots/30d-full-population-span-duration-buckets.png) | Inspect complete matching-span counts in fixed half-open duration intervals. |
+| [Reusable package](screenshots/30e-reusable-discovery-package.png) | Build, preview, save and reuse the selected filters/duration grouping without a source manifest. |
+| [Mobile discovery](screenshots/30f-mobile-log-discovery.png) | Search logs with narrow-screen controls and no horizontal page overflow. |
+
+Assertions cover literal search, severity, full context count versus its 100-row
+page, next-page count stability, service/environment exclusion, exact anchor fields,
+escaped multiline/long messages, focus return and late-read isolation. An independent
+fixture expectation checks all eight duration intervals, including exact boundaries.
+The package retains filters/grouping across fresh reuse; it saves configuration,
+not evidence. Time context is not causal correlation, and matching-span counts
+are not complete trace/root-latency measures.
+
+With `GOO_DISCOVERY_QUINT=1`, the journey writes a permanent ignored ledger under
+`artifacts/discovery/` and checks its actual context, trace and package questions
+against Go references through qobs/quint-go. Three negative controls reject widened
+context, a different trace environment and lost package grouping. Hegel state/swarm
+separately explores context anchors/radii/pages; partition properties and Go unit
+checks cover half-open buckets and UInt64 limits.
+
+`npm run test:discovery-campaign` also adds 100 worker spans in this isolated
+fixture after the deterministic assertions, then runs the dedicated Bombadil
+actor. It must reach every prefix stage and observe 113 matching duration-group
+members while the row page displays 100. Its actions include quick search from
+an empty OR composer, trace/context paging, radius changes, re-anchoring, duration
+breakdowns and package draft/edit/validate/preview/use. Data invariants and a
+second actor-derived Quint ledger complement the deterministic journey. The actor
+publishes no definitions; its fixture driver retains the earlier saved package.
+
+## 31. From observed services to a reusable question
+
+`journeys/inventory.spec.js` sends labelled OTLP fixture spans through the real
+collector: 113 edge spans, three worker spans and an excluded environment control.
+An independent ClickHouse query checks source counts and Error statuses. This
+validates the captured discovery path, not SDK instrumentation completeness.
+
+| Frame | User journey |
+| --- | --- |
+| [Observed services](screenshots/31a-observed-service-inventory.png) | Discover two services, full captured counts, error statuses and span-duration buckets without a manifest. |
+| [Fixed-window exploration](screenshots/31b-inventory-fixed-window-exploration.png) | Open one exact service/name pair; 113 matching spans remain distinct from the 100 displayed records. |
+| [Reusable preview](screenshots/31c-inventory-reusable-package-preview.png) | Build and independently preview a reusable package from the selected question. |
+| [Mobile inventory](screenshots/31d-mobile-service-inventory.png) | Use the same discovery surface on a narrow screen with readable stacked cards. |
+
+Local filtering retains capture totals/basis. Scope edits invalidate pending reads;
+no-data results retain unknown health. The actual capture/search/open/package
+ledger is always checked with quint-go and three rejecting controls (changed local
+total, widened open window, changed package environment). Hegel state/swarm checks
+observe/reset accounting. `npm run test:inventory-campaign` adds a read-only
+Bombadil actor with a required discovery/filter/clear/open prefix and independent
+accounting/rendered-count/scope/stale-evidence invariants; it saves no definitions.
+Permanent ignored ledgers, coverage and actor traces live under `artifacts/inventory/`.
+
+## 32. Preserve general evidence and page a stored record bank
+
+`journeys/captures.spec.js` sends a labelled OTLP fixture through the real collector
+and ClickHouse: 1,205 edge spans, five worker spans and 107 ordinary log records.
+An independent source query checks the edge count. The test then inserts a late
+span before the existing sort position. This is a captured-path fixture, not a
+claim about SDK completeness, unique invocations or production custody.
+
+| Frame | User journey |
+| --- | --- |
+| [Saved full population](screenshots/32a-saved-question-full-population.png) | Capture a named question with 1,205 matching spans, complete groups and 1,000 stored inspection records. |
+| [Stable record page](screenshots/32b-stable-stored-record-page.png) | Page within immutable stored evidence while preserving count and basis. |
+| [Successor revision](screenshots/32c-fixed-question-successor.png) | Refresh the same fixed question to see the late span without altering the predecessor. |
+| [Saved inventory](screenshots/32d-saved-inventory-local-search.png) | Preserve the bounded inventory and locally search without changing its totals. |
+| [Saved logs](screenshots/32e-saved-log-inspection.png) | Inspect structured log attributes on the second stored page. |
+| [Mobile capture](screenshots/32f-mobile-saved-investigation.png) | Read the receipt and captured evidence on a narrow screen. |
+
+Assertions cover exact row replay after late insertion, cross-revision cursor
+rejection, actual volume persistence across a packages-service restart, a fresh
+browser reopening/paging without live-query requests, copied deep link, explicit
+fresh live branch, span/log/inventory component isolation, stale open guards,
+full-count versus retained/page accounting and mobile containment. Go HTTP tests
+also close the source entirely before reopening and paging, and reject attempts
+to submit evidence or change refresh scope. Source-plan changes block refresh.
+
+The actual save/page/refresh/reopen ledger is always checked through quint-go,
+with four rejecting controls: changed old counts, changed page basis, changed
+refresh scope and acceptance of a cross-revision cursor. Hegel state/swarm explores
+arrivals, source changes, captures, branching refreshes and stable row banks.
+`npm run test:captures-campaign` adds a read-only Bombadil actor with a required
+page-forward/back, distribution and attribute-inspection prefix. It checks count,
+retention, scope, basis, replay, read-only controls and unique component identities;
+it never saves, refreshes or emits workload. Evidence lives in ignored
+`artifacts/captures/<fixture environment>/` directories.
+
+## 33. Core measures, reuse and service discovery
+
+Executable: `journeys/core-basics.spec.js`. Real OTLP spans/logs verify 205 matching
+spans versus 100 records displayed, exact upper p95 195 ms, saved-page stability,
+empty intervals/no-data, reusable YAML question with a fresh window, log-only
+services, reported `api → worker`, ambiguous/unresolved parents, source cancellation
+request and mobile containment. Native cancellation tests separately establish Go
+context propagation/admission. Optional `GOO_CORE_BOMBADIL=1` runs saved-measure/time-bar and live reuse/discovery/cancellation actors without changing source data. Quint validates the live ledger
+and rejects five corrupted variants; Hegel exercises duration state/swarm.
+
+| Frame | User action / asserted meaning |
+| --- | --- |
+| [33a](screenshots/33a-full-population-measures-and-time.png) | Inspect full-population duration measures and fixed count intervals. |
+| [33b](screenshots/33b-reusable-question-fresh-window.png) | Run a saved package question in a fresh source window. |
+| [33c](screenshots/33c-service-signals-and-reported-dependencies.png) | Discover span/log services and parent-link diagnostics; event age is not ingestion lag. |
+| [33d](screenshots/33d-mobile-saved-measures.png) | Reopen archived measures/chart on a narrow screen with stable values. |
+
+## 34. Duration breakdowns and saved measures
+
+`journeys/grouped-measures.spec.js` uses 124 real OTLP spans with fast/slow/missing/
+empty route groups. It verifies full-population p95 versus 100 displayed records,
+one/two-field group summaries, exact ranking/search/refinement, cohort measure
+accounting, retained pages, package preview and mobile containment. The live
+ledger is checked by Quint with three rejecting controls; the optional
+`GOO_GROUPS_BOMBADIL=1` campaign explores saved-only ranks/search/pages.
+
+| Frame | User journey |
+| --- | --- |
+| [34a](screenshots/34a-duration-breakdown-ranking.png) | Rank complete route groups by p95 while keeping the overall measure separate. |
+| [34b](screenshots/34b-saved-mean-breakdowns.png) | Compare exact means from an immutable capture. |
+| [34c](screenshots/34c-mobile-duration-breakdown.png) | Inspect the same stored breakdown on a narrow screen. |
+| [34d](screenshots/34d-grouped-package-preview.png) | Preview total and grouped duration measures from reusable YAML. |
+
+
+<a id="error-and-latency-comparison"></a>
+## 35. Error and latency comparison
+
+`journeys/error-comparison.spec.js` ingests 80 prior and 124 current OTel spans.
+The user ranks recorded errors, compares prior-window errors and latency,
+saves both populations, reopens the pair and follows a changed route into a
+cross-service trace and linked logs. Missing/empty groups remain distinct;
+only 100 current inspection rows are displayed. Quint checks the actual ledger
+with four rejecting controls. `GOO_ERROR_COMPARISON_BOMBADIL=1` explores saved
+measure changes with immutable evidence and exact known-result invariants.
+
+| Frame | User journey |
+| --- | --- |
+| [35a](screenshots/35a-error-rate-change.png) | Compare recorded errors with the previous fixed window. |
+| [35b](screenshots/35b-latency-change-and-missing-groups.png) | Rank p95 changes; absent baseline groups have unavailable differences. |
+| [35c](screenshots/35c-saved-population-comparison.png) | Reopen the server-reread pair with links to both record captures. |
+| [35d](screenshots/35d-mobile-comparison.png) | Inspect the same comparison on a narrow screen. |
+| [35e](screenshots/35e-changed-route-to-trace-and-logs.png) | Follow a changed route to explicit trace and log context. |
+
+
+## 36. Deployment context and ordered notes
+
+`journeys/context-notes.spec.js` generates a real report in the Go sample, finds
+its OTel trace through independent ClickHouse evidence, and opens a fixed Explore
+question. The user records a manual deployment claim, pins it with frozen evidence,
+edits/reorders hypotheses, saves immutable successor/branch revisions, retains an
+unapplied draft and opens exact stored evidence without telemetry execution.
+The deployment marker is authored context; the test does not deploy a new sample
+version. Quint checks actual observations with six rejecting controls.
+`GOO_CONTEXT_BOMBADIL=1` explores local draft operations without publishing them.
+
+| Frame | User journey |
+| --- | --- |
+| [36a](screenshots/36a-deployment-context-on-captured-time.png) | Read separate event/custody times alongside the captured time chart. |
+| [36b](screenshots/36b-ordered-hypothesis-and-frozen-references.png) | Preserve ordered hypotheses with exact capture and deployment references. |
+| [36c](screenshots/36c-narrative-revision-and-preserved-parent.png) | Save findings as a new narrative revision with an exact parent. |
+| [36d](screenshots/36d-follow-frozen-evidence-without-rerunning.png) | Open a cited capture without rerunning telemetry. |
+| [36e](screenshots/36e-mobile-investigation-notes.png) | Continue the same ordered investigation on a narrow screen. |
+
+## 37. Shared examples and scoped investigation recipes
+
+`journeys/recipes.spec.js` generates real report work and independently locates its
+scoped ready event in ClickHouse. The primary example gallery runs ordinary
+packages through Explore. A trace-scoped recipe preserves fixed bounds/selectors;
+preview and narrative actions do not read telemetry. The journey freezes evidence,
+saves an exact narrative reference, then derives/reuses a package; wrong-signal and delayed
+preview guards and mobile containment are checked. Quint has six rejecting
+controls. `GOO_RECIPES_BOMBADIL=1` exercises source-free preview guards.
+
+| Frame | User journey |
+| --- | --- |
+| [37a](screenshots/37a-shared-example-packages.png) | Choose a sample application package in the shared product workflow. |
+| [37b](screenshots/37b-fixed-scope-recipe-preview.png) | Review prerequisites, retained population and limits before a source read. |
+| [37c](screenshots/37c-recipe-operation-distribution.png) | Inspect complete operation duration groups from the recipe. |
+| [37d](screenshots/37d-recipe-hypothesis-and-evidence.png) | Keep the hypothesis separate from an exact frozen evidence citation. |
+| [37e](screenshots/37e-mobile-log-recipe.png) | Preview the same generic log recipe on a narrow screen. |
+
+## 38. Shared resource and lifecycle measurements
+
+`journeys/measurements.spec.js` generates ordinary good/retry/missing/rejected/late
+reservation work, a Go checkout and a Go report. Independent ClickHouse queries
+locate actual trace-correlated Go log records and check the gauge source count.
+The user opens a declarative USE step without reading telemetry, then executes
+fixed questions across all four measurement families. Mature lifecycle subjects
+preserve missing→unknown; typed subject drilldown retains exact tenant/event scope.
+A gauge capture refreshes without changing the question, reopens without source
+execution, is cited in notes, and becomes a reusable saved package. Independent
+Go lifecycle definitions exercise a different app/event vocabulary. Quint validates
+the actual live ledger and rejects seven altered ledgers; Hegel runs measurement
+state/swarm sequences. Optional `GOO_MEASUREMENTS_BOMBADIL=1` explores preview/edit
+invariants without creating evidence. This is bounded local verification, not a
+production delivery or completeness guarantee.
+
+| Frame | User journey |
+| --- | --- |
+| [38a](screenshots/38a-guided-resource-investigation.png) | Choose a data-only USE flow and inspect its requirements and shared window. |
+| [38b](screenshots/38b-resource-gauge-observations.png) | Inspect independent gauge samples with full stream identity. |
+| [38c](screenshots/38c-native-duration-intervals.png) | Inspect native histogram intervals, bucket ranges and exact counts. |
+| [38d](screenshots/38d-scoped-lifecycle-evidence.png) | Distinguish mature observed outcomes, pending work and missing evidence. |
+| [38e](screenshots/38e-measurement-capture-in-notes.png) | Cite a frozen typed capture in the common investigation narrative. |
+| [38f](screenshots/38f-mobile-measurement-editor.png) | Edit and validate a reusable definition on a narrow screen. |
+| [38g](screenshots/38g-fixed-record-package-workflow.png) | Preview a record package without a read, then explicitly run its fixed workflow window. |
+
+
+### 39 · Ordinary OTel metric discovery
+
+An engineer starts with an independently instrumented application with no goo
+manifest. They discover its `jobs.completed` instrument and dimensions, build and
+save an editable package, run it, distinguish outcomes in stream labels, capture
+it, reopen the retained evidence and cite it in notes.
+
+- [Discover observed instrument metadata](screenshots/39a-metric-discovery.png)
+- [Evaluate independent metric streams](screenshots/39b-discovered-measurement.png)
+- Executable: `journeys/metric-discovery.spec.js`; optional exploration invariants:
+  `GOO_METRIC_DISCOVERY_BOMBADIL=1`.
+
+### 40 · One investigation loop
+
+An engineer finds a reusable measurement in Definitions, previews it without a
+source read, selects a service in inventory and carries its scope into metric
+discovery. They abandon a delayed actual discovery response by switching modes,
+confirm that it cannot publish stale results, then explicitly discover and run an
+ordinary OTel metric package. The authoring surface shows canonical YAML and a
+three-stage flow that fits the mobile viewport.
+
+- [Shared searchable definitions](screenshots/40a-shared-definitions.png)
+- [Question to evidence](screenshots/40b-question-to-evidence.png)
+- [Mobile measurement flow](screenshots/40c-mobile-measurement-flow.png)
+- Executable: `journeys/coherence.spec.js`.
+
+### 41 · A cross-service, cross-signal investigation handoff
+
+An engineer starts with a question before evidence exists. They gather checkout
+and report spans, report logs and an independent OTel job counter. Capture-dialog
+destinations attach evidence to the current draft or an exact saved revision.
+The handoff preserves findings, uncertainty, time/population scope and reusable
+metric identity. It reopens without telemetry reads; fresh metric execution creates
+new evidence and a child investigation while the earlier handoff remains unchanged.
+
+- [Question, findings and evidence](screenshots/41a-cross-signal-investigation.png)
+- [Fresh reuse with preserved citations](screenshots/41b-reuse-with-preserved-evidence.png)
+- [Mobile investigation handoff](screenshots/41c-mobile-investigation-handoff.png)
+- Executable: `journeys/investigation-workspace.spec.js`; optional draft exploration:
+  `GOO_INVESTIGATION_BOMBADIL=1`.
+
+### 42 · From a slow operation to a supported finding
+
+A real delayed operation raises competing error-path, delayed-work and resource
+hypotheses. An engineer previews scope changes without a source read, compares
+recorded duration/status in the original population, follows a reported trace and
+its exact logs, then discovers worker instruments in the same fixed window. They
+capture supporting evidence, record a missing-instrumentation question and save
+a finding that distinguishes reproduced delay from production causal attribution.
+
+- [Explicit preserved and changed scope](screenshots/42a-explicit-follow-up-scope.png)
+- [Trace and exact log inspection](screenshots/42b-trace-and-exact-log-context.png)
+- [Evidence gap and supported finding](screenshots/42c-evidence-gap-and-supported-finding.png)
+- [Mobile investigation handoff](screenshots/42d-mobile-guided-investigation.png)
+- Executable: `journeys/followups.spec.js`; optional source-free browser exploration:
+  `GOO_FOLLOWUPS_BOMBADIL=1`.
+
+Scope consolidation: journeys 37 and 42 now assert the shared checked transform
+relationship and render computed population/grain changes. Their refreshed frames
+include progressive disclosure for source binding and unbound OTel semantics.
+The source reads remain explicit; this does not demonstrate automatic convention
+profile resolution. See [the shared contract](../QUESTION_SCOPE.md).
+
+
+### 43 · Compare HTTP route measures over time
+
+Implemented in `journeys/grouped-time-series.spec.js`. A controlled ordinary OTLP
+producer sends 124 server-shaped spans through the real collector/exporter into
+ClickHouse. The engineer compares route-specific duration/status over fixed time
+cells, distinguishes missing and empty routes, and searches locally without
+changing chart scale or querying again. A 100-row page does not limit the measures.
+The engineer captures the chart, derives/saves/reuses its package in a fresh window,
+then reopens the original evidence without source reads. Typed planning identifies
+span-record grain and raw-value percentile requirements. This does not certify
+HTTP semantic-convention coverage, unique requests or production health.
+
+![Fixed route/time comparison](screenshots/43a-http-route-time-comparison.png)
+![Frozen grouped evidence](screenshots/43b-frozen-grouped-evidence.png)
+![Mobile grouped evidence](screenshots/43c-mobile-grouped-evidence.png)
+
+### 44 · Measure numeric attributes with explicit coverage
+
+A database engineer selects a numeric attribute from ordinary OTel spans, declares
+integer type and unit in Explore, and sees exact arithmetic beside missing, empty
+and malformed-value counts. A controlled producer sends 128 spans and 128 logs
+through OTLP and the real exporter; a 100-row inspection page cannot define totals.
+The engineer explores route/time breakdowns locally, captures evidence, saves and
+reuses its YAML in a fresh window, then reopens the original immutable capture.
+Unsigned, signed and resource bindings, including overflow strings, are compared
+to the Go reference for every total/group/cell. No manifests or convention/type
+inference are required. Controlled data does not certify completeness or health.
+
+- [Declared measure and coverage](screenshots/44a-numeric-coverage-and-series.png)
+- [Frozen numeric evidence](screenshots/44b-frozen-numeric-evidence.png)
+- [Mobile numeric evidence](screenshots/44c-mobile-numeric-evidence.png)
+- Executable: `journeys/numeric-measures.spec.js`; optional local exploration:
+  `GOO_NUMERIC_BOMBADIL=1`. The live Quint ledger reuses the existing six-stage
+  custody model with numeric reference projections and eleven rejecting mutations.
+
+### 45 · One question from entry to frozen evidence
+
+An engineer arrives at a compact Explore entry, composes service/duration shortcuts
+and an advanced filter without a source read, then runs once. A route attribute
+narrows the fixed question in one gesture. Trace context and return preserve the
+main result; returning issues no query. An edit supersedes a delayed real response,
+which cannot publish stale results. From Services the engineer explicitly discovers
+a native worker instrument in the inventory's incident window, then captures the
+main record question and reopens frozen evidence without rereading telemetry.
+The controlled producer uses ordinary OTLP spans and a gauge, not mocked evidence.
+
+- [One primary entry](screenshots/45a-one-question-entry.png)
+- [Applied scope and contextual narrowing](screenshots/45b-applied-scope-and-drilldown.png)
+- [Metric discovery retains incident bounds](screenshots/45c-service-metric-window.png)
+- [Mobile frozen evidence](screenshots/45d-mobile-frozen-scope.png)
+- Executable: `journeys/question-workbench.spec.js`; optional source-free draft
+  exploration: `GOO_QUESTION_BOMBADIL=1`. The observed Quint lifecycle validates
+  generations/phases and rejects mutated publication, scope, read and custody facts.
+
+### 46 · Browse a service and follow observed conventions
+
+Run `journeys/service-browser.spec.js` through the normal journey wrapper. An
+ordinary catalog service emits HTTP/database spans, a log, a process utilization
+gauge and an unsupported nonmonotonic sum; another service emits only logs. Open
+service detail, choose an observed HTTP breakdown, return locally, preview a native
+measurement without execution, then inspect the log-only service. The journey also
+delays a real metadata response and changes environment to check stale publication.
+
+- [Service signals, questions and instruments](screenshots/46a-service-signals-questions-instruments.png)
+- [Fixed service route question](screenshots/46b-fixed-service-route-question.png)
+- [Native instrument preview](screenshots/46c-fixed-native-instrument-preview.png)
+- [Mobile service detail](screenshots/46d-mobile-service-detail.png)
+
+`GOO_SERVICE_BROWSER_BOMBADIL=1` enables the matching 30-second exploration campaign.
+The actual ledger is validated by quint-go with six rejecting mutations. See
+[service browsing](../SERVICE_BROWSING.md) for scope and semantic boundaries.
+
+### 47 · Discover metric-only services
+
+`journeys/metric-services.spec.js` ingests an ordinary metric-only worker with
+gauge, counter and histogram points, plus an unsupported-only worker. Discover
+services directly from native points, open the original window, preview a gauge
+without reading telemetry, run it explicitly and return locally. Boundary fixtures
+prove inclusion at the start and exclusion at the end using independent SQL.
+Counts are records, not the histogram's 5000 observations or metric values.
+
+- [All-signal catalog](screenshots/47a-metric-only-service-discovery.png)
+- [Metric-only instrument detail](screenshots/47b-metric-service-instruments.png)
+- [Fixed native execution](screenshots/47c-fixed-native-measurement.png)
+- [Mobile metric service](screenshots/47d-mobile-metric-service.png)
+
+`GOO_METRIC_SERVICES_BOMBADIL=1` enables its 30-second actor. The observed ledger
+is validated by quint-go with seven rejecting mutations.
+
+### 48 · One Services catalog
+
+Executed by `journeys/service-browser.spec.js` alongside storyboard 46. Discover
+once, see one row per service with distinct signal counts, search locally, follow
+a service question, return to the retained detail and then the filtered catalog.
+The journey checks no implicit return reads, empty-filter keyboard focus, mobile
+containment and rejection of an intentionally tampered real response scope.
+
+- [One catalog entry](screenshots/48a-one-services-catalog.png)
+- [Retained local filter and return](screenshots/48b-local-filtered-return.png)
+- [Mobile catalog](screenshots/48c-mobile-services-catalog.png)
+
+See [the catalog contract](../UNIFIED_SERVICE_CATALOG.md) for capture scope and
+remaining boundaries. Existing storyboard 31 now reaches operation inventory by
+opening a service; saved inventory 32 retains its original environment-wide scope.
+
+## 49 — Resume a fixed question
+
+`question-links.spec.js`: reopen a question without evidence, explicitly Run question,
+share with a second browser, traverse history without reads, reject malformed input
+and inspect mobile layout. Frames: `49a-reopened-question.png`,
+`49b-share-question.png`, `49c-mobile-resume.png`.
+
+## 50 — Mixed investigation steps
+
+`investigation-steps.spec.js` builds a named investigation with record and native
+questions plus a UI-captured evidence reference, displays same/different windows,
+saves a revision, reopens without reads and explicitly reruns. A second browser
+opens the shared native question. Frames `50a-mixed-question-investigation.png`,
+`50b-resume-native-question.png` and `50c-mobile-native-question.png` document it.
+
+## 51 — Linked question evidence
+
+`linked-evidence.spec.js` runs and captures a saved question twice, explains a
+changed-filter capture, recovers from document publication failure without another
+source read and reopens stored history on mobile. A companion case captures native
+metrics with their stored read time and typed definition. Frames 51a–e show the
+history, drift preview, recovery, mobile layout and native result summary.
+
+### 52 — Compare stored evidence
+
+`evidence-comparison.spec.js` exercises real OTLP HTTP spans and worker gauges:
+52a shows latency/error changes between stored windows, 52b refuses a changed
+selector, 52c checks mobile containment, and 52d preserves native stream identity
+and side-by-side saved results. It also checks empty results, failed GET recovery,
+no source reads and immutable receipts, with Quint and optional Bombadil coverage.
+
+### 53 — Save and share a comparison
+
+`saved-comparison.spec.js` saves a comparison and finding, shares the exact revision
+link with a fresh browser, preserves older findings, recovers failed publication
+and a changed-context receipt by ID, and saves native unit incompatibility.
+53a shows the saved finding, 53b the recipient view, 53c mobile containment and 53d
+the frozen incompatible decision. Ledger replay uses Quint with six rejecting
+controls; the optional Bombadil actor reopens stored comparison cards.
+
+Journey 53 also covers the shared stored comparison action group: inspect a
+baseline, return keyboard focus, inject a saved-receipt outage and recover through
+Comparison options without comparison-engine or telemetry execution. Saved
+Bombadil actions open the actual options disclosure and assert hidden fixed-pair
+selectors and no source reads.
+
+### 54 — Compare complete native windows
+
+`native-windows.spec.js` ingests standard OTLP sums and explicit histograms, then
+compares complete windows and shares a versioned frozen receipt. Frames 54a–e show
+counter rates, whole histogram populations, mobile containment, counter decrease
+refusal and incompatible bucket layouts. Incomplete coverage is also refused.
+Quint validates source-free transitions with six negative controls; optional
+Bombadil exploration reopens the saved native result.
+
+### 55 — Find and capture observed SDK windows
+
+`window-discovery.spec.js` ingests real standard OTLP cumulative counters and delta
+explicit histograms with 123 ns offsets. Broad captured questions cannot assert
+complete coverage. Discovery reads stored intervals only, previews exclusions and
+requires both selections before two explicit source reads create exact captures. Shared native previews show UTC bounds with exact nanosecond tooltips, readable durations, validated export coverage and exact-rate/histogram values. Exclusions explain missing coverage without claiming ingestion completeness.
+It compares and shares frozen evidence with a fresh browser and checks mobile
+containment. Original captures remain byte-for-byte unchanged. A forced second-capture failure
+retains the first ID and leaves the original comparison selected.
+
+- [Original support and exclusions](screenshots/55a-observed-support-and-exclusions.png)
+- [Explicit exact sub-scope selection](screenshots/55b-explicit-exact-window-selection.png)
+- [New captures compared](screenshots/55c-selected-scopes-captured-and-compared.png)
+- [Mobile histogram support](screenshots/55d-mobile-histogram-support.png)
+- [Completed first capture retained after second capture failure](screenshots/55e-partial-capture-recovery.png)
+
+Quint observed-trace replay validates source-free discovery/selection and explicit
+two-read capture, with six rejecting mutations. Optional Bombadil exploration
+compares original captures, discovers support and toggles selections while checking supplied coverage timestamps.
+
+### 56 — Reuse comparison questions
+
+`reusable-questions.spec.js` captures real standard OTLP request counters with
+123 ns offsets, then adds each saved comparison side as a separate reusable
+question. It forces a publication failure and retries without recapture, shares
+the revision with a fresh browser, restores exact scope without telemetry reads,
+runs and captures a child revision and previews/runs a fresh window with the same
+definition. Earlier revisions and evidence remain unchanged.
+
+- [Questions with linked captured evidence](screenshots/56a-comparison-to-reusable-questions.png)
+- [Restored exact question](screenshots/56b-restored-exact-question.png)
+- [Rerun appends evidence history](screenshots/56c-rerun-linked-evidence-history.png)
+- [Fresh window on mobile](screenshots/56d-mobile-fresh-window.png)
+
+Quint replay includes six rejecting mutations. Optional Bombadil exploration adds
+questions and reverts drafts, checking bounded cards and one linked capture per
+new question.
+
+### 57 — Resume with fresh evidence
+
+`fresh-comparison.spec.js` captures real HTTP server spans and OTel memory gauges.
+It checks baseline focus on entry and opener focus after closing through Preview
+options, then previews fresh scope without telemetry reads, rejects changed-definition prior
+evidence, selects a frozen baseline and performs one new capture. A forced
+comparison failure is retried without recapture. The finding is saved and shared
+with a fresh browser; original questions, evidence links and captures are unchanged.
+
+- [Explicit fresh scope and prior evidence](screenshots/57a-explicit-fresh-scope-preview.png)
+- [Fresh evidence against the frozen baseline](screenshots/57b-current-evidence-and-stored-baseline.png)
+- [Shared follow-up finding](screenshots/57c-shared-followup-finding.png)
+- [Native follow-up on mobile](screenshots/57d-mobile-native-followup.png)
+
+Quint replays observed reads and saved evidence relationships with six rejecting
+mutations. Optional Bombadil exploration opens/closes previews and selects prior
+evidence without capturing, while checking one visible fixed capture/retry action.
+
+## 58 — Locate a change by captured attribute
+
+Executable: `journeys/comparison-breakdown.spec.js`. Real standard OTLP spans
+create before/after populations of 1200/1300 records. Select HTTP route without
+a source read, explicitly capture both windows, inspect missing/empty/new groups,
+open a fixed-side question, save a finding and reopen it source-free on mobile.
+Frames: 58a explicit recapture, 58b full population breakdown, 58c shared mobile.
+
+- [58a — explicit breakdown recapture](screenshots/58a-explicit-breakdown-recapture.png)
+- [58b — complete route populations](screenshots/58b-complete-route-change.png)
+- [58c — frozen mobile finding](screenshots/58c-shared-mobile-breakdown.png)
+
+## 59 — Automatic service overview and distributed relationships
+
+Executable: `journeys/service-dashboards.spec.js`. Ordinary OTel spans, logs and
+native gauges produce manifest-free service widgets and a resolved parent edge.
+Switch to the distributed view without a read, open a node in the same scope,
+stage its widget question, capture it in an immutable revision and reopen in a
+fresh browser. An independent log-source failure retains span results. Registry
+declarations remain separate from observed data. Frames 59a–d show relationships,
+automatic widgets, mobile layout and partial-source availability.
+
+- [59a — reported distributed relationships](screenshots/59a-distributed-reported-relationships.png)
+- [59b — automatic service widgets](screenshots/59b-automatic-service-widgets.png)
+- [59c — mobile service overview](screenshots/59c-mobile-service-overview.png)
+- [59d — independent partial availability](screenshots/59d-partial-source-availability.png)
+
+## 60 Namespace service identity
+
+[Executable journey](../../journeys/service-namespaces.spec.js) injects four
+same-named OTel services: missing, empty, payments and orders namespaces. It
+checks independent inventory/native discovery isolation, a reported parent edge
+between same-named services in different namespaces, and a fixed payments
+question. A registered operation package produces a question matching its
+instance, instrumentation scope/version and operation name/role; a foreign role
+is excluded. Schema URL remains declared metadata. The observed ledger is replayed
+through Quint with namespace, count and window mutations required to fail.
+Optional `GOO_NAMESPACE_BOMBADIL=1` explores catalog/distributed/service transitions
+and checks namespace-preserving widget questions and uncaught exceptions.
+
+![Separate service identities](screenshots/60a-namespace-service-identities.png)
+![Fixed namespace overview](screenshots/60b-namespace-service-dashboard.png)
+![Declared operation question](screenshots/60c-declared-operation-question.png)
+![Mobile contract card](screenshots/60d-mobile-declared-operation-question.png)
+
+## 61 Declared services without observations
+
+[Executable journey](../../journeys/declared-services.spec.js) opens a real stored
+historical inventory as a fixed-window Services question. It discovers registered
+application bindings with no telemetry, sees them separately in the distributed
+view, opens the unified service overview, and explicitly explores/captures an
+empty span question. An explicitly selected namespace remains in the next captured
+question. A recipient reopens that receipt without a source read.
+Independent registry failure remains visible, and a late registry response is
+rejected after a scope edit. The observed ledger is replayed through Quint with
+five mutations; optional `GOO_DECLARED_BOMBADIL=1` explores declaration disclosures
+and catalog/service transitions without inventing observed widgets or edges.
+
+![Declared services and explicit absence](screenshots/61a-declared-services-without-observations.png)
+![Unified empty service overview](screenshots/61b-declared-service-empty-overview.png)
+![Mobile declared service](screenshots/61c-mobile-declared-service.png)
+![Stored empty service question](screenshots/61d-empty-service-evidence.png)
+
+## 62 Investigate an exact reported edge
+
+[Executable journey](../../journeys/reported-edges.spec.js) injects 130 child span
+records plus duplicate, ambiguous, internal, wrong-trace, wrong-environment and
+out-of-window parent cases. It stages the edge without a read, runs full latency
+and recorded-error summaries beyond the 100-record page, narrows to errors while
+retaining the parent universe, expands broader trace context, and saves/reopens
+an investigation without rereading telemetry. A separate namespace-filtered case
+proves that parent ownership keeps the original discovery namespace scope.
+Quint replays the observed ledger with five rejecting mutations; optional
+`GOO_EDGE_BOMBADIL=1` explores reruns, error filters and evidence disclosures.
+
+![Staged edge question](screenshots/62a-staged-reported-edge.png)
+![Exact child population and full summaries](screenshots/62b-exact-edge-latency-and-errors.png)
+![Stored mobile edge evidence](screenshots/62c-mobile-stored-edge.png)
+
+Comparison storyboards 35 and the stored/native comparison journeys now show
+[aligned visual comparisons](../VISUAL_COMPARISONS.md), with full-population values
+and explicit unavailable states rather than a wall of prose.
+
+## 63 Framework-neutral display components
+
+[Executable component conformance tests](../../journeys/components.spec.js) open
+`/ui-components`, a standalone reference containing explicitly synthetic fixtures.
+No app runtime or telemetry API is loaded. Server HTML upgrades to native custom
+elements; SPA properties remain reactive even when assigned before definition.
+Tests cover detached inputs, exact large values, zero vs absence, malformed JSON,
+text safety, keyboard disclosures, shared geometry and mobile containment.
+These fixture frames explain the library; real OTLP-backed journeys 35/52/54/58/59/62
+verify its adoption in application workflows.
+
+![Standalone component reference: synthetic fixtures](screenshots/63a-framework-neutral-display-components.png)
+![Mobile component reference: synthetic fixtures](screenshots/63b-mobile-display-components.png)
+
+Journey 64 (`components.spec.js`) checks caller-owned table rows, focus retention
+during appends, reconnects, explicit state transitions and keyboard overflow on
+mobile without API reads. These are synthetic component conformance fixtures.
+Journey 59 covers adoption in real service observations and partial source failure.
+
+Journey 65 (`components.spec.js`) exercises synthetic SSR/SPA facet and typed-value
+contracts without source reads. Journey 29 now verifies shared elements across
+real attribute/facet narrowing and trace/log inspection; optional
+`GOO_INSPECTION_BOMBADIL=1` explores that isolated fixed question. Journey 34
+checks full-population/saved facet scales with an updated Bombadil invariant.
+
+Journey 66 follows an applied log question into real OTel live observations,
+late duplicates, bounded eviction, focus pause, resumed/reconnected gaps and scope
+cancellation, with Quint ledger mutations and an opt-in Bombadil campaign.
+Journeys 67 and 68 are clearly synthetic standalone waterfall/time-bar contracts;
+actual app adoption is exercised by journeys 29, 30, 33, 45 and 59.
+
+## 69. A frozen baseline beside a rolling record population
+
+`journeys/live-comparison.spec.js` sends real OTel spans for a generic search
+service. Select linked baseline evidence, explicitly start a rolling comparison,
+pause, add observations, and rescale when the population exceeds the fixed axis.
+A failed refresh retains the old window as stale. Another source record arrives
+before freezing: the capture retains the seven displayed records, not the eight
+now in the source. Reopen evidence and verify the baseline is unchanged. The
+optional Bombadil actor exercises the live controls; the observed ledger runs
+through Quint with negative controls.
+
+![Frozen baseline and rolling count](screenshots/69a-frozen-baseline-rolling-count.png)
+![Stale read retains its axis and original window](screenshots/69b-stale-read-stable-axis.png)
+![Displayed evidence frozen without another source read](screenshots/69c-exact-displayed-evidence-frozen.png)
+
+![Frozen result linked to an immutable investigation revision](screenshots/69d-frozen-result-linked-to-investigation.png)
+![Mobile rolling comparison](screenshots/69e-mobile-live-comparison.png)
+
+## 70. Passive chart frame in server HTML and SPA updates
+
+`journeys/chart-frame-components.spec.js` demonstrates safe metadata, caller-owned
+native actions and disclosures, pre-upgrade properties, contained mobile layout,
+and focus preservation when state/window metadata changes. Synthetic standalone
+HTML tests the reusable display contract; journey 69 supplies real-source product
+coverage.
+
+![Passive chart frame](screenshots/70a-passive-chart-frame.png)
+![Mobile stale chart frame](screenshots/70b-mobile-stale-chart-frame.png)
+
+## 71. A service regression across count, latency and recorded error share
+
+`journeys/live-span-measures.spec.js` ingests real OTel spans and captures a
+question requesting duration and recorded status. Two baseline spans have 1 ms
+latency and one recorded error. Four current spans have 10 ms latency and one
+recorded error. The shared frame shows both compact percentile rails on the same
+fixed domain, plus Error/total fractions on a fixed 0–100% axis.
+
+Add three 100 ms errors: count grows to seven, p95/p99 grows to 100 ms, and Error
+share becomes 4/7 (57.14%). Explicitly rescale count and latency. A source failure
+retains all summaries, window and basis. After another 1,000 ms error arrives,
+freeze the displayed seven spans and their 340 ms duration sum/four errors into
+an investigation revision. Old source responses cannot populate a reopened panel.
+Quint rejects ten corrupted ledger observations; Bombadil checks exact percentile
+positions, per-measure domains and required start/freeze/link interactions.
+
+![One live window for count, latency and recorded error share](screenshots/71a-frozen-baseline-rolling-count.png)
+![Stale evidence retains all measures together](screenshots/71b-stale-read-stable-axis.png)
+![The complete displayed result is frozen](screenshots/71c-exact-displayed-evidence-frozen.png)
+![Frozen service regression evidence in the investigation](screenshots/71d-frozen-result-linked-to-investigation.png)
+![Mobile shared-domain comparison](screenshots/71e-mobile-live-comparison.png)
+
+A separate real-source check freezes an empty one-millisecond rolling window.
+No latency markers or error-share bars appear, and freezing keeps the result
+unavailable rather than inventing zero latency or zero percent errors.
+
+![Empty rolling window withholds numeric comparison](screenshots/71f-empty-live-window.png)
+
+## 72. Follow a native counter stream without hiding export gaps
+
+Run `journeys/live-counter.spec.js`. From a saved generic HTTP counter question,
+choose one frozen OTel stream baseline (3/s), then start live comparison (5/s).
+A newer incomplete export window withholds rates. Late coverage restores 15/s;
+the original domain remains fixed until Rescale. A failed read preserves the
+same display and basis. A later export arrives before Freeze, but the saved and
+reopened evidence retains the displayed window. Explicitly add that capture to
+the investigation. The original question and baseline remain unchanged.
+
+![Exact native rates on one domain](screenshots/72a-native-rate-shared-domain.png)
+![Latest export gap withholds rates](screenshots/72b-latest-export-gap-withheld.png)
+![Late coverage repaired and explicitly rescaled](screenshots/72c-late-coverage-restored.png)
+![Displayed native window frozen](screenshots/72d-displayed-native-rate-frozen.png)
+![Native rate comparison on mobile](screenshots/72e-mobile-native-rate.png)
+
+## 73. Focus one native stream from a shared instrument
+
+Run `journeys/exact-stream.spec.js`. A generic HTTP instrument has two baseline
+instances. Inspect their independent streams, focus instance one, and preview
+without a source read. Run the exact question, share it, save the package revision
+and capture the baseline. Seven current identities include near matches with
+missing/added/empty attributes and changed resource schema. Live comparison shows
+only the pinned stream's 5/s against its frozen 3/s baseline. Freeze and reopen
+retain the exact binding. Explore all matching streams returns to the original
+broad question with an explicit preview and Run; prior evidence remains unchanged.
+
+![Independent native streams](screenshots/73a-discover-independent-streams.png)
+![Read-free exact-stream preview](screenshots/73b-exact-stream-preview.png)
+![Captured selected identity](screenshots/73c-selected-stream-evidence.png)
+![Pinned live native rate](screenshots/73d-pinned-live-rate.png)
+
+![Selected stream on mobile with horizontally scrollable observations](screenshots/73e-mobile-selected-stream.png)
+
+## 74. Find a native stream and understand unavailable coverage
+
+Run `journeys/native-navigation.spec.js`. Open saved evidence containing 28 HTTP
+counter streams. Page past the first 25, select Needs review, see an explicit
+empty search and find a stream by a resource value. Its retained export crosses
+the fixed boundary: readable guidance explains why it cannot be split into an
+increment, with exact diagnostic codes preserved. Clear/search retains the open
+stream disclosure and original question/basis without reading telemetry. Focus
+previews its exact typed identity. Reopening the capture is unchanged.
+
+![Bounded retained stream inventory](screenshots/74a-bounded-stream-inventory.png)
+![Boundary coverage explained after identity search](screenshots/74b-explained-boundary-coverage.png)
+![Native review controls and scrollable observations on mobile](screenshots/74c-mobile-stream-review.png)
+
+## 75. From a native service overview to exact-stream evidence
+
+Run `journeys/service-native.spec.js`. Discover an ordinary OTel HTTP service in
+namespace payments without a Goo manifest. Two native widgets load automatically:
+six independent request-counter streams and a native request-duration histogram.
+The newest absent interval withholds a value; another stream shows a valid latest
+5/s interval alongside incomplete whole-window coverage. Histogram p95 stays the
+0.5 … +∞ s bucket range. A same-named service in another namespace is excluded.
+Expand/search the retained six streams without a telemetry read, then open one
+exact stream question. Preview preserves scope/identity; Run and Capture are
+explicit reads. Reopen retains immutable evidence. A runtime service separately
+shows a fresh gauge observation. The mobile compact table scrolls within its owner.
+
+![Native service values and separate window coverage](screenshots/75a-native-service-overview.png)
+![Retained service stream browsing without a read](screenshots/75b-retained-service-streams.png)
+![Compact native service card on mobile](screenshots/75c-mobile-native-service-card.png)
+
+## 76. Choose the native measurements in a service overview
+
+An operator opens a discovered payments API with multiple OTel instruments,
+including same-name version/schema variants. They stage non-default instruments
+without reading telemetry, see the two-card limit, then explicitly reread the
+same fixed service window. They capture one selected question and reopen that
+evidence without source reads, clear native cards, and restore defaults. A later
+empty Apply supersedes a held real source response. Selections last for this visit.
+
+Executable: `journeys/service-native-selection.spec.js`. Its real OTLP fixtures,
+Bombadil actions and observed Quint replay cover selection and evidence custody;
+Hegel generates independent planner selection sequences.
+
+![Staged choices and the native budget](screenshots/76a-staged-instrument-selection.png)
+![Selected native service measurements](screenshots/76b-selected-service-overview.png)
+![Mobile instrument picker](screenshots/76c-mobile-instrument-selection.png)
+
+## 77. Inspect native observations over time
+
+An operator opens ordinary OTel gauge, counter and histogram questions for a
+payments API. They inspect signed/stale/zero gauge samples, a counter reset and
+unknown intervals, then histogram intervals with an uncovered gap, zero
+observations and changed native bucket bounds. Selection is local and read-free.
+They capture the unchanged histogram question and reopen its stored timeline
+without source reads. Unknown selection never reuses a prior distribution.
+
+Executable: `journeys/native-timeline.spec.js`; actual OTLP, observed Quint replay
+with nine rejecting controls, and saved-evidence Bombadil inspection.
+
+![Independent gauge samples and latest unknown](screenshots/77a-gauge-native-timeline.png)
+![Counter interval values and typed unknowns](screenshots/77b-counter-unknown-intervals.png)
+![Selected native histogram interval and its bounds](screenshots/77c-histogram-interval-bounds.png)
+![Mobile native interval and bucket inspection](screenshots/77d-mobile-native-timeline.png)
+
+## 78. Reuse the passive timeline in server HTML or an SPA
+
+The labelled synthetic component catalog demonstrates supplied observations and
+controlled selection. Executable `journeys/value-timeline-components.spec.js`
+checks keyboard focus, exact zero/unknown values, detached property upgrade,
+getter detachment, reactive empty results and mobile composition without API reads.
+This component contract complements, rather than replaces, journey77's real data.
+
+![Passive supplied timeline at mobile width](screenshots/78a-passive-scalar-timeline.png)
+
+## Native bucket heatmap journeys
+
+Journey 77 now covers layout switching, recorded zero, unknown selection and mobile overflow over real OTLP evidence; its 77c/77d screenshots show the grid in context. Journey 54 shows the compatible-window count grid and rejects a grid for incompatible layouts. Journeys 79/80 document the passive component using a clearly synthetic fixture (`79-bucket-component-contract.png`).
+
+## 81 · Explicit histogram time buckets
+
+`journeys/histogram-time.spec.js` injects real OTLP exports, validates an explicit width, merges complete intervals, withholds crossings/layout changes, distinguishes zero/unknown, switches views without reads and reopens captured evidence. [Storyboard and frames](../HISTOGRAM_TIME_BUCKETS.md). Screenshots: `81a-go-time-bucket-aggregation.png` and `81b-mobile-time-bucket-unknown.png`.
+
+## 82/83 · Shared evidence summaries
+
+Journey82 exercises real OTLP capture → exact evidence summary → linked investigation, preserving unsaved findings and retained receipt identity without source reads. Journey83 covers synthetic standalone SSR/properties/focus and mobile layout. [Storyboard and frames](../EVIDENCE_SUMMARIES.md).
+
+Journeys59/75 now document compact shared service summaries and readable UTC time bounds with exact-value tooltips; journey83 covers formatter precision and keyboard inspection. Journeys82/77 refresh the affected captured-evidence and selected-interval frames. Details: [evidence-summary storyboard](../EVIDENCE_SUMMARIES.md#compact-service-cards-and-readable-time).
+
+Journey63 now checks the collapsed latency readout stays under 100px in its standalone desktop fixture, with the positional rail revealed through keyboard disclosure. Its desktop/mobile reference frames and journey59’s real service frames show the inline Mean/p50/P95/P99 layout.
+
+See [comparison presentation](../COMPARISON_PRESENTATION.md) for aligned scalar pairs, compact metric matrices, frozen-side summaries and UTC tooltip adoption.
+
+Journey84 documents the standalone selected-item shell; journey35 exercises real log/span inspection and journey77 exercises native selection replay. [Inspector storyboard](../SELECTED_ITEM_INSPECTORS.md).
+
+## Core experience refinements
+
+See [the implemented workflow](../CORE_EXPERIENCE_REFINEMENTS.md) for retained
+application visits, typed population selection, compact diagnosis, trace
+breakdowns and independently loaded context. These compose passive display
+elements; application adapters own navigation, read lifecycle and scope. Journey
+85 exercises real OTLP data and refreshed screenshots; the core-refinements
+Bombadil actor covers selection and returning to retained evidence. Hegel
+selection properties and the question-session state swarm complement observed
+quint-go validation against the existing question-links model.
+
+Journey **91** (`population-workspace.spec.js`) explores discovered attributes,
+compares two service values using a pinned baseline and explicit filter reset,
+saves/reopens/replays the configuration, checks an empty preceding window and
+missing versus empty attributes, and captures desktop/mobile frames. Enable
+`GOO_BREAKDOWN_BOMBADIL=1` for ranking and preceding-window actor actions.
+
+Journey **92**, `population-live.spec.js`, watches ordinary spans/logs, investigates
+reported trace context while paused, prepares full-population baseline comparison,
+saves/reopens without subscriptions, recovers with a continuity gap, changes signal
+and checks mobile composition. Enable `GOO_POPULATION_LIVE_BOMBADIL=1` for actor
+start/pause actions. The observed ledger counts subscription/read initiations,
+not the Go tail's internal polling reads.
+
+## 93. Enter through recent activity
+
+[Executable journey](../../journeys/recent-entry.spec.js) and
+[contract/storyboard](../RECENT_ACTIVITY.md): ordinary OTel multi-service data,
+explicit direct recent reads, local loaded-signal switching, service facets,
+source-free range preview and saved configuration reopening, mobile composition,
+log-only/no-data/partial sources and stale-response rejection. Quint checks the
+observed request ledger with rejecting controls; optional Bombadil actions run
+recent activity and switch loaded record pages without starting a tail.
+
+## 94–95. Brush a population and retain the parent
+
+[Executable journeys](../../journeys/range-drilldown.spec.js) and
+[contract/sequence/storyboards](../RANGE_DRILLDOWNS.md): real generic OTLP clusters,
+reverse brush and Escape, source-free child staging, independent fixed reads,
+retained parent baseline/record inspector/tail rows/focus/scroll, nested returns,
+late-response rejection, keyboard handles and deliberate mobile touch selection.
+Quint/quint-go replays observed depth/read transitions with seven rejecting
+controls. Bombadil runs/stages/returns without an implicit subscription. Journey
+95 separately checks the synthetic server-rendered component reference, detached
+property updates and native point/keyboard compatibility without API calls.
+
+## 96. Stage categorical populations
+
+[Contract, sequence diagram and generated frames](../FACET_SELECTION.md).
+`journeys/facet-selection.spec.js` ingests real OTLP spans with missing, empty,
+west and east region attributes. Include/Exclude, Undo/Clear and child staging
+perform no source reads; explicit Apply/Run yields the expected populations.
+Back preserves the original baseline and draft; Compare uses Go kernels; saving
+and reopening restores typed configuration without reading. The journey also
+checks mobile layout and combining fields across an explicit breakdown read.
+Hegel checks construction against Go matching/compilation, Quint replays the
+observed depth/read ledger with five rejecting controls, and optional
+`GOO_FACET_BOMBADIL=1` exercises the categorical actor.
+
+## 97. Derive a population from captured records
+
+[Contract, process diagram and generated storyboards](../RECORD_POPULATIONS.md).
+`journeys/record-population.spec.js` verifies inspector Include/Exclude, shared
+fields across two selected observations, exact session provenance, retained
+parent navigation, baseline comparison, 20-of-22 selection bounds, refresh reset,
+stale-action rejection and mobile layout over real OTLP data. Optional
+`GOO_RECORD_BOMBADIL=1` runs selection/shared-field/open/return/clear actions.
+The related [training-label proposal](../TRAINING_ANNOTATIONS_DESIGN.md) has
+conceptual training journeys only; shared tags/notes and optional saved-evidence retention are covered by journeys 98–99. Training export remains proposed.
+
+## 98. Authored context across the workbench
+
+Implemented: [executable journey](../../journeys/annotations.spec.js),
+[contract](../WORKBENCH_ANNOTATIONS.md). Discover a real OTel-emitting scoped service,
+add a tag/note, cancel another draft, and use the same annotation panel on a saved
+exploration, narrative revision and telemetry package. Find all four by exact tag.
+Correct a service assertion in parallel, withdraw one branch, and inspect immutable
+history. Annotation interactions perform no additional source reads. The observed
+ledger is checked with quint-go and injected negative controls; Bombadil explores
+local draft/cancel/history actions. Rich training labels remain proposed.
+
+![Scoped service annotation](screenshots/98a-scoped-service-annotation.png)
+![Cross-product exact-tag catalog](screenshots/98b-cross-product-annotations.png)
+![Corrections, parallel branches and withdrawal history](screenshots/98c-annotation-branches-history.png)
+![Compact mobile annotation history](screenshots/98d-mobile-annotation-history.png)
+
+## 99. Retain selected evidence in XTDB
+
+Optional experiment: [executable journey](../../journeys/retained-evidence.spec.js),
+[setup and limitations](../WORKBENCH_ANNOTATIONS.md#optional-xtdb-retained-evidence-experiment).
+Emit ordinary OTLP records and explicitly save a fresh fixed-query capture. Select
+one stored observation, annotate it and copy it to XTDB. Lose the successful save
+response and retry with the same request key; the original annotation is recovered.
+Open attributes, correct the review and reload the retained evidence with browser
+source API requests blocked. This verifies source-free UI reopening, not physical
+shutdown of ClickHouse or a completed native external-source connector.
+
+![Retain a selected saved observation](screenshots/99a-retain-selected-observation.png)
+![Evidence retained in XTDB](screenshots/99b-xtdb-retained-evidence.png)
+![Review correction history](screenshots/99c-retained-evidence-review-history.png)
+![Mobile retained evidence](screenshots/99d-mobile-retained-evidence.png)
+
+
+## 100. Retain the observation selected from live activity
+
+Implemented: [executable journey](../../journeys/live-retention.spec.js), optional
+XTDB overlay required. Emit 102 ordinary OTel spans and open recent activity.
+Select one displayed row, then ingest a later span: the selected page stays fixed.
+Explicitly retain the selected observation with its original token/question/basis;
+no save-capture step or source reread occurs. Lose the successful native response,
+retry the same intent, and recover the original annotation. Repeat that response
+loss for a correction and verify exactly two review revisions.
+
+Reload with a committed await-token lower bound while browser telemetry APIs are
+blocked. Inspect the exact retained attributes and compact mobile view. Returning
+to activity shows the late span on a new read; pagination and refresh clear row
+selection. ClickHouse remains running and no source records are deleted. Root Go
+clock tests separately check expired pages/capacity; native tests recover a committed
+request without its ephemeral page. The observed Quint ledger verifies original
+membership and rejects token/scope/member mutations in addition to the existing
+hidden-read/publication/history controls and a duplicated retry publication. Bombadil covers both review history and
+live selection → unpublished draft → clear, observing native POST count.
+
+![Select an observation from live activity](screenshots/100a-live-page-retention.png)
+![Retained live observation and explicit provenance](screenshots/100b-frozen-live-observation.png)
+![Idempotent review revision history](screenshots/100c-idempotent-review-history.png)
+![Compact mobile retained observation](screenshots/100d-mobile-live-evidence.png)
+
+
+## 101. Find retained evidence, recover interrupted saves and pin a review
+
+Implemented: [executable journey](../../journeys/evidence-library.spec.js), optional
+XTDB required. Emit three ordinary OTel spans, retain a selected observation and
+lose the actual committed response. Reload; the pending browser intent survives.
+Retry explicitly and recover the original annotation. Start an investigation with
+that exact review, save it, then correct the review and repeat response-loss/reload
+recovery. The document keeps its original interpretation.
+
+Search the retained catalog by current tag, environment, exact recorded service
+name and capture-time bounds. Superseded tags no longer match. Reopen the document
+and inspect its pinned evidence/review on mobile. Browser telemetry requests remain
+blocked throughout retention recovery and citation; ClickHouse stays running.
+Hegel exercises the actual journal; the observed Quint ledger rejects eight
+mutations. Bombadil explores readonly catalog, pending and citation controls.
+
+![Recover a pending native request after reload](screenshots/101a-recovered-pending-save.png)
+![Pin the original review in an investigation](screenshots/101b-pinned-review-citation.png)
+![Search current retained evidence metadata](screenshots/101c-retained-evidence-catalog.png)
+![Reopen the original review on mobile](screenshots/101d-mobile-pinned-review.png)
+![Browse the retained catalog on mobile](screenshots/101e-mobile-retained-catalog.png)
+
+
+The recent-activity journey 93 also checks compact desktop/mobile first-record
+positions, absence of duplicate facet-workspace summaries, and source-free facet
+disclosures. Its timeline opens range controls when a chart preview is selected.
+
+### 112 — Inspect investigation revisions before opening
+
+[Executable storyboard](../../journeys/document-library.spec.js): create same-title
+unrelated roots and a preserved child revision through the real API; follow server
+cursors and search within each page; inspect the exact child and parent without
+replacing a pending editor note. Explicit Open refuses the pending draft. Filtering
+retains the selected detail. Revert then Open loads the exact child without telemetry
+execution. [Mobile frame](screenshots/112a-investigation-revision-inspection.png).
+Journey 36 retains the deployed-app evidence path and the Quint ledger with rejecting
+controls; its optional Bombadil actor now explores revision browse/inspect/close as
+well as draft edits, with bounded rows and exact document selection invariants.
+
+
+Journey [101](../../journeys/evidence-library.spec.js) now selects compact retained
+catalog metadata before explicit opening, rejects an older real response after a
+filter change and preserves the selected snapshot when the optional store fails.
+Selection issues no manifest/review GET or source/publication request. It retains
+the real pending-save/reload/retry and pinned-old-review narrative path, including
+Quint rejecting controls and the expanded Bombadil catalog select/close actions.
+[Catalog](screenshots/101c-retained-evidence-catalog.png) ·
+[Mobile catalog](screenshots/101e-mobile-retained-catalog.png).
+
+
+[Journey 113](../../journeys/field-presentation.spec.js) stages omitted-empty,
+missing and literal-sentinel filters without execution, checks a real Go package's
+qualified field handoff and preserves the fixed draft across navigation.
+[Mobile qualified filter chips](screenshots/113a-qualified-empty-presence-filters.png).
+Journey 104 continues to exercise real ingested OTel data, source-free staged
+selectors, fixed authoring and paused return with its Quint/Bombadil campaigns.
+
+
+Journey [60](../../journeys/service-namespaces.spec.js) now covers six namespace
+populations using real OTel spans and gauges, including literal `missing` and
+`present empty` namespaces alongside missing-key and empty-string states. It
+checks distinct catalog labels, scoped native values, record question links and
+declared operation bindings, plus the existing observed Quint/rejecting controls
+and expanded Bombadil label invariant. [Namespace catalog](screenshots/60a-namespace-service-identities.png).
+
+
+[Journey 114](../../journeys/question-protocol.spec.js) captures a real ordinary
+OTel gauge with exact native bounds, links its Go-canonical receipt to an authored
+draft with omitted native defaults and verifies no false definition drift. Saving
+preserves exact strings; fresh preview accepts the baseline without source reads.
+[Mobile native wire/default scope](screenshots/114a-native-wire-defaults-and-exact-scope.png).
+Its Bombadil actor permits only source-free preview/close; existing mixed-step,
+linked-evidence and fresh-comparison journeys retain their observed model checks.
+
+## 115. Continue from Activity into fixed analysis
+
+[Executable journey](../../journeys/activity-analysis.spec.js) ingests ordinary
+OTel logs, stages a filter, proves scope Analyze requires Apply, and then stages
+the exact last completed window. Inspecting/editing the staged question performs
+no telemetry read or publication. Run reads the fixed selector once; Return
+restores the paused buffer and focus without resubscribing. An empty span window
+also stages without inventing bounds from rows.
+
+[Compact staged analysis](screenshots/115a-staged-activity-analysis.png) ·
+[Fixed analysis result](screenshots/115b-fixed-activity-analysis.png).
+The [contract](../ACTIVITY_ANALYSIS.md) distinguishes this applied-scope action
+from the inspector's original-observation-window action. The bounded
+[Bombadil actor](../../verification/bombadil/activity-analysis.ts) stages,
+discloses editing and returns; it never executes or publishes a question.
+
+## 116. Compare a staged population to its current population
+
+[Executable journey](../../journeys/population-context.spec.js) emits four ordinary
+OTel spans with missing, empty, west and east region values. It inspects each
+signal's applied selector without reads, stages missing-or-empty values, and
+compares the two-record selection with the full four-record baseline despite a
+two-record inspection page. The companion's predicate is preserved; each configured signal is read once,
+with no extra baseline read. The comparison opens
+visibly on mobile. Restore starting population explicitly rereads the exact
+original fixed questions.
+
+[Selection actions](screenshots/116a-population-selection-actions.png) ·
+[Comparison](screenshots/116b-selected-population-comparison.png).
+The [population contract](../POPULATION_WORKSPACE.md#contextual-selection-comparison-and-restoration)
+keeps this original selection-versus-current workflow separate from the later
+[bounded categorical selection-versus-rest](../POPULATION_PARTITIONS.md); general
+Boolean complements remain outside that contract.
+
+## 117. Browse saved work and recover context without rerunning telemetry
+
+[Executable journey](../../journeys/saved-workspace.spec.js) ingests a real log,
+preserves it in a capture and links that capture from a narrative revision.
+Browse investigations previews catalog metadata, then the exact narrative opens.
+An unsaved finding survives opening the captured evidence and returning to notes.
+Raw-ID fields remain secondary; Tools discloses annotation search and recovery.
+A valid browser-local retry fixture produces a notice without a write, and an
+unreadable journal remains discoverable. A malformed operation ID reports its
+error inside Tools instead of hiding it with the selected-case area.
+
+[Selected saved evidence](screenshots/117a-selected-saved-evidence.png) ·
+[Contextual recovery](screenshots/117b-contextual-pending-recovery.png).
+The [Saved composition contract](../SAVED_WORKSPACE.md) and
+[bounded Bombadil actor](../../verification/bombadil/saved-workspace.ts) keep
+browsing and disclosure separate from execution/publication.
+
+Journey 118 (`journeys/record-columns.spec.js`) covers live observed field
+selection, fixed-window layout handoff, staged field predicates and saved
+population layouts. Frames 118a–c show live, saved and mobile records. Optional
+`GOO_RECORD_COLUMNS_BOMBADIL=1` runs bounded local layout exploration.
+
+Frame 118d and journey 118 also cover reopened saved record-field exclusion,
+missing/empty preservation, selected-child staging/Run/return and observed
+Quint trace validation. The field Bombadil campaign additionally stages an
+exclusion after local column changes and checks that no source read follows.
+
+Journey 119 (`journeys/log-comparison.spec.js`) covers ordinary log comparisons,
+full groups versus bounded row pages, missing/empty groups, source-free stored
+comparison and mobile focused-question access. Frames 119a–c document live,
+stored and mobile surfaces. Set `GOO_LOG_COMPARISON_BOMBADIL=1` for its bounded
+stored-comparison campaign.
+
+Journey 120 (`comparison-ranking.spec.js`) ingests ordinary spans and demonstrates
+low-share error/latency regression discovery, saved error/count ranking reopening,
+full-population support independent of row limits, source-free stored ranking and
+mobile access. Frames 120a/b show live error and stored mean ranking. Enable
+`GOO_RANKING_BOMBADIL=1` for local rank-choice exploration.
+
+Journey 121: [raw-span time-duration selection](../HEATMAP_SELECTION.md) stages
+by pointer and keyboard, explicitly executes exact bounds and captures/reopens
+selected evidence. 121b covers the passive component contract.
+
+Journey 122: [explicit population time expansion](../POPULATION_WORKSPACE.md#expanding-the-time-window), source-free preview/open/return, independent selectors and explicit full-population reread.
+
+Journey 123: [selected versus rest](../POPULATION_PARTITIONS.md), missing/empty and qualified selectors, full counts with one-row pages, parent return, saved views and captures, and an empty remainder.
+
+Journey 124 checks the mobile selection summary is unobscured and its comparison action is keyboard-focusable below the wrapped investigation trail.
+
+Journey 125: [whole-condition population broadening](../POPULATION_BROADENING.md), missing/empty OR groups, draft blocking, mobile/keyboard staging, full membership beyond one-row pages, source-free parent return and saved-view reopen.
+
+Journey 126: [passive comparison context](../COMPARISON_CONTEXT.md), server HTML and early/detached SPA properties, exact clocks/counts, unknown transitions, source-free disclosure, keyboard focus and mobile layout. Existing journeys 120, 52, 53, 57, 69 and 72 exercise its real fixed/stored/fresh/live/native adoption.
+
+Journey 127: [contextual comparison actions](../COMPARISON_ACTIONS.md), single-signal inspection of either side, retained comparison/ranking/focus, missing versus empty, shared stored record inspection and obsolete-response rejection.
+
+
+Journey 128: [retained activity comparison](../COMPARISON_SERIES.md), keyboard/brush selection, exact side window, explicit child read, retained return and stored/mobile continuation.
+
+Journey 69 now covers live bucket refresh before Freeze, retained alignment/selection, explicit child Run and source-free Back. Frames 129a/129b show the live series and retained selection; see [contract](../LIVE_COMPARISON.md#retained-bucket-series-during-refresh).
+
+## D1 comparison acceptance audit
+
+The [acceptance map](../D1_ACCEPTANCE.md) reconciles the comparison storyboards
+with the completed bounded milestone. Journeys 69 and 71 now close previews through
+Preview options and check focus before reopening, then reject held obsolete source
+responses. Native-window Bombadil Reopen now uses Comparison options and requires
+another observed immutable receipt read with no telemetry/comparison-engine call.
+The native-question actor also uses the actual preview menu.
+
+## 130 — Discover native instrument capabilities
+
+`instrument-capabilities.spec.js` starts with manifest-free, language-neutral OTLP
+HTTP histograms and custom sums. Discover is explicit; metadata disclosures remain
+local; the exact seconds binding previews without evaluation, then Run reads once
+in the fixed service window. Mismatched units and non-monotonic sums stay honest.
+`instrument-catalog-components.spec.js` checks local 25-row paging and exact Build
+intent without API requests. Quint replays actual discovery/result bindings with
+rejecting controls; the configured Bombadil actor opens metadata without evaluation.
+See [contract and ownership diagram](../NATIVE_INSTRUMENT_DISCOVERY.md).
+
+- [Observed HTTP and generic capabilities](screenshots/130a-observed-instrument-capabilities.png)
+- [Selected HTTP metadata hints](screenshots/130c-http-metadata-hints.png)
+- [Contained mobile catalog](screenshots/130b-instrument-catalog-mobile.png)
+
+## 131 — Inspect observed stream presence
+
+`instrument-coverage.spec.js` emits three native HTTP streams with present, empty
+and missing method/status keys, duplicate observations and a missing instance ID.
+Discovery supplies the typed Go plan; local disclosures read or publish nothing.
+An independent ClickHouse identity query supplies the Quint oracle, with seven
+rejecting mutations. Missing metadata and truncated stream lists do not alter
+summary totals or become verified coverage.
+
+- [Observed stream presence](screenshots/131a-observed-stream-presence.png)
+- [Mobile stream inspection](screenshots/131b-stream-presence-mobile.png)
+
+132. **Manifest-free messaging processing discovery** —
+`messaging-profile.spec.js` emits real OTLP and inspects an experimental pinned
+processing-duration candidate, conditional label presence, missing/empty identity,
+and desktop/mobile composition. Observed Quint replay uses independent source
+identities and rejecting controls. The shared Bombadil discovery actor exercises
+this consumer without implicit execution/publication. See
+[the contract and frames](../NATIVE_INSTRUMENT_DISCOVERY.md#messaging-processing-candidate).
+
+
+133. **Candidate versus evaluated evidence** — `instrument-acceptance.spec.js`
+emits manifest-free OTLP across ordinary consumers and a custom counter. Explicit
+Preview/Run keeps complete processing windows observed, incomplete coverage
+unknown, and refuses missing identity or unsupported precision. Refusals clear the
+result and disable capture; metadata remains not-run. The existing Quint discovery
+replay validates observed/unknown results and rejecting controls; Bombadil
+inspects an unidentified candidate without executing it. Four real frames and the
+[acceptance map](../E1_ACCEPTANCE.md) document the boundaries.
+
+
+134. **Time/latency region versus rest** — `region-partition.spec.js` checks a real
+OTLP partition at exact time/duration boundaries with a one-row inspection page,
+source-free mobile staging and parent return, reusable configuration and immutable
+comparison evidence. Hegel/Quint and Bombadil guard membership and ownership.
+See [the contract and frames](../REGION_PARTITIONS.md).
+
+
+## 138. Inspect and cite retained Activity observations
+
+Implemented: [executable journey](../../journeys/tail-evidence.spec.js), optional
+local XTDB/ClickStack lab. This foundation journey predates browser Activity
+selection/publication; journeys 139–145 below record its subsequent delivered
+adoption and bounded acceptance.
+
+1. Preparation ingests two duplicate span occurrences through OTLP into ClickHouse.
+   The [development fixture helper](../../scripts/tail-evidence-fixture/main.go)
+   polls actual source data through the Go adapter, freezes separate read windows
+   and publishes through the typed backend into XTDB. No UI data is mocked and no
+   client-record publication endpoint is added.
+2. Open that retained selection: see Activity origin and recorded custody time,
+   then inspect an occurrence's compact service/event-time/status/duration summary.
+   Read time, poll window, basis and occurrence ordinal remain distinct. Attributes
+   disclose locally; UTC event timestamps retain exact nanoseconds in tooltips.
+3. Start and save an investigation with the original review pinned. Revise the
+   review on the retained selection and reopen the document: the citation keeps
+   its original review and read lower bound.
+4. Browse retained metadata scoped to the environment and Activity origin. Selecting
+   metadata does not fetch records/reviews; opening is explicit. Inspect the mobile
+   citation without horizontal overflow or telemetry reads.
+5. Observed Quint replay rejects extra source reads/publications, changed pinned
+   review, custody clock or exact manifest. Bombadil opens/folds provenance and
+   attributes, searches locally and checks occurrence count, origin, no writes/
+   reads and layout. Existing journeys 99–101 cover the v1 page/citation paths.
+
+![Compact retained Activity provenance](screenshots/138a-retained-activity-provenance.png)
+![Pin an Activity review in a saved investigation](screenshots/138b-pinned-activity-review.png)
+![Browse the origin-aware retained catalog](screenshots/138c-activity-catalog.png)
+![Read the pinned Activity citation on mobile](screenshots/138d-mobile-activity-citation.png)
+
+### 139 — Preserve exact Activity occurrences and recover a lost response
+
+[journey](../../journeys/tail-selection.spec.js) injects two identical real OTLP
+logs, independently checks ClickHouse multiplicity, receives server-issued SSE
+references, selects both and pauses. Tags/note appear only after selection.
+A real XTDB commit is allowed to finish before its browser response is dropped.
+Reloading Saved retries the unchanged journal intent and opens the same manifest,
+review and custody clock, without any telemetry source reads. Observed Quint
+replay includes rejecting controls. Bombadil selects, clears and resumes without
+publishing or generating workload. These handles describe observed multiplicity,
+not physical event identity or a complete trace/population.
+
+![Selected Activity occurrences](screenshots/139a-activity-selection.png)
+![Recovered retained Activity](screenshots/139b-retained-activity.png)
+
+![Compact mobile selection](screenshots/139c-mobile-selection.png)
+
+### 140–145 — Activity retention under failure
+
+[Executable matrix](../../journeys/tail-acceptance.spec.js) and
+[bounded acceptance](../ACTIVITY_RETENTION_ACCEPTANCE.md): actual isolated Go/Python
+owners over real OTLP/ClickHouse and optional XTDB exercise local expiry,
+unconfigured/failed configuration checks, actual database transport failure,
+browser quota refusal, genuine 64-batch capacity exhaustion and proof loss on a
+real Go restart. Submitted retries preserve intent; inspection survives failure.
+Quint replays the observed outage/retry ledger with rejecting controls. Bombadil
+explores capacity-refused inspection. Keyboard/mobile focus and no hidden source
+reads are checked. Only the failed configuration GET and local journal quota are
+browser fault injections; successful streams/publications are real.
+
+![Expired local selection on mobile](screenshots/140a-expired-selection-mobile.png)
+![Unconfigured retention](screenshots/141a-unconfigured-retention.png)
+![Save awaiting acknowledgment](screenshots/142a-pending-save.png)
+![Capacity-refused stream](screenshots/144a-capacity-unavailable.png)
+![Definitely uncommitted proof](screenshots/145a-proof-unavailable.png)
+![Mobile original-request recovery](screenshots/145b-mobile-recovery.png)
+
+## Subsequent Activity and component storyboards
 
 `POST /activity-views`, `GET /activity-views/{id}` and `GET /activity-views` expose
 immutable version-1 rolling selector and column configuration. Publication has a
 16 KiB Go/proxy bound and rejects execution/custody fields. List supports exact
 optional environment and cursor parameters, returning up to 20 items. These
 source-free file routes are independent of fixed `/exploration-views` and XTDB.
-Opening configuration never opens a tail connection. See [Activity views](ACTIVITY_VIEWS.md).
+Opening configuration never opens a tail connection. See [Activity views](../ACTIVITY_VIEWS.md).
 
 ### 146 — Reusable rolling Activity views
 

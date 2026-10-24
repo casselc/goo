@@ -8051,3 +8051,33 @@ and storyboard are synchronized. This is same-tab convenience, not durable/share
 recovery, secret scanning or exactly-once ordinary publication. Browser storage
 can fail or disappear; restored unknown saves may already exist on the server.
 Independent milestone review approved final code, model/browser evidence and documentation with no remaining blocking findings.
+
+
+## 2026-10-24 — M5 current orientation and index repair
+
+README now puts local startup near the top, describes Activity → narrow → inspect
+→ analyze → preserve/reuse, and separates optional reservation views from the
+general-purpose product. It is 192 lines rather than 619; 168 existing feature/design
+references remain accessible through `docs/CAPABILITY_GUIDE.md`. Current Go/Python
+and passive-display ownership, shipped native discovery, bounded trace continuity
+and same-tab recovery are stated without closing external deployment/data gates.
+
+Restored component and executable-storyboard contracts that commit c45caec had
+replaced with unrelated known-issues history. The repair preserves subsequent
+unique contracts/storyboards, adds current 44/87/164–170 references and points issue
+history at its actual owner. All 22 registered elements are represented. Dated
+proposal/acceptance material remains explicitly historical; this repair generated
+no screenshots and makes no new runtime acceptance claim.
+
+Checks: 744 relative file targets and 36 outgoing Markdown anchors across current
+entry/status/index/recovery docs resolve. The index repair independently checked
+527 relative targets, 19 outgoing anchors and 45 incoming index anchors with no
+failures. `git diff --check` passes. Compact reports remain under
+`artifacts/overnight-2026-10-24`. Runtime/model suites were not repeated for this
+documentation-only step; actual M1–M4 evidence appears above. The installed native
+binary's owned temporary build copy was removed after deployment; application
+telemetry, captures, XTDB, volumes and compact validation evidence were preserved.
+Independent whole-product/documentation review approved M5 with no blocking
+findings and independently resolved 726 relative targets across the four entry/index
+documents. The finite M1–M5 queue is complete; deferred proposals remain separate
+from this round. Final reviewed closeout is recorded in git history.
