@@ -7076,3 +7076,64 @@ value autocomplete inputs now use accessible labels in the test. Actual frames
 for 29/148/149/150 are refreshed. Final documentation and generated frames are
 synchronized after checks, owned temporary build staging is removed, and reusable
 Go/module caches are retained.
+
+## Explicit scoped counted field values — 2026-10-24
+
+[Counted field values](docs/FILTER_VALUES.md) now extend shown-record samples
+through an explicit existing exploration breakdown. The editor remains passive;
+`GooFilterValues` owns the applied scope, cancellation, result validation and read
+lifetime. Counts preserve environment, selector, reported edge and fixed bounds;
+page offsets, grouping and aggregate presentation are replaced by the selected
+field and a one-row inspection page. No backend API/schema migration is added.
+
+- Six focused Node files pass, including exact counts beyond JS safe integers,
+  null/empty separation, detached scope construction, budget refusal, duplicate
+  groups, changed reads and independent count/group conservation.
+- New cross-runtime Hegel checks run 80 sampled large-count partitions through
+  the JS model and independent native cohort validator. Existing cohort
+  state/swarm checks run 100 cases of 30 steps. Both pass. A development harness
+  initially decoded JS `value` as native wire `g0`; its explicit adapter is now
+  correct, preserving missing and empty rather than inventing duplicate groups.
+- Real journey 151 uses 103 ordinary OTel logs, independently counted in
+  ClickHouse. The first 100-row sample contains only `common`; the full lookup
+  returns common=100 plus canary, empty and missing=1 each. It verifies exactly
+  one explicit lookup request, unchanged page evidence, source-free local search
+  and keyboard staging, explicit Run, desktop/mobile behavior, actual held-response
+  refusal, negative transport retry, saved fixed children and frozen Activity
+  windows. Activity mode changes withdraw counted results without another read.
+- Real journey 152 ingests 1,001 distinct values and verifies Go's actual grouping
+  refusal, zero displayed partial groups/totals and intact main page evidence.
+  No successful source response or UI data is mocked. Both journeys pass in
+  1.2 minutes. Development corrected null ordering/disclosure assumptions in
+  the journey and a real saved-stream pause-path bug; lookup now pauses the
+  actual subscription before binding its completed window.
+- Observed Quint replay passes the actual lookup request/response and source-free
+  staging, with four rejecting controls for hidden reads, altered predicates,
+  changed bounds and changed environments. This is bounded scope consistency,
+  not a proof of arbitrary navigation histories. The new 30-second Bombadil
+  campaign explicitly runs/loads, searches locally, stages and verifies draft
+  invalidation, progress, overflow and exception invariants. Its selector now
+  scopes the visible single-question editor rather than hidden Activity markup.
+- Existing sample-suggestion and single-question journeys 150/149 pass (1.6 min),
+  including their observed model checks and actor campaigns. Source UI scripts,
+  new static asset allowlist and Python compilation pass. Production Go and the
+  existing grouping compiler/refusal policy are unchanged.
+
+The final local query/packages image is
+`sha256:ff4bae33709cfc94d68aaf44dd14f4de5083a8ce643449f7ba01ab97c8ea5529`.
+Only query/packages are recreated; telemetry/evidence/configuration volumes remain.
+Six served assets and the HTML script include match the checkout. A final deployed
+browser check verifies the compact read-details disclosure performs no source
+read and regenerates focused, readable desktop/mobile frames. Opaque read basis
+and grouping caveats are available behind Read details, separate from the count
+list. Compact logs are under `artifacts/filter-values-integration`; the final
+observed ledger/actor outputs are under `artifacts/filter-values/values-951528ce`.
+
+The existing full-group limit is 1,000; larger lookups are refused, without partial
+top-K or invented residual totals. Count/group reads are independent and coverage
+remains unknown. Lookups are ephemeral, require an applied scope, and never become
+retained row-membership evidence or silently enter saved configurations. Temporary
+build staging is removed, reusable Go/module caches remain, and unused Docker
+build cache/dangling-image cleanup uses supported CLI commands without volume
+pruning. Final documentation and actual 149–152 frames are synchronized after
+verification.

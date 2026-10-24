@@ -131,3 +131,5 @@ then explores and stages without executing another query.
 
 ![Observed Activity fields](journeys/screenshots/150a-observed-activity-fields.png)
 ![Mobile observed values](journeys/screenshots/150b-mobile-observed-fields.png)
+
+Observed sample fields and typed conditions now offer [explicit counted value lookup](FILTER_VALUES.md). This separate read covers the applied fixed scope; choosing a counted entry stages a predicate, while sample browsing and typing remain source-free.

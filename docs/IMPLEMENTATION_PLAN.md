@@ -903,3 +903,5 @@ retained through filter/environment edits, and shared links staged before Run.
 Broader automatic suggestions from Activity/discovery remain follow-up work.
 
 Bounded [observed field/value discovery](FILTER_EDITOR.md#observed-fields-and-values) is delivered across Activity, single questions and fixed/saved views. Existing reads supply scoped metadata and record samples; there is no new suggestion query. Full-source top values/cardinality and semantic-convention enrichment remain future work.
+
+[Explicit counted field values](FILTER_VALUES.md) now extend bounded samples using the existing full-scope grouping path. Activity freezes its completed window; single/fixed owners retain applied scope, invalidate stale reads and stage selection. Groupings above 1,000 are refused rather than truncated. Approximate large-cardinality/top-K and persistent lookup captures remain future work.

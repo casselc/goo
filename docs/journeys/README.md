@@ -718,3 +718,11 @@ controls and runs a source-free Bombadil editor campaign.
 
 ![Observed fields](screenshots/150a-observed-activity-fields.png)
 ![Mobile values](screenshots/150b-mobile-observed-fields.png)
+
+### 151–152 — Counted values beyond the shown page
+
+[Executable journeys](../../journeys/filter-values.spec.js) compare a 100-row sample with all groups from 103 ordinary OTel logs, then exercise staged missing/canary selection, keyboard/mobile/local search, delayed response refusal, negative transport retry, saved child scopes and paused Activity. A separate 1,001-value source fixture verifies refusal without partial totals. [Contract and process diagram](../FILTER_VALUES.md).
+
+![Scoped counted values](screenshots/151a-counted-field-values.png)
+![Mobile counted list](screenshots/151b-mobile-counted-values.png)
+![Cardinality refusal](screenshots/152-counted-value-refusal.png)

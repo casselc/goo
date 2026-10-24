@@ -660,3 +660,5 @@ editor, retaining source-supplied suggestions and explicit Run. Fixed editor dra
 opened as a child; configured view publication retains the parent selector.
 
 The editor now offers scoped observed field/value suggestions from existing reads, with missing/empty distinctions and invalidation on scope changes. The bounded sample (100 records, 64 fields, 12 values) does not establish population counts, cardinality or completeness. Missing maps and non-string values do not imply missing keys. Full-source value ranking remains unsupported. See [contract](FILTER_EDITOR.md#observed-fields-and-values).
+
+[Counted value lookup](FILTER_VALUES.md) now covers applied record scopes beyond the shown-page sample. It uses the existing <=1,000-group refusal contract; no partial top-K or approximate cardinality is offered. Counts and inspection pages are independent reads. Lookups are ephemeral, require an applied scope and do not change saved/custody formats.

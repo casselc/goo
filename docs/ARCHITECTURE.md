@@ -671,3 +671,5 @@ the query owner continues owning cancellation and reads. Environment edits retai
 the draft and fixed bounds; incompatible signal edits reset predicates.
 
 [Observed suggestion flow](FILTER_EDITOR.md#observed-fields-and-values) reuses successful applied record reads. The source adapter projects bounded qualified fields/values; the editor presents supplied observations and emits draft predicates. Scope ownership, invalidation, clocks and source execution remain in Activity/single/fixed adapters. Saved configuration never persists sampled suggestions.
+
+[Explicit value lookup](FILTER_VALUES.md) adds an application owner over the existing exploration grouping route. The passive editor emits a Load intent; each Activity/single/fixed adapter supplies its applied scope and lifetime. Lookup results retain their own read clock/basis and never replace page evidence, source capabilities or custody.
