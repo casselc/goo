@@ -130,7 +130,7 @@ func TestSavedComparisonRetainsServerEvidenceAndReopensOffline(t *testing.T) {
 	b := a
 	b.FromMS += 60000
 	b.ToMS += 60000
-	q := CaptureQuestion{Kind: "comparison", Comparison: &ComparisonQuestion{a, b}}
+	q := CaptureQuestion{Kind: "comparison", Comparison: &ComparisonQuestion{Baseline: a, Selection: b}}
 	store := CaptureStore{Dir: t.TempDir()}
 	saved, e := store.Create(context.Background(), source, "Error regression", q, "")
 	if e != nil {

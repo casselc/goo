@@ -24,7 +24,7 @@ document files reopen without the optional store. Native and record source HTTP 
 now use shared POST/bounded-read primitives; the [acceptance audit](HTTP_BOUNDARIES.md#c2-acceptance-audit--2026-10-22)
 identified four additional readers; all are now adopted, including histograms.
 Telemetry/native/fixed exploration JSON is adopted behind frozen wire cases.
-The [OpenAPI contract](API.md) now inventories 71 operations (65 Go operations, five Python-only API operations
+The [OpenAPI contract](API.md) now inventories 72 operations (66 Go operations, five Python-only API operations
 and root health) and documents direct-Go
 versus browser-proxy limits, headers and SSE differences. Those discrepancies are
 preserved, not repaired by documentation. Further mechanical JSON migration remains paused;

@@ -258,6 +258,59 @@
       }
     ]
   },
+  "DistributionSelectionRequest": {
+    "anyOf": [
+      {
+        "additionalProperties": false,
+        "properties": {
+          "comparison": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ComparisonRequestInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fromBin": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "side": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "toBin": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
   "Document": {
     "$ref": "#/components/schemas/workbench.Document"
   },
@@ -2830,6 +2883,16 @@
           }
         ]
       },
+      "numericHistogram": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.NumericHistogram"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "question": {
         "$ref": "#/components/schemas/exploration.Query"
       },
@@ -2859,6 +2922,9 @@
   },
   "exploration.CohortComparison": {
     "properties": {
+      "aggregateOnly": {
+        "type": "boolean"
+      },
       "baselineBasis": {
         "type": "string"
       },
@@ -2937,6 +3003,16 @@
   "exploration.CohortComparisonInput": {
     "additionalProperties": false,
     "properties": {
+      "aggregateOnly": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "baselineBasis": {
         "anyOf": [
           {
@@ -3155,6 +3231,23 @@
           }
         ]
       },
+      "numericHistogram": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.NumericHistogramInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "question": {
         "anyOf": [
           {
@@ -3201,6 +3294,9 @@
       "baseline": {
         "$ref": "#/components/schemas/exploration.Query"
       },
+      "distribution": {
+        "type": "boolean"
+      },
       "selection": {
         "$ref": "#/components/schemas/exploration.Query"
       }
@@ -3219,6 +3315,16 @@
         "anyOf": [
           {
             "$ref": "#/components/schemas/exploration.QueryInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "distribution": {
+        "anyOf": [
+          {
+            "type": "boolean"
           },
           {
             "type": "null"
@@ -3244,6 +3350,9 @@
       "baseline": {
         "$ref": "#/components/schemas/exploration.Cohort"
       },
+      "distribution": {
+        "type": "boolean"
+      },
       "numeric": {
         "type": "boolean"
       },
@@ -3265,6 +3374,16 @@
         "anyOf": [
           {
             "$ref": "#/components/schemas/exploration.CohortInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "distribution": {
+        "anyOf": [
+          {
+            "type": "boolean"
           },
           {
             "type": "null"
@@ -3900,6 +4019,9 @@
           }
         ]
       },
+      "distribution": {
+        "type": "boolean"
+      },
       "gauges": {
         "anyOf": [
           {
@@ -4020,6 +4142,16 @@
               ]
             },
             "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "distribution": {
+        "anyOf": [
+          {
+            "type": "boolean"
           },
           {
             "type": "null"
@@ -5188,6 +5320,261 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.NumericDiagnostic"
   },
+  "exploration.NumericDistributionBin": {
+    "properties": {
+      "baselineCount": {
+        "type": "string"
+      },
+      "baselinePercent": {
+        "type": "string"
+      },
+      "countDifference": {
+        "type": "string"
+      },
+      "differencePP": {
+        "type": "string"
+      },
+      "from": {
+        "type": "string"
+      },
+      "selectionCount": {
+        "type": "string"
+      },
+      "selectionPercent": {
+        "type": "string"
+      },
+      "to": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "from",
+      "to",
+      "baselineCount",
+      "selectionCount"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.NumericDistributionBin"
+  },
+  "exploration.NumericDistributionBinInput": {
+    "additionalProperties": false,
+    "properties": {
+      "baselineCount": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "baselinePercent": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "countDifference": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "differencePP": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "from": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "selectionCount": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "selectionPercent": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "to": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.NumericDistributionBin"
+  },
+  "exploration.NumericDistributionComparison": {
+    "properties": {
+      "baselineCount": {
+        "type": "string"
+      },
+      "binning": {
+        "type": "string"
+      },
+      "bins": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.NumericDistributionBin"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "denominator": {
+        "type": "string"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "selectionCount": {
+        "type": "string"
+      },
+      "state": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "state",
+      "binning",
+      "denominator",
+      "baselineCount",
+      "selectionCount",
+      "bins"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.NumericDistributionComparison"
+  },
+  "exploration.NumericDistributionComparisonInput": {
+    "additionalProperties": false,
+    "properties": {
+      "baselineCount": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "binning": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "bins": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/exploration.NumericDistributionBinInput"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "denominator": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "reason": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "selectionCount": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "state": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.NumericDistributionComparison"
+  },
   "exploration.NumericHistogram": {
     "properties": {
       "binning": {
@@ -5234,6 +5621,43 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.NumericHistogramBin"
   },
+  "exploration.NumericHistogramBinInput": {
+    "additionalProperties": false,
+    "properties": {
+      "count": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "from": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "to": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.NumericHistogramBin"
+  },
   "exploration.NumericHistogramComparisonQueries": {
     "properties": {
       "baseline": {
@@ -5250,6 +5674,43 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.NumericHistogramComparisonQueries"
   },
+  "exploration.NumericHistogramInput": {
+    "additionalProperties": false,
+    "properties": {
+      "binning": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "bins": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/exploration.NumericHistogramBinInput"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.NumericHistogram"
+  },
   "exploration.NumericHistogramSelection": {
     "properties": {
       "binning": {
@@ -5257,6 +5718,16 @@
       },
       "comparison": {
         "$ref": "#/components/schemas/exploration.NumericHistogramComparisonQueries"
+      },
+      "distributionComparison": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.NumericHistogramComparisonQueries"
+          },
+          {
+            "type": "null"
+          }
+        ]
       },
       "from": {
         "type": "string"
@@ -5361,6 +5832,16 @@
           }
         ]
       },
+      "distribution": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.NumericDistributionComparison"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "maxDifference": {
         "type": "string"
       },
@@ -5442,6 +5923,23 @@
               ]
             },
             "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "distribution": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.NumericDistributionComparisonInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           {
             "type": "null"
@@ -14903,6 +15401,9 @@
       "comparisonMetric": {
         "type": "string"
       },
+      "distribution": {
+        "type": "boolean"
+      },
       "metric": {
         "type": "string"
       }
@@ -14938,6 +15439,16 @@
         "anyOf": [
           {
             "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "distribution": {
+        "anyOf": [
+          {
+            "type": "boolean"
           },
           {
             "type": "null"

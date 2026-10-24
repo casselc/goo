@@ -206,3 +206,32 @@ func TestExplorationViewNumericComparisonReuse(t *testing.T) {
 		t.Fatal("accepted numeric ranking without binding")
 	}
 }
+
+func TestDistributionViewRetainsIntentAndHistogramBinding(t *testing.T) {
+	b := exploration.NumericBinding{Field: exploration.Field{Kind: "attribute", Key: "work.items"}, Type: "uint64", Unit: "items", Parse: "canonical-decimal"}
+	for _, group := range [][]exploration.Field{nil, {{Kind: "column", Key: "service"}}} {
+		q := exploration.Query{Signal: "spans", Environment: "prod", FromMS: 1000, ToMS: 2000, Limit: 100, Numeric: &b, NumericHistogram: &exploration.NumericHistogramSpec{Binning: "powers-of-two"}, GroupBy: group}
+		baseline := q
+		baseline.FromMS = 1
+		baseline.ToMS = 1000
+		v := ExplorationView{Version: 1, Title: "Distribution", Queries: []exploration.Query{q}, Layout: "charts-records", Columns: []string{"utc", "summary"}, Breakdowns: map[string]ExplorationBreakdown{"spans": {Metric: "count", ComparisonMetric: "count", Distribution: true, Baseline: &baseline}}}
+		store := Store{Dir: t.TempDir()}
+		saved, e := store.CreateExplorationView(v)
+		if e != nil {
+			t.Fatal(e)
+		}
+		loaded, e := store.LoadExplorationView(saved.ID)
+		if e != nil || !loaded.Breakdowns["spans"].Distribution || !reflect.DeepEqual(loaded.Breakdowns["spans"].Baseline, &baseline) {
+			t.Fatal("distribution view meaning changed", e)
+		}
+		baseline.NumericHistogram = nil
+		if v.Validate() == nil {
+			t.Fatal("orphan distribution baseline accepted")
+		}
+		baseline.NumericHistogram = q.NumericHistogram
+		v.Queries[0].NumericHistogram = nil
+		if v.Validate() == nil {
+			t.Fatal("orphan distribution request accepted")
+		}
+	}
+}

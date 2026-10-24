@@ -10,6 +10,7 @@ import (
 
 const ComparisonAlgorithm = "goo/evidence-comparison/v3"
 const NumericComparisonAlgorithm = "goo/evidence-comparison/v4"
+const DistributionComparisonAlgorithm = "goo/evidence-comparison/v5"
 
 var ErrComparisonChanged = errors.New("comparison changed; compare these captures again before saving")
 
@@ -35,7 +36,12 @@ func (s Store) CreateComparison(baseline, selection string, expected *exploratio
 	if e != nil {
 		return nil, e
 	}
-	result, e := exploration.CompareEvidence(a, b)
+	var result *exploration.EvidenceComparison
+	if expected.Distribution {
+		result, e = exploration.CompareDistributionEvidence(a, b)
+	} else {
+		result, e = exploration.CompareEvidence(a, b)
+	}
 	if e != nil {
 		return nil, e
 	}
@@ -45,6 +51,9 @@ func (s Store) CreateComparison(baseline, selection string, expected *exploratio
 	algorithm := ComparisonAlgorithm
 	if a.Question.Explore != nil && a.Question.Explore.Numeric != nil || b.Question.Explore != nil && b.Question.Explore.Numeric != nil {
 		algorithm = NumericComparisonAlgorithm
+	}
+	if expected.Distribution {
+		algorithm = DistributionComparisonAlgorithm
 	}
 	receipt := ComparisonReceipt{Version: 1, Algorithm: algorithm, RecordedAt: time.Now().UTC().Format(time.RFC3339Nano), Result: result}
 	id, e := digest(receipt)
@@ -66,8 +75,14 @@ func (s Store) LoadComparison(id string) (*ComparisonReceipt, error) {
 	r.ID = ""
 	hash, e := digest(r)
 	r.ID = actual
-	if e != nil || actual != id || hash != id || r.Version != 1 || (r.Algorithm != ComparisonAlgorithm && r.Algorithm != NumericComparisonAlgorithm && r.Algorithm != "goo/evidence-comparison/v1" && r.Algorithm != "goo/evidence-comparison/v2") || !validTime(r.RecordedAt) || r.Result == nil {
+	if e != nil || actual != id || hash != id || r.Version != 1 || (r.Algorithm != ComparisonAlgorithm && r.Algorithm != NumericComparisonAlgorithm && r.Algorithm != DistributionComparisonAlgorithm && r.Algorithm != "goo/evidence-comparison/v1" && r.Algorithm != "goo/evidence-comparison/v2") || !validTime(r.RecordedAt) || r.Result == nil {
 		return nil, errors.New("comparison integrity check failed")
+	}
+	if (r.Algorithm == DistributionComparisonAlgorithm) != r.Result.Distribution {
+		return nil, errors.New("distribution intent differs from stored comparison algorithm")
+	}
+	if r.Algorithm != DistributionComparisonAlgorithm && r.Result.Measures != nil && r.Result.Measures.Numeric != nil && r.Result.Measures.Numeric.Distribution != nil {
+		return nil, errors.New("distribution evidence requires distribution comparison algorithm")
 	}
 	a, b := r.Result.Baseline.Receipt, r.Result.Selection.Receipt
 	if !ID.MatchString(a.ID) || !ID.MatchString(b.ID) || a.ID == b.ID || a.Question.Validate() != nil || b.Question.Validate() != nil {
@@ -76,7 +91,7 @@ func (s Store) LoadComparison(id string) (*ComparisonReceipt, error) {
 	switch r.Result.State {
 	case "comparable", "incompatible", "unavailable", "unsupported":
 	case "unknown":
-		if r.Algorithm != NumericComparisonAlgorithm {
+		if r.Algorithm != NumericComparisonAlgorithm && r.Algorithm != DistributionComparisonAlgorithm {
 			return nil, errors.New("unknown numeric decision requires numeric comparison algorithm")
 		}
 	default:

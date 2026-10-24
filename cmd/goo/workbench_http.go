@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/internal/httpjson"
 	"github.com/casselc/goo/workbench"
 )
 
@@ -95,6 +96,28 @@ func registerWorkbench(mux *http.ServeMux, dir string, connection retentionConne
 			return
 		}
 		reply(w, 200, v)
+	})
+	mux.HandleFunc("POST /numeric-histograms/comparison-selection", func(w http.ResponseWriter, r *http.Request) {
+		var in struct {
+			Comparison exploration.ComparisonRequest `json:"comparison"`
+			Side       string                        `json:"side"`
+			FromBin    *int                          `json:"fromBin"`
+			ToBin      *int                          `json:"toBin"`
+		}
+		if e := httpjson.Decode(w, r, &in, 1<<20, "expected one JSON object"); e != nil {
+			fail(w, 400, e)
+			return
+		}
+		if in.FromBin == nil || in.ToBin == nil {
+			fail(w, 400, fmt.Errorf("fromBin and toBin are required"))
+			return
+		}
+		plan, e := exploration.PlanNumericDistributionSelection(in.Comparison, in.Side, *in.FromBin, *in.ToBin)
+		if e != nil {
+			fail(w, 400, e)
+			return
+		}
+		reply(w, 200, plan)
 	})
 	mux.HandleFunc("POST /numeric-histograms/selection", func(w http.ResponseWriter, r *http.Request) {
 		var in struct {

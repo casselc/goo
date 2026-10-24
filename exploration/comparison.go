@@ -12,14 +12,15 @@ import (
 // Cohort is a browser-held capture of complete group/count results, not a signed
 // source receipt. Comparison validates its internal accounting, not provenance.
 type Cohort struct {
-	Numeric    *NumericSummary    `json:"numeric,omitempty"`
-	Duration   *DurationSummary   `json:"duration,omitempty"`
-	SpanStatus *SpanStatusSummary `json:"spanStatus,omitempty"`
-	Question   Query              `json:"question"`
-	Basis      string             `json:"basis"`
-	Count      string             `json:"count"`
-	State      string             `json:"state"`
-	Groups     []ValueCount       `json:"groups"`
+	NumericHistogram *NumericHistogram  `json:"numericHistogram,omitempty"`
+	Numeric          *NumericSummary    `json:"numeric,omitempty"`
+	Duration         *DurationSummary   `json:"duration,omitempty"`
+	SpanStatus       *SpanStatusSummary `json:"spanStatus,omitempty"`
+	Question         Query              `json:"question"`
+	Basis            string             `json:"basis"`
+	Count            string             `json:"count"`
+	State            string             `json:"state"`
+	Groups           []ValueCount       `json:"groups"`
 }
 type ValueCount struct {
 	Numeric    *NumericSummary    `json:"numeric,omitempty"`
@@ -29,9 +30,10 @@ type ValueCount struct {
 	Count      string             `json:"count"`
 }
 type ComparisonRequest struct {
-	Numeric   bool   `json:"numeric,omitempty"`
-	Baseline  Cohort `json:"baseline"`
-	Selection Cohort `json:"selection"`
+	Distribution bool   `json:"distribution,omitempty"`
+	Numeric      bool   `json:"numeric,omitempty"`
+	Baseline     Cohort `json:"baseline"`
+	Selection    Cohort `json:"selection"`
 }
 type ValueComparison struct {
 	Measures         *MeasureComparison `json:"measures,omitempty"`
@@ -43,6 +45,7 @@ type ValueComparison struct {
 	DifferencePP     string             `json:"differencePP"`
 }
 type CohortComparison struct {
+	AggregateOnly  bool               `json:"aggregateOnly,omitempty"`
 	Measures       *MeasureComparison `json:"measures,omitempty"`
 	State          string             `json:"state"`
 	Reason         string             `json:"reason,omitempty"`
@@ -115,11 +118,23 @@ func (c Cohort) validate() (map[string]ValueCount, *big.Int, error) {
 	return m, total, nil
 }
 func CompareCohorts(request ComparisonRequest) (*CohortComparison, error) {
+	if request.Distribution && !request.Numeric {
+		return nil, fmt.Errorf("distribution comparison requires explicit numeric mode")
+	}
+	if !request.Distribution && (request.Baseline.NumericHistogram != nil || request.Selection.NumericHistogram != nil) {
+		return nil, fmt.Errorf("histogram payload requires explicit distribution comparison")
+	}
+	if request.Distribution && (request.Baseline.NumericHistogram == nil || request.Selection.NumericHistogram == nil) {
+		return nil, fmt.Errorf("distribution comparison requires complete histograms on both sides")
+	}
 	if !request.Numeric && (numericPayload(request.Baseline) || numericPayload(request.Selection)) {
 		return nil, fmt.Errorf("numeric payload requires explicit numeric comparison")
 	}
 	if request.Numeric && (!compatibleNumericBindings(request.Baseline.Question.Numeric, request.Selection.Question.Numeric) || request.Baseline.Numeric == nil || request.Selection.Numeric == nil) {
 		return nil, fmt.Errorf("numeric comparison requires identical declared bindings and complete numeric coverage")
+	}
+	if request.Distribution && len(request.Baseline.Question.GroupBy) == 0 && len(request.Selection.Question.GroupBy) == 0 {
+		return compareAggregateDistributions(request)
 	}
 	a, totalA, e := request.Baseline.validate()
 	if e != nil {
@@ -202,6 +217,9 @@ func CompareCohorts(request ComparisonRequest) (*CohortComparison, error) {
 	}
 	if request.Numeric {
 		result.Measures = withNumericMeasures(result.Measures, compareNumericMeasures(*qa.Numeric, request.Baseline.Numeric, request.Selection.Numeric, result.State == "unknown"))
+		if request.Distribution {
+			result.Measures.Numeric.Distribution = compareNumericDistributions(request.Baseline, request.Selection, result.State == "unknown")
+		}
 	}
 	// Hash the actual caller-held group evidence, not only claimed source bases.
 	canonical := request

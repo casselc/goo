@@ -170,16 +170,17 @@ type NumericHistogramComparisonQueries struct {
 	Selection Query `json:"selection"`
 }
 type NumericHistogramSelection struct {
-	NumericComparison *NumericHistogramComparisonQueries `json:"numericComparison,omitempty"`
-	Parent            Query                              `json:"parent"`
-	Selected          Query                              `json:"selected"`
-	Rest              Query                              `json:"rest"`
-	Comparison        NumericHistogramComparisonQueries  `json:"comparison"`
-	FromBin           int                                `json:"fromBin"`
-	ToBin             int                                `json:"toBin"`
-	Binning           string                             `json:"binning"`
-	From              string                             `json:"from"`
-	To                string                             `json:"to"`
+	DistributionComparison *NumericHistogramComparisonQueries `json:"distributionComparison,omitempty"`
+	NumericComparison      *NumericHistogramComparisonQueries `json:"numericComparison,omitempty"`
+	Parent                 Query                              `json:"parent"`
+	Selected               Query                              `json:"selected"`
+	Rest                   Query                              `json:"rest"`
+	Comparison             NumericHistogramComparisonQueries  `json:"comparison"`
+	FromBin                int                                `json:"fromBin"`
+	ToBin                  int                                `json:"toBin"`
+	Binning                string                             `json:"binning"`
+	From                   string                             `json:"from"`
+	To                     string                             `json:"to"`
 }
 
 // PlanNumericHistogramSelection is source-free. Indexes are half-open, like bin
@@ -260,7 +261,13 @@ func PlanNumericHistogramSelection(parent Query, fromBin, toBin int) (*NumericHi
 		return v
 	}
 	out.NumericComparison = &NumericHistogramComparisonQueries{Baseline: numericProject(out.Rest), Selection: numericProject(out.Selected)}
-	for _, q := range []Query{out.Selected, out.Rest, out.Comparison.Baseline, out.Comparison.Selection, out.NumericComparison.Baseline, out.NumericComparison.Selection} {
+	distributionProject := func(q Query) Query {
+		v := numericProject(q)
+		v.NumericHistogram = detached(parent.NumericHistogram)
+		return v
+	}
+	out.DistributionComparison = &NumericHistogramComparisonQueries{Baseline: distributionProject(out.Rest), Selection: distributionProject(out.Selected)}
+	for _, q := range []Query{out.Selected, out.Rest, out.Comparison.Baseline, out.Comparison.Selection, out.NumericComparison.Baseline, out.NumericComparison.Selection, out.DistributionComparison.Baseline, out.DistributionComparison.Selection} {
 		if e := q.Validate(); e != nil {
 			return nil, fmt.Errorf("histogram selection exceeds supported question: %w", e)
 		}

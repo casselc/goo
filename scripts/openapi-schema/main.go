@@ -196,6 +196,12 @@ func main() {
 		Title    string            `json:"title"`
 		Lookback int               `json:"lookbackMinutes"`
 	}{}, true)
+	root("DistributionSelectionRequest", struct {
+		Comparison exploration.ComparisonRequest `json:"comparison"`
+		Side       string                        `json:"side"`
+		FromBin    int                           `json:"fromBin"`
+		ToBin      int                           `json:"toBin"`
+	}{}, true)
 	root("NumericHistogramSelectionRequest", struct {
 		Parent  exploration.Query `json:"parent"`
 		FromBin int               `json:"fromBin"`

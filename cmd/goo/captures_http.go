@@ -74,7 +74,7 @@ func registerCaptures(mux *http.ServeMux, source exploration.Source, dir string)
 	})
 	mux.HandleFunc("GET /captures/{id}/compare", func(w http.ResponseWriter, r *http.Request) {
 		values := r.URL.Query()
-		if len(values) != 1 || len(values["selection"]) != 1 {
+		if (len(values) != 1 && len(values) != 2) || len(values["selection"]) != 1 || (len(values) == 2 && (len(values["distribution"]) != 1 || values.Get("distribution") != "true")) {
 			fail(w, 400, fmt.Errorf("one selection capture ID required"))
 			return
 		}
@@ -88,7 +88,12 @@ func registerCaptures(mux *http.ServeMux, source exploration.Source, dir string)
 			fail(w, 404, e)
 			return
 		}
-		result, e := exploration.CompareEvidence(a, b)
+		var result *exploration.EvidenceComparison
+		if values.Get("distribution") == "true" {
+			result, e = exploration.CompareDistributionEvidence(a, b)
+		} else {
+			result, e = exploration.CompareEvidence(a, b)
+		}
 		if e != nil {
 			fail(w, 400, e)
 			return

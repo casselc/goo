@@ -8,7 +8,7 @@ The running server must include the current routes and assets; changing the
 checkout alone does not update an existing process. Rebuild an older image, or
 use the supported local code/asset installation and restart procedure.
 
-The spec inventories 71 supported operations: 65 Go operations, five Python-only
+The spec inventories 72 supported operations: 66 Go operations, five Python-only
 `/api` operations and the Python root `/health` probe. Go paths are unprefixed on
 port 8089; the browser proxy exposes them under `/api` on port 8088. Python-only
 operations override the server list. `/api-docs`, `/openapi.json`, the UI, static
@@ -326,3 +326,10 @@ also supplies a separate `numericComparison` query pair alongside its unchanged
 count-only pair. Numeric stored-evidence decisions use algorithm v4; older frozen
 receipt algorithms remain readable without reevaluation. See
 [numeric comparison semantics](NUMERIC_COMPARISONS.md).
+
+Aligned distribution comparison is explicit `distribution: true` with numeric
+mode and both validated histogram payloads. `POST /numeric-histograms/comparison-selection`
+accepts the comparison, side and half-open bin indices, plans without source reads
+and permits 1 MiB request bodies. Stored capture comparison accepts the explicit
+`distribution=true` query option; publication freezes v5 intent, preserving old
+v1–v4 results. See [distribution comparisons](DISTRIBUTION_COMPARISONS.md).

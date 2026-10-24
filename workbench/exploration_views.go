@@ -13,6 +13,7 @@ type ExplorationTail struct {
 }
 
 type ExplorationBreakdown struct {
+	Distribution     bool               `json:"distribution,omitempty"`
 	Metric           string             `json:"metric"`
 	ComparisonMetric string             `json:"comparisonMetric"`
 	Baseline         *exploration.Query `json:"baseline,omitempty"`
@@ -89,7 +90,7 @@ func (v ExplorationView) Validate() error {
 				current = &v.Queries[i]
 			}
 		}
-		if current == nil || len(current.GroupBy) != 1 {
+		if current == nil || (len(current.GroupBy) != 1 && !(config.Distribution && len(current.GroupBy) == 0)) {
 			return errors.New("breakdown requires a configured single-group signal")
 		}
 		if config.Metric != "count" && config.Metric != "error-rate" && config.Metric != "mean" && config.Metric != "p95" && config.Metric != "p99" && config.Metric != "max" && config.Metric != "numeric-mean" && config.Metric != "numeric-sum" && config.Metric != "numeric-min" && config.Metric != "numeric-max" {
@@ -101,7 +102,13 @@ func (v ExplorationView) Validate() error {
 		if len(config.ComparisonMetric) >= 8 && config.ComparisonMetric[:8] == "numeric-" && current.Numeric == nil {
 			return errors.New("numeric comparison ranking requires an explicit numeric binding")
 		}
+		if config.Distribution && (current.Numeric == nil || current.NumericHistogram == nil) {
+			return errors.New("distribution comparison requires an explicit numeric histogram")
+		}
 		if b := config.Baseline; b != nil {
+			if config.Distribution && b.NumericHistogram == nil {
+				return errors.New("distribution baseline requires histogram evidence")
+			}
 			if b.Signal != signal || b.Environment != current.Environment || b.Offset != 0 || !reflect.DeepEqual(b.GroupBy, current.GroupBy) || !reflect.DeepEqual(b.Numeric, current.Numeric) {
 				return errors.New("baseline requires the same signal, environment, breakdown and numeric binding")
 			}

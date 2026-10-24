@@ -16,21 +16,22 @@ type NumericCoverageChange struct {
 	DifferencePP   string `json:"differencePP,omitempty"`
 }
 type NumericMeasureComparison struct {
-	Binding        NumericBinding          `json:"binding"`
-	State          string                  `json:"state"`
-	Reason         string                  `json:"reason,omitempty"`
-	Baseline       *NumericSummary         `json:"baseline,omitempty"`
-	Selection      *NumericSummary         `json:"selection,omitempty"`
-	SumDifference  string                  `json:"sumDifference,omitempty"`
-	MinDifference  string                  `json:"minDifference,omitempty"`
-	MaxDifference  string                  `json:"maxDifference,omitempty"`
-	MeanDifference string                  `json:"meanDifference,omitempty"`
-	Coverage       []NumericCoverageChange `json:"coverage"`
+	Distribution   *NumericDistributionComparison `json:"distribution,omitempty"`
+	Binding        NumericBinding                 `json:"binding"`
+	State          string                         `json:"state"`
+	Reason         string                         `json:"reason,omitempty"`
+	Baseline       *NumericSummary                `json:"baseline,omitempty"`
+	Selection      *NumericSummary                `json:"selection,omitempty"`
+	SumDifference  string                         `json:"sumDifference,omitempty"`
+	MinDifference  string                         `json:"minDifference,omitempty"`
+	MaxDifference  string                         `json:"maxDifference,omitempty"`
+	MeanDifference string                         `json:"meanDifference,omitempty"`
+	Coverage       []NumericCoverageChange        `json:"coverage"`
 }
 
 func compatibleNumericBindings(a, b *NumericBinding) bool { return a != nil && b != nil && *a == *b }
 func numericPayload(c Cohort) bool {
-	if c.Numeric != nil {
+	if c.Numeric != nil || c.NumericHistogram != nil {
 		return true
 	}
 	for _, g := range c.Groups {
@@ -41,6 +42,11 @@ func numericPayload(c Cohort) bool {
 	return false
 }
 func validateNumericCohort(c Cohort) error {
+	if c.NumericHistogram != nil {
+		if e := validateOptionalNumericHistogram(c.Question, c.NumericHistogram, c.Numeric); e != nil {
+			return e
+		}
+	}
 	if c.Numeric == nil {
 		for _, g := range c.Groups {
 			if g.Numeric != nil {

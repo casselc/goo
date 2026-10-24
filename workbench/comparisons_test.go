@@ -239,3 +239,93 @@ func TestNumericEvidenceReceiptFreezesVersionedMeaning(t *testing.T) {
 		t.Fatal("legacy version accepted a new numeric decision")
 	}
 }
+
+func TestDistributionEvidenceReceiptPreservesExplicitAlgorithm(t *testing.T) {
+	store := Store{Dir: t.TempDir()}
+	a, b := comparisonCaptures()
+	binding := exploration.NumericBinding{Field: exploration.Field{Kind: "attribute", Key: "work.items"}, Type: "int64", Unit: "items", Parse: "canonical-decimal"}
+	raw := func(s string) *string { return &s }
+	for i, c := range []*exploration.SavedCapture{a, b} {
+		c.Question.Explore.Numeric = &binding
+		c.Explore.Question.Numeric = &binding
+		spec := &exploration.NumericHistogramSpec{Binning: "powers-of-two"}
+		c.Question.Explore.NumericHistogram = spec
+		c.Explore.Question.NumericHistogram = spec
+		values := []*string{raw("-1"), raw("1")}
+		if i == 1 {
+			values = append(values, nil, raw("bad"))
+		}
+		s, e := exploration.EvaluateNumericValues(binding, values)
+		if e != nil {
+			t.Fatal(e)
+		}
+		h, e := exploration.EvaluateNumericHistogram(binding, values)
+		if e != nil {
+			t.Fatal(e)
+		}
+		c.Explore.Numeric = &s
+		c.Explore.NumericHistogram = &h
+	}
+	load := func(id string) (*exploration.SavedCapture, error) {
+		if id == a.ID {
+			return a, nil
+		}
+		return b, nil
+	}
+	old, e := exploration.CompareEvidence(a, b)
+	if e != nil {
+		t.Fatal(e)
+	}
+	if old.Distribution || old.Measures.Numeric.Distribution != nil {
+		t.Fatal("default numeric comparison silently changed")
+	}
+	oldReceipt, e := store.CreateComparison(a.ID, b.ID, old, load)
+	if e != nil || oldReceipt.Algorithm != NumericComparisonAlgorithm {
+		t.Fatal("old algorithm drift", e)
+	}
+	explicit, e := exploration.CompareDistributionEvidence(a, b)
+	if e != nil {
+		t.Fatal(e)
+	}
+	receipt, e := store.CreateComparison(a.ID, b.ID, explicit, load)
+	if e != nil || receipt.Algorithm != DistributionComparisonAlgorithm || !receipt.Result.Distribution || receipt.Result.Measures.Numeric.Distribution == nil {
+		t.Fatal("explicit distribution intent lost", e)
+	}
+	before, _ := json.Marshal(receipt)
+	again, e := store.LoadComparison(receipt.ID)
+	if e != nil {
+		t.Fatal(e)
+	}
+	after, _ := json.Marshal(again)
+	if string(before) != string(after) {
+		t.Fatal("distribution receipt changed on reopen")
+	}
+	for _, algorithm := range []string{ComparisonAlgorithm, NumericComparisonAlgorithm} {
+		forged := *receipt
+		forged.ID = ""
+		forged.Algorithm = algorithm
+		id, e := digest(forged)
+		if e != nil {
+			t.Fatal(e)
+		}
+		forged.ID = id
+		if e = store.publish("comparisons", id, forged); e != nil {
+			t.Fatal(e)
+		}
+		if _, e = store.LoadComparison(id); e == nil {
+			t.Fatal("new intent admitted by historical algorithm")
+		}
+	}
+	a.Explore.State = "changed_between_reads"
+	unknown, e := exploration.CompareDistributionEvidence(a, b)
+	if e != nil || unknown.State != "unknown" {
+		t.Fatal(e)
+	}
+	if _, e = store.CreateComparison(a.ID, b.ID, unknown, load); e != nil {
+		t.Fatal("unknown v5 decision lost", e)
+	}
+	frozen, e := store.LoadComparison(oldReceipt.ID)
+	if e != nil || frozen.Result.Distribution || frozen.Result.Measures.Numeric.Distribution != nil {
+		t.Fatal("old numeric evidence reinterpreted", e)
+	}
+}

@@ -28,6 +28,7 @@ type GaugeChange struct {
 	State      string               `json:"state"`
 }
 type EvidenceComparison struct {
+	Distribution    bool                       `json:"distribution,omitempty"`
 	Breakdown       *CohortComparison          `json:"breakdown,omitempty"`
 	NativeWindows   []metrics.WindowComparison `json:"nativeWindows,omitempty"`
 	Baseline        EvidenceSide               `json:"baseline"`

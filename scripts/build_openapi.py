@@ -17,19 +17,19 @@ schemas['Error'] = {'type': 'object', 'required': ['error'], 'properties': {'err
 schemas['Cancellation'] = {'type': 'object', 'required': ['state'], 'properties': {'state': {'const': 'cancellation-requested'}}}
 # API policy is deliberately authored, not inferred from HTTP verbs.
 reads = {'/http-package', '/operations', '/counter-rates', '/histograms', '/inventory', '/discovery', '/explore', '/metric-discovery', '/measurements', '/investigations', '/captures', '/tail', '/query'}
-plans = {'/measurement-packages/plan', '/telemetry-packages/draft', '/telemetry-packages/numeric-plan', '/telemetry-packages/plan', '/recipes', '/dashboards/plan', '/population/plan', '/numeric-histograms/selection', '/compare', '/explain'}
+plans = {'/measurement-packages/plan', '/telemetry-packages/draft', '/telemetry-packages/numeric-plan', '/telemetry-packages/plan', '/recipes', '/dashboards/plan', '/population/plan', '/numeric-histograms/selection', '/numeric-histograms/comparison-selection', '/compare', '/explain'}
 publications = {'/activity-views','/measurement-packages', '/telemetry-packages', '/annotations', '/exploration-views', '/deployments', '/documents', '/captures/comparisons'}
 requests = {'/activity-views':'ActivityViewRequest',
  '/retained-evidence/tail':'TailIntent','/compare':'CompareRequest','/inventory':'InventoryRequest','/discovery':'InventoryRequest','/explore':'RecordQuery','/tail':'TailSelector',
  '/measurements':'NativeQuestion','/metric-discovery':'MetricDiscoveryRequest','/measurement-packages/plan':'NativePlanRequest','/measurement-packages':'YAMLRequest',
  '/telemetry-packages':'YAMLRequest','/telemetry-packages/draft':'TelemetryDraftRequest','/telemetry-packages/numeric-plan':'NumericPlanRequest','/telemetry-packages/plan':'TelemetryPlanRequest',
- '/recipes':'RecipeRequest','/dashboards/plan':'DashboardRequest','/population/plan':'PopulationRequest','/numeric-histograms/selection':'NumericHistogramSelectionRequest','/annotations':'MeaningInput','/exploration-views':'ExplorationView','/deployments':'DeploymentInput','/documents':'DocumentRequest',
+ '/recipes':'RecipeRequest','/dashboards/plan':'DashboardRequest','/population/plan':'PopulationRequest','/numeric-histograms/selection':'NumericHistogramSelectionRequest','/numeric-histograms/comparison-selection':'DistributionSelectionRequest','/annotations':'MeaningInput','/exploration-views':'ExplorationView','/deployments':'DeploymentInput','/documents':'DocumentRequest',
  '/captures':'CaptureRequest','/captures/live':'LiveComparisonRequest','/captures/comparisons':'SaveComparisonRequest','/investigations':'InvestigationRequest','/retained-evidence':'RetainRequest','/retained-evidence/{id}/annotations':'CorrectRequest',
 }
 responses = {('post','/activity-views'):'ActivityView',('get','/activity-views/{id}'):'ActivityView',('get','/activity-views'):'ActivityViewList',
  ('post','/compare'):'CompareResult',('post','/inventory'):'InventoryResult',('post','/discovery'):'ServiceDiscovery',('post','/explore'):'RecordResult',
  ('post','/measurements'):'NativeResult',('post','/metric-discovery'):'MetricDiscoveryResult',('post','/telemetry-packages/draft'):'PackagePlan',('post','/telemetry-packages/plan'):'PackagePlan',('post','/telemetry-packages/numeric-plan'):'NumericPlan',('post','/telemetry-packages'):'SavedPackage',('get','/telemetry-packages/{revision}'):'SavedPackage',
- ('post','/recipes'):'RecipePlan',('post','/dashboards/plan'):'DashboardPlan',('post','/population/plan'):'PopulationPlan',('post','/numeric-histograms/selection'):'NumericHistogramSelection',
+ ('post','/recipes'):'RecipePlan',('post','/dashboards/plan'):'DashboardPlan',('post','/population/plan'):'PopulationPlan',('post','/numeric-histograms/selection'):'NumericHistogramSelection',('post','/numeric-histograms/comparison-selection'):'NumericHistogramSelection',
  ('get','/http-package'):'LiveHTTPResult',('get','/operations'):'LiveOperations',('get','/counter-rates'):'LiveRates',('get','/histograms'):'LiveHistograms',
  ('get','/captures'):'CaptureList',('post','/captures'):'CapturePage',('get','/captures/{id}'):'CapturePage',('get','/investigations/{id}'):'InvestigationCapture',('post','/investigations'):'InvestigationCapture',
  ('post','/annotations'):'MeaningRevision',('get','/annotations/{id}'):'MeaningRevision',('post','/deployments'):'Deployment',('get','/deployments/{id}'):'Deployment',('post','/documents'):'Document',('get','/documents/{id}'):'Document',
@@ -65,7 +65,7 @@ for name in ['measurements.Definition','measurements.Question','measurements.Pla
  if name not in schemas: raise ValueError(f'Missing reflected type: {name}')
 
 def go_limit(path):
- if path == '/compare': return 1048576
+ if path in ('/compare','/numeric-histograms/comparison-selection'): return 1048576
  if path == '/dashboards/plan': return 262144
  if path.startswith(('/telemetry-packages','/measurement-packages')) or path in ('/measurements','/metric-discovery'): return 65536
  if path in ('/annotations','/exploration-views','/deployments','/documents','/population/plan', '/numeric-histograms/selection','/captures/comparisons'): return 131072
@@ -73,7 +73,7 @@ def go_limit(path):
 
 def browser_limit(path):
  if path in ('/population/plan', '/numeric-histograms/selection','/exploration-views','/documents','/captures/comparisons'): return 131072
- if path == '/compare': return 1048576
+ if path in ('/compare','/numeric-histograms/comparison-selection'): return 1048576
  if path.startswith(('/telemetry-packages','/measurement-packages','/measurements')): return 65536
  return 16384
 
@@ -109,7 +109,7 @@ for (method,path),(file,block) in sorted(route_source.items()):
  # Enumerate explicit query getters; allowlists and cross-field validation stay in Go.
  for p in sorted(set(re.findall(r'(?:q|v|values|r\.URL\.Query\(\))\.(?:Get|Has)\("([^"]+)"',block))):
   op['parameters'].append({'name':p,'in':'query','schema':{'type':'string'},'description':'Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported.'})
- for p in {'/captures':['cursor'],'/captures/{id}':['cursor'],'/captures/{id}/followups':['row'],'/captures/{id}/compare':['selection']}.get(path,[]):
+ for p in {'/captures':['cursor'],'/captures/{id}':['cursor'],'/captures/{id}/followups':['row'],'/captures/{id}/compare':['selection','distribution']}.get(path,[]):
   if method=='get' and not any(v['name']==p and v['in']=='query' for v in op['parameters']):op['parameters'].append({'name':p,'in':'query','schema':{'type':'string'},'description':'Single canonical value; saved evidence is not reread from the telemetry source.'})
  controlled=method=='post' and path in ('/metric-discovery','/measurements','/explore','/inventory','/discovery','/captures','/captures/live')
  if controlled:op['parameters'].append({'name':'X-Goo-Query-ID','in':'header','schema':{'type':'string','pattern':'^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$'},'description':'Optional short-lived cancellation capability; repeated/cancelled IDs are refused.'})

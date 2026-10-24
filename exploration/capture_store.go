@@ -31,8 +31,9 @@ const CaptureCatalogLimit = 10000
 var ErrCapturePlanChanged = errors.New("captured source plan differs from the current compiler; original evidence remains reopenable")
 
 type ComparisonQuestion struct {
-	Baseline  Query `json:"baseline"`
-	Selection Query `json:"selection"`
+	Distribution bool  `json:"distribution,omitempty"`
+	Baseline     Query `json:"baseline"`
+	Selection    Query `json:"selection"`
 }
 type SavedComparison struct {
 	BaselineID  string            `json:"baselineId"`
@@ -73,8 +74,13 @@ func (q CaptureQuestion) Validate() error {
 			return errors.New("comparison questions required")
 		}
 		a, b := q.Comparison.Baseline, q.Comparison.Selection
-		if a.Validate() != nil || b.Validate() != nil || len(a.GroupBy) != 1 || len(b.GroupBy) != 1 || a.Signal != b.Signal || a.Environment != b.Environment || a.GroupBy[0] != b.GroupBy[0] {
-			return errors.New("comparison requires valid questions with identical signal, environment and one breakdown")
+		if q.Comparison.Distribution && (!compatibleNumericBindings(a.Numeric, b.Numeric) || a.NumericHistogram == nil || b.NumericHistogram == nil) {
+			return errors.New("distribution capture requires matching numeric bindings and histogram questions")
+		}
+		aggregateOnly := q.Comparison.Distribution && len(a.GroupBy) == 0 && len(b.GroupBy) == 0
+		grouped := len(a.GroupBy) == 1 && len(b.GroupBy) == 1 && a.GroupBy[0] == b.GroupBy[0]
+		if a.Validate() != nil || b.Validate() != nil || (!grouped && !aggregateOnly) || a.Signal != b.Signal || a.Environment != b.Environment {
+			return errors.New("comparison requires valid questions with identical signal, environment and one breakdown; explicit distributions also support aggregate-only questions")
 		}
 		return nil
 	default:
@@ -267,6 +273,9 @@ func validateCapture(c *SavedCapture) error {
 			return errors.New("invalid saved comparison")
 		}
 		pair := c.Comparison
+		if pair.Request.Distribution != c.Question.Comparison.Distribution {
+			return errors.New("distribution comparison intent differs from question")
+		}
 		if !reflect.DeepEqual(pair.Request.Baseline.Question, c.Question.Comparison.Baseline) || !reflect.DeepEqual(pair.Request.Selection.Question, c.Question.Comparison.Selection) {
 			return errors.New("comparison question drift")
 		}
@@ -521,11 +530,15 @@ func (s CaptureStore) createComparison(ctx context.Context, source Source, title
 		}
 		captures[i] = c
 	}
-	a, e := CohortFromResult(captures[0].Explore)
+	snapshot := CohortFromResult
+	if q.Comparison.Distribution {
+		snapshot = CohortFromResultDistribution
+	}
+	a, e := snapshot(captures[0].Explore)
 	if e != nil {
 		return nil, e
 	}
-	b, e := CohortFromResult(captures[1].Explore)
+	b, e := snapshot(captures[1].Explore)
 	if e != nil {
 		return nil, e
 	}
@@ -539,7 +552,7 @@ func (s CaptureStore) createComparison(ctx context.Context, source Source, title
 			b.Groups[i].Numeric = nil
 		}
 	}
-	req := ComparisonRequest{Numeric: numeric, Baseline: a, Selection: b}
+	req := ComparisonRequest{Distribution: q.Comparison.Distribution, Numeric: numeric, Baseline: a, Selection: b}
 	result, e := CompareCohorts(req)
 	if e != nil {
 		return nil, e

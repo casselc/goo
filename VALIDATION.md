@@ -8425,3 +8425,30 @@ type/unit/parse, no inferred units/conversions or statistical/causal claims.
 Live pin/previous comparisons retain one breakdown field; stored capture numeric
 totals also work without grouping. Two-field group comparisons and averaging
 percentiles are not introduced. Separate source reads remain separate evidence.
+
+## Distribution comparisons — DC1 exact semantics (2026-10-24)
+
+Explicit distribution mode now requires numeric intent and two complete validated
+histograms. Go compares exact aligned counts and rational percentages of all
+records, preserving parse exclusions. Empty population shares are undefined;
+positive all-invalid populations have known zero valid-bin shares. Changed reads
+retain supplied counts while withholding computed differences/shares and execution.
+The pure side planner validates global half-open indices and keeps the requested
+side's original predicates and fixed window; zero-count ranges are refused.
+
+Explicit aggregate-only distributions support zero categorical groups without
+inventing group data. Legacy count/numeric comparison validation remains unchanged.
+New capture questions preserve distribution intent and refresh it explicitly.
+Stored evidence uses an opt-in operation and v5 algorithm; frozen v1–v4 decisions
+remain unchanged. Reusable views retain the explicit histogram/baseline intent.
+
+Independent architecture review approved DC1. Full exploration/cmd/workbench
+regressions pass (2.866/1.185/0.625 seconds). HTTP tests check required indices,
+chosen-side identity, source-free planning and refusal; store/view tests verify
+v5 immutability, default v4 meaning, historical-version rejection and zero/one-group
+view reuse. Four native property tests pass with 100 Hegel campaigns and an
+independent stdlib/big.Int/Rat oracle, including extrema, exact population shares,
+coverage exclusions, empty/unknown states, range partitions and legacy intent.
+OpenAPI validates 72 operations / 66 Go operations and unchanged frozen wire
+fixtures. No source SQL kernel changed; actual telemetry/UI acceptance follows.
+Evidence: `artifacts/distribution-comparison-{go,http-workbench,aggregate-properties}.log`.
