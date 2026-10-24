@@ -164,7 +164,7 @@ func explanationReadValid(r ExplanationFieldRead, f Field) error {
 		if v.Value != nil && (!utf8.ValidString(*v.Value) || len(*v.Value) > 4096) {
 			return fmt.Errorf("invalid explanation group value")
 		}
-		if f.Kind == "column" && v.Value == nil {
+		if !f.CanBeMissing() && v.Value == nil {
 			return fmt.Errorf("fixed explanation columns cannot be missing")
 		}
 		key := valueKey(v.Value)

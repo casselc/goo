@@ -1,6 +1,6 @@
 /* Record-field display only. Validation, query ownership and native bindings stay separate. */
 (function(global){
- const operators={eq:'=',ne:'≠',gte:'≥',lte:'≤',gt:'>',lt:'<',valid:'is valid',empty:'is empty',invalid:'is invalid',contains:'contains',exists:'is present',missing:'is missing'},columns={service:'Service',duration_ns:'Span duration (ns)',timestamp_ns:'Event time (UTC)',status:'Recorded status',body:'Log message',severity:'Severity'};
+ const operators={eq:'=',ne:'≠',gte:'≥',lte:'≤',gt:'>',lt:'<',valid:'is valid',empty:'is empty',invalid:'is invalid',contains:'contains',exists:'is present',missing:'is missing'},columns={service:'Service',duration_ns:'Span duration (ns)',timestamp_ns:'Event time (UTC)',status:'Recorded status',body:'Log message',severity:'Severity',severity_number:'OTel severity number',exception_event:'Reported exception event',exception_type:'Reported exception type',exception_type_state:'Exception type reporting'};
  // Curated display hints, checked against OTel semconv v1.43.0 (legacy spellings
  // against earlier SDK registries). Exact namespace/key lookup; no alias rewriting.
  const conventions=new Map([
@@ -24,6 +24,13 @@
   ['attribute','messaging.destination.name','Message destination','Messaging','Reported queue, topic or destination; not a causal trace relationship.'],
   ['attribute','messaging.operation.type','Messaging operation','Messaging','Operation type, such as send, receive or process.'],
   ['attribute','error.type','Error type','Error','Reported error classification; absence does not establish success.'],
+  ['attribute','exception.type','Exception type attribute','Exception','Reported exception type in this record attribute map. Ordinary span event attributes are separate; use the reported exception type column for those events.'],
+  ['attribute','exception.message','Exception message attribute','Exception','Reported exception message in this record attribute map; span event messages remain separate event attributes.'],
+  ['attribute','exception.stacktrace','Exception stack trace attribute','Exception','Reported stack trace in this record attribute map; this field does not search span event attributes.'],
+  ['column','exception_event','Reported exception event','Exception','Whether a span reports an event named exception. Event presence alone does not establish failure or uncaught behavior.'],
+  ['column','exception_type','Reported exception type','Exception','One distinct exception.type reported by matching span exception events. Repeated types count once per record; unreported or multiple types have no unique value, and a present empty type remains empty.'],
+  ['column','exception_type_state','Exception type reporting','Exception','unreported, single, empty or multiple distinct reported exception types. A single reported type does not imply every exception event supplied a type.'],
+  ['column','severity_number','OTel severity number','Log','Exporter-reported numeric OTel severity. Numbers 17–24 represent Error through Fatal; 0 is unspecified. Raw severity text is preserved separately.'],
   ['attribute','http.method','HTTP request method','HTTP','Earlier HTTP method spelling; kept as its own exact field.',true],
   ['attribute','http.status_code','HTTP response status','HTTP','Earlier HTTP response-code spelling; separate from span status and business outcome.',true],
   ['attribute','rpc.system','RPC system','RPC','Earlier RPC system spelling; kept as its own exact field.',true],
@@ -37,6 +44,7 @@
  ].map(([kind,key,label,group,description,legacy=false])=>[JSON.stringify([kind,key]),Object.freeze({label,group,description,legacy})]));
  function hint(field){const value=conventions.get(JSON.stringify([field?.kind,field?.key]));return value?{...value}:null}
  function searchText(field){const h=hint(field);return [qualified(field),h?.label,h?.group,h?.description,h?.legacy?'legacy':''].filter(Boolean).join(' ')}
+ function missingLabel(field){return field?.kind==='column'&&field.key==='exception_type'?'No unique reported exception type':'Missing key'}
  function qualified(field){return field.kind+':'+field.key}
  function label(field){return field.kind==='column'?(columns[field.key]||field.key):field.kind+' '+field.key}
  function operator(op){return operators[op]||op}
@@ -48,5 +56,5 @@
  }
  function parts(p){if(p.numeric)return {field:qualified(p.numeric.field),operator:operator(p.op),type:p.numeric.type,unit:p.numeric.unit,parse:p.numeric.parse,...(['valid','missing','empty','invalid'].includes(p.op)?{}:{value:p.value})};return {field:qualified(p.field),operator:operator(p.op),...(['exists','missing'].includes(p.op)?{}:{value:valueText(p.field,p.value??'')})}}
  function selectorText(p){if(!p)return 'No additional selectors';if(p.all||p.any)return '('+(p.all||p.any).map(selectorText).join(p.all?' AND ':' OR ')+')';if(p.numeric){const b=p.numeric,state=['valid','missing','empty','invalid'].includes(p.op);return label(b.field)+' ['+b.type+' · '+b.unit+'] '+(state?operator(p.op):'valid value '+operator(p.op)+' '+p.value)}return label(p.field)+' '+operator(p.op)+(['exists','missing'].includes(p.op)?'':' '+(p.field?.kind==='column'&&p.field.key==='timestamp_ns'?valueText(p.field,p.value??''):JSON.stringify(p.value??'')))}
- const api={qualified,label,operator,parts,selectorText,hint,searchText};if(typeof module!=='undefined')module.exports=api;else global.GooFieldPresentation=api;
+ const api={qualified,label,operator,parts,selectorText,hint,searchText,missingLabel};if(typeof module!=='undefined')module.exports=api;else global.GooFieldPresentation=api;
 })(typeof window==='undefined'?globalThis:window);

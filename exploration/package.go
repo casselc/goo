@@ -202,6 +202,15 @@ func PlanTelemetryPackage(p TelemetryPackage, from, to int64, target *Annotation
 	for _, f := range p.GroupBy {
 		add(f)
 	}
+	for _, f := range handoff.Fields {
+		if _, _, ok := exceptionFieldSQL(f.Key); f.Kind == "column" && ok {
+			handoff.Notes = append(handoff.Notes, "Exception fields derive from span events named exception and their event attributes, not span attributes named after these derived columns. Recorded exception events do not establish failed status or uncaught behavior.")
+			break
+		}
+	}
+	if seen[Field{Kind: "column", Key: "severity_number"}] {
+		handoff.Notes = append(handoff.Notes, "severity_number is intrinsic OTel log SeverityNumber, not an attribute numeric binding. Preserve the independent raw SeverityText; do not infer numeric severity from its spelling.")
+	}
 	if p.ReportedEdge != nil {
 		add(Field{Kind: "column", Key: "trace_id"})
 		add(Field{Kind: "resource", Key: "service.namespace"})

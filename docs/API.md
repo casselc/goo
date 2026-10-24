@@ -92,6 +92,16 @@ short-lived local capabilities, not authorization. Do not infer authentication
 from ClickHouse credentials held by the server. See the fuller
 [HTTP ownership contract](HTTP_BOUNDARIES.md) for budgets and effects.
 
+## Nullable grouping values
+
+Fixed physical columns such as `column:service` are always present in valid source
+records. `/compare` now refuses caller-supplied null groups for those fields with
+HTTP 400; earlier validation admitted that malformed representation. Attribute and
+resource keys remain nullable, and the new derived `column:exception_type` explicitly
+allows null when no unique reported event type exists. Its present empty string
+remains separate. This is a request-validation tightening; valid legacy source
+captures, hashes and unrequested row SQL are unchanged. See [error triage](ERROR_TRIAGE.md).
+
 ## Population explanations
 
 Three Go routes are exposed through the browser proxy under `/api`:

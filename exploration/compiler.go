@@ -27,7 +27,10 @@ func (c *compiler) param(value, typ string) string {
 }
 func (c *compiler) field(f Field) (value, present string) {
 	if f.Kind == "column" {
-		mapping := map[string]string{"service": "ServiceName", "trace_id": "TraceId", "span_id": "SpanId", "scope": "ScopeName", "scope_version": "ScopeVersion", "name": "SpanName", "kind": "SpanKind", "status": "StatusCode", "duration_ns": "Duration", "timestamp_ns": "toUInt64(toUnixTimestamp64Nano(Timestamp))", "body": "Body", "severity": "SeverityText"}
+		if value, present, ok := exceptionFieldSQL(f.Key); ok {
+			return value, present
+		}
+		mapping := map[string]string{"service": "ServiceName", "trace_id": "TraceId", "span_id": "SpanId", "scope": "ScopeName", "scope_version": "ScopeVersion", "name": "SpanName", "kind": "SpanKind", "status": "StatusCode", "duration_ns": "Duration", "timestamp_ns": "toUInt64(toUnixTimestamp64Nano(Timestamp))", "body": "Body", "severity": "SeverityText", "severity_number": "SeverityNumber"}
 		if f.Key == "status_class" {
 			return statusClassSQL(), "1"
 		}
@@ -113,6 +116,7 @@ func compile(q Query, rowLimit int) (Plan, error) {
 		selectRows = common + ", Body, SeverityText"
 		order = "Timestamp, TraceId, SpanId, ServiceName, Body, SeverityText, toString(ResourceAttributes), toString(LogAttributes)"
 	}
+	selectRows += c.requestedDerivedColumns(q)
 	p := Plan{Rows: "SELECT " + selectRows + base + " ORDER BY " + order + fmt.Sprintf(" LIMIT %d OFFSET %d FORMAT JSONEachRow", rowLimit+1, q.Offset), Count: "SELECT toString(count()) AS count" + base + " FORMAT JSONEachRow"}
 	aggregate, e := recordAggregateSQL(q)
 	if e != nil {

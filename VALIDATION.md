@@ -8761,3 +8761,29 @@ actual desktop/mobile frames, the 178 actor and isolated 155 regression results.
 Source changes are committed separately as cdd5a88 (Activity entry/owner) and
 a6533a6 (retained fixed-visit lookup); acceptance/docs publication is recorded in
 git history and the final remote commit report.
+
+## Error triage — ET1 source-field semantics (2026-10-24)
+
+Added spans-only exception_event, nullable unique exception_type and reporting-state
+fields derived from exactly named exception events, plus the intrinsic logs-only
+severity_number. Repeated identical types do not multiply records; empty, unreported
+and multiple types remain distinct. Type/state SQL fails closed on misaligned name
+and attribute arrays. The independent Go reference helper rejects that alignment
+error. Derived aliases are added only when requested by filters/grouping, retaining
+old row SQL and valid source-capture hashes. All field/presence consumers share
+CanBeMissing; null fixed-column groups are refused while map/new derived nulls work.
+
+This intentionally tightens caller-held /compare validation: null fixed service
+previously admitted malformed input and now returns400. The HTTP regression proves
+legacy present fixed and missing map groups still200, new exception null/empty200,
+malformed fixed null400, and zero source reads. API/known-limits docs explicitly
+record this distinction rather than claiming all previously admitted payloads
+remain valid. Existing valid frozen fixtures and Go capture tests pass unchanged.
+
+Broad Go suites pass: exploration1.034s, cmd/goo.621s, workbench.261s. Targeted field
+unit tests and independent review pass. Real ClickHouse inline/read-only parity
+passes .09s, covering all reporting states, duplicate-record accounting, empty/null,
+non-exception shadows, Unicode/quotes, array mismatch refusal and numeric severity
+17–24 with noncanonical text. No fixture tables were mutated. The explicit HTTP
+boundary test passes .012s. Node field guards/hints and all66 Node files pass; full
+Activity/inspector/browser acceptance remains ET2/ET3 work.

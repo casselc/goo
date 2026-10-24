@@ -40,12 +40,12 @@ type Query struct {
 	Offset           int                   `json:"offset" yaml:"offset"`
 }
 
-var columns = map[string]string{"service": "string", "trace_id": "string", "span_id": "string", "scope": "string", "scope_version": "string", "name": "string", "kind": "string", "status": "string", "duration_ns": "uint64", "timestamp_ns": "uint64", "duration_bucket": "string", "status_class": "string", "body": "string", "severity": "string"}
+var columns = map[string]string{"service": "string", "trace_id": "string", "span_id": "string", "scope": "string", "scope_version": "string", "name": "string", "kind": "string", "status": "string", "duration_ns": "uint64", "timestamp_ns": "uint64", "duration_bucket": "string", "status_class": "string", "body": "string", "severity": "string", "severity_number": "uint64", "exception_event": "string", "exception_type": "string", "exception_type_state": "string"}
 
 func (f Field) Type(signal string) (string, error) {
 	if f.Kind == "column" {
 		typ, ok := columns[f.Key]
-		if !ok || signal == "logs" && (f.Key == "name" || f.Key == "kind" || f.Key == "status" || f.Key == "duration_ns" || f.Key == "duration_bucket" || f.Key == "status_class") || signal == "spans" && (f.Key == "body" || f.Key == "severity") {
+		if !ok || signal == "logs" && (f.Key == "name" || f.Key == "kind" || f.Key == "status" || f.Key == "duration_ns" || f.Key == "duration_bucket" || f.Key == "status_class" || f.Key == "exception_event" || f.Key == "exception_type" || f.Key == "exception_type_state") || signal == "spans" && (f.Key == "body" || f.Key == "severity" || f.Key == "severity_number") {
 			return "", fmt.Errorf("unsupported %s field %s", signal, f.Key)
 		}
 		return typ, nil
@@ -188,8 +188,8 @@ func validatePredicate(p *Predicate, signal string, depth int, count *int) error
 
 // Match is the independent reference predicate interpreter. Missing != empty and
 // ne never matches missing fields; an explicit missing predicate is required.
-// The logical record must include all fixed columns; only map attributes may
-// be absent in a valid bound source row.
+// The logical record must include non-nullable fixed columns. Map attributes
+// and the ambiguous/unreported derived exception_type may be absent.
 func Match(p *Predicate, values map[Field]string) bool {
 	if p == nil {
 		return true
@@ -229,7 +229,7 @@ func Match(p *Predicate, values map[Field]string) bool {
 	if !exists {
 		return false
 	}
-	if p.Field.Kind == "column" && (p.Field.Key == "duration_ns" || p.Field.Key == "timestamp_ns") && (p.Op == "eq" || p.Op == "ne") {
+	if p.Field.Kind == "column" && (p.Field.Key == "duration_ns" || p.Field.Key == "timestamp_ns" || p.Field.Key == "severity_number") && (p.Op == "eq" || p.Op == "ne") {
 		a, e := strconv.ParseUint(v, 10, 64)
 		b, e2 := strconv.ParseUint(p.Value, 10, 64)
 		return e == nil && e2 == nil && (p.Op == "eq" && a == b || p.Op == "ne" && a != b)

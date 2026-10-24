@@ -31,6 +31,9 @@ func groupValues(q Query, raw json.RawMessage) ([]*string, error) {
 		if json.Unmarshal(b, &v) != nil {
 			return nil, fmt.Errorf("invalid series dimension")
 		}
+		if e := validateGroupDimension(q.GroupBy[i], v); e != nil {
+			return nil, e
+		}
 		values = append(values, v)
 	}
 	return values, nil
@@ -92,6 +95,11 @@ func ValidateGroupedTimeSeries(q Query, groups []TimeSeriesGroup) error {
 	for _, g := range groups {
 		if len(g.Values) != len(q.GroupBy) {
 			return fmt.Errorf("series dimension count mismatch")
+		}
+		for i, value := range g.Values {
+			if e := validateGroupDimension(q.GroupBy[i], value); e != nil {
+				return e
+			}
 		}
 		key := groupKey(g.Values)
 		if previous != "" && key <= previous {

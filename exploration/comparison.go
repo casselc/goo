@@ -95,6 +95,9 @@ func (c Cohort) validate() (map[string]ValueCount, *big.Int, error) {
 	m := map[string]ValueCount{}
 	sum := new(big.Int)
 	for _, group := range c.Groups {
+		if e := validateGroupDimension(c.Question.GroupBy[0], group.Value); e != nil {
+			return nil, nil, e
+		}
 		if group.Value != nil && len(*group.Value) > 4096 {
 			return nil, nil, fmt.Errorf("distribution value exceeds 4096 bytes")
 		}

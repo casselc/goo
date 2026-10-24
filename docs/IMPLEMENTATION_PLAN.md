@@ -1018,3 +1018,14 @@ full-capture/field/rank oracles and Quint replay, 70 Hegel examples, a 60-second
 Bombadil campaign and the existing Activity latency regression components. The
 combined regression wrapper timeout and successful isolated checks are recorded
 explicitly in VALIDATION.md. Final review and publication use actual git history.
+
+### Recorded error and exception triage (active)
+
+Approved [error triage contract](ERROR_TRIAGE.md): ET1 adds exact event-derived
+span fields and intrinsic log severity with reference/ClickHouse parity and
+consistent nullable semantics. ET2 stages ordinary fixed questions from Activity,
+reuses full groups/timelines and service-scoped comparisons, and adds passive
+exception detail across inspectors. ET3 validates ordinary OTLP events/logs,
+record-grain counting, full groups beyond the page, saved evidence/reuse/notes,
+lifecycle/ownership and model/property/Bombadil evidence. No inferred health,
+arbitrary first exception, message-based fingerprint or new issue store.

@@ -314,6 +314,11 @@ func validateCapture(c *SavedCapture) error {
 	}
 	if c.Question.Kind == "explore" {
 		if c.Explore != nil {
+			for _, raw := range c.Explore.Groups {
+				if _, e := groupValues(c.Explore.Question, raw); e != nil {
+					return e
+				}
+			}
 			if e := ValidateNumericResult(c.Explore); e != nil {
 				return e
 			}

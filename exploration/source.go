@@ -280,6 +280,9 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 				if json.Unmarshal(v, &value) != nil {
 					return nil, fmt.Errorf("invalid group dimension")
 				}
+				if e := validateGroupDimension(q.GroupBy[i], value); e != nil {
+					return nil, e
+				}
 				dimensions = append(dimensions, value)
 			}
 			key, _ := json.Marshal(dimensions)
