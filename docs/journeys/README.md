@@ -736,3 +736,5 @@ controls and runs a source-free Bombadil editor campaign.
 157: Synthetic passive paired-histogram row contract: aligned readable bins, exact supplied percentages, common scale, semantic headers, source-free rendering and mobile composition.
 
 158: [Saved Activity baseline reference](../SAVED_ACTIVITY_BASELINE.md), real OTLP/ClickHouse, exact reference save, source/receipt/comparison-free reload, explicit Start/Show, preserved old views, clear-versus-delayed-save guard, unavailable receipt/retry, actual desktop/mobile frames and staged-only Bombadil/Quint checks.
+
+159: [Activity saved-view discovery](../ACTIVITY_VIEWS.md#activity-entry-storyboard-159), real OTLP/ClickHouse, source-free inline browsing, applied/draft environment isolation, existing keep/discard navigation, actual delayed catalog refusal, cleared inspector, loaded-page search, mobile frames, explicit Start and Bombadil/Quint controls.

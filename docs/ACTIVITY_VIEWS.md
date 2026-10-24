@@ -1,7 +1,7 @@
 # Reusable Activity views
 
 Activity views save a rolling log/span selector, record-column layout and optional exact captured latency baseline reference. Open a
-view from its exact share link, Saved, or a service's environment-scoped library;
+view from Activity’s Views menu, its exact share link, Saved, or a service's environment-scoped library;
 then explicitly Start stream. Opening, inspection, sharing and reload do not read
 telemetry. The view contains no fixed time window, observations, totals, read or
 custody clocks, membership tokens or instruction to execute.
@@ -22,6 +22,8 @@ intents remain in their separate journal. Analysis remains disabled until a read
 has completed. Later edits mark the view modified. Opening another view while
 scope/title/layout changes are unsaved offers explicit discard or keep-current
 controls; delayed view responses cannot replace a different route's draft.
+
+Activity’s Views menu embeds the same bounded library directly, using the **applied environment**. Opening Views loads configurations only; closing, leaving Activity or changing the applied environment cancels pending catalog publication. Editing a draft environment does not retarget the library. Scope changes clear its search and selected inspector so an old environment’s details cannot remain actionable. A successful save refreshes the open catalog. Both log and span configurations may appear; relevance means exact environment equality, not selector satisfiability.
 
 Saved exposes a bounded searchable Activity library using the existing revision
 rows and selected inspector. The bar's Browse saved Activity views opens that
@@ -60,8 +62,9 @@ filters compose with it. Remove saved selector explicitly removes that base.
 ```mermaid
 flowchart LR
   Activity[Applied Activity scope and columns] --> Save[Immutable configuration publisher]
-  Save --> Library[Shared revision library: Saved and Services]
+  Save --> Library[Shared revision library: Activity, Saved and Services]
   Save --> Link[Exact share link]
+  Applied[Applied environment] -->|Views disclosure, config only| Library
   Library --> Stage[Restore selector and layout with empty rows]
   Link --> Stage
   Stage -->|explicit Start stream| Tail[Current SSE window and new connection]
@@ -92,3 +95,16 @@ editor](FILTER_EDITOR.md), including AND/OR, missing keys and present-empty
 strings. Edits stay staged; invalid input blocks source actions and saving.
 
 [Saved baseline references](SAVED_ACTIVITY_BASELINE.md) extend modified-view and late-save guards. Reopen stages the reference without a receipt read; Start and Show latency remain explicit. Missing evidence does not hide the immutable configuration.
+
+## Activity entry storyboard (159)
+
+1. Reopen a saved worker view. Rows remain empty and Views stays folded; no catalog or telemetry read starts.
+2. Open Views to browse configurations in its applied environment. Inspect, search the loaded page or refresh; the current stream remains paused.
+3. Edit the environment. The library keeps the applied scope until Apply or another view is explicitly accepted. Keep current scope preserves that draft.
+4. Open a different-environment view and discard the draft. The old selection/search clears; delayed old catalog responses cannot restore it.
+5. Open the selected configuration, then explicitly Start to read current OTel data.
+
+[Executable journey 159](../journeys/activity-view-menu.spec.js) exercises this against real Go/Python and OTLP/ClickHouse, including a held actual catalog response, explicit negative catalog transport/retry, keyboard activation and mobile overflow checks. Its observed Quint replay has six rejecting controls; Bombadil opens, inspects and folds the configuration menu while guarding zero source reads and empty rows.
+
+![Activity view menu](journeys/screenshots/159a-activity-view-menu.png)
+![Mobile Activity view menu](journeys/screenshots/159b-mobile-activity-view-menu.png)

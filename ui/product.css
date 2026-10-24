@@ -1489,3 +1489,5 @@ td details {
 .activity-baseline .comparison-histogram{max-width:640px;margin:6px 0}
 .activity-baseline .comparison-histogram svg{max-height:150px}
 .activity-baseline th,.activity-baseline td{padding:3px 6px;font-size:11px}
+
+.activity-view-options .activity-view-library{border-top:1px solid var(--border);padding-top:6px}.activity-view-options .activity-view-library>h3{font-size:12px;margin:4px 0}.activity-view-library .definition-library>.controls{display:none}

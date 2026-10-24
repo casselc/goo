@@ -654,7 +654,7 @@ automatic startup preferences remain unsupported.
 
 Reusable [Activity views](ACTIVITY_VIEWS.md) use a typed rolling configuration in
 workbench's existing immutable file publisher, separate from fixed exploration
-views. Shared revision-library display appears in Saved and Services. The stream
+views. Shared revision-library display appears in Activity’s Views menu, Saved and Services. The stream
 adapter restores configuration through `GooTail.stage`; Start alone opens SSE.
 No observations or capabilities cross the configuration boundary. The linked
 flow diagram documents publication, staging and later separate retention.
@@ -693,3 +693,5 @@ Activity baseline comparison reuses `GooComparisonVisual.histogram` and supplied
 `GooComparisonVisual.histogram` now accepts `layout:'rows'` and supplied side labels. It renders a semantic table with aligned bucket labels and paired percentage bars on the same 0–100% scale, using the existing exact-string bar primitive. The original SVG layout stays the default. Journey 157 is a labeled passive fixture with no application/source requests and mobile label/overflow checks.
 
 Saved Activity baseline selection remains app-owned configuration: `GooActivityBaseline.restore` stages an exact reference without fetching, while `reference` exposes the selected ID separately from loaded evidence. `GooActivityLatency.restoreBaseline` resets the panel/cadence without subscribing. Existing supplied comparison displays are unchanged. [Contract](SAVED_ACTIVITY_BASELINE.md).
+
+Activity’s embedded library receives applied environment and visibility from the stream owner. `setScope` cancels stale reads and clears supplied rows plus inspector cache when the environment changes. `GooDefinitionLibrary.clear()` resets supplied presentation without reading. The catalog’s server page is capped at 20, so its redundant internal 25-row pager is hidden; explicit server first/next controls remain.

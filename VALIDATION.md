@@ -7404,3 +7404,50 @@ transaction. Missing evidence later does not invalidate a view; loading reports
 unavailability and keeps the ID for explicit retry or clear. New publication with
 an unavailable/incompatible reference refuses. Only the pin persists: no automatic
 monitor, stored cadence, copied snapshot, capability or clock is introduced.
+
+## Activity Views at the live entry — 2026-10-24
+
+The existing Activity configuration library now appears directly inside the folded
+Views menu. The stream owner supplies applied environment and visibility; opening
+loads configuration only. Draft edits retain the applied catalog. Environment
+changes clear loaded search/selection and inspector cache, while close/navigation
+cancels pending publication. A successful save refreshes the visible catalog.
+Exact links still stage empty rows before explicit Start; no configuration, API
+schema, receipt, source-clock or subscription format changed.
+
+Actual checks:
+
+- Focused Activity configuration/stream-entry Node tests and syntax/diff checks pass.
+  Hegel runs 50 immutable configuration cases with exact environment catalog
+  isolation, absent-environment emptiness and old-identity preservation.
+- Source browser journeys 159, 147 and 146 pass together (1.8m), covering ordinary
+  OTel ingestion independently counted in ClickHouse, applied/draft isolation,
+  keep/discard, actual delayed catalog refusal and cleared cross-scope inspector.
+  Existing Saved/Services sharing, layouts and the late-save guard remain intact.
+- Deployed 159 and saved-baseline regression 158 pass together (1.7m). The latter
+  retains exact baseline references, explicit Start/Show, stale-save protection and
+  unavailable-receipt retry. 159 adds keyboard disclosure activation, a negative
+  catalog transport followed by explicit retry, loaded-page search and mobile
+  overflow checks. Configuration browsing/staging adds zero source, capture or
+  comparison requests and restores zero rows; explicit Start reads the real log.
+- quint-go replays observed menu counters/scopes and rejects six mutations:
+  hidden reads, fabricated staged rows, missing Start, a wrong initial environment,
+  stale old-scope publication and wrong staged scope. The 25-second Bombadil
+  campaign opens, inspects and folds the catalog with source-free/empty-row,
+  layout, progress and uncaught-error invariants. No successful source or catalog
+  responses are mocked; the held catalog uses an actual route.fetch response.
+- Four served static assets match checkout in the existing local lab. README,
+  ownership contracts, planning, flow diagram, storyboard and actual desktop/mobile
+  frames are updated. Only static assets are deployed; native binary and Docker
+  images are unchanged. No application telemetry, retained evidence or XTDB records
+  are removed. Reusable caches and compact run logs/ledgers remain.
+
+Relevance is exact applied-environment equality across logs and spans, without
+selector satisfiability or a claim that telemetry exists. Search covers one
+loaded 20-item server page. Mutable aliases and automatic startup remain outside
+this cut.
+
+The bounded browser-diagnostic retention pass removes 13,434 expired raw files
+(418,689,024 allocated bytes), preserving compact logs, observed ledgers and its
+compressed audit. Active/new recordings remain within their retention lifetime;
+no application store, OTel data or dependency cache is included.
