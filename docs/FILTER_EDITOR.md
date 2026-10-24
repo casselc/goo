@@ -79,3 +79,55 @@ groups and invalid fields without running a source query.
 
 ![Single question editor](journeys/screenshots/149a-single-question-filters.png)
 ![Mobile single question editor](journeys/screenshots/149b-mobile-single-filters.png)
+
+
+## Observed fields and values
+
+Open **Observed fields and values** to search qualified keys in the applied scope.
+Each field offers **Is present**, **Missing key**, **Present empty string** and
+recorded literal values where supplied. Choosing one appends a condition with AND
+around the existing selector, then stages it. The field/value datalists also use
+supplied observations; manual entry stays available.
+
+No suggestion query is added. Activity derives observations from its held buffer;
+single questions and fixed populations reuse their successful result's field
+metadata and row page. Saved configurations reopen without observations. Start
+or Run explicitly to supply them. The label states environment, signal and fixed
+UTC bounds, or the held buffer's latest read window. A live buffer can contain
+observations from multiple read windows; its label does not bind all rows to the
+latest window. Suggestions are withdrawn on scope edits and source replacement; failed fixed
+reads leave them empty. Activity may retain its explicitly labeled held-buffer
+observations while paused or disconnected. Existing generation guards reject obsolete responses before presentation.
+
+`GooAttributes.suggestionData` scans at most 100 supplied records, 64 qualified
+fields and 12 distinct values per field. Limits are disclosed. Values are shown
+samples, without population counts, ranking, cardinality or completeness claims.
+An absent key is suggested only when the relevant attribute/resource map is
+actually present. An unavailable map or a present null/non-string value is not
+coerced into missing or a string. Column types still follow the Go grammar.
+
+The editor accepts detached `setSuggestions` data and never fetches. Updating
+observations refreshes datalists without changing the typed tree or emitting an
+edit. Unchanged field/value lists retain their disclosures and focus during live
+updates. Search is local. Adapters clear scoped observations rather than carrying
+suggestions from another environment, selector, signal or saved revision.
+
+```mermaid
+flowchart LR
+  Tail[Existing Activity read] --> Held[Held records / applied selector]
+  Fixed[Existing fixed read] --> Page[Successful page / scoped fields]
+  Held --> Bound[Bounded observation adapter]
+  Page --> Bound
+  Bound --> Browse[Shared observed fields and values]
+  Browse -->|choose literal / empty / missing| Draft[Draft predicate]
+  Draft -->|explicit Apply or Run| Read[Existing source owner]
+  Edit[Scope edit / failed read / reload] --> Clear[Withdraw scoped suggestions]
+```
+
+Journey 150 covers actual OTel/ClickHouse populations, keyboard/mobile selection,
+source-free search/selection, saved reopen, fixed child staging, obsolete-response
+refusal and a negative transport fault. Its actor campaign explicitly reads once,
+then explores and stages without executing another query.
+
+![Observed Activity fields](journeys/screenshots/150a-observed-activity-fields.png)
+![Mobile observed values](journeys/screenshots/150b-mobile-observed-fields.png)

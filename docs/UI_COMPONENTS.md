@@ -677,3 +677,5 @@ Single-question filtering now adopts the same helper. `setFields(fields)` suppli
 local attribute/resource-key suggestions without changing input, emitting edits
 or reading data. The old flat field picker/composer and their page styles are
 removed; service/message/duration shortcuts are application-owned AST inputs.
+
+`GooFilterEditor.setSuggestions(data)` accepts detached, scope-labeled observed fields/values supplied by application adapters. `GooAttributes.suggestionData(records,fields)` bounds the physical-record projection, preserving namespaces and missing/empty distinctions. Neither reads telemetry. Suggestion search and selection use the same passive editor across all record-query surfaces.

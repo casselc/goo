@@ -669,3 +669,5 @@ remain editable; shortcuts become explicit draft predicates. The existing sessio
 continues owning generations, fixed bounds and requested/applied evidence, and
 the query owner continues owning cancellation and reads. Environment edits retain
 the draft and fixed bounds; incompatible signal edits reset predicates.
+
+[Observed suggestion flow](FILTER_EDITOR.md#observed-fields-and-values) reuses successful applied record reads. The source adapter projects bounded qualified fields/values; the editor presents supplied observations and emits draft predicates. Scope ownership, invalidation, clocks and source execution remain in Activity/single/fixed adapters. Saved configuration never persists sampled suggestions.

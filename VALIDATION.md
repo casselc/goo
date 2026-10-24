@@ -7020,3 +7020,59 @@ Affected 29/45/115/148/149 documentation frames are regenerated from actual
 source/browser flows and synchronized after verification. The final single-question
 ledger is under `artifacts/single-filter-editor/single-filters-771f3360`. Owned
 temporary image staging is removed; reusable tool/module caches are retained.
+
+## Scoped observed filter suggestions — 2026-10-24
+
+[Observed fields and values](docs/FILTER_EDITOR.md#observed-fields-and-values)
+now reuse existing successful record reads across Activity, single questions and
+fixed/saved populations. No suggestion endpoint or automatic source read is added.
+Choosing a field/value stages a typed predicate; Apply/Start/Run remain explicit.
+Saved configurations reopen without sampled observations.
+
+- Six focused Node files pass, including bounded sample projection, namespace
+  separation, present-empty versus missing, null/non-string refusal, absent-map
+  uncertainty, detached input, and record/field/value budgets. Missing and empty
+  choices remain explicit when the ordinary literal-value budget fills.
+- Existing Hegel properties rerun 80 sampled nested predicate round trips. They
+  check native membership/JSON semantics, not the UI sampling policy.
+- Real journey 150 uses ordinary OTLP logs independently counted in ClickHouse,
+  then exercises Activity, single fixed questions and saved population/child
+  configurations. Search and choosing literal/empty/missing values perform zero
+  additional source reads. Keyboard/mobile behavior and exact matching record
+  bodies are checked. A held actual response cannot restore suggestions after a
+  scope edit; an explicitly aborted negative transport check leaves failed-read
+  suggestions empty. No successful source response or UI data is fabricated.
+- Observed single-question Quint-go replay passes with four rejecting controls
+  for hidden reads, changed predicates, changed bounds and changed environment.
+  This checks bounded staging/scope consistency; browser checks cover suggestion
+  invalidation. The new 30-second Bombadil campaign explicitly reads once, then
+  verifies four distinct field choices (present, missing, empty, literal), local
+  exploration, draft/no-record state, progress, overflow and exceptions.
+- Existing single-question journey 149 also passes with its observed replay and
+  30-second actor campaign. The combined 149/150 run passes in 1.7 minutes.
+  Updating metadata does not rerender typed inputs or emit edits. Unchanged live
+  field/value catalogs retain their open disclosures and focused controls.
+
+The final local query/packages image is
+`sha256:778556e0feb413ff1951c835f649f0f9237b3b7db5eb2869d86594838f4d1042`.
+Only query/packages are recreated; telemetry, retained evidence and configuration
+volumes remain. All six deployed UI assets match checkout bytes. Compact checks
+are retained under `artifacts/filter-suggestions-integration`; source ledgers,
+Quint results and actor traces live under
+`artifacts/filter-suggestions/suggestions-1110cdcd`.
+
+Suggestions scan at most 100 shown records, 64 qualified fields and 12 values per
+field. They do not establish population totals, top values or cardinality. Missing
+keys require a supplied map; unavailable maps and present nulls are not coerced.
+Activity may use explicitly labeled held observations from multiple windows while
+paused/disconnected; its caption states the latest completed read separately.
+Fixed failed/replaced reads withdraw suggestions. No native production Go code,
+API schemas, custody clocks or saved-view formats change in this cut.
+
+Final compatibility: deployed structured-inspection journey 29 passes (16.1 s),
+and existing Activity/fixed journey 148 passes (46.4 s), including its observed
+replay and actor campaign. Its initial failure was an obsolete textbox locator;
+value autocomplete inputs now use accessible labels in the test. Actual frames
+for 29/148/149/150 are refreshed. Final documentation and generated frames are
+synchronized after checks, owned temporary build staging is removed, and reusable
+Go/module caches are retained.

@@ -901,3 +901,5 @@ flat composer/join controls removed, shortcut predicates editable in the full
 tree, supplied field suggestions retained, invalid drafts guarded, fixed bounds
 retained through filter/environment edits, and shared links staged before Run.
 Broader automatic suggestions from Activity/discovery remain follow-up work.
+
+Bounded [observed field/value discovery](FILTER_EDITOR.md#observed-fields-and-values) is delivered across Activity, single questions and fixed/saved views. Existing reads supply scoped metadata and record samples; there is no new suggestion query. Full-source top values/cardinality and semantic-convention enrichment remain future work.

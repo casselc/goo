@@ -658,3 +658,5 @@ OTel attribute/resource keys can be entered without a matching record. Numeric
 attribute transforms remain open. The single-question builder now shares the
 editor, retaining source-supplied suggestions and explicit Run. Fixed editor drafts are distinct from their configured parent until
 opened as a child; configured view publication retains the parent selector.
+
+The editor now offers scoped observed field/value suggestions from existing reads, with missing/empty distinctions and invalidation on scope changes. The bounded sample (100 records, 64 fields, 12 values) does not establish population counts, cardinality or completeness. Missing maps and non-string values do not imply missing keys. Full-source value ranking remains unsupported. See [contract](FILTER_EDITOR.md#observed-fields-and-values).

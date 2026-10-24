@@ -711,3 +711,10 @@ controls and runs a source-free Bombadil editor campaign.
 
 ![Shared single-question editor](screenshots/149a-single-question-filters.png)
 ![Mobile typed editing](screenshots/149b-mobile-single-filters.png)
+
+### 150 — Discover observed fields before refining a scope
+
+[Executable journey](../../journeys/filter-suggestions.spec.js) reopens a saved Activity view without reads, explicitly starts ordinary OTel logs, browses a bounded field sample, and stages present-empty from the keyboard. A single fixed question selects missing; a saved population stages a canary child without reading it. Held actual responses and a negative transport fault verify stale suggestions stay withdrawn. Quint checks observed staging; Bombadil reads once explicitly, then explores values without rerunning.
+
+![Observed fields](screenshots/150a-observed-activity-fields.png)
+![Mobile values](screenshots/150b-mobile-observed-fields.png)

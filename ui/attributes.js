@@ -13,6 +13,20 @@
  }
  // Shared recorded string values only: absence, null and coercion never imply a predicate.
  function selectable(entry){const value=entry.value,key=entry.field?.key;return ['column','resource','attribute'].includes(entry.field?.kind)&&typeof value==='string'&&typeof key==='string'&&key.length>0&&new TextEncoder().encode(value).length<=1024&&new TextEncoder().encode(key).length<=128&&!/[\u0000\uD800-\uDFFF]/u.test(value)&&!/[\u0000\uD800-\uDFFF]/u.test(key)}
+ // Bounded supplied observations, never population coverage or inferred map availability.
+ function suggestionData(records=[],fields=[]){
+  const rows=records.slice(0,100),catalog=new Map();let limited=records.length>100;
+  function admit(field){try{if(!selectable({field,value:''}))return;const id=JSON.stringify([field.kind,field.key]);if(!catalog.has(id)){if(catalog.size>=64){limited=true;return}catalog.set(id,{field:structuredClone(field),values:[]})}return catalog.get(id)}catch{return}}
+  fields.forEach(admit);const models=rows.map(record=>groups(record));
+  for(const model of models)for(const group of model)for(const entry of group.entries)if(selectable(entry))admit(entry.field);
+  function value(item,v){if(item.values.includes(v))return;if(item.values.length>=12){limited=true;if(v===null||v===''){const index=item.values.findLastIndex(value=>value!==null&&value!=='');if(index>=0)item.values[index]=v}return}item.values.push(v)}
+  rows.forEach((record,index)=>{const entries=new Map(models[index].flatMap(g=>g.entries).filter(e=>e.field).map(e=>[JSON.stringify([e.field.kind,e.field.key]),e]));
+   for(const [id,item]of catalog){const entry=entries.get(id);if(entry){if(selectable(entry))value(item,entry.value);continue}
+    const map=item.field.kind==='resource'?record.ResourceAttributes:item.field.kind==='attribute'?(record.Attributes||record.SpanAttributes||record.LogAttributes):undefined;
+    if(map&&typeof map==='object'&&!Array.isArray(map)&&!Object.hasOwn(map,item.field.key))value(item,null);
+   }
+  });return {fields:[...catalog.values()],rows:rows.length,limited};
+ }
  function commonGroups(records){
   if(!Array.isArray(records)||!records.length||records.length>20)throw Error('Select 1–20 captured page observations.');
   const models=records.map(groups),identity=e=>JSON.stringify([e.field?.kind,e.field?.key,e.value]);
@@ -112,5 +126,5 @@
   const raw=node('details',undefined,'raw-record');raw.append(node('summary','Raw record'),node('pre',JSON.stringify(record,null,2)));detail.append(raw);
   let built=false;detail.addEventListener('toggle',()=>{if(detail.open&&!built){built=true;mount(host,record,{...options,raw:false})}});return detail;
  }
- const api={groups,commonGroups,selectable,type,text,matches,fieldModel,isJSONValue,mount,mountShared,streamRecord,mountStream,streamInspection,disclosure};if(typeof module!=='undefined')module.exports=api;else global.GooAttributes=api;
+ const api={suggestionData,groups,commonGroups,selectable,type,text,matches,fieldModel,isJSONValue,mount,mountShared,streamRecord,mountStream,streamInspection,disclosure};if(typeof module!=='undefined')module.exports=api;else global.GooAttributes=api;
 })(typeof window==='undefined'?globalThis:window);

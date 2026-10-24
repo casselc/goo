@@ -600,3 +600,5 @@ before a matching record appears. Apply/Start or Run explicitly reads the scope.
 The single-question builder uses the same filter editor, preserving full saved
 selectors, supplied field suggestions and explicit Run. Filter/environment edits
 retain the fixed window; incompatible signal changes reset the predicates.
+
+The shared editor now discovers [observed fields and values](docs/FILTER_EDITOR.md#observed-fields-and-values) from existing applied reads. Search locally and stage literal, empty or missing-key conditions before explicit Apply/Run.
