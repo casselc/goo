@@ -851,3 +851,30 @@ sums beyond uint64. Shared comparison bars use a common scale, explicit partial
 subtotals and known-row coverage. Group identities distinguish missing, empty
 and literal labels. The application adapter keeps the selected-span summary in
 the existing inspector and coordinates page and full-query highlights.
+
+### Supplied trace-page comparison
+
+`<goo-trace-comparison>` is a passive display of two bounded supplied pages. Load
+`components.js`, `comparison-visual.js`, `trace-page-breakdown.js`,
+`trace-page-breakdown-view.js`, `trace-page-comparison.js`, `attributes.js`, and
+`trace-comparison-view.js`, with `trace-comparison-view.css`. Set `.data` to
+`{baseline:{rows,truncated},selection:{rows,truncated}}`; each side accepts at most
+1,000 rows. A JSON `data` attribute supports server rendering up to 64 KiB;
+pre-definition properties and detached SPA updates are supported. Values are cloned.
+
+Relative start offsets and durations share the maximum physical extent of both
+pages. Unique reported service/operation labels with matching reported span kind
+can align observations; this does not identify the same invocation. Repeated
+labels show page aggregates without ordinal row pairing. Unknown or absent work
+is never zero-filled. Twenty groups appear initially, with local Show more.
+`goo-trace-comparison-pair` emits original `{groupIndex,baselineIndex,selectionIndex}`
+for an explicit local pair inspection. The component itself only displays supplied
+qualified attribute differences through `goo-field-value`; it never fetches,
+navigates, subscribes, or invokes the native waterfall's linked-log behavior.
+
+The record-results application owner pins one detached reference page in memory,
+including its fixed question, source clock and basis. Closing the inspector keeps
+that reference; disposing the owner clears it. A subsequent Expand trace is an
+explicit fresh read. Pin, Compare and Clear perform no source reads. Generation,
+visibility and closed-disclosure guards reject stale controls. These page
+observations do not establish complete trace coverage, CPU time or a critical path.

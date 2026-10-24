@@ -672,3 +672,24 @@ page/aggregate highlights and the existing inspector. Its separate target-level
 linked-log listener has the same generation and visibility guard. A closed or
 superseded component cannot bypass it through a retained native button. Existing
 full-query aggregates remain independent of this bounded-page calculation.
+
+The trace inspector can compare two supplied pages locally. Reference custody is
+bounded to its record-results owner; no new API, token or persistent resource is
+introduced. Relative clocks are normalized per supplied page, while original
+fixed bounds, source clocks and bases remain visible.
+
+```mermaid
+flowchart LR
+  A[Expand trace: existing fresh source read] --> B[Bounded supplied page]
+  B --> C[Pin detached page in owner memory]
+  D[Expand another trace: explicit fresh read] --> E[Current bounded page]
+  C --> F[Pure Go normative / JS mirrored comparison]
+  E --> F
+  F --> G[Passive aligned relative-time display]
+  G --> H[Local unique-label pair attribute inspection]
+```
+
+Repeated labels remain ambiguous instead of being zipped. Group span-duration sums
+may overlap, and missing page observations are not zero durations. Comparison
+selection is independent of native waterfall selection, which retains its existing
+explicit linked-log read behavior.
