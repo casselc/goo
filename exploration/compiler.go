@@ -27,6 +27,9 @@ func (c *compiler) param(value, typ string) string {
 }
 func (c *compiler) field(f Field) (value, present string) {
 	if f.Kind == "column" {
+		if f.Key == "body_pattern_v1" {
+			return logPatternSQL(), "1"
+		}
 		if value, present, ok := exceptionFieldSQL(f.Key); ok {
 			return value, present
 		}

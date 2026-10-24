@@ -40,12 +40,12 @@ type Query struct {
 	Offset           int                   `json:"offset" yaml:"offset"`
 }
 
-var columns = map[string]string{"service": "string", "trace_id": "string", "span_id": "string", "scope": "string", "scope_version": "string", "name": "string", "kind": "string", "status": "string", "duration_ns": "uint64", "timestamp_ns": "uint64", "duration_bucket": "string", "status_class": "string", "body": "string", "severity": "string", "severity_number": "uint64", "exception_event": "string", "exception_type": "string", "exception_type_state": "string"}
+var columns = map[string]string{"service": "string", "trace_id": "string", "span_id": "string", "scope": "string", "scope_version": "string", "name": "string", "kind": "string", "status": "string", "duration_ns": "uint64", "timestamp_ns": "uint64", "duration_bucket": "string", "status_class": "string", "body": "string", "severity": "string", "severity_number": "uint64", "body_pattern_v1": "string", "exception_event": "string", "exception_type": "string", "exception_type_state": "string"}
 
 func (f Field) Type(signal string) (string, error) {
 	if f.Kind == "column" {
 		typ, ok := columns[f.Key]
-		if !ok || signal == "logs" && (f.Key == "name" || f.Key == "kind" || f.Key == "status" || f.Key == "duration_ns" || f.Key == "duration_bucket" || f.Key == "status_class" || f.Key == "exception_event" || f.Key == "exception_type" || f.Key == "exception_type_state") || signal == "spans" && (f.Key == "body" || f.Key == "severity" || f.Key == "severity_number") {
+		if !ok || signal == "logs" && (f.Key == "name" || f.Key == "kind" || f.Key == "status" || f.Key == "duration_ns" || f.Key == "duration_bucket" || f.Key == "status_class" || f.Key == "exception_event" || f.Key == "exception_type" || f.Key == "exception_type_state") || signal == "spans" && (f.Key == "body" || f.Key == "severity" || f.Key == "severity_number" || f.Key == "body_pattern_v1") {
 			return "", fmt.Errorf("unsupported %s field %s", signal, f.Key)
 		}
 		return typ, nil
@@ -160,6 +160,16 @@ func validatePredicate(p *Predicate, signal string, depth int, count *int) error
 	}
 	if len(p.Value) > 1024 || !utf8.ValidString(p.Value) || strings.ContainsRune(p.Value, 0) {
 		return fmt.Errorf("invalid predicate value")
+	}
+	if p.Field.Kind == "column" && p.Field.Key == "body_pattern_v1" {
+		if p.Op == "contains" {
+			return fmt.Errorf("body_pattern_v1 requires an exact pattern identity")
+		}
+		if p.Op == "eq" || p.Op == "ne" {
+			if _, err := DecodeLogPattern(p.Value); err != nil {
+				return err
+			}
+		}
 	}
 	switch p.Op {
 	case "exists", "missing":

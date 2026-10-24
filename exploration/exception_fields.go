@@ -121,6 +121,9 @@ func (c *compiler) requestedDerivedColumns(q Query) string {
 			}
 		}
 	}
+	if q.Signal == "logs" && queryReferencesColumn(q, "body_pattern_v1") {
+		out += ", " + logPatternSQL() + " AS body_pattern_v1"
+	}
 	if q.Signal == "logs" && queryReferencesColumn(q, "severity_number") {
 		out += ", toString(toUInt64(SeverityNumber)) AS severity_number"
 	}
