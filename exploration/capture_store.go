@@ -502,6 +502,13 @@ func (s CaptureStore) List(after string) (*CaptureList, error) {
 // A comparison is published only after both server-read child captures succeed.
 // Children remain individually useful if the second read or pair publication fails.
 func (s CaptureStore) createComparison(ctx context.Context, source Source, title string, q CaptureQuestion, parent string, previous *SavedComparison) (*SavedCapture, error) {
+	numeric := q.Comparison.Baseline.Numeric != nil || q.Comparison.Selection.Numeric != nil
+	if previous != nil {
+		numeric = previous.Request.Numeric
+	}
+	if numeric && !compatibleNumericBindings(q.Comparison.Baseline.Numeric, q.Comparison.Selection.Numeric) {
+		return nil, errors.New("numeric comparison requires identical declared bindings")
+	}
 	parents := [2]string{}
 	if previous != nil {
 		parents = [2]string{previous.BaselineID, previous.SelectionID}
@@ -522,7 +529,17 @@ func (s CaptureStore) createComparison(ctx context.Context, source Source, title
 	if e != nil {
 		return nil, e
 	}
-	req := ComparisonRequest{a, b}
+	if !numeric {
+		a.Numeric = nil
+		b.Numeric = nil
+		for i := range a.Groups {
+			a.Groups[i].Numeric = nil
+		}
+		for i := range b.Groups {
+			b.Groups[i].Numeric = nil
+		}
+	}
+	req := ComparisonRequest{Numeric: numeric, Baseline: a, Selection: b}
 	result, e := CompareCohorts(req)
 	if e != nil {
 		return nil, e

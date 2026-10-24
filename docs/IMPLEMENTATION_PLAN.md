@@ -956,3 +956,13 @@ custom bin authoring and inferred OTel types remain separate work.
 H1 (`965de9b`) and H2 (`3923f07`) are delivered after independent review. H3
 actual telemetry, retained-component regression, model replay and Bombadil
 acceptance passed; see VALIDATION.md and the final acceptance commit in git log.
+
+### Numeric measure comparisons (active)
+
+Approved follow-up: [numeric comparison contract](NUMERIC_COMPARISONS.md).
+NC1 establishes exact arithmetic, strict binding compatibility, complete aggregate
+validation and legacy count-only preservation. NC2 extends existing live/stored
+comparison owners and passive signed displays. NC3 verifies actual telemetry,
+reuse/immutable reopen, source-free interactions and rejection controls with
+browser, Hegel and quint-go evidence. Complete and review each gate before
+exposing the next; preserve the existing count-only histogram action.

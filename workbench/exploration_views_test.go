@@ -5,6 +5,7 @@ import (
 	"github.com/casselc/goo/exploration"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -168,5 +169,40 @@ func TestExplorationViewCountComparisonRanking(t *testing.T) {
 	loaded, err := s.LoadExplorationView(saved.ID)
 	if err != nil || loaded.Breakdowns["logs"].ComparisonMetric != "count" || loaded.Queries[0].Limit != 1 {
 		t.Fatal("ranking or bounded page changed", err)
+	}
+}
+
+func TestExplorationViewNumericComparisonReuse(t *testing.T) {
+	binding := exploration.NumericBinding{Field: exploration.Field{Kind: "attribute", Key: "work.items"}, Type: "int64", Unit: "items", Parse: "canonical-decimal"}
+	q := exploration.Query{Signal: "logs", Environment: "prod", FromMS: 1000, ToMS: 2000, Limit: 1, GroupBy: []exploration.Field{{Kind: "column", Key: "service"}}, Numeric: &binding}
+	baseline := q
+	baseline.FromMS = 1
+	baseline.ToMS = 1000
+	v := ExplorationView{Version: 1, Title: "Numeric changes", Queries: []exploration.Query{q}, Layout: "charts-records", Columns: []string{"utc", "summary"}, Breakdowns: map[string]ExplorationBreakdown{"logs": {Metric: "numeric-mean", ComparisonMetric: "numeric-mean", Baseline: &baseline}}}
+	store := Store{Dir: t.TempDir()}
+	saved, e := store.CreateExplorationView(v)
+	if e != nil {
+		t.Fatal(e)
+	}
+	loaded, e := store.LoadExplorationView(saved.ID)
+	if e != nil || loaded.Breakdowns["logs"].ComparisonMetric != "numeric-mean" || !reflect.DeepEqual(loaded.Breakdowns["logs"].Baseline.Numeric, &binding) {
+		t.Fatal("numeric intent lost", e)
+	}
+	for _, mutate := range []func(*exploration.NumericBinding){func(b *exploration.NumericBinding) { b.Unit = "bytes" }, func(b *exploration.NumericBinding) { b.Field.Kind = "resource" }, func(b *exploration.NumericBinding) { b.Field.Key = "other" }, func(b *exploration.NumericBinding) { b.Type = "uint64" }} {
+		changed := binding
+		mutate(&changed)
+		baseline.Numeric = &changed
+		if v.Validate() == nil {
+			t.Fatal("accepted mismatched numeric baseline")
+		}
+	}
+	baseline.Numeric = nil
+	if v.Validate() == nil {
+		t.Fatal("accepted missing numeric baseline")
+	}
+	baseline.Numeric = &binding
+	v.Queries[0].Numeric = nil
+	if v.Validate() == nil {
+		t.Fatal("accepted numeric ranking without binding")
 	}
 }

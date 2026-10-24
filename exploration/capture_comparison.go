@@ -92,6 +92,28 @@ func CompareEvidence(a, b *SavedCapture) (*EvidenceComparison, error) {
 		y.FromMS = 0
 		x.ToMS = 0
 		y.ToMS = 0
+		if x.Numeric != nil || y.Numeric != nil {
+			if !compatibleNumericBindings(x.Numeric, y.Numeric) {
+				r.Differences = append(r.Differences, "Numeric binding differs")
+				r.State = "incompatible"
+			} else {
+				if !reflect.DeepEqual(x.Where, y.Where) {
+					r.Warnings = append(r.Warnings, "Numeric populations use different selectors. Differences are descriptive comparisons, not proof of subset membership or causality.")
+				}
+				x.Where = nil
+				y.Where = nil
+				x.NumericHistogram = nil
+				y.NumericHistogram = nil
+				x.Summary = ""
+				y.Summary = ""
+				x.SpanStatus = false
+				y.SpanStatus = false
+				x.BucketMS = 0
+				y.BucketMS = 0
+				x.GroupTimeSeries = false
+				y.GroupTimeSeries = false
+			}
+		}
 		if !reflect.DeepEqual(x, y) {
 			r.Differences = append(r.Differences, "Question definition differs")
 			r.State = "incompatible"
@@ -169,8 +191,14 @@ func CompareEvidence(a, b *SavedCapture) (*EvidenceComparison, error) {
 		r.Warnings = append(r.Warnings, "Native comparisons require complete validated window coverage for every exact stream. No boundary interpolation, interval shifting, cross-instance matching or rebinning. One unsupported member withholds all numeric changes.", "Counter rates use full-window increments and actual duration. Histogram populations combine only identical layouts; p95 remains a bucket range, never a scalar difference.")
 		return r, nil
 	}
+	if a.Explore != nil && qa.Explore.Numeric != nil {
+		r.Measures = withNumericMeasures(nil, compareNumericMeasures(*qa.Explore.Numeric, a.Explore.Numeric, b.Explore.Numeric, r.Baseline.State == "changed_between_reads" || r.Selection.State == "changed_between_reads"))
+	}
 	if r.Baseline.State != "observed" || r.Selection.State != "observed" {
 		r.State = "unavailable"
+		if r.Measures != nil && r.Measures.Numeric != nil && r.Measures.Numeric.State == "unknown" {
+			r.State = "unknown"
+		}
 		r.Warnings = append(r.Warnings, "No numeric differences: one result is empty, unknown or changed between reads.")
 		return r, nil
 	}
@@ -183,7 +211,10 @@ func CompareEvidence(a, b *SavedCapture) (*EvidenceComparison, error) {
 	r.CountDifference = signedDifference(r.Baseline.Count, r.Selection.Count)
 	if a.Explore != nil {
 		r.Measures = compareMeasures(a.Explore.Duration, b.Explore.Duration, a.Explore.SpanStatus, b.Explore.SpanStatus)
-		if len(qa.Explore.GroupBy) == 1 && qa.Explore.Numeric == nil {
+		if qa.Explore.Numeric != nil {
+			r.Measures = withNumericMeasures(r.Measures, compareNumericMeasures(*qa.Explore.Numeric, a.Explore.Numeric, b.Explore.Numeric, false))
+		}
+		if len(qa.Explore.GroupBy) == 1 {
 			ac, err := CohortFromResult(a.Explore)
 			if err != nil {
 				return nil, err
@@ -192,7 +223,7 @@ func CompareEvidence(a, b *SavedCapture) (*EvidenceComparison, error) {
 			if err != nil {
 				return nil, err
 			}
-			r.Breakdown, err = CompareCohorts(ComparisonRequest{Baseline: ac, Selection: bc})
+			r.Breakdown, err = CompareCohorts(ComparisonRequest{Numeric: qa.Explore.Numeric != nil, Baseline: ac, Selection: bc})
 			if err != nil {
 				return nil, err
 			}

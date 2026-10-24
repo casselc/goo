@@ -85,26 +85,26 @@ func TestMeasureComparisonAndMissingGroup(t *testing.T) {
 	b := measuredCohort([]uint64{30, 50, 100}, SpanStatusSummary{"3", "1", "1", "0", "1"})
 	b.Question.FromMS += 60000
 	b.Question.ToMS += 60000
-	r, e := CompareCohorts(ComparisonRequest{a, b})
+	r, e := CompareCohorts(ComparisonRequest{Baseline: a, Selection: b})
 	if e != nil || r.Measures.MeanDifferenceNS != "45.000" || r.Measures.P95DifferenceNS != "80" || r.Measures.ErrorDifferencePP != "-16.67" {
 		t.Fatal(r, e)
 	}
 	b.Groups[0].Value = nil
-	r, e = CompareCohorts(ComparisonRequest{a, b})
+	r, e = CompareCohorts(ComparisonRequest{Baseline: a, Selection: b})
 	if e != nil || len(r.Rows) != 2 || r.Rows[0].Measures.MeanDifferenceNS != "" {
 		t.Fatal(r, e)
 	}
 	b.SpanStatus = &SpanStatusSummary{"3", "0", "1", "0", "2"}
-	if _, e = CompareCohorts(ComparisonRequest{a, b}); e == nil {
+	if _, e = CompareCohorts(ComparisonRequest{Baseline: a, Selection: b}); e == nil {
 		t.Fatal("incoherent grouped status accepted")
 	}
 	b = measuredCohort(nil, emptySpanStatus())
-	r, e = CompareCohorts(ComparisonRequest{a, b})
+	r, e = CompareCohorts(ComparisonRequest{Baseline: a, Selection: b})
 	if e != nil || r.State != "no_data" || r.Measures != nil {
 		t.Fatal(r, e)
 	}
 	a.State = "changed_between_reads"
-	r, e = CompareCohorts(ComparisonRequest{a, a})
+	r, e = CompareCohorts(ComparisonRequest{Baseline: a, Selection: a})
 	if e != nil || r.State != "unknown" || r.Measures != nil {
 		t.Fatal(r, e)
 	}

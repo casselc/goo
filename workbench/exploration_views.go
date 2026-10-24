@@ -95,12 +95,15 @@ func (v ExplorationView) Validate() error {
 		if config.Metric != "count" && config.Metric != "error-rate" && config.Metric != "mean" && config.Metric != "p95" && config.Metric != "p99" && config.Metric != "max" && config.Metric != "numeric-mean" && config.Metric != "numeric-sum" && config.Metric != "numeric-min" && config.Metric != "numeric-max" {
 			return errors.New("unsupported breakdown ranking")
 		}
-		if config.ComparisonMetric != "share" && config.ComparisonMetric != "count" && config.ComparisonMetric != "error-rate" && config.ComparisonMetric != "mean" && config.ComparisonMetric != "p95" && config.ComparisonMetric != "p99" {
+		if config.ComparisonMetric != "share" && config.ComparisonMetric != "count" && config.ComparisonMetric != "error-rate" && config.ComparisonMetric != "mean" && config.ComparisonMetric != "p95" && config.ComparisonMetric != "p99" && config.ComparisonMetric != "numeric-mean" && config.ComparisonMetric != "numeric-sum" && config.ComparisonMetric != "numeric-min" && config.ComparisonMetric != "numeric-max" {
 			return errors.New("unsupported comparison metric")
 		}
+		if len(config.ComparisonMetric) >= 8 && config.ComparisonMetric[:8] == "numeric-" && current.Numeric == nil {
+			return errors.New("numeric comparison ranking requires an explicit numeric binding")
+		}
 		if b := config.Baseline; b != nil {
-			if b.Signal != signal || b.Environment != current.Environment || b.Offset != 0 || !reflect.DeepEqual(b.GroupBy, current.GroupBy) || b.Numeric != nil || current.Numeric != nil {
-				return errors.New("baseline requires the same signal, environment and breakdown without numeric measures")
+			if b.Signal != signal || b.Environment != current.Environment || b.Offset != 0 || !reflect.DeepEqual(b.GroupBy, current.GroupBy) || !reflect.DeepEqual(b.Numeric, current.Numeric) {
+				return errors.New("baseline requires the same signal, environment, breakdown and numeric binding")
 			}
 			if _, e := exploration.Compile(*b); e != nil {
 				return e

@@ -12,6 +12,7 @@ import (
 // Cohort is a browser-held capture of complete group/count results, not a signed
 // source receipt. Comparison validates its internal accounting, not provenance.
 type Cohort struct {
+	Numeric    *NumericSummary    `json:"numeric,omitempty"`
 	Duration   *DurationSummary   `json:"duration,omitempty"`
 	SpanStatus *SpanStatusSummary `json:"spanStatus,omitempty"`
 	Question   Query              `json:"question"`
@@ -21,12 +22,14 @@ type Cohort struct {
 	Groups     []ValueCount       `json:"groups"`
 }
 type ValueCount struct {
+	Numeric    *NumericSummary    `json:"numeric,omitempty"`
 	Duration   *DurationSummary   `json:"duration,omitempty"`
 	SpanStatus *SpanStatusSummary `json:"spanStatus,omitempty"`
 	Value      *string            `json:"g0"`
 	Count      string             `json:"count"`
 }
 type ComparisonRequest struct {
+	Numeric   bool   `json:"numeric,omitempty"`
 	Baseline  Cohort `json:"baseline"`
 	Selection Cohort `json:"selection"`
 }
@@ -112,6 +115,12 @@ func (c Cohort) validate() (map[string]ValueCount, *big.Int, error) {
 	return m, total, nil
 }
 func CompareCohorts(request ComparisonRequest) (*CohortComparison, error) {
+	if !request.Numeric && (numericPayload(request.Baseline) || numericPayload(request.Selection)) {
+		return nil, fmt.Errorf("numeric payload requires explicit numeric comparison")
+	}
+	if request.Numeric && (!compatibleNumericBindings(request.Baseline.Question.Numeric, request.Selection.Question.Numeric) || request.Baseline.Numeric == nil || request.Selection.Numeric == nil) {
+		return nil, fmt.Errorf("numeric comparison requires identical declared bindings and complete numeric coverage")
+	}
 	a, totalA, e := request.Baseline.validate()
 	if e != nil {
 		return nil, e
@@ -180,11 +189,19 @@ func CompareCohorts(request ComparisonRequest) (*CohortComparison, error) {
 			return rows[i].key < rows[j].key
 		})
 		for _, row := range rows {
+			if request.Numeric {
+				av := a[row.key]
+				bv := b[row.key]
+				row.row.Measures = withNumericMeasures(row.row.Measures, compareNumericMeasures(*qa.Numeric, av.Numeric, bv.Numeric, false))
+			}
 			result.Rows = append(result.Rows, row.row)
 		}
 	}
 	if result.State != "ok" {
 		result.Measures = nil
+	}
+	if request.Numeric {
+		result.Measures = withNumericMeasures(result.Measures, compareNumericMeasures(*qa.Numeric, request.Baseline.Numeric, request.Selection.Numeric, result.State == "unknown"))
 	}
 	// Hash the actual caller-held group evidence, not only claimed source bases.
 	canonical := request

@@ -7,14 +7,15 @@ import (
 )
 
 type MeasureComparison struct {
-	BaselineDuration  *DurationSummary   `json:"baselineDuration,omitempty"`
-	SelectionDuration *DurationSummary   `json:"selectionDuration,omitempty"`
-	BaselineStatus    *SpanStatusSummary `json:"baselineStatus,omitempty"`
-	SelectionStatus   *SpanStatusSummary `json:"selectionStatus,omitempty"`
-	MeanDifferenceNS  string             `json:"meanDifferenceNs,omitempty"`
-	P95DifferenceNS   string             `json:"p95DifferenceNs,omitempty"`
-	P99DifferenceNS   string             `json:"p99DifferenceNs,omitempty"`
-	ErrorDifferencePP string             `json:"errorDifferencePP,omitempty"`
+	Numeric           *NumericMeasureComparison `json:"numeric,omitempty"`
+	BaselineDuration  *DurationSummary          `json:"baselineDuration,omitempty"`
+	SelectionDuration *DurationSummary          `json:"selectionDuration,omitempty"`
+	BaselineStatus    *SpanStatusSummary        `json:"baselineStatus,omitempty"`
+	SelectionStatus   *SpanStatusSummary        `json:"selectionStatus,omitempty"`
+	MeanDifferenceNS  string                    `json:"meanDifferenceNs,omitempty"`
+	P95DifferenceNS   string                    `json:"p95DifferenceNs,omitempty"`
+	P99DifferenceNS   string                    `json:"p99DifferenceNs,omitempty"`
+	ErrorDifferencePP string                    `json:"errorDifferencePP,omitempty"`
 }
 
 func signedDifference(a, b string) string {
@@ -53,6 +54,9 @@ func compareMeasures(a, b *DurationSummary, x, y *SpanStatusSummary) *MeasureCom
 	return r
 }
 func (c Cohort) validateMeasures() error {
+	if e := validateNumericCohort(c); e != nil {
+		return e
+	}
 	if c.Duration != nil && (c.Question.Summary != "span-duration" || c.Duration.Count != c.Count || c.Duration.Validate() != nil) {
 		return fmt.Errorf("invalid cohort duration")
 	}
@@ -104,7 +108,10 @@ func (c Cohort) validateMeasures() error {
 
 // CohortFromResult retains full aggregates, never computes measures from rows.
 func CohortFromResult(r *Result) (Cohort, error) {
-	c := Cohort{Question: r.Question, Basis: r.Basis, Count: r.Count, State: r.State, Duration: r.Duration, SpanStatus: r.SpanStatus, Groups: []ValueCount{}}
+	if r == nil {
+		return Cohort{}, fmt.Errorf("result required")
+	}
+	c := Cohort{Numeric: detached(r.Numeric), Question: detached(r.Question), Basis: r.Basis, Count: r.Count, State: r.State, Duration: r.Duration, SpanStatus: r.SpanStatus, Groups: []ValueCount{}}
 	for _, raw := range r.Groups {
 		var g ValueCount
 		if json.Unmarshal(raw, &g) != nil {

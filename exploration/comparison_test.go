@@ -15,7 +15,7 @@ func cohort(total string, groups ...ValueCount) Cohort {
 func TestCohortComparisonExactCountsAndMissing(t *testing.T) {
 	a := cohort("8", ValueCount{Value: str("a"), Count: "4"}, ValueCount{Value: nil, Count: "2"}, ValueCount{Value: str(""), Count: "2"})
 	b := cohort("4", ValueCount{Value: str("a"), Count: "3"}, ValueCount{Value: str(""), Count: "1"})
-	r, e := CompareCohorts(ComparisonRequest{a, b})
+	r, e := CompareCohorts(ComparisonRequest{Baseline: a, Selection: b})
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -36,7 +36,7 @@ func TestCohortComparisonExactCountsAndMissing(t *testing.T) {
 		t.Fatal(r)
 	}
 	a.Groups[0], a.Groups[2] = a.Groups[2], a.Groups[0]
-	again, e := CompareCohorts(ComparisonRequest{a, b})
+	again, e := CompareCohorts(ComparisonRequest{Baseline: a, Selection: b})
 	if e != nil || r.Basis != again.Basis || !reflect.DeepEqual(r.Rows, again.Rows) {
 		t.Fatal("ordering changes comparison", e)
 	}
@@ -45,31 +45,31 @@ func TestCohortComparisonUnknownEmptyAndInvalid(t *testing.T) {
 	a := cohort("2", ValueCount{Value: str("x"), Count: "2"})
 	b := a
 	b.Question.ToMS++
-	if _, e := CompareCohorts(ComparisonRequest{a, b}); e != nil {
+	if _, e := CompareCohorts(ComparisonRequest{Baseline: a, Selection: b}); e != nil {
 		t.Fatal("different fixed windows rejected")
 	}
 	b = a
 	b.Groups = []ValueCount{{Value: str("x"), Count: "1"}}
-	if _, e := CompareCohorts(ComparisonRequest{a, b}); e == nil {
+	if _, e := CompareCohorts(ComparisonRequest{Baseline: a, Selection: b}); e == nil {
 		t.Fatal("partial groups accepted")
 	}
 	b.State = "changed_between_reads"
-	r, e := CompareCohorts(ComparisonRequest{a, b})
+	r, e := CompareCohorts(ComparisonRequest{Baseline: a, Selection: b})
 	if e != nil || r.State != "unknown" || len(r.Rows) != 0 {
 		t.Fatal(r, e)
 	}
 	b = cohort("0")
 	b.State = "no_data"
-	r, e = CompareCohorts(ComparisonRequest{a, b})
+	r, e = CompareCohorts(ComparisonRequest{Baseline: a, Selection: b})
 	if e != nil || r.State != "no_data" || len(r.Rows) != 0 {
 		t.Fatal(r, e)
 	}
 	b = cohort("2", ValueCount{Value: nil, Count: "1"}, ValueCount{Value: nil, Count: "1"})
-	if _, e := CompareCohorts(ComparisonRequest{a, b}); e == nil {
+	if _, e := CompareCohorts(ComparisonRequest{Baseline: a, Selection: b}); e == nil {
 		t.Fatal("duplicate missing bucket accepted")
 	}
 	a = cohort("18446744073709551615", ValueCount{Value: str("x"), Count: "18446744073709551614"}, ValueCount{Value: str("y"), Count: "1"})
-	r, e = CompareCohorts(ComparisonRequest{a, a})
+	r, e = CompareCohorts(ComparisonRequest{Baseline: a, Selection: a})
 	if e != nil || r.Rows[0].DifferencePP != "0.00" {
 		t.Fatal("lost uint64 precision", e)
 	}

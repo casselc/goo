@@ -316,3 +316,13 @@ the linked TF2/TF3 contract.
 The source-free `POST /numeric-histograms/selection` planner derives exact integer
 range and remainder questions from half-open bin indices. Its `/api` proxy has
 the same contract. See [integer distributions](NUMERIC_HISTOGRAMS.md).
+
+Numeric measure comparison is an explicit `numeric: true` mode on `POST /compare`.
+Both caller-held cohorts must include complete numeric totals and group summaries
+with the same declared binding. Exact integer/rational changes are additive under
+`measures.numeric`; no source access occurs in this endpoint. Omitting the flag
+preserves legacy count-only comparison behavior. The histogram selection planner
+also supplies a separate `numericComparison` query pair alongside its unchanged
+count-only pair. Numeric stored-evidence decisions use algorithm v4; older frozen
+receipt algorithms remain readable without reevaluation. See
+[numeric comparison semantics](NUMERIC_COMPARISONS.md).

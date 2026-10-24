@@ -8335,3 +8335,25 @@ Limits: fixed powers-of-two categorical ranges only; no density/linear numeric
 axis, custom bins, numeric mean/sum cohort comparison, inferred types/units or
 transactional multi-read snapshot. Count comparison uses the first declared
 breakdown or service name; selected/rest drilldowns preserve authored grouping.
+
+## Numeric comparisons — NC1 semantic milestone (2026-10-24)
+
+Implemented explicit numeric comparison intent, matching field/type/unit/parse
+bindings, complete totals/group accounting, exact signed integer and reduced
+rational differences, coverage and unknown/unavailable states. Parallel histogram
+numeric query pairs preserve the original count-only action. New capture evidence
+uses numeric summaries, while older count-only comparison requests omit the new
+fields and retain their original meaning. Numeric evidence receipts use v4;
+existing frozen v1–v3 receipts reopen without recomputation. v4 admits an unknown
+numeric decision; old receipt versions do not silently acquire that state.
+
+Independent backend review approved the milestone. Full exploration/cmd/workbench
+regressions pass, HTTP tests verify exact `1/3` transport, missing intent/evidence
+refusal and legacy count behavior, and receipt tests verify immutable numeric
+reopen and old-version decisions. Three native tests pass with 100 Hegel
+campaigns using independent standard-library parsing and big.Int/Rat oracles,
+including coverage, large signed/unsigned values, fractional means, one-sided and
+invalid/no-data/changed states, binding mismatches and detached output. OpenAPI
+checks pass with the existing 71 operations / 65 Go operations and frozen wire
+fixtures. No new SQL kernel is introduced; real source/UI acceptance is separate.
+Evidence: `artifacts/numeric-comparison-{go,http-workbench,receipt,properties}.log`.

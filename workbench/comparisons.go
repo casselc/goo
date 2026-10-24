@@ -9,6 +9,7 @@ import (
 )
 
 const ComparisonAlgorithm = "goo/evidence-comparison/v3"
+const NumericComparisonAlgorithm = "goo/evidence-comparison/v4"
 
 var ErrComparisonChanged = errors.New("comparison changed; compare these captures again before saving")
 
@@ -41,7 +42,11 @@ func (s Store) CreateComparison(baseline, selection string, expected *exploratio
 	if !reflect.DeepEqual(result, expected) {
 		return nil, ErrComparisonChanged
 	}
-	receipt := ComparisonReceipt{Version: 1, Algorithm: ComparisonAlgorithm, RecordedAt: time.Now().UTC().Format(time.RFC3339Nano), Result: result}
+	algorithm := ComparisonAlgorithm
+	if a.Question.Explore != nil && a.Question.Explore.Numeric != nil || b.Question.Explore != nil && b.Question.Explore.Numeric != nil {
+		algorithm = NumericComparisonAlgorithm
+	}
+	receipt := ComparisonReceipt{Version: 1, Algorithm: algorithm, RecordedAt: time.Now().UTC().Format(time.RFC3339Nano), Result: result}
 	id, e := digest(receipt)
 	if e != nil {
 		return nil, e
@@ -61,7 +66,7 @@ func (s Store) LoadComparison(id string) (*ComparisonReceipt, error) {
 	r.ID = ""
 	hash, e := digest(r)
 	r.ID = actual
-	if e != nil || actual != id || hash != id || r.Version != 1 || (r.Algorithm != ComparisonAlgorithm && r.Algorithm != "goo/evidence-comparison/v1" && r.Algorithm != "goo/evidence-comparison/v2") || !validTime(r.RecordedAt) || r.Result == nil {
+	if e != nil || actual != id || hash != id || r.Version != 1 || (r.Algorithm != ComparisonAlgorithm && r.Algorithm != NumericComparisonAlgorithm && r.Algorithm != "goo/evidence-comparison/v1" && r.Algorithm != "goo/evidence-comparison/v2") || !validTime(r.RecordedAt) || r.Result == nil {
 		return nil, errors.New("comparison integrity check failed")
 	}
 	a, b := r.Result.Baseline.Receipt, r.Result.Selection.Receipt
@@ -70,6 +75,10 @@ func (s Store) LoadComparison(id string) (*ComparisonReceipt, error) {
 	}
 	switch r.Result.State {
 	case "comparable", "incompatible", "unavailable", "unsupported":
+	case "unknown":
+		if r.Algorithm != NumericComparisonAlgorithm {
+			return nil, errors.New("unknown numeric decision requires numeric comparison algorithm")
+		}
 	default:
 		return nil, errors.New("invalid stored comparison decision")
 	}

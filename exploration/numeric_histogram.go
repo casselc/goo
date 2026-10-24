@@ -170,15 +170,16 @@ type NumericHistogramComparisonQueries struct {
 	Selection Query `json:"selection"`
 }
 type NumericHistogramSelection struct {
-	Parent     Query                             `json:"parent"`
-	Selected   Query                             `json:"selected"`
-	Rest       Query                             `json:"rest"`
-	Comparison NumericHistogramComparisonQueries `json:"comparison"`
-	FromBin    int                               `json:"fromBin"`
-	ToBin      int                               `json:"toBin"`
-	Binning    string                            `json:"binning"`
-	From       string                            `json:"from"`
-	To         string                            `json:"to"`
+	NumericComparison *NumericHistogramComparisonQueries `json:"numericComparison,omitempty"`
+	Parent            Query                              `json:"parent"`
+	Selected          Query                              `json:"selected"`
+	Rest              Query                              `json:"rest"`
+	Comparison        NumericHistogramComparisonQueries  `json:"comparison"`
+	FromBin           int                                `json:"fromBin"`
+	ToBin             int                                `json:"toBin"`
+	Binning           string                             `json:"binning"`
+	From              string                             `json:"from"`
+	To                string                             `json:"to"`
 }
 
 // PlanNumericHistogramSelection is source-free. Indexes are half-open, like bin
@@ -246,7 +247,20 @@ func PlanNumericHistogramSelection(parent Query, fromBin, toBin int) (*NumericHi
 		return v
 	}
 	out.Comparison = NumericHistogramComparisonQueries{Baseline: project(out.Rest), Selection: project(out.Selected)}
-	for _, q := range []Query{out.Selected, out.Rest, out.Comparison.Baseline, out.Comparison.Selection} {
+	numericProject := func(q Query) Query {
+		v := detached(q)
+		v.NumericHistogram = nil
+		v.Summary = ""
+		v.SpanStatus = false
+		if len(v.GroupBy) == 0 {
+			v.GroupBy = []Field{{Kind: "column", Key: "service"}}
+		} else {
+			v.GroupBy = v.GroupBy[:1]
+		}
+		return v
+	}
+	out.NumericComparison = &NumericHistogramComparisonQueries{Baseline: numericProject(out.Rest), Selection: numericProject(out.Selected)}
+	for _, q := range []Query{out.Selected, out.Rest, out.Comparison.Baseline, out.Comparison.Selection, out.NumericComparison.Baseline, out.NumericComparison.Selection} {
 		if e := q.Validate(); e != nil {
 			return nil, fmt.Errorf("histogram selection exceeds supported question: %w", e)
 		}

@@ -152,3 +152,90 @@ func TestLegacyComparisonReceiptStillReopensWithoutReevaluation(t *testing.T) {
 		}
 	}
 }
+
+func TestNumericEvidenceReceiptFreezesVersionedMeaning(t *testing.T) {
+	store := Store{Dir: t.TempDir()}
+	a, b := comparisonCaptures()
+	binding := exploration.NumericBinding{Field: exploration.Field{Kind: "attribute", Key: "work.items"}, Type: "int64", Unit: "items", Parse: "canonical-decimal"}
+	raw := func(s string) *string { return &s }
+	for i, c := range []*exploration.SavedCapture{a, b} {
+		c.Question.Explore.Numeric = &binding
+		c.Explore.Question.Numeric = &binding
+		values := []*string{raw("-1"), raw("0")}
+		if i == 1 {
+			values = append(values, raw("1"), nil)
+		}
+		summary, e := exploration.EvaluateNumericValues(binding, values)
+		if e != nil {
+			t.Fatal(e)
+		}
+		c.Explore.Numeric = &summary
+	}
+	expected, e := exploration.CompareEvidence(a, b)
+	if e != nil {
+		t.Fatal(e)
+	}
+	load := func(id string) (*exploration.SavedCapture, error) {
+		if id == a.ID {
+			return a, nil
+		}
+		return b, nil
+	}
+	receipt, e := store.CreateComparison(a.ID, b.ID, expected, load)
+	if e != nil || receipt.Algorithm != NumericComparisonAlgorithm || receipt.Result.Measures == nil || receipt.Result.Measures.Numeric == nil {
+		t.Fatal("numeric version/meaning lost", receipt, e)
+	}
+	original, _ := json.Marshal(receipt)
+	reopened, e := store.LoadComparison(receipt.ID)
+	if e != nil {
+		t.Fatal(e)
+	}
+	again, _ := json.Marshal(reopened)
+	if string(original) != string(again) {
+		t.Fatal("reopen changed immutable numeric bytes")
+	}
+	// A legacy receipt freezes its historical count-only result even when the new
+	// numeric comparison engine could now derive additional measure differences.
+	legacy := *receipt
+	legacy.ID = ""
+	legacy.Algorithm = ComparisonAlgorithm
+	cloned, _ := json.Marshal(receipt.Result)
+	legacy.Result = nil
+	json.Unmarshal(cloned, &legacy.Result)
+	legacy.Result.Measures = nil
+	id, e := digest(legacy)
+	if e != nil {
+		t.Fatal(e)
+	}
+	legacy.ID = id
+	if e = store.publish("comparisons", id, legacy); e != nil {
+		t.Fatal(e)
+	}
+	frozen, e := store.LoadComparison(id)
+	if e != nil || frozen.Result.Measures != nil || frozen.Algorithm != ComparisonAlgorithm {
+		t.Fatal("legacy evidence reinterpreted", e)
+	}
+	a.Explore.State = "changed_between_reads"
+	unknown, e := exploration.CompareEvidence(a, b)
+	if e != nil || unknown.State != "unknown" || unknown.Measures.Numeric.MeanDifference != "" {
+		t.Fatal("unknown comparison asserted arithmetic", e)
+	}
+	unknownReceipt, e := store.CreateComparison(a.ID, b.ID, unknown, load)
+	if e != nil || unknownReceipt.Algorithm != NumericComparisonAlgorithm {
+		t.Fatal("new unknown evidence cannot reopen", e)
+	}
+	bad := *unknownReceipt
+	bad.ID = ""
+	bad.Algorithm = ComparisonAlgorithm
+	badID, e := digest(bad)
+	if e != nil {
+		t.Fatal(e)
+	}
+	bad.ID = badID
+	if e = store.publish("comparisons", badID, bad); e != nil {
+		t.Fatal(e)
+	}
+	if _, e = store.LoadComparison(badID); e == nil {
+		t.Fatal("legacy version accepted a new numeric decision")
+	}
+}

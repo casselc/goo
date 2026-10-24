@@ -7671,6 +7671,16 @@
               }
             ]
           },
+          "numeric": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.NumericSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "question": {
             "$ref": "#/components/schemas/exploration.Query"
           },
@@ -7979,6 +7989,23 @@
               }
             ]
           },
+          "numeric": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.NumericSummaryInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "question": {
             "anyOf": [
               {
@@ -8068,6 +8095,9 @@
           "baseline": {
             "$ref": "#/components/schemas/exploration.Cohort"
           },
+          "numeric": {
+            "type": "boolean"
+          },
           "selection": {
             "$ref": "#/components/schemas/exploration.Cohort"
           }
@@ -8086,6 +8116,16 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/exploration.CohortInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "numeric": {
+            "anyOf": [
+              {
+                "type": "boolean"
               },
               {
                 "type": "null"
@@ -9652,6 +9692,16 @@
           "meanDifferenceNs": {
             "type": "string"
           },
+          "numeric": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.NumericMeasureComparison"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "p95DifferenceNs": {
             "type": "string"
           },
@@ -9734,6 +9784,23 @@
             "anyOf": [
               {
                 "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "numeric": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.NumericMeasureComparisonInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               {
                 "type": "null"
@@ -9869,6 +9936,89 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.NumericBinding"
       },
+      "exploration.NumericCoverageChange": {
+        "properties": {
+          "baselineCount": {
+            "type": "string"
+          },
+          "difference": {
+            "type": "string"
+          },
+          "differencePP": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "selectionCount": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "baselineCount",
+          "selectionCount"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.NumericCoverageChange"
+      },
+      "exploration.NumericCoverageChangeInput": {
+        "additionalProperties": false,
+        "properties": {
+          "baselineCount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "difference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "differencePP": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "selectionCount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.NumericCoverageChange"
+      },
       "exploration.NumericDiagnostic": {
         "properties": {
           "code": {
@@ -9965,6 +10115,16 @@
           "fromBin": {
             "type": "integer"
           },
+          "numericComparison": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.NumericHistogramComparisonQueries"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "parent": {
             "$ref": "#/components/schemas/exploration.Query"
           },
@@ -10023,6 +10183,202 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.NumericHistogramSpec"
+      },
+      "exploration.NumericMeasureComparison": {
+        "properties": {
+          "baseline": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.NumericSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "binding": {
+            "$ref": "#/components/schemas/exploration.NumericBinding"
+          },
+          "coverage": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/exploration.NumericCoverageChange"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "maxDifference": {
+            "type": "string"
+          },
+          "meanDifference": {
+            "type": "string"
+          },
+          "minDifference": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "selection": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.NumericSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "type": "string"
+          },
+          "sumDifference": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "binding",
+          "state",
+          "coverage"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.NumericMeasureComparison"
+      },
+      "exploration.NumericMeasureComparisonInput": {
+        "additionalProperties": false,
+        "properties": {
+          "baseline": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.NumericSummaryInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "binding": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.NumericBindingInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "coverage": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/exploration.NumericCoverageChangeInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "maxDifference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "meanDifference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "minDifference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "selection": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.NumericSummaryInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sumDifference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.NumericMeasureComparison"
       },
       "exploration.NumericPlan": {
         "properties": {
@@ -10133,6 +10489,113 @@
           "invalid",
           "sum"
         ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.NumericSummary"
+      },
+      "exploration.NumericSummaryInput": {
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "empty": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "invalid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "max": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "min": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "missing": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sum": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "valid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.NumericSummary"
       },
@@ -12594,6 +13057,16 @@
               }
             ]
           },
+          "numeric": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.NumericSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "spanStatus": {
             "anyOf": [
               {
@@ -12648,6 +13121,23 @@
                 "anyOf": [
                   {
                     "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "numeric": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.NumericSummaryInput"
                   },
                   {
                     "type": "null"
