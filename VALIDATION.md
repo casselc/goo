@@ -7137,3 +7137,60 @@ build staging is removed, reusable Go/module caches remain, and unused Docker
 build cache/dangling-image cleanup uses supported CLI commands without volume
 pruning. Final documentation and actual 149–152 frames are synchronized after
 verification.
+
+
+## Brushable raw-span latency distributions (2026-10-24 UTC)
+
+[Latency selection](docs/LATENCY_SELECTION.md) adds supplied-key range intent to
+passive count bars and an app-owned adapter over existing full duration groups.
+No evaluator, backend route, OpenAPI schema or native metric contract changed.
+A compact existing selection owner previews full-scope bucket counts and exact
+half-open bounds. Gestures/cancellation/editing/rest staging stay source-free;
+Run selected population explicitly reads an inspectable child, while Compare
+with rest stages before the child's explicit Run. Comparisons retain the entire
+parent selector/window and independent-read semantics. Exact-bound edits withdraw
+old bucket count/highlight previews.
+
+Actual validation:
+
+- Four focused Node files pass: histogram model, population transforms, supplied
+  count bars and exploration ownership; JavaScript/Python syntax and diff checks
+  pass. Every contiguous duration range is checked, including open upper bounds,
+  reverse intent, exact counts above JavaScript safe integers and malformed totals.
+- Hegel histogram partitions (40 cases), existing time/duration partitions (40)
+  and cohort state/swarm tests pass together (6.3s). Generated questions compile
+  through Go; the matcher checks missing/empty parents, exact bucket edges,
+  integers above 2^53 and uint64 maximum without overlap or lost parent membership.
+- Source journeys 153/154 pass (51.5s), with ordinary OTLP spans ingested into the
+  real local ClickHouse. The independent source oracle verifies six spans, five
+  in the parent scope. A one-row page does not limit histogram totals. Selecting
+  [5,10) ms yields exactly two span IDs, with three others in the remainder.
+- Final local deployed acceptance: six browser checks pass (1.0m): 153/154 plus
+  existing 121/121b heatmap and both 68 count-bar component contracts. Desktop and
+  mobile frames come from the real application. No successful telemetry response
+  mocks were used. Synthetic standalone component fixtures are explicitly labeled.
+- The actual 153 navigation/read ledger passes the existing Quint drilldown model
+  through quint-go. Five controls reject extra return/stage reads, overlapping
+  remainder, narrowed selection window and changed environment. The duration-only
+  replay preserves the full time window, unlike the earlier rectangle case.
+  A 25-second Bombadil campaign passes source-read/staging, progress, overflow and
+  uncaught-error invariants. Passive range checks cover pre-definition property
+  upgrade, SSR attributes, cancellation, pointer capture outside the plot and
+  removing range behavior. Existing count bars retain source-free defaults.
+- Local served assets and HTML registration match checkout; compact evidence and
+  command logs live under artifacts/latency-selection-round and individual runs.
+
+Deployment updates the running query container's assets/allowlist and restarts
+only that frontend. The existing Docker image is unchanged: constrained disk
+space precluded a fresh image build. Backend services and volumes are unchanged.
+README, architecture/flow diagram, component contracts, planning/limits, storyboards
+and actual frames are synchronized. Automatic live histogram reads remain future
+work; native histogram counts never establish individual span membership.
+
+Before validation, the supported diagnostic-retention tool expired 39,679 eligible
+raw browser files (103 bundles), preserving compact ledgers/logs, pins and evidence;
+its inventory is artifacts/retention/20261024T031415Z-f6f173ed.jsonl.gz. This mostly
+recovered /tmp space. Separately, trimming the current 761 MiB ClickHouse debug log
+to its latest 20 MiB recovered roughly 680 MiB on root. Error/audit logs, application
+OTel tables, captures, XTDB data and volumes were preserved. Root remains constrained;
+no Docker internals or volume pruning was used.

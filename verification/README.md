@@ -1067,3 +1067,5 @@ rejecting controls for source reads, publication counts, pinned revision, record
 custody time and exact manifest. `verification/bombadil/tail-evidence.ts` exercises
 local provenance/attribute disclosures and search without source reads or writes.
 The existing evidence-library actor also exercises the new origin selector.
+
+`TestHegelLatencyHistogramPartitions` checks generated contiguous bucket ranges, including reverse intent, missing/empty parents and exact upper boundaries through the Go compiler/matcher. `TestQuintLatencyHistogramLedger` reads `GOO_LATENCY_HISTOGRAM_LEDGER` from journey 153 and uses the existing drilldown model with five rejecting controls; duration-only scope differs from the earlier time/latency rectangle.

@@ -1463,3 +1463,10 @@ td details {
 
 /* Activity adapter layout for the shared supplied predicate editor. */
 .entry-filter-options[open]{flex-basis:100%}.entry-filter-options>summary{cursor:pointer}.stream-entry-toolbar .filter-editor select{width:auto;min-width:8rem}.stream-entry-toolbar .filter-editor input{width:10rem}.stream-entry-toolbar .filter-editor small{display:inline;color:var(--muted)}
+
+/* Application-owned latency distribution layout. */
+.latency-histogram{margin:12px 0;min-width:0}
+.latency-histogram>p{font-size:11px;color:var(--muted,#98a8bf);margin:6px 0}
+
+.latency-bucket-labels{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:2px;font-size:10px;color:var(--muted,#98a8bf);text-align:center;margin-top:3px}
+.latency-bucket-labels>span{overflow-wrap:anywhere}

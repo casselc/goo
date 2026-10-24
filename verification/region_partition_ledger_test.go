@@ -13,7 +13,15 @@ import (
 )
 
 func TestQuintRegionPartitionLedger(t *testing.T) {
-	name := os.Getenv("GOO_REGION_PARTITION_LEDGER")
+	checkRegionPartitionLedger(t, "GOO_REGION_PARTITION_LEDGER", false)
+}
+
+func TestQuintLatencyHistogramLedger(t *testing.T) {
+	checkRegionPartitionLedger(t, "GOO_LATENCY_HISTOGRAM_LEDGER", true)
+}
+
+func checkRegionPartitionLedger(t *testing.T, variable string, durationOnly bool) {
+	name := os.Getenv(variable)
 	if name == "" {
 		t.Skip("observed browser ledger")
 	}
@@ -60,7 +68,7 @@ func TestQuintRegionPartitionLedger(t *testing.T) {
 					vals := map[exploration.Field]string{{Kind: "column", Key: "timestamp_ns"}: strconv.FormatInt((l.Parent.FromMS+ms)*1000000, 10), {Kind: "column", Key: "duration_ns"}: strconv.FormatUint(d, 10), {Kind: "attribute", Key: "owner"}: owner}
 					p := exploration.Match(l.Parent.Where, vals)
 					a, b := exploration.Match(l.Pair.Selection.Question.Where, vals), exploration.Match(l.Pair.Baseline.Question.Where, vals)
-					coherent = coherent && !(a && b) && (a || b) == p && a == (p && ms < 10000 && d >= 5000000 && d < 10000000)
+					coherent = coherent && !(a && b) && (a || b) == p && a == (p && (durationOnly || ms < 10000) && d >= 5000000 && d < 10000000)
 				}
 			}
 		}

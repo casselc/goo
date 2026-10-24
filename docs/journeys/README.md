@@ -726,3 +726,5 @@ controls and runs a source-free Bombadil editor campaign.
 ![Scoped counted values](screenshots/151a-counted-field-values.png)
 ![Mobile counted list](screenshots/151b-mobile-counted-values.png)
 ![Cardinality refusal](screenshots/152-counted-value-refusal.png)
+
+153: [Latency histogram selection](../LATENCY_SELECTION.md), real OTLP/ClickHouse, reverse drag, keyboard/cancel, explicit child/rest comparison, source-free return, desktop/mobile frames and Bombadil. 154: synthetic passive count-bar range contract, SSR/detached upgrade, out-of-plot release and behavior removal.

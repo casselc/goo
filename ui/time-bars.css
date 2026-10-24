@@ -40,3 +40,6 @@ goo-comparison-series .comparison-series-table{max-width:100%;overflow:auto}
 goo-comparison-series table{width:100%;border-collapse:collapse;font-size:11px}
 goo-comparison-series :is(td,th){padding:4px;text-align:left;white-space:nowrap}
 goo-comparison-series summary{font-size:11px;cursor:pointer}
+
+/* Supplied range feedback; application adapters interpret keys. */
+goo-time-bars .time-bar[data-range-selected=true]{background:#79ddc62b;outline:1px solid var(--accent,#79ddc6);outline-offset:-1px}

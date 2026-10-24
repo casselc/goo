@@ -604,3 +604,5 @@ retain the fixed window; incompatible signal changes reset the predicates.
 The shared editor now discovers [observed fields and values](docs/FILTER_EDITOR.md#observed-fields-and-values) from existing applied reads. Search locally and stage literal, empty or missing-key conditions before explicit Apply/Run.
 
 [Counted field values](docs/FILTER_VALUES.md) can now be loaded explicitly beyond shown-record samples. Lookups retain the applied selector/window, expose exact missing/empty counts, and stage selections before Apply/Run.
+
+Raw-span duration breakdowns include a [brushable latency histogram](docs/LATENCY_SELECTION.md): select buckets and preview counts without a source read, then explicitly inspect or compare.
