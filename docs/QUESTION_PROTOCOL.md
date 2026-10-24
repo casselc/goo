@@ -131,3 +131,14 @@ This closes bounded B2. It does not claim exhaustive protocol validation or ever
 future presentation adoption. At B2 closeout the next cut was C1: freezing store-specific identity/response
 fixtures and extracting immutable-file mechanics without changing family semantics.
 That cut is now historical; the [current roadmap](ROADMAP_2026_10_24.md) owns status.
+
+
+## Typed predicate extension
+
+The [typed numeric leaf](TYPED_NUMERIC_FILTERS.md) adds `numeric` as an alternative
+to the existing `field` leaf. `validateNumericPredicate` is the canonical browser
+intent guard reused by the editor and recovery, retaining exact decimal strings
+and explicit interpretation. It performs no record evaluation. Optional null
+numeric pointers retain Go omission identity for legacy leaves; malformed browser
+UTF-16 is refused before transport. New 46-case fixtures and two explicit Unicode
+decode controls complement the unchanged shared-step/native digest fixtures.

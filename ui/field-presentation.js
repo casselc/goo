@@ -1,6 +1,6 @@
 /* Record-field display only. Validation, query ownership and native bindings stay separate. */
 (function(global){
- const operators={eq:'=',ne:'≠',gte:'≥',lte:'≤',contains:'contains',exists:'is present',missing:'is missing'},columns={service:'Service',duration_ns:'Span duration (ns)',timestamp_ns:'Event time (UTC)',status:'Recorded status',body:'Log message',severity:'Severity'};
+ const operators={eq:'=',ne:'≠',gte:'≥',lte:'≤',gt:'>',lt:'<',valid:'is valid',empty:'is empty',invalid:'is invalid',contains:'contains',exists:'is present',missing:'is missing'},columns={service:'Service',duration_ns:'Span duration (ns)',timestamp_ns:'Event time (UTC)',status:'Recorded status',body:'Log message',severity:'Severity'};
  // Curated display hints, checked against OTel semconv v1.43.0 (legacy spellings
  // against earlier SDK registries). Exact namespace/key lookup; no alias rewriting.
  const conventions=new Map([
@@ -46,7 +46,7 @@
   }
   return (value??'')===''?'Empty string':JSON.stringify(value);
  }
- function parts(p){return {field:qualified(p.field),operator:operator(p.op),...(['exists','missing'].includes(p.op)?{}:{value:valueText(p.field,p.value??'')})}}
- function selectorText(p){if(!p)return 'No additional selectors';if(p.all||p.any)return '('+(p.all||p.any).map(selectorText).join(p.all?' AND ':' OR ')+')';return label(p.field)+' '+operator(p.op)+(['exists','missing'].includes(p.op)?'':' '+(p.field?.kind==='column'&&p.field.key==='timestamp_ns'?valueText(p.field,p.value??''):JSON.stringify(p.value??'')))}
+ function parts(p){if(p.numeric)return {field:qualified(p.numeric.field),operator:operator(p.op),type:p.numeric.type,unit:p.numeric.unit,parse:p.numeric.parse,...(['valid','missing','empty','invalid'].includes(p.op)?{}:{value:p.value})};return {field:qualified(p.field),operator:operator(p.op),...(['exists','missing'].includes(p.op)?{}:{value:valueText(p.field,p.value??'')})}}
+ function selectorText(p){if(!p)return 'No additional selectors';if(p.all||p.any)return '('+(p.all||p.any).map(selectorText).join(p.all?' AND ':' OR ')+')';if(p.numeric){const b=p.numeric,state=['valid','missing','empty','invalid'].includes(p.op);return label(b.field)+' ['+b.type+' · '+b.unit+'] '+(state?operator(p.op):'valid value '+operator(p.op)+' '+p.value)}return label(p.field)+' '+operator(p.op)+(['exists','missing'].includes(p.op)?'':' '+(p.field?.kind==='column'&&p.field.key==='timestamp_ns'?valueText(p.field,p.value??''):JSON.stringify(p.value??'')))}
  const api={qualified,label,operator,parts,selectorText,hint,searchText};if(typeof module!=='undefined')module.exports=api;else global.GooFieldPresentation=api;
 })(typeof window==='undefined'?globalThis:window);

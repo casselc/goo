@@ -8176,3 +8176,32 @@ checker passes 64 Go routes,222 fixture responses,56 admitted requests,14 mux
 refusals, negative controls and SSE schemas. No route or frozen fixture changed.
 Independent review approved TF1 with no blocking findings. Browser support and
 end-to-end source/capture/reuse acceptance remain TF2/TF3, not implied by this gate.
+
+
+## 2026-10-24 — TF2 numeric editor, protocol and recovery
+
+The existing condition editor stages explicit string/int64/uint64 interpretation
+with required declared unit, qualified namespace and exact string threshold.
+Intrinsic columns remain read-only types. Invalid/unsupported drafts stay visible
+and block Run; state operators remove thresholds only on explicit selection.
+Protocol, recovery and display owners preserve the typed AST without source reads.
+The shared guard rejects malformed UTF-16 keys/units; two raw-JSON decode controls
+explicitly distinguish Go replacement behavior from browser intent rejection.
+
+Six existing Node suites plus six new numeric protocol tests pass. Frozen 16 shared
+fixtures, 46 numeric predicate fixtures and the two decode controls pass actual
+Go/Node round trips (workbench 0.183s). New 172/173 browser conformance passes
+(2 tests, 23.0s): exact large values, invalid type/namespace/environment edits, unit
+requirement, string compatibility, full 20-digit mobile threshold visibility,
+intrinsic column captions, URI preservation, authored typed question Add/reload/Restore
+without API requests, real Go publication and saved reopening without telemetry reads.
+These are labeled intent tests without a telemetry fixture, not TF3 data acceptance.
+
+Journey 173 exposed an authored-question recovery bug: known optional undefined
+properties were validated as values and left the earlier empty checkpoint. The
+validator now treats known undefined optionals as JSON omissions while still
+rejecting unknown fields; detached input and exact typed-card checkpoint tests pass.
+172 frames are generated from the running UI; protocol/component contracts and
+ownership diagram remain synchronized. TF3 real telemetry/capture/reuse/model
+acceptance is still pending at this slice.
+Existing actual-JavaScript Journal Hegel state/swarm regression passes (60×24 steps,1.07s). Independent review approved TF2 with no remaining blockers; TF3 artifacts are not claimed executed here.

@@ -1,7 +1,7 @@
 # Typed numeric attribute filters
 
-Status: TF1 Go/parity independently approved and delivered; TF2 editor/protocol
-implementation follows. Browser controls are not yet accepted in this slice. Existing string predicates and numeric aggregate
+Status: TF1 Go/parity (`19e45ad`) and TF2 editor/protocol are independently
+reviewed and delivered. TF3 real-telemetry acceptance remains pending. Existing string predicates and numeric aggregate
 bindings retain their current behavior.
 
 ## Contract
@@ -74,3 +74,37 @@ flowchart LR
 
 No floating-point filters, unit conversion, inferred bindings, new evaluation
 runtime, production cursor or storage migration is introduced by these gates.
+
+
+## Shared editor and authored-question continuation — TF2
+
+Choose an Attribute or Resource namespace and exact key, then explicitly select
+Signed integer or Unsigned integer and supply a unit. The editor offers numeric
+comparisons and four parse states. Unit/type are never inferred from field hints.
+Fixed columns retain their intrinsic type and nanosecond meaning. Switching type
+or namespace retains authored text; unsupported operators/thresholds remain visible
+and block execution until corrected. Selecting a state explicitly removes the
+threshold. Return to String preserves the original literal-value semantics.
+
+Controls stage intent and require existing Apply/Run actions. The shared pure
+protocol guard is used by the editor and draft recovery; display labels retain
+qualified field, type, unit and valid-only comparison meaning. Typed threshold
+inputs show the full 20-digit integer domain on mobile. New wire fixtures cover
+46 accepted/refused cases alongside the unchanged 16 shared-step fixtures.
+
+Browser keys and units reject malformed UTF-16 before serialization/recovery,
+while valid pairs and literal U+FFFD remain supported. Separate decode controls
+record that Go's standard JSON decoder replaces unpaired surrogate escapes with
+U+FFFD; this is an explicit transport boundary, not raw-input parity or secret
+scanning. Known optional JavaScript undefined fields follow JSON omission during
+checkpoint validation; unknown fields remain refused, including undefined ones.
+
+[172–173 intent/recovery conformance](../journeys/typed-numeric-editor.spec.js)
+uses the running UI and real Go document publication without executing a telemetry
+source. It checks exact thresholds/invalid drafts, namespace/type/environment
+changes, string mode, readable mobile inputs and typed-question reload/Restore
+with zero API requests. These checks are distinct from TF3's real telemetry
+population/capture/reuse acceptance.
+
+![Typed numeric editor](journeys/screenshots/172a-typed-numeric-editor.png)
+![Readable mobile threshold](journeys/screenshots/172b-mobile-typed-numeric-editor.png)

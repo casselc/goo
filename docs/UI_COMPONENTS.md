@@ -710,3 +710,10 @@ The [shared question protocol](QUESTION_PROTOCOL.md#pure-protocol-owner--n1-cont
 is application infrastructure rather than a display element: `question-protocol.js`
 owns pure intent/link helpers, workspace retains navigation, and source/state
 owners remain separate. No component lifecycle gains reads or publication.
+
+
+[Typed numeric filtering](TYPED_NUMERIC_FILTERS.md) extends the shared controlled
+filter editor rather than adding a second authoring panel. Explicit integer/unit
+controls remain application intent; common field labels render the declared
+interpretation. Scoped numeric threshold styles preserve full integer visibility
+on mobile; no display element evaluates source values or starts requests.

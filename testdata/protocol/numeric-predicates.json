@@ -1,0 +1,1142 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "int64 eq",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "eq",
+        "value": "9007199254740993"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "eq",
+        "value": "9007199254740993"
+      }
+    },
+    {
+      "name": "int64 ne",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "ne",
+        "value": "9007199254740993"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "ne",
+        "value": "9007199254740993"
+      }
+    },
+    {
+      "name": "int64 gt",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gt",
+        "value": "9007199254740993"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gt",
+        "value": "9007199254740993"
+      }
+    },
+    {
+      "name": "int64 gte",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": "9007199254740993"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": "9007199254740993"
+      }
+    },
+    {
+      "name": "int64 lt",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "lt",
+        "value": "9007199254740993"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "lt",
+        "value": "9007199254740993"
+      }
+    },
+    {
+      "name": "int64 lte",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "lte",
+        "value": "9007199254740993"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "lte",
+        "value": "9007199254740993"
+      }
+    },
+    {
+      "name": "int64 resource valid",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "resource",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "valid"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "resource",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "valid"
+      }
+    },
+    {
+      "name": "int64 resource missing",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "resource",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "missing"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "resource",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "missing"
+      }
+    },
+    {
+      "name": "int64 resource empty",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "resource",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "empty"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "resource",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "empty"
+      }
+    },
+    {
+      "name": "int64 resource invalid",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "resource",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "invalid"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "resource",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "invalid"
+      }
+    },
+    {
+      "name": "uint64 eq",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "eq",
+        "value": "9007199254740993"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "eq",
+        "value": "9007199254740993"
+      }
+    },
+    {
+      "name": "uint64 ne",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "ne",
+        "value": "9007199254740993"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "ne",
+        "value": "9007199254740993"
+      }
+    },
+    {
+      "name": "uint64 gt",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gt",
+        "value": "9007199254740993"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gt",
+        "value": "9007199254740993"
+      }
+    },
+    {
+      "name": "uint64 gte",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": "9007199254740993"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": "9007199254740993"
+      }
+    },
+    {
+      "name": "uint64 lt",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "lt",
+        "value": "9007199254740993"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "lt",
+        "value": "9007199254740993"
+      }
+    },
+    {
+      "name": "uint64 lte",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "lte",
+        "value": "9007199254740993"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "lte",
+        "value": "9007199254740993"
+      }
+    },
+    {
+      "name": "uint64 resource valid",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "resource",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "valid"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "resource",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "valid"
+      }
+    },
+    {
+      "name": "uint64 resource missing",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "resource",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "missing"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "resource",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "missing"
+      }
+    },
+    {
+      "name": "uint64 resource empty",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "resource",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "empty"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "resource",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "empty"
+      }
+    },
+    {
+      "name": "uint64 resource invalid",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "resource",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "invalid"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "resource",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "invalid"
+      }
+    },
+    {
+      "name": "int64 minimum",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "eq",
+        "value": "-9223372036854775808"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "int64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "eq",
+        "value": "-9223372036854775808"
+      }
+    },
+    {
+      "name": "uint64 maximum",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "eq",
+        "value": "18446744073709551615"
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "eq",
+        "value": "18446744073709551615"
+      }
+    },
+    {
+      "name": "state empty transport default",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "missing",
+        "value": ""
+      },
+      "valid": true,
+      "canonical": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "missing"
+      }
+    },
+    {
+      "name": "nested independent typed and string",
+      "predicate": {
+        "all": [
+          {
+            "numeric": {
+              "field": {
+                "kind": "attribute",
+                "key": "db.response.returned_rows"
+              },
+              "type": "int64",
+              "unit": "{row}",
+              "parse": "canonical-decimal"
+            },
+            "op": "lt",
+            "value": "-1"
+          },
+          {
+            "any": [
+              {
+                "numeric": {
+                  "field": {
+                    "kind": "resource",
+                    "key": "db.response.returned_rows"
+                  },
+                  "type": "uint64",
+                  "unit": "{row}",
+                  "parse": "canonical-decimal"
+                },
+                "op": "invalid"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "region"
+                },
+                "op": "eq",
+                "value": "eu"
+              }
+            ]
+          }
+        ]
+      },
+      "valid": true,
+      "canonical": {
+        "all": [
+          {
+            "numeric": {
+              "field": {
+                "kind": "attribute",
+                "key": "db.response.returned_rows"
+              },
+              "type": "int64",
+              "unit": "{row}",
+              "parse": "canonical-decimal"
+            },
+            "op": "lt",
+            "value": "-1"
+          },
+          {
+            "any": [
+              {
+                "numeric": {
+                  "field": {
+                    "kind": "resource",
+                    "key": "db.response.returned_rows"
+                  },
+                  "type": "uint64",
+                  "unit": "{row}",
+                  "parse": "canonical-decimal"
+                },
+                "op": "invalid"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "region"
+                },
+                "op": "eq",
+                "value": "eu"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "invalid uint threshold '01'",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": "01"
+      },
+      "valid": false
+    },
+    {
+      "name": "invalid uint threshold '-0'",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": "-0"
+      },
+      "valid": false
+    },
+    {
+      "name": "invalid uint threshold '+1'",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": "+1"
+      },
+      "valid": false
+    },
+    {
+      "name": "invalid uint threshold ' 1'",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": " 1"
+      },
+      "valid": false
+    },
+    {
+      "name": "invalid uint threshold '1.0'",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": "1.0"
+      },
+      "valid": false
+    },
+    {
+      "name": "invalid uint threshold '1e3'",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": "1e3"
+      },
+      "valid": false
+    },
+    {
+      "name": "invalid uint threshold '18446744073709551616'",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": "18446744073709551616"
+      },
+      "valid": false
+    },
+    {
+      "name": "invalid uint threshold '-1'",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": "-1"
+      },
+      "valid": false
+    },
+    {
+      "name": "invalid uint threshold 123",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": 123
+      },
+      "valid": false
+    },
+    {
+      "name": "invalid uint threshold None",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte"
+      },
+      "valid": false
+    },
+    {
+      "name": "invalid binding type float64",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "float64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": "9007199254740993"
+      },
+      "valid": false
+    },
+    {
+      "name": "invalid binding unit ",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": "9007199254740993"
+      },
+      "valid": false
+    },
+    {
+      "name": "invalid binding unit row count",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "row count",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": "9007199254740993"
+      },
+      "valid": false
+    },
+    {
+      "name": "invalid binding parse loose",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "loose"
+        },
+        "op": "gte",
+        "value": "9007199254740993"
+      },
+      "valid": false
+    },
+    {
+      "name": "invalid binding endpoint http://source",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal",
+          "endpoint": "http://source"
+        },
+        "op": "gte",
+        "value": "9007199254740993"
+      },
+      "valid": false
+    },
+    {
+      "name": "numeric column",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "column",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": "9007199254740993"
+      },
+      "valid": false
+    },
+    {
+      "name": "mixed fields",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": "9007199254740993",
+        "field": {
+          "kind": "attribute",
+          "key": "other"
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "mixed group",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": "9007199254740993",
+        "all": []
+      },
+      "valid": false
+    },
+    {
+      "name": "state threshold",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "valid",
+        "value": "0"
+      },
+      "valid": false
+    },
+    {
+      "name": "typed contains",
+      "predicate": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "db.response.returned_rows"
+          },
+          "type": "uint64",
+          "unit": "{row}",
+          "parse": "canonical-decimal"
+        },
+        "op": "contains",
+        "value": "9007199254740993"
+      },
+      "valid": false
+    },
+    {
+      "name": "legacy gt remains unavailable",
+      "predicate": {
+        "field": {
+          "kind": "column",
+          "key": "duration_ns"
+        },
+        "op": "gt",
+        "value": "1"
+      },
+      "valid": false
+    },
+    {
+      "name": "nullable numeric member legacy alias",
+      "predicate": {
+        "field": {
+          "kind": "attribute",
+          "key": "region"
+        },
+        "numeric": null,
+        "op": "eq",
+        "value": "eu"
+      },
+      "valid": true,
+      "canonical": {
+        "field": {
+          "kind": "attribute",
+          "key": "region"
+        },
+        "op": "eq",
+        "value": "eu"
+      }
+    }
+  ]
+}

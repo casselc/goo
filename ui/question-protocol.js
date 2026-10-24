@@ -44,11 +44,25 @@
   const value={version:1,question:structuredClone(question),view};validateLink(value);
   const hash=stepLink(recordStep(question,view));if(hash.length>16000)throw Error('Question is too large to share in a link.');return hash;
  }
+ // Browser intent guards only; Go remains authoritative for execution semantics.
+ function validateNumericPredicate(p){
+  const object=(v,keys)=>v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).every(k=>keys.includes(k)),bytes=v=>new TextEncoder().encode(v).length;
+  if(!object(p,['numeric','op','value'])||!object(p.numeric,['field','type','unit','parse']))throw Error('Use one numeric binding per condition, without an untyped field or group.');
+  const b=p.numeric,f=b.field,wellFormed=s=>![...s].some(c=>{const n=c.codePointAt(0);return n>=0xD800&&n<=0xDFFF});
+  if(!object(f,['kind','key'])||!['attribute','resource'].includes(f.kind)||typeof f.key!=='string'||!f.key||!wellFormed(f.key)||bytes(f.key)>128||f.key.includes('\0'))throw Error('Choose an attribute or resource numeric field (up to 128 bytes).');
+  if(!['int64','uint64'].includes(b.type)||b.parse!=='canonical-decimal')throw Error('Declare int64 or uint64 with canonical-decimal parsing.');
+  if(typeof b.unit!=='string'||!b.unit||!wellFormed(b.unit)||bytes(b.unit)>64||/[\p{White_Space}\p{Cc}]/u.test(b.unit))throw Error('Declare a unit without spaces or controls (up to 64 bytes); use 1 for dimensionless.');
+  if(['valid','missing','empty','invalid'].includes(p.op)){if(p.value!==undefined&&p.value!=='')throw Error('Numeric state checks have no threshold.');return p}
+  if(!['eq','ne','gt','gte','lt','lte'].includes(p.op))throw Error('Choose a numeric comparison or parse-state check.');
+  const v=p.value;if(typeof v!=='string'||v.length>20||!/^(0|[1-9][0-9]*|-[1-9][0-9]*)$/.test(v))throw Error('Use an exact canonical decimal integer threshold.');
+  const n=BigInt(v),low=b.type==='int64'?-9223372036854775808n:0n,high=b.type==='int64'?9223372036854775807n:18446744073709551615n;
+  if(n<low||n>high)throw Error('Threshold is outside the declared '+b.type+' range.');return p;
+ }
  function validateLink(value){
   const q=value?.question;if(value?.version!==1||!['Records','Distribution'].includes(value.view)||!q||!['spans','logs'].includes(q.signal)||typeof q.environment!=='string'||!q.environment.length||q.environment.length>256||!Number.isSafeInteger(q.fromMs)||!Number.isSafeInteger(q.toMs)||q.fromMs<0||q.toMs<=q.fromMs||q.toMs-q.fromMs>7200000||q.toMs>8640000000000000)throw Error('Invalid shared question or fixed window.');
   const allowed=['signal','environment','fromMs','toMs','limit','offset','where','groupBy','numeric','summary','spanStatus','bucketMs','groupTimeSeries','reportedEdge'];if(Object.keys(q).some(k=>!allowed.includes(k)))throw Error('Unsupported shared question field.');
   function field(f){if(!f||!['column','attribute','resource'].includes(f.kind)||typeof f.key!=='string'||!f.key.length||f.key.length>512)throw Error('Invalid shared field.');}
-  let count=0;function predicate(p,depth=0){if(++count>64||depth>8||!p||typeof p!=='object')throw Error('Invalid shared selectors.');if(p.all||p.any){const a=p.all||p.any;if(!Array.isArray(a)||!a.length||p.all&&p.any)throw Error('Invalid shared selectors.');a.forEach(x=>predicate(x,depth+1));}else{field(p.field);if(!['eq','ne','contains','exists','missing','gte','lte'].includes(p.op)||p.value!==undefined&&typeof p.value!=='string')throw Error('Invalid shared predicate.');}}
+  let count=0;function predicate(p,depth=0){if(++count>64||depth>8||!p||typeof p!=='object')throw Error('Invalid shared selectors.');if(p.all||p.any){const a=p.all||p.any;if(!Array.isArray(a)||!a.length||p.all&&p.any||p.numeric)throw Error('Invalid shared selectors.');a.forEach(x=>predicate(x,depth+1));}else if(p.numeric){validateNumericPredicate(p)}else{field(p.field);if(!['eq','ne','contains','exists','missing','gte','lte'].includes(p.op)||p.value!==undefined&&typeof p.value!=='string')throw Error('Invalid shared predicate.');}}
   if(q.reportedEdge){const e=q.reportedEdge,ns=n=>n&&['missing','value'].includes(n.mode)&&(!n.value||typeof n.value==='string'&&n.value.length<=128)&&!(n.mode==='missing'&&n.value);if(q.signal!=='spans'||!e.parent||!e.child||[e.parent,e.child].some(s=>typeof s.service!=='string'||s.service.length>128||!ns(s.namespace))||e.discoveryNamespace&&!ns(e.discoveryNamespace))throw Error('Invalid reported edge identity.');}
   if(q.where)predicate(q.where);if(q.groupBy){if(!Array.isArray(q.groupBy)||q.groupBy.length>2)throw Error('Invalid shared grouping.');q.groupBy.forEach(field);}
   if(q.limit!==undefined&&(!Number.isInteger(q.limit)||q.limit<1||q.limit>200)||q.offset!==undefined&&(!Number.isInteger(q.offset)||q.offset<0||q.offset>1000))throw Error('Invalid shared page.');
@@ -57,5 +71,5 @@
   return value;
  }
  function readQuestionLink(hash){if(hash.startsWith('#step=')){const s=readStepLink(hash);return s.kind==='record'?{version:1,question:s.record,view:s.view}:null}if(!hash.startsWith('#question='))return null;if(hash.length>16000)throw Error('Question link is too large.');return validateLink(JSON.parse(decodeURIComponent(hash.slice(10))));}
- const api={questionFromEvidence,captureQuestion,evidenceDifference,recordStep,measurementStep,validateStep,stepLink,readStepLink,sameWindow,questionLink,readQuestionLink,validateLink};if(typeof module!=='undefined')module.exports=api;else global.GooQuestionProtocol=api;
+ const api={questionFromEvidence,captureQuestion,evidenceDifference,recordStep,measurementStep,validateStep,stepLink,readStepLink,sameWindow,questionLink,readQuestionLink,validateLink,validateNumericPredicate};if(typeof module!=='undefined')module.exports=api;else global.GooQuestionProtocol=api;
 })(typeof window==='undefined'?globalThis:window);

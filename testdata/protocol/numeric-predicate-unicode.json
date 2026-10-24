@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "policy": "Browser rejects malformed UTF16 before transport; Go standard JSON decoder replaces malformed surrogate escapes. This fixture proves that boundary, not raw-input parity.",
+  "cases": [
+    {
+      "name": "malformed key",
+      "wire": "{\"numeric\": {\"field\": {\"kind\": \"attribute\", \"key\": \"\\ud800\"}, \"type\": \"uint64\", \"unit\": \"{item}\", \"parse\": \"canonical-decimal\"}, \"op\": \"gte\", \"value\": \"1\"}",
+      "decoded": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "\ufffd"
+          },
+          "type": "uint64",
+          "unit": "{item}",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": "1"
+      }
+    },
+    {
+      "name": "malformed unit",
+      "wire": "{\"numeric\": {\"field\": {\"kind\": \"attribute\", \"key\": \"measure\"}, \"type\": \"uint64\", \"unit\": \"\\ud800\", \"parse\": \"canonical-decimal\"}, \"op\": \"gte\", \"value\": \"1\"}",
+      "decoded": {
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "measure"
+          },
+          "type": "uint64",
+          "unit": "\ufffd",
+          "parse": "canonical-decimal"
+        },
+        "op": "gte",
+        "value": "1"
+      }
+    }
+  ]
+}

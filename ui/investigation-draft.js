@@ -7,14 +7,14 @@
  function object(v,keys){requireThat(v!==null&&typeof v==='object'&&!Array.isArray(v));requireThat(Object.keys(v).every(k=>keys.includes(k)),'Unsupported investigation draft field')}
  function text(v,max,multiline=false){requireThat(typeof v==='string'&&bytes(v)<=max&&!/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/u.test(v));requireThat(!(multiline?/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/:/[\x00-\x1F\x7F-\x9F]/).test(v))}
  function integer(v,min,max){requireThat(Number.isSafeInteger(v)&&v>=min&&v<=max)}
- function optional(v,k,fn){if(Object.hasOwn(v,k)&&v[k]!==null)fn(v[k])}
+ function optional(v,k,fn){if(Object.hasOwn(v,k)&&v[k]!==null&&v[k]!==undefined)fn(v[k])}
  function strings(v,count,max){requireThat(Array.isArray(v)&&v.length<=count);for(const x of v)text(x,max);requireThat(new Set(v).size===v.length)}
  function map(v,count,keyMax,valueMax){requireThat(v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).length<=count);for(const [k,x]of Object.entries(v)){text(k,keyMax);requireThat(k!=='');text(x,valueMax)}}
  function namespace(v){object(v,['mode','value']);requireThat(['missing','value'].includes(v.mode));optional(v,'value',x=>text(x,128));requireThat(v.mode!=='missing'||!v.value)}
  function field(v){object(v,['kind','key']);requireThat(['column','attribute','resource'].includes(v.kind));text(v.key,128);requireThat(v.key!=='')}
  function record(q){
   object(q,['reportedEdge','numeric','groupTimeSeries','spanStatus','bucketMs','summary','signal','environment','fromMs','toMs','where','groupBy','limit','offset']);
-  const walk=(p,depth=0,state={n:0})=>{object(p,['all','any','field','op','value']);requireThat(depth<=4&&++state.n<=32);if(p.all||p.any){requireThat(!(p.all&&p.any)&&!p.field&&!p.op&&!p.value);const list=p.all||p.any;requireThat(Array.isArray(list)&&list.length>0);for(const c of list)walk(c,depth+1,state)}else{field(p.field);requireThat(['eq','ne','contains','exists','missing','gte','lte'].includes(p.op));optional(p,'value',x=>text(x,1024))}};
+  const walk=(p,depth=0,state={n:0})=>{object(p,['all','any','field','numeric','op','value']);requireThat(depth<=4&&++state.n<=32);if(p.all||p.any){requireThat(!(p.all&&p.any)&&!p.field&&!p.numeric&&!p.op&&!p.value);const list=p.all||p.any;requireThat(Array.isArray(list)&&list.length>0);for(const c of list)walk(c,depth+1,state)}else if(p.numeric){const protocol=typeof module!=='undefined'?require('./question-protocol'):global.GooQuestionProtocol;protocol.validateNumericPredicate(p)}else{field(p.field);requireThat(['eq','ne','contains','exists','missing','gte','lte'].includes(p.op));optional(p,'value',x=>text(x,1024))}};
   optional(q,'where',x=>walk(x));optional(q,'groupBy',a=>{requireThat(Array.isArray(a)&&a.length<=2);a.forEach(field)});
   optional(q,'numeric',v=>{object(v,['field','type','unit','parse']);field(v.field);requireThat(['attribute','resource'].includes(v.field.kind)&&['int64','uint64'].includes(v.type)&&v.parse==='canonical-decimal');text(v.unit,64)});
   optional(q,'reportedEdge',v=>{object(v,['parent','child','discoveryNamespace']);for(const key of ['parent','child']){object(v[key],['service','namespace']);text(v[key].service,128);namespace(v[key].namespace)}optional(v,'discoveryNamespace',namespace)});

@@ -225,3 +225,6 @@ goo-comparison-context>small{display:block;font-size:10px;margin-top:4px;color:v
 .field-hint-label{font:11px system-ui;color:var(--muted,#98a8bf)}
 goo-attribute-list .field-hint-label{display:block}
 .filter-observations .field-hint-description{display:block;color:var(--muted,#98a8bf);margin:.25rem 0;overflow-wrap:anywhere}
+
+/* Exact typed integer thresholds stay readable at mobile editor widths. */
+.filter-editor fieldset.numeric-filter-condition input.numeric-filter-threshold{width:24ch;max-width:100%;font-variant-numeric:tabular-nums}
