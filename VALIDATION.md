@@ -7892,3 +7892,56 @@ Docker image changes were required. Static assets are deployed locally; existing
 telemetry, captures, XTDB and volumes are preserved. Test owners remove their own
 stores. Compact results are in artifacts/composed-grouping and
 artifacts/composed-grouping-round.
+
+
+## Consolidated grouping picker and chips — 2026-10-24
+
+[One grouping control](docs/GROUPING_CONTROL.md) now replaces the fixed-question
+selector and immediate population dropdowns. Manual selection, exact custom-key
+entry, removal and clear all stage through the existing canonical owner. The
+passive framework-neutral element supports supplied HTML/SPA data without source
+clients, subscriptions, saves or self-published query state.
+
+Actual checks:
+- Node display-contract/parser, field wire, filter and grouping-transform suites
+  passed. `TestHegelComposedGroupingStateSwarm` passed against the shared actual
+  transform kernel; its generated changes retain scope, identity and companions.
+- Real-data manual journey 168 passed: picker add/remove/clear, invalid-column
+  refusal, exact legacy/custom entry, compound source-oracle counts, saved reopen,
+  one control per editor and no legacy selector. After the initial stream read,
+  seven explicit exploration requests cover the workflow; staging adds none.
+- The existing Quint composition replay passed with its nine rejecting mutations.
+  Mobile Bombadil composition campaigns passed without extra source reads. The final
+  actor exercises native picker add, chip removal, clear and exact custom entry
+  with intermediate-state checks. The
+  observed-shortcut journey 167 and replacement/Activity-return journey 166 also
+  passed with the shared element.
+- Standalone grouping contracts passed for HTML upgrade, pre-definition property
+  upgrade, controlled intent, cloned data, equal-update DOM/focus retention,
+  detached updates, invalid data, exact custom parsing and zero API requests.
+  Owner availability also updates correctly with unchanged/empty field lists.
+- Population comparison journey 91 passed with staged child grouping and explicit
+  Run/Include/Apply, including saved baseline recovery and late-response refusal.
+  Facet journey 96 passed, including grouping disabled while facets are pending
+  and local record inspection staging a second field without a read.
+- Attribute-inspection journey 29, grouped-measurement journey 34 and two-field
+  imported-package journey 25 passed. The package check asserts the complete
+  nested predicate plus the new severity condition and unchanged fixed bounds.
+- `python3 -m py_compile server.py` passed for the added static asset routes.
+
+The first integration run exposed an Activity initialization-order error; the tail
+owner is now safely absent until mounted and grouping remains disabled until its
+scope is available. Early browser assertions were updated for chip-specific
+selectors, required Playwright fixtures and staged-child/mobile facet controls.
+The imported-package assertion previously assumed a wrapped AND tree; it now
+checks the complete existing editor tree and bounds. Completed passing runs above
+are acceptance evidence.
+
+Screenshots 168 plus affected 25/29/34/91/96/166/167 frames, the component gallery,
+README and architecture/planning/component docs are synchronized. Legacy selector
+state and unused styles are removed. The local Python frontend was restarted for
+new static routes; native executables and Docker images are unchanged. Existing
+telemetry, captures, XTDB and volumes are preserved. Tests remove only their owned
+stores. Compact ledgers/results remain under artifacts/composed-grouping,
+artifacts/population-breakdown, artifacts/facet-selection and
+artifacts/grouping-consolidation-round.

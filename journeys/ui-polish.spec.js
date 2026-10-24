@@ -65,7 +65,7 @@ test('29 inspect structured attributes, refine facets and navigate with keyboard
   await page.screenshot({path:path.join(frames,'29c-selected-trace-and-structured-context.png'),fullPage:true});
   await page.keyboard.press('Escape');await expect(page.locator('#exploreContext')).toBeHidden();await expect(opener).toBeFocused();
 
-  await page.setViewportSize({width:390,height:844});await require('./support/explore').clearFilters(page);await page.locator('#exploreGroup').selectOption('');await run();
+  await page.setViewportSize({width:390,height:844});await require('./support/explore').clearFilters(page);await require('./support/explore').chooseGrouping(page,null);await run();
   await page.locator('#exploreRows [data-inspect-record]').first().click();const mobile=page.locator('#exploreRows .ui-inspector');await mobile.getByRole('searchbox',{name:'Search attribute keys and values'}).fill('test.multiline');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
   await mobile.scrollIntoViewIfNeeded();await page.screenshot({path:path.join(frames,'29d-mobile-attribute-inspection.png'),fullPage:true});

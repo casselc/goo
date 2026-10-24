@@ -934,3 +934,5 @@ The approved [OTel field discovery cut](OTEL_FIELD_HINTS.md) enriches supplied f
 The approved [observed-field grouping cut](OBSERVED_GROUPING.md) adds source-free grouping intent inside existing disclosures. Activity analysis, fixed drafts and grouped population children retain predicates, clocks, exact keys and companion scope; explicit Run performs the existing source read. Two-field addition is delivered in the follow-up below; transformed grouping remains outside this action.
 
 The approved [two-field composition cut](COMPOSED_GROUPING.md) adds ordered Add/remove intent and controlled chips across Activity analysis, fixed drafts and population children. Same-scope observations remain ephemeral; unread child edits stay in place; saved reopen retains configuration only. Numeric grouping transforms remain outside the cut.
+
+The approved [grouping consolidation](GROUPING_CONTROL.md) replaces separate fixed/population dropdowns with one passive display element and canonical owner state. Manual, custom-key and observed-field intents stage through the existing owners. Saved contracts and Go execution validation are unchanged.

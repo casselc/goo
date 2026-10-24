@@ -699,3 +699,5 @@ The [record renderer audit](RECORD_RENDERER_AUDIT_2026_10_24.md) keeps custody, 
 [Observed grouping](OBSERVED_GROUPING.md) reuses the existing regroup transform across Activity and fixed owners. The field browser emits exact field/opener intent; app adapters freeze or retain scope, stage drafts/children and preserve companion questions. Go remains the execution validator; no source client lives in the editor.
 
 [Two-field composition](COMPOSED_GROUPING.md) keeps exact ordered grouping transforms in the population/query owner. Same-membership grouping drafts can hold scoped observation metadata, while explicit reads, changed scope and saved reopen withdraw it. Unread population drafts update in place; applied parents remain separate. No observation metadata enters saved query schemas.
+
+[One grouping control](GROUPING_CONTROL.md) replaces selector DOM state with the shared editor’s canonical grouping array. The passive custom element receives cloned display DTOs and emits intent; scope owners retain validation, staging, reads and publication. Legacy immediate population dropdowns are removed.

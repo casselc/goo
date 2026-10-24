@@ -713,3 +713,5 @@ Operation waterfalls use optional `goo-trace-waterfall.data.facts`: an array mat
 The filter editor accepts optional `onGroup(field, opener)` and `canGroup()` for supplied observed fields, with `syncGrouping()` for owner availability updates. Grouping emits detached intent, preserves the filter tree and adds no source reads. Exact behavior and owner contracts are in [observed grouping](OBSERVED_GROUPING.md).
 
 The filter editor now accepts `grouping`, controlled `setGrouping(fields)`, detached `suggestions()`, and an optional third `onGroup(field, opener, mode)` argument (`replace`, `add`, `remove`). Add prevents duplicates and a third field; chips emit removal intent without changing filters. See [two-field composition](COMPOSED_GROUPING.md).
+
+[`goo-grouping-control`](GROUPING_CONTROL.md) is a passive native picker/chip/custom-key element with JSON attribute/property input, cloned state, `goo:grouping-intent`, HTML/SPA/detached support and scoped `grouping-control.css`. It performs no reads or saves. The filter editor supplies labels, field inventory, availability and signal validation.

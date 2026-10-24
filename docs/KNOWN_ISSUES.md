@@ -689,3 +689,5 @@ The [renderer audit](RECORD_RENDERER_AUDIT_2026_10_24.md) fixes Operations' prim
 [Observed grouping](OBSERVED_GROUPING.md) now supports staging a one-field replacement directly from discovery. Activity uses the last completed applied window; children preserve companion selectors. This action clears split grouped timelines and resets paging, retaining filters and bucket width. The two-field follow-up below now supports adding/removing a second field; numeric transforms remain outside the shortcut.
 
 [Two-field composition](COMPOSED_GROUPING.md) now supports Add/remove with exact keys, order, duplicate refusal and the existing two-field limit. Only same-scope grouping edits retain observation hints; those samples are not saved or treated as new aggregates. Numeric grouping transforms and more than two fields remain unsupported.
+
+[Grouping consolidation](GROUPING_CONTROL.md) removes the old breakdown dropdowns. Manual field changes now stage a fixed draft or population child and require Run; pending facets guard grouping until Apply/Clear. Custom-key entry does not establish observed presence or source completeness.

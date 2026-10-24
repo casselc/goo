@@ -1,7 +1,7 @@
 import{always,eventually}from'@antithesishq/bombadil';
 import{extract,actions,registerCustomAction}from'@antithesishq/bombadil/browser';
 export{noUncaughtExceptions,noUnhandledPromiseRejections}from'@antithesishq/bombadil/browser/defaults/properties';
-const s=extract(({document,window})=>({step:Number(document.documentElement.dataset.groupStep||0),ready:!!document.getElementById('exploreRun'),phase:document.getElementById('exploration')?.dataset.questionPhase,group:(document.getElementById('exploreGroup') as HTMLSelectElement)?.value,reads:window.performance.getEntriesByType('resource').filter(e=>new URL(e.name).pathname==='/api/explore').length,overflow:document.documentElement.scrollWidth>window.innerWidth}));
+const s=extract(({document,window})=>({step:Number(document.documentElement.dataset.groupStep||0),ready:!!document.getElementById('exploreRun'),phase:document.getElementById('exploration')?.dataset.questionPhase,group:JSON.stringify(document.querySelector<any>('#exploreFilterEditor goo-grouping-control')?.data?.grouping?.[0]?.field),reads:window.performance.getEntriesByType('resource').filter(e=>new URL(e.name).pathname==='/api/explore').length,overflow:document.documentElement.scrollWidth>window.innerWidth}));
 export const noImplicitRead=always(()=>s.current.reads<=1);
 export const staged=always(()=>s.current.step<3||s.current.phase==='draft'&&s.current.group==='{"kind":"attribute","key":"http.route"}');
 export const fits=always(()=>!s.current.overflow);

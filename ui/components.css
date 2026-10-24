@@ -225,7 +225,3 @@ goo-comparison-context>small{display:block;font-size:10px;margin-top:4px;color:v
 .field-hint-label{font:11px system-ui;color:var(--muted,#98a8bf)}
 goo-attribute-list .field-hint-label{display:block}
 .filter-observations .field-hint-description{display:block;color:var(--muted,#98a8bf);margin:.25rem 0;overflow-wrap:anywhere}
-
-.grouping-fields{display:flex;flex-wrap:wrap;gap:.3rem;align-items:center;margin:.4rem 0;font-size:12px}.grouping-fields button{font-size:11px;padding:.2rem .4rem;max-width:100%;white-space:normal;overflow-wrap:anywhere}
-
-.grouping-fields[hidden]{display:none}

@@ -1,0 +1,8 @@
+/* Display-only grouping control; applications own placement and execution. */
+goo-grouping-control{display:block;min-width:0;font-size:12px}
+goo-grouping-control[hidden]{display:none}
+goo-grouping-control .grouping-fields{display:flex;flex-wrap:wrap;gap:.3rem;align-items:center;margin:.4rem 0;min-width:0}
+goo-grouping-control button{font-size:11px;padding:.2rem .4rem;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+goo-grouping-control .grouping-fields>select{font-size:12px;max-width:100%;min-width:0;width:14rem}
+
+goo-grouping-control .grouping-custom{font-size:11px;border:0;margin:0;padding:0;min-width:0}goo-grouping-control .grouping-custom form{display:flex;flex-wrap:wrap;gap:.3rem;margin:.3rem 0}goo-grouping-control input{max-width:100%;min-width:0}goo-grouping-control [role=status]{overflow-wrap:anywhere}

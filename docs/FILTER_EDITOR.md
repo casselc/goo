@@ -139,3 +139,5 @@ Observed sample fields and typed conditions now offer [explicit counted value lo
 [Observed-field grouping](OBSERVED_GROUPING.md) now stages exact one-field breakdowns through owner callbacks. Activity freezes its completed applied window; fixed questions stage a draft; population views stage children with companions intact. Choosing a field does not execute a query.
 
 [Two-field grouping composition](COMPOSED_GROUPING.md) now offers Add to grouping and removable chips. Grouping-only drafts retain same-scope observations; filter/scope changes and saved reopen still withdraw them. Owners execute only on Run.
+
+The [shared grouping control](GROUPING_CONTROL.md) now owns picker-and-chip presentation. `grouping()` returns detached canonical fields; `setGroupingFields()` updates supplied authoring choices. Observed shortcuts, manual selection and exact-key entry all emit the existing app-owned intent. Legacy fixed/population dropdowns are removed; changes stage before Run.

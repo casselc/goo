@@ -90,3 +90,5 @@ edits and no API calls.
 
 Arbitrary grouping depth, numeric transforms and saved observation samples remain
 outside this cut.
+
+Follow-up delivered: [one grouping control](GROUPING_CONTROL.md) now consolidates picker and chips, retains exact custom-key entry, and replaces the legacy immediate population dropdown with staged intent.
