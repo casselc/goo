@@ -1,6 +1,7 @@
 # Shared staged filter editor
 
-Activity's **Filters** disclosure and fixed population **Edit logs/spans filters**
+Activity's **Filters**, the single-question **Filters** disclosure and fixed
+population **Edit logs/spans filters**
 use `GooFilterEditor.mount`. Start with a known field even when no matching record
 has appeared. Choose Column, Attribute or Resource, enter its key, choose an
 operator and value. Column keys have signal-specific browser suggestions;
@@ -32,6 +33,8 @@ flowchart LR
   Config[Saved or current selector] --> Editor[Shared supplied AST editor]
   Editor --> Validate[Typed draft validation]
   Validate --> Activity[Activity draft / held rows paused]
+  Validate --> Single[Single question draft / fixed bounds]
+  Single -->|explicit Run| Query
   Validate --> Child[Fixed child configuration / parent paused]
   Activity -->|explicit Apply or Start| Tail[Existing tail owner]
   Child -->|explicit Run| Query[Existing fixed query owner]
@@ -44,9 +47,17 @@ validation error. It performs no fetch, navigation, subscription or publication.
 Application adapters own execution, drafts and custody. Native Go validation
 remains authoritative. Empty `value` is omitted exactly as Go JSON transport does;
 its operator retains empty-versus-missing meaning. Existing saved-view hashes and
-query API schemas are unchanged. The older single-question builder remains a
-separate authoring surface; this adoption covers Activity and fixed population
-workspaces, including saved configurations.
+query API schemas are unchanged. The single-question builder now uses the same editor. Service/message/duration
+shortcuts contribute visible predicates to the tree; editing that tree consumes
+the shortcuts into its full AST and clears their inputs. Later shortcut entries
+add explicit AND conditions. Refining an OR population adds a conjunct around the
+whole existing tree, preserving its Boolean meaning. Environment edits preserve
+filters and fixed bounds; signal changes reset incompatible predicates. Invalid
+drafts block Run, sharing and source actions without discarding partial input.
+Shortcut inputs pause during invalid tree edits so correcting the tree cannot
+overwrite a second, contradictory shortcut draft. Environment remains editable.
+Source-supplied field suggestions are passed through `setFields` without fetching;
+refreshing suggestions preserves input and does not emit an edit.
 
 Executable storyboard: journey 148 sends three ordinary OTel logs (missing,
 empty, canary), verifies ingestion independently in ClickHouse, edits a saved
@@ -58,3 +69,13 @@ checks missing/empty membership through sampled nested JSON round trips.
 
 ![Desktop staged filter editor](journeys/screenshots/148a-filter-editor.png)
 ![Mobile staged filter editor](journeys/screenshots/148b-mobile-filters.png)
+
+Journey 149 covers the single-question adoption: nested missing/empty edits,
+invalid field preservation across environment edits, source-free shared-link
+reload, keyboard Run, exact observed records, supplied field suggestions and
+fixed-window refinement. Its Quint replay rejects hidden reads, mismatched
+predicates, changed windows and changed environments. Bombadil explores supplied
+groups and invalid fields without running a source query.
+
+![Single question editor](journeys/screenshots/149a-single-question-filters.png)
+![Mobile single question editor](journeys/screenshots/149b-mobile-single-filters.png)

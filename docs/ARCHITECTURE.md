@@ -663,3 +663,9 @@ The [shared predicate editor](FILTER_EDITOR.md) is a supplied-input helper, reus
 by Activity and fixed population adapters. It normalizes Go's empty-value wire
 shape but does not evaluate, read or publish telemetry. Activity owns draft/apply;
 fixed adapters stage child configurations and retain their parent's source basis.
+
+Single-question filtering now uses that same supplied editor. Full restored ASTs
+remain editable; shortcuts become explicit draft predicates. The existing session
+continues owning generations, fixed bounds and requested/applied evidence, and
+the query owner continues owning cancellation and reads. Environment edits retain
+the draft and fixed bounds; incompatible signal edits reset predicates.

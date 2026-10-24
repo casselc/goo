@@ -48,11 +48,9 @@ async function inspectReport({ page, request, report, ledger, record, frameName 
     // Navigating to the current hash may keep the document and inspector alive.
     // A revisit explicitly closes context and starts a fresh trace selection.
     if (await page.locator('#exploreContextClose').isVisible()) await page.locator('#exploreContextClose').click();
-    await page.locator('#exploreClear').click();
+    await require('./explore').clearFilters(page);
     await page.locator('#minutes').fill('5');
-    await openFilters(page);await page.locator('#exploreField').selectOption(JSON.stringify({ kind: 'column', key: 'trace_id' }));
-    await openFilters(page);await page.locator('#exploreValue').fill(trace);
-    await page.locator('#exploreAdd').click();
+    await require('./explore').addFilter(page,{kind:'column',key:'trace_id'},'eq',trace);
     const responsePromise = page.waitForResponse(r => r.url().endsWith('/api/explore') && r.request().method() === 'POST');
     await page.locator('#exploreRun').click();
     const response = await responsePromise;

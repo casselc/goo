@@ -560,7 +560,7 @@ test('19 saved investigation reopens fixed evidence and refreshes late telemetry
 
 async function explore(request,q){const r=await request.post(investigation+'/api/explore',{data:q});expect(r.ok(),await r.text()).toBe(true);return r.json();}
 function column(key){return {kind:'column',key};}function attribute(key){return {kind:'attribute',key};}
-async function addExploreFilter(page,field,op,value=''){await openFilters(page);await page.locator('#exploreField').selectOption(JSON.stringify(field));await openFilters(page);await page.locator('#exploreOp').selectOption(op);if(!['exists','missing'].includes(op)){await openFilters(page);await page.locator('#exploreValue').fill(value)};await page.locator('#exploreAdd').click();}
+async function addExploreFilter(page,field,op,value=''){await require('./support/explore').addFilter(page,field,op,value)}
 async function exploreClick(page,selector){const promise=page.waitForResponse(r=>r.url().endsWith('/api/explore')&&r.request().method()==='POST');await page.locator(selector).click();const response=await promise;const data=await response.json();expect(response.ok(),JSON.stringify(data)).toBe(true);await expect(page.locator('#exploreRun')).toBeEnabled();return data;}
 
 test('20 general exploration counts full captured populations and preserves missing keys',async({page,request})=>{

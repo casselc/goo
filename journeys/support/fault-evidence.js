@@ -76,7 +76,7 @@ async function inspectScenario({ page, request, result, startedAt, frameName }) 
   for (const signal of ['spans', 'logs']) {
     await page.goto(goo + '/#questions');
     if (await page.locator('#exploreContextClose').isVisible()) await page.locator('#exploreContextClose').click();
-    await page.locator('#exploreClear').click();
+    await require('./explore').clearFilters(page);
     await page.locator('#exploreSignal').selectOption(signal);
     await page.locator('#minutes').fill('5');
     const run = async () => {
@@ -86,12 +86,10 @@ async function inspectScenario({ page, request, result, startedAt, frameName }) 
       return { question: r.request().postDataJSON(), data: await r.json() };
     };
     await run(); // Discover ordinary OTel attributes from the actual source.
-    await openFilters(page);await page.locator('#exploreField').selectOption(JSON.stringify({ kind: 'attribute', key: 'app.reservation.id' }));
-    await openFilters(page);await page.locator('#exploreValue').fill(result.id);
-    await page.locator('#exploreAdd').click();
+    await require('./explore').addFilter(page,{kind:'attribute',key:'app.reservation.id'},'eq',result.id);
     const shown = await run(), q = shown.question;
     expect(q.environment).toBe('local'); expect(q.signal).toBe(signal);
-    expect(q.where).toEqual({ all: [{ field: { kind: 'attribute', key: 'app.reservation.id' }, op: 'eq', value: result.id }] });
+    expect(q.where).toEqual({ field: { kind: 'attribute', key: 'app.reservation.id' }, op: 'eq', value: result.id });
     const oracle = await readSubject(request, signal, result.id, q.fromMs, q.toMs);
     expect(oracle.rows.length).toBeGreaterThan(0); expect(oracle.rows.length).toBeLessThanOrEqual(100);
     expect(shown.data.state).toBe('observed'); expect(shown.data.count).toBe(String(oracle.rows.length));

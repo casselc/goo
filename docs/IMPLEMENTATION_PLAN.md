@@ -895,3 +895,9 @@ typed AND/OR branch editing. Activity and fixed population/saved configurations
 share the supplied AST editor. Activity applies explicitly; fixed edits open a
 staged child before Run. Numeric attribute transforms and replacement of the
 older single-question builder remain outside this cut.
+
+The single-question adoption is delivered in the [shared editor](FILTER_EDITOR.md):
+flat composer/join controls removed, shortcut predicates editable in the full
+tree, supplied field suggestions retained, invalid drafts guarded, fixed bounds
+retained through filter/environment edits, and shared links staged before Run.
+Broader automatic suggestions from Activity/discovery remain follow-up work.

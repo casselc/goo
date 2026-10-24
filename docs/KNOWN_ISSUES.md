@@ -655,6 +655,6 @@ automatic startup preferences remain unsupported.
 Shared [typed predicate editing](FILTER_EDITOR.md) now covers Activity and fixed
 population/saved views. Column suggestions are local signal metadata; arbitrary
 OTel attribute/resource keys can be entered without a matching record. Numeric
-attribute transforms and consolidation of the older single-question builder are
-still open. Fixed editor drafts are distinct from their configured parent until
+attribute transforms remain open. The single-question builder now shares the
+editor, retaining source-supplied suggestions and explicit Run. Fixed editor drafts are distinct from their configured parent until
 opened as a child; configured view publication retains the parent selector.

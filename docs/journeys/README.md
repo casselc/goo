@@ -699,3 +699,15 @@ edit the same tree and open a child; only explicit Run reads it. Desktop/mobile
 frames: [148a](screenshots/148a-filter-editor.png),
 [148b](screenshots/148b-mobile-filters.png). Executable journey:
 `journeys/filter-editor.spec.js`; [semantics and boundaries](../FILTER_EDITOR.md).
+
+### 149 — One filter editor across record questions
+
+[Executable journey](../../journeys/single-filter-editor.spec.js) starts from a
+paused shared fixed question, edits a nested missing/empty selector, corrects an
+invalid field without losing it during environment changes, shares/reloads without
+reads, and runs via keyboard. It verifies exact ordinary OTel record populations
+and fixed-window refinement, then validates observed staging with rejecting Quint
+controls and runs a source-free Bombadil editor campaign.
+
+![Shared single-question editor](screenshots/149a-single-question-filters.png)
+![Mobile typed editing](screenshots/149b-mobile-single-filters.png)

@@ -596,3 +596,7 @@ exact tail selection/browser retry remain follow-up work.
 Activity and fixed population views share a [staged filter editor](docs/FILTER_EDITOR.md)
 for typed conditions, nested AND/OR, missing keys and present-empty values, even
 before a matching record appears. Apply/Start or Run explicitly reads the scope.
+
+The single-question builder uses the same filter editor, preserving full saved
+selectors, supplied field suggestions and explicit Run. Filter/environment edits
+retain the fixed window; incompatible signal changes reset the predicates.

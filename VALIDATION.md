@@ -6963,3 +6963,60 @@ automatic stream, paused inspection, explicit resume, scroll anchors, mobile
 layout and background handling. Their actual documentation frames are regenerated.
 Final documentation/frames are synchronized after these read-only checks; owned
 image staging is removed, and reusable Go/module caches remain.
+
+## Single-question filter consolidation — 2026-10-24
+
+The [shared editor](docs/FILTER_EDITOR.md) now also owns the single-question
+builder's typed condition/group presentation. The old flat composer, join picker,
+locked selector treatment and obsolete layout rules are removed. Application
+adapters retain shortcuts, grouping/measures, fixed-window/session ownership,
+query cancellation, sharing and evidence publication. No API/schema or backend
+migration is introduced.
+
+- Focused Node files and all journey/helper JavaScript syntax checks pass.
+  Hegel's 80 sampled nested predicate JSON/membership cases pass again.
+- Real-source journey 149 sends ordinary OTel logs and independently counts them
+  in ClickHouse. It verifies nested missing/empty editing, invalid input retained
+  across environment changes, blocked source/share actions, source-free shared-link
+  reload, keyboard Run, exact matching record bodies, supplied-key suggestions,
+  draft evidence clearing and refinement in the original fixed window. There are
+  no successful response or UI data mocks.
+- Its observed Quint-go replay admits the actual staged/requested/published scope
+  and rejects hidden reads, altered predicates, changed bounds and changed
+  environments. The checker compares Go's normalized wire format so omitted and
+  empty grouping lists do not produce false mismatches. This is a bounded observed
+  staging check, not a proof of arbitrary UI histories.
+- The new 30-second Bombadil campaign passes staged/no-record, invalid-Run,
+  overflow, progress and exception invariants while changing groups, presence,
+  nested clauses and invalid/fixed fields. The existing Activity/fixed journey
+  148 also passes with its observed replay and Bombadil campaign.
+- Deployed regression journeys 45, 29 and Activity analysis pass (1.3 minutes),
+  covering shortcuts, obsolete response rejection, exact trace drilldown,
+  capture/reopen, numeric validation, AND/OR, keyboard/mobile and namespaced
+  fixed analysis. Journey 45 includes its updated whole-workbench Bombadil run
+  and observed native model check. That regression preceded the final invalid-tree
+  shortcut-input guard, which is covered by the focused final journey.
+- Legacy journeys/helpers and discovery/workbench Bombadil actions use actual
+  shared-editor gestures. Other legacy browser campaigns are not all rerun.
+
+The final local query/packages image is
+`sha256:5f824e6e14601fc4c5c8c0e12505880c53dc7d2aabf6fcc9938cf6e944689b7e`.
+Only query/packages are recreated. Telemetry, retention and evidence volumes are
+preserved. Compact checks/build/deployment logs are retained under
+`artifacts/single-filter-integration`; observed ledgers and actor outputs remain
+under `artifacts/single-filter-editor`. No new native production code is changed.
+
+The component accepts supplied `setFields` metadata without fetching or emitting
+edits; broader automatic Activity/discovery suggestions remain follow-up work.
+Numeric attribute transforms remain unsupported. Shortcut inputs pause during an
+invalid tree edit to avoid overwriting an independent shortcut draft; environment
+editing retains both raw invalid input and the original fixed bounds. Signal
+changes explicitly clear incompatible predicates.
+
+Final focused acceptance passes journeys 148–149 in 1.6 minutes, including the
+invalid-tree shortcut guard and both 30-second actor campaigns. All three
+deployed adapter/component/style assets match the checkout byte-for-byte.
+Affected 29/45/115/148/149 documentation frames are regenerated from actual
+source/browser flows and synchronized after verification. The final single-question
+ledger is under `artifacts/single-filter-editor/single-filters-771f3360`. Owned
+temporary image staging is removed; reusable tool/module caches are retained.

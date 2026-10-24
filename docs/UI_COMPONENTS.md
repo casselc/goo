@@ -672,3 +672,8 @@ supplied tree; `snapshot` returns detached local input. It emits normalized
 predicates or a validation error and never reads or executes. Styles live in
 `components.css`; adapters retain execution and custody. See [contract and
 journey](FILTER_EDITOR.md).
+
+Single-question filtering now adopts the same helper. `setFields(fields)` supplies
+local attribute/resource-key suggestions without changing input, emitting edits
+or reading data. The old flat field picker/composer and their page styles are
+removed; service/message/duration shortcuts are application-owned AST inputs.
