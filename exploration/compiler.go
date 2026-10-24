@@ -61,6 +61,12 @@ func (c *compiler) predicate(p *Predicate) string {
 		}
 		return "(" + strings.Join(parts, op) + ")"
 	}
+	if p.Numeric != nil {
+		return c.numericPredicate(p)
+	}
+	if p.Field == nil {
+		return "0" // invalid leaves fail closed; exported Compile validates first
+	}
 	v, present := c.field(*p.Field)
 	if p.Op == "exists" {
 		return present

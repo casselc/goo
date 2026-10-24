@@ -80,6 +80,19 @@ func validNumericUnit(unit string) bool {
 
 var canonicalInteger = regexp.MustCompile(`^(0|[1-9][0-9]*|-[1-9][0-9]*)$`)
 
+// parseCanonicalInteger is shared by numeric coverage and typed predicates.
+// Exporter strings and thresholds obey the same exact, bounded parsing contract.
+func parseCanonicalInteger(raw, typ string) (*big.Int, bool) {
+	if len(raw) > 20 || !canonicalInteger.MatchString(raw) {
+		return nil, false
+	}
+	v, ok := new(big.Int).SetString(raw, 10)
+	if !ok || typ != "int64" && typ != "uint64" || typ == "int64" && !v.IsInt64() || typ == "uint64" && !v.IsUint64() {
+		return nil, false
+	}
+	return v, true
+}
+
 // NumericSummary preserves exact decimal integers. Mean is the rational Sum/Valid.
 // Empty and malformed values never contribute zero or enter the denominator.
 type NumericSummary struct {
@@ -120,12 +133,8 @@ func EvaluateNumericValues(b NumericBinding, values []*string) (NumericSummary, 
 			empty++
 			continue
 		}
-		if len(*raw) > 20 || !canonicalInteger.MatchString(*raw) {
-			invalid++
-			continue
-		}
-		v, ok := new(big.Int).SetString(*raw, 10)
-		if !ok || b.Type == "int64" && !v.IsInt64() || b.Type == "uint64" && !v.IsUint64() {
+		v, ok := parseCanonicalInteger(*raw, b.Type)
+		if !ok {
 			invalid++
 			continue
 		}

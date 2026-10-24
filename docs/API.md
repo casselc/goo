@@ -300,3 +300,15 @@ immutable version-1 rolling selector and column configuration. Publication has a
 optional environment and cursor parameters, returning up to 20 items. These
 source-free file routes are independent of fixed `/exploration-views` and XTDB.
 Opening configuration never opens a tail connection. See [Activity views](ACTIVITY_VIEWS.md).
+
+
+## Typed numeric predicate leaf
+
+Record predicates accept the optional `numeric` binding leaf described in
+[typed numeric filters](TYPED_NUMERIC_FILTERS.md). It is exclusive with `field`,
+`all` and `any`; the existing question-level numeric measure remains independent.
+Go validates declared type/unit/parsing and exact decimal-string thresholds before
+SQL lowering. State operators partition missing/empty/invalid/valid values;
+comparisons, including ne, match valid values only. This backend slice adds no
+route and changes no existing omitted-field bytes. Frontend controls have a
+separate TF2/TF3 acceptance gate.

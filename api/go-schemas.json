@@ -5366,6 +5366,16 @@
           }
         ]
       },
+      "numeric": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.NumericBinding"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "op": {
         "type": "string"
       },
@@ -5426,6 +5436,23 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/exploration.FieldInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "numeric": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.NumericBindingInput"
               },
               {
                 "type": "null"

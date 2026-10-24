@@ -144,18 +144,18 @@ func DescribeTransform(origin, target CaptureQuestion, relation string) (*Questi
 		}
 		p := target.Explore.Where
 		trace := func(p *Predicate) bool {
-			return p != nil && p.Field != nil && *p.Field == (Field{Kind: "column", Key: "trace_id"}) && p.Op == "eq" && len(p.All) == 0 && len(p.Any) == 0 && followupTrace.MatchString(p.Value) && p.Value != strings.Repeat("0", 32)
+			return p != nil && p.Numeric == nil && p.Field != nil && *p.Field == (Field{Kind: "column", Key: "trace_id"}) && p.Op == "eq" && len(p.All) == 0 && len(p.Any) == 0 && followupTrace.MatchString(p.Value) && p.Value != strings.Repeat("0", 32)
 		}
 		if relation == "exact-trace" {
 			if !trace(p) {
 				return nil, fmt.Errorf("exact trace requires one valid trace predicate")
 			}
 		} else {
-			if target.Explore.Signal != "logs" || p == nil || p.Field != nil || p.Op != "" || p.Value != "" || len(p.Any) != 0 || len(p.All) != 2 || !trace(&p.All[0]) {
+			if target.Explore.Signal != "logs" || p == nil || p.Numeric != nil || p.Field != nil || p.Op != "" || p.Value != "" || len(p.Any) != 0 || len(p.All) != 2 || !trace(&p.All[0]) {
 				return nil, fmt.Errorf("exact span requires trace and span predicates")
 			}
 			v := p.All[1]
-			if v.Field == nil || *v.Field != (Field{Kind: "column", Key: "span_id"}) || v.Op != "eq" || len(v.All) != 0 || len(v.Any) != 0 || !followupSpan.MatchString(v.Value) || v.Value == strings.Repeat("0", 16) {
+			if v.Numeric != nil || v.Field == nil || *v.Field != (Field{Kind: "column", Key: "span_id"}) || v.Op != "eq" || len(v.All) != 0 || len(v.Any) != 0 || !followupSpan.MatchString(v.Value) || v.Value == strings.Repeat("0", 16) {
 				return nil, fmt.Errorf("invalid exact span predicate")
 			}
 		}

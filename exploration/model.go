@@ -15,11 +15,12 @@ type Field struct {
 	Key  string `json:"key" yaml:"key"`
 }
 type Predicate struct {
-	All   []Predicate `json:"all,omitempty" yaml:"all,omitempty"`
-	Any   []Predicate `json:"any,omitempty" yaml:"any,omitempty"`
-	Field *Field      `json:"field,omitempty" yaml:"field,omitempty"`
-	Op    string      `json:"op,omitempty" yaml:"op,omitempty"`
-	Value string      `json:"value,omitempty" yaml:"value,omitempty"`
+	All     []Predicate     `json:"all,omitempty" yaml:"all,omitempty"`
+	Any     []Predicate     `json:"any,omitempty" yaml:"any,omitempty"`
+	Field   *Field          `json:"field,omitempty" yaml:"field,omitempty"`
+	Numeric *NumericBinding `json:"numeric,omitempty" yaml:"numeric,omitempty"`
+	Op      string          `json:"op,omitempty" yaml:"op,omitempty"`
+	Value   string          `json:"value,omitempty" yaml:"value,omitempty"`
 }
 type Query struct {
 	ReportedEdge    *ReportedEdge   `json:"reportedEdge,omitempty" yaml:"reportedEdge,omitempty"`
@@ -124,7 +125,7 @@ func validatePredicate(p *Predicate, signal string, depth int, count *int) error
 	}
 	branches := p.All != nil || p.Any != nil
 	if branches {
-		if p.All != nil && p.Any != nil || len(p.All) == 0 && len(p.Any) == 0 || p.Field != nil || p.Op != "" || p.Value != "" {
+		if p.All != nil && p.Any != nil || len(p.All) == 0 && len(p.Any) == 0 || p.Field != nil || p.Numeric != nil || p.Op != "" || p.Value != "" {
 			return fmt.Errorf("predicate must be one branch or leaf")
 		}
 		items := p.All
@@ -137,6 +138,12 @@ func validatePredicate(p *Predicate, signal string, depth int, count *int) error
 			}
 		}
 		return nil
+	}
+	if p.Numeric != nil {
+		if p.Field != nil {
+			return fmt.Errorf("numeric predicate cannot also have an untyped field")
+		}
+		return validateNumericPredicate(p, signal)
 	}
 	if p.Field == nil {
 		return fmt.Errorf("predicate leaf requires field")
@@ -180,6 +187,12 @@ func validatePredicate(p *Predicate, signal string, depth int, count *int) error
 func Match(p *Predicate, values map[Field]string) bool {
 	if p == nil {
 		return true
+	}
+	if p.Numeric != nil {
+		if p.Field != nil || p.All != nil || p.Any != nil {
+			return false
+		}
+		return matchNumericPredicate(p, values)
 	}
 	if len(p.All) > 0 {
 		for i := range p.All {

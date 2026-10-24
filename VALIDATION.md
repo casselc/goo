@@ -8144,3 +8144,35 @@ with no blocking findings. Whitespace checks pass. Reports are retained under
 No screenshots were generated for this documentation-only step; N1's real-browser
 frames/evidence remain the current acceptance. N1 and N2 are delivered; remaining
 semantic and external deployment proposals stay separately bounded in the roadmap.
+
+
+## 2026-10-24 — TF1 typed numeric predicate backend
+
+Numeric leaves reuse explicit NumericBinding rather than changing Field types.
+Shared canonical parsing and the existing nullable SQL numeric expression support
+valid-only eq/ne/gt/gte/lt/lte and explicit valid/missing/empty/invalid states.
+Thresholds remain exact typed parameters; the nullable comparison closes with
+ifNull0. Go AST validation rejects mixed leaf/branch discriminators. Package
+handoff includes numeric fields and exact trace/span recognizers retain their
+strict untyped identity conditions. Existing numeric summary interpretation is
+independent; old predicates omit the new member and preserve JSON/YAML/hash bytes.
+
+Enabled checks: `go test ./exploration ./workbench ./cmd/goo -count=1` passes
+(5.687s,0.349s,0.974s), with GOO_CLICKHOUSE_TEST_URL configured for the actual local
+ClickHouse. The new parity test executes 200 read-only inline-fixture queries over
+spans/logs, attribute/resource maps, int64/uint64 and every supported comparison
+and state. Actual threshold parameters cover zero, >2^53, int64 min/max and uint64
+max. Missing/empty, malformed/noncanonical, overflow, negative-under-uint and NUL/
+newline inputs agree with Go Match, and every SQL result is a total boolean.
+No application table was created or mutated by this parity fixture.
+
+Independent-oracle Hegel checks pass: 100 generated properties, 60 state/swarm
+sequences ×20 steps, deterministic boundary matrix and binding-independence tests
+(0.641s total). They check disjoint/exhaustive parse states and full complements,
+AND/OR, malformed thresholds/bindings, qualified namespaces and presentation-independent
+counts. Legacy numeric-column behavior and frozen shared wire suites remain green.
+Reflection/OpenAPI add only optional Predicate.numeric (27 lines each); the offline
+checker passes 64 Go routes,222 fixture responses,56 admitted requests,14 mux
+refusals, negative controls and SSE schemas. No route or frozen fixture changed.
+Independent review approved TF1 with no blocking findings. Browser support and
+end-to-end source/capture/reuse acceptance remain TF2/TF3, not implied by this gate.

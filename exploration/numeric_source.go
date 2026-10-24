@@ -28,14 +28,19 @@ func (b NumericBinding) Validate(signal string) error {
 // Roundtrip equality detects ClickHouse's permissive parsing and overflowing
 // integer conversions. Only canonical, in-range inputs become non-null values.
 // Count <= UInt64 and input <= UInt64 imply |sum| < 2^128; Int256 cannot overflow.
-func (c *compiler) numericSQL(b NumericBinding) string {
-	raw, present := c.field(b.Field)
+func (c *compiler) numericValueSQL(b NumericBinding) (raw, present, value string) {
+	raw, present = c.field(b.Field)
 	cast := "toInt64OrNull"
 	if b.Type == "uint64" {
 		cast = "toUInt64OrNull"
 	}
 	parsed := cast + "(" + raw + ")"
-	value := "if((" + present + ") AND length(" + raw + ") <= 20 AND toString(" + parsed + ") = " + raw + ", " + parsed + ", NULL)"
+	value = "if((" + present + ") AND length(" + raw + ") <= 20 AND toString(" + parsed + ") = " + raw + ", " + parsed + ", NULL)"
+	return raw, present, value
+}
+
+func (c *compiler) numericSQL(b NumericBinding) string {
+	raw, present, value := c.numericValueSQL(b)
 	valid := "count(" + value + ")"
 	missing := "countIf(NOT (" + present + "))"
 	empty := "countIf((" + present + ") AND " + raw + " = '')"

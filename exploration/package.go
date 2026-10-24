@@ -184,6 +184,9 @@ func PlanTelemetryPackage(p TelemetryPackage, from, to int64, target *Annotation
 		if pred.Field != nil {
 			add(*pred.Field)
 		}
+		if pred.Numeric != nil {
+			add(pred.Numeric.Field)
+		}
 		for i := range pred.All {
 			walk(&pred.All[i])
 		}
