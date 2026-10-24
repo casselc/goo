@@ -1074,3 +1074,15 @@ bounds all UTF-8 branches without changing the profile mapping. Actual main,
 ownership, 1,100-pattern refusal, 55-second actor, 220 generated cases/1,400
 state steps and 65 native controls pass. Final independent review approved
 source, visuals, custody and post-deployment equivalence.
+
+### Log-pattern comparisons across time (in progress)
+
+[Contract](LOG_PATTERN_TIME_COMPARISONS.md). PT1 validates canonical profile IDs
+in caller-held comparison groups. PT2 stages previous-window or saved baseline
+scopes without telemetry reads and reuses the existing population Run for two
+independent reads. The shared display aligns exact counts, rates and shares with
+honest zero/unavailable states, contextual side drilldown and explicitly labeled
+fresh-read capture. PT3 requires real unequal-window/saved-reread journeys,
+unchanged original custody, compact desktop/mobile frames, Bombadil, generated
+properties and finite replay with rejecting controls. Independent source and
+acceptance review precede publication.

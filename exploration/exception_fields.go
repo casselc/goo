@@ -74,6 +74,11 @@ func (f Field) CanBeMissing() bool {
 	return f.Kind == "attribute" || f.Kind == "resource" || f.Kind == "column" && f.Key == "exception_type"
 }
 func validateGroupDimension(f Field, value *string) error {
+	if value != nil && f.Kind == "column" && f.Key == "body_pattern_v1" {
+		if _, err := DecodeLogPattern(*value); err != nil {
+			return fmt.Errorf("invalid body_pattern_v1 group: %w", err)
+		}
+	}
 	if value == nil && !f.CanBeMissing() {
 		return fmt.Errorf("fixed column %s cannot be missing", f.Key)
 	}

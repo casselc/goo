@@ -226,3 +226,42 @@ func TestClickHouseLogPatternLongBodiesWithoutShortCircuit(t *testing.T) {
 		}
 	}
 }
+
+func TestLogPatternComparisonValidatesCanonicalFullGroupsAndEmptyState(t *testing.T) {
+	field := Field{Kind: "column", Key: "body_pattern_v1"}
+	question := Query{Signal: "logs", Environment: "lab", FromMS: 1000, ToMS: 61000, Limit: 10, GroupBy: []Field{field}}
+	id := ReferenceLogPattern("order12").Identity
+	cohort := Cohort{Question: question, Basis: "source-basis", Count: "2", State: "observed", Groups: []ValueCount{{Value: &id, Count: "2"}}}
+	empty := Cohort{Question: question, Basis: "empty-basis", Count: "0", State: "no_data", Groups: []ValueCount{}}
+	result, err := CompareCohorts(ComparisonRequest{Baseline: empty, Selection: cohort})
+	if err != nil || result.State != "no_data" || len(result.Rows) != 0 {
+		t.Fatal("known empty remains no_data", result, err)
+	}
+	changed := cohort
+	changed.State = "changed_between_reads"
+	changed.Count = "3"
+	result, err = CompareCohorts(ComparisonRequest{Baseline: changed, Selection: cohort})
+	if err != nil || result.State != "unknown" || len(result.Rows) != 0 {
+		t.Fatal("changed read inferred absence", result, err)
+	}
+	for _, bad := range []string{"lp1:p:31", "lp1:p:nn", "lp1:p:6A", "literal label"} {
+		for _, state := range []string{"observed", "no_data", "changed_between_reads"} {
+			broken := cohort
+			broken.State = state
+			if state == "no_data" {
+				broken.Count = "0"
+			}
+			broken.Groups = []ValueCount{{Value: &bad, Count: "2"}}
+			if _, err := CompareCohorts(ComparisonRequest{Baseline: broken, Selection: cohort}); err == nil {
+				t.Fatal("malformed pattern group certified", bad, state)
+			}
+		}
+	}
+	if err := validateGroupDimension(field, nil); err == nil {
+		t.Fatal("fixed pattern may not be missing")
+	}
+	arbitrary := "arbitrary legacy text"
+	if err := validateGroupDimension(Field{Kind: "column", Key: "service"}, &arbitrary); err != nil {
+		t.Fatal("legacy dimension changed", err)
+	}
+}
