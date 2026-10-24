@@ -43,3 +43,6 @@ goo-comparison-series summary{font-size:11px;cursor:pointer}
 
 /* Supplied range feedback; application adapters interpret keys. */
 goo-time-bars .time-bar[data-range-selected=true]{background:#79ddc62b;outline:1px solid var(--accent,#79ddc6);outline-offset:-1px}
+/* A committed or draft range remains legible when its tallest bar fills the plot. */
+goo-time-bars .time-bars:has(.time-bar[data-range-selected=true]) .time-bar:not([data-range-selected=true])::after{opacity:.35}
+goo-time-bars .time-bar[data-range-selected=true]{outline:1px solid var(--ink,#e3e9f3);outline-offset:-1px}

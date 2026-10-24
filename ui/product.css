@@ -1470,3 +1470,12 @@ td details {
 
 .latency-bucket-labels{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:2px;font-size:10px;color:var(--muted,#98a8bf);text-align:center;margin-top:3px}
 .latency-bucket-labels>span{overflow-wrap:anywhere}
+
+/* Optional Activity aggregate; rows remain the primary surface. */
+.activity-latency{padding:8px 12px;border-bottom:1px solid var(--border,#2b3545);min-width:0}
+.activity-latency-controls{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.activity-latency-controls :is(button,select){font-size:11px;padding:4px 8px;min-height:28px}
+.activity-latency goo-time-bars{--time-bars-height:64px}
+.activity-latency .latency-histogram{margin:6px 0;padding:0;border:0;border-radius:0;background:transparent}
+.activity-latency-status{font-size:11px;color:var(--muted);overflow-wrap:anywhere;margin:4px 0}
+.activity-latency-status>details{display:inline-block;margin-left:8px}

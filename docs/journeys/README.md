@@ -728,3 +728,5 @@ controls and runs a source-free Bombadil editor campaign.
 ![Cardinality refusal](screenshots/152-counted-value-refusal.png)
 
 153: [Latency histogram selection](../LATENCY_SELECTION.md), real OTLP/ClickHouse, reverse drag, keyboard/cancel, explicit child/rest comparison, source-free return, desktop/mobile frames and Bombadil. 154: synthetic passive count-bar range contract, SSR/detached upgrade, out-of-plot release and behavior removal.
+
+155: [Optional Activity latency](../ACTIVITY_LATENCY.md), real OTLP/ClickHouse, full counts versus one-row aggregate inspection, actual cadence and pause interval, brush/Apply, fixed remainder comparison and return, stale-response/empty/failure/retry checks, desktop/mobile frames, Hegel state sequences, Quint replay and Bombadil.

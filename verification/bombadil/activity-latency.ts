@@ -1,0 +1,12 @@
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document,window})=>({phase:Number(document.documentElement.dataset.latencyStep||0),started:!!document.documentElement.dataset.latencyStarted,rows:document.querySelectorAll('.stream-entry .live-tail tbody>tr').length,ready:document.querySelector('.activity-latency')?.getAttribute('data-phase')==='ready',paused:document.querySelector('.stream-entry .live-tail')?.getAttribute('data-state')==='paused',apply:[...document.querySelectorAll<HTMLButtonElement>('button')].some(b=>b.textContent==='Apply scope'&&!b.hidden),reads:window.performance.getEntriesByType('resource').filter(e=>new URL(e.name).pathname==='/api/explore').length,overflow:document.documentElement.scrollWidth>window.innerWidth}));
+export const onlyExplicitAggregate=always(()=>state.current.reads<=1);
+export const stagedPauses=always(()=>state.current.phase!==2||(state.current.paused&&state.current.apply));
+export const fits=always(()=>!state.current.overflow);
+export const completed=eventually(()=>state.current.phase===2).within(20,'seconds');
+const start=registerCustomAction('goo.activityLatencyStart',async(document)=>{document.documentElement.dataset.latencyStarted='1';[...document.querySelectorAll<HTMLButtonElement>('button')].find(b=>b.textContent==='Start stream')?.click()});
+const load=registerCustomAction('goo.activityLatencyLoad',async(document)=>{[...document.querySelectorAll<HTMLButtonElement>('button')].find(b=>b.textContent==='Show latency')?.click();document.documentElement.dataset.latencyStep='1'});
+const brush=registerCustomAction('goo.activityLatencyBrush',async(document)=>{const bars=document.querySelector('.activity-latency goo-time-bars');bars?.dispatchEvent(new CustomEvent('goo-time-range',{bubbles:true,detail:{fromKey:'2',toKey:'2'}}));document.documentElement.dataset.latencyStep='2'});
+export const choices=actions(()=>!state.current.started?[start()]:state.current.phase===0&&state.current.rows>0?[load()]:state.current.phase===1&&state.current.ready?[brush()]:['Wait']);

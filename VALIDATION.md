@@ -7194,3 +7194,69 @@ recovered /tmp space. Separately, trimming the current 761 MiB ClickHouse debug 
 to its latest 20 MiB recovered roughly 680 MiB on root. Error/audit logs, application
 OTel tables, captures, XTDB data and volumes were preserved. Root remains constrained;
 no Docker internals or volume pruning was used.
+
+
+## Optional scoped latency in Activity (2026-10-24 UTC)
+
+[Activity latency](docs/ACTIVITY_LATENCY.md) brings the raw-span distribution to
+the main stream as an optional panel. Opening loads once; Manual or explicit
+10/30-second cadence owns subsequent reads. Queries preserve the applied selector
+and latest completed 60-second stream window, with a one-row inspection limit.
+Full duration-group counts remain independent of the held stream buffer. The
+passive histogram now accepts app callbacks and a compact hint mode; scope,
+read generation, timers, cancellation, filtering and navigation stay app-owned.
+
+Brushing pauses both owners before staging a duration draft. Apply starts a new
+recent stream; comparison freezes the displayed window and stages the existing
+selected/rest workspace before Run. No new API operation, schema, evaluator,
+backend binary, native metric inference or evidence-membership authority changed.
+A small lifecycle correction pauses manually started saved streams regardless of
+the initial-entry gate, and resynchronizes held-panel visibility on parent return.
+
+Actual checks completed:
+
+- Four focused Node files pass (Activity query/gate, histogram, stream entry and
+  population selection). Syntax/compile and diff checks pass. Query plans retain
+  qualified missing/empty parents and exact window bounds; stale, duplicate,
+  mismatched, overlapping and frozen publications are refused.
+- Hegel generates 60 ownership sequences of 60 operations, checks an independent
+  pending-ticket oracle, and compiles generated rolling-window plans through Go
+  (4.5s). This is a generated state walk, not a live source performance test.
+- Source journey 155 passes (1.2m): independent ClickHouse ingestion count of six
+  ordinary OTLP spans, five matching the parent, exact 10-second refresh, full
+  count versus one-row inspection, keyboard brush and an 11-second no-read
+  observation, 2 selected versus 3 remainder, source-free fixed staging/return,
+  Apply yielding two live spans, delayed actual response invalidation, real
+  no-data, explicit negative transport failure, and explicit retry.
+- Deployed 155 plus saved Activity view 146 and fixed histogram 153 all pass
+  together (2.8m), including their actual Bombadil campaigns and quint-go replay.
+  The 155 observed rolling reads/selected-rest navigation are checked against the
+  existing drilldown model. Five negative controls reject hidden reads, overlapping
+  remainder, changed bounds and environment. No successful telemetry-response
+  mocks were used. The held response is an actual route.fetch result; route.abort
+  is an explicitly negative transport test.
+- Final targeted deployed 155 and passive range 154 pass together (1.2m).
+  Changing cadence during a held actual read and clicking Refresh does not issue
+  a second request; the subsequent scope edit cancels that read and prevents late
+  publication. The final shared range styling dims outside bars so a selected
+  tallest bucket remains visibly distinct.
+- A final deployed visual check uses newly ingested ordinary spans: no histogram
+  read before Show latency, exactly one afterward, a real 2-of-5 brush, paused
+  stream, compact controls and desktop/mobile overflow checks. Five served assets
+  and HTML registration match checkout. Actual panel/mobile/stream frames,
+  process diagram, README, component contracts, planning and limits are updated.
+
+Local deployment updates query-container assets and the Python asset allowlist,
+then restarts only the frontend. Docker images are unchanged because root disk
+space remains constrained; backend services and volumes are preserved. The
+current 100 MiB ClickHouse debug log was reduced to its latest 20 MiB for necessary
+headroom, preserving error/audit logs, OTel tables and saved/XTDB evidence. No
+volume pruning or Docker-internal filesystem manipulation was used. Temporary
+owned staging is removed; compact logs/ledgers remain in artifacts/activity-latency-round
+and per-run directories.
+
+Panel/cadence/brush state remains ephemeral. Counts are separate source reads,
+not an atomic aggregate/stream snapshot, completeness claim, request-latency SLI
+or native histogram-to-span relation. Hidden/paused/changed/failed scopes require
+explicit continuation; saving an Activity view retains its applied selector and
+columns, without starting or persisting this aggregate monitor.

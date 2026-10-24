@@ -69,3 +69,5 @@ mutations.
 
 ![Latency selection](journeys/screenshots/153a-latency-selection.png)
 ![Mobile latency selection](journeys/screenshots/153b-latency-selection-mobile.png)
+
+[Optional Activity latency](ACTIVITY_LATENCY.md) now supplies explicit or opt-in scheduled raw-span distributions on the live entry surface. Brushing pauses and stages before Apply; the original fixed-scope histogram behavior remains available.
