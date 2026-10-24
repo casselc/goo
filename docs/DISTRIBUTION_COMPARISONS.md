@@ -1,14 +1,14 @@
 # Aligned numeric distribution comparisons
 
 Implemented and independently reviewed. This extends the existing numeric baseline flow with
-exact aligned integer histograms. No new binning policy, numeric type inference,
+exact aligned numeric histograms. No new binning policy, numeric type inference,
 query language or automatic source subscription is introduced.
 
 ## Exact meaning
 
 Both source questions opt into the existing powers-of-two histogram and declare
-the same numeric field namespace/key, int64/uint64 type, unit and canonical parsing
-policy. Go validates the full 65/128-bin schema and each histogram's count sum
+the same numeric field namespace/key, int64/uint64/decimal64 type, explicit decimal
+scale, unit and canonical parsing policy. Go validates the full 65/128-bin schema and each histogram's count sum
 against numeric coverage before comparing it. Bins are aligned by exact derived
 half-open boundaries; data is not rebinned or reconstructed from inspection rows.
 
@@ -126,3 +126,8 @@ A separate resource attribute exercises integer extremes and parsing boundaries.
 
 DC1 `07a6fa9` and DC2 `aa96720` are committed. Actual source, model, actor and
 final display evidence is recorded in [VALIDATION.md](../VALIDATION.md).
+
+[Fixed-scale decimals](FIXED_SCALE_DECIMALS.md) retain integer coefficient bounds
+and exact bin counts. Human labels apply declared scale; the same coefficient
+geometry at a different scale is a different measurement, so comparison never
+implicitly rescales or rebins it.

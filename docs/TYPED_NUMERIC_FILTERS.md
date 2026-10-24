@@ -19,8 +19,10 @@ value: '1000'
 ```
 
 Exactly one of `all`, `any`, `field` or `numeric` identifies a branch/leaf. Numeric
-bindings support attribute/resource keys and explicit int64/uint64 types, unit
-labels and canonical-decimal parsing. No type/unit is inferred from an OTel name.
+bindings support attribute/resource keys and explicit int64/uint64 or decimal64 types, unit
+labels and canonical-decimal parsing. Decimal64 requires explicit scale 1–9 and
+exactly that many fractional digits in values/thresholds; see the
+[decimal contract](FIXED_SCALE_DECIMALS.md). No type/unit/scale is inferred from an OTel name.
 The predicate binding is independent of the optional question-level numeric measure.
 Adding the omitted optional field does not alter existing JSON/YAML or saved IDs.
 
@@ -28,7 +30,7 @@ Adding the omitted optional field does not alter existing JSON/YAML or saved IDs
 | --- | --- |
 | Absent key | missing |
 | Present empty string | empty |
-| Canonical decimal within the declared integer type | valid |
+| Canonical value within the declared type and scale | valid |
 | Present nonempty value failing parsing/range | invalid |
 
 Canonical integers have no whitespace, plus sign, leading zeros, negative zero,
@@ -63,7 +65,7 @@ they do not acquire an arbitrary-query NOT operator in this change.
 
 ```mermaid
 flowchart LR
-  Author[Explicit field / integer type / unit / threshold] --> AST[Typed predicate leaf]
+  Author[Explicit field / numeric type and scale / unit / threshold] --> AST[Typed predicate leaf]
   AST --> Go[Go validation and reference matching]
   Go --> SQL[Canonical parse guards and typed SQL params]
   SQL --> CH[ClickHouse record populations]
@@ -79,7 +81,8 @@ runtime, production cursor or storage migration is introduced by these gates.
 ## Shared editor and authored-question continuation — TF2
 
 Choose an Attribute or Resource namespace and exact key, then explicitly select
-Signed integer or Unsigned integer and supply a unit. The editor offers numeric
+Signed integer, Unsigned integer or Fixed-scale decimal and supply a unit.
+For decimals, explicitly supply scale 1–9. The editor offers numeric
 comparisons and four parse states. Unit/type are never inferred from field hints.
 Fixed columns retain their intrinsic type and nanosecond meaning. Switching type
 or namespace retains authored text; unsupported operators/thresholds remain visible

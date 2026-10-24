@@ -1,7 +1,7 @@
 # Numeric attributes: plan, measure and retain evidence
 
 Implemented in the Go record adapter, Explore and telemetry packages. One explicit
-integer attribute binding can accompany record count, span duration and recorded
+integer or fixed-scale decimal attribute binding can accompany record count, span duration and recorded
 status. It applies to the full selected span/log population independently of the
 inspection page, with the same result contract in totals, breakdowns, time cells,
 split charts and immutable captures. Native metric kernels remain separate.
@@ -9,7 +9,7 @@ split charts and immutable captures. Native metric kernels remain separate.
 ## Declare a meaning over ordinary OTel data
 
 In Explore, expand **Numeric attribute measure** under Measures and chart. Enable
-it, choose record or resource attributes, enter a key, declare int64 or uint64 and
+it, choose record or resource attributes, enter a key, declare int64, uint64 or decimal64 (with scale 1–9) and
 a unit, then Run. Available keys are suggestions; custom keys can be
 entered even when bounded inventory did not discover them. Missing/empty/invalid
 values remain visible beside arithmetic. Units label inputs; no rescaling occurs.
@@ -57,27 +57,36 @@ supported and unsupported paths through the proxy.
 | Capability | Contract |
 | --- | --- |
 | Signals / fields | Span or log question; explicit record-attribute or resource-map key |
-| Types | Declared int64 or uint64 with range validation |
-| Parsing | Canonical decimal integers; no trimming or coercion |
+| Types | Declared int64, uint64 or decimal64 with explicit scale 1–9 and range validation |
+| Parsing | Canonical decimal integers, or exact fixed-scale decimal literals; no trimming or coercion |
 | Units | Nonempty label, at most 64 UTF-8 bytes; no whitespace/control characters; `1` is dimensionless |
 | Calculations | Exact sum, min, max and rational mean |
 | Coverage | `count = valid + missing + empty + invalid` in every result/cell |
-| Conversion, floats, decimals, numeric quantiles, expressions | Unsupported |
-| Comparisons of numeric measures | Unsupported; baseline/previous-window controls disabled when the question-level numeric measure is enabled. Typed-filtered count/duration populations remain distinct. |
+| Conversion, floats, numeric quantiles, expressions | Unsupported |
+| Comparisons of numeric measures | [Supported](NUMERIC_COMPARISONS.md) for identical bindings, including declared scale; no implicit conversion. |
+
+[Fixed-scale decimals](FIXED_SCALE_DECIMALS.md) add exact fractional attributes using
+integer coefficient transport and explicit scale metadata. Integer examples and
+wire formats below remain unchanged. Decimal means divide the coefficient sum by
+`valid × 10^scale`; histogram edges and comparison differences use coefficient
+units with scale-aware display.
 
 ## Exact arithmetic and unavailable states
 
 `EvaluateNumericValues(binding, values)` consumes one optional exporter map value
-per record: nil means absent key, pointer-to-empty means present empty. Canonical
-forms are `0`, positive digits without leading zeros, or a minus sign followed by
+per record: nil means absent key, pointer-to-empty means present empty. For integer
+bindings, canonical forms are `0`, positive digits without leading zeros, or a minus sign followed by
 nonzero-leading digits for signed values. `-0`, `+1`, `01`, whitespace, fractions,
 exponents, NaN/infinity and out-of-range values are invalid. Unsigned bindings
 reject negatives. Empty values have their own category.
 
-Only valid values enter arithmetic. Decimal-string outputs preserve full precision;
-the mean is exactly `sum / valid`, displayed rounded to three decimals. The reference
-sum uses arbitrary-precision integers. ClickHouse roundtrip-checks nullable integer
-parsing against the original string to reject permissive casts and overflow wraps.
+Only valid values enter arithmetic. Integer coefficient strings preserve full
+precision. Mean in input units is `sum / (valid × 10^scale)`; integer scale is zero.
+Display rounds to `max(3, scale)` fractional digits. The reference sum uses
+arbitrary-precision integers. ClickHouse roundtrip-checks nullable integer parsing
+against canonical coefficient text to reject permissive casts and overflow wraps.
+Decimals additionally require the exact source literal grammar before removing
+the decimal point and normalizing coefficient zeros.
 Only validated values enter an Int256 accumulator. Given UInt64 record counts and
 64-bit inputs, absolute sum is below 2^128, so Int256 cannot overflow. Values never
 pass through float64 or `to*OrZero`.

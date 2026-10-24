@@ -584,3 +584,28 @@ UTC times, messages and disclosed stack traces; lifecycle and disclosure do not
 fetch, subscribe or publish. Source policy and query lifetime remain in owners.
 Raw nested-event Databricks lowering remains unsupported; prepared-fact export
 requires an explicit grain/alignment/nullability contract.
+
+## Fixed-scale decimal interpretation
+
+[Decimal bindings](FIXED_SCALE_DECIMALS.md) extend the existing numeric adapter,
+not the query runtime or physical OTel schema. An explicit scale defines a signed
+int64 coefficient lattice. Pure validation, reference evaluation and guarded
+ClickHouse integer parsing share the literal contract; sums widen to exact
+integer arithmetic. No floating point parser or Decimal cast defines coverage.
+
+```mermaid
+flowchart LR
+  D[Declared field, decimal64, scale and unit] --> Q[Typed record question]
+  Q --> V[Pure binding and threshold validation]
+  V --> C[Guarded source string to int64 coefficient]
+  C --> A[Exact aggregate and coefficient bins]
+  A --> W[Coefficient strings and explicit scale]
+  W --> P[Passive scale-aware decimal display]
+  W --> E[Immutable capture with original question]
+  P --> S[Range intent staged by application owner]
+  S --> Q
+```
+
+Scale is part of measurement identity. Incompatible scales withhold comparison
+arithmetic. Legacy integer bindings/results omit scale. Source-read budgets,
+record grain, independent-read uncertainty and capture custody are unchanged.

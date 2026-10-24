@@ -377,3 +377,19 @@ accepts the comparison, side and half-open bin indices, plans without source rea
 and permits 1 MiB request bodies. Stored capture comparison accepts the explicit
 `distribution=true` query option; publication freezes v5 intent, preserving old
 v1–v4 results. See [distribution comparisons](DISTRIBUTION_COMPARISONS.md).
+
+## Fixed-scale decimal numeric bindings
+
+[Decimal64](FIXED_SCALE_DECIMALS.md) extends existing numeric binding objects
+with optional integer `scale`. Decimal bindings require scale 1–9; int64/uint64
+bindings require zero (normally omitted). Typed thresholds are human literals
+with exactly that many fractional digits. There are no new endpoints.
+
+Summary `sum`, `min` and `max`, histogram bounds and comparison differences
+remain exact coefficient strings. Decimal summaries include matching `scale`;
+comparison bindings and histogram questions carry the interpretation. Mean in
+input units is `sum / (valid × 10^scale)`. Scale participates in binding identity,
+saved definitions and immutable evidence. No implicit rescaling is performed.
+Capability planning reports unsupported scale as diagnostics; execution rejects
+invalid bindings. A fractional or string-valued JSON scale is malformed transport.
+Older integer questions/results omit scale and retain their wire representation.

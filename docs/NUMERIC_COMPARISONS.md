@@ -1,12 +1,12 @@
 # Numeric measure comparisons
 
 Implemented and independently reviewed. This extends the existing record comparison flow to
-explicit integer attribute measures. It uses existing source aggregates and
+explicit integer and fixed-scale decimal attribute measures. It uses existing source aggregates and
 passive comparison components; it adds no query language or automatic source read.
 
 ## Compatibility and evidence
 
-Both sides must have identical numeric field namespace/key, integer type, unit
+Both sides must have identical numeric field namespace/key, numeric type, scale and unit
 and canonical parsing policy. Selectors and fixed windows may differ, and remain
 visible as independently read scopes. Histogram presentation may differ without
 changing numeric meaning. No type inference, unit conversion or duration/rate
@@ -26,7 +26,9 @@ Go validates canonical per-side coverage and integer bounds, group-to-total
 accounting and extrema. It computes selected minus baseline for sum/min/max as
 integers and mean as a reduced exact rational, using valid-value count as the
 denominator. Rational values are strings rather than JSON numbers. No decimal
-rounding becomes arithmetic authority.
+rounding becomes arithmetic authority. For [decimal64](FIXED_SCALE_DECIMALS.md),
+wire differences remain coefficient integers/rationals and display applies the
+binding scale. Mean in input units divides by the additional factor `10^scale`.
 
 Missing, present-empty and invalid values remain visible in coverage. An absent
 group or a side without valid values has unavailable numeric arithmetic; it does

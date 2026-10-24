@@ -1,4 +1,4 @@
-# Exact integer distributions
+# Exact numeric distributions
 
 Implemented in the Go adapter and fixed/saved question UI. This extends the explicit numeric attribute binding;
 it does not infer types or units from OTel attribute names. The existing record
@@ -9,7 +9,9 @@ question remains the unit of scope and reuse.
 An optional `numericHistogram: {binning: powers-of-two}` accompanies `numeric`.
 The Go adapter derives all half-open ranges from the declared integer type. There
 are 65 uint64 bins and 128 int64 bins, including zero and both domain extremes.
-Boundaries and counts are decimal strings. The final upper boundary is max+1;
+[Fixed-scale decimal](FIXED_SCALE_DECIMALS.md) bindings use the same signed
+coefficient geometry, with scale-aware decimal labels and exact typed thresholds.
+Boundaries and counts are integer coefficient strings. The final upper boundary is max+1;
 that histogram boundary is never submitted as an out-of-domain predicate value.
 
 The main count aggregate computes bins alongside numeric coverage in one source
@@ -48,7 +50,7 @@ requests when they clear numeric bindings.
 
 ```mermaid
 flowchart LR
-  B[Explicit integer binding and histogram opt-in] --> Q[Go-validated question]
+  B[Explicit numeric binding and histogram opt-in] --> Q[Go-validated question]
   Q --> C[One count and coverage aggregate in ClickHouse]
   C --> H[Exact bins and parse-state coverage]
   H --> V[Passive count bars and exact range table]

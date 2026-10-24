@@ -1036,3 +1036,19 @@ passes actual log/span journeys, stale-owner and passive SSR/SPA cases, the
 rejecting controls and the prior Activity explanation mains. Independent review
 approved the source, actual frames and corrected supplemental-rule probe evidence;
 final publication is recorded in VALIDATION.md and git history.
+
+### Fixed-scale decimal attributes (delivered)
+
+Approved next numeric family: [decimal64 with explicit scale](FIXED_SCALE_DECIMALS.md).
+Extend the existing parser/source guards, filters, totals/groups/time cells,
+histogram selection and aligned comparisons without floating point arithmetic.
+Reuse existing controls and passive display elements, preserving integer wire
+formats and staged-read ownership. Acceptance requires boundary ClickHouse parity,
+independent Hegel properties, real OTel browser journeys/Bombadil invariants,
+trace replay with rejecting controls, synchronized screenshots and review.
+
+FD1 `ff187e3`, FD2 `e6b7a10` and caption polish `2a7a8ef` are independently
+approved and deployed. FD3 acceptance passes both real OTel signals, passive
+SSR/SPA, 55-second Bombadil, 76 native rejecting controls, finite Quint/qobs
+replay and 300 generated Hegel examples with 2,100 swarm steps. Final acceptance
+commit/push status is recorded from actual git state in VALIDATION.md.

@@ -169,14 +169,18 @@ This list describes the current code at handoff. Items are observations or missi
 ## Language and resources
 
 [Typed numeric filters](TYPED_NUMERIC_FILTERS.md) support explicit int64/uint64
-attribute/resource predicates and four parse states. Comparisons (including ne)
+attribute/resource predicates and four parse states. Explicit
+[decimal64 scale 1–9](FIXED_SCALE_DECIMALS.md) extends the same path without rounding.
+Comparisons (including ne)
 select valid values only. Missing/empty/invalid are separate operators; no unit
-conversion, original OTLP type inference, floats/decimals or arbitrary NOT is
+conversion, original OTLP type inference, floating point parsing or arbitrary NOT is
 implied. Legacy string predicates retain literal semantics.
 
 [Numeric attribute measures](NUMERIC_ATTRIBUTE_PLANNING.md) now support one explicit
-int64/uint64 binding across totals, groups, charts, captures and YAML, with separate
-coverage counts and capability diagnostics. Multiple measures, comparisons of numeric measure summaries, floating/decimal parsing and unit conversion remain unsupported.
+int64/uint64 or fixed-scale decimal64 binding across totals, groups, charts, captures
+and YAML, with separate coverage counts and capability diagnostics. Exact numeric
+and aligned distribution comparisons require identical bindings, including scale.
+Multiple measures, floating point parsing and unit conversion remain unsupported.
 
 grammar.py still uses view-specific query branches. Grouping fields and map bindings are hardcoded. definitions/reservations.json is a small demo config and has no complete resource schema or version resolver. The original EDN package and deadline-outcome syntax are illustrative. The [Go aggregate](PORTABLE_COMPILER.md) and [lifecycle](LIFECYCLE_PREPARATION.md)
 kernels implement bounded typed models, preparation, reference evaluation and

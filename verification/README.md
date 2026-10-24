@@ -1360,3 +1360,92 @@ GOO_ERROR_TRIAGE_LEDGER=../artifacts/error-triage/error-triage-c0de66f5dc/ledger
 GOO_ERROR_TRIAGE_OWNERSHIP_LEDGER=../artifacts/error-triage/error-triage-5c76f5e2eb/ownership.json \
   go test -run '^TestQuintErrorTriageOwnershipLedger$' -v .
 ```
+
+Decimal numeric verification uses an independent ASCII grammar and `math/big`
+coefficient oracle in `decimal_numeric_test.go`. `decimal64` declares scale 1–9
+and a signed int64 coefficient. Exporter values and typed thresholds must contain
+exactly that many fractional digits with a mandatory dot; plus signs, leading
+integer zeros, negative zero, exponents, whitespace and extra precision (including
+trailing zeros) are invalid. Summaries, histogram geometry and numeric deltas stay
+coefficient integers/rationals on the wire. Human display values divide by the
+binding's power of ten without floating conversion. Integer bindings omit scale.
+
+The generated checks cover 90 coverage/partition examples, 70 histogram and
+human-threshold range-partition examples, 70 comparison/distribution and strict
+scale/legacy-wire examples, and 70 stateful examples with 30 scheduled actions
+(2,100 total). The state swarm edits scale and source values and freezes prior
+observations; frozen raw facts retain their original binding/scale. Thirty fixed
+literal cases cover all nine scales, coefficient extrema/overflow, values above
+binary64 precision, signed fractions, negative zero and malformed precision.
+Expected parsing/formatting does not call production helpers. Differently scaled
+comparison cohorts are each individually valid before compatibility is refused.
+
+`TestQuintDecimalNumericLiveLedger` is opt-in with
+`GOO_DECIMAL_NUMERIC_LEDGER`; it requires the actual ledger, full read-only copied
+`scope-capture.json` and `capture-custody.json` beside it. The oracle checks unique
+raw page identities, exact attributes/resources/time/trace IDs, complete counts,
+coverage, grouped/time summaries and all 128 coefficient bins against emitted
+OTLP facts. It checks human typed thresholds, selected/rest membership including
+excluded parse states, exact comparison means/coverage, human rational DOM titles,
+scale 1/9 and integer/resource regressions, saved YAML and fresh reuse. The full
+400-record source capture is hashed separately from its 100-record public page;
+raw-file SHA256/byte count/receipt/copy clocks are checked alongside the typed
+capture identity and immutable reopened evidence.
+
+The generic `numeric_authoring` model replays this observed twenty-one-action
+workflow: source-free authoring and invalid-input repair, four coverage filters,
+parent/range reads, pure brush/Back/planner actions, explicit comparison reads,
+capture/reopen and package reuse. Capture's action contains the separately named
+parent reread and capture reread. Independent source/arithmetic corruption is
+rejected before Quint; lifecycle mutations preserving source facts are replayed.
+These checks do not prove all interaction schedules, evaluator correctness for
+all data, internal SQL read counts, original OTLP scalar types or telemetry
+completeness. Separate source reads do not establish an atomic snapshot.
+
+Actual journey 180 acceptance:
+
+| Evidence | Native result | Retained stdout |
+| --- | --- | --- |
+| [Final spans ledger](../artifacts/decimal-numerics/decimal-numerics-6cf7ac4c11/ledger.json) | Baseline accepted; all 38 changed controls rejected; 36.68s | [Spans log](../artifacts/decimal-numerics/decimal-numerics-6cf7ac4c11/native-validation.txt) |
+| [Final logs ledger](../artifacts/decimal-numerics/decimal-numerics-630ae6e1cc/ledger.json) | Baseline accepted; all 38 changed controls rejected; 33.20s | [Logs log](../artifacts/decimal-numerics/decimal-numerics-630ae6e1cc/native-validation.txt) |
+| [Generated properties and fixed boundaries](../artifacts/decimal-native-properties.txt) | 300 generated examples, including 2,100 scheduled swarm steps; 30 fixed rows; 3.733s | Same linked log |
+
+The generic authoring model typechecks. Both actual traces contain twenty-one
+actions, fourteen explicit source operations, two pure selection plans, one
+comparison protocol call and one package publication. Each source population has
+400 records: 160 valid, 10 missing, 10 present-empty and 220 invalid at scale 2.
+The coefficient interval `[128,512)` is authored as human predicates `[1.28,5.12)`
+and selects 30 records. Its mean is the exact coefficient rational `983/3`; its
+human mean is `983/300 USD`. The UI's unreduced human fraction is accepted only
+when it is rationally identical, with an exact matching title. Domain sentinel
+geometry remains a coefficient bound and is never emitted as an invalid human
+predicate. Scale 1/9, resource-field and legacy integer source observations are
+also checked against their original raw values.
+
+Each final ledger has its real full stored source capture and raw custody sidecar:
+[spans custody](../artifacts/decimal-numerics/decimal-numerics-6cf7ac4c11/capture-custody.json)
+and [logs custody](../artifacts/decimal-numerics/decimal-numerics-630ae6e1cc/capture-custody.json).
+The independent guard verifies all 400 retained records and their hashes, not
+merely the public 100-record page. Rejection controls target duplicate IDs, raw
+attribute/resource mutation, scale metadata, coefficients, bins, human thresholds,
+selected/rest membership, rational displays, capture identity/custody, package
+reuse, source-free staging/repair/brush/reopen and protocol/publication effects.
+
+An [initial diagnostic](../artifacts/decimal-numerics/decimal-numerics-93cf173cf5/native-validation-rejected-request-effect.txt)
+on the earlier accepted logs source fixture passed every source/scope, capture,
+comparison and package guard but rejected the request ledger's explicit
+`comparison` effect. The verifier had not yet recognized that observer category.
+It now requires that entry to be exactly `/api/compare`, match the typed observed
+partition request and occur exactly once. Source/read assertions were retained;
+no application or arithmetic semantics changed. Final acceptance uses the two
+final artifacts above.
+
+From `verification/`, with the configured toolchain and writable Go/Hegel caches:
+
+```sh
+go test -run '^(TestHegelDecimal64|TestDecimal64FixedScaleBoundaryContract)' -v .
+GOO_DECIMAL_NUMERIC_LEDGER=../artifacts/decimal-numerics/decimal-numerics-6cf7ac4c11/ledger.json \
+  go test -run '^TestQuintDecimalNumericLiveLedger$' -v .
+GOO_DECIMAL_NUMERIC_LEDGER=../artifacts/decimal-numerics/decimal-numerics-630ae6e1cc/ledger.json \
+  go test -run '^TestQuintDecimalNumericLiveLedger$' -v .
+```

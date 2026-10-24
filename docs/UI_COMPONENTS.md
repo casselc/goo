@@ -774,3 +774,23 @@ locally as literal text. Those are display bounds, not source/group cardinality
 limits or evidence of complete telemetry. UTC formatting retains the exact supplied
 nanosecond time in a tooltip. The standalone synthetic component tests are separate
 from journey 179's actual OTLP integration screenshots.
+
+### Fixed-scale numeric display
+
+The existing numeric adapters support explicit decimal64 scale 1–9. Supplied
+summary and histogram strings remain exact coefficients; adapters format them
+with declared scale before passing labels and exact rational values to passive
+components. The aligned histogram accepts optional scale for decimal labels.
+Integer component data and rendering remain unchanged. No display component
+infers a scale from an attribute name, performs a source read or converts units.
+
+The existing measure/filter editor conditionally exposes a scale control with
+the decimal type. Scale is preserved in protocol, session identity, recovery,
+saved definitions and captures. It is part of measurement compatibility, never
+a local chart formatting preference. See [contract](FIXED_SCALE_DECIMALS.md).
+
+Decimal comparison rows may additionally supply `rangeDisplay: [min, max]`
+caption strings in the passive cloned DTO. These labels format the same exact
+signed domain; they do not change bar geometry, numerical data attributes or
+exact tooltips. Decimal captions wrap fully on mobile. Integer rows omit the
+optional field and retain their existing presentation.

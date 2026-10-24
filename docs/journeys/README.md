@@ -2025,3 +2025,37 @@ Supplemental log probes were corrected through actual API requests after a
 harness flattening/index mistake. The original rejected ledger remains retained;
 all other observations are unchanged. VALIDATION.md records these outcomes and
 the final acceptance commit/review/push status.
+
+
+180 — **real-source, passive component, actor and native/model acceptance pass**:
+[Declare and reuse exact decimal quantities](../../journeys/180-decimal-numerics-storyboard.md)
+and the [fixed-scale contract](../FIXED_SCALE_DECIMALS.md) cover ordinary span/log
+attributes with explicit `decimal64`, scale and unit declarations. Typed predicates
+use human fixed-scale literals; source summaries, histogram geometry and arithmetic
+retain exact integer coefficients. No binary-float or silent rounding conversion
+is introduced, and absent, empty and invalid records retain separate coverage.
+
+Actual real-source main journeys pass spans (53.2s) and logs (approximately 1.2m),
+2.2m together. They exercise local declaration/repair and range intent, full
+aggregates beyond 100-row pages, exact selected/rest comparisons, immutable capture
+reopen, reusable YAML, scale1/9 and resource bindings, integer compatibility,
+sentinel handling and explicit refusals. Final mobile comparison figures verify
+all four metric rows, both values and complete human range captions without
+clipping or sticky-header overlap.
+
+| Frame | Evidence |
+| --- | --- |
+| [Spans decimal range](screenshots/180a-spans-decimal-range.png) | Exact source coverage and human range intent |
+| [Logs decimal range](screenshots/180a-logs-decimal-range.png) | The same typed grammar over ordinary log attributes |
+| [Mobile spans comparison](screenshots/180b-spans-decimal-comparison.png) | Selected/rest values with exact human-rational tooltips |
+| [Mobile logs comparison](screenshots/180b-logs-decimal-comparison.png) | Shared signed geometry and legible finite range captions |
+| [Passive decimal components](screenshots/180c-passive-scaled-decimal-components.png) | Explicitly synthetic SSR/detached values, tiny scale-nine means and unchanged shares |
+
+The 55-second Bombadil campaign passes all 10 phases with four source reads, two
+pure planners and one comparison protocol. Source-free component acceptance
+passes in 4.9s. Independent native verification passes logs in 33.20s and spans in 36.68s,
+rejecting 38 changed controls each (76 total), including raw source/page uniqueness
+and full stored capture custody hashes. The first spans fresh-package attempt
+had a separately retained transient pre-execution timeout; the final mains passed
+with unchanged source budgets. VALIDATION.md records review and final publication
+status; no acceptance commit or push is inferred here.

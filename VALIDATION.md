@@ -8892,3 +8892,111 @@ acceptance/docs. Final ET3 review approved with no blockers after all native log
 and corrected supplemental evidence were inspected. README, diagrams, roadmap,
 backlog, guide, component contracts and storyboards are synchronized; final push
 is reported from actual git state.
+
+
+## Fixed-scale decimal source milestones (FD1/FD2)
+
+Source independently approved and deployed locally: `ff187e3` adds decimal64
+scale 1–9, exact signed int64 coefficients, strict human literals, source guards
+and scale metadata; `e6b7a10` extends existing controls and passive displays.
+Integer JSON and arithmetic retain their existing representation. Decimal
+summary/histogram/comparison transport uses coefficients with declared scale;
+all human display applies scale. No floating point parser, rounding, rescaling,
+new query runtime or endpoint is introduced.
+
+Source checks passed:
+
+- Focused numeric Go suite 0.184s; aggregate/empty-cell/group/split/capture/package
+  scale propagation 0.021s. Real ClickHouse parity 17.22s covers scales 1/2/9,
+  both signals and map namespaces, both coefficient extrema, >2^53, signed tiny
+  fractions, overflow, negative zero, precision/newline refusal, predicates and bins.
+- Full exploration regression 0.921s; cmd/goo 0.565s and workbench pass. The first
+  broad HTTP attempt could not bind a sandbox socket; the unchanged suite passed
+  with authorized local loopback access. This was an execution restriction.
+- All 67 Node files pass, final caption-polish run 3.65s, including fixed decimal sum/extrema
+  changes, exact rational means, scaled histograms, strict thresholds, scale
+  identity, recovery and integer compatibility.
+- Regenerated OpenAPI remains 75 operations / 69 Go. Existing 222 fixture
+  responses, 56 admitted requests, 14 mux refusals, negative/SSE controls pass.
+  API docs Python checks and real docs-browser/mobile checks pass; live proxy
+  integer/decimal preflight and invalid-scale diagnostics pass.
+
+Logs: artifacts/decimal-{node-final,http-workbench,exploration,api-browser,preflight}.log.
+At the source milestone, FD3 acceptance was still pending. Source tests alone
+do not establish end-to-end completion or Databricks support; actual FD3 checks
+are recorded below.
+
+Independent decimal properties also pass (latest 3.733s): 90 coverage/partition,
+70 histogram/range, 70 comparison/distribution and 70 scale/freeze swarm examples
+with 30 scheduled steps each: 300 generated examples and 2,100 state steps.
+Thirty deterministic literal rows cover all nine scales and bounded extrema.
+The oracle manually parses ASCII digits with big.Int rather than calling the
+production parser/formatter. Caption polish `2a7a8ef` was independently approved
+and deployed; it preserves exact domain geometry and integer DTOs.
+
+FD3 final display invocation passes both real OTel mains (spans 53.2s, logs about
+1.2 minutes; 2.2 minutes total). Each exercises 400 ordinary source records with
+a 100-record inspection page, exact decimal filters/coverage/128 bins, selected
+versus rest, comparisons, capture/reopen and fresh YAML reuse. Independent live replay and actor acceptance also pass as recorded below.
+The passive component fixture passes separately as recorded below.
+
+The first invocation passed logs (59.0s) but spans encountered a real ClickHouse
+502 on fresh five-minute package reuse after earlier assertions passed. Query
+log evidence records a 25.67s pre-execution failure with zero rows/bytes alongside
+collector pressure errors. The exact request later passed twice in 1.309/1.763s;
+decimal without histogram took 0.243s and integer histogram 0.512s. Decimal
+count SQL is 209,658 bytes versus 82,938 for integer histogram, an observed
+compilation overhead. Source/client limits were not increased and no backend
+change was made. The browser response wait became 45s to report actual status
+cleanly; success still requires HTTP 200 under the existing source budgets.
+
+Original first.log and bounded artifacts/decimal-source-diagnostic.json retain
+the failure and actual replay receipts. Playwright cleaned the first raw trace
+on rerun, so original raw 502 bytes and their hash are unavailable. The diagnostic
+labels extracted error/request semantics separately from retained bytes; it does
+not claim original-response custody. Final stored captures are retained outside
+Playwright's disposable output and receive independent byte/custody validation.
+
+Independent final native checks pass for logs630ae6e1cc (33.20s) and
+spans6cf7ac4c11 (36.68s), each baseline plus 38 guaranteed-changed rejecting
+controls: 76 total. They validate unique actual page IDs, exact attributes/resource
+maps/time/trace identities, full 400-record stored capture membership versus the
+public 100-record prefix, raw file SHA256/byte count/receipt/copy clocks, typed
+capture identity, every coefficient bin/coverage/threshold, comparison arithmetic
+and source-free request effects. A 21-action finite Quint model and native qobs
+replay validate the observed authoring/read/capture/reuse schedule. This does not
+prove all interleavings, complete telemetry or transactional source snapshots.
+
+The initial native draft rejected an explicit source-free /compare request effect
+it did not yet recognize. The verifier now checks exactly one typed expected
+comparison request; source counters remain strict. Original rejected output is
+retained as native-validation-rejected-request-effect.txt. Numeric/raw/capture
+guards were already true; this correction did not relax their assertions.
+
+Fresh-fixture Bombadil passes 55 seconds (57.3s test), all ten phases executed:
+parent 400, inspection page 100, valid 160, all 128 coefficient bins, selected 30,
+four population reads, two planners and one pure comparison request. Exact
+comparison mean 983/300 is preserved. Acceptance summary, process output and
+trace are under decimal-numerics-bb3c33b889/bombadil. Final native logs and raw
+capture/custody sidecars are under decimal-numerics-{630ae6e1cc,6cf7ac4c11}.
+The independent Hegel suite latest 3.733s includes 300 generated examples, 2,100
+swarm steps and 30 deterministic boundary rows.
+
+Passive SSR/predefinition/detached SPA acceptance passes 4.9s (7.8s invocation):
+scaled tiny values, zero-anchored domain, exact titles, unchanged histogram shares,
+retained local intent, cloned snapshots and zero API requests. First draft fixture
+incorrectly expected the positive baseline as axis minimum; the actual signed
+component correctly includes zero. Only that expected axis was corrected; tiny
+value/title, share and geometry guards were retained. Its failed trace is archived
+outside Playwright cleanup. Actual180c is explicitly a supplied-data component
+example;180a/b span/log frames are real telemetry journeys. Final browser/native
+acceptance is complete, with final independent review recorded below. Publication is checked against
+actual git state at completion.
+
+Final independent review APPROVED the source, exact arithmetic, final span/log
+and synthetic component visuals, actual actor exit status, native PASS logs and
+all 76 controls. The reviewer independently recomputed both full stored capture
+SHA256 digests against their custody receipts. No remaining feature blocker was
+identified. Source milestones are `ff187e3`, `e6b7a10` and `2a7a8ef`; this
+acceptance round is committed separately and published to the authorized
+`origin/work` target after checking actual git state.
