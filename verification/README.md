@@ -1836,3 +1836,40 @@ GOO_TRACE_PAGE_OWNERSHIP_LEDGER=/workspace/goo/artifacts/trace-page-breakdown/tr
 ```
 
 Observed coverage is not CPU/self time, complete exclusive time or a critical path; trace completeness remains unverified. Inclusive group sums may overlap in time. No new endpoint, query, persistence format or source completeness claim is introduced by this verification.
+
+### Supplied trace-page comparisons (185)
+
+`trace_comparison_oracle_test.go` derives both sides from raw facts with the independent endpoint-cell/graph oracle, builds the exact nullable service/operation identity union, and computes signed integer differences and relative starts with `math/big`. It never uses `CompareTracePages` to produce expected values. Repeated labels are never zipped or deduplicated into invocation matches. A unique-label candidate additionally requires reported labels, a single valid reported trace on each page, unambiguous valid row identities, valid row shape and equal nonempty reported span kinds. Missing groups do not become zero; incomplete metric sums withhold their differences independently of other known measures.
+
+The pure campaign in `trace_comparison_test.go` passed **220 generated examples and eight fixed authority/knownness boundaries in 6.166s**: [actual stdout](../artifacts/trace-comparison-properties.txt). Eighty examples check the raw oracle, side swap and page permutation; seventy compare actual Node/Go whole DTOs against the oracle, including odd-coefficient scaling that exercises signed duration/relative-start values beyond binary64 precision; seventy test simultaneous page translations and exact positive affine scaling. Fixed cases distinguish known zero, missing labels, present empty labels, absent groups, repeated labels, kind mismatch/unreported kind and unknown timing with known inclusive duration. The initial smaller-delta campaign also passed and is retained as `artifacts/trace-comparison-properties-initial-pass.txt`; the final generator deliberately strengthens large-delta coverage. This stateless projection uses generated metamorphisms rather than an artificial evaluator swarm; actual owner state transitions are checked separately below.
+
+The three real ordinary-OTLP ledgers passed on their first native runs, with **80 guaranteed-changed rejecting controls**, including six traces rejected by Quint itself. Each corruption is checked for a serialized change before rejection. No application code or raw fixture was changed to pass these native checks.
+
+| Check | Actual artifact | Rejected controls | Result |
+| --- | --- | ---: | --- |
+| `TestQuintTraceComparisonLiveLedger` | [main ledger](../artifacts/trace-comparison/trace-comparison-618c4bebb6/ledger.json), [stdout](../artifacts/trace-comparison/trace-comparison-618c4bebb6/native-validation.txt) | 38 | PASS 7.639s |
+| `TestQuintTraceComparisonPartialLedger` | [partial/problem ledger](../artifacts/trace-comparison/trace-comparison-ae88eb2a0c/partial.json), [stdout](../artifacts/trace-comparison/trace-comparison-ae88eb2a0c/native-validation.txt) | 22 | PASS 22.960s |
+| `TestQuintTraceComparisonOwnershipLedger` | [owner ledger](../artifacts/trace-comparison/trace-comparison-82a9feba5a/ownership.json), [stdout](../artifacts/trace-comparison/trace-comparison-82a9feba5a/native-validation.txt) | 20 | PASS 9.414s |
+
+`trace_comparison_live_test.go` independently validates exact raw timestamp/duration strings, trace/span/parent IDs, reported span kinds, namespace-qualified attribute/resource maps, scope, physical row membership and full-query inclusive duration/status summaries. The main reference and current queries retain their distinct 6-second and 60-second windows. Their query widths do not normalize span-duration deltas or set the display axis: both row placements use the maximum observed page extent, derived from reported intervals. Exact card indexes, matching states, nanosecond titles, shared physical tracks and independently floored 0.0001% placement geometry bind the displayed comparison to those pages. Qualified field differences retain raw typed state/value metadata, distinguish present empty from missing, and keep identical keys in attribute/resource namespaces separate.
+
+The main fixture verifies root inclusive duration 100→130ms and time outside observed direct children 50→75ms; the lookup's signed difference is -10ms, repeated prepare rows remain ambiguous, dispatch kinds do not pair, absent groups do not acquire zero durations, and the marker retains a real zero. The problem fixture withholds the outliving child's parent's residual difference while retaining independently known child measures. The partial query retains full count 126 and its independent aggregate sums while the compared page contains 100 rows, including 99 fanout rows. No aggregate sum is substituted for that supplied page.
+
+The existing reference capture was created by an explicit retained setup request before browser reads; it is not a newly persisted comparison. The complete stored capture is **12,477 bytes**, raw SHA256 `c5d4a6ab3be045df0ed6338f171b3da8fc5127d0c2df5e06094ee5055ce16c0c`, receipt `a3fe17e9079d11802fe0b62847e1a5b86126e52d70e35df5bfc64b6aaec35b0d`. Native checks verify identical before/after bytes, the complete stored typed receipt digest, original question and seven-record membership, custody-after-source chronology and semantic saved/reopened equality. The stored representation remains the hash authority; browser-reserialized raw rows are not substituted for it.
+
+The three qobs/Quint model pairs have **8 / 3 / 8 observed actions**. The main browser watch records six existing Explore source operations: search plus expansion/linked-log reads for each side. Pin, local comparison, pair-attribute inspection and capture reopen add none. The three partial/problem actions reach nine operations. The owner trace begins with six operations, retains the hidden comparison without letting its controls mutate it, requires explicit re-expansion after return (eight), holds a real next-page response (twelve), and rejects its acceptance after a natural environment-draft invalidation. Explicit fresh search plus expansion/linked logs recovers at fifteen. Native guards check the passive DOM states before replay: route-hidden retained controls may remain enabled in the DOM but are inert; pending/stale authority clears the comparison and disables pin/compare. Each model separately rejects a changed source counter and wrong action order.
+
+Reproduce serially after browser/actor ownership is released (live tests skip when their artifact variable is absent):
+
+```sh
+cd /workspace/goo/verification
+export PATH=/workspace/.toolchains/go/bin:$PATH GOPATH=/workspace/.go
+export GOMODCACHE=/tmp/goo-module-cache GOCACHE=/workspace/.cache/go-build
+export XDG_CACHE_HOME=/workspace/.cache GOTOOLCHAIN=local GOMAXPROCS=2
+go test -run '^Test(HegelTraceComparison|TraceComparisonKnownness)' -v .
+GOO_TRACE_COMPARISON_LEDGER=/workspace/goo/artifacts/trace-comparison/trace-comparison-618c4bebb6/ledger.json go test -run '^TestQuintTraceComparisonLiveLedger$' -v .
+GOO_TRACE_COMPARISON_PARTIAL_LEDGER=/workspace/goo/artifacts/trace-comparison/trace-comparison-ae88eb2a0c/partial.json go test -run '^TestQuintTraceComparisonPartialLedger$' -v .
+GOO_TRACE_COMPARISON_OWNERSHIP_LEDGER=/workspace/goo/artifacts/trace-comparison/trace-comparison-82a9feba5a/ownership.json go test -run '^TestQuintTraceComparisonOwnershipLedger$' -v .
+```
+
+The models replay these finite observed owner/source sequences; they do not prove all schedules, internal SQL request counts or telemetry completeness. Label alignment does not establish shared invocation identity, complete traces, CPU/self time or a critical path. Group duration sums may overlap. No endpoint or comparison persistence format is added.

@@ -1,0 +1,11 @@
+spec: trace_comparison_partial.qnt
+module: trace_comparison_partial
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  observe_problem_pin:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_problem_compare:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_partial_compare:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'

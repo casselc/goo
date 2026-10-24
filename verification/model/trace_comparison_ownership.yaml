@@ -1,0 +1,21 @@
+spec: trace_comparison_ownership.qnt
+module: trace_comparison_ownership
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  observe_pair:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_closed_pair:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_hidden_actions:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_return_stage:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_returned_compare:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_pending_actions:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_stale_response:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_fresh_accepted:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'

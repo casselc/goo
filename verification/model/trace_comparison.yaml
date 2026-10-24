@@ -1,0 +1,21 @@
+spec: trace_comparison.qnt
+module: trace_comparison
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  observe_reference_search:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_reference_expand:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_pin:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_current_search:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_current_expand:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_compare:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_pair_attributes:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_capture_reopen:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
