@@ -86,7 +86,7 @@ automatically start live updates.
 
 Population live tails are bounded recent event-time observations, not ingestion cursors or complete traces. Reconnect/resume exposes a continuity gap. Full-population live comparison uses independent reads over the baseline duration; its window may differ from the 60-second inspection tail. Saved settings never auto-subscribe. See [live contract](POPULATION_WORKSPACE.md#watching-a-population).
 
-Service-overview time selections scope that overview and its span/log follow-up links. Supporting discovery inventory retains its original window. General cross-service span/log populations and saved exploration views are now supported in the [population workspace](POPULATION_WORKSPACE.md). Discovered per-signal breakdowns and saved baseline comparisons are supported; numeric cohort comparisons remain unsupported. Arbitrary native-stream composition and saved multi-widget dashboards remain future work. Native crossing intervals are omitted, never split or interpolated. See [contract](LINKED_TIMELINE.md).
+Service-overview time selections scope that overview and its span/log follow-up links. Supporting discovery inventory retains its original window. General cross-service span/log populations and saved exploration views are now supported in the [population workspace](POPULATION_WORKSPACE.md). Discovered per-signal breakdowns and saved baseline comparisons are supported; numeric-measure summary comparisons remain unsupported; typed-filtered record populations retain existing count/duration comparisons. Arbitrary native-stream composition and saved multi-widget dashboards remain future work. Native crossing intervals are omitted, never split or interpolated. See [contract](LINKED_TIMELINE.md).
 
 Trace examples rank valid linked spans on a bounded record page, not complete traces or the full matching population. Findings link two later independent reads. Selected reported trace/span references are checked only against the returned retained trace page; a page miss does not establish absence from the capture, and matching IDs prove neither uniqueness nor unchanged attributes or complete traces. See [trace finding contract](TRACE_FINDINGS.md).
 
@@ -108,10 +108,15 @@ This list describes the current code at handoff. Items are observations or missi
 
 ## Language and resources
 
+[Typed numeric filters](TYPED_NUMERIC_FILTERS.md) support explicit int64/uint64
+attribute/resource predicates and four parse states. Comparisons (including ne)
+select valid values only. Missing/empty/invalid are separate operators; no unit
+conversion, original OTLP type inference, floats/decimals or arbitrary NOT is
+implied. Legacy string predicates retain literal semantics.
+
 [Numeric attribute measures](NUMERIC_ATTRIBUTE_PLANNING.md) now support one explicit
 int64/uint64 binding across totals, groups, charts, captures and YAML, with separate
-coverage counts and capability diagnostics. Multiple measures, numeric cohort
-comparisons, floating/decimal parsing and unit conversion remain unsupported.
+coverage counts and capability diagnostics. Multiple measures, comparisons of numeric measure summaries, floating/decimal parsing and unit conversion remain unsupported.
 
 grammar.py still uses view-specific query branches. Grouping fields and map bindings are hardcoded. definitions/reservations.json is a small demo config and has no complete resource schema or version resolver. The original EDN package and deadline-outcome syntax are illustrative. The [Go aggregate](PORTABLE_COMPILER.md) and [lifecycle](LIFECYCLE_PREPARATION.md)
 kernels implement bounded typed models, preparation, reference evaluation and
@@ -205,7 +210,7 @@ Local server-captured immutable revisions and fixed-question refresh now exist. 
 
 ## General exploration boundaries
 
-A bounded Go span/log AST, captured-record counts/groups, discovered keys and paged cross-service trace/exact-log navigation now exist. Reads are not transactional, ordinary live offset pages are not frozen, trace completeness is unknown, numeric-looking attributes remain strings, and general explorations/expanded context are not archived by operation captures. One-field distributions and fixed-window descriptive cohort comparison now exist. General chart algebra, arbitrary-field numeric casts, complete trace accumulation, live tail and production tenancy remain absent. See EXPLORATION_DESIGN.md.
+A bounded Go span/log AST, captured-record counts/groups, discovered keys and paged cross-service trace/exact-log navigation now exist. Reads are not transactional, ordinary live offset pages are not frozen, trace completeness is unknown, numeric-looking attributes remain exporter strings unless an explicit typed binding is declared, and general explorations/expanded context are not archived by operation captures. Bounded distributions, typed integer filters, fixed-window descriptive cohort comparison and live tails now exist. General chart algebra, implicit/arbitrary numeric conversions, complete trace accumulation and production tenancy remain absent. See EXPLORATION_DESIGN.md.
 
 - Explore baselines are volatile browser-held captures, not durable saved operation
   receipts. Comparison checks accounting/scope, not caller-supplied provenance;

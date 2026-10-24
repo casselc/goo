@@ -8205,3 +8205,51 @@ rejecting unknown fields; detached input and exact typed-card checkpoint tests p
 ownership diagram remain synchronized. TF3 real telemetry/capture/reuse/model
 acceptance is still pending at this slice.
 Existing actual-JavaScript Journal Hegel state/swarm regression passes (60×24 steps,1.07s). Independent review approved TF2 with no remaining blockers; TF3 artifacts are not claimed executed here.
+
+
+## 2026-10-24 — TF3 real numeric-filter population acceptance
+
+Journey 171 emits 512 ordinary OTLP spans through the real collector/ClickHouse.
+Attribute/resource keys intentionally collide. The explicit uint64 threshold above
+2^53 yields 96 records, resource interpretation 128, valid 160, invalid 288 and
+missing/empty 32 each. Resource/valid/invalid results retain exact full counts with
+100-row pages. Valid-only ne 0 yields 128; signed-min equality and legacy literal `01`
+remain distinct. Invalid overflow blocks Run, URI reload stages without reads,
+time-chart selection retains the parent numeric AST in an explicit narrower read,
+and actual capture/YAML fresh-reuse/stored-reopen preserve the exact declaration.
+All those browser assertions passed, with 171 frames regenerated. Existing numeric
+measure 44 and legacy editor 149 journeys also passed (44.7s and 48.9s); their affected
+frames are regenerated and their existing native/Quint checks remain passing.
+
+The initial three-journey Playwright command reported 2 passed / 1 failed because 171's
+final native checker rejected request groupBy:[] against Go's omitted empty grouping.
+This was a verifier mapping defect, not a source/UI mismatch. The checker now uses
+canonical Go JSON omission for query equality; changed grouping and rounded >2^53
+thresholds remain distinct. Its pure default regression passes. No source UI flow
+was repeated merely to replace the historical failure log.
+
+The SAME actual 171 ledger then passed native validation with 16 rejecting controls
+(33.07s) and an independent reviewer rerun (30.46s plus the query-default regression).
+The independent integer oracle checks full counts, exact state, expected page size,
+unique fixture timestamps/row membership, both map namespaces' exact raw/missing/
+empty values, fixed scope, environment/signal, explicit read transitions and frozen
+capture identity. Existing Quint grouped-series lifecycle validation is reused;
+no model-only trace is substituted for the observed ledger. Mutation controls cover
+wrong counts/threshold/namespace, hidden reads, lost typed predicates, wrong retained
+rows/state/environment and changed reopened evidence.
+
+A separate 30-second Bombadil run on that exact staged real-data question passes
+(code 0), using the visible editor, noncanonical/overflow/repair actions, invalid Run
+blocking and no implicit POSTs. Compact evidence:
+`artifacts/typed-numeric-filters/typed-filter-7eeca3f5b7/ledger.json`, original
+`TestQuintTypedNumericFilterLiveLedger.log` (initial failure),
+`reviewer-native-final.log` (independent pass), and `bombadil/run-result.json`.
+Independent TF3 source/docs/evidence review approved with no remaining blockers.
+
+Feature docs, architecture/protocol/component references, README, known limits,
+roadmap/backlog and 171–173 storyboards are synchronized. Canonical integer filters
+are distinct from still-unsupported numeric-measure comparisons, floating/decimal
+policies or unit conversion. The installed native backend and static assets are
+current; no images were rebuilt and existing telemetry, captures, XTDB and volumes
+were preserved. The owned temporary backend build copy is removed after acceptance.
+Final documentation check resolves 785 relative targets and 43 Markdown anchors with no failures; whitespace checks pass.

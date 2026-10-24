@@ -309,6 +309,6 @@ Record predicates accept the optional `numeric` binding leaf described in
 `all` and `any`; the existing question-level numeric measure remains independent.
 Go validates declared type/unit/parsing and exact decimal-string thresholds before
 SQL lowering. State operators partition missing/empty/invalid/valid values;
-comparisons, including ne, match valid values only. This backend slice adds no
-route and changes no existing omitted-field bytes. Frontend controls have a
-separate TF2/TF3 acceptance gate.
+comparisons, including ne, match valid values only. The feature adds no route and changes no existing omitted-field bytes. Shared
+editor/protocol and real telemetry capture/reuse acceptance are documented in
+the linked TF2/TF3 contract.

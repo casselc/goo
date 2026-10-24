@@ -63,7 +63,7 @@ supported and unsupported paths through the proxy.
 | Calculations | Exact sum, min, max and rational mean |
 | Coverage | `count = valid + missing + empty + invalid` in every result/cell |
 | Conversion, floats, decimals, numeric quantiles, expressions | Unsupported |
-| Numeric cohort comparisons | Unsupported; baseline/previous-window controls disabled for numeric questions |
+| Comparisons of numeric measures | Unsupported; baseline/previous-window controls disabled when the question-level numeric measure is enabled. Typed-filtered count/duration populations remain distinct. |
 
 ## Exact arithmetic and unavailable states
 
@@ -154,3 +154,11 @@ flowchart LR
 Storyboard 44 now exercises namespace switching, unchanged explicit defaults,
 source-free edits, cancellation of an actual held response, failed-read withdrawal
 and immutable capture reuse. Updated frames 44a–44c show the running application.
+
+
+[Typed numeric predicates](TYPED_NUMERIC_FILTERS.md) now filter attribute/resource
+record populations independently of this question-level numeric measure. They
+share canonical parsing but have their own explicit binding; choosing a filter
+does not silently add or change an aggregate measure. Count/duration comparisons
+and time-chart children preserve those predicates, while sum/mean measure
+comparisons remain unsupported.

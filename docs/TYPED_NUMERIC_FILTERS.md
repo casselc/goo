@@ -1,7 +1,7 @@
 # Typed numeric attribute filters
 
-Status: TF1 Go/parity (`19e45ad`) and TF2 editor/protocol are independently
-reviewed and delivered. TF3 real-telemetry acceptance remains pending. Existing string predicates and numeric aggregate
+Status: delivered after independent review of TF1 Go/parity (`19e45ad`), TF2
+editor/protocol (`82a1920`) and TF3 real-telemetry/model/exploration acceptance. Existing string predicates and numeric aggregate
 bindings retain their current behavior.
 
 ## Contract
@@ -108,3 +108,37 @@ population/capture/reuse acceptance.
 
 ![Typed numeric editor](journeys/screenshots/172a-typed-numeric-editor.png)
 ![Readable mobile threshold](journeys/screenshots/172b-mobile-typed-numeric-editor.png)
+
+
+## Real-data storyboard 171
+
+[Journey 171](../journeys/typed-numeric-filters.spec.js) emits 512 ordinary OTLP
+spans through the real collector and ClickHouse, with the same exact key in
+attribute and resource namespaces. It declares the interpretation explicitly; the
+fixture does not assert those string attributes conform to an OTel numeric schema.
+
+The user authors an unsigned threshold above 2^53, sees 96 matching records,
+changes namespace to see 128 resource matches despite a 100-row page, and isolates
+all four parse states. Attribute valid/invalid counts are 160/288, also exceeding
+that page. Valid-only ne excludes missing/empty/invalid; signed-min equality and
+legacy literal `01` remain distinct. Invalid overflow stays staged and blocks Run.
+
+A shared URL stages the exact predicate without reading sources. Existing time
+chart selection narrows the fixed window with the complete typed parent intact;
+Run selected population is explicit. Capture preserves that question, and reusable
+YAML retains its binding/threshold for a separate fresh-window read. Reopening the
+capture returns its original stored bytes/question/count without querying telemetry.
+These are count/duration populations filtered by numeric attributes; comparisons
+of numeric measure summaries and arbitrary numeric-value chart brushing remain
+separate work.
+
+The actual ledger is checked with an independent integer oracle, exact full
+counts, page sizes, unique fixture timestamp membership, raw attribute/resource
+presence and values, environment/signal identity and explicit read transitions.
+The existing Quint grouped-series lifecycle is reused with 16 rejecting controls.
+A bounded Bombadil actor opens the visible editor, tries noncanonical/overflow
+thresholds, repairs them and verifies invalid Run blocking and no implicit POSTs.
+
+![Real numeric filtering](journeys/screenshots/171a-explicit-numeric-filter.png)
+![Mobile filter](journeys/screenshots/171b-mobile-numeric-filter.png)
+![Reopened typed evidence](journeys/screenshots/171c-reopened-typed-evidence.png)

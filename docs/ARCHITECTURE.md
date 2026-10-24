@@ -488,3 +488,16 @@ The [record renderer audit](RECORD_RENDERER_AUDIT_2026_10_24.md) keeps custody, 
 [Two-field composition](COMPOSED_GROUPING.md) keeps exact ordered grouping transforms in the population/query owner. Same-membership grouping drafts can hold scoped observation metadata, while explicit reads, changed scope and saved reopen withdraw it. Unread population drafts update in place; applied parents remain separate. No observation metadata enters saved query schemas.
 
 [One grouping control](GROUPING_CONTROL.md) replaces selector DOM state with the shared editor’s canonical grouping array. The passive custom element receives cloned display DTOs and emits intent; scope owners retain validation, staging, reads and publication. Legacy immediate population dropdowns are removed.
+
+
+## Typed numeric record predicates
+
+[Numeric filter leaves](TYPED_NUMERIC_FILTERS.md) reuse explicit NumericBinding
+metadata while remaining independent of question-level numeric aggregates.
+`exploration/` shares canonical parsing and nullable SQL value guards between
+reference matching, numeric aggregates and predicates; typed threshold parameters
+stay exact. Missing/empty/invalid/valid form an explicit partition, and comparison
+inequality is valid-only. Physical map/column choices remain in source adapters.
+The existing editor, protocol/recovery guard and field presenter preserve authored
+intent; they do not evaluate captured source values. Query/capture/definition and
+read-time versus immutable-custody owners retain their existing lifetimes.

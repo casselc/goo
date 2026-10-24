@@ -20,6 +20,8 @@ generated evidence; no frames were fabricated for this documentation repair.
 | 167 | [Composed grouping](../../journeys/composed-grouping.spec.js) | [Two-field composition](../COMPOSED_GROUPING.md#executable-storyboard-167). |
 | 168 | [Grouping control](../../journeys/grouping-control.spec.js) | [Passive picker and real composition](../GROUPING_CONTROL.md); the standalone component fixture is synthetic. |
 | 169, M4 | [Explicit draft recovery](../../journeys/investigation-draft.spec.js) | [Implemented bounded same-tab recovery](../INVESTIGATION_DRAFT_RECOVERY.md), independently accepted in `6aba406`; Restore reads nothing and never retries publication. |
+| 171, TF3 | [Typed numeric populations](../../journeys/typed-numeric-filters.spec.js) | [Real 512-record OTLP filtering, chart/capture/YAML/reopen](../TYPED_NUMERIC_FILTERS.md#real-data-storyboard-171); independent row/count oracle, Quint and Bombadil. |
+| 172–173, TF2 | [Editor and authored-question conformance](../../journeys/typed-numeric-editor.spec.js) | Synthetic intent in the running UI with real Go document save; no telemetry execution. |
 | 170, M4 | [Save/storage races](../../journeys/investigation-draft-races.spec.js) | Real late save acknowledgment, acknowledged-save/local-cleanup failure, and denied storage without losing authored work. |
 
 The individual feature contracts link their actual existing frames. Current-round

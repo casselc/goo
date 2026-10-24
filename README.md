@@ -51,7 +51,7 @@ optional reservation lab.
 | Surface | Available now | Boundary |
 | --- | --- | --- |
 | [Activity](docs/LIVE_ACTIVITY.md) | Compact logs/spans, readable UTC, facets, columns, inspection and retained selections | Bounded live pages are not a durable replay cursor or completeness proof |
-| [Fixed analysis](docs/NUMERIC_ATTRIBUTE_PLANNING.md) | Counts, explicit numeric measures/coverage, two-field grouping, time charts and comparisons | Type/unit remain explicit; arbitrary numeric predicates need a separate typed Go design |
+| [Fixed analysis](docs/NUMERIC_ATTRIBUTE_PLANNING.md) | Counts, [typed numeric filters](docs/TYPED_NUMERIC_FILTERS.md), numeric measures/coverage, two-field grouping, charts and comparisons | Canonical int64/uint64 interpretation is explicit; broader types, conversions and numeric-measure comparisons remain separate |
 | [Services](docs/SERVICE_DASHBOARDS.md) | Discovery-driven service views and reported relationships | Missing signals and reported links do not establish health or complete topology |
 | [Trace findings](docs/TRACE_FINDINGS.md) | Waterfalls, bounded examples and preserved trace-page anchor diagnostics | Matching reported IDs prove neither unique occurrence nor unchanged attributes/complete traces |
 | [Native instruments](docs/NATIVE_INSTRUMENT_DISCOVERY.md) | Supported gauge, counter and histogram plans with unit/reset/temporality semantics | Unsupported instruments, missing identity and incompatible merges stay explicit |
