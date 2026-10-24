@@ -26,7 +26,12 @@ selected population and expanded trace as two independent captures. It stages tw
 existing question cards linked to those immutable captures, followed by a finding
 note containing the trace/span references and both original observed bases.
 The note distinguishes those observed views from the later capture reads; anchor
-retention and complete trace collection remain unverified. **Save revision** is a
+continuity is checked against the returned retained trace page using both reported
+trace and span IDs. The persisted note distinguishes a match (including matching
+row count), no match on this page, and unavailable/malformed or mismatched-scope
+rows. A page miss never means the reference is absent from the capture. Additional
+retained pages and retained-subset limits are stated when present. Matching IDs
+establish neither a unique occurrence, unchanged attributes nor a complete trace. **Save revision** is a
 separate explicit action. No new document/card schema or evaluator is introduced.
 
 If a capture fails, successful captures remain accessible through recovery links;
@@ -51,8 +56,8 @@ sequenceDiagram
     UI->>Go: Capture population, then trace (explicit independent reads)
     Go->>CH: Reread each question
     Go->>Store: Retain each successful capture
-    Go-->>UI: Two immutable receipts (or recoverable partial failure)
-    UI->>UI: Stage linked questions + authored finding atomically
+    Go-->>UI: Two retained capture pages (or recoverable partial failure)
+    UI->>UI: Check selected reference in returned trace page; stage finding
     UI->>Store: Save revision (separate user action)
 ```
 
@@ -64,7 +69,8 @@ actor exercises example navigation and composing a finding without publishing.
 Hegel generates bounded-page selections and existing immutable-history state/swarm
 checks cover linked revisions. The live ledger replays through the existing Quint
 linked-evidence model using quint-go; rejecting controls change environment, time,
-trace reference, evidence links and source-read count on reopen.
+trace reference, evidence links, source-read count on reopen, missing anchor rows
+and a falsely reported anchor outcome. No capture wire schema or old bytes change.
 
 ![Bounded trace example](journeys/screenshots/87a-bounded-trace-example.png)
 ![Trace and authored finding](journeys/screenshots/87b-trace-finding.png)

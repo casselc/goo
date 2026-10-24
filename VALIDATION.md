@@ -7988,3 +7988,21 @@ Checks executed with Go from `/workspace/.toolchains/go/bin`,
 No Docker build, live telemetry mutation, browser deployment or new screenshot was
 needed for this backend-only conflict correction. Independent milestone review approved the final patch with no blocking findings; no power-loss durability or hostile external file-mutation guarantee
 is added.
+
+
+## 2026-10-24 — M3 trace finding anchor continuity
+
+`node --check ui/trace-journey.js` and `node --test tests/trace-journey.test.js`
+pass, including exact pair/namespace mismatches, duplicate reported IDs, malformed
+or missing rows, changed reads, page scope/receipt mismatch, observed empty page,
+pagination/subset qualifiers and immutable input preservation. Journey87 passes
+against real collector/ClickHouse with `GOO_TRACE_FINDING_BOMBADIL=1` (1.1minutes).
+Its persisted finding states that the selected reference appears in one returned
+retained trace-page row, without uniqueness/unchanged-attributes/completeness
+claims; partial capture recovery, save/reopen and mobile checks remain passing.
+Native `TestQuintTraceFindingLedger` passes with seven rejecting mutations,
+including missing retained anchor rows and a false persisted outcome. Existing
+Bombadil example/finding composer exploration passes. Compact evidence:
+`artifacts/trace-finding/finding-37347835f1`. Frames87b/c and the trace findings
+sequence diagram are regenerated/updated. No capture schema or saved bytes change.
+Independent milestone review approved the final code/docs/evidence with no blocking findings.

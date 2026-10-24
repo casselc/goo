@@ -45,9 +45,26 @@ func TestQuintTraceFindingLedger(t *testing.T) {
 			l.AfterReopen++
 		case 4:
 			l.TraceID = strings.Repeat("f", 32)
+		case 5:
+			l.Captures[1].Explore.Rows = nil
+		case 6:
+			l.Doc.Cards[2].Text = strings.ReplaceAll(l.Doc.Cards[2].Text, "present in returned retained trace page (1 matching row)", "not found in returned retained trace page")
 		}
 		p, q := l.Captures[0].Receipt.Question.Explore, l.Captures[1].Receipt.Question.Explore
-		coherent := p != nil && q != nil && p.Environment == q.Environment && p.FromMS == q.FromMS && p.ToMS == q.ToMS && reflect.DeepEqual(p.Where, l.Q.Where) && len(q.Where.All) == 1 && q.Where.All[0].Field.Key == "trace_id" && q.Where.All[0].Op == "eq" && q.Where.All[0].Value == l.TraceID && reflect.DeepEqual(l.Doc.Cards[0].Evidence, []string{l.Captures[0].Receipt.ID}) && reflect.DeepEqual(l.Doc.Cards[1].Evidence, []string{l.Captures[1].Receipt.ID}) && strings.Contains(l.Doc.Cards[2].Text, l.TraceID) && l.Doc.DocumentInput.Validate() == nil && l.Orphan.Receipt.ID != "" && l.Orphan.Receipt.ID != l.Captures[0].Receipt.ID
+		anchorMatches := 0
+		if l.Captures[1].Explore != nil {
+			for _, raw := range l.Captures[1].Explore.Rows {
+				var row struct {
+					TraceID string `json:"TraceId"`
+					SpanID  string `json:"SpanId"`
+				}
+				if json.Unmarshal(raw, &row) == nil && row.TraceID == l.TraceID && row.SpanID == "1000000000000001" {
+					anchorMatches++
+				}
+			}
+		}
+		anchorCoherent := anchorMatches == 1 && strings.Contains(l.Doc.Cards[2].Text, "Selected trace/span reference: present in returned retained trace page (1 matching row).") && strings.Contains(l.Doc.Cards[2].Text, "unchanged attributes or a complete trace")
+		coherent := anchorCoherent && p != nil && q != nil && p.Environment == q.Environment && p.FromMS == q.FromMS && p.ToMS == q.ToMS && reflect.DeepEqual(p.Where, l.Q.Where) && len(q.Where.All) == 1 && q.Where.All[0].Field.Key == "trace_id" && q.Where.All[0].Op == "eq" && q.Where.All[0].Value == l.TraceID && reflect.DeepEqual(l.Doc.Cards[0].Evidence, []string{l.Captures[0].Receipt.ID}) && reflect.DeepEqual(l.Doc.Cards[1].Evidence, []string{l.Captures[1].Receipt.ID}) && strings.Contains(l.Doc.Cards[2].Text, l.TraceID) && l.Doc.DocumentInput.Validate() == nil && l.Orphan.Receipt.ID != "" && l.Orphan.Receipt.ID != l.Captures[0].Receipt.ID
 		sink := &qobs.MemorySink{}
 		rec := qobs.NewRecorder(sink)
 		rec.Record(context.Background(), "failPublish", nil, "obs.reads", 1, "obs.linked", 0, "obs.coherent", coherent)
@@ -68,7 +85,7 @@ func TestQuintTraceFindingLedger(t *testing.T) {
 	if !check(-1) {
 		t.Fatal("observed finding rejected")
 	}
-	for i := 0; i < 5; i++ {
+	for i := 0; i < 7; i++ {
 		if check(i) {
 			t.Fatal("invalid finding accepted", i)
 		}
