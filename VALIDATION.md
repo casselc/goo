@@ -8357,3 +8357,23 @@ invalid/no-data/changed states, binding mismatches and detached output. OpenAPI
 checks pass with the existing 71 operations / 65 Go operations and frozen wire
 fixtures. No new SQL kernel is introduced; real source/UI acceptance is separate.
 Evidence: `artifacts/numeric-comparison-{go,http-workbench,receipt,properties}.log`.
+
+## Numeric comparisons — NC2 live/stored display (2026-10-24)
+
+Existing numeric baseline/pin/previous-window, stored comparison, group ranking
+and histogram selected/rest owners now preserve numeric intent and complete
+summaries. The passive metric component has an additive signed/per-row scale mode:
+mean/sum/min/max each share a zero-anchored domain across both sides, with exact
+values/deltas and independent coverage. Numeric bindings and display scales never
+trigger implicit source reads. Old count-only numeric-question receipts retain
+their count presentation; numeric options require actual retained measure evidence.
+
+Independent UI/component review approved source and compatibility. Full Node
+suite passes (60 test files); actual journey 175 passed its main numeric and held
+late-response cases on the first run. Screenshot review identified horizontally
+hidden paired mobile columns, then an inherited inner height cap hiding lower
+metric rows. Signed-only responsive rows now stack controlled Baseline/Comparison/
+Change labels and use normal page scrolling. Stronger final browser geometry
+checks pass for all eight supplied value cells, exact text/tooltips, shared domains,
+visible labels and no internal vertical crop. Default positive displays are
+unchanged. Desktop/mobile screenshots 175a–c are actual running-app evidence.

@@ -228,3 +228,21 @@ goo-attribute-list .field-hint-label{display:block}
 
 /* Exact typed integer thresholds stay readable at mobile editor widths. */
 .filter-editor fieldset.numeric-filter-condition input.numeric-filter-threshold{width:24ch;max-width:100%;font-variant-numeric:tabular-nums}
+.signed-comparison-cell .comparison-bar-track{position:relative}
+.signed-comparison-cell .comparison-bar-track::before{content:'';position:absolute;left:var(--comparison-zero,50%);height:100%;border-left:1px solid var(--muted,#98a8bf)}
+.signed-comparison-cell .comparison-bar-fill{position:absolute}
+.comparison-row-axis{display:block;font-size:10px;font-weight:400;overflow-wrap:anywhere}
+.numeric-comparison details{font-size:11px}
+.numeric-comparison-groups td small{display:block;font-size:10px;overflow-wrap:anywhere}
+@media(max-width:700px){
+ .signed-comparison table,.signed-comparison tbody,.signed-comparison tbody tr{display:block;min-width:0;width:100%;max-width:100%}
+ .signed-comparison thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+ .signed-comparison tbody tr{padding-block:6px;border-bottom:1px solid var(--border,#2b3545)}
+ .signed-comparison .signed-metric-heading,.signed-comparison td{display:block;width:100%;box-sizing:border-box;border:0;padding:4px 0;text-align:left}
+ .signed-comparison td[data-label]::before{content:attr(data-label);display:block;font-size:10px;color:var(--muted,#98a8bf);margin-bottom:2px}
+ .signed-comparison .comparison-value{font-size:11px;font-variant-numeric:tabular-nums;word-break:normal;overflow-wrap:normal;white-space:normal}
+ .signed-comparison .comparison-row-axis{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .signed-comparison .signed-metric-change{font-size:11px;font-variant-numeric:tabular-nums;word-break:normal;overflow-wrap:normal}
+ .signed-comparison .signed-metric-change span{white-space:nowrap}
+}
+@media(max-width:700px){.signed-comparison .scroll{max-height:none;overflow:visible}}
