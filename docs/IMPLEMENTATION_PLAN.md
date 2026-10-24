@@ -1102,7 +1102,7 @@ actor and 80 rejecting controls over 7/6/3-action finite traces. A stored-waterf
 UI is not added; saved-table trace expansion remains a fresh read. Final actual
 frames, review and publication are recorded in VALIDATION.md.
 
-### Contextual trace-page comparisons (in progress)
+### Contextual trace-page comparisons (delivered)
 
 The user approved comparing an explicitly inspected trace page against a held
 reference. TC1 freezes pure Go/JavaScript page-label matching, exact interval
@@ -1113,3 +1113,10 @@ and independent review before publication. This adds no API or capture format.
 Repeated operations remain ambiguous; unique labels do not prove equivalent
 invocations. Automatic representative selection and stored comparison replay
 remain outside this cut.
+
+TC1/TC2 source is `8b9c4d0`/`b6422c1`, with compact/contrast correction `2200410`
+and independent native verification `37ab089`. Actual main/partial/ownership,
+passive SSR/SPA, 55-second actor (16 phases, 871 snapshots), 220 generated
+examples, eight fixed cases, all 80 rejecting controls and prior waterfall
+regressions pass. Exact raw capture bytes remain unchanged. Final accepted
+frames/storyboard, independent review and publication are in VALIDATION.md.

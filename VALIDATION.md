@@ -9344,3 +9344,136 @@ Independent final review approved source, visuals, properties, actor, native
 evidence and documentation, and recomputed both original/after capture hashes.
 No remaining blocker or application task is open. Publication uses the authorized
 origin/work; the completed round reports its actual commit and remote verification.
+
+
+## Contextual trace-page comparison — source gates (2026-10-24 UTC)
+
+TC1 source is `8b9c4d0`, independently approved. The pure Go comparison and
+JavaScript projection share 19 whole-DTO fixtures. Focused Go comparison checks
+pass (0.104s), with independent reviewer rerun (0.014s). Broad exploration,
+cmd/goo and workbench checks pass (1.383s/0.685s/0.401s). The final focused
+Go/Node checks follow the test-only surrogate fixture and JavaScript normalization
+change. Descriptor-only reads avoid invoking supplied getters; canonical ns
+strings reject whitespace. A related 184 ID-length regression closes terminal
+newline acceptance in the shared JavaScript projection; Go was already strict.
+
+TC2 source is `b6422c1`, independently approved for source only. All 76 Node test
+files pass (7.17s); server Python AST and changed JavaScript syntax checks pass.
+Accepted-page context/trace epochs guard Pin/Compare across pending, failed and
+invalidated reads; Clear is separately guarded so failed reads can discard a
+held reference. Components remain passive. Visible partial subtotal coverage,
+unavailable placement, equal physical tracks and typed qualified field values
+are required by the source contract. Actual browser/visual acceptance remains
+pending at this source checkpoint.
+
+The independent generated campaign passes 220 Hegel examples and eight fixed
+authority boundaries (6.166s), with independent endpoint-cell/graph facts, exact
+Go-to-actual-Node DTO parity, side swaps, permutations and affine transforms.
+The log is `artifacts/trace-comparison-properties.txt`. This is finite generated
+evidence, not exhaustive scheduling or proof of complete source telemetry.
+
+
+### Trace comparison — actual browser and visual gates
+
+The first real main (13.5s) and partial/outside-parent journey (12.9s) passed.
+The first ownership invocation failed at a harness-only Back-to-question link
+assumption after a direct-link reset; no app guard was weakened. Its trace and
+provisional screenshots are retained outside the next Playwright output. The
+owner journey now uses a natural environment draft edit to invalidate a held
+real pagination response, then an explicit Run and Expand for recovery.
+
+Actual screenshot review found unreadable unavailable labels over a light track
+and inherited oversized section/button styling. Reviewed fix `2200410` uses dark
+measured tracks, readable dashed unaligned rails, compact separators/actions,
+no empty attribute panel and mobile-only per-cell side labels. Final main passes
+18.5s and ownership 20.8s (43.6s invocation). The first partial journey remains
+valid because no underlying math/source contract changed. Final actual 185a/b/c
+frames independently pass visual review, including inspector clip bounds and
+equal physical side tracks.
+
+Main: `artifacts/trace-comparison/trace-comparison-618c4bebb6/ledger.json`.
+Partial: `artifacts/trace-comparison/trace-comparison-ae88eb2a0c/partial.json`.
+Ownership: `artifacts/trace-comparison/trace-comparison-82a9feba5a/ownership.json`.
+The main has six logical browser source operations: two explicit searches, two
+trace expansions and their two existing linked-log reads. Pin/Compare/pair
+attributes add zero API requests. Capture reopen reads stored metadata and adds
+no telemetry query. The setup capture is a separate
+explicit API operation. These are not internal ClickHouse statement counts.
+Ownership observes eight finite checkpoints with a final source count of 15;
+held obsolete completion causes no logs read or replacement publication.
+
+The original full raw capture remains 12,477 bytes before/after reopen, SHA-256
+`c5d4a6ab3be045df0ed6338f171b3da8fc5127d0c2df5e06094ee5055ce16c0c`,
+receipt `a3fe17e9079d11802fe0b62847e1a5b86126e52d70e35df5bfc64b6aaec35b0d`.
+This checks the existing raw capture, not a new saved paired-comparison format.
+Deployed asset MIME/HTTP/byte hashes and server source match are retained in
+`artifacts/trace-comparison/deployment.json`; no Go server rebuild was needed
+for the pure library/UI addition. Passive/actor/native gates are still pending
+at this browser checkpoint.
+
+
+### Trace comparison — independent native and observed-model gates
+
+All three native campaigns pass on their first actual execution, with no fixture
+or observer correction: main 7.639s (38 rejecting controls), partial 22.960s (22),
+and ownership 9.414s (20). All 80 controls prove a serialized change before
+rejection. Six submit changed counters/order directly to Quint independently
+of the raw-fact prechecks. Adjacent `native-validation.txt` files retain stdout.
+
+The verifier derives expected intervals from independent endpoint-cell/graph
+facts, checks ordinary OTLP records and public field mappings, query scopes/full
+aggregates, exact integer Go/JavaScript DTOs, original row indexes, qualified
+attribute differences and physical bar geometry. Complete stored typed IDs, raw
+before/after hashes and separate source/custody clocks are checked before replay.
+Models validate only the observed finite 8/3/8-action schedules; source limits,
+missing telemetry and all possible interleavings are not proven by this replay.
+Passive/actor/selected existing-waterfall regression gates remain pending here.
+
+
+### Trace comparison — final browser acceptance
+
+Synthetic supplied-data SSR/pre-definition/detached SPA passes (2.2s), including
+zero fetches, accessor refusal, semantic object ordering, qualified missing/empty
+values, unavailable placement, exact zero-pixel duration and equal mobile tracks.
+Existing 184 main/graph regressions pass (10.5s/10.4s); their actual frames are
+refreshed and independently approved.
+
+The first 55-second actor failed at phase 5/source 4: batched filter changes
+continued across a namespace-triggered rerender and left the wrong field. It is
+retained under `trace-comparison-1a250bd67e` and `actor-first-diagnostics`, not
+counted as a pass. The corrected actor separates each input transition and
+checks both the declared filter and actual request AST before continuing. No
+application behavior or property requirement was loosened.
+
+The final 55-second actor passes (56.5s test, 58.6s invocation), reaches all 16
+phases 0–15 across 871 snapshots, and finishes with six source operations, exact
++30ms inclusive/+25ms outside-child root differences, distinct trace IDs, explicit
+repeated-label ambiguity, cleared reference/disabled Compare and no overflow.
+Summary: `artifacts/trace-comparison/trace-comparison-e1710ff6f2/bombadil/acceptance-summary.json`.
+This is one observed bounded campaign, not a proof over every schedule.
+
+The real ordinary-OTLP fixture contains five traces and 146 span observations
+without manifests. Source-free local interactions remain distinct from explicit
+trace expansion and its existing linked-log read. The reference remains local
+in memory; paired-comparison persistence is outside this cut. Source, raw/model,
+custody and actual visual reviews have passed; final whole-milestone review and
+publication are recorded below after the last documentation check.
+
+Final exact-source Node rerun passes all 76 files (5.110s) after `2200410`'s
+attribute-panel visibility change. Stdout: `artifacts/trace-comparison-node-final.log`.
+No application changes followed that run.
+
+The final passive-only coverage extension passes (2.9s; 6.0s invocation),
+explicitly attempting retained pair actions while detached and aria-hidden.
+Both remain inert. This test-only addition changes no application source and
+does not require repeating the accepted real/native campaigns. Log:
+`artifacts/trace-comparison-passive-final.log`.
+
+
+Final independent whole-milestone review **APPROVE** covers the source, actual
+185 and refreshed 184 frames, independent oracle/model/control receipts, actor
+phase coverage, final Node/passive results, immutable full capture and completed
+documentation. All 241 checked relative links resolve; diff whitespace checks
+pass. No remaining blocker or temporary feature binary remains. Publication
+target is the authorized `origin/work`; the final commit and verified remote
+head are reported after the push.

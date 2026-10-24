@@ -2168,3 +2168,38 @@ existing linked-log read. Raw capture reopening preserves all 8651 stored bytes.
 The 55-second actor reaches all nine phases; independent properties and all 80
 native rejecting controls pass. Initial guard/layout defects and harness
 diagnostics remain recorded separately from accepted evidence in VALIDATION.md.
+
+## 185 — Compare two observed trace pages
+
+[Storyboard and commands](../../journeys/185-trace-comparison-storyboard.md),
+[ordinary OTel journeys](../../journeys/trace-comparison.spec.js),
+[synthetic passive component](../../journeys/trace-comparison-components.spec.js),
+[Bombadil actor](../../verification/bombadil/trace-comparison.ts) and
+[comparison contract](../TRACE_COMPARISON.md).
+
+| Frame | Actual evidence |
+| --- | --- |
+| [Two returned trace pages](screenshots/185a-two-observed-trace-pages.png) | Seven supplied label groups, exact signed changes, repeated ambiguity, kind mismatch and readable unavailable rails |
+| [Mobile unique-label pair](screenshots/185b-mobile-unique-label-pair.png) | Actual root durations 100/130 ms, inclusive change +30 ms and outside-observed-child change +25 ms |
+| [Qualified attribute differences](screenshots/185c-qualified-pair-attribute-differences.png) | Actual changed/added/removed values, present empty versus missing, and separate resource/attribute namespaces |
+
+Pin an already returned reference page, explicitly read another trace in its own
+fixed window, and compare locally. Unique service/operation labels with matching
+reported SpanKind are candidates, not invocation identities. Repeated labels
+remain unpaired; omitted page rows are not zero work. Both rails share relative
+elapsed time and equal physical width. Pin, Compare and attribute inspection add
+no API request; existing trace expansion and linked logs retain explicit reads.
+
+Main (18.5s), partial/outside-parent (12.9s), stale-owner (20.8s) and the final
+synthetic lifecycle case (2.9s) pass. All 80 independent native/model controls are
+rejected, and 220 generated cases plus eight boundaries pass. The 55-second actor
+completes all 16 phases across 871 snapshots, validates its actual source selector
+and exact deltas, then clears the local reference at six source operations.
+Original raw capture bytes remain unchanged; no paired-capture wire format is
+introduced. The affected 184 main/graph regressions pass (10.5s/10.4s).
+
+The first owner test used an incorrect Back-link assumption for a direct question
+URL, and the first actor batched editor mutations into a stale declaration.
+Corrected natural draft recovery and separate actor actions preserve the source
+and completion guards. Initial contrast frames and failed traces remain retained
+and distinguished from final passes in the storyboard and VALIDATION.md.

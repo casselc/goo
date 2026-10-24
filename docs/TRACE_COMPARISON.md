@@ -36,3 +36,32 @@ A matched row's relative start is measured from its own side's earliest valid su
 The model adds no API, SQL, query flag, result-bank type or stored capture fields. Reopening a capture or returning to a retained application visit can project the same supplied observations without rereading telemetry. If an owner explicitly fetches another page or trace, it must retain that read's own provenance and replace the corresponding side deliberately. No model computation silently refreshes either page.
 
 Shared fixtures cover exact differences above JavaScript's safe integer range, independent relative origins, partial pages, unknown residuals, missing groups, ambiguous repeats, duplicate identities, mixed traces, malformed labels/timestamps, nullable versus empty labels, and SpanKind eligibility. JavaScript also rejects accessor-backed inputs without invoking getters and rejects whitespace in canonical nanosecond values. The model makes no anomaly, health, statistical significance or causality claim.
+
+
+## Application flow and boundaries
+
+In the trace inspector, **Pin trace page as reference** freezes the currently
+accepted supplied page in that record-results owner's memory. Close the
+inspector, explicitly expand another trace, then **Compare with reference**.
+Each side retains its own environment, fixed UTC window, trace selector, source
+read time, basis and page position. Unique-label candidates share an elapsed-time
+scale; the pages' timestamp origins remain independent. Repeated label groups
+show aggregate values without invented individual pairing.
+
+**Inspect pair attributes** displays only supplied resource/span differences,
+using qualified namespaces and the shared typed field-value component. Object
+key order does not create a difference; arrays and value types remain distinct.
+Missing keys in a supplied map differ from an unavailable map. This action does
+not select the native waterfall or trigger its linked-log read.
+
+Pin/Compare/attribute inspection and Clear are local. Closing the inspector keeps
+the held reference; disposing its application owner discards it. New or paged
+trace reads temporarily revoke current-page action authority, and obsolete
+responses cannot restore it. Hidden, closed or detached controls are inert. A
+failed read can still discard the reference through its current visible Clear
+control. No new API, persistent paired-comparison capture or automatic typical
+trace selection is introduced. Existing saved captures keep their original
+bytes; expanding their trace context remains a fresh read.
+
+Actual journey, desktop/mobile frames and final acceptance receipts are linked
+from [the journey index](journeys/README.md) and [validation](../VALIDATION.md).

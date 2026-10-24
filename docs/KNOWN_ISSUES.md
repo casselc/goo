@@ -792,3 +792,20 @@ volume and exact selected-shape timelines are supported; per-pattern fleet
 sparklines, fuzzy clustering, long-body normalization and inferred issues/causes
 remain outside this profile. Standard OTLP JSON cannot exercise invalid UTF-8;
 that state has raw Go/ClickHouse parity evidence only.
+
+
+[Trace-page comparisons](TRACE_COMPARISON.md) align held supplied pages, not
+complete traces or equivalent invocations. A unique reported service/operation
+label requires matching nonempty reported span kind and valid unique page IDs
+before a row-level candidate is offered. Repeats are never paired by order.
+Absent groups do not imply zero duration; partial metric sums retain coverage
+and withhold differences where unknown. Relative-time placement uses each
+page's earliest valid interval and a common elapsed-time scale, not a common
+epoch or critical path. Pin/Compare and attribute inspection are local; Expand
+trace retains its existing explicit fresh read and linked-log read.
+
+The reference is bounded in-memory state of one record-results owner. It is kept
+when closing the inspector and cleared on owner disposal. This adds no saved
+paired-comparison format, automatic typical-trace selection or cross-owner
+reference sharing. Existing raw captures reopen without source reads or added
+derived fields. Actual acceptance scope and diagnostics are in VALIDATION.md.

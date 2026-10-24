@@ -86,9 +86,9 @@ and a falsely reported anchor outcome. No capture wire schema or old bytes chang
 
 ## Related supplied-page comparison
 
-The approved [trace-page comparison cut](TRACE_COMPARISON.md) is in progress. It
+The [trace-page comparison](TRACE_COMPARISON.md)
 uses an explicitly held reference page and a separately expanded current trace.
 Repeated service/operation labels remain ambiguous; a unique reported label and
 kind is only an alignment candidate. The existing finding publication path and
-stored capture fields remain unchanged. See the current roadmap for acceptance
-status before treating the new UI as delivered.
+stored capture fields remain unchanged. Actual acceptance scope is recorded in
+[validation](../VALIDATION.md).
