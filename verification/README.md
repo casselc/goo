@@ -1128,3 +1128,58 @@ scope substitution, stale plans and lost return behavior. Open stages a populati
 child; its Run performs the source read. The finite Bombadil actor records all ten
 phases and a terminal coverage receipt proving two initial side reads, one explicit
 child read, one pure planner and a retained second selection.
+
+`TestQuintPopulationExplanationLiveLedger` consumes journey 177's actual ordinary
+OTel fixtures through `GOO_POPULATION_EXPLANATION_LEDGER`. An independent stdlib
+and big.Int/big.Rat oracle computes full population/group counts, missing versus
+present-empty values, exact share changes and deterministic ranked references.
+It checks original scopes, count-only planning, partial high-cardinality fields,
+source/read versus custody clocks, representation/capture hashes, pure nullable
+side filters, and promotion of the exact held observation. The live fixture makes
+eight delayed selected records visible before Save: the saved observation retains
+160 selected records while explicit reuse sees 168. A lost acknowledgment and
+retry must return the same capture, with no source read. Twenty-one changed
+corruptions must reject; mathematical/ranking corruptions are rehashed so the
+independent oracle, rather than only checksum detection, must reject them.
+
+`TestQuintPopulationExplanationOwnershipLedger` uses
+`GOO_POPULATION_EXPLANATION_OWNERSHIP_LEDGER` to check real completed responses
+held across cancellation/navigation, retained return, a fresh explanation and
+explicit staged-side execution. Eleven changed controls reject stale ownership,
+extra reads/plans, shifted scope, wrong nullable membership and reused tokens.
+
+Run these from `verification` after journey 177 produces the compact files under
+`artifacts/population-explanations/<environment>/`:
+
+```sh
+GOO_POPULATION_EXPLANATION_LEDGER=/absolute/path/to/ledger.json \
+  go test -run '^TestQuintPopulationExplanationLiveLedger$' -count=1 -v .
+GOO_POPULATION_EXPLANATION_OWNERSHIP_LEDGER=/absolute/path/to/ownership.json \
+  go test -run '^TestQuintPopulationExplanationOwnershipLedger$' -count=1 -v .
+```
+
+The `population_explanation` and `population_explanation_ownership` Quint models
+replay the finite observed action order and logical API effects: source operations,
+pure planning and observed-result promotions. The main trace has eight source
+operations, two promotions and five plans; ownership has four source operations
+and four plans. These are browser API effects, not counts of internal SQL reads.
+Arithmetic and fixture membership are checked by the independent Go oracle before
+qobs/quintgo replay. The models do not prove the full evaluator, all concurrent
+interleavings, collector completeness or production storage durability. Native
+Hegel/backend tests separately exercise generated arithmetic, field failure,
+changed reads, byte bounds and snapshot expiry/retry behavior.
+
+Recorded local validation on 2026-10-24:
+
+| Actual journey ledger | Native result | Retained log |
+| --- | --- | --- |
+| `population-explanation-3107cb81d7/ledger.json` (final compact presentation) | Baseline accepted; all 21 controls rejected, 104.93s | [Main validation](../artifacts/population-explanations/population-explanation-3107cb81d7/native-validation.txt) |
+| `population-explanation-da32ba5df3/ownership.json` | Baseline accepted; all 11 controls rejected, 41.46s | [Ownership validation](../artifacts/population-explanations/population-explanation-da32ba5df3/native-validation.txt) |
+
+These environment-specific ledgers/logs are generated local artifacts. Re-run
+journey 177 to create new files when reproducing outside this workspace. The
+main verifier also passed the prior `population-explanation-bb8dfc9ade` ledger
+(87.55s); the final compact presentation retained the same arithmetic and API
+effect contract. An initial native assumption that unknown observation tokens
+returned HTTP 410 was corrected to the established HTTP 409 promotion contract;
+the initial diagnostic log remains beside that earlier ledger.

@@ -1,0 +1,39 @@
+spec: population_explanation.qnt
+module: population_explanation
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  stage:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and promotions == {{.obs.promotions}} and plans == {{.obs.plans}}'
+  parent:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and promotions == {{.obs.promotions}} and plans == {{.obs.plans}}'
+  select_range:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and promotions == {{.obs.promotions}} and plans == {{.obs.plans}}'
+  edit_fields:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and promotions == {{.obs.promotions}} and plans == {{.obs.plans}}'
+  explain:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and promotions == {{.obs.promotions}} and plans == {{.obs.plans}}'
+  late_arrival:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and promotions == {{.obs.promotions}} and plans == {{.obs.plans}}'
+  save_lost_ack:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and promotions == {{.obs.promotions}} and plans == {{.obs.plans}}'
+  save_retry:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and promotions == {{.obs.promotions}} and plans == {{.obs.plans}}'
+  reopen:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and promotions == {{.obs.promotions}} and plans == {{.obs.plans}}'
+  reuse_stage:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and promotions == {{.obs.promotions}} and plans == {{.obs.plans}}'
+  reuse_run:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and promotions == {{.obs.promotions}} and plans == {{.obs.plans}}'
+  filter_stage:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and promotions == {{.obs.promotions}} and plans == {{.obs.plans}}'
+  filter_open:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and promotions == {{.obs.promotions}} and plans == {{.obs.plans}}'
+  filter_run:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and promotions == {{.obs.promotions}} and plans == {{.obs.plans}}'
+  filter_return:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and promotions == {{.obs.promotions}} and plans == {{.obs.plans}}'
+  high_parent:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and promotions == {{.obs.promotions}} and plans == {{.obs.plans}}'
+  high_explain:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and promotions == {{.obs.promotions}} and plans == {{.obs.plans}}'

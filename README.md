@@ -34,10 +34,13 @@ seconds for telemetry. Published lab ports bind to loopback. The `lab` /
 4. Use **Investigate → Analyze this scope/window** for a fixed question, then
    explicitly **Run analysis**. Group fields, brush charts or compare a selected
    population with its remainder or a baseline.
-5. Capture evidence and an explanation in **Saved investigations**, or save a
-   reusable Activity view/definition. Saved Activity views reopen paused before
-   **Start**. Ordinary draft recovery offers explicit **Restore/Discard** in the
-   same tab and never retries a save automatically.
+5. Use **Explain this selection/comparison** to compare up to six chosen fields.
+   **Run explanation** reads full aggregates; value actions stage an original-side
+   question. **Save observed explanation** preserves that exact run without rereading.
+6. Revisit evidence in **Saved investigations**, or save a reusable Activity
+   view/definition. **Reuse explanation request** stages its fields and fixed
+   scopes before another explicit Run. Saved Activity views reopen paused before
+   **Start**; same-tab draft recovery never retries a save automatically.
 
 ![Recent Activity entry](docs/journeys/screenshots/102a-live-entry.png)
 
@@ -52,6 +55,7 @@ optional reservation lab.
 | --- | --- | --- |
 | [Activity](docs/LIVE_ACTIVITY.md) | Compact logs/spans, readable UTC, facets, columns, inspection and retained selections | Bounded live pages are not a durable replay cursor or completeness proof |
 | [Fixed analysis](docs/NUMERIC_ATTRIBUTE_PLANNING.md) | Counts, [typed numeric filters](docs/TYPED_NUMERIC_FILTERS.md), numeric measures/coverage, [integer distributions](docs/NUMERIC_HISTOGRAMS.md), two-field grouping, charts, [numeric comparisons](docs/NUMERIC_COMPARISONS.md) and [aligned distributions](docs/DISTRIBUTION_COMPARISONS.md) | Canonical int64/uint64 interpretation and matching bindings are explicit; broader types and conversions remain separate |
+| [Population explanations](docs/POPULATION_EXPLANATIONS.md) | Contextual field/value share differences, exact observed captures and reusable fixed-scope requests | Explicit fields, independent reads and bounded groups; descriptive differences do not establish causes |
 | [Services](docs/SERVICE_DASHBOARDS.md) | Discovery-driven service views and reported relationships | Missing signals and reported links do not establish health or complete topology |
 | [Trace findings](docs/TRACE_FINDINGS.md) | Waterfalls, bounded examples and preserved trace-page anchor diagnostics | Matching reported IDs prove neither unique occurrence nor unchanged attributes/complete traces |
 | [Native instruments](docs/NATIVE_INSTRUMENT_DISCOVERY.md) | Supported gauge, counter and histogram plans with unit/reset/temporality semantics | Unsupported instruments, missing identity and incompatible merges stay explicit |

@@ -37,6 +37,15 @@ const operations = Object.values(require('../api/openapi.json').paths).reduce((n
     await page.locator('#operations > details > summary').click();
     await page.getByText('Operation contract',{exact:true}).click();
     assert.match(await page.locator('#operations').innerText(),/EvidenceContent/);
+    await page.getByRole('searchbox').fill('/population/explain');
+    assert.equal(await page.locator('#operations > details').count(), 3);
+    for (const operation of await page.locator('#operations > details').all()) {
+      await operation.locator(':scope > summary').click();
+      assert.match(await operation.innerText(), /65,536/);
+      await operation.getByText('Operation contract', { exact: true }).click();
+      const route = await operation.locator('summary > code').first().innerText();
+      assert.match(await operation.innerText(), route === '/population/explain' ? /source-read/ : /pure/);
+    }
     await page.setViewportSize({ width: 390, height: 844 });
     await page.getByRole('searchbox').fill('/compare');
     assert.equal(await page.locator('#operations > details').count(), 2); // saved capture compare and supplied-summary compare

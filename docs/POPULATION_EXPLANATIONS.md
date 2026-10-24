@@ -1,6 +1,9 @@
 # Explain a selected population
 
-Implementation in progress. A contextual explanation compares two fixed record
+Implemented and independently reviewed. Journey 177 main/ownership, native/model,
+Bombadil and legacy numeric/distribution regression checks pass. Final review and
+push are recorded in [actual validation](../VALIDATION.md).
+A contextual explanation compares two fixed record
 populations over one to six explicitly chosen qualified fields. It extends the
 existing comparison and range-selection flows, without a new dashboard or an
 inferred anomaly/causal model.
@@ -34,20 +37,67 @@ alongside successful fields. A failed parent count prevents a valid explanation.
 The complete result remains within the shared 2 MiB observation bound. Global
 ranking references field/row indices instead of duplicating large values.
 
-## Contextual interaction
+## Use the contextual explanation
 
-Explain selection uses an existing checked selected/rest pair or a pinned baseline.
-An arbitrary baseline is not called a remainder or assumed disjoint. Field edits,
-local inspection and filter staging do not read telemetry. Available qualified
-field hints are advisory, with custom attribute/resource keys allowed and no
-semantic-convention conformance inferred.
+1. In an applied comparison, open **Explain this comparison**. A numeric brush
+   or supported span region offers **Explain this selection** using its checked
+   selected/remainder pair. A log time selection instead says **Explain selection
+   versus parent** and explicitly identifies the overlapping populations; it does
+   not invent a remainder.
+2. Keep **column:service**, or add/remove up to six exact `column`, `attribute`
+   or `resource` fields. Observed-key suggestions and OTel display hints help find
+   service versions, routes, regions and recorded status. They are incomplete and
+   do not rewrite namespaces, infer aliases or validate instrumentation conformance.
+   Custom keys are allowed. Field editing does not read telemetry.
+3. Click **Run explanation**. The contextual result shows full side counts,
+   ranked descriptive share differences, per-field states and missing-key counts.
+   Inspect each field's exact values and independent read clocks. Local **Show
+   more** controls reveal already returned rows without another query.
+4. Use **Selection actions** or **Baseline actions** on a value. **Stage include**
+   and **Stage exclude** call the pure Go filter planner and expose a staged-question
+   link. **Open side question** stages that matching fixed question directly.
+   Its existing **Run** action is still required to read records. Missing keys and
+   present empty strings remain distinct throughout these continuations.
+5. Click **Save observed explanation** to preserve the result currently shown.
+   Reopen it from the capture link or Saved evidence. **Reuse explanation request**
+   stages the original pair and field list; it does not execute them.
 
-Run explanation explicitly reads the aggregate populations. Ranked values show
-counts, shares and missing/empty coverage, with per-field failure and source clocks.
-A row can stage include/exclude intent on either original side; Go derives the
-predicate, preserving the complete selector and fixed window. Opening the staged
-question and its existing Run action is explicit. Values exceeding the existing
-filter budget remain explainable but cannot silently bypass query limits.
+Ranked leads use one semantic table with shared Field/Value and side headers,
+preserving Go's global ranking instead of repeating a card/table per value. Raw
+case-sensitive values keep their original casing in both ranked and independent
+field tables. The paired rows share a 0–100% population-share scale. Displayed percentages round
+locally to two decimal places; exact rational shares and percentage-point changes
+remain in tooltips and the stored result. Mobile rows keep Baseline and Selection
+labels beside their own values. If all comparable differences are zero, the UI
+says **No share differences observed in the complete requested fields** instead of
+presenting those rows as an anomalous explanation.
+
+A failed or high-cardinality field stays visible with its reason. A field whose
+reads disagree has no comparable rows or ranking; independent known value counts
+can still be inspected without inventing a missing side. The overall result can
+be partial while other fields remain useful. Empty sides have unavailable shares,
+not healthy zero percentages.
+
+Long observed values remain explainable. Values above the existing 1,024-byte
+predicate budget have disabled filter/inspection actions labeled **Value exceeds
+filter budget**. Field keys are limited to 128 UTF-8 bytes. Unsupported columns,
+`duration_bucket`, invalid Unicode and duplicate fields are refused locally or by
+the authoritative Go planner before source execution. Recorded span status belongs
+to span questions; log severity belongs to log questions.
+
+| Action | Effect |
+| --- | --- |
+| Edit fields, inspect supplied values, reveal more rows | Local UI only |
+| Stage a row filter or side question | Pure Go plan; no telemetry read |
+| Run explanation | Bounded full-count/group source reads |
+| Save observed explanation | Promote the held server result; no telemetry read |
+| Reopen saved explanation | Read immutable saved evidence |
+| Reuse explanation request | Stage fields and original questions locally |
+
+Cancellation, field changes, disclosure closure and owner navigation withdraw
+pending results. Returning to a retained parent permits a new explicit interaction;
+an old completion must not open or overwrite the current investigation. Pending
+listeners/observers are released when the request ends or its owner disappears.
 
 ## Observed evidence, save and reuse
 
@@ -85,14 +135,39 @@ flowchart LR
   K --> B
 ```
 
+## Storyboard 177 — explain and preserve a selected population
+
+The final compact journey 177 main passed in 53.9 seconds; ownership checks passed
+in 15.9 seconds.
+The frames below come from the actual browser run. Native/model replay also
+passes with 21 main and 11 ownership rejecting controls; a 60-second Bombadil
+campaign completes all ten phases with two explicit source runs, one observed
+promotion and one pure filter plan. Legacy journeys 174 and 176 pass as well.
+
+| Frame | User action | Explanation/evidence contract |
+| --- | --- | --- |
+| [177a: Selected population](journeys/screenshots/177a-explain-selected-ordinary-work.png) | Explain a checked ordinary-OTel numeric selection versus its remainder across six fields | Fixed pair, full counts, exact descriptive ranks and independently timed field reads |
+| [177b: Mobile saved observation](journeys/screenshots/177b-mobile-frozen-observation.png) | Reopen the observed capture on mobile, then reuse its request | Both sides stay readable; reopen/reuse read no telemetry; a fresh Run may observe late arrivals |
+| [177c: Partial field](journeys/screenshots/177c-partial-field-with-complete-leads.png) | Run a high-cardinality field beside a complete field | Partial status and the refused field remain visible without fabricated rows or top-N success |
+
+The executable scenario is [population-explanation.spec.js](../journeys/population-explanation.spec.js).
+It also exercises missing-versus-empty side plans, controlled late arrivals,
+lost-acknowledgment promotion retries and delayed request ownership. See [VALIDATION.md](../VALIDATION.md) for the native/model, Bombadil and legacy
+regression evidence, plus final artifact review and push status. The screenshots
+alone do not establish semantic or state-machine correctness.
+
 ## Review gates
 
-PE1: Go projection/aggregate/ranking/filter semantics, bounded failures and shared
-snapshot/immutable capture compatibility; independent property and architecture
-review before exposing source execution.
+PE1 passed in `cb4f5af`: Go projection/aggregate/ranking/filter semantics, bounded
+failures and shared snapshot/immutable capture compatibility, independently reviewed.
 
-PE2: contextual field controls, paired results, row intents, save/reopen/reuse and
-lifecycle cleanup using existing UI primitives; protocol and component checks.
+PE2 is delivered in `017f32b` after independent review and the final compact
+ranked-layout/raw-case/mobile browser check. It covers
+contextual fields, paired results, row intents, observed save/reopen/reuse and
+lifecycle cleanup using existing UI primitives.
 
-PE3: ordinary OTel storyboards, late-arrival immutable-save proof, cardinality and
-ownership cases, screenshots, Hegel/Quint and Bombadil; final review and push.
+PE3 acceptance is delivered: ordinary OTel browser stories, late-arrival observed
+save/reuse, cardinality and ownership checks, native/model replay with 32 rejecting
+controls, a completed 60-second Bombadil campaign and legacy journeys 174/176 pass.
+Final artifact review and push are recorded in VALIDATION.md; no additional commit
+ID is implied here.

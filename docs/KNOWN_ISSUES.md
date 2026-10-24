@@ -1,5 +1,18 @@
 # Known issues and gaps
 
+[Population explanations](POPULATION_EXPLANATIONS.md) now have contextual field
+controls and exact observed-result capture. They compare explicitly chosen fields,
+not automatically discovered causes: one to six fields, up to fourteen independent
+source reads, 1,000 values per field/side and a 128 KiB field-result bound. Partial,
+unavailable and changed-between-reads fields remain explicit; complete counts do
+not prove a transactional snapshot or complete telemetry. Missing and empty stay
+distinct. Values above the 1,024-byte filter budget remain visible but cannot be
+staged as predicates. Held explanation tokens expire after two minutes or can be
+refused by the shared observation pool; Save never silently reruns telemetry.
+Reopen/reuse are source-free, while another Run is a new observation. Journey 177 main/ownership, native replay with 32 rejecting controls, Bombadil and
+legacy 174/176 checks pass. Actual frames and final review/push status are linked
+from VALIDATION.md; these checks do not relax the limits above.
+
 [Diagnostic retention](DIAGNOSTIC_RETENTION.md) now expires raw browser recordings, with a 512 MiB soft budget, active/pinned protection and explicit Bombadil outcomes. Compact ledgers/results/logs remain. Legacy outcomes use a 72-hour policy; direct Playwright invocations require explicit pruning. ClickHouse Docker console logs now rotate at 10 MB × 3 files; internal system-table and file-log retention remain separate.
 
 Latest diagnostic cleanup recovered space from 509 MB to 6.4 GB by hardlinking
@@ -24,7 +37,7 @@ document files reopen without the optional store. Native and record source HTTP 
 now use shared POST/bounded-read primitives; the [acceptance audit](HTTP_BOUNDARIES.md#c2-acceptance-audit--2026-10-22)
 identified four additional readers; all are now adopted, including histograms.
 Telemetry/native/fixed exploration JSON is adopted behind frozen wire cases.
-The [OpenAPI contract](API.md) now inventories 72 operations (66 Go operations, five Python-only API operations
+The [OpenAPI contract](API.md) now inventories 75 operations (69 Go operations, five Python-only API operations
 and root health) and documents direct-Go
 versus browser-proxy limits, headers and SSE differences. Those discrepancies are
 preserved, not repaired by documentation. Further mechanical JSON migration remains paused;

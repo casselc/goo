@@ -42,6 +42,19 @@ The documented inventory keeps digest/custody/native YAML differences explicit.
 [Record population gestures](RECORD_POPULATIONS.md) reuse the attribute viewer and typed selection owner. Shared-field discovery is local string intersection; query evaluation remains in Go. [Shared annotations](WORKBENCH_ANNOTATIONS.md) attach exact-target revision sidecars; optional native retention freezes selected server-owned observations. The broader reviewed-label design remains proposed.
 
 
+[Population explanations](POPULATION_EXPLANATIONS.md) extend the same contextual
+comparison/range workflow. `ui/explanation.js` owns explicit execution, staged
+original-side filters and source-free request reuse; supplied result rendering
+does not infer causes or execute queries. `exploration/explanation.go` projects
+count-only questions, validates complete groups, preserves per-read bases and
+ranks exact descriptive share changes. `cmd/goo/population_explanation_http.go`
+keeps pure plans/filter plans separate from the controlled aggregate read.
+Observed promotion uses the shared bounded `ResultSnapshots` pool and immutable
+capture publication: the server-held result is saved without a second source
+read. Durable explanation captures hold aggregate facts and reusable questions,
+not raw inspection rows or ephemeral result tokens. Final journey 177 acceptance
+is recorded separately in VALIDATION.md.
+
 [Categorical selection](FACET_SELECTION.md) constructs bounded typed predicates in the population adapter, then delegates validation/compilation and measurement to Go. Staging and child return are source-free.
 
 

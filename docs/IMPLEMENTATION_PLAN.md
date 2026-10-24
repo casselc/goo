@@ -983,7 +983,7 @@ browser, property/model and Bombadil acceptance. Review and commit each gate.
 DC1 `07a6fa9`, DC2 `aa96720` and DC3 actual OTel/property/model/Bombadil and
 passive/mobile acceptance are delivered after independent review; see VALIDATION.md.
 
-### Explain a selected population (active)
+### Explain a selected population (delivered)
 
 Approved [population explanation contract](POPULATION_EXPLANATIONS.md): PE1 adds
 bounded count/group-only comparisons across explicit qualified fields, exact share
@@ -992,3 +992,12 @@ uses existing contextual comparison/range and capture surfaces. PE3 verifies ful
 actual telemetry, partial fields, late arrivals, immutable save/reuse and ownership
 through browser/property/model/Bombadil evidence. Keep old capture identities and
 numeric/distribution workflows unchanged; do not introduce inferred causal claims.
+
+
+Population explanation status: **PE1 delivered in `cb4f5af`** after independent
+semantic/custody review. **PE2 delivered in `017f32b`** after independent review
+and the final compact ranked-table/raw-case/mobile browser check. **PE3 acceptance
+is delivered**: final main/ownership browser journeys, native replay with 21+11
+rejecting controls, the 60-second/ten-phase Bombadil campaign and legacy 174/176
+pass. Final artifact review and push are recorded in VALIDATION.md rather than
+inferred from implementation status.

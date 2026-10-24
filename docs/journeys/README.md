@@ -1947,3 +1947,17 @@ controls and runs a source-free Bombadil editor campaign.
 175: [Numeric measure comparisons](../NUMERIC_COMPARISONS.md#storyboard-175--compare-populations-without-losing-numeric-meaning), ordinary OTel spans/logs, signed and uint64 values, full numeric totals/groups beyond inspection pages, fractional deltas and coverage, pin/previous-window/selected-rest flows, immutable capture and reusable-view reopen, mobile paired visibility, delayed real comparison refusal, independent native oracle with 22 controls and a finite Bombadil actor.
 
 176: [Aligned numeric distribution comparisons](../DISTRIBUTION_COMPARISONS.md#storyboard-176--isolate-a-changed-shape), ordinary OTel shape changes, exact counts/all-record shares, local scale/brush intent, each side's original scope, source-free child staging then explicit Run, capture/view and v5/v4 reuse, delayed plan ownership, mobile common geometry, synthetic SSR/SPA/retained gestures, independent model oracles and a finite Bombadil campaign.
+
+
+177 — **browser, native/model, Bombadil and legacy regression acceptance pass**:
+[Explain a selected population](../POPULATION_EXPLANATIONS.md#storyboard-177--explain-and-preserve-a-selected-population),
+ordinary OTel selected/remainder comparisons, source-free side filters, exact
+observed promotion after late data/lost acknowledgment, immutable reuse,
+cardinality refusal and delayed-owner cancellation. Actual frames:
+[selected population](screenshots/177a-explain-selected-ordinary-work.png),
+[mobile frozen observation](screenshots/177b-mobile-frozen-observation.png), and
+[partial field with complete leads](screenshots/177c-partial-field-with-complete-leads.png).
+Native replay has 21 main and 11 ownership rejecting controls; the 60-second
+Bombadil campaign completes ten phases with two source runs, one observed
+promotion and one pure plan. Legacy journeys 174/176 pass. Final artifact review
+and push status are recorded in VALIDATION.md.

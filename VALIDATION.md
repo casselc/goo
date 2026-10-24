@@ -8586,3 +8586,70 @@ nullable side filters and partial cardinality. The real delayed-response ownersh
 journey passed (15.9 seconds). Final compact-layout journey, Bombadil and affected
 legacy regressions are recorded separately under PE3; no final acceptance is
 inferred merely from screenshots.
+
+## Population explanations — PE3 live acceptance (2026-10-24)
+
+Final compact journey 177 passed in 53.9 seconds against actual OTLP-ingested spans
+and logs. Its independent fixture assertions cover full populations beyond the
+100-row display page, six qualified fields, exact global ranks and shares,
+missing/empty values, source-free field edits/plans, late arrival before Save,
+lost-acknowledgment retry identity, immutable reopen and explicit fresh reuse.
+The selected count advances from 160 to 168 before publication, while the saved
+observation remains exactly 160. Nullable side questions return 24 missing,
+44 present-empty and 120 baseline excluding-empty records. A 2,200-span fixture
+with 1,100 values per side withholds the oversized field while retaining complete
+service differences. Ordinary logs, equal populations and validation refusals
+also pass. The compact table checks exact server row order/case, shared headers,
+mobile paired labels and absence of clipped cell text.
+
+The real delayed-response ownership journey passed in 15.9 seconds. Its actual
+ledger passed the native oracle and all eleven changed controls (41.46 seconds).
+The final compact main ledger passed the independent stdlib/big.Int/big.Rat oracle
+and all twenty-one changed controls (104.93 seconds). Rehashed arithmetic/rank
+corruptions reject beyond checksum validation. Quint/qobs replay validates the
+finite observed lifecycle and API effects; this is not a proof of all evaluator
+behavior, storage durability or collector completeness. Main logical effects are
+eight source requests, two promotions and five plans, distinct from internal SQL
+read counts. Exact ledgers and native logs are retained under
+`artifacts/population-explanations/population-explanation-3107cb81d7/` (main) and
+`population-explanation-da32ba5df3/` (ownership).
+
+A fresh sixty-second Bombadil campaign passed with all ten actions and a terminal
+coverage receipt: completed=true, two source requests, one observed promotion and
+one pure side-filter plan, unchanged original receipt and preserved side scope.
+Actual outputs are the main ledger's `bombadil/{coverage.json,run-result.json,
+process.log,trace.jsonl}` and `artifacts/population-explanation-bombadil-final.log`.
+The original actor correctly reached Save/drilldown/return but its final guard
+incorrectly expected pre-Save status text; the corrected guard checks visible
+complete result panels, saved acknowledgment, published ID and bounded effects.
+Earlier journey failures corrected native combobox/relative-row locators and the
+existing Go empty-string omitempty convention in the independent JS oracle; no
+production assertion or acceptance guard was relaxed.
+
+Policy-based cleanup removed 31,974 expired browser recording files in 67 bundles,
+about 980 MiB allocated, while preserving compact ledgers, logs, saved evidence,
+active/pinned runs and documentation frames. The generated build binary was also
+removed. The deletion audit is `artifacts/retention/20261024T170434Z-bbfe4e12.jsonl.gz`.
+
+The affected legacy main journeys also pass on the compact UI: aligned distribution
+comparison (176) and exact numeric histogram exploration (174), two tests in
+1.7 minutes. Their real-source source planning, saved evidence and explicit-side
+continuations remain intact. Evidence:
+`artifacts/population-explanations-legacy-regressions.log`.
+
+Final artifact review approved the compact shared-header comparison, preserved
+case-sensitive values, mobile side labels and clean partial-field frame. Frame
+177c was recaptured with a focused real query replay and a 120-pixel scroll offset,
+without CSS substitution or new fixture telemetry; its separate metadata is
+`population-explanation-3107cb81d7/177c-screenshot-replay.json`. The executable
+journey now retains that screenshot-only scroll correction. API documentation
+browser checks pass for all 75 operations, including all three explanation routes'
+64 KiB limits and pure-plan/source-read effects, disclosure/search and mobile
+overflow with no page errors (`artifacts/population-explanation-api-docs.log`).
+README, architecture/process diagrams, planning/backlog, known limitations,
+verification instructions and executable storyboard 177 are synchronized.
+
+Independent milestone review approved PE2 and PE3 with no remaining blockers after
+the final API documentation check. The implementation is split into reviewed
+semantic/custody (`cb4f5af`), compact contextual UI (`017f32b`) and acceptance/docs
+commits; final commit IDs and remote publication are reported from git history.

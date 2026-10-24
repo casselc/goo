@@ -8,7 +8,7 @@ The running server must include the current routes and assets; changing the
 checkout alone does not update an existing process. Rebuild an older image, or
 use the supported local code/asset installation and restart procedure.
 
-The spec inventories 72 supported operations: 66 Go operations, five Python-only
+The spec inventories 75 supported operations: 69 Go operations, five Python-only
 `/api` operations and the Python root `/health` probe. Go paths are unprefixed on
 port 8089; the browser proxy exposes them under `/api` on port 8088. Python-only
 operations override the server list. `/api-docs`, `/openapi.json`, the UI, static
@@ -91,6 +91,40 @@ The lab has no authentication layer. `X-Goo-Query-ID` and draft/result tokens ar
 short-lived local capabilities, not authorization. Do not infer authentication
 from ClickHouse credentials held by the server. See the fuller
 [HTTP ownership contract](HTTP_BOUNDARIES.md) for budgets and effects.
+
+## Population explanations
+
+Three Go routes are exposed through the browser proxy under `/api`:
+
+| Route | Effect | Request |
+| --- | --- | --- |
+| `POST /population/explain/plan` | Pure projection/validation | `ExplanationRequest` |
+| `POST /population/explain` | Explicit aggregate source read | `ExplanationRequest` |
+| `POST /population/explain/filter` | Pure original-side predicate plan | Request, field, required null-or-string value, side and include/exclude mode |
+
+All three have a 64 KiB body ceiling at Go and browser boundaries. The source route
+uses the existing controlled query ID/cancellation mechanism and a 55-second total
+budget; each source operation has a three-second child budget. Planning and filter
+staging do not read telemetry. The versioned request names both original queries
+and one to six explicit qualified fields. The result contains independent counts,
+field statuses/read bases, exact rational shares/differences and ranked row
+references. Structural API validation is not proof that a field is complete or a
+population difference is causal.
+
+`POST /captures` also accepts `{title,resultToken}` for an observed explanation.
+The server loads its typed held result and derives the saved request; clients do
+not submit aggregate data as evidence. This publication performs no telemetry
+read. Repeating the same held token/title/store returns the same capture ID.
+Expiry/refusal never starts another explanation automatically. The existing
+16 KiB capture-body limit remains unchanged because the token avoids resending
+two potentially large queries. Ordinary capture creation and explanation promotion
+retain different effect contracts; an explanation cannot be refreshed by silently
+rerunning its questions through the ordinary capture path.
+
+`CapturePage.explanation` contains the saved result without its ephemeral token.
+Its source clocks/bases remain separate from receipt custody time. See
+[the explanation contract and UX](POPULATION_EXPLANATIONS.md) for bounds, partial
+fields and source-free reuse.
 
 ## Tail event contract
 

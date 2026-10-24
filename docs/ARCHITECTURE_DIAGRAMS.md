@@ -1233,3 +1233,46 @@ flowchart LR
 
 Missing measures remain unknown; comparable groups rank by absolute change.
 Display choices do not read sources or alter fixed questions or immutable receipts.
+
+
+## Contextual population explanations and observed promotion
+
+Implemented Go/UI flow; journey 177 browser checks pass and remaining acceptance
+is tracked in [validation](../VALIDATION.md). The
+[product contract](POPULATION_EXPLANATIONS.md) contains current limits and actual
+browser storyboard frames. The explanation is a typed
+aggregate observation, not a record-page selection or an inferred causal graph.
+
+```mermaid
+flowchart TB
+  Pair[Existing fixed comparison or checked selection pair] --> Fields[Local qualified field chips: one to six]
+  Fields --> Run[Explicit Run explanation]
+  Run --> Owner[Controlled Go owner: 55-second budget and cancellation]
+  Owner --> Totals[Independent full count for each side]
+  Owner --> Groups[Independent full groups for each field and side]
+  Totals --> Validate[Go accounting, field bounds and exact rational ranking]
+  Groups --> Validate
+  Validate --> View[Contextual paired rows: complete, partial or unavailable]
+  View --> Filter[Explicit pure original-side filter plan]
+  Filter --> Staged[Staged fixed question]
+  Staged --> Read[Explicit Run to inspect records]
+  Validate --> Hold[Typed server observation: two-minute bounded capability]
+  Hold --> Save[Explicit Save observed explanation]
+  Save --> File[Immutable explanation capture: no source reread]
+  File --> Reopen[Read stored result with original clocks and scopes]
+  File --> Reuse[Stage stored request and fields locally]
+  Reuse --> Run
+```
+
+The UI retains full side scopes, qualified field identity, missing versus empty
+values and per-field failure states. Its local pagination reveals supplied rows;
+it does not turn a refused high-cardinality field into a successful top-N result.
+Field/side reads can observe different source states. Changed accounting withholds
+shares and ranking rather than inventing zeros. Logs selected versus a parent are
+explicitly labeled overlapping; no automatic remainder is inferred.
+
+The observation token is not durable custody or an authenticated identity. Save
+promotes the exact held typed result; expiry/refusal never executes another query.
+The immutable payload omits the token and raw inspection pages. Capture custody
+time is separate from the source read clocks/bases. A new Run after reuse produces
+a separate observation and cannot rewrite earlier evidence.

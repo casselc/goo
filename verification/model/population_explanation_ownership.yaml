@@ -1,0 +1,27 @@
+spec: population_explanation_ownership.qnt
+module: population_explanation_ownership
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  parent:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  edit_fields:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  run_held:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  cancel:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  return:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  fresh_run:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  filter_held:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  filter_return:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  filter_fresh:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  stage_side:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  run_side:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
