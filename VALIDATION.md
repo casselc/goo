@@ -9770,3 +9770,24 @@ Independent final backend/UI source review **APPROVES** the corrected contract
 for live acceptance. Browser journeys, screenshots and deployed source equality
 are still pending in this source milestone; the following entry records their
 actual outcomes rather than treating unit checks as deployed evidence.
+
+
+### C2a.1 live-frame polish before final acceptance
+
+Initial real-data frames confirmed the 137-record incoming population and explicit
+198-record All spans view, but showed avoidable range controls, an unobserved-log
+card and repeated measurement prose ahead of useful content. The overview now
+uses the existing compact timeline, keeps unobserved metadata under prerequisite
+details and retains measurement reasons in evidence disclosures. Supported read
+failures, changed results and unknown native coverage remain visible. Equal
+20ms Mean/p95 bars exposed different physical track widths; HTTP route tracks
+now use the same 7rem width. No source question or read budget changes.
+
+The revised UI passes all **78 Node files in 3.26s**. Independent review approved
+the three disclosure/layout changes; final live frames also check actual bar
+geometry. The first two live invocations stopped on harness assumptions: replacing
+a range control invalidated a held input, then the test assumed descending source
+order. The corrected journey resolves the current inputs and proves that its
+chosen subwindow excludes every held metadata witness before checking that the
+HTTP profile persists. Failed diagnostics remain local; those partial invocations
+are not reported as acceptance.
