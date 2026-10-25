@@ -2149,3 +2149,54 @@ GOO_NATIVE_RECORD_CONTEXT_CASES=/workspace/goo/artifacts/native-record-context/n
 GOO_NATIVE_RECORD_CONTEXT_OWNERSHIP=/workspace/goo/artifacts/native-record-context/native-context-1480119d7a/ownership.json \
 go test -run '^Test(QuintNativeRecordContextObserved|NativeRecordContextCasesAndOwnership)$' -v .
 ```
+
+## Counted-values source projection (C4)
+
+`TestHegelCountedValuesReferenceAndSourceBoundary` uses 24 generated raw datasets
+with independent canonical int64 filtering and missing/empty/literal partitions,
+for both record and resource dimensions. An in-memory HTTP RoundTripper supplies
+those aggregates to the real source decoder, checking exactly two bounded source
+requests, detached question identity, count/group conservation, raw-read bases and
+read-clock ordering. Deliberate count disagreement remains
+`changed_between_reads` with diagnostic groups. Eight malformed response cases
+and caller mutation after the first read exercise refusal and detachment.
+
+The focused gate passed in 0.031s (`artifacts/counted-values-properties.txt`).
+The first attempt was blocked by socket sandboxing; replacing the fake listener
+with injected in-memory transport avoids network permissions. A second diagnostic
+corrected the test's dual numeric/untyped field declaration to the existing
+Numeric-only predicate DSL. Both diagnostics are retained; no application source
+was changed to satisfy the tests. This is source wire/decoder/reference-boundary
+coverage, not SQL execution parity. Actual journey193 supplies the real
+ClickHouse population evidence described below.
+
+`TestCountedValuesObserved` passed the accepted actual
+`artifacts/counted-values-projection/counted-projection-ab82d8e588/ledger.json`
+on its first invocation in 0.177s (test body 0.13s). An independent raw-fixture
+predicate/numeric oracle derives large143 and small5 complete group partitions,
+missing versus empty values, original full143/page100 and explicit missing1 row
+membership/attributes/time. It verifies exact parent projection, question binding,
+read receipt structure/clocks and the held-response stale-publication receipt.
+Eight serialized, guaranteed changed controls reject wrong total/group counts,
+missing-to-empty collapse, invalid receipt, wrong binding, a rounded >2^53
+threshold, changed-read state and stale publication. Stdout is retained at
+`artifacts/counted-values-projection/native-validation.txt`.
+
+The observed page request sequence has five telemetry API POSTs: three full
+Explore and two counted-values requests. One query-cancellation POST is a control,
+not a read. The small-population direct API request and setup readiness probes are
+outside that page journal. This is exact-scope/raw-membership and bounded observed
+owner verification, not a claim to observe every internal source SQL statement or
+prove all race schedules. The accepted browser main passed 21.7s and actor passed
+31.6s (seven phases, 511 snapshots, three source operations with one counted lookup).
+
+No new generic model is added. The old single-filter-editor ledger is a one-step
+staging check, not a suitable execution/cancellation lifecycle proof for this
+journal. Existing broad capture tests retain legacy wire/hash invariants.
+
+Using the toolchain/cache environment above after browser ownership is released:
+
+```sh
+go test -run '^Test(HegelCountedValues|CountedValuesMalformed)' -v .
+GOO_COUNTED_VALUES_LEDGER=/workspace/goo/artifacts/counted-values-projection/counted-projection-ab82d8e588/ledger.json go test -run '^TestCountedValuesObserved$' -v .
+```

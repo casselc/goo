@@ -10524,3 +10524,103 @@ controlled before/after comparison is required for implementation. No app/API/UI
 behavior or capture bytes changed; browser/property/model campaigns were not
 needed for this standalone audit. Counted values is the selected first adoption;
 the service lens needs a separate richer summary projection.
+
+
+## C4 counted-values projection — source and controlled audit (2026-10-25)
+
+Source commit `eae70ab` adds a distinct `goo/counted-values/v1` response through
+`POST /explore/counted-values` and its Python proxy. Only the counted-values
+adapter adopts it. It preserves exact predicates and reported-edge scope while
+reading count and complete one-field groups, with independent content bases and
+UTC read receipts. It never fabricates an inspection result or capture. Existing
+`Source.fetch` and capture serialization are unchanged.
+
+Actual source checks:
+
+- Root `go test ./... -count=1` passes, including the frozen exploration capture
+  byte/ID contract. An initial sandbox invocation could not open httptest sockets;
+  the supported local-socket invocation passed. Exploration's independent final
+  run passed in 7.196s; focused semantic cases passed in 0.056s.
+- All 80 Node files pass (20.0s). Focused adapter cases exercise the new route,
+  version/receipts, exact filters, pause/abort, scope edits and late completion.
+- Handler/refusal/admission/cancellation checks pass (0.054s). Python's six proxy
+  checks pass (4.965s), including exact path/body/query-ID forwarding and 16 KiB
+  budget. OpenAPI validates 79 operations / 72 Go routes, 413 schemas / 396
+  reflected shapes and 298 response / 98 admitted-request / 17 mux-refusal cases.
+- Hegel's 24 generated numeric-filtered partitions across attribute/resource
+  grouping and finite malformed-source/cancellation checks pass (0.031s). This is
+  a socket-free transport/reference boundary, not SQL execution. Initial test-only
+  diagnostics (sandbox listener, then an invalid dual Field/Numeric predicate)
+  were preserved and corrected without changing application validation.
+- Independent source review approved the DTO, admission, late-owner checks and
+  unchanged legacy capture boundary before deployment.
+
+[Controlled read receipts](docs/COUNTED_VALUES.md#controlled-source-comparison)
+use the same fixed existing OTLP fixture, question/settings and stopped owned lab
+traffic generator. Actual reads fall from four to two; count/group statement
+hashes and consumed response sizes match. Count remains 123 with 4/123 complete
+groups; serialized results are 5,819→766 and 9,472→4,508 bytes. Summed physical read
+rows are 24,708→12,354; these are statement-work sums, not unique telemetry records.
+This is one observation per mode/dimension, not a production latency claim.
+Independent review recomputed the committed receipt totals and approved them.
+
+Live browser acceptance is recorded below.
+
+
+## C4 counted-values projection — live acceptance (2026-10-25)
+
+[Journey 193 and actual frames](journeys/193-counted-values-projection-storyboard.md)
+pass against the frozen `eae70ab` local deployment. Binary SHA-256 is
+`7c68976da9112b187168aa21c6e569c3479c67ddd68190247c45e81a1040b53d`;
+server/module/spec hashes and MIME/status checks are in
+`artifacts/counted-values-projection/deployment.json`. Existing lab capability
+configuration remains active; no data volume was changed.
+
+The corrected main passed in 21.7s (25.8s invocation). Actual generated ordinary
+OTLP logs supply 143 admitted records versus a first page of 100: common140,
+canary1, present-empty1 and missing1. A separately requested small scope returns
+5 records/four groups. Four numeric controls are excluded by the exact signed
+integer predicate above 2^53. Loaded values retain the original service/namespace,
+fixed window and canonical numeric binding. Searching and staging are local;
+explicit Run reads the selected missing record. A held real counted response
+cannot publish after an environment edit. The browser observer records five
+telemetry POSTs and one cancellation **control** POST; the direct small request
+and readiness requests are separate from that page observer. These counts are
+logical API requests, not SQL statement counts.
+
+Accepted ledger:
+`artifacts/counted-values-projection/counted-projection-ab82d8e588/ledger.json`.
+Two initial setup attempts correctly refused fixture bindings missing explicit
+parse policy (1.7s) and unit (1.6s), before browser navigation. Both diagnostics
+are retained. The fixture was corrected and validated with the existing pure
+Go/UI validation before the successful run; application validation was unchanged.
+
+The bounded actor passed in 31.6s (32.8s invocation): seven phases, 511 snapshots,
+three explicit telemetry requests, one new counted lookup and zero legacy group
+lookups, with terminal selected state and no overflow. Receipt:
+`artifacts/counted-values-projection/counted-projection-bad4370743/bombadil/acceptance-summary.json`.
+Its first run stopped on a harness ownership selector that read the hidden
+Activity editor; controls were scoped to the fixed editor and selected count's
+number span, preserving the same budgets/invariants. The first diagnostics remain.
+
+Journeys 151/152 and the previous actor were updated to the new endpoint while
+preserving their semantic checks, but those older browser campaigns were not
+rerun in this round. The new main/actor cover this adoption; the >1,000-group
+refusal is covered by the source tests, with HTTP failure/admission contracts
+checked separately. No new Quint state machine is claimed
+for this projection; existing owner lifecycles are unchanged.
+
+Root and independent reviewer inspected the actual desktop/mobile frames. The
+qualified field, UTC scope, exact counts and missing/empty labels remain readable
+without horizontal overflow. The owned traffic generator's prior running state
+was restored, normal diagnostic retention was applied, compact receipts/diagnostics
+and committed frames preserved, and temporary audit/runtime binaries removed.
+
+The actual-ledger native check passed on its first run (0.177s; test body0.13s):
+`TestCountedValuesObserved` independently resolves raw OTLP membership, 143/5
+partitions, the original100/selected1 pages, null/empty values, numeric binding
+and parent scope, read clocks and five browser telemetry requests. Eight changed
+controls are rejected, including altered counts/groups, missing/empty identity,
+read receipts, numeric threshold/binding, state and stale publication. Output:
+`artifacts/counted-values-projection/native-validation.txt`. The cancellation
+request and direct small/readiness requests retain their separate classifications.

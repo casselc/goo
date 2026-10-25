@@ -1,0 +1,48 @@
+{
+  "count": "123",
+  "elapsedMs": 48.336,
+  "groups": 4,
+  "mode": "counted-values",
+  "reads": [
+    {
+      "kind": "count",
+      "sqlBytes": 330,
+      "sqlSHA256": "70027ead1295da26ff3d2b5cc036855e5c3b39588c69f690e236c06f14032e00",
+      "responseBytes": 16,
+      "status": 200,
+      "elapsedMs": 21.781,
+      "clickhouseSummary": {
+        "elapsed_ns": "16917847",
+        "read_bytes": "797864",
+        "read_rows": "6177",
+        "result_bytes": "0",
+        "result_rows": "0",
+        "total_rows_to_read": "6177",
+        "written_bytes": "0",
+        "written_rows": "0"
+      }
+    },
+    {
+      "kind": "groups",
+      "sqlBytes": 496,
+      "sqlSHA256": "ddfd443707c34eb2b22f30ec406708885e7bfa09ac02d63953161d83955eac52",
+      "responseBytes": 106,
+      "status": 200,
+      "elapsedMs": 24.819,
+      "clickhouseSummary": {
+        "elapsed_ns": "21642096",
+        "read_bytes": "797864",
+        "read_rows": "6177",
+        "result_bytes": "0",
+        "result_rows": "0",
+        "total_rows_to_read": "6177",
+        "written_bytes": "0",
+        "written_rows": "0"
+      }
+    }
+  ],
+  "resultBytes": 766,
+  "state": "observed",
+  "success": true,
+  "version": "goo/read-audit/v1"
+}

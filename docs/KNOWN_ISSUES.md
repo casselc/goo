@@ -1,9 +1,11 @@
 # Known issues and gaps
 
-The [C4 read audit](AGGREGATE_READ_AUDIT.md) confirms counted values still fetches
-an unused record page and field inventory. Projection is planned, not implemented.
-Measured source scan work exceeds the matching population and the lab continues
-ingesting unrelated telemetry; small output budgets are not scan-cost guarantees.
+The first [C4 counted-values projection](COUNTED_VALUES.md) removes unused page
+and field reads. Service dashboards still use complete exploration results; a
+richer projection remains planned. Count and groups remain independent source
+reads with possible disagreement, and >1,000 groups still refuses the whole lookup.
+Small output budgets are not scan-cost guarantees; the controlled lab comparison
+is not a production latency or large-cardinality benchmark.
 
 
 [Recorded error/exception triage](ERROR_TRIAGE.md) is delivered: ET1 `982b9e9`,

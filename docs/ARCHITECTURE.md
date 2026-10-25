@@ -714,3 +714,53 @@ The same span record can witness multiple conditions. No topology or unique
 invocation is inferred, and conditions remain fixed to the original window.
 Cancellation, scope edits, hidden/disposed ownership and stale generations
 withdraw pending results. This contextual adapter introduces no capture format.
+
+## Counted field values as a bounded source projection
+
+The first counted-values adoption adds `Source.FetchCountedValues` and
+`POST /explore/counted-values` (UI proxy `/api/explore/counted-values`). This is a
+separate `goo/counted-values/v1` result, not a new mode on the full record result.
+Existing `Source.Fetch`, record/capture DTOs, saved bytes and their custody paths
+remain unchanged.
+
+A valid request has one string grouping field, offset zero and no numeric result,
+duration/status summary or time-series projection. It retains the original fixed
+environment/window, WHERE (including typed numeric predicates) and reported-edge
+scope. The source detaches caller-owned state before I/O and uses the existing
+compiler/transport to read only the independent count and complete groups. It
+does not read inspection rows or discover fields as hidden prerequisites.
+
+```mermaid
+flowchart LR
+    I[Explicit field-value request] --> Q[Validate and detach typed question]
+    Q --> C[Bounded count read]
+    C --> G[Bounded complete group read]
+    G --> V[Validate values and count conservation]
+    V --> R[Versioned supplied counted-values result]
+    R --> E[Passive editor display and literal filter intent]
+```
+
+The result retains separate count/group read clocks and raw-read bases, plus a
+combined result basis independent of those clocks. Missing values are null and
+present empty strings remain distinct. Groups require unique canonical values and
+positive canonical uint64 counts; nonnullable dimensions and log-pattern IDs keep
+their existing validation rules. More than 1000 groups refuses the entire result,
+without partial grouping totals. Count/group disagreement returns explicit
+`changed_between_reads` diagnostic groups, not a coherent actionable population.
+These sequential reads are not a transactional snapshot.
+
+`ui/filter-values.js` owns explicit execution, cancellation and generation/scope
+binding. The filter editor receives supplied values and emits filter intent; it
+does not fetch telemetry. Opening the editor or changing local conditions does not
+automatically load counted values. Stale, failed, malformed and changed-scope
+responses cannot become usable value suggestions. Counts derive from full query
+populations, not the visible record page. [Journey193](../journeys/193-counted-values-projection-storyboard.md) accepted
+143 matching logs with a 100-row inspection page and four complete value groups,
+a separate five-record population, and explicit missing-value selection of one
+record. Numeric WHERE retained the exact integer threshold above 2^53. A held real
+response could not publish after a scope edit. The bounded native raw-fact check
+passed in 0.177s with eight changed controls; it validates this observed scope and
+membership, not all internal SQL or arbitrary schedules. The browser journal's
+five telemetry API POSTs exclude one cancellation control and the separately
+recorded small-population API/readiness probes. The architecture does not claim
+universal adoption by every grouped read or a replacement for capture semantics.

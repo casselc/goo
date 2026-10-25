@@ -65,5 +65,36 @@ It records source work separately from decoded response bytes and elapsed time.
 Removing reads does not make the remaining count/group scans cheap, and modest
 fixture timings do not establish production latency distributions.
 
-Live acceptance receipts and the executable walkthrough are recorded in
-[VALIDATION.md](../VALIDATION.md) as each gate completes.
+The [executable walkthrough and actual frames](../journeys/193-counted-values-projection-storyboard.md)
+cover full-scope values, exact numeric filters, local staging and stale publication.
+[VALIDATION.md](../VALIDATION.md) records the separate source, live and actor gates.
+
+## Controlled source comparison
+
+With only the owned lab traffic generator stopped, the final tool ran each fixed
+[baseline query](AGGREGATE_READ_AUDIT.md) first through legacy execution and then
+through counted-values execution. No fixture was added or changed during this
+window. Both cases matched the same 123 span records; the dimensions retained four
+namespace groups versus 123 span-name groups. Count and group SQL hashes and
+consumed response sizes matched exactly before/after.
+
+| Case | Statements before → after | Serialized result bytes before → after | Summed CH read rows before → after | Summed CH read bytes before → after | Elapsed ms before → after |
+| --- | --- | --- | --- | --- | --- |
+| small | 4 → 2 | 5819 → 766 | 24708 → 12354 | 4829863 → 1595728 | 140.397 → 48.336 |
+| larger | 4 → 2 | 9472 → 4508 | 24708 → 12354 | 4836040 → 1601905 | 83.391 → 47.768 |
+
+Receipts: [comparison manifest](evidence/aggregate-read-audit/comparison.json),
+[small legacy](evidence/aggregate-read-audit/small-before.json),
+[small projected](evidence/aggregate-read-audit/small-after.json),
+[larger legacy](evidence/aggregate-read-audit/larger-before.json), and
+[larger projected](evidence/aggregate-read-audit/larger-after.json). Source commit
+`eae70ab`; binary provenance and traffic state are recorded in the manifest and
+local deployment receipt. The generator's prior running state is restored after
+browser acceptance.
+
+Each statement reported 6,177 physically read rows, much more than the 123
+matching records. Sums count work across statements, not distinct records. These
+are two modest dimensions and one observation per mode, not a cardinality-only
+experiment, a large-cardinality benchmark or a latency distribution. Source/header
+measurements and serialized executor-result bytes differ from network traffic and
+HTTP envelopes. The remaining two aggregates still have normal scan/memory costs.

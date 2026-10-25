@@ -8,8 +8,10 @@ shared definitions when available.
 [Reviewed roadmap](docs/ROADMAP_2026_10_25.md) · [Execution backlog](docs/BACKLOG_2026_10_25.md) ·
 [Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md)
 
-Developer tooling: [measured aggregate read audit](docs/AGGREGATE_READ_AUDIT.md)
-records the existing counted-values read costs before projection changes.
+[Counted field values](docs/COUNTED_VALUES.md) reads complete scoped groups without
+loading record pages or unrelated field inventories. The controlled comparison
+records four source reads reduced to two; service dashboards retain their existing path.
+See the [live walkthrough](journeys/193-counted-values-projection-storyboard.md).
 
 ## Use your existing OTel data
 

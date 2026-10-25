@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "sourceCommit": "eae70ab",
+  "startedAt": "2026-10-25T20:04:10.514706+00:00",
+  "trafficWasRunning": true,
+  "trafficDuringAudit": "stopped",
+  "fixture": "journey192 existing generated ordinary OTLP, no new ingest",
+  "auditBinarySHA256": "1ac0d7df9f7a5252bbdd2e4e6834f8ea2432f2f27085d84c966a3aa8bc47444c",
+  "cases": [
+    {
+      "size": "small",
+      "beforeReads": 4,
+      "afterReads": 2,
+      "sameCountGroupSQL": true,
+      "sameCountGroupBodySize": true
+    },
+    {
+      "size": "larger",
+      "beforeReads": 4,
+      "afterReads": 2,
+      "sameCountGroupSQL": true,
+      "sameCountGroupBodySize": true
+    }
+  ],
+  "finishedAt": "2026-10-25T20:04:10.949778+00:00"
+}

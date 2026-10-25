@@ -1,5 +1,9 @@
 # Record aggregate read-set baseline
 
+The first [counted-values projection](COUNTED_VALUES.md) is now implemented; its
+controlled before/after receipts are recorded separately. This document preserves
+the original active-traffic baseline and its limitations.
+
 C4 prerequisite audit, 2026-10-25 UTC. This delivers a repeatable measurement
 command and a measured baseline, **not an aggregate projection or a speedup**.
 The application, UI, `/explore` result shape and existing captures are unchanged.
