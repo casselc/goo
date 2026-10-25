@@ -9477,3 +9477,86 @@ documentation. All 241 checked relative links resolve; diff whitespace checks
 pass. No remaining blocker or temporary feature binary remains. Publication
 target is the authorized `origin/work`; the final commit and verified remote
 head are reported after the push.
+
+
+## Trace existential span search — source gates (2026-10-25 UTC)
+
+TS1 `f70ff2f` and TS2 `19c7e91` are independently source-approved. One grouped
+ClickHouse read computes qualifying reported trace IDs with per-condition
+countIf and window totals before the bounded list limit. Qualified witness
+fields are re-evaluated with Go Match and checked against displayed metadata
+and fixed bounds. Existing record Query/capture bytes remain unchanged.
+
+Actual source gates:
+
+- Focused Go source/reference/proof checks and real readonly ClickHouse parity
+  pass (0.245s total, 0.19s parity), including deterministic raw-field tie-breaking,
+  exact values above 2^53, same-span/different-service cases, duplicates and
+  environment/time/ID controls. Broad exploration/workbench pass (1.068s/0.216s);
+  corrected final cmd/goo checks pass (0.450s; API owner independently 0.436s).
+- All 77 Node files pass (3.28s), with original filters confined to condition
+  one, exact UTF-8 field ordering, invalid Unicode refusal, request/result scope
+  guards and stale per-control ownership. Syntax and whitespace checks pass.
+- The controlled-source route uses 64-KiB strict request decoding and compile
+  prevalidation, 55-second handler/60-second admission budgets and cancellation.
+  OpenAPI reports 76 operations / 70 Go operations / 403 schemas; 229 frozen
+  fixture responses, 58 admitted/15 mux-refused cases and 22 actual proxy
+  responses pass schema checks. Five proxy tests pass (1.244s).
+- The independent property campaign passes 300 generated examples (6.115s):
+  90 set-intersection/permutation/monotonic/bounded-prefix cases, 70 numeric
+  examples exercising ten operators each, 70 actual JS contextual requests and
+  70 typed SQL parameter compositions. Fixed same-span/cross-trace/duplicate
+  and nullable witness tie cases also pass. Log: `artifacts/trace-search-properties.txt`.
+
+Initial diagnostics are preserved honestly. A proxy test client initially hit
+BrokenPipe while sending an already-refused oversized /compare request; its
+client now reads the actual early HTTP rejection, with no app guard change. A
+new test assumed a valid 64-node decimal plan exceeded 256 KiB, but measured
+plans fit the cap and were correctly accepted. The corrected boundary checks
+use a real 65-node request and assert 400 with zero source reads; compile-budget
+prevalidation remains in place. The first generated campaign declared the
+unsupported parse name canonical-integer; the corrected test-only declaration
+uses the existing canonical-decimal contract, retaining all raw values. Its
+rejected campaign and diagnostic remain in artifacts.
+
+Actual deployment/browser/native/model/visual acceptance is pending at this
+source checkpoint. No complete traces, unique invocations, causal order or
+distinct-span constraint is inferred from a shared reported trace ID.
+
+
+### Trace search — nullable witness tie correction
+
+Source review after the initial source commits found a real tie mismatch: a
+derived exception_type classified absent because several types were reported
+still carried an internal first-type string. That hidden string could rank ahead
+of a later visible resource field when otherwise-identical witnesses tied. A
+real ClickHouse counterexample selected visible zone z instead of reference a.
+Reviewed correction `618767f` normalizes every absent projected payload to the
+empty string in both witness output and argMin ordering, while public fieldValues
+still report null. The parser refuses nonempty hidden payloads for absent fields.
+No DTO or existing record/capture format changes.
+
+The targeted Go/actual ClickHouse checks pass (0.145s: original matrix 0.10s, new
+absent-derived tie 0.04s), including canonical-positive and corrupted-hidden-value
+controls. Final related Go regressions pass (exploration 0.834s, cmd/goo 0.493s,
+workbench cached). The pre-fix failure and post-fix success are distinct executed
+results. Browser acceptance was held until the reviewed fix and replacement
+binary were ready; earlier deployed asset checks are not final binary evidence.
+
+
+### Trace search — deployed API checkpoint
+
+The final static Go binary at `618767f` is installed and byte-verified with
+SHA-256 `61e8dfb75661692c6741f64f85412660f4d3a3f7a009f62f0f7c3c4d502fc9e1`.
+UI/server/OpenAPI assets match checkout hashes in
+`artifacts/trace-search/deployment.json`. The earlier binary was superseded
+before any browser acceptance. A readiness probe initially assumed a native
+/health route; the existing /operation-packages metadata route correctly
+checks readiness instead. No source behavior changed to satisfy that probe.
+
+Readonly deployed API acceptance passes (0.55s): matching OpenAPI and nine
+actual handler responses, including a completed unique-scope empty trace search
+and invalid-version refusal. Source span count 307 differs appropriately from
+the ten-row page. No records are published by this check. Stdout:
+`artifacts/trace-search-api-deployed.txt`. The temporary build binary was removed
+after verified installation. Browser/visual/actor/native gates follow separately.

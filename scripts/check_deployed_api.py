@@ -6,6 +6,7 @@ import sys
 import time
 import urllib.error
 import urllib.request
+import uuid
 from pathlib import Path
 
 from check_openapi import validator
@@ -44,4 +45,10 @@ now = int(time.time()*1000)
 check('POST', '/metric-discovery', '/metric-discovery', {'environment':'local','service':'lab-go-checkout','fromMs':now-120000,'toMs':now})
 records = check('POST', '/explore', '/explore', {'signal':'spans','environment':'local','fromMs':now-120000,'toMs':now,'limit':10,'offset':0})
 assert int(records['count']) >= len(records['rows']), 'Page became population'
-print(f'Deployed API contract passes: matching spec, {checks} real handler responses, span count={records["count"]}, page={len(records["rows"])}; no records published')
+trace_question = {'version':'goo/trace-search/v1', 'environment':'api-contract-' + uuid.uuid4().hex,
+                  'fromMs':now-120000, 'toMs':now, 'limit':10,
+                  'conditions':[{'field':{'kind':'column','key':'service'},'op':'eq','value':'api-contract'}]}
+traces = check('POST', '/trace-search', '/trace-search', trace_question)
+assert traces['state'] == 'no_data' and traces['matchedTraces'] == '0' and traces['items'] == [] and traces['hasMore'] is False
+check('POST', '/trace-search', '/trace-search', {**trace_question, 'version':'unsupported'}, want=400)
+print(f'Deployed API contract passes: matching spec, {checks} real handler responses, span count={records["count"]}, page={len(records["rows"])}; trace-search empty/refusal contracts pass; no records published')
