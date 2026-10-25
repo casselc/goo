@@ -16,7 +16,11 @@ additional current commitments.
 
 The complete queue through TS3 is shipped. The [new whole-product roadmap](ROADMAP_2026_10_25.md)
 now proposes generic-source startup and routine verification as parallel enablers,
-then explicit service observation grain and native-interval-to-record context.
+then automatic capability-driven operational dashboard families and
+native-interval-to-record context. The [family plan](AUTOMATIC_DASHBOARDS.md)
+starts with HTTP RED and explicitly includes database, messaging, resource USE
+and Kubernetes deliveries; an HTTP observation lens is the first slice, not the
+entire product goal.
 Lean aggregate reads require a measured audit; trace-search definition reuse is
 a conditional later cut, distinct from observed-result custody. These are
 proposals, not newly implemented or automatically activated work. The sections

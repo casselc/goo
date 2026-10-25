@@ -257,3 +257,15 @@ Expanded **Native result · exact streams** now reuses the common
 builds its gauge/counter/histogram chart. Selecting observations or native buckets
 performs no source read and changes neither dashboard scope nor stored evidence.
 Compact latest-value cards and their whole-window coverage semantics are unchanged.
+
+
+## Planned family expansion
+
+The user has prioritized [automatic operational dashboard families](AUTOMATIC_DASHBOARDS.md):
+RED for incoming web/RPC work, database client/pool views, messaging and broker
+views, resource USE, and Kubernetes cluster/workload/pod/node dashboards. The
+implemented v2 service overview and supported native kernels are a foundation;
+catalog entries marked proposed do not yet execute those complete dashboards.
+The initiative stages useful defaults, entity/resource discovery, required metric
+adapters and investigation drilldowns while keeping manifests optional. HTTP is
+the first vertical delivery, not the final product scope.

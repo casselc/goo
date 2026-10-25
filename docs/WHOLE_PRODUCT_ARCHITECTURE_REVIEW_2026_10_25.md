@@ -168,3 +168,95 @@ The revised roadmap should provide one finite active queue, and link delivered h
 This review has not benchmarked real customer volumes, interviewed users, audited every publisher fault mode, or rerun the recorded formal/browser checks. Generated properties, observed trace/model validation, negative controls and real journeys are valuable acceptance layers; each proves its stated model or finite schedule, not exhaustive runtime interleavings or telemetry completeness.
 
 Do not introduce DataFusion, another frontend framework, CEL/KCL execution, a universal authoring schema, a fleet database, a new bitemporal store, a service split, distributed collaboration or automatic statistical anomaly claims as incidental work. Keep Rust/Go, authoring-language and backend-target choices separate from a measured need. The next useful simplification is a runnable generic entry and a smaller, clearer path through the existing kernels.
+
+## User clarification: automatic USE/RED and discovered-entity dashboards
+
+The user's clarification expands the intended outcome beyond the single HTTP lens proposed above. **The HTTP lens is an initial delivery slice, not the completed C2 product goal.** Goo should automatically assemble useful default dashboards for discovered applications and infrastructure: web/RPC RED, database dependencies and pools, messaging producers/consumers and brokers, host/runtime USE, and Kubernetes cluster/node/workload/pod views. A user should not need a goo manifest, choose metric names from scratch, or build a dashboard before seeing relevant supported panels.
+
+This is an additive planning clarification. It does not claim those dashboard families execute today or authorize implementing all missing kernels at once. The roadmap should make C2 a staged capability-driven dashboard program with an explicit family matrix, rather than treating a defensible HTTP-only implementation as completion of the broader request.
+
+### Reuse one capability-to-dashboard path
+
+Use the existing discovery, prebuilt catalog, Go planner, native kernels and passive presenters as one path:
+
+```mermaid
+flowchart LR
+    O[Observed OTel records and instrument metadata] --> D[Bounded discovery with exact resource identities]
+    D --> C[Versioned family capability matching]
+    M[Optional manifests and declared policies] --> C
+    C --> P[Pure dashboard plan: useful defaults and missing capabilities]
+    P --> A[Application owner evaluates active bounded panels]
+    A --> K[Existing typed record/native kernels or explicitly added adapter]
+    K --> V[Shared summary, trend, distribution, table and inspector]
+    V --> I[Contextual records, traces and investigations]
+```
+
+**Discovery supplies evidence, profiles supply meaning, and the application owns execution.** A manifest may enrich names, membership or an outcome policy, but ordinary OTel must activate applicable families without one. Keep declared intent, observed metadata and validated evaluation separate in the plan; do not make lack of a manifest look like lack of observability.
+
+The existing [`prebuilt/catalog.yaml`](../prebuilt/catalog.yaml) already names HTTP/RPC, messaging, database operation/pool, host CPU and Go runtime families. Most associated features are marked `proposed`; that catalog is a starting requirement registry, not evidence all panels work. [`PlanInstrument`](../measurements/instrument_capabilities.go#L143) already provides observed coverage and HTTP/messaging capability hints. [`PlanServiceDashboard`](../exploration/dashboard.go#L79) already composes typed widgets. Extend those seams instead of maintaining another unrelated dashboard-template system in JavaScript.
+
+A proposed family capability descriptor should carry:
+
+- A versioned profile/rule-set ID, subject kind and exact identity requirements; required and optional observed instrument/resource dimensions.
+- The binding alternatives actually supported by source adapters: signal family, metric name, kind, unit, temporality and explicit schema-version policy. A legacy name or unit is a separate alternative, not an inferred alias.
+- Each panel's population grain, calculation, required evidence, supported execution path, query dependencies, known limits and default rank.
+- Separate states for observed candidate, supported plan, evaluated result and missing/unsupported capability. An observed name is not a successful evaluation; an unsupported calculation is not zero.
+- Existing contextual continuations and their scope-transfer contract. A panel stages record or trace context using shared facts; it does not invent cross-signal identity.
+
+Panel defaults should follow a stable task/family ranking, not the first two lexically sorted metric definitions. For an application service, incoming workload/RED should normally precede outbound dependencies, messaging and runtime detail; a selected infrastructure entity should start with its own usage/capacity/state panels. Show supported panels immediately after the existing dashboard-opening action, while compactly explaining missing family capabilities. Do not replace the dashboard with a long setup wizard or a wall of unavailable cards.
+
+### Source-backed numerical and discovery boundaries
+
+The clarification does **not** require inventing a fractional gauge kernel: it already exists. [`measurements/source.go:262–271`](../measurements/source.go#L262) parses finite floating-point gauge observations, and [`metrics/gauge.go`](../metrics/gauge.go) preserves per-stream latest/sample values. A fractional utilization gauge in unit `1` can therefore supply a useful panel today when its binding and service/instance identity are supported. Percent formatting is a profile-declared display convention, not implicit unit conversion or evidence of health.
+
+The actual missing capabilities are more specific:
+
+| Source fact | Consequence for dashboard families |
+| --- | --- |
+| Generic gauge evaluation accepts finite floating values and nonempty declared units, but requires service and instance identity. | Fractional utilization and byte/count gauges are usable for qualifying service-bound instruments. Host/node/broker gauges without those identities need an entity identity path, not a new float parser or synthetic service instance. |
+| The measurement counter adapter rejects fractional values, values at or above 2^53 and non-monotonic sums; the pure counter kernel uses exact integer values. | Fractional cumulative CPU-time/resource counters need a separately reviewed numerical/precision contract. Do not route them through integer counters, round them, or reuse the decimal-attribute binding as if it defined native metric semantics. |
+| Discovery reads gauge, sum and histogram tables. Non-monotonic sums are not eligible counters; there is no typed current-value UpDownCounter/sum adapter. | Database connection counts, Go memory/goroutine UpDownCounter instruments and similar resource measures may be discovered but cannot be evaluated merely by relabeling their sum table as a gauge. Add a bounded non-monotonic-sum current-value path while preserving its source kind and identity. Reuse latest-value arithmetic only after that contract is explicit. |
+| Native histogram evaluation is duration-oriented and restricts units to `s`/`ms`; the current source projection does not retain histogram sum. | Existing latency distributions and bucket-range percentiles can be reused. Arbitrary byte/unit histograms and native histogram means require additional reviewed support; do not manufacture a mean from a percentile or from span durations. |
+| Metric discovery filters one service; measurement decoding and kernels require nonempty `service.name` and `service.instance.id`. | Host, broker and Kubernetes entity dashboards are not obtained merely by adding names to the prebuilt registry. They need resource-entity discovery/binding and an explicit non-service identity policy. |
+| Resource attribute maps and record-resource filters are preserved, but there is no Kubernetes cluster/node/workload/pod inventory or owner-relationship adapter. | Existing observations can reveal reported `k8s.*`, `host.*` and container keys. That is useful metadata, not an authoritative cluster inventory or proof of owner/readiness relationships. |
+
+References: [`discovery.go:46–72,120–130`](../measurements/discovery.go#L46), [`source.go:235–280`](../measurements/source.go#L235), [`gauge.go:49–57`](../metrics/gauge.go#L49), [`histogram.go:175–185`](../metrics/histogram.go#L175), and the catalog above. These are confirmed source constraints; no new runtime acceptance was performed for this clarification.
+
+### Useful default panels and the required next adapters
+
+| Family | Automatic useful panels from supported observations | Additional capability needed for fuller coverage |
+| --- | --- | --- |
+| Web / HTTP server and RPC server RED | Incoming server-span observation counts/rates, recorded status/error evidence, operation/route or RPC method duration distributions, slow-operation trace continuation. Eligible native HTTP duration or explicitly bound legacy RPC duration histograms provide their own distributions and complete-window observation counts. Keep native and span populations labeled separately. | Explicit HTTP/RPC profile/version and status-policy bindings; no request/business success inference. Native mean needs histogram sum support. Broader native rates/aggregation require complete supported intervals and declared compatible members. |
+| Database client / pool | Client-span operation counts, duration/error evidence by reported database system and low-cardinality operation/summary, slow dependency traces. Eligible `db.client.operation.duration` and pool wait-time duration histograms can use existing duration kernels. Reported eligible gauges can show pool usage/capacity values side by side. | Non-monotonic-sum current values for standard connection-count instruments; pool-name/state value-level binding; a matched capacity/identity/time policy before utilization. Pool wait, open/busy connections and server contention are separate quantities. Raw SQL text is not a default grouping key. |
+| Messaging producer / consumer / broker | Producer/consumer span attempt activity, recorded failures, processing durations and destination/group breakdowns; consumer trace/link continuation. Eligible `messaging.process.duration` uses the existing profile/kernel. Actual compatible queue depth/pending gauges can show raw backlog immediately. | Pinned producer/broker instrument bindings and resource identity; typed current values or fractional counters where required. Lag, redelivery, deliveries and application subject success need their own real signals/identity, not destination/time guesses. The custom lab queue profile is not a portable broker adapter. |
+| Host and runtime USE | When present and bindable: per-core/state fractional CPU utilization, memory usage and reported capacity, worker/queue activity and raw saturation indicators, runtime duration distributions and observed error counters. These are useful panels before a composite utilization ratio exists. | Host identity independent of service instance; fractional CPU-time counter semantics; UpDownCounter current values for applicable Go runtime instruments; explicit aggregation/capacity alignment. Memory use is not a percentage without a valid denominator, and a goroutine count is not a leak diagnosis. |
+| Kubernetes cluster / node / workload / pod | Discover observed entity/resource keys; present the active entity's reported CPU/memory usage, capacity and status/restart metrics when actually supplied by a compatible receiver. Offer cluster → node/workload → pod/container drilldown and related service/log/trace context using reported resource mappings. Show missing instrument families compactly. | A real resource inventory/discovery adapter, supported entity identities, pinned kubelet/cluster receiver metric bindings and an observed owner mapping. Desired/ready replica counts, readiness conditions, restart counts, requests/limits and node saturation require their actual instruments; none follows merely from a pod emitting telemetry. |
+
+The dashboard should make partial coverage useful: for example, database client latency can work while pool counts are unsupported, or memory usage can render while its capacity is unreported. Supported data should not disappear because the full USE or RED acronym cannot yet be completed. Missing panels should identify the absent instrument/adapter/policy, not block the whole family or imply good health.
+
+### Infrastructure identity and Kubernetes scope
+
+Service identity remains `(environment, service namespace state, service name, instance where applicable)`. Infrastructure needs separately typed subjects, such as a host ID or reported Kubernetes cluster/node/pod/workload UID, with a declared fallback policy only where a profile explicitly permits it. Preserve complete resource/scope/attribute maps as stream identity. Do not satisfy the current service kernel precondition by adding fake `service.name` or an empty shared instance.
+
+For Kubernetes, bind the keys actually reported by the pinned source profile: candidate cluster name/UID, node name/UID, Kubernetes namespace, workload kind/UID and pod/container identity. Kubernetes namespace is not `service.namespace`. Same names in different clusters/namespaces, reused pod names and restarted containers must not collapse. Workload ownership must come from observed owner/resource metadata or an explicitly configured inventory source; a pod-name prefix is not an owner relationship. No ambient Kubernetes API access is assumed or authorized by this review.
+
+The reuse opportunity is to separate **resource identity eligibility from interval arithmetic** in native kernels with an explicit, versioned subject policy. Keep legacy service validation as the default and preserve old stream/capture identifiers. Add actual entity-source acceptance before enabling a host/Kubernetes execution path. Avoid either extreme: duplicating all counter/histogram arithmetic per entity, or globally removing identity checks to make sample infrastructure data pass.
+
+### Automatic planning with bounded execution
+
+Automatically producing a dashboard does not mean eagerly querying every possible panel. Planning from supplied discovery facts is source-free. Opening a dashboard can execute the already declared active default panels under the application owner's existing read policy; hidden families and tab changes must not fan out into an unbounded source sweep. Keep one active family/lens, reuse two-worker execution and the current native panel limit until a separately measured budget is approved. Add visible, explicit refresh/live behavior rather than automatic background polling from custom elements.
+
+A dashboard plan should disclose its bounded read dependencies. Retain the current source deadlines, memory/read/response limits, metadata/cardinality bounds and cancellation ownership. Do not raise the 1,000-group limit to make a Kubernetes or database view appear general. Narrow by cluster/namespace/workload or use a separately designed paged/summary operator; preserve unknown/partial/refused states. A summary list and a full-population metric are different capabilities.
+
+### Staged C2 program and completion evidence
+
+A coherent sequence can deliver useful panels without misrepresenting the program as one HTTP change:
+
+1. **Family planning and the HTTP/RPC reference implementation:** one Go capability-to-panel plan using current discovery and catalog versions; useful automatic incoming-workload defaults and shared record/native presentation. Keep protocol populations explicit and manifest-free.
+2. **Database and messaging adoption:** reuse that exact planning/display path for dependency, pool, producer/consumer and actual broker panels. Implement the non-monotonic-sum current-value adapter only when a real pool/runtime instrument proves the need; do not create local JavaScript metric calculations to bypass missing kernels.
+3. **Host/runtime identity and numerical support:** finite fractional gauges are already available; add the specific entity identity and counter/current-value capabilities required by real source fixtures. Reuse interval kernels and retain kind/unit distinctions.
+4. **Kubernetes resource discovery and dashboards:** supply actual cluster/node/workload/pod metadata and receiver metrics, then compose the same panels over those identities. Test association to services rather than assume every pod is one service or every service belongs to Kubernetes.
+
+The matrix is the completion contract: each family should identify implemented useful panels, unsupported calculations, required source adapters and real acceptance evidence. It is not enough to add a catalog entry, render all families as empty, or show only HTTP while reporting “automatic dashboards” complete.
+
+Required evidence includes ordinary non-Go, manifest-free OTLP; mixed/absent protocol metadata; real fractional gauges; fractional counters correctly refused until supported; UpDownCounter versus gauge/source-table distinctions; duration and non-duration histogram units; namespace/name/UID collisions and restarts; source errors and no-data; useful partial-family rendering; deterministic default ranking; bounded issued reads and unchanged legacy evidence. Kubernetes and broker acceptance need actual source-shaped fixtures and declared metadata/instrument mappings. No new cluster, exporter deployment, credentials or production access is implied by this planning clarification.

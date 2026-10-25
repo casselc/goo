@@ -266,3 +266,120 @@ across the round without rerunning every legacy suite after every local edit.
 This review recommends **meaningful defaults and connected investigations before
 more analytical breadth**. It does not ask for a new framework, universal result
 schema, required manifest, required bitemporal store or new top-level workbench.
+
+## User steering: automatic discovered-system dashboard families
+
+The user subsequently clarified the desired first initiative: **automatic USE,
+RED and related dashboards for discovered OTel services, Kubernetes, database,
+web and messaging systems**. This supersedes the *breadth* of the initial P1
+recommendation above. Retain that initial review as history: HTTP/server-span
+semantics are a sensible first executable slice, not the whole dashboard vision.
+The revised roadmap should make **capability-driven automatic dashboards** its
+first product initiative and deliver it in bounded family slices. It should not
+turn this request into a manual dashboard builder or another package wizard.
+
+### Common product contract
+
+A discovered entity should open a useful default overview from the telemetry
+actually available. Profiles select supported questions and displays; users should
+not have to know metric names, write YAML or supply a goo manifest to obtain that
+first overview. Manifests may add explicit meaning, expected signals or operation
+grain, but cannot fabricate observations.
+
+Reuse the existing service dashboard planner and execution owner
+([`exploration/dashboard.go`](../exploration/dashboard.go),
+[`ui/service-dashboard.js`](../ui/service-dashboard.js)). Extend the capability
+plan with family/entity identity, eligible widget questions, exact prerequisites
+and unavailable reasons. Keep metadata **candidate**, executable supported binding,
+and actual read state distinct. Pin each convention rule set; a matching metric
+name without kind/unit/temporality/resource identity is insufficient.
+
+Default composition should be small: the most useful supported activity/latency,
+resource-pressure and error/reliability panels, with shared scales and compact
+selected detail. Partial data should produce useful partial dashboards. Show a
+short explanation for a missing essential question and put the full prerequisite
+inventory in a disclosure; do not replace telemetry with a wall of empty tiles.
+A failed independent widget stays unavailable without zeroing successful widgets.
+No automatic default may imply a common transactional read or complete telemetry.
+
+### Proposed family matrix
+
+All family additions below are **proposed execution profiles**, except the stated
+existing foundations. Each must route into current fixed analysis, native stream
+inspection, logs/traces and saved definitions rather than become a separate app.
+
+| Family / discovered entity | Useful automatic defaults when supported | Evidence and eligibility requirements | Partial-data behavior and boundary |
+| --- | --- | --- | --- |
+| **HTTP/web service RED** | Observed server-span activity/rate, duration distribution and named recorded-error/status policy; route/operation breakdown. Prefer a supported native HTTP duration instrument when its semantics are appropriate. | Reported Server role plus actual HTTP convention evidence for HTTP labels; exact service/namespace/environment. Existing `http.server.request.duration` candidate requires supported histogram kind/unit/schema/identity and actual execution. Counts/latency from spans and native histograms remain separate sources. | Generic Server-span profile works without HTTP dimensions; generic mixed-span overview remains available. Missing HTTP status does not become a zero error ratio. Retries/sampling do not become unique or complete request throughput. |
+| **RPC service/client RED** | Reported server or client operation rate/duration/status by actual RPC system/method; separate perspectives rather than double-counting both ends. | Explicit role and supported RPC conventions, protocol-specific named error policy, exact source metadata for native instruments if used. | Missing RPC evidence retains generic server/client observations. Span Error is not automatically an RPC status policy. No inferred end-to-end request count. |
+| **Database client and pool** | Client operation latency/volume/recorded errors by database system/operation; pool used/idle/limit, pending acquisition and wait duration where supported. | DB client span evidence and explicit role; independently discovered pool instruments with exact kind/unit/dimensions and supported gauge/counter/histogram kernels. Ratios require an actual compatible limit/denominator. | Client spans describe client-side observations, not database-server CPU, locks or total query throughput. Pool metrics can appear without traces and vice versa. Missing pool capacity cannot produce utilization. Database-server health requires its own source/profile. |
+| **Messaging producer/consumer and broker** | Separate send/process volume/duration/recorded outcomes; backlog/queue depth/consumer lag and processing capacity when actual instruments support them. | Actual messaging system/destination/operation-role dimensions and per-stream identity; preserve message/byte/time units and temporality. Existing `messaging.process.duration` candidate is a foundation, not proof of consumer success or broker coverage. | Producer, consumer, process attempts and broker queues are different grains. No inferred one-to-one delivery, acknowledgment success, business completion or retry-free denominator. Broker metrics require broker evidence; lag and queue depth are not interchangeable. |
+| **Host/runtime USE** | Supported CPU/memory utilization; run-queue/wait/GC or thread/worker saturation signals; supported resource error counters. Show raw usage/capacity when a ratio is not justified. | Exact host/process/runtime identity, resource and library schema, units and actual compatible capacity limits. Finite gauge values are already supported; fractional monotonic counters and derived ratios need separate semantic/kernel support where absent. | CPU busy alone does not prove saturation; memory usage without limit does not imply utilization. Per-host/process streams are not a fleet average. Missing instance identity stays unsupported rather than receiving a fabricated service instance. |
+| **Kubernetes cluster/workload/pod/node** | Cluster/workload inventory and readiness/restarts where actually sourced; pod/container CPU/memory vs requests/limits; node capacity/pressure; scoped service logs/traces and resource drilldowns. | Dedicated entity inventory/ownership model with cluster identity, namespace and stable workload/pod/container/node IDs, plus supported cluster/node/container metric sources. Resource attributes on service telemetry supply context but do not establish complete cluster inventory. | A pod metric without cluster ownership must remain a scoped observation, not an invented workload rollup. Missing metrics/limits/owner refs remain partial. Service namespace and Kubernetes namespace are different qualified resource keys. Restart counts require compatible counter semantics; current service discovery is not Kubernetes discovery. |
+
+Examples of metric names above are capability candidates under a pinned profile,
+not permission to fuzzy-match aliases or coerce units. The existing HTTP rule set
+is pinned, and the messaging candidate is explicitly experimental
+([`measurements/instrument_capabilities.go`](../measurements/instrument_capabilities.go)).
+New DB/RPC/runtime/Kubernetes rules need the same versioned treatment and ordinary
+OTel fixtures, including wrong unit/kind/schema and missing dimension controls.
+
+### Foundations already shipped versus actual new work
+
+- **Already shipped:** all-signal service discovery, service identity including
+  missing/empty/value namespace handling, automatic service overview planning,
+  bounded concurrent independent widget execution, partial failure behavior,
+  observed HTTP/RPC/DB/messaging dimension suggestions, compact operation
+  diagnosis, native instrument discovery, generic kernels and HTTP/messaging
+  metadata capability candidates. These should not be renamed as new work.
+- **Missing execution layer:** automatic family selection at the correct entity
+  and grain, complete supported profile questions/default displays, usable
+  prerequisite explanations, and contextual routing from those defaults. A
+  candidate returned by discovery is not yet an automatically executed family.
+- **Missing Kubernetes foundation:** a dedicated cluster/workload/pod/node entity
+  inventory, ownership resolution and corresponding metric bindings. The existing
+  service catalog cannot safely stand in for it.
+- **Specific numeric gates:** native gauges already accept finite Float64
+  observations (`measurements/source.go`); claiming all floating-point metrics
+  are unsupported would be wrong. Current counter input requires nonnegative
+  integral values below 2^53. Fractional CPU-time counters, unsupported
+  temporality/bucket types, derived capacity ratios and metric streams lacking
+  the current required service-instance identity need explicit work. Record
+  attribute decimal support does not solve these native metric contracts.
+
+### Staged delivery recommendation
+
+1. **Shared family capability contract plus HTTP/server first execution.** Extend
+   the current planner, execute the first bounded family without authoring, and
+   prove generic fallback/partial data. Retain source-free planning, actual read
+   clocks and automatic supported widget execution already used by Services.
+2. **RPC and DB client/pool, then messaging roles.** Reuse current span conventions
+   and native candidates; add only the supported questions for each profile.
+   Ship useful span-only and metric-only partial dashboards, not an all-or-nothing
+   requirement for every instrument. Broker/server observability is a separate
+   profile from application client observations.
+3. **Host/runtime USE with narrow numeric prerequisites.** Begin with supported
+   finite gauges and integral counters. Add fractional counter or ratio semantics
+   only for a named profile/instrument, with kernel/reference/source parity.
+   Never make a USE profile silently downgrade unsupported input into zero.
+4. **Kubernetes discovery and one vertical pod/workload path.** Establish stable
+   entity identity and a real source before broad cluster aggregation. Deliver a
+   useful pod/workload overview and scoped record continuation first; expand node
+   and cluster rollups only with explicit ownership, coverage and aggregation
+   contracts. Unsupported identity is visible rather than patched with aliases.
+
+Acceptance should exercise an actual heterogeneous ordinary-OTel deployment:
+discover entities → open automatic defaults → inspect one pressure/error/latency
+population → follow scoped native/record context → preserve a finding → return.
+Include a sparse deployment, one unavailable source, missing conventions and an
+unsupported metric alongside a valid one. A manifest-free service and optional
+manifest enrichment must both work. Family changes should update the common
+storyboard/component usage and capability evidence; no family requires a new
+primary navigation destination or a manual layout editor.
+
+This revised first initiative changes the initial ranking: service family
+automation is the umbrella; the native-context continuation remains part of its
+useful investigation path, and collector diagnostic evidence remains a separately
+gated source-health profile. Reusable trace-search configuration is still useful,
+but it should not displace the user-requested automatic discovered-system
+experience or become a prerequisite for these dashboards.

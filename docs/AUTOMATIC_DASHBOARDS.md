@@ -1,0 +1,129 @@
+# Automatic operational dashboards — product initiative
+
+Status: **proposed**, clarified by the user on 2026-10-25 after the whole-product
+review. This is the expanded C2 initiative in the
+[current roadmap](ROADMAP_2026_10_25.md), not a claim every family is implemented.
+
+## Desired experience
+
+Connect ordinary OTel data, discover services and resources, then open a useful
+default dashboard without authoring queries or supplying a goo manifest. A web
+service should suggest an incoming-work RED view; a database dependency should
+show operations and latency; a monitored pool, host or Kubernetes resource should
+show the appropriate resource signals. The dashboard is an investigation entry:
+select a time interval, operation, resource or population and continue into the
+existing logs, spans, trace search and comparison tools.
+
+RED means rate, errors and duration. USE means utilization, saturation and errors.
+They are useful organizing methods, not a reason to invent missing measurements
+or blend incompatible populations. Common service pages can offer Incoming work,
+Dependencies, Resources and Logs as contextual views where supported; users
+should not need to build a dashboard or navigate a catalog of implementation
+families before seeing their own data.
+
+Discovery should automatically select relevant defaults and offer applicable
+views. Selecting a discovered entity can load a small bounded default overview
+as Services already does. Loading every family, every instrument and every entity
+in the background is not required. Local switching can use held data; additional
+source execution must remain explicit in the existing owning workflow and its
+read policy. Do not turn a metadata-only preview into a hidden population read.
+
+## Dashboard families and useful defaults
+
+| Family / entity | Useful default panels | Evidence required and fallback |
+| --- | --- | --- |
+| Web/API service and incoming RPC work — RED | Traffic over time, recorded errors/status, duration distribution/heatmap, route or operation ranking, slow/error trace examples, relevant deployments and dependency links. | Explicit server/protocol population or supported request metrics; keep observed span-record rates distinct from deduplicated request or native metric counts. RPC is a separate explicit profile. With spans only, still provide a useful span-backed view. |
+| Database client/dependency | Operation rate, errors and latency by database/system/operation; slow query summaries, caller services and representative traces. | Standard database spans and/or eligible `db.client.operation.duration`. Use sanitized low-cardinality summaries; raw SQL is not required. Client telemetry describes a dependency, not database-server health. |
+| Database pool or monitored database server — USE where supported | Connections by state, utilization against an actual capacity, acquisition wait, pending/timeouts; server CPU, memory, I/O, locks or cache signals when exported. | Pool identity/capacity and compatible typed metrics; actual server/exporter signals for server panels. Operation latency alone is neither pool saturation nor server contention. Partial pool/client views remain useful. |
+| Messaging producer/consumer | Send/process rates, processing duration, recorded failures, destinations and consumer groups, retries/redelivery where reported, trace links across asynchronous work. | Explicit operation/role profiles, matching processing metrics and reported attributes. Keep producer, processing attempt, message and acknowledgement grains distinct. |
+| Queue/broker — USE where supported | Backlog/lag, oldest-work age or wait, active/capacity, broker resource pressure, rejected/failed operations. | Actual queue/broker instruments and identity. Processing spans do not supply queue depth or broker availability; demo-only `lab.*` instruments are not generic defaults. |
+| Host/container/runtime — USE | CPU and memory use, capacity-relative utilization, runnable/pending work or pressure, I/O/network activity and errors, GC/runtime trends where reported. | Resource identity, compatible native gauges/counters and explicit capacity/denominator. CPU use alone is not saturation; memory usage alone is not a utilization percentage. Finite fractional gauges already work. |
+| Kubernetes cluster → namespace/workload → pod/container, with node views | Resource inventory and changes, CPU/memory versus requests/limits, readiness/restarts/pending state, node pressure, workload traffic/errors/latency, pod logs and traces. | Reported Kubernetes attributes plus actual kubelet/cluster/exporter metrics and ownership facts as needed. Scope by cluster/namespace/resource identity; show reported associations separately from verified owner relationships. Service inventory is not a cluster inventory. |
+
+A discovered service may have multiple roles. Show separate relevant views rather
+than forcing it into one guessed service type. Database and broker endpoints seen
+from clients are reported dependencies; monitored server entities require their
+own evidence. Infrastructure views must also work for resources with no
+`service.name` at all.
+
+## One capability-driven planning contract
+
+Extend the existing service planner and versioned profile/catalog machinery.
+Each family should declare:
+
+- Entity identity and scope: environment, logical service namespace or Kubernetes
+  namespace as distinct fields, instance/resource IDs and reported relationships.
+- Exact source population and grain; required/optional keys and instruments;
+  supported convention/version, unit, type, temporality and identity rules.
+- Required calculations and their numerical contract: rate/reset behavior,
+  distribution aggregation, capacity ratios and resource-state counts.
+- Small ranked default panel set, bounded execution/read budget, supplied-data
+  presentation and named investigation intents.
+- Per-panel state such as supported/observed, not observed, unsupported,
+  unavailable or requiring configuration, with an actionable explanation.
+
+A manifest may enrich naming, expected signals or declared operations. It is not
+a prerequisite for discovery-driven defaults. Reuse existing passive charts,
+tables, field views, scope summaries and inspectors. A general dashboard editor,
+new query engine, universal result object or new evidence store is not needed.
+
+Useful panels should appear even when other signals are absent. Put unavailable
+prerequisites in compact capability detail, with concrete receiver/exporter/key
+requirements; do not surround every useful chart with a wall of warnings or turn
+absence into green health. New panels must say what population they measured,
+not repeat every semantic caveat above the data.
+
+## Current foundation and actual implementation gaps
+
+Already implemented:
+
+- [Service overview planner](../exploration/dashboard.go), automatic service views,
+  bounded widget execution, scoped record/native presenters and investigation
+  continuations. Current default record grain is mixed-kind spans.
+- [Native HTTP/messaging capability candidates](../measurements/instrument_capabilities.go),
+  gauge/counter/explicit-duration-histogram kernels and exact stream identity.
+- [Catalog profiles](../prebuilt/catalog.yaml) for HTTP, messaging, host CPU,
+  database client/pool and runtime. Several catalog visualization/calculation
+  features are explicitly **proposed**; catalog presence is not executed support.
+- Generic record filtering, time/distribution displays, explanations, trace
+  inspection/comparison/search and saved definitions/evidence.
+
+Work that must be planned explicitly:
+
+1. Family discovery/selection, semantic population defaults and purpose-ranked
+   panels instead of only generic span groups or the first eligible instruments.
+2. A resource-entity inventory and typed identity policy for hosts/Kubernetes,
+   distinct from service-name discovery. Current native validation expects service
+   identity; introduce a deliberate resource contract rather than manufacturing
+   `service.name` or relaxing existing service-stream validation globally.
+3. Nonmonotonic sum/UpDownCounter handling for pool/runtime stock metrics. Its
+   temporality is not interchangeable with a gauge table or a monotonic counter.
+4. Fractional counter semantics where required, such as CPU-time seconds. Native
+   gauges already accept finite Float64 values; this is not a blanket missing
+   float-metrics engine. Current counters accept integral nonnegative values
+   below 2^53 from Float64 exports.
+5. Any histogram family/unit beyond current duration distributions, if an actual
+   panel needs it; do not silently treat byte distributions as latency histograms.
+6. Kubernetes identity/ownership/state and capacity mappings from an actual
+   selected source. Requests, limits and current use require compatible resource
+   identity, time and units before ratios or workload aggregation.
+
+Keep current and legacy convention profiles explicit. Existing native HTTP rules
+and prepared catalog rules pin different versions; discovery is not proof that
+all observations conform to the same version.
+
+## Staged delivery and acceptance
+
+| Stage | Concrete result | Acceptance before advancing |
+| --- | --- | --- |
+| C2a — shared family contract + web/RPC RED | C2a.1: discover a service and load a useful HTTP server-span dashboard with relevant eligible native request metrics. C2a.2: add the incoming RPC profile and method/status/duration panels with its own semantics. | Mixed span kinds, missing/empty keys, namespace collisions, manifest-free data, span/native separate grains and clocks, bounded automatic defaults, record/trace drilldown, desktop/mobile whole task. |
+| C2b — messaging + database dependency | Discover standard producer/consumer and database-client telemetry and open role-specific dashboards using existing kernels where supported. | Actual processing/client instruments or spans; operation/role separation, sanitized query summaries, asynchronous trace links, partial-signal usefulness and correct per-family source budgets. Do not claim broker/server/pool health from client spans. |
+| C2c — pool/runtime/host resource panels | Implement the typed stock/counter/identity/calculation prerequisites needed by a selected real pool/runtime/host source, then ship useful USE panels. | Actual fractional gauges, relevant sum temporality and counter tests, capacities/units/identity, reset/gap/missing behavior, independent source parity and real resource-to-record investigation. Reuse supported gauges now rather than block them on fractional counters. |
+| C2d — Kubernetes operational dashboards | Discover cluster/workload/pod/container/node entities from a chosen OTel receiver/resource source and ship bounded resource/state/workload views. | Real inventory/ownership evidence, absent service identity, cluster and namespace separation, requests/limits/state/pressure semantics, receiver gaps, scoped logs/traces and workload aggregation. Introduce identity/discovery prerequisites as part of this delivery. |
+
+This is the product direction, not an instruction to implement every stage at
+once. HTTP is the first vertical slice, not the final scope of the initiative.
+Kubernetes discovery design can proceed in parallel once its actual source and
+resource-identity contract are selected. Native-to-record context (C3) and lean
+aggregate execution (C4) support these dashboards; they should not postpone useful
+panels indefinitely or be expanded into unrelated framework projects.

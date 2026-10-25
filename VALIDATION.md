@@ -9688,3 +9688,31 @@ the integrated priority, scope, dependencies and factual corrections. Initial
 local validation checks 564 relative links across 13 changed Markdown files,
 all six review inputs and the new reconciliation anchor; whitespace checks pass.
 The final publication checks include this validation entry separately.
+
+
+## Automatic dashboard roadmap clarification (2026-10-25)
+
+The user clarified the main product initiative: automatic USE/RED and other
+role-specific dashboards for discovered OTel services and Kubernetes/database/
+web/messaging resources. C2 is expanded from a single observation lens to
+capability-driven dashboard families with staged C2a–C2d deliveries. HTTP is
+the first vertical, followed explicitly by RPC, database/messaging, pool/runtime/
+host resource prerequisites and Kubernetes entity discovery/views.
+
+The [family plan](docs/AUTOMATIC_DASHBOARDS.md) specifies useful panels, partial-
+data behavior, discovery-driven defaults, bounded evaluation and investigation
+continuations without requiring manifests or dashboard authoring. It separates
+existing service/native/catalog foundations from proposed full-family execution.
+Source review confirms fractional gauges already work; fractional counters,
+nonmonotonic sum handling and non-service resource identity/discovery are actual
+remaining prerequisites for selected panels. No existing service identity
+validation is globally relaxed by the proposal.
+
+Product and architecture agents appended the user's clarification to their
+reviews, preserving their original review conclusions. Architecture sanity
+review approves the expanded contract; its requested explicit RPC substage is
+included. README, service overview guide, roadmap, backlog and implementation
+index now distinguish current automatic overviews from the proposed family
+program. All 296 initially checked relative links across eight changed Markdown
+files resolve and whitespace checks pass. This is documentation/planning only;
+no application changes, browser sessions or runtime tests were performed.
