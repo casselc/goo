@@ -5,3 +5,6 @@
 .trace-search .filter-editor button[aria-label^="Load values for condition"],.trace-search .filter-editor>goo-grouping-control{display:none}
 .trace-search .filter-editor .filter-observations{display:none}
 .trace-search-condition>button{padding:.2rem .4rem;margin:.2rem 0;font-size:.72rem}
+
+/* Long read-basis IDs remain exact while fitting the application column. */
+.trace-search{min-width:0;overflow-wrap:anywhere}.trace-search small{white-space:normal}
