@@ -9897,17 +9897,17 @@ changes from unknown-profile to missing-RPC-metadata now that the profile exists
 The hint also leaves empty/null/omitted profile output unchanged.
 
 The shared raw-source checker refactor revalidates all 19 accepted journey187
-responses and count-rejection controls in **0.083s**; the new188 opt-in compiles
+responses and count-rejection controls in **0.083s**; the new 188 opt-in compiles
 and explicitly skips without its ledger. This is not a rerun of the old browser
 or actor. An initial native test invocation needed the established XDG cache
 setting; only environment setup changed. Independent final source review approves
 the corrected method-population contract for frozen live acceptance.
 
 Before this round, the workspace had only 15MiB free. Identified ClickHouse
-diagnostic logs occupied about1GiB. Their recent200-line tails and full rotated
+diagnostic logs occupied about 1 GiB. Their recent 200-line tails and full rotated
 gzip were retained under `/tmp/goo-session-artifacts/storage-cleanup-20261025-rpc`;
 only those active diagnostic logs were truncated and the backed-up rotation
-removed. This restored about1.1GiB free without touching telemetry volumes, stores,
+removed. This restored about 1.1 GiB free without touching telemetry volumes, stores,
 repository history or verification receipts. Temporary feature binaries will be
 removed after deployment. Live browser/actor/frame evidence follows separately.
 
@@ -9925,3 +9925,87 @@ calculations, stream identities and captures are unchanged.
 Targeted dashboard/timeline tests pass **0.14s**; independent review approves the
 presentation-only change. The accepted main/actor are retained; a bounded actual
 unit-label/frame replay is required instead of repeating those semantic campaigns.
+
+
+## C2a.2 legacy RPC dashboards — live acceptance (2026-10-25)
+
+Completed against source `4274441` and presentation-only unit labels `ccdd2d1`.
+Local runtime binary SHA-256 is
+`d184483795fa6fc18e201b5e163565629b7ae7baa0b3519f262a2b2ad97fc5e6`
+(20,063,652 bytes). Atomic deployment, UI/server/spec equality and real asset MIME
+checks are recorded under `artifacts/rpc-server-dashboard/deployment*.json`; the
+temporary feature binary was removed. Unit-label deployment leaves the Go binary
+unchanged. No endpoint, query owner, data store or source calculation was added.
+
+The main journey passes on its first invocation in **24.4s / 27.7s total**. The
+generated ordinary OTLP fixture contains **234 spans**, including **203 mixed
+commerce/rpc-api records** and **132 exact legacy server RPC matches**. It has no
+goo manifest or mocked positive source/UI responses. Full totals, duration, span
+status and method groups remain independent of the 100-row inspection page.
+The shared method population contains **120 records**, intentionally spanning
+108 grpc and 12 interleaved custom-system records and two reported `rpc.service`
+values; both appear in the actual first 100 drilldown rows. Its recorded Error
+count is 24 and its duration sum is 3,000,000,000ns. A different method has reported
+nonzero grpc codes with recorded SpanStatus OK; those codes do not become span
+Errors or a protocol-wide failure policy.
+
+The 12 main action receipts account for **38 logical source API operations and
+eight pure plans**. Explicit All spans/Incoming RPC switching retains scope. A
+one-record millisecond interval outside all held witnesses retains the resolved
+RPC profile despite a false advisory hint; Reset restores the original window.
+Opening the method population stages source-free, Run makes one fresh read,
+trace expansion plus linked logs makes two fresh reads, and three browser Back
+entries restore the identical retained service view without reads. Client-only
+RPC defaults to All spans; explicit incoming zero and recovery to seven records
+remain honest with no hidden fallback query. Main receipt:
+`artifacts/rpc-server-dashboard/rpc-dashboard-8bcb4af8ed/ledger.json`.
+
+The separate **30-second Bombadil campaign passes** on its first invocation in
+**31.8s / 33.0s total**, completing **nine phases and 498 snapshots**. Its terminal
+proof is RPC132 → All203 → RPC132, **17 logical source operations / three plans**,
+with source-free evidence/picker/catalog return. Receipt:
+`artifacts/rpc-server-dashboard/rpc-dashboard-154ca6479e/bombadil/acceptance-summary.json`.
+
+Independent actual-source verification passes **0.091s**, checking **18 response
+populations/pages/groups/status/duration sums**, including the method and trace
+continuations, against raw fixture facts. Changed counts are rejected for each.
+The first invocation exposed an observer limitation: the shared reference field
+map omitted trace_id/span_id and rejected a valid one-row trace continuation.
+Adding those raw identity fields fixes the observer only; application, fixture
+and contract were unchanged. The initial diagnostic and final native log remain
+adjacent to the main ledger. These are proportional checks, not a new formal
+scheduling proof or an internal SQL scan-cost measurement.
+
+The exact-unit display clarification passes a separate bounded replay on a fresh
+ordinary fixture in **9.8s / 12.6s total**. Native `rpc.server.duration [ms]` and
+`rpc.server.duration [s]` remain separate headings/lane identities; their count
+axes still say observations per interval and retain four observations each.
+Both desktop/mobile label containment and equal physical duration tracks pass.
+Initial open performs **nine logical source operations / one plan**; resizing and
+frame capture add none. Receipt:
+`artifacts/rpc-server-dashboard/rpc-dashboard-24b42fbfe3/labels.json`.
+The accepted main and actor were not repeated for that presentation-only change.
+
+Five actual frames accompany [storyboard 188](journeys/188-rpc-server-dashboard-storyboard.md).
+Frames 188a–d now use the fresh labelled display fixture/window; 188e retains the
+accepted main trace continuation. README, service guide, architecture notes,
+roadmap/backlog, known issues, journey index and verification guide distinguish
+this delivered legacy binding from newer RPC conventions and remaining families.
+The shared catalog/header overhead remains the prior bounded follow-up. Final
+independent review, documentation-link and publication checks follow separately.
+
+
+Final independent review **APPROVES C2a.2**, including raw population/drilldown
+receipts, actor/native controls and the exact-unit display replay. The shared
+component guide documents the pure unit-label helper. A final storage check
+identified ClickHouse's internal part/query/text/trace logs as the remaining disk
+pressure. Schemas and recent 200-row samples (2,906,191 bytes) were retained under
+`/tmp/goo-session-artifacts/storage-cleanup-20261025-rpc/system-logs`; only those
+four internal diagnostic tables were truncated. Application OTel tables and saved
+evidence were preserved; the accepted fixture still has 234 spans. Free workspace
+space rose to 3.2 GiB. This follow-up changes internal diagnostic tables in the
+ClickHouse volume, not application telemetry or any product/store contract.
+
+Whitespace checks pass; **1,407 relative links across 14 changed Markdown files
+resolve**. The final commit and verified `origin/work` head are reported on
+completion.

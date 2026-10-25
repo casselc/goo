@@ -2279,3 +2279,40 @@ context reads preserve original bounds, and browser Back restores the same held
 overview without reading. The fixtures are generated ordinary OTLP telemetry;
 positive source/UI responses are not mocked. Three harness failures and actual compactness/label fixes are retained separately from
 the final accepted run. This slice adds no persistence or capture format.
+
+## 188 — Incoming legacy RPC service overview
+
+[Storyboard and flow diagram](../../journeys/188-rpc-server-dashboard-storyboard.md),
+[real OTel journey and bounded actor wrapper](../../journeys/rpc-server-dashboards.spec.js),
+[unit-label/frame replay](../../journeys/rpc-dashboard-labels.spec.js),
+[Bombadil actor](../../verification/bombadil/rpc-server-dashboard.ts) and
+[automatic dashboard scope](../AUTOMATIC_DASHBOARDS.md).
+
+| Frame | Actual evidence |
+| --- | --- |
+| [Incoming RPC overview](screenshots/188a-incoming-rpc-dashboard.png) | Full 132-record population, explicit reported-method grouping and separate native `[ms]`/`[s]` identities |
+| [Mobile summary](screenshots/188b-mobile-rpc-summary.png) | Recorded span count, Error and duration without protocol-outcome inference |
+| [Desktop in context](screenshots/188c-rpc-service-in-context.png) | Real discovery scope, profile controls and application navigation |
+| [Mobile in context](screenshots/188d-mobile-rpc-in-context.png) | Honest entry overhead and native label containment |
+| [Method to trace](screenshots/188e-rpc-method-to-trace.png) | Original-window fresh waterfall and honestly empty linked logs, followed by source-free held-service return |
+
+Main passes first attempt in 24.4s: 132 Server records with nonempty legacy
+`rpc.system` and `rpc.method`, versus 203 mixed records and a 100-row held page.
+Modern keys alone, missing/empty keys, wrong kinds and namespace collisions do not
+silently join the profile. One reported method groups 120 records across two
+systems/services; both occur in the actual first page. Its exact staged query,
+explicit Run, trace/linked-log reads and retained browser Back are verified.
+Client-only RPC defaults to generic, with explicit incoming zero and generic
+seven-record recovery. The accepted profile survives an unheld one-record range
+whose new observation hint is false.
+
+The 30-second actor completes nine phases over 498 snapshots with exact 17-source/
+three-plan effects. Independent raw-source verification passes in 0.091s across
+18 responses and rejects 18 changed-count controls. A 9.8s focused display replay
+qualifies same-name native units while keeping histogram count axes unchanged;
+its initial overview uses nine source operations/one plan, then display changes
+are source-free. Frames 188a–d use that fresh display fixture; 188e retains the
+accepted main. Original semantic main/actor were not rerun for display-only
+`ccdd2d1`. Full receipts and the corrected oracle diagnostic are in the storyboard.
+Generated ordinary OTLP telemetry is used; positive source/UI responses are not
+mocked. No new persistence format or convention-conformance claim is introduced.

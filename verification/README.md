@@ -1944,3 +1944,39 @@ GOO_HTTP_DASHBOARD_LEDGER=/workspace/goo/artifacts/http-server-dashboard/http-da
 
 The live test skips unless its artifact variable is supplied. Artifact paths are
 local acceptance receipts, not required repository inputs or CI fixtures.
+
+## Legacy incoming RPC dashboard slice (C2a.2)
+
+`TestHegelRPCDashboardRecordPopulation` uses 16 generated exhaustive grids across
+service/resource namespace, reported kind, missing/empty/custom system and method
+values. It reuses the independent predicate interpreter to check every actual
+RPC/log record question without calling the production matcher. Six candidate
+boundaries distinguish flat keys from positive hints and reject the newer
+`rpc.system.name` alias/resource-key substitutions. Deterministic checks retain
+HTTP automatic priority, explicit RPC intent and exact native millisecond/scope
+identity under discovery permutation and changed record counts. The focused
+campaign passed in 0.075s (`artifacts/rpc-dashboard-properties.txt`). The first
+invocation lacked writable `XDG_CACHE_HOME`; its infrastructure diagnostic is
+retained separately, with no semantic assertion failure.
+
+`TestRPCDashboardObservedPopulations` is opt-in via `GOO_RPC_DASHBOARD_LEDGER` and
+reuses the ordinary raw-fact/full-population oracle from HTTP. It checks the
+actual returned questions, full groups/counts/status/durations, raw page identity
+and scope, and rejects guaranteed changed counts. Actual journey188 `rpc-dashboard-8bcb4af8ed/ledger.json` passed in 0.091s: all
+18 applicable responses, including the 120-record cross-system method population
+and its actual trace continuation, passed with changed-count rejection. The
+adjacent `native-validation.txt` retains stdout. An initial observer diagnostic
+identified omitted trace/span identity fields in the shared raw-fact map; adding
+those raw fields corrected the oracle without changing fixtures or application
+semantics. The rejected log is retained as
+`native-validation-missing-oracle-identity.txt`. The shared-oracle refactor also
+passed accepted journey187's 19 responses plus the explicit 188 skip/compile gate
+in 0.083s (`artifacts/rpc-dashboard-shared-oracle-regression.txt`). No new formal
+lifecycle model or fixed campaign quota is introduced.
+
+After browser ownership is released, use the environment above:
+
+```sh
+go test -run '^Test(HegelRPCDashboard|RPCDashboardCandidate|RPCDashboardNative)' -v .
+GOO_RPC_DASHBOARD_LEDGER=/workspace/goo/artifacts/rpc-server-dashboard/rpc-dashboard-8bcb4af8ed/ledger.json go test -run '^TestRPCDashboardObservedPopulations$' -v .
+```

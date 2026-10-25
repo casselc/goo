@@ -1,6 +1,6 @@
 # Automatic operational dashboards — product initiative
 
-Status: **C2a.1 HTTP slice delivered**; the remaining stages are proposed. Clarified by the user on 2026-10-25 after the whole-product review.
+Status: **C2a.1 HTTP and C2a.2 legacy RPC delivered**. Later stages are proposed. Clarified by the user on 2026-10-25 after the whole-product review.
 This is the expanded C2 initiative in the
 [current roadmap](ROADMAP_2026_10_25.md), not a claim every family is implemented.
 
@@ -61,6 +61,35 @@ C2a.1 is implemented and checked against ordinary OTel data. Actual source,
 browser, actor and independent verification evidence is recorded in
 [VALIDATION.md](../VALIDATION.md) and [journey 187](../journeys/187-http-server-dashboard-storyboard.md).
 
+## Incoming RPC slice — explicit legacy binding
+
+C2a.2 is delivered. The first RPC view uses a named legacy observation profile,
+`goo/rpc-server-legacy-span-observations/v1`: exact reported `Server` kind and
+present, nonempty `rpc.system` and `rpc.method` attributes. It does not union
+`rpc.system.name` or newer method names into that population. Custom nonempty
+values remain reported values rather than verified convention compliance.
+
+Flat key discovery suggests a selectable RPC candidate. Automatic admission also
+requires a positive same-row server/system/method observation from the existing
+scoped service page, or a compatible legacy native instrument. HTTP keeps its
+existing automatic priority; RPC follows when independently admitted, then All
+spans. Manual selection and range/native changes retain the resolved profile.
+No absence is inferred from a bounded metadata page, and no fallback read is hidden.
+
+The relevant native binding is `rpc.server.duration`, histogram, unit `ms`, with
+existing typed identity/temporality validation. A same-name seconds instrument
+is not silently converted into this binding; newer call-duration names need a
+separate explicit profile. Native results keep their own stream populations and
+interval coverage. Recorded span Error, gRPC numeric status, HTTP status and
+business success are separate facts; this cut does not invent a protocol-wide
+failure policy or a unique-call denominator.
+
+Method groups aggregate a reported method value across RPC systems/services
+within the selected service and parent population. Drilldown preserves that
+parent predicate and adds the exact method value; it does not manufacture a
+globally unique operation identity. The existing compact displays,
+scoped questions, trace waterfall and retained Back flow are reused.
+
 ## Dashboard families and useful defaults
 
 | Family / entity | Useful default panels | Evidence required and fallback |
@@ -112,8 +141,8 @@ Already implemented:
 
 - [Service overview planner](../exploration/dashboard.go), automatic service views,
   bounded widget execution, scoped record/native presenters and investigation
-  continuations. C2a.1 supplies HTTP server-span defaults with All spans fallback;
-  generic/legacy plans retain mixed-kind span grain.
+  continuations. C2a.1/C2a.2 supply HTTP and legacy RPC server-span defaults with
+  All spans fallback; omitted-profile plans retain mixed-kind span grain.
 - [Native HTTP/messaging capability candidates](../measurements/instrument_capabilities.go),
   gauge/counter/explicit-duration-histogram kernels and exact stream identity.
 - [Catalog profiles](../prebuilt/catalog.yaml) for HTTP, messaging, host CPU,
@@ -124,8 +153,8 @@ Already implemented:
 
 Work that must be planned explicitly:
 
-1. Extend the delivered HTTP family selection, semantic population defaults and
-   purpose-ranked panels to RPC and the remaining role/resource families.
+1. Extend the delivered HTTP/legacy-RPC family selection and purpose-ranked
+   panels to newer RPC conventions and the remaining role/resource families.
 2. A resource-entity inventory and typed identity policy for hosts/Kubernetes,
    distinct from service-name discovery. Current native validation expects service
    identity; introduce a deliberate resource contract rather than manufacturing

@@ -80,13 +80,15 @@ optional reservation lab.
 | [Saved work](docs/INVESTIGATION_DRAFT_RECOVERY.md) | Immutable evidence/revisions, reusable questions and bounded same-tab draft recovery | Browser storage can fail/expire; an unknown save may already have committed |
 | [Annotations](docs/WORKBENCH_ANNOTATIONS.md) | Tags/notes, exact references and optional XTDB-retained evidence | No shared-draft concurrency, trained classifier or production authorization is implied |
 
-[Automatic operational dashboards](docs/AUTOMATIC_DASHBOARDS.md) now start with
-HTTP server-span views: discover a service, see incoming activity, recorded span
-errors, duration and routes, then open a scoped question or trace. All spans
-remains available, and native HTTP duration instruments retain separate stream
-semantics. RPC, database, messaging, host/runtime USE and Kubernetes families
-remain staged follow-on work; discovery does not invent missing health signals.
-See the [executed journey and desktop/mobile frames](journeys/187-http-server-dashboard-storyboard.md).
+[Automatic operational dashboards](docs/AUTOMATIC_DASHBOARDS.md) now include
+HTTP and explicit legacy OTel RPC server-span views. Discover a service, see
+incoming activity, recorded span errors, duration and route/method populations,
+then open a scoped question or trace. All spans remains available; native metrics
+retain separate units, streams and intervals. Newer RPC convention bindings,
+database, messaging, host/runtime USE and Kubernetes remain staged follow-on work.
+Discovery does not invent missing health signals.
+See the executed [HTTP](journeys/187-http-server-dashboard-storyboard.md) and
+[RPC](journeys/188-rpc-server-dashboard-storyboard.md) journeys with desktop/mobile frames.
 
 Error triage acceptance is complete: ET1 `982b9e9`, ET2 `0c4ab38`, real OTel
 179 spans/logs, ownership, native/model checks and a 55-second actor pass. Actual

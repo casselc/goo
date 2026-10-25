@@ -73,3 +73,15 @@ model of all native UI composition. See [actual results](../VALIDATION.md).
 Other native aggregate layouts, arbitrary composition, fleet discovery and durable
 catalog/navigation work remain separate. This cut does not add new native math,
 interpolate bucket bounds or combine scalar percentiles.
+
+
+### Exact units in compact instrument labels
+
+`GooNativePresentation.instrumentLabel(name, unit)` is a pure display helper shared
+by service widget headings and native overview timeline lanes. It retains the
+reported unit explicitly, such as `rpc.server.duration [ms]` versus
+`rpc.server.duration [s]`; an absent unit is labelled **unit not reported** rather
+than inferred as dimensionless. Histogram axes still describe observations per
+interval. This changes neither source bindings, values, interval coverage nor
+complete stream identity. Journey188 exercises both units together on desktop
+and mobile; its accepted semantic run and display replay are separate receipts.

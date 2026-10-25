@@ -93,6 +93,37 @@ widget remains not observed. Registered operation bindings retain their declared
 populations. This slice does not establish request throughput, business success,
 complete traces, percentile merging or a complete RED dashboard.
 
+## Incoming RPC with an explicit legacy convention
+
+The `rpc-server` profile is a separate **legacy RPC server-span observation**
+lens. It preserves service, resource namespace, environment and fixed window,
+then requires reported kind `Server`, nonempty `rpc.system` and nonempty
+`rpc.method` record attributes. Missing and empty values are excluded; whitespace
+and custom nonempty values remain literal. `rpc.system.name` does not substitute
+for `rpc.system`, and no aliases are unioned. The rule set
+`goo/rpc-server-legacy-span-observations/v1` identifies this interpretation rather
+than claiming current semantic-convention conformance.
+
+Both legacy keys make an RPC candidate available. Auto chooses it only with a
+positive scoped held-page Server/system/method hint, or with an eligible exact
+`rpc.server.duration` histogram in milliseconds. Incoming HTTP retains automatic
+priority when both families qualify; explicit RPC selection remains available.
+Missing hints are unknown, and client-only keys can offer an explicit RPC lens
+whose actual population is empty. The same staged profile/explicit Apply policy
+and manual All spans fallback apply.
+
+RPC activity, reported status, durations and method groups all use that same
+server-span-record population. A method group is a literal value within this
+parent population: the same method can span different reported `rpc.system` or
+`rpc.service` values. Opening it preserves the parent and adds only the method predicate; it
+does not identify a unique RPC operation. These views do not infer gRPC status, request success,
+unique calls or a complete trace. Native legacy RPC duration remains an independent
+per-stream millisecond measurement, with its original library/schema/temporality
+identity; seconds do not become eligible by conversion. Eligible RPC instruments
+rank before unrelated defaults only while RPC is active, within the existing
+two-instrument bound. Logs and registered operation declarations keep their own
+populations. Current-convention RPC support remains a separate future contract.
+
 ## Observe → question → evidence → investigation
 
 Each widget offers **Open widget question**, **Add widget question** and
@@ -309,5 +340,6 @@ views, resource USE, and Kubernetes cluster/workload/pod/node dashboards. The
 implemented v2 service overview and supported native kernels are a foundation;
 catalog entries marked proposed do not yet execute those complete dashboards.
 The initiative stages useful defaults, entity/resource discovery, required metric
-adapters and investigation drilldowns while keeping manifests optional. The incoming HTTP server-span slice above is implemented; broader HTTP/RPC RED
-and the remaining families still require their own population and source contracts.
+adapters and investigation drilldowns while keeping manifests optional. The incoming HTTP and legacy RPC server-span slices above are implemented.
+Broader HTTP/RPC RED, newer RPC conventions and protocol outcome policies, and
+the remaining families still require their own population and source contracts.

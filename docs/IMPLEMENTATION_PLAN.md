@@ -20,8 +20,9 @@ then automatic capability-driven operational dashboard families and
 native-interval-to-record context. The G1 fast root Go/Node gate is delivered in
 `374bbd5`; the first HTTP dashboard source slice is implemented in `13a8da1`,
 with live ordinary-OTel acceptance in [journey 187](../journeys/187-http-server-dashboard-storyboard.md), compact UI `d648655` and mobile containment `a01141b`. The [family plan](AUTOMATIC_DASHBOARDS.md)
-starts with HTTP RED and explicitly includes database, messaging, resource USE
-and Kubernetes deliveries; an HTTP observation lens is the first slice, not the
+now includes delivered HTTP and legacy RPC server-span slices, with explicit
+method-population semantics and independent native units. See [journey 188](../journeys/188-rpc-server-dashboard-storyboard.md). Database, messaging, resource USE
+and Kubernetes remain staged deliveries; the first two profiles are not the
 entire product goal.
 Lean aggregate reads require a measured audit; trace-search definition reuse is
 a conditional later cut, distinct from observed-result custody. These are

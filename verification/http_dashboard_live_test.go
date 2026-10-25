@@ -33,6 +33,8 @@ func hdLivePopulation(records []hdLiveRecord, q exploration.Query) []hdLiveRecor
 	var out []hdLiveRecord
 	for _, r := range records {
 		fields := map[exploration.Field]string{
+			{Kind: "column", Key: "trace_id"}:            r.TraceID,
+			{Kind: "column", Key: "span_id"}:             r.ID,
 			{Kind: "column", Key: "service"}:             r.Service,
 			{Kind: "column", Key: "name"}:                r.Name,
 			{Kind: "column", Key: "kind"}:                map[int]string{1: "Internal", 2: "Server", 3: "Client", 4: "Producer", 5: "Consumer"}[r.Kind],

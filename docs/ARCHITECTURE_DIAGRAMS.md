@@ -1146,6 +1146,16 @@ coverage remain separate from span counts. These are server-span observations,
 not deduplicated request RED or health. See the implemented limits and selection
 rules in [service dashboards](SERVICE_DASHBOARDS.md#incoming-http-as-an-explicit-record-population).
 
+### Incoming RPC and family precedence
+
+The implemented legacy RPC lens reuses the same pure planner and explicit widget
+execution path. Auto selects HTTP before RPC, then All spans. An explicit RPC
+choice uses `Server` plus nonempty `rpc.system` and `rpc.method` in the original
+fixed scope; it does not union newer aliases or infer gRPC status. A positive
+held-page hint is advisory. Native `rpc.server.duration` histograms remain exact
+millisecond per-stream evidence, independent of span counts. Current RPC schema
+support is proposed separately; see [the RPC population contract](SERVICE_DASHBOARDS.md#incoming-rpc-with-an-explicit-legacy-convention).
+
 ### Live native counter windows
 
 The [counter export-window sequence](LIVE_COMPARISON.md#exact-stream-counter-rates)

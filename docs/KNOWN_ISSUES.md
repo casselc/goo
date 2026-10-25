@@ -835,7 +835,10 @@ Automatic span admission reuses at most 100 already-held service records; a page
 without a matching witness leaves All spans selected and offers the HTTP candidate
 when current method metadata exists. It does not prove HTTP work absent. Explicit
 view/range changes preserve the selected population and perform bounded fresh
-widget reads. Legacy-only HTTP keys, incoming RPC, database/messaging/resource USE
-and Kubernetes families remain separate profiles/deliveries. Generic-source
+widget reads. The delivered incoming RPC profile explicitly uses legacy `rpc.system`/`rpc.method`
+and native `rpc.server.duration` milliseconds. Newer RPC bindings, legacy-only
+HTTP keys, database/messaging/resource USE and Kubernetes remain separate
+profiles/deliveries. A bare method group spans reported RPC systems/services
+within its parent; it is not a unique operation identity. Generic-source
 startup still has the documented sample-configuration dependency (C1); running
 this manifest-free telemetry journey in the existing lab does not close that gap.

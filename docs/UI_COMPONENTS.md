@@ -518,7 +518,11 @@ with external callers; application consumers have migrated.
 `GooNativePresentation` shares native latest values, series diagnostics, exact rate
 formatting and comparison-window coverage. It composes existing stats, UTC timestamps
 and disclosures, with styles in `native-presentation.css`. It has no source client or
-query/evidence state. Service coverage remains compact and collapsed; measurement
+query/evidence state. Its pure `instrumentLabel(name, unit)` helper qualifies
+service widget and timeline headings with the exact source unit; absent units say
+**unit not reported**. Same-name milliseconds/seconds instruments remain distinct,
+and histogram count-axis units remain observations per interval. It performs no
+conversion or stream merge. Service coverage remains compact and collapsed; measurement
 stream details retain latest versus whole-window distinctions. Supported-window previews also compose its window values and coverage with the existing stream inspector; discovery and explicit recapture remain owned by `GooWindowDiscovery`. [Contract and diagram](NATIVE_PRESENTATION.md).
 
 ## Definition library presenter
