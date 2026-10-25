@@ -645,3 +645,28 @@ diagnostics but do not support conserved-population actions. Equal aggregates do
 not prove a transactional snapshot. Empty time buckets are no observations in
 that aggregate read, not evidence of service health. Existing `/explore` and
 counted-values responses are unchanged.
+
+Native measurements now accept additive `definition.kind: stock` through the
+existing package, `/measurements` and capture routes. Stock binds actual sum-table
+observations, requiring cumulative temporality and nonmonotonic input. Delta and
+monotonic source sums return 502 rather than being presented as an absolute stock;
+invalid package definitions return 400 before source execution. There is no new
+route or change to existing transport/cancellation limits.
+
+A stock result adds optional `stocks: {fromNS,toNS,series}`. Each exact stream has
+state and samples containing accumulation `startNS`, observation `atNS`, state,
+optional numeric value and optional reason. Signed finite fractional tallies are
+supported. A decrease is an observation, not a counter reset; a new epoch is
+retained without subtraction or interpolation. `observed`, `stale` and `unknown`
+remain distinct. Unknown samples omit value; stale samples retain it. This is
+neither a gauge-table reinterpretation nor a counter rate, fleet total, verified
+physical baseline, pool health or utilization ratio.
+
+Captured stocks reopen through the existing saved-capture API without telemetry
+reads and preserve the original source rows, exact identity, epochs and computed
+stock result. Existing gauge/counter/histogram/lifecycle result bytes are unchanged
+when `stocks` is absent. The actual handler workflow can be exported with
+`GOO_STOCK_API_OBSERVATIONS` while running `TestStockHTTPExecuteCaptureAndOfflineReopen`
+and checked using `scripts/check_openapi.py --stock-observations <path>`; the
+workflow covers execute, capture, offline reopen and delta/monotonic refusals.
+See [cumulative stock semantics](CUMULATIVE_STOCKS.md).

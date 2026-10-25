@@ -33,24 +33,24 @@
  };
  function reasonInfo(code){const [title,guidance]=(Object.hasOwn(reasonDescriptions,code)?reasonDescriptions[code]:null)||['The source reported an additional diagnostic.','Inspect its exact code and retained observations before interpreting this window.'];return {code,title,guidance}}
  function streamDiagnostics(series,kind){
-  const observations=kind==='gauge'?series.samples||[]:series.intervals||[],good=kind==='gauge'?'observed':'ok',recorded=observations.filter(x=>x.state===good).length,review=observations.length-recorded;
+  const observations=['gauge','stock'].includes(kind)?series.samples||[]:series.intervals||[],good=['gauge','stock'].includes(kind)?'observed':'ok',recorded=observations.filter(x=>x.state===good).length,review=observations.length-recorded;
   const reasons=[...new Set(observations.map(x=>x.reason).filter(Boolean))];
   const attention=series.state!==good||review>0;
-  if(attention&&!reasons.length)reasons.push(kind==='gauge'?'unknown-observation':'incomplete-window');
-  const label=kind==='gauge'?(series.state==='observed'?'Latest observation recorded':series.state==='stale'?'Latest observation stale':'Observation unavailable'):(series.state==='ok'?'Window covered':series.state==='no_data'?'No evaluated intervals':'Window needs review');
+  if(attention&&!reasons.length)reasons.push(['gauge','stock'].includes(kind)?'unknown-observation':'incomplete-window');
+  const label=['gauge','stock'].includes(kind)?(series.state==='observed'?'Latest observation recorded':series.state==='stale'?'Latest observation stale':'Observation unavailable'):(series.state==='ok'?'Window covered':series.state==='no_data'?'No evaluated intervals':'Window needs review');
   return {state:series.state,attention,label,recorded,review,reasons};
  }
  function latest(s,kind){
-   const gauge=kind==='gauge',points=(gauge?s.samples:s.intervals)||[],last=points.reduce((a,p)=>!a||BigInt(p.atNS||p.toNS)>BigInt(a.atNS||a.toNS)?p:a,null);
-   let value='Unavailable';const validSeries=gauge?s.state==='observed':['ok','unknown'].includes(s.state);
-   if(validSeries&&last?.state===(gauge?'observed':'ok')){
+   const gauge=['gauge','stock'].includes(kind),points=(gauge?s.samples:s.intervals)||[],last=points.reduce((a,p)=>!a||BigInt(p.atNS||p.toNS)>BigInt(a.atNS||a.toNS)?p:a,null);
+   let value='Unavailable';const validSeries=kind==='stock'?['observed','unknown','stale'].includes(s.state):gauge?s.state==='observed':['ok','unknown'].includes(s.state);
+   if(validSeries&&(kind==='stock'?['observed','stale'].includes(last?.state):last?.state===(gauge?'observed':'ok'))){
     if(gauge&&typeof last.value==='number'&&Number.isFinite(last.value))value=String(last.value)+' '+s.stream.unit;
     else if(kind==='counter'&&typeof last.perSecond==='number'&&Number.isFinite(last.perSecond))value=String(last.perSecond)+' '+s.stream.unit+'/s';
     else if(kind==='histogram'&&last.distribution?.unit===s.stream.unit){const d=last.distribution,formatter=typeof module!=='undefined'?require('./histograms'):global.GooHistograms;value=d.count+' observations · '+(['bucket-bound','unbounded-upper','unbounded-lower','unbounded','no_data'].includes(d.p95.state)?formatter.p95Label(d.p95,d.unit):'P95 unavailable')}
    }
-   return {stream:structuredClone(s.stream),kind,seriesState:s.state,state:last?.state||s.state,value,extent:last?(gauge?'Endpoint '+last.atNS+' ns':'Latest interval ['+last.fromNS+', '+last.toNS+') ns'):'No retained endpoint or interval',reason:last?.reason||'',fromNS:last?.fromNS,toNS:last?.toNS,atNS:last?.atNS};
+   return {stream:structuredClone(s.stream),kind,seriesState:s.state,state:last?.state||s.state,value,extent:last?(gauge?'Endpoint '+last.atNS+' ns':'Latest interval ['+last.fromNS+', '+last.toNS+') ns'):'No retained endpoint or interval',reason:last?.reason||'',fromNS:last?.fromNS,toNS:last?.toNS,atNS:last?.atNS,...(kind==='stock'?{startNS:last?.startNS}:{})};
  }
- function nativeSummary(data){const family=data.gauges||data.counters||data.histograms;if(!family)return [];const kind=data.gauges?'gauge':data.counters?'counter':'histogram';return family.series.slice(0,4).map(s=>latest(s,kind))}
+ function nativeSummary(data){const family=data.gauges||data.stocks||data.counters||data.histograms;if(!family)return [];const kind=data.gauges?'gauge':data.stocks?'stock':data.counters?'counter':'histogram';return family.series.slice(0,4).map(s=>latest(s,kind))}
  function rateText(value){if(typeof value!=='string'||! /^-?\d+(\/[1-9]\d*)?$/.test(value)||value.length>256)return 'Unavailable';const [a,b='1']=value.split('/'),n=BigInt(a),d=BigInt(b),v=((n<0n?-n:n)*1000n+d/2n)/d;return (n<0n&&v!==0n?'-':'')+String(v/1000n)+'.'+String(v%1000n).padStart(3,'0')}
  function windowValue(stream,summary){
   if(!windowCoverage(summary).validated)return 'Unavailable';
@@ -65,10 +65,10 @@
   const list=node('ul');list.className='native-reason-list';for(const code of unique){const info=reasonInfo(code),item=node('li');item.append(node('strong',info.title),node('span',' '+info.guidance));list.append(item)}
   const exact=node('details');exact.append(node('summary','Diagnostic codes'),node('code',unique.join(' · ')));host.append(list,exact);
  }
- function extent(host,value){const p=node('p');if(value.atNS!==undefined)p.append('Endpoint ',global.GooEvidenceSummary.timestamp(value.atNS));else if(value.fromNS!==undefined&&value.toNS!==undefined)p.append('Latest interval [',global.GooEvidenceSummary.timestamp(value.fromNS),' → ',global.GooEvidenceSummary.timestamp(value.toNS),')');else p.textContent='No retained endpoint or interval';host.append(p)}
+ function extent(host,value){const p=node('p');if(value.atNS!==undefined)p.append('Endpoint ',global.GooEvidenceSummary.timestamp(value.atNS));else if(value.fromNS!==undefined&&value.toNS!==undefined)p.append('Latest interval [',global.GooEvidenceSummary.timestamp(value.fromNS),' → ',global.GooEvidenceSummary.timestamp(value.toNS),')');else p.textContent='No retained endpoint or interval';if(value.kind==='stock')p.append(' · accumulation epoch ',value.startNS?global.GooEvidenceSummary.timestamp(value.startNS):node('span','Unavailable'));host.append(p)}
  function renderStreamDiagnostics(host,s,kind,{exportCoverage=false,compact=false,showLatest=true}={}){const m=streamDiagnostics(s,kind),section=node(compact?'details':'section');section.className='native-diagnostics'+(compact?' native-coverage-details':'');section.dataset.state=m.state;section.append(node(compact?'summary':'h4',(exportCoverage?'Export intervals · ':'')+m.label));
   if(showLatest){const value=latest(s,kind);const row=node('p');row.append(node('strong',value.value));section.append(row);extent(section,value)}
-  section.append(global.GooUI.stats([{label:kind==='gauge'?'Fresh observations':'Recorded intervals',value:String(m.recorded)},{label:kind==='gauge'?'Observations needing review':'Intervals needing review',value:String(m.review)}]));renderReasons(section,m.reasons);section.append(node('small',kind==='gauge'?'Independent samples; freshness is evaluated at the fixed window end.':'Recorded intervals do not by themselves establish whole-window coverage.'));host.append(section);return section;
+  section.append(global.GooUI.stats([{label:['gauge','stock'].includes(kind)?'Fresh observations':'Recorded intervals',value:String(m.recorded)},{label:['gauge','stock'].includes(kind)?'Observations needing review':'Intervals needing review',value:String(m.review)}]));renderReasons(section,m.reasons);section.append(node('small',['gauge','stock'].includes(kind)?'Independent samples; freshness is evaluated at the fixed window end.':'Recorded intervals do not by themselves establish whole-window coverage.'));host.append(section);return section;
  }
  function windowCoverage(side){return side?{state:side.state,fromNS:side.fromNS,toNS:side.toNS,temporality:side.temporality,reasons:[...new Set(side.reasons||[])],validated:side.state==='observed'&&!(side.reasons||[]).length}:{state:'missing',reasons:[],validated:false}}
  function renderWindowCoverage(host,label,side){const m=windowCoverage(side),section=node('div');section.className='native-window-coverage';section.dataset.state=m.state;const p=node('p');if(side)p.append(label+': [',global.GooEvidenceSummary.timestamp(m.fromNS),' → ',global.GooEvidenceSummary.timestamp(m.toNS),') · '+m.temporality+' · '+m.state+' · '+(m.validated?'Validated export coverage':'Coverage not validated'));else p.textContent=label+': missing exact stream';section.append(p);renderReasons(section,m.reasons);host.append(section);return section}

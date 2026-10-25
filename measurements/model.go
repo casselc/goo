@@ -76,6 +76,7 @@ type Plan struct {
 	Revision   string            `json:"revision"`
 }
 type Result struct {
+	Stocks        *metrics.StockResult         `json:"stocks,omitempty"`
 	HistogramTime *metrics.HistogramTimeResult `json:"histogramTime,omitempty"`
 	Events        []lifecycle.Event            `json:"events,omitempty"`
 	Question      Question                     `json:"question"`
@@ -110,7 +111,7 @@ func (d Definition) Validate() error {
 	if d.HistogramBucketMS != nil && (d.Kind != "histogram" || *d.HistogramBucketMS < 1 || *d.HistogramBucketMS > 7200000) {
 		return fmt.Errorf("histogramBucketMs requires a histogram and a positive width <=120 minutes")
 	}
-	if d.Kind != "gauge" && d.Kind != "counter" && d.Kind != "histogram" && d.Kind != "lifecycle" {
+	if d.Kind != "gauge" && d.Kind != "counter" && d.Kind != "histogram" && d.Kind != "lifecycle" && d.Kind != "stock" {
 		return fmt.Errorf("unsupported measurement kind")
 	}
 	if d.Grain != "per-stream" && d.Grain != "consumer-group" && d.Grain != "subject" {

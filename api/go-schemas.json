@@ -12713,6 +12713,16 @@
       "state": {
         "type": "string"
       },
+      "stocks": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/metrics.StockResult"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "warnings": {
         "anyOf": [
           {
@@ -14096,6 +14106,99 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/metrics.RatioSeries"
+  },
+  "metrics.StockResult": {
+    "properties": {
+      "fromNS": {
+        "type": "string"
+      },
+      "series": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/metrics.StockSeries"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "toNS": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "fromNS",
+      "toNS",
+      "series"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/metrics.StockResult"
+  },
+  "metrics.StockSample": {
+    "properties": {
+      "atNS": {
+        "type": "string"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "startNS": {
+        "type": "string"
+      },
+      "state": {
+        "type": "string"
+      },
+      "value": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "startNS",
+      "atNS",
+      "state"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/metrics.StockSample"
+  },
+  "metrics.StockSeries": {
+    "properties": {
+      "samples": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/metrics.StockSample"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "state": {
+        "type": "string"
+      },
+      "stream": {
+        "$ref": "#/components/schemas/metrics.Stream"
+      }
+    },
+    "required": [
+      "stream",
+      "state",
+      "samples"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/metrics.StockSeries"
   },
   "metrics.Stream": {
     "properties": {

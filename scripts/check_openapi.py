@@ -81,7 +81,7 @@ def check(spec):
                 requests += 1
                 if isinstance(request, dict):
                     accepted.append((shape, request))
-    assert responses == 311 and requests == 106 and mux_refusals == 18, (responses, requests)
+    assert responses == 315 and requests == 109 and mux_refusals == 18, (responses, requests)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)
@@ -155,10 +155,33 @@ def check_observed(spec, path):
     print(f"Observed API workflow: {len(observations)} real handler responses conform (including optional XTDB only when configured)")
 
 
+def check_stock_observed(spec,path):
+    observations=json.loads(Path(path).read_text())
+    assert len(observations)==6, 'Expected execute/capture/reopen/delta/monotonic/invalid stock workflow'
+    for case in observations:
+        op=spec['paths'][case['path']][case['method'].lower()]
+        validator(spec,op['responses'][str(case['status'])]['content']['application/json']['schema']).validate(case['response'])
+        if case.get('request') is not None and 'requestBody' in op:
+            validator(spec,op['requestBody']['content']['application/json']['schema']).validate(case['request'])
+    executed=next(c['response'] for c in observations if c['path']=='/measurements' and c['status']==200)
+    assert executed['question']['definition']['kind']=='stock' and len(executed['stocks']['series'])==1
+    assert all(k not in executed for k in ('gauges','counters','histograms','lifecycle'))
+    sample=executed['stocks']['series'][0]['samples'][1]
+    shape={'$ref':'#/components/schemas/metrics.StockSample'}
+    for wrong in ({**sample,'state':'healthy'},{**sample,'value':'7.5'},{**sample,'state':'unknown'},{k:v for k,v in sample.items() if k!='value'}):
+        assert list(validator(spec,shape).iter_errors(wrong)), 'Stock sample negative control accepted'
+    assert len([c for c in observations if c['path']=='/measurements' and c['status']==502])==2
+    captured=next(c['response']['measurement'] for c in observations if c['path']=='/captures' and c['status']==201)
+    reopened=next(c['response']['measurement'] for c in observations if c['path']=='/captures/{id}' and c['status']==200)
+    assert captured==reopened, 'Stock capture changed on offline reopen'
+    print('Stock API workflow: 6 actual handler responses conform; capture/reopen and rejecting controls pass')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--observations')
     parser.add_argument('--proxy-observations')
+    parser.add_argument('--stock-observations')
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
@@ -166,3 +189,6 @@ if __name__ == '__main__':
         check_observed(spec, args.observations)
     if args.proxy_observations:
         check_observed(spec, args.proxy_observations)
+
+    if args.stock_observations:
+        check_stock_observed(spec,args.stock_observations)

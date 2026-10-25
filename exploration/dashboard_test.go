@@ -70,7 +70,7 @@ func TestDashboardRejectsUnsupportedNativeTemporalityAndKind(t *testing.T) {
 		kind        string
 		temporality int
 		monotonic   bool
-	}{{"gauge", 1, false}, {"counter", 2, false}, {"histogram", 3, false}, {"lifecycle", 0, false}} {
+	}{{"gauge", 1, false}, {"counter", 2, false}, {"histogram", 3, false}, {"lifecycle", 0, false}, {"stock", 1, false}, {"stock", 2, true}} {
 		d := measurements.Definition{APIVersion: measurements.Version, Name: "metric", Title: "Metric", Kind: bad.kind, Environment: "prod", LookbackMinutes: 1, MaxGapMS: 60000, Grain: "per-stream", Source: measurements.Binding{Services: []string{"api"}, Scope: "sdk", Metric: "metric", Unit: "ms"}}
 		in.Instruments = []measurements.Instrument{{Kind: bad.kind, Temporality: bad.temporality, Monotonic: bad.monotonic, Metric: "metric", Unit: "ms", Scope: "sdk", Supported: true, Definition: &d}}
 		if _, err := PlanServiceDashboard(in, nil); err == nil {
@@ -159,5 +159,25 @@ func TestDashboardExplicitNativeSelection(t *testing.T) {
 	in.Scope.Environment = "other"
 	if _, e := PlanServiceDashboard(in, nil); e == nil {
 		t.Fatal("cross-environment selection accepted")
+	}
+}
+
+func TestDashboardStockGenericNativeSupport(t *testing.T) {
+	d := measurements.Definition{APIVersion: measurements.Version, Name: "connections", Title: "Connection observations", Kind: "stock", Environment: "prod", LookbackMinutes: 1, MaxGapMS: 60000, Grain: "per-stream", Source: measurements.Binding{Services: []string{"api"}, Scope: "sdk", Metric: "db.client.connection.count", Unit: "{connection}"}}
+	in := DashboardRequest{Scope: InventoryQuestion{Environment: "prod", FromMS: 1000, ToMS: 61000}, Service: "api", Signals: []string{"metrics"}, Instruments: []measurements.Instrument{{Kind: "stock", Temporality: 2, Monotonic: false, Scope: "sdk", Metric: d.Source.Metric, Unit: d.Source.Unit, Supported: true, Definition: &d}}}
+	p, err := PlanServiceDashboard(in, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(p.NativeOptions) != 1 || len(p.Widgets) != 3 || p.Widgets[2].Measurement == nil || p.Widgets[2].Measurement.Definition.Kind != "stock" {
+		t.Fatalf("stock unavailable in generic native widgets: %+v", p)
+	}
+	// An eligible generic stock must not become an inferred pool-health profile.
+	if p.Widgets[2].Family != "" {
+		t.Fatal("stock name inferred family health")
+	}
+	in.Instruments[0].Definition.Source.Unit = "By"
+	if _, err := PlanServiceDashboard(in, nil); err == nil {
+		t.Fatal("mismatched stock identity accepted")
 	}
 }

@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "stock-package-plan",
+      "method": "POST",
+      "path": "/measurement-packages/plan",
+      "body": "{\"fromMs\":100000,\"toMs\":104000,\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: pool-stock\\ntitle: Pool observations\\nkind: stock\\nenvironment: prod\\nlookbackMinutes: 1\\nmaxGapMs: 60000\\ngrain: per-stream\\nsource:\\n    namespace:\\n        mode: value\\n    services:\\n        - api\\n    scope: ordinary-sdk\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: db.client.connection.count\\n    unit: '{connection}'\\n\"}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pool-stock\",\"title\":\"Pool observations\",\"kind\":\"stock\",\"environment\":\"prod\",\"lookbackMinutes\":1,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"namespace\":{\"mode\":\"value\"},\"services\":[\"api\"],\"scope\":\"ordinary-sdk\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"db.client.connection.count\",\"unit\":\"{connection}\"}},\"plan\":{\"sql\":\"SELECT mapUpdate(ResourceAttributes,map('service.name',toString(ServiceName))) AS resource, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schema_url, ResourceSchemaUrl AS resource_schema_url, MetricName AS name, MetricUnit AS unit, Attributes AS attributes, toString(toUnixTimestamp64Nano(StartTimeUnix)) AS start_ns, toString(toUnixTimestamp64Nano(TimeUnix)) AS end_ns, Flags AS flags, toString(Value) AS value, AggregationTemporality AS temporality, IsMonotonic AS monotonic FROM otel_metrics_sum WHERE TimeUnix\\u003e=fromUnixTimestamp64Milli({p0:Int64}) AND TimeUnix\\u003cfromUnixTimestamp64Milli({p1:Int64}) AND ResourceAttributes['deployment.environment.name']={p2:String} AND ServiceName IN ({p3:String}) AND mapContains(ResourceAttributes,'service.namespace') AND ResourceAttributes['service.namespace']={p4:String} AND ScopeName={p5:String} AND ScopeVersion={p6:String} AND ScopeSchemaUrl={p7:String} AND MetricName={p8:String} AND MetricUnit={p9:String} ORDER BY TimeUnix LIMIT 10001 FORMAT JSONEachRow\",\"parameters\":{\"p0\":\"100000\",\"p1\":\"104000\",\"p2\":\"prod\",\"p3\":\"api\",\"p4\":\"\",\"p5\":\"ordinary-sdk\",\"p6\":\"\",\"p7\":\"\",\"p8\":\"db.client.connection.count\",\"p9\":\"{connection}\"},\"revision\":\"c4b131c4a0abab04490b4bd4e59945dd845dd907be87dfb7385a210740e42e18\"},\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pool-stock\",\"title\":\"Pool observations\",\"kind\":\"stock\",\"environment\":\"prod\",\"lookbackMinutes\":1,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"namespace\":{\"mode\":\"value\"},\"services\":[\"api\"],\"scope\":\"ordinary-sdk\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"db.client.connection.count\",\"unit\":\"{connection}\"}},\"fromMs\":100000,\"toMs\":104000},\"revision\":\"c4b131c4a0abab04490b4bd4e59945dd845dd907be87dfb7385a210740e42e18\",\"yaml\":\"apiVersion: goo/measurement-package/v1alpha1\\nname: pool-stock\\ntitle: Pool observations\\nkind: stock\\nenvironment: prod\\nlookbackMinutes: 1\\nmaxGapMs: 60000\\ngrain: per-stream\\nsource:\\n    namespace:\\n        mode: value\\n    services:\\n        - api\\n    scope: ordinary-sdk\\n    version: \\\"\\\"\\n    schemaURL: \\\"\\\"\\n    metric: db.client.connection.count\\n    unit: '{connection}'\\n\"}\n"
+    },
+    {
+      "name": "stock-delta-refused",
+      "method": "POST",
+      "path": "/measurements",
+      "body": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pool-stock\",\"title\":\"Pool observations\",\"kind\":\"stock\",\"environment\":\"prod\",\"lookbackMinutes\":1,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"namespace\":{\"mode\":\"value\"},\"services\":[\"api\"],\"scope\":\"ordinary-sdk\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"db.client.connection.count\",\"unit\":\"{connection}\"}},\"fromMs\":100000,\"toMs\":104000}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"invalid cumulative stock observation\"}\n"
+    },
+    {
+      "name": "stock-monotonic-refused",
+      "method": "POST",
+      "path": "/measurements",
+      "body": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pool-stock\",\"title\":\"Pool observations\",\"kind\":\"stock\",\"environment\":\"prod\",\"lookbackMinutes\":1,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"namespace\":{\"mode\":\"value\"},\"services\":[\"api\"],\"scope\":\"ordinary-sdk\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"db.client.connection.count\",\"unit\":\"{connection}\"}},\"fromMs\":100000,\"toMs\":104000}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"invalid cumulative stock observation\"}\n"
+    },
+    {
+      "name": "stock-unknown-field",
+      "method": "POST",
+      "path": "/measurements",
+      "body": "{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pool-stock\",\"title\":\"Pool observations\",\"kind\":\"stock\",\"environment\":\"prod\",\"lookbackMinutes\":1,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"namespace\":{\"mode\":\"value\"},\"services\":[\"api\"],\"scope\":\"ordinary-sdk\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"db.client.connection.count\",\"unit\":\"{connection}\"}},\"fromMs\":100000,\"toMs\":104000,\"stocks\":{}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"stocks\\\"\"}\n"
+    }
+  ]
+}

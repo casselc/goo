@@ -1,9 +1,11 @@
 # Cumulative stock semantics
 
-Implemented prerequisite for C2c: the pure Go evaluator in
-[metrics/stock.go](../metrics/stock.go). Source discovery, measurement packages,
-HTTP contracts, capture/replay and automatic pool/runtime panels are still planned.
-Existing native gauges, counters, histograms and saved bytes are unchanged.
+The pure Go evaluator in [metrics/stock.go](../metrics/stock.go) now has an
+additive native measurement path: `kind: stock`, a direct sum-table source,
+discovery, package planning/execution, frozen capture/replay and per-stream
+observation presentation. Automatic pool/runtime panels remain planned.
+Existing gauge/counter/histogram wire fields and historical saved bytes are
+unchanged; `stocks` is omitted from results for those kinds.
 
 For an explicitly bound stock instrument, its cumulative nonmonotonic OTLP sum
 is observed as the exported tally at an observation time. The sum type alone does
@@ -31,31 +33,57 @@ is implied.
 
 ```mermaid
 flowchart LR
-  A[OTLP cumulative nonmonotonic sum] --> B[Planned exact sum-table adapter]
-  B --> C[Implemented stock evaluator]
-  C --> D[Planned native package and frozen replay]
-  D --> E[Planned per-instance pool dashboard]
+  A[OTLP cumulative nonmonotonic sum] --> B[Exact sum-table adapter]
+  B --> C[Stock evaluator]
+  C --> D[Native package and frozen replay]
+  D --> V[Per-stream observation view]
+  V --> E[Planned per-instance pool dashboard]
   E --> F[Planned explicit resource-scoped record investigation]
 ```
 
-Next vertical slice: bind actual `otel_metrics_sum` rows without routing them
-through the gauge table or counter rate kernel; add an additive stock measurement
-result and replay contract; classify eligible cumulative sums in discovery; then
-show per-instance named-pool connection states using ordinary OTLP in generic
-mode. Keep pool states separate, require actual aligned capacity before a ratio,
-and preserve missing/empty pool identity. The catalog's v1.37 development names
-are candidate bindings, not proven exporter conformance.
+## Source and package contract
+
+`kind: stock` selects `otel_metrics_sum`, retaining `IsMonotonic`,
+`AggregationTemporality`, `StartTimeUnix`, flags and original rows. Evaluation
+refuses any selected delta or monotonic report; the adapter does not hide such
+reports with a successful empty result. Stock reads use the exact half-open
+observation window, without counter lookback. Values follow the exporter's
+Float64 representation; this is not new exact-integer arithmetic above 2^53.
+
+Discovery classifies cumulative nonmonotonic sum observations as stock. Delta
+nonmonotonic sums remain unsupported. Eligibility is metadata planning, not
+proof of metric values, valid instance identity, physical stock or convention
+conformance. Public execution verifies actual rows. Exact stream selection keeps
+resource/schema/scope/unit/attribute identity. Generic service-native widgets
+accept stocks within their existing two-instrument budget; this is not an
+automatic named-pool profile or a new source-read owner.
+
+Results add an optional `stocks` family with fixed bounds and per-stream samples.
+Stored replay recomputes that family from the retained rows at the original read
+clock and rejects altered values, epochs or mixed result families. Capture
+creation remains a fresh source read; reopening remains a file-backed read of
+original evidence. The presentation reuses passive observation timelines, with
+UTC observation/epoch times, retained stale values and explicit unknown samples.
+Stock observations do not gain counter-rate comparisons or interval-to-record
+links. Saved evidence uses the same display without executing sources.
+
+Next vertical slice: show per-instance named-pool connection states using
+ordinary OTLP in generic mode. Keep pool states separate, require actual aligned
+capacity before a ratio, and preserve missing/empty pool identity. The catalog's
+v1.37 development names are candidate bindings, not proven exporter conformance.
 
 Planned user journey: Services → chosen service → named pool/instance → observed
 connection-state series → selected observation → explicitly scoped logs/spans.
-The source fixture must include releases, new epochs, stale/missing/conflicting
-reports, multiple pools/instances and unsupported delta sums. Capture/reopen must
-retain original bytes and epoch semantics. Browser screenshots and Bombadil
-coverage belong to that UI slice; this pure evaluator changes no screen.
+That automatic-panel journey remains planned. The current native integration
+journey instead discovers a stock, explicitly reads its observations and freezes
+the result for source-free reopening. Its source fixture includes releases, new
+epochs, stale/missing/conflicting reports, multiple pools/instances and unsupported
+delta sums. Captures preserve original bytes and epoch semantics.
 
 Validation: fixed semantic/validation/isolation cases in
 [metrics/stock_test.go](../metrics/stock_test.go), plus generated descending
 signed/fractional stocks, epoch changes, reordered arrival and duplicate replay in
 [verification/stock_test.go](../verification/stock_test.go). These are in-memory
-checks, not ClickHouse/OTLP integration or a completed dashboard. There is no new
-stateful owner requiring a Quint model in this cut.
+kernel checks. Source adapter/replay and HTTP tests add integration boundaries;
+the live journey records actual OTLP/ClickHouse/browser acceptance separately.
+There is no new stateful owner requiring a Quint model in this cut.

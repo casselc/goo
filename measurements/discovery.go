@@ -90,6 +90,9 @@ func discoverRows(q DiscoveryQuestion, rows []json.RawMessage) (*DiscoveryResult
 			return nil, e
 		}
 		i := raw.Instrument
+		if i.Kind == "counter" && !i.Monotonic && i.Temporality == 2 {
+			i.Kind = "stock"
+		}
 		i.CapabilityPlan = nil
 		keys := i.Dimensions
 		i.Dimensions = nil
@@ -117,7 +120,7 @@ func discoverRows(q DiscoveryQuestion, rows []json.RawMessage) (*DiscoveryResult
 			i.Dimensions = append(i.Dimensions, d)
 		}
 		sort.Strings(i.Dimensions)
-		i.Supported = i.Scope != "" && i.Unit != "" && (i.Kind == "gauge" || (i.Temporality == 1 || i.Temporality == 2) && (i.Kind == "histogram" && (i.Unit == "s" || i.Unit == "ms") || i.Kind == "counter" && i.Monotonic))
+		i.Supported = i.Scope != "" && i.Unit != "" && (i.Kind == "gauge" || i.Kind == "stock" && i.Temporality == 2 && !i.Monotonic || (i.Temporality == 1 || i.Temporality == 2) && (i.Kind == "histogram" && (i.Unit == "s" || i.Unit == "ms") || i.Kind == "counter" && i.Monotonic))
 		if i.Supported {
 			d := Definition{APIVersion: Version, Name: "metric-" + k[:12], Title: i.Metric, Kind: i.Kind, Environment: q.Environment, LookbackMinutes: 2, MaxGapMS: 60000, Grain: "per-stream", Source: Binding{Namespace: q.Namespace.Clone(), Services: []string{q.Service}, Scope: i.Scope, Version: i.Version, SchemaURL: i.SchemaURL, Metric: i.Metric, Unit: i.Unit}}
 			if d.Validate() == nil {

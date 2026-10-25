@@ -44,12 +44,12 @@ func Compile(q Question) (Plan, error) {
 		from -= d.Lifecycle.DeadlineMS + d.Lifecycle.AllowanceMS
 	}
 	timeColumn := "TimeUnix"
-	table := "otel_metrics_" + map[string]string{"gauge": "gauge", "counter": "sum", "histogram": "histogram"}[d.Kind]
+	table := "otel_metrics_" + map[string]string{"gauge": "gauge", "counter": "sum", "stock": "sum", "histogram": "histogram"}[d.Kind]
 	fields := `mapUpdate(ResourceAttributes,map('service.name',toString(ServiceName))) AS resource, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schema_url, ResourceSchemaUrl AS resource_schema_url, MetricName AS name, MetricUnit AS unit, Attributes AS attributes, toString(toUnixTimestamp64Nano(StartTimeUnix)) AS start_ns, toString(toUnixTimestamp64Nano(TimeUnix)) AS end_ns, Flags AS flags`
 	switch d.Kind {
 	case "gauge":
 		fields += ", toString(Value) AS value"
-	case "counter":
+	case "counter", "stock":
 		fields += ", toString(Value) AS value, AggregationTemporality AS temporality, IsMonotonic AS monotonic"
 	case "histogram":
 		fields += ", AggregationTemporality AS temporality, toString(Count) AS count, arrayMap(c -> toString(c),BucketCounts) AS bucket_counts, ExplicitBounds AS bounds"
@@ -235,6 +235,7 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 	gs := []metrics.GaugePoint{}
 	cs := []metrics.CounterPoint{}
 	hs := []metrics.HistogramPoint{}
+	ss := []metrics.StockPoint{}
 	d := q.Definition
 	for _, raw := range copied {
 		var row metricRow
@@ -259,7 +260,7 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 			return nil, fmt.Errorf("metric exact stream selector mismatch")
 		}
 		missing := row.Flags&1 != 0
-		if d.Kind == "gauge" || d.Kind == "counter" {
+		if d.Kind == "gauge" || d.Kind == "counter" || d.Kind == "stock" {
 			value := float64(0)
 			if !missing {
 				value, e = strconv.ParseFloat(row.Value, 64)
@@ -269,6 +270,10 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 			}
 			if d.Kind == "gauge" {
 				gs = append(gs, metrics.GaugePoint{Stream: stream, EndNS: row.EndNS, Value: value, NoRecordedValue: missing})
+				continue
+			}
+			if d.Kind == "stock" {
+				ss = append(ss, metrics.StockPoint{Stream: stream, Temporality: map[int]string{1: "delta", 2: "cumulative"}[row.Temporality], Monotonic: row.Monotonic, StartNS: row.StartNS, EndNS: row.EndNS, Value: value, NoRecordedValue: missing})
 				continue
 			}
 			if value < 0 || value >= 9007199254740992 || math.Trunc(value) != value || !row.Monotonic {
@@ -282,6 +287,8 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 	}
 	fromNS, toNS := q.BoundsNS()
 	switch d.Kind {
+	case "stock":
+		r.Stocks, e = metrics.EvaluateStocks(fromNS, toNS, ns(d.MaxGapMS), ss)
 	case "gauge":
 		r.Gauges, e = metrics.EvaluateGauges(fromNS, toNS, ns(d.MaxGapMS), gs)
 	case "counter":
@@ -303,6 +310,13 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 	}
 	if r.Gauges != nil {
 		for _, s := range r.Gauges.Series {
+			if s.State != "observed" {
+				r.State = "unknown"
+			}
+		}
+	}
+	if r.Stocks != nil {
+		for _, s := range r.Stocks.Series {
 			if s.State != "observed" {
 				r.State = "unknown"
 			}

@@ -26,7 +26,7 @@
  const native=()=>typeof module!=='undefined'?require('./native-presentation'):global.GooNativePresentation;
  const nativeSummary=data=>native().nativeSummary(data);
  function renderNative(box,data){
-  const family=data.gauges||data.counters||data.histograms,kind=data.question.definition.kind,series=family?.series||[],summaries=nativeSummary(data),metrics=global.GooMeasurements;
+  const family=data.gauges||data.stocks||data.counters||data.histograms,kind=data.question.definition.kind,series=family?.series||[],summaries=nativeSummary(data),metrics=global.GooMeasurements;
   box.append(ui().stats([{label:'Independent streams',value:String(series.length)},{label:'Streams needing review',value:String(series.filter(s=>metrics.streamDiagnostics(s,kind).attention).length)}]));
   const retained=node('details'),body=node('div');retained.className='dashboard-native-retained';retained.append(node('summary','Native result · exact streams'),body);let built=false;retained.addEventListener('toggle',()=>{if(retained.open&&!built){built=true;metrics.render(body,data,{saved:true,summaryProvided:true})}});
   if(summaries.length){const wrap=node('goo-table'),table=node('table'),head=node('tr'),thead=node('thead'),rows=node('tbody');wrap.setAttribute('density','compact');wrap.setAttribute('aria-label','Latest evaluated native values');wrap.className='dashboard-native-table';table.append(node('caption',kind==='gauge'?'Latest retained gauge observations':'Latest retained intervals · not whole-window or fleet values'));

@@ -2269,3 +2269,22 @@ go test -run '^TestServiceRecordAggregates(Observed|Ownership)$' -v .
 ```
 
 `TestHegelStockObservations` checks signed fractional cumulative stocks and epoch preservation under descending values, reordered arrival and duplicate replay. It is an in-memory prerequisite, not source/dashboard acceptance; see [contract](../docs/CUMULATIVE_STOCKS.md).
+
+## Stock measurement integration (C2c)
+
+The existing `TestHegelStockObservations` remains the kernel property: decreases,
+accumulation epochs, arrival permutation and identical replay are already covered.
+The integration adds a typed native sum path and `result.stocks`; it does not
+change float64 observations into exact-integer values. New source/observed checks
+will focus on raw exporter values, epochs, stream identity, source/replay mapping
+and full capture bytes. Actual journey195 acceptance is pending; no new lifecycle
+model or redundant kernel campaign is claimed.
+
+`TestHegelStockAdapterIdentityAndEpochs` passed on its first invocation in 0.141s
+(`artifacts/stock-integration-properties.txt`). Twelve generated signed-fraction
+shifts cross six distinct namespace/instance streams. Independent physical input
+facts check every timestamp, value and accumulation epoch, including decreases
+and epoch transitions; valid serialized replay succeeds and an edited epoch is
+refused. This tests public adapter/replay integration without calling the stock
+kernel as the expected oracle. The pre-existing kernel property was not rerun.
+Actual journey195 source/capture acceptance remains pending.

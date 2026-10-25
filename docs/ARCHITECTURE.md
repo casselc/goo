@@ -813,3 +813,28 @@ telemetry bodies or proof that upstream work completed. Focused fake-transport
 properties establish decoder parity/read shape; bounded actual raw-fact checks
 establish these observed populations, quantiles, custody and ownership. Neither
 proves arbitrary schedules or a transactional dashboard snapshot.
+
+## Cumulative nonmonotonic sums as stock observations
+
+The stock integration uses the native sum source with a distinct measurement
+`kind: stock` and `result.stocks`. Cumulative nonmonotonic samples are observed
+levels: decreases remain valid, and accumulation start timestamps retain their
+epoch identity. They are not converted to counter deltas/rates or silently
+reclassified as gauges. Stream resource, instrumentation and metric identity
+remain exact; separate instances are not summed into a fleet level.
+
+```mermaid
+flowchart LR
+    S[OTel cumulative nonmonotonic sum] --> A[Typed native sum adapter]
+    A --> O[Stock samples with timestamp and accumulation epoch]
+    O --> P[Supplied native presentation]
+    O --> C[Explicit native capture with independent custody]
+    C --> R[Source-free retained replay]
+```
+
+The existing stock kernel uses finite floating-point sample values; this does not
+introduce exact-integer arithmetic, capacity/utilization inference, interpolation
+or delta-sum integration. Integration acceptance and its source/capture receipts
+are pending. Existing kernel properties already cover decreases, epochs and
+arrival/replay stability; the new checks focus on adapter identity, physical
+source rows and immutable stored evidence rather than another kernel campaign.

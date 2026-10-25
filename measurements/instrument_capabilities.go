@@ -155,6 +155,13 @@ func PlanInstrument(i Instrument, observations []DiscoveryObservation) Instrumen
 	if i.Kind == "counter" && !i.Monotonic {
 		p.Reasons = append(p.Reasons, "Non-monotonic sums are not supported by the counter kernel.")
 	}
+	if i.Kind == "stock" {
+		if i.Temporality != 2 || i.Monotonic {
+			p.Eligible = false
+			p.Reasons = append(p.Reasons, "Stock observations require cumulative nonmonotonic sums; delta input has no established absolute baseline.")
+		}
+		p.Hints = append(p.Hints, "Cumulative nonmonotonic exported tallies are observed independently with freshness and retained epochs; decreases are not counter resets. No rate, fleet total or physical stock meaning is inferred.")
+	}
 	if i.Kind == "histogram" && i.Unit != "s" && i.Unit != "ms" {
 		p.Reasons = append(p.Reasons, "The current histogram kernel requires seconds or milliseconds.")
 	}

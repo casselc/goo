@@ -435,10 +435,10 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		if !signals["metrics"] || !instrument.Supported || instrument.Definition == nil {
 			continue
 		}
-		if instrument.Kind != "gauge" && instrument.Kind != "counter" && instrument.Kind != "histogram" {
+		if instrument.Kind != "gauge" && instrument.Kind != "counter" && instrument.Kind != "histogram" && instrument.Kind != "stock" {
 			return nil, fmt.Errorf("unsupported native instrument kind")
 		}
-		if instrument.Kind == "gauge" && instrument.Temporality != 0 || instrument.Kind != "gauge" && instrument.Temporality != 1 && instrument.Temporality != 2 || instrument.Kind == "counter" && !instrument.Monotonic {
+		if instrument.Kind == "gauge" && instrument.Temporality != 0 || instrument.Kind != "gauge" && instrument.Temporality != 1 && instrument.Temporality != 2 || instrument.Kind == "counter" && !instrument.Monotonic || instrument.Kind == "stock" && (instrument.Temporality != 2 || instrument.Monotonic) {
 			return nil, fmt.Errorf("unsupported native temporality or monotonicity")
 		}
 		d := *instrument.Definition

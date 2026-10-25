@@ -34,6 +34,14 @@ aggregate['count']['pattern']='^(0|[1-9][0-9]*)$';aggregate['basis']['pattern']=
 schemas['RecordAggregateGroup']={'type':'object','required':['g0','count'],'properties':{'g0':{'type':['string','null']},'count':{'type':'string','pattern':'^[1-9][0-9]*$'},'duration':{'$ref':'#/components/schemas/exploration.DurationSummary'},'spanStatus':{'$ref':'#/components/schemas/exploration.SpanStatusSummary'}},'additionalProperties':True}
 aggregate['groups']={'type':'array','items':{'$ref':'#/components/schemas/RecordAggregateGroup'}}
 schemas['exploration.RecordAggregatesResult']['description']='Aggregate-only record projection: exactly count and groups reads plus one optional time-series read. Separate clocks/content bases do not establish a transactional snapshot. Changed aggregates are diagnostic and non-actionable. Never includes source rows, fields, plan, pagination or retention token.'
+# Additive cumulative nonmonotonic sum observations, distinct from counter rates.
+schemas['metrics.StockResult']['description']='Per-stream cumulative nonmonotonic sum observations. Signed finite fractional values and accumulation epochs are preserved; decreases are not resets. No delta integration, fleet total, rate, capacity or utilization is inferred.'
+for name in ('metrics.StockSample','metrics.StockSeries'):
+ schemas[name]['properties']['state']['enum']=['observed','stale','unknown']
+stock_sample=schemas['metrics.StockSample']
+stock_sample['properties']['value']={'type':'number','description':'Finite observed cumulative tally, possibly signed/fractional. Omitted when unknown; stale observations retain their value.'}
+stock_sample['properties']['atNS']['pattern']='^(0|[1-9][0-9]*)$'
+stock_sample['allOf']=[{'if':{'properties':{'state':{'enum':['observed','stale']}},'required':['state']},'then':{'required':['value']}},{'if':{'properties':{'state':{'const':'unknown'}},'required':['state']},'then':{'not':{'required':['value']}}}]
 # Runtime metadata is encoded by small Go/Python maps; schemas are authored here.
 schemas['RuntimeCapabilityState']={'type':'object','required':['state'],'properties':{'state':{'enum':['configured','unconfigured']}},'additionalProperties':False}
 schemas['RuntimeCapabilities']={'type':'object','required':['version','profile','preparedHTTP','declaredOperations'],'properties':{'version':{'const':'goo/runtime-capabilities/v1'},'profile':{'enum':['lab','generic']},'preparedHTTP':{'$ref':'#/components/schemas/RuntimeCapabilityState'},'declaredOperations':{'$ref':'#/components/schemas/RuntimeCapabilityState'}},'additionalProperties':False,'description':'Source-free startup configuration only. Configured does not establish source availability, authorization, telemetry coverage, ingestion completeness or service health.'}
