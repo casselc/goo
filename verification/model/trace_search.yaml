@@ -1,0 +1,25 @@
+spec: trace_search.qnt
+module: trace_search
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  observe_parent_run:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_stage:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_search:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_witness_details:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_open_cross:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_pin_cross:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_open_same:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_compare:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_open_repeated:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_next_trace_page:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'

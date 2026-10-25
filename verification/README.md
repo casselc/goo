@@ -1873,3 +1873,40 @@ GOO_TRACE_COMPARISON_OWNERSHIP_LEDGER=/workspace/goo/artifacts/trace-comparison/
 ```
 
 The models replay these finite observed owner/source sequences; they do not prove all schedules, internal SQL request counts or telemetry completeness. Label alignment does not establish shared invocation identity, complete traces, CPU/self time or a critical path. Group duration sums may overlap. No endpoint or comparison persistence format is added.
+
+### Trace-wide span-condition search (186)
+
+`trace_search_oracle_test.go` interprets raw logical fields independently, builds an ID set for each condition and intersects those sets within the explicit environment and half-open fixed window. It derives exact matching-record counts and deterministic representative witnesses afterward, including namespace-qualified raw `fieldValues` and missing/null versus present-empty distinctions. It does not use `Match`, `ReferenceTraceSearch` or the SQL compiler as an expected-value oracle. One observed span may satisfy several independent conditions; repeated records count as records, while reported trace IDs are distinct. Parent filters belong only to the first seeded condition; added conditions may match other services.
+
+The pure campaign passed **300 generated examples in 6.115s**: [actual stdout](../artifacts/trace-search-properties.txt). Ninety examples check full-population intersection, condition/record permutation, bounded prefixes and monotonic added matching records. Seventy numeric examples exercise ten operators each (700 operator scenarios) over exact int64/decimal64 strings, including invalid/empty/missing parsing and values beyond binary64 precision. Seventy actual-Node contextual requests validate through Go without parent mutation or filter leakage into added conditions. Seventy typed compiler compositions verify scope, map keys and string values stay in parameters. Fixed cases distinguish cross-trace false joins from allowed same-span matches, duplicate-record counts, and qualified missing-versus-empty witness ties. Stateless set/predicate metamorphisms are used here; actual owner state is checked separately below.
+
+The [initial rejection](../artifacts/trace-search-properties-rejected-first.txt) and [isolated diagnostic](../artifacts/trace-search-diagnostic.txt) are retained: the test generator initially declared unsupported `Parse: canonical-integer`. The existing API's `canonical-decimal` profile also names base-10 integer parsing. Correcting that test declaration preserved raw values and expected arithmetic; no production change or relaxed membership assertion was needed. Temporary diagnostic source was removed.
+
+Both final ordinary-OTLP native baselines passed on their first actual runs, with **80 guaranteed-changed rejecting controls**, including four corrupted traces rejected by Quint itself. Each control checks that serialized evidence changed before requiring rejection; no application or raw fixture changed to pass these gates.
+
+| Check | Actual artifact | Rejected controls | Result |
+| --- | --- | ---: | --- |
+| `TestQuintTraceSearchLiveLedger` | [main ledger](../artifacts/trace-search/trace-search-fb788e547b/ledger.json), [stdout](../artifacts/trace-search/trace-search-fb788e547b/native-validation.txt) | 62 | PASS 8.396s |
+| `TestQuintTraceSearchOwnershipLedger` | [owner ledger](../artifacts/trace-search/trace-search-84a5306a6a/ownership.json), [stdout](../artifacts/trace-search/trace-search-84a5306a6a/native-validation.txt) | 18 | PASS 7.905s |
+
+`trace_search_live_test.go` independently derives membership, exact full totals, sorted bounded ID prefixes, per-condition matching-record counts, deterministic witness metadata and every qualified raw proof value from fixture records. Setup source probes prove **294 records / 20 trace IDs** actually exist: common environment over the broader window has **291 / 19**, and the other environment has **3 / 1**. The requested fixed common scope has **288 / 18** before predicate intersection. This proves the excluded environment/time controls are present; it does not conflate broad setup coverage with the requested question. Native checks validate the full grouped probe populations and retained raw prefixes.
+
+The parent predicate matches 135 records while its inspection page contains 100. Trace search returns 15 matching reported IDs; an independent API request with limit 2 still reports full total 15 and `hasMore`, and a separate impossible second condition produces known `no_data`. The cross-service trace uses different representative spans; the same-span trace legitimately uses one span for both conditions. The repeated trace has 120 matching records for each condition, independent of the parent or trace inspection page. Its explicit continuation retains full trace count 241 across two actual pages of 100 records; the second-condition representative is absent from the first page and present in the second. The native oracle checks raw identities, timestamps, durations, statuses, kinds, maps and the separate full-query aggregates. It also validates the subsequent source-free trace-page comparison with the independent interval/delta oracle.
+
+DOM checks bind displayed IDs, witness condition indexes/counts, exact timestamp/duration titles and typed qualified values to the actual source result. The original parent predicate is required in condition 1 with the selected service/operation seed; condition 2 remains independent. Trace continuations preserve the common environment and fixed bounds but open the selected trace across services, rather than treating representative witnesses as a trace page. No new capture or comparison receipt is created by this flow; the separate legacy custody regression is not presented as a newly saved trace-search result.
+
+The two qobs/Quint models replay **10 / 8 observed actions**. Main browser effects reach 10 source operations: parent Explore, one trace-search Run, three explicit trace expansions with existing linked-log reads, and a later trace page with its linked-log read. Staging, witness disclosure, pinning and comparison add none. Two separately recorded API trace-search probes (bounded/empty) and setup readiness/presence reads are outside that browser counter. The owner model reaches five source operations, proves a closed editor cannot alter the next explicit request, and rejects closed/hidden retained actions. A real completed backend response is held, a visible condition edit supersedes it, and only a fresh Run publishes rows. Query cancellation is recorded as a control request, not another telemetry source read. Both models separately reject an unexpected source count and wrong action order.
+
+Reproduce serially after browser/actor ownership is released (live tests skip without their explicit artifact variable):
+
+```sh
+cd /workspace/goo/verification
+export PATH=/workspace/.toolchains/go/bin:$PATH GOPATH=/workspace/.go
+export GOMODCACHE=/tmp/goo-module-cache GOCACHE=/workspace/.cache/go-build
+export XDG_CACHE_HOME=/workspace/.cache GOTOOLCHAIN=local GOMAXPROCS=2
+go test -run '^Test(HegelTraceSearch|TraceSearchSameSpan|TraceSearchQualifiedWitness)' -v .
+GOO_TRACE_SEARCH_LEDGER=/workspace/goo/artifacts/trace-search/trace-search-fb788e547b/ledger.json go test -run '^TestQuintTraceSearchLiveLedger$' -v .
+GOO_TRACE_SEARCH_OWNERSHIP_LEDGER=/workspace/goo/artifacts/trace-search/trace-search-84a5306a6a/ownership.json go test -run '^TestQuintTraceSearchOwnershipLedger$' -v .
+```
+
+These finite traces validate observed client source/owner discipline, not every schedule or internal SQL request count. Representative witnesses and distinct reported IDs do not establish unique invocations, distinct spans per condition, parent topology, ordering, causality, complete traces, complete ingestion or absence of late data. No live malformed/all-zero OTLP identity ingestion is claimed; identity exclusion is covered by generated logical records and separate backend checks.

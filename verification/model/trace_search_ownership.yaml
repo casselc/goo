@@ -1,0 +1,21 @@
+spec: trace_search_ownership.qnt
+module: trace_search_ownership
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  observe_initial:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_closed_editor:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_closed_editor_rerun:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_closed:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_hidden:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_held:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_superseded:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
+  observe_fresh:
+    expect: 'coherent == {{.obs.coherent}} and source == {{.obs.source}}'
