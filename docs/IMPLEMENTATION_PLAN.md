@@ -1121,7 +1121,7 @@ examples, eight fixed cases, all 80 rejecting controls and prior waterfall
 regressions pass. Exact raw capture bytes remain unchanged. Final accepted
 frames/storyboard, independent review and publication are in VALIDATION.md.
 
-### Trace existential span search (in progress)
+### Trace existential span search (delivered)
 
 The approved continuation asks which reported trace IDs contain spans matching
 each of one to four independent predicates. TS1 provides exact full-source
@@ -1133,3 +1133,11 @@ source/journey/actor, independent generated/native/model, API/proxy, visual/docs
 and review gates before pushing. Each condition is existential; the same span
 can satisfy multiple conditions. No topology or complete-invocation guarantee
 follows from a shared reported trace ID.
+
+TS1/TS2 source is `f70ff2f`/`19c7e91`, with nullable witness correction `618767f`,
+compact accepted-draft editing `bb81466` and mobile wrapping `76556d7`. Actual
+main/owner, 55-second actor (16 phases, 1089 snapshots), Go/ClickHouse parity,
+all 77 Node files, API/proxy/deployed contracts, 300 generated cases and all
+80 native rejecting controls pass. Current frames and original-window waterfall/
+comparison continuation are independently reviewed. Final publication and bounded
+acceptance receipts are in VALIDATION.md.

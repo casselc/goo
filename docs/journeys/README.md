@@ -2203,3 +2203,41 @@ URL, and the first actor batched editor mutations into a stale declaration.
 Corrected natural draft recovery and separate actor actions preserve the source
 and completion guards. Initial contrast frames and failed traces remain retained
 and distinguished from final passes in the storyboard and VALIDATION.md.
+
+## 186 — Find traces containing independent span conditions
+
+[Storyboard and flow diagram](../../journeys/186-trace-search-storyboard.md),
+[ordinary OTel journeys](../../journeys/trace-search.spec.js),
+[Bombadil actor](../../verification/bombadil/trace-search.ts) and
+[trace-search contract](../TRACE_SEARCH.md).
+
+| Frame | Actual evidence |
+| --- | --- |
+| [Cross-service witnesses](screenshots/186a-cross-service-condition-witnesses.png) | Slow database and worker-error records in the same reported trace, with qualified predicate evidence |
+| [Same-span witnesses on mobile](screenshots/186b-mobile-same-span-witnesses.png) | One reported span satisfies both conditions; no distinct-span requirement or horizontal overflow |
+| [Original-window trace comparison](screenshots/186c-matching-trace-page-comparison.png) | Fresh full-trace reads preserve bounds; existing held-page comparison adds no source read |
+| [Controls through first result](screenshots/186d-controls-to-first-result.png) | Concise actual predicates and closed advanced editors; first result 464.046875 px below the panel start |
+
+The applied parent matches 135 records versus a 100-row inspection page. Explicit
+trace search finds 15 distinct reported IDs across the full source. Repeated
+120/120 matching records remain one trace; a two-item list still reports total
+15. A-only and B-only records in different traces do not join. Shared environment
+and fixed window constrain all conditions; the original filters constrain only
+condition 1, permitting other services in added conditions. Representative
+witnesses are not every span, a causal path or completeness proof.
+
+Main (13.9s), ownership including an actual closed-editor rerun (10.8s), and the
+55-second actor pass. The actor reaches all 16 phases across 1,089 snapshots,
+proves cross-service/same-span/repeated cases and closes at four source reads.
+Main uses ten explicit browser source operations plus two separately labeled API
+probes; setup independently proves 291 records/19 IDs plus the excluded
+environment's three records/one ID. Existing raw capture bytes remain unchanged;
+there is no new saved trace-search or paired-capture format. Independent native
+main/ownership verification rejects all 80 changed controls, including actual
+Quint lifecycle failures; 300 generated cases pass. Final publication is recorded
+in VALIDATION.md.
+
+Initial strict-selector/framing failures and the real verbose-editor/mobile-basis
+layout fixes remain documented separately from final evidence. No positive
+source response was mocked. Malformed/all-zero identity exclusions use backend
+raw-source checks, not invented successful OTLP ingestion.

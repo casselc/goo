@@ -9560,3 +9560,98 @@ and invalid-version refusal. Source span count 307 differs appropriately from
 the ten-row page. No records are published by this check. Stdout:
 `artifacts/trace-search-api-deployed.txt`. The temporary build binary was removed
 after verified installation. Browser/visual/actor/native gates follow separately.
+
+
+### Trace search — real journeys and visual acceptance
+
+The ordinary OTLP fixture contains 20 traces and 294 spans across several
+services, with no goo manifests. Two setup-only physical probes confirm the
+negative controls were ingested: the broader common-environment scope has
+291 records/19 reported IDs, and the other environment has three records/one
+ID. These probes are separate from browser source-effect counts. The fixed
+search window intentionally excludes the outside-window trace.
+
+Final main passes (13.9s; 15.8s invocation), artifact
+`artifacts/trace-search/trace-search-fb788e547b/ledger.json`. Its parent count
+is 135 versus a 100-row page. Search finds 15 distinct reported IDs, including
+different-service witnesses, one span satisfying both conditions, and one trace
+with 120 matching records per condition. Two supplemental explicit API probes
+verify limit two with full total 15 and a completed empty population. Original-
+window expansion opens three-span/two-span traces, uses the existing local
+comparison, and pages a 241-span trace through two 100-row pages without treating
+page misses as absence. Ten logical browser source operations cover parent Run,
+one trace search, three trace expansions/linked-log reads and the next page/
+linked-log read; staging, disclosure, pin and comparison add none.
+
+Final owner passes (10.8s), artifact
+`artifacts/trace-search/trace-search-84a5306a6a/ownership.json`. Eight observed
+checkpoints end at five source operations. Closed-editor input changes cannot
+change the next actual request; closing/hiding prevents retained actions, and
+a held real source response is rejected after editing. Fresh Run recovers
+explicitly. Cancellation-control POSTs are separated from telemetry reads.
+
+Source/visual follow-up `bb81466` replaces an approximately 1800-pixel editor wall
+with complete parenthesized condition summaries and disclosed full editors.
+The final measured panel-heading-to-first-result distance is 464.046875 pixels.
+Accepted draft intent is separate from hidden editor state. All 77 Node files
+pass (4.20s); no JavaScript source changes followed that run. CSS-only `76556d7`
+wraps the exact source-basis ID to remove actual mobile page overflow. Final
+186a/b/c/d desktop, mobile, comparison and whole-flow frames pass independent
+visual review, strict bounds and the mobile no-overflow guard.
+
+Initial browser diagnostics remain distinct from acceptance: both first tests
+stopped at an ambiguous selector that also matched the hidden custom grouping
+input; that harness selector is now qualified. The second main stopped on
+subpixel screenshot framing while its owner passed. The third main passed
+search semantics but exposed the real mobile provenance overflow; its owner
+passed. Failed traces/provisional frames are retained in first/second/third
+diagnostic directories, and the accepted main is the final complete run above.
+
+The 55-second Bombadil campaign passes (56.8s test; 58.2s invocation), reaches all
+16 phases across 1089 snapshots and ends at four source operations. It proves
+parent135/page100, matches15, different-service/same-span/repeated120 cases,
+qualified UTC/ms witness detail, closed-editor restoration, original-window
+trace expansion and inert retained terminal controls. Summary:
+`artifacts/trace-search/trace-search-92e91b2266/bombadil/acceptance-summary.json`.
+This is one finite observed campaign, not exhaustive concurrency coverage.
+
+A separate readonly actual-store check confirms the accepted 185 capture still
+has 12,477 bytes, SHA-256
+`c5d4a6ab3be045df0ed6338f171b3da8fc5127d0c2df5e06094ee5055ce16c0c`,
+ID `a3fe17e9079d11802fe0b62847e1a5b86126e52d70e35df5bfc64b6aaec35b0d`.
+Receipt: `artifacts/trace-search/legacy-custody.json`. This checks the actual
+stored file against the earlier accepted receipt, not a new trace-search
+capture type or browser-reserialized JSON. Independent raw/native/model gates
+are recorded separately after execution.
+
+
+### Trace search — independent native and observed-model gates
+
+Both actual baselines pass on their first native execution, with no observer
+or fixture correction: main 8.396s (62 rejecting controls) and owner 7.905s
+(18). All 80 controls prove a serialized change before rejection. Four bad
+counter/order traces are submitted directly to Quint independently of semantic
+prechecks. Actual stdout is retained beside each accepted ledger in
+`native-validation.txt`.
+
+The independent oracle builds per-condition ID sets from raw records and
+intersects them, rather than calling the production evaluator to create expected
+membership. It checks actual physical-presence probes, exact matching counts,
+representative tie order/field proof, original scopes, typed SQL parameters,
+bounded/no-data probes, waterfall rows and comparison, DOM UTC/ms/qualified
+fields, local-action effects and closed-editor/held-response ownership. Model
+pairs replay only the observed 10-action main and eight-action owner schedules;
+they do not prove all interleavings, telemetry completeness or unique invocations.
+
+No further campaigns are planned after these passes. Final documentation/link
+checks, whole-milestone review and publication follow below.
+
+
+Final independent whole-milestone review **APPROVE** covers source/API/proxy,
+real ClickHouse semantics and the nullable tie correction, actual main/owner
+journeys, all four frames, actor phase coverage, generated/native/model receipts
+and unchanged legacy capture bytes. The 14 changed Markdown files pass 1415
+relative-link checks, with no whitespace errors. Native verification is committed
+as `622f125`; no temporary feature binary or diagnostic source remains. The
+remaining browser/docs milestone is ready for the authorized `origin/work` push;
+its final commit and verified remote head are reported after publication.

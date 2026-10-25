@@ -50,3 +50,18 @@ A successfully completed empty aggregate returns `state:no_data`, `matchedTraces
 Opening or editing a search stages intent without reading telemetry. Run explicitly executes it. Opening a resulting trace uses the existing trace inspector for a separate fresh read of that reported trace ID in the fixed environment/window. The original search conditions need not match every span in the expanded trace. Waterfall and supplied-page comparison remain bounded observations with their own read provenance; missing parents, async links, invalid IDs, truncation and completeness caveats still apply.
 
 This milestone adds no capture type, search persistence, saved-result promotion or mutation of existing captures. Old `Query` and capture wire formats remain unchanged. `ReferenceTraceSearch` is a pure Go reference over logical captured records, and read-only ClickHouse parity tests exercise different-service witnesses, one observation satisfying multiple conditions, duplicate observations, exact numeric values above 2^53, environment/time/ID controls, bounded lists, deterministic evidence tie-breaking and completed empty populations.
+
+
+## Compact condition editing
+
+The contextual panel keeps all conditions visible as qualified, parenthesized
+AND/OR summaries. Durations use readable units; declared numeric type, unit and
+scale remain explicit. The seeded condition's full editor is disclosed on
+demand, while a newly added condition opens ready for editing. A successful
+Run closes editors to put the matching list directly below the compact scope
+and conditions. This presentation does not flatten, deduplicate or replace
+the original predicate AST.
+
+Only visible current-editor changes update accepted draft intent. A retained
+closed input cannot silently change the request; reopening restores the accepted
+draft. Source reads remain confined to explicit Run and trace expansion.

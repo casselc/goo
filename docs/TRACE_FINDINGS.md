@@ -92,3 +92,13 @@ Repeated service/operation labels remain ambiguous; a unique reported label and
 kind is only an alignment candidate. The existing finding publication path and
 stored capture fields remain unchanged. Actual acceptance scope is recorded in
 [validation](../VALIDATION.md).
+
+
+## Find matching traces before inspection
+
+[Trace search](TRACE_SEARCH.md) starts from an inspected operation or qualified
+field in an applied fixed span population. Each independent condition must have
+a matching observation in the same reported trace ID and original window.
+Qualified representative witnesses explain the matches, then Open trace uses
+the existing fresh expansion and local comparison. Search results are not
+immutable captures, and shared IDs do not prove unique invocations or topology.

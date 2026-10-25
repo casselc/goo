@@ -809,3 +809,21 @@ when closing the inspector and cleared on owner disposal. This adds no saved
 paired-comparison format, automatic typical-trace selection or cross-owner
 reference sharing. Existing raw captures reopen without source reads or added
 derived fields. Actual acceptance scope and diagnostics are in VALIDATION.md.
+
+
+[Trace existential search](TRACE_SEARCH.md) uses one environment/fixed window and
+one to four independent span predicates. A single observed span can satisfy
+several conditions. The exact full-source total counts distinct valid reported
+trace IDs; witness counts count matching records including duplicates. Results
+are a bounded lexical prefix, with no offset paging in v1. A valid reported trace
+ID can qualify even if a witness's span ID is absent or malformed; trace
+expansion remains available, but span-specific identity is not inferred.
+
+Qualified witness fields cover every referenced leaf, including nonmatching OR
+branches, rather than complete attribute maps. Oversized required proof or source
+budget failure refuses the whole search. The existing predicate/numeric
+contracts and source bounds apply. This adds no negative-existence, distinct-span
+or parent-path operator, automatic issue classification, saved search resource
+or capture format. Contextual entry currently uses applied fixed span
+populations; unsupported reported-edge origins refuse rather than drop scope.
+Trace expansion is a separate fresh read in the original window.

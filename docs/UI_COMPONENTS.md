@@ -897,3 +897,10 @@ full distinct-ID total. Opening a result delegates the existing explicit fresh
 trace expansion. There is no automatic capture, saved resource or inferred
 parent-child relationship. Qualified witness fields preserve missing versus empty
 and show only requested fields, not complete attribute-map claims.
+
+Trace-search conditions show complete parenthesized predicate summaries. The
+seeded full editor starts closed, a newly added editor starts open, and a
+successful Run closes editors to keep results visible. Accepted drafts are
+separate from mutable editor snapshots: retained hidden input changes cannot
+alter Run intent, and reopening restores the accepted draft. Opening an editor
+is local; editing withdraws old results before the next explicit Run.
