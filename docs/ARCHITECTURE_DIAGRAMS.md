@@ -1485,3 +1485,26 @@ than empty telemetry. Existing stored operation evidence still reopens; a refres
 without its original registry revision retains the existing 409 refusal. The lab
 profile remains separate. See [generic startup](GENERIC_STARTUP.md) for process
 configuration and the implemented verification boundary.
+
+## Native intervals to record context
+
+The native-to-record planner is a source-free typed transform. It retains only
+established shared service/resource identity and exact event-time bounds; metric
+dimensions and instrumentation identity remain on the native side.
+
+```mermaid
+flowchart LR
+    N[Held native counter or histogram result] --> I[Select exact stream and interval]
+    I --> P[Validate native parent and shared identity]
+    P --> Q[Stage logs or spans question]
+    Q --> T[Enclosing millisecond window plus exact nanosecond predicates]
+    T --> R[Explicit Run reads records]
+    R --> E[Existing record and trace investigation]
+    E --> B[Return to held native context without reread]
+```
+
+The staged record interval is half-open and excludes other service instances.
+Trace expansion retains its existing broader millisecond-window/trace-ID read
+and the exact record origin. Gauge points have no UI lookaround in this slice. Shared time establishes context, not causality,
+complete traces or a joined metric/record denominator. See
+[native record context](NATIVE_RECORD_CONTEXT.md) for the exact mapping boundary.

@@ -1,0 +1,37 @@
+const { test, expect } = require('@playwright/test');
+const fs = require('node:fs/promises'), path = require('node:path');
+const { measurementStep, stepLink } = require('../ui/workspace');
+const { base, json, observe } = require('./192-native-context-support');
+test.use({ actionTimeout: 15000, navigationTimeout: 45000 });
+test('192 selected native interval frame from an explicit retained source question', async ({ page }) => {
+  test.skip(!process.env.GOO_NATIVE_CONTEXT_LEDGER, 'Explicit retained accepted ledger; no new ingestion');
+  const ledgerPath = path.resolve(process.env.GOO_NATIVE_CONTEXT_LEDGER), ledger = JSON.parse(await fs.readFile(ledgerPath, 'utf8'));
+  const observation = observe(page);
+  await page.setViewportSize({ width: 1440, height: 1800 });
+  await page.goto(base + '/' + stepLink(measurementStep(ledger.native.question)));
+  await expect(page.locator('#measureRun')).toBeEnabled(); expect(observation.source()).toBe(0);
+  const pending = page.waitForResponse(response => response.url().endsWith('/api/measurements') && response.request().method() === 'POST');
+  await page.locator('#measureRun').click(); const native = await json(await pending);
+  expect(native.question).toEqual(ledger.native.question); expect(native.counters).toEqual(ledger.native.counters);
+  const host = page.locator('#measureResult'); await host.getByLabel('Find a stream', { exact: true }).fill('inventory');
+  const stream = host.locator('.native-stream-list > details'); await expect(stream).toHaveCount(1);
+  if (!await stream.evaluate(element => element.open)) await stream.locator(':scope > summary').click();
+  await stream.locator('goo-value-timeline button[data-key="0"]').click();
+  await stream.getByText('Exact timestamp bounds', { exact: true }).click();
+  const context = stream.locator('.native-record-context');
+  await expect(context).toHaveAttribute('data-from-ns', ledger.facts.fromNS);
+  await expect(context).toHaveAttribute('data-to-ns', ledger.facts.toNS);
+  await expect(context.getByRole('link', { name: 'Logs in interval', exact: true })).toBeVisible();
+  await expect(context.getByRole('link', { name: 'Spans in interval', exact: true })).toBeVisible();
+  const frame = stream.locator('goo-chart-frame.native-timeline');
+  await frame.scrollIntoViewIfNeeded();
+  await page.evaluate(() => {
+    const target = document.querySelector('#measureResult .native-stream-list > details goo-chart-frame.native-timeline');
+    const top = target.getBoundingClientRect().top;
+    if (top < 90) scrollBy(0, top - 90);
+  });
+  const geometry = await frame.boundingBox(); expect(geometry.y).toBeGreaterThanOrEqual(60); expect(geometry.y + geometry.height).toBeLessThanOrEqual(1800);
+  await frame.screenshot({ path: 'docs/journeys/screenshots/192c-selected-native-interval.png' });
+  expect(observation.source()).toBe(1); expect(observation.errors).toEqual([]);
+  await fs.writeFile(path.join(path.dirname(ledgerPath), 'display.json'), JSON.stringify({ sourceLedger: ledgerPath, freshNativeRead: true, newIngestion: false, native, geometry, sourceReads: 1, requests: observation.requests, responses: observation.responses }, null, 2));
+});

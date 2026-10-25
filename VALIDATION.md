@@ -10411,3 +10411,94 @@ ns grids plus finite refusals (0.037s), all 80 Node files (3.73s), and final foc
 owner/measurement guard checks (0.28s). Independent final source review approves
 frozen browser acceptance. Actual source membership, native return/focus,
 cancellation and trace scope remain separate live gates below.
+
+
+## C3 native interval context — live acceptance (2026-10-25)
+
+Accepted UI source is `15b8b5c`, including locally retained native origin
+question/stream/basis/readAt disclosure and its filter-only sharing boundary.
+The Go source is `75e76ea`, binary SHA-256
+`0d7ddbe24f646d668d4345efb32b6fa009f54755a31fe4eb5faa5de768bcc554`.
+Deployment checks verify actual assets/MIME and binary equality in
+`artifacts/native-record-context/deployment.json`. An initial static hash check
+was interrupted by the approved pre-browser provenance amendment; refreshed
+hashes matched before any browser test. No app source changed during acceptance.
+The temporary binary was removed after atomic installation; no data volumes changed.
+
+The accepted main passes **9.2s / 11.6s invocation**, with **five telemetry POSTs**:
+one native read, two explicit record reads and the existing trace/log pair.
+Native selection, both staging actions and both returns read no telemetry.
+Ordinary generated OTel data includes **123 spans and 123 logs**, with native
+counter/histogram streams, namespace/instance controls and nanosecond boundary
+records inside the same coarse millisecond envelope. The selected exact resource/
+interval population is **115 records**, despite a 100-row page. Both record
+signals retain exact half-open event-time membership and exclude other instances,
+namespace variants and adjacent boundary records without copying metric-only
+labels. The main receipt is
+`artifacts/native-record-context/native-context-a57c48baf4/ledger.json`.
+
+Trace expansion deliberately performs the existing fresh reported-trace-ID reads
+in the enclosing millisecond window: **four spans and four logs**, including
+same-envelope time/instance controls outside the narrow record context. A more
+distant same-trace record is excluded. Exact record origin and basis remain
+visible, and the broader-context note is explicit. Return restores the identical
+native question, basis/readAt, retained DOM/selected interval and actual opener
+focus, without previewing or rerunning. No contributing-span, exemplar or causal
+association is asserted.
+
+Four separate real-source cases pass on their first invocation (**14.7s**):
+histogram/empty namespace returns one record, counter/missing namespace returns
+one, a flagged unknown interval still offers honest context115 without a known
+rate, and another native interval returns zero matching records. Receipt:
+`native-context-1a693076d7/cases.json` beneath the same artifact root.
+Ownership passes on its first invocation (**5.6s**), including a held actual
+backend response, return/cancellation, rejected late publication, closed/hidden
+anchor guards and browser Back with the retained parent. Its observer counter
+reaches three POSTs: **two telemetry reads plus one query-cancel control**, not a
+third read. Receipt: `native-context-1480119d7a/ownership.json`.
+
+The bounded **25-second Bombadil campaign** passes on its first invocation in
+**25.8s / 28.2s**, covering **eight phases and 418 snapshots** with **two actual
+telemetry reads**. Staging and native return add none. Receipt:
+`artifacts/native-record-context/native-context-9e531b8bdf/bombadil/acceptance-summary.json`.
+These logical effects do not measure underlying SQL scan cost.
+
+Independent native/Quint checks pass in **6.878s**. The main checks actual selected-
+stream mapping, raw record membership, broader trace/log scope, exact origin and
+unchanged held parent. It reuses the existing `population_drilldown` model for ten
+replay steps derived from nine observed UI events (trace expansion has two reads),
+rejecting six semantic and two finite altered controls. Four cases and ownership
+also pass with cancel classified separately. The adjacent `native-validation.txt`
+retains results. Its initial observer incorrectly required a single stream in a
+three-namespace result; the corrected resolver uses the actual selected inspector's
+raw disclosure to identify the unique exact native stream. Original diagnostics
+remain; no fixture or app change was needed. This bounded observed replay does
+not claim exhaustive scheduling or production metric-to-record associations.
+
+The first browser main failed in **27s** because its harness requested obsolete
+button text Expand instead of the actual Expand trace plus ID. Exact115, scope,
+rows and provenance checks had already passed. Only that selector was corrected;
+the successful cases/ownership were not repeated. The diagnostic is retained.
+
+Frames192a/b come from the accepted main. Frame192c comes from a separate **3.6s /
+5.6s** native-entry replay using the same accepted question/data, no new ingestion,
+one fresh native read and source-free interval selection. Its counter values
+match; it is a separate read clock, not the same native receipt. Receipt:
+`native-context-a57c48baf4/display.json`. Root reviewed the return bar, exact UTC
+predicates and the selected native inspector/actions. The bounded inspector frame
+does not display every resource field. Mobile still has inherited editor/header
+controls before rows; that remains a recorded whole-task polish follow-up.
+
+Final independent source/evidence/design review **APPROVES C3**. The
+[storyboard](journeys/192-native-record-context-storyboard.md), three actual frames,
+[context guide](docs/NATIVE_RECORD_CONTEXT.md), architecture and current roadmap/
+backlog are synchronized. No new HTTP endpoint, SQL operator or persisted native
+citation/capture format is introduced. Final whitespace/link, docs deployment and
+publication checks follow; accepted semantic campaigns are not repeated.
+
+
+Final whitespace checks pass, and **1,369 relative links across all 11 Markdown
+files changed in this round have resolving local file targets**. All changed docs
+and three actual frames are synchronized to the running lab before publication.
+The complete reviewed round is pushed together; the verified remote head is
+reported after publication. No accepted semantic campaign is repeated for closeout.

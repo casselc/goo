@@ -27,8 +27,9 @@ Each keeps literal population, native-unit and source-read semantics explicit.
 profiles and an initial chosen scope, preserving lab mode and optional capability
 states. Newer convention bindings,
 database pool/server health, broker signals, resource USE and Kubernetes discovery
-remain staged deliveries. Native interval-to-record context is a separate next
-investigation path. Lean aggregate reads require a measured audit; trace-search
+remain staged deliveries. [Native interval-to-record context](NATIVE_RECORD_CONTEXT.md)
+is delivered for the live counter/histogram inspector with exact event-time/resource
+filters and retained return. Gauge windows and broader adoption remain follow-ons. Lean aggregate reads require a measured audit; trace-search
 definition reuse is conditional and distinct from observed-result custody.
 The history below does not create additional current commitments.
 

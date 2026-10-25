@@ -864,3 +864,20 @@ cleanup retained bounded samples and removed only internal logs, preserving
 application OTel data and saved evidence. A bounded diagnostic retention policy
 remains a separate lab reproducibility follow-up; current manual cleanup is not
 a production retention guarantee.
+
+
+The [native interval context handoff](NATIVE_RECORD_CONTEXT.md) supports actual
+counter/histogram export intervals in the live Measurements inspector. Gauge
+observations and aggregated histogram time buckets have no invented context
+window; saved/native-service displays do not yet own this retained handoff.
+Record context preserves exact nanosecond boundaries and shared service/resource
+namespace/instance. It does not establish causal contribution or exemplars.
+Trace expansion is deliberately broader in its existing enclosing millisecond
+window and reported trace-ID scope, retaining the exact record origin. Native
+provenance is held in this tab; saving or sharing the record question preserves
+filters but does not create a durable native-result citation or atomic cross-signal
+snapshot. Return cancellation is a control request, not a telemetry reread.
+
+The C3 mobile fixed-record frame retains substantial existing form/header controls
+before rows. Answer-first consolidation is tracked in the current backlog; the
+new interval handoff does not claim whole-product mobile density is solved.

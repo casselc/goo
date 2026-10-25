@@ -2091,3 +2091,61 @@ GOO_GENERIC_BINARY=/tmp/goo-generic-191 npx playwright test journeys/generic-sta
 GOO_GENERIC_BINARY=/tmp/goo-generic-191 GOO_GENERIC_BOMBADIL=1 npx playwright test journeys/generic-startup-bombadil.spec.js
 GOO_GENERIC_BINARY=/tmp/goo-generic-191 GOO_GENERIC_LEDGER=/absolute/path/to/ledger.json npx playwright test journeys/generic-startup-offline.spec.js
 ```
+
+## Native interval to record context (C3)
+
+`TestHegelNativeRecordContextExactMembership` checks 24 generated nanosecond
+intervals above 2^53 across counter/histogram parents, both record signals and
+missing/empty/named resource namespaces. Independent `big.Int` geometry and raw
+fact membership validate millisecond enclosure plus exact half-open membership,
+other-instance exclusion, immutable inputs and the strict shared-field whitelist.
+`TestNativeRecordContextRefusalsAndPoints` covers canonical bounds, window limits,
+invalid signal/identity, pinned-stream replacement and pure gauge point versus
+lookaround semantics. The first focused campaign passed in 0.037s
+(`artifacts/native-record-context-properties.txt`). No production evaluator is the
+expected membership oracle.
+
+Actual journey192 passed bounded native acceptance in 6.878s:
+
+- `TestQuintNativeRecordContextObserved`: 6.85s, accepted
+  `artifacts/native-record-context/native-context-a57c48baf4/ledger.json`;
+  six semantic and two finite-model controls rejected.
+- `TestNativeRecordContextCasesAndOwnership`: 0.02s, accepted
+  `native-context-1a693076d7/cases.json` and
+  `native-context-1480119d7a/ownership.json`; four changed case counts rejected.
+
+The main checks exact115 raw records, broader trace4/linkedlogs4, integer
+boundaries, page identity/scope/time/attributes and retained parent evidence.
+Selection resolves the actually displayed Raw record against the original exact
+stream set. A rejected initial observer assumed only one stream; all source and
+return guards were already true. The first and isolated diagnostic logs are
+retained beside final `native-validation.txt`; no fixture/application change was
+made to satisfy it.
+
+The existing `population_drilldown` model replays ten steps derived from nine
+observed UI events: stage/back/history and five actual source operations, including
+two reads in trace expansion. It validates this observed depth/counter protocol;
+independent raw-fact checks, not the model, validate interval arithmetic and
+population membership. Its two changed counter/order controls reject. The older
+fixed-phase `native_navigation` model was not reused. No new model framework or
+case quota was introduced.
+
+The four actual scenarios cover histogram empty/missing namespace, a flagged
+unknown native interval and an empty record interval. Held-response ownership
+checks distinguish two telemetry reads from one cancellation control POST; Return
+and stale-response rejection add no source read. The browser main initially had
+an obsolete Expand-button selector and passed after a harness-only correction.
+The accepted actor (25.8s, eight phases, 418 snapshots, two reads) and separate
+3.6s native-entry frame (one fresh read, source-free selection) retain their own
+receipts. Child record filters persist when shared/saved; tab-local native origin
+is not a durable native citation.
+
+With the toolchain/cache environment above and browser ownership released:
+
+```sh
+go test -run '^Test(HegelNativeRecordContext|NativeRecordContextRefusals)' -v .
+GOO_NATIVE_RECORD_CONTEXT_LEDGER=/workspace/goo/artifacts/native-record-context/native-context-a57c48baf4/ledger.json \
+GOO_NATIVE_RECORD_CONTEXT_CASES=/workspace/goo/artifacts/native-record-context/native-context-1a693076d7/cases.json \
+GOO_NATIVE_RECORD_CONTEXT_OWNERSHIP=/workspace/goo/artifacts/native-record-context/native-context-1480119d7a/ownership.json \
+go test -run '^Test(QuintNativeRecordContextObserved|NativeRecordContextCasesAndOwnership)$' -v .
+```

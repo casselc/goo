@@ -102,6 +102,14 @@ See the executed [HTTP](journeys/187-http-server-dashboard-storyboard.md),
 [database-client](journeys/189-db-client-dashboard-storyboard.md) and
 [messaging](journeys/190-messaging-dashboard-storyboard.md) journeys with desktop/mobile frames.
 
+From the live native Measurements inspector, select a counter or histogram
+interval and choose **Logs in interval** or **Spans in interval**. The
+[native-context handoff](docs/NATIVE_RECORD_CONTEXT.md) preserves exact event-time
+membership and matching resource identity; Run reads records explicitly and Back
+restores the held metric view. It provides context rather than a causal or
+exemplar relationship. [Journey 192](journeys/192-native-record-context-storyboard.md)
+shows the flow and its broader trace-expansion boundary.
+
 Error triage acceptance is complete: ET1 `982b9e9`, ET2 `0c4ab38`, real OTel
 179 spans/logs, ownership, native/model checks and a 55-second actor pass. Actual
 [span groups](docs/journeys/screenshots/179a-spans-error-evidence-groups.png),

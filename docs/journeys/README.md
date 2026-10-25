@@ -2401,3 +2401,10 @@ no persistence format is added. Exact receipts and limits are in the storyboard.
 [Executable storyboard](../../journeys/191-generic-startup-storyboard.md) · [Activity](screenshots/191a-generic-python-activity.png) · [Service](screenshots/191b-generic-python-service.png) · [Mobile frozen evidence](screenshots/191c-generic-saved-python-evidence.png).
 
 The isolated generic runtime contains no grammar, sample definitions or operation bindings. Blank idle startup makes no population reads; explicit Activity → discovered service → staged fixed question → Run returns 140 Python-tagged server-span records, then capture/reopen preserves the same fixed evidence. Main 20.0s, bounded actor 30.9s/six phases, 465 snapshots, offline API supplement 2.0s and refreshed lab compatibility 6.0s pass. Two initial real startup defects (automatic local tail and residual example catalog fetch) are fixed and retained as diagnostics; no failed attempt is claimed passed. See the storyboard for source effects, capture custody, exact receipts and reproduction commands.
+
+
+## 192 — Native interval to coincident records
+
+[Executable storyboard](../../journeys/192-native-record-context-storyboard.md) · [Selected native interval](screenshots/192c-selected-native-interval.png) · [Exact span context](screenshots/192a-native-interval-record-context.png) · [Mobile logs](screenshots/192b-mobile-exact-interval-logs.png).
+
+A live counter/histogram interval stages an exact nanosecond log/span question using only shared service/resource identity. Explicit Run finds 115 records beyond the first 100-row page; existing trace expansion intentionally reads a disclosed broader coarse window. Back restores retained native evidence and focus without reading. Main 9.2s, four bounded cases 14.7s, ownership 5.6s, eight-phase actor 25.8s/418 snapshots and one-read native-frame replay 3.6s pass. Unknown exports, missing/empty namespaces, empty context, held responses and hidden controls are covered. The initial obsolete trace-button selector failure is retained separately. See the storyboard for exact receipts and effect accounting.
