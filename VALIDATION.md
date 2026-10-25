@@ -10502,3 +10502,25 @@ files changed in this round have resolving local file targets**. All changed doc
 and three actual frames are synchronized to the running lab before publication.
 The complete reviewed round is pushed together; the verified remote head is
 reported after publication. No accepted semantic campaign is repeated for closeout.
+
+
+## C4 aggregate read-set audit (2026-10-25)
+
+[Audit and committed receipts](docs/AGGREGATE_READ_AUDIT.md) document a new
+`cmd/goo-read-audit` developer command over the unchanged real Source.Fetch path.
+Final live ClickHouse cases returned count 123, 4 versus 123 complete groups and
+four successful reads each: count, rows, groups, fields. The command records SQL
+size/hash, consumed decoded response bytes, timings and allowlisted numeric
+ClickHouse summary fields without emitting source rows or SQL parameters.
+The focused Go regression passes (0.006s), including malicious/malformed header
+controls. Independent review identified arbitrary summary JSON as an output risk;
+the final tool whitelists canonical uint64 strings, and both live cases were
+rerun after that correction.
+
+This is the prerequisite baseline, not a projection or performance improvement.
+The existing generated OTLP fixture was reused without writes. Background lab
+traffic remained active, so source read-row counts differ between cases; a fresh
+controlled before/after comparison is required for implementation. No app/API/UI
+behavior or capture bytes changed; browser/property/model campaigns were not
+needed for this standalone audit. Counted values is the selected first adoption;
+the service lens needs a separate richer summary projection.

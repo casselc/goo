@@ -1,0 +1,14 @@
+{
+  "signal": "spans",
+  "environment": "native-context-a57c48baf4",
+  "fromMs": 1792946003747,
+  "toMs": 1792946007747,
+  "limit": 1,
+  "offset": 0,
+  "groupBy": [
+    {
+      "kind": "column",
+      "key": "name"
+    }
+  ]
+}

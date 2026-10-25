@@ -29,7 +29,10 @@ states. Newer convention bindings,
 database pool/server health, broker signals, resource USE and Kubernetes discovery
 remain staged deliveries. [Native interval-to-record context](NATIVE_RECORD_CONTEXT.md)
 is delivered for the live counter/histogram inspector with exact event-time/resource
-filters and retained return. Gauge windows and broader adoption remain follow-ons. Lean aggregate reads require a measured audit; trace-search
+filters and retained return. Gauge windows and broader adoption remain follow-ons.
+The [aggregate read audit](AGGREGATE_READ_AUDIT.md) is delivered; the next C4 slice
+is a distinct count/group response for counted values, with a fresh controlled
+before/after check. Service-summary adoption follows separately. Trace-search
 definition reuse is conditional and distinct from observed-result custody.
 The history below does not create additional current commitments.
 

@@ -1,5 +1,10 @@
 # Known issues and gaps
 
+The [C4 read audit](AGGREGATE_READ_AUDIT.md) confirms counted values still fetches
+an unused record page and field inventory. Projection is planned, not implemented.
+Measured source scan work exceeds the matching population and the lab continues
+ingesting unrelated telemetry; small output budgets are not scan-cost guarantees.
+
 
 [Recorded error/exception triage](ERROR_TRIAGE.md) is delivered: ET1 `982b9e9`,
 ET2 `0c4ab38` and ET3 real OTel/browser/native/model/actor acceptance pass. Actual

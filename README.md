@@ -8,6 +8,9 @@ shared definitions when available.
 [Reviewed roadmap](docs/ROADMAP_2026_10_25.md) · [Execution backlog](docs/BACKLOG_2026_10_25.md) ·
 [Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md)
 
+Developer tooling: [measured aggregate read audit](docs/AGGREGATE_READ_AUDIT.md)
+records the existing counted-values read costs before projection changes.
+
 ## Use your existing OTel data
 
 [Generic startup](docs/GENERIC_STARTUP.md) runs the Go API and Python UI without
