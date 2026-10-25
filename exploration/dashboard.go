@@ -15,6 +15,7 @@ const DashboardNativeLimit = 2
 
 // Inputs are supplied observations, not authenticated source evidence or health.
 type DashboardRequest struct {
+	RPCServerObserved  bool                      `json:"rpcServerObserved,omitempty"`
 	HTTPServerObserved bool                      `json:"httpServerObserved,omitempty"`
 	Profile            string                    `json:"profile,omitempty"`
 	Scope              InventoryQuestion         `json:"scope"`
@@ -93,7 +94,7 @@ func DashboardRecordQuestion(scope InventoryQuestion, service, signal string) Qu
 // PlanServiceDashboard performs no source reads. Every executable widget uses an
 // existing typed evaluator; no SQL, health policy or fleet aggregation is inferred.
 func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclaration) (*DashboardPlan, error) {
-	if in.Profile != "" && in.Profile != "auto" && in.Profile != "all-spans" && in.Profile != "http-server" {
+	if in.Profile != "" && in.Profile != "auto" && in.Profile != "all-spans" && in.Profile != "http-server" && in.Profile != "rpc-server" {
 		return nil, fmt.Errorf("unsupported dashboard profile")
 	}
 	if err := in.Scope.Validate(); err != nil {
@@ -138,6 +139,23 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			}
 		}
 	}
+	rpcSystem, rpcMethod := false, false
+	if signals["spans"] {
+		for _, f := range in.Fields {
+			rpcSystem = rpcSystem || f == (Field{Kind: "attribute", Key: "rpc.system"})
+			rpcMethod = rpcMethod || f == (Field{Kind: "attribute", Key: "rpc.method"})
+		}
+	}
+	rpcCandidate := rpcSystem && rpcMethod
+	rpcAuto := rpcCandidate && in.RPCServerObserved
+	if signals["metrics"] {
+		for _, instrument := range in.Instruments {
+			if dashboardNativeRPC(in.Scope, in.Service, instrument) {
+				rpcCandidate, rpcAuto = true, true
+			}
+		}
+	}
+	rpcActive := false
 	httpActive := false
 	if in.Profile != "" {
 		p.Profile = in.Profile
@@ -145,11 +163,17 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			p.Profile = "all-spans"
 			if httpAuto {
 				p.Profile = "http-server"
+			} else if rpcAuto {
+				p.Profile = "rpc-server"
 			}
 		}
 		if p.Profile == "http-server" && !httpCandidate {
 			return nil, fmt.Errorf("HTTP server profile requires supplied current HTTP metadata or an eligible duration instrument")
 		}
+		if p.Profile == "rpc-server" && !rpcCandidate {
+			return nil, fmt.Errorf("RPC server profile requires supplied legacy rpc.system and rpc.method metadata or an eligible legacy duration instrument")
+		}
+		rpcActive = p.Profile == "rpc-server"
 		httpActive = p.Profile == "http-server"
 		genericState := "not_observed"
 		if signals["spans"] {
@@ -161,7 +185,11 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			httpState = "candidate"
 			httpReason = "Metadata candidate only. Incoming span observations require exact Server kind and a nonempty current http.request.method in the actual read; conformance is unverified"
 		}
-		p.Families = []DashboardFamily{{Key: "http-server", Title: "Incoming HTTP", State: httpState, Grain: "server-span-record", Reason: httpReason, RuleSet: "goo/http-server-span-observations/v1", Selected: httpActive}, {Key: "all-spans", Title: "All spans", State: genericState, Grain: "span-record", Reason: "Mixed reported span kinds and retries; records are not request throughput", Selected: !httpActive}}
+		p.Families = []DashboardFamily{{Key: "http-server", Title: "Incoming HTTP", State: httpState, Grain: "server-span-record", Reason: httpReason, RuleSet: "goo/http-server-span-observations/v1", Selected: httpActive}, {Key: "all-spans", Title: "All spans", State: genericState, Grain: "span-record", Reason: "Mixed reported span kinds and retries; records are not request throughput", Selected: !httpActive && !rpcActive}}
+		if rpcCandidate || rpcActive {
+			family := DashboardFamily{Key: "rpc-server", Title: "Incoming RPC", State: "candidate", Grain: "server-span-record", Reason: "Legacy metadata candidate only. Actual reads require exact Server kind and nonempty rpc.system and rpc.method; recorded status is not protocol outcome or conformance", RuleSet: "goo/rpc-server-legacy-span-observations/v1", Selected: rpcActive}
+			p.Families = append(p.Families[:1], append([]DashboardFamily{family}, p.Families[1:]...)...)
+		}
 	}
 	bucket := int64(1000)
 	for _, b := range []int64{1000, 10000, 60000, 300000} {
@@ -179,6 +207,12 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 				w.Title = "HTTP server span observations"
 				w.Grain = "server-span-record"
 				w.Reason = "Exact Server kind and nonempty current HTTP method; observed span status is not a verified HTTP outcome policy"
+			}
+			if rpcActive && signal == "spans" {
+				q = dashboardRPCQuestion(q)
+				w.Title = "RPC server span observations"
+				w.Grain = "server-span-record"
+				w.Reason = "Exact Server kind and nonempty legacy RPC system and method; recorded span status is not a protocol outcome policy"
 			}
 			q.BucketMS = bucket
 			q.GroupBy = []Field{{Kind: "column", Key: map[string]string{"spans": "name", "logs": "severity"}[signal]}}
@@ -200,9 +234,11 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		keys := []string{"http.route", "rpc.method", "db.system.name", "db.system", "messaging.destination.name", "messaging.system"}
 		if httpActive {
 			keys = []string{"http.route"}
+		} else if rpcActive {
+			keys = []string{"rpc.method"}
 		}
 		for _, key := range keys {
-			found := httpActive
+			found := httpActive || rpcActive
 			for _, f := range in.Fields {
 				if f.Kind == "attribute" && f.Key == key {
 					found = true
@@ -216,6 +252,9 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			if httpActive {
 				q = dashboardHTTPQuestion(q)
 			}
+			if rpcActive {
+				q = dashboardRPCQuestion(q)
+			}
 			q.GroupBy = []Field{{Kind: "attribute", Key: key}}
 			q.Summary = "span-duration"
 			q.SpanStatus = true
@@ -227,6 +266,11 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 				w.Title = "HTTP server routes"
 				w.Grain = "server-span-record"
 				w.Reason = "Missing and empty routes remain separate; only matching server span observations are counted"
+			}
+			if rpcActive {
+				w.Title = "RPC server methods"
+				w.Grain = "server-span-record"
+				w.Reason = "Reported nonempty legacy RPC methods on matching server span observations; no protocol status inference"
 			}
 			p.Widgets = append(p.Widgets, w)
 			break
@@ -240,6 +284,12 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		if in.Profile != "" {
 			if httpActive {
 				a, b := dashboardNativeHTTP(in.Scope, in.Service, instruments[i]), dashboardNativeHTTP(in.Scope, in.Service, instruments[j])
+				if a != b {
+					return a
+				}
+			}
+			if rpcActive {
+				a, b := dashboardNativeRPC(in.Scope, in.Service, instruments[i]), dashboardNativeRPC(in.Scope, in.Service, instruments[j])
 				if a != b {
 					return a
 				}
@@ -307,6 +357,10 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			if dashboardNativeHTTP(in.Scope, in.Service, instrument) {
 				w.Family = "http-server"
 				w.Reason = "Independent native HTTP duration binding; units, temporality and interval coverage require evaluation, not inferred span counts or conformance"
+			}
+			if dashboardNativeRPC(in.Scope, in.Service, instrument) {
+				w.Family = "rpc-server"
+				w.Reason = "Independent legacy RPC duration binding in milliseconds; exact identity, temporality and interval coverage remain separate from span counts or conformance"
 			}
 		}
 		p.Widgets = append(p.Widgets, w)
@@ -392,10 +446,40 @@ func dashboardHTTPQuestion(q Query) Query {
 	return q
 }
 func dashboardNativeHTTP(scope InventoryQuestion, service string, i measurements.Instrument) bool {
-	if !i.Supported || i.Definition == nil || i.Kind != "histogram" || i.Metric != "http.server.request.duration" || (i.Unit != "s" && i.Unit != "ms") || (i.Temporality != 1 && i.Temporality != 2) {
+	if i.Metric != "http.server.request.duration" || (i.Unit != "s" && i.Unit != "ms") {
+		return false
+	}
+	return dashboardNativeDuration(scope, service, i)
+}
+func dashboardNativeDuration(scope InventoryQuestion, service string, i measurements.Instrument) bool {
+	if !i.Supported || i.Definition == nil || i.Kind != "histogram" || (i.Temporality != 1 && i.Temporality != 2) {
 		return false
 	}
 	d := i.Definition
 	q := measurements.Question{Definition: *d, FromMS: scope.FromMS, ToMS: scope.ToMS}
 	return d.Kind == i.Kind && d.Source.Metric == i.Metric && d.Source.Unit == i.Unit && d.Source.Scope == i.Scope && d.Source.Version == i.Version && d.Source.SchemaURL == i.SchemaURL && d.Source.Namespace.Equal(scope.Namespace) && d.Environment == scope.Environment && len(d.Source.Services) == 1 && d.Source.Services[0] == service && q.Validate() == nil
+}
+
+// Legacy RPC is an explicit profile, never an alias union with newer convention keys.
+func dashboardRPCQuestion(q Query) Query {
+	parts := []Predicate{}
+	if q.Where != nil {
+		if len(q.Where.All) > 0 {
+			parts = append(parts, q.Where.All...)
+		} else {
+			parts = append(parts, *q.Where)
+		}
+	}
+	parts = append(parts,
+		Predicate{Field: &Field{Kind: "column", Key: "kind"}, Op: "eq", Value: "Server"},
+		Predicate{Field: &Field{Kind: "attribute", Key: "rpc.system"}, Op: "ne"},
+		Predicate{Field: &Field{Kind: "attribute", Key: "rpc.method"}, Op: "ne"})
+	q.Where = &Predicate{All: parts}
+	return q
+}
+func dashboardNativeRPC(scope InventoryQuestion, service string, i measurements.Instrument) bool {
+	if i.Metric != "rpc.server.duration" || i.Unit != "ms" {
+		return false
+	}
+	return dashboardNativeDuration(scope, service, i)
 }

@@ -9867,3 +9867,46 @@ frames. Whitespace checks pass; **1,303 relative links across 12 changed Markdow
 files resolve**. No additional runtime tests were repeated after accepted main,
 actor and supplement runs. Publication follows the reviewed source milestones;
 the final commit and verified remote head are reported on completion.
+
+
+## C2a.2 incoming RPC — source milestone (2026-10-25)
+
+An explicit legacy RPC profile extends the existing planner: reported Server kind
+and present nonempty `rpc.system` and `rpc.method`. Flat metadata only offers a
+candidate. A positive same-row, same-scope held observation or compatible legacy
+native metric admits automatic selection; existing HTTP admission wins ties. The
+resolved profile survives range/reset/native changes. Native `rpc.server.duration`
+histograms use the explicit `ms` binding; newer names/seconds are not alias-unioned
+or converted into that profile. Native stream/interval and span-record grains
+remain separate. Recorded span Error does not infer gRPC, HTTP or business outcome.
+
+The UI shares small incoming-family descriptors and the existing compact displays,
+with RPC-specific captions and explicit method-value population actions. A method
+group intentionally aggregates reported systems/services within its parent; its
+drilldown retains the parent and adds only the method literal. No unique operation
+or call identity is inferred. Actual cross-system/service grouping remains a
+required browser acceptance case. No new route, component query owner or store.
+
+Checks pass: focused backend **0.019s**, broad exploration **1.188s**, independent
+RPC Go review **0.010s**, actual handler/legacy fixtures **0.030s**, all **78 Node
+files 5.68s**, independent 16 generated scope/predicate grids plus boundary/native
+checks **0.075s**. OpenAPI validates **248 responses, 71 admitted requests and
+15 mux refusals**, with 76 operations/70 Go routes unchanged. Successful legacy
+and HTTP plan bytes stay exact; one old `rpc-server` 400 refusal intentionally
+changes from unknown-profile to missing-RPC-metadata now that the profile exists.
+The hint also leaves empty/null/omitted profile output unchanged.
+
+The shared raw-source checker refactor revalidates all 19 accepted journey187
+responses and count-rejection controls in **0.083s**; the new188 opt-in compiles
+and explicitly skips without its ledger. This is not a rerun of the old browser
+or actor. An initial native test invocation needed the established XDG cache
+setting; only environment setup changed. Independent final source review approves
+the corrected method-population contract for frozen live acceptance.
+
+Before this round, the workspace had only 15MiB free. Identified ClickHouse
+diagnostic logs occupied about1GiB. Their recent200-line tails and full rotated
+gzip were retained under `/tmp/goo-session-artifacts/storage-cleanup-20261025-rpc`;
+only those active diagnostic logs were truncated and the backed-up rotation
+removed. This restored about1.1GiB free without touching telemetry volumes, stores,
+repository history or verification receipts. Temporary feature binaries will be
+removed after deployment. Live browser/actor/frame evidence follows separately.

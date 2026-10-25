@@ -111,7 +111,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"unsupported dashboard profile\"}\n"
+      "response": "{\"error\":\"RPC server profile requires supplied legacy rpc.system and rpc.method metadata or an eligible legacy duration instrument\"}\n"
     },
     {
       "name": "wrong-profile-type",

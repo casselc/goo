@@ -8959,7 +8959,7 @@
                 "type": "null"
               }
             ],
-            "description": "Opt-in bounded family descriptors. HTTP candidate metadata must be confirmed by the executable question before treating counts as observed; no hidden source read or fallback is performed by this planner."
+            "description": "Opt-in bounded family descriptors. HTTP/RPC candidate metadata must be confirmed by the executable question before treating counts as observed; no hidden source read or fallback is performed by this planner."
           },
           "nativeLimit": {
             "type": "integer"
@@ -8979,7 +8979,7 @@
           },
           "profile": {
             "type": "string",
-            "description": "Selected all-spans or http-server family for opt-in requests; absent on legacy requests."
+            "description": "Selected all-spans, http-server or rpc-server family for opt-in requests; absent on legacy requests."
           },
           "scope": {
             "$ref": "#/components/schemas/exploration.InventoryQuestion"
@@ -9120,7 +9120,18 @@
                 "type": "null"
               }
             ],
-            "description": "Optional auto, all-spans or http-server selection. Omitted/empty/null preserves the legacy v2 response. auto selects HTTP only with a positive supplied server-observation hint plus current-key metadata, or a compatible native HTTP instrument. Flat keys alone leave All spans selected; the hint is advisory, not authenticated conformance."
+            "description": "Optional auto, all-spans, http-server or rpc-server selection. Omitted/empty/null preserves the legacy v2 response. auto selects HTTP only with a positive supplied server-observation hint plus current-key metadata, or a compatible native HTTP instrument. Automatic precedence is HTTP, legacy RPC, then All spans. RPC admission requires both legacy rpc.system/rpc.method keys plus a positive rpcServerObserved hint, or an eligible legacy RPC duration instrument. Flat keys alone leave All spans selected; hints are advisory, not authenticated conformance."
+          },
+          "rpcServerObserved": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional advisory positive hint from already-held, same-scope Server span observations with nonempty legacy rpc.system and rpc.method on the same row. false/omitted is unknown, not RPC absence or conformance. HTTP admission has automatic precedence; this does not authorize a probe."
           },
           "scope": {
             "anyOf": [

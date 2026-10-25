@@ -3908,6 +3908,16 @@
           }
         ]
       },
+      "rpcServerObserved": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "scope": {
         "anyOf": [
           {

@@ -53,6 +53,7 @@ func TestDashboardProfileHTTPWireFixtures(t *testing.T) {
 		{Name: "auto-legacy-keys-no-alias", Body: dashboardProfileBody("auto", []string{"spans"}, legacy), Status: 200},
 		{Name: "auto-no-span-signal", Body: dashboardProfileBody("auto", []string{"logs"}, current), Status: 200},
 		{Name: "explicit-HTTP-without-current-candidate", Body: dashboardProfileBody("http-server", []string{"spans"}, legacy), Status: 400},
+		// Historical case name retained: rpc-server is now recognized but lacks RPC metadata.
 		{Name: "unsupported-profile", Body: dashboardProfileBody("rpc-server", []string{"spans"}, current), Status: 400},
 		{Name: "wrong-profile-type", Body: dashboardProfileBody(true, []string{"spans"}, current), Status: 400},
 		{Name: "wrong-server-hint-type", Body: dashboardProfileBodyHint("auto", []string{"spans"}, current, "yes"), Status: 400},

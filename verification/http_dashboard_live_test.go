@@ -175,6 +175,11 @@ func TestHTTPDashboardObservedPopulations(t *testing.T) {
 	if path == "" {
 		t.Skip("set GOO_HTTP_DASHBOARD_LEDGER to an actual 187 ledger")
 	}
+	hdCheckObservedLedger(t, path, 225)
+}
+
+func hdCheckObservedLedger(t *testing.T, path string, wantRecords int) {
+	t.Helper()
 	raw, e := os.ReadFile(path)
 	if e != nil {
 		t.Fatal(e)
@@ -183,7 +188,7 @@ func TestHTTPDashboardObservedPopulations(t *testing.T) {
 	if e = json.Unmarshal(raw, &ledger); e != nil {
 		t.Fatal(e)
 	}
-	if len(ledger.Records) != 225 {
+	if len(ledger.Records) != wantRecords {
 		t.Fatal("ordinary fixture population missing")
 	}
 	checked := 0

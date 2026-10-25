@@ -505,3 +505,24 @@ offers an explicit All spans switch without a hidden fallback query. Recorded sp
 business outcome stay distinct. Counts are span observations, not deduplicated
 requests. Related native instruments keep separate stream identity, units and
 evidence bases. See [automatic dashboards](AUTOMATIC_DASHBOARDS.md).
+
+
+Incoming RPC uses the same planning route and additive v2 contract. The optional
+`rpc-server` profile is distinct from HTTP. For this supported legacy RPC family,
+span questions require exact `SpanKind = Server` and present, nonempty
+`rpc.system` **and** `rpc.method` on each matching row. Flat keys offer a candidate;
+`rpcServerObserved` is an advisory positive hint from already-held same-scope rows,
+not an authenticated observation or a convention-compliance assertion. Automatic
+selection prefers eligible HTTP, then eligible RPC, then All spans. Explicit RPC
+without eligible metadata returns 400. The previously unsupported `rpc-server`
+request now reports missing RPC metadata instead of an unsupported-profile error.
+All omitted-profile responses and existing successful HTTP plans retain their
+wire bytes; an RPC descriptor is added only when RPC metadata is supplied or RPC
+is explicitly requested.
+
+Only the supported legacy `rpc.server.duration` native histogram in milliseconds
+can independently admit this RPC family. Newer duration/identity conventions are
+not silently aliased or mixed with it. Span observations and native metrics retain
+separate populations, clocks and units. No request deduplication, RPC status-to-
+business-outcome rule, source probe or fallback read is inferred. Profile and hint
+additions do not alter route counts, byte limits or publication effects.
