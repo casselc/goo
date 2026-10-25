@@ -35,6 +35,8 @@ Each item has `traceId` and one witness per condition. A witness carries its `co
 
 `fieldValues` supplies all unique qualified fields used by that condition, including fields referenced by numeric bindings and all OR branches. Entries are `{field:{kind,key},value:null|string}`, sorted by field kind and key. Null means absent, while an empty string is a reported empty value. Numeric attributes remain raw reported strings; declared parsing, scale and unit stay in the condition. Derived OTel fields use the same compiler adapter as ordinary exploration. The response omits unrelated attributes and does not truncate proof values.
 
+Absent evidence uses an empty internal payload in both witness projection and tie ordering; hidden adapter values cannot affect selection of later reported fields. The source decoder rejects a nonempty payload for an absent field.
+
 The Go source parser reconstructs the logical fields and re-evaluates the condition with `Match`. It rejects missing, malformed or false proof, contradictory projected metadata, inconsistent totals/list shape, noncanonical IDs/counts, out-of-window witness timestamps and invalid duration strings. Known physical counterparts such as service, operation, kind, timestamp, duration, span/trace IDs and the requested deployment environment must agree with the displayed witness. A condition with OR branches still displays the reported values of every referenced field, rather than implying every branch matched.
 
 ## Boundedness and failure

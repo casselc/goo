@@ -200,3 +200,56 @@ func TestTraceSearchCompiledPlanBound(t *testing.T) {
 		t.Fatal(e)
 	}
 }
+
+func TestClickHouseTraceSearchAbsentDerivedEvidenceTieParity(t *testing.T) {
+	endpoint := os.Getenv("GOO_CLICKHOUSE_TEST_URL")
+	if endpoint == "" {
+		t.Skip("GOO_CLICKHOUSE_TEST_URL not configured")
+	}
+	request := traceSearchTestRequest()
+	request.Limit = 20
+	request.Conditions = []Predicate{{All: []Predicate{{Field: &Field{Kind: "column", Key: "exception_type"}, Op: "missing"}, {Field: &Field{Kind: "resource", Key: "zone"}, Op: "exists"}}}}
+	records := []TraceSearchRecord{}
+	for _, zone := range []string{"a", "z"} {
+		records = append(records, TraceSearchRecord{Environment: "prod", Fields: map[Field]string{{Kind: "column", Key: "trace_id"}: strings.Repeat("a", 32), {Kind: "column", Key: "span_id"}: "0000000000000001", {Kind: "column", Key: "timestamp_ns"}: "1000000000", {Kind: "column", Key: "duration_ns"}: "100", {Kind: "column", Key: "service"}: "db", {Kind: "column", Key: "name"}: "operation", {Kind: "column", Key: "kind"}: "Server", {Kind: "resource", Key: "zone"}: zone}})
+	}
+	// Both exception types are unreported as a unique type. Their hidden first
+	// values deliberately sort opposite the visible resource-zone evidence.
+	inline := " FROM (SELECT ['z','a'][number+1] AS hidden, ['a','z'][number+1] AS zone, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' AS TraceId, '0000000000000001' AS SpanId, '' AS ParentSpanId, 'db' AS ServiceName, 'operation' AS SpanName, 'Server' AS SpanKind, toUInt64(100) AS Duration, fromUnixTimestamp64Nano(toInt64(1000000000)) AS Timestamp, map('deployment.environment.name','prod','zone',zone) AS ResourceAttributes, map() AS SpanAttributes, ['exception','exception'] AS `Events.Name`, [map('exception.type',hidden),map('exception.type',concat(hidden,'2'))] AS `Events.Attributes` FROM numbers(2))"
+	transport := traceSearchTransport(func(req *http.Request) (*http.Response, error) {
+		raw, e := io.ReadAll(req.Body)
+		if e != nil {
+			return nil, e
+		}
+		req = req.Clone(req.Context())
+		sql := strings.Replace(string(raw), " FROM otel_traces", inline, 1)
+		req.Body = io.NopCloser(strings.NewReader(sql))
+		req.ContentLength = int64(len(sql))
+		return http.DefaultTransport.RoundTrip(req)
+	})
+	source := Source{Endpoint: endpoint, User: os.Getenv("GOO_CLICKHOUSE_TEST_USER"), Password: os.Getenv("GOO_CLICKHOUSE_TEST_PASSWORD"), Client: &http.Client{Transport: transport}}
+	want, count, e := ReferenceTraceSearch(request, records)
+	if e != nil {
+		t.Fatal(e)
+	}
+	got, e := source.SearchTraces(context.Background(), request)
+	if e != nil {
+		t.Fatal(e)
+	}
+	if count != got.MatchedTraces || !reflect.DeepEqual(want, got.Items) {
+		w, _ := json.Marshal(want)
+		g, _ := json.Marshal(got.Items)
+		t.Fatalf("absent derived projection altered visible evidence tie: got %s want %s", g, w)
+	}
+}
+
+func TestTraceSearchAbsentProofRequiresCanonicalEmptyPayload(t *testing.T) {
+	p := Predicate{Field: &Field{Kind: "attribute", Key: "optional"}, Op: "missing"}
+	if _, e := decodeTraceSearchValues(json.RawMessage(`[[0,"hidden"]]`), p); e == nil {
+		t.Fatal("absent evidence retained hidden tie value")
+	}
+	out, e := decodeTraceSearchValues(json.RawMessage(`[[0,""]]`), p)
+	if e != nil || len(out) != 1 || out[0].Value != nil {
+		t.Fatal("canonical absent evidence refused", out, e)
+	}
+}

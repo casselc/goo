@@ -104,7 +104,7 @@ func CompileTraceSearch(r TraceSearchRequest) (TraceSearchPlan, error) {
 		values := []string{}
 		for _, field := range fields {
 			v, present := c.field(field)
-			values = append(values, "tuple(toUInt8("+present+"), toString("+v+"))")
+			values = append(values, "tuple(toUInt8("+present+"), if("+present+", toString("+v+"), ''))")
 		}
 		tuple := "tuple(toString(toUnixTimestamp64Nano(Timestamp)), SpanId, ParentSpanId, ServiceName, SpanName, SpanKind, toString(Duration), [" + strings.Join(values, ", ") + "])"
 		order := "tuple(Timestamp, SpanId, ParentSpanId, ServiceName, SpanName, SpanKind, Duration, [" + strings.Join(values, ", ") + "])"
@@ -368,6 +368,9 @@ func decodeTraceSearchValues(raw json.RawMessage, p Predicate) ([]TraceSearchFie
 		var value string
 		if len(row) != 2 || json.Unmarshal(row[0], &present) != nil || present > 1 || !traceSearchString(row[1], &value) || len(value) > 4096 {
 			return nil, fmt.Errorf("invalid trace search field evidence")
+		}
+		if present == 0 && value != "" {
+			return nil, fmt.Errorf("absent trace witness field has noncanonical hidden value")
 		}
 		entry := TraceSearchFieldValue{Field: fields[i]}
 		if present == 1 {
