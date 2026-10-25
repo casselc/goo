@@ -10782,3 +10782,65 @@ Independent architecture review found and verified fixes for signed-zero and
 nil/empty-map replay determinism, with exact JSON regression coverage. Browser,
 Bombadil and new Quint checks were not run: no screen or stateful owner changed.
 Source/OTLP parity, package replay and actual dashboard acceptance remain planned.
+
+## C2c native cumulative-stock integration (2026-10-25 UTC)
+
+Source `6e88d57` connects `kind: stock` packages to cumulative nonmonotonic sum
+reads, discovery, native observation views and immutable capture replay. No new
+route, source owner, automatic pool-health profile, capacity ratio, delta baseline
+or stock interval-to-record context is introduced. Existing Result fields retain
+their order and the optional stocks member is absent for legacy kinds.
+
+Actual source gates: full root `go test ./... -count=1` passed (cmd 0.789s,
+exploration 2.484s, measurements 0.384s); all 81 Node files passed (25.15s).
+Twelve generated source-adapter/replay examples passed (0.141s), preserving six
+namespace/instance stream identities, signed fractions and epochs and rejecting
+forged replay epochs. The already accepted kernel campaign was not repeated.
+HTTP tests passed (0.025s): execute, capture, fresh-mux offline byte-exact reopen,
+delta/monotonic source refusals and invalid-kind zero-read refusal. Four new
+frozen cases leave old fixtures untouched. OpenAPI validates 80 operations/73 Go
+operations, 420 schemas/402 reflected, 315 responses/109 admitted requests/18 mux
+refusals, plus six actual stock workflow responses and negative controls.
+
+Live journey 195 passed on its first invocation: 9.5s test / 13.0s invocation.
+Ordinary generated OTLP travels through the actual collector and ClickHouse;
+seven independent streams retain all eleven stock reports. Decreases, epoch
+changes, signed fractions, stale exports, flagged missing values and conflicting
+same-time exports are observed rather than fabricated source responses. Overall
+state remains unknown. The negative value under the database connection metric
+name is explicitly a generic engine probe, not valid physical pool-count or
+semantic-convention conformance evidence. Generic pool/state labels are not a
+pinned pool-profile binding.
+
+The UI journal has three logical telemetry requests: discovery, explicit
+measurement and fresh capture. Package staging, local stream filtering/point
+inspection and frozen reload add none. Direct ingestion/readiness and a later
+pure dashboard planning request are separate, not hidden in that total. The
+full stored capture is 12,964 bytes and remains byte-identical after reopening:
+SHA256 `599056e688d0ed0627049978d9d89d8f09191359ad4b13f0faee191330cbd37b`;
+ID `81babd515806c6fff7c47f57e5a4a081673326e6f18b7c929ce027ea10de94fa`.
+
+The 30-second Bombadil campaign passed first try (30.3s test / 31.6s invocation),
+with phases 0–5, one explicit measurement read and local signed-point/epoch
+inspection; it reuses accepted data without new ingestion. Supplemental dashboard
+planning first refused a harness question whose namespace differed from the
+supplied discovery definition; using the exact discovery scope returned the
+generic stock widget. The source was unchanged and the original refusal retained.
+
+Receipts: `artifacts/cumulative-stocks/cumulative-stock-c553c6dc4d/ledger.json`,
+its `bombadil/acceptance-summary.json` and the deployment receipt. Runtime binary
+SHA256 `56a5b6df5aa9c65926d3966d650797138d9bd08f59c0537d649c107d5d87b37e`.
+Actual desktop/mobile frames show UTC epochs, signed points and unknown/stale
+states. The mobile detail table scrolls internally; the inherited native workspace
+is still verbose. This cut does not claim whole-product density improvements.
+Independent source and visual reviews approve the scoped behavior. No new Quint
+model is claimed for unchanged read/capture ownership.
+
+Source-free observed receipt validation passed first try (0.037s; test body 0.02s)
+against the actual raw-fact ledger, all source rows, independent sample/epoch
+expectations and complete stored bytes/content ID. All six changed controls
+(value, epoch, identity, state, raw row and reopened receipt) were rejected.
+`artifacts/cumulative-stocks/native-validation.txt` records the check. The actor
+retains 509 snapshots; no ingestion or source campaigns were repeated.
+See [journey 195](journeys/195-cumulative-stocks-storyboard.md) for executable
+commands, actual frames and deliberate limits.

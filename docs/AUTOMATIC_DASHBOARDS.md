@@ -254,4 +254,4 @@ resource-identity contract are selected. Native-to-record context (C3) and lean
 aggregate execution (C4) support these dashboards; they should not postpone useful
 panels indefinitely or be expanded into unrelated framework projects.
 
-C2c prerequisite delivered: the pure [cumulative-stock evaluator](CUMULATIVE_STOCKS.md) accepts cumulative nonmonotonic observations. Public source/package/replay and pool panels are still planned; this does not change instrument eligibility.
+C2c prerequisite delivered: [cumulative-stock measurements](CUMULATIVE_STOCKS.md) connect cumulative nonmonotonic sum discovery to direct source reads, native observation views and frozen replay. Automatic named-pool/runtime panels remain planned; generic stock eligibility does not establish convention or pool-health conformance.

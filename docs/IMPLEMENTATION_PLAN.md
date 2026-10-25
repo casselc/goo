@@ -1169,4 +1169,4 @@ all 77 Node files, API/proxy/deployed contracts, 300 generated cases and all
 comparison continuation are independently reviewed. Final publication and bounded
 acceptance receipts are in VALIDATION.md.
 
-C2c has begun with the pure [cumulative-stock evaluator](CUMULATIVE_STOCKS.md). The sum-table adapter, additive package/replay contract and real pool UI remain the next vertical slice.
+C2c now includes [native cumulative-stock measurements](CUMULATIVE_STOCKS.md): sum-table reads, discovery, additive package/results, observation presentation and frozen replay. Next ship the named-pool per-instance dashboard; broader resource identity and capacity calculations remain separate.

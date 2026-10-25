@@ -2275,10 +2275,10 @@ go test -run '^TestServiceRecordAggregates(Observed|Ownership)$' -v .
 The existing `TestHegelStockObservations` remains the kernel property: decreases,
 accumulation epochs, arrival permutation and identical replay are already covered.
 The integration adds a typed native sum path and `result.stocks`; it does not
-change float64 observations into exact-integer values. New source/observed checks
-will focus on raw exporter values, epochs, stream identity, source/replay mapping
-and full capture bytes. Actual journey195 acceptance is pending; no new lifecycle
-model or redundant kernel campaign is claimed.
+change float64 observations into exact-integer values. Source/observed checks
+focus on raw exporter values, epochs, stream identity, source/replay mapping
+and full capture bytes. Actual journey195 acceptance is recorded below; no new lifecycle model or
+redundant kernel campaign is claimed.
 
 `TestHegelStockAdapterIdentityAndEpochs` passed on its first invocation in 0.141s
 (`artifacts/stock-integration-properties.txt`). Twelve generated signed-fraction
@@ -2287,4 +2287,29 @@ facts check every timestamp, value and accumulation epoch, including decreases
 and epoch transitions; valid serialized replay succeeds and an edited epoch is
 refused. This tests public adapter/replay integration without calling the stock
 kernel as the expected oracle. The pre-existing kernel property was not rerun.
-Actual journey195 source/capture acceptance remains pending.
+`TestStockIntegrationObserved` passed on its first invocation in 0.037s (body 0.02s)
+against `artifacts/cumulative-stocks/cumulative-stock-c553c6dc4d/ledger.json`.
+Independent raw-fact grouping validates eleven physical reports/seven exact streams,
+values, accumulation epochs, missing/conflicting observations and freshness. It
+checks complete raw source rows as a multiset, not just the derived display,
+then verifies saved/reopened payloads and the complete immutable capture/content ID.
+Six changed controls reject value, epoch, stream identity, state, missing source
+row and altered reopen data. No source call, production stock evaluator oracle or
+new formal model is used. Stdout: `artifacts/cumulative-stocks/native-validation.txt`.
+
+The accepted capture is 12964 bytes, SHA256
+`599056e688d0ed0627049978d9d89d8f09191359ad4b13f0faee191330cbd37b`;
+its before/after sidecars match. Browser main 9.5s and actor 30.3s (six phases,
+one explicit read) retain separate receipts. The supplemental pure dashboard-plan
+probe initially mismatched namespace with discovered definition and correctly
+refused 400; binding the actual discovery scope produced 200 without application
+changes. Signed fractional samples and generic labels are engine probes, not
+physical connection-count or semantic-convention conformance claims. Inherited
+mobile stream-card density remains a presentation limitation.
+
+With the toolchain/cache environment above, after browser ownership is released:
+
+```sh
+go test -run '^TestHegelStockAdapterIdentityAndEpochs$' -v .
+GOO_STOCK_INTEGRATION_LEDGER=/workspace/goo/artifacts/cumulative-stocks/cumulative-stock-c553c6dc4d/ledger.json go test -run '^TestStockIntegrationObserved$' -v .
+```

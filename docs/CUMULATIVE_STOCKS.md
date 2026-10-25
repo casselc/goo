@@ -58,6 +58,33 @@ resource/schema/scope/unit/attribute identity. Generic service-native widgets
 accept stocks within their existing two-instrument budget; this is not an
 automatic named-pool profile or a new source-read owner.
 
+A package can bind an ordinary exported instrument without a Goo manifest:
+
+```yaml
+apiVersion: goo/measurement-package/v1alpha1
+name: pool-connections
+title: Pool connection observations
+kind: stock
+environment: production
+lookbackMinutes: 2
+maxGapMs: 60000
+grain: per-stream
+source:
+  services: [api]
+  scope: ordinary.sdk
+  version: ""
+  schemaURL: ""
+  metric: db.client.connection.count
+  unit: "{connection}"
+  attributes:
+    db.client.connection.pool.name: main
+```
+
+The service, environment, scope/version/schema and attribute values must match
+actual exports. An omitted attribute selector retains all matching independent
+streams; it does not collapse their identities. The package name is not proof
+that the instrument follows a particular semantic convention.
+
 Results add an optional `stocks` family with fixed bounds and per-stream samples.
 Stored replay recomputes that family from the retained rows at the original read
 clock and rejects altered values, epochs or mixed result families. Capture
@@ -65,7 +92,10 @@ creation remains a fresh source read; reopening remains a file-backed read of
 original evidence. The presentation reuses passive observation timelines, with
 UTC observation/epoch times, retained stale values and explicit unknown samples.
 Stock observations do not gain counter-rate comparisons or interval-to-record
-links. Saved evidence uses the same display without executing sources.
+links. The live acceptance fixture includes a negative signed value under
+`db.client.connection.count` with generic `pool`/`state` labels as an engine
+probe. It does not establish valid nonnegative physical connection counts or
+semantic-convention conformance; a named-pool profile must enforce its domain. Saved evidence uses the same display without executing sources.
 
 Next vertical slice: show per-instance named-pool connection states using
 ordinary OTLP in generic mode. Keep pool states separate, require actual aligned
@@ -87,3 +117,6 @@ signed/fractional stocks, epoch changes, reordered arrival and duplicate replay 
 kernel checks. Source adapter/replay and HTTP tests add integration boundaries;
 the live journey records actual OTLP/ClickHouse/browser acceptance separately.
 There is no new stateful owner requiring a Quint model in this cut.
+
+Actual OTLP/browser, immutable capture, actor and independent raw-fact acceptance
+are recorded in [journey 195](../journeys/195-cumulative-stocks-storyboard.md).

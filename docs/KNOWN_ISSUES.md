@@ -891,4 +891,4 @@ The C3 mobile fixed-record frame retains substantial existing form/header contro
 before rows. Answer-first consolidation is tracked in the current backlog; the
 new interval handoff does not claim whole-product mobile density is solved.
 
-The [cumulative-stock evaluator](CUMULATIVE_STOCKS.md) is not yet wired into discovery, HTTP, captures or dashboards. Nonmonotonic sums remain refused by existing public measurement paths.
+[Cumulative-stock measurements](CUMULATIVE_STOCKS.md) accept cumulative nonmonotonic sum observations. Delta nonmonotonic sums remain unsupported without an established absolute baseline. Generic native widgets are supported; automatic named-pool/runtime panels, capacity joins, stock interval-to-record context and numeric stock comparisons remain unimplemented. Values follow exporter Float64 precision.

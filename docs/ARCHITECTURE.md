@@ -835,6 +835,26 @@ flowchart LR
 The existing stock kernel uses finite floating-point sample values; this does not
 introduce exact-integer arithmetic, capacity/utilization inference, interpolation
 or delta-sum integration. Integration acceptance and its source/capture receipts
-are pending. Existing kernel properties already cover decreases, epochs and
+are recorded below. Existing kernel properties already cover decreases, epochs and
 arrival/replay stability; the new checks focus on adapter identity, physical
 source rows and immutable stored evidence rather than another kernel campaign.
+
+
+The stock integration fixture uses generic `pool`/`state` labels to distinguish
+streams. Signed fractional values under a connection-count instrument exercise
+the generic engine; they do not establish physical connection-count validity or
+semantic-convention conformance. No stock-to-record interval action is inferred:
+stock samples retain their accumulation epochs and are not counter intervals.
+
+
+[Journey195](../journeys/195-cumulative-stocks-storyboard.md) accepted eleven
+physical stock reports across seven exact streams, including descending levels,
+signed fractions, a new epoch, stale and missing samples, and a real conflicting
+timestamp retained by the exporter. The main passed 9.5s and its browser actor
+passed 30.3s with one explicit source read. A bounded native raw-fact/custody check
+passed in 0.037s and rejected six changed controls. Local observation selection and
+frozen reopen performed no source read. The complete 12964-byte capture remained
+unchanged, with SHA256
+`599056e688d0ed0627049978d9d89d8f09191359ad4b13f0faee191330cbd37b`.
+Discovery and the supplemental pure dashboard plan admit generic stock evidence;
+this is not a completed database-pool health dashboard or utilization inference.
