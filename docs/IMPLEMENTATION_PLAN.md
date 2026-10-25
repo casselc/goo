@@ -1,7 +1,7 @@
 # Implementation plan
 
-> Current priority/status index: [2026-10-24 roadmap](ROADMAP_2026_10_24.md) and
-> [review-gated execution backlog](BACKLOG_2026_10_24.md). The long milestone record
+> Current priority/status index: [2026-10-25 roadmap](ROADMAP_2026_10_25.md) and
+> [review-gated execution backlog](BACKLOG_2026_10_25.md). The long milestone record
 > below is implementation history; conflicting old Next labels are superseded.
 
 
@@ -11,6 +11,17 @@ and design reviews and working through the resulting tasks. The
 reconciliation, detailed rationale and source links. This active index replaces
 competing historical “next” lists; the history below preserves past scope, not
 additional current commitments.
+
+## Current review result — 2026-10-25
+
+The complete queue through TS3 is shipped. The [new whole-product roadmap](ROADMAP_2026_10_25.md)
+now proposes generic-source startup and routine verification as parallel enablers,
+then explicit service observation grain and native-interval-to-record context.
+Lean aggregate reads require a measured audit; trace-search definition reuse is
+a conditional later cut, distinct from observed-result custody. These are
+proposals, not newly implemented or automatically activated work. The sections
+below preserve earlier queues and delivered history; use the current index above
+for priority and acceptance.
 
 ## Active implementation queue
 

@@ -5,7 +5,7 @@ compare evidence, and preserve an explanation you can revisit or reuse. Goo work
 with ordinary OpenTelemetry data; application manifests and Go annotations add
 shared definitions when available.
 
-[Reviewed roadmap](docs/ROADMAP_2026_10_24.md) · [Execution backlog](docs/BACKLOG_2026_10_24.md) ·
+[Reviewed roadmap](docs/ROADMAP_2026_10_25.md) · [Execution backlog](docs/BACKLOG_2026_10_25.md) ·
 [Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md)
 
 ## Run the local lab
@@ -216,7 +216,7 @@ docker compose --profile hyperdx down
 Named volumes preserve lab data. Removing volumes is a separate explicit reset.
 Deployment-specific authentication, tenant isolation, quotas and retention require
 a named target and acceptance checks. External Databricks/XTDB expansion and other
-proposals stay in the [reviewed backlog](docs/BACKLOG_2026_10_24.md).
+proposals stay in the [reviewed backlog](docs/BACKLOG_2026_10_25.md).
 
 [Capability/design reference index](docs/CAPABILITY_GUIDE.md) ·
 [Product essence](docs/PRODUCT_ESSENCE.md) ·

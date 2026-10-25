@@ -9655,3 +9655,36 @@ relative-link checks, with no whitespace errors. Native verification is committe
 as `622f125`; no temporary feature binary or diagnostic source remains. The
 remaining browser/docs milestone is ready for the authorized `origin/work` push;
 its final commit and verified remote head are reported after publication.
+
+
+## Whole-product review and roadmap revision (2026-10-25)
+
+Six agents reviewed shipped baseline `9e07b88` across product, architecture,
+usability, platform, verification and planning reconciliation. Reviews inspect
+source, existing contracts, prior proposals and committed frames/acceptance;
+they are not new browser sessions, customer studies, performance measurements
+or source integration campaigns. No runtime tests were needed for this
+documentation-only round, and no previous pass is presented as a new run.
+
+The [new roadmap](docs/ROADMAP_2026_10_25.md) and
+[execution proposal](docs/BACKLOG_2026_10_25.md) replace the prior persistence-first
+suggestion. Generic-source startup and routine CI are parallel enablers; explicit
+HTTP server-span observation grain is the first functional outcome, followed by
+native interval-to-record context. Lean aggregate projection requires a measured
+read-set audit. Trace-search definition reuse is a conditional later cut, and
+exact observed-result custody remains a separate contract. New cuts are proposed,
+not started or automatically authorized by this review request.
+
+The plan preserves shipped discovery/native/trace/evidence work rather than
+rescheduling old proposals. It makes high-cardinality, pipeline-source, training,
+collaboration, warehouse and shared-deployment prerequisites explicit. Current
+README/implementation links point to the new index; old Oct24 files are clearly
+historical. Known Issues corrections align local draft recovery, counted-value
+lookup, typed numeric measures and the 76-operation/70-Go API inventory with
+existing implemented contracts. No application, API, CI or data behavior changes.
+
+Independent planning review and a second architecture sanity review **APPROVE**
+the integrated priority, scope, dependencies and factual corrections. Initial
+local validation checks 564 relative links across 13 changed Markdown files,
+all six review inputs and the new reconciliation anchor; whitespace checks pass.
+The final publication checks include this validation entry separately.

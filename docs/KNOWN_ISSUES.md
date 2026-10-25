@@ -84,7 +84,7 @@ document files reopen without the optional store. Native and record source HTTP 
 now use shared POST/bounded-read primitives; the [acceptance audit](HTTP_BOUNDARIES.md#c2-acceptance-audit--2026-10-22)
 identified four additional readers; all are now adopted, including histograms.
 Telemetry/native/fixed exploration JSON is adopted behind frozen wire cases.
-The [OpenAPI contract](API.md) now inventories 75 operations (69 Go operations, five Python-only API operations
+The [OpenAPI contract](API.md) now inventories 76 operations (70 Go operations, five Python-only API operations
 and root health) and documents direct-Go
 versus browser-proxy limits, headers and SSE differences. Those discrepancies are
 preserved, not repaired by documentation. Further mechanical JSON migration remains paused;
@@ -329,12 +329,12 @@ Per-process query limits/cancellation cover general routes, not all legacy route
 or cross-replica/per-tenant quotas. Service discovery is a separate live read and
 is not archived by saved inventory. Event age does not establish pipeline health.
 
-[Grouped span-duration measures](GROUPED_MEASURES.md) now support complete per-group summaries/ranking. Arbitrary numeric measures remain absent. Opt-in bounded grouped time series now
+[Grouped span-duration measures](GROUPED_MEASURES.md) now support complete per-group summaries/ranking. Explicit typed numeric-attribute measures and comparisons are delivered; arbitrary expressions, floating point and unit conversions remain outside those contracts. Opt-in bounded grouped time series now
 exist through the [typed record-measure adapter](RECORD_MEASURES.md). Old summary+group capture plans may require explicit new live evidence rather than refresh; count-only groups are not retroactively upgraded.
 
 [Error/latency comparison boundaries](ERROR_COMPARISONS.md): span status is exporter status, not request/business outcome policy; captured-error percentages include Unset/unknown in the denominator. Different fixed windows and saved server-read pairs now exist. Statistical attribution and custom outcome policies remain future work. Local [deployment context and ordered notes](WORKBENCH_CONTEXT.md) now exist, with explicit authored provenance, immutable branches and exact evidence references.
 
-Investigation documents currently reference general captures and local deployment receipts; legacy operation receipts and live-question cards are not supported. Marker corrections/retractions, automatic CI ingestion, verified authorship and team authorization remain future work. Drafts persist only in the current page until saved. See [contract](WORKBENCH_CONTEXT.md).
+Investigation documents currently reference general captures and local deployment receipts; legacy operation receipts and live-question cards are not supported. Marker corrections/retractions, automatic CI ingestion, verified authorship and team authorization remain future work. Bounded same-tab browser-local authored draft recovery is delivered through explicit source-free Restore/Discard; it is not durable shared editing or an automatic publication retry. See [draft recovery](INVESTIGATION_DRAFT_RECOVERY.md) and the [context contract](WORKBENCH_CONTEXT.md).
 
 ## Scoped recipes and examples
 
@@ -738,7 +738,7 @@ attribute transforms remain open. The single-question builder now shares the
 editor, retaining source-supplied suggestions and explicit Run. Fixed editor drafts are distinct from their configured parent until
 opened as a child; configured view publication retains the parent selector.
 
-The editor now offers scoped observed field/value suggestions from existing reads, with missing/empty distinctions and invalidation on scope changes. The bounded sample (100 records, 64 fields, 12 values) does not establish population counts, cardinality or completeness. Missing maps and non-string values do not imply missing keys. Full-source value ranking remains unsupported. See [contract](FILTER_EDITOR.md#observed-fields-and-values).
+The editor now offers scoped observed field/value suggestions from existing reads, with missing/empty distinctions and invalidation on scope changes. The bounded sample (100 records, 64 fields, 12 values) does not establish population counts, cardinality or completeness. Missing maps and non-string values do not imply missing keys. These sampled suggestions do not rank a full population. Explicit counted-value lookup below supplies full fixed-scope counts within its grouping bound. See [sample contract](FILTER_EDITOR.md#observed-fields-and-values) and [counted lookup](FILTER_VALUES.md).
 
 [Counted value lookup](FILTER_VALUES.md) now covers applied record scopes beyond the shown-page sample. It uses the existing <=1,000-group refusal contract; no partial top-K or approximate cardinality is offered. Counts and inspection pages are independent reads. Lookups are ephemeral, require an applied scope and do not change saved/custody formats.
 
