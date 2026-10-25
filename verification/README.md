@@ -2043,3 +2043,51 @@ After browser ownership is released, use the toolchain/cache environment above:
 go test -run '^Test(HegelMessagingDashboard|MessagingDashboardCandidate|MessagingDashboardNative)' -v .
 GOO_MESSAGING_DASHBOARD_LEDGER=/workspace/goo/artifacts/messaging-dashboard/messaging-dashboard-bc0f633c21/ledger.json go test -run '^TestMessagingDashboardObservedPopulations$' -v .
 ```
+
+
+## Generic startup and optional capabilities (C1)
+
+No additional Hegel campaign or lifecycle model was added: startup flags and
+capability states form a small finite contract already checked by
+`TestGenericStartupWithoutSampleFiles`,
+`TestStartupProfilesFailClosedExplicitConfiguration`,
+`TestGenericExplicitOperationPackageRemainsAvailable` and
+`TestRuntimeCapabilitiesHTTPWireFixtures` in `cmd/goo`, plus
+`tests/test_server_startup.py`. These distinguish absent optional configuration,
+invalid explicit input, unavailable family responses and telemetry failures.
+They do not certify source connectivity or a production deployment.
+
+Actual [journey191](../journeys/191-generic-startup-storyboard.md) uses isolated Go
+and Python processes with no sample grammar/configuration/definitions. Accepted
+main `artifacts/generic-startup/generic-python-e570bbe8e2/ledger.json` passed in
+20s. Its asset-only `runtime.json` and read-only `file-audit.json` match 132 asset
+hashes, the frozen binary and the complete capture store, confirm cleanup, and
+compare the saved/reopened pages. Complete capture SHA256:
+`5a7cccde32af802e66062fec59148f21012dbadadfd9bd27efb12f73bb369844`.
+The audit ran no telemetry queries, build or native campaign.
+
+The actor at `generic-python-38477cf34c/bombadil/acceptance-summary.json` passed
+30.9s (six phases, 465 snapshots, eight source operations and one plan). The main's
+`offline/offline.json` passed 2s against an actually unavailable localhost source:
+valid discovery 502, optional-family 503, capability 200 and immutable retained
+capture GET. The existing lab regression passed 6s. Artifact durations describe
+individual bounded checks, not a universal performance budget.
+
+The first two main attempts found real defects: automatic local tail startup and
+a disabled example-catalog request. `artifacts/generic-startup/main-first.log`
+and `main-second.log` remain rejected diagnostics. The accepted third run retained
+the strict source-free and disabled-example assertions; this was not first-pass
+acceptance. The Python-tagged OTLP fixtures are generated ordinary telemetry,
+not evidence of executing a separately instrumented Python application.
+
+Reproduce only with the lab source/collector available and the browser slot free:
+
+```sh
+# From repository root, using its supported Go toolchain:
+go test ./cmd/goo -run 'Test(GenericStartup|StartupProfiles|GenericExplicitOperation|RuntimeCapabilitiesHTTP)'
+python3 -m unittest discover -s tests -p test_server_startup.py -v
+go build -o /tmp/goo-generic-191 ./cmd/goo
+GOO_GENERIC_BINARY=/tmp/goo-generic-191 npx playwright test journeys/generic-startup.spec.js
+GOO_GENERIC_BINARY=/tmp/goo-generic-191 GOO_GENERIC_BOMBADIL=1 npx playwright test journeys/generic-startup-bombadil.spec.js
+GOO_GENERIC_BINARY=/tmp/goo-generic-191 GOO_GENERIC_LEDGER=/absolute/path/to/ledger.json npx playwright test journeys/generic-startup-offline.spec.js
+```

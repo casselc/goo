@@ -8,6 +8,15 @@ shared definitions when available.
 [Reviewed roadmap](docs/ROADMAP_2026_10_25.md) · [Execution backlog](docs/BACKLOG_2026_10_25.md) ·
 [Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md)
 
+## Use your existing OTel data
+
+[Generic startup](docs/GENERIC_STARTUP.md) runs the Go API and Python UI without
+sample definitions, bindings or manifests. Set Go `--profile generic` and Python
+`GOO_PROFILE=generic`, supply your ClickHouse connection and an evidence directory,
+then choose an environment and **Start stream**. The existing ClickStack-shaped
+source adapters apply; this does not install a collector or create source tables.
+Optional prepared/example capabilities stay explicitly unconfigured.
+
 ## Run the local lab
 
 Install Docker with Compose v2. The lab needs roughly 4 GB of memory and several

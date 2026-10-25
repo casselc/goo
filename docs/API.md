@@ -8,7 +8,7 @@ The running server must include the current routes and assets; changing the
 checkout alone does not update an existing process. Rebuild an older image, or
 use the supported local code/asset installation and restart procedure.
 
-The spec inventories 76 supported operations: 70 Go operations, five Python-only
+The spec inventories 78 supported operations: 71 Go operations, six Python-only
 `/api` operations and the Python root `/health` probe. Go paths are unprefixed on
 port 8089; the browser proxy exposes them under `/api` on port 8088. Python-only
 operations override the server list. `/api-docs`, `/openapi.json`, the UI, static

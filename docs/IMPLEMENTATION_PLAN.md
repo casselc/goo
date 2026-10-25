@@ -23,7 +23,9 @@ current-key database-client views ([journey 189](../journeys/189-db-client-dashb
 and messaging-role views ([journey 190](../journeys/190-messaging-dashboard-storyboard.md)).
 Each keeps literal population, native-unit and source-read semantics explicit.
 
-Generic-source startup remains an adoption enabler. Newer convention bindings,
+[Generic-source startup](GENERIC_STARTUP.md) is delivered with explicit Go/Python
+profiles and an initial chosen scope, preserving lab mode and optional capability
+states. Newer convention bindings,
 database pool/server health, broker signals, resource USE and Kubernetes discovery
 remain staged deliveries. Native interval-to-record context is a separate next
 investigation path. Lean aggregate reads require a measured audit; trace-search

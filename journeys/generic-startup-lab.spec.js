@@ -1,0 +1,21 @@
+const { test, expect } = require('@playwright/test');
+const fs = require('node:fs/promises');
+test('191 refreshed lab preserves configured operations and automatic local Activity', async ({ page, request }) => {
+  test.skip(process.env.GOO_GENERIC_LAB_SMOKE !== '1', 'Explicit existing lab compatibility check');
+  const base = 'http://127.0.0.1:8088', requests = [];
+  page.on('request', req => { if (new URL(req.url()).pathname.startsWith('/api/')) requests.push({ method: req.method(), endpoint: new URL(req.url()).pathname }); });
+  const configResponse = await request.get(base + '/api/ui-config'); expect(configResponse.status()).toBe(200); const config = await configResponse.json();
+  expect(config.profile).toBe('lab'); expect(config.examples.state).toBe('configured');
+  const capsResponse = await request.get(base + '/api/capabilities'); expect(capsResponse.status()).toBe(200); const caps = await capsResponse.json();
+  expect(caps).toMatchObject({ profile: 'lab', preparedHTTP: { state: 'configured' }, declaredOperations: { state: 'configured' } });
+  const registryResponse = await request.get(base + '/api/operation-packages'); expect(registryResponse.status()).toBe(200); const registry = await registryResponse.json();
+  expect(Array.isArray(registry)).toBe(true); expect(registry.length).toBeGreaterThan(0);
+  await page.goto(base + '/');
+  await expect(page.locator('html')).toHaveAttribute('data-profile', 'lab');
+  await expect(page.getByLabel('Live environment', { exact: true })).toHaveValue('local');
+  await expect.poll(() => requests.filter(req => req.endpoint === '/api/tail').length).toBeGreaterThan(0);
+  await expect(page.getByRole('button', { name: 'Pause stream', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Pause stream', exact: true }).click();
+  await expect(page.locator('.stream-entry .live-tail')).toHaveAttribute('data-state', 'paused');
+  await fs.writeFile('artifacts/generic-startup/lab-smoke.json', JSON.stringify({ config, capabilities: caps, registry, requests, paused: true }, null, 2));
+});

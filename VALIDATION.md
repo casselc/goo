@@ -10297,3 +10297,82 @@ unknown examples skip both example catalogs while user-owned measurement package
 metadata remains available. Status distinguishes unconfigured from unavailable;
 no healthy zero-workflow claim is made. Independent review and syntax checks
 approve this additional gate before the next frozen invocation.
+
+
+## C1 generic-source startup — isolated live acceptance (2026-10-25)
+
+Accepted source is `1616c2a`, following reviewed startup source `70e2882` and
+initial-scope correction `c9f0460`. The Go binary SHA-256 is
+`a8d9b8e6b82cef589f9c205de5d1d4db472f0a13b6f8f299b202d94f05a782a9`.
+All 78 Node files pass after the final guided-example gate (4.79s). No application
+source changed during the accepted main, actor, offline or legacy-lab checks.
+
+The main passes **20.0s / 23.8s invocation** from a fresh isolated directory
+containing only `server.py`, `ui/`, `api/` and a writable capture directory, with
+the executable outside that root. No grammar, definitions, binding, inventory,
+operation, prebuilt or sample configuration files are copied. Explicit generic
+processes use existing lab ClickHouse/OTLP connections; receipts omit credentials.
+The actual generated ordinary fixture contains **150 spans and 140 logs**, with
+Python SDK resource attributes/scopes, including **140 HTTP server-span records**
+for the selected service and separate scope/role controls. It is Python-tagged
+synthetic OTLP, not proof that a separate Python application was instrumented.
+No positive source/UI response is mocked.
+
+The fresh page makes **seven configuration/storage GETs**, zero source POSTs,
+zero tail subscriptions and zero example-catalog GETs. Its environment is blank
+until chosen. Start and Pause expose actual observations; explicit service
+selection admits HTTP140 with a 100-row inspection page. The declaration receipt
+is explicitly unconfigured, not a successful empty registry. Widget opening
+stages without a source read; Run measures the fixed140 population. Capture and
+reopen preserve its question, scope, custody and full stored inspection records.
+The main ledger is
+`artifacts/generic-startup/generic-python-e570bbe8e2/ledger.json`.
+
+Independent read-only file audit verifies **132 exact frozen assets**, the binary
+hash, absence of sample/config/grammar paths, explicit generic arguments without
+optional declarations, complete retained capture store and successful temporary-
+process/directory cleanup. The API saved and reopened pages match. The full raw
+capture file matches both the retained store and `scope-capture.json`, SHA-256
+`5a7cccde32af802e66062fec59148f21012dbadadfd9bd27efb12f73bb369844`.
+The adjacent `file-audit.json` and `runtime.json` retain those checks.
+
+The bounded **30-second Bombadil campaign** passes on its first invocation in
+**30.9s / 32.2s**, with **six phases and 465 snapshots**, **eight logical source
+operations and one pure plan**. It verifies HTTP140, source-free widget staging
+and one explicit fixed-question read returning140. Receipt:
+`artifacts/generic-startup/generic-python-38477cf34c/bombadil/acceptance-summary.json`.
+These logical operations do not establish underlying SQL scan costs.
+
+The separate **offline API supplement** passes on its first invocation in
+**2.0s / 4.6s**. Another owned generic runtime uses an actual unreachable ClickHouse
+endpoint. A valid discovery question returns **502**, optional-family requests
+return **503 capability_unconfigured**, configuration remains **200**, and saved
+capture GET returns **200** with identical page and full stored bytes. No telemetry
+service is stopped or mocked. Receipt: the main ledger's
+`offline/offline.json`. Both isolated processes are stopped and temporary roots
+removed in every run; full capture stores remain retained outside those roots.
+
+The existing cloud lab is updated to the same frozen Go/Python/UI assets and
+verified hashes, retaining its exact explicit bindings, packages and startup
+arguments. The bounded lab smoke passes on its first invocation in **6.0s / 9.2s**:
+lab examples and both optional families remain configured, the actual operation
+registry is nonempty/200, and its original automatic local Activity starts before
+being paused. `artifacts/generic-startup/lab-deployment.json` and `lab-smoke.json`
+record deployment and effects. No ClickHouse tables, volumes or application data
+are recreated. The temporary build binary is removed after installation/checks.
+
+The two earlier failed browser attempts are real startup defects, corrected and
+recorded above rather than relabeled as successful acceptance. The final
+[storyboard](journeys/191-generic-startup-storyboard.md), three actual frames,
+[startup guide](docs/GENERIC_STARTUP.md), architecture and roadmap/backlog are
+updated. Root reviewed Activity and mobile saved-evidence frames. Final independent
+source/evidence/custody review **APPROVES C1**. No duplicate property campaign or
+formal lifecycle model was needed for this startup extension. Final link,
+whitespace, documentation synchronization and publication checks follow.
+
+
+Final whitespace checks pass, and **1,385 relative links across all 12 Markdown
+files changed in the round resolve**. The complete changed docs and three actual
+frames are synchronized to the local lab before publication. Final source and
+closeout commits are pushed together; the verified remote head is reported after
+publication. No further source campaign is repeated after accepted results.

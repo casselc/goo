@@ -84,7 +84,7 @@ document files reopen without the optional store. Native and record source HTTP 
 now use shared POST/bounded-read primitives; the [acceptance audit](HTTP_BOUNDARIES.md#c2-acceptance-audit--2026-10-22)
 identified four additional readers; all are now adopted, including histograms.
 Telemetry/native/fixed exploration JSON is adopted behind frozen wire cases.
-The [OpenAPI contract](API.md) now inventories 76 operations (70 Go operations, five Python-only API operations
+The [OpenAPI contract](API.md) now inventories 78 operations (71 Go operations, six Python-only API operations
 and root health) and documents direct-Go
 versus browser-proxy limits, headers and SSE differences. Those discrepancies are
 preserved, not repaired by documentation. Further mechanical JSON migration remains paused;
@@ -851,9 +851,12 @@ nonempty `db.system.name` and native operation-duration seconds. Legacy `db.syst
 pool/server health and query-summary authoring remain separate. Literal operation
 or database labels span reported systems/targets within their parent; they do not
 identify a monitored database server or unique query. A bare method group spans reported RPC systems/services
-within its parent; it is not a unique operation identity. Generic-source
-startup still has the documented sample-configuration dependency (C1); running
-this manifest-free telemetry journey in the existing lab does not close that gap.
+within its parent; it is not a unique operation identity. The explicit
+[generic startup profile](GENERIC_STARTUP.md) now removes the sample-configuration
+dependency. Lab mode still loads its configured samples by design. Generic mode
+requires existing supported OTel source tables and explicit connection settings;
+startup metadata does not prove source health, install a collector or supply
+production deployment/authentication.
 
 
 The local lab's ClickHouse internal diagnostic tables can grow quickly. Recent

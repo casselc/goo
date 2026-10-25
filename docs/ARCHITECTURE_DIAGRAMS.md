@@ -1453,3 +1453,35 @@ Actual journey 179 frames: [span groups](journeys/screenshots/179a-spans-error-e
 [passive supplied-data components](journeys/screenshots/179c-passive-exception-details-components.png).
 The last frame is a synthetic SSR/SPA contract example. Final validation, including
 the corrected supplemental-log API probes, remains authoritative in VALIDATION.md.
+
+
+## Generic startup and optional capabilities
+
+The implemented generic profiles separate optional examples from ordinary
+observation. Go validates explicitly supplied configuration before listening;
+Python generic mode serves UI/API assets without importing the example grammar.
+Neither startup capability response queries telemetry or certifies source health.
+Generic Activity waits for UI configuration, then requires an explicitly applied
+environment and Start stream; unknown configuration also withholds automatic reads.
+The lab profile retains its existing local automatic start.
+
+```mermaid
+flowchart LR
+    G[Go generic profile] --> V[Validate supplied optional configuration]
+    V --> A[Typed observation API and evidence store]
+    V --> C[Source-free runtime capabilities]
+    P[Python generic profile] --> U[UI assets and source-free UI configuration]
+    U --> C
+    U --> S[Blank generic scope and explicit Start stream]
+    S --> A
+    A --> R[Explicit ordinary telemetry reads]
+    A --> E[Retained evidence GET without source reads]
+    C --> O[Unavailable example areas remain explicit]
+    I[Invalid explicit configuration] --> F[Startup refusal]
+```
+
+Unconfigured prepared/declared-family GETs return explicit 503 responses rather
+than empty telemetry. Existing stored operation evidence still reopens; a refresh
+without its original registry revision retains the existing 409 refusal. The lab
+profile remains separate. See [generic startup](GENERIC_STARTUP.md) for process
+configuration and the implemented verification boundary.

@@ -2394,3 +2394,10 @@ issue are preserved separately from final evidence. The latter was fixed by
 CSS-only `8ae7573` without repeating the semantic main/actor. No positive source/UI
 response was mocked, no queue/broker health or inferred pairing is claimed, and
 no persistence format is added. Exact receipts and limits are in the storyboard.
+
+
+## 191 — Generic startup with ordinary Python-tagged OTel
+
+[Executable storyboard](../../journeys/191-generic-startup-storyboard.md) · [Activity](screenshots/191a-generic-python-activity.png) · [Service](screenshots/191b-generic-python-service.png) · [Mobile frozen evidence](screenshots/191c-generic-saved-python-evidence.png).
+
+The isolated generic runtime contains no grammar, sample definitions or operation bindings. Blank idle startup makes no population reads; explicit Activity → discovered service → staged fixed question → Run returns 140 Python-tagged server-span records, then capture/reopen preserves the same fixed evidence. Main 20.0s, bounded actor 30.9s/six phases, 465 snapshots, offline API supplement 2.0s and refreshed lab compatibility 6.0s pass. Two initial real startup defects (automatic local tail and residual example catalog fetch) are fixed and retained as diagnostics; no failed attempt is claimed passed. See the storyboard for source effects, capture custody, exact receipts and reproduction commands.
