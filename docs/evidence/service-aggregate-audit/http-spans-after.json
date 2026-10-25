@@ -1,0 +1,67 @@
+{
+  "aggregatesSHA256": "7f6984c8f11dc8c386086fd60ec49938ba35028201b528f903fbfa5e911898cf",
+  "count": "137",
+  "elapsedMs": 122.059,
+  "groups": 4,
+  "mode": "record-aggregates",
+  "reads": [
+    {
+      "kind": "count",
+      "sqlBytes": 1046,
+      "sqlSHA256": "6980ba71a8586b637165ecd64cbed634947a8364761d910359b01b024f4a66db",
+      "responseBytes": 205,
+      "status": 200,
+      "elapsedMs": 42.508,
+      "clickhouseSummary": {
+        "elapsed_ns": "35618726",
+        "read_bytes": "673381",
+        "read_rows": "8192",
+        "result_bytes": "0",
+        "result_rows": "0",
+        "total_rows_to_read": "8192",
+        "written_bytes": "0",
+        "written_rows": "0"
+      }
+    },
+    {
+      "kind": "groups",
+      "sqlBytes": 1146,
+      "sqlSHA256": "caffeba15661b272153d6134824f8f0c52a4e58f60ed20229f9fcc257804616d",
+      "responseBytes": 930,
+      "status": 200,
+      "elapsedMs": 48.615,
+      "clickhouseSummary": {
+        "elapsed_ns": "45810366",
+        "read_bytes": "676631",
+        "read_rows": "8192",
+        "result_bytes": "0",
+        "result_rows": "0",
+        "total_rows_to_read": "8192",
+        "written_bytes": "0",
+        "written_rows": "0"
+      }
+    },
+    {
+      "kind": "timeSeries",
+      "sqlBytes": 1230,
+      "sqlSHA256": "5b4c734a60bc7a86f2f651080d835e53ff637e5ceb4a72a7645933dd1f519b3f",
+      "responseBytes": 457,
+      "status": 200,
+      "elapsedMs": 29.356,
+      "clickhouseSummary": {
+        "elapsed_ns": "24168603",
+        "read_bytes": "673381",
+        "read_rows": "8192",
+        "result_bytes": "0",
+        "result_rows": "0",
+        "total_rows_to_read": "8192",
+        "written_bytes": "0",
+        "written_rows": "0"
+      }
+    }
+  ],
+  "resultBytes": 5456,
+  "state": "observed",
+  "success": true,
+  "version": "goo/read-audit/v1"
+}

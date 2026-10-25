@@ -87,8 +87,10 @@ for all four queries. This is a differential legacy-result check, not a claim th
 new source reads create an identical immutable capture timestamp. Existing frozen
 storage tests independently preserve old capture bytes/IDs.
 
-Actual measurement receipts, executable journey and frames are linked from
-[VALIDATION.md](../VALIDATION.md) as each acceptance gate completes.
+The [executable journey and actual frames](../journeys/194-service-dashboard-projection-storyboard.md)
+cover summary/diagnosis/timeline data, full supporting witnesses, raw drilldown,
+fresh capture and late ownership. [VALIDATION.md](../VALIDATION.md) records the
+separate source, browser, property, actual-ledger and actor checks.
 
 | Fixture / widget | Reads before → after | Serialized executor bytes before → after | Summed CH read rows before → after | Summed CH read bytes before → after | Observed ms before → after |
 | --- | --- | --- | --- | --- | --- |

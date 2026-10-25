@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "startedAt": "2026-10-25T20:23:38.191594+00:00",
+  "trafficWasRunning": true,
+  "trafficDuringAudit": "stopped",
+  "fixture": "existing journey187/190 generated ordinary OTLP; no additional ingestion during audit",
+  "auditBinarySHA256": "fd6d52b0f8fff85067ad549eed73e92a6b9d47d8ef1b10b321c0a726330eed5d",
+  "cases": [
+    {
+      "name": "http-spans",
+      "aggregatesSHA256": "7f6984c8f11dc8c386086fd60ec49938ba35028201b528f903fbfa5e911898cf",
+      "aggregateMeaningEqual": true,
+      "sameRetainedSQLAndBodySizes": true,
+      "readsBefore": 5,
+      "readsAfter": 3
+    },
+    {
+      "name": "http-dimension",
+      "aggregatesSHA256": "5fe9ef4690b5ad788657b48975ec3091d3f3adcd3d41e6d7ec81c15ae4662cbb",
+      "aggregateMeaningEqual": true,
+      "sameRetainedSQLAndBodySizes": true,
+      "readsBefore": 4,
+      "readsAfter": 2
+    },
+    {
+      "name": "messaging-spans",
+      "aggregatesSHA256": "d138321179fdb322210002a7a388db2b5746a05ea8bcea2cee90324177d11d16",
+      "aggregateMeaningEqual": true,
+      "sameRetainedSQLAndBodySizes": true,
+      "readsBefore": 5,
+      "readsAfter": 3
+    },
+    {
+      "name": "messaging-dimension",
+      "aggregatesSHA256": "e1df815d4524e1cd90fe4825dcd13509d272e73fdfc5cccaa0d338a31d5c275f",
+      "aggregateMeaningEqual": true,
+      "sameRetainedSQLAndBodySizes": true,
+      "readsBefore": 4,
+      "readsAfter": 2
+    }
+  ],
+  "finishedAt": "2026-10-25T20:23:39.276715+00:00",
+  "sourceCommit": "4a49f61"
+}

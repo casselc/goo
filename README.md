@@ -10,8 +10,10 @@ shared definitions when available.
 
 [Counted field values](docs/COUNTED_VALUES.md) reads complete scoped groups without
 loading record pages or unrelated field inventories. The controlled comparison
-records four source reads reduced to two; service dashboards retain their existing path.
-See the [live walkthrough](journeys/193-counted-values-projection-storyboard.md).
+records four source reads reduced to two. [Service widget summaries](docs/SERVICE_RECORD_AGGREGATES.md)
+similarly skip unused pages and field inventories while retaining full service
+inspection and capture paths. See the [service walkthrough](journeys/194-service-dashboard-projection-storyboard.md).
+See the [counted-values walkthrough](journeys/193-counted-values-projection-storyboard.md).
 
 ## Use your existing OTel data
 

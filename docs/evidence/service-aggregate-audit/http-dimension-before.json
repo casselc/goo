@@ -1,0 +1,85 @@
+{
+  "aggregatesSHA256": "5fe9ef4690b5ad788657b48975ec3091d3f3adcd3d41e6d7ec81c15ae4662cbb",
+  "count": "137",
+  "elapsedMs": 76.808,
+  "groups": 4,
+  "mode": "explore",
+  "reads": [
+    {
+      "kind": "count",
+      "sqlBytes": 1046,
+      "sqlSHA256": "6980ba71a8586b637165ecd64cbed634947a8364761d910359b01b024f4a66db",
+      "responseBytes": 205,
+      "status": 200,
+      "elapsedMs": 18.322,
+      "clickhouseSummary": {
+        "elapsed_ns": "14356093",
+        "read_bytes": "673381",
+        "read_rows": "8192",
+        "result_bytes": "0",
+        "result_rows": "0",
+        "total_rows_to_read": "8192",
+        "written_bytes": "0",
+        "written_rows": "0"
+      }
+    },
+    {
+      "kind": "rows",
+      "sqlBytes": 1542,
+      "sqlSHA256": "484045208fdfcfaeceeac4eb3604d568be08a17b2a3d3c56fdb81e2734a0a01d",
+      "responseBytes": 91645,
+      "status": 200,
+      "elapsedMs": 22.796,
+      "clickhouseSummary": {
+        "elapsed_ns": "20091849",
+        "read_bytes": "1202341",
+        "read_rows": "8192",
+        "result_bytes": "0",
+        "result_rows": "0",
+        "total_rows_to_read": "8192",
+        "written_bytes": "0",
+        "written_rows": "0"
+      }
+    },
+    {
+      "kind": "groups",
+      "sqlBytes": 1204,
+      "sqlSHA256": "61060147ceeb0c077284657627512bdbac15e0650727783f522cc9d7ac9a61d5",
+      "responseBytes": 854,
+      "status": 200,
+      "elapsedMs": 17.719,
+      "clickhouseSummary": {
+        "elapsed_ns": "15741979",
+        "read_bytes": "673381",
+        "read_rows": "8192",
+        "result_bytes": "0",
+        "result_rows": "0",
+        "total_rows_to_read": "8192",
+        "written_bytes": "0",
+        "written_rows": "0"
+      }
+    },
+    {
+      "kind": "fields",
+      "sqlBytes": 766,
+      "sqlSHA256": "93ef19eb5b8bc9fc145c824aefef5091fedb88395b7b35e2c169b18ba845afcd",
+      "responseBytes": 318,
+      "status": 200,
+      "elapsedMs": 11.599,
+      "clickhouseSummary": {
+        "elapsed_ns": "10184055",
+        "read_bytes": "644131",
+        "read_rows": "8192",
+        "result_bytes": "0",
+        "result_rows": "0",
+        "total_rows_to_read": "8192",
+        "written_bytes": "0",
+        "written_rows": "0"
+      }
+    }
+  ],
+  "resultBytes": 99954,
+  "state": "observed",
+  "success": true,
+  "version": "goo/read-audit/v1"
+}

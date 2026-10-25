@@ -2200,3 +2200,70 @@ Using the toolchain/cache environment above after browser ownership is released:
 go test -run '^Test(HegelCountedValues|CountedValuesMalformed)' -v .
 GOO_COUNTED_VALUES_LEDGER=/workspace/goo/artifacts/counted-values-projection/counted-projection-ab82d8e588/ledger.json go test -run '^TestCountedValuesObserved$' -v .
 ```
+
+## Service record-aggregate projection (C4 second caller)
+
+`TestHegelRecordAggregatesLegacyProjectionParity` uses 18 generated raw datasets
+with null/empty/value groups, durations above 2^53 and all recorded status classes.
+Independent integer summaries/order statistics feed the real old/new source
+decoders through socket-free in-memory transport. Valid aggregate projections
+match while primary reads fall 5→3 and dimension reads 4→2; receipt presence and the
+absence of rows/fields/plan/token are checked. Group/series duration disagreement
+retains changed-read diagnostics without quantile merging. The focused campaign
+passed in 0.088s (`artifacts/record-aggregates-properties.txt`). This is decoder/source
+boundary parity, not SQL execution or capture-byte equivalence proof; existing
+legacy fixtures and broad capture tests retain their own contract checks.
+
+The shared 187–190 observed verifier now branches explicitly on
+`goo/record-aggregates/v1`, validating complete groups/status/duration/order
+statistics/time series against raw span facts and separately supplied log facts.
+Full supporting/drilldown Explore results retain raw-page guards; no synthetic
+rows or weakened legacy DTO acceptance are introduced. The final shared-validator regression passed in 0.103s: accepted journey187
+now checks 22 full span responses, including three supporting metadata pages;
+the new projection entrypoint compiled in that pre-browser gate. Completed
+journey194 acceptance is recorded below.
+`artifacts/record-aggregates-legacy-validator.txt` retains stdout. This is an
+archived-187 validator regression, not a fresh replay of every 187–190 browser
+journey after their transport expectations changed.
+
+Actual 194 native acceptance passed: main and owner together 1.008s (main 0.77s,
+owner 0.19s), then the owner-only explicit original-HTTP equality guard passed
+0.218s (body 0.16s). The final log is
+`artifacts/service-dashboard-projection/native-validation.txt`. Main
+`service-projection-b7b0685a04/ledger.json` covers raw 137 spans, 155 independent
+logs (ERROR 23/INFO 132), four route groups, exact per-group/global order statistics,
+zero-filled time buckets and per-read receipts. Full supporting witness and
+explicit drilldown pages keep raw identity/attributes/time guards. The full
+137-row stored capture (100-row public page) validates its content-addressed ID,
+unchanged 138964 bytes and SHA256
+`9837ae1af29939e979f715421ac830077674ae05b4ee551bcbd3d7ba011256c2`.
+Eight guaranteed changed main controls reject count, group quantile, series,
+scope, receipt, inspection-field leakage, missing full rows and a hidden return read.
+
+Owner `service-projection-fbc939b42b/ownership.json` retains the actual complete
+All-spans 198 DTO and its actual pure-plan receipt with original service/scope;
+fresh HTTP recovery must equal the original exact question. Four changed owner
+controls reject held count/binding, stale visibility and a fresh receipt error.
+An initial observer incorrectly bound the held read to the original HTTP 137 plan;
+`native-validation-original-profile-diagnostic.txt` preserves that rejected
+assumption. Correcting its plan binding changed no fixture or application source.
+
+The accepted browser main 19.9s/owner 8.0s and actor 31.3s (nine phases, 462 snapshots,
+11 source API operations) remain separate from native checks. Initial harness
+failures involved unsupported capture browser-history navigation and a collector
+waiting on canceled bodies. The accepted collector binds partial-body diagnostics
+to actual request-failure/cancellation metadata and preserves true header status;
+it supplies no positive substitute data. Header 202 cancellation receipts with
+`bodyObserved:false` are controls, not telemetry bodies or upstream-completion
+proof. Complete held DTOs remain strictly validated. Fixed-question Back is
+source-free; capture return is explicit Services navigation, not a fabricated
+history edge. No new formal model is required for this projection adoption.
+
+Using the toolchain/cache environment above after browser ownership is released:
+
+```sh
+go test -run '^Test(HegelRecordAggregates|RecordAggregatesChanged)' -v .
+GOO_SERVICE_AGGREGATES_LEDGER=/workspace/goo/artifacts/service-dashboard-projection/service-projection-b7b0685a04/ledger.json \
+GOO_SERVICE_AGGREGATES_OWNERSHIP=/workspace/goo/artifacts/service-dashboard-projection/service-projection-fbc939b42b/ownership.json \
+go test -run '^TestServiceRecordAggregates(Observed|Ownership)$' -v .
+```

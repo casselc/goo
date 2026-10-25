@@ -22,15 +22,18 @@ function canonical(value) {
 }
 function findResult(observation, question) {
   const key = JSON.stringify(canonical(question));
-  return [...observation.responses].reverse().find(value => value.endpoint === '/api/explore' && JSON.stringify(canonical(value.body.question)) === key)?.body;
+  return [...observation.responses].reverse().find(value => value.endpoint === '/api/record-aggregates' && JSON.stringify(canonical(value.body.question)) === key)?.body;
 }
 function assertPopulation(facts, result, profile, service = 'messaging-app', attributes = {}) {
   const records = expected(facts, profile, service).filter(record => record.timeMs >= result.question.fromMs && record.timeMs < result.question.toMs && Object.entries(attributes).every(([key, value]) => record.attributes[key] === value));
   expect(result.count).toBe(String(records.length));
-  expect(result.rows).toHaveLength(Math.min(100, records.length));
+  const rows = result.rows;
+  if (result.version === 'goo/record-aggregates/v1') {
+    for (const key of ['rows', 'fields', 'plan', 'resultToken']) expect(result[key]).toBeUndefined();
+  } else expect(rows).toHaveLength(Math.min(100, records.length));
   const byID = new Map(records.map(record => [record.id, record]));
-  expect(new Set(result.rows.map(row => row.SpanId)).size).toBe(result.rows.length);
-  for (const row of result.rows) {
+  expect(new Set((rows || []).map(row => row.SpanId)).size).toBe((rows || []).length);
+  for (const row of rows || []) {
     const record = byID.get(row.SpanId);
     expect(record, 'unexpected source span ' + row.SpanId).toBeTruthy();
     expect(row.TraceId).toBe(record.traceId);

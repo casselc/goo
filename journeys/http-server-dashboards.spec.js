@@ -22,7 +22,7 @@ function findResult(observation, question) {
   const canonical = value => Array.isArray(value) ? value.map(canonical) : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map(key => [key, canonical(value[key])])) : value;
   const stable = value => JSON.stringify(canonical(value));
   // Question properties are canonicalized by Go; the fixed plan query is also echoed by the endpoint.
-  return [...observation.responses].reverse().find(response => response.endpoint === '/api/explore' && response.body.question && stable(response.body.question) === stable(question))?.body;
+  return [...observation.responses].reverse().find(response => response.endpoint === '/api/record-aggregates' && response.body.question && stable(response.body.question) === stable(question))?.body;
 }
 async function routeGeometry(page) {
   const rows = await page.locator('[data-widget=dimension] tbody tr').evaluateAll(rows => rows.map(row => ({
@@ -103,7 +103,7 @@ test('187 Incoming HTTP defaults retain exact server population, native grain an
   expect(plan.declarations).toEqual([]);
   const initial = { plan, results: await inspectPlan(facts, observation, plan), view: await snapshot(page, observation) };
   expect(initial.results.spans.count).toBe('137');
-  expect(initial.results.spans.rows).toHaveLength(100);
+  expect(initial.results.spans.rows).toBeUndefined();
   expect(initial.view.rateTitle).toContain('not unique request throughput');
   expect(initial.view.rateTitle).toContain('137000/' + (plan.scope.toMs - plan.scope.fromMs));
   const native = plan.widgets.filter(widget => widget.measurement);

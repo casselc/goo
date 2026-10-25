@@ -1,0 +1,55 @@
+{
+  "sourceCommit": "88a85b9",
+  "traffic": "stopped",
+  "startedAt": "2026-10-25T20:18:07.289502+00:00",
+  "auditBinarySHA256": "a87bea6e8e2805b8dcf4efe77503594a30cffc2f9defab2bade132c904a62f71",
+  "cases": [
+    {
+      "name": "http-spans",
+      "count": "137",
+      "groups": 4,
+      "readKinds": [
+        "count",
+        "rows",
+        "groups",
+        "fields",
+        "timeSeries"
+      ]
+    },
+    {
+      "name": "http-dimension",
+      "count": "137",
+      "groups": 4,
+      "readKinds": [
+        "count",
+        "rows",
+        "groups",
+        "fields"
+      ]
+    },
+    {
+      "name": "messaging-spans",
+      "count": "137",
+      "groups": 4,
+      "readKinds": [
+        "count",
+        "rows",
+        "groups",
+        "fields",
+        "timeSeries"
+      ]
+    },
+    {
+      "name": "messaging-dimension",
+      "count": "137",
+      "groups": 4,
+      "readKinds": [
+        "count",
+        "rows",
+        "groups",
+        "fields"
+      ]
+    }
+  ],
+  "finishedAt": "2026-10-25T20:18:08.307447+00:00"
+}

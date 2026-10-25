@@ -21,12 +21,13 @@ type hdLiveRecord struct {
 	Attributes                                                     map[string]string
 }
 type hdLiveLedger struct {
-	Records   []hdLiveRecord
-	Responses []struct {
-		Endpoint string
-		Status   int
-		Body     json.RawMessage
+	Facts struct {
+		Records []hdLiveRecord
+		Logs    []raLogFact
 	}
+	Logs      []raLogFact
+	Records   []hdLiveRecord
+	Responses []raObservedResponse
 }
 
 func hdLivePopulation(records []hdLiveRecord, q exploration.Query) []hdLiveRecord {
@@ -50,6 +51,9 @@ func hdLivePopulation(records []hdLiveRecord, q exploration.Query) []hdLiveRecor
 	return out
 }
 func hdLiveResult(records []hdLiveRecord, r exploration.Result) error {
+	return hdLiveResultMode(records, r, true)
+}
+func hdLiveResultMode(records []hdLiveRecord, r exploration.Result, inspect bool, retentionLimit ...int) error {
 	pop := hdLivePopulation(records, r.Question)
 	if r.Count != strconv.Itoa(len(pop)) {
 		return fmt.Errorf("population count %s != %d", r.Count, len(pop))
@@ -133,12 +137,19 @@ func hdLiveResult(records []hdLiveRecord, r exploration.Result) error {
 			return fmt.Errorf("full group population")
 		}
 	}
+	if !inspect {
+		return nil
+	}
 	want := len(pop) - r.Question.Offset
 	if want < 0 {
 		want = 0
 	}
-	if want > r.Question.Limit {
-		want = r.Question.Limit
+	limit := r.Question.Limit
+	if len(retentionLimit) == 1 {
+		limit = retentionLimit[0]
+	}
+	if want > limit {
+		want = limit
 	}
 	if len(r.Rows) != want {
 		return fmt.Errorf("page length")
@@ -190,23 +201,44 @@ func hdCheckObservedLedger(t *testing.T, path string, wantRecords int) {
 	if e = json.Unmarshal(raw, &ledger); e != nil {
 		t.Fatal(e)
 	}
+	if len(ledger.Records) == 0 && len(ledger.Facts.Records) > 0 {
+		ledger.Records = ledger.Facts.Records
+		ledger.Logs = ledger.Facts.Logs
+	}
 	if len(ledger.Records) != wantRecords {
 		t.Fatal("ordinary fixture population missing")
 	}
 	checked := 0
 	for _, response := range ledger.Responses {
-		if response.Endpoint != "/api/explore" || response.Status != 200 {
+		complete, err := raResponseComplete(response)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !complete {
+			continue
+		}
+		if response.Endpoint == "/api/record-aggregates" {
+			if e := raLiveJournalResult(ledger.Records, ledger.Logs, response.Body); e != nil {
+				t.Fatalf("aggregate source response%d: %v", checked, e)
+			}
+			var changed map[string]json.RawMessage
+			json.Unmarshal(response.Body, &changed)
+			changed["count"] = json.RawMessage(`"999999"`)
+			bad, _ := json.Marshal(changed)
+			if raLiveJournalResult(ledger.Records, ledger.Logs, bad) == nil {
+				t.Fatal("changed aggregate count accepted")
+			}
+			checked++
+			continue
+		}
+		if response.Endpoint != "/api/explore" {
 			continue
 		}
 		var r exploration.Result
 		if json.Unmarshal(response.Body, &r) != nil || r.Question.Signal != "spans" || r.Count == "" {
 			continue
 		}
-		// Metadata discovery can use a different projection. Verify only executed
-		// duration/status overview questions and their exact focused continuations.
-		if r.Duration == nil && r.SpanStatus == nil {
-			continue
-		}
+		// Supporting span witness reads remain full Results and retain raw-page guards.
 		if e := hdLiveResult(ledger.Records, r); e != nil {
 			t.Fatalf("source response %d: %v", checked, e)
 		}

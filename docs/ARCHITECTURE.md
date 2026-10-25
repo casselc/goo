@@ -764,3 +764,52 @@ membership, not all internal SQL or arbitrary schedules. The browser journal's
 five telemetry API POSTs exclude one cancellation control and the separately
 recorded small-population API/readiness probes. The architecture does not claim
 universal adoption by every grouped read or a replacement for capture semantics.
+
+## Service record aggregates without inspection reads
+
+The second narrow-projection adoption adds `Source.FetchRecordAggregates` and
+`POST /record-aggregates` (UI proxy `/api/record-aggregates`), with version
+`goo/record-aggregates/v1`. Service widgets execute their existing exact typed
+questions through this aggregate-only path. The service browser's initial full
+Explore metadata page remains a separate positive witness and inspection source;
+opening a widget question, explicit record Run and capture still use their existing
+full-result owners. No synthetic record page is attached to a widget result.
+
+A request retains one string group, environment/window, WHERE and reported-edge
+scope. Count can include requested duration/status aggregates in the same read;
+groups are a second read, and requested overall time series is a third. No record
+rows, field discovery, plan or held-result token are returned. For the measured
+primary and dimension shapes this removes the old inspection/discovery reads:
+five to three and four to two, respectively. This describes query shape, not a
+universal latency or scan-cost bound.
+
+Legacy and narrow paths share group decoding and additive conservation helpers.
+Counts, status classes and duration sum/min/max can identify disagreement across
+independent groups/series reads. Quantiles remain values from their own full
+source populations; they are never averaged, merged or reconstructed from group
+quantiles. Disagreement retains diagnostics as `changed_between_reads`, not an
+actionable snapshot. Receipts identify each requested aggregate read separately;
+the result basis excludes read clocks. These are not transactional reads.
+
+The old full-result/capture shapes and saved evidence bytes remain separate.
+Counted field values retain their existing dedicated endpoint and DTO. This is
+not a universal result adapter or migration of all observation families.
+
+Actual journey194 accepted three rich widgets over the exact HTTP population
+(137 spans), independent logs (155) and four route groups, with varying durations
+that expose exact-quantile boundaries. The original 100-row supporting witness,
+full log/operation/trace reads and a fresh full capture remain distinct paths.
+The capture retained 137 rows (100 on its public page), and its complete stored
+bytes and content-addressed receipt remained unchanged after subsequent navigation
+and range reads. Fixed-question Back reused held dashboard evidence. After capture,
+the accepted journey used explicit Services navigation, not an invented browser
+history edge; that particular retained navigation also performed no source reads.
+
+The held-response scenario deliberately switches to All spans (198) before
+leaving. Its actual plan and complete upstream DTO are retained, while late
+completion cannot reveal the departed service. Recovery returns to the original
+exact HTTP question. Header-only cancellation acknowledgements are controls, not
+telemetry bodies or proof that upstream work completed. Focused fake-transport
+properties establish decoder parity/read shape; bounded actual raw-fact checks
+establish these observed populations, quantiles, custody and ownership. Neither
+proves arbitrary schedules or a transactional dashboard snapshot.

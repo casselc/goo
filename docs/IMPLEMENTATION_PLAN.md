@@ -32,8 +32,10 @@ is delivered for the live counter/histogram inspector with exact event-time/reso
 filters and retained return. Gauge windows and broader adoption remain follow-ons.
 The [aggregate read audit](AGGREGATE_READ_AUDIT.md) and first
 [counted-values projection](COUNTED_VALUES.md) are implemented with a controlled
-four-to-two read comparison and unchanged capture contracts. Richer service-summary
-adoption follows separately. Trace-search
+four-to-two read comparison and unchanged capture contracts. The second
+[service-widget adoption](SERVICE_RECORD_AGGREGATES.md) is delivered with shared
+decoders, three/two aggregate reads and retained full inspection/capture paths.
+Resource/dashboard prerequisites remain the main C2 continuation. Trace-search
 definition reuse is conditional and distinct from observed-result custody.
 The history below does not create additional current commitments.
 

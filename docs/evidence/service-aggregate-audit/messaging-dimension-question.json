@@ -1,0 +1,51 @@
+{
+  "spanStatus": true,
+  "summary": "span-duration",
+  "signal": "spans",
+  "environment": "messaging-dashboard-bc0f633c21",
+  "fromMs": 1792941478669,
+  "toMs": 1792941598669,
+  "where": {
+    "all": [
+      {
+        "field": {
+          "kind": "column",
+          "key": "service"
+        },
+        "op": "eq",
+        "value": "messaging-app"
+      },
+      {
+        "field": {
+          "kind": "resource",
+          "key": "service.namespace"
+        },
+        "op": "eq",
+        "value": "commerce"
+      },
+      {
+        "field": {
+          "kind": "column",
+          "key": "kind"
+        },
+        "op": "eq",
+        "value": "Consumer"
+      },
+      {
+        "field": {
+          "kind": "attribute",
+          "key": "messaging.system"
+        },
+        "op": "ne"
+      }
+    ]
+  },
+  "groupBy": [
+    {
+      "kind": "attribute",
+      "key": "messaging.destination.name"
+    }
+  ],
+  "limit": 100,
+  "offset": 0
+}

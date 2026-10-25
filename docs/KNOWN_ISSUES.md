@@ -1,11 +1,13 @@
 # Known issues and gaps
 
-The first [C4 counted-values projection](COUNTED_VALUES.md) removes unused page
-and field reads. Service dashboards still use complete exploration results; a
-richer projection remains planned. Count and groups remain independent source
-reads with possible disagreement, and >1,000 groups still refuses the whole lookup.
-Small output budgets are not scan-cost guarantees; the controlled lab comparison
-is not a production latency or large-cardinality benchmark.
+[Counted values](COUNTED_VALUES.md) and [service widgets](SERVICE_RECORD_AGGREGATES.md)
+now avoid unused inspection reads. The service browser deliberately retains full
+supporting rows/fields for inspection and positive profile witnesses. Aggregates
+remain independent reads with possible disagreement, and >1,000 groups still
+refuses the whole lookup. Small output budgets are not scan-cost guarantees; the
+controlled lab comparisons are not production latency or large-cardinality
+benchmarks. The service dashboard's inherited overall/mobile density remains a
+separate product issue; this source projection does not claim to solve it.
 
 
 [Recorded error/exception triage](ERROR_TRIAGE.md) is delivered: ET1 `982b9e9`,

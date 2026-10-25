@@ -10624,3 +10624,140 @@ controls are rejected, including altered counts/groups, missing/empty identity,
 read receipts, numeric threshold/binding, state and stale publication. Output:
 `artifacts/counted-values-projection/native-validation.txt`. The cancellation
 request and direct small/readiness requests retain their separate classifications.
+
+
+## C4 service-widget aggregate projection — reviewed source and audit (2026-10-25)
+
+Source `4a49f61` introduces `goo/record-aggregates/v1` through
+`POST /record-aggregates` and the UI proxy. Only dashboard record-widget execution
+migrates; supporting full Explore rows/fields for service inspection and positive
+profile witnesses remain intact, as do native requests and fresh full captures.
+Shared group decoding and series conservation preserve legacy behavior; the new
+projection additionally checks duration sum/min/max across time buckets without
+combining quantiles. Changed reads retain diagnostics/actions while withholding
+summary figures, rates, rankings and timeline plots.
+
+Actual source gates:
+
+- Full root Go suite passes (cmd/goo 1.135s, exploration 3.105s), including frozen
+  capture bytes/IDs and new execution-mode guards. Independent focused projection
+  tests passed 0.012s and all exploration tests 2.160s.
+- All 80 Node files pass 5.26s; the final additional plan-substitution guard passed
+  its focused dashboard regression 0.16s. UI version/question/measure/read-receipt
+  checks and changed-result suppression retain original action questions.
+- HTTP/proxy admission, cancellation, failures and 16 KiB/55s constraints pass;
+  focused Go 0.037s and seven actual Python proxy tests 1.583s. OpenAPI validates
+  80 operations / 73 Go routes,417 schemas / 399 reflected,311 responses,106 admitted
+  requests and 18 mux refusals, preserving old frozen response fixtures.
+- Hegel's 18 generated duration/status/missing-empty partitions compare old and new
+  aggregate meaning and exact quantiles,3-vs-5 / 2-vs-4 read sets and independent receipts
+  (0.088s). These supplied transport/reference tests do not execute SQL. A bounded
+  archived 187 native-validator regression passes 0.103s for 22 span responses including
+  three full supporting witness pages and rejecting changed-count controls; the
+  explicit new-DTO branch does not weaken full Explore row guards.
+
+[Source measurements and receipts](docs/SERVICE_RECORD_AGGREGATES.md) record four
+pre-edit HTTP/messaging baseline cases and controlled final pairs with the same
+questions/settings and stopped owned traffic generator. Each matches 137 records
+and four groups: activity 5→3 statements, diagnosis 4→2. Retained SQL hashes/body sizes
+and canonical aggregate fingerprints match. Payload figures are serialized executor
+results, not HTTP network bytes; physical read sums count work across statements.
+The modest four-group fixtures and single timings do not establish production
+latency or large-cardinality behavior.
+
+An independent archived 88a85b9 build, not the refactored decoder, also rereads all
+four fixed questions. Clearing only Result.capturedAt yields exactly identical full
+JSON bytes including basis, plan, rows, fields and summaries versus 4a49f61. The
+probe compares raw output in memory and retains only its source and hash/size
+receipt, not duplicate record banks. This is an honest differential check rather
+than a claimed pre-edit fake-source golden. Task-owned archive scratch and probe
+binaries were removed afterward. Independent source review approved this seam and
+compatibility evidence before deployment.
+
+Live journey 194 acceptance is recorded below.
+
+
+## C4 service-widget projection — live acceptance (2026-10-25)
+
+Frozen source `4a49f61` runs the actual Go/Python lab with binary SHA-256
+`6af45f128aacd5540cbf25942cbd82acdd37750ef2904891ba5ac66eb167e11c`.
+`artifacts/service-dashboard-projection/deployment.json` records actual runtime
+module/server/spec hashes, HTTP status/MIME and the prior traffic state. The
+controlled audit and browser checks stop only the owned traffic generator; data
+volumes remain intact, and the prior running state is restored afterward.
+
+The accepted main case passed in 19.9s:
+`artifacts/service-dashboard-projection/service-projection-b7b0685a04/ledger.json`.
+Ordinary generated OTLP supplies 137 HTTP Server spans and 155 in-scope logs plus
+mixed-role/namespace controls. Route groups preserve 120 items, 12 custom, 3 missing
+and 2 present-empty records. Varied 1–120 ms and 5–60 ms durations exercise independently
+computed ExactHigh quantiles, 7.75 seconds summed duration, 38 recorded Error spans and
+all requested group/time-bucket summaries. No source/UI positive response is mocked.
+
+The three record widgets have narrow DTOs; two native widget paths remain
+independent. Automatic HTTP admission retains its separately read 100-row full
+supporting page. Opening widget questions and sorting/staging are local; explicit
+Run uses full Explore, including 155 log records versus a 100-row page. A fresh
+widget capture stores 137 ordered raw spans, full fields and original question,
+with a 100-row public page. Its 138,964 stored bytes remain unchanged before/after
+API/UI reopen and later range exploration: SHA-256
+`9837ae1af29939e979f715421ac830077674ae05b4ee551bcbd3d7ba011256c2`.
+Stored custody and source observations remain distinct.
+
+Fixed-question Back and Services navigation from the capture restore the retained
+service without a source read. A route drilldown reads 120 spans and then one
+reported-ID trace/zero linked logs; it does not establish causal contribution or
+a complete trace. A one-millisecond range excluding all supporting witnesses
+retains the explicitly selected HTTP profile, supplies false positive-hint metadata
+and correctly reads one span. Capture reopen remains source-free. The page journal
+records 20 logical telemetry requests and two pure plans; these are not SQL statement
+counts.
+
+The accepted ownership case passed separately in 8.0s (10.2s invocation):
+`artifacts/service-dashboard-projection/service-projection-fbc939b42b/ownership.json`.
+Its actual held All spans response contains 198 records. Departure keeps the
+panel hidden through late release; fresh HTTP reentry reads 137 real records.
+Control acknowledgements retain actual 202 status, exact query-ID cancel endpoint
+and `bodyObserved:false`; no control body is invented or counted as telemetry.
+This records cancellation requested/acknowledged, not completed upstream
+cancellation. Separate handler/context tests cover source cancellation correctness.
+
+Two earlier frozen invocations exposed test assumptions: browser-history Back
+after capture was not an established return path, and route labels render quoted
+literal strings. The next main passed after using actual Services navigation and
+the supplied quoted value. Ownership diagnostics also isolated Playwright body
+collection waiting on keepalive cancellation controls. The observer now records
+control headers and races actual failed/cancel-requested data bodies, with a
+bounded diagnostic for unexplained waits. These are harness-only changes; full
+positive bodies and raw membership/capture checks remain strict. The main was not
+rerun after its accepted case; only the remaining ownership case was rerun.
+
+The actor passed on its first campaign in 31.3s (32.8s invocation): nine phases,
+462 snapshots, 11 observed telemetry requests and three rich widget reads. It
+checks the full supporting page, local diagnosis sort, source-free widget staging,
+full log drilldown and retained service Back with no page overflow. Receipt:
+`artifacts/service-dashboard-projection/service-projection-133c4d4bff/bombadil/acceptance-summary.json`.
+
+Legacy 187–190 helpers/specs now observe the new widget endpoint/shape while
+retaining separate full supporting-page and drilldown assertions; those older
+browser campaigns were not rerun in this round. The bounded archived 187 native
+regression and new 194 journey supply their stated independent checks. No new
+Quint state machine is claimed for the unchanged request-owner lifecycle. Actual
+frames retain the same compact latency/group presentation and independent units;
+this does not claim to fix inherited whole-product or mobile dashboard density.
+
+Final actual-ledger validation passes for both accepted cases: main 0.77s and
+owner 0.19s (1.008s combined) reject eight main and four ownership changes. A final
+owner-only check 0.218s additionally requires the fresh HTTP question to equal the
+original one. The initial ownership observer wrongly bound the deliberate held
+All spans 198 response to the original HTTP 137 plan; its preserved diagnostic led
+to binding the actual all-spans plan in the unchanged service scope. Neither
+application nor fixture changed. Log:
+`artifacts/service-dashboard-projection/native-validation.txt`.
+
+Independent source/audit/live/visual/actor/native reviews approve the bounded cut.
+The full original-row/storage guards remain; cancellation headers are not
+telemetry bodies or proof of completed source cancellation. README, architecture,
+current backlog/roadmap, executable storyboard and three actual frames are kept
+aligned. The source projection finishes C4's two selected caller adoptions; it
+does not introduce a universal query/result kernel or a new capture format.

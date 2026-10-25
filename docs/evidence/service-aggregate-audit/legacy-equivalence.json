@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "legacyRevision": "88a85b9",
+  "currentRevision": "4a49f61",
+  "normalization": "Result.capturedAt cleared only; basis,plan,rows,fields,allaggregatefields unchanged",
+  "sameProbeSHA256": "c085509c2919ca45b7c55a56202263053d2d10a70a9902ef974f47514a40f821",
+  "traffic": "stopped",
+  "cases": [
+    {
+      "name": "http-spans",
+      "normalizedFullBytes": 103907,
+      "normalizedFullSHA256": "5cf441763025d3f9ace3391ad1982f008e59508326bd684e707607b6edc7b68e",
+      "basis": "111b1031bd49a64f27d1c97006a6ce92bffbc31cb1984d42d27f0b05907c1e67",
+      "exactEqual": true,
+      "count": "137",
+      "rows": 100,
+      "groups": 4
+    },
+    {
+      "name": "http-dimension",
+      "normalizedFullBytes": 99925,
+      "normalizedFullSHA256": "094836295aa516aacc766fdc71c50a781e27effd18a1d49b908ec1be6bcae4e3",
+      "basis": "877453b0c305e5d37a3a492bbf78755a00d1f33acfc62e77ebfe7e4c1aa46234",
+      "exactEqual": true,
+      "count": "137",
+      "rows": 100,
+      "groups": 4
+    },
+    {
+      "name": "messaging-spans",
+      "normalizedFullBytes": 117759,
+      "normalizedFullSHA256": "aa2eb9b856ff0958a3e4958326c865827571cae42a99207fe949cf8c7f35cca0",
+      "basis": "7381eca0e807d0fefe920eed4d22dafe5b936d6ad483d2e31e2ad4b6023478fb",
+      "exactEqual": true,
+      "count": "137",
+      "rows": 100,
+      "groups": 4
+    },
+    {
+      "name": "messaging-dimension",
+      "normalizedFullBytes": 113897,
+      "normalizedFullSHA256": "3766bebdc8b328c39483cd7b4240cfe6e66f9a0e1fcf46e26f42f43eab69532a",
+      "basis": "9ed5ec23191fdfe3f063c978f54bbc3d67e945e183222050c67d532ff41c72d3",
+      "exactEqual": true,
+      "count": "137",
+      "rows": 100,
+      "groups": 4
+    }
+  ],
+  "sourceCommit": "4a49f61"
+}

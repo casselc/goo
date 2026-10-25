@@ -28,27 +28,43 @@ function observe(page) {
   const requests = [], responses = [], errors = [], events = [], pending = new Set();
   const pure = new Set(['/api/dashboards/plan', '/api/measurement-packages/plan', '/api/packages/plan']);
   let source = 0, plans = 0;
+  const failed = new WeakSet(), failureWaiters = new Map(), canceledIDs = new Set(), cancellationWaiters = new Map(), pendingMetadata = new Map();
+  page.on('requestfailed', request => { failed.add(request); failureWaiters.get(request)?.(); });
   page.on('pageerror', error => errors.push(error.message));
   page.on('request', request => {
     const endpoint = new URL(request.url()).pathname;
     if (!endpoint.startsWith('/api/')) return;
-    const isPost = request.method() === 'POST';
+    const isPost = request.method() === 'POST', queryId = request.headers()['x-goo-query-id'];
+    const cancel = endpoint.match(/^\/api\/queries\/([^/]+)\/cancel$/);
+    if (cancel) { canceledIDs.add(cancel[1]); cancellationWaiters.get(cancel[1])?.(); }
     const effect = !isPost ? 'metadata' : pure.has(endpoint) ? 'plan' : /^\/api\/queries\/[^/]+\/cancel$/.test(endpoint) ? 'cancel' : 'source';
     if (effect === 'source') source++;
     if (effect === 'plan') plans++;
-    requests.push({ endpoint, method: request.method(), effect, source, plans, payload: isPost ? request.postDataJSON() : null });
+    requests.push({ endpoint, method: request.method(), effect, source, plans, ...(queryId ? { queryId } : {}), payload: isPost ? request.postDataJSON() : null });
   });
   page.on('response', response => {
     const endpoint = new URL(response.url()).pathname;
     if (!endpoint.startsWith('/api/') || response.request().method() !== 'POST') return;
+    if (/^\/api\/queries\/[^/]+\/cancel$/.test(endpoint)) {
+      // keepalive control acknowledgments are not measurement result bodies.
+      responses.push({ endpoint, status: response.status(), request: response.request().postDataJSON(), control: 'cancel', bodyObserved: false });
+      return;
+    }
+    const request = response.request(), queryId = request.headers()['x-goo-query-id'];
     const work = (async () => {
-      let body; try { body = await response.json(); } catch { body = await response.text(); }
-      responses.push({ endpoint, status: response.status(), request: response.request().postDataJSON(), body });
+      const read = async () => { try { return { body: await response.json() }; } catch { try { return { body: await response.text() }; } catch { return { aborted: true }; } } };
+      const canceled = new Promise(resolve => { const finish = () => resolve({ aborted: true }); failureWaiters.set(request, finish); if (queryId) cancellationWaiters.set(queryId, finish); });
+      const outcome = failed.has(request) || queryId && canceledIDs.has(queryId) ? { aborted: true } : await Promise.race([read(), canceled]);
+      failureWaiters.delete(request); if (queryId) cancellationWaiters.delete(queryId);
+      const cancelRequested = !!queryId && canceledIDs.has(queryId);
+      if (outcome.aborted && !failed.has(request) && !cancelRequested) errors.push('Response body unavailable without a reported request failure: ' + endpoint);
+      responses.push({ endpoint, status: response.status(), request: request.postDataJSON(), ...(queryId ? { queryId } : {}), ...outcome,
+        ...(outcome.aborted ? { bodyUnavailable: true, cancelled: failed.has(request), cancelRequested, body: { error: 'Request canceled or response unavailable' } } : {}) });
     })();
-    pending.add(work); work.finally(() => pending.delete(work));
+    pending.add(work); pendingMetadata.set(work, { endpoint, queryId }); work.then(() => { pending.delete(work); pendingMetadata.delete(work); }, () => { pending.delete(work); pendingMetadata.delete(work); });
   });
   return { requests, responses, errors, events, get source() { return source; }, get plans() { return plans; },
-    async settle() { await Promise.all([...pending]); },
+    async settle() { let timer; try { await Promise.race([Promise.all([...pending]), new Promise((_, reject) => { timer = setTimeout(() => reject(Error('Response body did not settle: ' + JSON.stringify([...pendingMetadata.values()]))), 15000); })]); } finally { clearTimeout(timer); } },
     event(action, extra = {}) { events.push({ action, source, plans, ...extra }); } };
 }
 async function loaded(page, profile) {
@@ -74,11 +90,14 @@ async function snapshot(page, observation) {
 function assertPopulation(facts, result, profile, service = 'edge-api') {
   const records = expected(facts, profile, service).filter(record => record.timeMs >= result.question.fromMs && record.timeMs < result.question.toMs);
   expect(result.count).toBe(String(records.length));
-  expect(result.rows.length).toBe(Math.min(100, records.length));
+  const rows = result.rows;
+  if (result.version === 'goo/record-aggregates/v1') {
+    for (const key of ['rows', 'fields', 'plan', 'resultToken']) expect(result[key]).toBeUndefined();
+  } else expect(rows).toHaveLength(Math.min(100, records.length));
   const byID = new Map(records.map(record => [record.id, record]));
-  const ids = result.rows.map(row => row.SpanId);
+  const ids = (rows || []).map(row => row.SpanId);
   expect(new Set(ids).size).toBe(ids.length);
-  for (const row of result.rows) {
+  for (const row of rows || []) {
     const record = byID.get(row.SpanId);
     expect(record, 'unexpected span ' + row.SpanId).toBeTruthy();
     expect(row.TraceId).toBe(record.traceId);

@@ -73,7 +73,7 @@ test('190 messaging roles preserve destination populations and continue to real 
   expect(methodWidget.query.where).toEqual(spanWidget.query.where);
   const initial = { plan, spans: findResult(observation, spanWidget.query), methods: findResult(observation, methodWidget.query), view: await snapshot(page, observation) };
   assertPopulation(facts, initial.spans, 'messaging-consumer'); assertPopulation(facts, initial.methods, 'messaging-consumer');
-  expect(initial.spans.count).toBe('137'); expect(initial.spans.rows).toHaveLength(100);
+  expect(initial.spans.count).toBe('137'); expect(initial.spans.rows).toBeUndefined();
   expect(initial.spans.spanStatus.error).toBe('26');
   expect(initial.methods.groups.map(group => [group.g0, group.count]).sort()).toEqual([[null, '3'], ['', '2'], ['returns', '12'], ['orders', '120']].sort());
   const native = plan.widgets.filter(widget => widget.measurement);

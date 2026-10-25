@@ -72,7 +72,7 @@ test('189 current-key database client defaults preserve operation populations an
   expect(methodWidget.query.where).toEqual(spanWidget.query.where);
   const initial = { plan, spans: findResult(observation, spanWidget.query), methods: findResult(observation, methodWidget.query), view: await snapshot(page, observation) };
   assertPopulation(facts, initial.spans, 'db-client'); assertPopulation(facts, initial.methods, 'db-client');
-  expect(initial.spans.count).toBe('137'); expect(initial.spans.rows).toHaveLength(100);
+  expect(initial.spans.count).toBe('137'); expect(initial.spans.rows).toBeUndefined();
   expect(initial.spans.spanStatus.error).toBe('26');
   expect(initial.methods.groups.map(group => [group.g0, group.count]).sort()).toEqual([[null, '3'], ['', '2'], ['FETCH', '12'], ['SELECT', '120']].sort());
   const native = plan.widgets.filter(widget => widget.measurement);

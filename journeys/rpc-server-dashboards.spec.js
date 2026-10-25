@@ -71,7 +71,7 @@ test('188 incoming legacy RPC defaults preserve method populations and continue 
   expect(methodWidget.query.where).toEqual(spanWidget.query.where);
   const initial = { plan, spans: findResult(observation, spanWidget.query), methods: findResult(observation, methodWidget.query), view: await snapshot(page, observation) };
   assertPopulation(facts, initial.spans, 'rpc-server'); assertPopulation(facts, initial.methods, 'rpc-server');
-  expect(initial.spans.count).toBe('132'); expect(initial.spans.rows).toHaveLength(100);
+  expect(initial.spans.count).toBe('132'); expect(initial.spans.rows).toBeUndefined();
   expect(initial.spans.spanStatus.error).toBe('24');
   expect(initial.methods.groups.map(group => [group.g0, group.count]).sort()).toEqual([['CustomCall', '12'], ['catalog.Inventory/GetItem', '120']].sort());
   const native = plan.widgets.filter(widget => widget.measurement);

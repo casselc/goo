@@ -4,7 +4,8 @@ The filter editor's **Load scoped values** action uses a separate typed aggregat
 response. It reads the matching count and complete values for one string field,
 without fetching a record page or discovering unrelated fields. The same action
 works in fixed exploration, population workspaces and paused Activity scopes.
-Service dashboards continue using their existing complete exploration responses.
+[Service widgets](SERVICE_RECORD_AGGREGATES.md) have their own richer projection;
+the service browser supporting read and capture paths retain full exploration.
 
 `POST /explore/counted-values` (UI proxy `/api/explore/counted-values`) accepts the
 existing exact exploration question. It requires one string `groupBy`, offset zero

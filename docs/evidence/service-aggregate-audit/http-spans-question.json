@@ -1,0 +1,52 @@
+{
+  "spanStatus": true,
+  "bucketMs": 10000,
+  "summary": "span-duration",
+  "signal": "spans",
+  "environment": "http-dashboard-13dc64d238",
+  "fromMs": 1792891925327,
+  "toMs": 1792892045327,
+  "where": {
+    "all": [
+      {
+        "field": {
+          "kind": "column",
+          "key": "service"
+        },
+        "op": "eq",
+        "value": "edge-api"
+      },
+      {
+        "field": {
+          "kind": "resource",
+          "key": "service.namespace"
+        },
+        "op": "eq",
+        "value": "commerce"
+      },
+      {
+        "field": {
+          "kind": "column",
+          "key": "kind"
+        },
+        "op": "eq",
+        "value": "Server"
+      },
+      {
+        "field": {
+          "kind": "attribute",
+          "key": "http.request.method"
+        },
+        "op": "ne"
+      }
+    ]
+  },
+  "groupBy": [
+    {
+      "kind": "column",
+      "key": "name"
+    }
+  ],
+  "limit": 100,
+  "offset": 0
+}
