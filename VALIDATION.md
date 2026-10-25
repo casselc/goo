@@ -10376,3 +10376,38 @@ files changed in the round resolve**. The complete changed docs and three actual
 frames are synchronized to the local lab before publication. Final source and
 closeout commits are pushed together; the verified remote head is reported after
 publication. No further source campaign is repeated after accepted results.
+
+
+## C3 native interval to record context — reviewed source (2026-10-25)
+
+The first handoff uses actual counter/histogram export intervals in the live
+Measurements inspector. It stages ordinary Logs/Spans questions; Run is the
+existing explicit source read. Gauge observations and aggregated histogram time
+buckets have no new handoff. No nearby window is invented. Unknown/reset intervals
+can supply time context without becoming healthy measurements or causal evidence.
+
+Pure Go/JavaScript mappers validate the parent question and selected exact stream.
+They copy only established environment, service, resource namespace (missing,
+empty or value) and instance identity. Metric name, metric point dimensions,
+instrumentation scope/version and schema URL do not become record filters.
+Floor/ceil millisecond bounds form an enclosing query window; exact `timestamp_ns`
+`gte fromNS` and `lte toNS-1` predicates preserve half-open membership. Invalid,
+out-of-parent or over-wide enclosing windows refuse rather than using current time.
+Existing API, SQL operators, storage/custody and capture formats remain unchanged.
+
+The root application owner retains the accepted native DOM/selected interval and
+opener while staging a record question. Explicit Back or browser Back restores it
+without automatically previewing, polling or rerunning the native question. Hidden,
+closed, detached, stale or inactive controls cannot act; modified/new-tab links keep
+normal browser behavior. Trace expansion intentionally retains its existing fresh
+reported-trace-ID read in the enclosing millisecond window, potentially broader
+in time/resource scope than the exact interval. The origin question and visible
+broader-context explanation remain available; no exemplar or contributing-span
+relationship is inferred.
+
+Source checks pass: exploration regressions (1.082s), 19 shared Go/JS fixtures and
+21 additional JS boundary/identity checks, 24 independently generated Hegel exact-
+ns grids plus finite refusals (0.037s), all 80 Node files (3.73s), and final focused
+owner/measurement guard checks (0.28s). Independent final source review approves
+frozen browser acceptance. Actual source membership, native return/focus,
+cancellation and trace scope remain separate live gates below.
