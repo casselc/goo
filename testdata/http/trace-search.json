@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "empty",
+      "method": "POST",
+      "path": "/trace-search",
+      "body": "",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "unknown",
+      "method": "POST",
+      "path": "/trace-search",
+      "body": "{\"unexpected\":true}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"unexpected\\\"\"}\n"
+    },
+    {
+      "name": "trailing",
+      "method": "POST",
+      "path": "/trace-search",
+      "body": "{\"version\":\"goo/trace-search/v1\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"conditions\":[{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"db\"}],\"limit\":20} {}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "missing version",
+      "method": "POST",
+      "path": "/trace-search",
+      "body": "{}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"trace search requires v1, one to four conditions and limit 1..100\"}\n"
+    },
+    {
+      "name": "source unavailable",
+      "method": "POST",
+      "path": "/trace-search",
+      "body": "{\"version\":\"goo/trace-search/v1\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"conditions\":[{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"db\"}],\"limit\":20}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "exact size",
+      "method": "POST",
+      "path": "/trace-search",
+      "body": "{\"version\":\"goo/trace-search/v1\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"conditions\":[{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"db\"}],\"limit\":20}",
+      "padTo": 65536,
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "oversize",
+      "method": "POST",
+      "path": "/trace-search",
+      "body": "{\"version\":\"goo/trace-search/v1\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"conditions\":[{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"db\"}],\"limit\":20}",
+      "padTo": 65537,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "method",
+      "method": "GET",
+      "path": "/trace-search",
+      "body": "",
+      "status": 405,
+      "headers": {
+        "Allow": "POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    }
+  ]
+}

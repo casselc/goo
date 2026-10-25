@@ -11,6 +11,7 @@ import (
 var resultSnapshots = &exploration.ResultSnapshots{}
 
 func registerExploration(mux *http.ServeMux, source exploration.Source, banks ...*exploration.TailMembershipSnapshots) {
+	registerTraceSearch(mux, source)
 	registerRecipes(mux)
 	registerPopulationExplanations(mux, source)
 	registerTail(mux, source, banks...)

@@ -83,7 +83,12 @@ class ProxyContracts(unittest.TestCase):
     def request(self, method, path, body=None, headers=None):
         conn = http.client.HTTPConnection('127.0.0.1', self.proxy.server_port, timeout=5)
         try:
-            conn.request(method, path, body=body, headers=headers or {})
+            try:
+                conn.request(method, path, body=body, headers=headers or {})
+            except BrokenPipeError:
+                # The size guard may reject from Content-Length and close while
+                # a large body is still being sent. Its HTTP refusal is evidence.
+                pass
             response = conn.getresponse()
             data = response.read()
             spec = json.loads(Path('api/openapi.json').read_text())
@@ -99,7 +104,7 @@ class ProxyContracts(unittest.TestCase):
 
     def test_exact_and_over_browser_limits(self):
         spec = json.loads(Path('api/openapi.json').read_text())
-        for path in ('/dashboards/plan', '/metric-discovery', '/annotations', '/deployments', '/compare', '/measurements'):
+        for path in ('/dashboards/plan', '/metric-discovery', '/annotations', '/deployments', '/compare', '/measurements', '/trace-search'):
             limit = spec['paths'][path]['post']['x-browser-body-limit-bytes']
             with self.subTest(path=path):
                 before = len(Upstream.calls)

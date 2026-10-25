@@ -1120,3 +1120,16 @@ passive SSR/SPA, 55-second actor (16 phases, 871 snapshots), 220 generated
 examples, eight fixed cases, all 80 rejecting controls and prior waterfall
 regressions pass. Exact raw capture bytes remain unchanged. Final accepted
 frames/storyboard, independent review and publication are in VALIDATION.md.
+
+### Trace existential span search (in progress)
+
+The approved continuation asks which reported trace IDs contain spans matching
+each of one to four independent predicates. TS1 provides exact full-source
+intersection, one-read totals and bounded representative witness field values
+through a separate typed endpoint, preserving old Query and capture wire bytes.
+TS2 stages original population filters within condition one and reuses existing
+span filter editors and original-window waterfall continuation. TS3 closes real
+source/journey/actor, independent generated/native/model, API/proxy, visual/docs
+and review gates before pushing. Each condition is existential; the same span
+can satisfy multiple conditions. No topology or complete-invocation guarantee
+follows from a shared reported trace ID.

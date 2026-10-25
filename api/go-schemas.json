@@ -1333,6 +1333,19 @@
       }
     ]
   },
+  "TraceSearchRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/exploration.TraceSearchRequestInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "TraceSearchResult": {
+    "$ref": "#/components/schemas/exploration.TraceSearchResult"
+  },
   "WorkflowList": {
     "anyOf": [
       {
@@ -9092,6 +9105,322 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.TraceExampleSet"
+  },
+  "exploration.TraceSearchFieldValue": {
+    "properties": {
+      "field": {
+        "$ref": "#/components/schemas/exploration.Field"
+      },
+      "value": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "field",
+      "value"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.TraceSearchFieldValue"
+  },
+  "exploration.TraceSearchItem": {
+    "properties": {
+      "traceId": {
+        "type": "string"
+      },
+      "witnesses": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.TraceSearchWitness"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "traceId",
+      "witnesses"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.TraceSearchItem"
+  },
+  "exploration.TraceSearchPlan": {
+    "properties": {
+      "parameters": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "sql": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "sql",
+      "parameters"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.TraceSearchPlan"
+  },
+  "exploration.TraceSearchRequest": {
+    "properties": {
+      "conditions": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.Predicate"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "environment": {
+        "type": "string"
+      },
+      "fromMs": {
+        "type": "integer"
+      },
+      "limit": {
+        "type": "integer"
+      },
+      "toMs": {
+        "type": "integer"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "environment",
+      "fromMs",
+      "toMs",
+      "conditions",
+      "limit"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.TraceSearchRequest"
+  },
+  "exploration.TraceSearchRequestInput": {
+    "additionalProperties": false,
+    "properties": {
+      "conditions": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/exploration.PredicateInput"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "environment": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "fromMs": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "limit": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "toMs": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.TraceSearchRequest"
+  },
+  "exploration.TraceSearchResult": {
+    "properties": {
+      "basis": {
+        "type": "string"
+      },
+      "hasMore": {
+        "type": "boolean"
+      },
+      "items": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.TraceSearchItem"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "matchedTraces": {
+        "type": "string"
+      },
+      "plan": {
+        "$ref": "#/components/schemas/exploration.TraceSearchPlan"
+      },
+      "readAt": {
+        "type": "string"
+      },
+      "request": {
+        "$ref": "#/components/schemas/exploration.TraceSearchRequest"
+      },
+      "state": {
+        "type": "string"
+      },
+      "warnings": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "request",
+      "readAt",
+      "basis",
+      "state",
+      "matchedTraces",
+      "hasMore",
+      "items",
+      "plan",
+      "warnings"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.TraceSearchResult"
+  },
+  "exploration.TraceSearchWitness": {
+    "properties": {
+      "conditionIndex": {
+        "type": "integer"
+      },
+      "durationNs": {
+        "type": "string"
+      },
+      "fieldValues": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.TraceSearchFieldValue"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "kind": {
+        "type": "string"
+      },
+      "matchingRecords": {
+        "type": "string"
+      },
+      "operation": {
+        "type": "string"
+      },
+      "parentSpanId": {
+        "type": "string"
+      },
+      "service": {
+        "type": "string"
+      },
+      "spanId": {
+        "type": "string"
+      },
+      "timestampNs": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "fieldValues",
+      "conditionIndex",
+      "matchingRecords",
+      "spanId",
+      "parentSpanId",
+      "service",
+      "operation",
+      "kind",
+      "timestampNs",
+      "durationNs"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.TraceSearchWitness"
   },
   "exploration.ValueComparison": {
     "properties": {

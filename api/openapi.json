@@ -4782,6 +4782,94 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/trace-search": {
+      "post": {
+        "operationId": "post_trace_search",
+        "summary": "POST /trace-search",
+        "tags": [
+          "trace-search"
+        ],
+        "description": "Current owner: cmd/goo/trace_search_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/trace_search_http.go",
+        "x-effects": "source-read",
+        "parameters": [
+          {
+            "name": "X-Goo-Query-ID",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+            },
+            "description": "Optional short-lived cancellation capability; repeated/cancelled IDs are refused."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TraceSearchResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TraceSearchRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 65536,
+        "x-browser-body-limit-bytes": 65536,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/package": {
       "get": {
         "operationId": "get_python_package",
@@ -6452,6 +6540,19 @@
             "type": "null"
           }
         ]
+      },
+      "TraceSearchRequest": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.TraceSearchRequestInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "TraceSearchResult": {
+        "$ref": "#/components/schemas/exploration.TraceSearchResult"
       },
       "WorkflowList": {
         "anyOf": [
@@ -14213,6 +14314,322 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.TraceExampleSet"
+      },
+      "exploration.TraceSearchFieldValue": {
+        "properties": {
+          "field": {
+            "$ref": "#/components/schemas/exploration.Field"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "field",
+          "value"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.TraceSearchFieldValue"
+      },
+      "exploration.TraceSearchItem": {
+        "properties": {
+          "traceId": {
+            "type": "string"
+          },
+          "witnesses": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/exploration.TraceSearchWitness"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "traceId",
+          "witnesses"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.TraceSearchItem"
+      },
+      "exploration.TraceSearchPlan": {
+        "properties": {
+          "parameters": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sql": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "sql",
+          "parameters"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.TraceSearchPlan"
+      },
+      "exploration.TraceSearchRequest": {
+        "properties": {
+          "conditions": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/exploration.Predicate"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "environment": {
+            "type": "string"
+          },
+          "fromMs": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "toMs": {
+            "type": "integer"
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "environment",
+          "fromMs",
+          "toMs",
+          "conditions",
+          "limit"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.TraceSearchRequest"
+      },
+      "exploration.TraceSearchRequestInput": {
+        "additionalProperties": false,
+        "properties": {
+          "conditions": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/exploration.PredicateInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "environment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fromMs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "toMs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.TraceSearchRequest"
+      },
+      "exploration.TraceSearchResult": {
+        "properties": {
+          "basis": {
+            "type": "string"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "items": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/exploration.TraceSearchItem"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "matchedTraces": {
+            "type": "string"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/exploration.TraceSearchPlan"
+          },
+          "readAt": {
+            "type": "string"
+          },
+          "request": {
+            "$ref": "#/components/schemas/exploration.TraceSearchRequest"
+          },
+          "state": {
+            "type": "string"
+          },
+          "warnings": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "request",
+          "readAt",
+          "basis",
+          "state",
+          "matchedTraces",
+          "hasMore",
+          "items",
+          "plan",
+          "warnings"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.TraceSearchResult"
+      },
+      "exploration.TraceSearchWitness": {
+        "properties": {
+          "conditionIndex": {
+            "type": "integer"
+          },
+          "durationNs": {
+            "type": "string"
+          },
+          "fieldValues": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/exploration.TraceSearchFieldValue"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "kind": {
+            "type": "string"
+          },
+          "matchingRecords": {
+            "type": "string"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "parentSpanId": {
+            "type": "string"
+          },
+          "service": {
+            "type": "string"
+          },
+          "spanId": {
+            "type": "string"
+          },
+          "timestampNs": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "fieldValues",
+          "conditionIndex",
+          "matchingRecords",
+          "spanId",
+          "parentSpanId",
+          "service",
+          "operation",
+          "kind",
+          "timestampNs",
+          "durationNs"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.TraceSearchWitness"
       },
       "exploration.ValueComparison": {
         "properties": {

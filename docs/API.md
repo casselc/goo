@@ -8,7 +8,7 @@ The running server must include the current routes and assets; changing the
 checkout alone does not update an existing process. Rebuild an older image, or
 use the supported local code/asset installation and restart procedure.
 
-The spec inventories 75 supported operations: 69 Go operations, five Python-only
+The spec inventories 76 supported operations: 70 Go operations, five Python-only
 `/api` operations and the Python root `/health` probe. Go paths are unprefixed on
 port 8089; the browser proxy exposes them under `/api` on port 8088. Python-only
 operations override the server list. `/api-docs`, `/openapi.json`, the UI, static
@@ -431,3 +431,38 @@ projection consumes existing source or stored rows. It does not augment saved
 capture bytes or substitute bounded page sums for the independent query aggregate.
 Row selection retains the existing linked-log action; disclosure/group display
 does not issue telemetry requests.
+
+
+## Trace search across span conditions
+
+`POST /trace-search` (browser `/api/trace-search`) reads one full scoped source
+aggregation for 1–4 span predicates. Its `TraceSearchRequest` declares version
+`goo/trace-search/v1`, one environment, a fixed half-open window of at most two
+hours and a trace-page limit of 1–100. The request body ceiling is 64 KiB at
+both HTTP boundaries. Conditions use the existing typed span predicate tree,
+with at most 64 nodes across the request and a 256 KiB compiled-SQL ceiling.
+The HTTP boundary compiles and validates before any source effect; oversize
+plans return 400 with an instruction to simplify the conditions.
+
+A trace ID qualifies when each condition has at least one matching observed
+record in that scope. One record may satisfy several conditions. Conditions
+do not require distinct spans, a reported parent edge, matching services or a
+complete trace. Canonical nonzero lowercase 32-hex trace IDs define the grouping
+identity; the result is a count of observed reported IDs, not requests or
+unique invocations. A contextual original record predicate belongs to the
+first condition, not a global filter restricting all other conditions.
+
+`TraceSearchResult` returns the exact same-query `matchedTraces` count, bounded
+items, a `hasMore` flag and a representative witness for each condition. Witnesses
+include full matching-record counts and qualified predicate field values; missing
+keys remain null instead of empty strings. Numeric values, timestamps and
+counts retain string encoding. Witness selection does not establish a unique
+occurrence, root span, causality or telemetry completeness. The source and full
+JSON response are bounded to 8 MiB; overflow refuses the entire result.
+
+The route shares source-query admission and optional `X-Goo-Query-ID`
+cancellation. It has a 55-second handler deadline under the existing 60-second
+query owner. Validation failures return 400; source/response-bound failures
+return 502. No result-retention token, capture publication or paired-evidence
+format is introduced. Opening a trace from a result is a separate explicit
+existing record-context read. See [the semantic contract](TRACE_SEARCH.md).
