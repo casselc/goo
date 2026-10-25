@@ -75,6 +75,27 @@ func registerExploration(mux *http.ServeMux, source exploration.Source, banks ..
 		httpjson.Write(w, 200, result)
 	})
 
+	mux.HandleFunc("POST /record-aggregates", func(w http.ResponseWriter, r *http.Request) {
+		fail := func(code int, e error) { httpjson.Write(w, code, map[string]string{"error": e.Error()}) }
+		var q exploration.Query
+		if e := httpjson.Decode(w, r, &q, 16384, "expected one JSON object"); e != nil {
+			fail(400, e)
+			return
+		}
+		if e := exploration.ValidateRecordAggregatesQuery(q); e != nil {
+			fail(400, e)
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 55*time.Second)
+		defer cancel()
+		result, e := source.FetchRecordAggregates(ctx, q)
+		if e != nil {
+			fail(502, e)
+			return
+		}
+		httpjson.Write(w, 200, result)
+	})
+
 	mux.HandleFunc("POST /explore/counted-values", func(w http.ResponseWriter, r *http.Request) {
 		fail := func(code int, e error) { httpjson.Write(w, code, map[string]string{"error": e.Error()}) }
 		var q exploration.Query

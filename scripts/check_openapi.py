@@ -81,7 +81,7 @@ def check(spec):
                 requests += 1
                 if isinstance(request, dict):
                     accepted.append((shape, request))
-    assert responses == 298 and requests == 98 and mux_refusals == 17, (responses, requests)
+    assert responses == 311 and requests == 106 and mux_refusals == 18, (responses, requests)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)
@@ -101,6 +101,11 @@ def check(spec):
     counted=next(json.loads(c['response']) for c in counted_cases if c['name']=='success-observed')
     for wrong in ({**counted,'count':2},{**counted,'count':'02'},{**counted,'state':'healthy'},{**counted,'basis':'not-a-content-basis'},{**counted,'groups':[{'g0':17,'count':'2'}]},{**counted,'groups':[{'g0':None,'count':'0'}]}):
         assert list(validator(spec,counted_shape).iter_errors(wrong)), 'Counted values negative control accepted'
+    aggregate_shape={'$ref':'#/components/schemas/RecordAggregatesResult'}
+    aggregate_cases=json.loads((ROOT/'testdata/http/record-aggregates.json').read_text())['cases']
+    aggregate=next(json.loads(c['response']) for c in aggregate_cases if c['name']=='success-rich-series')
+    for wrong in ({**aggregate,'count':2},{**aggregate,'state':'healthy'},{**aggregate,'rows':[]},{**aggregate,'resultToken':'a'*64},{**aggregate,'groups':[{'g0':17,'count':'2'}]},{**aggregate,'groups':[{'g0':None,'count':'0'}]}):
+        assert list(validator(spec,aggregate_shape).iter_errors(wrong)), 'Record aggregate negative control accepted'
     # Startup metadata is configuration only, with closed states and no health flags.
     runtime_shape={'$ref':'#/components/schemas/RuntimeCapabilities'}
     configured={'version':'goo/runtime-capabilities/v1','profile':'generic','preparedHTTP':{'state':'unconfigured'},'declaredOperations':{'state':'configured'}}

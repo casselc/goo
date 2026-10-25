@@ -4602,6 +4602,94 @@
         "x-browser-body-limit-bytes": 16384
       }
     },
+    "/record-aggregates": {
+      "post": {
+        "operationId": "post_record_aggregates",
+        "summary": "POST /record-aggregates",
+        "tags": [
+          "record-aggregates"
+        ],
+        "description": "Current owner: cmd/goo/exploration_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/exploration_http.go",
+        "x-effects": "source-read",
+        "parameters": [
+          {
+            "name": "X-Goo-Query-ID",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+            },
+            "description": "Optional short-lived cancellation capability; repeated/cancelled IDs are refused."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecordAggregatesResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordQuery"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 16384,
+        "x-browser-body-limit-bytes": 16384,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/retained-evidence/tail": {
       "post": {
         "operationId": "post_retained_evidence_tail",
@@ -6411,6 +6499,9 @@
             "type": "null"
           }
         ]
+      },
+      "RecordAggregatesResult": {
+        "$ref": "#/components/schemas/exploration.RecordAggregatesResult"
       },
       "RecordQuery": {
         "anyOf": [
@@ -13433,6 +13524,133 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.RecipePlan"
+      },
+      "exploration.RecordAggregatesReads": {
+        "properties": {
+          "count": {
+            "$ref": "#/components/schemas/exploration.CountedValuesRead"
+          },
+          "groups": {
+            "$ref": "#/components/schemas/exploration.CountedValuesRead"
+          },
+          "timeSeries": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.CountedValuesRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "count",
+          "groups"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.RecordAggregatesReads"
+      },
+      "exploration.RecordAggregatesResult": {
+        "properties": {
+          "basis": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "capturedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "count": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$"
+          },
+          "duration": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.DurationSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecordAggregateGroup"
+            }
+          },
+          "question": {
+            "$ref": "#/components/schemas/exploration.Query"
+          },
+          "reads": {
+            "$ref": "#/components/schemas/exploration.RecordAggregatesReads"
+          },
+          "spanStatus": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.SpanStatusSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "no_data",
+              "changed_between_reads"
+            ]
+          },
+          "timeSeries": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/exploration.TimePoint"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/record-aggregates/v1"
+          },
+          "warnings": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "version",
+          "question",
+          "capturedAt",
+          "basis",
+          "count",
+          "state",
+          "groups",
+          "warnings",
+          "reads"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.RecordAggregatesResult",
+        "additionalProperties": false,
+        "description": "Aggregate-only record projection: exactly count and groups reads plus one optional time-series read. Separate clocks/content bases do not establish a transactional snapshot. Changed aggregates are diagnostic and non-actionable. Never includes source rows, fields, plan, pagination or retention token."
       },
       "exploration.RecordMeasure": {
         "properties": {
@@ -22999,6 +23217,32 @@
             "const": "cancellation-requested"
           }
         }
+      },
+      "RecordAggregateGroup": {
+        "type": "object",
+        "required": [
+          "g0",
+          "count"
+        ],
+        "properties": {
+          "g0": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "count": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "duration": {
+            "$ref": "#/components/schemas/exploration.DurationSummary"
+          },
+          "spanStatus": {
+            "$ref": "#/components/schemas/exploration.SpanStatusSummary"
+          }
+        },
+        "additionalProperties": true
       },
       "RuntimeCapabilityState": {
         "type": "object",

@@ -48,6 +48,18 @@ func sourceSummary(raw string) map[string]string {
 	return out
 }
 
+// Compare the shared aggregate meaning independently of DTO/provenance shape.
+func aggregateFingerprint(q exploration.Query, count, state string, groups any, duration *exploration.DurationSummary, status *exploration.SpanStatusSummary, series []exploration.TimePoint) string {
+	b, _ := json.Marshal(map[string]any{"question": q, "count": count, "state": state, "groups": groups, "duration": duration, "spanStatus": status, "timeSeries": series})
+	decoder := json.NewDecoder(strings.NewReader(string(b)))
+	decoder.UseNumber()
+	var canonical any
+	_ = decoder.Decode(&canonical)
+	b, _ = json.Marshal(canonical)
+	h := sha256.Sum256(b)
+	return hex.EncodeToString(h[:])
+}
+
 type audit struct {
 	base  http.RoundTripper
 	kinds map[string]string
@@ -123,8 +135,8 @@ func run() error {
 	if mode == "" {
 		mode = "explore"
 	}
-	if mode != "explore" && mode != "counted-values" {
-		return fmt.Errorf("GOO_AUDIT_MODE must be explore or counted-values")
+	if mode != "explore" && mode != "counted-values" && mode != "record-aggregates" {
+		return fmt.Errorf("GOO_AUDIT_MODE must be explore, counted-values or record-aggregates")
 	}
 	a := &audit{base: http.DefaultTransport, kinds: map[string]string{p.Count: "count", p.Rows: "rows", p.Groups: "groups", p.Fields: "fields", p.TimeSeries: "timeSeries", p.GroupedTimeSeries: "groupedTimeSeries"}, reads: []*read{}}
 	s := exploration.Source{Endpoint: endpoint, User: os.Getenv("GOO_AUDIT_USER"), Password: os.Getenv("GOO_AUDIT_PASSWORD"), Client: &http.Client{Transport: a, Timeout: 15 * time.Second}}
@@ -140,6 +152,17 @@ func run() error {
 			out["groups"] = len(result.Groups)
 			out["state"] = result.State
 		}
+	} else if mode == "record-aggregates" {
+		var result *exploration.RecordAggregatesResult
+		result, err = s.FetchRecordAggregates(context.Background(), q)
+		if result != nil {
+			b, _ := json.Marshal(result)
+			out["resultBytes"] = len(b)
+			out["count"] = result.Count
+			out["groups"] = len(result.Groups)
+			out["state"] = result.State
+			out["aggregatesSHA256"] = aggregateFingerprint(result.Question, result.Count, result.State, result.Groups, result.Duration, result.SpanStatus, result.TimeSeries)
+		}
 	} else {
 		var result *exploration.Result
 		result, err = s.Fetch(context.Background(), q)
@@ -149,6 +172,7 @@ func run() error {
 			out["count"] = result.Count
 			out["groups"] = len(result.Groups)
 			out["state"] = result.State
+			out["aggregatesSHA256"] = aggregateFingerprint(result.Question, result.Count, result.State, result.Groups, result.Duration, result.SpanStatus, result.TimeSeries)
 		}
 	}
 	out["reads"] = a.reads

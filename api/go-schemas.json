@@ -940,6 +940,9 @@
       }
     ]
   },
+  "RecordAggregatesResult": {
+    "$ref": "#/components/schemas/exploration.RecordAggregatesResult"
+  },
   "RecordQuery": {
     "anyOf": [
       {
@@ -7937,6 +7940,127 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.RecipePlan"
+  },
+  "exploration.RecordAggregatesReads": {
+    "properties": {
+      "count": {
+        "$ref": "#/components/schemas/exploration.CountedValuesRead"
+      },
+      "groups": {
+        "$ref": "#/components/schemas/exploration.CountedValuesRead"
+      },
+      "timeSeries": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.CountedValuesRead"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "count",
+      "groups"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.RecordAggregatesReads"
+  },
+  "exploration.RecordAggregatesResult": {
+    "properties": {
+      "basis": {
+        "type": "string"
+      },
+      "capturedAt": {
+        "type": "string"
+      },
+      "count": {
+        "type": "string"
+      },
+      "duration": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.DurationSummary"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "groups": {
+        "anyOf": [
+          {
+            "items": {},
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "question": {
+        "$ref": "#/components/schemas/exploration.Query"
+      },
+      "reads": {
+        "$ref": "#/components/schemas/exploration.RecordAggregatesReads"
+      },
+      "spanStatus": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.SpanStatusSummary"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "state": {
+        "type": "string"
+      },
+      "timeSeries": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.TimePoint"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "type": "string"
+      },
+      "warnings": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "version",
+      "question",
+      "capturedAt",
+      "basis",
+      "count",
+      "state",
+      "groups",
+      "warnings",
+      "reads"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.RecordAggregatesResult"
   },
   "exploration.RecordMeasure": {
     "properties": {

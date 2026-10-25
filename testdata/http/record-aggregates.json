@@ -1,0 +1,203 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "empty",
+      "method": "POST",
+      "path": "/record-aggregates",
+      "body": "",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "unknown",
+      "method": "POST",
+      "path": "/record-aggregates",
+      "body": "{\"unexpected\":true}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"unexpected\\\"\"}\n"
+    },
+    {
+      "name": "trailing",
+      "method": "POST",
+      "path": "/record-aggregates",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":20,\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}]} {}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "missing grouping",
+      "method": "POST",
+      "path": "/record-aggregates",
+      "body": "{}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"signal must be spans or logs\"}\n"
+    },
+    {
+      "name": "source unavailable",
+      "method": "POST",
+      "path": "/record-aggregates",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":20,\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}]}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "exact size",
+      "method": "POST",
+      "path": "/record-aggregates",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":20,\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}]}",
+      "padTo": 16384,
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "oversize",
+      "method": "POST",
+      "path": "/record-aggregates",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":20,\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}]}",
+      "padTo": 16385,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "success-observed",
+      "method": "POST",
+      "path": "/record-aggregates",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":20,\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}]}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"basis\":\"267f742b8b0e78299372b16301414b2313977188fcc0e97c1a4b7051f1493d23\",\"capturedAt\":\"2026-10-25T00:00:00Z\",\"count\":\"2\",\"groups\":[{\"count\":\"2\",\"g0\":\"ERROR\"}],\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"groupBy\":[{\"key\":\"severity\",\"kind\":\"column\"}],\"limit\":20,\"offset\":0,\"signal\":\"logs\",\"toMs\":61000},\"reads\":{\"count\":{\"basis\":\"7117fbcc2d124c7bbac44e977d24168cb28986e4087397e597cc160f6e40c7d1\",\"readAt\":\"2026-10-25T00:00:00Z\"},\"groups\":{\"basis\":\"7fd153e828c70dc5fb9f8caa9bd02569ee2e9fe7503746c32fcd3e65348dc0d1\",\"readAt\":\"2026-10-25T00:00:00Z\"}},\"state\":\"observed\",\"version\":\"goo/record-aggregates/v1\",\"warnings\":[\"Captured records only; sampling, ingestion completeness and clock accuracy are unverified.\",\"Count, groups and time series are independent aggregate reads, not a transactional snapshot. No records or field discovery were read.\"]}\n"
+    },
+    {
+      "name": "success-no-data",
+      "method": "POST",
+      "path": "/record-aggregates",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":20,\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}]}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"basis\":\"abc1525c634c84ce8faa1a601fa49d577adac1c7adbe3c4a67577f66366dd141\",\"capturedAt\":\"2026-10-25T00:00:00Z\",\"count\":\"0\",\"groups\":[],\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"groupBy\":[{\"key\":\"severity\",\"kind\":\"column\"}],\"limit\":20,\"offset\":0,\"signal\":\"logs\",\"toMs\":61000},\"reads\":{\"count\":{\"basis\":\"59fbab4bac7cb12eee5b33c7df3f95e89686eb8f430c84695e63c7557c702414\",\"readAt\":\"2026-10-25T00:00:00Z\"},\"groups\":{\"basis\":\"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945\",\"readAt\":\"2026-10-25T00:00:00Z\"}},\"state\":\"no_data\",\"version\":\"goo/record-aggregates/v1\",\"warnings\":[\"Captured records only; sampling, ingestion completeness and clock accuracy are unverified.\",\"Count, groups and time series are independent aggregate reads, not a transactional snapshot. No records or field discovery were read.\"]}\n"
+    },
+    {
+      "name": "success-changed",
+      "method": "POST",
+      "path": "/record-aggregates",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":20,\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}]}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"basis\":\"08b4c4d00132ca2d36fcd4c9d4d54d96002e3d01e1ff184bce893f4d348d5910\",\"capturedAt\":\"2026-10-25T00:00:00Z\",\"count\":\"2\",\"groups\":[{\"count\":\"1\",\"g0\":\"ERROR\"}],\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"groupBy\":[{\"key\":\"severity\",\"kind\":\"column\"}],\"limit\":20,\"offset\":0,\"signal\":\"logs\",\"toMs\":61000},\"reads\":{\"count\":{\"basis\":\"7117fbcc2d124c7bbac44e977d24168cb28986e4087397e597cc160f6e40c7d1\",\"readAt\":\"2026-10-25T00:00:00Z\"},\"groups\":{\"basis\":\"9766c68feb99327ad162b8dcc686d57550b87fbb66561c53d558e149a948932a\",\"readAt\":\"2026-10-25T00:00:00Z\"}},\"state\":\"changed_between_reads\",\"version\":\"goo/record-aggregates/v1\",\"warnings\":[\"Captured records only; sampling, ingestion completeness and clock accuracy are unverified.\",\"Count, groups and time series are independent aggregate reads, not a transactional snapshot. No records or field discovery were read.\",\"Independent aggregate reads disagree; retained values are diagnostics, not an actionable population snapshot.\"]}\n"
+    },
+    {
+      "name": "success-rich-series",
+      "method": "POST",
+      "path": "/record-aggregates",
+      "body": "{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":20,\"groupBy\":[{\"kind\":\"column\",\"key\":\"service\"}],\"summary\":\"span-duration\",\"spanStatus\":true,\"bucketMs\":10000}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"basis\":\"940159c30278fb368c9aac07152560902abe6608e09e61262abadf82e83d399f\",\"capturedAt\":\"2026-10-25T00:00:00Z\",\"count\":\"2\",\"duration\":{\"count\":\"2\",\"maxNs\":\"10\",\"minNs\":\"10\",\"p50Ns\":\"10\",\"p95Ns\":\"10\",\"p99Ns\":\"10\",\"state\":\"observed\",\"sumNs\":\"20\"},\"groups\":[{\"count\":\"2\",\"duration\":{\"count\":\"2\",\"maxNs\":\"10\",\"minNs\":\"10\",\"p50Ns\":\"10\",\"p95Ns\":\"10\",\"p99Ns\":\"10\",\"state\":\"observed\",\"sumNs\":\"20\"},\"g0\":\"worker\",\"spanStatus\":{\"count\":\"2\",\"error\":\"1\",\"ok\":\"1\",\"unknown\":\"0\",\"unset\":\"0\"}}],\"question\":{\"bucketMs\":10000,\"environment\":\"prod\",\"fromMs\":1000,\"groupBy\":[{\"key\":\"service\",\"kind\":\"column\"}],\"limit\":20,\"offset\":0,\"signal\":\"spans\",\"spanStatus\":true,\"summary\":\"span-duration\",\"toMs\":61000},\"reads\":{\"count\":{\"basis\":\"7937804814f4f13c899748da2d2f814c8e82d62d8c5b4a9b2e761880dbb46ea2\",\"readAt\":\"2026-10-25T00:00:00Z\"},\"groups\":{\"basis\":\"390099ddc0fefd273573bf063a0a4d369e095a6c5fe3333a8bd9df03eea590c1\",\"readAt\":\"2026-10-25T00:00:00Z\"},\"timeSeries\":{\"basis\":\"cc03be257c4d9fd242da723705b6eb5253c3c97a99b5a6d9be45034aa4a11cb4\",\"readAt\":\"2026-10-25T00:00:00Z\"}},\"spanStatus\":{\"count\":\"2\",\"error\":\"1\",\"ok\":\"1\",\"unknown\":\"0\",\"unset\":\"0\"},\"state\":\"observed\",\"timeSeries\":[{\"count\":\"2\",\"duration\":{\"count\":\"2\",\"maxNs\":\"10\",\"minNs\":\"10\",\"p50Ns\":\"10\",\"p95Ns\":\"10\",\"p99Ns\":\"10\",\"state\":\"observed\",\"sumNs\":\"20\"},\"fromMs\":1000,\"spanStatus\":{\"count\":\"2\",\"error\":\"1\",\"ok\":\"1\",\"unknown\":\"0\",\"unset\":\"0\"},\"state\":\"observed\",\"toMs\":11000},{\"count\":\"0\",\"duration\":{\"count\":\"0\",\"state\":\"no_data\",\"sumNs\":\"0\"},\"fromMs\":11000,\"spanStatus\":{\"count\":\"0\",\"error\":\"0\",\"ok\":\"0\",\"unknown\":\"0\",\"unset\":\"0\"},\"state\":\"no_data\",\"toMs\":21000},{\"count\":\"0\",\"duration\":{\"count\":\"0\",\"state\":\"no_data\",\"sumNs\":\"0\"},\"fromMs\":21000,\"spanStatus\":{\"count\":\"0\",\"error\":\"0\",\"ok\":\"0\",\"unknown\":\"0\",\"unset\":\"0\"},\"state\":\"no_data\",\"toMs\":31000},{\"count\":\"0\",\"duration\":{\"count\":\"0\",\"state\":\"no_data\",\"sumNs\":\"0\"},\"fromMs\":31000,\"spanStatus\":{\"count\":\"0\",\"error\":\"0\",\"ok\":\"0\",\"unknown\":\"0\",\"unset\":\"0\"},\"state\":\"no_data\",\"toMs\":41000},{\"count\":\"0\",\"duration\":{\"count\":\"0\",\"state\":\"no_data\",\"sumNs\":\"0\"},\"fromMs\":41000,\"spanStatus\":{\"count\":\"0\",\"error\":\"0\",\"ok\":\"0\",\"unknown\":\"0\",\"unset\":\"0\"},\"state\":\"no_data\",\"toMs\":51000},{\"count\":\"0\",\"duration\":{\"count\":\"0\",\"state\":\"no_data\",\"sumNs\":\"0\"},\"fromMs\":51000,\"spanStatus\":{\"count\":\"0\",\"error\":\"0\",\"ok\":\"0\",\"unknown\":\"0\",\"unset\":\"0\"},\"state\":\"no_data\",\"toMs\":61000}],\"version\":\"goo/record-aggregates/v1\",\"warnings\":[\"Captured records only; sampling, ingestion completeness and clock accuracy are unverified.\",\"Count, groups and time series are independent aggregate reads, not a transactional snapshot. No records or field discovery were read.\"]}\n"
+    },
+    {
+      "name": "late-groups-unavailable",
+      "method": "POST",
+      "path": "/record-aggregates",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":20,\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}]}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "late-series-unavailable",
+      "method": "POST",
+      "path": "/record-aggregates",
+      "body": "{\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":20,\"groupBy\":[{\"kind\":\"column\",\"key\":\"service\"}],\"summary\":\"span-duration\",\"spanStatus\":true,\"bucketMs\":10000}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "method",
+      "method": "GET",
+      "path": "/record-aggregates",
+      "body": "",
+      "status": 405,
+      "headers": {
+        "Allow": "POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    }
+  ]
+}

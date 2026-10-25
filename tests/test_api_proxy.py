@@ -150,6 +150,22 @@ class ProxyContracts(unittest.TestCase):
         self.assertEqual(self.request('POST','/api/explore/counted-values',accepted+b' ')[0],400)
         self.assertEqual(len(Upstream.calls),count)
 
+    def test_record_aggregates_proxy_route_limits_and_cancellation_header(self):
+        query_id = '01234567-1234-1234-1234-012345678901'
+        payload = b'{"signal":"spans","environment":"prod","fromMs":1000,"toMs":61000,"limit":100,"groupBy":[{"kind":"column","key":"service"}],"summary":"span-duration","spanStatus":true,"bucketMs":10000}'
+        status, headers, body = self.request('POST', '/api/record-aggregates', payload, {'X-Goo-Query-ID':query_id})
+        self.assertEqual(status, 400)
+        self.assertEqual(json.loads(body), {'error':'backend refusal'})
+        self.assertEqual(Upstream.calls[-1][1], '/record-aggregates')
+        self.assertEqual(Upstream.calls[-1][3], payload)
+        self.assertEqual({k.lower():v for k,v in Upstream.calls[-1][2].items()}['x-goo-query-id'], query_id)
+        accepted = payload + b' ' * (16384-len(payload))
+        self.assertEqual(self.request('POST','/api/record-aggregates',accepted)[0],400)
+        self.assertEqual(Upstream.calls[-1][3],accepted)
+        count = len(Upstream.calls)
+        self.assertEqual(self.request('POST','/api/record-aggregates',accepted+b' ')[0],400)
+        self.assertEqual(len(Upstream.calls),count)
+
     def test_get_errors_and_queries_are_reencoded(self):
         Upstream.mode = 'text'
         status, headers, body = self.request('GET', '/api/operations?package=example&minutes=5')

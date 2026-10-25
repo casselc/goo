@@ -619,3 +619,29 @@ unsupported requests return 400 before source execution.
 the separately observed total; it is not a population suitable for actions or a
 transactional snapshot. Read times are provenance, not a completeness guarantee.
 See [counted values](COUNTED_VALUES.md) for interpretation and UI behavior.
+
+`POST /record-aggregates` (browser `/api/record-aggregates`) projects existing
+record questions into aggregate-only service-dashboard results. It uses strict
+`RecordQuery` decoding, a 16 KiB request ceiling on both transports, a 55-second
+enclosing timeout and the shared query admission/cancellation owner. Requests
+require exactly one string group and zero offset. Optional `span-duration`,
+recorded span status and fixed time buckets are supported; numeric measures,
+numeric histograms and grouped time series are refused. Numeric predicates and
+reported-edge scope remain available. Invalid requests return 400 before reading
+the source.
+
+The `goo/record-aggregates/v1` response contains question/count/state/groups,
+optional duration/status/time-series summaries, capture time, content basis,
+warnings and separate read receipts. It reads count and complete groups, plus
+exactly one time-series aggregate when requested. It never reads or returns a
+record page, discovered fields, query plan, pagination state or retention token.
+More than 1,000 groups is refused. Source or decoding failures return 502,
+including failures after an earlier aggregate read; partial successful data is
+not substituted.
+
+Each summary retains its existing record grain and exact string-count/nanosecond
+contract. Separate reads can yield `changed_between_reads`; those results retain
+diagnostics but do not support conserved-population actions. Equal aggregates do
+not prove a transactional snapshot. Empty time buckets are no observations in
+that aggregate read, not evidence of service health. Existing `/explore` and
+counted-values responses are unchanged.

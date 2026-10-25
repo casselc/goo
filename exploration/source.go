@@ -219,101 +219,12 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 		}
 	}
 	if plan.Groups != "" {
-		sum := new(big.Int)
-		durationSum := new(big.Int)
-		var durationMin, durationMax *big.Int
-		statusTotals := emptySpanStatus()
-		seenGroups := map[string]bool{}
-		for groupIndex, raw := range r.Groups {
-			var group map[string]json.RawMessage
-			if json.Unmarshal(raw, &group) != nil {
-				return nil, fmt.Errorf("invalid group")
-			}
-			var count string
-			if json.Unmarshal(group["count"], &count) != nil {
-				return nil, fmt.Errorf("invalid group count")
-			}
-			n, ok := new(big.Int).SetString(count, 10)
-			if !ok || n.Sign() < 0 || n.BitLen() > 64 {
-				return nil, fmt.Errorf("invalid group count")
-			}
-			sum.Add(sum, n)
-			if q.Summary == "span-duration" {
-				d, err := DecodeDurationSummary(raw)
-				if err != nil || d.State != "observed" {
-					return nil, fmt.Errorf("invalid grouped duration summary")
-				}
-				for _, key := range []string{"sum_ns", "min_ns", "max_ns", "quantiles_ns"} {
-					delete(group, key)
-				}
-				group["duration"], _ = json.Marshal(d)
-				v, _ := durationDecimal(d.SumNS, 128)
-				durationSum.Add(durationSum, v)
-				lo, _ := durationDecimal(d.MinNS, 64)
-				hi, _ := durationDecimal(d.MaxNS, 64)
-				if durationMin == nil || lo.Cmp(durationMin) < 0 {
-					durationMin = lo
-				}
-				if durationMax == nil || hi.Cmp(durationMax) > 0 {
-					durationMax = hi
-				}
-			}
-			if q.SpanStatus {
-				status, err := DecodeSpanStatus(raw)
-				if err != nil || status.Count == "0" {
-					return nil, fmt.Errorf("invalid grouped span status")
-				}
-				statusTotals.add(*status)
-				for _, k := range []string{"status_error", "status_ok", "status_unset", "status_unknown"} {
-					delete(group, k)
-				}
-				group["spanStatus"], _ = json.Marshal(status)
-			}
-			dimensions := []*string{}
-			for i := range q.GroupBy {
-				key := fmt.Sprintf("g%d", i)
-				v, exists := group[key]
-				if !exists {
-					return nil, fmt.Errorf("missing group dimension")
-				}
-				var value *string
-				if json.Unmarshal(v, &value) != nil {
-					return nil, fmt.Errorf("invalid group dimension")
-				}
-				if e := validateGroupDimension(q.GroupBy[i], value); e != nil {
-					return nil, e
-				}
-				dimensions = append(dimensions, value)
-			}
-			key, _ := json.Marshal(dimensions)
-			if seenGroups[string(key)] {
-				return nil, fmt.Errorf("duplicate group dimensions")
-			}
-			seenGroups[string(key)] = true
-			if q.Numeric != nil {
-				summary, err := decodeNumeric(raw, *q.Numeric, count)
-				if err != nil {
-					return nil, err
-				}
-				group["numeric"], _ = json.Marshal(summary)
-			}
-			if q.Summary == "span-duration" || q.SpanStatus || q.Numeric != nil {
-				r.Groups[groupIndex], _ = json.Marshal(group)
-			}
+		var changed bool
+		r.Groups, changed, e = decodeAggregateGroups(q, r.Groups, r.Count, r.Duration, r.SpanStatus)
+		if e != nil {
+			return nil, e
 		}
-		if r.SpanStatus != nil && *r.SpanStatus != statusTotals {
-			r.State = "changed_between_reads"
-		}
-		if r.Duration != nil {
-			totalSum, _ := durationDecimal(r.Duration.SumNS, 128)
-			if durationSum.Cmp(totalSum) != 0 {
-				r.State = "changed_between_reads"
-			}
-			if durationMin != nil && r.Duration.State == "observed" && (durationMin.String() != r.Duration.MinNS || durationMax.String() != r.Duration.MaxNS) {
-				r.State = "changed_between_reads"
-			}
-		}
-		if sum.Cmp(totalValue) != 0 {
+		if changed {
 			r.State = "changed_between_reads"
 		}
 	}
@@ -368,19 +279,7 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 		if err != nil {
 			return nil, err
 		}
-		sum := new(big.Int)
-		statusTotal := emptySpanStatus()
-		for _, point := range r.TimeSeries {
-			if point.SpanStatus != nil {
-				statusTotal.add(*point.SpanStatus)
-			}
-			n, _ := new(big.Int).SetString(point.Count, 10)
-			sum.Add(sum, n)
-		}
-		if r.SpanStatus != nil && *r.SpanStatus != statusTotal {
-			r.State = "changed_between_reads"
-		}
-		if sum.Cmp(totalValue) != 0 {
+		if !aggregateSeriesAgree(r.Count, r.SpanStatus, nil, r.TimeSeries) {
 			r.State = "changed_between_reads"
 		}
 	}
@@ -421,4 +320,153 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 	h := sha256.Sum256(b)
 	r.Basis = hex.EncodeToString(h[:])
 	return r, nil
+}
+
+// decodeAggregateGroups is shared by full exploration and aggregate-only reads.
+// Legacy parser/re-encoding behavior stays here unchanged; narrower consumers
+// may validate their raw contract before calling it.
+func decodeAggregateGroups(q Query, groups []json.RawMessage, total string, duration *DurationSummary, status *SpanStatusSummary) ([]json.RawMessage, bool, error) {
+	totalValue, _ := new(big.Int).SetString(total, 10)
+	changed := false
+	sum := new(big.Int)
+	durationSum := new(big.Int)
+	var durationMin, durationMax *big.Int
+	statusTotals := emptySpanStatus()
+	seenGroups := map[string]bool{}
+	for groupIndex, raw := range groups {
+		var group map[string]json.RawMessage
+		if json.Unmarshal(raw, &group) != nil {
+			return nil, false, fmt.Errorf("invalid group")
+		}
+		var count string
+		if json.Unmarshal(group["count"], &count) != nil {
+			return nil, false, fmt.Errorf("invalid group count")
+		}
+		n, ok := new(big.Int).SetString(count, 10)
+		if !ok || n.Sign() < 0 || n.BitLen() > 64 {
+			return nil, false, fmt.Errorf("invalid group count")
+		}
+		sum.Add(sum, n)
+		if q.Summary == "span-duration" {
+			d, err := DecodeDurationSummary(raw)
+			if err != nil || d.State != "observed" {
+				return nil, false, fmt.Errorf("invalid grouped duration summary")
+			}
+			for _, key := range []string{"sum_ns", "min_ns", "max_ns", "quantiles_ns"} {
+				delete(group, key)
+			}
+			group["duration"], _ = json.Marshal(d)
+			v, _ := durationDecimal(d.SumNS, 128)
+			durationSum.Add(durationSum, v)
+			lo, _ := durationDecimal(d.MinNS, 64)
+			hi, _ := durationDecimal(d.MaxNS, 64)
+			if durationMin == nil || lo.Cmp(durationMin) < 0 {
+				durationMin = lo
+			}
+			if durationMax == nil || hi.Cmp(durationMax) > 0 {
+				durationMax = hi
+			}
+		}
+		if q.SpanStatus {
+			status, err := DecodeSpanStatus(raw)
+			if err != nil || status.Count == "0" {
+				return nil, false, fmt.Errorf("invalid grouped span status")
+			}
+			statusTotals.add(*status)
+			for _, k := range []string{"status_error", "status_ok", "status_unset", "status_unknown"} {
+				delete(group, k)
+			}
+			group["spanStatus"], _ = json.Marshal(status)
+		}
+		dimensions := []*string{}
+		for i := range q.GroupBy {
+			key := fmt.Sprintf("g%d", i)
+			v, exists := group[key]
+			if !exists {
+				return nil, false, fmt.Errorf("missing group dimension")
+			}
+			var value *string
+			if json.Unmarshal(v, &value) != nil {
+				return nil, false, fmt.Errorf("invalid group dimension")
+			}
+			if e := validateGroupDimension(q.GroupBy[i], value); e != nil {
+				return nil, false, e
+			}
+			dimensions = append(dimensions, value)
+		}
+		key, _ := json.Marshal(dimensions)
+		if seenGroups[string(key)] {
+			return nil, false, fmt.Errorf("duplicate group dimensions")
+		}
+		seenGroups[string(key)] = true
+		if q.Numeric != nil {
+			summary, err := decodeNumeric(raw, *q.Numeric, count)
+			if err != nil {
+				return nil, false, err
+			}
+			group["numeric"], _ = json.Marshal(summary)
+		}
+		if q.Summary == "span-duration" || q.SpanStatus || q.Numeric != nil {
+			groups[groupIndex], _ = json.Marshal(group)
+		}
+	}
+	if status != nil && *status != statusTotals {
+		changed = true
+	}
+	if duration != nil {
+		totalSum, _ := durationDecimal(duration.SumNS, 128)
+		if durationSum.Cmp(totalSum) != 0 {
+			changed = true
+		}
+		if durationMin != nil && duration.State == "observed" && (durationMin.String() != duration.MinNS || durationMax.String() != duration.MaxNS) {
+			changed = true
+		}
+	}
+	if sum.Cmp(totalValue) != 0 {
+		changed = true
+	}
+
+	return groups, changed, nil
+}
+
+// A nil duration preserves the legacy count/status-only series agreement policy.
+func aggregateSeriesAgree(count string, status *SpanStatusSummary, duration *DurationSummary, series []TimePoint) bool {
+	sum := new(big.Int)
+	statusTotal := emptySpanStatus()
+	durationSum := new(big.Int)
+	var low, high *big.Int
+	for _, point := range series {
+		if point.SpanStatus != nil {
+			statusTotal.add(*point.SpanStatus)
+		}
+		n, _ := new(big.Int).SetString(point.Count, 10)
+		sum.Add(sum, n)
+		if duration != nil && point.Duration != nil && point.Duration.State == "observed" {
+			d := point.Duration
+			v, _ := durationDecimal(d.SumNS, 128)
+			durationSum.Add(durationSum, v)
+			lo, _ := durationDecimal(d.MinNS, 64)
+			hi, _ := durationDecimal(d.MaxNS, 64)
+			if low == nil || lo.Cmp(low) < 0 {
+				low = lo
+			}
+			if high == nil || hi.Cmp(high) > 0 {
+				high = hi
+			}
+		}
+	}
+	total, _ := new(big.Int).SetString(count, 10)
+	if sum.Cmp(total) != 0 || status != nil && *status != statusTotal {
+		return false
+	}
+	if duration != nil {
+		v, _ := durationDecimal(duration.SumNS, 128)
+		if durationSum.Cmp(v) != 0 {
+			return false
+		}
+		if low != nil && duration.State == "observed" && (low.String() != duration.MinNS || high.String() != duration.MaxNS) {
+			return false
+		}
+	}
+	return true
 }
