@@ -10274,3 +10274,16 @@ Independent final source review approves the cut. Existing finite configuration
 and boundary checks cover this startup change; no duplicate property quota or
 new lifecycle model is introduced. The isolated real-source browser/capture and
 ordinary non-Go OTel workflow remain separate live acceptance gates below.
+
+
+The first isolated browser attempt exposed a real startup defect before fixture
+ingestion: the existing Activity bootstrap still supplied the lab's `local`
+environment and automatically read logs. That failed run is retained under
+`artifacts/generic-startup/first-failure-diagnostics`, with its owned subprocesses
+stopped and temporary runtime removed. It is not accepted as source-free startup.
+The correction waits for UI configuration, gives generic/unknown profiles a blank
+environment and explicit Start stream, and keeps lab automatic entry unchanged.
+Signal/environment edits before the first applied selector remain local; inert
+Resume controls without a selector are hidden. Focused entry/tail tests and all
+78 Node files pass (7.84s). Independent review approves this correction before
+another frozen live invocation.
