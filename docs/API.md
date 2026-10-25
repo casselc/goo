@@ -597,3 +597,25 @@ mode the optional lab routes `/api/package`, `/api/query`, `/api/explain`,
 `/api/example-questions` and `/api/prebuilts` return JSON 503 with the same code
 and `capability:"example-grammar"` or `"example-catalog"`. This is intentional
 unconfigured functionality, not a claim that the telemetry source failed.
+
+`POST /explore/counted-values` (browser `/api/explore/counted-values`) accepts the
+existing strict `RecordQuery` shape, restricted to exactly one string `groupBy`,
+zero offset and no measure, histogram, summary, bucket, time-series or span-status
+projections. Numeric predicates and reported-edge scope remain supported. Go and
+proxy accept at most 16 KiB; Go uses the same 55-second timeout, admission budget
+and `X-Goo-Query-ID` cancellation owner as `/explore`.
+
+The `goo/counted-values/v1` response contains the original question, total count,
+complete groups (`g0: null|string`, positive string count), capture time and a
+content basis, plus separate count/groups read clocks and bases. Exactly two
+bounded aggregate reads run: count then groups. No record page, source rows,
+retention token or capture is produced. Counts remain canonical decimal strings;
+missing and present-empty group values remain distinct. More than 1,000 groups
+is refused rather than partially represented. Source failures return 502;
+unsupported requests return 400 before source execution.
+
+`observed` and `no_data` describe consistent observed aggregates.
+`changed_between_reads` retains diagnostic results when group counts differ from
+the separately observed total; it is not a population suitable for actions or a
+transactional snapshot. Read times are provenance, not a completeness guarantee.
+See [counted values](COUNTED_VALUES.md) for interpretation and UI behavior.

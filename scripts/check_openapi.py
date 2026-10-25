@@ -81,7 +81,7 @@ def check(spec):
                 requests += 1
                 if isinstance(request, dict):
                     accepted.append((shape, request))
-    assert responses == 288 and requests == 93 and mux_refusals == 16, (responses, requests)
+    assert responses == 298 and requests == 98 and mux_refusals == 17, (responses, requests)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)
@@ -96,6 +96,11 @@ def check(spec):
         wrong = copy.deepcopy(value)
         wrong[{'reset':'replay','batch':'rows','gap':'reason'}[event]] = 123
         assert list(validator(spec, shape).iter_errors(wrong)), f'SSE {event} control accepted'
+    counted_shape={'$ref':'#/components/schemas/CountedValuesResult'}
+    counted_cases=json.loads((ROOT/'testdata/http/counted-values.json').read_text())['cases']
+    counted=next(json.loads(c['response']) for c in counted_cases if c['name']=='success-observed')
+    for wrong in ({**counted,'count':2},{**counted,'count':'02'},{**counted,'state':'healthy'},{**counted,'basis':'not-a-content-basis'},{**counted,'groups':[{'g0':17,'count':'2'}]},{**counted,'groups':[{'g0':None,'count':'0'}]}):
+        assert list(validator(spec,counted_shape).iter_errors(wrong)), 'Counted values negative control accepted'
     # Startup metadata is configuration only, with closed states and no health flags.
     runtime_shape={'$ref':'#/components/schemas/RuntimeCapabilities'}
     configured={'version':'goo/runtime-capabilities/v1','profile':'generic','preparedHTTP':{'state':'unconfigured'},'declaredOperations':{'state':'configured'}}

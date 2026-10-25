@@ -3659,6 +3659,94 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/explore/counted-values": {
+      "post": {
+        "operationId": "post_explore_counted_values",
+        "summary": "POST /explore/counted-values",
+        "tags": [
+          "explore"
+        ],
+        "description": "Current owner: cmd/goo/exploration_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/exploration_http.go",
+        "x-effects": "source-read",
+        "parameters": [
+          {
+            "name": "X-Goo-Query-ID",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+            },
+            "description": "Optional short-lived cancellation capability; repeated/cancelled IDs are refused."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountedValuesResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordQuery"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 16384,
+        "x-browser-body-limit-bytes": 16384,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/inventory": {
       "post": {
         "operationId": "post_inventory",
@@ -5629,6 +5717,9 @@
       },
       "CorrectionReceipt": {
         "$ref": "#/components/schemas/retention.CorrectionReceipt"
+      },
+      "CountedValuesResult": {
+        "$ref": "#/components/schemas/exploration.CountedValuesResult"
       },
       "DashboardPlan": {
         "$ref": "#/components/schemas/exploration.DashboardPlan"
@@ -8962,6 +9053,124 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ComparisonRequest"
+      },
+      "exploration.CountedValue": {
+        "properties": {
+          "count": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "g0": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "g0",
+          "count"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.CountedValue"
+      },
+      "exploration.CountedValuesRead": {
+        "properties": {
+          "basis": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "readAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "readAt",
+          "basis"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.CountedValuesRead"
+      },
+      "exploration.CountedValuesReads": {
+        "properties": {
+          "count": {
+            "$ref": "#/components/schemas/exploration.CountedValuesRead"
+          },
+          "groups": {
+            "$ref": "#/components/schemas/exploration.CountedValuesRead"
+          }
+        },
+        "required": [
+          "count",
+          "groups"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.CountedValuesReads"
+      },
+      "exploration.CountedValuesResult": {
+        "properties": {
+          "basis": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "capturedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "count": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$"
+          },
+          "groups": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/exploration.CountedValue"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "question": {
+            "$ref": "#/components/schemas/exploration.Query"
+          },
+          "reads": {
+            "$ref": "#/components/schemas/exploration.CountedValuesReads"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "no_data",
+              "changed_between_reads"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/counted-values/v1"
+          }
+        },
+        "required": [
+          "version",
+          "question",
+          "capturedAt",
+          "basis",
+          "count",
+          "state",
+          "groups",
+          "reads"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.CountedValuesResult",
+        "description": "Exactly two bounded aggregate reads: complete count then complete string groups, with separate read clocks and content bases. changed_between_reads retains diagnostic observations but must not drive population actions. No source rows, result token, capture, native arithmetic or transactional snapshot."
       },
       "exploration.DashboardDeclaration": {
         "properties": {

@@ -246,6 +246,9 @@
   "CorrectionReceipt": {
     "$ref": "#/components/schemas/retention.CorrectionReceipt"
   },
+  "CountedValuesResult": {
+    "$ref": "#/components/schemas/exploration.CountedValuesResult"
+  },
   "DashboardPlan": {
     "$ref": "#/components/schemas/exploration.DashboardPlan"
   },
@@ -3577,6 +3580,111 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.ComparisonRequest"
+  },
+  "exploration.CountedValue": {
+    "properties": {
+      "count": {
+        "type": "string"
+      },
+      "g0": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "g0",
+      "count"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.CountedValue"
+  },
+  "exploration.CountedValuesRead": {
+    "properties": {
+      "basis": {
+        "type": "string"
+      },
+      "readAt": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "readAt",
+      "basis"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.CountedValuesRead"
+  },
+  "exploration.CountedValuesReads": {
+    "properties": {
+      "count": {
+        "$ref": "#/components/schemas/exploration.CountedValuesRead"
+      },
+      "groups": {
+        "$ref": "#/components/schemas/exploration.CountedValuesRead"
+      }
+    },
+    "required": [
+      "count",
+      "groups"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.CountedValuesReads"
+  },
+  "exploration.CountedValuesResult": {
+    "properties": {
+      "basis": {
+        "type": "string"
+      },
+      "capturedAt": {
+        "type": "string"
+      },
+      "count": {
+        "type": "string"
+      },
+      "groups": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.CountedValue"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "question": {
+        "$ref": "#/components/schemas/exploration.Query"
+      },
+      "reads": {
+        "$ref": "#/components/schemas/exploration.CountedValuesReads"
+      },
+      "state": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "question",
+      "capturedAt",
+      "basis",
+      "count",
+      "state",
+      "groups",
+      "reads"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.CountedValuesResult"
   },
   "exploration.DashboardDeclaration": {
     "properties": {

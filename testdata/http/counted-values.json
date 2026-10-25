@@ -1,0 +1,161 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "empty",
+      "method": "POST",
+      "path": "/explore/counted-values",
+      "body": "",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "unknown",
+      "method": "POST",
+      "path": "/explore/counted-values",
+      "body": "{\"unexpected\":true}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"unexpected\\\"\"}\n"
+    },
+    {
+      "name": "trailing",
+      "method": "POST",
+      "path": "/explore/counted-values",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":20,\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}]} {}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "missing grouping",
+      "method": "POST",
+      "path": "/explore/counted-values",
+      "body": "{}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"signal must be spans or logs\"}\n"
+    },
+    {
+      "name": "source unavailable",
+      "method": "POST",
+      "path": "/explore/counted-values",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":20,\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}]}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "exact size",
+      "method": "POST",
+      "path": "/explore/counted-values",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":20,\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}]}",
+      "padTo": 16384,
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "oversize",
+      "method": "POST",
+      "path": "/explore/counted-values",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":20,\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}]}",
+      "padTo": 16385,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "success-observed",
+      "method": "POST",
+      "path": "/explore/counted-values",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":20,\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}]}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"basis\":\"5dea77e7de67eed6fe59886b57eb91f9ce0c13c581a510c0e399d4d7cad82636\",\"capturedAt\":\"2026-10-25T00:00:00Z\",\"count\":\"2\",\"groups\":[{\"count\":\"2\",\"g0\":\"ERROR\"}],\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"groupBy\":[{\"key\":\"severity\",\"kind\":\"column\"}],\"limit\":20,\"offset\":0,\"signal\":\"logs\",\"toMs\":61000},\"reads\":{\"count\":{\"basis\":\"7117fbcc2d124c7bbac44e977d24168cb28986e4087397e597cc160f6e40c7d1\",\"readAt\":\"2026-10-25T00:00:00Z\"},\"groups\":{\"basis\":\"7fd153e828c70dc5fb9f8caa9bd02569ee2e9fe7503746c32fcd3e65348dc0d1\",\"readAt\":\"2026-10-25T00:00:00Z\"}},\"state\":\"observed\",\"version\":\"goo/counted-values/v1\"}\n"
+    },
+    {
+      "name": "success-no-data",
+      "method": "POST",
+      "path": "/explore/counted-values",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":20,\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}]}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"basis\":\"27f8f4eb98ab9018b0856da120107e913e4386ea98feaf4673626b3965420591\",\"capturedAt\":\"2026-10-25T00:00:00Z\",\"count\":\"0\",\"groups\":[],\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"groupBy\":[{\"key\":\"severity\",\"kind\":\"column\"}],\"limit\":20,\"offset\":0,\"signal\":\"logs\",\"toMs\":61000},\"reads\":{\"count\":{\"basis\":\"59fbab4bac7cb12eee5b33c7df3f95e89686eb8f430c84695e63c7557c702414\",\"readAt\":\"2026-10-25T00:00:00Z\"},\"groups\":{\"basis\":\"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945\",\"readAt\":\"2026-10-25T00:00:00Z\"}},\"state\":\"no_data\",\"version\":\"goo/counted-values/v1\"}\n"
+    },
+    {
+      "name": "success-changed",
+      "method": "POST",
+      "path": "/explore/counted-values",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":20,\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}]}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"basis\":\"9a733402611452cad2dadd8b48c2c24b2703b7aa4cedf5cab893f8d61ecf9ce1\",\"capturedAt\":\"2026-10-25T00:00:00Z\",\"count\":\"2\",\"groups\":[{\"count\":\"1\",\"g0\":\"ERROR\"}],\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"groupBy\":[{\"key\":\"severity\",\"kind\":\"column\"}],\"limit\":20,\"offset\":0,\"signal\":\"logs\",\"toMs\":61000},\"reads\":{\"count\":{\"basis\":\"7117fbcc2d124c7bbac44e977d24168cb28986e4087397e597cc160f6e40c7d1\",\"readAt\":\"2026-10-25T00:00:00Z\"},\"groups\":{\"basis\":\"9766c68feb99327ad162b8dcc686d57550b87fbb66561c53d558e149a948932a\",\"readAt\":\"2026-10-25T00:00:00Z\"}},\"state\":\"changed_between_reads\",\"version\":\"goo/counted-values/v1\"}\n"
+    },
+    {
+      "name": "method",
+      "method": "GET",
+      "path": "/explore/counted-values",
+      "body": "",
+      "status": 405,
+      "headers": {
+        "Allow": "POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    }
+  ]
+}

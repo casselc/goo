@@ -119,18 +119,41 @@ func run() error {
 	if endpoint == "" {
 		return fmt.Errorf("GOO_AUDIT_ENDPOINT is required")
 	}
+	mode := os.Getenv("GOO_AUDIT_MODE")
+	if mode == "" {
+		mode = "explore"
+	}
+	if mode != "explore" && mode != "counted-values" {
+		return fmt.Errorf("GOO_AUDIT_MODE must be explore or counted-values")
+	}
 	a := &audit{base: http.DefaultTransport, kinds: map[string]string{p.Count: "count", p.Rows: "rows", p.Groups: "groups", p.Fields: "fields", p.TimeSeries: "timeSeries", p.GroupedTimeSeries: "groupedTimeSeries"}, reads: []*read{}}
 	s := exploration.Source{Endpoint: endpoint, User: os.Getenv("GOO_AUDIT_USER"), Password: os.Getenv("GOO_AUDIT_PASSWORD"), Client: &http.Client{Transport: a, Timeout: 15 * time.Second}}
 	start := time.Now()
-	result, err := s.Fetch(context.Background(), q)
-	out := map[string]any{"version": "goo/read-audit/v1", "reads": a.reads, "elapsedMs": float64(time.Since(start).Microseconds()) / 1000, "success": err == nil}
-	if result != nil {
-		b, _ := json.Marshal(result)
-		out["resultBytes"] = len(b)
-		out["count"] = result.Count
-		out["groups"] = len(result.Groups)
-		out["state"] = result.State
+	out := map[string]any{"version": "goo/read-audit/v1", "mode": mode}
+	if mode == "counted-values" {
+		var result *exploration.CountedValuesResult
+		result, err = s.FetchCountedValues(context.Background(), q)
+		if result != nil {
+			b, _ := json.Marshal(result)
+			out["resultBytes"] = len(b)
+			out["count"] = result.Count
+			out["groups"] = len(result.Groups)
+			out["state"] = result.State
+		}
+	} else {
+		var result *exploration.Result
+		result, err = s.Fetch(context.Background(), q)
+		if result != nil {
+			b, _ := json.Marshal(result)
+			out["resultBytes"] = len(b)
+			out["count"] = result.Count
+			out["groups"] = len(result.Groups)
+			out["state"] = result.State
+		}
 	}
+	out["reads"] = a.reads
+	out["elapsedMs"] = float64(time.Since(start).Microseconds()) / 1000
+	out["success"] = err == nil
 	// Source errors can contain URL credentials; keep output deliberately generic.
 	encoder := json.NewEncoder(os.Stdout)
 	encoder.SetIndent("", "  ")
