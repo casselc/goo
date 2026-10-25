@@ -3821,6 +3821,16 @@
   "exploration.DashboardRequestInput": {
     "additionalProperties": false,
     "properties": {
+      "dbClientObserved": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "fields": {
         "anyOf": [
           {

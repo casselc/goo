@@ -10009,3 +10009,33 @@ ClickHouse volume, not application telemetry or any product/store contract.
 Whitespace checks pass; **1,407 relative links across 14 changed Markdown files
 resolve**. The final commit and verified `origin/work` head are reported on
 completion.
+
+
+## C2b.1 database clients — source milestone (2026-10-25)
+
+The existing pure dashboard planner gains the current-key `db-client` profile:
+exact Client kind and present nonempty `db.system.name`. Legacy `db.system` is
+not alias-unioned. Advisory same-row Client observations or compatible native
+`db.client.operation.duration` seconds admit automatic selection; HTTP then RPC
+keep priority. Existing successful/failed frozen responses remain unchanged.
+The optional DB descriptor appears only when its metadata is relevant.
+
+The shared presentation is role-aware without relabelling declared or native
+widgets. Dimension priority is operation name, database namespace, then system;
+missing/empty values remain separate and grouping never adds a WHERE constraint.
+These are literal populations across targets, not unique queries or monitored
+server entities. Existing filters/grouping support further explicit scoping.
+No automatic query-summary/raw-SQL grouping, source owner or store is added.
+Recorded span Error and inclusive client duration do not establish server/pool
+health or a database-wide outcome policy. Exact native units remain visible.
+
+Checks pass: focused dashboard suite **0.016s**, full exploration **1.238s**,
+actual handler/old frozen fixtures **0.028s**, independent 16 generated scope/
+role/key grids plus dimension/native/precedence boundaries **0.098s**. All
+**78 Node files pass in 5.69s**; a final DB-only timeline-title copy override
+passes focused tests while preserving HTTP/RPC titles. OpenAPI validates
+**259 responses / 80 admitted requests / 15 mux refusals**, with 76 operations
+and 70 Go routes unchanged. The 189 raw opt-in compiles and skips honestly
+without a ledger. Independent source review approves frozen live acceptance.
+Actual cross-system filtering, trace return, raw-query marker visibility and
+desktop/mobile frames remain live acceptance gates, recorded separately below.

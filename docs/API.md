@@ -526,3 +526,21 @@ not silently aliased or mixed with it. Span observations and native metrics reta
 separate populations, clocks and units. No request deduplication, RPC status-to-
 business-outcome rule, source probe or fallback read is inferred. Profile and hint
 additions do not alter route counts, byte limits or publication effects.
+
+
+Database dependencies use the optional `db-client` dashboard profile and advisory
+`dbClientObserved` boolean. Current `db.system.name` metadata offers a candidate;
+a positive same-scope Client-row hint admits automatic selection after eligible
+HTTP and RPC. A compatible native `db.client.operation.duration` histogram in
+seconds can independently admit the family. Explicit DB without a candidate
+returns 400. Flat keys alone and false/omitted hints do not prove observations or
+absence. A DB descriptor is added only for relevant metadata or explicit choice,
+preserving unrelated successful plans and omitted-profile responses.
+
+DB span questions retain service/environment/namespace/window and require exact
+`SpanKind = Client` plus a present nonempty current `db.system.name`. Legacy
+`db.system` is not an alias. These are observed client dependencies and recorded
+span statuses, not database-server health, database completeness or a deduplicated
+operation count. Native and span duration remain separate populations with
+independent units, intervals and evidence. No new route, source probe, hidden
+fallback, annotation requirement or publication is introduced.

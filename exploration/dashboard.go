@@ -15,6 +15,7 @@ const DashboardNativeLimit = 2
 
 // Inputs are supplied observations, not authenticated source evidence or health.
 type DashboardRequest struct {
+	DBClientObserved   bool                      `json:"dbClientObserved,omitempty"`
 	RPCServerObserved  bool                      `json:"rpcServerObserved,omitempty"`
 	HTTPServerObserved bool                      `json:"httpServerObserved,omitempty"`
 	Profile            string                    `json:"profile,omitempty"`
@@ -94,7 +95,7 @@ func DashboardRecordQuestion(scope InventoryQuestion, service, signal string) Qu
 // PlanServiceDashboard performs no source reads. Every executable widget uses an
 // existing typed evaluator; no SQL, health policy or fleet aggregation is inferred.
 func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclaration) (*DashboardPlan, error) {
-	if in.Profile != "" && in.Profile != "auto" && in.Profile != "all-spans" && in.Profile != "http-server" && in.Profile != "rpc-server" {
+	if in.Profile != "" && in.Profile != "auto" && in.Profile != "all-spans" && in.Profile != "http-server" && in.Profile != "rpc-server" && in.Profile != "db-client" {
 		return nil, fmt.Errorf("unsupported dashboard profile")
 	}
 	if err := in.Scope.Validate(); err != nil {
@@ -155,6 +156,21 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			}
 		}
 	}
+	dbCandidate := false
+	if signals["spans"] {
+		for _, f := range in.Fields {
+			dbCandidate = dbCandidate || f == (Field{Kind: "attribute", Key: "db.system.name"})
+		}
+	}
+	dbAuto := dbCandidate && in.DBClientObserved
+	if signals["metrics"] {
+		for _, instrument := range in.Instruments {
+			if dashboardNativeDB(in.Scope, in.Service, instrument) {
+				dbCandidate, dbAuto = true, true
+			}
+		}
+	}
+	dbActive := false
 	rpcActive := false
 	httpActive := false
 	if in.Profile != "" {
@@ -165,6 +181,8 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 				p.Profile = "http-server"
 			} else if rpcAuto {
 				p.Profile = "rpc-server"
+			} else if dbAuto {
+				p.Profile = "db-client"
 			}
 		}
 		if p.Profile == "http-server" && !httpCandidate {
@@ -173,6 +191,10 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		if p.Profile == "rpc-server" && !rpcCandidate {
 			return nil, fmt.Errorf("RPC server profile requires supplied legacy rpc.system and rpc.method metadata or an eligible legacy duration instrument")
 		}
+		if p.Profile == "db-client" && !dbCandidate {
+			return nil, fmt.Errorf("Database client profile requires supplied current db.system.name metadata or an eligible operation duration instrument")
+		}
+		dbActive = p.Profile == "db-client"
 		rpcActive = p.Profile == "rpc-server"
 		httpActive = p.Profile == "http-server"
 		genericState := "not_observed"
@@ -185,10 +207,14 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			httpState = "candidate"
 			httpReason = "Metadata candidate only. Incoming span observations require exact Server kind and a nonempty current http.request.method in the actual read; conformance is unverified"
 		}
-		p.Families = []DashboardFamily{{Key: "http-server", Title: "Incoming HTTP", State: httpState, Grain: "server-span-record", Reason: httpReason, RuleSet: "goo/http-server-span-observations/v1", Selected: httpActive}, {Key: "all-spans", Title: "All spans", State: genericState, Grain: "span-record", Reason: "Mixed reported span kinds and retries; records are not request throughput", Selected: !httpActive && !rpcActive}}
+		p.Families = []DashboardFamily{{Key: "http-server", Title: "Incoming HTTP", State: httpState, Grain: "server-span-record", Reason: httpReason, RuleSet: "goo/http-server-span-observations/v1", Selected: httpActive}, {Key: "all-spans", Title: "All spans", State: genericState, Grain: "span-record", Reason: "Mixed reported span kinds and retries; records are not request throughput", Selected: !httpActive && !rpcActive && !dbActive}}
 		if rpcCandidate || rpcActive {
 			family := DashboardFamily{Key: "rpc-server", Title: "Incoming RPC", State: "candidate", Grain: "server-span-record", Reason: "Legacy metadata candidate only. Actual reads require exact Server kind and nonempty rpc.system and rpc.method; recorded status is not protocol outcome or conformance", RuleSet: "goo/rpc-server-legacy-span-observations/v1", Selected: rpcActive}
 			p.Families = append(p.Families[:1], append([]DashboardFamily{family}, p.Families[1:]...)...)
+		}
+		if dbCandidate || dbActive {
+			family := DashboardFamily{Key: "db-client", Title: "Database clients", State: "candidate", Grain: "client-span-record", Reason: "Current metadata candidate only. Actual reads require exact Client kind and nonempty db.system.name; observations do not establish database or pool health", RuleSet: "goo/db-client-span-observations/v1", Selected: dbActive}
+			p.Families = append(p.Families[:len(p.Families)-1], family, p.Families[len(p.Families)-1])
 		}
 	}
 	bucket := int64(1000)
@@ -214,6 +240,12 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 				w.Grain = "server-span-record"
 				w.Reason = "Exact Server kind and nonempty legacy RPC system and method; recorded span status is not a protocol outcome policy"
 			}
+			if dbActive && signal == "spans" {
+				q = dashboardDBQuestion(q)
+				w.Title = "Database client span observations"
+				w.Grain = "client-span-record"
+				w.Reason = "Exact Client kind and nonempty current database system; recorded span status is not database server or pool health"
+			}
 			q.BucketMS = bucket
 			q.GroupBy = []Field{{Kind: "column", Key: map[string]string{"spans": "name", "logs": "severity"}[signal]}}
 			if signal == "spans" {
@@ -236,9 +268,11 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			keys = []string{"http.route"}
 		} else if rpcActive {
 			keys = []string{"rpc.method"}
+		} else if dbActive {
+			keys = []string{"db.operation.name", "db.namespace", "db.system.name"}
 		}
 		for _, key := range keys {
-			found := httpActive || rpcActive
+			found := httpActive || rpcActive || dbActive && key == "db.system.name"
 			for _, f := range in.Fields {
 				if f.Kind == "attribute" && f.Key == key {
 					found = true
@@ -254,6 +288,9 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			}
 			if rpcActive {
 				q = dashboardRPCQuestion(q)
+			}
+			if dbActive {
+				q = dashboardDBQuestion(q)
 			}
 			q.GroupBy = []Field{{Kind: "attribute", Key: key}}
 			q.Summary = "span-duration"
@@ -271,6 +308,11 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 				w.Title = "RPC server methods"
 				w.Grain = "server-span-record"
 				w.Reason = "Reported nonempty legacy RPC methods on matching server span observations; no protocol status inference"
+			}
+			if dbActive {
+				w.Title = "Database client " + key
+				w.Grain = "client-span-record"
+				w.Reason = "Literal reported populations across database systems and namespaces; missing and empty labels remain separate, not unique operations or server health"
 			}
 			p.Widgets = append(p.Widgets, w)
 			break
@@ -290,6 +332,12 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			}
 			if rpcActive {
 				a, b := dashboardNativeRPC(in.Scope, in.Service, instruments[i]), dashboardNativeRPC(in.Scope, in.Service, instruments[j])
+				if a != b {
+					return a
+				}
+			}
+			if dbActive {
+				a, b := dashboardNativeDB(in.Scope, in.Service, instruments[i]), dashboardNativeDB(in.Scope, in.Service, instruments[j])
 				if a != b {
 					return a
 				}
@@ -361,6 +409,10 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			if dashboardNativeRPC(in.Scope, in.Service, instrument) {
 				w.Family = "rpc-server"
 				w.Reason = "Independent legacy RPC duration binding in milliseconds; exact identity, temporality and interval coverage remain separate from span counts or conformance"
+			}
+			if dashboardNativeDB(in.Scope, in.Service, instrument) {
+				w.Family = "db-client"
+				w.Reason = "Independent native database operation duration binding in seconds; stream identity and interval coverage remain separate from client span counts or database health"
 			}
 		}
 		p.Widgets = append(p.Widgets, w)
@@ -479,6 +531,27 @@ func dashboardRPCQuestion(q Query) Query {
 }
 func dashboardNativeRPC(scope InventoryQuestion, service string, i measurements.Instrument) bool {
 	if i.Metric != "rpc.server.duration" || i.Unit != "ms" {
+		return false
+	}
+	return dashboardNativeDuration(scope, service, i)
+}
+
+// Database clients use the current key only; legacy keys remain generic fields.
+func dashboardDBQuestion(q Query) Query {
+	parts := []Predicate{}
+	if q.Where != nil {
+		if len(q.Where.All) > 0 {
+			parts = append(parts, q.Where.All...)
+		} else {
+			parts = append(parts, *q.Where)
+		}
+	}
+	parts = append(parts, Predicate{Field: &Field{Kind: "column", Key: "kind"}, Op: "eq", Value: "Client"}, Predicate{Field: &Field{Kind: "attribute", Key: "db.system.name"}, Op: "ne"})
+	q.Where = &Predicate{All: parts}
+	return q
+}
+func dashboardNativeDB(scope InventoryQuestion, service string, i measurements.Instrument) bool {
+	if i.Metric != "db.client.operation.duration" || i.Unit != "s" {
 		return false
 	}
 	return dashboardNativeDuration(scope, service, i)
