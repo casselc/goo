@@ -31,7 +31,7 @@ def check(spec):
     # Check the Python-only public API explicitly; proxy-forwarded routes are Go's.
     python_tree = ast.parse((ROOT / 'server.py').read_text())
     literals = {n.value for n in ast.walk(python_tree) if isinstance(n, ast.Constant) and isinstance(n.value, str)}
-    for path in ('/package', '/example-questions', '/prebuilts', '/query', '/explain'):
+    for path in ('/package', '/example-questions', '/prebuilts', '/query', '/explain', '/ui-config'):
         assert '/api' + path in literals and path in spec['paths']
     for path, item in spec['paths'].items():
         for method, op in item.items():
@@ -81,7 +81,7 @@ def check(spec):
                 requests += 1
                 if isinstance(request, dict):
                     accepted.append((shape, request))
-    assert responses == 277 and requests == 93 and mux_refusals == 15, (responses, requests)
+    assert responses == 288 and requests == 93 and mux_refusals == 16, (responses, requests)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)
@@ -96,6 +96,15 @@ def check(spec):
         wrong = copy.deepcopy(value)
         wrong[{'reset':'replay','batch':'rows','gap':'reason'}[event]] = 123
         assert list(validator(spec, shape).iter_errors(wrong)), f'SSE {event} control accepted'
+    # Startup metadata is configuration only, with closed states and no health flags.
+    runtime_shape={'$ref':'#/components/schemas/RuntimeCapabilities'}
+    configured={'version':'goo/runtime-capabilities/v1','profile':'generic','preparedHTTP':{'state':'unconfigured'},'declaredOperations':{'state':'configured'}}
+    validator(spec,runtime_shape).validate(configured)
+    for wrong in ({**configured,'profile':'production'}, {**configured,'preparedHTTP':{'state':'healthy'}}, {**configured,'sourceHealthy':True}):
+        assert list(validator(spec,runtime_shape).iter_errors(wrong)), 'Runtime metadata negative control accepted'
+    refusal={'$ref':'#/components/schemas/RuntimeCapabilityRefusal'}
+    for wrong in ({'error':'unconfigured','code':'capability_unconfigured','capability':'unknown'}, {'error':'unconfigured','capability':'prepared-http'}):
+        assert list(validator(spec,refusal).iter_errors(wrong)), 'Capability refusal negative control accepted'
     # A preservation claim must carry a capability; unavailable/empty must not.
     shape=spec['paths']['/tail']['post']['x-sse-events']['batch']
     batch={'rows':[],'limited':False,'fromMs':1000,'toMs':61000,'observedAt':'2026-10-23T00:00:00Z','membershipState':'available'}

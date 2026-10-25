@@ -1,5 +1,7 @@
 import base64
 import json
+import ipaddress
+import re
 import os
 import select
 import socket
@@ -10,7 +12,50 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from grammar import PACKAGE, compile_query, summarize
+
+def startup_config(environ):
+    profile = environ.get('GOO_PROFILE', 'lab')
+    if profile not in ('lab', 'generic'):
+        raise ValueError('GOO_PROFILE must be lab or generic; an explicitly empty value is invalid')
+    host = environ.get('GOO_HOST', '127.0.0.1' if profile == 'generic' else '0.0.0.0')
+    if not host or len(host) > 253 or any(c.isspace() for c in host):
+        raise ValueError('GOO_HOST must be a nonempty IPv4 address or hostname')
+    try:
+        address = ipaddress.ip_address(host)
+        if address.version != 4:
+            raise ValueError('GOO_HOST must use IPv4 for this listener')
+    except ValueError as exc:
+        if ':' in host or not all(re.fullmatch(r'[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?', label) for label in host.split('.')):
+            raise ValueError('GOO_HOST must be an IPv4 address or hostname') from exc
+    raw_port = environ.get('GOO_PORT', '8088')
+    if not re.fullmatch(r'[0-9]{1,5}', raw_port) or not 1 <= int(raw_port) <= 65535:
+        raise ValueError('GOO_PORT must be a decimal port from 1 to 65535')
+    for key in ('CLICKHOUSE_URL', 'PACKAGES_URL'):
+        if key not in environ:
+            continue
+        value = environ[key]
+        try:
+            parsed = urllib.parse.urlsplit(value)
+            if not value or any(c.isspace() for c in value) or parsed.scheme not in ('http', 'https') or not parsed.hostname or parsed.query or parsed.fragment:
+                raise ValueError()
+            parsed.port  # Validate an explicitly supplied port without connecting.
+        except ValueError:
+            raise ValueError(key + ' must be an absolute HTTP(S) base URL without query or fragment') from None
+    return profile, host, int(raw_port)
+
+
+PROFILE, BIND_HOST, BIND_PORT = startup_config(os.environ)
+if PROFILE == 'lab':
+    try:
+        from grammar import PACKAGE, compile_query, summarize
+    except (ImportError, OSError, ValueError) as exc:
+        raise RuntimeError('Lab example grammar could not load; use GOO_PROFILE=generic to run without sample files') from exc
+
+
+def ui_config():
+    return {'version': 'goo/ui-config/v1', 'profile': PROFILE,
+            'examples': {'state': 'configured' if PROFILE == 'lab' else 'unconfigured'}}
+
 
 
 def clickhouse(sql, params):
@@ -39,8 +84,16 @@ class Handler(BaseHTTPRequestHandler):
             return
         self.json_response(exc.code, payload)
 
+    def capability_unconfigured(self, capability):
+        self.json_response(503, {'error': 'This example capability is not configured in the generic UI profile',
+                                 'code': 'capability_unconfigured', 'capability': capability})
+
     def do_GET(self):
-        if self.path in ('/api-docs', '/openapi.json'):
+        if self.path == '/api/ui-config':
+            self.json_response(200, ui_config())
+        elif PROFILE == 'generic' and self.path in ('/api/package', '/api/example-questions', '/api/prebuilts'):
+            self.capability_unconfigured('example-grammar' if self.path == '/api/package' else 'example-catalog')
+        elif self.path in ('/api-docs', '/openapi.json'):
             resource = 'index.html' if self.path == '/api-docs' else 'openapi.json'
             self.send_response(200)
             self.send_header('Content-Type', 'text/html; charset=utf-8' if resource.endswith('.html') else 'application/json')
@@ -48,10 +101,10 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write((Path(__file__).parent / 'api' / resource).read_bytes())
         elif self.path == '/api/package': self.json_response(200, PACKAGE)
-        elif self.path.startswith(('/api/retained-evidence','/api/annotations','/api/activity-views','/api/exploration-views','/api/http-package', '/api/operations', '/api/operation-packages', '/api/counter-rates', '/api/histograms', '/api/investigations', '/api/captures', '/api/telemetry-packages', '/api/measurement-packages', '/api/investigation-workflows', '/api/recipes', '/api/documents', '/api/deployments')):
+        elif self.path.startswith(('/api/capabilities','/api/retained-evidence','/api/annotations','/api/activity-views','/api/exploration-views','/api/http-package', '/api/operations', '/api/operation-packages', '/api/counter-rates', '/api/histograms', '/api/investigations', '/api/captures', '/api/telemetry-packages', '/api/measurement-packages', '/api/investigation-workflows', '/api/recipes', '/api/documents', '/api/deployments')):
             try:
                 parsed = urllib.parse.urlsplit(self.path)
-                if not (parsed.path.startswith('/api/retained-evidence/') or parsed.path.startswith('/api/annotations/') or parsed.path.startswith('/api/activity-views/') or parsed.path.startswith('/api/exploration-views/') or parsed.path.startswith('/api/documents/') or parsed.path.startswith('/api/deployments/') or parsed.path.startswith('/api/captures/') or parsed.path.startswith('/api/investigations/') or parsed.path.startswith('/api/telemetry-packages/') or parsed.path in ('/api/retained-evidence','/api/annotations','/api/activity-views','/api/exploration-views','/api/http-package', '/api/operations', '/api/operation-packages', '/api/counter-rates', '/api/histograms', '/api/captures', '/api/telemetry-packages', '/api/measurement-packages', '/api/investigation-workflows', '/api/recipes', '/api/documents', '/api/deployments')): self.send_error(404); return
+                if not (parsed.path.startswith('/api/retained-evidence/') or parsed.path.startswith('/api/annotations/') or parsed.path.startswith('/api/activity-views/') or parsed.path.startswith('/api/exploration-views/') or parsed.path.startswith('/api/documents/') or parsed.path.startswith('/api/deployments/') or parsed.path.startswith('/api/captures/') or parsed.path.startswith('/api/investigations/') or parsed.path.startswith('/api/telemetry-packages/') or parsed.path in ('/api/capabilities','/api/retained-evidence','/api/annotations','/api/activity-views','/api/exploration-views','/api/http-package', '/api/operations', '/api/operation-packages', '/api/counter-rates', '/api/histograms', '/api/captures', '/api/telemetry-packages', '/api/measurement-packages', '/api/investigation-workflows', '/api/recipes', '/api/documents', '/api/deployments')): self.send_error(404); return
                 endpoint = os.getenv('PACKAGES_URL', 'http://localhost:8089') + parsed.path.removeprefix('/api')
                 with urllib.request.urlopen(endpoint + ('?' + parsed.query if parsed.query else ''), timeout=90) as response:
                     self.json_response(200, json.load(response))
@@ -79,6 +132,9 @@ class Handler(BaseHTTPRequestHandler):
         else: self.send_error(404)
 
     def do_POST(self):
+        if PROFILE == 'generic' and self.path in ('/api/query', '/api/explain'):
+            self.capability_unconfigured('example-grammar')
+            return
         if self.path == '/api/tail':
             started = False
             try:
@@ -120,7 +176,7 @@ class Handler(BaseHTTPRequestHandler):
             except Exception as exc:
                 if not started: self.json_response(400 if isinstance(exc, ValueError) else 502, {'error': str(exc)})
             return
-        if self.path.startswith(('/api/retained-evidence/','/api/queries/')) or self.path in ('/api/retained-evidence','/api/annotations','/api/activity-views','/api/exploration-views','/api/population/plan','/api/population/explain','/api/population/explain/plan','/api/population/explain/filter','/api/numeric-histograms/selection','/api/numeric-histograms/comparison-selection','/api/dashboards/plan','/api/metric-discovery','/api/measurements','/api/measurement-packages','/api/measurement-packages/plan','/api/recipes','/api/documents','/api/deployments','/api/captures','/api/captures/live','/api/captures/comparisons','/api/investigations','/api/explore','/api/trace-search','/api/inventory', '/api/discovery','/api/compare','/api/telemetry-packages','/api/telemetry-packages/draft','/api/telemetry-packages/plan','/api/telemetry-packages/numeric-plan'):
+        if self.path.startswith(('/api/retained-evidence/','/api/queries/')) or self.path in ('/api/capabilities','/api/retained-evidence','/api/annotations','/api/activity-views','/api/exploration-views','/api/population/plan','/api/population/explain','/api/population/explain/plan','/api/population/explain/filter','/api/numeric-histograms/selection','/api/numeric-histograms/comparison-selection','/api/dashboards/plan','/api/metric-discovery','/api/measurements','/api/measurement-packages','/api/measurement-packages/plan','/api/recipes','/api/documents','/api/deployments','/api/captures','/api/captures/live','/api/captures/comparisons','/api/investigations','/api/explore','/api/trace-search','/api/inventory', '/api/discovery','/api/compare','/api/telemetry-packages','/api/telemetry-packages/draft','/api/telemetry-packages/plan','/api/telemetry-packages/numeric-plan'):
             try:
                 length = int(self.headers.get('Content-Length', 0))
                 limit = 131072 if self.path in ('/api/population/plan','/api/numeric-histograms/selection','/api/exploration-views','/api/documents','/api/captures/comparisons') else 1048576 if self.path in ('/api/compare','/api/numeric-histograms/comparison-selection') else 65536 if self.path in ('/api/population/explain','/api/population/explain/plan','/api/population/explain/filter','/api/trace-search') or self.path.startswith(('/api/telemetry-packages','/api/measurement-packages','/api/measurements')) else 16384
@@ -156,4 +212,8 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, *_): pass
 
 
-if __name__ == '__main__': ThreadingHTTPServer(('0.0.0.0', 8088), Handler).serve_forever()
+if __name__ == '__main__':
+    try:
+        ThreadingHTTPServer((BIND_HOST, BIND_PORT), Handler).serve_forever()
+    except OSError as exc:
+        raise SystemExit('UI listener could not bind the configured GOO_HOST/GOO_PORT: ' + str(exc)) from None

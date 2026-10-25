@@ -372,6 +372,52 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/capabilities": {
+      "get": {
+        "operationId": "get_capabilities",
+        "summary": "GET /capabilities",
+        "tags": [
+          "capabilities"
+        ],
+        "description": "Current owner: cmd/goo/serve_http.go. Effect: configuration-only. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/serve_http.go",
+        "x-effects": "configuration-only",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeCapabilities"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-schema-coverage": "typed"
+      }
+    },
     "/captures": {
       "get": {
         "operationId": "get_captures",
@@ -1043,6 +1089,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeCapabilityRefusal"
+                }
+              }
+            }
           }
         },
         "x-schema-coverage": "typed"
@@ -1657,6 +1713,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeCapabilityRefusal"
+                }
+              }
+            }
           }
         },
         "x-schema-coverage": "typed"
@@ -1715,6 +1781,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeCapabilityRefusal"
                 }
               }
             }
@@ -1954,6 +2030,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeCapabilityRefusal"
+                }
+              }
+            }
           }
         },
         "x-schema-coverage": "typed"
@@ -2020,6 +2106,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeCapabilityRefusal"
                 }
               }
             }
@@ -4916,6 +5012,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Optional lab example capability is unconfigured; no source read.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeCapabilityRefusal"
+                }
+              }
+            }
           }
         }
       }
@@ -4963,6 +5069,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Optional lab example capability is unconfigured; no source read.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeCapabilityRefusal"
                 }
               }
             }
@@ -5016,6 +5132,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Optional lab example capability is unconfigured; no source read.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeCapabilityRefusal"
+                }
+              }
+            }
           }
         }
       }
@@ -5063,6 +5189,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Optional lab example capability is unconfigured; no source read.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeCapabilityRefusal"
                 }
               }
             }
@@ -5127,6 +5263,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Optional lab example capability is unconfigured; no source read.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeCapabilityRefusal"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -5140,6 +5286,36 @@
           }
         },
         "x-browser-body-limit-bytes": 8192
+      }
+    },
+    "/ui-config": {
+      "get": {
+        "operationId": "get_python_ui_config",
+        "summary": "UI startup configuration",
+        "tags": [
+          "Python configuration"
+        ],
+        "servers": [
+          {
+            "url": "http://localhost:8088/api",
+            "description": "Browser Python proxy (default local lab)"
+          }
+        ],
+        "x-python-source": "server.py",
+        "x-effects": "configuration-only",
+        "x-schema-coverage": "typed",
+        "responses": {
+          "200": {
+            "description": "Pure startup metadata; no source probe.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UIConfig"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/health": {
@@ -22614,6 +22790,98 @@
             "const": "cancellation-requested"
           }
         }
+      },
+      "RuntimeCapabilityState": {
+        "type": "object",
+        "required": [
+          "state"
+        ],
+        "properties": {
+          "state": {
+            "enum": [
+              "configured",
+              "unconfigured"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "RuntimeCapabilities": {
+        "type": "object",
+        "required": [
+          "version",
+          "profile",
+          "preparedHTTP",
+          "declaredOperations"
+        ],
+        "properties": {
+          "version": {
+            "const": "goo/runtime-capabilities/v1"
+          },
+          "profile": {
+            "enum": [
+              "lab",
+              "generic"
+            ]
+          },
+          "preparedHTTP": {
+            "$ref": "#/components/schemas/RuntimeCapabilityState"
+          },
+          "declaredOperations": {
+            "$ref": "#/components/schemas/RuntimeCapabilityState"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Source-free startup configuration only. Configured does not establish source availability, authorization, telemetry coverage, ingestion completeness or service health."
+      },
+      "RuntimeCapabilityRefusal": {
+        "type": "object",
+        "required": [
+          "error",
+          "code",
+          "capability"
+        ],
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "code": {
+            "const": "capability_unconfigured"
+          },
+          "capability": {
+            "enum": [
+              "prepared-http",
+              "declared-operations",
+              "example-grammar",
+              "example-catalog"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "UIConfig": {
+        "type": "object",
+        "required": [
+          "version",
+          "profile",
+          "examples"
+        ],
+        "properties": {
+          "version": {
+            "const": "goo/ui-config/v1"
+          },
+          "profile": {
+            "enum": [
+              "lab",
+              "generic"
+            ]
+          },
+          "examples": {
+            "$ref": "#/components/schemas/RuntimeCapabilityState"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Pure Python UI startup configuration. Does not query or report readiness of ClickHouse or Go."
       },
       "RetentionStatus": {
         "type": "object",

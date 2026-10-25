@@ -15,6 +15,11 @@ schemas['annotations.OperationSpan']['properties']['reportedStatus']['descriptio
 
 schemas['Error'] = {'type': 'object', 'required': ['error'], 'properties': {'error': {'type': 'string'}, 'hint': {'type': 'string'}}, 'additionalProperties': True}
 schemas['Cancellation'] = {'type': 'object', 'required': ['state'], 'properties': {'state': {'const': 'cancellation-requested'}}}
+# Runtime metadata is encoded by small Go/Python maps; schemas are authored here.
+schemas['RuntimeCapabilityState']={'type':'object','required':['state'],'properties':{'state':{'enum':['configured','unconfigured']}},'additionalProperties':False}
+schemas['RuntimeCapabilities']={'type':'object','required':['version','profile','preparedHTTP','declaredOperations'],'properties':{'version':{'const':'goo/runtime-capabilities/v1'},'profile':{'enum':['lab','generic']},'preparedHTTP':{'$ref':'#/components/schemas/RuntimeCapabilityState'},'declaredOperations':{'$ref':'#/components/schemas/RuntimeCapabilityState'}},'additionalProperties':False,'description':'Source-free startup configuration only. Configured does not establish source availability, authorization, telemetry coverage, ingestion completeness or service health.'}
+schemas['RuntimeCapabilityRefusal']={'type':'object','required':['error','code','capability'],'properties':{'error':{'type':'string'},'code':{'const':'capability_unconfigured'},'capability':{'enum':['prepared-http','declared-operations','example-grammar','example-catalog']}},'additionalProperties':False}
+schemas['UIConfig']={'type':'object','required':['version','profile','examples'],'properties':{'version':{'const':'goo/ui-config/v1'},'profile':{'enum':['lab','generic']},'examples':{'$ref':'#/components/schemas/RuntimeCapabilityState'}},'additionalProperties':False,'description':'Pure Python UI startup configuration. Does not query or report readiness of ClickHouse or Go.'}
 # Additive dashboard profiles opt in; omitted/empty/null retain the legacy plan.
 schemas['exploration.DashboardRequestInput']['properties']['profile']['description']='Optional auto, all-spans, http-server, rpc-server, db-client, messaging-consumer or messaging-producer selection. Omitted/empty/null preserves the legacy v2 response. auto selects HTTP only with a positive supplied server-observation hint plus current-key metadata, or a compatible native HTTP instrument. Automatic precedence is HTTP, legacy RPC, DB client, messaging consumer, messaging producer, then All spans. RPC admission requires both legacy rpc.system/rpc.method keys plus a positive rpcServerObserved hint, or an eligible legacy RPC duration instrument. Flat keys alone leave All spans selected; hints are advisory, not authenticated conformance.'
 schemas['exploration.DashboardRequestInput']['properties']['httpServerObserved']['description']='Optional advisory positive hint from already-held, same-scope span observations. false/omitted means no positive hint, not HTTP absence; no new probe or semantic-convention compliance claim is implied.'
@@ -37,7 +42,7 @@ requests = {'/activity-views':'ActivityViewRequest',
  '/recipes':'RecipeRequest','/dashboards/plan':'DashboardRequest','/population/plan':'PopulationRequest','/numeric-histograms/selection':'NumericHistogramSelectionRequest','/numeric-histograms/comparison-selection':'DistributionSelectionRequest','/annotations':'MeaningInput','/exploration-views':'ExplorationView','/deployments':'DeploymentInput','/documents':'DocumentRequest',
  '/population/explain':'ExplanationRequest','/population/explain/plan':'ExplanationRequest','/population/explain/filter':'ExplanationFilterRequest','/captures':'CaptureRequest','/captures/live':'LiveComparisonRequest','/captures/comparisons':'SaveComparisonRequest','/investigations':'InvestigationRequest','/retained-evidence':'RetainRequest','/retained-evidence/{id}/annotations':'CorrectRequest',
 }
-responses = {('post','/population/explain'):'ExplanationResult',('post','/population/explain/plan'):'ExplanationPlan',('post','/population/explain/filter'):'ExplanationStagedQuestion',('post','/activity-views'):'ActivityView',('get','/activity-views/{id}'):'ActivityView',('get','/activity-views'):'ActivityViewList',
+responses = {('get','/capabilities'):'RuntimeCapabilities',('post','/population/explain'):'ExplanationResult',('post','/population/explain/plan'):'ExplanationPlan',('post','/population/explain/filter'):'ExplanationStagedQuestion',('post','/activity-views'):'ActivityView',('get','/activity-views/{id}'):'ActivityView',('get','/activity-views'):'ActivityViewList',
  ('post','/compare'):'CompareResult',('post','/inventory'):'InventoryResult',('post','/discovery'):'ServiceDiscovery',('post','/explore'):'RecordResult',('post','/trace-search'):'TraceSearchResult',
  ('post','/measurements'):'NativeResult',('post','/metric-discovery'):'MetricDiscoveryResult',('post','/telemetry-packages/draft'):'PackagePlan',('post','/telemetry-packages/plan'):'PackagePlan',('post','/telemetry-packages/numeric-plan'):'NumericPlan',('post','/telemetry-packages'):'SavedPackage',('get','/telemetry-packages/{revision}'):'SavedPackage',
  ('post','/recipes'):'RecipePlan',('post','/dashboards/plan'):'DashboardPlan',('post','/population/plan'):'PopulationPlan',('post','/numeric-histograms/selection'):'NumericHistogramSelection',('post','/numeric-histograms/comparison-selection'):'NumericHistogramSelection',
@@ -89,6 +94,7 @@ def browser_limit(path):
  return 16384
 
 def effect(method,path):
+ if path == '/capabilities': return 'configuration-only'
  if path == '/queries/{id}/cancel': return 'cancel-capability'
  if path == '/captures': return 'source-read-and-capture-or-held-explanation-publication'
  if path == '/captures/live': return 'source-read-or-held-draft-publication'
@@ -138,10 +144,12 @@ for (method,path),(file,block) in sorted(route_source.items()):
  if method=='post': codes.add(400)
  if controlled: codes.update((400,409,429))
  if path.startswith('/retained-evidence') and not path.endswith('/status'): codes.add(503)
+ if method=='get' and path in ('/http-package','/operation-packages','/operations','/counter-rates','/histograms'): codes.add(503)
  if path=='/queries/{id}/cancel':codes.update((400,429))
  for status in map(str,sorted(n for n in codes if n>=400)):
   op['responses'][status]={'description':'Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.','content':{'application/json':{'schema':ref('Error')}}}
  if method=='get' and path in ('/http-package','/operation-packages','/operations','/counter-rates','/histograms'):
+  op['responses']['503']['content']['application/json']['schema']=ref('RuntimeCapabilityRefusal')
   op['responses']['400']['content']['text/plain']={'schema':{'type':'string'},'example':'{"error":"unsupported query parameter"}\n'}
  if path=='/queries/{id}/cancel':
   op['responses']['200']['content']['application/json']['schema']=ref('Cancellation');op['x-schema-coverage']='typed'
@@ -172,6 +180,10 @@ schemas['LegacyPackage']={'type':'object','required':['apiVersion','id','views']
 schemas['LegacyResult']={'type':'object','required':['expression','sql','parameters','evaluatedAt','evidence','limit'],'properties':{'expression':ref('LegacyQuery'),'sql':{'type':'string'},'parameters':{'type':'object','additionalProperties':{'type':'string'}},'evaluatedAt':{'type':'integer'},'evidence':{'const':'demo-unverified'},'limit':{'type':['integer','null']},'rows':{'type':'array','items':{'type':'object','additionalProperties':True}},'summary':{'type':['object','null']},'possiblyTruncated':{'type':'boolean'}}}
 for method,path,model in [('get','/package','LegacyPackage'),('get','/prebuilts','PrebuiltRegistry'),('get','/example-questions','ExampleQuestions'),('post','/query','LegacyResult'),('post','/explain','LegacyResult')]:
  op=spec['paths'][path][method];op['responses']['200']['content']['application/json']['schema']=ref(model);op['responses']['200']['description']='Current Python lab response; record rows remain adapter-shaped objects.';op['x-schema-coverage']='typed-envelope'
+ui_config={'operationId':'get_python_ui_config','summary':'UI startup configuration','tags':['Python configuration'],'servers':[spec['servers'][0]],'x-python-source':'server.py','x-effects':'configuration-only','x-schema-coverage':'typed','responses':{'200':{'description':'Pure startup metadata; no source probe.','content':{'application/json':{'schema':ref('UIConfig')}}}}}
+spec['paths']['/ui-config']={'get':ui_config}
+for method,path in [('get','/package'),('get','/example-questions'),('get','/prebuilts'),('post','/query'),('post','/explain')]:
+ spec['paths'][path][method]['responses']['503']={'description':'Optional lab example capability is unconfigured; no source read.','content':{'application/json':{'schema':ref('RuntimeCapabilityRefusal')}}}
 health={'operationId':'get_python_health','summary':'ClickHouse lab health probe','tags':['Python lab'],'servers':[{'url':'http://localhost:8088','description':'Python root (no /api prefix)'}],'x-python-source':'server.py','x-effects':'source-read','x-schema-coverage':'typed','responses':{}}
 for status in ('200','503'):health['responses'][status]={'description':'Readonly SELECT 1 probe; does not establish ingestion completeness.','content':{'application/json':{'schema':{'type':'object','required':['ok'],'properties':{'ok':{'type':'boolean'},'error':{'type':'string'}}}}}}
 spec['paths']['/health']={'get':health}

@@ -10240,3 +10240,37 @@ Final whitespace checks pass, and **1,382 relative links across all 13 Markdown
 files changed in this round resolve**. The complete changed documentation and
 frames are synchronized to the running local query service before publication.
 The final commit and verified `origin/work` head are reported after pushing.
+
+
+## C1 generic-source startup — reviewed source (2026-10-25)
+
+Go `serve-http --profile generic` no longer requires demo bindings, inventory,
+instrumentation scope or a default checkout operation package. The existing lab
+profile remains the default. Explicit optional prepared flags are all-or-none;
+invalid, missing or malformed explicitly configured packages fail startup. Pure
+configuration metadata reports enabled optional families without probing telemetry.
+Five unconfigured family GET routes return typed 503 refusals rather than a healthy
+empty inventory. Historical investigation GET still reopens saved bytes, while
+refresh without the installed package retains its existing 409 behavior.
+
+Python `GOO_PROFILE=generic` starts without importing grammar or reading disabled
+sample assets. UI/API assets and existing Go proxies remain available. Independent
+UI and Go capability metadata describe configuration, not source connectivity or
+health. The browser gates optional examples/prepared controls and distinguishes an
+unconfigured declaration registry from transport failure. Generic source, native
+and saved-work execution owners and custody formats are unchanged.
+
+Focused startup tests include an empty-cwd child process, absent/partial/explicit-
+empty/invalid configuration and preserved optional packages. Broad `cmd/goo` tests
+pass (0.858s). Startup/proxy Python checks pass 13 tests (1.67s), including an
+asset-only runtime without grammar, definitions or examples; socket-dependent
+checks used authorized local loopback access. All 78 Node files pass (7.29s), and
+inline bootstrap syntax checks pass. OpenAPI validates 78 operations (71 Go),
+408 schemas, 288 responses, 93 admitted requests and 16 mux refusals. Counting
+source controls verify capability metadata and unconfigured refusals add zero
+source reads. Earlier frozen response fixtures remain unchanged.
+
+Independent final source review approves the cut. Existing finite configuration
+and boundary checks cover this startup change; no duplicate property quota or
+new lifecycle model is introduced. The isolated real-source browser/capture and
+ordinary non-Go OTel workflow remain separate live acceptance gates below.

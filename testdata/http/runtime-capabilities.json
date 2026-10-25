@@ -1,0 +1,187 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "generic-unconfigured",
+      "method": "GET",
+      "path": "/capabilities",
+      "body": "",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"declaredOperations\":{\"state\":\"unconfigured\"},\"preparedHTTP\":{\"state\":\"unconfigured\"},\"profile\":\"generic\",\"version\":\"goo/runtime-capabilities/v1\"}\n",
+      "profile": "generic"
+    },
+    {
+      "name": "generic-configured",
+      "method": "GET",
+      "path": "/capabilities",
+      "body": "",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"declaredOperations\":{\"state\":\"configured\"},\"preparedHTTP\":{\"state\":\"configured\"},\"profile\":\"generic\",\"version\":\"goo/runtime-capabilities/v1\"}\n",
+      "profile": "generic",
+      "prepared": true,
+      "operations": true
+    },
+    {
+      "name": "generic-prepared-only",
+      "method": "GET",
+      "path": "/capabilities",
+      "body": "",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"declaredOperations\":{\"state\":\"unconfigured\"},\"preparedHTTP\":{\"state\":\"configured\"},\"profile\":\"generic\",\"version\":\"goo/runtime-capabilities/v1\"}\n",
+      "profile": "generic",
+      "prepared": true
+    },
+    {
+      "name": "generic-operations-only",
+      "method": "GET",
+      "path": "/capabilities",
+      "body": "",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"declaredOperations\":{\"state\":\"configured\"},\"preparedHTTP\":{\"state\":\"unconfigured\"},\"profile\":\"generic\",\"version\":\"goo/runtime-capabilities/v1\"}\n",
+      "profile": "generic",
+      "operations": true
+    },
+    {
+      "name": "lab-configured",
+      "method": "GET",
+      "path": "/capabilities",
+      "body": "",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"declaredOperations\":{\"state\":\"configured\"},\"preparedHTTP\":{\"state\":\"configured\"},\"profile\":\"lab\",\"version\":\"goo/runtime-capabilities/v1\"}\n",
+      "profile": "lab",
+      "prepared": true,
+      "operations": true
+    },
+    {
+      "name": "capabilities-POST-refused",
+      "method": "POST",
+      "path": "/capabilities",
+      "body": "",
+      "status": 405,
+      "headers": {
+        "Allow": "GET, HEAD",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n",
+      "profile": "generic"
+    },
+    {
+      "name": "capabilities-query-refused",
+      "method": "GET",
+      "path": "/capabilities",
+      "body": "",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"no query parameters supported\"}\n",
+      "profile": "generic",
+      "query": "?foreign=1"
+    },
+    {
+      "name": "unconfigured/http-package",
+      "method": "GET",
+      "path": "/http-package",
+      "body": "",
+      "status": 503,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"capability\":\"prepared-http\",\"code\":\"capability_unconfigured\",\"error\":\"capability is not configured for this runtime\"}\n"
+    },
+    {
+      "name": "unconfigured/operation-packages",
+      "method": "GET",
+      "path": "/operation-packages",
+      "body": "",
+      "status": 503,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"capability\":\"declared-operations\",\"code\":\"capability_unconfigured\",\"error\":\"capability is not configured for this runtime\"}\n"
+    },
+    {
+      "name": "unconfigured/operations",
+      "method": "GET",
+      "path": "/operations",
+      "body": "",
+      "status": 503,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"capability\":\"declared-operations\",\"code\":\"capability_unconfigured\",\"error\":\"capability is not configured for this runtime\"}\n"
+    },
+    {
+      "name": "unconfigured/counter-rates",
+      "method": "GET",
+      "path": "/counter-rates",
+      "body": "",
+      "status": 503,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"capability\":\"declared-operations\",\"code\":\"capability_unconfigured\",\"error\":\"capability is not configured for this runtime\"}\n"
+    },
+    {
+      "name": "unconfigured/histograms",
+      "method": "GET",
+      "path": "/histograms",
+      "body": "",
+      "status": 503,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"capability\":\"declared-operations\",\"code\":\"capability_unconfigured\",\"error\":\"capability is not configured for this runtime\"}\n"
+    }
+  ]
+}

@@ -569,3 +569,31 @@ independently admit the consumer family. Its processing-duration population,
 identity, intervals and units remain separate from Consumer span observations;
 metric shape does not prove matching operation values or convention compliance.
 No new routes, transport budgets or publication effects are introduced.
+
+`GET /capabilities` (browser `GET /api/capabilities`) reports source-free Go
+startup metadata: `{version:"goo/runtime-capabilities/v1", profile:"lab"|"generic",
+preparedHTTP:{state:"configured"|"unconfigured"},
+declaredOperations:{state:"configured"|"unconfigured"}}`. No query parameters are
+accepted. Configured means the optional startup inputs were loaded; it does not
+establish ClickHouse reachability, ingestion, telemetry coverage, readiness,
+authorization or application health. Generic startup requires neither prepared
+HTTP binding/inventory nor operation manifests. Explicitly supplied optional
+configuration is still validated; the lab profile retains its existing defaults.
+
+Absent prepared HTTP returns JSON 503 from `/http-package`; absent declared
+operations returns JSON 503 from `/operation-packages`, `/operations`,
+`/counter-rates` and `/histograms`. These responses contain `error`,
+`code:"capability_unconfigured"` and `capability:"prepared-http"` or
+`"declared-operations"`, before any source read. Existing configured route
+responses retain their previous wire behavior. Generic record exploration,
+discovery and supplied-data planning do not require those optional capabilities.
+
+Python `GET /api/ui-config` separately returns pure startup configuration:
+`{version:"goo/ui-config/v1",profile:"lab"|"generic",
+examples:{state:"configured"|"unconfigured"}}`. It does not contact Go or
+ClickHouse. `/api/capabilities` transparently forwards Go's capability response;
+UI configuration and Go configuration describe their own processes. In generic
+mode the optional lab routes `/api/package`, `/api/query`, `/api/explain`,
+`/api/example-questions` and `/api/prebuilts` return JSON 503 with the same code
+and `capability:"example-grammar"` or `"example-catalog"`. This is intentional
+unconfigured functionality, not a claim that the telemetry source failed.
