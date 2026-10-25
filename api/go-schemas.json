@@ -3648,6 +3648,40 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.DashboardDeclaration"
   },
+  "exploration.DashboardFamily": {
+    "properties": {
+      "grain": {
+        "type": "string"
+      },
+      "key": {
+        "type": "string"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "ruleSet": {
+        "type": "string"
+      },
+      "selected": {
+        "type": "boolean"
+      },
+      "state": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "key",
+      "title",
+      "state",
+      "grain",
+      "selected"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.DashboardFamily"
+  },
   "exploration.DashboardNativeOption": {
     "properties": {
       "default": {
@@ -3703,6 +3737,19 @@
           }
         ]
       },
+      "families": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.DashboardFamily"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "nativeLimit": {
         "type": "integer"
       },
@@ -3718,6 +3765,9 @@
             "type": "null"
           }
         ]
+      },
+      "profile": {
+        "type": "string"
       },
       "scope": {
         "$ref": "#/components/schemas/exploration.InventoryQuestion"
@@ -3791,6 +3841,16 @@
           }
         ]
       },
+      "httpServerObserved": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "instruments": {
         "anyOf": [
           {
@@ -3832,6 +3892,16 @@
                 "type": "null"
               }
             ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "profile": {
+        "anyOf": [
+          {
+            "type": "string"
           },
           {
             "type": "null"
@@ -3884,6 +3954,9 @@
   },
   "exploration.DashboardWidget": {
     "properties": {
+      "family": {
+        "type": "string"
+      },
       "grain": {
         "type": "string"
       },

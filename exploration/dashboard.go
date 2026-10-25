@@ -15,11 +15,13 @@ const DashboardNativeLimit = 2
 
 // Inputs are supplied observations, not authenticated source evidence or health.
 type DashboardRequest struct {
-	Scope       InventoryQuestion         `json:"scope"`
-	Service     string                    `json:"service"`
-	Signals     []string                  `json:"signals"`
-	Fields      []Field                   `json:"fields"`
-	Instruments []measurements.Instrument `json:"instruments"`
+	HTTPServerObserved bool                      `json:"httpServerObserved,omitempty"`
+	Profile            string                    `json:"profile,omitempty"`
+	Scope              InventoryQuestion         `json:"scope"`
+	Service            string                    `json:"service"`
+	Signals            []string                  `json:"signals"`
+	Fields             []Field                   `json:"fields"`
+	Instruments        []measurements.Instrument `json:"instruments"`
 	// Nil uses defaults; an explicit empty list selects no native reads.
 	NativeSelection *[]string `json:"nativeSelection,omitempty"`
 }
@@ -49,6 +51,7 @@ type DashboardOperation struct {
 	Role string `json:"role"`
 }
 type DashboardWidget struct {
+	Family      string                 `json:"family,omitempty"`
 	Key         string                 `json:"key"`
 	Title       string                 `json:"title"`
 	State       string                 `json:"state"`
@@ -57,7 +60,18 @@ type DashboardWidget struct {
 	Query       *Query                 `json:"query,omitempty"`
 	Measurement *measurements.Question `json:"measurement,omitempty"`
 }
+type DashboardFamily struct {
+	Key      string `json:"key"`
+	Title    string `json:"title"`
+	State    string `json:"state"`
+	Grain    string `json:"grain"`
+	Reason   string `json:"reason,omitempty"`
+	RuleSet  string `json:"ruleSet,omitempty"`
+	Selected bool   `json:"selected"`
+}
 type DashboardPlan struct {
+	Profile       string                  `json:"profile,omitempty"`
+	Families      []DashboardFamily       `json:"families,omitempty"`
 	Version       string                  `json:"version"`
 	Scope         InventoryQuestion       `json:"scope"`
 	Service       string                  `json:"service"`
@@ -79,6 +93,9 @@ func DashboardRecordQuestion(scope InventoryQuestion, service, signal string) Qu
 // PlanServiceDashboard performs no source reads. Every executable widget uses an
 // existing typed evaluator; no SQL, health policy or fleet aggregation is inferred.
 func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclaration) (*DashboardPlan, error) {
+	if in.Profile != "" && in.Profile != "auto" && in.Profile != "all-spans" && in.Profile != "http-server" {
+		return nil, fmt.Errorf("unsupported dashboard profile")
+	}
 	if err := in.Scope.Validate(); err != nil {
 		return nil, err
 	}
@@ -103,6 +120,49 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 	scope := in.Scope
 	scope.Namespace = in.Scope.Namespace.Clone()
 	p := &DashboardPlan{Version: DashboardVersion, Scope: scope, Service: in.Service, Widgets: []DashboardWidget{}, Declarations: []DashboardDeclaration{}, NativeOptions: []DashboardNativeOption{}, NativeLimit: DashboardNativeLimit, Warnings: []string{"Metadata suggests widgets, not service health or telemetry completeness. Each widget is a separate bounded source read; no transactional snapshot is claimed.", "Counts are captured records, not request throughput. Generic spans include retries and mixed span kinds; unset status is not verified success.", "Native evaluations preserve full OTel identity, units and temporality. At most two supported instruments are loaded; selection is local to this service visit, not saved dashboard configuration."}}
+	httpCandidate := false
+	httpAuto := false
+	if signals["spans"] {
+		for _, f := range in.Fields {
+			if f == (Field{Kind: "attribute", Key: "http.request.method"}) {
+				httpCandidate = true
+				httpAuto = in.HTTPServerObserved
+			}
+		}
+	}
+	if signals["metrics"] {
+		for _, instrument := range in.Instruments {
+			if dashboardNativeHTTP(in.Scope, in.Service, instrument) {
+				httpCandidate = true
+				httpAuto = true
+			}
+		}
+	}
+	httpActive := false
+	if in.Profile != "" {
+		p.Profile = in.Profile
+		if p.Profile == "auto" {
+			p.Profile = "all-spans"
+			if httpAuto {
+				p.Profile = "http-server"
+			}
+		}
+		if p.Profile == "http-server" && !httpCandidate {
+			return nil, fmt.Errorf("HTTP server profile requires supplied current HTTP metadata or an eligible duration instrument")
+		}
+		httpActive = p.Profile == "http-server"
+		genericState := "not_observed"
+		if signals["spans"] {
+			genericState = "supported"
+		}
+		httpState := "not_observed"
+		httpReason := "No current HTTP method key or eligible HTTP duration instrument supplied; coverage unknown"
+		if httpCandidate {
+			httpState = "candidate"
+			httpReason = "Metadata candidate only. Incoming span observations require exact Server kind and a nonempty current http.request.method in the actual read; conformance is unverified"
+		}
+		p.Families = []DashboardFamily{{Key: "http-server", Title: "Incoming HTTP", State: httpState, Grain: "server-span-record", Reason: httpReason, RuleSet: "goo/http-server-span-observations/v1", Selected: httpActive}, {Key: "all-spans", Title: "All spans", State: genericState, Grain: "span-record", Reason: "Mixed reported span kinds and retries; records are not request throughput", Selected: !httpActive}}
+	}
 	bucket := int64(1000)
 	for _, b := range []int64{1000, 10000, 60000, 300000} {
 		bucket = b
@@ -114,6 +174,12 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		w := DashboardWidget{Key: signal, Title: map[string]string{"spans": "Span activity and duration", "logs": "Log activity and severity"}[signal], Grain: map[string]string{"spans": "span-record", "logs": "log-record"}[signal], State: "not_observed"}
 		if signals[signal] {
 			q := DashboardRecordQuestion(in.Scope, in.Service, signal)
+			if httpActive && signal == "spans" {
+				q = dashboardHTTPQuestion(q)
+				w.Title = "HTTP server span observations"
+				w.Grain = "server-span-record"
+				w.Reason = "Exact Server kind and nonempty current HTTP method; observed span status is not a verified HTTP outcome policy"
+			}
 			q.BucketMS = bucket
 			q.GroupBy = []Field{{Kind: "column", Key: map[string]string{"spans": "name", "logs": "severity"}[signal]}}
 			if signal == "spans" {
@@ -125,11 +191,18 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		} else {
 			w.Reason = "Not observed in supplied inventory; coverage unknown"
 		}
+		if in.Profile != "" {
+			w.Family = map[string]string{"spans": p.Profile, "logs": "logs"}[signal]
+		}
 		p.Widgets = append(p.Widgets, w)
 	}
 	if signals["spans"] {
-		for _, key := range []string{"http.route", "rpc.method", "db.system.name", "db.system", "messaging.destination.name", "messaging.system"} {
-			found := false
+		keys := []string{"http.route", "rpc.method", "db.system.name", "db.system", "messaging.destination.name", "messaging.system"}
+		if httpActive {
+			keys = []string{"http.route"}
+		}
+		for _, key := range keys {
+			found := httpActive
 			for _, f := range in.Fields {
 				if f.Kind == "attribute" && f.Key == key {
 					found = true
@@ -140,10 +213,22 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 				continue
 			}
 			q := DashboardRecordQuestion(in.Scope, in.Service, "spans")
+			if httpActive {
+				q = dashboardHTTPQuestion(q)
+			}
 			q.GroupBy = []Field{{Kind: "attribute", Key: key}}
 			q.Summary = "span-duration"
 			q.SpanStatus = true
-			p.Widgets = append(p.Widgets, DashboardWidget{Key: "dimension", Title: "Observed " + key, State: "supported", Grain: "span-record", Query: &q})
+			w := DashboardWidget{Key: "dimension", Title: "Observed " + key, State: "supported", Grain: "span-record", Query: &q}
+			if in.Profile != "" {
+				w.Family = p.Profile
+			}
+			if httpActive {
+				w.Title = "HTTP server routes"
+				w.Grain = "server-span-record"
+				w.Reason = "Missing and empty routes remain separate; only matching server span observations are counted"
+			}
+			p.Widgets = append(p.Widgets, w)
 			break
 		}
 	}
@@ -152,6 +237,19 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 	var instruments []measurements.Instrument
 	json.Unmarshal(raw, &instruments)
 	sort.Slice(instruments, func(i, j int) bool {
+		if in.Profile != "" {
+			if httpActive {
+				a, b := dashboardNativeHTTP(in.Scope, in.Service, instruments[i]), dashboardNativeHTTP(in.Scope, in.Service, instruments[j])
+				if a != b {
+					return a
+				}
+			}
+			a, _ := json.Marshal(instruments[i].Definition)
+			b, _ := json.Marshal(instruments[j].Definition)
+			if string(a) != string(b) {
+				return string(a) < string(b)
+			}
+		}
 		a, _ := json.Marshal(instruments[i])
 		b, _ := json.Marshal(instruments[j])
 		return string(a) < string(b)
@@ -203,7 +301,15 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			continue
 		}
 		native++
-		p.Widgets = append(p.Widgets, DashboardWidget{Key: fmt.Sprintf("native-%d", native), Title: d.Title, State: "supported", Grain: "per-stream", Measurement: &q})
+		w := DashboardWidget{Key: fmt.Sprintf("native-%d", native), Title: d.Title, State: "supported", Grain: "per-stream", Measurement: &q}
+		if in.Profile != "" {
+			w.Family = "native"
+			if dashboardNativeHTTP(in.Scope, in.Service, instrument) {
+				w.Family = "http-server"
+				w.Reason = "Independent native HTTP duration binding; units, temporality and interval coverage require evaluation, not inferred span counts or conformance"
+			}
+		}
+		p.Widgets = append(p.Widgets, w)
 	}
 	if len(selected) != 0 {
 		return nil, fmt.Errorf("native selection is absent from supported instrument inventory")
@@ -267,4 +373,29 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		}
 	}
 	return p, nil
+}
+
+// dashboardHTTPQuestion narrows the existing service/namespace selector. The
+// current-key method policy is explicit: missing and reported empty are excluded;
+// custom nonempty method strings remain reported values, not verified conformance.
+func dashboardHTTPQuestion(q Query) Query {
+	parts := []Predicate{}
+	if q.Where != nil {
+		if len(q.Where.All) > 0 {
+			parts = append(parts, q.Where.All...)
+		} else {
+			parts = append(parts, *q.Where)
+		}
+	}
+	parts = append(parts, Predicate{Field: &Field{Kind: "column", Key: "kind"}, Op: "eq", Value: "Server"}, Predicate{Field: &Field{Kind: "attribute", Key: "http.request.method"}, Op: "ne"})
+	q.Where = &Predicate{All: parts}
+	return q
+}
+func dashboardNativeHTTP(scope InventoryQuestion, service string, i measurements.Instrument) bool {
+	if !i.Supported || i.Definition == nil || i.Kind != "histogram" || i.Metric != "http.server.request.duration" || (i.Unit != "s" && i.Unit != "ms") || (i.Temporality != 1 && i.Temporality != 2) {
+		return false
+	}
+	d := i.Definition
+	q := measurements.Question{Definition: *d, FromMS: scope.FromMS, ToMS: scope.ToMS}
+	return d.Kind == i.Kind && d.Source.Metric == i.Metric && d.Source.Unit == i.Unit && d.Source.Scope == i.Scope && d.Source.Version == i.Version && d.Source.SchemaURL == i.SchemaURL && d.Source.Namespace.Equal(scope.Namespace) && d.Environment == scope.Environment && len(d.Source.Services) == 1 && d.Source.Services[0] == service && q.Validate() == nil
 }

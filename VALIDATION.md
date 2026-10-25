@@ -9737,3 +9737,36 @@ from executing. No temporary failing test was added to the repository.
 This is local validation of the fast commands and workflow wiring, not a completed
 GitHub-hosted run or evidence that optional integrations passed. Logs are local
 `/tmp/goo-c2a1-root-go.log` and `/tmp/goo-c2a1-node-baseline.log`.
+
+
+## C2a.1 HTTP dashboard source contract (2026-10-25)
+
+The existing pure service planner gains opt-in automatic/HTTP/All spans profiles
+and additive family descriptors. Omitted-profile v2 output stays byte-identical,
+including a rich pre-change response and the existing planning fixtures. HTTP
+queries require exact reported Server kind and present nonempty current HTTP
+method. Flat key metadata only offers a candidate. Automatic admission requires
+a positive same-row observation in the existing scoped service page or an
+eligible native HTTP duration instrument; no extra discovery query is added.
+
+The UI preserves the resolved profile across range/reset/native changes. Review
+identified and corrected both plan-wide HTTP relabelling of declared widgets
+and an auto-selection continuity bug that could otherwise widen a narrowed
+population. Unavailable HTTP prerequisites do not offer a predictably refused
+selector. Each source owner retains existing cancellation/generation guards.
+
+Checks: backend dashboard tests **0.051s**; independent final dashboard tests
+**0.012s**; all **78 Node files pass in 3.10s** before the final one-line resolved-
+profile persistence correction (syntax checked, with the actual range regression
+required in browser acceptance). API generation/conformance passes **240 frozen
+responses, 65 admitted requests, 15 mux refusals**, with no new route; actual
+new/legacy dashboard handler checks pass **0.047s**. The 76-operation/70-Go
+inventory is unchanged. Independent verification passes 24 generated literal
+scope/time identities with exhaustive kind/method/namespace predicate grids and
+small native-priority/fallback tables in **0.036s**. This pure planner does not
+require a new scheduling model or a fixed negative-control quota.
+
+Independent final backend/UI source review **APPROVES** the corrected contract
+for live acceptance. Browser journeys, screenshots and deployed source equality
+are still pending in this source milestone; the following entry records their
+actual outcomes rather than treating unit checks as deployed evidence.

@@ -474,3 +474,34 @@ query owner. Validation failures return 400; source/response-bound failures
 return 502. No result-retention token, capture publication or paired-evidence
 format is introduced. Opening a trace from a result is a separate explicit
 existing record-context read. See [the semantic contract](TRACE_SEARCH.md).
+
+
+## Automatic service dashboard families
+
+`POST /dashboards/plan` remains a pure planning operation. It accepts optional
+`DashboardRequest.profile`: `auto`, `all-spans` or `http-server`. Omitting it
+(including its existing empty/null decoding) preserves the legacy v2 response
+without new profile/family fields. Existing request ceilings are unchanged: Go
+256 KiB and the browser proxy 16 KiB. No source execution or new route is added.
+
+Opt-in plans add selected `profile`, `families` descriptors and optional widget
+`family` identities. A descriptor carries key, title, state, grain, selected
+state and optional reason/rule-set identity. HTTP metadata is explicitly a
+**candidate**, not proof that the service has HTTP server observations, follows
+a particular semantic-convention version or is healthy. `auto` selects HTTP only
+with both current span-key metadata and an advisory positive `httpServerObserved`
+hint, or a compatible native HTTP instrument. The hint comes from already-held
+same-scope observations; false/omitted means no positive hint, not absence. Flat
+keys alone leave All spans selected while offering the HTTP candidate. An
+explicit unsupported HTTP profile returns 400 instead of silently changing intent.
+
+HTTP span questions retain service/environment/namespace/window and require exact
+physical `SpanKind = Server` plus a present nonempty current
+`attribute:http.request.method`. Legacy `http.method` is not silently unioned.
+HTTP keys observed only on client spans can suggest the candidate but do not
+automatically admit it without a positive server hint or compatible native
+instrument. An explicitly selected HTTP query can return known empty; the UI
+offers an explicit All spans switch without a hidden fallback query. Recorded span status, HTTP status and
+business outcome stay distinct. Counts are span observations, not deduplicated
+requests. Related native instruments keep separate stream identity, units and
+evidence bases. See [automatic dashboards](AUTOMATIC_DASHBOARDS.md).

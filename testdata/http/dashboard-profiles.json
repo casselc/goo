@@ -1,0 +1,145 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "auto-current-HTTP-candidate",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"fields\":[{\"kind\":\"attribute\",\"key\":\"http.request.method\"},{\"kind\":\"attribute\",\"key\":\"http.route\"}],\"instruments\":[],\"profile\":\"auto\",\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"namespace\":{\"mode\":\"value\",\"value\":\"commerce\"},\"toMs\":61000},\"service\":\"checkout\",\"signals\":[\"spans\",\"logs\"]}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"profile\":\"all-spans\",\"families\":[{\"key\":\"http-server\",\"title\":\"Incoming HTTP\",\"state\":\"candidate\",\"grain\":\"server-span-record\",\"reason\":\"Metadata candidate only. Incoming span observations require exact Server kind and a nonempty current http.request.method in the actual read; conformance is unverified\",\"ruleSet\":\"goo/http-server-span-observations/v1\",\"selected\":false},{\"key\":\"all-spans\",\"title\":\"All spans\",\"state\":\"supported\",\"grain\":\"span-record\",\"reason\":\"Mixed reported span kinds and retries; records are not request throughput\",\"selected\":true}],\"version\":\"goo/service-dashboard/v2\",\"scope\":{\"namespace\":{\"mode\":\"value\",\"value\":\"commerce\"},\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000},\"service\":\"checkout\",\"widgets\":[{\"family\":\"all-spans\",\"key\":\"spans\",\"title\":\"Span activity and duration\",\"state\":\"supported\",\"grain\":\"span-record\",\"query\":{\"spanStatus\":true,\"bucketMs\":1000,\"summary\":\"span-duration\",\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"where\":{\"all\":[{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"checkout\"},{\"field\":{\"kind\":\"resource\",\"key\":\"service.namespace\"},\"op\":\"eq\",\"value\":\"commerce\"}]},\"groupBy\":[{\"kind\":\"column\",\"key\":\"name\"}],\"limit\":100,\"offset\":0}},{\"family\":\"logs\",\"key\":\"logs\",\"title\":\"Log activity and severity\",\"state\":\"supported\",\"grain\":\"log-record\",\"query\":{\"bucketMs\":1000,\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"where\":{\"all\":[{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"checkout\"},{\"field\":{\"kind\":\"resource\",\"key\":\"service.namespace\"},\"op\":\"eq\",\"value\":\"commerce\"}]},\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}],\"limit\":100,\"offset\":0}},{\"family\":\"all-spans\",\"key\":\"dimension\",\"title\":\"Observed http.route\",\"state\":\"supported\",\"grain\":\"span-record\",\"query\":{\"spanStatus\":true,\"summary\":\"span-duration\",\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"where\":{\"all\":[{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"checkout\"},{\"field\":{\"kind\":\"resource\",\"key\":\"service.namespace\"},\"op\":\"eq\",\"value\":\"commerce\"}]},\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"http.route\"}],\"limit\":100,\"offset\":0}}],\"declarations\":[],\"warnings\":[\"Metadata suggests widgets, not service health or telemetry completeness. Each widget is a separate bounded source read; no transactional snapshot is claimed.\",\"Counts are captured records, not request throughput. Generic spans include retries and mixed span kinds; unset status is not verified success.\",\"Native evaluations preserve full OTel identity, units and temporality. At most two supported instruments are loaded; selection is local to this service visit, not saved dashboard configuration.\"],\"nativeOptions\":[],\"nativeLimit\":2}\n"
+    },
+    {
+      "name": "auto-positive-server-hint",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"fields\":[{\"key\":\"http.request.method\",\"kind\":\"attribute\"},{\"key\":\"http.route\",\"kind\":\"attribute\"}],\"httpServerObserved\":true,\"instruments\":[],\"profile\":\"auto\",\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"namespace\":{\"mode\":\"value\",\"value\":\"commerce\"},\"toMs\":61000},\"service\":\"checkout\",\"signals\":[\"spans\",\"logs\"]}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"profile\":\"http-server\",\"families\":[{\"key\":\"http-server\",\"title\":\"Incoming HTTP\",\"state\":\"candidate\",\"grain\":\"server-span-record\",\"reason\":\"Metadata candidate only. Incoming span observations require exact Server kind and a nonempty current http.request.method in the actual read; conformance is unverified\",\"ruleSet\":\"goo/http-server-span-observations/v1\",\"selected\":true},{\"key\":\"all-spans\",\"title\":\"All spans\",\"state\":\"supported\",\"grain\":\"span-record\",\"reason\":\"Mixed reported span kinds and retries; records are not request throughput\",\"selected\":false}],\"version\":\"goo/service-dashboard/v2\",\"scope\":{\"namespace\":{\"mode\":\"value\",\"value\":\"commerce\"},\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000},\"service\":\"checkout\",\"widgets\":[{\"family\":\"http-server\",\"key\":\"spans\",\"title\":\"HTTP server span observations\",\"state\":\"supported\",\"reason\":\"Exact Server kind and nonempty current HTTP method; observed span status is not a verified HTTP outcome policy\",\"grain\":\"server-span-record\",\"query\":{\"spanStatus\":true,\"bucketMs\":1000,\"summary\":\"span-duration\",\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"where\":{\"all\":[{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"checkout\"},{\"field\":{\"kind\":\"resource\",\"key\":\"service.namespace\"},\"op\":\"eq\",\"value\":\"commerce\"},{\"field\":{\"kind\":\"column\",\"key\":\"kind\"},\"op\":\"eq\",\"value\":\"Server\"},{\"field\":{\"kind\":\"attribute\",\"key\":\"http.request.method\"},\"op\":\"ne\"}]},\"groupBy\":[{\"kind\":\"column\",\"key\":\"name\"}],\"limit\":100,\"offset\":0}},{\"family\":\"logs\",\"key\":\"logs\",\"title\":\"Log activity and severity\",\"state\":\"supported\",\"grain\":\"log-record\",\"query\":{\"bucketMs\":1000,\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"where\":{\"all\":[{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"checkout\"},{\"field\":{\"kind\":\"resource\",\"key\":\"service.namespace\"},\"op\":\"eq\",\"value\":\"commerce\"}]},\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}],\"limit\":100,\"offset\":0}},{\"family\":\"http-server\",\"key\":\"dimension\",\"title\":\"HTTP server routes\",\"state\":\"supported\",\"reason\":\"Missing and empty routes remain separate; only matching server span observations are counted\",\"grain\":\"server-span-record\",\"query\":{\"spanStatus\":true,\"summary\":\"span-duration\",\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"where\":{\"all\":[{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"checkout\"},{\"field\":{\"kind\":\"resource\",\"key\":\"service.namespace\"},\"op\":\"eq\",\"value\":\"commerce\"},{\"field\":{\"kind\":\"column\",\"key\":\"kind\"},\"op\":\"eq\",\"value\":\"Server\"},{\"field\":{\"kind\":\"attribute\",\"key\":\"http.request.method\"},\"op\":\"ne\"}]},\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"http.route\"}],\"limit\":100,\"offset\":0}}],\"declarations\":[],\"warnings\":[\"Metadata suggests widgets, not service health or telemetry completeness. Each widget is a separate bounded source read; no transactional snapshot is claimed.\",\"Counts are captured records, not request throughput. Generic spans include retries and mixed span kinds; unset status is not verified success.\",\"Native evaluations preserve full OTel identity, units and temporality. At most two supported instruments are loaded; selection is local to this service visit, not saved dashboard configuration.\"],\"nativeOptions\":[],\"nativeLimit\":2}\n"
+    },
+    {
+      "name": "explicit-all-spans",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"fields\":[{\"kind\":\"attribute\",\"key\":\"http.request.method\"},{\"kind\":\"attribute\",\"key\":\"http.route\"}],\"instruments\":[],\"profile\":\"all-spans\",\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"namespace\":{\"mode\":\"value\",\"value\":\"commerce\"},\"toMs\":61000},\"service\":\"checkout\",\"signals\":[\"spans\",\"logs\"]}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"profile\":\"all-spans\",\"families\":[{\"key\":\"http-server\",\"title\":\"Incoming HTTP\",\"state\":\"candidate\",\"grain\":\"server-span-record\",\"reason\":\"Metadata candidate only. Incoming span observations require exact Server kind and a nonempty current http.request.method in the actual read; conformance is unverified\",\"ruleSet\":\"goo/http-server-span-observations/v1\",\"selected\":false},{\"key\":\"all-spans\",\"title\":\"All spans\",\"state\":\"supported\",\"grain\":\"span-record\",\"reason\":\"Mixed reported span kinds and retries; records are not request throughput\",\"selected\":true}],\"version\":\"goo/service-dashboard/v2\",\"scope\":{\"namespace\":{\"mode\":\"value\",\"value\":\"commerce\"},\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000},\"service\":\"checkout\",\"widgets\":[{\"family\":\"all-spans\",\"key\":\"spans\",\"title\":\"Span activity and duration\",\"state\":\"supported\",\"grain\":\"span-record\",\"query\":{\"spanStatus\":true,\"bucketMs\":1000,\"summary\":\"span-duration\",\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"where\":{\"all\":[{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"checkout\"},{\"field\":{\"kind\":\"resource\",\"key\":\"service.namespace\"},\"op\":\"eq\",\"value\":\"commerce\"}]},\"groupBy\":[{\"kind\":\"column\",\"key\":\"name\"}],\"limit\":100,\"offset\":0}},{\"family\":\"logs\",\"key\":\"logs\",\"title\":\"Log activity and severity\",\"state\":\"supported\",\"grain\":\"log-record\",\"query\":{\"bucketMs\":1000,\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"where\":{\"all\":[{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"checkout\"},{\"field\":{\"kind\":\"resource\",\"key\":\"service.namespace\"},\"op\":\"eq\",\"value\":\"commerce\"}]},\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}],\"limit\":100,\"offset\":0}},{\"family\":\"all-spans\",\"key\":\"dimension\",\"title\":\"Observed http.route\",\"state\":\"supported\",\"grain\":\"span-record\",\"query\":{\"spanStatus\":true,\"summary\":\"span-duration\",\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"where\":{\"all\":[{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"checkout\"},{\"field\":{\"kind\":\"resource\",\"key\":\"service.namespace\"},\"op\":\"eq\",\"value\":\"commerce\"}]},\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"http.route\"}],\"limit\":100,\"offset\":0}}],\"declarations\":[],\"warnings\":[\"Metadata suggests widgets, not service health or telemetry completeness. Each widget is a separate bounded source read; no transactional snapshot is claimed.\",\"Counts are captured records, not request throughput. Generic spans include retries and mixed span kinds; unset status is not verified success.\",\"Native evaluations preserve full OTel identity, units and temporality. At most two supported instruments are loaded; selection is local to this service visit, not saved dashboard configuration.\"],\"nativeOptions\":[],\"nativeLimit\":2}\n"
+    },
+    {
+      "name": "explicit-HTTP-server",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"fields\":[{\"kind\":\"attribute\",\"key\":\"http.request.method\"},{\"kind\":\"attribute\",\"key\":\"http.route\"}],\"instruments\":[],\"profile\":\"http-server\",\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"namespace\":{\"mode\":\"value\",\"value\":\"commerce\"},\"toMs\":61000},\"service\":\"checkout\",\"signals\":[\"spans\",\"logs\"]}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"profile\":\"http-server\",\"families\":[{\"key\":\"http-server\",\"title\":\"Incoming HTTP\",\"state\":\"candidate\",\"grain\":\"server-span-record\",\"reason\":\"Metadata candidate only. Incoming span observations require exact Server kind and a nonempty current http.request.method in the actual read; conformance is unverified\",\"ruleSet\":\"goo/http-server-span-observations/v1\",\"selected\":true},{\"key\":\"all-spans\",\"title\":\"All spans\",\"state\":\"supported\",\"grain\":\"span-record\",\"reason\":\"Mixed reported span kinds and retries; records are not request throughput\",\"selected\":false}],\"version\":\"goo/service-dashboard/v2\",\"scope\":{\"namespace\":{\"mode\":\"value\",\"value\":\"commerce\"},\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000},\"service\":\"checkout\",\"widgets\":[{\"family\":\"http-server\",\"key\":\"spans\",\"title\":\"HTTP server span observations\",\"state\":\"supported\",\"reason\":\"Exact Server kind and nonempty current HTTP method; observed span status is not a verified HTTP outcome policy\",\"grain\":\"server-span-record\",\"query\":{\"spanStatus\":true,\"bucketMs\":1000,\"summary\":\"span-duration\",\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"where\":{\"all\":[{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"checkout\"},{\"field\":{\"kind\":\"resource\",\"key\":\"service.namespace\"},\"op\":\"eq\",\"value\":\"commerce\"},{\"field\":{\"kind\":\"column\",\"key\":\"kind\"},\"op\":\"eq\",\"value\":\"Server\"},{\"field\":{\"kind\":\"attribute\",\"key\":\"http.request.method\"},\"op\":\"ne\"}]},\"groupBy\":[{\"kind\":\"column\",\"key\":\"name\"}],\"limit\":100,\"offset\":0}},{\"family\":\"logs\",\"key\":\"logs\",\"title\":\"Log activity and severity\",\"state\":\"supported\",\"grain\":\"log-record\",\"query\":{\"bucketMs\":1000,\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"where\":{\"all\":[{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"checkout\"},{\"field\":{\"kind\":\"resource\",\"key\":\"service.namespace\"},\"op\":\"eq\",\"value\":\"commerce\"}]},\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}],\"limit\":100,\"offset\":0}},{\"family\":\"http-server\",\"key\":\"dimension\",\"title\":\"HTTP server routes\",\"state\":\"supported\",\"reason\":\"Missing and empty routes remain separate; only matching server span observations are counted\",\"grain\":\"server-span-record\",\"query\":{\"spanStatus\":true,\"summary\":\"span-duration\",\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"where\":{\"all\":[{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"checkout\"},{\"field\":{\"kind\":\"resource\",\"key\":\"service.namespace\"},\"op\":\"eq\",\"value\":\"commerce\"},{\"field\":{\"kind\":\"column\",\"key\":\"kind\"},\"op\":\"eq\",\"value\":\"Server\"},{\"field\":{\"kind\":\"attribute\",\"key\":\"http.request.method\"},\"op\":\"ne\"}]},\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"http.route\"}],\"limit\":100,\"offset\":0}}],\"declarations\":[],\"warnings\":[\"Metadata suggests widgets, not service health or telemetry completeness. Each widget is a separate bounded source read; no transactional snapshot is claimed.\",\"Counts are captured records, not request throughput. Generic spans include retries and mixed span kinds; unset status is not verified success.\",\"Native evaluations preserve full OTel identity, units and temporality. At most two supported instruments are loaded; selection is local to this service visit, not saved dashboard configuration.\"],\"nativeOptions\":[],\"nativeLimit\":2}\n"
+    },
+    {
+      "name": "auto-legacy-keys-no-alias",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"fields\":[{\"kind\":\"attribute\",\"key\":\"http.method\"},{\"kind\":\"attribute\",\"key\":\"http.route\"}],\"instruments\":[],\"profile\":\"auto\",\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"namespace\":{\"mode\":\"value\",\"value\":\"commerce\"},\"toMs\":61000},\"service\":\"checkout\",\"signals\":[\"spans\"]}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"profile\":\"all-spans\",\"families\":[{\"key\":\"http-server\",\"title\":\"Incoming HTTP\",\"state\":\"not_observed\",\"grain\":\"server-span-record\",\"reason\":\"No current HTTP method key or eligible HTTP duration instrument supplied; coverage unknown\",\"ruleSet\":\"goo/http-server-span-observations/v1\",\"selected\":false},{\"key\":\"all-spans\",\"title\":\"All spans\",\"state\":\"supported\",\"grain\":\"span-record\",\"reason\":\"Mixed reported span kinds and retries; records are not request throughput\",\"selected\":true}],\"version\":\"goo/service-dashboard/v2\",\"scope\":{\"namespace\":{\"mode\":\"value\",\"value\":\"commerce\"},\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000},\"service\":\"checkout\",\"widgets\":[{\"family\":\"all-spans\",\"key\":\"spans\",\"title\":\"Span activity and duration\",\"state\":\"supported\",\"grain\":\"span-record\",\"query\":{\"spanStatus\":true,\"bucketMs\":1000,\"summary\":\"span-duration\",\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"where\":{\"all\":[{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"checkout\"},{\"field\":{\"kind\":\"resource\",\"key\":\"service.namespace\"},\"op\":\"eq\",\"value\":\"commerce\"}]},\"groupBy\":[{\"kind\":\"column\",\"key\":\"name\"}],\"limit\":100,\"offset\":0}},{\"family\":\"logs\",\"key\":\"logs\",\"title\":\"Log activity and severity\",\"state\":\"not_observed\",\"reason\":\"Not observed in supplied inventory; coverage unknown\",\"grain\":\"log-record\"},{\"family\":\"all-spans\",\"key\":\"dimension\",\"title\":\"Observed http.route\",\"state\":\"supported\",\"grain\":\"span-record\",\"query\":{\"spanStatus\":true,\"summary\":\"span-duration\",\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"where\":{\"all\":[{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"checkout\"},{\"field\":{\"kind\":\"resource\",\"key\":\"service.namespace\"},\"op\":\"eq\",\"value\":\"commerce\"}]},\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"http.route\"}],\"limit\":100,\"offset\":0}}],\"declarations\":[],\"warnings\":[\"Metadata suggests widgets, not service health or telemetry completeness. Each widget is a separate bounded source read; no transactional snapshot is claimed.\",\"Counts are captured records, not request throughput. Generic spans include retries and mixed span kinds; unset status is not verified success.\",\"Native evaluations preserve full OTel identity, units and temporality. At most two supported instruments are loaded; selection is local to this service visit, not saved dashboard configuration.\"],\"nativeOptions\":[],\"nativeLimit\":2}\n"
+    },
+    {
+      "name": "auto-no-span-signal",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"fields\":[{\"kind\":\"attribute\",\"key\":\"http.request.method\"},{\"kind\":\"attribute\",\"key\":\"http.route\"}],\"instruments\":[],\"profile\":\"auto\",\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"namespace\":{\"mode\":\"value\",\"value\":\"commerce\"},\"toMs\":61000},\"service\":\"checkout\",\"signals\":[\"logs\"]}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"profile\":\"all-spans\",\"families\":[{\"key\":\"http-server\",\"title\":\"Incoming HTTP\",\"state\":\"not_observed\",\"grain\":\"server-span-record\",\"reason\":\"No current HTTP method key or eligible HTTP duration instrument supplied; coverage unknown\",\"ruleSet\":\"goo/http-server-span-observations/v1\",\"selected\":false},{\"key\":\"all-spans\",\"title\":\"All spans\",\"state\":\"not_observed\",\"grain\":\"span-record\",\"reason\":\"Mixed reported span kinds and retries; records are not request throughput\",\"selected\":true}],\"version\":\"goo/service-dashboard/v2\",\"scope\":{\"namespace\":{\"mode\":\"value\",\"value\":\"commerce\"},\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000},\"service\":\"checkout\",\"widgets\":[{\"family\":\"all-spans\",\"key\":\"spans\",\"title\":\"Span activity and duration\",\"state\":\"not_observed\",\"reason\":\"Not observed in supplied inventory; coverage unknown\",\"grain\":\"span-record\"},{\"family\":\"logs\",\"key\":\"logs\",\"title\":\"Log activity and severity\",\"state\":\"supported\",\"grain\":\"log-record\",\"query\":{\"bucketMs\":1000,\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"where\":{\"all\":[{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"checkout\"},{\"field\":{\"kind\":\"resource\",\"key\":\"service.namespace\"},\"op\":\"eq\",\"value\":\"commerce\"}]},\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}],\"limit\":100,\"offset\":0}}],\"declarations\":[],\"warnings\":[\"Metadata suggests widgets, not service health or telemetry completeness. Each widget is a separate bounded source read; no transactional snapshot is claimed.\",\"Counts are captured records, not request throughput. Generic spans include retries and mixed span kinds; unset status is not verified success.\",\"Native evaluations preserve full OTel identity, units and temporality. At most two supported instruments are loaded; selection is local to this service visit, not saved dashboard configuration.\"],\"nativeOptions\":[],\"nativeLimit\":2}\n"
+    },
+    {
+      "name": "explicit-HTTP-without-current-candidate",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"fields\":[{\"kind\":\"attribute\",\"key\":\"http.method\"},{\"kind\":\"attribute\",\"key\":\"http.route\"}],\"instruments\":[],\"profile\":\"http-server\",\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"namespace\":{\"mode\":\"value\",\"value\":\"commerce\"},\"toMs\":61000},\"service\":\"checkout\",\"signals\":[\"spans\"]}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"HTTP server profile requires supplied current HTTP metadata or an eligible duration instrument\"}\n"
+    },
+    {
+      "name": "unsupported-profile",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"fields\":[{\"kind\":\"attribute\",\"key\":\"http.request.method\"},{\"kind\":\"attribute\",\"key\":\"http.route\"}],\"instruments\":[],\"profile\":\"rpc-server\",\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"namespace\":{\"mode\":\"value\",\"value\":\"commerce\"},\"toMs\":61000},\"service\":\"checkout\",\"signals\":[\"spans\"]}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"unsupported dashboard profile\"}\n"
+    },
+    {
+      "name": "wrong-profile-type",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"fields\":[{\"kind\":\"attribute\",\"key\":\"http.request.method\"},{\"kind\":\"attribute\",\"key\":\"http.route\"}],\"instruments\":[],\"profile\":true,\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"namespace\":{\"mode\":\"value\",\"value\":\"commerce\"},\"toMs\":61000},\"service\":\"checkout\",\"signals\":[\"spans\"]}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal bool into Go struct field DashboardRequest.profile of type string\"}\n"
+    },
+    {
+      "name": "wrong-server-hint-type",
+      "method": "POST",
+      "path": "/dashboards/plan",
+      "body": "{\"fields\":[{\"key\":\"http.request.method\",\"kind\":\"attribute\"},{\"key\":\"http.route\",\"kind\":\"attribute\"}],\"httpServerObserved\":\"yes\",\"instruments\":[],\"profile\":\"auto\",\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"namespace\":{\"mode\":\"value\",\"value\":\"commerce\"},\"toMs\":61000},\"service\":\"checkout\",\"signals\":[\"spans\"]}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: cannot unmarshal string into Go struct field DashboardRequest.httpServerObserved of type bool\"}\n"
+    }
+  ]
+}

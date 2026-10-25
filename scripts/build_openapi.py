@@ -15,6 +15,13 @@ schemas['annotations.OperationSpan']['properties']['reportedStatus']['descriptio
 
 schemas['Error'] = {'type': 'object', 'required': ['error'], 'properties': {'error': {'type': 'string'}, 'hint': {'type': 'string'}}, 'additionalProperties': True}
 schemas['Cancellation'] = {'type': 'object', 'required': ['state'], 'properties': {'state': {'const': 'cancellation-requested'}}}
+# Additive dashboard profiles opt in; omitted/empty/null retain the legacy plan.
+schemas['exploration.DashboardRequestInput']['properties']['profile']['description']='Optional auto, all-spans or http-server selection. Omitted/empty/null preserves the legacy v2 response. auto selects HTTP only with a positive supplied server-observation hint plus current-key metadata, or a compatible native HTTP instrument. Flat keys alone leave All spans selected; the hint is advisory, not authenticated conformance.'
+schemas['exploration.DashboardRequestInput']['properties']['httpServerObserved']['description']='Optional advisory positive hint from already-held, same-scope span observations. false/omitted means no positive hint, not HTTP absence; no new probe or semantic-convention compliance claim is implied.'
+schemas['exploration.DashboardPlan']['properties']['profile']['description']='Selected all-spans or http-server family for opt-in requests; absent on legacy requests.'
+schemas['exploration.DashboardPlan']['properties']['families']['description']='Opt-in bounded family descriptors. HTTP candidate metadata must be confirmed by the executable question before treating counts as observed; no hidden source read or fallback is performed by this planner.'
+schemas['exploration.DashboardFamily']['properties']['state']['description']='Metadata capability state, including candidate. Not a service-health verdict, observed server count or semantic-convention conformance assertion.'
+schemas['exploration.DashboardWidget']['properties']['family']['description']='Optional display/planning family identity; not a telemetry field or a shared native/span/log denominator.'
 # API policy is deliberately authored, not inferred from HTTP verbs.
 reads = {'/http-package', '/operations', '/counter-rates', '/histograms', '/inventory', '/discovery', '/explore', '/trace-search', '/population/explain', '/metric-discovery', '/measurements', '/investigations', '/captures', '/tail', '/query'}
 plans = {'/measurement-packages/plan', '/telemetry-packages/draft', '/telemetry-packages/numeric-plan', '/telemetry-packages/plan', '/recipes', '/dashboards/plan', '/population/plan', '/population/explain/plan', '/population/explain/filter', '/numeric-histograms/selection', '/numeric-histograms/comparison-selection', '/compare', '/explain'}

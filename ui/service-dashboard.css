@@ -1,0 +1,11 @@
+.dashboard-profiles{display:flex;flex-wrap:wrap;align-items:center;gap:.35rem;margin:.35rem 0}
+.dashboard-profiles>button{padding:.3rem .65rem;font-size:.8rem}
+.dashboard-profiles>button[aria-pressed=true]{background:var(--surface-raised,#1d2532);color:var(--fg,#dce6f3);border-color:var(--accent,#579be8);opacity:1}
+.dashboard-profiles>details{margin-left:auto;font-size:.75rem;max-width:100%}
+.dashboard-profiles>details[open]{flex-basis:100%}
+.dashboard-profile-status{font-size:.78rem;line-height:1.4;margin:.3rem 0;color:var(--muted,#98a8bf)}
+.dashboard-record-rate{font-size:.85rem;margin:.3rem 0;font-variant-numeric:tabular-nums}
+[data-profile=http-server] .dashboard-widget[data-widget=spans]{grid-column:1/-1}
+[data-profile=http-server] .dashboard-widget[data-widget=spans]>.ui-stats{margin-bottom:.3rem}
+[data-profile=http-server] .dashboard-widget[data-widget=dimension] .service-diagnosis>h6{display:none}
+@media(max-width:600px){.dashboard-profiles>details{margin-left:0;flex-basis:100%}.dashboard-profiles>button{flex:1}.dashboard-profile-status{font-size:.75rem}}

@@ -1,0 +1,19 @@
+{
+  "cases": [
+    {
+      "body": "{\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000},\"service\":\"checkout\",\"signals\":[\"spans\",\"logs\"],\"fields\":[{\"kind\":\"attribute\",\"key\":\"http.request.method\"},{\"kind\":\"attribute\",\"key\":\"http.route\"}],\"instruments\":[]}",
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "method": "POST",
+      "name": "omitted-profile-rich-legacy",
+      "path": "/dashboards/plan",
+      "response": "{\"version\":\"goo/service-dashboard/v2\",\"scope\":{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000},\"service\":\"checkout\",\"widgets\":[{\"key\":\"spans\",\"title\":\"Span activity and duration\",\"state\":\"supported\",\"grain\":\"span-record\",\"query\":{\"spanStatus\":true,\"bucketMs\":1000,\"summary\":\"span-duration\",\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"where\":{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"checkout\"},\"groupBy\":[{\"kind\":\"column\",\"key\":\"name\"}],\"limit\":100,\"offset\":0}},{\"key\":\"logs\",\"title\":\"Log activity and severity\",\"state\":\"supported\",\"grain\":\"log-record\",\"query\":{\"bucketMs\":1000,\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"where\":{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"checkout\"},\"groupBy\":[{\"kind\":\"column\",\"key\":\"severity\"}],\"limit\":100,\"offset\":0}},{\"key\":\"dimension\",\"title\":\"Observed http.route\",\"state\":\"supported\",\"grain\":\"span-record\",\"query\":{\"spanStatus\":true,\"summary\":\"span-duration\",\"signal\":\"spans\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"where\":{\"field\":{\"kind\":\"column\",\"key\":\"service\"},\"op\":\"eq\",\"value\":\"checkout\"},\"groupBy\":[{\"kind\":\"attribute\",\"key\":\"http.route\"}],\"limit\":100,\"offset\":0}}],\"declarations\":[],\"warnings\":[\"Metadata suggests widgets, not service health or telemetry completeness. Each widget is a separate bounded source read; no transactional snapshot is claimed.\",\"Counts are captured records, not request throughput. Generic spans include retries and mixed span kinds; unset status is not verified success.\",\"Native evaluations preserve full OTel identity, units and temporality. At most two supported instruments are loaded; selection is local to this service visit, not saved dashboard configuration.\"],\"nativeOptions\":[],\"nativeLimit\":2}\n",
+      "status": 200
+    }
+  ],
+  "version": 1
+}
