@@ -1,1 +1,7 @@
 .trace-search{padding:.6rem;margin:.5rem 0;border:1px solid var(--border,#2b3545)}.trace-search[hidden]{display:none}.trace-search-heading{display:flex;align-items:center;justify-content:space-between;gap:.5rem}.trace-search-heading h3{margin:0}.trace-search>p{font-size:.8rem;margin:.35rem 0}.trace-search-condition{padding:.35rem 0;margin:.35rem 0;border:0;border-top:1px solid var(--border,#2b3545);border-radius:0}.trace-search-condition h4{margin:.25rem 0}.trace-search table{width:100%;table-layout:fixed}.trace-search th,.trace-search td{padding:.4rem;overflow-wrap:anywhere;white-space:normal}.trace-search th:first-child{width:24%}.trace-search th:last-child{width:18%}.trace-search td details{margin:.3rem 0}.trace-search button{font-size:.8rem}.trace-search .attribute-tools{flex-wrap:wrap}@media(max-width:600px){.trace-search table,.trace-search tbody,.trace-search tr,.trace-search td{display:block;width:auto}.trace-search thead{display:none}.trace-search td{padding:.3rem 0}}
+.trace-search .trace-condition-summary{margin:.2rem 0;font-size:.78rem;line-height:1.4;overflow-wrap:anywhere;color:var(--fg,#dce6f3)}
+.trace-search details[data-condition-editor]{margin:.25rem 0}
+.trace-search details[data-condition-editor]>summary{font-size:.78rem}
+.trace-search .filter-editor button[aria-label^="Load values for condition"],.trace-search .filter-editor>goo-grouping-control{display:none}
+.trace-search .filter-editor .filter-observations{display:none}
+.trace-search-condition>button{padding:.2rem .4rem;margin:.2rem 0;font-size:.72rem}
