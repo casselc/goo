@@ -890,3 +890,5 @@ snapshot. Return cancellation is a control request, not a telemetry reread.
 The C3 mobile fixed-record frame retains substantial existing form/header controls
 before rows. Answer-first consolidation is tracked in the current backlog; the
 new interval handoff does not claim whole-product mobile density is solved.
+
+The [cumulative-stock evaluator](CUMULATIVE_STOCKS.md) is not yet wired into discovery, HTTP, captures or dashboards. Nonmonotonic sums remain refused by existing public measurement paths.

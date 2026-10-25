@@ -10761,3 +10761,24 @@ telemetry bodies or proof of completed source cancellation. README, architecture
 current backlog/roadmap, executable storyboard and three actual frames are kept
 aligned. The source projection finishes C4's two selected caller adoptions; it
 does not introduce a universal query/result kernel or a new capture format.
+
+
+## C2c cumulative-stock kernel prerequisite (2026-10-25 UTC)
+
+Added a separate pure evaluator for cumulative nonmonotonic sum observations.
+Descending signed/fractional values remain observations; epochs are retained,
+missing/conflicting reports are unknown and old reports are stale. Existing
+source adapters, public APIs, UI and stored capture contracts remain unchanged.
+See [scope and next integration journey](docs/CUMULATIVE_STOCKS.md).
+
+Actual checks: full root `go test ./... -count=1` passed, including existing
+capture and HTTP regression contracts; full metrics package passed (0.287s).
+Hegel generated observation,
+epoch, reorder and duplicate-replay properties passed (0.315s). The initial Hegel
+invocation failed on the default read-only home cache; rerunning with documented
+`XDG_CACHE_HOME=/workspace/.cache` passed. A preliminary command used the wrong
+relative test-file path and ran no matching tests; it is not acceptance evidence.
+Independent architecture review found and verified fixes for signed-zero and
+nil/empty-map replay determinism, with exact JSON regression coverage. Browser,
+Bombadil and new Quint checks were not run: no screen or stateful owner changed.
+Source/OTLP parity, package replay and actual dashboard acceptance remain planned.

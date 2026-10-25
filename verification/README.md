@@ -2267,3 +2267,5 @@ GOO_SERVICE_AGGREGATES_LEDGER=/workspace/goo/artifacts/service-dashboard-project
 GOO_SERVICE_AGGREGATES_OWNERSHIP=/workspace/goo/artifacts/service-dashboard-projection/service-projection-fbc939b42b/ownership.json \
 go test -run '^TestServiceRecordAggregates(Observed|Ownership)$' -v .
 ```
+
+`TestHegelStockObservations` checks signed fractional cumulative stocks and epoch preservation under descending values, reordered arrival and duplicate replay. It is an in-memory prerequisite, not source/dashboard acceptance; see [contract](../docs/CUMULATIVE_STOCKS.md).

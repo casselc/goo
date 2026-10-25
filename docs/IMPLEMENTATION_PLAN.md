@@ -1168,3 +1168,5 @@ all 77 Node files, API/proxy/deployed contracts, 300 generated cases and all
 80 native rejecting controls pass. Current frames and original-window waterfall/
 comparison continuation are independently reviewed. Final publication and bounded
 acceptance receipts are in VALIDATION.md.
+
+C2c has begun with the pure [cumulative-stock evaluator](CUMULATIVE_STOCKS.md). The sum-table adapter, additive package/replay contract and real pool UI remain the next vertical slice.

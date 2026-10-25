@@ -253,3 +253,5 @@ Kubernetes discovery design can proceed in parallel once its actual source and
 resource-identity contract are selected. Native-to-record context (C3) and lean
 aggregate execution (C4) support these dashboards; they should not postpone useful
 panels indefinitely or be expanded into unrelated framework projects.
+
+C2c prerequisite delivered: the pure [cumulative-stock evaluator](CUMULATIVE_STOCKS.md) accepts cumulative nonmonotonic observations. Public source/package/replay and pool panels are still planned; this does not change instrument eligibility.

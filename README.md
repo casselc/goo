@@ -259,3 +259,5 @@ proposals stay in the [reviewed backlog](docs/BACKLOG_2026_10_25.md).
 [Product essence](docs/PRODUCT_ESSENCE.md) ·
 [Implementation history](docs/IMPLEMENTATION_PLAN.md) ·
 [Original handoff (historical)](START_HERE.md)
+
+The [cumulative-stock evaluator](docs/CUMULATIVE_STOCKS.md) is an internal pool/runtime prerequisite; source and dashboard integration remain planned.
