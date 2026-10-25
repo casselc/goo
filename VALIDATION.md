@@ -10287,3 +10287,13 @@ Signal/environment edits before the first applied selector remain local; inert
 Resume controls without a selector are hidden. Focused entry/tail tests and all
 78 Node files pass (7.84s). Independent review approves this correction before
 another frozen live invocation.
+
+
+The second isolated attempt confirms blank scope, explicit Start and no automatic
+POST/tail request, then rejects a remaining example-catalog GET from the guided
+workflow widget before ingestion. Its diagnostic and cleanup receipt are retained
+separately. Guided workflows now await the same configuration: unconfigured or
+unknown examples skip both example catalogs while user-owned measurement package
+metadata remains available. Status distinguishes unconfigured from unavailable;
+no healthy zero-workflow claim is made. Independent review and syntax checks
+approve this additional gate before the next frozen invocation.
