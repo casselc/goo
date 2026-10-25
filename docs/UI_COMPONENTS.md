@@ -878,3 +878,22 @@ that reference; disposing the owner clears it. A subsequent Expand trace is an
 explicit fresh read. Pin, Compare and Clear perform no source reads. Generation,
 visibility and closed-disclosure guards reject stale controls. These page
 observations do not establish complete trace coverage, CPU time or a critical path.
+
+### Contextual trace search owner
+
+`GooTraceSearch.mount(host,{current,onOpenTrace})` is an application adapter, not a
+new passive element. It composes the existing supplied-predicate filter editors
+and typed `goo-field-value` witness display. `open(seed,opener)` stages one
+condition in the current applied fixed span scope without reading telemetry.
+`invalidate()` cancels pending work and withdraws results; `dispose()` also removes
+the panel. The current callback supplies `{question,active,clean}`.
+
+One to four conditions are independent span existentials within the same reported
+trace ID, environment and fixed window. The original population selector remains
+inside condition one only. An internal AND within one condition still applies to
+one span record. Explicit Run reads the full population through trace search;
+returned trace IDs and representative witnesses are bounded independently from the
+full distinct-ID total. Opening a result delegates the existing explicit fresh
+trace expansion. There is no automatic capture, saved resource or inferred
+parent-child relationship. Qualified witness fields preserve missing versus empty
+and show only requested fields, not complete attribute-map claims.

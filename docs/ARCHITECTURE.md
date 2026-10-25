@@ -693,3 +693,24 @@ Repeated labels remain ambiguous instead of being zipped. Group span-duration su
 may overlap, and missing page observations are not zero durations. Comparison
 selection is independent of native waterfall selection, which retains its existing
 explicit linked-log read behavior.
+
+Contextual trace search preserves the distinction between a span predicate and
+independent conditions that may be witnessed by different spans. Its common scope
+is only the applied environment and fixed window; the original WHERE is retained
+inside condition one, so additional conditions can match other services.
+
+```mermaid
+flowchart LR
+  A[Inspect applied span or qualified field] --> B[Stage condition 1 with original WHERE]
+  B --> C[Add up to 3 independent span conditions]
+  C --> D[Explicit Run trace search]
+  D --> E[Go validates and executes one grouped source query]
+  E --> F[Full distinct reported-ID count and bounded representative witnesses]
+  F --> G[Explicit Open trace: existing fresh expansion]
+  G --> H[Existing waterfall and local reference comparison]
+```
+
+The same span record can witness multiple conditions. No topology or unique
+invocation is inferred, and conditions remain fixed to the original window.
+Cancellation, scope edits, hidden/disposed ownership and stale generations
+withdraw pending results. This contextual adapter introduces no capture format.
