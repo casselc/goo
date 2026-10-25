@@ -9910,3 +9910,18 @@ only those active diagnostic logs were truncated and the backed-up rotation
 removed. This restored about1.1GiB free without touching telemetry volumes, stores,
 repository history or verification receipts. Temporary feature binaries will be
 removed after deployment. Live browser/actor/frame evidence follows separately.
+
+
+### C2a.2 native-unit display clarification
+
+The first actual RPC overview showed two distinct supported instruments named
+`rpc.server.duration`, one in milliseconds and one in seconds. Their values and
+source bindings were correct, but identical primary headings and timeline labels
+made them hard to distinguish. Shared `NativePresentation.instrumentLabel` now
+qualifies native widget and lane names with their exact source/stream unit, or
+explicitly says the unit is unreported. Observation-count axes and all queries,
+calculations, stream identities and captures are unchanged.
+
+Targeted dashboard/timeline tests pass **0.14s**; independent review approves the
+presentation-only change. The accepted main/actor are retained; a bounded actual
+unit-label/frame replay is required instead of repeating those semantic campaigns.
