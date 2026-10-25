@@ -158,6 +158,41 @@ bound and original scope/schema/temporality. This slice does not infer database
 server health, pool saturation, unique operations or query success from span status.
 Logs and declared operation bindings retain their separate populations.
 
+## Messaging consumer and producer observations
+
+The `messaging-consumer` and `messaging-producer` profiles keep separate record
+populations: exact reported kind `Consumer` or `Producer`, respectively, plus
+nonempty `messaging.system`, within the original fixed service/resource namespace
+scope. Missing and empty systems are excluded, while custom and whitespace
+nonempty values remain literal. A flat record key offers both candidates; a
+positive same-row held-page role/system hint supports automatic selection, not
+schema conformance or whole-window presence. A missing hint remains unknown.
+
+Automatic precedence is Incoming HTTP, legacy Incoming RPC, DB client, messaging
+consumer, messaging producer, then All spans. Explicit role selection remains
+available. It stages intent without source reads; Apply executes only that role's
+questions. Empty role populations remain no data, with All spans as a manual
+fallback. The dimension uses observed keys in order `messaging.destination.name`,
+`messaging.operation.name`, then `messaging.system`. It changes grouping, not
+population: missing and empty optional values remain distinct. A destination or
+operation name is a literal value across the parent, potentially spanning reported
+systems or destinations; opening it adds that literal predicate while preserving
+the parent. It does not identify a unique queue, message or operation.
+
+The new consumer profile binding recognizes exact `messaging.process.duration`
+histograms in seconds, reusing existing kernels with original per-stream identity,
+unit and temporality. That native processing population remains independent of
+Consumer span records, which can describe receive or process work. It is not a
+producer metric, an alias, or a joined denominator. Eligible consumer processing
+instruments rank before unrelated defaults only for the consumer profile, with
+the existing two-instrument bound. Milliseconds do not become eligible by
+conversion. Logs and registered operation bindings remain separate.
+
+Recorded span status is not acknowledgement, delivery success or broker health.
+These slices do not infer queue depth, lag, saturation, message uniqueness,
+exactly-once delivery, end-to-end causality or complete asynchronous topology.
+Broker/resource discovery and metric families still require separate contracts.
+
 ## Observe → question → evidence → investigation
 
 Each widget offers **Open widget question**, **Add widget question** and
@@ -374,6 +409,7 @@ views, resource USE, and Kubernetes cluster/workload/pod/node dashboards. The
 implemented v2 service overview and supported native kernels are a foundation;
 catalog entries marked proposed do not yet execute those complete dashboards.
 The initiative stages useful defaults, entity/resource discovery, required metric
-adapters and investigation drilldowns while keeping manifests optional. The incoming HTTP, legacy RPC server-span and DB client-span slices above are implemented.
+adapters and investigation drilldowns while keeping manifests optional. The incoming HTTP, legacy RPC server-span, DB client-span and messaging role-span
+slices above are implemented.
 Broader HTTP/RPC RED, newer RPC conventions and protocol outcome policies, and
 the remaining families still require their own population and source contracts.

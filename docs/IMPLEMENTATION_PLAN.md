@@ -18,12 +18,13 @@ The queue through TS3 is shipped. The [current roadmap](ROADMAP_2026_10_25.md)
 and [execution backlog](BACKLOG_2026_10_25.md) own the remaining priorities. G1's
 fast root Go/Node gate is delivered. The [dashboard initiative](AUTOMATIC_DASHBOARDS.md)
 has delivered HTTP server-span views ([journey 187](../journeys/187-http-server-dashboard-storyboard.md)),
-explicit legacy RPC views ([journey 188](../journeys/188-rpc-server-dashboard-storyboard.md))
-and current-key database-client views ([journey 189](../journeys/189-db-client-dashboard-storyboard.md)).
+explicit legacy RPC views ([journey 188](../journeys/188-rpc-server-dashboard-storyboard.md)),
+current-key database-client views ([journey 189](../journeys/189-db-client-dashboard-storyboard.md)),
+and messaging-role views ([journey 190](../journeys/190-messaging-dashboard-storyboard.md)).
 Each keeps literal population, native-unit and source-read semantics explicit.
 
-Generic-source startup remains an adoption enabler. Messaging, newer convention
-bindings, database pool/server health, resource USE and Kubernetes discovery
+Generic-source startup remains an adoption enabler. Newer convention bindings,
+database pool/server health, broker signals, resource USE and Kubernetes discovery
 remain staged deliveries. Native interval-to-record context is a separate next
 investigation path. Lean aggregate reads require a measured audit; trace-search
 definition reuse is conditional and distinct from observed-result custody.

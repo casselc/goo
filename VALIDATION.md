@@ -10147,3 +10147,96 @@ behavior are unchanged. Relevant metadata intentionally adds selectable messagin
 families to opt-in plans; this is not a claim that every previously possible
 opt-in response is byte-identical. Final source review approves the frozen cut.
 Actual source/browser/actor populations and frames remain a separate gate below.
+
+
+## C2b.2 messaging dashboards — live acceptance (2026-10-25)
+
+The reviewed `ab7e612` source was deployed with binary SHA-256
+`a4efde55848c898127d80df438dbad2c2df650c3814349d7497955579e91c013`
+(20,106,996 bytes). Local readiness and source/asset/spec hash and MIME checks
+are retained in `artifacts/messaging-dashboard/deployment.json`; the temporary
+binary was removed. No application behavior changed during the main or actor.
+
+A generated ordinary OTLP fixture contains **353 spans** without a goo manifest
+or mocked positive source/UI responses. Its main service/resource-namespace scope
+has **309 mixed records**, **137 matching Consumer records** and **120 Producer
+records**. Missing destination (3), empty destination (2) and receive operations
+remain in the consumer population. The same destination value spans different
+reported systems/groups. Native processing seconds retain their independent
+four-observation stream; other reported native instruments remain separately
+selectable rather than establishing a new producer binding.
+
+The accepted main passes **33.3s / 35.5s total**, with **53 logical source API
+operations and 12 browser-owned pure plans**. Two additional metadata-only
+fallback controls verify operation-name/system grouping without source reads;
+they do not claim discovered source fields vanished. The receipt is
+`artifacts/messaging-dashboard/messaging-dashboard-bc0f633c21/ledger.json`.
+Actual Consumer/Producer/All switching, a one-record range outside all held-page
+witnesses, false-hint profile continuity/reset, an explicit zero-role view and
+manual recovery, and hybrid HTTP/RPC/DB precedence all pass.
+
+Opening destination **orders 120** stages a question without reads; explicit Run
+measures 120 records, Error 24 and sum 3,600,000,000 ns. Existing system/group
+filters stage without reads; another Run measures **108 Kafka/workers-a records**,
+Error 12 and sum 3,240,000,000 ns. All original Consumer/system/service/resource-
+namespace/window predicates survive. Records-tab switching and raw inspection
+read nothing. The actual UI exposes a supplied asynchronous trace/span link and
+its attributes as reported data. Expanding that consumer's trace performs two
+fresh original-window reads: **one span and zero logs**, retaining the isolated
+108-record origin. The linked producer is not joined into a parent edge. Five
+Back entries restore the identical held service snapshot without reads.
+
+The **30-second Bombadil campaign** passes in **30.9s / 32.2s total**, with
+**11 phases and 511 snapshots**, **25 logical source operations / five plans**
+and terminal consumer137 → All309 → consumer137 → producer120 → consumer137,
+then source-free return to the catalog. Receipt:
+`artifacts/messaging-dashboard/messaging-dashboard-e876d3c458/bombadil/acceptance-summary.json`.
+These effect counts are logical API operations, not internal SQL scan costs.
+
+The first main stopped in **24.7s** because a strict test locator matched both
+waterfall disclaimer paragraphs. Actual link inspection and trace-origin checks
+had passed. The correction narrows the locator to its intended disclaimer; no
+application, fixture or source change was required. Its diagnostic is retained.
+
+Whole-product mobile screenshot review exposed six view buttons shrinking into
+unreadable vertical fragments. The scoped CSS-only correction `8ae7573` uses two
+columns with normal word wrapping. It does not alter execution or selection.
+Its separate bounded display replay and final independent raw validation are
+recorded below; the semantic main and actor are not repeated for a layout edit.
+
+
+The bounded display replay passes **10.0s / 12.6s total** against the same Go
+binary and exact CSS SHA-256
+`c9796a09982d2ddb364bf9fa03e8dd61aab50accfd2e2fd2d028ddb6dd216913`.
+It checks all six accessible labels, each word's unclipped single rectangle,
+selected Consumer, a true two-column mobile grid and no overflow. Resizing and
+capturing frames add zero reads after the initial **nine source operations / one
+plan**. The receipt is
+`artifacts/messaging-dashboard/messaging-dashboard-0f6c958f1a/display.json`;
+`deployment-responsive-profiles.json` records exact deployment equality. Frames
+190a–d now come from this separate actual display fixture; 190e remains from the
+accepted main. Pre-correction frames remain diagnostic evidence. Root reviewed
+the full mobile context and confirmed readable choices. Broader service catalog/
+header overhead is still explicitly planned, not claimed solved by this fix.
+
+Independent native verification passes on its first actual run in **0.225s**,
+checking **27 actual populations/pages/groups/status/duration responses** against
+the separate raw-fact interpreter, including Consumer137, Producer120, All309,
+destination120, filtered108 and trace1. All 27 changed-count controls are rejected.
+No observer, fixture or application correction was needed. The receipt is the
+main ledger's adjacent `native-validation.txt`. The pure-planner extension reuses
+existing lifecycle/read owners; no new formal scheduling model was required.
+
+Final independent source/evidence/design review **APPROVES C2b.2**, including the
+scoped mobile correction and accurate native-versus-span grains. The updated
+[storyboard](journeys/190-messaging-dashboard-storyboard.md), five actual frames,
+README, service/architecture/verification guides and roadmap/backlog describe the
+implemented roles and remaining broker/resource/startup boundaries. Final
+whitespace/link and publication checks follow; no semantic campaign is repeated
+after its accepted results.
+
+
+Final whitespace checks pass, and **1,382 relative links across all 13 Markdown
+files changed in this round resolve**. The complete changed documentation and
+frames are synchronized to the running local query service before publication.
+The final commit and verified `origin/work` head are reported after pushing.

@@ -678,8 +678,8 @@ inherit HTTP semantics. Plans remain `not-run` even when matching metadata exist
 The messaging processing candidate uses experimental OTel v1.30.0 semantics.
 Its presence matrix does not validate operation values, destination cardinality,
 unique deliveries, queue lag, delivery success or end-to-end trace relations.
-Other messaging instruments retain generic bindings; this is not a full broker
-or consumer dashboard. Non-monotonic pool sums still require kernel support.
+Other messaging instruments retain generic bindings. The later role-specific
+service views below do not establish full broker or consumer health. Non-monotonic pool sums still require kernel support.
 
 
 The [bounded E1 audit](E1_ACCEPTANCE.md) accepts discovery/metadata planning, not
@@ -837,7 +837,15 @@ when current method metadata exists. It does not prove HTTP work absent. Explici
 view/range changes preserve the selected population and perform bounded fresh
 widget reads. The delivered incoming RPC profile explicitly uses legacy `rpc.system`/`rpc.method`
 and native `rpc.server.duration` milliseconds. Newer RPC bindings, legacy-only
-HTTP keys, messaging/resource USE and Kubernetes remain separate profiles/deliveries.
+HTTP keys, resource USE and Kubernetes remain separate profiles/deliveries.
+Messaging Consumer/Producer views are delivered for exact reported role and
+nonempty `messaging.system`. Consumer spans can describe receive or process work;
+native processing seconds remain an independent population. Literal destinations
+can span systems/groups; reported async links are references, not inferred parent
+edges or delivery proof. Broker depth/lag/health, unique-message counts and
+acknowledgment policies remain separate. The mobile selector now uses readable
+two-column choices; catalog/header overhead above the opened entity still needs
+the bounded consolidation described in the current backlog.
 Current-key database-client views are delivered for exact Client spans with
 nonempty `db.system.name` and native operation-duration seconds. Legacy `db.system`,
 pool/server health and query-summary authoring remain separate. Literal operation

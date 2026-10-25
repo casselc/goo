@@ -1,6 +1,6 @@
 # Automatic operational dashboards — product initiative
 
-Status: **C2a HTTP/legacy-RPC and C2b.1 database clients delivered**.
+Status: **C2a HTTP/legacy-RPC and C2b database-client/messaging roles delivered**.
 Later stages remain proposed. Clarified by the user on 2026-10-25 after the whole-product review.
 This is the expanded C2 initiative in the
 [current roadmap](ROADMAP_2026_10_25.md), not a claim every family is implemented.
@@ -73,8 +73,8 @@ values remain reported values rather than verified convention compliance.
 Flat key discovery suggests a selectable RPC candidate. Automatic admission also
 requires a positive same-row server/system/method observation from the existing
 scoped service page, or a compatible legacy native instrument. HTTP keeps its
-existing automatic priority; RPC follows when independently admitted, then All
-spans. Manual selection and range/native changes retain the resolved profile.
+existing automatic priority; RPC follows when independently admitted, ahead of DB and messaging.
+All spans remains the fallback. Manual selection and range/native changes retain the resolved profile.
 No absence is inferred from a bounded metadata page, and no fallback read is hidden.
 
 The relevant native binding is `rpc.server.duration`, histogram, unit `ms`, with
@@ -119,6 +119,38 @@ dependency work. They do not establish unique-query throughput, database-server
 health, connection-pool saturation, affected rows or business success. The native
 seconds binding retains exact stream identity, temporality and interval coverage;
 same-name metrics with another unit remain separate ordinary instruments.
+
+## Messaging slice — role-specific span observations
+
+C2b.2 is delivered; actual acceptance and frames are in
+[journey 190](../journeys/190-messaging-dashboard-storyboard.md) and
+[VALIDATION.md](../VALIDATION.md).
+The `messaging-consumer` and `messaging-producer` profiles require exact reported
+`Consumer` or `Producer` kind respectively, with present, nonempty
+`messaging.system`. They do not infer roles from span names or operation labels.
+A supplied field key offers a candidate; automatic selection additionally needs
+a same-row, same-scope positive witness from the existing held service page.
+The exact eligible `messaging.process.duration` seconds histogram also admits
+the consumer candidate. HTTP, legacy RPC and DB retain priority, followed by
+consumer, producer and All spans. This deterministic preference is not severity.
+An accepted profile stays selected through range and native changes; a matching
+zero population never triggers a hidden fallback read.
+
+The default breakdown chooses observed `messaging.destination.name`, then
+`messaging.operation.name`, then `messaging.system`. Optional missing and empty
+values remain distinct; grouping does not exclude them. Destination and operation
+values describe populations across reported systems and other attributes, not
+unique queue or operation identities. Existing explicit filters refine them while
+preserving the role, service, resource namespace, environment and fixed window.
+
+Consumer spans may describe receiving or processing; producer and consumer record
+counts are neither unique messages nor acknowledgements. Recorded span Error is
+not a broker outcome policy. Native process duration has its own exact stream,
+interval and operation population; it is not an aggregate of every Consumer
+span. No producer native binding is added in this cut. Other reported instruments
+remain available through existing explicit selection. Reported asynchronous links
+remain producer data: these views do not join messages or infer delivery, backlog,
+queue availability, retry uniqueness or exactly-once behavior.
 
 ## Dashboard families and useful defaults
 
@@ -184,7 +216,7 @@ Already implemented:
 
 Work that must be planned explicitly:
 
-1. Extend the delivered HTTP/legacy-RPC/database-client selection to messaging,
+1. Extend the delivered HTTP/legacy-RPC/database-client/messaging selection with
    newer convention bindings and the remaining role/resource families.
 2. A resource-entity inventory and typed identity policy for hosts/Kubernetes,
    distinct from service-name discovery. Current native validation expects service

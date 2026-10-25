@@ -2353,3 +2353,44 @@ source-free tab correction and preserved 34.4s diagnostic are documented separat
 from the accepted main. No positive source/UI response was mocked and no new
 persistence format is introduced. Full timings, receipts and limits are in the
 storyboard and VALIDATION.md.
+
+## 190 — Messaging consumer and producer overviews
+
+[Storyboard and flow diagram](../../journeys/190-messaging-dashboard-storyboard.md),
+[ordinary OTel main and actor wrapper](../../journeys/messaging-dashboards.spec.js),
+[responsive display replay](../../journeys/messaging-dashboard-display.spec.js),
+[Bombadil actor](../../verification/bombadil/messaging-dashboard.ts) and
+[automatic dashboard scope](../AUTOMATIC_DASHBOARDS.md).
+
+| Frame | Actual evidence |
+| --- | --- |
+| [Messaging overview](screenshots/190a-messaging-consumer-dashboard.png) | Full Consumer population, literal destination groups, explicit roles and separate native identities |
+| [Mobile summary](screenshots/190b-mobile-consumer-summary.png) | Captured Consumer-record count, recorded Error and duration |
+| [Desktop in context](screenshots/190c-messaging-service-in-context.png) | Real navigation, service scope and readable profile names |
+| [Mobile in context](screenshots/190d-mobile-messaging-in-context.png) | Two-column full labels without overflow; existing entry overhead remains visible |
+| [Consumer population to trace](screenshots/190e-consumer-population-to-trace.png) | Original-window supplied trace and honestly empty linked logs, without inferred asynchronous pairing |
+
+Main passes in 33.3s over 353 generated ordinary OTLP spans: Consumer 137,
+Producer 120 and All spans 309 in the same scoped service. Each role requires its
+exact kind and nonempty current `messaging.system`; records are not unique
+messages, processing completions or delivery confirmations. Destination `orders`
+combines two systems/groups and 120 records. Explicit system/group filters return
+108 before trace expansion. A genuine reported link is inspected in the existing
+Raw record UI without reading; its Producer target is not automatically joined,
+fetched or drawn as a parent. Trace origin and source-free service return remain
+exact. Missing/empty groups, false-hint range retention and explicit zero fallback
+are verified.
+
+The 30-second actor completes 11 phases/511 snapshots, including both role
+switches, at exactly 25 source operations/five plans. Independent raw-source checks
+pass first run in 0.225s across 27 responses and reject 27 changed-count controls. Main
+uses 53 browser source operations / 12 plans plus two separate pure fallback probes.
+A 10.0s display replay verifies six full labels, selected state, mobile two-column
+layout and source-free resizing after nine initial source operations/one plan.
+Frames 190a–d use that fresh display fixture; 190e retains the accepted main.
+
+The initial ambiguous waterfall selector and actual mobile letter-stack layout
+issue are preserved separately from final evidence. The latter was fixed by
+CSS-only `8ae7573` without repeating the semantic main/actor. No positive source/UI
+response was mocked, no queue/broker health or inferred pairing is claimed, and
+no persistence format is added. Exact receipts and limits are in the storyboard.

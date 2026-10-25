@@ -2011,3 +2011,35 @@ After browser ownership is released, use the toolchain/cache environment above:
 go test -run '^Test(HegelDBDashboard|DBDashboardCandidates|DBDashboardNative)' -v .
 GOO_DB_DASHBOARD_LEDGER=/workspace/goo/artifacts/db-client-dashboard/db-dashboard-00281d8421/ledger.json go test -run '^TestDBDashboardObservedPopulations$' -v .
 ```
+
+## Messaging role dashboard slices (C2b.2)
+
+`TestHegelMessagingDashboardRolePopulations` uses 12 generated exhaustive grids
+for both roles across service/resource namespace, reported kind and missing/empty/
+custom systems. The shared independent predicate interpreter checks every actual
+role/log question. Focused deterministic checks cover four hint-role combinations,
+resource-key and missing-system refusals, literal dimension priority, all family
+precedence, explicit Producer intent, native processing seconds-only eligibility,
+exact scope/grain and stable ordering under permutation/record-count changes.
+The first campaign passed in 0.145s
+(`artifacts/messaging-dashboard-properties.txt`); the actual-ledger entrypoint
+compiled and skipped without its artifact variable.
+
+`TestMessagingDashboardObservedPopulations` uses
+`GOO_MESSAGING_DASHBOARD_LEDGER` with the shared independent ordinary raw-fact
+oracle. Actual journey190
+`messaging-dashboard-bc0f633c21/ledger.json` passed on its first invocation in
+0.225s: 27 responses matched full raw populations/groups/status/durations and
+raw page scope/time/attributes/identities, including consumer 137, producer 120,
+mixed 309, destination 120, explicit filtered 108 and trace continuation 1.
+A guaranteed changed count was rejected for each response (27 controls). The
+adjacent `native-validation.txt` retains stdout. No observer correction or
+application/fixture change was needed. This pure-planner extension introduces no
+new formal lifecycle model or mandatory evidence quota.
+
+After browser ownership is released, use the toolchain/cache environment above:
+
+```sh
+go test -run '^Test(HegelMessagingDashboard|MessagingDashboardCandidate|MessagingDashboardNative)' -v .
+GOO_MESSAGING_DASHBOARD_LEDGER=/workspace/goo/artifacts/messaging-dashboard/messaging-dashboard-bc0f633c21/ledger.json go test -run '^TestMessagingDashboardObservedPopulations$' -v .
+```

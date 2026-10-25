@@ -1149,7 +1149,8 @@ rules in [service dashboards](SERVICE_DASHBOARDS.md#incoming-http-as-an-explicit
 ### Incoming RPC and family precedence
 
 The implemented legacy RPC lens reuses the same pure planner and explicit widget
-execution path. Auto selects HTTP before RPC, then All spans. An explicit RPC
+execution path. Auto selects HTTP before RPC, followed by DB and messaging
+when admitted, with All spans as fallback. An explicit RPC
 choice uses `Server` plus nonempty `rpc.system` and `rpc.method` in the original
 fixed scope; it does not union newer aliases or infer gRPC status. A positive
 held-page hint is advisory. Native `rpc.server.duration` histograms remain exact
@@ -1160,12 +1161,43 @@ support is proposed separately; see [the RPC population contract](SERVICE_DASHBO
 
 The implemented DB profile uses `Client` plus nonempty current `db.system.name`
 in the same fixed service/resource namespace scope. Auto precedence is HTTP, RPC,
-DB, then All spans; explicit selection and source-free staging use the shared
+DB, messaging consumer, messaging producer, then All spans; explicit selection and source-free staging use the shared
 planner path. The held-page Client/system hint is positive advisory evidence,
 not proof of absence. Default grouping by operation name, namespace or system
 retains missing/empty optional values and does not identify a unique query.
 Native `db.client.operation.duration` histograms are separate exact second-valued
 per-stream evidence, not database/pool health. See the [DB population contract](SERVICE_DASHBOARDS.md#database-client-span-observations).
+
+### Messaging roles and independent processing metrics
+
+The shared planner now offers separate Consumer and Producer record populations,
+each requiring nonempty `messaging.system` in the fixed parent scope. Positive
+held-page hints inform auto selection after HTTP/RPC/DB; explicit role choice
+executes one population. Optional destination/operation/system group values
+remain literal, including missing/empty distinctions, rather than queue or message
+identity. Only the consumer profile assigns the named processing binding to
+`messaging.process.duration` histograms in seconds; other profiles can still
+select ordinary native instruments. Processing streams and
+Consumer span counts remain independent. No broker, delivery or asynchronous
+completeness claim follows. See the [messaging population contract](SERVICE_DASHBOARDS.md#messaging-consumer-and-producer-observations).
+
+```mermaid
+flowchart LR
+    Held[Held role/system witness and scoped metadata] --> Plan[Existing pure dashboard planner]
+    Plan --> Consumer[Consumer plus nonempty messaging.system]
+    Plan --> Producer[Producer plus nonempty messaging.system]
+    Plan --> Native[Independent native process-duration streams]
+    Consumer --> Group[Literal destination / operation / system groups]
+    Producer --> Group
+    Group --> Stage[Stage exact parent plus selected value]
+    Stage --> Run[Explicit Run and optional further filters]
+    Run --> Trace[Fresh original-window trace and log reads]
+    Trace --> Back[Return to held service view without reads]
+    Native --> Separate[Exact units / intervals / stream identity]
+```
+
+Only the selected role's span questions execute. The native processing population
+is separate; a reported asynchronous link does not create a parent edge.
 
 ### Live native counter windows
 

@@ -81,16 +81,17 @@ optional reservation lab.
 | [Annotations](docs/WORKBENCH_ANNOTATIONS.md) | Tags/notes, exact references and optional XTDB-retained evidence | No shared-draft concurrency, trained classifier or production authorization is implied |
 
 [Automatic operational dashboards](docs/AUTOMATIC_DASHBOARDS.md) now include
-HTTP and explicit legacy OTel RPC server-span views, plus current-key database
-client dependency views. Discover a service, inspect activity, recorded span errors,
-duration and literal route/method/database populations, then narrow the scope and
+HTTP and explicit legacy OTel RPC server-span views, current-key database
+client dependencies, and separate messaging consumer/producer views. Discover a service, inspect activity, recorded span errors,
+duration and literal route/method/database/destination populations, then narrow the scope and
 open a trace. All spans remains available; native metrics retain separate units,
-streams and intervals. Newer RPC bindings, messaging, database pool/server health,
+streams and intervals. Newer bindings, database pool/server health, broker signals,
 host/runtime USE and Kubernetes remain staged follow-on work. Discovery does not
 invent missing health signals.
-See the executed [HTTP](journeys/187-http-server-dashboard-storyboard.md) and
-[RPC](journeys/188-rpc-server-dashboard-storyboard.md) and
-[database-client](journeys/189-db-client-dashboard-storyboard.md) journeys with desktop/mobile frames.
+See the executed [HTTP](journeys/187-http-server-dashboard-storyboard.md),
+[RPC](journeys/188-rpc-server-dashboard-storyboard.md),
+[database-client](journeys/189-db-client-dashboard-storyboard.md) and
+[messaging](journeys/190-messaging-dashboard-storyboard.md) journeys with desktop/mobile frames.
 
 Error triage acceptance is complete: ET1 `982b9e9`, ET2 `0c4ab38`, real OTel
 179 spans/logs, ownership, native/model checks and a 55-second actor pass. Actual
