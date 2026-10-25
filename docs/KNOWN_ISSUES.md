@@ -827,3 +827,15 @@ or parent-path operator, automatic issue classification, saved search resource
 or capture format. Contextual entry currently uses applied fixed span
 populations; unsupported reported-edge origins refuse rather than drop scope.
 Trace expansion is a separate fresh read in the original window.
+
+
+The first [automatic HTTP dashboard](AUTOMATIC_DASHBOARDS.md) uses current-key
+server-span observations and independent eligible native HTTP duration metrics.
+Automatic span admission reuses at most 100 already-held service records; a page
+without a matching witness leaves All spans selected and offers the HTTP candidate
+when current method metadata exists. It does not prove HTTP work absent. Explicit
+view/range changes preserve the selected population and perform bounded fresh
+widget reads. Legacy-only HTTP keys, incoming RPC, database/messaging/resource USE
+and Kubernetes families remain separate profiles/deliveries. Generic-source
+startup still has the documented sample-configuration dependency (C1); running
+this manifest-free telemetry journey in the existing lab does not close that gap.

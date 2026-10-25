@@ -2241,3 +2241,41 @@ Initial strict-selector/framing failures and the real verbose-editor/mobile-basi
 layout fixes remain documented separately from final evidence. No positive
 source response was mocked. Malformed/all-zero identity exclusions use backend
 raw-source checks, not invented successful OTLP ingestion.
+
+## 187 — Automatic incoming HTTP service overview
+
+[Storyboard and flow diagram](../../journeys/187-http-server-dashboard-storyboard.md),
+[real OTel journey](../../journeys/http-server-dashboards.spec.js),
+[Bombadil actor](../../verification/bombadil/http-server-dashboard.ts) and
+[automatic dashboard scope](../AUTOMATIC_DASHBOARDS.md).
+
+| Frame | Actual evidence |
+| --- | --- |
+| [Incoming HTTP overview](screenshots/187a-incoming-http-service-dashboard.png) | Compact timeline, full 137-record server population, nullable routes and separate native intervals |
+| [Mobile server summary](screenshots/187b-mobile-http-server-records.png) | Recorded count, span Error and duration without conflating client calls or native observations |
+| [Desktop in context](screenshots/187c-service-overview-in-context.png) | Real navigation, service scope and profile controls; no isolated demo shell |
+| [Mobile in context](screenshots/187d-mobile-service-overview-in-context.png) | Actual catalog/header overhead remains visible; long native lane names cannot overlap plots |
+| [Route to trace](screenshots/187e-route-to-original-window-trace.png) | Actual original-window span waterfall and honestly empty linked logs after explicit route Run |
+
+Main passes in 17.6s over 225 ordinary spans. Incoming HTTP matches 137 records
+versus 198 in All spans and a 100-row held page. The current-method Server rule
+excludes clients, legacy-only, missing and empty methods; reported custom values
+are not called verified conformance. The eligible native HTTP duration instrument
+is prioritized without combining its four observations with span-record counts.
+
+Explicit profile switches preserve scope and make exactly the bounded widget
+reads. A positive one-record window outside all held supporting rows retains the
+accepted HTTP profile despite a false hint. Staging/retained-control rejection is
+source-free; named Run executes the exact drilldown. Generic worker fallback and
+client-only All spans → explicit HTTP zero → All spans seven remain honest.
+Equal 20 ms route values use equal 98 px mean/p95 tracks at both widths.
+
+The 45-second Bombadil campaign passes all nine phases over 974 snapshots,
+reaching its exact 17-source-operation/three-plan terminal proof. Independent Go
+source verification passes in 0.055s over 19 actual responses and rejects all 19
+changed-count controls. A separate route-to-trace supplement passes in 9.1s:
+staging is source-free, explicit Run returns 120 matching records, two fresh
+context reads preserve original bounds, and browser Back restores the same held
+overview without reading. The fixtures are generated ordinary OTLP telemetry;
+positive source/UI responses are not mocked. Three harness failures and actual compactness/label fixes are retained separately from
+the final accepted run. This slice adds no persistence or capture format.

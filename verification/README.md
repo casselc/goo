@@ -1910,3 +1910,37 @@ GOO_TRACE_SEARCH_OWNERSHIP_LEDGER=/workspace/goo/artifacts/trace-search/trace-se
 ```
 
 These finite traces validate observed client source/owner discipline, not every schedule or internal SQL request count. Representative witnesses and distinct reported IDs do not establish unique invocations, distinct spans per condition, parent topology, ordering, causality, complete traces, complete ingestion or absence of late data. No live malformed/all-zero OTLP identity ingestion is claimed; identity exclusion is covered by generated logical records and separate backend checks.
+
+## Incoming HTTP dashboard slice (C2a.1)
+
+`TestHegelHTTPDashboardPopulationAndIsolation` uses 24 generated scope/literal
+examples with exhaustive namespace, span-kind and method-presence combinations.
+Its small independent predicate interpreter checks each actual HTTP/log widget
+population. `TestHTTPDashboardNativePriorityAndCandidateLimits` checks exact
+native priority, independent units/grain, mutable metadata immunity and explicit
+empty selection; `TestHTTPDashboardFallbackAndUnknowns` covers six hint/key/signal
+boundaries and invalid explicit choices. These focused pure checks passed in
+0.036s (`artifacts/http-dashboard-properties.txt`). No generated lifecycle model
+is needed for this pure planner.
+
+The opt-in `TestHTTPDashboardObservedPopulations` independently derives matching
+records from ordinary OTLP facts and actual returned typed questions. It checks
+full counts/groups (including missing versus empty routes), duration sums,
+recorded span status, page uniqueness and raw attribute/scope/time fidelity.
+Against journey187's accepted `http-dashboard-13dc64d238/ledger.json`, all 19
+applicable source responses passed in 0.055s; a guaranteed changed count was
+rejected for every response. The adjacent `native-validation.txt` retains stdout.
+Browser intent/stale-owner effects and native measurement semantics remain covered
+by their respective journey/kernel checks; this test does not model schedules,
+prove schema conformance or infer requests from span-record counts.
+
+With the toolchain/cache environment above, reproduce after browser ownership is
+released:
+
+```sh
+go test -run '^Test(HegelHTTPDashboard|HTTPDashboardFallback|HTTPDashboardNative)' -v .
+GOO_HTTP_DASHBOARD_LEDGER=/workspace/goo/artifacts/http-server-dashboard/http-dashboard-13dc64d238/ledger.json go test -run '^TestHTTPDashboardObservedPopulations$' -v .
+```
+
+The live test skips unless its artifact variable is supplied. Artifact paths are
+local acceptance receipts, not required repository inputs or CI fixtures.

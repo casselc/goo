@@ -1113,8 +1113,38 @@ are planned. Observed, declared and executed-supported evidence remain distinct.
 from observed signals, convention keys and native instruments. Matching registry
 contracts retain declared revision IDs. Services also offers a local distributed
 view of resolved parent relationships and diagnostics, with fixed-scope handoffs
-into questions and immutable investigation evidence. Async/declaration topology,
-whole-dashboard snapshots and declared-only catalog entries remain future work.
+into questions and immutable investigation evidence. Declared-only catalog entries
+retain explicit not-observed states. Async/declaration topology and whole-dashboard
+snapshots remain future work.
+
+### Incoming HTTP capability planning
+
+The implemented HTTP slice uses the existing service metadata reads and evaluators.
+The positive Server/method hint comes from the bounded held metadata page; it is
+advisory and does not establish full-population absence or schema conformance.
+
+```mermaid
+flowchart LR
+    M[Fixed-scope service metadata] --> P[Pure Go dashboard planner]
+    H[Positive held Server and current-method hint] --> P
+    N[Eligible exact HTTP server duration histogram] --> P
+    P --> C[Auto profile or explicit candidate choice]
+    C --> A[Apply selected profile and reread]
+    A --> S[Server span records with nonempty current method]
+    A --> L[Independent service log records]
+    A --> I[Up to two exact native instrument questions]
+    S --> E[Independent results and read clocks]
+    L --> E
+    I --> E
+    E --> Q[Stage exact widget question without reading]
+    Q --> R[Explicit run or evidence capture]
+```
+
+Only one record profile executes. An empty HTTP population stays no data; a user
+can explicitly choose All spans. Native seconds/milliseconds and per-stream
+coverage remain separate from span counts. These are server-span observations,
+not deduplicated request RED or health. See the implemented limits and selection
+rules in [service dashboards](SERVICE_DASHBOARDS.md#incoming-http-as-an-explicit-record-population).
 
 ### Live native counter windows
 

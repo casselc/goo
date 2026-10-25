@@ -27,7 +27,7 @@ Each widget retains its actual independent source-read time and state. One faile
 widget produces a partial overview without zeroing other results. Failed service
 discovery withholds the overview rather than guessing signal support.
 
-Defaults are bounded:
+Defaults are bounded. The **All spans** profile retains the generic defaults:
 
 - Span activity over time, full-population duration/error summaries and observed
   span-name groups. These are spans, including mixed kinds and retries, not HTTP
@@ -50,6 +50,48 @@ Defaults are bounded:
 Time buckets keep at most 60 intervals. Group tables show up to 12 of the
 complete captured groups; summaries use full aggregate populations, never the
 inspection page or visible table rows. Existing source limits fail explicitly.
+
+## Incoming HTTP as an explicit record population
+
+The current incoming HTTP slice adds `auto`, `all-spans` and `http-server`
+profiles. New service visits use `auto`; callers omitting the profile retain the
+legacy plan and ordering unchanged. The planner still performs no source read.
+
+Auto chooses Incoming HTTP when an eligible native
+`http.server.request.duration` histogram in seconds or milliseconds is discovered,
+or when current `http.request.method` attribute discovery accompanies a positive
+Server-span observation in the existing scoped metadata page. That page is bounded
+to 100 rows: its positive hint is advisory, and a missing hint means unknown.
+Flat attribute-key discovery alone does not prove that the method occurred on a
+Server span. It offers the Incoming HTTP candidate while keeping the automatic
+record profile at All spans. Legacy `http.method` alone does not activate it.
+
+The HTTP record question preserves environment, fixed window, service and exact
+resource namespace identity, then requires reported span kind `Server` and a
+present, nonempty record attribute `http.request.method`. Client and internal
+spans, missing methods and empty methods are excluded. Other nonempty values are
+retained literally; this is no schema-conformance assertion. The route breakdown
+retains missing routes separately from empty routes. Durations and recorded span
+status use this same population. Its grain is **server-span records**: retries or
+multiple records are not deduplicated into requests, and recorded span errors do
+not infer an HTTP response-status policy.
+
+A user can choose Incoming HTTP when candidate metadata exists even without the
+positive hint, or choose All spans to examine the broader population. A profile
+change stages intent; applying it explicitly rereads the overview. An empty HTTP
+result remains no data with a manual fallback, rather than silently reading the
+broader population. An explicit HTTP profile without candidate metadata is
+refused. Supported widgets describe executable questions, not health.
+
+Logs retain their own log-record population. Native instruments retain exact
+stream identities, units and independent read clocks; no span/native request-count
+merge is made. While HTTP is active, eligible HTTP server duration histograms rank
+before unrelated default instruments, with deterministic exact-definition ordering
+and the existing two-instrument bound. Seconds and milliseconds remain separate.
+A native-only HTTP candidate can execute its native question while the span
+widget remains not observed. Registered operation bindings retain their declared
+populations. This slice does not establish request throughput, business success,
+complete traces, percentile merging or a complete RED dashboard.
 
 ## Observe → question → evidence → investigation
 
@@ -267,5 +309,5 @@ views, resource USE, and Kubernetes cluster/workload/pod/node dashboards. The
 implemented v2 service overview and supported native kernels are a foundation;
 catalog entries marked proposed do not yet execute those complete dashboards.
 The initiative stages useful defaults, entity/resource discovery, required metric
-adapters and investigation drilldowns while keeping manifests optional. HTTP is
-the first vertical delivery, not the final product scope.
+adapters and investigation drilldowns while keeping manifests optional. The incoming HTTP server-span slice above is implemented; broader HTTP/RPC RED
+and the remaining families still require their own population and source contracts.

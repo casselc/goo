@@ -9791,3 +9791,79 @@ order. The corrected journey resolves the current inputs and proves that its
 chosen subwindow excludes every held metadata witness before checking that the
 HTTP profile persists. Failed diagnostics remain local; those partial invocations
 are not reported as acceptance.
+
+
+## C2a.1 automatic HTTP dashboards — live acceptance (2026-10-25)
+
+Completed against Go/source `13a8da1`, compact presentation `d648655` and final
+mobile label containment `a01141b`. The local lab binary SHA-256 is
+`d65d1307e13e1c237260343dac3eb52f2e981f1d1d4cfb14e2dcecc707c59d43`
+(20,038,768 bytes); the temporary build binary was removed after atomic deployment.
+UI/server/spec equality and actual CSS/JS MIME checks are recorded under
+`artifacts/http-server-dashboard/deployment*.json`. An initial check used the
+wrong spec URL `/api/openapi.json`; the correct `/openapi.json` matched the local
+spec without another deployment. No source or API changes followed the freeze.
+
+The generated fixture emits **225 ordinary OTLP spans** and three native
+instruments through the collector. These are synthetic test telemetry, not mocked
+positive UI/source responses or a production workload. No goo manifest is needed.
+The exact commerce/edge-api scope contains **198 mixed records**, of which
+**137** satisfy Server/current-nonempty-method. Native HTTP duration contributes
+four observations in its own interval, independently from the span population.
+
+The final main journey passes **17.6s / 19.9s invocation**. Its 12 action receipts
+account for **43 logical source API operations and nine pure plans**; inspecting
+held evidence and staging are source-free. Profile switches and range/reset use
+one plan and one read per supported widget, without repeated discovery or hidden
+fallback. Full counts/status/duration/routes are independent of the 100-row page.
+A one-millisecond window contains one actual server record outside all held
+metadata witnesses: the hint is false but the resolved HTTP population remains
+unchanged. Generic worker fallback, client-only default All spans, explicit HTTP
+zero and explicit recovery to seven outgoing spans pass. Both screen sizes verify
+equal physical Mean/p95 tracks and label containment; whole-product desktop and
+mobile frames accompany the focused overview frames. Main receipt:
+`artifacts/http-server-dashboard/http-dashboard-13dc64d238/ledger.json`.
+
+The separate **45-second Bombadil campaign passes** in 47.0s / 48.4s invocation,
+completing **nine phases and 974 snapshots**, with **17 logical source operations
+and three pure plans**. It proves HTTP137 → All198 → HTTP137 and source-free
+evidence/native-picker/catalog return. Receipt:
+`artifacts/http-server-dashboard/http-dashboard-b5a69ca44d/bombadil/acceptance-summary.json`.
+
+A separate route continuation passes **9.1s / 11.7s invocation** without rerunning
+the accepted main or actor. The /items action stages its exact HTTP/route/namespace/
+window predicate source-free; explicit Run measures **120 records**, duration sum
+**2,400,000,000ns**, **24 recorded Error spans** and at most 100 held rows. Trace
+expansion plus linked logs makes two fresh reads in the original bounds, honestly
+showing one supplied trace row and zero log records. Back restores the exact held
+dashboard/scope without another read. Receipt:
+`artifacts/http-server-dashboard/http-dashboard-5e49093a0a/route.json`.
+
+Independent native verification passes **0.055s**, checking **19 actual full-
+population/page/group/status/duration responses** against raw fixture facts using
+a separate small predicate interpreter. A changed count is rejected for each
+response. The fixture identity/predicate properties and old-wire checks recorded
+above remain applicable. These logical API budgets do not measure internal SQL
+scan cost, and no new Quint scheduling proof or numerical control quota is claimed.
+
+The three partial main invocations remain failed diagnostics: stale range input,
+wrong source-order assumption, then a Reset control hidden after compact remount.
+Their corrected guards are retained; no bound was weakened. Actual frames drove
+compact disclosure, equal bar tracks and mobile label containment fixes. The
+remaining catalog/header overhead is visible in whole-product frames and recorded
+as a bounded backlog follow-up. Generic startup still has the C1 sample-configuration
+dependency; this manifest-free lab journey does not close standalone adoption.
+
+README, service guide, architecture diagram, roadmap/backlog, executable
+[storyboard 187](journeys/187-http-server-dashboard-storyboard.md), journey index
+and verification guide are synchronized. The diagram is source-inspected Mermaid,
+not a newly rendered artifact. Independent final review and publication checks
+are recorded after their completion below.
+
+
+Final independent review **APPROVES C2a.1/G1**, including raw route-to-trace
+receipts, exact range/profile preservation, actor/native evidence and refreshed
+frames. Whitespace checks pass; **1,303 relative links across 12 changed Markdown
+files resolve**. No additional runtime tests were repeated after accepted main,
+actor and supplement runs. Publication follows the reviewed source milestones;
+the final commit and verified remote head are reported on completion.

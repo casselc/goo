@@ -80,9 +80,13 @@ optional reservation lab.
 | [Saved work](docs/INVESTIGATION_DRAFT_RECOVERY.md) | Immutable evidence/revisions, reusable questions and bounded same-tab draft recovery | Browser storage can fail/expire; an unknown save may already have committed |
 | [Annotations](docs/WORKBENCH_ANNOTATIONS.md) | Tags/notes, exact references and optional XTDB-retained evidence | No shared-draft concurrency, trained classifier or production authorization is implied |
 
-The next product initiative is [automatic RED/USE and role-specific dashboards](docs/AUTOMATIC_DASHBOARDS.md)
-for discovered web/RPC, database, messaging, host/runtime and Kubernetes entities.
-This is proposed staged work; current automatic service overviews are its foundation.
+[Automatic operational dashboards](docs/AUTOMATIC_DASHBOARDS.md) now start with
+HTTP server-span views: discover a service, see incoming activity, recorded span
+errors, duration and routes, then open a scoped question or trace. All spans
+remains available, and native HTTP duration instruments retain separate stream
+semantics. RPC, database, messaging, host/runtime USE and Kubernetes families
+remain staged follow-on work; discovery does not invent missing health signals.
+See the [executed journey and desktop/mobile frames](journeys/187-http-server-dashboard-storyboard.md).
 
 Error triage acceptance is complete: ET1 `982b9e9`, ET2 `0c4ab38`, real OTel
 179 spans/logs, ownership, native/model checks and a 55-second actor pass. Actual

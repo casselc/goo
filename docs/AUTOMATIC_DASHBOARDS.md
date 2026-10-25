@@ -1,7 +1,7 @@
 # Automatic operational dashboards — product initiative
 
-Status: **proposed**, clarified by the user on 2026-10-25 after the whole-product
-review. This is the expanded C2 initiative in the
+Status: **C2a.1 HTTP slice delivered**; the remaining stages are proposed. Clarified by the user on 2026-10-25 after the whole-product review.
+This is the expanded C2 initiative in the
 [current roadmap](ROADMAP_2026_10_25.md), not a claim every family is implemented.
 
 ## Desired experience
@@ -27,6 +27,39 @@ as Services already does. Loading every family, every instrument and every entit
 in the background is not required. Local switching can use held data; additional
 source execution must remain explicit in the existing owning workflow and its
 read policy. Do not turn a metadata-only preview into a hidden population read.
+
+## First HTTP slice — implementation contract
+
+The service planner accepts an optional `profile`: `auto`, `http-server` or
+`all-spans`. Omitting it preserves the existing v2 plan, including its mixed-span
+defaults. The service UI opts into `auto`; a new service visit starts automatic,
+while range and native-instrument changes retain the chosen view. A view switch
+uses the existing cancellation/generation owner and performs fresh bounded reads.
+
+An HTTP view is a **candidate**, suggested by the supplied current
+`http.request.method` attribute key or a supported HTTP server duration histogram.
+A flat attribute inventory cannot prove that the method and Server kind occurred
+on the same record. Automatic selection additionally uses a positive matching
+server-span observation from the existing held service page, or an eligible
+native HTTP duration instrument. Without either, All spans stays the default and
+the HTTP candidate remains available to select. A bounded page without a witness
+does not establish that HTTP work is absent. Actual span questions require the reported kind `Server`
+and a present, nonempty `http.request.method`, within the original service,
+namespace, environment and fixed window. Legacy `http.method` alone stays in
+All spans; this raw-span profile does not union aliases or certify a convention.
+Missing and empty routes remain separate groups. Recorded span Error is distinct
+from HTTP response status and business success.
+
+No matching server spans leaves an explicit empty incoming view and an All spans
+action; there is no hidden fallback population read. Native HTTP duration results
+retain their own exact streams, units, intervals and source basis. Purpose ranking
+places relevant supported duration instruments ahead of unrelated defaults, with
+the existing two-instrument limit and explicit override. Generic, log and declared
+operation widgets retain their own populations rather than becoming HTTP metrics.
+
+C2a.1 is implemented and checked against ordinary OTel data. Actual source,
+browser, actor and independent verification evidence is recorded in
+[VALIDATION.md](../VALIDATION.md) and [journey 187](../journeys/187-http-server-dashboard-storyboard.md).
 
 ## Dashboard families and useful defaults
 
@@ -79,7 +112,8 @@ Already implemented:
 
 - [Service overview planner](../exploration/dashboard.go), automatic service views,
   bounded widget execution, scoped record/native presenters and investigation
-  continuations. Current default record grain is mixed-kind spans.
+  continuations. C2a.1 supplies HTTP server-span defaults with All spans fallback;
+  generic/legacy plans retain mixed-kind span grain.
 - [Native HTTP/messaging capability candidates](../measurements/instrument_capabilities.go),
   gauge/counter/explicit-duration-histogram kernels and exact stream identity.
 - [Catalog profiles](../prebuilt/catalog.yaml) for HTTP, messaging, host CPU,
@@ -90,8 +124,8 @@ Already implemented:
 
 Work that must be planned explicitly:
 
-1. Family discovery/selection, semantic population defaults and purpose-ranked
-   panels instead of only generic span groups or the first eligible instruments.
+1. Extend the delivered HTTP family selection, semantic population defaults and
+   purpose-ranked panels to RPC and the remaining role/resource families.
 2. A resource-entity inventory and typed identity policy for hosts/Kubernetes,
    distinct from service-name discovery. Current native validation expects service
    identity; introduce a deliberate resource contract rather than manufacturing
