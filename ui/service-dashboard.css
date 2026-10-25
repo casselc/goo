@@ -5,15 +5,15 @@
 .dashboard-profiles>details[open]{flex-basis:100%}
 .dashboard-profile-status{font-size:.78rem;line-height:1.4;margin:.3rem 0;color:var(--muted,#98a8bf)}
 .dashboard-record-rate{font-size:.85rem;margin:.3rem 0;font-variant-numeric:tabular-nums}
-:is([data-profile=http-server],[data-profile=rpc-server],[data-profile=db-client]) .dashboard-widget[data-widget=spans]{grid-column:1/-1}
-:is([data-profile=http-server],[data-profile=rpc-server],[data-profile=db-client]) .dashboard-widget[data-widget=spans]>.ui-stats{margin-bottom:.3rem}
-:is([data-profile=http-server],[data-profile=rpc-server],[data-profile=db-client]) .dashboard-widget[data-widget=dimension] .service-diagnosis>h6{display:none}
+:is([data-profile=http-server],[data-profile=rpc-server],[data-profile=db-client],[data-profile=messaging-consumer],[data-profile=messaging-producer]) .dashboard-widget[data-widget=spans]{grid-column:1/-1}
+:is([data-profile=http-server],[data-profile=rpc-server],[data-profile=db-client],[data-profile=messaging-consumer],[data-profile=messaging-producer]) .dashboard-widget[data-widget=spans]>.ui-stats{margin-bottom:.3rem}
+:is([data-profile=http-server],[data-profile=rpc-server],[data-profile=db-client],[data-profile=messaging-consumer],[data-profile=messaging-producer]) .dashboard-widget[data-widget=dimension] .service-diagnosis>h6{display:none}
 @media(max-width:600px){.dashboard-profiles>details{margin-left:0;flex-basis:100%}.dashboard-profiles>button{flex:1}.dashboard-profile-status{font-size:.75rem}}
 .dashboard-prerequisites{margin:.5rem 0;font-size:.78rem}
 .dashboard-prerequisites>p{font-size:.75rem;line-height:1.4;margin:.3rem 0}
 .service-dashboard .service-timeline.compact-timeline{margin-top:.4rem}
 /* Identical physical tracks make route mean/p95 bars directly comparable. */
-.service-dashboard:is([data-profile=http-server],[data-profile=rpc-server],[data-profile=db-client]) .dashboard-widget[data-widget=dimension] .comparison-bar-cell{width:7rem;min-width:7rem;max-width:7rem}
+.service-dashboard:is([data-profile=http-server],[data-profile=rpc-server],[data-profile=db-client],[data-profile=messaging-consumer],[data-profile=messaging-producer]) .dashboard-widget[data-widget=dimension] .comparison-bar-cell{width:7rem;min-width:7rem;max-width:7rem}
 /* Compact columns retain labels and units within their own track-free cell. */
 .service-dashboard .compact-timeline .service-timeline-lane>div{display:grid;min-width:0}
 .service-dashboard .compact-timeline .service-timeline-lane>div>strong,

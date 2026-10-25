@@ -10115,3 +10115,35 @@ evidence and delivered-scope boundaries. Whitespace checks pass, and **1,362
 relative links across the 13 Markdown files changed in this round resolve**. No additional runtime
 campaign was repeated after acceptance. The final commit and verified
 `origin/work` head are reported after publication.
+
+
+## C2b.2 messaging dashboards — reviewed source (2026-10-25)
+
+Separate `messaging-consumer` and `messaging-producer` profiles require exact
+reported Consumer/Producer kind and nonempty `messaging.system` within the
+original service, resource namespace, environment and fixed window. Positive
+same-row held-page hints admit automatic selection; a bounded page without a
+witness is unknown. HTTP, RPC and DB retain priority, followed by consumer,
+producer and All spans. Range/native changes retain the resolved profile.
+Destination, operation-name and system breakdowns retain literal missing/empty
+populations. Consumer spans can cover receive or process records; native exact
+`messaging.process.duration` seconds is independent processing evidence, not the
+same population. Producer-native admission is refused without span metadata.
+
+Actual source checks: all root Go packages pass, all 78 Node test files pass
+(4.64s), focused dashboard and full exploration tests pass, and 18 new handler
+fixtures pass alongside all earlier frozen fixtures. OpenAPI validates 277
+responses, 93 admitted requests and 15 mux refusals, with 76 operations/70 Go
+routes unchanged. Twelve generated Hegel two-role grids plus boundary, namespace,
+missing/empty, dimension, precedence and native-identity checks pass (0.145s).
+The root Go invocation first encountered sandbox-denied local httptest sockets;
+the rerun with local socket access passed. Source-gated external checks are not
+claimed as live acceptance.
+
+Independent review caught unrelated-profile native relabeling; the correction
+restricts new processing-native family/reason labels to the consumer profile and
+adds regression coverage. Existing frozen responses and omitted-profile legacy
+behavior are unchanged. Relevant metadata intentionally adds selectable messaging
+families to opt-in plans; this is not a claim that every previously possible
+opt-in response is byte-identical. Final source review approves the frozen cut.
+Actual source/browser/actor populations and frames remain a separate gate below.

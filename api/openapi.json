@@ -8959,7 +8959,7 @@
                 "type": "null"
               }
             ],
-            "description": "Opt-in bounded family descriptors. HTTP/RPC/DB candidate metadata must be confirmed by the executable question before treating counts as observed; no hidden source read or fallback is performed by this planner."
+            "description": "Opt-in bounded family descriptors. HTTP/RPC/DB/messaging candidate metadata must be confirmed by the executable question before treating counts as observed; no hidden source read or fallback is performed by this planner."
           },
           "nativeLimit": {
             "type": "integer"
@@ -8979,7 +8979,7 @@
           },
           "profile": {
             "type": "string",
-            "description": "Selected all-spans, http-server, rpc-server or db-client family for opt-in requests; absent on legacy requests."
+            "description": "Selected all-spans, http-server, rpc-server, db-client, messaging-consumer or messaging-producer family for opt-in requests; absent on legacy requests."
           },
           "scope": {
             "$ref": "#/components/schemas/exploration.InventoryQuestion"
@@ -9095,6 +9095,28 @@
               }
             ]
           },
+          "messagingConsumerObserved": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional advisory positive hint from already-held, same-scope Consumer spans with nonempty messaging.system on the same row. false/omitted is unknown, not absence, delivery success, acknowledgement or broker health. A compatible processing-duration histogram can independently admit the consumer family; it remains a separate population."
+          },
+          "messagingProducerObserved": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional advisory positive hint from already-held, same-scope Producer spans with nonempty messaging.system on the same row. false/omitted is unknown, not absence or delivery success. Consumer has automatic precedence; processing metrics never admit the producer family."
+          },
           "nativeSelection": {
             "anyOf": [
               {
@@ -9131,7 +9153,7 @@
                 "type": "null"
               }
             ],
-            "description": "Optional auto, all-spans, http-server, rpc-server or db-client selection. Omitted/empty/null preserves the legacy v2 response. auto selects HTTP only with a positive supplied server-observation hint plus current-key metadata, or a compatible native HTTP instrument. Automatic precedence is HTTP, legacy RPC, DB client, then All spans. RPC admission requires both legacy rpc.system/rpc.method keys plus a positive rpcServerObserved hint, or an eligible legacy RPC duration instrument. Flat keys alone leave All spans selected; hints are advisory, not authenticated conformance."
+            "description": "Optional auto, all-spans, http-server, rpc-server, db-client, messaging-consumer or messaging-producer selection. Omitted/empty/null preserves the legacy v2 response. auto selects HTTP only with a positive supplied server-observation hint plus current-key metadata, or a compatible native HTTP instrument. Automatic precedence is HTTP, legacy RPC, DB client, messaging consumer, messaging producer, then All spans. RPC admission requires both legacy rpc.system/rpc.method keys plus a positive rpcServerObserved hint, or an eligible legacy RPC duration instrument. Flat keys alone leave All spans selected; hints are advisory, not authenticated conformance."
           },
           "rpcServerObserved": {
             "anyOf": [

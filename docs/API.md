@@ -544,3 +544,28 @@ span statuses, not database-server health, database completeness or a deduplicat
 operation count. Native and span duration remain separate populations with
 independent units, intervals and evidence. No new route, source probe, hidden
 fallback, annotation requirement or publication is introduced.
+
+
+Messaging adds separate optional `messaging-consumer` and `messaging-producer`
+profiles with advisory `messagingConsumerObserved` and
+`messagingProducerObserved` booleans. Current `messaging.system` metadata offers
+both candidates; positive same-scope rows admit the corresponding role. Automatic
+precedence is HTTP, RPC, DB client, consumer, producer, then All spans. False or
+omitted hints mean unknown. Explicit selection needs eligible metadata; no source
+probe or fallback read is performed. Unrelated and omitted-profile plans retain
+their existing wire bytes.
+
+Consumer span questions require exact `SpanKind = Consumer`; producer questions
+require exact `SpanKind = Producer`. Both require present nonempty
+`messaging.system`, preserving service/environment/namespace/window. Destination
+or operation metadata alone does not admit either role. Optional dimensions use
+current destination name, operation name, then system. The profile describes role
+span observations, not unique messages, confirmed acknowledgements, delivery
+success, queue depth, lag or broker health. Processing metrics cannot establish
+those facts or classify producer spans.
+
+Only a compatible native `messaging.process.duration` histogram in seconds can
+independently admit the consumer family. Its processing-duration population,
+identity, intervals and units remain separate from Consumer span observations;
+metric shape does not prove matching operation values or convention compliance.
+No new routes, transport budgets or publication effects are introduced.

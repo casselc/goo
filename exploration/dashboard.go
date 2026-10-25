@@ -15,15 +15,17 @@ const DashboardNativeLimit = 2
 
 // Inputs are supplied observations, not authenticated source evidence or health.
 type DashboardRequest struct {
-	DBClientObserved   bool                      `json:"dbClientObserved,omitempty"`
-	RPCServerObserved  bool                      `json:"rpcServerObserved,omitempty"`
-	HTTPServerObserved bool                      `json:"httpServerObserved,omitempty"`
-	Profile            string                    `json:"profile,omitempty"`
-	Scope              InventoryQuestion         `json:"scope"`
-	Service            string                    `json:"service"`
-	Signals            []string                  `json:"signals"`
-	Fields             []Field                   `json:"fields"`
-	Instruments        []measurements.Instrument `json:"instruments"`
+	MessagingConsumerObserved bool                      `json:"messagingConsumerObserved,omitempty"`
+	MessagingProducerObserved bool                      `json:"messagingProducerObserved,omitempty"`
+	DBClientObserved          bool                      `json:"dbClientObserved,omitempty"`
+	RPCServerObserved         bool                      `json:"rpcServerObserved,omitempty"`
+	HTTPServerObserved        bool                      `json:"httpServerObserved,omitempty"`
+	Profile                   string                    `json:"profile,omitempty"`
+	Scope                     InventoryQuestion         `json:"scope"`
+	Service                   string                    `json:"service"`
+	Signals                   []string                  `json:"signals"`
+	Fields                    []Field                   `json:"fields"`
+	Instruments               []measurements.Instrument `json:"instruments"`
 	// Nil uses defaults; an explicit empty list selects no native reads.
 	NativeSelection *[]string `json:"nativeSelection,omitempty"`
 }
@@ -95,7 +97,7 @@ func DashboardRecordQuestion(scope InventoryQuestion, service, signal string) Qu
 // PlanServiceDashboard performs no source reads. Every executable widget uses an
 // existing typed evaluator; no SQL, health policy or fleet aggregation is inferred.
 func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclaration) (*DashboardPlan, error) {
-	if in.Profile != "" && in.Profile != "auto" && in.Profile != "all-spans" && in.Profile != "http-server" && in.Profile != "rpc-server" && in.Profile != "db-client" {
+	if in.Profile != "" && in.Profile != "auto" && in.Profile != "all-spans" && in.Profile != "http-server" && in.Profile != "rpc-server" && in.Profile != "db-client" && in.Profile != "messaging-consumer" && in.Profile != "messaging-producer" {
 		return nil, fmt.Errorf("unsupported dashboard profile")
 	}
 	if err := in.Scope.Validate(); err != nil {
@@ -170,6 +172,23 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			}
 		}
 	}
+	messagingCandidate := false
+	if signals["spans"] {
+		for _, f := range in.Fields {
+			messagingCandidate = messagingCandidate || f == (Field{Kind: "attribute", Key: "messaging.system"})
+		}
+	}
+	consumerCandidate := messagingCandidate
+	consumerAuto := messagingCandidate && in.MessagingConsumerObserved
+	producerAuto := messagingCandidate && in.MessagingProducerObserved
+	if signals["metrics"] {
+		for _, instrument := range in.Instruments {
+			if dashboardNativeMessaging(in.Scope, in.Service, instrument) {
+				consumerCandidate, consumerAuto = true, true
+			}
+		}
+	}
+	messagingActive := false
 	dbActive := false
 	rpcActive := false
 	httpActive := false
@@ -183,6 +202,10 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 				p.Profile = "rpc-server"
 			} else if dbAuto {
 				p.Profile = "db-client"
+			} else if consumerAuto {
+				p.Profile = "messaging-consumer"
+			} else if producerAuto {
+				p.Profile = "messaging-producer"
 			}
 		}
 		if p.Profile == "http-server" && !httpCandidate {
@@ -194,6 +217,13 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		if p.Profile == "db-client" && !dbCandidate {
 			return nil, fmt.Errorf("Database client profile requires supplied current db.system.name metadata or an eligible operation duration instrument")
 		}
+		if p.Profile == "messaging-consumer" && !consumerCandidate {
+			return nil, fmt.Errorf("Messaging consumer profile requires supplied current messaging.system metadata or an eligible processing duration instrument")
+		}
+		if p.Profile == "messaging-producer" && !messagingCandidate {
+			return nil, fmt.Errorf("Messaging producer profile requires supplied current messaging.system metadata")
+		}
+		messagingActive = p.Profile == "messaging-consumer" || p.Profile == "messaging-producer"
 		dbActive = p.Profile == "db-client"
 		rpcActive = p.Profile == "rpc-server"
 		httpActive = p.Profile == "http-server"
@@ -207,13 +237,24 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			httpState = "candidate"
 			httpReason = "Metadata candidate only. Incoming span observations require exact Server kind and a nonempty current http.request.method in the actual read; conformance is unverified"
 		}
-		p.Families = []DashboardFamily{{Key: "http-server", Title: "Incoming HTTP", State: httpState, Grain: "server-span-record", Reason: httpReason, RuleSet: "goo/http-server-span-observations/v1", Selected: httpActive}, {Key: "all-spans", Title: "All spans", State: genericState, Grain: "span-record", Reason: "Mixed reported span kinds and retries; records are not request throughput", Selected: !httpActive && !rpcActive && !dbActive}}
+		p.Families = []DashboardFamily{{Key: "http-server", Title: "Incoming HTTP", State: httpState, Grain: "server-span-record", Reason: httpReason, RuleSet: "goo/http-server-span-observations/v1", Selected: httpActive}, {Key: "all-spans", Title: "All spans", State: genericState, Grain: "span-record", Reason: "Mixed reported span kinds and retries; records are not request throughput", Selected: !httpActive && !rpcActive && !dbActive && !messagingActive}}
 		if rpcCandidate || rpcActive {
 			family := DashboardFamily{Key: "rpc-server", Title: "Incoming RPC", State: "candidate", Grain: "server-span-record", Reason: "Legacy metadata candidate only. Actual reads require exact Server kind and nonempty rpc.system and rpc.method; recorded status is not protocol outcome or conformance", RuleSet: "goo/rpc-server-legacy-span-observations/v1", Selected: rpcActive}
 			p.Families = append(p.Families[:1], append([]DashboardFamily{family}, p.Families[1:]...)...)
 		}
 		if dbCandidate || dbActive {
 			family := DashboardFamily{Key: "db-client", Title: "Database clients", State: "candidate", Grain: "client-span-record", Reason: "Current metadata candidate only. Actual reads require exact Client kind and nonempty db.system.name; observations do not establish database or pool health", RuleSet: "goo/db-client-span-observations/v1", Selected: dbActive}
+			p.Families = append(p.Families[:len(p.Families)-1], family, p.Families[len(p.Families)-1])
+		}
+		for _, role := range []string{"consumer", "producer"} {
+			candidate := messagingCandidate
+			if role == "consumer" {
+				candidate = consumerCandidate
+			}
+			if !candidate {
+				continue
+			}
+			family := DashboardFamily{Key: "messaging-" + role, Title: "Messaging " + role + "s", State: "candidate", Grain: role + "-span-record", Reason: "Current metadata candidate only. Actual reads require the exact reported role and nonempty messaging.system; counts do not establish message throughput, queue health or delivery guarantees", RuleSet: "goo/messaging-" + role + "-span-observations/v1", Selected: p.Profile == "messaging-"+role}
 			p.Families = append(p.Families[:len(p.Families)-1], family, p.Families[len(p.Families)-1])
 		}
 	}
@@ -246,6 +287,13 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 				w.Grain = "client-span-record"
 				w.Reason = "Exact Client kind and nonempty current database system; recorded span status is not database server or pool health"
 			}
+			if messagingActive && signal == "spans" {
+				role := strings.TrimPrefix(p.Profile, "messaging-")
+				q = dashboardMessagingQuestion(q, role)
+				w.Title = "Messaging " + role + " span observations"
+				w.Grain = role + "-span-record"
+				w.Reason = "Reported role and nonempty messaging.system; Consumer includes receive/process records, not processing-only. Recorded status is not delivery, broker or queue health"
+			}
 			q.BucketMS = bucket
 			q.GroupBy = []Field{{Kind: "column", Key: map[string]string{"spans": "name", "logs": "severity"}[signal]}}
 			if signal == "spans" {
@@ -270,9 +318,11 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			keys = []string{"rpc.method"}
 		} else if dbActive {
 			keys = []string{"db.operation.name", "db.namespace", "db.system.name"}
+		} else if messagingActive {
+			keys = []string{"messaging.destination.name", "messaging.operation.name", "messaging.system"}
 		}
 		for _, key := range keys {
-			found := httpActive || rpcActive || dbActive && key == "db.system.name"
+			found := httpActive || rpcActive || dbActive && key == "db.system.name" || messagingActive && key == "messaging.system"
 			for _, f := range in.Fields {
 				if f.Kind == "attribute" && f.Key == key {
 					found = true
@@ -291,6 +341,9 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			}
 			if dbActive {
 				q = dashboardDBQuestion(q)
+			}
+			if messagingActive {
+				q = dashboardMessagingQuestion(q, strings.TrimPrefix(p.Profile, "messaging-"))
 			}
 			q.GroupBy = []Field{{Kind: "attribute", Key: key}}
 			q.Summary = "span-duration"
@@ -313,6 +366,12 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 				w.Title = "Database client " + key
 				w.Grain = "client-span-record"
 				w.Reason = "Literal reported populations across database systems and namespaces; missing and empty labels remain separate, not unique operations or server health"
+			}
+			if messagingActive {
+				role := strings.TrimPrefix(p.Profile, "messaging-")
+				w.Title = "Messaging " + role + " " + key
+				w.Grain = role + "-span-record"
+				w.Reason = "Literal reported populations across messaging systems; missing and empty labels remain separate, not unique messages, queue health or producer-consumer identity"
 			}
 			p.Widgets = append(p.Widgets, w)
 			break
@@ -338,6 +397,12 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			}
 			if dbActive {
 				a, b := dashboardNativeDB(in.Scope, in.Service, instruments[i]), dashboardNativeDB(in.Scope, in.Service, instruments[j])
+				if a != b {
+					return a
+				}
+			}
+			if p.Profile == "messaging-consumer" {
+				a, b := dashboardNativeMessaging(in.Scope, in.Service, instruments[i]), dashboardNativeMessaging(in.Scope, in.Service, instruments[j])
 				if a != b {
 					return a
 				}
@@ -413,6 +478,10 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			if dashboardNativeDB(in.Scope, in.Service, instrument) {
 				w.Family = "db-client"
 				w.Reason = "Independent native database operation duration binding in seconds; stream identity and interval coverage remain separate from client span counts or database health"
+			}
+			if p.Profile == "messaging-consumer" && dashboardNativeMessaging(in.Scope, in.Service, instrument) {
+				w.Family = "messaging-consumer"
+				w.Reason = "Independent native messaging process duration binding in seconds; not all Consumer receive/process spans, message throughput or queue health"
 			}
 		}
 		p.Widgets = append(p.Widgets, w)
@@ -552,6 +621,30 @@ func dashboardDBQuestion(q Query) Query {
 }
 func dashboardNativeDB(scope InventoryQuestion, service string, i measurements.Instrument) bool {
 	if i.Metric != "db.client.operation.duration" || i.Unit != "s" {
+		return false
+	}
+	return dashboardNativeDuration(scope, service, i)
+}
+
+func dashboardMessagingQuestion(q Query, role string) Query {
+	parts := []Predicate{}
+	if q.Where != nil {
+		if len(q.Where.All) > 0 {
+			parts = append(parts, q.Where.All...)
+		} else {
+			parts = append(parts, *q.Where)
+		}
+	}
+	kind := "Consumer"
+	if role == "producer" {
+		kind = "Producer"
+	}
+	parts = append(parts, Predicate{Field: &Field{Kind: "column", Key: "kind"}, Op: "eq", Value: kind}, Predicate{Field: &Field{Kind: "attribute", Key: "messaging.system"}, Op: "ne"})
+	q.Where = &Predicate{All: parts}
+	return q
+}
+func dashboardNativeMessaging(scope InventoryQuestion, service string, i measurements.Instrument) bool {
+	if i.Metric != "messaging.process.duration" || i.Unit != "s" {
 		return false
 	}
 	return dashboardNativeDuration(scope, service, i)

@@ -3881,6 +3881,26 @@
           }
         ]
       },
+      "messagingConsumerObserved": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "messagingProducerObserved": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "nativeSelection": {
         "anyOf": [
           {
