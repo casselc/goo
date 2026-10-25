@@ -837,8 +837,19 @@ when current method metadata exists. It does not prove HTTP work absent. Explici
 view/range changes preserve the selected population and perform bounded fresh
 widget reads. The delivered incoming RPC profile explicitly uses legacy `rpc.system`/`rpc.method`
 and native `rpc.server.duration` milliseconds. Newer RPC bindings, legacy-only
-HTTP keys, database/messaging/resource USE and Kubernetes remain separate
-profiles/deliveries. A bare method group spans reported RPC systems/services
+HTTP keys, messaging/resource USE and Kubernetes remain separate profiles/deliveries.
+Current-key database-client views are delivered for exact Client spans with
+nonempty `db.system.name` and native operation-duration seconds. Legacy `db.system`,
+pool/server health and query-summary authoring remain separate. Literal operation
+or database labels span reported systems/targets within their parent; they do not
+identify a monitored database server or unique query. A bare method group spans reported RPC systems/services
 within its parent; it is not a unique operation identity. Generic-source
 startup still has the documented sample-configuration dependency (C1); running
 this manifest-free telemetry journey in the existing lab does not close that gap.
+
+
+The local lab's ClickHouse internal diagnostic tables can grow quickly. Recent
+cleanup retained bounded samples and removed only internal logs, preserving
+application OTel data and saved evidence. A bounded diagnostic retention policy
+remains a separate lab reproducibility follow-up; current manual cleanup is not
+a production retention guarantee.

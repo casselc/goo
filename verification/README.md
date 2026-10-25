@@ -1980,3 +1980,34 @@ After browser ownership is released, use the environment above:
 go test -run '^Test(HegelRPCDashboard|RPCDashboardCandidate|RPCDashboardNative)' -v .
 GOO_RPC_DASHBOARD_LEDGER=/workspace/goo/artifacts/rpc-server-dashboard/rpc-dashboard-8bcb4af8ed/ledger.json go test -run '^TestRPCDashboardObservedPopulations$' -v .
 ```
+
+## Current database client dashboard slice (C2b)
+
+`TestHegelDBDashboardPopulation` uses 16 generated exhaustive service/resource
+namespace, reported kind and missing/empty/custom current-system grids, with
+legacy `db.system` supplied independently as an exclusion control. The shared
+independent predicate interpreter checks all actual DB/log widget questions.
+Four candidate boundaries distinguish positive hints, flat keys, resource-key
+spoofs and legacy aliases. Deterministic checks cover optional dimension priority,
+HTTP/RPC precedence, explicit DB choice, native seconds-only eligibility, exact
+scope/grain and stable default ordering under descriptor permutation/count
+changes. The focused campaign passed in 0.098s
+(`artifacts/db-dashboard-properties.txt`); the actual-ledger test compiled and
+skipped without its artifact variable.
+
+`TestDBDashboardObservedPopulations` reuses the independent raw-record oracle via
+`GOO_DB_DASHBOARD_LEDGER`. Actual journey189
+`db-dashboard-00281d8421/ledger.json` passed on its first invocation in 0.145s:
+25 full-population responses, including DB 137 versus mixed 189, literal SELECT
+120, explicitly filtered 108 and actual trace continuation 1, matched the raw
+facts. Each guaranteed changed count was rejected. The adjacent
+`native-validation.txt` retains stdout; no observer correction, fixture or
+application change was needed. No new model, mandatory generated case quota or
+synthetic lifecycle replay is introduced for this pure-planner addition.
+
+After browser ownership is released, use the toolchain/cache environment above:
+
+```sh
+go test -run '^Test(HegelDBDashboard|DBDashboardCandidates|DBDashboardNative)' -v .
+GOO_DB_DASHBOARD_LEDGER=/workspace/goo/artifacts/db-client-dashboard/db-dashboard-00281d8421/ledger.json go test -run '^TestDBDashboardObservedPopulations$' -v .
+```

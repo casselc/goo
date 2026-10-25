@@ -14,21 +14,20 @@ additional current commitments.
 
 ## Current review result — 2026-10-25
 
-The complete queue through TS3 is shipped. The [new whole-product roadmap](ROADMAP_2026_10_25.md)
-tracks generic-source startup and routine verification as parallel enablers,
-then automatic capability-driven operational dashboard families and
-native-interval-to-record context. The G1 fast root Go/Node gate is delivered in
-`374bbd5`; the first HTTP dashboard source slice is implemented in `13a8da1`,
-with live ordinary-OTel acceptance in [journey 187](../journeys/187-http-server-dashboard-storyboard.md), compact UI `d648655` and mobile containment `a01141b`. The [family plan](AUTOMATIC_DASHBOARDS.md)
-now includes delivered HTTP and legacy RPC server-span slices, with explicit
-method-population semantics and independent native units. See [journey 188](../journeys/188-rpc-server-dashboard-storyboard.md). Database, messaging, resource USE
-and Kubernetes remain staged deliveries; the first two profiles are not the
-entire product goal.
-Lean aggregate reads require a measured audit; trace-search definition reuse is
-a conditional later cut, distinct from observed-result custody. These are
-remaining proposals, not automatically activated work. The sections
-below preserve earlier queues and delivered history; use the current index above
-for priority and acceptance.
+The queue through TS3 is shipped. The [current roadmap](ROADMAP_2026_10_25.md)
+and [execution backlog](BACKLOG_2026_10_25.md) own the remaining priorities. G1's
+fast root Go/Node gate is delivered. The [dashboard initiative](AUTOMATIC_DASHBOARDS.md)
+has delivered HTTP server-span views ([journey 187](../journeys/187-http-server-dashboard-storyboard.md)),
+explicit legacy RPC views ([journey 188](../journeys/188-rpc-server-dashboard-storyboard.md))
+and current-key database-client views ([journey 189](../journeys/189-db-client-dashboard-storyboard.md)).
+Each keeps literal population, native-unit and source-read semantics explicit.
+
+Generic-source startup remains an adoption enabler. Messaging, newer convention
+bindings, database pool/server health, resource USE and Kubernetes discovery
+remain staged deliveries. Native interval-to-record context is a separate next
+investigation path. Lean aggregate reads require a measured audit; trace-search
+definition reuse is conditional and distinct from observed-result custody.
+The history below does not create additional current commitments.
 
 ## Active implementation queue
 

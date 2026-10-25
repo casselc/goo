@@ -1,6 +1,7 @@
 # Automatic operational dashboards — product initiative
 
-Status: **C2a.1 HTTP and C2a.2 legacy RPC delivered**. Later stages are proposed. Clarified by the user on 2026-10-25 after the whole-product review.
+Status: **C2a HTTP/legacy-RPC and C2b.1 database clients delivered**.
+Later stages remain proposed. Clarified by the user on 2026-10-25 after the whole-product review.
 This is the expanded C2 initiative in the
 [current roadmap](ROADMAP_2026_10_25.md), not a claim every family is implemented.
 
@@ -90,6 +91,35 @@ parent predicate and adds the exact method value; it does not manufacture a
 globally unique operation identity. The existing compact displays,
 scoped questions, trace waterfall and retained Back flow are reused.
 
+## Database-client slice — current-key dependency observations
+
+C2b.1 is delivered. The `db-client` profile requires exact reported `Client`
+kind and present, nonempty `db.system.name`. Legacy `db.system` alone stays in
+All spans; it is not silently unioned into the current-key population. A positive
+same-row, same-scope observation from the existing held page, or compatible
+native `db.client.operation.duration` histogram in seconds, admits automatic
+selection. Existing HTTP and RPC admission keep their priority. Flat field
+metadata offers a candidate but does not prove Client/key co-occurrence.
+
+The bounded default breakdown chooses observed `db.operation.name`, then
+`db.namespace`, then `db.system.name`. Missing and empty optional labels remain
+separate groups; choosing a breakdown does not add a population filter. These
+are literal value populations across reported systems and database namespaces,
+not globally unique operations or monitored database entities. Existing question
+filters/grouping support explicit further scoping without loading every dimension.
+
+No automatic `db.query.summary`, `db.query.text` or `db.statement` grouping is
+introduced. Already-reported attributes remain available through existing explicit
+record inspection and exploration; the tool does not require raw SQL, sanitize
+arbitrary query text or promise that producer-supplied fields contain no secrets.
+The page/aggregate source contracts remain unchanged.
+
+Activity, recorded span Error and inclusive client duration describe observed
+dependency work. They do not establish unique-query throughput, database-server
+health, connection-pool saturation, affected rows or business success. The native
+seconds binding retains exact stream identity, temporality and interval coverage;
+same-name metrics with another unit remain separate ordinary instruments.
+
 ## Dashboard families and useful defaults
 
 | Family / entity | Useful default panels | Evidence required and fallback |
@@ -141,8 +171,9 @@ Already implemented:
 
 - [Service overview planner](../exploration/dashboard.go), automatic service views,
   bounded widget execution, scoped record/native presenters and investigation
-  continuations. C2a.1/C2a.2 supply HTTP and legacy RPC server-span defaults with
-  All spans fallback; omitted-profile plans retain mixed-kind span grain.
+  continuations. C2a/C2b.1 supply HTTP/legacy-RPC server-span and current-key
+  database-client defaults, with All spans fallback. Omitted-profile plans retain
+  mixed-kind span grain.
 - [Native HTTP/messaging capability candidates](../measurements/instrument_capabilities.go),
   gauge/counter/explicit-duration-histogram kernels and exact stream identity.
 - [Catalog profiles](../prebuilt/catalog.yaml) for HTTP, messaging, host CPU,
@@ -153,8 +184,8 @@ Already implemented:
 
 Work that must be planned explicitly:
 
-1. Extend the delivered HTTP/legacy-RPC family selection and purpose-ranked
-   panels to newer RPC conventions and the remaining role/resource families.
+1. Extend the delivered HTTP/legacy-RPC/database-client selection to messaging,
+   newer convention bindings and the remaining role/resource families.
 2. A resource-entity inventory and typed identity policy for hosts/Kubernetes,
    distinct from service-name discovery. Current native validation expects service
    identity; introduce a deliberate resource contract rather than manufacturing

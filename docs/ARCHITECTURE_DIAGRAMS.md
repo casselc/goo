@@ -1156,6 +1156,17 @@ held-page hint is advisory. Native `rpc.server.duration` histograms remain exact
 millisecond per-stream evidence, independent of span counts. Current RPC schema
 support is proposed separately; see [the RPC population contract](SERVICE_DASHBOARDS.md#incoming-rpc-with-an-explicit-legacy-convention).
 
+### Database client capability planning
+
+The implemented DB profile uses `Client` plus nonempty current `db.system.name`
+in the same fixed service/resource namespace scope. Auto precedence is HTTP, RPC,
+DB, then All spans; explicit selection and source-free staging use the shared
+planner path. The held-page Client/system hint is positive advisory evidence,
+not proof of absence. Default grouping by operation name, namespace or system
+retains missing/empty optional values and does not identify a unique query.
+Native `db.client.operation.duration` histograms are separate exact second-valued
+per-stream evidence, not database/pool health. See the [DB population contract](SERVICE_DASHBOARDS.md#database-client-span-observations).
+
 ### Live native counter windows
 
 The [counter export-window sequence](LIVE_COMPARISON.md#exact-stream-counter-rates)

@@ -2316,3 +2316,40 @@ accepted main. Original semantic main/actor were not rerun for display-only
 `ccdd2d1`. Full receipts and the corrected oracle diagnostic are in the storyboard.
 Generated ordinary OTLP telemetry is used; positive source/UI responses are not
 mocked. No new persistence format or convention-conformance claim is introduced.
+
+## 189 — Database client overview
+
+[Storyboard and flow diagram](../../journeys/189-db-client-dashboard-storyboard.md),
+[ordinary OTel journey and actor wrapper](../../journeys/db-client-dashboards.spec.js),
+[Bombadil actor](../../verification/bombadil/db-client-dashboard.ts) and
+[automatic dashboard scope](../AUTOMATIC_DASHBOARDS.md).
+
+| Frame | Actual evidence |
+| --- | --- |
+| [DB client overview](screenshots/189a-db-client-dashboard.png) | Full Client population, literal missing/empty operation groups and separate native units/identities |
+| [Mobile summary](screenshots/189b-mobile-db-summary.png) | Client-record count, recorded span Error and duration |
+| [Desktop in context](screenshots/189c-db-service-in-context.png) | Real discovery/service scope and explicit role choices |
+| [Mobile in context](screenshots/189d-mobile-db-in-context.png) | Honest entry overhead and contained native labels |
+| [Database population to trace](screenshots/189e-db-population-to-trace.png) | Fresh original-window waterfall and honestly empty linked logs from the isolated 108-record population |
+
+Main passes in 28.6s over 233 generated ordinary OTLP spans: 137 current-key Client
+matches versus 189 mixed records and a 100-row held page. Legacy-only system keys,
+wrong kinds and namespace collisions do not silently join. `SELECT` combines 120
+records across two systems/database namespaces; both occur in the actual first
+page. Explicit filters narrow to 108 before trace expansion. Edits, Records-tab
+selection and retained service return are source-free; named Runs and trace/log
+reads remain explicit. Client observations are not database-server or pool health.
+
+Two pure metadata API probes demonstrate diagnosis fallback from operation to
+database namespace to system without automatic read fanout or raw SQL/summary
+selection. The full browser task uses 49 logical source operations/11 plans,
+with those two probes separately labeled. The 30-second actor completes nine
+phases/461 snapshots and its exact 17-source/three-plan proof. First-run independent
+Go verification passes in 0.145s across 25 actual responses and rejects 25
+changed-count controls. Five actual frames use the accepted main fixture.
+
+The initial harness failed to select Records after a filter-editor Run; the
+source-free tab correction and preserved 34.4s diagnostic are documented separately
+from the accepted main. No positive source/UI response was mocked and no new
+persistence format is introduced. Full timings, receipts and limits are in the
+storyboard and VALIDATION.md.

@@ -81,14 +81,16 @@ optional reservation lab.
 | [Annotations](docs/WORKBENCH_ANNOTATIONS.md) | Tags/notes, exact references and optional XTDB-retained evidence | No shared-draft concurrency, trained classifier or production authorization is implied |
 
 [Automatic operational dashboards](docs/AUTOMATIC_DASHBOARDS.md) now include
-HTTP and explicit legacy OTel RPC server-span views. Discover a service, see
-incoming activity, recorded span errors, duration and route/method populations,
-then open a scoped question or trace. All spans remains available; native metrics
-retain separate units, streams and intervals. Newer RPC convention bindings,
-database, messaging, host/runtime USE and Kubernetes remain staged follow-on work.
-Discovery does not invent missing health signals.
+HTTP and explicit legacy OTel RPC server-span views, plus current-key database
+client dependency views. Discover a service, inspect activity, recorded span errors,
+duration and literal route/method/database populations, then narrow the scope and
+open a trace. All spans remains available; native metrics retain separate units,
+streams and intervals. Newer RPC bindings, messaging, database pool/server health,
+host/runtime USE and Kubernetes remain staged follow-on work. Discovery does not
+invent missing health signals.
 See the executed [HTTP](journeys/187-http-server-dashboard-storyboard.md) and
-[RPC](journeys/188-rpc-server-dashboard-storyboard.md) journeys with desktop/mobile frames.
+[RPC](journeys/188-rpc-server-dashboard-storyboard.md) and
+[database-client](journeys/189-db-client-dashboard-storyboard.md) journeys with desktop/mobile frames.
 
 Error triage acceptance is complete: ET1 `982b9e9`, ET2 `0c4ab38`, real OTel
 179 spans/logs, ownership, native/model checks and a 55-second actor pass. Actual

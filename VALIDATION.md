@@ -10039,3 +10039,79 @@ and 70 Go routes unchanged. The 189 raw opt-in compiles and skips honestly
 without a ledger. Independent source review approves frozen live acceptance.
 Actual cross-system filtering, trace return, raw-query marker visibility and
 desktop/mobile frames remain live acceptance gates, recorded separately below.
+
+
+## C2b.1 database-client dashboards — live acceptance (2026-10-25)
+
+Completed against reviewed source `a1cd787`, with no application changes after
+freeze. The local Go binary SHA-256 is
+`01bbec442848837bda11911db50ac3e8d8061c5757cb9d86d06a4953c57dbb76`
+(20,082,252 bytes). Deployment equality, native readiness, real asset HTTP 200/MIME
+and server/spec hashes are in `artifacts/db-client-dashboard/deployment.json`.
+The temporary build binary was removed.
+
+The generated ordinary OTLP fixture contains **233 spans**. Its main exact service/
+resource-namespace population has **189 mixed records**, including **137 current-
+key Client matches**. No goo manifest or mocked positive source/UI responses are
+used. Operation groups retain missing (3) and empty (2) separately. SELECT contains
+**120 records** across PostgreSQL/catalog and MySQL/archive, with recorded Error 24
+and duration sum 3,600,000,000 ns. A reported database error attribute is not inferred
+into recorded span status or server health. Native current operation-duration
+seconds remain independent from other reported instruments.
+
+The accepted main passes **28.6s / 32.4s total**, recording **49 logical source API
+operations and 11 browser-owned pure plans**. Two additional pure API controls
+remove optional metadata to verify namespace/system fallback plans without source
+reads; these are separate planning controls, not discovered-source assertions.
+Setup ingestion/readiness probes are also separate from browser effects. The
+main receipt is `artifacts/db-client-dashboard/db-dashboard-00281d8421/ledger.json`.
+
+The actual workflow opens SELECT 120 source-free, explicitly runs it, then stages
+existing PostgreSQL and catalog filters source-free. The next explicit Run
+measures **108 records**, Error 12 and duration sum 3,240,000,000 ns. Every original
+Client/current-key/service/namespace/time predicate survives. Switching the retained
+result to Records reads nothing. Expanding a trace from that isolated result makes
+two fresh original-window reads, showing one supplied span and zero logs; five
+Back entries restore the identical retained service view without source reads.
+
+The same run verifies explicit mixed/profile switching, one-record narrowing
+outside all held metadata witnesses despite a false hint, and reset without
+changing the selected client population. Non-Client metadata defaults to All
+spans; explicit DB zero and recovery to five records remain honest. A real hybrid
+service admits HTTP first and offers independent explicit RPC/DB five-record
+populations. Both sizes pass physical duration-track/label containment checks.
+Supplied harmless raw-query and query-summary markers are absent from visible
+default panels; this is not a promise to sanitize arbitrary producer attributes.
+
+The bounded **30-second Bombadil campaign** passes in **30.9s / 32.4s total**,
+completing **nine phases and 461 snapshots**, with **17 logical source operations /
+three plans** and terminal DB137 → All189 → DB137/catalog return. Receipt:
+`artifacts/db-client-dashboard/db-dashboard-8c25c5dec8/bombadil/acceptance-summary.json`.
+
+Independent native verification passes on its first run in **0.145s**, checking
+**25 actual populations/pages/groups/status/duration/raw-record responses**,
+including SELECT 120, filtered 108 and trace 1, against the separate raw fact
+interpreter. Changed-count controls are rejected for each response. No observer
+correction, fixture change, new formal scheduling model or quota campaign was
+needed. The receipt is the main ledger's adjacent `native-validation.txt`.
+These logical API effects do not establish internal SQL scan cost.
+
+The first main stopped in **34.4s** because the harness looked for Expand while
+the existing Distribution tab was selected after filter Run. The correction
+selects the actual retained Records view and closes its filter disclosure; these
+local actions are verified source-free. The diagnostic is retained separately;
+it is not reported as an application defect or successful acceptance.
+
+[Storyboard 189](journeys/189-db-client-dashboard-storyboard.md), five actual
+desktop/mobile/context/trace frames, README, architecture/service/verification
+guides and roadmap/backlog are synchronized. Delivery is the current-key client
+slice only: messaging, legacy DB aliases, database pool/server health and broader
+resource discovery remain explicit follow-ons. Independent final source/evidence
+review approves the round. Final whitespace/link and publication checks follow.
+
+
+Final independent review **APPROVES C2b.1** source, real-data/actor/native
+evidence and delivered-scope boundaries. Whitespace checks pass, and **1,362
+relative links across the 13 Markdown files changed in this round resolve**. No additional runtime
+campaign was repeated after acceptance. The final commit and verified
+`origin/work` head are reported after publication.

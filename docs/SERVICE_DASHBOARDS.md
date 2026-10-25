@@ -124,6 +124,40 @@ rank before unrelated defaults only while RPC is active, within the existing
 two-instrument bound. Logs and registered operation declarations keep their own
 populations. Current-convention RPC support remains a separate future contract.
 
+## Database client span observations
+
+The `db-client` profile uses the exact fixed service/resource namespace scope and
+reported kind `Client` with nonempty current `db.system.name`. Legacy `db.system`
+is not an alias and is not unioned into the population. Missing or empty current
+systems are excluded, while custom and whitespace nonempty values remain literal.
+The rule set `goo/db-client-span-observations/v1` names this interpretation without
+asserting exporter schema conformance.
+
+Auto selects DB after eligible Incoming HTTP and legacy Incoming RPC, using a
+positive same-row held-page Client/current-system hint or an eligible exact
+`db.client.operation.duration` histogram in seconds. A flat current-system key
+alone makes a manual candidate available, not a co-occurrence claim. Explicit DB
+selection retains the chosen profile even when a narrower applied window lacks
+the advisory hint. Empty results remain no data and All spans is a manual fallback.
+No extra metadata probe or background alternative population is introduced.
+
+DB activity, recorded span status and durations share the client-span-record
+population. The optional dimension uses observed keys in order:
+`db.operation.name`, `db.namespace`, then `db.system.name`. Choosing that dimension
+only changes grouping; missing and empty optional values remain distinct groups.
+An operation-name group is a literal value across the parent population, potentially
+including different database systems and namespaces. Opening it preserves the
+parent and adds only that value predicate, not a unique SQL query, database
+endpoint or dependency identity. Raw query text and summaries are not default
+group dimensions.
+
+Native DB duration remains independent exact per-stream second-valued evidence;
+milliseconds are not converted into candidate eligibility. Eligible DB instruments
+rank before unrelated defaults only while DB is active, retaining the existing
+bound and original scope/schema/temporality. This slice does not infer database
+server health, pool saturation, unique operations or query success from span status.
+Logs and declared operation bindings retain their separate populations.
+
 ## Observe → question → evidence → investigation
 
 Each widget offers **Open widget question**, **Add widget question** and
@@ -340,6 +374,6 @@ views, resource USE, and Kubernetes cluster/workload/pod/node dashboards. The
 implemented v2 service overview and supported native kernels are a foundation;
 catalog entries marked proposed do not yet execute those complete dashboards.
 The initiative stages useful defaults, entity/resource discovery, required metric
-adapters and investigation drilldowns while keeping manifests optional. The incoming HTTP and legacy RPC server-span slices above are implemented.
+adapters and investigation drilldowns while keeping manifests optional. The incoming HTTP, legacy RPC server-span and DB client-span slices above are implemented.
 Broader HTTP/RPC RED, newer RPC conventions and protocol outcome policies, and
 the remaining families still require their own population and source contracts.
