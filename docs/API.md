@@ -173,7 +173,7 @@ python3 scripts/build_openapi.py
 python3 -m venv /tmp/goo-api-tools
 /tmp/goo-api-tools/bin/pip install -r requirements-api.txt
 /tmp/goo-api-tools/bin/python scripts/check_openapi.py
-go test ./cmd/goo -run 'Test(APITailSSEWireContract|PlanningHTTPWireFixtures|TelemetryHTTPWireFixtures|NativeJSONHTTPWireFixtures|ExplorationJSONHTTPWireFixtures)$' -count=1
+go test ./cmd/goo -run 'Test(APITailSSEWireContract|PlanningHTTPWireFixtures|TelemetryHTTPWireFixtures|NativeJSONHTTPWireFixtures|ExplorationJSONHTTPWireFixtures|TraceSearchHTTPWireFixtures)$' -count=1
 python3 -m unittest discover -s tests -p test_api_docs.py -v
 node scripts/check_api_docs.cjs
 ```
@@ -187,6 +187,14 @@ validates 56 admitted request bodies. The workflow executes those wire tests plu
 and tests the Python docs routes. The browser journey runs locally with the
 existing Playwright/Chromium setup and captures a real docs screenshot; it does
 not start the full lab or mutate telemetry.
+
+The fast CI tier also installs locked npm dependencies on Node 24.19.0, runs
+`go test ./... -count=1` for the root Go module and runs all `tests/*.test.js`
+through `npm run test:visualizations`. The explicit wire selection includes the
+trace-search HTTP handler fixtures. Source-dependent tests remain opt-in and
+report skips without their configured source; nested `verification/` and
+`instrumentation/` modules and real browser/store campaigns are separate tiers.
+The local checks do not establish that a GitHub-hosted CI run has completed.
 
 Schema roots and inline request envelopes live in
 [scripts/openapi-schema/main.go](../scripts/openapi-schema/main.go); reviewed

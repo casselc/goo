@@ -9716,3 +9716,24 @@ index now distinguish current automatic overviews from the proposed family
 program. All 296 initially checked relative links across eight changed Markdown
 files resolve and whitespace checks pass. This is documentation/planning only;
 no application changes, browser sessions or runtime tests were performed.
+
+
+## G1 fast regression gate (2026-10-25)
+
+The API workflow now installs locked npm dependencies on Node 24.19.0, runs the
+full root Go module and all Node display/application tests, and explicitly includes
+the trace-search HTTP wire fixtures alongside existing API/Python checks. Nested
+verification/instrumentation modules and real source/browser campaigns remain
+separate tiers; the Go version continues to come from the root go.mod.
+
+Local root `go test ./... -count=1` passes across all packages on Go 1.27.2;
+source-dependent opt-ins were not configured and remain skipped. The all-Node
+baseline passes **77 files in 3.116 seconds** on Node 24.19.0. This baseline
+precedes the C2a.1 dashboard implementation; changed dashboard tests are checked
+again with that slice. Independent review approves the workflow. Isolated Go and
+Node deliberate failures each return exit 1 and prevent the next shell command
+from executing. No temporary failing test was added to the repository.
+
+This is local validation of the fast commands and workflow wiring, not a completed
+GitHub-hosted run or evidence that optional integrations passed. Logs are local
+`/tmp/goo-c2a1-root-go.log` and `/tmp/goo-c2a1-node-baseline.log`.
