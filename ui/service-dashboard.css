@@ -14,3 +14,7 @@
 .service-dashboard .service-timeline.compact-timeline{margin-top:.4rem}
 /* Identical physical tracks make route mean/p95 bars directly comparable. */
 .service-dashboard[data-profile=http-server] .dashboard-widget[data-widget=dimension] .comparison-bar-cell{width:7rem;min-width:7rem;max-width:7rem}
+/* Compact columns retain labels and units within their own track-free cell. */
+.service-dashboard .compact-timeline .service-timeline-lane>div{display:grid;min-width:0}
+.service-dashboard .compact-timeline .service-timeline-lane>div>strong,
+.service-dashboard .compact-timeline .service-timeline-lane>div>small{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
