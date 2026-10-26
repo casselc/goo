@@ -222,8 +222,9 @@ Work that must be planned explicitly:
    delivered separately from service-name discovery. Kubernetes ownership/entity
    mappings remain planned; do not manufacture service labels or relax original
    service-stream validation globally.
-3. Cumulative nonmonotonic stocks now cover pool counts and host memory. Runtime
-   and delta-stock reconstruction remain separate; their temporality cannot be
+3. Cumulative nonmonotonic stocks now cover pool counts, host memory and the
+   [first Go runtime profile](GO_RUNTIME.md). Delta-stock reconstruction remains
+   separate; their temporality cannot be
    substituted with a gauge or monotonic counter.
 4. Fractional counter semantics where required, such as CPU-time seconds. Native
    gauges already accept finite Float64 values; this is not a blanket missing
@@ -285,3 +286,18 @@ records real ordinary OTLP acceptance and source costs. This closes the first
 host gauge/stock identity prerequisite; runtime/GC panels, fractional CPU-time
 counters, derived capacity calculations, missing-environment discovery and
 Kubernetes resource/ownership mappings remain separately scoped follow-ons.
+
+
+### C2c — first Go runtime observations (200)
+
+Source `a98b9a9` adds [pinned Go runtime observations](GO_RUNTIME.md) to the
+existing service dashboard: exact-instance memory-used and GC heap-target stocks,
+with goroutines explicitly selectable. The existing two-native-read budget,
+role/pool precedence, native inspection and individual capture owners remain.
+Runtime names alone cannot admit an automatic broad read. Candidate expansion
+is bounded and omissions disclosed; memory categories and process identities
+remain separate. Source/property/API and ordinary OTLP/browser, owner, actor and independent
+raw/custody gates pass; see [journey 200](../journeys/200-runtime-storyboard.md)
+for exact costs, actual frames and validation limits. This closes the first Go runtime stock-profile slice, not GC pauses,
+pressure classification, cross-runtime support, capacity calculations or
+Kubernetes discovery. Those remain separately scoped work.

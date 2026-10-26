@@ -2439,3 +2439,23 @@ service YAML storage fixture. Host sharing/recovery shape-immutability checks
 pass in 0.74s. No semantic/browser/actor campaign is repeated for this authoring
 boundary; the updated binary and two modules have actual hash/MIME checks, the
 original pure plan is unchanged and the original capture SHA is rechecked.
+
+### Exact Go runtime stocks (journey200)
+
+`TestHegelGoRuntimeExactPopulationAndDefaults` varies twelve reported process identities and independently checks positive same-stream candidates, duplicate/custom-component separation, a same-process memory+goal default pair, explicit goroutine selection, order invariance and detached executed definitions. `TestGoRuntimeAdmissionAndPreviewBoundaries` rejects wrong gauge/unit/schema/delta/monotonic/service-instance/host authority and checks first25 and omission-overflow boundaries. These focused tests passed0.041s (`artifacts/go-runtime-properties.txt`). The separate complete planner check guarantees stack/other/custom/missing memory types remain independent candidates, exact executed hashes/windows, two defaults and caller custody; it passed0.136s (`artifacts/go-runtime-dashboard-boundaries.txt`). No kernel campaign was repeated.
+
+Actual main `artifacts/runtime-observations/runtime-observed-220f90ed2a/ledger.json` passed17.3s; ownership `runtime-observed-99f75b3052/ownership.json` passed5.2s. These are generated ordinary OTLP reports, not telemetry claimed to come from a running instrumented Go application. The default observations were one memory component (other16384By) and a GC heap goal262144By from worker-a; explicit goroutine-only Apply returned7. Initial source count was8, native Run9, fresh individual capture10, and goroutine Apply12: that last action reread one record aggregate and exactly one native measurement. Pure planning, selection, retained Back and frozen reopen are distinguished from source reads.
+
+The independent raw-ledger gate checks exact service/instance/full resource/resource-schema/scope/version/schema/attributes, selected raw row membership and all reported values/epochs, opted integer domain, default memory/goal versus explicit goroutine, network-bound clocks/bases and actual request/event source effects. Complete individual capture remained6132 byte-identical bytes, SHA256 `860494a978114b26c7e75e4c79be8169974ebcfa0e65aacf004ccb9cde8a8771`, with its original question/content-addressed receipt. Nine main and four owner serialized changed controls target instance/component/schema/raw rows/basis/read clock/local read/goroutine unit/capture and stale publication. No new Quint model is introduced for the unchanged explicit native read/planner/retained-owner algebra.
+
+The final observed gate passed0.329s (main0.25s, ownership0.06s), with all thirteen controls rejected; log `artifacts/runtime-observations/native-validation.txt`. The initial0.477s pass is retained separately. A bounded final rerun verified the subsequently added raw request-journal crosscheck; no properties, application or fixture were repeated/changed to obtain acceptance. There were no native observer failures.
+
+The separate actor passed32.0s across eight phases/284 snapshots, final source9 from baseline8. Its bounded schedules and the offline gate do not prove runtime leak diagnosis, GC pause/activity inference, complete heap totals or arbitrary scheduling. Epoch changes remain stock observations, never counter rates or merged process values.
+
+Run only the bounded actual gate with the toolchain/cache environment above:
+
+```sh
+GOO_GO_RUNTIME_LEDGER=/workspace/goo/artifacts/runtime-observations/runtime-observed-220f90ed2a/ledger.json \
+GOO_GO_RUNTIME_OWNER_LEDGER=/workspace/goo/artifacts/runtime-observations/runtime-observed-99f75b3052/ownership.json \
+go test -run '^TestGoRuntime(Observed|OwnershipObserved)$' -v .
+```

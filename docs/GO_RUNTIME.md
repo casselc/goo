@@ -1,7 +1,8 @@
 # Go runtime observations
 
-Milestone 200 implements the first runtime slice of C2c. Source validation is
-complete; live acceptance and screenshots are pending.
+Implemented and accepted in [journey 200](../journeys/200-runtime-storyboard.md).
+This is the first runtime stock-profile slice of C2c.
+[Compact receipt](evidence/go-runtime-200.json).
 
 ## What the measurements mean
 
@@ -36,11 +37,13 @@ its existing native measurement transport. Runtime observations are independent
 of the selected HTTP, RPC, database or messaging span population. They do not
 change span counts, infer causality or identify the source of request latency.
 
-Every runtime question pins the complete observed stream: reported resource map
+Every runtime question pins the complete observed service-adapter stream: resource map
 and resource schema, service/namespace/environment, nonempty service instance,
 instrumentation scope/version/schema, metric/unit and point attributes. Equal
 instance labels do not establish the same operating-system process across
-different raw identities. No PID or missing service identity is manufactured.
+different identities. This retains the existing service adapter's physical
+`ServiceName` mapping; it does not introduce host-style raw-resource authority.
+No PID or host-to-service association is manufactured.
 
 At most two native measurements load by default across the service dashboard;
 additional runtime streams require explicit selection. Each read retains its own
@@ -90,9 +93,30 @@ flowchart LR
 
 ## Validation boundary
 
-The live journey will send ordinary OTLP through the real collector and
-ClickHouse, without a Goo manifest. Generated telemetry validates supported
-transport and semantics; it does not establish that a particular Go runtime SDK
-emits this convention by default. Source tests, browser ownership checks,
-independent evidence validation and actual desktop/mobile frames will be linked
-here when completed.
+The live journey sends generated ordinary OTLP through the real collector and
+ClickHouse without a Goo manifest. It verifies worker-a's memory category `other`
+at 16,384 bytes and GC heap target at 262,144 bytes, then explicitly selects a
+single stream reporting seven goroutines. Sixteen raw metric reports include
+additional identities, memory categories and unsupported controls; their presence
+in discovery is not a claim that every control received a browser measurement.
+
+The initial overview costs eight logical source operations and one pure plan,
+including service discovery/inspection and the two native reads. Native staging
+and retained Back are source-free. Explicit native Run advances to nine and fresh
+individual capture to ten. Editing the goroutine selection reads nothing; Apply
+rereads one record aggregate and one native measurement, ending at twelve source
+operations. Frozen reopen adds none. Independent reads are not transactional,
+and these operation counts are not SQL-statement or scan-cost measurements.
+
+Main, late-response ownership and the bounded Bombadil journey pass. Independent
+raw-source/custody validation rejects nine changed main and four changed owner
+controls. The complete individual capture remains 6,132 bytes with unchanged
+SHA-256 on reopen. The storyboard links actual desktop/mobile frames and records
+the separate label-only display refresh. The inherited full service dashboard
+still requires substantial mobile scrolling; the compact runtime cards do not
+claim to resolve the broader service-entry layout.
+
+Generated telemetry validates this transport and supported profile; it does not
+establish that a particular Go runtime SDK emits the convention by default.
+No GC pause/activity, leak, pressure or complete runtime-health inference is
+implemented.

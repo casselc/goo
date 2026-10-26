@@ -11294,3 +11294,80 @@ in its HTTP check (1.007s); there is no new endpoint or proxy transport.
 Independent source review approves the bounded profile and passive presenter.
 Live OTLP/browser, ownership, actor, capture-custody and screenshots remain
 pending; these source checks do not claim runtime SDK or production acceptance.
+
+
+## Go runtime observations — live acceptance (200)
+
+Source `a98b9a9` is deployed with Go binary SHA256
+`34cd5aa470ebbaa8f4bea570362f4b84452eb502f0ec41765858b7bc8684ed5c`.
+Actual HTTP status/MIME/SHA and both application-root source/prebuilt copies
+match. No image build or broad prune was needed; traffic and data stayed intact.
+[Contract](docs/GO_RUNTIME.md), [storyboard](journeys/200-runtime-storyboard.md)
+and [compact receipt](docs/evidence/go-runtime-200.json).
+
+Corrected main passes in 17.3s and owner in 5.2s (combined 25.6s). The first invocation
+failed because the new local harness called the shared observer's numeric
+getters as functions. A local adapter and socket-free transition check corrected
+that bookkeeping error; failed diagnostics remain retained. No application
+behavior, fixture values or semantic assertions changed for this correction.
+
+Sixteen generated ordinary OTLP metric reports and 120 span records pass through
+the actual collector/ClickHouse path without a manifest or positive-response
+mock. Default runtime streams report worker-a memory type other at 16384 By and
+GC heap goal at 262144 By. An explicit goroutine-only selection reports 7 with
+`{goroutine}` unit and no reappearance of memory/goal defaults. Unsupported
+schema/unit/kind/temporality, other instances/types/resource variants and epoch
+changes are retained fixture metadata, not claims that every control was read
+through a browser widget. This is not a real runtime-SDK deployment or complete
+process-memory/GC-health acceptance.
+
+Initial overview is 8 logical source operations/1 pure plan, including metadata,
+record inspection/aggregation and 2 native reads. Native staging and retained Back
+stay at 8; explicit native Run is 9 and fresh individual capture 10. Retained return
+and goroutine selection are source-free; Apply rereads one aggregate and one
+native stream, ending at 12 source/4 pure plans. Frozen public/UI reopen adds none.
+These are application operations, not physical SQL statement or scan counts.
+The owner holds a real source response after fetch, leaves the service and
+releases it: no stale card, navigation or additional source operation publishes.
+
+Bombadil passes in 32.0s (38.6s invocation), phases 0–7 with 284 snapshots and
+source baseline 8→9/terminal true. The actor summary has no separate pure-plan
+counter; the main network journal records those operations. There is no
+unbounded scheduling or leak-diagnosis claim.
+
+Independent native validation initially passes in 0.477s, then the final edited
+request-journal guard passes in 0.329s (main 0.25/owner 0.06). The bounded rerun is only
+for that added guard. Nine main and four owner changed controls reject: raw
+identity/component/schema/rows/basis/clock, hidden local source reads, goroutine
+unit, capture receipt and late-publication mutations. Actual values, epochs,
+source bindings, clocks and full capture custody match. No new Quint model is
+introduced for the unchanged explicit-read/planner/retained-owner algebra.
+
+The individual capture is 6132 bytes, ID
+`12678adfe6198c9c43e69c9001637f6c1077b049a01b0ee564326dfee3bf7f00`, SHA256
+`860494a978114b26c7e75e4c79be8169974ebcfa0e65aacf004ccb9cde8a8771`,
+unchanged through public/UI reopen and the explicit goroutine observation.
+There is no combined runtime dashboard capture.
+
+Actual screenshot review found only a dangling separator on dimensionless
+runtime identity labels. Display-only `1357004` removes it and explicitly labels
+unreported memory type without collapsing present-empty/custom values. Focused
+component checks pass in 0.18s; native semantics, binary and interaction owner are
+unchanged. A separate fresh display replay and final frames are recorded below;
+main/owner/actor are not repeated for this label-only change.
+
+Fresh label-only display replay passes in 8.6s (11.1s invocation), scope
+`runtime-observed-47d2f0174c`. Eight source operations/one pure plan load the
+normal service overview; no native Run, capture or actor is repeated. The three
+actual refreshed frames pass 90px plot, X/Y containment and UTC/ns checks. The
+full original capture remains byte-identical on a separate read-only store copy.
+Root and UI/browser reviewers inspected actual desktop/mobile frames. The
+inherited overall dashboard still scrolls substantially on mobile; this round
+claims compact runtime cards, not a full service-entry density redesign.
+
+Final independent release review approves the bounded implementation, source
+costs, raw/custody controls and actual visual evidence. All 3,224 local Markdown
+links resolve; the compact receipt's three frame hashes and all new journey
+JavaScript syntax checks pass. Browser/native workers are closed, exact task
+binary/helpers removed, normal diagnostic retention applied, and traffic/data
+remain intact.

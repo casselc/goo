@@ -101,8 +101,9 @@ HTTP and explicit legacy OTel RPC server-span views, current-key database
 client dependencies, and separate messaging consumer/producer views. Discover a service, inspect activity, recorded span errors,
 duration and literal route/method/database/destination populations, then narrow the scope and
 open a trace. All spans remains available; native metrics retain separate units,
-streams and intervals. Newer bindings, database pool/server health, broker signals,
-host/runtime USE and Kubernetes remain staged follow-on work. Discovery does not
+streams and intervals. Pool observations, host CPU/memory and the first Go runtime
+observations are described below. Newer bindings, database-server/broker health,
+complete USE calculations and Kubernetes remain staged follow-on work. Discovery does not
 invent missing health signals.
 See the executed [HTTP](journeys/187-http-server-dashboard-storyboard.md),
 [RPC](journeys/188-rpc-server-dashboard-storyboard.md),
@@ -260,14 +261,15 @@ proposals stay in the [reviewed backlog](docs/BACKLOG_2026_10_25.md).
 [Implementation history](docs/IMPLEMENTATION_PLAN.md) ·
 [Original handoff (historical)](START_HERE.md)
 
-[Cumulative-stock measurements](docs/CUMULATIVE_STOCKS.md) support discovery, sum-table reads and frozen replay. [Named-pool connections](docs/POOL_CONNECTIONS.md) add automatic per-instance connection-state views within service dashboards; capacity/wait joins and runtime/host panels remain follow-ons.
+[Cumulative-stock measurements](docs/CUMULATIVE_STOCKS.md) support discovery, sum-table reads and frozen replay. [Named-pool connections](docs/POOL_CONNECTIONS.md) add automatic per-instance connection-state views within service dashboards; capacity/wait context is described below; broader USE calculations remain follow-ons.
 
 
 [Pool capacity and acquisition-wait context](docs/POOL_SIGNALS.md) now stages
 independently evaluated exact-stream measurements from a selected named pool.
 Default service reads remain bounded; explicit Run and individual capture retain
 the original window, identity and separate clocks. Numerical capacity/utilization
-joins, causal attribution and automatic runtime/host panels remain follow-ons.
+joins and causal attribution remain separate; host and Go runtime observations
+are described below.
 
 [Gotogether consumer pilot](docs/GOTOGETHER_PILOT.md) records onboarding and
 capture-workflow compatibility. The [follow-on pilot](docs/GOTOGETHER_FOLLOWUP.md)
@@ -287,3 +289,12 @@ without service labels or manifests. Explicitly open a resource for bounded CPU
 and memory defaults, inspect or capture a native stream, or stage matching-resource
 logs/spans. [Journey 199](journeys/199-host-storyboard.md) records actual source,
 identity/custody tests and refreshed desktop/mobile frames.
+
+
+[Go runtime observations](docs/GO_RUNTIME.md) add compact memory usage and reported
+GC heap-target views to existing service dashboards, with goroutine count available
+through explicit native selection. Exact instance/category streams retain their
+own clocks and epochs. The existing two-native-measurement budget stays unchanged;
+no memory/goal percentage, GC-pause signal or pressure verdict is inferred.
+See [journey 200](journeys/200-runtime-storyboard.md) for the actual ordinary-OTLP
+workflow, compact desktop/mobile frames and capture/ownership checks.

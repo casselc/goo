@@ -978,3 +978,17 @@ and fresh catalog reads cover the nine empty-collection combinations.
 The service planner recognizes schema1.37 cumulative nonmonotonic `go.memory.used` and `go.memory.gc.goal` in bytes, and `go.goroutine.count` in `{goroutine}`. Each admitted preview stream becomes an independent pinned stock question with the nonnegative-integer domain; no gauge, delta/monotonic sum, wrong-unit/schema or host-resource authority is silently reinterpreted. The first25 preview streams are positive metadata only; omissions do not prove absence. The original complete resource, resource schema, service/instance, instrumentation scope/version/schema and measurement attributes are retained.
 
 At most two native defaults remain automatic. When available, one memory component and one GC heap goal are selected for the same reported process identity. Components such as stack, other, custom values and missing memory type remain separate explicit candidates; no heap total is manufactured. Goroutine observations require explicit selection. A shared process context is not an atomic GC snapshot: each measurement retains its own source read time, basis, epochs and freshness. These stocks do not expose GC pause/activity intervals, leak diagnosis or memory pressure. Existing explicit native preview/read, individual capture and retained service navigation carry the selected question without adding another source owner.
+
+Journey200 used generated ordinary OTLP reports rather than claiming a running instrumented Go workload. The accepted main17.3s and owner5.2s runs retained one worker-a memory component16384By and GC heap goal262144By as defaults, then explicitly selected goroutines7. Its separate32.0s actor exercised eight bounded phases. The independent native raw/custody gate passed0.329s with thirteen changed controls rejected, including exact identity, component separation and source clocks. The individual capture remained byte-identical at6132 bytes. Source costs were explicit:8 initial page reads,9 after native Run,10 after fresh capture and12 after goroutine-only Apply (one record aggregate and one measurement reread). Pure selection and retained/frozen navigation remained source-free.
+
+```mermaid
+flowchart LR
+  Discovery[Retained service metric metadata] --> Exact[Pin each eligible schema1.37 runtime stream]
+  Exact --> Defaults[At most one memory component and one GC goal]
+  Defaults --> Reads[Independent explicit stock reads]
+  Exact --> Picker[Explicit goroutine or alternative component selection]
+  Picker --> Apply[Apply and reread selected overview]
+  Reads --> Cards[Separate runtime values and evidence clocks]
+  Cards --> Preview[Source-free exact native preview]
+  Preview --> Capture[Explicit Run or individual fresh capture]
+```

@@ -1,0 +1,137 @@
+{
+  "version": 1,
+  "featureSourceCommit": "a98b9a90d7e69946ccc15a1f2828c0303c4efba6",
+  "displayCommit": "135700492acbaf767542ae7914b466ddf5d3f946",
+  "binarySHA256": "34cd5aa470ebbaa8f4bea570362f4b84452eb502f0ec41765858b7bc8684ed5c",
+  "mainSeconds": 17.3,
+  "ownershipSeconds": 5.2,
+  "actorSeconds": 32.0,
+  "nativeSeconds": 0.329,
+  "nativeRejectingControls": {
+    "main": 9,
+    "ownership": 4
+  },
+  "displaySeconds": 8.6,
+  "mainLedger": "artifacts/runtime-observations/runtime-observed-220f90ed2a/ledger.json",
+  "ownershipLedger": "artifacts/runtime-observations/runtime-observed-99f75b3052/ownership.json",
+  "displayLedger": "artifacts/runtime-observations/runtime-observed-47d2f0174c/display.json",
+  "mainEvents": [
+    {
+      "action": "overview",
+      "source": 8,
+      "plans": 1
+    },
+    {
+      "action": "native-staged",
+      "source": 8,
+      "plans": 2
+    },
+    {
+      "action": "retained-back",
+      "source": 8,
+      "plans": 2
+    },
+    {
+      "action": "native-run",
+      "source": 9,
+      "plans": 3
+    },
+    {
+      "action": "individual-capture",
+      "source": 10,
+      "plans": 3
+    },
+    {
+      "action": "capture-retained-service-return",
+      "source": 10,
+      "plans": 3
+    },
+    {
+      "action": "goroutine-selection-staged",
+      "source": 10,
+      "plans": 3
+    },
+    {
+      "action": "goroutine-alone-read",
+      "source": 12,
+      "plans": 4
+    },
+    {
+      "action": "immutable-reopen",
+      "source": 12,
+      "plans": 4
+    }
+  ],
+  "actorSummary": {
+    "phases": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "snapshots": 284,
+    "final": {
+      "phase": 7,
+      "source": 9,
+      "baseline": 8,
+      "terminal": true,
+      "catalog": true,
+      "ready": true,
+      "nativeReady": true,
+      "nativeComplete": true
+    }
+  },
+  "actorPurePlanCounterRecorded": false,
+  "displaySourceOperations": 8,
+  "displayPurePlans": 1,
+  "capture": {
+    "id": "12678adfe6198c9c43e69c9001637f6c1077b049a01b0ee564326dfee3bf7f00",
+    "bytes": 6132,
+    "sha256": "860494a978114b26c7e75e4c79be8169974ebcfa0e65aacf004ccb9cde8a8771",
+    "immutableOnReopenAndDisplay": true
+  },
+  "frames": [
+    {
+      "path": "docs/journeys/screenshots/200a-runtime-observations.png",
+      "bytes": 150445,
+      "sha256": "a4857f1e382341a17d8f6e09ed12c0a935be5144ee5090f72168f7606d7d42a1"
+    },
+    {
+      "path": "docs/journeys/screenshots/200b-mobile-runtime-observations.png",
+      "bytes": 142760,
+      "sha256": "611de0d8f27e0546233eba37297d90d7817fdfec3b873ac2e6c54c22b11faf41"
+    },
+    {
+      "path": "docs/journeys/screenshots/200c-runtime-in-context.png",
+      "bytes": 178397,
+      "sha256": "111b9f93eaf77f7f4f3b6e9399ed9ff533d997bc8976d573b072f324d29940cb"
+    }
+  ],
+  "scope": {
+    "source": "Generated ordinary OTel v1.37 metrics and spans through actual collector/ClickHouse; no manifest or positive-response mocks.",
+    "defaults": [
+      "go.memory.used exact other category: 16384 By",
+      "go.memory.gc.goal exact heap target: 262144 By"
+    ],
+    "explicit": "go.goroutine.count exact stream: 7 {goroutine}",
+    "nativeReadBudget": 2,
+    "nativeOptionLimit": 128,
+    "streamPreviewLimit": 25,
+    "crossInstrumentCalculations": false,
+    "combinedCapture": false,
+    "realGoRuntimeSDKDeployment": false,
+    "gcPauseOrPressureInference": false,
+    "allControlStreamsBrowserRead": false,
+    "arbitrarySchedulesProven": false,
+    "wholeServiceMobileDensitySolved": false
+  },
+  "diagnostics": {
+    "initialMainOwnerFailure": "Local harness called numeric observer getters as functions; adapter corrected without changing app or assertions.",
+    "nativeRerun": "Initial0.477s pass followed by final0.329s check after adding independent request-journal guard.",
+    "labelReplay": "Fresh display scope; no main/owner/actor or semantic replay for label-only cut."
+  }
+}

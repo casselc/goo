@@ -1,9 +1,18 @@
 # Known issues and gaps
 
+[Go runtime observations](GO_RUNTIME.md) support only the pinned OTel v1.37
+cumulative nonmonotonic memory-used, GC heap-goal and goroutine stocks with
+reported service/instance identity. GC goal is a heap target, not pause/activity
+or memory capacity. Older SDK names and schemas are not aliases. Exact stream
+preview and native-option limits can omit candidates; missing telemetry is not
+health. There is no cross-instance/category aggregation, usage/goal ratio,
+process leak/pressure diagnosis, runtime-specific resource authority or automatic
+refresh. Generated OTLP acceptance is distinct from a real runtime SDK deployment.
+
 [Host resources](HOST_RESOURCES.md) require an explicit environment and reported
 `host.id`; names are labels and full raw resource/schema variants remain separate.
 This first host authority supports gauges and cumulative nonmonotonic stocks, not
-host counters/histograms or runtime/GC/Kubernetes aggregation. CPU percentages are
+host counters/histograms or runtime/Kubernetes resource aggregation. CPU percentages are
 reported per exact core/mode, not fleet/host averages; memory bytes do not imply
 a capacity percentage. Matching-resource record searches are contextual predicates,
 not exact schema/map joins, causal service attribution or complete host telemetry.
