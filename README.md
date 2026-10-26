@@ -89,7 +89,7 @@ optional reservation lab.
 | [Population explanations](docs/POPULATION_EXPLANATIONS.md) | Contextual field/value share differences, exact observed captures and reusable fixed-scope requests | Explicit fields, independent reads and bounded groups; descriptive differences do not establish causes |
 | [Recorded error triage](docs/ERROR_TRIAGE.md) | Standard span exception events, reported status, intrinsic log severity, service/type groups and passive exception details | Counts are records, not issues or exception-event totals; recorded evidence is not inferred application failure |
 | [Log patterns](docs/LOG_PATTERNS.md) | Versioned shapes, full-window counts, rare-first sorting, pattern timelines, service/rest and [time comparisons](docs/LOG_PATTERN_TIME_COMPARISONS.md) with exact rates/shares | Short-body profile; unclassified buckets retained, absence refers only to the compared reads |
-| [Services](docs/SERVICE_DASHBOARDS.md) | Discovery-driven service views and reported relationships | Missing signals and reported links do not establish health or complete topology |
+| [Services & resources](docs/SERVICE_DASHBOARDS.md) | Service dashboards, [host observations](docs/HOST_RESOURCES.md) and [Kubernetes resource discovery](docs/KUBERNETES_RESOURCES.md) | Reported telemetry and associations do not establish health, verified ownership or complete topology |
 | [Trace search](docs/TRACE_SEARCH.md) | Find reported trace IDs with independent span conditions across services, inspect qualified witnesses, then open waterfalls or compare pages | Same span may satisfy several conditions; reported IDs and bounded witnesses do not establish unique invocations, complete traces or causal paths |
 | [Trace findings](docs/TRACE_FINDINGS.md) | Waterfalls, [observed-page latency breakdowns](docs/TRACE_PAGE_TIMING.md), [local trace-page comparisons](docs/TRACE_COMPARISON.md), bounded examples and preserved anchor diagnostics | Overlapping span sums are not wall time; reported IDs do not establish unique occurrences or complete traces |
 | [Native instruments](docs/NATIVE_INSTRUMENT_DISCOVERY.md) | Supported gauge, counter and histogram plans with unit/reset/temporality semantics | Unsupported instruments, missing identity and incompatible merges stay explicit |
@@ -298,3 +298,13 @@ own clocks and epochs. The existing two-native-measurement budget stays unchange
 no memory/goal percentage, GC-pause signal or pressure verdict is inferred.
 See [journey 200](journeys/200-runtime-storyboard.md) for the actual ordinary-OTLP
 workflow, compact desktop/mobile frames and capture/ownership checks.
+
+
+[Kubernetes resource discovery](docs/KUBERNETES_RESOURCES.md) shows pod-bearing
+resource variants from ordinary logs, spans and metric points. Narrow the held
+inventory by reported cluster/namespace or text, then stage matching-resource
+logs/spans and Run explicitly. Missing cluster UIDs remain visible as unverified
+context; pod names do not replace UIDs. This is telemetry discovery, not a live
+Kubernetes API inventory or a readiness/health dashboard.
+See [journey 201](journeys/201-kubernetes-storyboard.md) for the executed discovery,
+record membership, cancellation and actual desktop/mobile views.

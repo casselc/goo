@@ -1010,3 +1010,10 @@ admission, cancellation, navigation, held filters and focus restoration. The
 record helper preserves declared missing qualifiers only when requested and
 refuses predicates over the existing budgets; it does not drop attributes to
 make a question fit.
+
+Kubernetes resource details use a full-width companion table row (`colSpan=4`)
+with a native disclosure and lazy, supplied-data attribute viewer. Outer table
+selectors target direct children, allowing the nested shared viewer to retain
+its own layout. The actual desktop/mobile replay verifies full-width geometry,
+readable field values and disclosure toggles without source requests. Family
+labels distinguish log/span records from gauge/sum/histogram data points.

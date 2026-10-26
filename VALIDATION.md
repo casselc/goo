@@ -11407,3 +11407,72 @@ suspension now withdraws supporting/dashboard work; completed views and their
 future Apply callbacks remain retained. Focused six-file checks pass in 0.45s.
 Actual Kubernetes context/owner, service pending/completed behavior, prior host
 owner regression, actor and screenshots remain pending.
+
+
+## Kubernetes resource discovery — live acceptance (201)
+
+Feature source `bad6727` is deployed with binary SHA256
+`2269e3510ec168225733191348b9778fa204b0c0c20791c52f05055a59834c1a`.
+Actual status/MIME/SHA checks cover nine served assets/specs, server and schemas.
+No image build/prune or traffic pause was needed. [Contract](docs/KUBERNETES_RESOURCES.md),
+[storyboard](journeys/201-kubernetes-storyboard.md) and
+[compact receipt](docs/evidence/kubernetes-resources-201.json).
+
+Main passes in 12.4s, Kubernetes held-response owner in 5.8s and the prior 199 host
+owner regression in 5.1s. The generated ordinary OTLP fixture sends 15 metric
+points and 11 records; two metric controls have a different environment or time.
+Actual selected evidence is 18 raw resource/schema variants, 22 family groups
+and 24 source rows: logs 6 / spans 5 / gauge 11 / sum 1 / histogram 1. Unknown trace schema,
+retained empty schema, absent/empty UID and service attributes remain distinct.
+No positive source/UI data is mocked. This is not a live Kubernetes API or
+collector-RBAC test and no physical-pod count, owner graph or health is inferred.
+
+Main discovery is 1 logical source operation. Local cluster/namespace/text
+filtering, disclosure, record staging and retained Back add none. Explicit
+matching-resource Runs advance to 2 for four logs, then 3 for three spans, including
+actual service-bearing application records. Missing cluster UID/namespace
+qualifiers exclude present-empty controls without manufacturing missing service
+clauses. Each retained return preserves full UI/filter state and opener focus.
+There is no inventory capture/store or new native pod measurement authority.
+
+The Services owner regression first stalled on a harness snapshot that awaited
+a dashboard element before the first Open. The helper now records null when
+that expected element is absent; interrupted diagnostics remain retained. Only
+that affected case was rerun, passing in 10.2s (13.2s invocation). Real supporting
+and widget replies cannot publish or launch follow-on dashboard reads after
+Services→Kubernetes departure. A completed service view retains its HTML/source
+count across tabs and still performs explicit goroutine-only Apply correctly.
+No application or assertions changed for the snapshot correction.
+
+Independent native validation passes first in 0.251s: main 0.06, Kubernetes
+owner 0.02, Services owner 0.15. Nine main, three Kubernetes owner and four Services
+owner changed controls reject. The oracle derives full raw membership/counts/
+first-last timestamps, nullable schemas and presence-qualified contexts, binds
+clocks/bases to network responses and verifies source journals/real held results.
+No new Quint model is added for the unchanged explicit-read/retained-generation
+owner algebra; properties and actual rejecting controls cover this bounded cut.
+
+Actual screenshot review found the resource attribute inspector confined to a
+narrow table cell, producing unreadable wrapped values and excessive row height.
+Passive correction `ff12b8f` moves evidence into a full-width companion row,
+scopes table styles away from the nested shared viewer and labels records versus
+metric points clearly. Focused disclosure/host/scope checks pass in 0.15s. A fresh
+ordinary-OTLP display replay passes in 9.6s (12.6s invocation), scope
+`pod-observed-d166c357ff`, with one inventory operation and no context Runs.
+Full-width equality, nested value readability, mobile X/Y, UTC/ns, local toggles,
+staging and retained Back pass. Final 201a/b/c were inspected by root and browser
+reviewer. Main/owners are not repeated for this passive cut; the actor runs on
+the corrected assets.
+
+The actor passes in 31.2s (33.2s invocation), nine phases 0–8 with 428 snapshots,
+source 2/terminal true. It independently observes the exact four-log membership,
+retained filters/focus and source-free local/staging/return steps on the final
+presentation assets. No arbitrary-schedule guarantee or Kubernetes completeness
+claim follows from that bounded run.
+
+Final independent release review approves identity, source effects, pending-only
+suspension, regression evidence and final desktop/mobile presentation. All 3,261
+local Markdown links resolve; the compact receipt's three frame hashes and all
+new journey JavaScript syntax checks pass. Browser/native workers are closed,
+normal diagnostic retention is applied, and exact task binaries, SQL/research
+helpers are removed. Traffic and data volumes remain intact.

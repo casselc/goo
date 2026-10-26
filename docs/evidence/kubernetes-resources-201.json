@@ -1,0 +1,148 @@
+{
+  "version": 1,
+  "featureSourceCommit": "bad6727d190314a20951206c7c2a1fc140185bcc",
+  "displayCommit": "ff12b8f67dc52f135e80befe9754ca1dddcec866",
+  "binarySHA256": "2269e3510ec168225733191348b9778fa204b0c0c20791c52f05055a59834c1a",
+  "mainSeconds": 12.4,
+  "kubernetesOwnershipSeconds": 5.8,
+  "servicesOwnershipSeconds": 10.2,
+  "hostOwnershipRegressionSeconds": 5.1,
+  "actorSeconds": 31.2,
+  "nativeSeconds": 0.251,
+  "nativeRejectingControls": {
+    "main": 9,
+    "kubernetesOwner": 3,
+    "servicesOwner": 4
+  },
+  "displaySeconds": 9.6,
+  "mainLedger": "artifacts/kubernetes/pod-observed-c31414e48a/ledger.json",
+  "kubernetesOwnershipLedger": "artifacts/kubernetes/pod-observed-930153d43f/ownership.json",
+  "servicesOwnershipLedger": "artifacts/kubernetes/runtime-observed-d0f8f65630/services-ownership.json",
+  "hostOwnershipLedger": "artifacts/hosts/host-observed-3cc1f8c94d/ownership.json",
+  "displayLedger": "artifacts/kubernetes/pod-observed-d166c357ff/display.json",
+  "actorSummary": {
+    "phases": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "snapshots": 428,
+    "expectedIDs": [
+      "4855c9f3babbbb2c",
+      "7b43999810c31a05",
+      "d821fa6978b721f9",
+      "e26c711f97f08dfc"
+    ],
+    "final": {
+      "phase": 8,
+      "source": 2,
+      "terminal": true,
+      "target": "4ebba7a804069eee731265555e33d6849c755a721495ecb5b959a954242f5ba6",
+      "ready": true,
+      "observed": true,
+      "runReady": true
+    }
+  },
+  "mainEvents": [
+    {
+      "action": "discovery",
+      "source": 1,
+      "plans": 0
+    },
+    {
+      "action": "local-filters",
+      "source": 1,
+      "plans": 0
+    },
+    {
+      "action": "logs-staged",
+      "source": 1,
+      "plans": 0
+    },
+    {
+      "action": "logs-run",
+      "source": 2,
+      "plans": 0
+    },
+    {
+      "action": "logs-retained-back",
+      "source": 2,
+      "plans": 0
+    },
+    {
+      "action": "spans-staged",
+      "source": 2,
+      "plans": 0
+    },
+    {
+      "action": "spans-run",
+      "source": 3,
+      "plans": 0
+    },
+    {
+      "action": "spans-retained-back",
+      "source": 3,
+      "plans": 0
+    }
+  ],
+  "sourceGroups": 22,
+  "resourceVariants": 18,
+  "observationsOmitted": 0,
+  "observedTelemetryRows": 24,
+  "familyCounts": {
+    "logs": "6",
+    "spans": "5",
+    "gauge": "11",
+    "sum": "1",
+    "histogram": "1"
+  },
+  "contextCounts": {
+    "logs": "4",
+    "spans": "3"
+  },
+  "displaySourceOperations": 1,
+  "displayContextRuns": 0,
+  "frames": [
+    {
+      "path": "docs/journeys/screenshots/201a-pod-resource-evidence.png",
+      "bytes": 56866,
+      "sha256": "0b4f0eff578db2b0b3a122914fe0c62867622d96ad976ef8eaf3ef258afe40cd"
+    },
+    {
+      "path": "docs/journeys/screenshots/201b-mobile-pod-resource.png",
+      "bytes": 53251,
+      "sha256": "dd1bfad22535b6e7f369a2d9cbb3303cce8ed261a7dfb2fcd3b5d8c543a452bb"
+    },
+    {
+      "path": "docs/journeys/screenshots/201c-kubernetes-in-context.png",
+      "bytes": 280030,
+      "sha256": "3754b22ada3d48b8da1c48d6553f739685654f16bb0628b5c7b804455040b036"
+    }
+  ],
+  "scope": {
+    "source": "Generated ordinary OTel resource attributes through actual collector/ClickHouse; no positive-response mocks.",
+    "missingClusterUIDUsableAsUnverifiedContext": true,
+    "unknownTraceSchemaDistinctFromRetainedEmpty": true,
+    "serviceIdentitySynthesized": false,
+    "podUIDRequiredForRecordActions": true,
+    "physicalPodCount": false,
+    "kubernetesAPIOrCollectorRBACAcceptance": false,
+    "verifiedOwnershipOrHealth": false,
+    "nativePodMeasurementAuthority": false,
+    "inventoryCaptureOrStore": false,
+    "allOmittedDataQueriedByLocalFacets": false,
+    "sourceFamilyGroupLimit": 1000,
+    "retainedResourceVariantLimit": 100,
+    "arbitrarySchedulesProven": false
+  },
+  "diagnostics": {
+    "servicesHarness": "Expected absent dashboard now snapshots null instead of awaiting a missing element; only affected case rerun. No app/assertion changes.",
+    "displayCorrection": "Full-width companion evidence row and scoped nested table styles; independent fresh display scope, no source/owner workflow repeat."
+  }
+}

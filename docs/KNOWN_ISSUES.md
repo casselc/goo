@@ -1,5 +1,15 @@
 # Known issues and gaps
 
+[Kubernetes resource discovery](KUBERNETES_RESOURCES.md) observes pod-bearing OTel
+resource variants in a fixed explicit environment/window, not live Kubernetes
+API state or a count of physical pods. Cluster UID may be unreported; pod UID
+is required for contextual record actions. Unknown trace schemas and retained
+empty schemas differ. The 1,000 source-family-group refusal and 100 returned
+variant limit can require a narrower window; local facets do not query omitted
+data. Matching-resource record context is not exact map/schema equality or all
+telemetry for a pod. Native pod metrics, ownership, readiness/restarts,
+requests/limits, pressure and workload rollups remain separate work.
+
 [Go runtime observations](GO_RUNTIME.md) support only the pinned OTel v1.37
 cumulative nonmonotonic memory-used, GC heap-goal and goroutine stocks with
 reported service/instance identity. GC goal is a heap target, not pause/activity

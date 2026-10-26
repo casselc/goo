@@ -1,7 +1,8 @@
 # Kubernetes resources observed in telemetry
 
-Milestone 201 implements this first C2d slice; live acceptance is pending. It
-discovers reported pod resource variants and stages contextual logs/spans.
+Implemented and accepted in [journey 201](../journeys/201-kubernetes-storyboard.md).
+This first C2d slice discovers pod resource variants and stages contextual
+logs/spans. [Compact receipt](evidence/kubernetes-resources-201.json).
 Kubernetes API inventory, ownership graphs and operational metric dashboards
 remain separate deliveries.
 
@@ -95,9 +96,29 @@ flowchart LR
 
 ## Validation and later slices
 
-Source/property/API checks and actual ordinary OTLP/browser acceptance are
-pending. Generated telemetry will exercise the collector/ClickHouse path; it
-will not claim to be a live Kubernetes cluster or a test of enrichment RBAC.
+Source/property/API checks and ordinary OTLP/browser acceptance pass. The main
+fixture emits 15 metric points and 11 log/span records; two metric controls fall
+outside the selected environment/window. The observed 24 source records form 22
+source-family groups and 18 full resource/schema variants: six logs, five spans,
+eleven gauge points, one sum point and one histogram point. A histogram point's
+internal count does not become the inventory's point count.
+
+The selected metric resource has neither service identity nor reported cluster
+UID/namespace. Its matching-resource questions return four logs and three spans,
+including real-service application records. Missing cluster/namespace predicates
+exclude present-empty controls. Local facets, staging and retained Back preserve
+held data and focus without reads: discovery is one logical source operation;
+explicit log and span Runs bring the main total to three. Readiness probes are
+separate from this journal, and one union query still scans five source families.
+
+Real held-response checks cover Kubernetes scope edit/tab departure, Services
+supporting/widget departure and completed-view Apply, plus the prior host owner
+regression. Independent raw/journal validation rejects sixteen altered controls.
+A separate fresh display replay checks full-width resource details, nested
+attribute readability, family labels, UTC/ns and local disclosure/Back behavior
+with one inventory read. These receipts do not claim a live Kubernetes cluster,
+collector enrichment/RBAC acceptance, arbitrary schedules or a new inventory
+capture/store.
 
 Readiness, restarts, requests/limits, CPU/memory, node pressure, ownership facts,
 resource changes and workload rollups need explicit receiver, identity,

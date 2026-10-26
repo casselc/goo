@@ -2459,3 +2459,22 @@ GOO_GO_RUNTIME_LEDGER=/workspace/goo/artifacts/runtime-observations/runtime-obse
 GOO_GO_RUNTIME_OWNER_LEDGER=/workspace/goo/artifacts/runtime-observations/runtime-observed-99f75b3052/ownership.json \
 go test -run '^TestGoRuntime(Observed|OwnershipObserved)$' -v .
 ```
+
+### Kubernetes resource observations (journey201)
+
+`TestHegelPodResourceVariantsAndFamilyCounts` derives source groups from ten generated raw fact sets, each crossing three pod-UID presence variants and five source families. An independent raw-fact oracle checks full identity/schema availability, counts and min/max clocks, UID actionability, single-read behavior, arrival/read-clock-independent basis and caller facts. `TestPodDiscoveryBudgetsAndWholeRefusal` covers100 returned variants versus101 observed, the1001 source-group sentinel, duplicate groups and malformed schema/count/clock/family/environment/label limits. These passed0.049s (`artifacts/pod-discovery-properties.txt`). A separate test proves an omitted variant's count changes basis while leaving the visible100 identical, and rejects an identity over16KiB despite valid individual labels; it passed0.027s (`artifacts/pod-discovery-basis-boundaries.txt`). Transport is injected and grouped; real ClickHouse SQL parity is a separate backend gate, not claimed by this fake transport.
+
+Actual main `artifacts/kubernetes/pod-observed-c31414e48a/ledger.json` passed12.4s, discovery owner `pod-observed-930153d43f/ownership.json` passed5.8s and Services suspension/recovery `runtime-observed-d0f8f65630/services-ownership.json` passed10.2s. The ordinary generated OTLP source contained eighteen raw variants, twenty-two family groups and twenty-four physical rows. Trace unknown schema (`null`) and reported empty schema remained separate. Contextual Logs/Spans returned4/3 records with missing cluster UID and namespace predicates, including real application service attributes. Local facets, staging and retained Back left source counts unchanged; discovery/explicit context Runs progressed1→2→3.
+
+`TestPodDiscoveryObserved`, `TestPodDiscoveryOwnershipObserved` and `TestPodServicesDepartureObserved` passed first in0.251s combined (0.06/0.02/0.15s), rejecting nine main, three Kubernetes owner and four Services owner serialized changed controls. The raw oracle reconstructs each five-family group and complete resource/schema membership, binds read clock/basis to the actual source response, checks exact contextual predicates and raw record membership, and crosschecks source journals. Real held responses cannot publish rows after scope edit/tab departure or launch follow-on service work. Services supporting span rows and held runtime stocks are independently checked; completed retained tabs remain source-free, and explicit goroutine Apply rereads actual matching data. No native observer diagnostic/failure occurred; stdout is `artifacts/kubernetes/native-validation.txt`.
+
+This inventory-only slice creates no capture/store or new metric authority. No additional Quint model is added for unchanged explicit discovery/read/staging/retained-owner semantics. The new raw variant/grain/authority distinctions are covered by independent generated and actual-source checks, not claims about arbitrary concurrent schedules or physical Kubernetes objects. Final actor `artifacts/kubernetes/pod-observed-4252f0d44a/bombadil/acceptance-summary.json` passed31.2s (33.2s invocation), phases0–8/428 snapshots, final source2, terminal true and exact logs4. A separate fresh-fixture display receipt `artifacts/kubernetes/pod-observed-d166c357ff/display.json` passed9.6s (12.6s invocation): one inventory, zero contextual Runs, full-width details/scoped nested tables, qualifiers/UTC labels and source-free toggles/stage/Back. Passive presentation commit `ff12b8f` left the source binary unchanged; no native or semantic campaign was repeated for it.
+
+Run only the bounded observed gates with the toolchain/cache environment above:
+
+```sh
+GOO_POD_DISCOVERY_LEDGER=/workspace/goo/artifacts/kubernetes/pod-observed-c31414e48a/ledger.json \
+GOO_POD_DISCOVERY_OWNER_LEDGER=/workspace/goo/artifacts/kubernetes/pod-observed-930153d43f/ownership.json \
+GOO_POD_SERVICES_OWNER_LEDGER=/workspace/goo/artifacts/kubernetes/runtime-observed-d0f8f65630/services-ownership.json \
+go test -run '^Test(PodDiscoveryObserved|PodDiscoveryOwnershipObserved|PodServicesDepartureObserved)$' -v .
+```

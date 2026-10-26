@@ -301,3 +301,23 @@ raw/custody gates pass; see [journey 200](../journeys/200-runtime-storyboard.md)
 for exact costs, actual frames and validation limits. This closes the first Go runtime stock-profile slice, not GC pauses,
 pressure classification, cross-runtime support, capacity calculations or
 Kubernetes discovery. Those remain separately scoped work.
+
+
+### C2d — Kubernetes resource discovery (201)
+
+Source `bad6727` implements the [initial Kubernetes discovery path](KUBERNETES_RESOURCES.md):
+full reported resource variants across five OTel source families, local cluster/
+namespace filtering and explicit matching-resource record investigation. Missing
+cluster UID remains unverified context; names never manufacture pod identity.
+Grouped source bounds refuse whole over-budget inventories, and presentation
+omissions remain explicit. Shared request/tab primitives preserve host behavior
+and withdraw pending service work while retaining completed views. Source,
+property, API, physical SQL and ordinary OTLP/browser/ownership/native gates pass;
+[journey 201](../journeys/201-kubernetes-storyboard.md) records exact costs and
+separate display/actor receipts.
+
+This delivers the discovery prerequisite, not the whole Kubernetes dashboard
+family. The next C2d slice must select an actual receiver metric profile and
+implement explicit pod-resource native measurement authority before useful
+memory/state defaults. CPU/request-limit calculations, ownership facts, readiness,
+resource changes and workload aggregation retain separate contracts.

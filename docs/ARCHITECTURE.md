@@ -1000,3 +1000,18 @@ flowchart LR
 Pod UID and cluster UID distinguish missing, present-empty and present-nonempty. Only a nonempty reported pod UID enables contextual record actions. Missing cluster UID remains an unverified qualifier, rather than evidence that the cluster does not exist. Pod names, workload/node labels and equal UIDs do not merge different complete resource variants or establish ownership. No metric evaluation authority is created by this inventory.
 
 The source refuses more than1000 source-family groups as a whole, then returns at most100 resource variants with explicit omissions. Evidence basis includes decoded omitted variants as well as visible ones, while excluding arrival order and read clock. Identities are bounded to16KiB/64 labels and the source response to8MiB. Local cluster/namespace facets and staging reuse held metadata without another source read; explicit record Run and retained Back use the established owner protocol.
+
+The ordinary OTLP journey201 observed18 raw resource/schema variants,22 family groups and24 physical source rows. Its explicit contextual reads returned four logs and three spans while retaining missing cluster-UID/namespace qualifiers and allowing real-service application attributes. Main discovery and contextual Runs consumed1→2→3 source calls; local facets, staging and retained Back did not read. No inventory capture or Kubernetes state store was added. Separate held discovery and Services supporting/widget tests check pending work cannot publish or start follow-on reads after edit or tab departure; completed service views still support retained return and explicit goroutine Apply.
+
+```mermaid
+flowchart LR
+  Find[Explicit Find pods] --> Union[One grouped five-family source read]
+  Union --> Variants[Full raw resource and schema variants]
+  Variants --> Facets[Local reported cluster and namespace facets]
+  Facets --> UID[Nonempty reported pod UID]
+  UID --> Stage[Source-free qualified contextual record question]
+  Stage --> Run[Explicit Logs or Spans read]
+  Run --> Back[Retained Back with no source read]
+```
+
+The final journey201 actor passed31.2s (33.2s invocation), nine phases/428 snapshots, ending with two source reads and an exact four-log contextual population. A separate9.6s bounded display replay used a fresh ordinary fixture, one inventory read and no contextual Run; full-width details, scoped nested-table geometry, qualifiers, UTC labels and source-free toggles/stage/Back passed. Its passive presentation commit did not change the source binary or repeat semantic/native acceptance.
