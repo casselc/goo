@@ -875,6 +875,19 @@
   "PackagePlan": {
     "$ref": "#/components/schemas/exploration.PackagePlan"
   },
+  "PoolSignalsPlan": {
+    "$ref": "#/components/schemas/measurements.PoolSignalsPlan"
+  },
+  "PoolSignalsRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/measurements.PoolSignalsRequestInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
   "PopulationPlan": {
     "$ref": "#/components/schemas/exploration.PopulationPlan"
   },
@@ -12548,6 +12561,151 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/measurements.Plan"
+  },
+  "measurements.PoolSignalOption": {
+    "properties": {
+      "key": {
+        "type": "string"
+      },
+      "question": {
+        "$ref": "#/components/schemas/measurements.Question"
+      },
+      "title": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "key",
+      "title",
+      "question"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.PoolSignalOption"
+  },
+  "measurements.PoolSignalsPlan": {
+    "properties": {
+      "capacity": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.PoolSignalOption"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "capacityOmitted": {
+        "type": "integer"
+      },
+      "parent": {
+        "$ref": "#/components/schemas/measurements.Question"
+      },
+      "state": {
+        "type": "string"
+      },
+      "stream": {
+        "$ref": "#/components/schemas/metrics.Stream"
+      },
+      "streamsOmitted": {
+        "type": "integer"
+      },
+      "version": {
+        "type": "string"
+      },
+      "wait": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.PoolSignalOption"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "waitOmitted": {
+        "type": "integer"
+      },
+      "warnings": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "version",
+      "parent",
+      "stream",
+      "capacity",
+      "wait",
+      "state",
+      "capacityOmitted",
+      "waitOmitted",
+      "streamsOmitted",
+      "warnings"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.PoolSignalsPlan"
+  },
+  "measurements.PoolSignalsRequestInput": {
+    "additionalProperties": false,
+    "properties": {
+      "instruments": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/measurements.InstrumentInput"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "parent": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.QuestionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "stream": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/metrics.StreamInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.PoolSignalsRequest"
   },
   "measurements.Question": {
     "properties": {

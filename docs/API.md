@@ -690,3 +690,36 @@ negative/fractional/unsafe refusals, the accepted maximum safe integer and missi
 flags can be exported with `GOO_STOCK_DOMAIN_API_OBSERVATIONS` while running
 `TestStockDomainHTTPExecuteCaptureAndOfflineReopen`, then checked with
 `scripts/check_openapi.py --stock-domain-observations <path>`.
+
+`POST /pool-signals/plan` (browser `/api/pool-signals/plan`) is pure planning over
+`{parent: NativeQuestion, stream: Stream, instruments: Instrument[]}`. Both
+transports enforce 64 KiB. Go checks cancellation/deadline before and after the
+bounded synchronous planner under a two-second context; this does not preempt
+computation in a goroutine. Validation and elapsed/cancelled requests return 400.
+It occupies no source-query slot, performs no telemetry/custody read or publication,
+and does not treat a supplied query ID as authorization or a source capability.
+
+The parent must be a domain-qualified, schema-pinned connection-count question
+and the held stream must satisfy its exact binding. Candidates match the full
+shared resource/resource-schema and instrumentation identity, with count stream
+attributes minus only connection state. Pool, instance and state must be reported;
+no alias or dimension broadening is inferred. Capacity candidates are cumulative
+nonmonotonic connection-max stocks with the bounded nonnegative-integer domain;
+wait candidates are wait-time histograms in seconds. Options preserve the exact
+parent bounds and can run through existing measurement/capture routes.
+
+`goo/pool-signals/v1` returns detached parent/stream, capacity/wait options
+`{key,title,question}`, state `candidates|unconfirmed`, omission counts and warnings.
+At most 16 instruments and the first 25 preview streams per instrument are
+considered, with at most two distinct options per signal. Preview omissions or
+no matches do not prove absence. Capacity and wait remain independent evidence
+with separate clocks; matching labels do not prove alignment, utilization,
+queue health or causality. Actual execute/capture/offline reopen of count, capacity
+and wait can be exported with `GOO_POOL_SIGNALS_API_OBSERVATIONS` while running
+`TestPoolSignalsHTTPExecuteCaptureOfflineReopen`, and checked with
+`scripts/check_openapi.py --pool-signals-observations <path>`.
+
+Pool-signal preview omission counters must be within 0..10,000 per supplied
+instrument, including extra preview rows removed by the 25-stream cap. Invalid
+or overflowing supplied counters are refused with 400, preserving meaningful
+omission disclosures; the bounded total cannot exceed 160,000.

@@ -81,7 +81,7 @@ def check(spec):
                 requests += 1
                 if isinstance(request, dict):
                     accepted.append((shape, request))
-    assert responses == 322 and requests == 113 and mux_refusals == 18, (responses, requests)
+    assert responses == 336 and requests == 117 and mux_refusals == 19, (responses, requests)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)
@@ -197,12 +197,34 @@ def check_stock_domain_observed(spec,path):
     print('Stock domain API workflow: 10 actual handler responses conform; domain controls and offline reopen pass')
 
 
+def check_pool_signals_observed(spec,path):
+    observations=json.loads(Path(path).read_text())
+    assert len(observations)==9
+    for case in observations:
+        op=spec['paths'][case['path']][case['method'].lower()]
+        validator(spec,op['responses'][str(case['status'])]['content']['application/json']['schema']).validate(case['response'])
+        if case.get('request') is not None and 'requestBody' in op:
+            validator(spec,op['requestBody']['content']['application/json']['schema']).validate(case['request'])
+    plan=observations[0]['response'];assert len(plan['capacity'])==1 and len(plan['wait'])==1
+    for field in ('capacity','wait'):
+        question=plan[field][0]['question'];assert question['fromMs']==plan['parent']['fromMs'] and question['toMs']==plan['parent']['toMs']
+    assert plan['capacity'][0]['question']['definition']['stockDomain']=='nonnegative-integer'
+    shape={'$ref':'#/components/schemas/PoolSignalsPlan'}
+    for wrong in ({**plan,'state':'healthy'},{**plan,'streamsOmitted':-1},{**plan,'capacity':plan['capacity']*3}):
+        assert list(validator(spec,shape).iter_errors(wrong)), 'Pool signal contract control accepted'
+    captured=[c['response']['measurement'] for c in observations if c['path']=='/captures' and c['status']==201]
+    reopened=[c['response']['measurement'] for c in observations if c['path']=='/captures/{id}' and c['status']==200]
+    assert captured==reopened and len(captured)==3
+    print('Pool signals API workflow: 9 actual handlers conform; independent capacity/wait execution and original-count offline reopen pass')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--observations')
     parser.add_argument('--proxy-observations')
     parser.add_argument('--stock-observations')
     parser.add_argument('--stock-domain-observations')
+    parser.add_argument('--pool-signals-observations')
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
@@ -216,3 +238,6 @@ if __name__ == '__main__':
 
     if args.stock_domain_observations:
         check_stock_domain_observed(spec,args.stock_domain_observations)
+
+    if args.pool_signals_observations:
+        check_pool_signals_observed(spec,args.pool_signals_observations)

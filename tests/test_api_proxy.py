@@ -166,6 +166,18 @@ class ProxyContracts(unittest.TestCase):
         self.assertEqual(self.request('POST','/api/record-aggregates',accepted+b' ')[0],400)
         self.assertEqual(len(Upstream.calls),count)
 
+    def test_pool_signals_proxy_exact_64k_limit(self):
+        payload = b'{}' + b' ' * (65536-2)
+        status, _, body = self.request('POST','/api/pool-signals/plan',payload)
+        self.assertEqual(status,400)
+        self.assertEqual(json.loads(body),{'error':'backend refusal'})
+        self.assertEqual(Upstream.calls[-1][1],'/pool-signals/plan')
+        self.assertEqual(Upstream.calls[-1][3],payload)
+        before=len(Upstream.calls)
+        status, _, body = self.request('POST','/api/pool-signals/plan',payload+b' ')
+        self.assertEqual(status,400)
+        self.assertEqual(len(Upstream.calls),before)
+
     def test_get_errors_and_queries_are_reencoded(self):
         Upstream.mode = 'text'
         status, headers, body = self.request('GET', '/api/operations?package=example&minutes=5')

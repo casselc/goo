@@ -4263,6 +4263,64 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/pool-signals/plan": {
+      "post": {
+        "operationId": "post_pool_signals_plan",
+        "summary": "POST /pool-signals/plan",
+        "tags": [
+          "pool-signals"
+        ],
+        "description": "Current owner: cmd/goo/pool_signals_http.go. Effect: pure-plan-or-supplied-summary. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/pool_signals_http.go",
+        "x-effects": "pure-plan-or-supplied-summary",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PoolSignalsPlan"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PoolSignalsRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 65536,
+        "x-browser-body-limit-bytes": 65536,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/population/explain": {
       "post": {
         "operationId": "post_population_explain",
@@ -6434,6 +6492,19 @@
       },
       "PackagePlan": {
         "$ref": "#/components/schemas/exploration.PackagePlan"
+      },
+      "PoolSignalsPlan": {
+        "$ref": "#/components/schemas/measurements.PoolSignalsPlan"
+      },
+      "PoolSignalsRequest": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.PoolSignalsRequestInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
       },
       "PopulationPlan": {
         "$ref": "#/components/schemas/exploration.PopulationPlan"
@@ -18141,6 +18212,151 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.Plan"
+      },
+      "measurements.PoolSignalOption": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "question": {
+            "$ref": "#/components/schemas/measurements.Question"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "title",
+          "question"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.PoolSignalOption"
+      },
+      "measurements.PoolSignalsPlan": {
+        "properties": {
+          "capacity": {
+            "type": "array",
+            "maxItems": 2,
+            "items": {
+              "$ref": "#/components/schemas/measurements.PoolSignalOption"
+            }
+          },
+          "capacityOmitted": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "parent": {
+            "$ref": "#/components/schemas/measurements.Question"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "candidates",
+              "unconfirmed"
+            ]
+          },
+          "stream": {
+            "$ref": "#/components/schemas/metrics.Stream"
+          },
+          "streamsOmitted": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 160000
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/pool-signals/v1"
+          },
+          "wait": {
+            "type": "array",
+            "maxItems": 2,
+            "items": {
+              "$ref": "#/components/schemas/measurements.PoolSignalOption"
+            }
+          },
+          "waitOmitted": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "warnings": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "version",
+          "parent",
+          "stream",
+          "capacity",
+          "wait",
+          "state",
+          "capacityOmitted",
+          "waitOmitted",
+          "streamsOmitted",
+          "warnings"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.PoolSignalsPlan",
+        "description": "Pure supplied-metadata planning. Capacity/wait options are independent exact-stream questions, not fresh evidence or alignment/health/utilization claims. Preserves parent bounds; no source read, custody or publication."
+      },
+      "measurements.PoolSignalsRequestInput": {
+        "additionalProperties": false,
+        "properties": {
+          "instruments": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/measurements.InstrumentInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array",
+                "maxItems": 16
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "parent": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.QuestionInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/metrics.StreamInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.PoolSignalsRequest"
       },
       "measurements.Question": {
         "properties": {

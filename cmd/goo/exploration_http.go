@@ -13,6 +13,7 @@ var resultSnapshots = &exploration.ResultSnapshots{}
 func registerExploration(mux *http.ServeMux, source exploration.Source, banks ...*exploration.TailMembershipSnapshots) {
 	registerTraceSearch(mux, source)
 	registerRecipes(mux)
+	registerPoolSignals(mux)
 	registerPopulationExplanations(mux, source)
 	registerTail(mux, source, banks...)
 	mux.HandleFunc("POST /compare", func(w http.ResponseWriter, r *http.Request) {
