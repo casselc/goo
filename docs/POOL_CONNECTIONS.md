@@ -67,3 +67,10 @@ comparisons remain follow-ons with their own identity/time/coverage contracts.
 The executable service-to-pool/native/capture flow, accepted desktop/mobile frames,
 source-effect journal and original diagnostic are recorded in
 [journey 196](../journeys/196-pool-connections-storyboard.md).
+
+
+[Pool capacity and acquisition-wait context](POOL_SIGNALS.md) now stages
+independently evaluated exact-stream measurements from a selected named pool.
+Default service reads remain bounded; explicit Run and individual capture retain
+the original window, identity and separate clocks. Numerical capacity/utilization
+joins, causal attribution and automatic runtime/host panels remain follow-ons.

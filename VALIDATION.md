@@ -10934,3 +10934,80 @@ substitution and altered receipts. Log:
 `artifacts/pool-connections/native-validation.txt`. No source read or campaign
 repeat was needed. Source and desktop/mobile visual reviews approve the bounded
 slice; [journey 196](journeys/196-pool-connections-storyboard.md) records the flow.
+
+## Exact capacity and acquisition-wait continuation (2026-10-26 UTC)
+
+Source `b229599` adds pure `/pool-signals/plan` planning over retained discovery,
+then reuses existing native staging, explicit Run, individual capture and service
+return. Full resource/resource-schema, scope/version/schema and every non-state
+attribute must match. Capacity is a pinned cumulative nonmonotonic max stock with
+an explicit count domain; wait remains an independent seconds histogram. Exact
+parent millisecond/nanosecond bounds are retained. No ratio, common epoch,
+transactional snapshot, paired store or additional default telemetry is inferred.
+
+Source gates: full root Go suite passed (cmd 1.751s, exploration 1.350s,
+measurements 0.431s); all 83 Node files passed (6.85s), followed by focused omission
+and error-handling checks (0.23s / 0.11s). Independent review identified and
+verified bounded omission-counter arithmetic; malformed metadata now renders
+unavailable before starting fetch/listeners. Hegel/native planning properties
+passed (0.068s): 12 generated identities with ten mismatch edits, exact bounds,
+pinned-parent refusal, domain/hash, deterministic dedup and first-25 boundaries.
+A preliminary output path was wrong and created no acceptance log; the actual
+focused test invocation passed with an absolute log path. Existing kernel
+campaigns were not repeated.
+
+API gates passed: 15 new frozen cases, nine actual workflow responses for
+capacity/wait execution, count/capacity/wait capture and offline exact reopen,
+and eight actual Python proxy tests (1.263s). OpenAPI covers 81 operations/74 Go,
+425 schemas/407 reflected, 336 responses, 117 admitted requests and 19 mux
+refusals. The new pure planner has a 64 KiB body/2s context and no source or query
+budget effects; existing dashboard planning stays at 16 KiB. Negative or excessive
+preview counts fail before addition. Existing fixtures remain unchanged.
+
+The first live main and ownership tests passed (14.4s and 4.5s; 21.6s invocation),
+using ordinary generated OTLP through the actual collector/ClickHouse. Main:
+`artifacts/pool-signals/pool-signals-64f0827254/ledger.json`; ownership:
+`artifacts/pool-signals/pool-signals-a40b948f32/ownership.json`.
+The default overview remains nine logical telemetry operations and two native
+widgets. Pool planning/staging adds none; explicit capacity Run/capture advances
+to 11, wait Run/capture to 13. Both API reopen and retained Services/Back-to-service
+returns stay at 13, as does final frozen UI reload. Three pool-planning requests
+are recorded separately from other metadata/preview reads; these are not SQL
+statement counts. Actual planner request is 9,417 bytes, dashboard plan 15,896.
+
+Capacity reports 20→0 with an epoch change. Wait retains four observations,
+raw buckets `[1,2,1,0]` and p95 range `(0.05,0.1]` seconds, not a scalar or fleet
+percentile. Partial wait-only and unconfirmed cases remain explicit. A separate
+owner case holds a real upstream planner response, leaves the service, and proves
+late release cannot publish options or reopen the departed parent. No positive
+response is fabricated. The source binary SHA256 is
+`eea3d5b229ea5f8c7894a0500158d8aaa9a6807548325158acf683dbcec5cb2f`;
+`artifacts/pool-signals/deployment.json` records actual HTTP/MIME/hash checks.
+
+Both complete captures retain identical before/after bytes:
+
+| Signal | Bytes | SHA256 |
+| --- | ---: | --- |
+| Capacity | 6,645 | `dfae375dc47b4cc47c06a7aa923ae4ffed34b0e652d00499a264230c5931725b` |
+| Wait | 6,537 | `1f79900a42ff49ec69e707ce03d06fc233b4cdbbd81b1f7ae546654086581ed4` |
+
+The actor passed first try (31.0s / 33.3s invocation), nine phases 0–8 and 405
+snapshots, ten logical source operations, one pool plan and terminal true. It uses
+a separate ordinary fixture:
+`artifacts/pool-signals/pool-signals-16eac4ec83/bombadil/acceptance-summary.json`.
+Actual desktop/mobile pool options and wait-interval frames remain in
+[journey 197](journeys/197-pool-signals-storyboard.md). Shared pool scale captions
+are consolidated; inherited native detail density remains a separate limitation.
+
+Independent observed validation passes in 0.373s (main 0.27s, owner 0.09s), rejecting
+five main and three ownership changed controls. It checks physical source
+membership, full identity, epochs/domain/buckets, exact staged questions, local
+source effects, full stored bytes/content IDs and the actual held-response case.
+The first main observer used an incomplete raw fixture selector and incorrectly
+included a deliberately different `cloud.region` resource; that rejected
+observation is retained. Correcting the oracle to compare the complete resource
+and scope identity preserves the strict expected membership. The owner passed
+initially; the final combined run also adds shared content-ID checks. No app,
+fixture or accepted source result changed. Log:
+`artifacts/pool-signals/native-validation.txt`. Existing navigation/read/custody
+owners remain in use; no new Quint model is claimed for this bounded adoption.

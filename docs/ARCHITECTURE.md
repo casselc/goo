@@ -904,3 +904,11 @@ actual identities and the same admission control. The actor passed 30.6s using a
 separately ingested ordinary fixture (eight phases, 478 snapshots), not journey195's
 reused data. These are bounded supplied-telemetry observations, not a complete pool
 health, capacity or acquisition-wait dashboard.
+
+### Independent capacity and acquisition-wait questions
+
+The named-pool view can ask the pure `goo/pool-signals/v1` planner to inspect supplied discovery metadata. A compatible capacity stream uses `db.client.connection.max` in `{connection}` as an independent cumulative stock with the nonnegative-integer domain. A compatible acquisition-wait stream uses `db.client.connection.wait_time` in seconds as a delta or cumulative histogram. The selected count stream's complete resource, resource schema, instrumentation scope/version/schema and attributes must match; only the count's connection-state attribute is removed. The parent window, including explicit nanosecond bounds, is preserved. Names and titles do not identify streams.
+
+This metadata check does not read telemetry or certify aligned observations. It examines at most16 instruments and25 preview streams per instrument, offers at most two options per signal, and reports omissions without claiming absence. Preview stages an exact independent question; Run and capture each perform their existing explicit reads. No count/capacity ratio, aligned snapshot, pool health or causal relationship follows from compatibility. Returning to the retained service view and reopening frozen evidence remain source-free.
+
+Journey197 exercised ordinary OTLP count/capacity reports and raw wait buckets, including capacity20→0 across epochs and an observed P95 bucket range `(0.05, 0.1]` seconds from four reports. Its main and held-plan ownership journeys passed in14.4s and4.5s; a separately ingested actor fixture passed31.0s across nine phases. The offline raw-ledger gate checks independent values, exact identity/window, source effects and both complete content-addressed capture files; it does not add a new lifecycle model or a production completeness claim.

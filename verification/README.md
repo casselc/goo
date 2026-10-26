@@ -2355,3 +2355,21 @@ With the toolchain/cache environment above after browser ownership is released:
 go test -run '^Test(HegelPoolSameRow|PoolDomainRaw)' -v .
 GOO_POOL_INTEGRATION_LEDGER=/workspace/goo/artifacts/pool-connections/named-pools-7d8247745c/ledger.json go test -run '^TestPoolIntegrationObserved$' -v .
 ```
+
+### Independent pool signals (journey197)
+
+`TestHegelPoolSignalsIdentityAndScope` and `TestPoolSignalsPreviewAndPin` passed in0.068s (`artifacts/pool-signals-properties.txt`). Twelve generated labels exercise ten identity mismatches each, exact ms/ns bounds, detached outputs, capacity-only domain and executed-question hash; deterministic checks cover name-independent deduplication, instrument order, preview indices24/25, pinned-parent refusal and invalid omission counters. These are focused planner checks, not another stock/histogram kernel campaign.
+
+The actual main ledger is `artifacts/pool-signals/pool-signals-64f0827254/ledger.json`; ownership is `pool-signals-a40b948f32/ownership.json`. Main passed14.4s and ownership4.5s. The separately ingested actor fixture `pool-signals-16eac4ec83/bombadil/acceptance-summary.json` passed31.0s with nine phases,405 snapshots and ten observed source requests. Pure pool-planning POSTs are counted separately from telemetry and legacy planning calls.
+
+The corrected combined actual gate passed in0.373s (main body0.27s, ownership0.09s), with eight changed controls rejected; stdout is `artifacts/pool-signals/native-validation.txt`. The first ownership run passed while the first main run rejected the incomplete observer selector.
+
+`TestPoolSignalsObserved` independently selects full raw resource/instrument identities, checks capacity epochs and actual zero, wait buckets and the exact P95 enclosing bucket, original windows, explicit-read/local-action discipline, saved raw measurements and complete unchanged capture bytes/content IDs. `TestPoolSignalsOwnershipObserved` checks the real held positive planner response could not repopulate options or add reads after leaving. Five main and three ownership serialized changed controls exercise scope, raw value, domain, hidden source read, reopened payload and owner mutations. Existing native ownership is reused; no additional Quint model or arbitrary-schedule claim is made. The initial observer rejection is retained: expected raw membership initially omitted the deliberate resource-extra control; the oracle now reconstructs the complete resource and scope/version before selection, with no fixture or application change.
+
+Run only the bounded actual gate with the toolchain/cache environment described above:
+
+```sh
+GOO_POOL_SIGNALS_LEDGER=/workspace/goo/artifacts/pool-signals/pool-signals-64f0827254/ledger.json \
+GOO_POOL_SIGNALS_OWNER_LEDGER=/workspace/goo/artifacts/pool-signals/pool-signals-a40b948f32/ownership.json \
+go test -run '^TestPoolSignals(Observed|OwnershipObserved)$' -v .
+```

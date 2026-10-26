@@ -62,3 +62,5 @@ The metadata request is canceled or ignored when its parent is closed, removed,
 left or replaced. It cannot publish options into a departed service. This reuses
 the existing pending-scope and native navigation owners, with no new telemetry
 subscription or automatic refresh.
+
+Actual flow, frames and receipts are recorded in [journey 197](../journeys/197-pool-signals-storyboard.md).

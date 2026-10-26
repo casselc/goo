@@ -919,3 +919,8 @@ and a 256-state display bound, with explicit omissions and a stable shared count
 scale. It does not fetch or publish, infer a capacity ratio or merge contributors.
 Service widgets and frozen native evidence share this composition; their existing
 owners retain question execution, navigation and capture custody.
+
+The pool-signal continuation adds metadata-only candidate planning outside the
+passive count display. Its pending scope cancels or ignores late responses after
+parent withdrawal; the existing native measurement/navigation owner stages,
+executes and captures each signal independently. See [contract](POOL_SIGNALS.md).

@@ -893,4 +893,11 @@ new interval handoff does not claim whole-product mobile density is solved.
 
 [Cumulative-stock measurements](CUMULATIVE_STOCKS.md) accept cumulative nonmonotonic sums, with an optional exact raw nonnegative-integer domain for [named-pool connection views](POOL_CONNECTIONS.md). The automatic binding is pinned to schema 1.37.0 and positive same-stream metadata; omitted discovery preview evidence is unknown. Capacity/wait joins, runtime/host panels, stock-to-record context and numeric stock comparisons remain unimplemented. Delta nonmonotonic sums require a separate absolute-baseline contract.
 
-The named-pool composition retains repeated per-row scale captions and tall unknown-state marks. A compact shared state matrix and clearer state-to-bar labels remain presentation refinements; the current slice does not claim whole-product density is solved.
+Named-pool counts now use one shared scale caption. Tall unknown-state marks and clearer state-to-bar labels remain presentation refinements; the current slice does not claim whole-product density is solved.
+
+
+[Pool capacity and acquisition-wait context](POOL_SIGNALS.md) now stages
+independently evaluated exact-stream measurements from a selected named pool.
+Default service reads remain bounded; explicit Run and individual capture retain
+the original window, identity and separate clocks. Numerical capacity/utilization
+joins, causal attribution and automatic runtime/host panels remain follow-ons.

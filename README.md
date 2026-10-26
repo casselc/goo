@@ -261,3 +261,10 @@ proposals stay in the [reviewed backlog](docs/BACKLOG_2026_10_25.md).
 [Original handoff (historical)](START_HERE.md)
 
 [Cumulative-stock measurements](docs/CUMULATIVE_STOCKS.md) support discovery, sum-table reads and frozen replay. [Named-pool connections](docs/POOL_CONNECTIONS.md) add automatic per-instance connection-state views within service dashboards; capacity/wait joins and runtime/host panels remain follow-ons.
+
+
+[Pool capacity and acquisition-wait context](docs/POOL_SIGNALS.md) now stages
+independently evaluated exact-stream measurements from a selected named pool.
+Default service reads remain bounded; explicit Run and individual capture retain
+the original window, identity and separate clocks. Numerical capacity/utilization
+joins, causal attribution and automatic runtime/host panels remain follow-ons.

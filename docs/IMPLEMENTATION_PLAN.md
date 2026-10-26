@@ -1170,3 +1170,10 @@ comparison continuation are independently reviewed. Final publication and bounde
 acceptance receipts are in VALIDATION.md.
 
 C2c includes [native stocks](CUMULATIVE_STOCKS.md) and [automatic named-pool connection observations](POOL_CONNECTIONS.md): pinned same-stream discovery, domain-constrained counts, per-instance state comparison and shared frozen presentation. Capacity/wait joins, pool-to-record context and broader runtime/host/resource identity remain separate.
+
+
+[Pool capacity and acquisition-wait context](POOL_SIGNALS.md) now stages
+independently evaluated exact-stream measurements from a selected named pool.
+Default service reads remain bounded; explicit Run and individual capture retain
+the original window, identity and separate clocks. Numerical capacity/utilization
+joins, causal attribution and automatic runtime/host panels remain follow-ons.
