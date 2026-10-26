@@ -74,3 +74,10 @@ independently evaluated exact-stream measurements from a selected named pool.
 Default service reads remain bounded; explicit Run and individual capture retain
 the original window, identity and separate clocks. Numerical capacity/utilization
 joins, causal attribution and automatic runtime/host panels remain follow-ons.
+
+
+The [compact pool view](POOL_VIEW.md) now compares selected capacity and wait
+beside held count states. Only matching latest reported used/maximum endpoints
+with equal nonzero epochs and positive capacity can yield a fraction. Custom
+states remain unsummed; wait remains a separate population. This does not add
+pool-to-record scope expansion or infer saturation/database health.

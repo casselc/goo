@@ -1,7 +1,8 @@
 # Compact pool observations
 
-Status: implementation and acceptance in progress. This document records the
-approved contract; it does not yet claim live acceptance.
+Implemented and accepted in [journey 198](../journeys/198-pool-view-storyboard.md).
+The [compact receipt](evidence/pool-view-198.json) records source effects, immutable
+capture hashes and actual desktop/mobile geometry.
 
 A pool row keeps its reported counts, optional maximum connections and optional
 acquisition-wait interval together. It builds on [named-pool observations](POOL_CONNECTIONS.md)
@@ -85,3 +86,28 @@ response withdrawal, retained source-free navigation and immutable individual
 capture reopening. Refresh desktop/mobile and keyboard journey frames, extend
 Bombadil actions/invariants and use meaningful generated/observed checks. Do not
 accept mocked positive source/UI responses as live acceptance.
+
+
+## Actual acceptance
+
+Ordinary Python-tagged OTLP through the collector/ClickHouse supplies the real
+count/capacity/wait evidence. The main journey passes first run in 21.1s, three
+held-response ownership cases in 12.0s and the bounded eleven-phase Bombadil actor
+in 31.5s (285 snapshots). Independent raw-source/custody validation passes in
+0.549s with eight main and four ownership rejecting controls. Generated properties
+and explicit integer/zero/epoch boundaries pass separately. No redundant Quint
+model or new testing dependency is introduced for this pure algebra and existing
+read-owner protocol.
+
+Actual screenshot review caught global checkbox minimums and the service widget's
+inherited table-height cap. The scoped display fixes preserve the existing
+256-state bound and keep used/idle visible before custom states. Final same-fixture
+display replay passes in 12.5s, checking every cell horizontally and vertically,
+full wait values, UTC/nanosecond tooltips, small square checkboxes and shared count
+tracks. It uses eleven real reads with no new ingestion/capture; the accepted
+semantic/ownership/actor campaigns were not repeated. Earlier display diagnostics
+remain explicit in the storyboard rather than being counted as final acceptance.
+
+[Desktop](journeys/screenshots/198a-aligned-pool-evidence.png) ·
+[Mobile](journeys/screenshots/198b-mobile-aligned-pool.png) ·
+[Whole service context](journeys/screenshots/198c-pool-view-in-context.png).

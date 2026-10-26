@@ -924,3 +924,27 @@ The pool-signal continuation adds metadata-only candidate planning outside the
 passive count display. Its pending scope cancels or ignores late responses after
 parent withdrawal; the existing native measurement/navigation owner stages,
 executes and captures each signal independently. See [contract](POOL_SIGNALS.md).
+
+
+## Compact aligned pool view
+
+`ui/pool-view.js` is a supplied-data renderer and response-scope guard. It reuses
+`goo-table`, `GooComparisonVisual.cell` and the UTC timestamp presenter. Known
+count states and capacity use one visible zero-based count scale; stale values
+are muted and unknown values unpainted. Wait keeps its own histogram units and
+interval. The Go composer alone decides ratio eligibility; JavaScript only
+formats its exact rational, marking truncated percentages. Used and idle remain
+visible before the bounded custom-state list.
+
+`GooPoolSignals` is the application owner for selected optional reads and pure
+composition. Opening/reopening cached metadata or results is local; explicit
+Load uses the existing measurement transport, then the pure pool-view endpoint.
+Selection edits, parent withdrawal and closing cancel or ignore pending work.
+The display renderer never fetches, subscribes or publishes. Preview delegates
+existing native inspection/navigation and individual capture ownership.
+
+Nested narrow panels stack signal/value and short UTC observation rows. Full UTC
+and nanoseconds remain in focusable timestamp tooltips; epochs and read bases
+stay in a closed disclosure. Scoped checkbox sizing overrides global input
+minimums without changing common component styles. See [contract](POOL_VIEW.md)
+and [executable journey](../journeys/198-pool-view-storyboard.md).

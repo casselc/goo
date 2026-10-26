@@ -912,3 +912,30 @@ The named-pool view can ask the pure `goo/pool-signals/v1` planner to inspect su
 This metadata check does not read telemetry or certify aligned observations. It examines at most16 instruments and25 preview streams per instrument, offers at most two options per signal, and reports omissions without claiming absence. Preview stages an exact independent question; Run and capture each perform their existing explicit reads. No count/capacity ratio, aligned snapshot, pool health or causal relationship follows from compatibility. Returning to the retained service view and reopening frozen evidence remain source-free.
 
 Journey197 exercised ordinary OTLP count/capacity reports and raw wait buckets, including capacity20→0 across epochs and an observed P95 bucket range `(0.05, 0.1]` seconds from four reports. Its main and held-plan ownership journeys passed in14.4s and4.5s; a separately ingested actor fixture passed31.0s across nine phases. The offline raw-ledger gate checks independent values, exact identity/window, source effects and both complete content-addressed capture files; it does not add a new lifecycle model or a production completeness claim.
+
+### Compact pool evidence and qualified reported utilization
+
+`POST /api/pool-signals/view` is a pure `goo/pool-view/v1` composition over held count, optional capacity and optional acquisition-wait Results. It replays the raw Result inputs before exposing their evidence. Count states retain exact pool/resource/instrument identity; only the connection-state attribute partitions rows. Each signal keeps its original question, source read clock and basis. Related measurements still use explicit existing measurement reads; local selection, cached return and pure composition do not add telemetry reads.
+
+A reported used/maximum fraction is available only for literal `used` and the selected opted-domain capacity: both latest samples must be observed, have exactly equal observation nanoseconds and nonzero equal start epochs, capacity must exceed zero, and used must not exceed capacity. The fraction is reduced exactly; zero used remains an observed zero. Unknown epoch0, stale/conflicting samples, different clocks or epochs, zero capacity and used above maximum retain explicit unavailable/inconsistent reasons. Neither matching reported clocks nor this fraction certifies a transactional snapshot, aligned idle/custom-state totals, capacity health or causality. Wait remains an independent histogram interval and bucket-bound P95, never the ratio denominator.
+
+Individual signal capture remains an independent fresh read with its original exact question and content-addressed custody. The compact composed view does not create a durable paired receipt. The observed journey198 exercises an aligned3/10 fraction and six actual-source boundary compositions; epoch0 is covered by properties rather than claimed as live-fixture evidence. Existing native ownership is retained: held related-source responses cannot publish a view after close, changed selection or navigation. No additional formal lifecycle model is asserted for this reuse.
+
+```mermaid
+sequenceDiagram
+  participant User
+  participant Pool as Retained pool view
+  participant Planner as Pure metadata planner
+  participant Source as Existing measurement source
+  participant Compose as Pure pool composer
+  User->>Pool: Select exact pool and optional signals
+  Pool->>Planner: Held count question, stream, discovery metadata
+  Planner-->>Pool: Exact compatible independent questions
+  User->>Pool: Load selected signals
+  Pool->>Source: Explicit capacity and/or wait reads
+  Source-->>Pool: Raw Results with separate clocks and bases
+  Pool->>Compose: Held count plus completed optional Results
+  Compose-->>Pool: Certified inputs, states, qualified fraction or reason
+  User->>Pool: Select cached row or return
+  Note over User,Pool: Cached and local actions perform no source read
+```

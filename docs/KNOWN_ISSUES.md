@@ -1,5 +1,13 @@
 # Known issues and gaps
 
+[Compact pool observations](POOL_VIEW.md) require exact reported identity, latest
+time and a matching nonzero epoch before showing used / maximum. A zero maximum,
+unknown/stale value or mismatch withholds the fraction; independent wait remains
+a different population. These checks are not source authenticity, simultaneous
+collection, saturation or database health. There is no paired capture or automatic
+refresh. Pool-to-record context and runtime/host/Kubernetes discovery remain
+separate, and broader service-catalog/header density is not solved by this panel.
+
 [Counted values](COUNTED_VALUES.md) and [service widgets](SERVICE_RECORD_AGGREGATES.md)
 now avoid unused inspection reads. The service browser deliberately retains full
 supporting rows/fields for inspection and positive profile witnesses. Aggregates

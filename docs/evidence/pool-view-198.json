@@ -1,0 +1,223 @@
+{
+  "version": 1,
+  "sourceCommit": "cb63955056f4b7937048a94fe0e60be289fe75e0",
+  "finalDisplayCommit": "2f8405e10dd0140a331ee2e99bd15e72a9bac9f0",
+  "binarySHA256": "9a05542547b87bb0fb1fe2b7c09f09bf5afec16328f9feeb6021d50dcdbb8cfd",
+  "mainSeconds": 21.1,
+  "ownershipSeconds": 12.0,
+  "actorSeconds": 31.5,
+  "nativeCombinedSeconds": 0.549,
+  "nativeRejectingControls": {
+    "main": 8,
+    "owner": 4
+  },
+  "displaySeconds": 12.5,
+  "mainLedger": "artifacts/pool-view/pool-view-cb9c0ef820/ledger.json",
+  "ownershipLedger": "artifacts/pool-view/pool-view-79f71bfe7e/ownership.json",
+  "actorSummary": {
+    "phases": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "snapshots": 285,
+    "final": {
+      "phase": 10,
+      "source": 11,
+      "plans": 1,
+      "views": 1,
+      "catalog": true,
+      "ready": true,
+      "options": true,
+      "loaded": true,
+      "terminal": true
+    }
+  },
+  "capture": {
+    "id": "a3dc227d2b5fe0c877a936ed792d9895f1d2b8d899494adf814729ff9389323a",
+    "bytes": 6626,
+    "beforeSHA256": "ff1b9cbdbf55f18974c496d6d25874add639450954a05878c448bc11540c1ae3",
+    "afterSHA256": "ff1b9cbdbf55f18974c496d6d25874add639450954a05878c448bc11540c1ae3",
+    "afterDisplaySHA256": "ff1b9cbdbf55f18974c496d6d25874add639450954a05878c448bc11540c1ae3"
+  },
+  "mainEvents": [
+    {
+      "action": "overview",
+      "source": 9,
+      "poolPlans": 0,
+      "views": 0
+    },
+    {
+      "action": "keyboard-open",
+      "source": 9,
+      "poolPlans": 1,
+      "views": 0
+    },
+    {
+      "action": "keyboard-selection",
+      "source": 9,
+      "poolPlans": 1,
+      "views": 0
+    },
+    {
+      "action": "load-pair",
+      "source": 11,
+      "poolPlans": 1,
+      "views": 1
+    },
+    {
+      "action": "cached-keyboard-reopen",
+      "source": 11,
+      "poolPlans": 1,
+      "views": 1
+    },
+    {
+      "action": "partial-one-read",
+      "source": 12,
+      "poolPlans": 2,
+      "views": 2
+    },
+    {
+      "action": "cached-row-return",
+      "source": 12,
+      "poolPlans": 2,
+      "views": 2
+    },
+    {
+      "action": "individual-staged",
+      "source": 12,
+      "poolPlans": 2,
+      "views": 2
+    },
+    {
+      "action": "individual-run",
+      "source": 13,
+      "poolPlans": 2,
+      "views": 2
+    },
+    {
+      "action": "individual-capture",
+      "source": 14,
+      "poolPlans": 2,
+      "views": 2
+    },
+    {
+      "action": "retained-service-return",
+      "source": 14,
+      "poolPlans": 2,
+      "views": 2
+    },
+    {
+      "action": "frozen-individual-reload",
+      "source": 14,
+      "poolPlans": 2,
+      "views": 2
+    }
+  ],
+  "supplementalNativeReadsOutsidePageJournal": 6,
+  "displaySourceReads": 11,
+  "displayNewIngestion": false,
+  "displayNewCapture": false,
+  "visualGeometry": {
+    "desktop": {
+      "rootRem": 14,
+      "table": {
+        "top": 500.703125,
+        "bottom": 958.078125,
+        "scrollHeight": 455,
+        "clientHeight": 455
+      },
+      "checks": [
+        {
+          "width": 14,
+          "height": 14
+        },
+        {
+          "width": 14,
+          "height": 14
+        }
+      ],
+      "tracks": [
+        326.984375,
+        326.984375,
+        326.984375,
+        326.984375
+      ],
+      "maxima": [
+        "12",
+        "12",
+        "12",
+        "12"
+      ],
+      "order": [
+        "used",
+        "idle",
+        "reserved",
+        "Capacity",
+        "Acquisition wait \u00b7 p95"
+      ],
+      "provenanceOpen": false,
+      "issues": []
+    },
+    "mobile": {
+      "rootRem": 14,
+      "table": {
+        "top": 538.21875,
+        "bottom": 1013.59375,
+        "scrollHeight": 473,
+        "clientHeight": 473
+      },
+      "checks": [
+        {
+          "width": 14,
+          "height": 14
+        },
+        {
+          "width": 14,
+          "height": 14
+        }
+      ],
+      "tracks": [
+        165.90625,
+        165.90625,
+        165.90625,
+        165.90625
+      ],
+      "maxima": [
+        "12",
+        "12",
+        "12",
+        "12"
+      ],
+      "order": [
+        "used",
+        "idle",
+        "reserved",
+        "Capacity",
+        "Acquisition wait \u00b7 p95"
+      ],
+      "provenanceOpen": false,
+      "issues": []
+    }
+  },
+  "frames": {
+    "198a-aligned-pool-evidence.png": "958a62dc921950f471f96267844eb053a304fe1e85011993ac2c7975bdc7d34f",
+    "198b-mobile-aligned-pool.png": "e80095e091660b4e2f3585e8cde90be4a25e38394c26fa710f9424f30f8ee987",
+    "198c-pool-view-in-context.png": "7843cae61546cbd3b0d8652029b15eef12ee8af0de926ba14e9c8b37b4a72194"
+  },
+  "claims": [
+    "raw replay establishes internal consistency, not authenticity",
+    "matching reported clocks/epochs does not prove a transactional snapshot or health",
+    "wait population remains independent",
+    "no paired capture or new Quint model",
+    "semantic main/owner/actor not repeated for display-only fixes"
+  ]
+}

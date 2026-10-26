@@ -1175,5 +1175,17 @@ C2c includes [native stocks](CUMULATIVE_STOCKS.md) and [automatic named-pool con
 [Pool capacity and acquisition-wait context](POOL_SIGNALS.md) now stages
 independently evaluated exact-stream measurements from a selected named pool.
 Default service reads remain bounded; explicit Run and individual capture retain
-the original window, identity and separate clocks. Numerical capacity/utilization
-joins, causal attribution and automatic runtime/host panels remain follow-ons.
+the original window, identity and separate clocks. Strict reported used / maximum composition is delivered in the compact pool
+view below. Broader time/capacity joins, causal attribution and automatic
+runtime/host panels remain follow-ons.
+
+
+C2c's [compact pool view](POOL_VIEW.md) composes held counts and explicitly loaded
+capacity/wait with exact per-pool identity and raw replay. A reported used /
+maximum fraction requires matching latest observation time and nonzero epoch,
+positive maximum and a valid bounded numerator. Missing, stale and incompatible
+signals retain separate values/reasons; no states are summed and no health is
+inferred. Default reads remain unchanged. Runtime/host resource identity and
+Kubernetes discovery remain the next family prerequisites; pool-to-record scope
+expansion remains separate. Acceptance is recorded in
+[journey 198](../journeys/198-pool-view-storyboard.md).

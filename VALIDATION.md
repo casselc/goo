@@ -11071,3 +11071,89 @@ and existing verification dependencies/source remain unchanged.
   collector drain/completeness. No new Bombadil adapter, Rust/qweave/gosim run or
   production checker migration is claimed. Actual frames and process diagram are
   linked from the report; no broad suites repeated for this isolated pilot.
+
+
+## Compact aligned pool observations — journey 198 (2026-10-26 UTC)
+
+[Contract](docs/POOL_VIEW.md), [executable storyboard](journeys/198-pool-view-storyboard.md)
+and [compact receipt](docs/evidence/pool-view-198.json). Source `cb63955` adds a
+pure Go composer over replay-validated held count/capacity/wait evidence, a bounded
+2 MiB pure HTTP/proxy contract and compact passive table/bar presentation. Explicit
+selected optional measurement reads keep the default dashboard budget unchanged.
+Only literal used and maximum latest observed values with identical timestamp and
+matching nonzero epoch, positive maximum and used <= maximum produce an exact
+rational. Unknown/stale/zero/misaligned/inconsistent values remain explicit;
+custom states are unsummed and acquisition wait is a separate population.
+
+Source gates: full root Go passes (cmd/goo 0.869s, exploration 1.091s, measurements
+0.349s); full Node gate passes with 84 reported tests in 6.775s. Affected pool
+render/owner tests pass after later scoped display changes (0.26s), including
+actual deferred-fetch cancel/retry and used/idle retention before bounded custom
+states. Generated Hegel alignment checks pass in 0.103s, guaranteed zero, integer
+and capacity/epoch boundaries in 0.017s. No testing dependency migration occurs.
+
+API gates: focused pool-view/pool-signal handlers pass in 0.539s; ten actual proxy
+checks pass in 1.630s. Thirteen new HTTP fixtures cover exact composition, forged
+results, bounds/identity, malformed/trailing input, pure zero-budget behavior,
+cancellation/expiry, exact 2 MiB/overflow and method refusal. OpenAPI checks pass
+with 82 operations (75 Go), 439 reflected/457 total schemas, 348 observed responses,
+120 admitted requests and 20 mux refusals. Raw replay establishes internal
+consistency, not source authenticity; the enclosing two-second pre/post deadline
+does not interrupt the bounded synchronous computation mid-execution.
+
+Actual ordinary OTLP → collector → ClickHouse acceptance passes first run: main
+21.1s, ownership 12.0s (37.9s invocation). Aligned used 3 / maximum 10 is 30%; idle
+12 and reserved 2 remain independent. Wait has four acquisition observations with
+bucket-bound p95 `(0.05, 0.1]` seconds. A wait-only partial pool remains useful;
+six actual supplemental native reads show zero maximum, time/epoch mismatch,
+stale/conflicting used and used above maximum without inventing a ratio. Three
+held original source responses cannot publish after close, selection change or
+leaving. No positive source/UI responses are mocked; traffic remains running.
+
+The browser journal records 9 default source calls, 11 after optional pair,
+12 after partial wait, 13 after individual Run and 14 after its fresh capture.
+Staging, cached reopen, retained return and frozen reload add none. Two pool plans
+and two pure compositions are separate from source operations. Six supplemental
+native reads and their pure plans/compositions, plus fixture-readiness probes,
+are outside that page journal; these are not counts of internal SQL statements.
+
+First-pass Bombadil is 31.5s (33.2s invocation), eleven phases/285 snapshots,
+source 11, one pool plan, one pure view, terminal true. Independent observed
+validation passes in 0.549s combined (main 0.37s, ownership 0.17s), rejecting eight
+changed main and four owner controls. Initial main observer wrongly compared
+metric name/unit across different related instruments; only its shared-identity
+comparison was corrected, preserving each instrument's exact raw identity. The
+first owner check passed. No application/fixture change accommodates that gate.
+No redundant Quint model is added for this pure algebra and existing explicit-read
+owner; finite observed checks are not arbitrary concurrency exploration.
+
+The full individual capacity capture remains 6,626 bytes, ID
+`a3dc227d2b5fe0c877a936ed792d9895f1d2b8d899494adf814729ff9389323a`, SHA256
+`ff1b9cbdbf55f18974c496d6d25874add639450954a05878c448bc11540c1ae3`,
+identical before/after frozen reopening and after final display replay. No paired
+view receipt, transactional snapshot, saturation or database-health claim is made.
+
+Actual screenshot review found inherited large checkbox controls and horizontal
+panning. Display polish `25119f1` stacks nested rows and prioritizes used/idle.
+The first display replay (10.9s) corrected a harness assumption that 1rem meant
+16px, whereas the app uses 14px. The second (10.3s) then caught a real inherited
+38px minimum checkbox height; scoped `70810e1` resets it. The third (14.1s) passed
+its horizontal geometry check, but actual PNG review found the inherited service
+widget's 24rem table cap vertically hiding capacity/wait. That is not final visual
+acceptance. Scoped `2f8405e` removes the cap and fixes compact cell padding while
+preserving the 256-state bound. Diagnostics and original frames remain retained.
+
+Final same-fixture display replay passes in 12.5s (17.4s invocation): all five
+rows are actually visible on desktop/mobile, both-axis cell containment passes,
+mobile table scroll/client height both 473px, checkboxes 14x14px, shared count
+tracks/max 12, exact UTC/ns tooltips and closed provenance. It uses 11 real reads
+of the original accepted scope with no new ingestion/capture; resizing is local.
+The semantic main/owner/actor are not repeated for these display-only corrections.
+Independent source and final visual reviews approve release; wider service-header
+and catalog density remains separate. Actual refreshed frames, process diagrams,
+contracts, storyboard and roadmap are synchronized.
+
+Binary SHA256 `9a05542547b87bb0fb1fe2b7c09f09bf5afec16328f9feeb6021d50dcdbb8cfd`
+stays unchanged through static display fixes. Actual asset HTTP/MIME/SHA checks
+pass. Temporary task build/helpers are removed; normal compact receipts and
+failure diagnostics are retained. No volumes or application tables are removed.

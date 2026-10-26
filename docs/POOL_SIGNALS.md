@@ -64,3 +64,10 @@ the existing pending-scope and native navigation owners, with no new telemetry
 subscription or automatic refresh.
 
 Actual flow, frames and receipts are recorded in [journey 197](../journeys/197-pool-signals-storyboard.md).
+
+
+[Compact aligned pool observations](POOL_VIEW.md) add an explicit in-place Load
+for selected optional signals. Raw-result replay and exact latest reported
+clock/epoch checks can provide a reported used / maximum fraction; otherwise
+values remain independent with a reason. Existing Preview/Run and individual
+capture paths remain available, and default dashboard reads stay unchanged.

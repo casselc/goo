@@ -2388,3 +2388,23 @@ reported parser fix at pinned `65093ec` and tests a build-overlay cutoff mutant
 against the actual lifecycle preparer. Six faithful schedules pass; qhegel
 shrinks the mutant to two necessary actions within its duplicate-noise generator.
 Production and existing verification module dependencies remain unchanged.
+
+### Compact pool view (journey198)
+
+`verification/pool_view_test.go` adds an independent reduced-rational oracle over actual raw adapter inputs. Twelve generated used/maximum pairs cross six clock/epoch/missing-value modes; zero epochs withhold the ratio even when both equal0. Independent identity mismatches refuse composition, clocks/bases remain separate and outputs cannot mutate caller evidence. This focused gate passed0.103s (`artifacts/pool-view-properties.txt`). A separate guaranteed table covers0/0,0/1,1/1,used>maximum and exact integers up to2^53−1; it passed0.017s (`artifacts/pool-view-boundaries.txt`). No old kernel or gotogether campaign was rerun.
+
+Actual main `artifacts/pool-view/pool-view-cb9c0ef820/ledger.json` passed21.1s; ownership `pool-view-79f71bfe7e/ownership.json` passed12.0s. The separately ingested actor fixture passed31.5s across eleven phases/285 snapshots, with eleven source requests, one pool planner and one pure view call. Main page observations record fourteen source calls, two pure pool planners and two pure compositions; six direct boundary API reads/compositions are outside that page counter. The real-source cases include aligned3/10, zero capacity, different observation time, different epoch, stale used, conflicting used and used above capacity. Epoch0 remains a property-only case.
+
+`TestPoolViewObserved` and `TestPoolViewOwnershipObserved` passed0.549s combined (main0.37s, ownership0.17s); eight main and four owner serialized changed controls were rejected. The gate independently checks complete raw count populations, selected optional identity/membership, stock samples/epochs/zero/staleness, wait buckets and P95 range, full state membership, exact reduced ratio, read clocks/bases and explicit-read versus cached/local/pure-call effects. Individual capture retains the original exact question and raw evidence:6626 bytes, SHA256 `ff1b9cbdbf55f18974c496d6d25874add639450954a05878c448bc11540c1ae3`, unchanged complete bytes and content-addressed receipt. This is not a paired-view capture or transaction proof.
+
+The first main observer run rejected a comparator that incorrectly required count and capacity metric name/unit to match. The corrected cross-signal relation compares full shared resource/resource-schema/scope/version/schema/attributes while each individual raw source still must match its own exact metric/unit. The original rejection is retained in `artifacts/pool-view/native-validation.initial-observer.txt`; application and fixture were unchanged. The first ownership run passed. The final log is `artifacts/pool-view/native-validation.txt`.
+
+The three real held-response cases cover close, deliberate retained selection event and leave: each actual related-source read completes without a pure composition, published view or extra source call after invalidation. This preserves the existing native read-owner algebra; direct observed checks are used without adding a redundant Quint model. Neither arbitrary concurrent schedules nor durable compact-view custody is claimed.
+
+With the toolchain/cache environment above, run only the actual bounded gate:
+
+```sh
+GOO_POOL_VIEW_LEDGER=/workspace/goo/artifacts/pool-view/pool-view-cb9c0ef820/ledger.json \
+GOO_POOL_VIEW_OWNER_LEDGER=/workspace/goo/artifacts/pool-view/pool-view-79f71bfe7e/ownership.json \
+go test -run '^TestPoolView(Observed|OwnershipObserved)$' -v .
+```

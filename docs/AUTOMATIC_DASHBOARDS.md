@@ -254,11 +254,23 @@ resource-identity contract are selected. Native-to-record context (C3) and lean
 aggregate execution (C4) support these dashboards; they should not postpone useful
 panels indefinitely or be expanded into unrelated framework projects.
 
-C2c now adds [automatic named-pool connection observations](POOL_CONNECTIONS.md) over [native stocks](CUMULATIVE_STOCKS.md). Same-stream pinned metadata derives an explicit count-domain question, with separate per-instance states and frozen replay. This partial view does not infer capacity, acquisition wait, saturation or pool health; runtime/host and capacity/wait bindings remain staged.
+C2c now adds [automatic named-pool connection observations](POOL_CONNECTIONS.md) over [native stocks](CUMULATIVE_STOCKS.md). Same-stream pinned metadata derives an explicit count-domain question, with separate per-instance states and frozen replay. The original count-only view does not infer capacity, acquisition wait, saturation or pool health. Related-signal inspection and strict reported-ratio composition are delivered below; runtime/host remains staged.
 
 
 [Pool capacity and acquisition-wait context](POOL_SIGNALS.md) now stages
 independently evaluated exact-stream measurements from a selected named pool.
 Default service reads remain bounded; explicit Run and individual capture retain
-the original window, identity and separate clocks. Numerical capacity/utilization
-joins, causal attribution and automatic runtime/host panels remain follow-ons.
+the original window, identity and separate clocks. Strict reported used / maximum composition is delivered in the compact pool
+view below. Broader time/capacity joins, causal attribution and automatic
+runtime/host panels remain follow-ons.
+
+
+C2c's [compact pool view](POOL_VIEW.md) composes held counts and explicitly loaded
+capacity/wait with exact per-pool identity and raw replay. A reported used /
+maximum fraction requires matching latest observation time and nonzero epoch,
+positive maximum and a valid bounded numerator. Missing, stale and incompatible
+signals retain separate values/reasons; no states are summed and no health is
+inferred. Default reads remain unchanged. Runtime/host resource identity and
+Kubernetes discovery remain the next family prerequisites; pool-to-record scope
+expansion remains separate. Acceptance is recorded in
+[journey 198](../journeys/198-pool-view-storyboard.md).

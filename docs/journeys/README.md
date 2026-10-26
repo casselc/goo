@@ -2456,3 +2456,10 @@ is retained separately; the accepted run uses independent typed Go hashing.
 Settling concerns only finite driver calls/bodies, not global collector drain or
 telemetry completeness. This is a Playwright integration pilot; existing Bombadil
 coverage and Goo dependencies remain unchanged.
+
+
+## 198 — Compact aligned pool evidence
+
+[Executable storyboard](../../journeys/198-pool-view-storyboard.md) · [Desktop](screenshots/198a-aligned-pool-evidence.png) · [Mobile](screenshots/198b-mobile-aligned-pool.png) · [Whole viewport](screenshots/198c-pool-view-in-context.png).
+
+Explicit optional reads compose held pool evidence without changing the default read budget. Exact latest observation/epoch alignment certifies reported used 3 / maximum 10; six real boundary probes withhold or flag invalid ratios. Main 21.1s, ownership 12.0s, eleven-phase actor 31.5s/285 snapshots and independent validation 0.549s/twelve rejecting controls pass. Cached reopening is local, partial signals remain useful, and individual capture bytes remain unchanged. Final same-fixture display replay 12.5s proves complete mobile values, square controls, full timestamp tooltips and no X/Y cropping; earlier geometry/harness/CSS diagnostics are retained. No atomic-snapshot, health or composite-custody claim is made.

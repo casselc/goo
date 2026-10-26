@@ -273,3 +273,10 @@ joins, causal attribution and automatic runtime/host panels remain follow-ons.
 capture-workflow compatibility. The [follow-on pilot](docs/GOTOGETHER_FOLLOWUP.md)
 verifies the parser fix and shrinks a real lifecycle cutoff mutant; Goo's existing
 testing dependencies remain unchanged.
+
+
+[Compact pool observations](docs/POOL_VIEW.md) put selected capacity and acquisition
+wait beside held state counts. Shared count bars, exact reported used / maximum
+eligibility and separate wait intervals support inspection without background
+reads or composite custody. See [journey 198](journeys/198-pool-view-storyboard.md)
+for actual source effects, controls and desktop/mobile frames.
