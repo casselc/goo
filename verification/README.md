@@ -2408,3 +2408,34 @@ GOO_POOL_VIEW_LEDGER=/workspace/goo/artifacts/pool-view/pool-view-cb9c0ef820/led
 GOO_POOL_VIEW_OWNER_LEDGER=/workspace/goo/artifacts/pool-view/pool-view-79f71bfe7e/ownership.json \
 go test -run '^TestPoolView(Observed|OwnershipObserved)$' -v .
 ```
+
+### Explicit host resources (journey199)
+
+`TestHegelHostAuthorityAndRawIdentity` generates ten host IDs and crosses gauge/stock with missing, present-empty and named service identities. Seven raw identity/window edits per combination must refuse, while valid results preserve exact raw maps and caller bytes. `TestHostAuthorityDoesNotRelaxServiceOrCounter` checks legacy service kernels, unsupported host counter/histogram authority and omitted resource wire compatibility. This focused gate passed0.269s (`artifacts/host-resource-properties.txt`). A separate guaranteed zero/stale/missing/conflicting-latest table for both host kernels passed0.008s (`artifacts/host-resource-boundaries.txt`). No broad or counter-kernel campaign was repeated.
+
+Actual main `artifacts/hosts/host-observed-fbac46c3b3/ledger.json` passed11.9s; ownership `host-observed-e69e4254ba/ownership.json` passed4.5s. Inventory retained sixteen physical metadata observations as eight exact full-resource/resource-schema identities. Default activation performed three logical source requests: one inventory and two independent native measurements. Matching-resource Logs and Spans each returned the actual application record with a real service name; absence of a service key in the metric parent did not become an absence predicate. The separate actor `host-observed-fa0ffde660/bombadil/acceptance-summary.json` passed30.6s, eight phases/400 snapshots, four source requests and one pure host planner. A later bounded CSS display replay is separate evidence, not a semantic main/actor rerun.
+
+`TestHostResourceObserved` and `TestHostResourceOwnershipObserved` passed0.225s combined (main0.18s, owner0.03s), rejecting ten main and three owner serialized changed controls. The independent oracle derives full inventory membership from raw points, validates exact explicit host authority and source selection, all CPU/memory raw samples and epoch/value preservation, exact positive parent resource predicates for record context, returned raw resource/service fields, observed source-free staging/retained Back/reopen and actual network-bound clocks/bases. Complete individual capture bytes remained unchanged:5618 bytes, SHA256 `cea836acf2036872bb751cda541614c22b58faa0307a2bfeab0cf1d2a10fd668`, original content-addressed ID and exact question. It does not hash the public page as if it were the full store.
+
+Initial main observer diagnostics are retained under `artifacts/hosts/`: the first raw checker assumed a single selected observation and rejected the real memory4096→2048 sequence across two epochs; it now verifies every matched raw sample. A subsequent journal check used byte equality on JSON RawMessage rows whose indentation differed across otherwise identical ledger branches; only that DTO binding now uses canonical complete JSON equality. Source field/value comparisons remain strict and capture custody remains byte-exact. The first ownership run passed. No application or fixture changed to satisfy the oracle. Final stdout is `artifacts/hosts/native-validation.txt`.
+
+No additional Quint model is introduced: explicit discovery, pure planning, native read, staged record context, individual capture and stale-owner rejection reuse the established ownership algebra. The new authority boundary is covered by generated raw checks and actual journals. This does not claim arbitrary concurrent schedules, whole-host health, a complete host inventory or cross-resource identity equivalence.
+
+Run the bounded actual gate using the toolchain/cache environment above:
+
+```sh
+GOO_HOST_RESOURCE_LEDGER=/workspace/goo/artifacts/hosts/host-observed-fbac46c3b3/ledger.json \
+GOO_HOST_RESOURCE_OWNER_LEDGER=/workspace/goo/artifacts/hosts/host-observed-e69e4254ba/ownership.json \
+go test -run '^TestHostResource(Observed|OwnershipObserved)$' -v .
+```
+
+
+A final host-authoring regression separately checks omitted/null/empty services
+and dimensionless exact-stream attributes. `Read` canonicalizes fresh host YAML
+before hashing; direct JSON question/capture shapes remain unchanged. Unit
+round-trip/hash tests pass in 0.029s and actual publish/duplicate/fresh catalog
+checks in 0.134s, including all nine collection combinations and the unchanged
+service YAML storage fixture. Host sharing/recovery shape-immutability checks
+pass in 0.74s. No semantic/browser/actor campaign is repeated for this authoring
+boundary; the updated binary and two modules have actual hash/MIME checks, the
+original pure plan is unchanged and the original capture SHA is rechecked.

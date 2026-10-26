@@ -1,0 +1,214 @@
+{
+  "version": 1,
+  "featureSourceCommit": "e5f490e4886636bb0c8dc9c46e823f1c68eb3f46",
+  "displayCommit": "6a95d503ba5c7150a3456993eb6c13932a9930e1",
+  "authoringCommit": "9649373adf52bfafd7a58456a3cdf21f61693962",
+  "initialBinarySHA256": "71d47aa280afccdb343dbbc738f24d3baee08fe89ea8d62c9f1d05e2082b52c6",
+  "finalBinarySHA256": "332cb5c25f1c201ed8b1338a6e2a176e86edbc1758266d90210815330bb4c4fa",
+  "mainSeconds": 11.9,
+  "ownershipSeconds": 4.5,
+  "actorSeconds": 30.6,
+  "nativeSeconds": 0.225,
+  "nativeRejectingControls": {
+    "main": 10,
+    "ownership": 3
+  },
+  "displaySeconds": 6.5,
+  "mainLedger": "artifacts/hosts/host-observed-fbac46c3b3/ledger.json",
+  "ownershipLedger": "artifacts/hosts/host-observed-e69e4254ba/ownership.json",
+  "displayLedger": "artifacts/hosts/host-observed-eef8d1d896/display.json",
+  "mainEvents": [
+    {
+      "action": "draft",
+      "source": 0,
+      "plans": 0
+    },
+    {
+      "action": "discover",
+      "source": 1,
+      "plans": 0
+    },
+    {
+      "action": "host-observations",
+      "source": 3,
+      "plans": 1
+    },
+    {
+      "action": "logs-staged",
+      "source": 3,
+      "plans": 1
+    },
+    {
+      "action": "logs-run",
+      "source": 4,
+      "plans": 1
+    },
+    {
+      "action": "logs-retained-back",
+      "source": 4,
+      "plans": 1
+    },
+    {
+      "action": "spans-staged",
+      "source": 4,
+      "plans": 1
+    },
+    {
+      "action": "spans-run",
+      "source": 5,
+      "plans": 1
+    },
+    {
+      "action": "spans-retained-back",
+      "source": 5,
+      "plans": 1
+    },
+    {
+      "action": "native-preview",
+      "source": 5,
+      "plans": 1
+    },
+    {
+      "action": "native-run",
+      "source": 6,
+      "plans": 1
+    },
+    {
+      "action": "individual-capture",
+      "source": 7,
+      "plans": 1
+    },
+    {
+      "action": "immutable-reopen",
+      "source": 7,
+      "plans": 1
+    }
+  ],
+  "metadataRecords": 16,
+  "resourceIdentities": 8,
+  "actor": {
+    "phases": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "snapshots": 400,
+    "final": {
+      "phase": 7,
+      "source": 4,
+      "plans": 1,
+      "terminal": true,
+      "hostKey": "20a60a4ee39b71f0610f749b4bed2968e5705a87eeac1ba7eb40a3606ea7152f",
+      "inventory": true,
+      "ready": true,
+      "nativeComplete": true,
+      "nativeReady": true
+    }
+  },
+  "displaySourceReads": 3,
+  "displayGeometry": [
+    {
+      "width": 1440,
+      "height": 1600,
+      "geometry": [
+        {
+          "clocks": [
+            {
+              "text": "2026-10-26 18:14:34.454 UTC",
+              "title": "1793038474454000000 ns since Unix epoch",
+              "datetime": "2026-10-26T18:14:34.454000000Z"
+            }
+          ],
+          "width": 558.09375,
+          "scrollWidth": 556,
+          "clientWidth": 556,
+          "plotHeight": 90,
+          "issues": []
+        },
+        {
+          "clocks": [
+            {
+              "text": "2026-10-26 18:14:34.454 UTC",
+              "title": "1793038474454000000 ns since Unix epoch",
+              "datetime": "2026-10-26T18:14:34.454000000Z"
+            }
+          ],
+          "width": 558.109375,
+          "scrollWidth": 556,
+          "clientWidth": 556,
+          "plotHeight": 90,
+          "issues": []
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "height": 1800,
+      "geometry": [
+        {
+          "clocks": [
+            {
+              "text": "2026-10-26 18:14:34.454 UTC",
+              "title": "1793038474454000000 ns since Unix epoch",
+              "datetime": "2026-10-26T18:14:34.454000000Z"
+            }
+          ],
+          "width": 324,
+          "scrollWidth": 322,
+          "clientWidth": 322,
+          "plotHeight": 90,
+          "issues": []
+        },
+        {
+          "clocks": [
+            {
+              "text": "2026-10-26 18:14:34.454 UTC",
+              "title": "1793038474454000000 ns since Unix epoch",
+              "datetime": "2026-10-26T18:14:34.454000000Z"
+            }
+          ],
+          "width": 324,
+          "scrollWidth": 322,
+          "clientWidth": 322,
+          "plotHeight": 90,
+          "issues": []
+        }
+      ]
+    }
+  ],
+  "capture": {
+    "id": "fdf520f858bf93d385cbd07147bd650bd46cad18e1c19b06c3ec87cf9d17004e",
+    "bytes": 5618,
+    "beforeSHA256": "cea836acf2036872bb751cda541614c22b58faa0307a2bfeab0cf1d2a10fd668",
+    "afterSHA256": "cea836acf2036872bb751cda541614c22b58faa0307a2bfeab0cf1d2a10fd668"
+  },
+  "frames": {
+    "199b-mobile-host-observations.png": "bbf594326a833aca3d2841361696db2fbc33f076944936cded06f7f20494ea0f",
+    "199c-hosts-in-context.png": "7ab5c1a2a805b854008aa1fe633c46e1b41791d66e9c51e83de70b7b093e2a0f",
+    "199a-host-observations.png": "e05ad5800477669ea893cf13126ef86512c13c69cb4ed263d35010210eb63734"
+  },
+  "authoringTests": {
+    "hostYAMLServiceVariants": 3,
+    "dimensionlessServicesAttributesMatrix": 9,
+    "handlerSeconds": 0.134,
+    "unitSeconds": 0.029,
+    "nodeSeconds": 0.74,
+    "legacyServiceStorageFixture": "byte-identical",
+    "directJSONCaptureNormalization": "none",
+    "runtimeSmoke": "metadata readiness and original pure host plan unchanged; capture SHA rechecked; no telemetry/custody/browser operations"
+  },
+  "limits": [
+    "explicit environment and host.id required",
+    "raw resource identity, not unique physical host count",
+    "gauge and cumulative nonmonotonic stock resource authority only",
+    "no whole-host CPU aggregation or inferred memory-capacity ratio",
+    "record context matches supplied attributes, not exact schema/map or causality",
+    "generated ordinary OTLP, not OS hostmetrics scraper acceptance",
+    "new source authority covered with properties and observed checks, no redundant Quint model"
+  ]
+}

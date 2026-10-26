@@ -280,3 +280,10 @@ wait beside held state counts. Shared count bars, exact reported used / maximum
 eligibility and separate wait intervals support inspection without background
 reads or composite custody. See [journey 198](journeys/198-pool-view-storyboard.md)
 for actual source effects, controls and desktop/mobile frames.
+
+
+[Host-resource observations](docs/HOST_RESOURCES.md) discover ordinary host metrics
+without service labels or manifests. Explicitly open a resource for bounded CPU
+and memory defaults, inspect or capture a native stream, or stage matching-resource
+logs/spans. [Journey 199](journeys/199-host-storyboard.md) records actual source,
+identity/custody tests and refreshed desktop/mobile frames.

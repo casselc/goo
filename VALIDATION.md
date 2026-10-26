@@ -11157,3 +11157,106 @@ Binary SHA256 `9a05542547b87bb0fb1fe2b7c09f09bf5afec16328f9feeb6021d50dcdbb8cfd`
 stays unchanged through static display fixes. Actual asset HTTP/MIME/SHA checks
 pass. Temporary task build/helpers are removed; normal compact receipts and
 failure diagnostics are retained. No volumes or application tables are removed.
+
+
+## Host-resource observations — journey 199 (2026-10-26 UTC)
+
+[Contract](docs/HOST_RESOURCES.md), [executable storyboard](journeys/199-host-storyboard.md)
+and [compact receipt](docs/evidence/host-resources-199.json). Source `e5f490e`
+introduces explicit host gauge/stock authority with mandatory raw exact streams,
+without synthesizing service or instance labels. Original service SQL, validation,
+wire and captures remain unchanged when the resource binding is omitted.
+Host inventory is one admitted host-bearing union read; pure planning selects at
+most two exact CPU/memory defaults. Names are labels; full resource/schema variants
+remain separate even when reported host IDs are equal. Environment is explicit.
+
+Source gates: full root Go passes (cmd/goo 0.951s, exploration 1.722s); all 86
+reported Node tests pass in 5.753s. Core resource/gauge/stock/replay and old-wire
+focused tests pass; host-only gauge canonicalization fixes nil/empty map grouping
+and negative zero without changing old service gauge behavior. Generated raw
+identity/authority properties pass in 0.269s and guaranteed zero/stale/missing/
+conflicting boundaries in 0.008s. CPU-time counters and other unsupported resource
+kinds remain refused rather than weakening service validators. No testing-tool
+migration or redundant Quint model is introduced for the unchanged explicit-read
+owner algebra; new authority has independent properties and observed checks.
+
+Source/planner tests pass in 0.066s; fourteen host HTTP cases plus eight actual
+native execute/capture/offline reopen handler responses pass in 0.033s. Eleven
+proxy/asset checks pass in 3.004s. OpenAPI checks pass with 84 operations (77 Go),
+453 reflected/471 total schemas, 360 responses, 126 admitted requests and 22 mux
+refusals. Inventory limits: 16 KiB request, 15s context, global 10,000 source rows,
+100 exact resource identities, 16 instruments/25 stream previews and an 8 MiB
+response refusal. Pure host planning uses 64 KiB and a two-second pre/post context;
+omissions are explicit and byte/deadline budgets are not completeness or scan-cost
+claims. Host-bearing source filtering does not count unidentified source rows.
+
+Ordinary generated schema1.37 host OTLP without service.name/instance passes the
+live collector/ClickHouse journey: corrected main 11.9s (14.0s invocation), first
+ownership 4.5s. Initial main geometry included hidden disclosure descendants;
+restricting the helper to rendered nodes corrected that harness error without
+changing visible containment guards or app data. Sixteen host-bearing metadata
+rows produce eight exact resource identities, including equal names/account and
+missing-versus-empty service variants. The primary observed CPU user/core0 is
+25%; memory used 4096→2048 across separate epochs remains independent stock data.
+No real OS-scraper collection, whole-host CPU average, derived memory-capacity
+percentage or health conclusion is claimed.
+
+The main journal records zero reads while drafting; Find hosts is 1; opening the
+host reaches 3 with two independent default native reads and one pure plan.
+Matching resource logs/spans stage without reading, then each explicit Run adds
+one (4 and 5); actual matching app records retain a real service name. Native
+Preview stages locally, explicit Run reaches 6 and fresh individual capture 7.
+Retained Back and immutable reopen add none. Record context is matching-attribute
+search, not exact schema/map equality, causality or all telemetry from the host.
+Fixture readiness probes are separate from that journal; logical API calls are
+not internal SQL-statement counts.
+
+Accepted bounded Bombadil is 30.6s (32.5s invocation), eight phases/400 snapshots,
+source 4, one pure host plan, terminal true. Two partial actor runs did not advance
+because an unqualified data-host-key selector selected the html marker before
+the Open host button; the first scroll-only attempt did not resolve that actual
+collision. Qualifying the button fixes the harness. This is not evidence that
+the app rejects every offscreen action. Partial diagnostics are retained and are
+not counted as accepted campaigns; no app change accommodates them.
+
+Independent observed validation passes in 0.225s (main 0.18s, owner 0.03s), rejecting
+ten changed main and three owner controls. It checks raw identity/maps/schema,
+missing/empty service distinction, values/epochs, real app context, clocks/bases,
+source effects and full capture custody. Initial main observer assumed one memory
+sample despite the actual two-epoch stock stream; another DTO comparator treated
+RawMessage indentation as data. Both observer errors were corrected while complete
+raw fields/membership and exact stored bytes remain strict. First owner passed.
+
+The complete individual capture remains 5,618 bytes, ID
+`fdf520f858bf93d385cbd07147bd650bd46cad18e1c19b06c3ec87cf9d17004e`, SHA256
+`cea836acf2036872bb751cda541614c22b58faa0307a2bfeab0cf1d2a10fd668`,
+unchanged on reopen and again after the final authoring deployment. There is no
+combined host-dashboard capture or new mutable evidence store.
+
+Compact display change `6a95d50` honors the host's 90px reusable timeline setting;
+unset consumers retain 150px and more-specific service overrides stay intact.
+Separate fresh-fixture display replay passes in 6.5s (9.0s invocation), using
+inventory1 + native2 / pureplan1, no capture. Visible desktop/mobile cards, labels,
+controls, UTC/ns tooltips and computed 90px plots pass X/Y checks and actual PNG
+review; resizing is source-free. Frames come from this explicit display fixture,
+not the main's older window. Main/owner/actor are not repeated for a CSS setting.
+
+Final authoring check reproduced a host-only YAML nil-collection round-trip risk:
+omitted/null services and dimensionless attributes serialize as empty collections,
+which could change a package revision on reload. `9649373` canonicalizes these
+only at fresh host YAML Read before hashing; direct JSON, Evaluate/Validate and
+stored captures remain untouched. Unit round-trip/hash and raw JSON immutability
+checks pass in 0.029s. Actual publish/duplicate/fresh catalog tests pass in 0.134s
+for three services forms and all nine services/attributes combinations, yielding
+one file per semantic question; the original service storage fixture is byte-exact.
+Host comparison/recovery nine-way shape-immutability tests pass in 0.74s. No
+controller or telemetry-semantic change follows from that authoring boundary.
+
+The final authoring binary SHA256 is
+`332cb5c25f1c201ed8b1338a6e2a176e86edbc1758266d90210815330bb4c4fa`.
+Metadata readiness and the original pure host plan match; both updated modules
+have actual HTTP/MIME/SHA checks. This deployment adds zero telemetry/custody or
+browser operations. Independent source, semantic and visual reviews approve
+release. Contracts, architecture/process diagrams, component guidance, roadmap,
+executable storyboard and screenshots are current; temporary task binaries/helpers
+are removed, normal diagnostic receipts retained, and traffic/volumes untouched.

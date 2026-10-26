@@ -801,3 +801,12 @@ selection through existing measurement/capture APIs.
 The actual host-only inventory/plan/gauge/stock/capture/offline-reopen workflow is
 exported by `GOO_HOST_API_OBSERVATIONS` with `TestHostHTTPNativeExecuteCaptureOfflineReopen`
 and checked using `scripts/check_openapi.py --host-observations <path>`.
+
+
+Fresh host YAML package authoring canonicalizes an omitted/null services list to
+`[]` and omitted/null exact-stream attributes to `{}` before revision hashing.
+This prevents YAML publication/reload from changing the package identity. It does
+not normalize direct JSON measurement questions, evaluated evidence or existing
+captures, and service package serialization remains unchanged. Actual publication,
+duplicate/winner verification and fresh-catalog checks cover all nine host
+services/attributes empty-shape combinations.

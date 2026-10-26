@@ -948,3 +948,24 @@ and nanoseconds remain in focusable timestamp tooltips; epochs and read bases
 stay in a closed disclosure. Scoped checkbox sizing overrides global input
 minimums without changing common component styles. See [contract](POOL_VIEW.md)
 and [executable journey](../journeys/198-pool-view-storyboard.md).
+
+
+## Host-resource presentation
+
+`GooHostDashboard` is a supplied-data presenter using the shared scalar timeline,
+attribute inspector and UTC timestamps. It does not fetch, aggregate CPU cores,
+combine memory states or calculate capacity denominators. A display-only copy
+masks out-of-domain reported fractions/negative byte values as unknown marks;
+original evidence remains available for native inspection. Byte labels retain
+exact-value tooltips and reported fractions retain their raw unit values.
+
+`GooHostBrowser` owns explicit inventory, metadata planning, at most two default
+native reads and cancellation/generation state. Native inspection/capture and
+record staging use existing owners. Services & resources tabs retain one route;
+switching scope or leaving withdraws pending host work. Host-only comparison and
+draft recovery accept absent/null/empty no-service and no-dimension aliases without
+rewriting authored payloads. The shared `goo-value-timeline` plot height now honors
+`--value-timeline-height` with a 150px fallback; hosts choose 90px and existing
+service-specific overrides remain intact.
+
+See [host contract](HOST_RESOURCES.md) and [journey 199](../journeys/199-host-storyboard.md).

@@ -939,3 +939,36 @@ sequenceDiagram
   User->>Pool: Select cached row or return
   Note over User,Pool: Cached and local actions perform no source read
 ```
+
+### Explicit host resource authority
+
+Host observations use `source.resource: {kind: host, id: ...}` and a mandatory exact stream. This is separate authority from service observations: only gauge and stock kinds are admitted, service selectors must be empty, and namespace selection cannot substitute for the exact raw resource. Host kernels require the reported nonempty `host.id`; old service kernels still require service and instance identity. The source preserves the full raw resource map and resource schema rather than fabricating service labels. Missing and present-empty `service.name` remain different identities; equal host IDs or display names across different resource maps do not collapse cloud accounts or otherwise certify a physical host.
+
+An explicit Find hosts action performs one bounded host-ID-bearing inventory read. The pure planner stages at most two defaults, each an exact schema1.37 stream: logical-CPU utilization and memory usage stock, with memory utilization gauge as fallback. Each default performs its own existing measurement read. These observations do not constitute a whole-host aggregate, health assessment or complete resource inventory. Native preview, individual capture and retained navigation reuse existing owners and custody.
+
+Matching-resource Logs/Spans context conjoins the reported parent resource fields; absence of a metric's service identity does not require application records to lack service identity. The ordinary source fixture includes application records with a real service name that match the host resource. Gauge/stock zero remains visible, stale or missing/conflicting values remain unavailable as declared; no counter or integer-domain policy is relaxed. The host-only canonical normalization detaches maps and normalizes equivalent empty attribute maps without erasing missing-versus-empty resource keys.
+
+Journey199 accepted sixteen ordinary OTLP metadata observations/eight exact resources and independently checked CPU0.25 plus memory4096→2048 across reported epochs. The main11.9s and held-response owner4.5s runs passed, followed by a separate30.6s actor run. The bounded offline raw/custody gate passed0.225s with thirteen changed controls rejected. Its matching-resource application context returned one log and one span with real service identity; its individual full capture remained byte-identical at5618 bytes. These receipts establish the bounded ordinary-source workflow, not host completeness or a new host-counter interpretation.
+
+```mermaid
+flowchart LR
+  Find[Explicit Find hosts] --> Inventory[One bounded raw host resource inventory]
+  Inventory --> Plan[Pure exact-resource planner]
+  Plan --> CPU[Explicit logical CPU gauge read]
+  Plan --> Memory[Explicit memory stock or fallback gauge read]
+  CPU --> View[Retained host observations]
+  Memory --> View
+  View --> Stage[Source-free matching-resource record context]
+  Stage --> Run[Explicit Logs or Spans Run]
+  View --> Preview[Source-free native preview]
+  Preview --> Read[Explicit native Run or individual capture]
+```
+
+
+Fresh host YAML authoring canonicalizes only empty host services and exact-stream
+attribute collections before definition hashing, ensuring immutable package
+publication/reload agrees. Direct JSON questions, evaluated results and existing
+captures do not pass through this canonicalization; old service serialization
+stays unchanged. Host-only UI comparison/recovery aliases operate on copies or
+local validation values, preserving authored payloads. Actual duplicate publication
+and fresh catalog reads cover the nine empty-collection combinations.

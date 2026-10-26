@@ -218,12 +218,13 @@ Work that must be planned explicitly:
 
 1. Extend the delivered HTTP/legacy-RPC/database-client/messaging selection with
    newer convention bindings and the remaining role/resource families.
-2. A resource-entity inventory and typed identity policy for hosts/Kubernetes,
-   distinct from service-name discovery. Current native validation expects service
-   identity; introduce a deliberate resource contract rather than manufacturing
-   `service.name` or relaxing existing service-stream validation globally.
-3. Nonmonotonic sum/UpDownCounter handling for pool/runtime stock metrics. Its
-   temporality is not interchangeable with a gauge table or a monotonic counter.
+2. [Host inventory and explicit gauge/stock authority](HOST_RESOURCES.md) are now
+   delivered separately from service-name discovery. Kubernetes ownership/entity
+   mappings remain planned; do not manufacture service labels or relax original
+   service-stream validation globally.
+3. Cumulative nonmonotonic stocks now cover pool counts and host memory. Runtime
+   and delta-stock reconstruction remain separate; their temporality cannot be
+   substituted with a gauge or monotonic counter.
 4. Fractional counter semantics where required, such as CPU-time seconds. Native
    gauges already accept finite Float64 values; this is not a blanket missing
    float-metrics engine. Current counters accept integral nonnegative values
@@ -270,7 +271,17 @@ capacity/wait with exact per-pool identity and raw replay. A reported used /
 maximum fraction requires matching latest observation time and nonzero epoch,
 positive maximum and a valid bounded numerator. Missing, stale and incompatible
 signals retain separate values/reasons; no states are summed and no health is
-inferred. Default reads remain unchanged. Runtime/host resource identity and
-Kubernetes discovery remain the next family prerequisites; pool-to-record scope
+inferred. Default reads remain unchanged. The initial host resource identity path is delivered below; runtime/GC and
+Kubernetes discovery remain family follow-ons; pool-to-record scope
 expansion remains separate. Acceptance is recorded in
 [journey 198](../journeys/198-pool-view-storyboard.md).
+
+
+C2c now includes [host-resource observations](HOST_RESOURCES.md): explicit host
+identity without service/instance fabrication, bounded host-bearing inventory,
+reported per-core CPU utilization and memory-stock defaults, matching-resource
+record context and existing native preservation. [Journey 199](../journeys/199-host-storyboard.md)
+records real ordinary OTLP acceptance and source costs. This closes the first
+host gauge/stock identity prerequisite; runtime/GC panels, fractional CPU-time
+counters, derived capacity calculations, missing-environment discovery and
+Kubernetes resource/ownership mappings remain separately scoped follow-ons.

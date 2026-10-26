@@ -1,7 +1,8 @@
 # Host resource observations
 
-Status: source implemented; live acceptance in progress. This is the first host
-slice of C2c, not a complete runtime, container or Kubernetes dashboard family.
+Implemented and accepted in [journey 199](../journeys/199-host-storyboard.md).
+This is the first host slice of C2c, not a complete runtime, container or Kubernetes
+dashboard family. [Compact receipt](evidence/host-resources-199.json).
 
 ## Identity and measurement authority
 
@@ -99,3 +100,40 @@ Runtime/GC, additional host instruments, derived capacity ratios, resource
 aggregation, missing-environment discovery and Kubernetes ownership remain
 separate contracts. A catalog entry or missing metric is not an operational
 health conclusion.
+
+
+## Authoring and accepted evidence
+
+Fresh **host YAML package input** canonicalizes omitted/null services to `[]` and
+omitted/null exact-stream attributes to `{}` before package hashing. This keeps
+YAML serialization, immutable publication, duplicate publication and catalog
+reopening on one revision. The rule is confined to host authoring: direct JSON
+questions, evaluated results and stored capture bytes keep their original shapes;
+old service package wire remains unchanged. UI comparison/recovery accepts the
+corresponding host-only empty aliases without mutating authored payloads.
+
+The ordinary generated OTLP acceptance uses no service name or instance on host
+metrics. Main passes in 11.9s, ownership in 4.5s, and the bounded eight-phase
+Bombadil campaign in 30.6s (400 snapshots). Independent raw-source and custody
+checks pass in 0.225s and reject ten main plus three owner mutations. The fixture
+has sixteen observed metric rows across eight exact resource identities; this is
+not an OS-scraper deployment or a count of unique physical hosts. Matching app
+logs/spans preserve their real service identity.
+
+The default path makes one inventory read and at most two native reads. Staging
+is source-free; explicit log and span reads, native Run and individual fresh
+capture bring the main journey to seven logical source operations. Frozen reopen
+and retained Back add none. The complete individual capture stays 5,618 bytes,
+SHA256 `cea836acf2036872bb751cda541614c22b58faa0307a2bfeab0cf1d2a10fd668`.
+
+The final compact display replay uses a separate fresh ordinary fixture and three
+real source calls, no capture, and passes in 6.5s. Host plots are 90px through the
+reusable timeline CSS variable; other consumers keep their existing defaults.
+Exact labels, UTC/ns tooltips and visible desktop/mobile content pass geometry
+and actual image review. The authoring fix is checked separately by service/stream
+empty-shape publication and recovery matrices; its deployment smoke uses metadata
+and the original pure plan, with zero telemetry/custody/browser operations.
+
+[Desktop](journeys/screenshots/199a-host-observations.png) ·
+[Mobile](journeys/screenshots/199b-mobile-host-observations.png) ·
+[Whole viewport](journeys/screenshots/199c-hosts-in-context.png).
