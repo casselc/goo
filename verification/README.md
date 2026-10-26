@@ -2313,3 +2313,45 @@ With the toolchain/cache environment above, after browser ownership is released:
 go test -run '^TestHegelStockAdapterIdentityAndEpochs$' -v .
 GOO_STOCK_INTEGRATION_LEDGER=/workspace/goo/artifacts/cumulative-stocks/cumulative-stock-c553c6dc4d/ledger.json go test -run '^TestStockIntegrationObserved$' -v .
 ```
+
+## Automatic pool stock candidate and domain (C2c)
+
+`TestHegelPoolSameRowWitnessAndDetachedDomain` checks 12 generated identity/label
+cases across missing/empty/custom state combinations and split versus same-row
+witnesses. It verifies detached opted definitions and equality of selection hashes
+with executed domain definitions. The first focused gate passed in 0.034s
+(`artifacts/pool-integration-properties.txt`). Finite domain cases cover zero,
+2^53−1, negative/fractional/2^53 refusals, missing-flag exemption and valid replay.
+The existing stock kernel campaign was not repeated. Critical raw-decimal rounding,
+scientific-integer and hexadecimal cases passed a separate bounded gate in 0.012s
+(`artifacts/pool-domain-exact-boundaries.txt`).
+
+`TestPoolIntegrationObserved` passed on its first invocation in 0.362s (body 0.32s)
+against `artifacts/pool-connections/named-pools-7d8247745c/ledger.json`.
+Independent physical-row and timestamp grouping validates 13 reports/ten streams,
+exact source identities, epochs, domain-preserving questions, stale/missing/conflict
+semantics and complete native/capture results. The passive UI model is checked
+against the full stream identity except state: five groups/two ineligible streams,
+per-state latest values and DOM side counts, including worker-B idle 0 versus
+unavailable values and the literal custom state. It also checks actual generic
+signed-stock/domain 502 and bounded negative-metadata receipts. Six changed controls
+reject dropped domain, changed capture question, dropped ineligible streams,
+instance merge, unknown-to-zero conversion and a changed reopen receipt.
+Stdout: `artifacts/pool-connections/native-validation.txt`.
+
+The full opted capture retains 16904 bytes and SHA256
+`e659f1ddbc9da4dad4e441e88b136b920849873e336765b7ae9219b454ae6b0e`,
+with equal before/after bytes, content-addressed ID and public receipt metadata.
+The accepted main 23.9s followed an initial 11.9s harness rejection: the supplied
+26th-stream negative metadata control exceeded the existing 16 KiB endpoint budget.
+Compact control preflight and the complete corrected main preserve admission and
+raw identities; no application source changed. The actor 30.6s/eight phases/478
+snapshots uses a separately ingested ordinary fixture, not journey195 reuse.
+No new lifecycle model, source calls or stock-kernel campaign are introduced.
+
+With the toolchain/cache environment above after browser ownership is released:
+
+```sh
+go test -run '^Test(HegelPoolSameRow|PoolDomainRaw)' -v .
+GOO_POOL_INTEGRATION_LEDGER=/workspace/goo/artifacts/pool-connections/named-pools-7d8247745c/ledger.json go test -run '^TestPoolIntegrationObserved$' -v .
+```

@@ -891,4 +891,6 @@ The C3 mobile fixed-record frame retains substantial existing form/header contro
 before rows. Answer-first consolidation is tracked in the current backlog; the
 new interval handoff does not claim whole-product mobile density is solved.
 
-[Cumulative-stock measurements](CUMULATIVE_STOCKS.md) accept cumulative nonmonotonic sum observations. Delta nonmonotonic sums remain unsupported without an established absolute baseline. Generic native widgets are supported; automatic named-pool/runtime panels, capacity joins, stock interval-to-record context and numeric stock comparisons remain unimplemented. Values follow exporter Float64 precision.
+[Cumulative-stock measurements](CUMULATIVE_STOCKS.md) accept cumulative nonmonotonic sums, with an optional exact raw nonnegative-integer domain for [named-pool connection views](POOL_CONNECTIONS.md). The automatic binding is pinned to schema 1.37.0 and positive same-stream metadata; omitted discovery preview evidence is unknown. Capacity/wait joins, runtime/host panels, stock-to-record context and numeric stock comparisons remain unimplemented. Delta nonmonotonic sums require a separate absolute-baseline contract.
+
+The named-pool composition retains repeated per-row scale captions and tall unknown-state marks. A compact shared state matrix and clearer state-to-bar labels remain presentation refinements; the current slice does not claim whole-product density is solved.

@@ -260,4 +260,4 @@ proposals stay in the [reviewed backlog](docs/BACKLOG_2026_10_25.md).
 [Implementation history](docs/IMPLEMENTATION_PLAN.md) ·
 [Original handoff (historical)](START_HERE.md)
 
-[Cumulative-stock measurements](docs/CUMULATIVE_STOCKS.md) support discovery, direct sum-table reads, per-stream observation views and frozen replay. Automatic named-pool/runtime dashboards remain the next C2c slice.
+[Cumulative-stock measurements](docs/CUMULATIVE_STOCKS.md) support discovery, sum-table reads and frozen replay. [Named-pool connections](docs/POOL_CONNECTIONS.md) add automatic per-instance connection-state views within service dashboards; capacity/wait joins and runtime/host panels remain follow-ons.

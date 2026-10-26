@@ -858,3 +858,49 @@ unchanged, with SHA256
 `599056e688d0ed0627049978d9d89d8f09191359ad4b13f0faee191330cbd37b`.
 Discovery and the supplemental pure dashboard plan admit generic stock evidence;
 this is not a completed database-pool health dashboard or utilization inference.
+
+## Automatic pool connection stock observations
+
+An eligible `db.client.connection.count` instrument can produce a
+`database-pool-connections` native widget within the existing two-instrument
+budget, rather than a new record profile. Admission requires the exact 1.37 schema,
+`{connection}` unit, cumulative nonmonotonic stock shape and one complete stream
+witness containing a nonempty service instance, `db.client.connection.pool.name`
+and `db.client.connection.state`. Custom nonempty states remain literal. The first
+25 supplied coverage streams provide positive witnesses only; keys from different
+streams cannot be joined into evidence, and no witness does not establish absence.
+Existing role-specific native priority remains ahead of pool candidates.
+
+The planner derives a detached definition with
+`stockDomain: nonnegative-integer` before hashing selection options and executing
+questions. Caller metadata is not mutated. This optional stock-only policy
+certifies every recorded selected source value as an exact decimal integer,
+nonnegative and below 2^53, before accepting or displaying a Float64-backed count.
+The original decimal text is certified even if floating-point parsing would round it.
+Missing-value flags remain unknown rather than zero. Generic stock definitions
+without the policy retain signed/fractional behavior and their original wire/hash
+contract; this is not a migration of existing captures.
+
+Pool display groups retain the full stream identity except the state attribute.
+Different instances, pools, remaining dimensions, resource/instrumentation schema
+and scope/version are not merged. Rows expose reported states and their own
+observations; side counts describe coverage, not capacity or utilization ratios.
+Unknown/stale latest observations do not fall back to earlier healthy values.
+Filters and disclosure are source-free supplied-data operations. No fleet sum,
+capacity ratio, broker/dependency inference or stock-to-record interval is added.
+[Journey196](../journeys/196-pool-connections-storyboard.md) accepted 13 physical
+reports in ten exact streams, presented as five eligible groups with two explicitly
+ineligible streams. The shared bar ceiling 21 is a display scale, not capacity.
+Worker-B idle 0 remains a real reported zero; missing/conflicting values stay
+unavailable, archive values stay stale and the custom reserved state stays literal.
+The exact opted question persists through Native Open, fresh capture and reopen.
+The complete 16904-byte capture retained its content ID and unchanged SHA256
+`e659f1ddbc9da4dad4e441e88b136b920849873e336765b7ae9219b454ae6b0e`.
+The raw-fact/model/DOM/custody check passed in 0.362s with six changed controls rejected.
+
+The accepted main passed 23.9s after a negative caller-metadata test exceeded the
+existing 16 KiB request budget; compacting redundant display metadata preserved the
+actual identities and the same admission control. The actor passed 30.6s using a
+separately ingested ordinary fixture (eight phases, 478 snapshots), not journey195's
+reused data. These are bounded supplied-telemetry observations, not a complete pool
+health, capacity or acquisition-wait dashboard.

@@ -2428,3 +2428,9 @@ Service widgets use rich aggregate-only reads while retaining exact count/group/
 [Executable storyboard](../../journeys/195-cumulative-stocks-storyboard.md) · [Desktop](screenshots/195a-cumulative-stock-observations.png) · [Mobile epoch](screenshots/195b-mobile-stock-epoch.png).
 
 Actual cumulative nonmonotonic exports retain seven exact pool/state/instance streams, descending values, signed fractions, accumulation epochs, stale observations and unknown missing/conflicting reports. Main first pass 9.5s and six-phase actor 30.3s/509 snapshots pass; independent validation 0.037s rejects six changed controls. A fresh full measurement capture reopens source-free with identical 12,964-byte stored evidence. Generic stock eligibility is separate from semantic-convention compliance, physical pool counts or automatic pool health; no stock interval context is claimed. See the storyboard for source effects, the separate pure planner scope correction and full receipts.
+
+## 196 — Named database pool observations
+
+[Executable storyboard](../../journeys/196-pool-connections-storyboard.md) · [Desktop](screenshots/196a-named-pool-counts.png) · [Mobile states](screenshots/196b-mobile-pool-states.png).
+
+Pinned 1.37 connection stocks assemble five exact pool identities with separate instances and reported states, including a genuine zero, custom state, epochs, stale data and unknown missing/conflicting exports. HTTP native priority and the two-widget budget remain unchanged. Main 23.9s and eight-phase actor 30.6s/478 snapshots pass; independent validation 0.362s rejects six changed controls; native staging and local filters are source-free, and fresh capture preserves its domain through frozen reopening with identical 16,904-byte stored evidence. Generic signed stocks remain separate from the certified count domain. The initial negative-metadata request-size harness failure is retained; no pool totals, utilization or health are inferred.

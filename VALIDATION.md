@@ -10844,3 +10844,93 @@ expectations and complete stored bytes/content ID. All six changed controls
 retains 509 snapshots; no ingestion or source campaigns were repeated.
 See [journey 195](journeys/195-cumulative-stocks-storyboard.md) for executable
 commands, actual frames and deliberate limits.
+
+## C2c automatic named-pool connection observations (2026-10-26 UTC)
+
+Source `2ece59d` adds a pinned OpenTelemetry v1.37.0 pool binding within existing
+service-native widgets. A positive same-stream instance/pool/state witness is
+required; dimension unions and an omitted discovery preview are insufficient.
+The planner derives a detached `stockDomain: nonnegative-integer` definition with
+consistent selection hashes. Go validates bounded original exact decimals before accepting Float64-backed
+counts, refusing rounded fractions, negative or unsafe counts.
+Generic signed/fractional stocks and legacy omitted-field bytes remain unchanged.
+
+The same passive composition presents exact pool/instance/state groups in service
+widgets and frozen evidence. It retains custom states, different observation and
+epoch clocks, stale values, unknowns and genuine zero. Local filtering/paging is
+bounded to 25 pool rows and 256 state slots, discloses omissions and preserves the
+full model/common scale. Capacity, utilization, acquisition wait, saturation and
+stock-to-record interval links remain outside this cut.
+
+Source checks passed: full root Go suite (cmd 1.224s, exploration 2.371s,
+measurements 0.291s), 82 Node files before the final saved-view hook (7.20s),
+focused saved-view/protocol checks (0.27s), and final nine pool cases (0.14s).
+Independent review caught and verified exact Unicode ordering tie-breaks; root
+review caught literal state-name sentinel collisions and unbounded rendering.
+Focused native checks passed (0.034s) for 12 same-row/detached-hash generated
+cases and raw domain/replay boundaries; added exact-decimal cases passed (0.012s).
+Existing stock-kernel campaigns were not repeated.
+
+API checks add seven frozen contracts and ten actual handler workflow responses,
+including offline byte-exact capture reopen, invalid values, accepted maximum safe
+integer and missing flags. Existing six generic-stock workflow responses still
+conform. OpenAPI remains 80 operations/73 Go operations, 420 schemas/402 reflected;
+322 responses, 113 admitted requests and 18 mux refusals validate, with domain
+negative controls. No new route, query owner or capture format is introduced.
+
+The first live main reached successful pool display, native Run, fresh capture and
+unchanged stored bytes, then failed its final caller-supplied metadata control:
+the 26-stream test request exceeded the unchanged 16,384-byte route limit and was
+correctly refused. The harness compacted only redundant display metadata, keeping
+exact source stream identity. Separate pure controls of 2,281 and 12,075 bytes
+passed on the existing fixture before a complete corrected main was run. One
+explicit discovery preflight is recorded separately. Original diagnostics remain
+in `artifacts/pool-connections/first-failure-diagnostics`; no application change,
+positive-response mock or relaxed limit/oracle was used.
+
+Corrected main passes **23.9s** (26.7s invocation), using ordinary generated OTLP
+through the collector and ClickHouse: 120 HTTP Server spans, native HTTP duration
+and 13 pool reports forming 10 exact streams, five eligible pool/instance groups
+and two explicitly ineligible streams. Role-native HTTP retains first priority;
+the pool takes the second native slot without increasing the existing budget.
+Used/idle/custom states remain separate; worker-b idle zero is distinct from
+unavailable. The common count ceiling is 21. Generic signed fallback and a domain
+502 refusal are separate actual-source probes.
+
+Browser logical source counts are 9 at overview, unchanged through local
+filter/disclosure and native question staging, 10 after explicit native Run,
+11 after fresh capture and unchanged after frozen reopen. Pure planning counts
+are separate (one for the overview and three after native staging). Ingestion,
+readiness, direct negative probes and API planning controls are not hidden in
+these browser counts; logical operations are not SQL statement counts.
+
+The full capture remains **16,904 bytes**, SHA256
+`e659f1ddbc9da4dad4e441e88b136b920849873e336765b7ae9219b454ae6b0e`;
+ID `1abfe1fc772a9bd5be1c5c8d0cd3c67f4f2d5de631e0fd996634e5b746e6d105`.
+Receipt: `artifacts/pool-connections/named-pools-7d8247745c/ledger.json`.
+Runtime binary SHA256
+`2d896fd13ac38b07391b145505fbeaf96d78749cf7c6cfadb81bca439e7a2a8b`;
+`artifacts/pool-connections/deployment.json` verifies actual asset status/MIME/hash.
+Desktop/mobile frames show the accepted fixture and retain readable UTC epochs
+without page overflow. Repeated captions and tall unknown-state marks remain
+presentation refinements; this is not a whole-product density claim.
+
+The bounded actor passes first try: **30.6s** (33.8s invocation), eight phases
+0–7 and 478 snapshots, terminal true and overflow false. Its service overview
+settles at nine logical source operations; local pool controls preserve that
+count. Unlike journey 195's reused actor data, this actor uses a separate
+ordinary OTLP fixture. Receipt:
+`artifacts/pool-connections/named-pools-b419ced9f4/bombadil/acceptance-summary.json`.
+No new source/custody lifecycle was introduced, so no new Quint model is claimed.
+
+Independent source-free receipt validation passes first try: **0.362s** (body
+0.32s). It checks all 13 physical reports/10 exact streams, five full-identity
+pool groups and two ineligible streams, latest state values/epochs and
+unknown/stale/zero semantics, DOM counts, domain-preserving native/capture intent,
+actual generic/domain-refusal and negative metadata controls, and the complete
+stored bytes/content ID. Six changed controls reject domain changes, altered
+capture questions, dropped ineligible streams, merged instances, missing-to-zero
+substitution and altered receipts. Log:
+`artifacts/pool-connections/native-validation.txt`. No source read or campaign
+repeat was needed. Source and desktop/mobile visual reviews approve the bounded
+slice; [journey 196](journeys/196-pool-connections-storyboard.md) records the flow.

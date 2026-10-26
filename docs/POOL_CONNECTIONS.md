@@ -62,3 +62,8 @@ flowchart LR
 is a separate seconds histogram. Capacity and wait-time joins, pool-to-record
 scope expansion, automatic runtime/host/Kubernetes panels and numeric stock
 comparisons remain follow-ons with their own identity/time/coverage contracts.
+
+
+The executable service-to-pool/native/capture flow, accepted desktop/mobile frames,
+source-effect journal and original diagnostic are recorded in
+[journey 196](../journeys/196-pool-connections-storyboard.md).

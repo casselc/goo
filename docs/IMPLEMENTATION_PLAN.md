@@ -1169,4 +1169,4 @@ all 77 Node files, API/proxy/deployed contracts, 300 generated cases and all
 comparison continuation are independently reviewed. Final publication and bounded
 acceptance receipts are in VALIDATION.md.
 
-C2c now includes [native cumulative-stock measurements](CUMULATIVE_STOCKS.md): sum-table reads, discovery, additive package/results, observation presentation and frozen replay. Next ship the named-pool per-instance dashboard; broader resource identity and capacity calculations remain separate.
+C2c includes [native stocks](CUMULATIVE_STOCKS.md) and [automatic named-pool connection observations](POOL_CONNECTIONS.md): pinned same-stream discovery, domain-constrained counts, per-instance state comparison and shared frozen presentation. Capacity/wait joins, pool-to-record context and broader runtime/host/resource identity remain separate.

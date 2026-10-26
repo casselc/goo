@@ -908,3 +908,14 @@ successful Run closes editors to keep results visible. Accepted drafts are
 separate from mutable editor snapshots: retained hidden input changes cannot
 alter Run intent, and reopening restores the accepted draft. Opening an editor
 is local; editing withdraws old results before the next explicit Run.
+
+## Named-pool composition
+
+[Named-pool connection observations](POOL_CONNECTIONS.md) use the existing passive
+`goo-time-bars`, typed attribute inspector and timestamp presenter. The app-level
+`GooPoolConnections` adapter assembles supplied domain-validated stock samples
+into exact pool/instance/state rows. It owns only local filtering, 25-row paging
+and a 256-state display bound, with explicit omissions and a stable shared count
+scale. It does not fetch or publish, infer a capacity ratio or merge contributors.
+Service widgets and frozen native evidence share this composition; their existing
+owners retain question execution, navigation and capture custody.

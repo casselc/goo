@@ -254,4 +254,4 @@ resource-identity contract are selected. Native-to-record context (C3) and lean
 aggregate execution (C4) support these dashboards; they should not postpone useful
 panels indefinitely or be expanded into unrelated framework projects.
 
-C2c prerequisite delivered: [cumulative-stock measurements](CUMULATIVE_STOCKS.md) connect cumulative nonmonotonic sum discovery to direct source reads, native observation views and frozen replay. Automatic named-pool/runtime panels remain planned; generic stock eligibility does not establish convention or pool-health conformance.
+C2c now adds [automatic named-pool connection observations](POOL_CONNECTIONS.md) over [native stocks](CUMULATIVE_STOCKS.md). Same-stream pinned metadata derives an explicit count-domain question, with separate per-instance states and frozen replay. This partial view does not infer capacity, acquisition wait, saturation or pool health; runtime/host and capacity/wait bindings remain staged.

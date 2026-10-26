@@ -1,7 +1,7 @@
 # Shared measurement packages
 
 Implemented: `goo/measurement-package/v1alpha1` binds bounded OTel observations
-in ClickHouse to the Go gauge, counter, native histogram or lifecycle kernels.
+in ClickHouse to the Go gauge, cumulative stock, counter, native histogram or lifecycle kernels.
 This is distinct from `goo/telemetry-package/v1alpha1`, which describes captured
 span/log populations. Both use the same immutable general captures and ordered
 investigation notes. The UI exposes **Explore → Measurements**, Definitions and
@@ -49,7 +49,7 @@ source:
     messaging.consumer.group.name: inventory
 ```
 
-`maxGapMs` is gauge freshness or the native interval gap limit. Lifecycle
+`maxGapMs` is gauge/stock freshness or the native interval gap limit. Lifecycle
 classification instead uses its explicit `deadlineMs` and `allowanceMs`.
 
 Source columns and typed parameter SQL belong to the adapter. Definitions cannot
@@ -61,18 +61,20 @@ rejected. Custom package revisions use the same schema as built-ins.
 | Family | Meaning and boundaries |
 | --- | --- |
 | Gauge | Independent timestamped observations per complete stream identity. Conflicting same-time values and no-recorded-value flags are unknown. Freshness is evaluated at the fixed upper bound, not the current wall clock; old values remain visible as stale. Dots are not interpolated; no rate or sum is inferred. |
+| Stock | Cumulative nonmonotonic exported observations, preserving decreases, accumulation epochs and missing/stale/conflicting reports. The optional `stockDomain: nonnegative-integer` validates exact raw counts below 2^53; generic stocks remain signed/fractional. See [stock semantics](CUMULATIVE_STOCKS.md) and [named pools](POOL_CONNECTIONS.md). |
 | Counter | Existing reset-aware monotonic cumulative/delta kernel. Separate resource instances, start-time resets, missing boundaries and gaps remain explicit. Float64-exported integral counters must be below 2^53; no rounded large-integer claims. |
 | Native histogram | Existing per-stream interval reconstruction with explicit bucket bounds/counts and p95 bucket ranges. Bucket inspection retains exact count strings. No percentile averaging or implicit fleet merging. Current kernel supports nonnegative explicit duration bounds; exponential histograms are not supported. |
 | Lifecycle | Explicit accepted/terminal event names and field mappings, tenant set, logical owner, outcome domain, deadline and allowance. Mature cohort, pending/unknown and quality receipts use the shared lifecycle kernel. Subject drilldown retains tenant, subject, environment, service set, event names and fixed source horizon. |
 
 Stream identity includes resource schema, full resource map, instrumentation scope,
-version/schema, metric name/unit and all point attributes. Native counter/histogram
+version/schema, metric name/unit and all point attributes. Native metric
 packages require an explicit scope name; version and schema may be empty and remain exact stream identity values. Missing required metadata is a
 validation failure, not invented identity. Gauge grain documents intended resource
 meaning; it does not authorize aggregating repeated consumer-group observations
 from several workers. Worker utilization is recorded per instance. Lag is
 undelivered group work; pending may include stale unreclaimed entries. Neither
-proves saturation. Missing CPU, memory and pool measurements remain uninstrumented.
+proves saturation. Missing CPU, memory, pool capacity or wait signals remain
+unavailable; a template does not manufacture them.
 
 ## Lifecycle event and knowledge time
 
@@ -148,7 +150,8 @@ annotations, manifest or service-specific attribute conventions.
 observed scope/name/unit/version/schema bindings. The initial two-minute lookback
 and 60-second gap are authoring defaults to review. Empty optional version/schema
 values match empty values; they never act as wildcards. Separate versions and
-schemas remain separate streams. Supported sums are monotonic counters;
+schemas remain separate streams. Supported sums are monotonic counters or cumulative nonmonotonic stocks; delta
+nonmonotonic sums have no inferred absolute baseline.
 histograms currently support explicit nonnegative duration distributions in
 seconds/milliseconds. Actual values, resource-instance identity and interval
 quality are validated when run. Unsupported metadata remains visible.

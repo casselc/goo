@@ -3,7 +3,9 @@
 The pure Go evaluator in [metrics/stock.go](../metrics/stock.go) now has an
 additive native measurement path: `kind: stock`, a direct sum-table source,
 discovery, package planning/execution, frozen capture/replay and per-stream
-observation presentation. Automatic pool/runtime panels remain planned.
+observation presentation. [Named-pool connection observations](POOL_CONNECTIONS.md)
+now provide the first automatic pool slice; runtime panels and capacity/wait
+joins remain planned.
 Existing gauge/counter/histogram wire fields and historical saved bytes are
 unchanged; `stocks` is omitted from results for those kinds.
 
@@ -27,8 +29,8 @@ flags at one timestamp yield unknown without a winning value or epoch. Missing
 values yield unknown; old observations retain their value marked stale against
 the fixed window end. Empty input has no series, rather than a zero. Series state
 is the last sample state. Gaps have no fabricated samples or continuity promise.
-Negative values are valid generic nonmonotonic sums; a connection-count profile
-will need a separate nonnegative domain rule. No fleet total or utilization ratio
+Negative values are valid generic nonmonotonic sums; the named-pool connection profile
+uses a separate nonnegative-integer domain rule. No fleet total or utilization ratio
 is implied.
 
 ```mermaid
@@ -37,7 +39,7 @@ flowchart LR
   B --> C[Stock evaluator]
   C --> D[Native package and frozen replay]
   D --> V[Per-stream observation view]
-  V --> E[Planned per-instance pool dashboard]
+  V --> E[Per-instance named-pool connection view]
   E --> F[Planned explicit resource-scoped record investigation]
 ```
 
@@ -55,8 +57,9 @@ nonmonotonic sums remain unsupported. Eligibility is metadata planning, not
 proof of metric values, valid instance identity, physical stock or convention
 conformance. Public execution verifies actual rows. Exact stream selection keeps
 resource/schema/scope/unit/attribute identity. Generic service-native widgets
-accept stocks within their existing two-instrument budget; this is not an
-automatic named-pool profile or a new source-read owner.
+accept stocks within their existing two-instrument budget. The
+[named-pool view](POOL_CONNECTIONS.md) adds an explicit profile binding and count
+domain without adding a source-read owner.
 
 A package can bind an ordinary exported instrument without a Goo manifest:
 
@@ -97,18 +100,16 @@ links. The live acceptance fixture includes a negative signed value under
 probe. It does not establish valid nonnegative physical connection counts or
 semantic-convention conformance; a named-pool profile must enforce its domain. Saved evidence uses the same display without executing sources.
 
-Next vertical slice: show per-instance named-pool connection states using
-ordinary OTLP in generic mode. Keep pool states separate, require actual aligned
-capacity before a ratio, and preserve missing/empty pool identity. The catalog's
-v1.37 development names are candidate bindings, not proven exporter conformance.
+The [named-pool view](POOL_CONNECTIONS.md) now uses ordinary OTLP and exact
+per-instance connection states within service dashboards. Capacity/wait bindings
+and explicitly scoped pool-to-record continuation remain follow-ons, with no
+inferred ratios or lookaround. The catalog's v1.37 development names remain
+explicit candidate bindings rather than general exporter conformance claims.
 
-Planned user journey: Services → chosen service → named pool/instance → observed
-connection-state series → selected observation → explicitly scoped logs/spans.
-That automatic-panel journey remains planned. The current native integration
-journey instead discovers a stock, explicitly reads its observations and freezes
-the result for source-free reopening. Its source fixture includes releases, new
-epochs, stale/missing/conflicting reports, multiple pools/instances and unsupported
-delta sums. Captures preserve original bytes and epoch semantics.
+The original generic stock journey discovers a stock, explicitly reads its
+observations and freezes the result for source-free reopening. Its fixture
+includes releases, epochs, stale/missing/conflicting reports and unsupported
+delta sums. The named-pool journey adds the standard-key binding and count domain.
 
 Validation: fixed semantic/validation/isolation cases in
 [metrics/stock_test.go](../metrics/stock_test.go), plus generated descending
@@ -120,3 +121,14 @@ There is no new stateful owner requiring a Quint model in this cut.
 
 Actual OTLP/browser, immutable capture, actor and independent raw-fact acceptance
 are recorded in [journey 195](../journeys/195-cumulative-stocks-storyboard.md).
+
+
+## Explicit count domain
+
+`stockDomain: nonnegative-integer` is an optional stock-only package rule used by
+[named-pool views](POOL_CONNECTIONS.md). It validates each selected recorded raw
+decimal as an exact nonnegative integer below 2^53 before accepting the count, including
+fractional values that Float64 would otherwise round into integers. Input text
+and exponent lengths are bounded. Missing flags remain unknown; generic stock
+packages omit the rule and keep their original signed fractional semantics.
+The rule participates in definition hashes, capture questions and replay.
