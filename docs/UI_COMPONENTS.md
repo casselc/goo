@@ -1017,3 +1017,19 @@ selectors target direct children, allowing the nested shared viewer to retain
 its own layout. The actual desktop/mobile replay verifies full-width geometry,
 readable field values and disclosure toggles without source requests. Family
 labels distinguish log/span records from gauge/sum/histogram data points.
+
+
+## Shared resource-native observations (202)
+
+`resource-native-view.js` is a passive supplied-result renderer shared by host
+and pod panels. `host-dashboard.js` preserves its existing compatibility exports.
+Byte formatting, UTC clocks, exact-stream inspection and timeline snapshots reuse
+existing components. The optional pod strict-byte display policy masks negative,
+fractional and unsafe byte counts in both its headline and a detached plotted
+copy. Original native results, source rows and host behavior are unchanged.
+
+`pod-metrics.js` owns explicit discovery, pure planning and at most two default
+native requests. Kubernetes rows retain one full-width selected panel; filtering,
+redraw, scope changes and departure withdraw pending work. Completed panel
+inspection/capture navigation uses the existing native owner and returns to held
+filters/focus. Display elements and raw-resource disclosures never fetch.

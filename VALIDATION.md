@@ -11476,3 +11476,51 @@ local Markdown links resolve; the compact receipt's three frame hashes and all
 new journey JavaScript syntax checks pass. Browser/native workers are closed,
 normal diagnostic retention is applied, and exact task binaries, SQL/research
 helpers are removed. Traffic and data volumes remain intact.
+
+
+## Pod memory observations — source gates (202)
+
+[Contract](docs/POD_METRICS.md). Explicit `kubernetes-pod` resource authority
+admits only full exact-stream gauges, without fabricated service/instance labels.
+Raw resource/schema and reported pod UID remain pinned; original service/host
+wire and validator behavior remain. Collector kubeletstats v0.137.0 usage and
+working-set byte gauges form one profile; semconv v1.37 usage is a separate
+usage-only profile. Empty-unit ordinal phase and container readiness remain
+unsupported, rather than becoming pod-health badges.
+
+Full root Go passes: cmd/goo 5.154s, exploration 25.847s, measurements 0.723s,
+metrics 22.546s. All 92 reported Node files pass in 25.121s with concurrency two.
+Focused core gates pass in 0.006/0.027s. Generated native authority/profile/raw
+value/custody properties pass first in 0.491s; positive first-25 and seven required
+source-field boundaries in 0.014s. Negative/fractional/unsafe gauges retain raw
+Float64 observations; only the pod display copy withholds invalid byte counts.
+Stale/conflicting/missing latest samples do not fall back to older values.
+
+Review corrected two planner gaps before release: first-preview convenience
+bindings no longer suppress independent positive attribute-stream candidates,
+and family defaults are selected before the 16-candidate display cap. A
+20-usage-stream plus working-set case retains both defaults, 16 candidates and
+five explicit omissions. Existing source attribute selectors remain binding.
+Known-empty metadata schemas require actual source fields; legacy native Stream
+omission is interpreted only under a validated known-empty lookup, never a null
+trace schema.
+
+API gates pass: 21 new frozen cases, actual discovery→plan→two executions→two
+captures→two fresh offline reopens, and nine fresh-authoring service/attribute
+forms with duplicate publication/reload. Raw JSON/captured bytes are unchanged;
+only fresh host/pod YAML canonicalizes empty collections before hashing.
+Generated SQL executes against actual ClickHouse read-only in 0.216s. OpenAPI
+checks pass with 87 total/80 Go operations, 471 reflected/489 total schemas,
+395 responses, 144 admitted requests and 25 mux refusals. Existing fixtures stay
+unchanged.
+
+A final transport review found an incompatible 64 KiB pure-plan limit below
+valid discovery response size. Only the new pure planner now accepts 8 MiB +
+1 KiB; source requests and old host planner remain 64 KiB. Focused final handler
+checks pass in 0.328s with real 102,967-byte decoded metadata accepted without
+source reads/admission, exact 8,389,632-byte acceptance and one-byte-over refusal.
+Actual proxy cap/header/asset checks pass in 1.119s; schema and API docs align.
+The two-second pure pre/post deadline is not a CPU interruption guarantee.
+
+Independent source review approves deployment. Live ordinary OTLP/panel ownership,
+strict-byte masking, authoring/capture custody and actual frames remain pending.

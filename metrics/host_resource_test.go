@@ -76,3 +76,21 @@ func TestHostGaugeCanonicalIdentityAndArrivalOrder(t *testing.T) {
 		t.Fatal("caller identity mutated")
 	}
 }
+
+func TestPodGaugeAuthorityIsSeparate(t *testing.T) {
+	stream := Stream{Resource: map[string]string{"k8s.pod.uid": "one"}, Scope: "kubeletstats", Name: "memory", Unit: "By"}
+	points := []GaugePoint{{Stream: stream, EndNS: "10", Value: 1024}}
+	if _, e := EvaluateGauges("0", "20", "20", points); e == nil {
+		t.Fatal("pod entered service authority")
+	}
+	if _, e := EvaluateHostGauges("0", "20", "20", "one", points); e == nil {
+		t.Fatal("pod entered host authority")
+	}
+	r, e := EvaluatePodGauges("0", "20", "20", "one", points)
+	if e != nil || *r.Series[0].Samples[0].Value != 1024 {
+		t.Fatal(r, e)
+	}
+	if _, e := EvaluatePodGauges("0", "20", "20", "other", points); e == nil {
+		t.Fatal("different UID accepted")
+	}
+}

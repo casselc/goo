@@ -4409,6 +4409,64 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/pod-dashboard/plan": {
+      "post": {
+        "operationId": "post_pod_dashboard_plan",
+        "summary": "POST /pod-dashboard/plan",
+        "tags": [
+          "pod-dashboard"
+        ],
+        "description": "Current owner: cmd/goo/pod_metrics_http.go. Effect: pure-plan-or-supplied-summary. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/pod_metrics_http.go",
+        "x-effects": "pure-plan-or-supplied-summary",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PodDashboardPlan"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PodDashboardRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 8389632,
+        "x-browser-body-limit-bytes": 8389632,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/pod-discovery": {
       "post": {
         "operationId": "post_pod_discovery",
@@ -4494,6 +4552,94 @@
         },
         "x-go-body-limit-bytes": 16384,
         "x-browser-body-limit-bytes": 16384,
+        "x-schema-coverage": "typed"
+      }
+    },
+    "/pod-metric-discovery": {
+      "post": {
+        "operationId": "post_pod_metric_discovery",
+        "summary": "POST /pod-metric-discovery",
+        "tags": [
+          "pod-metric-discovery"
+        ],
+        "description": "Current owner: cmd/goo/pod_metrics_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/pod_metrics_http.go",
+        "x-effects": "source-read",
+        "parameters": [
+          {
+            "name": "X-Goo-Query-ID",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+            },
+            "description": "Optional short-lived cancellation capability; repeated/cancelled IDs are refused."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PodMetricDiscovery"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PodMetricDiscoveryQuestion"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 65536,
+        "x-browser-body-limit-bytes": 65536,
         "x-schema-coverage": "typed"
       }
     },
@@ -6811,6 +6957,19 @@
       "PackagePlan": {
         "$ref": "#/components/schemas/exploration.PackagePlan"
       },
+      "PodDashboardPlan": {
+        "$ref": "#/components/schemas/measurements.PodDashboardPlan"
+      },
+      "PodDashboardRequest": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.PodDashboardRequestInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "PodDiscovery": {
         "$ref": "#/components/schemas/exploration.PodDiscovery"
       },
@@ -6818,6 +6977,19 @@
         "anyOf": [
           {
             "$ref": "#/components/schemas/exploration.PodDiscoveryQuestionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "PodMetricDiscovery": {
+        "$ref": "#/components/schemas/measurements.PodMetricDiscovery"
+      },
+      "PodMetricDiscoveryQuestion": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.PodMetricDiscoveryQuestionInput"
           },
           {
             "type": "null"
@@ -20138,6 +20310,434 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.Plan"
       },
+      "measurements.PodDashboardPlan": {
+        "properties": {
+          "candidates": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/measurements.PodMetricWidget"
+                },
+                "type": "array",
+                "maxItems": 16
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "candidatesOmitted": {
+            "type": "integer"
+          },
+          "instrumentsOmitted": {
+            "type": "integer"
+          },
+          "question": {
+            "$ref": "#/components/schemas/measurements.PodMetricDiscoveryQuestion"
+          },
+          "resourceKey": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "candidates",
+              "unconfirmed"
+            ]
+          },
+          "streamsOmitted": {
+            "type": "integer"
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/pod-dashboard/v1"
+          },
+          "warnings": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "widgets": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/measurements.PodMetricWidget"
+                },
+                "type": "array",
+                "maxItems": 2
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "version",
+          "question",
+          "resourceKey",
+          "state",
+          "widgets",
+          "candidates",
+          "candidatesOmitted",
+          "instrumentsOmitted",
+          "streamsOmitted",
+          "warnings"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.PodDashboardPlan"
+      },
+      "measurements.PodDashboardRequestInput": {
+        "additionalProperties": false,
+        "properties": {
+          "discovery": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.PodMetricDiscoveryInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.PodDashboardRequest"
+      },
+      "measurements.PodMetricDiscovery": {
+        "properties": {
+          "instruments": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/measurements.Instrument"
+                },
+                "type": "array",
+                "maxItems": 16
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "instrumentsOmitted": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000
+          },
+          "key": {
+            "type": "string"
+          },
+          "question": {
+            "$ref": "#/components/schemas/measurements.PodMetricDiscoveryQuestion"
+          },
+          "records": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/pod-metric-discovery/v1"
+          },
+          "warning": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "question",
+          "key",
+          "instruments",
+          "records",
+          "instrumentsOmitted",
+          "warning"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.PodMetricDiscovery"
+      },
+      "measurements.PodMetricDiscoveryInput": {
+        "additionalProperties": false,
+        "properties": {
+          "instruments": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/measurements.InstrumentInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "instrumentsOmitted": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "question": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.PodMetricDiscoveryQuestionInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "records": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.PodMetricDiscovery"
+      },
+      "measurements.PodMetricDiscoveryQuestion": {
+        "properties": {
+          "environment": {
+            "type": "string"
+          },
+          "fromMs": {
+            "type": "integer"
+          },
+          "resource": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "resourceSchemaURL": {
+            "type": "string",
+            "maxLength": 1024,
+            "description": "Required reported resource schema including known empty string; unknown/null trace schema is refused before source access."
+          },
+          "toMs": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "environment",
+          "fromMs",
+          "resource",
+          "resourceSchemaURL",
+          "toMs"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.PodMetricDiscoveryQuestion"
+      },
+      "measurements.PodMetricDiscoveryQuestionInput": {
+        "additionalProperties": false,
+        "properties": {
+          "environment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fromMs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "resource": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "resourceSchemaURL": {
+            "type": "string",
+            "maxLength": 1024,
+            "description": "Required reported resource schema including known empty string; unknown/null trace schema is refused before source access."
+          },
+          "toMs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.PodMetricDiscoveryQuestion",
+        "required": [
+          "resourceSchemaURL"
+        ]
+      },
+      "measurements.PodMetricWidget": {
+        "properties": {
+          "grain": {
+            "type": "string",
+            "const": "pod-resource-stream"
+          },
+          "key": {
+            "type": "string"
+          },
+          "profile": {
+            "type": "string",
+            "enum": [
+              "collector-kubeletstats-v0.137.0",
+              "otel-k8s-v1.37.0"
+            ]
+          },
+          "question": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/measurements.Question"
+              },
+              {
+                "properties": {
+                  "definition": {
+                    "properties": {
+                      "kind": {
+                        "const": "gauge"
+                      },
+                      "source": {
+                        "required": [
+                          "resource",
+                          "exactStream"
+                        ],
+                        "properties": {
+                          "resource": {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "const": "kubernetes-pod"
+                              }
+                            }
+                          },
+                          "exactStream": {
+                            "type": "object"
+                          },
+                          "services": {
+                            "type": [
+                              "array",
+                              "null"
+                            ],
+                            "maxItems": 0
+                          },
+                          "namespace": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "state": {
+            "type": "string",
+            "const": "candidate"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "title",
+          "state",
+          "profile",
+          "grain",
+          "question"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.PodMetricWidget"
+      },
       "measurements.PoolSignalOption": {
         "properties": {
           "key": {
@@ -20693,11 +21293,14 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 512,
-            "description": "Exact reported host.id, never host.name or a manufactured service/instance identity."
+            "description": "Exact reported host.id or k8s.pod.uid for the selected resource kind; never a name or manufactured service/instance identity."
           },
           "kind": {
             "type": "string",
-            "const": "host"
+            "enum": [
+              "host",
+              "kubernetes-pod"
+            ]
           }
         },
         "required": [
@@ -20721,13 +21324,10 @@
             ]
           },
           "kind": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
+            "type": "string",
+            "enum": [
+              "host",
+              "kubernetes-pod"
             ]
           }
         },

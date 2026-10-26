@@ -29,7 +29,7 @@ func newQueryBudget(next http.Handler, limit int) http.Handler {
 	return &queryBudget{entries: map[string]queryEntry{}, limit: limit, next: next}
 }
 func (b *queryBudget) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	controlled := r.Method == "POST" && (r.URL.Path == "/metric-discovery" || r.URL.Path == "/host-discovery" || r.URL.Path == "/pod-discovery" || r.URL.Path == "/measurements" || r.URL.Path == "/explore" || r.URL.Path == "/explore/counted-values" || r.URL.Path == "/record-aggregates" || r.URL.Path == "/trace-search" || r.URL.Path == "/population/explain" || r.URL.Path == "/inventory" || r.URL.Path == "/discovery" || r.URL.Path == "/captures" || r.URL.Path == "/captures/live")
+	controlled := r.Method == "POST" && (r.URL.Path == "/metric-discovery" || r.URL.Path == "/host-discovery" || r.URL.Path == "/pod-discovery" || r.URL.Path == "/pod-metric-discovery" || r.URL.Path == "/measurements" || r.URL.Path == "/explore" || r.URL.Path == "/explore/counted-values" || r.URL.Path == "/record-aggregates" || r.URL.Path == "/trace-search" || r.URL.Path == "/population/explain" || r.URL.Path == "/inventory" || r.URL.Path == "/discovery" || r.URL.Path == "/captures" || r.URL.Path == "/captures/live")
 	cancelPath := r.Method == "POST" && strings.HasPrefix(r.URL.Path, "/queries/") && strings.HasSuffix(r.URL.Path, "/cancel")
 	if !controlled && !cancelPath {
 		b.next.ServeHTTP(w, r)

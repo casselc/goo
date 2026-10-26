@@ -1015,3 +1015,11 @@ flowchart LR
 ```
 
 The final journey201 actor passed31.2s (33.2s invocation), nine phases/428 snapshots, ending with two source reads and an exact four-log contextual population. A separate9.6s bounded display replay used a fresh ordinary fixture, one inventory read and no contextual Run; full-width details, scoped nested-table geometry, qualifiers, UTC labels and source-free toggles/stage/Back passed. Its passive presentation commit did not change the source binary or repeat semantic/native acceptance.
+
+### Explicit pod-native gauge authority
+
+Pod native lookup requires a known resource-schema string (including reported empty) and a nonempty pod UID for one exact raw resource variant. A trace's unknown/null schema cannot acquire native authority. Execution uses `source.resource.kind: kubernetes-pod`, gauge-only, with a mandatory exact stream and no service/namespace selector. This separate entry does not relax host/service kernels or grant stock/counter authority.
+
+The first supported receiver profile is Collector kubeletstats0.137.0: exact receiver scope path and version, empty scope schema, `k8s.pod.memory.usage` and `k8s.pod.memory.working_set` gauges in `By`. The semconv1.37 usage-only profile stays separate; no working-set alias, container sum, limit ratio, ordinal pod-phase or container-readiness health panel is inferred. Full resource/schema/scope/version/attribute identity is retained. Positive preview metadata is bounded to25 streams and16 displayed candidates; default usage/working-set selection precedes candidate truncation so component variants cannot displace both defaults.
+
+Raw gauge evidence may contain zero, negative, fractional or unsafe byte values. The gauge engine preserves it; presentation must mask invalid byte counts rather than rewrite stored evidence or fall back from stale/missing/conflicting latest reports. Fresh YAML authoring canonicalizes nil attribute maps on its detached definition; direct JSON evidence/capture retains its original bytes and identity. Existing independent read clocks, explicit native Run/individual capture and retained-owner cancellation apply.

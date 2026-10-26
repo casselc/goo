@@ -81,7 +81,7 @@ def check(spec):
                 requests += 1
                 if isinstance(request, dict):
                     accepted.append((shape, request))
-    assert responses == 376 and requests == 135 and mux_refusals == 23, (responses, requests)
+    assert responses == 395 and requests == 144 and mux_refusals == 25, (responses, requests)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)
@@ -142,6 +142,23 @@ def check(spec):
         if mode=='excess-source-groups':wrong['sourceGroups']=1001
         if mode=='unknown-family':wrong['observations'][0]['families'][0]['family']='kube-api'
         assert list(validator(spec,pod_shape).iter_errors(wrong)), 'Pod resource discovery control accepted'
+    pod_native_cases=json.loads((ROOT/'testdata/http/pod-metrics.json').read_text())['cases']
+    pod_native=next(json.loads(c['response']) for c in pod_native_cases if c['name']=='pod-metric-plan')
+    assert len(pod_native['widgets'])==2
+    native_shape={'$ref':'#/components/schemas/PodDashboardPlan'}
+    for mode in ('wrong-profile','too-many-defaults','wrong-grain'):
+        wrong=copy.deepcopy(pod_native)
+        if mode=='wrong-profile':wrong['widgets'][0]['profile']='any-kubernetes'
+        if mode=='wrong-grain':wrong['widgets'][0]['grain']='pod-health'
+        if mode=='too-many-defaults':wrong['widgets']*=2
+        assert list(validator(spec,native_shape).iter_errors(wrong)), 'Pod native planner control accepted'
+    pod_question=pod_native['question']
+    shape=spec['paths']['/pod-metric-discovery']['post']['requestBody']['content']['application/json']['schema']
+    for mode in ('null','missing'):
+        wrong=copy.deepcopy(pod_question)
+        if mode=='null':wrong['resourceSchemaURL']=None
+        else:wrong.pop('resourceSchemaURL')
+        assert list(validator(spec,shape).iter_errors(wrong)), 'Unknown pod metric resource schema accepted'
     # Startup metadata is configuration only, with closed states and no health flags.
     runtime_shape={'$ref':'#/components/schemas/RuntimeCapabilities'}
     configured={'version':'goo/runtime-capabilities/v1','profile':'generic','preparedHTTP':{'state':'unconfigured'},'declaredOperations':{'state':'configured'}}

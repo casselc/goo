@@ -29,6 +29,17 @@ type ResourceBinding struct {
 	Kind string `json:"kind" yaml:"kind"`
 	ID   string `json:"id" yaml:"id"`
 }
+
+func (r ResourceBinding) AttributeKey() string {
+	switch r.Kind {
+	case "host":
+		return "host.id"
+	case "kubernetes-pod":
+		return "k8s.pod.uid"
+	}
+	return ""
+}
+
 type Binding struct {
 	Resource    *ResourceBinding    `json:"resource,omitempty" yaml:"resource,omitempty"`
 	ExactStream *metrics.Stream     `json:"exactStream,omitempty" yaml:"exactStream,omitempty"`
@@ -133,7 +144,15 @@ func (d Definition) Validate() error {
 		return fmt.Errorf("invalid source binding")
 	}
 	if r := d.Source.Resource; r != nil {
-		if r.Kind != "host" || r.ID == "" || !text(r.ID, 512) || d.Kind != "gauge" && d.Kind != "stock" || len(d.Source.Services) != 0 || d.Source.Namespace != nil || d.Source.ExactStream == nil || d.Grain != "per-stream" {
+		if r.Kind == "host" {
+			if r.ID == "" || !text(r.ID, 512) || d.Kind != "gauge" && d.Kind != "stock" || len(d.Source.Services) != 0 || d.Source.Namespace != nil || d.Source.ExactStream == nil || d.Grain != "per-stream" {
+				return fmt.Errorf("host resource binding requires gauge or stock, exact stream, per-stream grain and no service or namespace selector")
+			}
+		} else if r.Kind == "kubernetes-pod" {
+			if r.ID == "" || !text(r.ID, 512) || d.Kind != "gauge" || len(d.Source.Services) != 0 || d.Source.Namespace != nil || d.Source.ExactStream == nil || d.Grain != "per-stream" {
+				return fmt.Errorf("pod resource binding requires gauge, exact stream, per-stream grain and no service or namespace selector")
+			}
+		} else {
 			return fmt.Errorf("host resource binding requires gauge or stock, exact stream, per-stream grain and no service or namespace selector")
 		}
 	}
@@ -259,11 +278,11 @@ func Read(text string) (Definition, error) {
 	if dec.Decode(new(any)) != io.EOF {
 		return d, fmt.Errorf("one YAML document required")
 	}
-	// Authoring canonicalization is deliberately confined to host YAML input.
+	// Authoring canonicalization is confined to explicit host/pod YAML input.
 	// Publishing emits an empty services sequence; normalize it before hashing
 	// so omitted/null inputs reopen with the same package identity. Direct JSON
 	// questions and frozen results retain their original nil/empty distinction.
-	if d.Source.Resource != nil && d.Source.Resource.Kind == "host" {
+	if d.Source.Resource != nil && (d.Source.Resource.Kind == "host" || d.Source.Resource.Kind == "kubernetes-pod") {
 		if d.Source.Services == nil {
 			d.Source.Services = []string{}
 		}

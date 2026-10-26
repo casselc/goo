@@ -17,6 +17,7 @@ import (
 
 func registerMeasurements(mux *http.ServeMux, source measurements.Source, dir string) {
 	registerHostMeasurements(mux, source)
+	registerPodMeasurements(mux, source)
 	packagesDir := filepath.Join(dir, "measurement-packages")
 	source.CustodyDir = filepath.Join(dir, "exploration", "custody")
 	send := httpjson.Write

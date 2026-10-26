@@ -22,6 +22,8 @@ family limits remain authoritative in code/tests; this table groups related rout
 | POST `/measurement-packages` | Publish canonical YAML; preserve existing duplicate policy | 64 KiB; filesystem |
 | POST `/metric-discovery` | Query native instrument inventory | 64 KiB; 15s context |
 | POST `/pod-discovery` | One grouped source read across logs, spans and three metric tables; reported resource variants only | 16 KiB; 30s enclosing context, shared source admission/cancellation; 1,000 source-family groups before whole refusal, 100 retained variants, 8 MiB reply |
+| POST `/pod-metric-discovery` | Exact raw pod-resource metric metadata lookup | 64 KiB; 30s enclosing context; shared source admission/cancellation |
+| POST `/pod-dashboard/plan` | Pure bounded pod-memory planning over supplied discovery | 8 MiB + 1 KiB; two-second pre/post deadline; no source admission or custody |
 | POST `/measurements` | Execute native measurement; lifecycle may create first-observation custody files | 64 KiB; 15s context |
 | POST `/inventory`, `/discovery`, `/explore` | Query ClickHouse; Explore also freezes a bounded process-local result-page capability when possible | 16 KiB; 15s / 30s / 55s contexts |
 | POST `/compare` | Compare supplied summaries; no telemetry query | 1 MiB |

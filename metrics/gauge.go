@@ -41,8 +41,18 @@ func EvaluateHostGauges(fromText, toText, maxAgeText, hostID string, points []Ga
 	if err := validateHostObservationID(hostID); err != nil {
 		return nil, err
 	}
-	// Host observations canonicalize detached identity before grouping. The
-	// legacy service entry point retains its historical nil-map wire semantics.
+	return evaluateResourceGauges(fromText, toText, maxAgeText, "host.id", hostID, points)
+}
+
+// EvaluatePodGauges opts into reported pod UID identity without supplying fake
+// service or instance labels. Full resource isolation remains in each stream.
+func EvaluatePodGauges(fromText, toText, maxAgeText, podUID string, points []GaugePoint) (*GaugeResult, error) {
+	if err := validateHostObservationID(podUID); err != nil {
+		return nil, fmt.Errorf("require a nonempty bounded pod UID")
+	}
+	return evaluateResourceGauges(fromText, toText, maxAgeText, "k8s.pod.uid", podUID, points)
+}
+func evaluateResourceGauges(fromText, toText, maxAgeText, key, id string, points []GaugePoint) (*GaugeResult, error) {
 	canonical := make([]GaugePoint, len(points))
 	for index, point := range points {
 		point.Stream = cloneStream(point.Stream)
@@ -51,7 +61,7 @@ func EvaluateHostGauges(fromText, toText, maxAgeText, hostID string, points []Ga
 		}
 		canonical[index] = point
 	}
-	return evaluateGauges(fromText, toText, maxAgeText, canonical, func(s Stream) bool { return s.Resource["host.id"] == hostID })
+	return evaluateGauges(fromText, toText, maxAgeText, canonical, func(s Stream) bool { return s.Resource[key] == id })
 }
 func evaluateGauges(fromText, toText, maxAgeText string, points []GaugePoint, identity func(Stream) bool) (*GaugeResult, error) {
 	from, e := nano(fromText)

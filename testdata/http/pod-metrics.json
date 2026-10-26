@@ -1,0 +1,303 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "pod-metric-inventory",
+      "method": "POST",
+      "path": "/pod-metric-discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":100000,\"toMs\":104000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\"}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"version\":\"goo/pod-metric-discovery/v1\",\"question\":{\"environment\":\"prod\",\"fromMs\":100000,\"toMs\":104000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\"},\"key\":\"d0bf96ed6f2637e4d68301431e4a0abca4fb37859e5ea04cba35acc8588425fd\",\"instruments\":[{\"capabilityPlan\":{\"version\":\"goo/instrument-capability-plan/v1alpha1\",\"profile\":\"pod-metric\",\"title\":\"Reported pod resource metric\",\"shapeMatches\":false,\"eligible\":true,\"verification\":\"not-run\",\"reasons\":[],\"hints\":[\"Pod resource authority supports gauges only; reported phase/readiness with empty units and stock/counter/histogram metrics remain unsupported. No aliases, service labels or health state are inferred.\"],\"coverage\":{\"state\":\"observed\",\"totalStreams\":1,\"omittedStreams\":0,\"dimensions\":[],\"streams\":[{\"id\":\"5a74943a9a150d3592c08926a9acb9e493ead48c2ce4f33b0b49f6bce0725d74\",\"stream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"attributes\":{}},\"records\":1,\"instance\":\"missing\",\"dimensions\":[]}]}},\"kind\":\"gauge\",\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"temporality\":0,\"monotonic\":false,\"dimensions\":null,\"records\":1,\"supported\":true,\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-metric-425585e589c3\",\"title\":\"k8s.pod.memory.usage\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.usage\",\"unit\":\"By\"}}},{\"capabilityPlan\":{\"version\":\"goo/instrument-capability-plan/v1alpha1\",\"profile\":\"pod-metric\",\"title\":\"Reported pod resource metric\",\"shapeMatches\":false,\"eligible\":true,\"verification\":\"not-run\",\"reasons\":[],\"hints\":[\"Pod resource authority supports gauges only; reported phase/readiness with empty units and stock/counter/histogram metrics remain unsupported. No aliases, service labels or health state are inferred.\"],\"coverage\":{\"state\":\"observed\",\"totalStreams\":1,\"omittedStreams\":0,\"dimensions\":[],\"streams\":[{\"id\":\"30b34fc719b8f2d90e5e454ec7e41ccdd444bf7a5224960aed2425f6b22245f9\",\"stream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"attributes\":{}},\"records\":1,\"instance\":\"missing\",\"dimensions\":[]}]}},\"kind\":\"gauge\",\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"temporality\":0,\"monotonic\":false,\"dimensions\":null,\"records\":1,\"supported\":true,\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-metric-48efe98f2ff3\",\"title\":\"k8s.pod.memory.working_set\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.working_set\",\"unit\":\"By\"}}}],\"records\":2,\"instrumentsOmitted\":0,\"warning\":\"Reported metadata for one exact raw resource and known resource schema. No service identity, complete pod inventory, phase, readiness, health, capacity or container aggregation is inferred. Receiver-specific names and semconv profiles remain distinct.\"}\n"
+    },
+    {
+      "name": "pod-metric-inventory-invalid",
+      "method": "POST",
+      "path": "/pod-metric-discovery",
+      "body": "{}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"pod metric discovery requires explicit environment and fixed half-open window \\u003c=120 minutes before 2100\"}\n"
+    },
+    {
+      "name": "pod-metric-inventory-unknown",
+      "method": "POST",
+      "path": "/pod-metric-discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":100000,\"toMs\":104000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\",\"service\":\"fake\"}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"service\\\"\"}\n"
+    },
+    {
+      "name": "pod-metric-inventory-exact-size",
+      "method": "POST",
+      "path": "/pod-metric-discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":100000,\"toMs\":104000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\"}",
+      "padTo": 65536,
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"version\":\"goo/pod-metric-discovery/v1\",\"question\":{\"environment\":\"prod\",\"fromMs\":100000,\"toMs\":104000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\"},\"key\":\"d0bf96ed6f2637e4d68301431e4a0abca4fb37859e5ea04cba35acc8588425fd\",\"instruments\":[{\"capabilityPlan\":{\"version\":\"goo/instrument-capability-plan/v1alpha1\",\"profile\":\"pod-metric\",\"title\":\"Reported pod resource metric\",\"shapeMatches\":false,\"eligible\":true,\"verification\":\"not-run\",\"reasons\":[],\"hints\":[\"Pod resource authority supports gauges only; reported phase/readiness with empty units and stock/counter/histogram metrics remain unsupported. No aliases, service labels or health state are inferred.\"],\"coverage\":{\"state\":\"observed\",\"totalStreams\":1,\"omittedStreams\":0,\"dimensions\":[],\"streams\":[{\"id\":\"5a74943a9a150d3592c08926a9acb9e493ead48c2ce4f33b0b49f6bce0725d74\",\"stream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"attributes\":{}},\"records\":1,\"instance\":\"missing\",\"dimensions\":[]}]}},\"kind\":\"gauge\",\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"temporality\":0,\"monotonic\":false,\"dimensions\":null,\"records\":1,\"supported\":true,\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-metric-425585e589c3\",\"title\":\"k8s.pod.memory.usage\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.usage\",\"unit\":\"By\"}}},{\"capabilityPlan\":{\"version\":\"goo/instrument-capability-plan/v1alpha1\",\"profile\":\"pod-metric\",\"title\":\"Reported pod resource metric\",\"shapeMatches\":false,\"eligible\":true,\"verification\":\"not-run\",\"reasons\":[],\"hints\":[\"Pod resource authority supports gauges only; reported phase/readiness with empty units and stock/counter/histogram metrics remain unsupported. No aliases, service labels or health state are inferred.\"],\"coverage\":{\"state\":\"observed\",\"totalStreams\":1,\"omittedStreams\":0,\"dimensions\":[],\"streams\":[{\"id\":\"30b34fc719b8f2d90e5e454ec7e41ccdd444bf7a5224960aed2425f6b22245f9\",\"stream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"attributes\":{}},\"records\":1,\"instance\":\"missing\",\"dimensions\":[]}]}},\"kind\":\"gauge\",\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"temporality\":0,\"monotonic\":false,\"dimensions\":null,\"records\":1,\"supported\":true,\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-metric-48efe98f2ff3\",\"title\":\"k8s.pod.memory.working_set\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.working_set\",\"unit\":\"By\"}}}],\"records\":2,\"instrumentsOmitted\":0,\"warning\":\"Reported metadata for one exact raw resource and known resource schema. No service identity, complete pod inventory, phase, readiness, health, capacity or container aggregation is inferred. Receiver-specific names and semconv profiles remain distinct.\"}\n"
+    },
+    {
+      "name": "pod-metric-inventory-oversize",
+      "method": "POST",
+      "path": "/pod-metric-discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":100000,\"toMs\":104000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\"}",
+      "padTo": 65537,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "pod-metric-inventory-source-failure",
+      "method": "POST",
+      "path": "/pod-metric-discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":100000,\"toMs\":104000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\"}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"bounded measurement source HTTP 503 / payload limit\"}\n"
+    },
+    {
+      "name": "pod-metric-plan-no-candidates",
+      "method": "POST",
+      "path": "/pod-dashboard/plan",
+      "body": "{\"discovery\":{\"version\":\"goo/pod-metric-discovery/v1\",\"question\":{\"environment\":\"prod\",\"fromMs\":100000,\"toMs\":104000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\"},\"key\":\"d0bf96ed6f2637e4d68301431e4a0abca4fb37859e5ea04cba35acc8588425fd\",\"instruments\":null,\"records\":2,\"instrumentsOmitted\":0,\"warning\":\"Reported metadata for one exact raw resource and known resource schema. No service identity, complete pod inventory, phase, readiness, health, capacity or container aggregation is inferred. Receiver-specific names and semconv profiles remain distinct.\"}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"version\":\"goo/pod-dashboard/v1\",\"question\":{\"environment\":\"prod\",\"fromMs\":100000,\"toMs\":104000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\"},\"resourceKey\":\"d0bf96ed6f2637e4d68301431e4a0abca4fb37859e5ea04cba35acc8588425fd\",\"state\":\"unconfirmed\",\"widgets\":[],\"candidates\":[],\"candidatesOmitted\":0,\"instrumentsOmitted\":0,\"streamsOmitted\":0,\"warnings\":[\"Reported metadata for one exact pod resource variant and known schema, not a verified pod entity, health or complete Kubernetes inventory.\",\"Collector kubeletstats v0.137.0 memory usage and working set gauges remain separate from the semconv v1.37.0 usage-only profile. No aliases, container sums, CPU/limit ratios or ownership are inferred.\",\"At most two exact-stream default reads run; all values, freshness and read clocks require independent evaluation. Negative, fractional or unsafe byte values remain raw gauge evidence but cannot be displayed as valid byte counts.\",\"Ordinal pod phase and container readiness from other receiver profiles are not supported state or health panels in this slice. Missing or omitted metadata does not establish absence.\"]}\n"
+    },
+    {
+      "name": "pod-metric-plan",
+      "method": "POST",
+      "path": "/pod-dashboard/plan",
+      "body": "{\"discovery\":{\"version\":\"goo/pod-metric-discovery/v1\",\"question\":{\"environment\":\"prod\",\"fromMs\":100000,\"toMs\":104000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\"},\"key\":\"d0bf96ed6f2637e4d68301431e4a0abca4fb37859e5ea04cba35acc8588425fd\",\"instruments\":[{\"capabilityPlan\":{\"version\":\"goo/instrument-capability-plan/v1alpha1\",\"profile\":\"pod-metric\",\"title\":\"Reported pod resource metric\",\"shapeMatches\":false,\"eligible\":true,\"verification\":\"not-run\",\"reasons\":[],\"hints\":[\"Pod resource authority supports gauges only; reported phase/readiness with empty units and stock/counter/histogram metrics remain unsupported. No aliases, service labels or health state are inferred.\"],\"coverage\":{\"state\":\"observed\",\"totalStreams\":1,\"omittedStreams\":0,\"dimensions\":[],\"streams\":[{\"id\":\"5a74943a9a150d3592c08926a9acb9e493ead48c2ce4f33b0b49f6bce0725d74\",\"stream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"attributes\":{}},\"records\":1,\"instance\":\"missing\",\"dimensions\":[]}]}},\"kind\":\"gauge\",\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"temporality\":0,\"monotonic\":false,\"dimensions\":null,\"records\":1,\"supported\":true,\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-metric-425585e589c3\",\"title\":\"k8s.pod.memory.usage\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.usage\",\"unit\":\"By\"}}},{\"capabilityPlan\":{\"version\":\"goo/instrument-capability-plan/v1alpha1\",\"profile\":\"pod-metric\",\"title\":\"Reported pod resource metric\",\"shapeMatches\":false,\"eligible\":true,\"verification\":\"not-run\",\"reasons\":[],\"hints\":[\"Pod resource authority supports gauges only; reported phase/readiness with empty units and stock/counter/histogram metrics remain unsupported. No aliases, service labels or health state are inferred.\"],\"coverage\":{\"state\":\"observed\",\"totalStreams\":1,\"omittedStreams\":0,\"dimensions\":[],\"streams\":[{\"id\":\"30b34fc719b8f2d90e5e454ec7e41ccdd444bf7a5224960aed2425f6b22245f9\",\"stream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"attributes\":{}},\"records\":1,\"instance\":\"missing\",\"dimensions\":[]}]}},\"kind\":\"gauge\",\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"temporality\":0,\"monotonic\":false,\"dimensions\":null,\"records\":1,\"supported\":true,\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-metric-48efe98f2ff3\",\"title\":\"k8s.pod.memory.working_set\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.working_set\",\"unit\":\"By\"}}}],\"records\":2,\"instrumentsOmitted\":0,\"warning\":\"Reported metadata for one exact raw resource and known resource schema. No service identity, complete pod inventory, phase, readiness, health, capacity or container aggregation is inferred. Receiver-specific names and semconv profiles remain distinct.\"}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"version\":\"goo/pod-dashboard/v1\",\"question\":{\"environment\":\"prod\",\"fromMs\":100000,\"toMs\":104000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\"},\"resourceKey\":\"d0bf96ed6f2637e4d68301431e4a0abca4fb37859e5ea04cba35acc8588425fd\",\"state\":\"candidates\",\"widgets\":[{\"key\":\"791fec43c4ab2f1a6e40a1671fe05f2eea82ed0b28a48b7f51026279f4590e05\",\"title\":\"Pod memory usage\",\"state\":\"candidate\",\"profile\":\"collector-kubeletstats-v0.137.0\",\"grain\":\"pod-resource-stream\",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-observation-b95d576f0e58dd4cf0d4da8e\",\"title\":\"Pod memory usage\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.usage\",\"unit\":\"By\"}},\"fromMs\":100000,\"toMs\":104000}},{\"key\":\"cbba9b3e34bc26008da75cf56bc97c971510a24bc9a20b4deb6f21937216ace2\",\"title\":\"Pod memory working set\",\"state\":\"candidate\",\"profile\":\"collector-kubeletstats-v0.137.0\",\"grain\":\"pod-resource-stream\",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-observation-3045e55c7128d021932f440b\",\"title\":\"Pod memory working set\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.working_set\",\"unit\":\"By\"}},\"fromMs\":100000,\"toMs\":104000}}],\"candidates\":[{\"key\":\"791fec43c4ab2f1a6e40a1671fe05f2eea82ed0b28a48b7f51026279f4590e05\",\"title\":\"Pod memory usage\",\"state\":\"candidate\",\"profile\":\"collector-kubeletstats-v0.137.0\",\"grain\":\"pod-resource-stream\",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-observation-b95d576f0e58dd4cf0d4da8e\",\"title\":\"Pod memory usage\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.usage\",\"unit\":\"By\"}},\"fromMs\":100000,\"toMs\":104000}},{\"key\":\"cbba9b3e34bc26008da75cf56bc97c971510a24bc9a20b4deb6f21937216ace2\",\"title\":\"Pod memory working set\",\"state\":\"candidate\",\"profile\":\"collector-kubeletstats-v0.137.0\",\"grain\":\"pod-resource-stream\",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-observation-3045e55c7128d021932f440b\",\"title\":\"Pod memory working set\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.working_set\",\"unit\":\"By\"}},\"fromMs\":100000,\"toMs\":104000}}],\"candidatesOmitted\":0,\"instrumentsOmitted\":0,\"streamsOmitted\":0,\"warnings\":[\"Reported metadata for one exact pod resource variant and known schema, not a verified pod entity, health or complete Kubernetes inventory.\",\"Collector kubeletstats v0.137.0 memory usage and working set gauges remain separate from the semconv v1.37.0 usage-only profile. No aliases, container sums, CPU/limit ratios or ownership are inferred.\",\"At most two exact-stream default reads run; all values, freshness and read clocks require independent evaluation. Negative, fractional or unsafe byte values remain raw gauge evidence but cannot be displayed as valid byte counts.\",\"Ordinal pod phase and container readiness from other receiver profiles are not supported state or health panels in this slice. Missing or omitted metadata does not establish absence.\"]}\n"
+    },
+    {
+      "name": "pod-metric-plan-wrong-key",
+      "method": "POST",
+      "path": "/pod-dashboard/plan",
+      "body": "{\"discovery\":{\"version\":\"goo/pod-metric-discovery/v1\",\"question\":{\"environment\":\"prod\",\"fromMs\":100000,\"toMs\":104000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\"},\"key\":\"wrong\",\"instruments\":[{\"capabilityPlan\":{\"version\":\"goo/instrument-capability-plan/v1alpha1\",\"profile\":\"pod-metric\",\"title\":\"Reported pod resource metric\",\"shapeMatches\":false,\"eligible\":true,\"verification\":\"not-run\",\"reasons\":[],\"hints\":[\"Pod resource authority supports gauges only; reported phase/readiness with empty units and stock/counter/histogram metrics remain unsupported. No aliases, service labels or health state are inferred.\"],\"coverage\":{\"state\":\"observed\",\"totalStreams\":1,\"omittedStreams\":0,\"dimensions\":[],\"streams\":[{\"id\":\"5a74943a9a150d3592c08926a9acb9e493ead48c2ce4f33b0b49f6bce0725d74\",\"stream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"attributes\":{}},\"records\":1,\"instance\":\"missing\",\"dimensions\":[]}]}},\"kind\":\"gauge\",\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"temporality\":0,\"monotonic\":false,\"dimensions\":null,\"records\":1,\"supported\":true,\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-metric-425585e589c3\",\"title\":\"k8s.pod.memory.usage\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.usage\",\"unit\":\"By\"}}},{\"capabilityPlan\":{\"version\":\"goo/instrument-capability-plan/v1alpha1\",\"profile\":\"pod-metric\",\"title\":\"Reported pod resource metric\",\"shapeMatches\":false,\"eligible\":true,\"verification\":\"not-run\",\"reasons\":[],\"hints\":[\"Pod resource authority supports gauges only; reported phase/readiness with empty units and stock/counter/histogram metrics remain unsupported. No aliases, service labels or health state are inferred.\"],\"coverage\":{\"state\":\"observed\",\"totalStreams\":1,\"omittedStreams\":0,\"dimensions\":[],\"streams\":[{\"id\":\"30b34fc719b8f2d90e5e454ec7e41ccdd444bf7a5224960aed2425f6b22245f9\",\"stream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"attributes\":{}},\"records\":1,\"instance\":\"missing\",\"dimensions\":[]}]}},\"kind\":\"gauge\",\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"temporality\":0,\"monotonic\":false,\"dimensions\":null,\"records\":1,\"supported\":true,\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-metric-48efe98f2ff3\",\"title\":\"k8s.pod.memory.working_set\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.working_set\",\"unit\":\"By\"}}}],\"records\":2,\"instrumentsOmitted\":0,\"warning\":\"Reported metadata for one exact raw resource and known resource schema. No service identity, complete pod inventory, phase, readiness, health, capacity or container aggregation is inferred. Receiver-specific names and semconv profiles remain distinct.\"}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"pod dashboard requires bounded matching discovery metadata\"}\n"
+    },
+    {
+      "name": "pod-metric-plan-bad-omissions",
+      "method": "POST",
+      "path": "/pod-dashboard/plan",
+      "body": "{\"discovery\":{\"version\":\"goo/pod-metric-discovery/v1\",\"question\":{\"environment\":\"prod\",\"fromMs\":100000,\"toMs\":104000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\"},\"key\":\"d0bf96ed6f2637e4d68301431e4a0abca4fb37859e5ea04cba35acc8588425fd\",\"instruments\":[{\"capabilityPlan\":{\"version\":\"goo/instrument-capability-plan/v1alpha1\",\"profile\":\"pod-metric\",\"title\":\"Reported pod resource metric\",\"shapeMatches\":false,\"eligible\":true,\"verification\":\"not-run\",\"reasons\":[],\"hints\":[\"Pod resource authority supports gauges only; reported phase/readiness with empty units and stock/counter/histogram metrics remain unsupported. No aliases, service labels or health state are inferred.\"],\"coverage\":{\"state\":\"observed\",\"totalStreams\":1,\"omittedStreams\":-1,\"dimensions\":[],\"streams\":[{\"id\":\"5a74943a9a150d3592c08926a9acb9e493ead48c2ce4f33b0b49f6bce0725d74\",\"stream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"attributes\":{}},\"records\":1,\"instance\":\"missing\",\"dimensions\":[]}]}},\"kind\":\"gauge\",\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"temporality\":0,\"monotonic\":false,\"dimensions\":null,\"records\":1,\"supported\":true,\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-metric-425585e589c3\",\"title\":\"k8s.pod.memory.usage\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.usage\",\"unit\":\"By\"}}},{\"capabilityPlan\":{\"version\":\"goo/instrument-capability-plan/v1alpha1\",\"profile\":\"pod-metric\",\"title\":\"Reported pod resource metric\",\"shapeMatches\":false,\"eligible\":true,\"verification\":\"not-run\",\"reasons\":[],\"hints\":[\"Pod resource authority supports gauges only; reported phase/readiness with empty units and stock/counter/histogram metrics remain unsupported. No aliases, service labels or health state are inferred.\"],\"coverage\":{\"state\":\"observed\",\"totalStreams\":1,\"omittedStreams\":0,\"dimensions\":[],\"streams\":[{\"id\":\"30b34fc719b8f2d90e5e454ec7e41ccdd444bf7a5224960aed2425f6b22245f9\",\"stream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"attributes\":{}},\"records\":1,\"instance\":\"missing\",\"dimensions\":[]}]}},\"kind\":\"gauge\",\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"temporality\":0,\"monotonic\":false,\"dimensions\":null,\"records\":1,\"supported\":true,\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-metric-48efe98f2ff3\",\"title\":\"k8s.pod.memory.working_set\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.working_set\",\"unit\":\"By\"}}}],\"records\":2,\"instrumentsOmitted\":0,\"warning\":\"Reported metadata for one exact raw resource and known resource schema. No service identity, complete pod inventory, phase, readiness, health, capacity or container aggregation is inferred. Receiver-specific names and semconv profiles remain distinct.\"}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"pod preview counts must be within 0..10000\"}\n"
+    },
+    {
+      "name": "pod-metric-plan-exact-size",
+      "method": "POST",
+      "path": "/pod-dashboard/plan",
+      "body": "{\"discovery\":{\"version\":\"goo/pod-metric-discovery/v1\",\"question\":{\"environment\":\"prod\",\"fromMs\":100000,\"toMs\":104000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\"},\"key\":\"d0bf96ed6f2637e4d68301431e4a0abca4fb37859e5ea04cba35acc8588425fd\",\"instruments\":[{\"capabilityPlan\":{\"version\":\"goo/instrument-capability-plan/v1alpha1\",\"profile\":\"pod-metric\",\"title\":\"Reported pod resource metric\",\"shapeMatches\":false,\"eligible\":true,\"verification\":\"not-run\",\"reasons\":[],\"hints\":[\"Pod resource authority supports gauges only; reported phase/readiness with empty units and stock/counter/histogram metrics remain unsupported. No aliases, service labels or health state are inferred.\"],\"coverage\":{\"state\":\"observed\",\"totalStreams\":1,\"omittedStreams\":0,\"dimensions\":[],\"streams\":[{\"id\":\"5a74943a9a150d3592c08926a9acb9e493ead48c2ce4f33b0b49f6bce0725d74\",\"stream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"attributes\":{}},\"records\":1,\"instance\":\"missing\",\"dimensions\":[]}]}},\"kind\":\"gauge\",\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"temporality\":0,\"monotonic\":false,\"dimensions\":null,\"records\":1,\"supported\":true,\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-metric-425585e589c3\",\"title\":\"k8s.pod.memory.usage\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.usage\",\"unit\":\"By\"}}},{\"capabilityPlan\":{\"version\":\"goo/instrument-capability-plan/v1alpha1\",\"profile\":\"pod-metric\",\"title\":\"Reported pod resource metric\",\"shapeMatches\":false,\"eligible\":true,\"verification\":\"not-run\",\"reasons\":[],\"hints\":[\"Pod resource authority supports gauges only; reported phase/readiness with empty units and stock/counter/histogram metrics remain unsupported. No aliases, service labels or health state are inferred.\"],\"coverage\":{\"state\":\"observed\",\"totalStreams\":1,\"omittedStreams\":0,\"dimensions\":[],\"streams\":[{\"id\":\"30b34fc719b8f2d90e5e454ec7e41ccdd444bf7a5224960aed2425f6b22245f9\",\"stream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"attributes\":{}},\"records\":1,\"instance\":\"missing\",\"dimensions\":[]}]}},\"kind\":\"gauge\",\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"temporality\":0,\"monotonic\":false,\"dimensions\":null,\"records\":1,\"supported\":true,\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-metric-48efe98f2ff3\",\"title\":\"k8s.pod.memory.working_set\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.working_set\",\"unit\":\"By\"}}}],\"records\":2,\"instrumentsOmitted\":0,\"warning\":\"Reported metadata for one exact raw resource and known resource schema. No service identity, complete pod inventory, phase, readiness, health, capacity or container aggregation is inferred. Receiver-specific names and semconv profiles remain distinct.\"}}",
+      "padTo": 8389632,
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"version\":\"goo/pod-dashboard/v1\",\"question\":{\"environment\":\"prod\",\"fromMs\":100000,\"toMs\":104000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\"},\"resourceKey\":\"d0bf96ed6f2637e4d68301431e4a0abca4fb37859e5ea04cba35acc8588425fd\",\"state\":\"candidates\",\"widgets\":[{\"key\":\"791fec43c4ab2f1a6e40a1671fe05f2eea82ed0b28a48b7f51026279f4590e05\",\"title\":\"Pod memory usage\",\"state\":\"candidate\",\"profile\":\"collector-kubeletstats-v0.137.0\",\"grain\":\"pod-resource-stream\",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-observation-b95d576f0e58dd4cf0d4da8e\",\"title\":\"Pod memory usage\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.usage\",\"unit\":\"By\"}},\"fromMs\":100000,\"toMs\":104000}},{\"key\":\"cbba9b3e34bc26008da75cf56bc97c971510a24bc9a20b4deb6f21937216ace2\",\"title\":\"Pod memory working set\",\"state\":\"candidate\",\"profile\":\"collector-kubeletstats-v0.137.0\",\"grain\":\"pod-resource-stream\",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-observation-3045e55c7128d021932f440b\",\"title\":\"Pod memory working set\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.working_set\",\"unit\":\"By\"}},\"fromMs\":100000,\"toMs\":104000}}],\"candidates\":[{\"key\":\"791fec43c4ab2f1a6e40a1671fe05f2eea82ed0b28a48b7f51026279f4590e05\",\"title\":\"Pod memory usage\",\"state\":\"candidate\",\"profile\":\"collector-kubeletstats-v0.137.0\",\"grain\":\"pod-resource-stream\",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-observation-b95d576f0e58dd4cf0d4da8e\",\"title\":\"Pod memory usage\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.usage\",\"unit\":\"By\"}},\"fromMs\":100000,\"toMs\":104000}},{\"key\":\"cbba9b3e34bc26008da75cf56bc97c971510a24bc9a20b4deb6f21937216ace2\",\"title\":\"Pod memory working set\",\"state\":\"candidate\",\"profile\":\"collector-kubeletstats-v0.137.0\",\"grain\":\"pod-resource-stream\",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-observation-3045e55c7128d021932f440b\",\"title\":\"Pod memory working set\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.working_set\",\"unit\":\"By\"}},\"fromMs\":100000,\"toMs\":104000}}],\"candidatesOmitted\":0,\"instrumentsOmitted\":0,\"streamsOmitted\":0,\"warnings\":[\"Reported metadata for one exact pod resource variant and known schema, not a verified pod entity, health or complete Kubernetes inventory.\",\"Collector kubeletstats v0.137.0 memory usage and working set gauges remain separate from the semconv v1.37.0 usage-only profile. No aliases, container sums, CPU/limit ratios or ownership are inferred.\",\"At most two exact-stream default reads run; all values, freshness and read clocks require independent evaluation. Negative, fractional or unsafe byte values remain raw gauge evidence but cannot be displayed as valid byte counts.\",\"Ordinal pod phase and container readiness from other receiver profiles are not supported state or health panels in this slice. Missing or omitted metadata does not establish absence.\"]}\n"
+    },
+    {
+      "name": "pod-metric-plan-oversize",
+      "method": "POST",
+      "path": "/pod-dashboard/plan",
+      "body": "{\"discovery\":{\"version\":\"goo/pod-metric-discovery/v1\",\"question\":{\"environment\":\"prod\",\"fromMs\":100000,\"toMs\":104000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\"},\"key\":\"d0bf96ed6f2637e4d68301431e4a0abca4fb37859e5ea04cba35acc8588425fd\",\"instruments\":[{\"capabilityPlan\":{\"version\":\"goo/instrument-capability-plan/v1alpha1\",\"profile\":\"pod-metric\",\"title\":\"Reported pod resource metric\",\"shapeMatches\":false,\"eligible\":true,\"verification\":\"not-run\",\"reasons\":[],\"hints\":[\"Pod resource authority supports gauges only; reported phase/readiness with empty units and stock/counter/histogram metrics remain unsupported. No aliases, service labels or health state are inferred.\"],\"coverage\":{\"state\":\"observed\",\"totalStreams\":1,\"omittedStreams\":0,\"dimensions\":[],\"streams\":[{\"id\":\"5a74943a9a150d3592c08926a9acb9e493ead48c2ce4f33b0b49f6bce0725d74\",\"stream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"attributes\":{}},\"records\":1,\"instance\":\"missing\",\"dimensions\":[]}]}},\"kind\":\"gauge\",\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"temporality\":0,\"monotonic\":false,\"dimensions\":null,\"records\":1,\"supported\":true,\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-metric-425585e589c3\",\"title\":\"k8s.pod.memory.usage\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.usage\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.usage\",\"unit\":\"By\"}}},{\"capabilityPlan\":{\"version\":\"goo/instrument-capability-plan/v1alpha1\",\"profile\":\"pod-metric\",\"title\":\"Reported pod resource metric\",\"shapeMatches\":false,\"eligible\":true,\"verification\":\"not-run\",\"reasons\":[],\"hints\":[\"Pod resource authority supports gauges only; reported phase/readiness with empty units and stock/counter/histogram metrics remain unsupported. No aliases, service labels or health state are inferred.\"],\"coverage\":{\"state\":\"observed\",\"totalStreams\":1,\"omittedStreams\":0,\"dimensions\":[],\"streams\":[{\"id\":\"30b34fc719b8f2d90e5e454ec7e41ccdd444bf7a5224960aed2425f6b22245f9\",\"stream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"attributes\":{}},\"records\":1,\"instance\":\"missing\",\"dimensions\":[]}]}},\"kind\":\"gauge\",\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"temporality\":0,\"monotonic\":false,\"dimensions\":null,\"records\":1,\"supported\":true,\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"pod-metric-48efe98f2ff3\",\"title\":\"k8s.pod.memory.working_set\",\"kind\":\"gauge\",\"environment\":\"prod\",\"lookbackMinutes\":2,\"maxGapMs\":60000,\"grain\":\"per-stream\",\"source\":{\"resource\":{\"kind\":\"kubernetes-pod\",\"id\":\"pod-1\"},\"exactStream\":{\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"name\":\"k8s.pod.memory.working_set\",\"unit\":\"By\",\"attributes\":{}},\"services\":[],\"scope\":\"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver\",\"version\":\"0.137.0\",\"schemaURL\":\"\",\"metric\":\"k8s.pod.memory.working_set\",\"unit\":\"By\"}}}],\"records\":2,\"instrumentsOmitted\":0,\"warning\":\"Reported metadata for one exact raw resource and known resource schema. No service identity, complete pod inventory, phase, readiness, health, capacity or container aggregation is inferred. Receiver-specific names and semconv profiles remain distinct.\"}}",
+      "padTo": 8389633,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "pod-metric-inventory-method",
+      "method": "GET",
+      "path": "/pod-metric-discovery",
+      "body": "",
+      "status": 405,
+      "headers": {
+        "Allow": "POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    },
+    {
+      "name": "pod-metric-plan-method",
+      "method": "GET",
+      "path": "/pod-dashboard/plan",
+      "body": "",
+      "status": 405,
+      "headers": {
+        "Allow": "POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    },
+    {
+      "name": "null-schema",
+      "method": "POST",
+      "path": "/pod-metric-discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":100000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":null,\"toMs\":104000}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"pod metric discovery requires a known reported resource schema; trace schema is unavailable\"}\n"
+    },
+    {
+      "name": "missing-schema",
+      "method": "POST",
+      "path": "/pod-metric-discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":100000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"toMs\":104000}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"pod metric discovery requires a known reported resource schema; trace schema is unavailable\"}\n"
+    },
+    {
+      "name": "missing-uid",
+      "method": "POST",
+      "path": "/pod-metric-discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":100000,\"resource\":{\"deployment.environment.name\":\"prod\"},\"resourceSchemaURL\":\"\",\"toMs\":104000}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"pod metric discovery requires an exact pod UID and resource identity in the question environment\"}\n"
+    },
+    {
+      "name": "wrong-environment",
+      "method": "POST",
+      "path": "/pod-metric-discovery",
+      "body": "{\"environment\":\"other\",\"fromMs\":100000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\",\"toMs\":104000}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"pod metric discovery requires an exact pod UID and resource identity in the question environment\"}\n"
+    },
+    {
+      "name": "escaped-resource",
+      "method": "POST",
+      "path": "/pod-metric-discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":100000,\"toMs\":104000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\"}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"pod metric source returned a different resource identity\"}\n"
+    },
+    {
+      "name": "escaped-schema",
+      "method": "POST",
+      "path": "/pod-metric-discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":100000,\"toMs\":104000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\"}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"pod metric source returned a different resource identity\"}\n"
+    },
+    {
+      "name": "source-row-sentinel",
+      "method": "POST",
+      "path": "/pod-metric-discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":100000,\"toMs\":104000,\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"},\"resourceSchemaURL\":\"\"}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"source exceeds 10000 rows; no partial measurement\"}\n"
+    }
+  ]
+}

@@ -901,6 +901,19 @@
   "PackagePlan": {
     "$ref": "#/components/schemas/exploration.PackagePlan"
   },
+  "PodDashboardPlan": {
+    "$ref": "#/components/schemas/measurements.PodDashboardPlan"
+  },
+  "PodDashboardRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/measurements.PodDashboardRequestInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
   "PodDiscovery": {
     "$ref": "#/components/schemas/exploration.PodDiscovery"
   },
@@ -908,6 +921,19 @@
     "anyOf": [
       {
         "$ref": "#/components/schemas/exploration.PodDiscoveryQuestionInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "PodMetricDiscovery": {
+    "$ref": "#/components/schemas/measurements.PodMetricDiscovery"
+  },
+  "PodMetricDiscoveryQuestion": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/measurements.PodMetricDiscoveryQuestionInput"
       },
       {
         "type": "null"
@@ -14062,6 +14088,385 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/measurements.Plan"
+  },
+  "measurements.PodDashboardPlan": {
+    "properties": {
+      "candidates": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.PodMetricWidget"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "candidatesOmitted": {
+        "type": "integer"
+      },
+      "instrumentsOmitted": {
+        "type": "integer"
+      },
+      "question": {
+        "$ref": "#/components/schemas/measurements.PodMetricDiscoveryQuestion"
+      },
+      "resourceKey": {
+        "type": "string"
+      },
+      "state": {
+        "type": "string"
+      },
+      "streamsOmitted": {
+        "type": "integer"
+      },
+      "version": {
+        "type": "string"
+      },
+      "warnings": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "widgets": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.PodMetricWidget"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "version",
+      "question",
+      "resourceKey",
+      "state",
+      "widgets",
+      "candidates",
+      "candidatesOmitted",
+      "instrumentsOmitted",
+      "streamsOmitted",
+      "warnings"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.PodDashboardPlan"
+  },
+  "measurements.PodDashboardRequestInput": {
+    "additionalProperties": false,
+    "properties": {
+      "discovery": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.PodMetricDiscoveryInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.PodDashboardRequest"
+  },
+  "measurements.PodMetricDiscovery": {
+    "properties": {
+      "instruments": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.Instrument"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "instrumentsOmitted": {
+        "type": "integer"
+      },
+      "key": {
+        "type": "string"
+      },
+      "question": {
+        "$ref": "#/components/schemas/measurements.PodMetricDiscoveryQuestion"
+      },
+      "records": {
+        "type": "integer"
+      },
+      "version": {
+        "type": "string"
+      },
+      "warning": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "question",
+      "key",
+      "instruments",
+      "records",
+      "instrumentsOmitted",
+      "warning"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.PodMetricDiscovery"
+  },
+  "measurements.PodMetricDiscoveryInput": {
+    "additionalProperties": false,
+    "properties": {
+      "instruments": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/measurements.InstrumentInput"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "instrumentsOmitted": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "key": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "question": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.PodMetricDiscoveryQuestionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "records": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "warning": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.PodMetricDiscovery"
+  },
+  "measurements.PodMetricDiscoveryQuestion": {
+    "properties": {
+      "environment": {
+        "type": "string"
+      },
+      "fromMs": {
+        "type": "integer"
+      },
+      "resource": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "resourceSchemaURL": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "toMs": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "environment",
+      "fromMs",
+      "toMs",
+      "resource",
+      "resourceSchemaURL"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.PodMetricDiscoveryQuestion"
+  },
+  "measurements.PodMetricDiscoveryQuestionInput": {
+    "additionalProperties": false,
+    "properties": {
+      "environment": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "fromMs": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "resource": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "resourceSchemaURL": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "toMs": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.PodMetricDiscoveryQuestion"
+  },
+  "measurements.PodMetricWidget": {
+    "properties": {
+      "grain": {
+        "type": "string"
+      },
+      "key": {
+        "type": "string"
+      },
+      "profile": {
+        "type": "string"
+      },
+      "question": {
+        "$ref": "#/components/schemas/measurements.Question"
+      },
+      "state": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "key",
+      "title",
+      "state",
+      "profile",
+      "grain",
+      "question"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.PodMetricWidget"
   },
   "measurements.PoolSignalOption": {
     "properties": {

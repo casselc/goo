@@ -34,7 +34,7 @@ func validateExactStream(d Definition) error {
 	}
 	identityOK := serviceOK && s.Resource["service.instance.id"] != ""
 	if r := b.Resource; r != nil {
-		identityOK = r.Kind == "host" && r.ID != "" && s.Resource["host.id"] == r.ID
+		identityOK = r.AttributeKey() != "" && r.ID != "" && s.Resource[r.AttributeKey()] == r.ID
 	}
 	if !identityOK || s.Resource["deployment.environment.name"] != d.Environment || !b.Namespace.Matches(s.Resource) || s.Scope != b.Scope || s.Version != b.Version || s.SchemaURL != b.SchemaURL || s.Name != b.Metric || s.Unit != b.Unit {
 		return fmt.Errorf("exact stream conflicts with metric source binding")

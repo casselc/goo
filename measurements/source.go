@@ -88,7 +88,8 @@ func Compile(q Question) (Plan, error) {
 	if d.Source.Resource == nil {
 		where += " AND ServiceName IN (" + strings.Join(services, ",") + ")"
 	} else {
-		where += " AND mapContains(ResourceAttributes,'host.id') AND ResourceAttributes['host.id']=" + param(d.Source.Resource.ID, "String")
+		key := d.Source.Resource.AttributeKey()
+		where += " AND mapContains(ResourceAttributes,'" + key + "') AND ResourceAttributes['" + key + "']=" + param(d.Source.Resource.ID, "String")
 	}
 	if n := d.Source.Namespace; n != nil {
 		if n.Mode == "missing" {
@@ -257,7 +258,7 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 		}
 		identityOK := serviceOK && row.Resource["service.instance.id"] != ""
 		if resource := d.Source.Resource; resource != nil {
-			identityOK = resource.Kind == "host" && row.Resource["host.id"] == resource.ID
+			identityOK = resource.AttributeKey() != "" && row.Resource[resource.AttributeKey()] == resource.ID
 		}
 		if !d.Source.Namespace.Matches(row.Resource) || !identityOK || row.Resource["deployment.environment.name"] != d.Environment || row.Scope != d.Source.Scope || row.Version != d.Source.Version || row.SchemaURL != d.Source.SchemaURL || row.Name != d.Source.Metric || row.Unit != d.Source.Unit || row.Flags&^uint32(1) != 0 {
 			return nil, fmt.Errorf("metric source identity/unit/flags mismatch")
@@ -323,7 +324,9 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 			r.Stocks, e = metrics.EvaluateStocks(fromNS, toNS, ns(d.MaxGapMS), ss)
 		}
 	case "gauge":
-		if d.Source.Resource != nil {
+		if d.Source.Resource != nil && d.Source.Resource.Kind == "kubernetes-pod" {
+			r.Gauges, e = metrics.EvaluatePodGauges(fromNS, toNS, ns(d.MaxGapMS), d.Source.Resource.ID, gs)
+		} else if d.Source.Resource != nil {
 			r.Gauges, e = metrics.EvaluateHostGauges(fromNS, toNS, ns(d.MaxGapMS), d.Source.Resource.ID, gs)
 		} else {
 			r.Gauges, e = metrics.EvaluateGauges(fromNS, toNS, ns(d.MaxGapMS), gs)

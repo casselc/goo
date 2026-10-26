@@ -878,3 +878,39 @@ API handler fixtures parse the actual read clock and normalize only that clock
 for frozen comparison; content bases remain unchanged. The exact generated SQL
 was also verified read-only against the local five-table ClickHouse schema using
 an empty environment/window, including the absent trace-schema-column case.
+
+Pod-native metrics reuse measurement execution, capture and package publication.
+`POST /pod-metric-discovery` accepts an explicit environment/fixed window, complete
+raw `resource` map and required non-null `resourceSchemaURL` string. Known empty
+schema is valid; an unknown trace schema is refused before source access. One
+bounded UNION over gauge, sum and histogram metadata matches the exact map/schema
+without manufacturing service identity. More than 10,000 rows refuses the entire
+response; at most 16 instruments and 25 stream previews per instrument are
+retained with explicit omissions. Metadata is not pod health or a complete pod
+inventory.
+
+`POST /pod-dashboard/plan` accepts `{discovery: <held discovery response>}` and
+performs pure bounded planning. The initial Collector kubeletstats v0.137.0
+profile requires its exact receiver scope/version and empty scope schema, and
+exposes memory usage/working-set `By` gauges. The separate OTel v1.37 profile
+exposes usage only. No aliases, ordinal state interpretation, container sums,
+capacity ratios or ownership are inferred. Plans contain at most two defaults
+and 16 explicit candidates, each a gauge question with resource kind
+`kubernetes-pod`, exact reported UID and mandatory exact stream. No service
+fallback applies.
+
+Discovery has a strict 64 KiB request limit. The pure planner accepts up to
+8 MiB + 1 KiB (8,389,632 bytes), allowing the bounded discovery response plus
+its JSON wrapper; semantic instrument/stream limits remain unchanged. Discovery uses the existing shared
+source admission/query-ID cancellation owner and a 30-second deadline; planning
+uses a two-second context around synchronous bounded computation and does not
+reserve source admission or create custody. Execute a returned question through
+`/measurements`; use existing capture and package APIs for custody/authoring.
+Fresh YAML authoring normalizes empty service/attribute containers for stable
+revisions; direct JSON questions and captured raw evidence retain their shapes.
+
+Acceptance covers actual HTTP discovery/planning, two native gauge executions,
+capture and exact offline reopening, plus duplicate publication/fresh catalog
+reopening for omitted/null/empty services and attributes. Exact generated
+resource-map/schema SQL also executes read-only against the local ClickHouse
+schema. This syntax check is distinct from receiver ingestion evidence.
