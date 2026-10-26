@@ -1,0 +1,5 @@
+{
+  "format": "unified diff",
+  "originalSHA256": "79e4429ba48611462e153f9bb721a7d5f67ebf8dc9863e7a6c8675a4a8856d36",
+  "text": "diff --git a/tmp/goo-gotogether-pilot/onboarding/logs/06-hello-original-go.mod b/go.mod\nindex 044ca34..a2e18f2 100644\n--- a/tmp/goo-gotogether-pilot/onboarding/logs/06-hello-original-go.mod\n+++ b/go.mod\n@@ -3,8 +3,8 @@ module github.com/chucklehead-dev/gotogether/examples/hello\n go 1.26.1\n \n require (\n-\tgithub.com/chucklehead-dev/gotogether v0.0.0\n-\tgithub.com/chucklehead-dev/gotogether/qhegel v0.0.0-00010101000000-000000000000\n+\tgithub.com/chucklehead-dev/gotogether v0.0.0-20261026025747-50157b805ae4\n+\tgithub.com/chucklehead-dev/gotogether/qhegel v0.0.0-20261026025747-50157b805ae4\n \thegel.dev/go/hegel v0.9.27\n )\n \n@@ -16,7 +16,3 @@ require (\n \tgolang.org/x/sys v0.48.0 // indirect\n \tgopkg.in/yaml.v3 v3.0.1 // indirect\n )\n-\n-replace github.com/chucklehead-dev/gotogether => ../..\n-\n-replace github.com/chucklehead-dev/gotogether/qhegel => ../../qhegel\n"
+}

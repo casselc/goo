@@ -35,7 +35,7 @@ benchmark. Two initial working-directory/replay-path mistakes were pilot harness
 errors, not library defects.
 
 [Pin/skill/status manifest](evidence/gotogether-pilot/onboarding-manifest.json)
-and [dependency-only tutorial patch](evidence/gotogether-pilot/hello-dependency.patch.txt)
+and [dependency-only tutorial patch](evidence/gotogether-pilot/hello-dependency-patch.json)
 retain compact proof; full command logs and actual exploration data remain in
 scratch. The default-target skill install was tested, not `-target all`.
 
