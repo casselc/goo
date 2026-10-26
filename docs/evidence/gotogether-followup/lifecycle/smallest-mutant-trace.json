@@ -1,0 +1,62 @@
+[
+  {
+    "Action": "terminal",
+    "Seq": 1,
+    "Recorder": "2aa55615dff5",
+    "Actor": "default",
+    "Process": "2aa55615dff5",
+    "Thread": "t14",
+    "Outcome": "ok",
+    "Error": "",
+    "Time": "2026-10-26T14:37:04.246879067Z",
+    "Invoked": "0001-01-01T00:00:00Z",
+    "Invocation": false,
+    "Call": 0,
+    "Settled": false,
+    "Lost": "",
+    "LostAfter": 0,
+    "LostBefore": "0001-01-01T00:00:00Z",
+    "Ambiguous": false,
+    "Args": null,
+    "Obs": {
+      "bad": 0,
+      "basis": 80,
+      "eligible": 0,
+      "good": 0,
+      "snapshots": 0,
+      "unknown": false
+    },
+    "Order": null,
+    "Source": ""
+  },
+  {
+    "Action": "advance95",
+    "Seq": 2,
+    "Recorder": "2aa55615dff5",
+    "Actor": "default",
+    "Process": "2aa55615dff5",
+    "Thread": "t14",
+    "Outcome": "ok",
+    "Error": "",
+    "Time": "2026-10-26T14:37:04.247001697Z",
+    "Invoked": "0001-01-01T00:00:00Z",
+    "Invocation": false,
+    "Call": 0,
+    "Settled": false,
+    "Lost": "",
+    "LostAfter": 0,
+    "LostBefore": "0001-01-01T00:00:00Z",
+    "Ambiguous": false,
+    "Args": null,
+    "Obs": {
+      "bad": 0,
+      "basis": 95,
+      "eligible": 0,
+      "good": 0,
+      "snapshots": 0,
+      "unknown": true
+    },
+    "Order": null,
+    "Source": ""
+  }
+]

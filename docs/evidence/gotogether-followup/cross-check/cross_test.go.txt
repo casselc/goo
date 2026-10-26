@@ -1,0 +1,185 @@
+package cross_test
+
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+	"os/exec"
+	"testing"
+	"time"
+
+	"github.com/chucklehead-dev/gotogether/qtest"
+	"github.com/chucklehead-dev/gotogether/qtrace"
+	"github.com/chucklehead-dev/gotogether/validate"
+)
+
+type event struct {
+	Seq           uint64 `json:"seq"`
+	Action        string `json:"action"`
+	Kind          string `json:"kind"`
+	CallID        string `json:"callId"`
+	CorrelationID string `json:"correlationId"`
+	ObservedAt    string `json:"observedAt"`
+	Subject       string `json:"subject"`
+	Trace         string `json:"trace"`
+	Environment   string `json:"environment"`
+	Count         int    `json:"count"`
+	Members       string `json:"members"`
+	CaptureID     string `json:"captureId"`
+	Digest        string `json:"digest"`
+}
+type ledger struct {
+	Run               string  `json:"run"`
+	Events            []event `json:"events"`
+	CollectionSettled bool    `json:"collectionSettled"`
+}
+
+// Preserve the external coordinator's clock and sequence. Do not replace them
+// with timestamps from this later validation process or reorder by host clocks.
+func steps(l ledger) ([]qtrace.Step, error) {
+	if l.Run == "" || len(l.Events) == 0 {
+		return nil, fmt.Errorf("missing run or events")
+	}
+	out := make([]qtrace.Step, 0, len(l.Events)+1)
+	calls := map[string]uint64{}
+	actions := map[string]string{}
+	var previous time.Time
+	for i, e := range l.Events {
+		if e.Seq != uint64(i+1) || e.CorrelationID != l.Run || e.CallID == "" {
+			return nil, fmt.Errorf("bad coordinator identity at %d", i)
+		}
+		at, err := time.Parse(time.RFC3339Nano, e.ObservedAt)
+		if err != nil || at.Before(previous) {
+			return nil, fmt.Errorf("bad coordinator clock at %d", i)
+		}
+		previous = at
+		s := qtrace.Step{Action: e.Action, Seq: e.Seq, Recorder: l.Run, Actor: l.Run, Thread: "coordinator", Time: at, Source: fmt.Sprintf("ledger event %d", i+1), Args: map[string]any{}, Order: map[string]int64{"coordinator": int64(e.Seq)}}
+		switch e.Kind {
+		case "invoke":
+			if _, exists := calls[e.CallID]; exists {
+				return nil, fmt.Errorf("duplicate call %s", e.CallID)
+			}
+			calls[e.CallID] = e.Seq
+			actions[e.CallID] = e.Action
+			s.Invocation = true
+		case "complete":
+			call, ok := calls[e.CallID]
+			if !ok || actions[e.CallID] != e.Action {
+				return nil, fmt.Errorf("unpaired completion %s", e.CallID)
+			}
+			s.Call = call
+			s.Outcome = "ok"
+			delete(calls, e.CallID)
+			delete(actions, e.CallID)
+			switch e.Action {
+			case "generate":
+				s.Args["subject"] = e.Subject
+			case "collect", "inspect":
+				s.Args = map[string]any{"subject": e.Subject, "trace": e.Trace, "environment": e.Environment, "count": e.Count, "members": e.Members}
+			case "capture", "reopen":
+				s.Args = map[string]any{"captureId": e.CaptureID, "digest": e.Digest}
+			default:
+				return nil, fmt.Errorf("unknown action %s", e.Action)
+			}
+		default:
+			return nil, fmt.Errorf("unknown kind %s", e.Kind)
+		}
+		out = append(out, s)
+	}
+	// This marker concerns this bounded coordinator only, never global collector
+	// quiescence. Its flag is supplied after responses and driver work finish.
+	if l.CollectionSettled {
+		out = append(out, qtrace.Step{Action: "settled", Settled: true, Seq: uint64(len(out) + 1), Recorder: l.Run, Actor: l.Run, Time: previous.Add(time.Nanosecond)})
+	}
+	return out, nil
+}
+func TestCrossApp(t *testing.T) {
+	quint := os.Getenv("QUINT_BIN")
+	if quint == "" {
+		t.Fatal("QUINT_BIN required")
+	}
+	if _, err := exec.LookPath(quint); err != nil {
+		t.Fatal(err)
+	}
+	raw, err := os.ReadFile(os.Getenv("GOO_GOTOGETHER_LEDGER"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var l ledger
+	if err = json.Unmarshal(raw, &l); err != nil {
+		t.Fatal(err)
+	}
+	base, err := steps(l)
+	if err != nil {
+		t.Fatal(err)
+	}
+	opts := []qtest.Option{qtest.Quint(validate.Options{Quint: quint, Backend: "typescript", Eval: "quint"})}
+	run := qtest.Validate(t, "binding.yaml", base, opts...)
+	run.Expect(t, qtest.Conforms(), qtest.Settles(), qtest.Completes())
+	t.Run("changed-reopened-digest", func(t *testing.T) {
+		changed := append([]qtrace.Step(nil), base...)
+		for i := range changed {
+			if changed[i].Action == "reopen" && changed[i].Model() {
+				changed[i].Args = map[string]any{"captureId": changed[i].Args["captureId"], "digest": "corrupt"}
+			}
+		}
+		qtest.Validate(t, "binding.yaml", changed, opts...).Expect(t, qtest.Rejects("reopen"))
+	})
+	t.Run("changed-observed-membership", func(t *testing.T) {
+		changed := append([]qtrace.Step(nil), base...)
+		for i := range changed {
+			if changed[i].Action == "inspect" && changed[i].Model() {
+				attrs := make(map[string]any, len(changed[i].Args))
+				for k, v := range changed[i].Args {
+					attrs[k] = v
+				}
+				attrs["members"] = "wrong-membership"
+				changed[i].Args = attrs
+			}
+		}
+		qtest.Validate(t, "binding.yaml", changed, opts...).Expect(t, qtest.Rejects("inspect"))
+	})
+	t.Run("valid-unsettled-prefix-is-not-finished", func(t *testing.T) {
+		var prefix []qtrace.Step
+		for _, s := range base {
+			if s.Action == "capture" {
+				break
+			}
+			prefix = append(prefix, s)
+		}
+		r := qtest.Validate(t, "binding.yaml", prefix, opts...)
+		if len(r.Report.Actors) != 1 || r.Report.Actors[0].Conforms != validate.Pass {
+			t.Fatal("prefix must conform before checking unfinished status")
+		}
+		r.Expect(t, qtest.Completes())
+		if qtest.Violates(validate.EventuallyName("done")).Holds(r) {
+			t.Fatal("unsettled eventual condition judged as failure")
+		}
+		if qtest.Settles().Holds(r) {
+			t.Fatal("unfinished prefix treated as settled")
+		}
+		t.Log("valid prefix has no completion verdict; not accepted as finished")
+	})
+	t.Run("settled-with-pending-reopen", func(t *testing.T) {
+		var changed []qtrace.Step
+		for _, s := range base {
+			if s.Action == "reopen" && s.Model() {
+				continue
+			}
+			changed = append(changed, s)
+		}
+		// A missing retained sequence is evidence loss. For this deliberate pending
+		// call control, re-number the synthetic trace to model no completion emitted.
+		for i := range changed {
+			changed[i].Seq = uint64(i + 1)
+		}
+		r := qtest.Validate(t, "binding.yaml", changed, opts...)
+		r.Expect(t, qtest.Pending("reopen"), qtest.Violates(validate.EventuallyName("done")))
+		if qtest.Completes().Holds(r) {
+			t.Fatal("pending call passed Completes")
+		}
+		if qtest.Conforms().Holds(r) {
+			t.Fatal("settled incomplete journey passed eventual done")
+		}
+	})
+}

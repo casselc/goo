@@ -1,0 +1,22 @@
+=== RUN   TestFaithfulBounded
+=== RUN   TestFaithfulBounded/0
+    pilot_test.go:40: qhegel: 1 runs checked with quint, 0 decided from earlier verdicts
+=== RUN   TestFaithfulBounded/1
+    pilot_test.go:40: qhegel: 1 runs checked with quint, 0 decided from earlier verdicts
+=== RUN   TestFaithfulBounded/2
+    pilot_test.go:40: qhegel: 1 runs checked with quint, 0 decided from earlier verdicts
+=== RUN   TestFaithfulBounded/3
+    pilot_test.go:40: qhegel: 1 runs checked with quint, 0 decided from earlier verdicts
+=== RUN   TestFaithfulBounded/4
+    pilot_test.go:40: qhegel: 1 runs checked with quint, 0 decided from earlier verdicts
+=== RUN   TestFaithfulBounded/5
+    pilot_test.go:40: qhegel: 1 runs checked with quint, 0 decided from earlier verdicts
+--- PASS: TestFaithfulBounded (13.19s)
+    --- PASS: TestFaithfulBounded/0 (4.69s)
+    --- PASS: TestFaithfulBounded/1 (2.16s)
+    --- PASS: TestFaithfulBounded/2 (1.62s)
+    --- PASS: TestFaithfulBounded/3 (1.51s)
+    --- PASS: TestFaithfulBounded/4 (1.96s)
+    --- PASS: TestFaithfulBounded/5 (1.25s)
+PASS
+ok  	lifecycle-pilot	13.201s

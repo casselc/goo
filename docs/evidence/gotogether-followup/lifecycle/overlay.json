@@ -1,0 +1,5 @@
+{
+  "Replace": {
+    "/workspace/goo/lifecycle/prepare.go": "/tmp/goo-gotogether-followup/lifecycle/prepare-mutant.go.txt"
+  }
+}

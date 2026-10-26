@@ -1,0 +1,3 @@
+package main
+import("encoding/json";"crypto/sha256";"encoding/hex";"os";"fmt";"github.com/casselc/goo/exploration")
+func main(){raw,e:=os.ReadFile(os.Args[1]);if e!=nil{panic(e)};var c exploration.SavedCapture;if e=json.Unmarshal(raw,&c);e!=nil{panic(e)};original:=c.ID;c.ID="";b,e:=json.Marshal(c);if e!=nil{panic(e)};sum:=sha256.Sum256(b);id:=hex.EncodeToString(sum[:]);if len(os.Args)>2{if e=os.WriteFile(os.Args[2],b,0600);e!=nil{panic(e)}};if id!=original{panic(fmt.Sprintf("content ID mismatch %s != %s",id,original))};fmt.Println(id)}

@@ -1,0 +1,31 @@
+=== RUN   TestRejectTrailingData
+=== RUN   TestRejectTrailingData/object/newline
+    parser_test.go:8: line 1: trailing data after the step's object at offset 84: write one object per line
+=== RUN   TestRejectTrailingData/object/newline/line2
+    parser_test.go:8: line 2: trailing data after the step's object at offset 84: write one object per line
+=== RUN   TestRejectTrailingData/object/no-newline
+    parser_test.go:8: line 1: trailing data after the step's object at offset 84: write one object per line
+=== RUN   TestRejectTrailingData/object/no-newline/line2
+    parser_test.go:8: line 2: trailing data after the step's object at offset 84: write one object per line
+=== RUN   TestRejectTrailingData/garbage/newline
+    parser_test.go:8: line 1: trailing data after the step's object at offset 83: write one object per line
+=== RUN   TestRejectTrailingData/garbage/newline/line2
+    parser_test.go:8: line 2: trailing data after the step's object at offset 83: write one object per line
+=== RUN   TestRejectTrailingData/garbage/no-newline
+    parser_test.go:8: line 1: trailing data after the step's object at offset 83: write one object per line
+=== RUN   TestRejectTrailingData/garbage/no-newline/line2
+    parser_test.go:8: line 2: trailing data after the step's object at offset 83: write one object per line
+--- PASS: TestRejectTrailingData (0.00s)
+    --- PASS: TestRejectTrailingData/object/newline (0.00s)
+    --- PASS: TestRejectTrailingData/object/newline/line2 (0.00s)
+    --- PASS: TestRejectTrailingData/object/no-newline (0.00s)
+    --- PASS: TestRejectTrailingData/object/no-newline/line2 (0.00s)
+    --- PASS: TestRejectTrailingData/garbage/newline (0.00s)
+    --- PASS: TestRejectTrailingData/garbage/newline/line2 (0.00s)
+    --- PASS: TestRejectTrailingData/garbage/no-newline (0.00s)
+    --- PASS: TestRejectTrailingData/garbage/no-newline/line2 (0.00s)
+=== RUN   TestWhitespaceAndTornTail
+    parser_test.go:13: prefix preserved: 2 records, line 2: the log ends in the middle of a step (16 bytes, no newline): the writer stopped while writing it; the steps before it are kept
+--- PASS: TestWhitespaceAndTornTail (0.00s)
+PASS
+ok  	example.com/goo-gotogether-parser-pilot	0.023s

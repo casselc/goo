@@ -2382,3 +2382,9 @@ imports and dependencies remain authoritative and unchanged. The experiment
 found a reproducible malformed-log parser defect; its expected-failing regression
 and ready-to-file issue are retained as text evidence, not added to normal CI.
 No gotogether runtime, skill install or Hegel upgrade was applied to this project.
+
+The [gotogether follow-on pilot](../docs/GOTOGETHER_FOLLOWUP.md) verifies the
+reported parser fix at pinned `65093ec` and tests a build-overlay cutoff mutant
+against the actual lifecycle preparer. Six faithful schedules pass; qhegel
+shrinks the mutant to two necessary actions within its duplicate-noise generator.
+Production and existing verification module dependencies remain unchanged.

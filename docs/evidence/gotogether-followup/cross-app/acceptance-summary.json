@@ -1,0 +1,137 @@
+{
+  "status": "passed",
+  "elapsedMs": 13074,
+  "run": "b8c07770-d7cf-4faf-99c9-f8bcaf3d3308",
+  "events": 10,
+  "phases": [
+    "generate",
+    "collect",
+    "inspect",
+    "capture",
+    "reopen"
+  ],
+  "subject": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+  "trace": "b28fbd7036b2427a72ee6846cffe0160",
+  "environment": "local",
+  "observedSpanCount": 1,
+  "members": "e121c2e6e8d490d2",
+  "capture": {
+    "id": "e3645c0e731fd8c2674dca913ccb6cd27012a98e2309aa353ce693c23b0c225f",
+    "beforeBytes": 6080,
+    "afterBytes": 6080,
+    "beforeSHA256": "d5456ccd5c4a9d3ec09477e90d6afc95191165446fc89e734bf827441bef06cd",
+    "afterSHA256": "d5456ccd5c4a9d3ec09477e90d6afc95191165446fc89e734bf827441bef06cd",
+    "typedContentIDVerified": true
+  },
+  "effects": {
+    "applicationGeneratePOSTs": 1,
+    "directClickHousePOSTs": {
+      "report-subject-correlation": 7,
+      "trace-window-membership": 2
+    },
+    "gooExplorePOSTs": 3,
+    "gooCapturePOSTs": 1,
+    "captureMeaning": "One fresh source read plus immutable custody publication, not a metadata-only write.",
+    "captureGETs": 5,
+    "otherMetadataGETs": 29,
+    "frozenReopenExtraTelemetryPOSTs": 0,
+    "backendClickHouseStatementsInsideGoo": "not measured; do not equate API calls with SQL statements"
+  },
+  "apiRequests": [
+    {
+      "method": "GET",
+      "path": "/api/ui-config",
+      "count": 2
+    },
+    {
+      "method": "GET",
+      "path": "/api/capabilities",
+      "count": 2
+    },
+    {
+      "method": "GET",
+      "path": "/api/recipes",
+      "count": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/retained-evidence/status",
+      "count": 5
+    },
+    {
+      "method": "GET",
+      "path": "/api/telemetry-packages",
+      "count": 2
+    },
+    {
+      "method": "GET",
+      "path": "/api/measurement-packages",
+      "count": 4
+    },
+    {
+      "method": "GET",
+      "path": "/api/prebuilts",
+      "count": 2
+    },
+    {
+      "method": "GET",
+      "path": "/api/example-questions",
+      "count": 4
+    },
+    {
+      "method": "GET",
+      "path": "/api/investigation-workflows",
+      "count": 2
+    },
+    {
+      "method": "GET",
+      "path": "/api/package",
+      "count": 2
+    },
+    {
+      "method": "GET",
+      "path": "/api/operation-packages",
+      "count": 2
+    },
+    {
+      "method": "POST",
+      "path": "/api/explore",
+      "count": 3
+    },
+    {
+      "method": "GET",
+      "path": "/api/documents",
+      "count": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/captures",
+      "count": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/captures",
+      "count": 3
+    },
+    {
+      "method": "GET",
+      "path": "/api/captures/e3645c0e731fd8c2674dca913ccb6cd27012a98e2309aa353ce693c23b0c225f",
+      "count": 2
+    }
+  ],
+  "collectionSettledScope": "Only this bounded coordinator: script-owned calls and observed finite POST response bodies finished. Not global collector drain, telemetry completeness or a complete-trace guarantee.",
+  "bombadil": "Not run; external adapter not tested in this round.",
+  "firstFailure": "Initial scratch JS content-ID reconstruction erased escaped slashes in raw JSON rows. Preserved diagnostic; corrected typed public SavedCapture marshal + standard SHA256, no production digest call.",
+  "hashHelper": {
+    "source": "capture-hash.go",
+    "sha256": "d37d93cf33b100a64b10ab93b3e4ca997b9ed995ee873af2f98d84c3a86cb649",
+    "moduleCwd": "/workspace/goo",
+    "import": "github.com/casselc/goo/exploration (exported SavedCapture type only)"
+  },
+  "frames": [
+    "report-ready.png",
+    "goo-correlated-trace.png",
+    "immutable-reopened.png"
+  ],
+  "traceFile": "trace.zip"
+}

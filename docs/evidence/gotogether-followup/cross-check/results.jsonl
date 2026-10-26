@@ -1,0 +1,25 @@
+{"Time":"2026-10-26T14:41:43.404817186Z","Action":"start","Package":"goo-gotogether-cross-check"}
+{"Time":"2026-10-26T14:41:43.410654589Z","Action":"run","Package":"goo-gotogether-cross-check","Test":"TestCrossApp"}
+{"Time":"2026-10-26T14:41:43.410909784Z","Action":"output","Package":"goo-gotogether-cross-check","Test":"TestCrossApp","Output":"=== RUN   TestCrossApp\n","OutputType":"frame"}
+{"Time":"2026-10-26T14:41:51.096686031Z","Action":"run","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/changed-reopened-digest"}
+{"Time":"2026-10-26T14:41:51.096901072Z","Action":"output","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/changed-reopened-digest","Output":"=== RUN   TestCrossApp/changed-reopened-digest\n","OutputType":"frame"}
+{"Time":"2026-10-26T14:41:56.338417641Z","Action":"output","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/changed-reopened-digest","Output":"--- PASS: TestCrossApp/changed-reopened-digest (5.24s)\n","OutputType":"frame"}
+{"Time":"2026-10-26T14:41:56.338746849Z","Action":"pass","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/changed-reopened-digest","Elapsed":5.24}
+{"Time":"2026-10-26T14:41:56.338941717Z","Action":"run","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/changed-observed-membership"}
+{"Time":"2026-10-26T14:41:56.338945005Z","Action":"output","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/changed-observed-membership","Output":"=== RUN   TestCrossApp/changed-observed-membership\n","OutputType":"frame"}
+{"Time":"2026-10-26T14:42:00.26801906Z","Action":"output","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/changed-observed-membership","Output":"--- PASS: TestCrossApp/changed-observed-membership (3.93s)\n","OutputType":"frame"}
+{"Time":"2026-10-26T14:42:00.268251013Z","Action":"pass","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/changed-observed-membership","Elapsed":3.93}
+{"Time":"2026-10-26T14:42:00.268272352Z","Action":"run","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/valid-unsettled-prefix-is-not-finished"}
+{"Time":"2026-10-26T14:42:00.268283663Z","Action":"output","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/valid-unsettled-prefix-is-not-finished","Output":"=== RUN   TestCrossApp/valid-unsettled-prefix-is-not-finished\n","OutputType":"frame"}
+{"Time":"2026-10-26T14:42:02.98745241Z","Action":"output","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/valid-unsettled-prefix-is-not-finished","Output":"    cross_test.go:157: valid prefix has no completion verdict; not accepted as finished\n"}
+{"Time":"2026-10-26T14:42:02.9878266Z","Action":"output","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/valid-unsettled-prefix-is-not-finished","Output":"--- PASS: TestCrossApp/valid-unsettled-prefix-is-not-finished (2.72s)\n","OutputType":"frame"}
+{"Time":"2026-10-26T14:42:02.987837173Z","Action":"pass","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/valid-unsettled-prefix-is-not-finished","Elapsed":2.72}
+{"Time":"2026-10-26T14:42:02.987857265Z","Action":"run","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/settled-with-pending-reopen"}
+{"Time":"2026-10-26T14:42:02.987863049Z","Action":"output","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/settled-with-pending-reopen","Output":"=== RUN   TestCrossApp/settled-with-pending-reopen\n","OutputType":"frame"}
+{"Time":"2026-10-26T14:42:07.899780376Z","Action":"output","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/settled-with-pending-reopen","Output":"--- PASS: TestCrossApp/settled-with-pending-reopen (4.91s)\n","OutputType":"frame"}
+{"Time":"2026-10-26T14:42:07.900047406Z","Action":"pass","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/settled-with-pending-reopen","Elapsed":4.91}
+{"Time":"2026-10-26T14:42:07.900056971Z","Action":"output","Package":"goo-gotogether-cross-check","Test":"TestCrossApp","Output":"--- PASS: TestCrossApp (24.49s)\n","OutputType":"frame"}
+{"Time":"2026-10-26T14:42:07.900061189Z","Action":"pass","Package":"goo-gotogether-cross-check","Test":"TestCrossApp","Elapsed":24.49}
+{"Time":"2026-10-26T14:42:07.90009545Z","Action":"output","Package":"goo-gotogether-cross-check","Output":"PASS\n","OutputType":"frame"}
+{"Time":"2026-10-26T14:42:07.902418208Z","Action":"output","Package":"goo-gotogether-cross-check","Output":"ok  \tgoo-gotogether-cross-check\t24.496s\n"}
+{"Time":"2026-10-26T14:42:07.902469775Z","Action":"pass","Package":"goo-gotogether-cross-check","Elapsed":24.498}

@@ -2440,3 +2440,19 @@ Pinned 1.37 connection stocks assemble five exact pool identities with separate 
 [Executable storyboard](../../journeys/197-pool-signals-storyboard.md) · [Desktop options](screenshots/197a-pool-signal-options.png) · [Mobile](screenshots/197b-mobile-pool-options.png) · [Actual wait interval](screenshots/197c-exact-wait-interval.png).
 
 Contextual pure planning matches complete pool identity after removing only count state; existing default HTTP/count reads remain unchanged. First-pass main 14.4s and late-response ownership 4.5s pass. Explicit capacity zero/epoch and wait bucket-bound p95 reads each capture and reopen immutable bytes; preview and retained Back/navigation are source-free. The nine-phase actor 31.0s/405 snapshots passes; independent validation 0.373s rejects eight changed controls. Wait-only and unconfirmed plans stay useful/honest, and mismatched identities are excluded. No utilization ratio or pool-health inference is introduced; see the storyboard for exact requests, source effects and both capture hashes.
+
+
+## Gotogether cross-app completion pilot
+
+[Experiment and executable source](../GOTOGETHER_FOLLOWUP.md) · [Ready report](screenshots/gotogether-report-ready.png) · [Correlated trace](screenshots/gotogether-correlated-trace.png) · [Frozen reopening](screenshots/gotogether-immutable-reopened.png).
+
+The real sample-app report → ordinary OTLP/ClickHouse → Goo fixed records/waterfall
+→ fresh capture → source-free reopen journey passes in 13.074s. Ten persisted
+invocation/completion checkpoints feed a single bounded coordinator model at
+pinned gotogether `65093ec`; validation and four controls pass in 24.498s, followed
+by a strengthened conforming-prefix check in 3.296s. Full stored evidence stays
+6,080 bytes with the same content ID/SHA256. The first JS hashing-harness failure
+is retained separately; the accepted run uses independent typed Go hashing.
+Settling concerns only finite driver calls/bodies, not global collector drain or
+telemetry completeness. This is a Playwright integration pilot; existing Bombadil
+coverage and Goo dependencies remain unchanged.

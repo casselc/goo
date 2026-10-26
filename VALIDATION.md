@@ -11036,3 +11036,38 @@ passing test. GitHub issue posting returned Forbidden; the reviewed issue draft,
 minimal reproduction, compact results and adoption limits are in
 [the pilot report](docs/GOTOGETHER_PILOT.md). No Goo dependencies, skills, app code
 or existing testing oracles changed. No gotogether source patch was made.
+
+
+## Gotogether follow-on consumer pilot (2026-10-26 UTC)
+
+[Full report and retained evidence](docs/GOTOGETHER_FOLLOWUP.md). Exact remote
+core/qhegel pin `65093ec1c98abd095f6d399fae038e466555c231 ` resolves with checksums;
+GitHub CI API remains Forbidden, so remote CI success is unverified. Production
+and existing verification dependencies/source remain unchanged.
+
+- Parser regression passes in 0.023s: eight trailing-object/garbage variants reject
+  with line-specific errors; valid whitespace and true TornTail recovery remain.
+- Six faithful schedules against actual lifecycle.Prepare pass in 13.201s. A build
+  overlay changes cutoff exclusion `>=` to `>`; qhegel catches a state mismatch and
+  shrinks redundant duplicates to terminal→advance95 in 33.953s (7 Quint checks,
+  7 cache hits). Both proper one-action subsequences pass the bounded projection;
+  minimality applies within this constrained generator, not arbitrary programs.
+- Real cross-app browser journey passes in 13.074s with exact independent ClickHouse,
+  API, DOM and waterfall membership. Three Explore POSTs and one fresh-source
+  capture POST; frozen reopening adds no telemetry POST. Nine direct source
+  probes, five capture GETs and 29 metadata GETs are separate; SQL statement counts
+  inside Goo were not measured. Traffic stays running; no positive mocks.
+- Capture `e3645c0e731fd8c2674dca913ccb6cd27012a98e2309aa353ce693c23b0c225f`
+  retains all 6,080 bytes, SHA256
+  d5456ccd5c4a9d3ec09477e90d6afc95191165446fc89e734bf827441bef06cd.
+- Actual ledger validation/four controls pass in 24.498s, no skips: altered reopened
+  digest/membership reject; conforming unsettled prefix remains unfinished;
+  pending reopen is detected and eventual done violated. The stronger explicit
+  prefix-conformance/completed-prefix check passes in 3.296s separately.
+- First browser attempt failed only its JS serialization hash oracle (escaped
+  slashes in Go `json.RawMessage`); independent public-typed Go marshal/SHA corrected the
+  harness, with diagnostic retained and a new complete accepted run. Missing
+  Quint fails; TypeScript / `Eval: "quint"` explicit. Finite-coordinator settling is not
+  collector drain/completeness. No new Bombadil adapter, Rust/qweave/gosim run or
+  production checker migration is claimed. Actual frames and process diagram are
+  linked from the report; no broad suites repeated for this isolated pilot.

@@ -1,0 +1,13 @@
+{"Time":"2026-10-26T14:42:37.937851677Z","Action":"start","Package":"goo-gotogether-cross-check"}
+{"Time":"2026-10-26T14:42:37.944935623Z","Action":"run","Package":"goo-gotogether-cross-check","Test":"TestCrossApp"}
+{"Time":"2026-10-26T14:42:37.945091891Z","Action":"output","Package":"goo-gotogether-cross-check","Test":"TestCrossApp","Output":"=== RUN   TestCrossApp\n","OutputType":"frame"}
+{"Time":"2026-10-26T14:42:40.084041868Z","Action":"run","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/valid-unsettled-prefix-is-not-finished"}
+{"Time":"2026-10-26T14:42:40.084166789Z","Action":"output","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/valid-unsettled-prefix-is-not-finished","Output":"=== RUN   TestCrossApp/valid-unsettled-prefix-is-not-finished\n","OutputType":"frame"}
+{"Time":"2026-10-26T14:42:41.228715426Z","Action":"output","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/valid-unsettled-prefix-is-not-finished","Output":"    cross_test.go:161: valid prefix has no completion verdict; not accepted as finished\n"}
+{"Time":"2026-10-26T14:42:41.228902428Z","Action":"output","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/valid-unsettled-prefix-is-not-finished","Output":"--- PASS: TestCrossApp/valid-unsettled-prefix-is-not-finished (1.15s)\n","OutputType":"frame"}
+{"Time":"2026-10-26T14:42:41.228907535Z","Action":"pass","Package":"goo-gotogether-cross-check","Test":"TestCrossApp/valid-unsettled-prefix-is-not-finished","Elapsed":1.15}
+{"Time":"2026-10-26T14:42:41.228963072Z","Action":"output","Package":"goo-gotogether-cross-check","Test":"TestCrossApp","Output":"--- PASS: TestCrossApp (3.28s)\n","OutputType":"frame"}
+{"Time":"2026-10-26T14:42:41.22897583Z","Action":"pass","Package":"goo-gotogether-cross-check","Test":"TestCrossApp","Elapsed":3.28}
+{"Time":"2026-10-26T14:42:41.23112968Z","Action":"output","Package":"goo-gotogether-cross-check","Output":"PASS\n","OutputType":"frame"}
+{"Time":"2026-10-26T14:42:41.234276229Z","Action":"output","Package":"goo-gotogether-cross-check","Output":"ok  \tgoo-gotogether-cross-check\t3.295s\n"}
+{"Time":"2026-10-26T14:42:41.234330723Z","Action":"pass","Package":"goo-gotogether-cross-check","Elapsed":3.296}

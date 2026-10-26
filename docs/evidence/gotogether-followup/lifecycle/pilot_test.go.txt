@@ -1,0 +1,78 @@
+package pilot
+
+import (
+	"encoding/json"
+	"fmt"
+	"github.com/chucklehead-dev/gotogether/qhegel"
+	"github.com/chucklehead-dev/gotogether/qtest"
+	"github.com/chucklehead-dev/gotogether/validate"
+	"hegel.dev/go/hegel"
+	"os"
+	"os/exec"
+	"testing"
+)
+
+func tools(t *testing.T) []qtest.Option {
+	t.Helper()
+	q := "/workspace/goo/node_modules/.bin/quint"
+	if _, e := exec.LookPath(q); e != nil {
+		t.Fatal("Quint required, never skip:", e)
+	}
+	return []qtest.Option{qtest.Quint(validate.Options{Quint: q, Backend: "typescript", Eval: "quint"})}
+}
+func execute(tc hegel.TestCase, c *qhegel.Case, actions []string) {
+	w := newWorld()
+	w.recorder = c.Recorder
+	for _, a := range actions {
+		ok, e := w.apply(a)
+		if e != nil || !ok {
+			tc.Errorf("invalid pilot action %s: %v", a, e)
+		}
+	}
+}
+func TestFaithfulBounded(t *testing.T) {
+	if os.Getenv("PILOT_MUTANT") == "1" {
+		t.Fatal("faithful test must run without overlay")
+	}
+	cases := [][]string{{"terminal", "advance95"}, {"accept", "terminal", "advance95"}, {"accept", "terminal", "advance96", "snapshot", "duplicate"}, {"terminal", "advance100", "accept", "snapshot"}, {"accept", "snapshot", "terminal", "advance95", "snapshot", "advance96", "snapshot"}, {"terminal", "duplicate", "advance95", "advance96"}}
+	for i, actions := range cases {
+		t.Run(fmt.Sprint(i), func(t *testing.T) {
+			qhegel.Test(t, qhegel.Config{Binding: "model/binding.yaml", Mode: qhegel.Each, Opts: tools(t)}, func(ht *hegel.T, c *qhegel.Case) { execute(ht, c, actions) }, hegel.WithTestCases(1), hegel.WithSeed(1), hegel.WithDatabase(""))
+		})
+	}
+
+}
+func TestMutantShrinks(t *testing.T) {
+	if os.Getenv("PILOT_MUTANT") != "1" {
+		t.Fatal("mutant test requires build overlay")
+	}
+	v := qhegel.FindViolation(t, qhegel.ViolationConfig{Binding: "model/binding.yaml", Opts: tools(t)}, func(tc hegel.TestCase, c *qhegel.Case) {
+		noise := hegel.Draw(tc, hegel.Integers(0, 6))
+		a := []string{"terminal"}
+		for i := 0; i < noise; i++ {
+			a = append(a, "duplicate")
+		}
+		a = append(a, "advance95")
+		execute(tc, c, a)
+	}, hegel.WithTestCases(8), hegel.WithSeed(3), hegel.WithDatabase(""))
+	v.Expect(t, qtest.Mismatch("advance95"))
+	if len(v.Steps) != 2 || v.Steps[0].Action != "terminal" || v.Steps[1].Action != "advance95" {
+		t.Fatalf("want exact smallest two-step terminal/advance95, got %+v", v.Steps)
+	}
+	for _, actions := range [][]string{{"terminal"}, {"advance95"}} {
+		w := newWorld()
+		for _, a := range actions {
+			if _, e := w.apply(a); e != nil {
+				t.Fatal(e)
+			}
+		}
+		if e := w.check(); e != nil {
+			t.Fatal("proper subsequence still mismatches", actions, e)
+		}
+	}
+	raw, _ := json.MarshalIndent(v.Steps, "", "  ")
+	if e := os.WriteFile("smallest-mutant-trace.json", raw, 0644); e != nil {
+		t.Fatal(e)
+	}
+	t.Logf("smallest exact actions terminal,advance95; Quint checks=%d cache=%d", v.QuintRuns, v.CacheHits)
+}

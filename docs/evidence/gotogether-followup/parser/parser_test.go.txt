@@ -1,0 +1,14 @@
+package parserpilot
+import("errors";"strings";"testing";"github.com/chucklehead-dev/gotogether/qtrace")
+const first=`{"quint.action":"save","quint.seq":1,"quint.recorder":"pilot","quint.outcome":"ok"}`
+const second=`{"quint.action":"reopen","quint.seq":2,"quint.recorder":"pilot","quint.outcome":"ok"}`
+func TestRejectTrailingData(t *testing.T){
+ for _,suffix:=range []string{second,"garbage"}{for _,nl:=range []string{"\n",""}{for _,prefix:=range []string{"",first+"\n"}{
+ name:="object";if suffix=="garbage"{name="garbage"};if nl==""{name+="/no-newline"}else{name+="/newline"};line:="line 1:";if prefix!=""{name+="/line2";line="line 2:"}
+ t.Run(name,func(t *testing.T){steps,err:=qtrace.ReadJSONL(strings.NewReader(prefix+first+suffix+nl));var torn *qtrace.TornTail;if err==nil||!strings.Contains(err.Error(),line)||!strings.Contains(err.Error(),"trailing data")||errors.As(err,&torn){t.Fatalf("steps=%d err=%v; want ordinary line-specific trailing-data error",len(steps),err)};t.Log(err)})
+ }}}
+}
+func TestWhitespaceAndTornTail(t *testing.T){
+ for _,input:=range []string{first+" \t\r\n",first+" \t",first+"\n\n"+second+"\n"}{steps,err:=qtrace.ReadJSONL(strings.NewReader(input));if err!=nil||len(steps)==0{t.Fatalf("valid: %d steps err=%v",len(steps),err)}}
+ steps,err:=qtrace.ReadJSONL(strings.NewReader(first+"\n"+`{"quint.action":`));var torn *qtrace.TornTail;if !errors.As(err,&torn)||torn.Line!=2||len(steps)<1||steps[0].Action!="save"{t.Fatalf("prefix/torn-tail lost: steps=%+v err=%v",steps,err)};t.Logf("prefix preserved: %d records, %v",len(steps),err)
+}

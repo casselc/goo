@@ -1,0 +1,92 @@
+const fs = require('node:fs/promises'), path = require('node:path'), crypto = require('node:crypto');
+const assert = require('node:assert/strict');
+const { chromium, expect } = require('/workspace/goo/node_modules/@playwright/test');
+const { source } = require('/workspace/goo/journeys/support/cross-app');
+const { inspectedRecords } = require('/workspace/goo/journeys/support/explore');
+const { recordStep, stepLink } = require('/workspace/goo/ui/workspace');
+const dir = '/tmp/goo-gotogether-followup/cross-app', goo = 'http://127.0.0.1:8088', app = 'http://127.0.0.1:8091';
+const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
+const ledger = { version: 1, run: crypto.randomUUID(), events: [], collectionSettled: false, collectionSettledScope: 'Only this bounded coordinator: script-owned calls and observed finite POST response bodies finished. Not global collector drain, telemetry completeness or a complete-trace guarantee.', sourcePosts: [], responses: [], errors: [] };
+const active = new Set(), bodies = new Set(); let seq = 0, browser, context;
+async function persist() { ledger.pendingDriverCalls = active.size; ledger.pendingResponseBodies = bodies.size; await fs.writeFile(path.join(dir, 'ledger.json.tmp'), JSON.stringify(ledger, null, 2)); await fs.rename(path.join(dir, 'ledger.json.tmp'), path.join(dir, 'ledger.json')); }
+async function operation(action, fn) {
+ const callId = action + '-' + (seq + 1); active.add(callId);
+ ledger.events.push({ seq: ++seq, action, kind: 'invoke', callId, correlationId: ledger.run, observedAt: new Date().toISOString() });
+ await persist(); // durable invocation checkpoint precedes the actual action
+ try { const observed = await fn(); active.delete(callId); ledger.events.push({ seq: ++seq, action, kind: 'complete', callId, correlationId: ledger.run, observedAt: new Date().toISOString(), ...observed }); await persist(); }
+ catch (error) { active.delete(callId); ledger.failure = { action, message: error.message }; await persist(); throw error; }
+}
+async function json(response) { assert(response.ok(), 'HTTP ' + response.status() + ': ' + await response.text()); return response.json(); }
+function identities(rows) { return rows.map(row => row.SpanId).sort().join(','); }
+async function stored(id, name) {
+ assert.match(id, /^[a-f0-9]{64}$/); const env = { ...process.env }; for (const key of ['DOCKER_HOST','DOCKER_CONTEXT','DOCKER_TLS','DOCKER_TLS_VERIFY','DOCKER_CERT_PATH']) delete env[key];
+ await require('node:util').promisify(require('node:child_process').execFile)('docker', ['--host=unix:///var/run/docker.sock', 'cp', 'grammar-observability-packages-1:/app/artifacts/investigations/exploration/' + id + '.json', path.join(dir, name)], { env });
+ const bytes = await fs.readFile(path.join(dir, name)), data = JSON.parse(bytes);
+ const checked = await require('node:util').promisify(require('node:child_process').execFile)(path.join(dir, 'capture-hash'), [path.join(dir, name)]);
+ const contentId = checked.stdout.trim(); assert.equal(contentId, id, 'Independent typed Go content digest differs');
+ return { file: name, bytes: bytes.length, digest: sha(bytes), contentId, hashOracle: 'Public SavedCapture typed unmarshal/remarshal with ID empty and standard SHA256; production captureDigest is not called.', data };
+}
+(async () => {
+ await fs.mkdir(dir, { recursive: true }); await persist(); const started = Date.now();
+ browser = await chromium.launch({ executablePath: '/usr/bin/chromium', args: ['--no-sandbox'], headless: true });
+ context = await browser.newContext({ viewport: { width: 1440, height: 1400 } }); context.setDefaultTimeout(15000); context.setDefaultNavigationTimeout(45000);
+ await context.tracing.start({ screenshots: true, snapshots: true, sources: true }); const page = await context.newPage(), request = context.request;
+ page.on('pageerror', e => ledger.errors.push(e.message));
+ page.on('request', r => { const url = new URL(r.url()); if (url.origin === goo && r.method() === 'POST' && url.pathname.startsWith('/api/') && !url.pathname.endsWith('/plan') && !url.pathname.endsWith('/cancel')) ledger.sourcePosts.push({ endpoint: url.pathname, question: r.postDataJSON() }); });
+ page.on('response', response => {
+  const r = response.request(), url = new URL(response.url()); if (r.method() !== 'POST' || ![goo,app].includes(url.origin)) return;
+  const task = (async () => { try { const raw = await response.text(); ledger.responses.push({ endpoint: url.pathname, origin: url.origin, status: response.status(), raw, body: JSON.parse(raw) }); } catch (e) { ledger.errors.push('Finite response body: ' + e.message); } })(); bodies.add(task); task.finally(() => bodies.delete(task));
+ });
+ const watchdog = setTimeout(() => browser.close().catch(() => {}), 180000);
+ try {
+  await page.goto(app);
+  await operation('generate', async () => {
+   ledger.workloadStartedAt = Date.now(); const pending = page.waitForResponse(r => r.url() === app + '/generate' && r.request().method() === 'POST');
+   await page.getByRole('button', { name: 'Generate report', exact: true }).click(); const response = await pending; ledger.applicationResponse = await json(response);
+   await expect(page.locator('#result')).toContainText('ready'); ledger.report = JSON.parse(await page.locator('#result').innerText()); assert.deepEqual(ledger.report, ledger.applicationResponse); assert.equal(ledger.report.outcome, 'ready'); assert.match(ledger.report.id, /^[A-Za-z0-9]+$/);
+   await page.screenshot({ path: path.join(dir, 'report-ready.png') }); return { subject: ledger.report.id };
+  });
+  await operation('collect', async () => {
+   const sql = "SELECT TraceId, SpanId FROM default.otel_traces WHERE ServiceName={service:String} AND Timestamp>=fromUnixTimestamp64Milli({from:Int64}) AND arrayExists(a -> a['goo.subject.id']={subject:String} AND a['goo.subject.namespace']='report' AND a['goo.subject.tenant']='demo', `Events.Attributes`) ORDER BY SpanId LIMIT 100 FORMAT JSONEachRow";
+   const parameters = { param_service: 'lab-go-reports', param_from: ledger.workloadStartedAt - 1000, param_subject: ledger.report.id }; let rows = []; const deadline = Date.now() + 60000;
+   while (Date.now() < deadline) { rows = await source(request, sql, parameters); if (rows.length) break; await new Promise(resolve => setTimeout(resolve, 500)); }
+   assert(rows.length > 0, 'No independently observed report correlation'); const traces = [...new Set(rows.map(r => r.TraceId))]; assert.equal(traces.length, 1); ledger.trace = traces[0]; assert.match(ledger.trace, /^[a-f0-9]{32}$/);
+   ledger.question = { signal: 'spans', environment: 'local', fromMs: ledger.workloadStartedAt - 1000, toMs: Date.now() + 1000, limit: 100, where: { all: [{ field: { kind: 'column', key: 'trace_id' }, op: 'eq', value: ledger.trace }] } };
+   ledger.sourceSQL = "SELECT TraceId, SpanId, ServiceName, SpanName, toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, toString(Duration) AS duration_ns FROM default.otel_traces WHERE Timestamp>=fromUnixTimestamp64Milli({from:Int64}) AND Timestamp<fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes,'deployment.environment.name') AND ResourceAttributes['deployment.environment.name']={environment:String} AND TraceId={trace:String} ORDER BY SpanId LIMIT 100 FORMAT JSONEachRow";
+   ledger.sourceParameters = { param_from: ledger.question.fromMs, param_to: ledger.question.toMs, param_environment: 'local', param_trace: ledger.trace };
+   const population = await source(request, ledger.sourceSQL, ledger.sourceParameters); assert(population.length > 0 && population.length < 100); assert.equal(new Set(population.map(r => r.SpanId)).size, population.length);
+   ledger.collection = { correlationSQL: sql, parameters, rows, population, meaning: 'Matching report and trace-window records observed; no global drain or complete-trace assertion.' };
+   return { subject: ledger.report.id, trace: ledger.trace, environment: 'local', count: population.length, members: identities(population) };
+  });
+  await operation('inspect', async () => {
+   await page.goto(goo + '/' + stepLink(recordStep(ledger.question))); await expect(page.locator('#exploreRun')).toBeEnabled();
+   const pending = page.waitForResponse(r => r.url().endsWith('/api/explore') && r.request().method() === 'POST'); await page.locator('#exploreRun').click(); ledger.result = await json(await pending);
+   const oracle = await source(request, ledger.sourceSQL, ledger.sourceParameters); assert.equal(identities(oracle), identities(ledger.collection.population)); assert.equal(ledger.result.count, String(oracle.length)); assert.equal(identities(ledger.result.rows), identities(oracle));
+   if (await page.locator('#resultRecords').isVisible()) await page.locator('#resultRecords').click();
+   ledger.domRecords = await inspectedRecords(page); assert.equal(identities(ledger.domRecords), identities(oracle));
+   for (const row of ledger.result.rows) { const raw = oracle.find(r => r.SpanId === row.SpanId); assert.equal(row.TraceId, raw.TraceId); assert.equal(row.timestamp_ns, raw.timestamp_ns); assert.equal(row.duration_ns, raw.duration_ns); }
+   const spans = page.waitForResponse(r => r.url().endsWith('/api/explore') && r.request().method() === 'POST' && r.request().postDataJSON().signal === 'spans');
+   const logs = page.waitForResponse(r => r.url().endsWith('/api/explore') && r.request().method() === 'POST' && r.request().postDataJSON().signal === 'logs');
+   await page.locator('#exploreRows .record-row').first().getByRole('button', { name: 'Expand trace ' + ledger.trace, exact: true }).click(); ledger.expansion = { spans: await json(await spans), logs: await json(await logs) };
+   await expect(page.locator('#exploreTrace .waterfall-row')).toHaveCount(oracle.length);
+   ledger.waterfallMembers = (await page.locator('#exploreTrace .waterfall-row').evaluateAll(rows => rows.map(r => r.dataset.spanId))).sort().join(','); assert.equal(ledger.waterfallMembers, identities(oracle));
+   await page.screenshot({ path: path.join(dir, 'goo-correlated-trace.png') }); await page.locator('#exploreContextClose').click();
+   return { subject: ledger.report.id, trace: ledger.trace, environment: 'local', count: oracle.length, members: identities(oracle) };
+  });
+  await operation('capture', async () => {
+   await page.locator('#exploreSaveCapture').click(); await page.locator('#captureDraftTitle').fill('Cross-app report ' + ledger.report.id);
+   const pending = page.waitForResponse(r => r.url().endsWith('/api/captures') && r.request().method() === 'POST'); await page.locator('#captureDraftConfirm').click(); ledger.saved = await json(await pending);
+   await expect(page.locator('#savedexploreCount')).toContainText(String(ledger.collection.population.length)); assert.equal(ledger.saved.explore.count, ledger.result.count); assert.equal(identities(ledger.saved.explore.rows), identities(ledger.collection.population));
+   ledger.storedBefore = await stored(ledger.saved.receipt.id, 'capture-before.json'); assert.equal(identities(ledger.storedBefore.data.explore.rows), identities(ledger.collection.population));
+   return { captureId: ledger.saved.receipt.id, digest: ledger.storedBefore.digest };
+  });
+  await operation('reopen', async () => {
+   const before = ledger.sourcePosts.length; await page.reload(); await expect(page.locator('#savedexploreCount')).toContainText(String(ledger.collection.population.length));
+   ledger.reopened = await json(await request.get(goo + '/api/captures/' + ledger.saved.receipt.id)); assert.deepEqual(ledger.reopened, ledger.saved); assert.equal(ledger.sourcePosts.length, before);
+   ledger.storedAfter = await stored(ledger.saved.receipt.id, 'capture-after.json'); assert.equal(ledger.storedAfter.digest, ledger.storedBefore.digest); assert.equal(ledger.storedAfter.contentId, ledger.saved.receipt.id);
+   await page.screenshot({ path: path.join(dir, 'immutable-reopened.png') }); return { captureId: ledger.saved.receipt.id, digest: ledger.storedAfter.digest };
+  });
+  while (bodies.size) await Promise.all([...bodies]); assert.deepEqual(ledger.errors, []); assert.equal(active.size, 0); ledger.collectionSettled = true; ledger.elapsedMs = Date.now() - started; await persist(); console.log(JSON.stringify({ status: 'passed', ledger: path.join(dir, 'ledger.json'), events: ledger.events.length, sourcePosts: ledger.sourcePosts.length, elapsedMs: ledger.elapsedMs }));
+ } catch (e) { ledger.status = 'failed'; ledger.error = e.stack; await persist(); await page.screenshot({ path: path.join(dir, 'failure.png') }).catch(() => {}); throw e; }
+ finally { clearTimeout(watchdog); await context.tracing.stop({ path: path.join(dir, 'trace.zip') }); await browser.close(); }
+})().catch(e => { console.error(e.stack); process.exitCode = 1; });

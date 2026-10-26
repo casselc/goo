@@ -1,0 +1,2822 @@
+{
+  "version": 1,
+  "run": "b8c07770-d7cf-4faf-99c9-f8bcaf3d3308",
+  "events": [
+    {
+      "seq": 1,
+      "action": "generate",
+      "kind": "invoke",
+      "callId": "generate-1",
+      "correlationId": "b8c07770-d7cf-4faf-99c9-f8bcaf3d3308",
+      "observedAt": "2026-10-26T14:40:46.823Z"
+    },
+    {
+      "seq": 2,
+      "action": "generate",
+      "kind": "complete",
+      "callId": "generate-1",
+      "correlationId": "b8c07770-d7cf-4faf-99c9-f8bcaf3d3308",
+      "observedAt": "2026-10-26T14:40:47.421Z",
+      "subject": "HBFH7JOI6FQYQNBKKIGIWRUEIA"
+    },
+    {
+      "seq": 3,
+      "action": "collect",
+      "kind": "invoke",
+      "callId": "collect-3",
+      "correlationId": "b8c07770-d7cf-4faf-99c9-f8bcaf3d3308",
+      "observedAt": "2026-10-26T14:40:47.422Z"
+    },
+    {
+      "seq": 4,
+      "action": "collect",
+      "kind": "complete",
+      "callId": "collect-3",
+      "correlationId": "b8c07770-d7cf-4faf-99c9-f8bcaf3d3308",
+      "observedAt": "2026-10-26T14:40:51.061Z",
+      "subject": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+      "trace": "b28fbd7036b2427a72ee6846cffe0160",
+      "environment": "local",
+      "count": 1,
+      "members": "e121c2e6e8d490d2"
+    },
+    {
+      "seq": 5,
+      "action": "inspect",
+      "kind": "invoke",
+      "callId": "inspect-5",
+      "correlationId": "b8c07770-d7cf-4faf-99c9-f8bcaf3d3308",
+      "observedAt": "2026-10-26T14:40:51.063Z"
+    },
+    {
+      "seq": 6,
+      "action": "inspect",
+      "kind": "complete",
+      "callId": "inspect-5",
+      "correlationId": "b8c07770-d7cf-4faf-99c9-f8bcaf3d3308",
+      "observedAt": "2026-10-26T14:40:54.962Z",
+      "subject": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+      "trace": "b28fbd7036b2427a72ee6846cffe0160",
+      "environment": "local",
+      "count": 1,
+      "members": "e121c2e6e8d490d2"
+    },
+    {
+      "seq": 7,
+      "action": "capture",
+      "kind": "invoke",
+      "callId": "capture-7",
+      "correlationId": "b8c07770-d7cf-4faf-99c9-f8bcaf3d3308",
+      "observedAt": "2026-10-26T14:40:54.965Z"
+    },
+    {
+      "seq": 8,
+      "action": "capture",
+      "kind": "complete",
+      "callId": "capture-7",
+      "correlationId": "b8c07770-d7cf-4faf-99c9-f8bcaf3d3308",
+      "observedAt": "2026-10-26T14:40:55.936Z",
+      "captureId": "e3645c0e731fd8c2674dca913ccb6cd27012a98e2309aa353ce693c23b0c225f",
+      "digest": "d5456ccd5c4a9d3ec09477e90d6afc95191165446fc89e734bf827441bef06cd"
+    },
+    {
+      "seq": 9,
+      "action": "reopen",
+      "kind": "invoke",
+      "callId": "reopen-9",
+      "correlationId": "b8c07770-d7cf-4faf-99c9-f8bcaf3d3308",
+      "observedAt": "2026-10-26T14:40:55.937Z"
+    },
+    {
+      "seq": 10,
+      "action": "reopen",
+      "kind": "complete",
+      "callId": "reopen-9",
+      "correlationId": "b8c07770-d7cf-4faf-99c9-f8bcaf3d3308",
+      "observedAt": "2026-10-26T14:40:57.210Z",
+      "captureId": "e3645c0e731fd8c2674dca913ccb6cd27012a98e2309aa353ce693c23b0c225f",
+      "digest": "d5456ccd5c4a9d3ec09477e90d6afc95191165446fc89e734bf827441bef06cd"
+    }
+  ],
+  "collectionSettled": true,
+  "collectionSettledScope": "Only this bounded coordinator: script-owned calls and observed finite POST response bodies finished. Not global collector drain, telemetry completeness or a complete-trace guarantee.",
+  "sourcePosts": [
+    {
+      "endpoint": "/api/explore",
+      "question": {
+        "signal": "spans",
+        "environment": "local",
+        "fromMs": 1793025645825,
+        "toMs": 1793025652025,
+        "limit": 100,
+        "offset": 0,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "trace_id"
+              },
+              "op": "eq",
+              "value": "b28fbd7036b2427a72ee6846cffe0160"
+            }
+          ]
+        },
+        "groupBy": []
+      }
+    },
+    {
+      "endpoint": "/api/explore",
+      "question": {
+        "signal": "spans",
+        "environment": "local",
+        "fromMs": 1793025645825,
+        "toMs": 1793025652025,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "trace_id"
+              },
+              "op": "eq",
+              "value": "b28fbd7036b2427a72ee6846cffe0160"
+            }
+          ]
+        },
+        "limit": 100,
+        "offset": 0,
+        "groupBy": [
+          {
+            "kind": "column",
+            "key": "service"
+          },
+          {
+            "kind": "column",
+            "key": "name"
+          }
+        ],
+        "summary": "span-duration",
+        "spanStatus": true
+      }
+    },
+    {
+      "endpoint": "/api/explore",
+      "question": {
+        "signal": "logs",
+        "environment": "local",
+        "fromMs": 1793025645825,
+        "toMs": 1793025652025,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "trace_id"
+              },
+              "op": "eq",
+              "value": "b28fbd7036b2427a72ee6846cffe0160"
+            }
+          ]
+        },
+        "limit": 100,
+        "offset": 0
+      }
+    },
+    {
+      "endpoint": "/api/captures",
+      "question": {
+        "title": "Cross-app report HBFH7JOI6FQYQNBKKIGIWRUEIA",
+        "question": {
+          "kind": "explore",
+          "explore": {
+            "signal": "spans",
+            "environment": "local",
+            "fromMs": 1793025645825,
+            "toMs": 1793025652025,
+            "where": {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "trace_id"
+                  },
+                  "op": "eq",
+                  "value": "b28fbd7036b2427a72ee6846cffe0160"
+                }
+              ]
+            },
+            "limit": 100,
+            "offset": 0
+          }
+        }
+      }
+    }
+  ],
+  "responses": [
+    {
+      "endpoint": "/generate",
+      "origin": "http://127.0.0.1:8091",
+      "status": 200,
+      "raw": "{\"id\":\"HBFH7JOI6FQYQNBKKIGIWRUEIA\",\"outcome\":\"ready\"}\n",
+      "body": {
+        "id": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+        "outcome": "ready"
+      }
+    },
+    {
+      "endpoint": "/api/explore",
+      "origin": "http://127.0.0.1:8088",
+      "status": 200,
+      "raw": "{\"resultToken\": \"74165e2c52195a8b377b453514c62570af0eeaa93049f02e87e5ca2850442f90\", \"traceExamples\": {\"version\": \"goo/trace-page-examples/v1\", \"state\": \"observed\", \"considered\": 1, \"excluded\": 0, \"items\": [{\"traceId\": \"b28fbd7036b2427a72ee6846cffe0160\", \"spanId\": \"e121c2e6e8d490d2\", \"service\": \"lab-go-reports\", \"name\": \"report.generate\", \"durationNS\": \"40404180\", \"timestampNS\": \"1793025647150608541\", \"status\": \"Unset\", \"reason\": \"Longest linked span on this page\"}]}, \"question\": {\"signal\": \"spans\", \"environment\": \"local\", \"fromMs\": 1793025645825, \"toMs\": 1793025652025, \"where\": {\"all\": [{\"field\": {\"kind\": \"column\", \"key\": \"trace_id\"}, \"op\": \"eq\", \"value\": \"b28fbd7036b2427a72ee6846cffe0160\"}]}, \"limit\": 100, \"offset\": 0}, \"capturedAt\": \"2026-10-26T14:40:52.660191702Z\", \"basis\": \"460bf6de2cd551bdc3d744a8b9921faa1720c8f9f173443c17639d9b94b51cd5\", \"count\": \"1\", \"state\": \"observed\", \"rows\": [{\"timestamp_ns\": \"1793025647150608541\", \"ServiceName\": \"lab-go-reports\", \"TraceId\": \"b28fbd7036b2427a72ee6846cffe0160\", \"SpanId\": \"e121c2e6e8d490d2\", \"ResourceAttributes\": {\"deployment.environment.name\": \"local\", \"service.instance.id\": \"reports-demo\", \"service.name\": \"lab-go-reports\"}, \"ScopeName\": \"github.com/casselc/goo/instrumentation\", \"ScopeVersion\": \"0.1.0\", \"Attributes\": {\"goo.operation.name\": \"report.generate\", \"goo.operation.outcome\": \"ok\", \"goo.operation.role\": \"server\"}, \"SpanName\": \"report.generate\", \"SpanKind\": \"Server\", \"ParentSpanId\": \"\", \"duration_bucket\": \"[10,50) ms\", \"duration_ns\": \"40404180\", \"StatusCode\": \"Unset\", \"StatusMessage\": \"\", \"SpanAttributes\": {\"goo.operation.name\": \"report.generate\", \"goo.operation.outcome\": \"ok\", \"goo.operation.role\": \"server\"}, \"event_times_ns\": [\"1793025647190938422\"], \"event_names\": [\"report.ready\"], \"event_attributes\": [{\"goo.event.name\": \"report.ready\", \"goo.subject.id\": \"HBFH7JOI6FQYQNBKKIGIWRUEIA\", \"goo.subject.namespace\": \"report\", \"goo.subject.outcome\": \"ready\", \"goo.subject.tenant\": \"demo\"}], \"linked_attributes\": [], \"linked_traces\": [], \"linked_spans\": []}], \"hasMore\": false, \"groups\": [], \"fields\": [{\"kind\": \"column\", \"key\": \"duration_bucket\"}, {\"kind\": \"column\", \"key\": \"duration_ns\"}, {\"kind\": \"column\", \"key\": \"exception_event\"}, {\"kind\": \"column\", \"key\": \"exception_type\"}, {\"kind\": \"column\", \"key\": \"exception_type_state\"}, {\"kind\": \"column\", \"key\": \"kind\"}, {\"kind\": \"column\", \"key\": \"name\"}, {\"kind\": \"column\", \"key\": \"scope\"}, {\"kind\": \"column\", \"key\": \"scope_version\"}, {\"kind\": \"column\", \"key\": \"service\"}, {\"kind\": \"column\", \"key\": \"span_id\"}, {\"kind\": \"column\", \"key\": \"status\"}, {\"kind\": \"column\", \"key\": \"status_class\"}, {\"kind\": \"column\", \"key\": \"timestamp_ns\"}, {\"kind\": \"column\", \"key\": \"trace_id\"}, {\"kind\": \"attribute\", \"key\": \"goo.operation.name\"}, {\"kind\": \"attribute\", \"key\": \"goo.operation.outcome\"}, {\"kind\": \"attribute\", \"key\": \"goo.operation.role\"}, {\"kind\": \"resource\", \"key\": \"deployment.environment.name\"}, {\"kind\": \"resource\", \"key\": \"service.instance.id\"}, {\"kind\": \"resource\", \"key\": \"service.name\"}], \"fieldsLimited\": false, \"plan\": {\"rows\": \"SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, SpanAttributes AS Attributes, SpanName, SpanKind, ParentSpanId, multiIf(Duration < 1000000, '[0,1) ms', Duration < 5000000, '[1,5) ms', Duration < 10000000, '[5,10) ms', Duration < 50000000, '[10,50) ms', Duration < 100000000, '[50,100) ms', Duration < 500000000, '[100,500) ms', Duration < 1000000000, '[500,1000) ms', '[1000,+inf) ms') AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration LIMIT 101 OFFSET 0 FORMAT JSONEachRow\", \"count\": \"SELECT toString(count()) AS count FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) FORMAT JSONEachRow\", \"fields\": \"SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -> concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -> concat('attribute:', k), mapKeys(SpanAttributes)))) AS field FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY field LIMIT 129 FORMAT JSONEachRow\", \"parameters\": {\"environment\": \"local\", \"from\": \"1793025645825\", \"p3\": \"b28fbd7036b2427a72ee6846cffe0160\", \"to\": \"1793025652025\"}}, \"warnings\": [\"Captured records only; sampling, ingestion completeness and clock accuracy are unverified.\", \"Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.\", \"Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes.\"]}",
+      "body": {
+        "resultToken": "74165e2c52195a8b377b453514c62570af0eeaa93049f02e87e5ca2850442f90",
+        "traceExamples": {
+          "version": "goo/trace-page-examples/v1",
+          "state": "observed",
+          "considered": 1,
+          "excluded": 0,
+          "items": [
+            {
+              "traceId": "b28fbd7036b2427a72ee6846cffe0160",
+              "spanId": "e121c2e6e8d490d2",
+              "service": "lab-go-reports",
+              "name": "report.generate",
+              "durationNS": "40404180",
+              "timestampNS": "1793025647150608541",
+              "status": "Unset",
+              "reason": "Longest linked span on this page"
+            }
+          ]
+        },
+        "question": {
+          "signal": "spans",
+          "environment": "local",
+          "fromMs": 1793025645825,
+          "toMs": 1793025652025,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "column",
+                  "key": "trace_id"
+                },
+                "op": "eq",
+                "value": "b28fbd7036b2427a72ee6846cffe0160"
+              }
+            ]
+          },
+          "limit": 100,
+          "offset": 0
+        },
+        "capturedAt": "2026-10-26T14:40:52.660191702Z",
+        "basis": "460bf6de2cd551bdc3d744a8b9921faa1720c8f9f173443c17639d9b94b51cd5",
+        "count": "1",
+        "state": "observed",
+        "rows": [
+          {
+            "timestamp_ns": "1793025647150608541",
+            "ServiceName": "lab-go-reports",
+            "TraceId": "b28fbd7036b2427a72ee6846cffe0160",
+            "SpanId": "e121c2e6e8d490d2",
+            "ResourceAttributes": {
+              "deployment.environment.name": "local",
+              "service.instance.id": "reports-demo",
+              "service.name": "lab-go-reports"
+            },
+            "ScopeName": "github.com/casselc/goo/instrumentation",
+            "ScopeVersion": "0.1.0",
+            "Attributes": {
+              "goo.operation.name": "report.generate",
+              "goo.operation.outcome": "ok",
+              "goo.operation.role": "server"
+            },
+            "SpanName": "report.generate",
+            "SpanKind": "Server",
+            "ParentSpanId": "",
+            "duration_bucket": "[10,50) ms",
+            "duration_ns": "40404180",
+            "StatusCode": "Unset",
+            "StatusMessage": "",
+            "SpanAttributes": {
+              "goo.operation.name": "report.generate",
+              "goo.operation.outcome": "ok",
+              "goo.operation.role": "server"
+            },
+            "event_times_ns": [
+              "1793025647190938422"
+            ],
+            "event_names": [
+              "report.ready"
+            ],
+            "event_attributes": [
+              {
+                "goo.event.name": "report.ready",
+                "goo.subject.id": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+                "goo.subject.namespace": "report",
+                "goo.subject.outcome": "ready",
+                "goo.subject.tenant": "demo"
+              }
+            ],
+            "linked_attributes": [],
+            "linked_traces": [],
+            "linked_spans": []
+          }
+        ],
+        "hasMore": false,
+        "groups": [],
+        "fields": [
+          {
+            "kind": "column",
+            "key": "duration_bucket"
+          },
+          {
+            "kind": "column",
+            "key": "duration_ns"
+          },
+          {
+            "kind": "column",
+            "key": "exception_event"
+          },
+          {
+            "kind": "column",
+            "key": "exception_type"
+          },
+          {
+            "kind": "column",
+            "key": "exception_type_state"
+          },
+          {
+            "kind": "column",
+            "key": "kind"
+          },
+          {
+            "kind": "column",
+            "key": "name"
+          },
+          {
+            "kind": "column",
+            "key": "scope"
+          },
+          {
+            "kind": "column",
+            "key": "scope_version"
+          },
+          {
+            "kind": "column",
+            "key": "service"
+          },
+          {
+            "kind": "column",
+            "key": "span_id"
+          },
+          {
+            "kind": "column",
+            "key": "status"
+          },
+          {
+            "kind": "column",
+            "key": "status_class"
+          },
+          {
+            "kind": "column",
+            "key": "timestamp_ns"
+          },
+          {
+            "kind": "column",
+            "key": "trace_id"
+          },
+          {
+            "kind": "attribute",
+            "key": "goo.operation.name"
+          },
+          {
+            "kind": "attribute",
+            "key": "goo.operation.outcome"
+          },
+          {
+            "kind": "attribute",
+            "key": "goo.operation.role"
+          },
+          {
+            "kind": "resource",
+            "key": "deployment.environment.name"
+          },
+          {
+            "kind": "resource",
+            "key": "service.instance.id"
+          },
+          {
+            "kind": "resource",
+            "key": "service.name"
+          }
+        ],
+        "fieldsLimited": false,
+        "plan": {
+          "rows": "SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, SpanAttributes AS Attributes, SpanName, SpanKind, ParentSpanId, multiIf(Duration < 1000000, '[0,1) ms', Duration < 5000000, '[1,5) ms', Duration < 10000000, '[5,10) ms', Duration < 50000000, '[10,50) ms', Duration < 100000000, '[50,100) ms', Duration < 500000000, '[100,500) ms', Duration < 1000000000, '[500,1000) ms', '[1000,+inf) ms') AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration LIMIT 101 OFFSET 0 FORMAT JSONEachRow",
+          "count": "SELECT toString(count()) AS count FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) FORMAT JSONEachRow",
+          "fields": "SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -> concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -> concat('attribute:', k), mapKeys(SpanAttributes)))) AS field FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY field LIMIT 129 FORMAT JSONEachRow",
+          "parameters": {
+            "environment": "local",
+            "from": "1793025645825",
+            "p3": "b28fbd7036b2427a72ee6846cffe0160",
+            "to": "1793025652025"
+          }
+        },
+        "warnings": [
+          "Captured records only; sampling, ingestion completeness and clock accuracy are unverified.",
+          "Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.",
+          "Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes."
+        ]
+      }
+    },
+    {
+      "endpoint": "/api/explore",
+      "origin": "http://127.0.0.1:8088",
+      "status": 200,
+      "raw": "{\"resultToken\": \"a2f1cb19606bca78ce55ef47db8782d0d310bcc1301b160265be621063278ce6\", \"traceExamples\": {\"version\": \"goo/trace-page-examples/v1\", \"state\": \"observed\", \"considered\": 1, \"excluded\": 0, \"items\": [{\"traceId\": \"b28fbd7036b2427a72ee6846cffe0160\", \"spanId\": \"e121c2e6e8d490d2\", \"service\": \"lab-go-reports\", \"name\": \"report.generate\", \"durationNS\": \"40404180\", \"timestampNS\": \"1793025647150608541\", \"status\": \"Unset\", \"reason\": \"Longest linked span on this page\"}]}, \"spanStatus\": {\"count\": \"1\", \"error\": \"0\", \"ok\": \"0\", \"unset\": \"1\", \"unknown\": \"0\"}, \"duration\": {\"state\": \"observed\", \"count\": \"1\", \"sumNs\": \"40404180\", \"minNs\": \"40404180\", \"maxNs\": \"40404180\", \"p50Ns\": \"40404180\", \"p95Ns\": \"40404180\", \"p99Ns\": \"40404180\"}, \"question\": {\"spanStatus\": true, \"summary\": \"span-duration\", \"signal\": \"spans\", \"environment\": \"local\", \"fromMs\": 1793025645825, \"toMs\": 1793025652025, \"where\": {\"all\": [{\"field\": {\"kind\": \"column\", \"key\": \"trace_id\"}, \"op\": \"eq\", \"value\": \"b28fbd7036b2427a72ee6846cffe0160\"}]}, \"groupBy\": [{\"kind\": \"column\", \"key\": \"service\"}, {\"kind\": \"column\", \"key\": \"name\"}], \"limit\": 100, \"offset\": 0}, \"capturedAt\": \"2026-10-26T14:40:54.11319235Z\", \"basis\": \"ffa4ea03af5b43001c1433e0c844ac692ae95004098f8043efb4fdbd9f5f6e83\", \"count\": \"1\", \"state\": \"observed\", \"rows\": [{\"timestamp_ns\": \"1793025647150608541\", \"ServiceName\": \"lab-go-reports\", \"TraceId\": \"b28fbd7036b2427a72ee6846cffe0160\", \"SpanId\": \"e121c2e6e8d490d2\", \"ResourceAttributes\": {\"deployment.environment.name\": \"local\", \"service.instance.id\": \"reports-demo\", \"service.name\": \"lab-go-reports\"}, \"ScopeName\": \"github.com/casselc/goo/instrumentation\", \"ScopeVersion\": \"0.1.0\", \"Attributes\": {\"goo.operation.name\": \"report.generate\", \"goo.operation.outcome\": \"ok\", \"goo.operation.role\": \"server\"}, \"SpanName\": \"report.generate\", \"SpanKind\": \"Server\", \"ParentSpanId\": \"\", \"duration_bucket\": \"[10,50) ms\", \"duration_ns\": \"40404180\", \"StatusCode\": \"Unset\", \"StatusMessage\": \"\", \"SpanAttributes\": {\"goo.operation.name\": \"report.generate\", \"goo.operation.outcome\": \"ok\", \"goo.operation.role\": \"server\"}, \"event_times_ns\": [\"1793025647190938422\"], \"event_names\": [\"report.ready\"], \"event_attributes\": [{\"goo.event.name\": \"report.ready\", \"goo.subject.id\": \"HBFH7JOI6FQYQNBKKIGIWRUEIA\", \"goo.subject.namespace\": \"report\", \"goo.subject.outcome\": \"ready\", \"goo.subject.tenant\": \"demo\"}], \"linked_attributes\": [], \"linked_traces\": [], \"linked_spans\": []}], \"hasMore\": false, \"groups\": [{\"count\": \"1\", \"duration\": {\"state\": \"observed\", \"count\": \"1\", \"sumNs\": \"40404180\", \"minNs\": \"40404180\", \"maxNs\": \"40404180\", \"p50Ns\": \"40404180\", \"p95Ns\": \"40404180\", \"p99Ns\": \"40404180\"}, \"g0\": \"lab-go-reports\", \"g1\": \"report.generate\", \"spanStatus\": {\"count\": \"1\", \"error\": \"0\", \"ok\": \"0\", \"unset\": \"1\", \"unknown\": \"0\"}}], \"fields\": [{\"kind\": \"column\", \"key\": \"duration_bucket\"}, {\"kind\": \"column\", \"key\": \"duration_ns\"}, {\"kind\": \"column\", \"key\": \"exception_event\"}, {\"kind\": \"column\", \"key\": \"exception_type\"}, {\"kind\": \"column\", \"key\": \"exception_type_state\"}, {\"kind\": \"column\", \"key\": \"kind\"}, {\"kind\": \"column\", \"key\": \"name\"}, {\"kind\": \"column\", \"key\": \"scope\"}, {\"kind\": \"column\", \"key\": \"scope_version\"}, {\"kind\": \"column\", \"key\": \"service\"}, {\"kind\": \"column\", \"key\": \"span_id\"}, {\"kind\": \"column\", \"key\": \"status\"}, {\"kind\": \"column\", \"key\": \"status_class\"}, {\"kind\": \"column\", \"key\": \"timestamp_ns\"}, {\"kind\": \"column\", \"key\": \"trace_id\"}, {\"kind\": \"attribute\", \"key\": \"goo.operation.name\"}, {\"kind\": \"attribute\", \"key\": \"goo.operation.outcome\"}, {\"kind\": \"attribute\", \"key\": \"goo.operation.role\"}, {\"kind\": \"resource\", \"key\": \"deployment.environment.name\"}, {\"kind\": \"resource\", \"key\": \"service.instance.id\"}, {\"kind\": \"resource\", \"key\": \"service.name\"}], \"fieldsLimited\": false, \"plan\": {\"rows\": \"SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, SpanAttributes AS Attributes, SpanName, SpanKind, ParentSpanId, multiIf(Duration < 1000000, '[0,1) ms', Duration < 5000000, '[1,5) ms', Duration < 10000000, '[5,10) ms', Duration < 50000000, '[10,50) ms', Duration < 100000000, '[50,100) ms', Duration < 500000000, '[100,500) ms', Duration < 1000000000, '[500,1000) ms', '[1000,+inf) ms') AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration LIMIT 101 OFFSET 0 FORMAT JSONEachRow\", \"count\": \"SELECT toString(count()) AS count, toString(sum(toUInt128(Duration))) AS sum_ns, toString(min(Duration)) AS min_ns, toString(max(Duration)) AS max_ns, arrayMap(x -> toString(x), quantilesExactHigh(0.50, 0.95, 0.99)(Duration)) AS quantiles_ns, toString(countIf(StatusCode = 'Error')) AS status_error, toString(countIf(StatusCode = 'Ok')) AS status_ok, toString(countIf(StatusCode = 'Unset')) AS status_unset, toString(countIf(StatusCode NOT IN ('Error','Ok','Unset'))) AS status_unknown FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) FORMAT JSONEachRow\", \"groups\": \"SELECT if(1, CAST(toString(ServiceName) AS Nullable(String)), NULL) AS g0, if(1, CAST(toString(SpanName) AS Nullable(String)), NULL) AS g1, toString(count()) AS count, toString(sum(toUInt128(Duration))) AS sum_ns, toString(min(Duration)) AS min_ns, toString(max(Duration)) AS max_ns, arrayMap(x -> toString(x), quantilesExactHigh(0.50, 0.95, 0.99)(Duration)) AS quantiles_ns, toString(countIf(StatusCode = 'Error')) AS status_error, toString(countIf(StatusCode = 'Ok')) AS status_ok, toString(countIf(StatusCode = 'Unset')) AS status_unset, toString(countIf(StatusCode NOT IN ('Error','Ok','Unset'))) AS status_unknown FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) GROUP BY g0, g1 ORDER BY g0, g1 LIMIT 1001 FORMAT JSONEachRow\", \"fields\": \"SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -> concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -> concat('attribute:', k), mapKeys(SpanAttributes)))) AS field FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY field LIMIT 129 FORMAT JSONEachRow\", \"parameters\": {\"environment\": \"local\", \"from\": \"1793025645825\", \"p3\": \"b28fbd7036b2427a72ee6846cffe0160\", \"to\": \"1793025652025\"}}, \"warnings\": [\"Captured records only; sampling, ingestion completeness and clock accuracy are unverified.\", \"Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.\", \"Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes.\"]}",
+      "body": {
+        "resultToken": "a2f1cb19606bca78ce55ef47db8782d0d310bcc1301b160265be621063278ce6",
+        "traceExamples": {
+          "version": "goo/trace-page-examples/v1",
+          "state": "observed",
+          "considered": 1,
+          "excluded": 0,
+          "items": [
+            {
+              "traceId": "b28fbd7036b2427a72ee6846cffe0160",
+              "spanId": "e121c2e6e8d490d2",
+              "service": "lab-go-reports",
+              "name": "report.generate",
+              "durationNS": "40404180",
+              "timestampNS": "1793025647150608541",
+              "status": "Unset",
+              "reason": "Longest linked span on this page"
+            }
+          ]
+        },
+        "spanStatus": {
+          "count": "1",
+          "error": "0",
+          "ok": "0",
+          "unset": "1",
+          "unknown": "0"
+        },
+        "duration": {
+          "state": "observed",
+          "count": "1",
+          "sumNs": "40404180",
+          "minNs": "40404180",
+          "maxNs": "40404180",
+          "p50Ns": "40404180",
+          "p95Ns": "40404180",
+          "p99Ns": "40404180"
+        },
+        "question": {
+          "spanStatus": true,
+          "summary": "span-duration",
+          "signal": "spans",
+          "environment": "local",
+          "fromMs": 1793025645825,
+          "toMs": 1793025652025,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "column",
+                  "key": "trace_id"
+                },
+                "op": "eq",
+                "value": "b28fbd7036b2427a72ee6846cffe0160"
+              }
+            ]
+          },
+          "groupBy": [
+            {
+              "kind": "column",
+              "key": "service"
+            },
+            {
+              "kind": "column",
+              "key": "name"
+            }
+          ],
+          "limit": 100,
+          "offset": 0
+        },
+        "capturedAt": "2026-10-26T14:40:54.11319235Z",
+        "basis": "ffa4ea03af5b43001c1433e0c844ac692ae95004098f8043efb4fdbd9f5f6e83",
+        "count": "1",
+        "state": "observed",
+        "rows": [
+          {
+            "timestamp_ns": "1793025647150608541",
+            "ServiceName": "lab-go-reports",
+            "TraceId": "b28fbd7036b2427a72ee6846cffe0160",
+            "SpanId": "e121c2e6e8d490d2",
+            "ResourceAttributes": {
+              "deployment.environment.name": "local",
+              "service.instance.id": "reports-demo",
+              "service.name": "lab-go-reports"
+            },
+            "ScopeName": "github.com/casselc/goo/instrumentation",
+            "ScopeVersion": "0.1.0",
+            "Attributes": {
+              "goo.operation.name": "report.generate",
+              "goo.operation.outcome": "ok",
+              "goo.operation.role": "server"
+            },
+            "SpanName": "report.generate",
+            "SpanKind": "Server",
+            "ParentSpanId": "",
+            "duration_bucket": "[10,50) ms",
+            "duration_ns": "40404180",
+            "StatusCode": "Unset",
+            "StatusMessage": "",
+            "SpanAttributes": {
+              "goo.operation.name": "report.generate",
+              "goo.operation.outcome": "ok",
+              "goo.operation.role": "server"
+            },
+            "event_times_ns": [
+              "1793025647190938422"
+            ],
+            "event_names": [
+              "report.ready"
+            ],
+            "event_attributes": [
+              {
+                "goo.event.name": "report.ready",
+                "goo.subject.id": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+                "goo.subject.namespace": "report",
+                "goo.subject.outcome": "ready",
+                "goo.subject.tenant": "demo"
+              }
+            ],
+            "linked_attributes": [],
+            "linked_traces": [],
+            "linked_spans": []
+          }
+        ],
+        "hasMore": false,
+        "groups": [
+          {
+            "count": "1",
+            "duration": {
+              "state": "observed",
+              "count": "1",
+              "sumNs": "40404180",
+              "minNs": "40404180",
+              "maxNs": "40404180",
+              "p50Ns": "40404180",
+              "p95Ns": "40404180",
+              "p99Ns": "40404180"
+            },
+            "g0": "lab-go-reports",
+            "g1": "report.generate",
+            "spanStatus": {
+              "count": "1",
+              "error": "0",
+              "ok": "0",
+              "unset": "1",
+              "unknown": "0"
+            }
+          }
+        ],
+        "fields": [
+          {
+            "kind": "column",
+            "key": "duration_bucket"
+          },
+          {
+            "kind": "column",
+            "key": "duration_ns"
+          },
+          {
+            "kind": "column",
+            "key": "exception_event"
+          },
+          {
+            "kind": "column",
+            "key": "exception_type"
+          },
+          {
+            "kind": "column",
+            "key": "exception_type_state"
+          },
+          {
+            "kind": "column",
+            "key": "kind"
+          },
+          {
+            "kind": "column",
+            "key": "name"
+          },
+          {
+            "kind": "column",
+            "key": "scope"
+          },
+          {
+            "kind": "column",
+            "key": "scope_version"
+          },
+          {
+            "kind": "column",
+            "key": "service"
+          },
+          {
+            "kind": "column",
+            "key": "span_id"
+          },
+          {
+            "kind": "column",
+            "key": "status"
+          },
+          {
+            "kind": "column",
+            "key": "status_class"
+          },
+          {
+            "kind": "column",
+            "key": "timestamp_ns"
+          },
+          {
+            "kind": "column",
+            "key": "trace_id"
+          },
+          {
+            "kind": "attribute",
+            "key": "goo.operation.name"
+          },
+          {
+            "kind": "attribute",
+            "key": "goo.operation.outcome"
+          },
+          {
+            "kind": "attribute",
+            "key": "goo.operation.role"
+          },
+          {
+            "kind": "resource",
+            "key": "deployment.environment.name"
+          },
+          {
+            "kind": "resource",
+            "key": "service.instance.id"
+          },
+          {
+            "kind": "resource",
+            "key": "service.name"
+          }
+        ],
+        "fieldsLimited": false,
+        "plan": {
+          "rows": "SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, SpanAttributes AS Attributes, SpanName, SpanKind, ParentSpanId, multiIf(Duration < 1000000, '[0,1) ms', Duration < 5000000, '[1,5) ms', Duration < 10000000, '[5,10) ms', Duration < 50000000, '[10,50) ms', Duration < 100000000, '[50,100) ms', Duration < 500000000, '[100,500) ms', Duration < 1000000000, '[500,1000) ms', '[1000,+inf) ms') AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration LIMIT 101 OFFSET 0 FORMAT JSONEachRow",
+          "count": "SELECT toString(count()) AS count, toString(sum(toUInt128(Duration))) AS sum_ns, toString(min(Duration)) AS min_ns, toString(max(Duration)) AS max_ns, arrayMap(x -> toString(x), quantilesExactHigh(0.50, 0.95, 0.99)(Duration)) AS quantiles_ns, toString(countIf(StatusCode = 'Error')) AS status_error, toString(countIf(StatusCode = 'Ok')) AS status_ok, toString(countIf(StatusCode = 'Unset')) AS status_unset, toString(countIf(StatusCode NOT IN ('Error','Ok','Unset'))) AS status_unknown FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) FORMAT JSONEachRow",
+          "groups": "SELECT if(1, CAST(toString(ServiceName) AS Nullable(String)), NULL) AS g0, if(1, CAST(toString(SpanName) AS Nullable(String)), NULL) AS g1, toString(count()) AS count, toString(sum(toUInt128(Duration))) AS sum_ns, toString(min(Duration)) AS min_ns, toString(max(Duration)) AS max_ns, arrayMap(x -> toString(x), quantilesExactHigh(0.50, 0.95, 0.99)(Duration)) AS quantiles_ns, toString(countIf(StatusCode = 'Error')) AS status_error, toString(countIf(StatusCode = 'Ok')) AS status_ok, toString(countIf(StatusCode = 'Unset')) AS status_unset, toString(countIf(StatusCode NOT IN ('Error','Ok','Unset'))) AS status_unknown FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) GROUP BY g0, g1 ORDER BY g0, g1 LIMIT 1001 FORMAT JSONEachRow",
+          "fields": "SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -> concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -> concat('attribute:', k), mapKeys(SpanAttributes)))) AS field FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY field LIMIT 129 FORMAT JSONEachRow",
+          "parameters": {
+            "environment": "local",
+            "from": "1793025645825",
+            "p3": "b28fbd7036b2427a72ee6846cffe0160",
+            "to": "1793025652025"
+          }
+        },
+        "warnings": [
+          "Captured records only; sampling, ingestion completeness and clock accuracy are unverified.",
+          "Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.",
+          "Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes."
+        ]
+      }
+    },
+    {
+      "endpoint": "/api/explore",
+      "origin": "http://127.0.0.1:8088",
+      "status": 200,
+      "raw": "{\"resultToken\": \"8606011f5ce7837a01bbe8fbb6beb7d2d6eb61da1506f4067e8d3c4b28875127\", \"question\": {\"signal\": \"logs\", \"environment\": \"local\", \"fromMs\": 1793025645825, \"toMs\": 1793025652025, \"where\": {\"all\": [{\"field\": {\"kind\": \"column\", \"key\": \"trace_id\"}, \"op\": \"eq\", \"value\": \"b28fbd7036b2427a72ee6846cffe0160\"}]}, \"limit\": 100, \"offset\": 0}, \"capturedAt\": \"2026-10-26T14:40:54.213908777Z\", \"basis\": \"e65b45698240425db91331d34b9f6941f84e514bff6fbdb647e3f8ce3034ff10\", \"count\": \"2\", \"state\": \"observed\", \"rows\": [{\"timestamp_ns\": \"1793025647155178700\", \"ServiceName\": \"lab-go-reports\", \"TraceId\": \"b28fbd7036b2427a72ee6846cffe0160\", \"SpanId\": \"e121c2e6e8d490d2\", \"ResourceAttributes\": {\"deployment.environment.name\": \"local\", \"service.instance.id\": \"reports-demo\", \"service.name\": \"lab-go-reports\"}, \"ScopeName\": \"goo.examples.logging\", \"ScopeVersion\": \"0.1.0\", \"Attributes\": {\"app.outcome\": \"\", \"app.release\": \"example-v1\", \"goo.event.id\": \"YVUH6BYJVFKQO6ENIH2IKRJOUK\", \"goo.event.name\": \"report.accepted\", \"goo.event.time_ns\": \"1793025647155178700\", \"goo.subject.id\": \"HBFH7JOI6FQYQNBKKIGIWRUEIA\", \"goo.subject.namespace\": \"report\", \"goo.subject.outcome\": \"\", \"goo.subject.tenant\": \"demo\"}, \"Body\": \"report.accepted\", \"SeverityText\": \"INFO\"}, {\"timestamp_ns\": \"1793025647189267864\", \"ServiceName\": \"lab-go-reports\", \"TraceId\": \"b28fbd7036b2427a72ee6846cffe0160\", \"SpanId\": \"e121c2e6e8d490d2\", \"ResourceAttributes\": {\"deployment.environment.name\": \"local\", \"service.instance.id\": \"reports-demo\", \"service.name\": \"lab-go-reports\"}, \"ScopeName\": \"goo.examples.logging\", \"ScopeVersion\": \"0.1.0\", \"Attributes\": {\"app.outcome\": \"ready\", \"app.release\": \"example-v1\", \"goo.event.id\": \"JBU4YWGXRZ5B4PJBCMNZA6HJML\", \"goo.event.name\": \"report.ready\", \"goo.event.time_ns\": \"1793025647189267864\", \"goo.subject.id\": \"HBFH7JOI6FQYQNBKKIGIWRUEIA\", \"goo.subject.namespace\": \"report\", \"goo.subject.outcome\": \"ready\", \"goo.subject.tenant\": \"demo\"}, \"Body\": \"report.ready\", \"SeverityText\": \"INFO\"}], \"hasMore\": false, \"groups\": [], \"fields\": [{\"kind\": \"column\", \"key\": \"body\"}, {\"kind\": \"column\", \"key\": \"body_pattern_v1\"}, {\"kind\": \"column\", \"key\": \"scope\"}, {\"kind\": \"column\", \"key\": \"scope_version\"}, {\"kind\": \"column\", \"key\": \"service\"}, {\"kind\": \"column\", \"key\": \"severity\"}, {\"kind\": \"column\", \"key\": \"severity_number\"}, {\"kind\": \"column\", \"key\": \"span_id\"}, {\"kind\": \"column\", \"key\": \"timestamp_ns\"}, {\"kind\": \"column\", \"key\": \"trace_id\"}, {\"kind\": \"attribute\", \"key\": \"app.outcome\"}, {\"kind\": \"attribute\", \"key\": \"app.release\"}, {\"kind\": \"attribute\", \"key\": \"goo.event.id\"}, {\"kind\": \"attribute\", \"key\": \"goo.event.name\"}, {\"kind\": \"attribute\", \"key\": \"goo.event.time_ns\"}, {\"kind\": \"attribute\", \"key\": \"goo.subject.id\"}, {\"kind\": \"attribute\", \"key\": \"goo.subject.namespace\"}, {\"kind\": \"attribute\", \"key\": \"goo.subject.outcome\"}, {\"kind\": \"attribute\", \"key\": \"goo.subject.tenant\"}, {\"kind\": \"resource\", \"key\": \"deployment.environment.name\"}, {\"kind\": \"resource\", \"key\": \"service.instance.id\"}, {\"kind\": \"resource\", \"key\": \"service.name\"}], \"fieldsLimited\": false, \"plan\": {\"rows\": \"SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, LogAttributes AS Attributes, Body, SeverityText FROM otel_logs WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY Timestamp, TraceId, SpanId, ServiceName, Body, SeverityText, toString(ResourceAttributes), toString(LogAttributes) LIMIT 101 OFFSET 0 FORMAT JSONEachRow\", \"count\": \"SELECT toString(count()) AS count FROM otel_logs WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) FORMAT JSONEachRow\", \"fields\": \"SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -> concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -> concat('attribute:', k), mapKeys(LogAttributes)))) AS field FROM otel_logs WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY field LIMIT 129 FORMAT JSONEachRow\", \"parameters\": {\"environment\": \"local\", \"from\": \"1793025645825\", \"p3\": \"b28fbd7036b2427a72ee6846cffe0160\", \"to\": \"1793025652025\"}}, \"warnings\": [\"Captured records only; sampling, ingestion completeness and clock accuracy are unverified.\", \"Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.\", \"Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes.\"]}",
+      "body": {
+        "resultToken": "8606011f5ce7837a01bbe8fbb6beb7d2d6eb61da1506f4067e8d3c4b28875127",
+        "question": {
+          "signal": "logs",
+          "environment": "local",
+          "fromMs": 1793025645825,
+          "toMs": 1793025652025,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "column",
+                  "key": "trace_id"
+                },
+                "op": "eq",
+                "value": "b28fbd7036b2427a72ee6846cffe0160"
+              }
+            ]
+          },
+          "limit": 100,
+          "offset": 0
+        },
+        "capturedAt": "2026-10-26T14:40:54.213908777Z",
+        "basis": "e65b45698240425db91331d34b9f6941f84e514bff6fbdb647e3f8ce3034ff10",
+        "count": "2",
+        "state": "observed",
+        "rows": [
+          {
+            "timestamp_ns": "1793025647155178700",
+            "ServiceName": "lab-go-reports",
+            "TraceId": "b28fbd7036b2427a72ee6846cffe0160",
+            "SpanId": "e121c2e6e8d490d2",
+            "ResourceAttributes": {
+              "deployment.environment.name": "local",
+              "service.instance.id": "reports-demo",
+              "service.name": "lab-go-reports"
+            },
+            "ScopeName": "goo.examples.logging",
+            "ScopeVersion": "0.1.0",
+            "Attributes": {
+              "app.outcome": "",
+              "app.release": "example-v1",
+              "goo.event.id": "YVUH6BYJVFKQO6ENIH2IKRJOUK",
+              "goo.event.name": "report.accepted",
+              "goo.event.time_ns": "1793025647155178700",
+              "goo.subject.id": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+              "goo.subject.namespace": "report",
+              "goo.subject.outcome": "",
+              "goo.subject.tenant": "demo"
+            },
+            "Body": "report.accepted",
+            "SeverityText": "INFO"
+          },
+          {
+            "timestamp_ns": "1793025647189267864",
+            "ServiceName": "lab-go-reports",
+            "TraceId": "b28fbd7036b2427a72ee6846cffe0160",
+            "SpanId": "e121c2e6e8d490d2",
+            "ResourceAttributes": {
+              "deployment.environment.name": "local",
+              "service.instance.id": "reports-demo",
+              "service.name": "lab-go-reports"
+            },
+            "ScopeName": "goo.examples.logging",
+            "ScopeVersion": "0.1.0",
+            "Attributes": {
+              "app.outcome": "ready",
+              "app.release": "example-v1",
+              "goo.event.id": "JBU4YWGXRZ5B4PJBCMNZA6HJML",
+              "goo.event.name": "report.ready",
+              "goo.event.time_ns": "1793025647189267864",
+              "goo.subject.id": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+              "goo.subject.namespace": "report",
+              "goo.subject.outcome": "ready",
+              "goo.subject.tenant": "demo"
+            },
+            "Body": "report.ready",
+            "SeverityText": "INFO"
+          }
+        ],
+        "hasMore": false,
+        "groups": [],
+        "fields": [
+          {
+            "kind": "column",
+            "key": "body"
+          },
+          {
+            "kind": "column",
+            "key": "body_pattern_v1"
+          },
+          {
+            "kind": "column",
+            "key": "scope"
+          },
+          {
+            "kind": "column",
+            "key": "scope_version"
+          },
+          {
+            "kind": "column",
+            "key": "service"
+          },
+          {
+            "kind": "column",
+            "key": "severity"
+          },
+          {
+            "kind": "column",
+            "key": "severity_number"
+          },
+          {
+            "kind": "column",
+            "key": "span_id"
+          },
+          {
+            "kind": "column",
+            "key": "timestamp_ns"
+          },
+          {
+            "kind": "column",
+            "key": "trace_id"
+          },
+          {
+            "kind": "attribute",
+            "key": "app.outcome"
+          },
+          {
+            "kind": "attribute",
+            "key": "app.release"
+          },
+          {
+            "kind": "attribute",
+            "key": "goo.event.id"
+          },
+          {
+            "kind": "attribute",
+            "key": "goo.event.name"
+          },
+          {
+            "kind": "attribute",
+            "key": "goo.event.time_ns"
+          },
+          {
+            "kind": "attribute",
+            "key": "goo.subject.id"
+          },
+          {
+            "kind": "attribute",
+            "key": "goo.subject.namespace"
+          },
+          {
+            "kind": "attribute",
+            "key": "goo.subject.outcome"
+          },
+          {
+            "kind": "attribute",
+            "key": "goo.subject.tenant"
+          },
+          {
+            "kind": "resource",
+            "key": "deployment.environment.name"
+          },
+          {
+            "kind": "resource",
+            "key": "service.instance.id"
+          },
+          {
+            "kind": "resource",
+            "key": "service.name"
+          }
+        ],
+        "fieldsLimited": false,
+        "plan": {
+          "rows": "SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, LogAttributes AS Attributes, Body, SeverityText FROM otel_logs WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY Timestamp, TraceId, SpanId, ServiceName, Body, SeverityText, toString(ResourceAttributes), toString(LogAttributes) LIMIT 101 OFFSET 0 FORMAT JSONEachRow",
+          "count": "SELECT toString(count()) AS count FROM otel_logs WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) FORMAT JSONEachRow",
+          "fields": "SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -> concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -> concat('attribute:', k), mapKeys(LogAttributes)))) AS field FROM otel_logs WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY field LIMIT 129 FORMAT JSONEachRow",
+          "parameters": {
+            "environment": "local",
+            "from": "1793025645825",
+            "p3": "b28fbd7036b2427a72ee6846cffe0160",
+            "to": "1793025652025"
+          }
+        },
+        "warnings": [
+          "Captured records only; sampling, ingestion completeness and clock accuracy are unverified.",
+          "Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.",
+          "Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes."
+        ]
+      }
+    },
+    {
+      "endpoint": "/api/captures",
+      "origin": "http://127.0.0.1:8088",
+      "status": 201,
+      "raw": "{\"receipt\": {\"version\": 1, \"id\": \"e3645c0e731fd8c2674dca913ccb6cd27012a98e2309aa353ce693c23b0c225f\", \"title\": \"Cross-app report HBFH7JOI6FQYQNBKKIGIWRUEIA\", \"capturedAt\": \"2026-10-26T14:40:55.575464905Z\", \"question\": {\"kind\": \"explore\", \"explore\": {\"signal\": \"spans\", \"environment\": \"local\", \"fromMs\": 1793025645825, \"toMs\": 1793025652025, \"where\": {\"all\": [{\"field\": {\"kind\": \"column\", \"key\": \"trace_id\"}, \"op\": \"eq\", \"value\": \"b28fbd7036b2427a72ee6846cffe0160\"}]}, \"limit\": 100, \"offset\": 0}}}, \"explore\": {\"traceExamples\": {\"version\": \"goo/trace-page-examples/v1\", \"state\": \"observed\", \"considered\": 1, \"excluded\": 0, \"items\": [{\"traceId\": \"b28fbd7036b2427a72ee6846cffe0160\", \"spanId\": \"e121c2e6e8d490d2\", \"service\": \"lab-go-reports\", \"name\": \"report.generate\", \"durationNS\": \"40404180\", \"timestampNS\": \"1793025647150608541\", \"status\": \"Unset\", \"reason\": \"Longest linked span on this page\"}]}, \"question\": {\"signal\": \"spans\", \"environment\": \"local\", \"fromMs\": 1793025645825, \"toMs\": 1793025652025, \"where\": {\"all\": [{\"field\": {\"kind\": \"column\", \"key\": \"trace_id\"}, \"op\": \"eq\", \"value\": \"b28fbd7036b2427a72ee6846cffe0160\"}]}, \"limit\": 100, \"offset\": 0}, \"capturedAt\": \"2026-10-26T14:40:55.527911582Z\", \"basis\": \"e619d9c83d8798452f0cb2e0a73ac81a323307fbdc03bf2dcba8da71b5e46d56\", \"count\": \"1\", \"state\": \"observed\", \"rows\": [{\"timestamp_ns\": \"1793025647150608541\", \"ServiceName\": \"lab-go-reports\", \"TraceId\": \"b28fbd7036b2427a72ee6846cffe0160\", \"SpanId\": \"e121c2e6e8d490d2\", \"ResourceAttributes\": {\"deployment.environment.name\": \"local\", \"service.instance.id\": \"reports-demo\", \"service.name\": \"lab-go-reports\"}, \"ScopeName\": \"github.com/casselc/goo/instrumentation\", \"ScopeVersion\": \"0.1.0\", \"Attributes\": {\"goo.operation.name\": \"report.generate\", \"goo.operation.outcome\": \"ok\", \"goo.operation.role\": \"server\"}, \"SpanName\": \"report.generate\", \"SpanKind\": \"Server\", \"ParentSpanId\": \"\", \"duration_bucket\": \"[10,50) ms\", \"duration_ns\": \"40404180\", \"StatusCode\": \"Unset\", \"StatusMessage\": \"\", \"SpanAttributes\": {\"goo.operation.name\": \"report.generate\", \"goo.operation.outcome\": \"ok\", \"goo.operation.role\": \"server\"}, \"event_times_ns\": [\"1793025647190938422\"], \"event_names\": [\"report.ready\"], \"event_attributes\": [{\"goo.event.name\": \"report.ready\", \"goo.subject.id\": \"HBFH7JOI6FQYQNBKKIGIWRUEIA\", \"goo.subject.namespace\": \"report\", \"goo.subject.outcome\": \"ready\", \"goo.subject.tenant\": \"demo\"}], \"linked_attributes\": [], \"linked_traces\": [], \"linked_spans\": []}], \"hasMore\": false, \"groups\": [], \"fields\": [{\"kind\": \"column\", \"key\": \"duration_bucket\"}, {\"kind\": \"column\", \"key\": \"duration_ns\"}, {\"kind\": \"column\", \"key\": \"exception_event\"}, {\"kind\": \"column\", \"key\": \"exception_type\"}, {\"kind\": \"column\", \"key\": \"exception_type_state\"}, {\"kind\": \"column\", \"key\": \"kind\"}, {\"kind\": \"column\", \"key\": \"name\"}, {\"kind\": \"column\", \"key\": \"scope\"}, {\"kind\": \"column\", \"key\": \"scope_version\"}, {\"kind\": \"column\", \"key\": \"service\"}, {\"kind\": \"column\", \"key\": \"span_id\"}, {\"kind\": \"column\", \"key\": \"status\"}, {\"kind\": \"column\", \"key\": \"status_class\"}, {\"kind\": \"column\", \"key\": \"timestamp_ns\"}, {\"kind\": \"column\", \"key\": \"trace_id\"}, {\"kind\": \"attribute\", \"key\": \"goo.operation.name\"}, {\"kind\": \"attribute\", \"key\": \"goo.operation.outcome\"}, {\"kind\": \"attribute\", \"key\": \"goo.operation.role\"}, {\"kind\": \"resource\", \"key\": \"deployment.environment.name\"}, {\"kind\": \"resource\", \"key\": \"service.instance.id\"}, {\"kind\": \"resource\", \"key\": \"service.name\"}], \"fieldsLimited\": false, \"plan\": {\"rows\": \"SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, SpanAttributes AS Attributes, SpanName, SpanKind, ParentSpanId, multiIf(Duration < 1000000, '[0,1) ms', Duration < 5000000, '[1,5) ms', Duration < 10000000, '[5,10) ms', Duration < 50000000, '[10,50) ms', Duration < 100000000, '[50,100) ms', Duration < 500000000, '[100,500) ms', Duration < 1000000000, '[500,1000) ms', '[1000,+inf) ms') AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration LIMIT 1001 OFFSET 0 FORMAT JSONEachRow\", \"count\": \"SELECT toString(count()) AS count FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) FORMAT JSONEachRow\", \"fields\": \"SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -> concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -> concat('attribute:', k), mapKeys(SpanAttributes)))) AS field FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY field LIMIT 129 FORMAT JSONEachRow\", \"parameters\": {\"environment\": \"local\", \"from\": \"1793025645825\", \"p3\": \"b28fbd7036b2427a72ee6846cffe0160\", \"to\": \"1793025652025\"}}, \"warnings\": [\"Captured records only; sampling, ingestion completeness and clock accuracy are unverified.\", \"Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.\", \"Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes.\"]}, \"retainedRecords\": 1, \"recordsLimited\": false}",
+      "body": {
+        "receipt": {
+          "version": 1,
+          "id": "e3645c0e731fd8c2674dca913ccb6cd27012a98e2309aa353ce693c23b0c225f",
+          "title": "Cross-app report HBFH7JOI6FQYQNBKKIGIWRUEIA",
+          "capturedAt": "2026-10-26T14:40:55.575464905Z",
+          "question": {
+            "kind": "explore",
+            "explore": {
+              "signal": "spans",
+              "environment": "local",
+              "fromMs": 1793025645825,
+              "toMs": 1793025652025,
+              "where": {
+                "all": [
+                  {
+                    "field": {
+                      "kind": "column",
+                      "key": "trace_id"
+                    },
+                    "op": "eq",
+                    "value": "b28fbd7036b2427a72ee6846cffe0160"
+                  }
+                ]
+              },
+              "limit": 100,
+              "offset": 0
+            }
+          }
+        },
+        "explore": {
+          "traceExamples": {
+            "version": "goo/trace-page-examples/v1",
+            "state": "observed",
+            "considered": 1,
+            "excluded": 0,
+            "items": [
+              {
+                "traceId": "b28fbd7036b2427a72ee6846cffe0160",
+                "spanId": "e121c2e6e8d490d2",
+                "service": "lab-go-reports",
+                "name": "report.generate",
+                "durationNS": "40404180",
+                "timestampNS": "1793025647150608541",
+                "status": "Unset",
+                "reason": "Longest linked span on this page"
+              }
+            ]
+          },
+          "question": {
+            "signal": "spans",
+            "environment": "local",
+            "fromMs": 1793025645825,
+            "toMs": 1793025652025,
+            "where": {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "trace_id"
+                  },
+                  "op": "eq",
+                  "value": "b28fbd7036b2427a72ee6846cffe0160"
+                }
+              ]
+            },
+            "limit": 100,
+            "offset": 0
+          },
+          "capturedAt": "2026-10-26T14:40:55.527911582Z",
+          "basis": "e619d9c83d8798452f0cb2e0a73ac81a323307fbdc03bf2dcba8da71b5e46d56",
+          "count": "1",
+          "state": "observed",
+          "rows": [
+            {
+              "timestamp_ns": "1793025647150608541",
+              "ServiceName": "lab-go-reports",
+              "TraceId": "b28fbd7036b2427a72ee6846cffe0160",
+              "SpanId": "e121c2e6e8d490d2",
+              "ResourceAttributes": {
+                "deployment.environment.name": "local",
+                "service.instance.id": "reports-demo",
+                "service.name": "lab-go-reports"
+              },
+              "ScopeName": "github.com/casselc/goo/instrumentation",
+              "ScopeVersion": "0.1.0",
+              "Attributes": {
+                "goo.operation.name": "report.generate",
+                "goo.operation.outcome": "ok",
+                "goo.operation.role": "server"
+              },
+              "SpanName": "report.generate",
+              "SpanKind": "Server",
+              "ParentSpanId": "",
+              "duration_bucket": "[10,50) ms",
+              "duration_ns": "40404180",
+              "StatusCode": "Unset",
+              "StatusMessage": "",
+              "SpanAttributes": {
+                "goo.operation.name": "report.generate",
+                "goo.operation.outcome": "ok",
+                "goo.operation.role": "server"
+              },
+              "event_times_ns": [
+                "1793025647190938422"
+              ],
+              "event_names": [
+                "report.ready"
+              ],
+              "event_attributes": [
+                {
+                  "goo.event.name": "report.ready",
+                  "goo.subject.id": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+                  "goo.subject.namespace": "report",
+                  "goo.subject.outcome": "ready",
+                  "goo.subject.tenant": "demo"
+                }
+              ],
+              "linked_attributes": [],
+              "linked_traces": [],
+              "linked_spans": []
+            }
+          ],
+          "hasMore": false,
+          "groups": [],
+          "fields": [
+            {
+              "kind": "column",
+              "key": "duration_bucket"
+            },
+            {
+              "kind": "column",
+              "key": "duration_ns"
+            },
+            {
+              "kind": "column",
+              "key": "exception_event"
+            },
+            {
+              "kind": "column",
+              "key": "exception_type"
+            },
+            {
+              "kind": "column",
+              "key": "exception_type_state"
+            },
+            {
+              "kind": "column",
+              "key": "kind"
+            },
+            {
+              "kind": "column",
+              "key": "name"
+            },
+            {
+              "kind": "column",
+              "key": "scope"
+            },
+            {
+              "kind": "column",
+              "key": "scope_version"
+            },
+            {
+              "kind": "column",
+              "key": "service"
+            },
+            {
+              "kind": "column",
+              "key": "span_id"
+            },
+            {
+              "kind": "column",
+              "key": "status"
+            },
+            {
+              "kind": "column",
+              "key": "status_class"
+            },
+            {
+              "kind": "column",
+              "key": "timestamp_ns"
+            },
+            {
+              "kind": "column",
+              "key": "trace_id"
+            },
+            {
+              "kind": "attribute",
+              "key": "goo.operation.name"
+            },
+            {
+              "kind": "attribute",
+              "key": "goo.operation.outcome"
+            },
+            {
+              "kind": "attribute",
+              "key": "goo.operation.role"
+            },
+            {
+              "kind": "resource",
+              "key": "deployment.environment.name"
+            },
+            {
+              "kind": "resource",
+              "key": "service.instance.id"
+            },
+            {
+              "kind": "resource",
+              "key": "service.name"
+            }
+          ],
+          "fieldsLimited": false,
+          "plan": {
+            "rows": "SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, SpanAttributes AS Attributes, SpanName, SpanKind, ParentSpanId, multiIf(Duration < 1000000, '[0,1) ms', Duration < 5000000, '[1,5) ms', Duration < 10000000, '[5,10) ms', Duration < 50000000, '[10,50) ms', Duration < 100000000, '[50,100) ms', Duration < 500000000, '[100,500) ms', Duration < 1000000000, '[500,1000) ms', '[1000,+inf) ms') AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration LIMIT 1001 OFFSET 0 FORMAT JSONEachRow",
+            "count": "SELECT toString(count()) AS count FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) FORMAT JSONEachRow",
+            "fields": "SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -> concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -> concat('attribute:', k), mapKeys(SpanAttributes)))) AS field FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY field LIMIT 129 FORMAT JSONEachRow",
+            "parameters": {
+              "environment": "local",
+              "from": "1793025645825",
+              "p3": "b28fbd7036b2427a72ee6846cffe0160",
+              "to": "1793025652025"
+            }
+          },
+          "warnings": [
+            "Captured records only; sampling, ingestion completeness and clock accuracy are unverified.",
+            "Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.",
+            "Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes."
+          ]
+        },
+        "retainedRecords": 1,
+        "recordsLimited": false
+      }
+    }
+  ],
+  "errors": [],
+  "pendingDriverCalls": 0,
+  "pendingResponseBodies": 0,
+  "workloadStartedAt": 1793025646825,
+  "applicationResponse": {
+    "id": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+    "outcome": "ready"
+  },
+  "report": {
+    "id": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+    "outcome": "ready"
+  },
+  "trace": "b28fbd7036b2427a72ee6846cffe0160",
+  "question": {
+    "signal": "spans",
+    "environment": "local",
+    "fromMs": 1793025645825,
+    "toMs": 1793025652025,
+    "limit": 100,
+    "where": {
+      "all": [
+        {
+          "field": {
+            "kind": "column",
+            "key": "trace_id"
+          },
+          "op": "eq",
+          "value": "b28fbd7036b2427a72ee6846cffe0160"
+        }
+      ]
+    }
+  },
+  "sourceSQL": "SELECT TraceId, SpanId, ServiceName, SpanName, toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, toString(Duration) AS duration_ns FROM default.otel_traces WHERE Timestamp>=fromUnixTimestamp64Milli({from:Int64}) AND Timestamp<fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes,'deployment.environment.name') AND ResourceAttributes['deployment.environment.name']={environment:String} AND TraceId={trace:String} ORDER BY SpanId LIMIT 100 FORMAT JSONEachRow",
+  "sourceParameters": {
+    "param_from": 1793025645825,
+    "param_to": 1793025652025,
+    "param_environment": "local",
+    "param_trace": "b28fbd7036b2427a72ee6846cffe0160"
+  },
+  "collection": {
+    "correlationSQL": "SELECT TraceId, SpanId FROM default.otel_traces WHERE ServiceName={service:String} AND Timestamp>=fromUnixTimestamp64Milli({from:Int64}) AND arrayExists(a -> a['goo.subject.id']={subject:String} AND a['goo.subject.namespace']='report' AND a['goo.subject.tenant']='demo', `Events.Attributes`) ORDER BY SpanId LIMIT 100 FORMAT JSONEachRow",
+    "parameters": {
+      "param_service": "lab-go-reports",
+      "param_from": 1793025645825,
+      "param_subject": "HBFH7JOI6FQYQNBKKIGIWRUEIA"
+    },
+    "rows": [
+      {
+        "TraceId": "b28fbd7036b2427a72ee6846cffe0160",
+        "SpanId": "e121c2e6e8d490d2"
+      }
+    ],
+    "population": [
+      {
+        "TraceId": "b28fbd7036b2427a72ee6846cffe0160",
+        "SpanId": "e121c2e6e8d490d2",
+        "ServiceName": "lab-go-reports",
+        "SpanName": "report.generate",
+        "timestamp_ns": "1793025647150608541",
+        "duration_ns": "40404180"
+      }
+    ],
+    "meaning": "Matching report and trace-window records observed; no global drain or complete-trace assertion."
+  },
+  "result": {
+    "resultToken": "74165e2c52195a8b377b453514c62570af0eeaa93049f02e87e5ca2850442f90",
+    "traceExamples": {
+      "version": "goo/trace-page-examples/v1",
+      "state": "observed",
+      "considered": 1,
+      "excluded": 0,
+      "items": [
+        {
+          "traceId": "b28fbd7036b2427a72ee6846cffe0160",
+          "spanId": "e121c2e6e8d490d2",
+          "service": "lab-go-reports",
+          "name": "report.generate",
+          "durationNS": "40404180",
+          "timestampNS": "1793025647150608541",
+          "status": "Unset",
+          "reason": "Longest linked span on this page"
+        }
+      ]
+    },
+    "question": {
+      "signal": "spans",
+      "environment": "local",
+      "fromMs": 1793025645825,
+      "toMs": 1793025652025,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "column",
+              "key": "trace_id"
+            },
+            "op": "eq",
+            "value": "b28fbd7036b2427a72ee6846cffe0160"
+          }
+        ]
+      },
+      "limit": 100,
+      "offset": 0
+    },
+    "capturedAt": "2026-10-26T14:40:52.660191702Z",
+    "basis": "460bf6de2cd551bdc3d744a8b9921faa1720c8f9f173443c17639d9b94b51cd5",
+    "count": "1",
+    "state": "observed",
+    "rows": [
+      {
+        "timestamp_ns": "1793025647150608541",
+        "ServiceName": "lab-go-reports",
+        "TraceId": "b28fbd7036b2427a72ee6846cffe0160",
+        "SpanId": "e121c2e6e8d490d2",
+        "ResourceAttributes": {
+          "deployment.environment.name": "local",
+          "service.instance.id": "reports-demo",
+          "service.name": "lab-go-reports"
+        },
+        "ScopeName": "github.com/casselc/goo/instrumentation",
+        "ScopeVersion": "0.1.0",
+        "Attributes": {
+          "goo.operation.name": "report.generate",
+          "goo.operation.outcome": "ok",
+          "goo.operation.role": "server"
+        },
+        "SpanName": "report.generate",
+        "SpanKind": "Server",
+        "ParentSpanId": "",
+        "duration_bucket": "[10,50) ms",
+        "duration_ns": "40404180",
+        "StatusCode": "Unset",
+        "StatusMessage": "",
+        "SpanAttributes": {
+          "goo.operation.name": "report.generate",
+          "goo.operation.outcome": "ok",
+          "goo.operation.role": "server"
+        },
+        "event_times_ns": [
+          "1793025647190938422"
+        ],
+        "event_names": [
+          "report.ready"
+        ],
+        "event_attributes": [
+          {
+            "goo.event.name": "report.ready",
+            "goo.subject.id": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+            "goo.subject.namespace": "report",
+            "goo.subject.outcome": "ready",
+            "goo.subject.tenant": "demo"
+          }
+        ],
+        "linked_attributes": [],
+        "linked_traces": [],
+        "linked_spans": []
+      }
+    ],
+    "hasMore": false,
+    "groups": [],
+    "fields": [
+      {
+        "kind": "column",
+        "key": "duration_bucket"
+      },
+      {
+        "kind": "column",
+        "key": "duration_ns"
+      },
+      {
+        "kind": "column",
+        "key": "exception_event"
+      },
+      {
+        "kind": "column",
+        "key": "exception_type"
+      },
+      {
+        "kind": "column",
+        "key": "exception_type_state"
+      },
+      {
+        "kind": "column",
+        "key": "kind"
+      },
+      {
+        "kind": "column",
+        "key": "name"
+      },
+      {
+        "kind": "column",
+        "key": "scope"
+      },
+      {
+        "kind": "column",
+        "key": "scope_version"
+      },
+      {
+        "kind": "column",
+        "key": "service"
+      },
+      {
+        "kind": "column",
+        "key": "span_id"
+      },
+      {
+        "kind": "column",
+        "key": "status"
+      },
+      {
+        "kind": "column",
+        "key": "status_class"
+      },
+      {
+        "kind": "column",
+        "key": "timestamp_ns"
+      },
+      {
+        "kind": "column",
+        "key": "trace_id"
+      },
+      {
+        "kind": "attribute",
+        "key": "goo.operation.name"
+      },
+      {
+        "kind": "attribute",
+        "key": "goo.operation.outcome"
+      },
+      {
+        "kind": "attribute",
+        "key": "goo.operation.role"
+      },
+      {
+        "kind": "resource",
+        "key": "deployment.environment.name"
+      },
+      {
+        "kind": "resource",
+        "key": "service.instance.id"
+      },
+      {
+        "kind": "resource",
+        "key": "service.name"
+      }
+    ],
+    "fieldsLimited": false,
+    "plan": {
+      "rows": "SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, SpanAttributes AS Attributes, SpanName, SpanKind, ParentSpanId, multiIf(Duration < 1000000, '[0,1) ms', Duration < 5000000, '[1,5) ms', Duration < 10000000, '[5,10) ms', Duration < 50000000, '[10,50) ms', Duration < 100000000, '[50,100) ms', Duration < 500000000, '[100,500) ms', Duration < 1000000000, '[500,1000) ms', '[1000,+inf) ms') AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration LIMIT 101 OFFSET 0 FORMAT JSONEachRow",
+      "count": "SELECT toString(count()) AS count FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) FORMAT JSONEachRow",
+      "fields": "SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -> concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -> concat('attribute:', k), mapKeys(SpanAttributes)))) AS field FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY field LIMIT 129 FORMAT JSONEachRow",
+      "parameters": {
+        "environment": "local",
+        "from": "1793025645825",
+        "p3": "b28fbd7036b2427a72ee6846cffe0160",
+        "to": "1793025652025"
+      }
+    },
+    "warnings": [
+      "Captured records only; sampling, ingestion completeness and clock accuracy are unverified.",
+      "Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.",
+      "Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes."
+    ]
+  },
+  "domRecords": [
+    {
+      "timestamp_ns": "1793025647150608541",
+      "ServiceName": "lab-go-reports",
+      "TraceId": "b28fbd7036b2427a72ee6846cffe0160",
+      "SpanId": "e121c2e6e8d490d2",
+      "ResourceAttributes": {
+        "deployment.environment.name": "local",
+        "service.instance.id": "reports-demo",
+        "service.name": "lab-go-reports"
+      },
+      "ScopeName": "github.com/casselc/goo/instrumentation",
+      "ScopeVersion": "0.1.0",
+      "Attributes": {
+        "goo.operation.name": "report.generate",
+        "goo.operation.outcome": "ok",
+        "goo.operation.role": "server"
+      },
+      "SpanName": "report.generate",
+      "SpanKind": "Server",
+      "ParentSpanId": "",
+      "duration_bucket": "[10,50) ms",
+      "duration_ns": "40404180",
+      "StatusCode": "Unset",
+      "StatusMessage": "",
+      "SpanAttributes": {
+        "goo.operation.name": "report.generate",
+        "goo.operation.outcome": "ok",
+        "goo.operation.role": "server"
+      },
+      "event_times_ns": [
+        "1793025647190938422"
+      ],
+      "event_names": [
+        "report.ready"
+      ],
+      "event_attributes": [
+        {
+          "goo.event.name": "report.ready",
+          "goo.subject.id": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+          "goo.subject.namespace": "report",
+          "goo.subject.outcome": "ready",
+          "goo.subject.tenant": "demo"
+        }
+      ],
+      "linked_attributes": [],
+      "linked_traces": [],
+      "linked_spans": []
+    }
+  ],
+  "expansion": {
+    "spans": {
+      "resultToken": "a2f1cb19606bca78ce55ef47db8782d0d310bcc1301b160265be621063278ce6",
+      "traceExamples": {
+        "version": "goo/trace-page-examples/v1",
+        "state": "observed",
+        "considered": 1,
+        "excluded": 0,
+        "items": [
+          {
+            "traceId": "b28fbd7036b2427a72ee6846cffe0160",
+            "spanId": "e121c2e6e8d490d2",
+            "service": "lab-go-reports",
+            "name": "report.generate",
+            "durationNS": "40404180",
+            "timestampNS": "1793025647150608541",
+            "status": "Unset",
+            "reason": "Longest linked span on this page"
+          }
+        ]
+      },
+      "spanStatus": {
+        "count": "1",
+        "error": "0",
+        "ok": "0",
+        "unset": "1",
+        "unknown": "0"
+      },
+      "duration": {
+        "state": "observed",
+        "count": "1",
+        "sumNs": "40404180",
+        "minNs": "40404180",
+        "maxNs": "40404180",
+        "p50Ns": "40404180",
+        "p95Ns": "40404180",
+        "p99Ns": "40404180"
+      },
+      "question": {
+        "spanStatus": true,
+        "summary": "span-duration",
+        "signal": "spans",
+        "environment": "local",
+        "fromMs": 1793025645825,
+        "toMs": 1793025652025,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "trace_id"
+              },
+              "op": "eq",
+              "value": "b28fbd7036b2427a72ee6846cffe0160"
+            }
+          ]
+        },
+        "groupBy": [
+          {
+            "kind": "column",
+            "key": "service"
+          },
+          {
+            "kind": "column",
+            "key": "name"
+          }
+        ],
+        "limit": 100,
+        "offset": 0
+      },
+      "capturedAt": "2026-10-26T14:40:54.11319235Z",
+      "basis": "ffa4ea03af5b43001c1433e0c844ac692ae95004098f8043efb4fdbd9f5f6e83",
+      "count": "1",
+      "state": "observed",
+      "rows": [
+        {
+          "timestamp_ns": "1793025647150608541",
+          "ServiceName": "lab-go-reports",
+          "TraceId": "b28fbd7036b2427a72ee6846cffe0160",
+          "SpanId": "e121c2e6e8d490d2",
+          "ResourceAttributes": {
+            "deployment.environment.name": "local",
+            "service.instance.id": "reports-demo",
+            "service.name": "lab-go-reports"
+          },
+          "ScopeName": "github.com/casselc/goo/instrumentation",
+          "ScopeVersion": "0.1.0",
+          "Attributes": {
+            "goo.operation.name": "report.generate",
+            "goo.operation.outcome": "ok",
+            "goo.operation.role": "server"
+          },
+          "SpanName": "report.generate",
+          "SpanKind": "Server",
+          "ParentSpanId": "",
+          "duration_bucket": "[10,50) ms",
+          "duration_ns": "40404180",
+          "StatusCode": "Unset",
+          "StatusMessage": "",
+          "SpanAttributes": {
+            "goo.operation.name": "report.generate",
+            "goo.operation.outcome": "ok",
+            "goo.operation.role": "server"
+          },
+          "event_times_ns": [
+            "1793025647190938422"
+          ],
+          "event_names": [
+            "report.ready"
+          ],
+          "event_attributes": [
+            {
+              "goo.event.name": "report.ready",
+              "goo.subject.id": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+              "goo.subject.namespace": "report",
+              "goo.subject.outcome": "ready",
+              "goo.subject.tenant": "demo"
+            }
+          ],
+          "linked_attributes": [],
+          "linked_traces": [],
+          "linked_spans": []
+        }
+      ],
+      "hasMore": false,
+      "groups": [
+        {
+          "count": "1",
+          "duration": {
+            "state": "observed",
+            "count": "1",
+            "sumNs": "40404180",
+            "minNs": "40404180",
+            "maxNs": "40404180",
+            "p50Ns": "40404180",
+            "p95Ns": "40404180",
+            "p99Ns": "40404180"
+          },
+          "g0": "lab-go-reports",
+          "g1": "report.generate",
+          "spanStatus": {
+            "count": "1",
+            "error": "0",
+            "ok": "0",
+            "unset": "1",
+            "unknown": "0"
+          }
+        }
+      ],
+      "fields": [
+        {
+          "kind": "column",
+          "key": "duration_bucket"
+        },
+        {
+          "kind": "column",
+          "key": "duration_ns"
+        },
+        {
+          "kind": "column",
+          "key": "exception_event"
+        },
+        {
+          "kind": "column",
+          "key": "exception_type"
+        },
+        {
+          "kind": "column",
+          "key": "exception_type_state"
+        },
+        {
+          "kind": "column",
+          "key": "kind"
+        },
+        {
+          "kind": "column",
+          "key": "name"
+        },
+        {
+          "kind": "column",
+          "key": "scope"
+        },
+        {
+          "kind": "column",
+          "key": "scope_version"
+        },
+        {
+          "kind": "column",
+          "key": "service"
+        },
+        {
+          "kind": "column",
+          "key": "span_id"
+        },
+        {
+          "kind": "column",
+          "key": "status"
+        },
+        {
+          "kind": "column",
+          "key": "status_class"
+        },
+        {
+          "kind": "column",
+          "key": "timestamp_ns"
+        },
+        {
+          "kind": "column",
+          "key": "trace_id"
+        },
+        {
+          "kind": "attribute",
+          "key": "goo.operation.name"
+        },
+        {
+          "kind": "attribute",
+          "key": "goo.operation.outcome"
+        },
+        {
+          "kind": "attribute",
+          "key": "goo.operation.role"
+        },
+        {
+          "kind": "resource",
+          "key": "deployment.environment.name"
+        },
+        {
+          "kind": "resource",
+          "key": "service.instance.id"
+        },
+        {
+          "kind": "resource",
+          "key": "service.name"
+        }
+      ],
+      "fieldsLimited": false,
+      "plan": {
+        "rows": "SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, SpanAttributes AS Attributes, SpanName, SpanKind, ParentSpanId, multiIf(Duration < 1000000, '[0,1) ms', Duration < 5000000, '[1,5) ms', Duration < 10000000, '[5,10) ms', Duration < 50000000, '[10,50) ms', Duration < 100000000, '[50,100) ms', Duration < 500000000, '[100,500) ms', Duration < 1000000000, '[500,1000) ms', '[1000,+inf) ms') AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration LIMIT 101 OFFSET 0 FORMAT JSONEachRow",
+        "count": "SELECT toString(count()) AS count, toString(sum(toUInt128(Duration))) AS sum_ns, toString(min(Duration)) AS min_ns, toString(max(Duration)) AS max_ns, arrayMap(x -> toString(x), quantilesExactHigh(0.50, 0.95, 0.99)(Duration)) AS quantiles_ns, toString(countIf(StatusCode = 'Error')) AS status_error, toString(countIf(StatusCode = 'Ok')) AS status_ok, toString(countIf(StatusCode = 'Unset')) AS status_unset, toString(countIf(StatusCode NOT IN ('Error','Ok','Unset'))) AS status_unknown FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) FORMAT JSONEachRow",
+        "groups": "SELECT if(1, CAST(toString(ServiceName) AS Nullable(String)), NULL) AS g0, if(1, CAST(toString(SpanName) AS Nullable(String)), NULL) AS g1, toString(count()) AS count, toString(sum(toUInt128(Duration))) AS sum_ns, toString(min(Duration)) AS min_ns, toString(max(Duration)) AS max_ns, arrayMap(x -> toString(x), quantilesExactHigh(0.50, 0.95, 0.99)(Duration)) AS quantiles_ns, toString(countIf(StatusCode = 'Error')) AS status_error, toString(countIf(StatusCode = 'Ok')) AS status_ok, toString(countIf(StatusCode = 'Unset')) AS status_unset, toString(countIf(StatusCode NOT IN ('Error','Ok','Unset'))) AS status_unknown FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) GROUP BY g0, g1 ORDER BY g0, g1 LIMIT 1001 FORMAT JSONEachRow",
+        "fields": "SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -> concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -> concat('attribute:', k), mapKeys(SpanAttributes)))) AS field FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY field LIMIT 129 FORMAT JSONEachRow",
+        "parameters": {
+          "environment": "local",
+          "from": "1793025645825",
+          "p3": "b28fbd7036b2427a72ee6846cffe0160",
+          "to": "1793025652025"
+        }
+      },
+      "warnings": [
+        "Captured records only; sampling, ingestion completeness and clock accuracy are unverified.",
+        "Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.",
+        "Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes."
+      ]
+    },
+    "logs": {
+      "resultToken": "8606011f5ce7837a01bbe8fbb6beb7d2d6eb61da1506f4067e8d3c4b28875127",
+      "question": {
+        "signal": "logs",
+        "environment": "local",
+        "fromMs": 1793025645825,
+        "toMs": 1793025652025,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "trace_id"
+              },
+              "op": "eq",
+              "value": "b28fbd7036b2427a72ee6846cffe0160"
+            }
+          ]
+        },
+        "limit": 100,
+        "offset": 0
+      },
+      "capturedAt": "2026-10-26T14:40:54.213908777Z",
+      "basis": "e65b45698240425db91331d34b9f6941f84e514bff6fbdb647e3f8ce3034ff10",
+      "count": "2",
+      "state": "observed",
+      "rows": [
+        {
+          "timestamp_ns": "1793025647155178700",
+          "ServiceName": "lab-go-reports",
+          "TraceId": "b28fbd7036b2427a72ee6846cffe0160",
+          "SpanId": "e121c2e6e8d490d2",
+          "ResourceAttributes": {
+            "deployment.environment.name": "local",
+            "service.instance.id": "reports-demo",
+            "service.name": "lab-go-reports"
+          },
+          "ScopeName": "goo.examples.logging",
+          "ScopeVersion": "0.1.0",
+          "Attributes": {
+            "app.outcome": "",
+            "app.release": "example-v1",
+            "goo.event.id": "YVUH6BYJVFKQO6ENIH2IKRJOUK",
+            "goo.event.name": "report.accepted",
+            "goo.event.time_ns": "1793025647155178700",
+            "goo.subject.id": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+            "goo.subject.namespace": "report",
+            "goo.subject.outcome": "",
+            "goo.subject.tenant": "demo"
+          },
+          "Body": "report.accepted",
+          "SeverityText": "INFO"
+        },
+        {
+          "timestamp_ns": "1793025647189267864",
+          "ServiceName": "lab-go-reports",
+          "TraceId": "b28fbd7036b2427a72ee6846cffe0160",
+          "SpanId": "e121c2e6e8d490d2",
+          "ResourceAttributes": {
+            "deployment.environment.name": "local",
+            "service.instance.id": "reports-demo",
+            "service.name": "lab-go-reports"
+          },
+          "ScopeName": "goo.examples.logging",
+          "ScopeVersion": "0.1.0",
+          "Attributes": {
+            "app.outcome": "ready",
+            "app.release": "example-v1",
+            "goo.event.id": "JBU4YWGXRZ5B4PJBCMNZA6HJML",
+            "goo.event.name": "report.ready",
+            "goo.event.time_ns": "1793025647189267864",
+            "goo.subject.id": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+            "goo.subject.namespace": "report",
+            "goo.subject.outcome": "ready",
+            "goo.subject.tenant": "demo"
+          },
+          "Body": "report.ready",
+          "SeverityText": "INFO"
+        }
+      ],
+      "hasMore": false,
+      "groups": [],
+      "fields": [
+        {
+          "kind": "column",
+          "key": "body"
+        },
+        {
+          "kind": "column",
+          "key": "body_pattern_v1"
+        },
+        {
+          "kind": "column",
+          "key": "scope"
+        },
+        {
+          "kind": "column",
+          "key": "scope_version"
+        },
+        {
+          "kind": "column",
+          "key": "service"
+        },
+        {
+          "kind": "column",
+          "key": "severity"
+        },
+        {
+          "kind": "column",
+          "key": "severity_number"
+        },
+        {
+          "kind": "column",
+          "key": "span_id"
+        },
+        {
+          "kind": "column",
+          "key": "timestamp_ns"
+        },
+        {
+          "kind": "column",
+          "key": "trace_id"
+        },
+        {
+          "kind": "attribute",
+          "key": "app.outcome"
+        },
+        {
+          "kind": "attribute",
+          "key": "app.release"
+        },
+        {
+          "kind": "attribute",
+          "key": "goo.event.id"
+        },
+        {
+          "kind": "attribute",
+          "key": "goo.event.name"
+        },
+        {
+          "kind": "attribute",
+          "key": "goo.event.time_ns"
+        },
+        {
+          "kind": "attribute",
+          "key": "goo.subject.id"
+        },
+        {
+          "kind": "attribute",
+          "key": "goo.subject.namespace"
+        },
+        {
+          "kind": "attribute",
+          "key": "goo.subject.outcome"
+        },
+        {
+          "kind": "attribute",
+          "key": "goo.subject.tenant"
+        },
+        {
+          "kind": "resource",
+          "key": "deployment.environment.name"
+        },
+        {
+          "kind": "resource",
+          "key": "service.instance.id"
+        },
+        {
+          "kind": "resource",
+          "key": "service.name"
+        }
+      ],
+      "fieldsLimited": false,
+      "plan": {
+        "rows": "SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, LogAttributes AS Attributes, Body, SeverityText FROM otel_logs WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY Timestamp, TraceId, SpanId, ServiceName, Body, SeverityText, toString(ResourceAttributes), toString(LogAttributes) LIMIT 101 OFFSET 0 FORMAT JSONEachRow",
+        "count": "SELECT toString(count()) AS count FROM otel_logs WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) FORMAT JSONEachRow",
+        "fields": "SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -> concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -> concat('attribute:', k), mapKeys(LogAttributes)))) AS field FROM otel_logs WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY field LIMIT 129 FORMAT JSONEachRow",
+        "parameters": {
+          "environment": "local",
+          "from": "1793025645825",
+          "p3": "b28fbd7036b2427a72ee6846cffe0160",
+          "to": "1793025652025"
+        }
+      },
+      "warnings": [
+        "Captured records only; sampling, ingestion completeness and clock accuracy are unverified.",
+        "Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.",
+        "Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes."
+      ]
+    }
+  },
+  "waterfallMembers": "e121c2e6e8d490d2",
+  "saved": {
+    "receipt": {
+      "version": 1,
+      "id": "e3645c0e731fd8c2674dca913ccb6cd27012a98e2309aa353ce693c23b0c225f",
+      "title": "Cross-app report HBFH7JOI6FQYQNBKKIGIWRUEIA",
+      "capturedAt": "2026-10-26T14:40:55.575464905Z",
+      "question": {
+        "kind": "explore",
+        "explore": {
+          "signal": "spans",
+          "environment": "local",
+          "fromMs": 1793025645825,
+          "toMs": 1793025652025,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "column",
+                  "key": "trace_id"
+                },
+                "op": "eq",
+                "value": "b28fbd7036b2427a72ee6846cffe0160"
+              }
+            ]
+          },
+          "limit": 100,
+          "offset": 0
+        }
+      }
+    },
+    "explore": {
+      "traceExamples": {
+        "version": "goo/trace-page-examples/v1",
+        "state": "observed",
+        "considered": 1,
+        "excluded": 0,
+        "items": [
+          {
+            "traceId": "b28fbd7036b2427a72ee6846cffe0160",
+            "spanId": "e121c2e6e8d490d2",
+            "service": "lab-go-reports",
+            "name": "report.generate",
+            "durationNS": "40404180",
+            "timestampNS": "1793025647150608541",
+            "status": "Unset",
+            "reason": "Longest linked span on this page"
+          }
+        ]
+      },
+      "question": {
+        "signal": "spans",
+        "environment": "local",
+        "fromMs": 1793025645825,
+        "toMs": 1793025652025,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "trace_id"
+              },
+              "op": "eq",
+              "value": "b28fbd7036b2427a72ee6846cffe0160"
+            }
+          ]
+        },
+        "limit": 100,
+        "offset": 0
+      },
+      "capturedAt": "2026-10-26T14:40:55.527911582Z",
+      "basis": "e619d9c83d8798452f0cb2e0a73ac81a323307fbdc03bf2dcba8da71b5e46d56",
+      "count": "1",
+      "state": "observed",
+      "rows": [
+        {
+          "timestamp_ns": "1793025647150608541",
+          "ServiceName": "lab-go-reports",
+          "TraceId": "b28fbd7036b2427a72ee6846cffe0160",
+          "SpanId": "e121c2e6e8d490d2",
+          "ResourceAttributes": {
+            "deployment.environment.name": "local",
+            "service.instance.id": "reports-demo",
+            "service.name": "lab-go-reports"
+          },
+          "ScopeName": "github.com/casselc/goo/instrumentation",
+          "ScopeVersion": "0.1.0",
+          "Attributes": {
+            "goo.operation.name": "report.generate",
+            "goo.operation.outcome": "ok",
+            "goo.operation.role": "server"
+          },
+          "SpanName": "report.generate",
+          "SpanKind": "Server",
+          "ParentSpanId": "",
+          "duration_bucket": "[10,50) ms",
+          "duration_ns": "40404180",
+          "StatusCode": "Unset",
+          "StatusMessage": "",
+          "SpanAttributes": {
+            "goo.operation.name": "report.generate",
+            "goo.operation.outcome": "ok",
+            "goo.operation.role": "server"
+          },
+          "event_times_ns": [
+            "1793025647190938422"
+          ],
+          "event_names": [
+            "report.ready"
+          ],
+          "event_attributes": [
+            {
+              "goo.event.name": "report.ready",
+              "goo.subject.id": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+              "goo.subject.namespace": "report",
+              "goo.subject.outcome": "ready",
+              "goo.subject.tenant": "demo"
+            }
+          ],
+          "linked_attributes": [],
+          "linked_traces": [],
+          "linked_spans": []
+        }
+      ],
+      "hasMore": false,
+      "groups": [],
+      "fields": [
+        {
+          "kind": "column",
+          "key": "duration_bucket"
+        },
+        {
+          "kind": "column",
+          "key": "duration_ns"
+        },
+        {
+          "kind": "column",
+          "key": "exception_event"
+        },
+        {
+          "kind": "column",
+          "key": "exception_type"
+        },
+        {
+          "kind": "column",
+          "key": "exception_type_state"
+        },
+        {
+          "kind": "column",
+          "key": "kind"
+        },
+        {
+          "kind": "column",
+          "key": "name"
+        },
+        {
+          "kind": "column",
+          "key": "scope"
+        },
+        {
+          "kind": "column",
+          "key": "scope_version"
+        },
+        {
+          "kind": "column",
+          "key": "service"
+        },
+        {
+          "kind": "column",
+          "key": "span_id"
+        },
+        {
+          "kind": "column",
+          "key": "status"
+        },
+        {
+          "kind": "column",
+          "key": "status_class"
+        },
+        {
+          "kind": "column",
+          "key": "timestamp_ns"
+        },
+        {
+          "kind": "column",
+          "key": "trace_id"
+        },
+        {
+          "kind": "attribute",
+          "key": "goo.operation.name"
+        },
+        {
+          "kind": "attribute",
+          "key": "goo.operation.outcome"
+        },
+        {
+          "kind": "attribute",
+          "key": "goo.operation.role"
+        },
+        {
+          "kind": "resource",
+          "key": "deployment.environment.name"
+        },
+        {
+          "kind": "resource",
+          "key": "service.instance.id"
+        },
+        {
+          "kind": "resource",
+          "key": "service.name"
+        }
+      ],
+      "fieldsLimited": false,
+      "plan": {
+        "rows": "SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, SpanAttributes AS Attributes, SpanName, SpanKind, ParentSpanId, multiIf(Duration < 1000000, '[0,1) ms', Duration < 5000000, '[1,5) ms', Duration < 10000000, '[5,10) ms', Duration < 50000000, '[10,50) ms', Duration < 100000000, '[50,100) ms', Duration < 500000000, '[100,500) ms', Duration < 1000000000, '[500,1000) ms', '[1000,+inf) ms') AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration LIMIT 1001 OFFSET 0 FORMAT JSONEachRow",
+        "count": "SELECT toString(count()) AS count FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) FORMAT JSONEachRow",
+        "fields": "SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -> concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -> concat('attribute:', k), mapKeys(SpanAttributes)))) AS field FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY field LIMIT 129 FORMAT JSONEachRow",
+        "parameters": {
+          "environment": "local",
+          "from": "1793025645825",
+          "p3": "b28fbd7036b2427a72ee6846cffe0160",
+          "to": "1793025652025"
+        }
+      },
+      "warnings": [
+        "Captured records only; sampling, ingestion completeness and clock accuracy are unverified.",
+        "Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.",
+        "Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes."
+      ]
+    },
+    "retainedRecords": 1,
+    "recordsLimited": false
+  },
+  "storedBefore": {
+    "file": "capture-before.json",
+    "bytes": 6080,
+    "digest": "d5456ccd5c4a9d3ec09477e90d6afc95191165446fc89e734bf827441bef06cd",
+    "contentId": "e3645c0e731fd8c2674dca913ccb6cd27012a98e2309aa353ce693c23b0c225f",
+    "hashOracle": "Public SavedCapture typed unmarshal/remarshal with ID empty and standard SHA256; production captureDigest is not called.",
+    "data": {
+      "version": 1,
+      "id": "e3645c0e731fd8c2674dca913ccb6cd27012a98e2309aa353ce693c23b0c225f",
+      "title": "Cross-app report HBFH7JOI6FQYQNBKKIGIWRUEIA",
+      "capturedAt": "2026-10-26T14:40:55.575464905Z",
+      "question": {
+        "kind": "explore",
+        "explore": {
+          "signal": "spans",
+          "environment": "local",
+          "fromMs": 1793025645825,
+          "toMs": 1793025652025,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "column",
+                  "key": "trace_id"
+                },
+                "op": "eq",
+                "value": "b28fbd7036b2427a72ee6846cffe0160"
+              }
+            ]
+          },
+          "limit": 100,
+          "offset": 0
+        }
+      },
+      "explore": {
+        "traceExamples": {
+          "version": "goo/trace-page-examples/v1",
+          "state": "observed",
+          "considered": 1,
+          "excluded": 0,
+          "items": [
+            {
+              "traceId": "b28fbd7036b2427a72ee6846cffe0160",
+              "spanId": "e121c2e6e8d490d2",
+              "service": "lab-go-reports",
+              "name": "report.generate",
+              "durationNS": "40404180",
+              "timestampNS": "1793025647150608541",
+              "status": "Unset",
+              "reason": "Longest linked span on this page"
+            }
+          ]
+        },
+        "question": {
+          "signal": "spans",
+          "environment": "local",
+          "fromMs": 1793025645825,
+          "toMs": 1793025652025,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "column",
+                  "key": "trace_id"
+                },
+                "op": "eq",
+                "value": "b28fbd7036b2427a72ee6846cffe0160"
+              }
+            ]
+          },
+          "limit": 100,
+          "offset": 0
+        },
+        "capturedAt": "2026-10-26T14:40:55.527911582Z",
+        "basis": "e619d9c83d8798452f0cb2e0a73ac81a323307fbdc03bf2dcba8da71b5e46d56",
+        "count": "1",
+        "state": "observed",
+        "rows": [
+          {
+            "timestamp_ns": "1793025647150608541",
+            "ServiceName": "lab-go-reports",
+            "TraceId": "b28fbd7036b2427a72ee6846cffe0160",
+            "SpanId": "e121c2e6e8d490d2",
+            "ResourceAttributes": {
+              "deployment.environment.name": "local",
+              "service.instance.id": "reports-demo",
+              "service.name": "lab-go-reports"
+            },
+            "ScopeName": "github.com/casselc/goo/instrumentation",
+            "ScopeVersion": "0.1.0",
+            "Attributes": {
+              "goo.operation.name": "report.generate",
+              "goo.operation.outcome": "ok",
+              "goo.operation.role": "server"
+            },
+            "SpanName": "report.generate",
+            "SpanKind": "Server",
+            "ParentSpanId": "",
+            "duration_bucket": "[10,50) ms",
+            "duration_ns": "40404180",
+            "StatusCode": "Unset",
+            "StatusMessage": "",
+            "SpanAttributes": {
+              "goo.operation.name": "report.generate",
+              "goo.operation.outcome": "ok",
+              "goo.operation.role": "server"
+            },
+            "event_times_ns": [
+              "1793025647190938422"
+            ],
+            "event_names": [
+              "report.ready"
+            ],
+            "event_attributes": [
+              {
+                "goo.event.name": "report.ready",
+                "goo.subject.id": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+                "goo.subject.namespace": "report",
+                "goo.subject.outcome": "ready",
+                "goo.subject.tenant": "demo"
+              }
+            ],
+            "linked_attributes": [],
+            "linked_traces": [],
+            "linked_spans": []
+          }
+        ],
+        "hasMore": false,
+        "groups": [],
+        "fields": [
+          {
+            "kind": "column",
+            "key": "duration_bucket"
+          },
+          {
+            "kind": "column",
+            "key": "duration_ns"
+          },
+          {
+            "kind": "column",
+            "key": "exception_event"
+          },
+          {
+            "kind": "column",
+            "key": "exception_type"
+          },
+          {
+            "kind": "column",
+            "key": "exception_type_state"
+          },
+          {
+            "kind": "column",
+            "key": "kind"
+          },
+          {
+            "kind": "column",
+            "key": "name"
+          },
+          {
+            "kind": "column",
+            "key": "scope"
+          },
+          {
+            "kind": "column",
+            "key": "scope_version"
+          },
+          {
+            "kind": "column",
+            "key": "service"
+          },
+          {
+            "kind": "column",
+            "key": "span_id"
+          },
+          {
+            "kind": "column",
+            "key": "status"
+          },
+          {
+            "kind": "column",
+            "key": "status_class"
+          },
+          {
+            "kind": "column",
+            "key": "timestamp_ns"
+          },
+          {
+            "kind": "column",
+            "key": "trace_id"
+          },
+          {
+            "kind": "attribute",
+            "key": "goo.operation.name"
+          },
+          {
+            "kind": "attribute",
+            "key": "goo.operation.outcome"
+          },
+          {
+            "kind": "attribute",
+            "key": "goo.operation.role"
+          },
+          {
+            "kind": "resource",
+            "key": "deployment.environment.name"
+          },
+          {
+            "kind": "resource",
+            "key": "service.instance.id"
+          },
+          {
+            "kind": "resource",
+            "key": "service.name"
+          }
+        ],
+        "fieldsLimited": false,
+        "plan": {
+          "rows": "SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, SpanAttributes AS Attributes, SpanName, SpanKind, ParentSpanId, multiIf(Duration < 1000000, '[0,1) ms', Duration < 5000000, '[1,5) ms', Duration < 10000000, '[5,10) ms', Duration < 50000000, '[10,50) ms', Duration < 100000000, '[50,100) ms', Duration < 500000000, '[100,500) ms', Duration < 1000000000, '[500,1000) ms', '[1000,+inf) ms') AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration LIMIT 1001 OFFSET 0 FORMAT JSONEachRow",
+          "count": "SELECT toString(count()) AS count FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) FORMAT JSONEachRow",
+          "fields": "SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -> concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -> concat('attribute:', k), mapKeys(SpanAttributes)))) AS field FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY field LIMIT 129 FORMAT JSONEachRow",
+          "parameters": {
+            "environment": "local",
+            "from": "1793025645825",
+            "p3": "b28fbd7036b2427a72ee6846cffe0160",
+            "to": "1793025652025"
+          }
+        },
+        "warnings": [
+          "Captured records only; sampling, ingestion completeness and clock accuracy are unverified.",
+          "Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.",
+          "Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes."
+        ]
+      }
+    }
+  },
+  "reopened": {
+    "receipt": {
+      "version": 1,
+      "id": "e3645c0e731fd8c2674dca913ccb6cd27012a98e2309aa353ce693c23b0c225f",
+      "title": "Cross-app report HBFH7JOI6FQYQNBKKIGIWRUEIA",
+      "capturedAt": "2026-10-26T14:40:55.575464905Z",
+      "question": {
+        "kind": "explore",
+        "explore": {
+          "signal": "spans",
+          "environment": "local",
+          "fromMs": 1793025645825,
+          "toMs": 1793025652025,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "column",
+                  "key": "trace_id"
+                },
+                "op": "eq",
+                "value": "b28fbd7036b2427a72ee6846cffe0160"
+              }
+            ]
+          },
+          "limit": 100,
+          "offset": 0
+        }
+      }
+    },
+    "explore": {
+      "traceExamples": {
+        "version": "goo/trace-page-examples/v1",
+        "state": "observed",
+        "considered": 1,
+        "excluded": 0,
+        "items": [
+          {
+            "traceId": "b28fbd7036b2427a72ee6846cffe0160",
+            "spanId": "e121c2e6e8d490d2",
+            "service": "lab-go-reports",
+            "name": "report.generate",
+            "durationNS": "40404180",
+            "timestampNS": "1793025647150608541",
+            "status": "Unset",
+            "reason": "Longest linked span on this page"
+          }
+        ]
+      },
+      "question": {
+        "signal": "spans",
+        "environment": "local",
+        "fromMs": 1793025645825,
+        "toMs": 1793025652025,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "trace_id"
+              },
+              "op": "eq",
+              "value": "b28fbd7036b2427a72ee6846cffe0160"
+            }
+          ]
+        },
+        "limit": 100,
+        "offset": 0
+      },
+      "capturedAt": "2026-10-26T14:40:55.527911582Z",
+      "basis": "e619d9c83d8798452f0cb2e0a73ac81a323307fbdc03bf2dcba8da71b5e46d56",
+      "count": "1",
+      "state": "observed",
+      "rows": [
+        {
+          "timestamp_ns": "1793025647150608541",
+          "ServiceName": "lab-go-reports",
+          "TraceId": "b28fbd7036b2427a72ee6846cffe0160",
+          "SpanId": "e121c2e6e8d490d2",
+          "ResourceAttributes": {
+            "deployment.environment.name": "local",
+            "service.instance.id": "reports-demo",
+            "service.name": "lab-go-reports"
+          },
+          "ScopeName": "github.com/casselc/goo/instrumentation",
+          "ScopeVersion": "0.1.0",
+          "Attributes": {
+            "goo.operation.name": "report.generate",
+            "goo.operation.outcome": "ok",
+            "goo.operation.role": "server"
+          },
+          "SpanName": "report.generate",
+          "SpanKind": "Server",
+          "ParentSpanId": "",
+          "duration_bucket": "[10,50) ms",
+          "duration_ns": "40404180",
+          "StatusCode": "Unset",
+          "StatusMessage": "",
+          "SpanAttributes": {
+            "goo.operation.name": "report.generate",
+            "goo.operation.outcome": "ok",
+            "goo.operation.role": "server"
+          },
+          "event_times_ns": [
+            "1793025647190938422"
+          ],
+          "event_names": [
+            "report.ready"
+          ],
+          "event_attributes": [
+            {
+              "goo.event.name": "report.ready",
+              "goo.subject.id": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+              "goo.subject.namespace": "report",
+              "goo.subject.outcome": "ready",
+              "goo.subject.tenant": "demo"
+            }
+          ],
+          "linked_attributes": [],
+          "linked_traces": [],
+          "linked_spans": []
+        }
+      ],
+      "hasMore": false,
+      "groups": [],
+      "fields": [
+        {
+          "kind": "column",
+          "key": "duration_bucket"
+        },
+        {
+          "kind": "column",
+          "key": "duration_ns"
+        },
+        {
+          "kind": "column",
+          "key": "exception_event"
+        },
+        {
+          "kind": "column",
+          "key": "exception_type"
+        },
+        {
+          "kind": "column",
+          "key": "exception_type_state"
+        },
+        {
+          "kind": "column",
+          "key": "kind"
+        },
+        {
+          "kind": "column",
+          "key": "name"
+        },
+        {
+          "kind": "column",
+          "key": "scope"
+        },
+        {
+          "kind": "column",
+          "key": "scope_version"
+        },
+        {
+          "kind": "column",
+          "key": "service"
+        },
+        {
+          "kind": "column",
+          "key": "span_id"
+        },
+        {
+          "kind": "column",
+          "key": "status"
+        },
+        {
+          "kind": "column",
+          "key": "status_class"
+        },
+        {
+          "kind": "column",
+          "key": "timestamp_ns"
+        },
+        {
+          "kind": "column",
+          "key": "trace_id"
+        },
+        {
+          "kind": "attribute",
+          "key": "goo.operation.name"
+        },
+        {
+          "kind": "attribute",
+          "key": "goo.operation.outcome"
+        },
+        {
+          "kind": "attribute",
+          "key": "goo.operation.role"
+        },
+        {
+          "kind": "resource",
+          "key": "deployment.environment.name"
+        },
+        {
+          "kind": "resource",
+          "key": "service.instance.id"
+        },
+        {
+          "kind": "resource",
+          "key": "service.name"
+        }
+      ],
+      "fieldsLimited": false,
+      "plan": {
+        "rows": "SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, SpanAttributes AS Attributes, SpanName, SpanKind, ParentSpanId, multiIf(Duration < 1000000, '[0,1) ms', Duration < 5000000, '[1,5) ms', Duration < 10000000, '[5,10) ms', Duration < 50000000, '[10,50) ms', Duration < 100000000, '[50,100) ms', Duration < 500000000, '[100,500) ms', Duration < 1000000000, '[500,1000) ms', '[1000,+inf) ms') AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration LIMIT 1001 OFFSET 0 FORMAT JSONEachRow",
+        "count": "SELECT toString(count()) AS count FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) FORMAT JSONEachRow",
+        "fields": "SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -> concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -> concat('attribute:', k), mapKeys(SpanAttributes)))) AS field FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY field LIMIT 129 FORMAT JSONEachRow",
+        "parameters": {
+          "environment": "local",
+          "from": "1793025645825",
+          "p3": "b28fbd7036b2427a72ee6846cffe0160",
+          "to": "1793025652025"
+        }
+      },
+      "warnings": [
+        "Captured records only; sampling, ingestion completeness and clock accuracy are unverified.",
+        "Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.",
+        "Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes."
+      ]
+    },
+    "retainedRecords": 1,
+    "recordsLimited": false
+  },
+  "storedAfter": {
+    "file": "capture-after.json",
+    "bytes": 6080,
+    "digest": "d5456ccd5c4a9d3ec09477e90d6afc95191165446fc89e734bf827441bef06cd",
+    "contentId": "e3645c0e731fd8c2674dca913ccb6cd27012a98e2309aa353ce693c23b0c225f",
+    "hashOracle": "Public SavedCapture typed unmarshal/remarshal with ID empty and standard SHA256; production captureDigest is not called.",
+    "data": {
+      "version": 1,
+      "id": "e3645c0e731fd8c2674dca913ccb6cd27012a98e2309aa353ce693c23b0c225f",
+      "title": "Cross-app report HBFH7JOI6FQYQNBKKIGIWRUEIA",
+      "capturedAt": "2026-10-26T14:40:55.575464905Z",
+      "question": {
+        "kind": "explore",
+        "explore": {
+          "signal": "spans",
+          "environment": "local",
+          "fromMs": 1793025645825,
+          "toMs": 1793025652025,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "column",
+                  "key": "trace_id"
+                },
+                "op": "eq",
+                "value": "b28fbd7036b2427a72ee6846cffe0160"
+              }
+            ]
+          },
+          "limit": 100,
+          "offset": 0
+        }
+      },
+      "explore": {
+        "traceExamples": {
+          "version": "goo/trace-page-examples/v1",
+          "state": "observed",
+          "considered": 1,
+          "excluded": 0,
+          "items": [
+            {
+              "traceId": "b28fbd7036b2427a72ee6846cffe0160",
+              "spanId": "e121c2e6e8d490d2",
+              "service": "lab-go-reports",
+              "name": "report.generate",
+              "durationNS": "40404180",
+              "timestampNS": "1793025647150608541",
+              "status": "Unset",
+              "reason": "Longest linked span on this page"
+            }
+          ]
+        },
+        "question": {
+          "signal": "spans",
+          "environment": "local",
+          "fromMs": 1793025645825,
+          "toMs": 1793025652025,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "column",
+                  "key": "trace_id"
+                },
+                "op": "eq",
+                "value": "b28fbd7036b2427a72ee6846cffe0160"
+              }
+            ]
+          },
+          "limit": 100,
+          "offset": 0
+        },
+        "capturedAt": "2026-10-26T14:40:55.527911582Z",
+        "basis": "e619d9c83d8798452f0cb2e0a73ac81a323307fbdc03bf2dcba8da71b5e46d56",
+        "count": "1",
+        "state": "observed",
+        "rows": [
+          {
+            "timestamp_ns": "1793025647150608541",
+            "ServiceName": "lab-go-reports",
+            "TraceId": "b28fbd7036b2427a72ee6846cffe0160",
+            "SpanId": "e121c2e6e8d490d2",
+            "ResourceAttributes": {
+              "deployment.environment.name": "local",
+              "service.instance.id": "reports-demo",
+              "service.name": "lab-go-reports"
+            },
+            "ScopeName": "github.com/casselc/goo/instrumentation",
+            "ScopeVersion": "0.1.0",
+            "Attributes": {
+              "goo.operation.name": "report.generate",
+              "goo.operation.outcome": "ok",
+              "goo.operation.role": "server"
+            },
+            "SpanName": "report.generate",
+            "SpanKind": "Server",
+            "ParentSpanId": "",
+            "duration_bucket": "[10,50) ms",
+            "duration_ns": "40404180",
+            "StatusCode": "Unset",
+            "StatusMessage": "",
+            "SpanAttributes": {
+              "goo.operation.name": "report.generate",
+              "goo.operation.outcome": "ok",
+              "goo.operation.role": "server"
+            },
+            "event_times_ns": [
+              "1793025647190938422"
+            ],
+            "event_names": [
+              "report.ready"
+            ],
+            "event_attributes": [
+              {
+                "goo.event.name": "report.ready",
+                "goo.subject.id": "HBFH7JOI6FQYQNBKKIGIWRUEIA",
+                "goo.subject.namespace": "report",
+                "goo.subject.outcome": "ready",
+                "goo.subject.tenant": "demo"
+              }
+            ],
+            "linked_attributes": [],
+            "linked_traces": [],
+            "linked_spans": []
+          }
+        ],
+        "hasMore": false,
+        "groups": [],
+        "fields": [
+          {
+            "kind": "column",
+            "key": "duration_bucket"
+          },
+          {
+            "kind": "column",
+            "key": "duration_ns"
+          },
+          {
+            "kind": "column",
+            "key": "exception_event"
+          },
+          {
+            "kind": "column",
+            "key": "exception_type"
+          },
+          {
+            "kind": "column",
+            "key": "exception_type_state"
+          },
+          {
+            "kind": "column",
+            "key": "kind"
+          },
+          {
+            "kind": "column",
+            "key": "name"
+          },
+          {
+            "kind": "column",
+            "key": "scope"
+          },
+          {
+            "kind": "column",
+            "key": "scope_version"
+          },
+          {
+            "kind": "column",
+            "key": "service"
+          },
+          {
+            "kind": "column",
+            "key": "span_id"
+          },
+          {
+            "kind": "column",
+            "key": "status"
+          },
+          {
+            "kind": "column",
+            "key": "status_class"
+          },
+          {
+            "kind": "column",
+            "key": "timestamp_ns"
+          },
+          {
+            "kind": "column",
+            "key": "trace_id"
+          },
+          {
+            "kind": "attribute",
+            "key": "goo.operation.name"
+          },
+          {
+            "kind": "attribute",
+            "key": "goo.operation.outcome"
+          },
+          {
+            "kind": "attribute",
+            "key": "goo.operation.role"
+          },
+          {
+            "kind": "resource",
+            "key": "deployment.environment.name"
+          },
+          {
+            "kind": "resource",
+            "key": "service.instance.id"
+          },
+          {
+            "kind": "resource",
+            "key": "service.name"
+          }
+        ],
+        "fieldsLimited": false,
+        "plan": {
+          "rows": "SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, SpanAttributes AS Attributes, SpanName, SpanKind, ParentSpanId, multiIf(Duration < 1000000, '[0,1) ms', Duration < 5000000, '[1,5) ms', Duration < 10000000, '[5,10) ms', Duration < 50000000, '[10,50) ms', Duration < 100000000, '[50,100) ms', Duration < 500000000, '[100,500) ms', Duration < 1000000000, '[500,1000) ms', '[1000,+inf) ms') AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration LIMIT 1001 OFFSET 0 FORMAT JSONEachRow",
+          "count": "SELECT toString(count()) AS count FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) FORMAT JSONEachRow",
+          "fields": "SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -> concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -> concat('attribute:', k), mapKeys(SpanAttributes)))) AS field FROM otel_traces WHERE Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND ((1 AND TraceId = {p3:String})) ORDER BY field LIMIT 129 FORMAT JSONEachRow",
+          "parameters": {
+            "environment": "local",
+            "from": "1793025645825",
+            "p3": "b28fbd7036b2427a72ee6846cffe0160",
+            "to": "1793025652025"
+          }
+        },
+        "warnings": [
+          "Captured records only; sampling, ingestion completeness and clock accuracy are unverified.",
+          "Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.",
+          "Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes."
+        ]
+      }
+    }
+  },
+  "elapsedMs": 13074
+}

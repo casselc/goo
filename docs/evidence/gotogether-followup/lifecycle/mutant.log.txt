@@ -1,0 +1,20 @@
+=== RUN   TestMutantShrinks
+    pilot_test.go:49: qhegel: 7 runs checked with quint, 7 decided from earlier verdicts; shrunk run:
+          1. terminal()
+          2. advance95()
+        actor default: 2 steps
+          conformance: FAIL
+            after step 2 the model's state does not match what was observed
+              quint:    advance95
+              expect:   basis == 95 and good == 0 and unknown == true
+              binding:  basis == {{.obs.basis}} and good == {{.obs.good}} and unknown == {{.obs.unknown}}
+              observed: advance95() (seq 2)
+              obs:      bad=0, basis=95, eligible=0, good=0, snapshots=0, unknown=true
+              model state: not reported: the TypeScript backend writes no ITF for a failing test (QUINT_BACKEND=rust shows it)
+          invariant safety: not checked: the run does not conform, so the model's states after the failure are not the run's
+          instance: MAX_SNAPSHOTS = 3
+          module: /tmp/TestMutantShrinks1339964918/001/quint/check1/check-1/observed_default_detail.qnt
+    pilot_test.go:77: smallest exact actions terminal,advance95; Quint checks=7 cache=7
+--- PASS: TestMutantShrinks (33.94s)
+PASS
+ok  	lifecycle-pilot	33.953s

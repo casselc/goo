@@ -1,0 +1,15 @@
+spec: model.qnt
+module: cross
+invariants: [safety]
+eventually: [done]
+actions:
+  generate:
+    args: {id: '{{.subject}}'}
+  collect:
+    args: {id: '{{.subject}}', tid: '{{.trace}}', env: '{{.environment}}', n: '{{.count}}', ids: '{{.members}}'}
+  inspect:
+    args: {id: '{{.subject}}', tid: '{{.trace}}', env: '{{.environment}}', n: '{{.count}}', ids: '{{.members}}'}
+  capture:
+    args: {id: '{{.captureId}}', hash: '{{.digest}}'}
+  reopen:
+    args: {id: '{{.captureId}}', hash: '{{.digest}}'}

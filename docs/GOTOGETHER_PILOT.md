@@ -1,5 +1,8 @@
 # Gotogether outside-agent pilot
 
+This is the historical `50157b8` baseline. The [follow-on pilot](GOTOGETHER_FOLLOWUP.md)
+verifies the parser fix at `65093ec` and exercises actual lifecycle shrinking.
+
 The approved onboarding and shadow-validation pilot ran in
 `/tmp/goo-gotogether-pilot`, pinned to
 [`50157b805ae455de165f37bf39da78690958763c`](https://github.com/chucklehead-dev/gotogether/tree/50157b805ae455de165f37bf39da78690958763c).

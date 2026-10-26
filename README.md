@@ -269,6 +269,7 @@ Default service reads remain bounded; explicit Run and individual capture retain
 the original window, identity and separate clocks. Numerical capacity/utilization
 joins, causal attribution and automatic runtime/host panels remain follow-ons.
 
-[Gotogether consumer pilot](docs/GOTOGETHER_PILOT.md): isolated onboarding and
-capture-workflow compatibility results, one parser defect and adoption boundaries;
-Goo's existing testing dependencies remain unchanged.
+[Gotogether consumer pilot](docs/GOTOGETHER_PILOT.md) records onboarding and
+capture-workflow compatibility. The [follow-on pilot](docs/GOTOGETHER_FOLLOWUP.md)
+verifies the parser fix and shrinks a real lifecycle cutoff mutant; Goo's existing
+testing dependencies remain unchanged.

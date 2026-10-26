@@ -1,0 +1,5 @@
+module example.com/goo-gotogether-parser-pilot
+
+go 1.27
+
+require github.com/chucklehead-dev/gotogether v0.0.0-20261026141556-65093ec1c98a // indirect

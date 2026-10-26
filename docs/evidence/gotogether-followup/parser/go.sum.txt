@@ -1,0 +1,2 @@
+github.com/chucklehead-dev/gotogether v0.0.0-20261026141556-65093ec1c98a h1:Xdx36CmJ2XsJiOfyoYxuyhwA9rHlO6WEVmMCoy43yAM=
+github.com/chucklehead-dev/gotogether v0.0.0-20261026141556-65093ec1c98a/go.mod h1:kZ6XGpgMaZWrMgym3rpruW/ZJC8aHY2RqEnbkQDO+q8=

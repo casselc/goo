@@ -1,0 +1,27 @@
+{
+  "toolkitCommit": "65093ec1c98abd095f6d399fae038e466555c231",
+  "remoteModuleVersion": "v0.0.0-20261026141556-65093ec1c98a",
+  "gooCommit": "8f8584fcb291dc62ecaf8127f8f155d3bfb727ae",
+  "prepareSHA256": "8b85766e87a34d0d324a73fe039930a8f94402c7920641c1c9b38679e344a3ca",
+  "researchCheckoutHEAD": "2992868097ec5cb1eecf230097739bf090d91573",
+  "faithfulSeconds": 13.201,
+  "mutantSeconds": 33.953,
+  "quintChecksMutant": 7,
+  "cacheHitsMutant": 7,
+  "smallestActions": [
+    "terminal",
+    "advance95"
+  ],
+  "minimality": "within duplicate-noise generator; each proper one-action subsequence passes independent projection",
+  "files": {
+    "go.mod": "adc8bea21968f42b68da9588797b69e6f2278b15c02cb6c900592330bd0aa228",
+    "go.sum": "d01104503cea742142e1b5e856306ab2e8ea975c44b02b9f9d9eb11cafc0af2f",
+    "pilot_test.go": "9fce065d5db5b74cd02263f9ba851f27920d1b4d81c34d63094dd8da4b8f498b",
+    "world_test.go": "ac7b3ba29390fc8a7273244e806273bcb41cf9233e0084755ce744a5c4777cfa",
+    "model/lifecycle.qnt": "875974a7380df8744f7fa2ef6e411adcb18f778960dac3e2baefe8c3b2d817ac",
+    "model/binding.yaml": "67279266f67fae5acea55b2a993e29cd7e9a2b1693fe6640d97e3ac124a2fc1b",
+    "overlay.json": "fbc73f88a59ecb9e1dda3aef8d55f115f3526cbe31087da484a171011ecdf6b1",
+    "prepare-mutant.go.txt": "98aa84187f58562e8b7a8da593e82a4d2d48e538bc0acc73b40e1c0a20fa1383",
+    "smallest-mutant-trace.json": "1c847e7fe88f36ce6512a7a7a3c69d909fc981baf874438c8ae47e6ecfcc77e9"
+  }
+}

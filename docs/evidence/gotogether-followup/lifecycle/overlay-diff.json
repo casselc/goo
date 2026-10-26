@@ -1,0 +1,4 @@
+{
+  "sha256": "370698ab86c68e41c6725939e465e2c48fed5a3cb08f3e6043ceebd51aad7464",
+  "patch": "--- /workspace/goo/lifecycle/prepare.go\n+++ build-overlay/prepare.go\n@@ -126,7 +126,7 @@\n \t\t\tcontinue\n \t\t}\n \t\treceived, receivedErr := parseNS(e.ReceivedTimeNS)\n-\t\tif receivedErr == nil && received >= b.cutoff {\n+\t\tif receivedErr == nil && received > b.cutoff {\n \t\t\tr.AfterCutoff++\n \t\t\tcontinue\n \t\t}\n"
+}
