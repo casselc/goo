@@ -46,7 +46,11 @@ func Compile(q Question) (Plan, error) {
 	}
 	timeColumn := "TimeUnix"
 	table := "otel_metrics_" + map[string]string{"gauge": "gauge", "counter": "sum", "stock": "sum", "histogram": "histogram"}[d.Kind]
-	fields := `mapUpdate(ResourceAttributes,map('service.name',toString(ServiceName))) AS resource, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schema_url, ResourceSchemaUrl AS resource_schema_url, MetricName AS name, MetricUnit AS unit, Attributes AS attributes, toString(toUnixTimestamp64Nano(StartTimeUnix)) AS start_ns, toString(toUnixTimestamp64Nano(TimeUnix)) AS end_ns, Flags AS flags`
+	resourceColumn := "mapUpdate(ResourceAttributes,map('service.name',toString(ServiceName)))"
+	if d.Source.Resource != nil {
+		resourceColumn = "ResourceAttributes"
+	}
+	fields := resourceColumn + ` AS resource, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schema_url, ResourceSchemaUrl AS resource_schema_url, MetricName AS name, MetricUnit AS unit, Attributes AS attributes, toString(toUnixTimestamp64Nano(StartTimeUnix)) AS start_ns, toString(toUnixTimestamp64Nano(TimeUnix)) AS end_ns, Flags AS flags`
 	switch d.Kind {
 	case "gauge":
 		fields += ", toString(Value) AS value"
@@ -81,7 +85,11 @@ func Compile(q Question) (Plan, error) {
 	for _, s := range d.Source.Services {
 		services = append(services, param(s, "String"))
 	}
-	where += " AND ServiceName IN (" + strings.Join(services, ",") + ")"
+	if d.Source.Resource == nil {
+		where += " AND ServiceName IN (" + strings.Join(services, ",") + ")"
+	} else {
+		where += " AND mapContains(ResourceAttributes,'host.id') AND ResourceAttributes['host.id']=" + param(d.Source.Resource.ID, "String")
+	}
 	if n := d.Source.Namespace; n != nil {
 		if n.Mode == "missing" {
 			where += " AND NOT mapContains(ResourceAttributes,'service.namespace')"
@@ -114,7 +122,7 @@ func Compile(q Question) (Plan, error) {
 		// Compare sorted key/value tuples, preserving missing versus present-empty
 		// keys and ignoring map iteration order. Bind JSON as data, never SQL syntax.
 		where += " AND ResourceSchemaUrl=" + param(exact.ResourceSchemaURL, "String")
-		for _, pair := range [][2]string{{"mapUpdate(ResourceAttributes,map('service.name',toString(ServiceName)))", string(resource)}, {"Attributes", string(encodedAttributes)}} {
+		for _, pair := range [][2]string{{resourceColumn, string(resource)}, {"Attributes", string(encodedAttributes)}} {
 			where += " AND arraySort(arrayZip(mapKeys(" + pair[0] + "),mapValues(" + pair[0] + ")))=arraySort(JSONExtractKeysAndValues(" + param(pair[1], "String") + ",'String'))"
 		}
 	}
@@ -247,7 +255,11 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 		for _, name := range d.Source.Services {
 			serviceOK = serviceOK || row.Resource["service.name"] == name
 		}
-		if !d.Source.Namespace.Matches(row.Resource) || !serviceOK || row.Resource["deployment.environment.name"] != d.Environment || row.Resource["service.instance.id"] == "" || row.Scope != d.Source.Scope || row.Version != d.Source.Version || row.SchemaURL != d.Source.SchemaURL || row.Name != d.Source.Metric || row.Unit != d.Source.Unit || row.Flags&^uint32(1) != 0 {
+		identityOK := serviceOK && row.Resource["service.instance.id"] != ""
+		if resource := d.Source.Resource; resource != nil {
+			identityOK = resource.Kind == "host" && row.Resource["host.id"] == resource.ID
+		}
+		if !d.Source.Namespace.Matches(row.Resource) || !identityOK || row.Resource["deployment.environment.name"] != d.Environment || row.Scope != d.Source.Scope || row.Version != d.Source.Version || row.SchemaURL != d.Source.SchemaURL || row.Name != d.Source.Metric || row.Unit != d.Source.Unit || row.Flags&^uint32(1) != 0 {
 			return nil, fmt.Errorf("metric source identity/unit/flags mismatch")
 		}
 		for k, v := range d.Source.Attributes {
@@ -305,9 +317,17 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 	fromNS, toNS := q.BoundsNS()
 	switch d.Kind {
 	case "stock":
-		r.Stocks, e = metrics.EvaluateStocks(fromNS, toNS, ns(d.MaxGapMS), ss)
+		if d.Source.Resource != nil {
+			r.Stocks, e = metrics.EvaluateHostStocks(fromNS, toNS, ns(d.MaxGapMS), d.Source.Resource.ID, ss)
+		} else {
+			r.Stocks, e = metrics.EvaluateStocks(fromNS, toNS, ns(d.MaxGapMS), ss)
+		}
 	case "gauge":
-		r.Gauges, e = metrics.EvaluateGauges(fromNS, toNS, ns(d.MaxGapMS), gs)
+		if d.Source.Resource != nil {
+			r.Gauges, e = metrics.EvaluateHostGauges(fromNS, toNS, ns(d.MaxGapMS), d.Source.Resource.ID, gs)
+		} else {
+			r.Gauges, e = metrics.EvaluateGauges(fromNS, toNS, ns(d.MaxGapMS), gs)
+		}
 	case "counter":
 		r.Counters, e = metrics.EvaluateCounters(metrics.CounterRequest{FromNS: fromNS, ToNS: toNS, MaxGapNS: ns(d.MaxGapMS), Points: cs})
 	case "histogram":

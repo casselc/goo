@@ -505,6 +505,32 @@
   "FollowupSet": {
     "$ref": "#/components/schemas/exploration.FollowupSet"
   },
+  "HostDashboardPlan": {
+    "$ref": "#/components/schemas/measurements.HostDashboardPlan"
+  },
+  "HostDashboardRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/measurements.HostDashboardRequestInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "HostDiscovery": {
+    "$ref": "#/components/schemas/measurements.HostDiscovery"
+  },
+  "HostDiscoveryQuestion": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/measurements.HostDiscoveryQuestionInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
   "InventoryRequest": {
     "anyOf": [
       {
@@ -11807,6 +11833,16 @@
           }
         ]
       },
+      "resource": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.ResourceBinding"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "schemaURL": {
         "type": "string"
       },
@@ -11898,6 +11934,23 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/identity.NamespaceInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "resource": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.ResourceBindingInput"
               },
               {
                 "type": "null"
@@ -12426,6 +12479,381 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/measurements.DiscoveryResult"
+  },
+  "measurements.HostDashboardPlan": {
+    "properties": {
+      "candidates": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.HostWidget"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "candidatesOmitted": {
+        "type": "integer"
+      },
+      "hostKey": {
+        "type": "string"
+      },
+      "instrumentsOmitted": {
+        "type": "integer"
+      },
+      "question": {
+        "$ref": "#/components/schemas/measurements.HostDiscoveryQuestion"
+      },
+      "state": {
+        "type": "string"
+      },
+      "streamsOmitted": {
+        "type": "integer"
+      },
+      "version": {
+        "type": "string"
+      },
+      "warnings": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "widgets": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.HostWidget"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "version",
+      "question",
+      "hostKey",
+      "state",
+      "widgets",
+      "candidates",
+      "candidatesOmitted",
+      "instrumentsOmitted",
+      "streamsOmitted",
+      "warnings"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HostDashboardPlan"
+  },
+  "measurements.HostDashboardRequestInput": {
+    "additionalProperties": false,
+    "properties": {
+      "host": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.HostEntryInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "question": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.HostDiscoveryQuestionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HostDashboardRequest"
+  },
+  "measurements.HostDiscovery": {
+    "properties": {
+      "hosts": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.HostEntry"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "hostsOmitted": {
+        "type": "integer"
+      },
+      "missingHostIDRecords": {
+        "type": "integer"
+      },
+      "question": {
+        "$ref": "#/components/schemas/measurements.HostDiscoveryQuestion"
+      },
+      "records": {
+        "type": "integer"
+      },
+      "version": {
+        "type": "string"
+      },
+      "warning": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "question",
+      "hosts",
+      "records",
+      "missingHostIDRecords",
+      "hostsOmitted",
+      "warning"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HostDiscovery"
+  },
+  "measurements.HostDiscoveryQuestion": {
+    "properties": {
+      "environment": {
+        "type": "string"
+      },
+      "fromMs": {
+        "type": "integer"
+      },
+      "toMs": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "environment",
+      "fromMs",
+      "toMs"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HostDiscoveryQuestion"
+  },
+  "measurements.HostDiscoveryQuestionInput": {
+    "additionalProperties": false,
+    "properties": {
+      "environment": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "fromMs": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "toMs": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HostDiscoveryQuestion"
+  },
+  "measurements.HostEntry": {
+    "properties": {
+      "instruments": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.Instrument"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "instrumentsOmitted": {
+        "type": "integer"
+      },
+      "key": {
+        "type": "string"
+      },
+      "records": {
+        "type": "integer"
+      },
+      "resource": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "resourceSchemaURL": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "key",
+      "resource",
+      "resourceSchemaURL",
+      "instruments",
+      "records",
+      "instrumentsOmitted"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HostEntry"
+  },
+  "measurements.HostEntryInput": {
+    "additionalProperties": false,
+    "properties": {
+      "instruments": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/measurements.InstrumentInput"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "instrumentsOmitted": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "key": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "records": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "resource": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "resourceSchemaURL": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HostEntry"
+  },
+  "measurements.HostWidget": {
+    "properties": {
+      "grain": {
+        "type": "string"
+      },
+      "key": {
+        "type": "string"
+      },
+      "question": {
+        "$ref": "#/components/schemas/measurements.Question"
+      },
+      "state": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "key",
+      "title",
+      "state",
+      "grain",
+      "question"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HostWidget"
   },
   "measurements.Instrument": {
     "properties": {
@@ -13922,6 +14350,49 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/measurements.Question"
+  },
+  "measurements.ResourceBinding": {
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "kind": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "kind",
+      "id"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.ResourceBinding"
+  },
+  "measurements.ResourceBindingInput": {
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "kind": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.ResourceBinding"
   },
   "measurements.Result": {
     "properties": {

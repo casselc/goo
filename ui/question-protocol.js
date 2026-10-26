@@ -14,8 +14,9 @@
   for(const k of ['scope','version','schemaURL'])if(source[k]===undefined||source[k]===null)source[k]='';
   for(const k of ['metric','unit'])if(source[k]==='')delete source[k];
   if(source.attributes===null||source.attributes&&typeof source.attributes==='object'&&!Array.isArray(source.attributes)&&Object.keys(source.attributes).length===0)delete source.attributes;
-  for(const k of ['namespace','exactStream'])if(source[k]===null)delete source[k];
+  for(const k of ['namespace','exactStream','resource'])if(source[k]===null)delete source[k];
   if(source.namespace?.value==='')delete source.namespace.value;
+  if(source.resource?.kind==='host'&&source.services==null)source.services=[];
   if(d.stockDomain===null||d.stockDomain==='')delete d.stockDomain;
   for(const k of ['histogramBucketMs','lifecycle'])if(d[k]===null)delete d[k];
   return d;

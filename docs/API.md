@@ -750,3 +750,54 @@ raw observations remain visible. A zero start epoch means unreported epoch, even
 when both are zero. Matching reported clocks/epochs do not establish a
 transactional snapshot, aligned collection, health or causal relation. Existing
 count, capacity and wait captures remain independent and unchanged.
+
+Host discovery and host measurements use a distinct resource binding without
+manufactured service identity. Native `source.resource:{kind:"host",id:<host.id>}`
+requires an exact stream, no service selectors/namespace and per-stream gauge or
+stock semantics. The full raw resource map and resource schema remain exact;
+missing versus present-empty `service.name` is preserved when actually reported.
+`host.name` is display metadata, not an identity fallback. Existing service-bound
+measurement validation and saved bytes remain unchanged.
+
+`POST /host-discovery` (browser `/api/host-discovery`) accepts
+`{environment,fromMs,toMs}` with a 16 KiB body limit, native source admission/query
+cancellation and a 15-second context. One globally bounded UNION read inventories
+host-bearing raw metadata across gauge/sum/histogram tables without consulting or
+augmenting the exporter ServiceName column. More than 10,000 observations fails
+closed; no partial catalog is published. Resource identities are limited to
+16 KiB and the complete response to 8 MiB. `goo/host-discovery/v1` returns question,
+up to 100 full-map/schema resource entries with opaque keys, records and explicit
+host/instrument omissions. Each entry retains at most 16 instruments with 25
+preview streams apiece and their omissions. Reported host IDs shared by different
+full maps remain separate resource identities, not a proven physical-host count.
+
+Unidentified source rows are not queried, so `missingHostIDRecords` describes only
+unqualified rows observed by the bounded decoder, not an inventory-wide missing-ID
+count or absence claim. Metadata and coverage descriptors do not establish host
+health, value freshness, ingestion completeness or physical relationships.
+Host execution currently supports exact gauges and cumulative nonmonotonic stocks;
+other families, including CPU seconds counters, remain unsupported metadata.
+An instrument's definition binds its first exact preview only, never an aggregate
+across the instrument's other streams.
+
+`POST /host-dashboard/plan` (browser `/api/host-dashboard/plan`) accepts
+`{question:HostDiscoveryQuestion,host:HostEntry}` under a 64 KiB body limit and
+checks a two-second context around bounded synchronous pure planning. It occupies
+no source-query slot and performs no source/custody reads or publication. The
+`goo/host-dashboard/v1` plan includes at most two default `widgets`, up to 16
+explicit `candidates` with exact native questions, state and separate
+`candidatesOmitted`, `streamsOmitted`, `instrumentsOmitted` counters. Large retained
+metadata that exceeds the request bound is refused rather than silently clipped.
+
+Defaults use the pinned v1.37 CPU-utilization gauge in unit 1 (user mode preferred,
+then canonical numeric core order; opaque core labels retain literal order) and
+memory-usage cumulative nonmonotonic stock in By (used state preferred, bounded
+nonnegative integer domain). A provided memory-utilization gauge in unit 1 can
+serve as a fallback; no utilization ratio or capacity is derived. Every logical
+CPU, mode, memory state and resource remains a separate stream. A core view is
+not a whole-host or fleet aggregate. Remaining candidates run only by explicit
+selection through existing measurement/capture APIs.
+
+The actual host-only inventory/plan/gauge/stock/capture/offline-reopen workflow is
+exported by `GOO_HOST_API_OBSERVATIONS` with `TestHostHTTPNativeExecuteCaptureOfflineReopen`
+and checked using `scripts/check_openapi.py --host-observations <path>`.

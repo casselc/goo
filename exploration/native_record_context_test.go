@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/casselc/goo/identity"
@@ -129,5 +130,14 @@ func TestNativeRecordContextFixtures(t *testing.T) {
 	}
 	if !reflect.DeepEqual(fixtures, frozen) {
 		t.Fatal("shared context fixtures drift")
+	}
+}
+
+func TestNativeRecordContextRejectsResourceBinding(t *testing.T) {
+	d := dashboardTestInstrument("host-context", "cpu", "gauge", "1").Definition
+	d.Source.Resource = &measurements.ResourceBinding{Kind: "host", ID: "one"}
+	_, e := PlanNativeRecordContext(measurements.Question{Definition: *d, FromMS: 1000, ToMS: 2000}, metrics.Stream{}, "spans", "1000000000", "1000000001")
+	if e == nil || !strings.Contains(e.Error(), "resource-bound") {
+		t.Fatal("resource measurement gained service context", e)
 	}
 }

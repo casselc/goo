@@ -3747,6 +3747,152 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/host-dashboard/plan": {
+      "post": {
+        "operationId": "post_host_dashboard_plan",
+        "summary": "POST /host-dashboard/plan",
+        "tags": [
+          "host-dashboard"
+        ],
+        "description": "Current owner: cmd/goo/host_http.go. Effect: pure-plan-or-supplied-summary. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/host_http.go",
+        "x-effects": "pure-plan-or-supplied-summary",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HostDashboardPlan"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HostDashboardRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 65536,
+        "x-browser-body-limit-bytes": 65536,
+        "x-schema-coverage": "typed"
+      }
+    },
+    "/host-discovery": {
+      "post": {
+        "operationId": "post_host_discovery",
+        "summary": "POST /host-discovery",
+        "tags": [
+          "host-discovery"
+        ],
+        "description": "Current owner: cmd/goo/host_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/host_http.go",
+        "x-effects": "source-read",
+        "parameters": [
+          {
+            "name": "X-Goo-Query-ID",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+            },
+            "description": "Optional short-lived cancellation capability; repeated/cancelled IDs are refused."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HostDiscovery"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HostDiscoveryQuestion"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 16384,
+        "x-browser-body-limit-bytes": 16384,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/inventory": {
       "post": {
         "operationId": "post_inventory",
@@ -6180,6 +6326,32 @@
       },
       "FollowupSet": {
         "$ref": "#/components/schemas/exploration.FollowupSet"
+      },
+      "HostDashboardPlan": {
+        "$ref": "#/components/schemas/measurements.HostDashboardPlan"
+      },
+      "HostDashboardRequest": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.HostDashboardRequestInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "HostDiscovery": {
+        "$ref": "#/components/schemas/measurements.HostDiscovery"
+      },
+      "HostDiscoveryQuestion": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.HostDiscoveryQuestionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
       },
       "InventoryRequest": {
         "anyOf": [
@@ -17513,6 +17685,16 @@
               }
             ]
           },
+          "resource": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.ResourceBinding"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "schemaURL": {
             "type": "string"
           },
@@ -17604,6 +17786,23 @@
                 "anyOf": [
                   {
                     "$ref": "#/components/schemas/identity.NamespaceInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "resource": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/measurements.ResourceBindingInput"
                   },
                   {
                     "type": "null"
@@ -18135,6 +18334,449 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.DiscoveryResult"
+      },
+      "measurements.HostDashboardPlan": {
+        "properties": {
+          "candidates": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/measurements.HostWidget"
+                },
+                "type": "array",
+                "maxItems": 16
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "candidatesOmitted": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "hostKey": {
+            "type": "string"
+          },
+          "instrumentsOmitted": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "question": {
+            "$ref": "#/components/schemas/measurements.HostDiscoveryQuestion"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "candidates",
+              "unconfirmed"
+            ]
+          },
+          "streamsOmitted": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/host-dashboard/v1"
+          },
+          "warnings": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "widgets": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/measurements.HostWidget"
+                },
+                "type": "array",
+                "maxItems": 2
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "version",
+          "question",
+          "hostKey",
+          "state",
+          "widgets",
+          "candidates",
+          "candidatesOmitted",
+          "instrumentsOmitted",
+          "streamsOmitted",
+          "warnings"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HostDashboardPlan",
+        "description": "Pure retained-metadata planning. At most two independently evaluated default questions, with up to16 explicit exact-stream candidates. CPU logical cores/modes and memory states remain separate. No whole-host/fleet aggregation, derived capacity, saturation or health is inferred."
+      },
+      "measurements.HostDashboardRequestInput": {
+        "additionalProperties": false,
+        "properties": {
+          "host": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.HostEntryInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "question": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.HostDiscoveryQuestionInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HostDashboardRequest"
+      },
+      "measurements.HostDiscovery": {
+        "properties": {
+          "hosts": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/measurements.HostEntry"
+                },
+                "type": "array",
+                "maxItems": 100
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "hostsOmitted": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "missingHostIDRecords": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "question": {
+            "$ref": "#/components/schemas/measurements.HostDiscoveryQuestion"
+          },
+          "records": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/host-discovery/v1"
+          },
+          "warning": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "question",
+          "hosts",
+          "records",
+          "missingHostIDRecords",
+          "hostsOmitted",
+          "warning"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HostDiscovery",
+        "description": "One bounded host-bearing metadata read over gauge/sum/histogram tables. Raw full resource maps/schemas remain separate identities. Unidentified source rows are not queried/countable; decoder missingHostIDRecords does not establish source absence. Metadata is not health/completeness."
+      },
+      "measurements.HostDiscoveryQuestion": {
+        "properties": {
+          "environment": {
+            "type": "string"
+          },
+          "fromMs": {
+            "type": "integer"
+          },
+          "toMs": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "environment",
+          "fromMs",
+          "toMs"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HostDiscoveryQuestion"
+      },
+      "measurements.HostDiscoveryQuestionInput": {
+        "additionalProperties": false,
+        "properties": {
+          "environment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fromMs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "toMs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HostDiscoveryQuestion"
+      },
+      "measurements.HostEntry": {
+        "properties": {
+          "instruments": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/measurements.Instrument"
+                },
+                "type": "array",
+                "maxItems": 16
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "instrumentsOmitted": {
+            "type": "integer"
+          },
+          "key": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "records": {
+            "type": "integer"
+          },
+          "resource": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "required": [
+              "host.id"
+            ],
+            "properties": {
+              "host.id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              }
+            }
+          },
+          "resourceSchemaURL": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "resource",
+          "resourceSchemaURL",
+          "instruments",
+          "records",
+          "instrumentsOmitted"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HostEntry"
+      },
+      "measurements.HostEntryInput": {
+        "additionalProperties": false,
+        "properties": {
+          "instruments": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/measurements.InstrumentInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "instrumentsOmitted": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "records": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "resource": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "resourceSchemaURL": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HostEntry"
+      },
+      "measurements.HostWidget": {
+        "properties": {
+          "grain": {
+            "type": "string",
+            "const": "host-exact-stream"
+          },
+          "key": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "question": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/measurements.Question"
+              },
+              {
+                "properties": {
+                  "definition": {
+                    "properties": {
+                      "source": {
+                        "required": [
+                          "resource",
+                          "exactStream"
+                        ],
+                        "properties": {
+                          "resource": {
+                            "type": "object"
+                          },
+                          "exactStream": {
+                            "type": "object"
+                          },
+                          "services": {
+                            "type": [
+                              "array",
+                              "null"
+                            ],
+                            "maxItems": 0
+                          },
+                          "namespace": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "state": {
+            "type": "string",
+            "const": "candidate"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "title",
+          "state",
+          "grain",
+          "question"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HostWidget"
       },
       "measurements.Instrument": {
         "properties": {
@@ -19679,6 +20321,53 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.Question"
+      },
+      "measurements.ResourceBinding": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "description": "Exact reported host.id, never host.name or a manufactured service/instance identity."
+          },
+          "kind": {
+            "type": "string",
+            "const": "host"
+          }
+        },
+        "required": [
+          "kind",
+          "id"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.ResourceBinding"
+      },
+      "measurements.ResourceBindingInput": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.ResourceBinding"
       },
       "measurements.Result": {
         "properties": {

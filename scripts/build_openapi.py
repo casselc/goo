@@ -64,6 +64,21 @@ util=schemas['measurements.PoolViewUtilization'];util['properties']['state']['en
 util['properties']['numerator']['pattern']='^(0|[1-9][0-9]*)$';util['properties']['denominator']['pattern']='^[1-9][0-9]*$'
 util['allOf']=[{'if':{'properties':{'state':{'const':'observed'}},'required':['state']},'then':{'required':['numerator','denominator']},'else':{'not':{'anyOf':[{'required':['numerator']},{'required':['denominator']}]}}}]
 evidence=schemas['measurements.PoolViewEvidence']['properties'];evidence['basis']['pattern']='^[a-f0-9]{64}$';evidence['readAt']['format']='date-time'
+schemas['measurements.ResourceBinding']['properties']['kind']['const']='host'
+schemas['measurements.ResourceBinding']['properties']['id'].update({'minLength':1,'maxLength':512,'description':'Exact reported host.id, never host.name or a manufactured service/instance identity.'})
+host=schemas['measurements.HostDiscovery']['properties'];host['version']['const']='goo/host-discovery/v1';host['hosts']['anyOf'][0]['maxItems']=100
+schemas['measurements.HostDiscovery']['description']='One bounded host-bearing metadata read over gauge/sum/histogram tables. Raw full resource maps/schemas remain separate identities. Unidentified source rows are not queried/countable; decoder missingHostIDRecords does not establish source absence. Metadata is not health/completeness.'
+for name in ('records','missingHostIDRecords','hostsOmitted'):host[name]['minimum']=0
+plan=schemas['measurements.HostDashboardPlan']['properties'];plan['version']['const']='goo/host-dashboard/v1';plan['state']['enum']=['candidates','unconfirmed'];plan['widgets']['anyOf'][0]['maxItems']=2;plan['candidates']['anyOf'][0]['maxItems']=16
+for name in ('candidatesOmitted','streamsOmitted','instrumentsOmitted'):plan[name]['minimum']=0
+schemas['measurements.HostWidget']['properties']['state']['const']='candidate'
+schemas['measurements.HostWidget']['properties']['grain']['const']='host-exact-stream'
+schemas['measurements.HostEntry']['properties']['key']['pattern']='^[a-f0-9]{64}$'
+schemas['measurements.HostEntry']['properties']['resource'].update({'required':['host.id'],'properties':{'host.id':{'type':'string','minLength':1,'maxLength':512}}})
+schemas['measurements.HostEntry']['properties']['instruments']['anyOf'][0]['maxItems']=16
+schemas['measurements.HostWidget']['properties']['key']['pattern']='^[a-f0-9]{64}$'
+schemas['measurements.HostWidget']['properties']['question']={'allOf':[{'$ref':'#/components/schemas/measurements.Question'},{'properties':{'definition':{'properties':{'source':{'required':['resource','exactStream'],'properties':{'resource':{'type':'object'},'exactStream':{'type':'object'},'services':{'type':['array','null'],'maxItems':0},'namespace':{'type':'null'}}}}}}}]}
+schemas['measurements.HostDashboardPlan']['description']='Pure retained-metadata planning. At most two independently evaluated default questions, with up to16 explicit exact-stream candidates. CPU logical cores/modes and memory states remain separate. No whole-host/fleet aggregation, derived capacity, saturation or health is inferred.'
 # Runtime metadata is encoded by small Go/Python maps; schemas are authored here.
 schemas['RuntimeCapabilityState']={'type':'object','required':['state'],'properties':{'state':{'enum':['configured','unconfigured']}},'additionalProperties':False}
 schemas['RuntimeCapabilities']={'type':'object','required':['version','profile','preparedHTTP','declaredOperations'],'properties':{'version':{'const':'goo/runtime-capabilities/v1'},'profile':{'enum':['lab','generic']},'preparedHTTP':{'$ref':'#/components/schemas/RuntimeCapabilityState'},'declaredOperations':{'$ref':'#/components/schemas/RuntimeCapabilityState'}},'additionalProperties':False,'description':'Source-free startup configuration only. Configured does not establish source availability, authorization, telemetry coverage, ingestion completeness or service health.'}
@@ -81,17 +96,17 @@ schemas['exploration.DashboardPlan']['properties']['families']['description']='O
 schemas['exploration.DashboardFamily']['properties']['state']['description']='Metadata capability state, including candidate. Not a service-health verdict, observed server count or semantic-convention conformance assertion.'
 schemas['exploration.DashboardWidget']['properties']['family']['description']='Optional display/planning family identity; not a telemetry field or a shared native/span/log denominator.'
 # API policy is deliberately authored, not inferred from HTTP verbs.
-reads = {'/http-package', '/operations', '/counter-rates', '/histograms', '/inventory', '/discovery', '/explore', '/explore/counted-values', '/record-aggregates', '/trace-search', '/population/explain', '/metric-discovery', '/measurements', '/investigations', '/captures', '/tail', '/query'}
-plans = {'/pool-signals/plan','/pool-signals/view','/measurement-packages/plan', '/telemetry-packages/draft', '/telemetry-packages/numeric-plan', '/telemetry-packages/plan', '/recipes', '/dashboards/plan', '/population/plan', '/population/explain/plan', '/population/explain/filter', '/numeric-histograms/selection', '/numeric-histograms/comparison-selection', '/compare', '/explain'}
+reads = {'/host-discovery','/http-package', '/operations', '/counter-rates', '/histograms', '/inventory', '/discovery', '/explore', '/explore/counted-values', '/record-aggregates', '/trace-search', '/population/explain', '/metric-discovery', '/measurements', '/investigations', '/captures', '/tail', '/query'}
+plans = {'/host-dashboard/plan','/pool-signals/plan','/pool-signals/view','/measurement-packages/plan', '/telemetry-packages/draft', '/telemetry-packages/numeric-plan', '/telemetry-packages/plan', '/recipes', '/dashboards/plan', '/population/plan', '/population/explain/plan', '/population/explain/filter', '/numeric-histograms/selection', '/numeric-histograms/comparison-selection', '/compare', '/explain'}
 publications = {'/activity-views','/measurement-packages', '/telemetry-packages', '/annotations', '/exploration-views', '/deployments', '/documents', '/captures/comparisons'}
-requests = {'/pool-signals/plan':'PoolSignalsRequest','/pool-signals/view':'PoolViewRequest','/activity-views':'ActivityViewRequest',
+requests = {'/host-discovery':'HostDiscoveryQuestion','/host-dashboard/plan':'HostDashboardRequest','/pool-signals/plan':'PoolSignalsRequest','/pool-signals/view':'PoolViewRequest','/activity-views':'ActivityViewRequest',
  '/retained-evidence/tail':'TailIntent','/compare':'CompareRequest','/inventory':'InventoryRequest','/discovery':'InventoryRequest','/explore':'RecordQuery','/explore/counted-values':'RecordQuery','/record-aggregates':'RecordQuery','/trace-search':'TraceSearchRequest','/tail':'TailSelector',
  '/measurements':'NativeQuestion','/metric-discovery':'MetricDiscoveryRequest','/measurement-packages/plan':'NativePlanRequest','/measurement-packages':'YAMLRequest',
  '/telemetry-packages':'YAMLRequest','/telemetry-packages/draft':'TelemetryDraftRequest','/telemetry-packages/numeric-plan':'NumericPlanRequest','/telemetry-packages/plan':'TelemetryPlanRequest',
  '/recipes':'RecipeRequest','/dashboards/plan':'DashboardRequest','/population/plan':'PopulationRequest','/numeric-histograms/selection':'NumericHistogramSelectionRequest','/numeric-histograms/comparison-selection':'DistributionSelectionRequest','/annotations':'MeaningInput','/exploration-views':'ExplorationView','/deployments':'DeploymentInput','/documents':'DocumentRequest',
  '/population/explain':'ExplanationRequest','/population/explain/plan':'ExplanationRequest','/population/explain/filter':'ExplanationFilterRequest','/captures':'CaptureRequest','/captures/live':'LiveComparisonRequest','/captures/comparisons':'SaveComparisonRequest','/investigations':'InvestigationRequest','/retained-evidence':'RetainRequest','/retained-evidence/{id}/annotations':'CorrectRequest',
 }
-responses = {('post','/pool-signals/plan'):'PoolSignalsPlan',('post','/pool-signals/view'):'PoolView',('get','/capabilities'):'RuntimeCapabilities',('post','/population/explain'):'ExplanationResult',('post','/population/explain/plan'):'ExplanationPlan',('post','/population/explain/filter'):'ExplanationStagedQuestion',('post','/activity-views'):'ActivityView',('get','/activity-views/{id}'):'ActivityView',('get','/activity-views'):'ActivityViewList',
+responses = {('post','/host-discovery'):'HostDiscovery',('post','/host-dashboard/plan'):'HostDashboardPlan',('post','/pool-signals/plan'):'PoolSignalsPlan',('post','/pool-signals/view'):'PoolView',('get','/capabilities'):'RuntimeCapabilities',('post','/population/explain'):'ExplanationResult',('post','/population/explain/plan'):'ExplanationPlan',('post','/population/explain/filter'):'ExplanationStagedQuestion',('post','/activity-views'):'ActivityView',('get','/activity-views/{id}'):'ActivityView',('get','/activity-views'):'ActivityViewList',
  ('post','/compare'):'CompareResult',('post','/inventory'):'InventoryResult',('post','/discovery'):'ServiceDiscovery',('post','/explore'):'RecordResult',('post','/explore/counted-values'):'CountedValuesResult',('post','/record-aggregates'):'RecordAggregatesResult',('post','/trace-search'):'TraceSearchResult',
  ('post','/measurements'):'NativeResult',('post','/metric-discovery'):'MetricDiscoveryResult',('post','/telemetry-packages/draft'):'PackagePlan',('post','/telemetry-packages/plan'):'PackagePlan',('post','/telemetry-packages/numeric-plan'):'NumericPlan',('post','/telemetry-packages'):'SavedPackage',('get','/telemetry-packages/{revision}'):'SavedPackage',
  ('post','/recipes'):'RecipePlan',('post','/dashboards/plan'):'DashboardPlan',('post','/population/plan'):'PopulationPlan',('post','/numeric-histograms/selection'):'NumericHistogramSelection',('post','/numeric-histograms/comparison-selection'):'NumericHistogramSelection',
@@ -133,7 +148,7 @@ def go_limit(path):
  if path == '/pool-signals/view': return 2097152
  if path in ('/compare','/numeric-histograms/comparison-selection'): return 1048576
  if path == '/dashboards/plan': return 262144
- if path.startswith(('/telemetry-packages','/measurement-packages')) or path in ('/pool-signals/plan','/population/explain','/population/explain/plan','/population/explain/filter','/measurements','/metric-discovery','/trace-search'): return 65536
+ if path.startswith(('/telemetry-packages','/measurement-packages')) or path in ('/host-dashboard/plan','/pool-signals/plan','/population/explain','/population/explain/plan','/population/explain/filter','/measurements','/metric-discovery','/trace-search'): return 65536
  if path in ('/annotations','/exploration-views','/deployments','/documents','/population/plan', '/numeric-histograms/selection','/captures/comparisons'): return 131072
  return 16384
 
@@ -141,7 +156,7 @@ def browser_limit(path):
  if path == '/pool-signals/view': return 2097152
  if path in ('/population/plan', '/numeric-histograms/selection','/exploration-views','/documents','/captures/comparisons'): return 131072
  if path in ('/compare','/numeric-histograms/comparison-selection'): return 1048576
- if path in ('/pool-signals/plan','/population/explain','/population/explain/plan','/population/explain/filter','/trace-search') or path.startswith(('/telemetry-packages','/measurement-packages','/measurements')): return 65536
+ if path in ('/host-dashboard/plan','/pool-signals/plan','/population/explain','/population/explain/plan','/population/explain/filter','/trace-search') or path.startswith(('/telemetry-packages','/measurement-packages','/measurements')): return 65536
  return 16384
 
 def effect(method,path):
@@ -180,7 +195,7 @@ for (method,path),(file,block) in sorted(route_source.items()):
   op['parameters'].append({'name':p,'in':'query','schema':{'type':'string'},'description':'Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported.'})
  for p in {'/captures':['cursor'],'/captures/{id}':['cursor'],'/captures/{id}/followups':['row'],'/captures/{id}/compare':['selection','distribution']}.get(path,[]):
   if method=='get' and not any(v['name']==p and v['in']=='query' for v in op['parameters']):op['parameters'].append({'name':p,'in':'query','schema':{'type':'string'},'description':'Single canonical value; saved evidence is not reread from the telemetry source.'})
- controlled=method=='post' and path in ('/metric-discovery','/measurements','/explore','/explore/counted-values','/record-aggregates','/trace-search','/population/explain','/inventory','/discovery','/captures','/captures/live')
+ controlled=method=='post' and path in ('/metric-discovery','/host-discovery','/measurements','/explore','/explore/counted-values','/record-aggregates','/trace-search','/population/explain','/inventory','/discovery','/captures','/captures/live')
  if controlled:op['parameters'].append({'name':'X-Goo-Query-ID','in':'header','schema':{'type':'string','pattern':'^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$'},'description':'Optional short-lived cancellation capability; repeated/cancelled IDs are refused.'})
  if method=='post' and path in requests:
   op['requestBody']={'required':True,'content':{'application/json':{'schema':ref(requests[path])}}}

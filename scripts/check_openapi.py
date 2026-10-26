@@ -81,7 +81,7 @@ def check(spec):
                 requests += 1
                 if isinstance(request, dict):
                     accepted.append((shape, request))
-    assert responses == 348 and requests == 120 and mux_refusals == 20, (responses, requests)
+    assert responses == 360 and requests == 126 and mux_refusals == 22, (responses, requests)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)
@@ -113,6 +113,16 @@ def check(spec):
         wrong=copy.deepcopy(pool_view);wrong['utilization']=change
         assert list(validator(spec,pool_view_shape).iter_errors(wrong)), 'Pool-view utilization control accepted'
     assert pool_view['utilization']['state']=='observed' and pool_view['utilization']['numerator']=='1' and pool_view['utilization']['denominator']=='1'
+    host_cases=json.loads((ROOT/'testdata/http/host.json').read_text())['cases']
+    host_plan=next(json.loads(c['response']) for c in host_cases if c['name']=='host-plan')
+    host_plan_shape={'$ref':'#/components/schemas/HostDashboardPlan'}
+    for mode in ('manufactured-service','missing-resource','too-many-defaults','healthy'):
+        wrong=copy.deepcopy(host_plan)
+        if mode=='manufactured-service':wrong['widgets'][0]['question']['definition']['source']['services']=['fake-service']
+        if mode=='missing-resource':del wrong['widgets'][0]['question']['definition']['source']['resource']
+        if mode=='too-many-defaults':wrong['widgets']=wrong['widgets']*2
+        if mode=='healthy':wrong['state']='healthy'
+        assert list(validator(spec,host_plan_shape).iter_errors(wrong)), 'Host question contract control accepted'
     # Startup metadata is configuration only, with closed states and no health flags.
     runtime_shape={'$ref':'#/components/schemas/RuntimeCapabilities'}
     configured={'version':'goo/runtime-capabilities/v1','profile':'generic','preparedHTTP':{'state':'unconfigured'},'declaredOperations':{'state':'configured'}}
@@ -225,6 +235,26 @@ def check_pool_signals_observed(spec,path):
     print('Pool signals API workflow: 9 actual handlers conform; independent capacity/wait execution and original-count offline reopen pass')
 
 
+def check_host_observed(spec,path):
+    observed=json.loads(Path(path).read_text());assert len(observed)==8
+    for case in observed:
+        op=spec['paths'][case['path']][case['method'].lower()]
+        validator(spec,op['responses'][str(case['status'])]['content']['application/json']['schema']).validate(case['response'])
+        if case.get('request') is not None and 'requestBody' in op:
+            validator(spec,op['requestBody']['content']['application/json']['schema']).validate(case['request'])
+    inventory=observed[0]['response'];assert len(inventory['hosts'])==1
+    host=inventory['hosts'][0];assert 'service.name' not in host['resource'] and 'service.instance.id' not in host['resource']
+    plan=observed[1]['response'];assert len(plan['widgets'])==2
+    for widget in plan['widgets']:
+        definition=widget['question']['definition'];binding=definition['source']
+        assert binding['resource']=={'kind':'host','id':'machine-1'} and not binding['services'] and 'namespace' not in binding
+        assert binding['exactStream']['resource']==host['resource']
+    captured=[c['response']['measurement'] for c in observed if c['status']==201]
+    reopened=[c['response']['measurement'] for c in observed if c['path']=='/captures/{id}']
+    assert captured==reopened and len(captured)==2
+    print('Host API workflow: 8 real handler responses conform; host-only gauge/stock execution and offline exact reopen pass')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--observations')
@@ -232,6 +262,7 @@ if __name__ == '__main__':
     parser.add_argument('--stock-observations')
     parser.add_argument('--stock-domain-observations')
     parser.add_argument('--pool-signals-observations')
+    parser.add_argument('--host-observations')
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
@@ -248,3 +279,6 @@ if __name__ == '__main__':
 
     if args.pool_signals_observations:
         check_pool_signals_observed(spec,args.pool_signals_observations)
+
+    if args.host_observations:
+        check_host_observed(spec,args.host_observations)

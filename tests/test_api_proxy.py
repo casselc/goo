@@ -201,6 +201,26 @@ class ProxyContracts(unittest.TestCase):
         finally:
             conn.close()
 
+    def test_host_routes_transport_and_assets(self):
+        for path,limit in (('/api/host-discovery',16384),('/api/host-dashboard/plan',65536)):
+            payload=b'{}'+b' '*(limit-2)
+            status,_,body=self.request('POST',path,payload)
+            self.assertEqual(status,400)
+            self.assertEqual(json.loads(body),{'error':'backend refusal'})
+            self.assertEqual(Upstream.calls[-1][1],path.removeprefix('/api'))
+            self.assertEqual(Upstream.calls[-1][3],payload)
+            before=len(Upstream.calls)
+            self.assertEqual(self.request('POST',path,payload+b' ')[0],400)
+            self.assertEqual(len(Upstream.calls),before)
+        for asset in ('host-browser.js','host-dashboard.js','host.css'):
+            conn=http.client.HTTPConnection('127.0.0.1',self.proxy.server_port,timeout=5)
+            try:
+                conn.request('GET','/'+asset);response=conn.getresponse()
+                self.assertEqual(response.status,200)
+                self.assertEqual(response.read(),Path('ui/'+asset).read_bytes())
+            finally:
+                conn.close()
+
     def test_get_errors_and_queries_are_reencoded(self):
         Upstream.mode = 'text'
         status, headers, body = self.request('GET', '/api/operations?package=example&minutes=5')

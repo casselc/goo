@@ -40,6 +40,18 @@ type StockResult struct {
 // It does not integrate delta sums, interpolate gaps, sum instances, infer
 // capacity, or calculate rates. Service identity remains deliberately required.
 func EvaluateStocks(fromText, toText, maxAgeText string, points []StockPoint) (*StockResult, error) {
+	return evaluateStocks(fromText, toText, maxAgeText, points, serviceObservationIdentity)
+}
+
+// EvaluateHostStocks is an explicit host-resource path; service identity remains
+// mandatory for the original EvaluateStocks entry point.
+func EvaluateHostStocks(fromText, toText, maxAgeText, hostID string, points []StockPoint) (*StockResult, error) {
+	if err := validateHostObservationID(hostID); err != nil {
+		return nil, err
+	}
+	return evaluateStocks(fromText, toText, maxAgeText, points, func(s Stream) bool { return s.Resource["host.id"] == hostID })
+}
+func evaluateStocks(fromText, toText, maxAgeText string, points []StockPoint, identity func(Stream) bool) (*StockResult, error) {
 	from, err := nano(fromText)
 	if err != nil {
 		return nil, err
@@ -57,7 +69,7 @@ func EvaluateStocks(fromText, toText, maxAgeText string, points []StockPoint) (*
 	for _, p := range points {
 		start, se := nano(p.StartNS)
 		at, ae := nano(p.EndNS)
-		if se != nil || ae != nil || start > at || at < from || at >= to || p.Temporality != "cumulative" || p.Monotonic || math.IsNaN(p.Value) || math.IsInf(p.Value, 0) || p.Stream.Resource["service.name"] == "" || p.Stream.Resource["service.instance.id"] == "" || p.Stream.Scope == "" || p.Stream.Name == "" || p.Stream.Unit == "" {
+		if se != nil || ae != nil || start > at || at < from || at >= to || p.Temporality != "cumulative" || p.Monotonic || math.IsNaN(p.Value) || math.IsInf(p.Value, 0) || !identity(p.Stream) || p.Stream.Scope == "" || p.Stream.Name == "" || p.Stream.Unit == "" {
 			return nil, fmt.Errorf("invalid cumulative stock observation")
 		}
 		p.Stream = cloneStream(p.Stream)

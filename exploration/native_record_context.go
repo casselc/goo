@@ -22,6 +22,9 @@ type NativeRecordContext struct {
 // an enclosing millisecond source window. Gauge points must be supplied as
 // [atNS,atNS+1); no lookaround or current-time fallback is inferred.
 func PlanNativeRecordContext(parent measurements.Question, stream metrics.Stream, signal, fromNS, toNS string) (*NativeRecordContext, error) {
+	if parent.Definition.Source.Resource != nil {
+		return nil, fmt.Errorf("service record context does not support resource-bound measurements")
+	}
 	if signal != "logs" && signal != "spans" {
 		return nil, fmt.Errorf("record context requires logs or spans")
 	}

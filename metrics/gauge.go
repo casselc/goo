@@ -32,6 +32,28 @@ type GaugeResult struct {
 }
 
 func EvaluateGauges(fromText, toText, maxAgeText string, points []GaugePoint) (*GaugeResult, error) {
+	return evaluateGauges(fromText, toText, maxAgeText, points, serviceObservationIdentity)
+}
+
+// EvaluateHostGauges is an explicit host-resource path; service identity remains
+// mandatory for the original EvaluateGauges entry point.
+func EvaluateHostGauges(fromText, toText, maxAgeText, hostID string, points []GaugePoint) (*GaugeResult, error) {
+	if err := validateHostObservationID(hostID); err != nil {
+		return nil, err
+	}
+	// Host observations canonicalize detached identity before grouping. The
+	// legacy service entry point retains its historical nil-map wire semantics.
+	canonical := make([]GaugePoint, len(points))
+	for index, point := range points {
+		point.Stream = cloneStream(point.Stream)
+		if point.Value == 0 {
+			point.Value = 0
+		}
+		canonical[index] = point
+	}
+	return evaluateGauges(fromText, toText, maxAgeText, canonical, func(s Stream) bool { return s.Resource["host.id"] == hostID })
+}
+func evaluateGauges(fromText, toText, maxAgeText string, points []GaugePoint, identity func(Stream) bool) (*GaugeResult, error) {
 	from, e := nano(fromText)
 	if e != nil {
 		return nil, e
@@ -48,7 +70,7 @@ func EvaluateGauges(fromText, toText, maxAgeText string, points []GaugePoint) (*
 	streams := map[string]Stream{}
 	for _, p := range points {
 		at, e := nano(p.EndNS)
-		if p.Stream.Resource["service.name"] == "" || p.Stream.Resource["service.instance.id"] == "" || p.Stream.Scope == "" || p.Stream.Name == "" || p.Stream.Unit == "" || e != nil || at < from || at >= to || math.IsNaN(p.Value) || math.IsInf(p.Value, 0) {
+		if !identity(p.Stream) || p.Stream.Scope == "" || p.Stream.Name == "" || p.Stream.Unit == "" || e != nil || at < from || at >= to || math.IsNaN(p.Value) || math.IsInf(p.Value, 0) {
 			return nil, fmt.Errorf("invalid gauge observation")
 		}
 		encoded, _ := json.Marshal(p.Stream)

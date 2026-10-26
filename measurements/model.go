@@ -23,7 +23,14 @@ const RowLimit = 10000
 
 var stable = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_.-]{0,127}$`)
 
+// ResourceBinding opts into a separate native resource authority. It never
+// supplies synthetic service labels to the legacy service path.
+type ResourceBinding struct {
+	Kind string `json:"kind" yaml:"kind"`
+	ID   string `json:"id" yaml:"id"`
+}
 type Binding struct {
+	Resource    *ResourceBinding    `json:"resource,omitempty" yaml:"resource,omitempty"`
 	ExactStream *metrics.Stream     `json:"exactStream,omitempty" yaml:"exactStream,omitempty"`
 	Namespace   *identity.Namespace `json:"namespace,omitempty" yaml:"namespace,omitempty"`
 	Services    []string            `json:"services" yaml:"services"`
@@ -122,8 +129,13 @@ func (d Definition) Validate() error {
 	if d.Grain != "per-stream" && d.Grain != "consumer-group" && d.Grain != "subject" {
 		return fmt.Errorf("declare measurement grain")
 	}
-	if len(d.Source.Services) < 1 || len(d.Source.Services) > 8 || !text(d.Source.Scope, 256) || !text(d.Source.Version, 128) || !text(d.Source.SchemaURL, 1024) || len(d.Source.Attributes) > 16 {
+	if (d.Source.Resource == nil && len(d.Source.Services) < 1) || len(d.Source.Services) > 8 || !text(d.Source.Scope, 256) || !text(d.Source.Version, 128) || !text(d.Source.SchemaURL, 1024) || len(d.Source.Attributes) > 16 {
 		return fmt.Errorf("invalid source binding")
+	}
+	if r := d.Source.Resource; r != nil {
+		if r.Kind != "host" || r.ID == "" || !text(r.ID, 512) || d.Kind != "gauge" && d.Kind != "stock" || len(d.Source.Services) != 0 || d.Source.Namespace != nil || d.Source.ExactStream == nil || d.Grain != "per-stream" {
+			return fmt.Errorf("host resource binding requires gauge or stock, exact stream, per-stream grain and no service or namespace selector")
+		}
 	}
 	seen := map[string]bool{}
 	for _, s := range d.Source.Services {
