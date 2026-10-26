@@ -4409,6 +4409,94 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/pod-discovery": {
+      "post": {
+        "operationId": "post_pod_discovery",
+        "summary": "POST /pod-discovery",
+        "tags": [
+          "pod-discovery"
+        ],
+        "description": "Current owner: cmd/goo/pod_discovery_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/pod_discovery_http.go",
+        "x-effects": "source-read",
+        "parameters": [
+          {
+            "name": "X-Goo-Query-ID",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+            },
+            "description": "Optional short-lived cancellation capability; repeated/cancelled IDs are refused."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PodDiscovery"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PodDiscoveryQuestion"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 16384,
+        "x-browser-body-limit-bytes": 16384,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/pool-signals/plan": {
       "post": {
         "operationId": "post_pool_signals_plan",
@@ -6722,6 +6810,19 @@
       },
       "PackagePlan": {
         "$ref": "#/components/schemas/exploration.PackagePlan"
+      },
+      "PodDiscovery": {
+        "$ref": "#/components/schemas/exploration.PodDiscovery"
+      },
+      "PodDiscoveryQuestion": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.PodDiscoveryQuestionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
       },
       "PoolSignalsPlan": {
         "$ref": "#/components/schemas/measurements.PoolSignalsPlan"
@@ -13081,6 +13182,260 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.Plan"
+      },
+      "exploration.PodDiscovery": {
+        "properties": {
+          "basis": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "observations": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/exploration.PodResourceObservation"
+                },
+                "type": "array",
+                "maxItems": 100
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "observationsOmitted": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 900
+          },
+          "question": {
+            "$ref": "#/components/schemas/exploration.PodDiscoveryQuestion"
+          },
+          "readAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sourceGroups": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/pod-discovery/v1"
+          },
+          "warning": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "question",
+          "observations",
+          "sourceGroups",
+          "observationsOmitted",
+          "readAt",
+          "basis",
+          "warning"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.PodDiscovery",
+        "description": "One bounded UNION of five source-family resource-map/schema groups, not physical pod inventory or Kubernetes API state. More than1000groups refuses the entire request;100resource variants retained with omissions. No native authority, health, capacity, ownership or exact-map record join is inferred."
+      },
+      "exploration.PodDiscoveryQuestion": {
+        "properties": {
+          "environment": {
+            "type": "string"
+          },
+          "fromMs": {
+            "type": "integer"
+          },
+          "toMs": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "environment",
+          "fromMs",
+          "toMs"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.PodDiscoveryQuestion"
+      },
+      "exploration.PodDiscoveryQuestionInput": {
+        "additionalProperties": false,
+        "properties": {
+          "environment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fromMs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "toMs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.PodDiscoveryQuestion"
+      },
+      "exploration.PodFamilyObservation": {
+        "properties": {
+          "count": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "family": {
+            "type": "string",
+            "enum": [
+              "logs",
+              "spans",
+              "gauge",
+              "sum",
+              "histogram"
+            ]
+          },
+          "firstNS": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$"
+          },
+          "lastNS": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$"
+          }
+        },
+        "required": [
+          "family",
+          "count",
+          "firstNS",
+          "lastNS"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.PodFamilyObservation"
+      },
+      "exploration.PodResourceObservation": {
+        "properties": {
+          "actionable": {
+            "type": "boolean"
+          },
+          "clusterUIDState": {
+            "type": "string",
+            "enum": [
+              "present",
+              "empty",
+              "missing"
+            ]
+          },
+          "families": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/exploration.PodFamilyObservation"
+                },
+                "type": "array",
+                "maxItems": 5
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "key": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "podUIDState": {
+            "type": "string",
+            "enum": [
+              "present",
+              "empty",
+              "missing"
+            ]
+          },
+          "resource": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "resourceSchemaURL": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Explicit null for unrecorded trace-table resource schema; string including empty for known log/metric schema. These states remain distinct identities."
+          }
+        },
+        "required": [
+          "key",
+          "resource",
+          "resourceSchemaURL",
+          "podUIDState",
+          "clusterUIDState",
+          "actionable",
+          "families"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.PodResourceObservation",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "podUIDState": {
+                  "const": "present"
+                }
+              },
+              "required": [
+                "podUIDState"
+              ]
+            },
+            "then": {
+              "properties": {
+                "actionable": {
+                  "const": true
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "actionable": {
+                  "const": false
+                }
+              }
+            }
+          }
+        ]
       },
       "exploration.PopulationPlan": {
         "properties": {

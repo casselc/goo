@@ -901,6 +901,19 @@
   "PackagePlan": {
     "$ref": "#/components/schemas/exploration.PackagePlan"
   },
+  "PodDiscovery": {
+    "$ref": "#/components/schemas/exploration.PodDiscovery"
+  },
+  "PodDiscoveryQuestion": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/exploration.PodDiscoveryQuestionInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
   "PoolSignalsPlan": {
     "$ref": "#/components/schemas/measurements.PoolSignalsPlan"
   },
@@ -7231,6 +7244,200 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.Plan"
+  },
+  "exploration.PodDiscovery": {
+    "properties": {
+      "basis": {
+        "type": "string"
+      },
+      "observations": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.PodResourceObservation"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "observationsOmitted": {
+        "type": "integer"
+      },
+      "question": {
+        "$ref": "#/components/schemas/exploration.PodDiscoveryQuestion"
+      },
+      "readAt": {
+        "type": "string"
+      },
+      "sourceGroups": {
+        "type": "integer"
+      },
+      "version": {
+        "type": "string"
+      },
+      "warning": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "question",
+      "observations",
+      "sourceGroups",
+      "observationsOmitted",
+      "readAt",
+      "basis",
+      "warning"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.PodDiscovery"
+  },
+  "exploration.PodDiscoveryQuestion": {
+    "properties": {
+      "environment": {
+        "type": "string"
+      },
+      "fromMs": {
+        "type": "integer"
+      },
+      "toMs": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "environment",
+      "fromMs",
+      "toMs"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.PodDiscoveryQuestion"
+  },
+  "exploration.PodDiscoveryQuestionInput": {
+    "additionalProperties": false,
+    "properties": {
+      "environment": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "fromMs": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "toMs": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.PodDiscoveryQuestion"
+  },
+  "exploration.PodFamilyObservation": {
+    "properties": {
+      "count": {
+        "type": "string"
+      },
+      "family": {
+        "type": "string"
+      },
+      "firstNS": {
+        "type": "string"
+      },
+      "lastNS": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "family",
+      "count",
+      "firstNS",
+      "lastNS"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.PodFamilyObservation"
+  },
+  "exploration.PodResourceObservation": {
+    "properties": {
+      "actionable": {
+        "type": "boolean"
+      },
+      "clusterUIDState": {
+        "type": "string"
+      },
+      "families": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.PodFamilyObservation"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "key": {
+        "type": "string"
+      },
+      "podUIDState": {
+        "type": "string"
+      },
+      "resource": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "resourceSchemaURL": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "key",
+      "resource",
+      "resourceSchemaURL",
+      "podUIDState",
+      "clusterUIDState",
+      "actionable",
+      "families"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.PodResourceObservation"
   },
   "exploration.PopulationPlan": {
     "properties": {

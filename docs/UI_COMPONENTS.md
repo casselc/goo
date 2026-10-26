@@ -987,3 +987,26 @@ Exact instance and literal metric dimensions remain visible in picker labels.
 The renderer uses scoped `.runtime-observations` styles and the timeline's
 `--value-timeline-height` opt-in; native capture and frozen replay retain the
 original measurement semantics and evidence owner.
+
+
+## Resource browsing adapters (201)
+
+Kubernetes observations reuse `goo-table`, the structured attribute inspector,
+UTC timestamp presentation and existing record-question navigation. The new
+`kubernetes.css` owns application layout and compact row behavior; it does not
+change global table or reusable component geometry. Full resources and nullable
+schema facts are supplied data, not a live Kubernetes API model.
+
+`resource-tabs.js` is a small application tab adapter with arrow/Home/End
+navigation, retained panels and leave callbacks. Selecting a tab never fetches.
+The Services callback suspends pending work while preserving completed views;
+Hosts and Kubernetes withdraw their generation-owned requests.
+
+`resource-scope.js` supplies fixed-window validation, bounded canonical matching-
+resource question authoring and a request-generation owner shared by host and
+Kubernetes adapters. These are application utilities, not source-reading display
+components or a universal entity/ownership abstraction. The adapters own query
+admission, cancellation, navigation, held filters and focus restoration. The
+record helper preserves declared missing qualifiers only when requested and
+refuses predicates over the existing budgets; it does not drop attributes to
+make a question fit.

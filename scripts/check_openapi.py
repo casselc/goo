@@ -81,7 +81,7 @@ def check(spec):
                 requests += 1
                 if isinstance(request, dict):
                     accepted.append((shape, request))
-    assert responses == 368 and requests == 131 and mux_refusals == 22, (responses, requests)
+    assert responses == 376 and requests == 135 and mux_refusals == 23, (responses, requests)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)
@@ -129,6 +129,19 @@ def check(spec):
     for field in ('nativeOptionsOmitted','runtimeStreamsOmitted'):
         wrong=copy.deepcopy(runtime_plan);wrong[field]=-1
         assert list(validator(spec,{'$ref':'#/components/schemas/DashboardPlan'}).iter_errors(wrong)), 'Runtime omission control accepted'
+    pod_cases=json.loads((ROOT/'testdata/http/pod-discovery.json').read_text())['cases']
+    pod=next(json.loads(c['response']) for c in pod_cases if c['name']=='five-families-resource-variants')
+    assert pod['sourceGroups']==7 and len(pod['observations'])==4
+    assert any(o['resourceSchemaURL'] is None for o in pod['observations']) and any(o['resourceSchemaURL']=='' for o in pod['observations'])
+    pod_shape={'$ref':'#/components/schemas/PodDiscovery'}
+    for mode in ('numeric-count','actionable-missing-uid','excess-source-groups','unknown-family'):
+        wrong=copy.deepcopy(pod)
+        if mode=='numeric-count':wrong['observations'][0]['families'][0]['count']=2
+        if mode=='actionable-missing-uid':
+            entry=next(o for o in wrong['observations'] if o['podUIDState']=='missing');entry['actionable']=True
+        if mode=='excess-source-groups':wrong['sourceGroups']=1001
+        if mode=='unknown-family':wrong['observations'][0]['families'][0]['family']='kube-api'
+        assert list(validator(spec,pod_shape).iter_errors(wrong)), 'Pod resource discovery control accepted'
     # Startup metadata is configuration only, with closed states and no health flags.
     runtime_shape={'$ref':'#/components/schemas/RuntimeCapabilities'}
     configured={'version':'goo/runtime-capabilities/v1','profile':'generic','preparedHTTP':{'state':'unconfigured'},'declaredOperations':{'state':'configured'}}

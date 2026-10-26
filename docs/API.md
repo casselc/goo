@@ -839,3 +839,42 @@ policy identity, so input ordering or arbitrary discovery package names do not
 multiply equivalent physical/policy choices. Both new fields are absent when
 zero, preserving unrelated response bytes. Old non-runtime fixtures remain
 unchanged.
+
+`POST /pod-discovery` (browser `/api/pod-discovery`) accepts
+`{environment,fromMs,toMs}` with strict 16 KiB decoding, a fixed window of at most
+120 minutes, a 30-second enclosing context and the existing source-query
+admission/cancellation owner. It requires no Kubernetes credentials or external
+cluster access. One read groups pod-bearing raw telemetry resource maps and
+resource schemas across logs, spans, gauges, sums and histograms. It never
+augments maps from the exporter ServiceName column.
+
+`goo/pod-discovery/v1` returns question, `sourceGroups`, up to 100 `observations`,
+`observationsOmitted`, read clock, content basis and warning. The whole request
+fails when its 1,001st source-family group is observed, rather than publishing a
+partial inventory. Identities are bounded to 64 labels/16 KiB, with an 8 MiB
+whole-response limit. A source-family group is not one pod or one record:
+`families[].count` is a canonical positive decimal string counting that family's
+captured records or metric points; `firstNS`/`lastNS` are exact timestamp strings.
+The basis includes canonical grouped observations even when their display
+variants are omitted. One query does not establish a transactional or complete
+cross-signal snapshot.
+
+Each resource observation retains key, raw resource map, nullable
+`resourceSchemaURL`, pod/cluster UID states, contextual `actionable` flag and
+family observations. The pinned deployed trace table does not record resource
+schema, represented explicitly as null; logs and metric tables record strings,
+including known empty. These remain distinct identities. Missing and present-empty
+UIDs remain distinct metadata diagnostics. Only a nonempty reported pod UID can
+enable contextual record actions; a missing cluster UID remains unverified
+context. Equal names or UIDs across different resource/schema variants do not
+prove physical identity, ownership or Kubernetes API state.
+
+Record exploration uses existing staged questions and source reads, retaining
+present attributes and explicit missing cluster UID/namespace where applicable.
+This is contextual matching, not full map/schema equality, every pod's telemetry,
+a causal join, native metric authority, health or capacity. No new measurement,
+record-query operator, capture format or configuration capability is introduced.
+API handler fixtures parse the actual read clock and normalize only that clock
+for frozen comparison; content bases remain unchanged. The exact generated SQL
+was also verified read-only against the local five-table ClickHouse schema using
+an empty environment/window, including the absent trace-schema-column case.

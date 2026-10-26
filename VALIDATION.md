@@ -11371,3 +11371,39 @@ links resolve; the compact receipt's three frame hashes and all new journey
 JavaScript syntax checks pass. Browser/native workers are closed, exact task
 binary/helpers removed, normal diagnostic retention applied, and traffic/data
 remain intact.
+
+
+## Kubernetes resource discovery — source gates (201)
+
+[Contract](docs/KUBERNETES_RESOURCES.md). One grouped union across logs, spans
+and gauge/sum/histogram tables returns reported full resource variants, separate
+family record counts and first/last point times. Resource maps are canonicalized
+before source grouping; missing/empty UID/namespace labels and unknown trace
+schema versus retained empty schema remain distinct. No service identity,
+physical-pod count, Kubernetes ownership, health or metric authority is inferred.
+Source-family group count above 1,000 refuses the whole lookup; 100 retained
+variants have explicit omissions, and the basis includes omitted observations.
+
+Full root Go passes: cmd/goo 7.190s, exploration 8.459s. All 91 reported Node
+files pass in 23.072s with test concurrency two. Focused source tests pass in
+0.015s. Hegel/raw-reference identity, count, schema and refusal properties pass
+in 0.049s; omitted-evidence basis and exact identity-byte boundaries in 0.027s.
+The latter gates use injected transport and an independent raw-count oracle;
+no live Kubernetes cluster or collector RBAC acceptance is claimed.
+
+Nine frozen HTTP cases and shared admission/inflight-cancellation/strict body
+checks pass in 0.039s. The generated grouped source SQL also executes against
+actual ClickHouse read-only in 0.300s; the physical schema audit confirms logs
+and metrics retain ResourceSchemaUrl while traces do not. OpenAPI checks pass:
+85 total/78 Go operations, 460 reflected/478 total schemas, 376 responses,
+135 admitted requests and 23 mux refusals with negative controls. Actual proxy
+body/header and four static-asset checks pass in 1.034s; existing wire fixtures
+remain unchanged.
+
+Shared resource scope/request ownership and three-tab navigation retain host
+compatibility. Review found an existing pending service-open continuation could
+launch hidden dashboard reads after entity-tab departure. Pending-only service
+suspension now withdraws supporting/dashboard work; completed views and their
+future Apply callbacks remain retained. Focused six-file checks pass in 0.45s.
+Actual Kubernetes context/owner, service pending/completed behavior, prior host
+owner regression, actor and screenshots remain pending.

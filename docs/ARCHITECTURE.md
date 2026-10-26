@@ -992,3 +992,11 @@ flowchart LR
   Cards --> Preview[Source-free exact native preview]
   Preview --> Capture[Explicit Run or individual fresh capture]
 ```
+
+### Pod-bearing resource observations
+
+`Source.DiscoverPods` performs one bounded grouped union across logs, spans, gauge points, sum points and histogram points for an explicit environment and fixed window. Each returned observation is an exact full raw resource-map plus resource-schema variant, not a physical pod or Kubernetes API object. The five family counts retain their own record/data-point grain and time extent; they are never combined into requests, messages or health. Trace schema availability is unknown (`null`), while log/metric schema is reported as a string, including literal empty. These remain different identities.
+
+Pod UID and cluster UID distinguish missing, present-empty and present-nonempty. Only a nonempty reported pod UID enables contextual record actions. Missing cluster UID remains an unverified qualifier, rather than evidence that the cluster does not exist. Pod names, workload/node labels and equal UIDs do not merge different complete resource variants or establish ownership. No metric evaluation authority is created by this inventory.
+
+The source refuses more than1000 source-family groups as a whole, then returns at most100 resource variants with explicit omissions. Evidence basis includes decoded omitted variants as well as visible ones, while excluding arrival order and read clock. Identities are bounded to16KiB/64 labels and the source response to8MiB. Local cluster/namespace facets and staging reuse held metadata without another source read; explicit record Run and retained Back use the established owner protocol.

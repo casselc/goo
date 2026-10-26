@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "five-families-resource-variants",
+      "method": "POST",
+      "path": "/pod-discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"version\":\"goo/pod-discovery/v1\",\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000},\"observations\":[{\"key\":\"0f3ccea40e54f2a38cefad563dc977f488985d56e595e86314e8b7142506dfa7\",\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.name\":\"missing-uid\"},\"resourceSchemaURL\":\"\",\"podUIDState\":\"missing\",\"clusterUIDState\":\"missing\",\"actionable\":false,\"families\":[{\"family\":\"logs\",\"count\":\"1\",\"firstNS\":\"1000000001\",\"lastNS\":\"2000000001\"}]},{\"key\":\"4763c01fe62deb95d5d08f032f3d7f01c64c6989deabe98f92b9d8faf6c9e773\",\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.name\":\"empty-uid\",\"k8s.pod.uid\":\"\"},\"resourceSchemaURL\":null,\"podUIDState\":\"empty\",\"clusterUIDState\":\"missing\",\"actionable\":false,\"families\":[{\"family\":\"spans\",\"count\":\"1\",\"firstNS\":\"1000000001\",\"lastNS\":\"2000000001\"}]},{\"key\":\"571b2703f18d2bbd5128fa06f75a7dfa280b3e207deae5d14650829b3e0364c5\",\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.namespace.name\":\"checkout\",\"k8s.pod.name\":\"reported-pod\",\"k8s.pod.uid\":\"pod-a\"},\"resourceSchemaURL\":null,\"podUIDState\":\"present\",\"clusterUIDState\":\"missing\",\"actionable\":true,\"families\":[{\"family\":\"spans\",\"count\":\"2\",\"firstNS\":\"1000000001\",\"lastNS\":\"2000000001\"}]},{\"key\":\"bbab1f394e7fc937057e90c02a5824249c411ef6751180acbda8d245988d5c24\",\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.namespace.name\":\"checkout\",\"k8s.pod.name\":\"reported-pod\",\"k8s.pod.uid\":\"pod-a\"},\"resourceSchemaURL\":\"\",\"podUIDState\":\"present\",\"clusterUIDState\":\"missing\",\"actionable\":true,\"families\":[{\"family\":\"gauge\",\"count\":\"2\",\"firstNS\":\"1000000001\",\"lastNS\":\"2000000001\"},{\"family\":\"histogram\",\"count\":\"2\",\"firstNS\":\"1000000001\",\"lastNS\":\"2000000001\"},{\"family\":\"logs\",\"count\":\"18446744073709551615\",\"firstNS\":\"1000000001\",\"lastNS\":\"2000000001\"},{\"family\":\"sum\",\"count\":\"2\",\"firstNS\":\"1000000001\",\"lastNS\":\"2000000001\"}]}],\"sourceGroups\":7,\"observationsOmitted\":0,\"readAt\":\"2026-10-26T00:00:00Z\",\"basis\":\"d600e5e1ae59132f0836233efe2120e9bdafeae3b02283a757ed2208823dfb74\",\"warning\":\"Reported pod-bearing resource variants, not physical pod inventory or Kubernetes API state. Family counts are captured records or metric data points, not messages, requests or healthy entities. Cluster names, namespace, workload and node labels are reported context; missing cluster UID does not establish absence. Matching resource record questions are contextual, not exact map/schema joins. No ownership, health, capacity or native metric authority is inferred.\"}\n"
+    },
+    {
+      "name": "missing-scope",
+      "method": "POST",
+      "path": "/pod-discovery",
+      "body": "{}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"pod discovery requires explicit environment and fixed half-open window \\u003c=120 minutes before 2100\"}\n"
+    },
+    {
+      "name": "unknown-field",
+      "method": "POST",
+      "path": "/pod-discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"sql\":\"SELECT 1\"}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"sql\\\"\"}\n"
+    },
+    {
+      "suffix": " {}",
+      "name": "trailing",
+      "method": "POST",
+      "path": "/pod-discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "exact-16KiB",
+      "method": "POST",
+      "path": "/pod-discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000}",
+      "padTo": 16384,
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"version\":\"goo/pod-discovery/v1\",\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000},\"observations\":[{\"key\":\"0f3ccea40e54f2a38cefad563dc977f488985d56e595e86314e8b7142506dfa7\",\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.name\":\"missing-uid\"},\"resourceSchemaURL\":\"\",\"podUIDState\":\"missing\",\"clusterUIDState\":\"missing\",\"actionable\":false,\"families\":[{\"family\":\"logs\",\"count\":\"1\",\"firstNS\":\"1000000001\",\"lastNS\":\"2000000001\"}]},{\"key\":\"4763c01fe62deb95d5d08f032f3d7f01c64c6989deabe98f92b9d8faf6c9e773\",\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.pod.name\":\"empty-uid\",\"k8s.pod.uid\":\"\"},\"resourceSchemaURL\":null,\"podUIDState\":\"empty\",\"clusterUIDState\":\"missing\",\"actionable\":false,\"families\":[{\"family\":\"spans\",\"count\":\"1\",\"firstNS\":\"1000000001\",\"lastNS\":\"2000000001\"}]},{\"key\":\"571b2703f18d2bbd5128fa06f75a7dfa280b3e207deae5d14650829b3e0364c5\",\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.namespace.name\":\"checkout\",\"k8s.pod.name\":\"reported-pod\",\"k8s.pod.uid\":\"pod-a\"},\"resourceSchemaURL\":null,\"podUIDState\":\"present\",\"clusterUIDState\":\"missing\",\"actionable\":true,\"families\":[{\"family\":\"spans\",\"count\":\"2\",\"firstNS\":\"1000000001\",\"lastNS\":\"2000000001\"}]},{\"key\":\"bbab1f394e7fc937057e90c02a5824249c411ef6751180acbda8d245988d5c24\",\"resource\":{\"deployment.environment.name\":\"prod\",\"k8s.namespace.name\":\"checkout\",\"k8s.pod.name\":\"reported-pod\",\"k8s.pod.uid\":\"pod-a\"},\"resourceSchemaURL\":\"\",\"podUIDState\":\"present\",\"clusterUIDState\":\"missing\",\"actionable\":true,\"families\":[{\"family\":\"gauge\",\"count\":\"2\",\"firstNS\":\"1000000001\",\"lastNS\":\"2000000001\"},{\"family\":\"histogram\",\"count\":\"2\",\"firstNS\":\"1000000001\",\"lastNS\":\"2000000001\"},{\"family\":\"logs\",\"count\":\"18446744073709551615\",\"firstNS\":\"1000000001\",\"lastNS\":\"2000000001\"},{\"family\":\"sum\",\"count\":\"2\",\"firstNS\":\"1000000001\",\"lastNS\":\"2000000001\"}]}],\"sourceGroups\":7,\"observationsOmitted\":0,\"readAt\":\"2026-10-26T00:00:00Z\",\"basis\":\"d600e5e1ae59132f0836233efe2120e9bdafeae3b02283a757ed2208823dfb74\",\"warning\":\"Reported pod-bearing resource variants, not physical pod inventory or Kubernetes API state. Family counts are captured records or metric data points, not messages, requests or healthy entities. Cluster names, namespace, workload and node labels are reported context; missing cluster UID does not establish absence. Matching resource record questions are contextual, not exact map/schema joins. No ownership, health, capacity or native metric authority is inferred.\"}\n"
+    },
+    {
+      "name": "oversize",
+      "method": "POST",
+      "path": "/pod-discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000}",
+      "padTo": 16385,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "source-unavailable",
+      "method": "POST",
+      "path": "/pod-discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exploration source HTTP 503\"}\n"
+    },
+    {
+      "name": "source-group-sentinel",
+      "method": "POST",
+      "path": "/pod-discovery",
+      "body": "{\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"more than 1000 pod source-family groups; narrow the window; no partial inventory\"}\n"
+    },
+    {
+      "name": "method",
+      "method": "GET",
+      "path": "/pod-discovery",
+      "body": "",
+      "status": 405,
+      "headers": {
+        "Allow": "POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    }
+  ]
+}

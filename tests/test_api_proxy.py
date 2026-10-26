@@ -232,6 +232,28 @@ class ProxyContracts(unittest.TestCase):
         finally:
             conn.close()
 
+    def test_pod_discovery_limits_query_id_and_assets(self):
+        query_id = '01234567-1234-1234-1234-012345678901'
+        payload = b'{}' + b' ' * (16384-2)
+        status, _, body = self.request('POST', '/api/pod-discovery', payload, {'X-Goo-Query-ID': query_id})
+        self.assertEqual(status, 400)
+        self.assertEqual(json.loads(body), {'error': 'backend refusal'})
+        self.assertEqual(Upstream.calls[-1][1], '/pod-discovery')
+        self.assertEqual(Upstream.calls[-1][3], payload)
+        self.assertEqual({k.lower(): v for k, v in Upstream.calls[-1][2].items()}['x-goo-query-id'], query_id)
+        before = len(Upstream.calls)
+        self.assertEqual(self.request('POST', '/api/pod-discovery', payload+b' ')[0], 400)
+        self.assertEqual(len(Upstream.calls), before)
+        for asset in ('kubernetes-browser.js', 'resource-scope.js', 'resource-tabs.js', 'kubernetes.css'):
+            conn = http.client.HTTPConnection('127.0.0.1', self.proxy.server_port, timeout=5)
+            try:
+                conn.request('GET', '/'+asset)
+                response = conn.getresponse()
+                self.assertEqual(response.status, 200)
+                self.assertEqual(response.read(), Path('ui/'+asset).read_bytes())
+            finally:
+                conn.close()
+
     def test_get_errors_and_queries_are_reencoded(self):
         Upstream.mode = 'text'
         status, headers, body = self.request('GET', '/api/operations?package=example&minutes=5')
