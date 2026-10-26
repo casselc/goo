@@ -4321,6 +4321,64 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/pool-signals/view": {
+      "post": {
+        "operationId": "post_pool_signals_view",
+        "summary": "POST /pool-signals/view",
+        "tags": [
+          "pool-signals"
+        ],
+        "description": "Current owner: cmd/goo/pool_view_http.go. Effect: pure-plan-or-supplied-summary. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/pool_view_http.go",
+        "x-effects": "pure-plan-or-supplied-summary",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PoolView"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PoolViewRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 2097152,
+        "x-browser-body-limit-bytes": 2097152,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/population/explain": {
       "post": {
         "operationId": "post_population_explain",
@@ -6500,6 +6558,19 @@
         "anyOf": [
           {
             "$ref": "#/components/schemas/measurements.PoolSignalsRequestInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "PoolView": {
+        "$ref": "#/components/schemas/measurements.PoolView"
+      },
+      "PoolViewRequest": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.PoolViewRequestInput"
           },
           {
             "type": "null"
@@ -15923,6 +15994,113 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/lifecycle.Event"
       },
+      "lifecycle.EventInput": {
+        "additionalProperties": false,
+        "properties": {
+          "environment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "event_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "event_time_ns": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "outcome": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "received_time_ns": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "release": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "service_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "subject_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tenant_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/lifecycle.Event"
+      },
       "lifecycle.Policy": {
         "properties": {
           "allowanceNs": {
@@ -16017,6 +16195,203 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/lifecycle.Policy"
       },
+      "lifecycle.PolicyInput": {
+        "additionalProperties": false,
+        "properties": {
+          "allowanceNs": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "apiVersion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "custodyClock": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "deadlineNs": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "definitionRevision": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "evaluationId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "evaluationTimeNs": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "evidenceBasis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "evidenceCutoffNs": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "knowledgeAfterEvaluation": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scopes": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/lifecycle.ScopeInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sourceRevision": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "subjectField": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "successOutcome": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "supersedesEvaluationId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "terminalOutcomes": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "windowNs": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/lifecycle.Policy"
+      },
       "lifecycle.Prepared": {
         "properties": {
           "facts": {
@@ -16062,6 +16437,64 @@
           "subjects",
           "facts"
         ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/lifecycle.Prepared"
+      },
+      "lifecycle.PreparedInput": {
+        "additionalProperties": false,
+        "properties": {
+          "facts": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": {},
+                      "type": "object"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "receipt": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/lifecycle.ReceiptInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "subjects": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/lifecycle.SubjectInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/lifecycle.Prepared"
       },
@@ -16153,6 +16586,183 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/lifecycle.Receipt"
       },
+      "lifecycle.ReceiptInput": {
+        "additionalProperties": false,
+        "properties": {
+          "after_cutoff": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cohort_end_ns": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cohort_start_ns": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "conflicting_event_ids": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "counts": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "duplicate_deliveries": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "evidence_digest": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "input_manifest_digest": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "invalid_records": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "outside_scope": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "policy": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/lifecycle.PolicyInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scopes": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/lifecycle.ScopeReceiptInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "snapshot_digest": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "visible_deliveries": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/lifecycle.Receipt"
+      },
       "lifecycle.Scope": {
         "properties": {
           "coverage": {
@@ -16177,6 +16787,63 @@
           "serviceName",
           "coverage"
         ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/lifecycle.Scope"
+      },
+      "lifecycle.ScopeInput": {
+        "additionalProperties": false,
+        "properties": {
+          "coverage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "environment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "evidenceRef": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "serviceName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tenantId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/lifecycle.Scope"
       },
@@ -16215,6 +16882,73 @@
           "invalid_records",
           "orphan_subjects"
         ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/lifecycle.ScopeReceipt"
+      },
+      "lifecycle.ScopeReceiptInput": {
+        "additionalProperties": false,
+        "properties": {
+          "invalid_records": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "orphan_subjects": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "quality": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reasons": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/lifecycle.ScopeInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/lifecycle.ScopeReceipt"
       },
@@ -16279,6 +17013,143 @@
           "is_mature",
           "event_ids"
         ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/lifecycle.Subject"
+      },
+      "lifecycle.SubjectInput": {
+        "additionalProperties": false,
+        "properties": {
+          "accepted_time_ns": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "classification": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "environment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "event_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "in_cohort": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "is_mature": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "release": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "service_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "subject_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tenant_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "terminal_time_ns": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/lifecycle.Subject"
       },
@@ -18213,6 +19084,53 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.Plan"
       },
+      "measurements.PlanInput": {
+        "additionalProperties": false,
+        "properties": {
+          "parameters": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "revision": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sql": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.Plan"
+      },
       "measurements.PoolSignalOption": {
         "properties": {
           "key": {
@@ -18357,6 +19275,327 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.PoolSignalsRequest"
+      },
+      "measurements.PoolView": {
+        "properties": {
+          "capacity": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.PoolViewCapacity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "capacityQuestion": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.Question"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "countEvidence": {
+            "$ref": "#/components/schemas/measurements.PoolViewEvidence"
+          },
+          "countQuestion": {
+            "$ref": "#/components/schemas/measurements.Question"
+          },
+          "states": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/measurements.PoolViewCountState"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stream": {
+            "$ref": "#/components/schemas/metrics.Stream"
+          },
+          "utilization": {
+            "$ref": "#/components/schemas/measurements.PoolViewUtilization"
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/pool-view/v1"
+          },
+          "wait": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.PoolViewWait"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "waitQuestion": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.Question"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "warnings": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "version",
+          "stream",
+          "countQuestion",
+          "states",
+          "countEvidence",
+          "utilization",
+          "warnings"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.PoolView",
+        "additionalProperties": false,
+        "description": "Pure composition of replay-validated held native evidence. Full identity, fixed bounds and observed stock times/epochs govern rational utilization; separate read clocks remain visible. No source read, custody, capture or transactional observation is created."
+      },
+      "measurements.PoolViewCapacity": {
+        "properties": {
+          "evidence": {
+            "$ref": "#/components/schemas/measurements.PoolViewEvidence"
+          },
+          "latest": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/metrics.StockSample"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stream": {
+            "$ref": "#/components/schemas/metrics.Stream"
+          }
+        },
+        "required": [
+          "stream",
+          "evidence"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.PoolViewCapacity"
+      },
+      "measurements.PoolViewCountState": {
+        "properties": {
+          "latest": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/metrics.StockSample"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "stream": {
+            "$ref": "#/components/schemas/metrics.Stream"
+          }
+        },
+        "required": [
+          "name",
+          "stream"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.PoolViewCountState"
+      },
+      "measurements.PoolViewEvidence": {
+        "properties": {
+          "basis": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "readAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "basis",
+          "readAt"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.PoolViewEvidence"
+      },
+      "measurements.PoolViewRequestInput": {
+        "additionalProperties": false,
+        "properties": {
+          "capacity": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/measurements.ResultInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "count": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.ResultInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/metrics.StreamInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "wait": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/measurements.ResultInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.PoolViewRequest"
+      },
+      "measurements.PoolViewUtilization": {
+        "properties": {
+          "denominator": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "numerator": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "unavailable",
+              "inconsistent"
+            ]
+          }
+        },
+        "required": [
+          "state",
+          "reason"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.PoolViewUtilization",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "observed"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "required": [
+                "numerator",
+                "denominator"
+              ]
+            },
+            "else": {
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "numerator"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "denominator"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "measurements.PoolViewWait": {
+        "properties": {
+          "evidence": {
+            "$ref": "#/components/schemas/measurements.PoolViewEvidence"
+          },
+          "latest": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/metrics.HistogramInterval"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stream": {
+            "$ref": "#/components/schemas/metrics.Stream"
+          }
+        },
+        "required": [
+          "stream",
+          "evidence"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.PoolViewWait"
       },
       "measurements.Question": {
         "properties": {
@@ -18626,6 +19865,226 @@
             }
           }
         ]
+      },
+      "measurements.ResultInput": {
+        "additionalProperties": false,
+        "properties": {
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "count": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "counters": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/metrics.CounterResultInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "events": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/lifecycle.EventInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "gauges": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/metrics.GaugeResultInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "histogramTime": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/metrics.HistogramTimeResultInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "histograms": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/metrics.HistogramResultInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lifecycle": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/lifecycle.PreparedInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "plan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.PlanInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "question": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.QuestionInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "readAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "rows": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stocks": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/metrics.StockResultInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "warnings": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.Result"
       },
       "measurements.Workflow": {
         "properties": {
@@ -18941,6 +20400,80 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/metrics.CounterInterval"
       },
+      "metrics.CounterIntervalInput": {
+        "additionalProperties": false,
+        "properties": {
+          "delta": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fromNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "perSecond": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "toNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.CounterInterval"
+      },
       "metrics.CounterResult": {
         "properties": {
           "apiVersion": {
@@ -18993,6 +20526,93 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/metrics.CounterResult"
       },
+      "metrics.CounterResultInput": {
+        "additionalProperties": false,
+        "properties": {
+          "apiVersion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fromNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "series": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/metrics.CounterSeriesInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "toNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "warnings": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.CounterResult"
+      },
       "metrics.CounterSeries": {
         "properties": {
           "intervals": {
@@ -19024,6 +20644,63 @@
           "state",
           "intervals"
         ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.CounterSeries"
+      },
+      "metrics.CounterSeriesInput": {
+        "additionalProperties": false,
+        "properties": {
+          "intervals": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/metrics.CounterIntervalInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/metrics.StreamInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "temporality": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/metrics.CounterSeries"
       },
@@ -19391,6 +21068,53 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/metrics.GaugeResult"
       },
+      "metrics.GaugeResultInput": {
+        "additionalProperties": false,
+        "properties": {
+          "fromNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "series": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/metrics.GaugeSeriesInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "toNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.GaugeResult"
+      },
       "metrics.GaugeSample": {
         "properties": {
           "atNS": {
@@ -19504,6 +21228,53 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/metrics.GaugeSeries"
       },
+      "metrics.GaugeSeriesInput": {
+        "additionalProperties": false,
+        "properties": {
+          "samples": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/metrics.GaugeSampleInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/metrics.StreamInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.GaugeSeries"
+      },
       "metrics.HistogramInterval": {
         "properties": {
           "distribution": {
@@ -19534,6 +21305,70 @@
           "toNS",
           "state"
         ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.HistogramInterval"
+      },
+      "metrics.HistogramIntervalInput": {
+        "additionalProperties": false,
+        "properties": {
+          "distribution": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/metrics.DistributionInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fromNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "toNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/metrics.HistogramInterval"
       },
@@ -19593,6 +21428,103 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/metrics.HistogramResult"
       },
+      "metrics.HistogramResultInput": {
+        "additionalProperties": false,
+        "properties": {
+          "apiVersion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fromNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "maxGapNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "series": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/metrics.HistogramSeriesInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "toNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "warnings": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.HistogramResult"
+      },
       "metrics.HistogramSeries": {
         "properties": {
           "intervals": {
@@ -19624,6 +21556,63 @@
           "state",
           "intervals"
         ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.HistogramSeries"
+      },
+      "metrics.HistogramSeriesInput": {
+        "additionalProperties": false,
+        "properties": {
+          "intervals": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/metrics.HistogramIntervalInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/metrics.StreamInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "temporality": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/metrics.HistogramSeries"
       },
@@ -19668,6 +21657,80 @@
           "state",
           "reasons"
         ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.HistogramTimeBucket"
+      },
+      "metrics.HistogramTimeBucketInput": {
+        "additionalProperties": false,
+        "properties": {
+          "distribution": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/metrics.DistributionInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fromNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reasons": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "toNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/metrics.HistogramTimeBucket"
       },
@@ -19717,6 +21780,93 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/metrics.HistogramTimeResult"
       },
+      "metrics.HistogramTimeResultInput": {
+        "additionalProperties": false,
+        "properties": {
+          "apiVersion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fromNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "series": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/metrics.HistogramTimeSeriesInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sourceBasis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "toNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "widthNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.HistogramTimeResult"
+      },
       "metrics.HistogramTimeSeries": {
         "properties": {
           "buckets": {
@@ -19744,6 +21894,53 @@
           "temporality",
           "buckets"
         ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.HistogramTimeSeries"
+      },
+      "metrics.HistogramTimeSeriesInput": {
+        "additionalProperties": false,
+        "properties": {
+          "buckets": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/metrics.HistogramTimeBucketInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/metrics.StreamInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "temporality": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/metrics.HistogramTimeSeries"
       },
@@ -20015,6 +22212,53 @@
         "x-go-type": "github.com/casselc/goo/metrics.StockResult",
         "description": "Per-stream cumulative nonmonotonic sum observations. Signed finite fractional values and accumulation epochs are preserved; decreases are not resets. No delta integration, fleet total, rate, capacity or utilization is inferred."
       },
+      "metrics.StockResultInput": {
+        "additionalProperties": false,
+        "properties": {
+          "fromNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "series": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/metrics.StockSeriesInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "toNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.StockResult"
+      },
       "metrics.StockSample": {
         "properties": {
           "atNS": {
@@ -20089,6 +22333,70 @@
           }
         ]
       },
+      "metrics.StockSampleInput": {
+        "additionalProperties": false,
+        "properties": {
+          "atNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "startNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "value": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.StockSample"
+      },
       "metrics.StockSeries": {
         "properties": {
           "samples": {
@@ -20121,6 +22429,53 @@
           "state",
           "samples"
         ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.StockSeries"
+      },
+      "metrics.StockSeriesInput": {
+        "additionalProperties": false,
+        "properties": {
+          "samples": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/metrics.StockSampleInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/metrics.StreamInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/metrics.StockSeries"
       },

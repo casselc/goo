@@ -178,6 +178,29 @@ class ProxyContracts(unittest.TestCase):
         self.assertEqual(status,400)
         self.assertEqual(len(Upstream.calls),before)
 
+    def test_pool_view_proxy_exact_2mib_limit(self):
+        payload = b'{}' + b' ' * (2097152-2)
+        status, _, body = self.request('POST','/api/pool-signals/view',payload)
+        self.assertEqual(status,400)
+        self.assertEqual(json.loads(body),{'error':'backend refusal'})
+        self.assertEqual(Upstream.calls[-1][1],'/pool-signals/view')
+        self.assertEqual(Upstream.calls[-1][3],payload)
+        before=len(Upstream.calls)
+        status, _, body = self.request('POST','/api/pool-signals/view',payload+b' ')
+        self.assertEqual(status,400)
+        self.assertEqual(len(Upstream.calls),before)
+
+    def test_pool_view_asset_is_served_without_upstream(self):
+        conn=http.client.HTTPConnection('127.0.0.1',self.proxy.server_port,timeout=5)
+        try:
+            conn.request('GET','/pool-view.js')
+            response=conn.getresponse()
+            self.assertEqual(response.status,200)
+            self.assertEqual(response.read(),Path('ui/pool-view.js').read_bytes())
+            self.assertEqual(Upstream.calls,[])
+        finally:
+            conn.close()
+
     def test_get_errors_and_queries_are_reencoded(self):
         Upstream.mode = 'text'
         status, headers, body = self.request('GET', '/api/operations?package=example&minutes=5')

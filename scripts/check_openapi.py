@@ -81,7 +81,7 @@ def check(spec):
                 requests += 1
                 if isinstance(request, dict):
                     accepted.append((shape, request))
-    assert responses == 336 and requests == 117 and mux_refusals == 19, (responses, requests)
+    assert responses == 348 and requests == 120 and mux_refusals == 20, (responses, requests)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)
@@ -106,6 +106,13 @@ def check(spec):
     aggregate=next(json.loads(c['response']) for c in aggregate_cases if c['name']=='success-rich-series')
     for wrong in ({**aggregate,'count':2},{**aggregate,'state':'healthy'},{**aggregate,'rows':[]},{**aggregate,'resultToken':'a'*64},{**aggregate,'groups':[{'g0':17,'count':'2'}]},{**aggregate,'groups':[{'g0':None,'count':'0'}]}):
         assert list(validator(spec,aggregate_shape).iter_errors(wrong)), 'Record aggregate negative control accepted'
+    pool_view_cases=json.loads((ROOT/'testdata/http/pool-view.json').read_text())['cases']
+    pool_view=next(json.loads(c['response']) for c in pool_view_cases if c['name']=='validated-count-capacity-wait')
+    pool_view_shape={'$ref':'#/components/schemas/PoolView'}
+    for change in ({'state':'healthy'},{'state':'observed','reason':'fake'},{'state':'observed','reason':'fake','numerator':'1','denominator':'0'},{'state':'unavailable','reason':'unknown','numerator':'0','denominator':'1'}):
+        wrong=copy.deepcopy(pool_view);wrong['utilization']=change
+        assert list(validator(spec,pool_view_shape).iter_errors(wrong)), 'Pool-view utilization control accepted'
+    assert pool_view['utilization']['state']=='observed' and pool_view['utilization']['numerator']=='1' and pool_view['utilization']['denominator']=='1'
     # Startup metadata is configuration only, with closed states and no health flags.
     runtime_shape={'$ref':'#/components/schemas/RuntimeCapabilities'}
     configured={'version':'goo/runtime-capabilities/v1','profile':'generic','preparedHTTP':{'state':'unconfigured'},'declaredOperations':{'state':'configured'}}

@@ -56,6 +56,14 @@ pool['streamsOmitted']['maximum']=160000
 schemas['measurements.PoolSignalOption']['properties']['key']['pattern']='^[a-f0-9]{64}$'
 schemas['measurements.PoolSignalsRequestInput']['properties']['instruments']['anyOf'][0]['maxItems']=16
 schemas['measurements.PoolSignalsPlan']['description']='Pure supplied-metadata planning. Capacity/wait options are independent exact-stream questions, not fresh evidence or alignment/health/utilization claims. Preserves parent bounds; no source read, custody or publication.'
+view=schemas['measurements.PoolView']['properties']
+view['version']['const']='goo/pool-view/v1'
+schemas['measurements.PoolView']['additionalProperties']=False
+schemas['measurements.PoolView']['description']='Pure composition of replay-validated held native evidence. Full identity, fixed bounds and observed stock times/epochs govern rational utilization; separate read clocks remain visible. No source read, custody, capture or transactional observation is created.'
+util=schemas['measurements.PoolViewUtilization'];util['properties']['state']['enum']=['observed','unavailable','inconsistent']
+util['properties']['numerator']['pattern']='^(0|[1-9][0-9]*)$';util['properties']['denominator']['pattern']='^[1-9][0-9]*$'
+util['allOf']=[{'if':{'properties':{'state':{'const':'observed'}},'required':['state']},'then':{'required':['numerator','denominator']},'else':{'not':{'anyOf':[{'required':['numerator']},{'required':['denominator']}]}}}]
+evidence=schemas['measurements.PoolViewEvidence']['properties'];evidence['basis']['pattern']='^[a-f0-9]{64}$';evidence['readAt']['format']='date-time'
 # Runtime metadata is encoded by small Go/Python maps; schemas are authored here.
 schemas['RuntimeCapabilityState']={'type':'object','required':['state'],'properties':{'state':{'enum':['configured','unconfigured']}},'additionalProperties':False}
 schemas['RuntimeCapabilities']={'type':'object','required':['version','profile','preparedHTTP','declaredOperations'],'properties':{'version':{'const':'goo/runtime-capabilities/v1'},'profile':{'enum':['lab','generic']},'preparedHTTP':{'$ref':'#/components/schemas/RuntimeCapabilityState'},'declaredOperations':{'$ref':'#/components/schemas/RuntimeCapabilityState'}},'additionalProperties':False,'description':'Source-free startup configuration only. Configured does not establish source availability, authorization, telemetry coverage, ingestion completeness or service health.'}
@@ -74,16 +82,16 @@ schemas['exploration.DashboardFamily']['properties']['state']['description']='Me
 schemas['exploration.DashboardWidget']['properties']['family']['description']='Optional display/planning family identity; not a telemetry field or a shared native/span/log denominator.'
 # API policy is deliberately authored, not inferred from HTTP verbs.
 reads = {'/http-package', '/operations', '/counter-rates', '/histograms', '/inventory', '/discovery', '/explore', '/explore/counted-values', '/record-aggregates', '/trace-search', '/population/explain', '/metric-discovery', '/measurements', '/investigations', '/captures', '/tail', '/query'}
-plans = {'/pool-signals/plan','/measurement-packages/plan', '/telemetry-packages/draft', '/telemetry-packages/numeric-plan', '/telemetry-packages/plan', '/recipes', '/dashboards/plan', '/population/plan', '/population/explain/plan', '/population/explain/filter', '/numeric-histograms/selection', '/numeric-histograms/comparison-selection', '/compare', '/explain'}
+plans = {'/pool-signals/plan','/pool-signals/view','/measurement-packages/plan', '/telemetry-packages/draft', '/telemetry-packages/numeric-plan', '/telemetry-packages/plan', '/recipes', '/dashboards/plan', '/population/plan', '/population/explain/plan', '/population/explain/filter', '/numeric-histograms/selection', '/numeric-histograms/comparison-selection', '/compare', '/explain'}
 publications = {'/activity-views','/measurement-packages', '/telemetry-packages', '/annotations', '/exploration-views', '/deployments', '/documents', '/captures/comparisons'}
-requests = {'/pool-signals/plan':'PoolSignalsRequest','/activity-views':'ActivityViewRequest',
+requests = {'/pool-signals/plan':'PoolSignalsRequest','/pool-signals/view':'PoolViewRequest','/activity-views':'ActivityViewRequest',
  '/retained-evidence/tail':'TailIntent','/compare':'CompareRequest','/inventory':'InventoryRequest','/discovery':'InventoryRequest','/explore':'RecordQuery','/explore/counted-values':'RecordQuery','/record-aggregates':'RecordQuery','/trace-search':'TraceSearchRequest','/tail':'TailSelector',
  '/measurements':'NativeQuestion','/metric-discovery':'MetricDiscoveryRequest','/measurement-packages/plan':'NativePlanRequest','/measurement-packages':'YAMLRequest',
  '/telemetry-packages':'YAMLRequest','/telemetry-packages/draft':'TelemetryDraftRequest','/telemetry-packages/numeric-plan':'NumericPlanRequest','/telemetry-packages/plan':'TelemetryPlanRequest',
  '/recipes':'RecipeRequest','/dashboards/plan':'DashboardRequest','/population/plan':'PopulationRequest','/numeric-histograms/selection':'NumericHistogramSelectionRequest','/numeric-histograms/comparison-selection':'DistributionSelectionRequest','/annotations':'MeaningInput','/exploration-views':'ExplorationView','/deployments':'DeploymentInput','/documents':'DocumentRequest',
  '/population/explain':'ExplanationRequest','/population/explain/plan':'ExplanationRequest','/population/explain/filter':'ExplanationFilterRequest','/captures':'CaptureRequest','/captures/live':'LiveComparisonRequest','/captures/comparisons':'SaveComparisonRequest','/investigations':'InvestigationRequest','/retained-evidence':'RetainRequest','/retained-evidence/{id}/annotations':'CorrectRequest',
 }
-responses = {('post','/pool-signals/plan'):'PoolSignalsPlan',('get','/capabilities'):'RuntimeCapabilities',('post','/population/explain'):'ExplanationResult',('post','/population/explain/plan'):'ExplanationPlan',('post','/population/explain/filter'):'ExplanationStagedQuestion',('post','/activity-views'):'ActivityView',('get','/activity-views/{id}'):'ActivityView',('get','/activity-views'):'ActivityViewList',
+responses = {('post','/pool-signals/plan'):'PoolSignalsPlan',('post','/pool-signals/view'):'PoolView',('get','/capabilities'):'RuntimeCapabilities',('post','/population/explain'):'ExplanationResult',('post','/population/explain/plan'):'ExplanationPlan',('post','/population/explain/filter'):'ExplanationStagedQuestion',('post','/activity-views'):'ActivityView',('get','/activity-views/{id}'):'ActivityView',('get','/activity-views'):'ActivityViewList',
  ('post','/compare'):'CompareResult',('post','/inventory'):'InventoryResult',('post','/discovery'):'ServiceDiscovery',('post','/explore'):'RecordResult',('post','/explore/counted-values'):'CountedValuesResult',('post','/record-aggregates'):'RecordAggregatesResult',('post','/trace-search'):'TraceSearchResult',
  ('post','/measurements'):'NativeResult',('post','/metric-discovery'):'MetricDiscoveryResult',('post','/telemetry-packages/draft'):'PackagePlan',('post','/telemetry-packages/plan'):'PackagePlan',('post','/telemetry-packages/numeric-plan'):'NumericPlan',('post','/telemetry-packages'):'SavedPackage',('get','/telemetry-packages/{revision}'):'SavedPackage',
  ('post','/recipes'):'RecipePlan',('post','/dashboards/plan'):'DashboardPlan',('post','/population/plan'):'PopulationPlan',('post','/numeric-histograms/selection'):'NumericHistogramSelection',('post','/numeric-histograms/comparison-selection'):'NumericHistogramSelection',
@@ -122,6 +130,7 @@ for name in ['measurements.Definition','measurements.Question','measurements.Pla
  if name not in schemas: raise ValueError(f'Missing reflected type: {name}')
 
 def go_limit(path):
+ if path == '/pool-signals/view': return 2097152
  if path in ('/compare','/numeric-histograms/comparison-selection'): return 1048576
  if path == '/dashboards/plan': return 262144
  if path.startswith(('/telemetry-packages','/measurement-packages')) or path in ('/pool-signals/plan','/population/explain','/population/explain/plan','/population/explain/filter','/measurements','/metric-discovery','/trace-search'): return 65536
@@ -129,6 +138,7 @@ def go_limit(path):
  return 16384
 
 def browser_limit(path):
+ if path == '/pool-signals/view': return 2097152
  if path in ('/population/plan', '/numeric-histograms/selection','/exploration-views','/documents','/captures/comparisons'): return 131072
  if path in ('/compare','/numeric-histograms/comparison-selection'): return 1048576
  if path in ('/pool-signals/plan','/population/explain','/population/explain/plan','/population/explain/filter','/trace-search') or path.startswith(('/telemetry-packages','/measurement-packages','/measurements')): return 65536

@@ -723,3 +723,30 @@ Pool-signal preview omission counters must be within 0..10,000 per supplied
 instrument, including extra preview rows removed by the 25-stream cap. Invalid
 or overflowing supplied counters are refused with 400, preserving meaningful
 omission disclosures; the bounded total cannot exceed 160,000.
+
+`POST /pool-signals/view` (browser `/api/pool-signals/view`) composes held native
+results using `{count: NativeResult, stream: Stream, capacity?: NativeResult,
+wait?: NativeResult}`. Both transports enforce 2 MiB. Go checks a two-second
+context before and after bounded synchronous composition; cancellation, elapsed
+deadlines, malformed input and invalid composition return 400. This pure route
+uses no source admission/cancellation token, performs no source or custody I/O,
+and publishes no capture or combined receipt.
+
+Every supplied result is replay-validated against its retained raw rows, question,
+basis and derived values. That establishes internal evidence consistency, not
+source authenticity or authorization. The anchor must exist in the held count
+result. Optional signals require their exact pinned identities, the same full
+pool/resource/instrumentation identity and identical fixed evaluation bounds.
+Wrong identity/window and forged bases or evaluated values are refused instead
+of silently repaired or retargeted.
+
+`goo/pool-view/v1` returns separate count/capacity/wait questions and evidence
+clocks/bases, reported count states, optional latest capacity/wait observations,
+warnings and utilization. Utilization is a rational pair of decimal strings only
+when observed bounded integer used/capacity values have the same observation time
+and a matching nonzero accumulation epoch, with positive capacity and used <=
+capacity. Unavailable or inconsistent results carry a reason and omit the ratio;
+raw observations remain visible. A zero start epoch means unreported epoch, even
+when both are zero. Matching reported clocks/epochs do not establish a
+transactional snapshot, aligned collection, health or causal relation. Existing
+count, capacity and wait captures remain independent and unchanged.

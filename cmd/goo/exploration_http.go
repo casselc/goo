@@ -14,6 +14,7 @@ func registerExploration(mux *http.ServeMux, source exploration.Source, banks ..
 	registerTraceSearch(mux, source)
 	registerRecipes(mux)
 	registerPoolSignals(mux)
+	registerPoolView(mux)
 	registerPopulationExplanations(mux, source)
 	registerTail(mux, source, banks...)
 	mux.HandleFunc("POST /compare", func(w http.ResponseWriter, r *http.Request) {
