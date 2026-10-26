@@ -82,6 +82,8 @@ func observedCoverage(i Instrument, observations []DiscoveryObservation) Instrum
 	case "http.server.request.duration":
 		keys["http.request.method"] = true
 		keys["http.response.status_code"] = true
+	case "go.memory.used":
+		keys["go.memory.type"] = true
 	case "db.client.connection.count":
 		keys["db.client.connection.pool.name"] = true
 		keys["db.client.connection.state"] = true
@@ -171,6 +173,20 @@ func PlanInstrument(i Instrument, observations []DiscoveryObservation) Instrumen
 	}
 	if !p.Eligible && len(p.Reasons) == 0 {
 		p.Reasons = append(p.Reasons, "No valid package binding is available from the current kernels.")
+	}
+	if GoRuntimeMetricTitle(i.Metric) != "" {
+		candidate := i
+		candidate.CapabilityPlan = &p
+		if len(GoRuntimeCandidates(candidate)) > 0 {
+			p.Profile = "go-runtime"
+			p.Title = GoRuntimeMetricTitle(i.Metric) + " candidate"
+			p.RuleSet = "OpenTelemetry semantic conventions v1.37.0 (Go runtime: development)"
+			p.ShapeMatches = true
+			p.Hints = append(p.Hints, "Positive service-instance preview metadata supports exact-stream stock observations with nonnegative-integer domain. Numerical values and freshness still require evaluation.", "Memory types remain separate literal labels, including custom or unreported types. GC heap goal is a reported target, not GC pause time, collection activity or memory utilization. Goroutine count is not a leak diagnosis.")
+		} else {
+			p.Hints = append(p.Hints, "Pinned Go runtime eligibility is unconfirmed; it requires cumulative nonmonotonic stock identity, exact unit and v1.37.0 schema, plus positive service-instance preview evidence. The generic binding remains available; missing preview evidence is not absence.")
+		}
+		return p
 	}
 	if i.Metric == "db.client.connection.count" {
 		candidate := i

@@ -74,16 +74,18 @@ type DashboardFamily struct {
 	Selected bool   `json:"selected"`
 }
 type DashboardPlan struct {
-	Profile       string                  `json:"profile,omitempty"`
-	Families      []DashboardFamily       `json:"families,omitempty"`
-	Version       string                  `json:"version"`
-	Scope         InventoryQuestion       `json:"scope"`
-	Service       string                  `json:"service"`
-	Widgets       []DashboardWidget       `json:"widgets"`
-	Declarations  []DashboardDeclaration  `json:"declarations"`
-	Warnings      []string                `json:"warnings"`
-	NativeOptions []DashboardNativeOption `json:"nativeOptions"`
-	NativeLimit   int                     `json:"nativeLimit"`
+	RuntimeStreamsOmitted int                     `json:"runtimeStreamsOmitted,omitempty"`
+	NativeOptionsOmitted  int                     `json:"nativeOptionsOmitted,omitempty"`
+	Profile               string                  `json:"profile,omitempty"`
+	Families              []DashboardFamily       `json:"families,omitempty"`
+	Version               string                  `json:"version"`
+	Scope                 InventoryQuestion       `json:"scope"`
+	Service               string                  `json:"service"`
+	Widgets               []DashboardWidget       `json:"widgets"`
+	Declarations          []DashboardDeclaration  `json:"declarations"`
+	Warnings              []string                `json:"warnings"`
+	NativeOptions         []DashboardNativeOption `json:"nativeOptions"`
+	NativeLimit           int                     `json:"nativeLimit"`
 }
 
 func DashboardRecordQuestion(scope InventoryQuestion, service, signal string) Query {
@@ -381,6 +383,31 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 	raw, _ := json.Marshal(in.Instruments)
 	var instruments []measurements.Instrument
 	json.Unmarshal(raw, &instruments)
+	// Runtime observations expand into individually pinned preview streams; no
+	// broad per-instrument question is substituted for an exact process stream.
+	expandedInstruments := []measurements.Instrument{}
+	for _, instrument := range instruments {
+		omitted, e := measurements.GoRuntimePreviewOmissions(instrument)
+		if e != nil {
+			return nil, e
+		}
+		p.RuntimeStreamsOmitted += omitted
+		candidates := measurements.GoRuntimeCandidates(instrument)
+		if len(candidates) > 0 {
+			expandedInstruments = append(expandedInstruments, candidates...)
+		} else {
+			expandedInstruments = append(expandedInstruments, instrument)
+		}
+	}
+	instruments = expandedInstruments
+	runtimeDefaults := measurements.GoRuntimeDefaults(instruments)
+	modernNativeSort := in.Profile != ""
+	for _, instrument := range instruments {
+		if measurements.GoRuntimeExactCandidate(instrument) {
+			modernNativeSort = true
+			break
+		}
+	}
 	// Derive the certified pool domain on detached definitions before hashing
 	// options, so selection identity and executed definition cannot diverge.
 	for index := range instruments {
@@ -391,7 +418,7 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		}
 	}
 	sort.Slice(instruments, func(i, j int) bool {
-		if in.Profile != "" {
+		if modernNativeSort {
 			if httpActive {
 				a, b := dashboardNativeHTTP(in.Scope, in.Service, instruments[i]), dashboardNativeHTTP(in.Scope, in.Service, instruments[j])
 				if a != b {
@@ -420,6 +447,20 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			if aPool != bPool {
 				return aPool
 			}
+			aRuntime, bRuntime := measurements.GoRuntimeExactCandidate(instruments[i]), measurements.GoRuntimeExactCandidate(instruments[j])
+			if aRuntime != bRuntime {
+				return aRuntime
+			}
+			if aRuntime && bRuntime {
+				aDefault, bDefault := runtimeDefaults[measurements.Hash(*instruments[i].Definition)], runtimeDefaults[measurements.Hash(*instruments[j].Definition)]
+				if aDefault != bDefault {
+					return aDefault
+				}
+				if instruments[i].Metric != instruments[j].Metric {
+					ranks := map[string]int{"go.memory.used": 0, "go.memory.gc.goal": 1, "go.goroutine.count": 2}
+					return ranks[instruments[i].Metric] < ranks[instruments[j].Metric]
+				}
+			}
 			a, _ := json.Marshal(instruments[i].Definition)
 			b, _ := json.Marshal(instruments[j].Definition)
 			if string(a) != string(b) {
@@ -444,6 +485,7 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		}
 	}
 	native := 0
+	nativeDefaults := 0
 	for _, instrument := range instruments {
 		if !signals["metrics"] || !instrument.Supported || instrument.Definition == nil {
 			continue
@@ -466,7 +508,17 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		}
 		seen[key] = true
 		optionKey := measurements.Hash(d)
-		isDefault := len(p.NativeOptions) < DashboardNativeLimit
+		if len(p.NativeOptions) >= 128 {
+			p.NativeOptionsOmitted++
+			continue
+		}
+		isDefault := nativeDefaults < DashboardNativeLimit
+		if measurements.GoRuntimeMetricTitle(instrument.Metric) != "" {
+			isDefault = isDefault && measurements.GoRuntimeExactCandidate(instrument) && runtimeDefaults[optionKey]
+		}
+		if isDefault {
+			nativeDefaults++
+		}
 		chosen := isDefault
 		if in.NativeSelection != nil {
 			chosen = selected[optionKey]
@@ -500,6 +552,11 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		if measurements.PoolConnectionsCandidate(instrument) {
 			w.Family = "database-pool-connections"
 			w.Reason = "Named-pool connection stocks with certified nonnegative-integer domain; states, pools, instances and read clocks remain independent. No capacity ratio or pool health is inferred"
+		}
+		if measurements.GoRuntimeExactCandidate(instrument) {
+			w.Family = "go-runtime"
+			w.Title = measurements.GoRuntimeMetricTitle(instrument.Metric)
+			w.Reason = "Exact service-instance runtime stock observation. Memory components and GC heap goals retain independent streams and clocks; no memory pressure, GC pause/activity, utilization or leak diagnosis is inferred"
 		}
 		p.Widgets = append(p.Widgets, w)
 	}

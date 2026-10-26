@@ -145,19 +145,26 @@ profiles:
       - Bind the same pool attribute value and capacity before deriving utilization. Presence of an attribute key is not a value-level join proof.
       - Do not merge instances or equate open connections with busy connections.
   - id: otel.go.runtime
-    description: Per-instance memory and goroutine trends leading to runtime-pressure investigation.
+    description: Exact-instance Go memory observations and GC heap goals, with goroutines explicitly selectable.
     stability: semconv-v1.37.0-development
     resources: [service.name, service.instance.id]
     requirements:
       - id: memory
         anyOf:
           - {kind: updowncounter, name: go.memory.used, unit: By, schemaURL: 'https://opentelemetry.io/schemas/1.37.0', attributes: []}
+      - id: gc-heap-goal
+        anyOf:
+          - {kind: updowncounter, name: go.memory.gc.goal, unit: By, schemaURL: 'https://opentelemetry.io/schemas/1.37.0', attributes: []}
       - id: goroutines
         anyOf:
           - {kind: updowncounter, name: go.goroutine.count, unit: '{goroutine}', schemaURL: 'https://opentelemetry.io/schemas/1.37.0', attributes: []}
     features:
+      - {id: runtime-observations, kind: visualization, implementation: implemented}
       - {id: runtime-pressure, kind: investigation, implementation: proposed}
     caveats:
+      - Pinned source is https://github.com/open-telemetry/semantic-conventions/blob/v1.37.0/docs/runtime/go-metrics.md; this development binding is not exporter conformance proof.
+      - Memory type is recommended and remains literal, including custom, missing and empty labels. Components are not summed.
+      - GC heap goal is a target, not GC pause time or collection activity; no memory-to-goal ratio is derived.
       - A goroutine count is not a leak diagnosis; correlate trends with traffic and runtime evidence.
       - Memory utilization requires a valid limit or capacity; memory usage alone has no percentage denominator.
   - id: otel.http.server.spans

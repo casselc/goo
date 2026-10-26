@@ -810,3 +810,32 @@ not normalize direct JSON measurement questions, evaluated evidence or existing
 captures, and service package serialization remains unchanged. Actual publication,
 duplicate/winner verification and fresh-catalog checks cover all nine host
 services/attributes empty-shape combinations.
+
+Go runtime observations reuse `/dashboards/plan`, `/measurements`, existing
+native selection and capture APIs; no route or record-profile change is added.
+Relevant native widgets use `family: go-runtime`. The pinned v1.37 candidates are
+`go.memory.used` and `go.memory.gc.goal` cumulative nonmonotonic stocks in By, and
+`go.goroutine.count` in `{goroutine}`. Each derived question carries an exact
+preview stream, service/environment/namespace identity, a reported nonempty
+instance and the bounded nonnegative-integer stock domain. Metadata is not a
+semantic-convention compliance certificate.
+
+Default selection prefers one memory component and one GC heap-goal observation
+from the same full resource/resource-schema/instrumentation identity when
+available, within the existing two-native-read budget and established role/pool
+priorities. Goroutines require explicit selection. Components, instances and read
+clocks remain independent: memory used is not memory pressure, heap goal is not
+capacity, utilization or GC pause/activity, and a goroutine count is not a leak
+diagnosis. Recognized runtime metrics without qualifying preview evidence remain
+explicit generic options and do not automatically trigger a broad fallback read.
+
+Runtime preview input is bounded to the first 25 streams per instrument.
+`runtimeStreamsOmitted,omitempty` reports clipped preview rows plus bounded
+supplied discovery omissions, not a proven count of executable choices or source
+absence. `nativeOptionsOmitted,omitempty` separately reports supported options
+excluded by the global 128-option display cap. Negative or out-of-bound runtime
+preview counters are refused. Exact option keys are canonicalized from stream and
+policy identity, so input ordering or arbitrary discovery package names do not
+multiply equivalent physical/policy choices. Both new fields are absent when
+zero, preserving unrelated response bytes. Old non-runtime fixtures remain
+unchanged.

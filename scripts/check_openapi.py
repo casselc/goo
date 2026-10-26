@@ -81,7 +81,7 @@ def check(spec):
                 requests += 1
                 if isinstance(request, dict):
                     accepted.append((shape, request))
-    assert responses == 360 and requests == 126 and mux_refusals == 22, (responses, requests)
+    assert responses == 368 and requests == 131 and mux_refusals == 22, (responses, requests)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)
@@ -123,6 +123,12 @@ def check(spec):
         if mode=='too-many-defaults':wrong['widgets']=wrong['widgets']*2
         if mode=='healthy':wrong['state']='healthy'
         assert list(validator(spec,host_plan_shape).iter_errors(wrong)), 'Host question contract control accepted'
+    runtime_cases=json.loads((ROOT/'testdata/http/runtime-dashboard.json').read_text())['cases']
+    runtime_plan=next(json.loads(c['response']) for c in runtime_cases if c['name']=='runtime-preview-omissions')
+    assert runtime_plan['runtimeStreamsOmitted']==3
+    for field in ('nativeOptionsOmitted','runtimeStreamsOmitted'):
+        wrong=copy.deepcopy(runtime_plan);wrong[field]=-1
+        assert list(validator(spec,{'$ref':'#/components/schemas/DashboardPlan'}).iter_errors(wrong)), 'Runtime omission control accepted'
     # Startup metadata is configuration only, with closed states and no health flags.
     runtime_shape={'$ref':'#/components/schemas/RuntimeCapabilities'}
     configured={'version':'goo/runtime-capabilities/v1','profile':'generic','preparedHTTP':{'state':'unconfigured'},'declaredOperations':{'state':'configured'}}

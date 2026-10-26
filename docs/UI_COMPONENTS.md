@@ -969,3 +969,21 @@ rewriting authored payloads. The shared `goo-value-timeline` plot height now hon
 service-specific overrides remain intact.
 
 See [host contract](HOST_RESOURCES.md) and [journey 199](../journeys/199-host-storyboard.md).
+
+### Go runtime observations
+
+`ui/runtime-observations.js` is a supplied-data application renderer over the
+existing passive value timeline and UTC timestamp components. `model(result)`
+requires one certified, exact-stream cumulative stock question for the pinned Go
+runtime instruments; `render(host, result, {onOpen, onInspect})` renders the latest
+observation and delegates inspection intent to the existing service/native owner.
+It performs no source reads, subscriptions, joins, instance sums or capacity
+arithmetic. Unknown latest observations do not fall back to older values; stale
+values retain their state and accumulation epoch. GC heap goal means an exported
+heap target, not GC activity, pause duration or process-memory capacity.
+
+Dashboard adapters retain the two-native-instrument budget and explicit picker.
+Exact instance and literal metric dimensions remain visible in picker labels.
+The renderer uses scoped `.runtime-observations` styles and the timeline's
+`--value-timeline-height` opt-in; native capture and frozen replay retain the
+original measurement semantics and evidence owner.

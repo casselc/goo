@@ -972,3 +972,9 @@ captures do not pass through this canonicalization; old service serialization
 stays unchanged. Host-only UI comparison/recovery aliases operate on copies or
 local validation values, preserving authored payloads. Actual duplicate publication
 and fresh catalog reads cover the nine empty-collection combinations.
+
+### Exact Go runtime stock observations
+
+The service planner recognizes schema1.37 cumulative nonmonotonic `go.memory.used` and `go.memory.gc.goal` in bytes, and `go.goroutine.count` in `{goroutine}`. Each admitted preview stream becomes an independent pinned stock question with the nonnegative-integer domain; no gauge, delta/monotonic sum, wrong-unit/schema or host-resource authority is silently reinterpreted. The first25 preview streams are positive metadata only; omissions do not prove absence. The original complete resource, resource schema, service/instance, instrumentation scope/version/schema and measurement attributes are retained.
+
+At most two native defaults remain automatic. When available, one memory component and one GC heap goal are selected for the same reported process identity. Components such as stack, other, custom values and missing memory type remain separate explicit candidates; no heap total is manufactured. Goroutine observations require explicit selection. A shared process context is not an atomic GC snapshot: each measurement retains its own source read time, basis, epochs and freshness. These stocks do not expose GC pause/activity intervals, leak diagnosis or memory pressure. Existing explicit native preview/read, individual capture and retained service navigation carry the selected question without adding another source owner.

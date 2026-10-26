@@ -221,6 +221,17 @@ class ProxyContracts(unittest.TestCase):
             finally:
                 conn.close()
 
+    def test_runtime_observations_asset_is_served_without_upstream(self):
+        conn = http.client.HTTPConnection('127.0.0.1', self.proxy.server_port, timeout=5)
+        try:
+            conn.request('GET', '/runtime-observations.js')
+            response = conn.getresponse()
+            self.assertEqual(response.status, 200)
+            self.assertEqual(response.read(), Path('ui/runtime-observations.js').read_bytes())
+            self.assertEqual(Upstream.calls, [])
+        finally:
+            conn.close()
+
     def test_get_errors_and_queries_are_reencoded(self):
         Upstream.mode = 'text'
         status, headers, body = self.request('GET', '/api/operations?package=example&minutes=5')

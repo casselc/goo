@@ -9767,9 +9767,19 @@
               }
             ]
           },
+          "nativeOptionsOmitted": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Optional positive count of supported native options excluded by the 128-option display bound after exact-stream expansion. Omitted/zero preserves legacy wire bytes."
+          },
           "profile": {
             "type": "string",
             "description": "Selected all-spans, http-server, rpc-server, db-client, messaging-consumer or messaging-producer family for opt-in requests; absent on legacy requests."
+          },
+          "runtimeStreamsOmitted": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Optional positive count of runtime preview streams clipped beyond first25 plus supplied bounded discovery omissions. This is not source absence or a count of validated executable options."
           },
           "scope": {
             "$ref": "#/components/schemas/exploration.InventoryQuestion"

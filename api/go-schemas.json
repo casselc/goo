@@ -3929,8 +3929,14 @@
           }
         ]
       },
+      "nativeOptionsOmitted": {
+        "type": "integer"
+      },
       "profile": {
         "type": "string"
+      },
+      "runtimeStreamsOmitted": {
+        "type": "integer"
       },
       "scope": {
         "$ref": "#/components/schemas/exploration.InventoryQuestion"

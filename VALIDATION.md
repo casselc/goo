@@ -11260,3 +11260,37 @@ browser operations. Independent source, semantic and visual reviews approve
 release. Contracts, architecture/process diagrams, component guidance, roadmap,
 executable storyboard and screenshots are current; temporary task binaries/helpers
 are removed, normal diagnostic receipts retained, and traffic/volumes untouched.
+
+
+## Go runtime observations — source gates (2026-10-26 UTC)
+
+Milestone 200 implements the first pinned runtime slice described in
+[the contract](docs/GO_RUNTIME.md). The published OTel v1.37 Go convention
+provides memory usage and a GC heap target, not a GC-pause metric. Questions
+pin exact service-instance streams and retain the existing stock evaluator,
+nonnegative-integer domain, two-native-read budget and explicit selection.
+Goroutines are explicit-only; components/instances are not summed or divided.
+Generated authoring identities deduplicate display aliases, preserve policy
+differences and round-trip dimensionless YAML without changing old authoring.
+
+Full root Go passes: cmd/goo 1.570s, exploration 2.273s, measurements 0.908s.
+The first sandboxed attempt could not create httptest loopback sockets; the
+rerun with local socket access passes. That first attempt also encountered the
+catalog during regeneration; its generated artifact and final catalog check
+are current. All 87 reported Node test files pass in 49.646s. Focused runtime
+semantic tests pass (measurements 0.040s; exploration 0.243s), generated native
+identity/admission properties in 0.041s, planner integration in 0.136s.
+
+Eight frozen runtime HTTP cases and existing planning/profile wire fixtures
+pass in 0.233s. Actual handler checks cover two exact defaults, explicit
+goroutines, unchanged scope, stable ordering and missing-instance broad
+options never selected automatically. A 150-instance input retains 128 options
+and discloses 22 omitted; first-25 plus reported preview omissions are checked.
+OpenAPI checks pass: 84 total/77 Go operations, 453 reflected/471 total schemas,
+368 responses, 131 admitted requests and 22 mux refusals, including negative
+omission controls. The new static asset is byte-exact with zero upstream calls
+in its HTTP check (1.007s); there is no new endpoint or proxy transport.
+
+Independent source review approves the bounded profile and passive presenter.
+Live OTLP/browser, ownership, actor, capture-custody and screenshots remain
+pending; these source checks do not claim runtime SDK or production acceptance.
