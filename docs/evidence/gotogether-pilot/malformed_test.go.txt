@@ -1,0 +1,22 @@
+package shadow
+
+import (
+	"strings"
+	"testing"
+
+	"github.com/chucklehead-dev/gotogether/qtrace"
+)
+
+// A native log is one complete JSON object per line. Unparsed suffixes must
+// never disappear while the retained prefix is reported as a complete log.
+func TestMalformedJSONLRejectsTrailingData(t *testing.T) {
+	first := `{"quint.action":"save","quint.seq":1,"quint.recorder":"r","quint.actor":"captures","quint.outcome":"ok"}`
+	second := `{"quint.action":"reopen","quint.seq":2,"quint.recorder":"r","quint.actor":"captures","quint.outcome":"ok"}`
+	for _, suffix := range []string{second, `garbage`} {
+		steps, err := qtrace.ReadJSONL(strings.NewReader(first + suffix + "\n"))
+		t.Logf("trailing=%q steps=%d error=%v", suffix, len(steps), err)
+		if err == nil {
+			t.Errorf("accepted malformed line and silently discarded trailing bytes")
+		}
+	}
+}

@@ -1,0 +1,235 @@
+package shadow
+
+import (
+	"bytes"
+	"context"
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"reflect"
+	"strings"
+	"testing"
+	"time"
+
+	"github.com/casselc/goo/exploration"
+	oldobs "github.com/casselc/observability/quintgo/qobs"
+	oldtrace "github.com/casselc/observability/quintgo/qtrace"
+	oldvalidate "github.com/casselc/observability/quintgo/validate"
+	newtrace "github.com/chucklehead-dev/gotogether/qtrace"
+	newvalidate "github.com/chucklehead-dev/gotogether/validate"
+)
+
+type ledger struct {
+	Original            exploration.CapturePage `json:"original"`
+	Second              exploration.CapturePage `json:"second"`
+	Refreshed           exploration.CapturePage `json:"refreshed"`
+	Reopened            exploration.CapturePage `json:"reopened"`
+	CrossRevisionStatus int                     `json:"crossRevisionStatus"`
+}
+
+// These are the existing TestQuintCaptureLiveLedger observations, unchanged.
+// They inspect an archived actual-ClickHouse/browser ledger, never a mocked UI.
+func observations(l ledger) []oldtrace.Step {
+	sink := &oldobs.MemorySink{}
+	rec := oldobs.NewRecorder(sink, oldobs.WithActor("captures"))
+	a, s, n := l.Original, l.Second, l.Refreshed
+	valid := a.Explore != nil && a.Receipt.Question.Kind == "explore" && a.RetainedRecords == 1000 && a.RecordsLimited && len(a.Explore.Rows) == 100 && a.Explore.Count == "1205" && a.Explore.Question.Offset == 0 && a.Receipt.Question.Explore.Offset == 0
+	rec.Record(context.Background(), "save", nil, "obs.coherent", valid)
+	expected := *a.Receipt.Question.Explore
+	expected.Offset = 100
+	paged := s.Receipt.ID == a.Receipt.ID && reflect.DeepEqual(s.Explore.Question, expected) && s.Explore.Basis == a.Explore.Basis && s.Explore.Count == a.Explore.Count && s.RetainedRecords == a.RetainedRecords && s.RecordsLimited == a.RecordsLimited && len(s.Explore.Rows) == 100 && s.PreviousCursor != "" && s.NextCursor != ""
+	rec.Record(context.Background(), "page", nil, "obs.coherent", paged)
+	refreshed := n.Receipt.ID != a.Receipt.ID && n.Receipt.Parent == a.Receipt.ID && reflect.DeepEqual(n.Receipt.Question, a.Receipt.Question) && n.Explore.Count == "1206" && n.Explore.Basis != a.Explore.Basis && l.CrossRevisionStatus == 400
+	rec.Record(context.Background(), "refresh", nil, "obs.coherent", refreshed)
+	rec.Record(context.Background(), "reopen", nil, "obs.coherent", reflect.DeepEqual(a, l.Reopened))
+	return sink.Steps()
+}
+
+type verdict struct {
+	OK            bool    `json:"ok"`
+	Conformance   string  `json:"conformance"`
+	FailureKind   string  `json:"failureKind,omitempty"`
+	FailureIndex  *int    `json:"failureIndex,omitempty"`
+	Summary       string  `json:"summary"`
+	Milliseconds  float64 `json:"milliseconds"`
+	ArtifactBytes int64   `json:"artifactBytes"`
+}
+type result struct {
+	Name     string `json:"name"`
+	Expected bool   `json:"expected"`
+	Old, New verdict
+	Equal    bool `json:"equal"`
+}
+
+func size(dir string) int64 {
+	var n int64
+	filepath.Walk(dir, func(_ string, i os.FileInfo, e error) error {
+		if e == nil && !i.IsDir() {
+			n += i.Size()
+		}
+		return nil
+	})
+	return n
+}
+func save(name string, v any) {
+	b, e := json.MarshalIndent(v, "", "  ")
+	if e != nil {
+		panic(e)
+	}
+	if e = os.WriteFile(name, append(b, '\n'), 0600); e != nil {
+		panic(e)
+	}
+}
+func TestShadowCaptureWorkflow(t *testing.T) {
+	quint := os.Getenv("QUINT_BIN")
+	if quint == "" {
+		t.Fatal("QUINT_BIN is required: no skipped acceptance")
+	}
+	if _, e := os.Stat(quint); e != nil {
+		t.Fatal(e)
+	}
+	version, e := exec.Command(quint, "--version").CombinedOutput()
+	if e != nil {
+		t.Fatal(e, string(version))
+	}
+	path := os.Getenv("GOO_SHADOW_LEDGER")
+	if path == "" {
+		t.Fatal("actual archived capture ledger required")
+	}
+	raw, e := os.ReadFile(path)
+	if e != nil {
+		t.Fatal(e)
+	}
+	before := sha256.Sum256(raw)
+	if e = os.MkdirAll("results", 0700); e != nil {
+		t.Fatal(e)
+	}
+	begin := time.Now()
+	old, e := oldvalidate.NewChecker("model/captures.yaml", oldvalidate.Options{Quint: quint, Backend: "typescript", Dir: "results/old"})
+	if e != nil {
+		t.Fatal(e)
+	}
+	oldSetup := time.Since(begin).Seconds() * 1000
+	begin = time.Now()
+	fresh, e := newvalidate.NewChecker("model/captures.yaml", newvalidate.Options{Quint: quint, Backend: "typescript", Dir: "results/new", Eval: "quint"})
+	if e != nil {
+		t.Fatal(e)
+	}
+	defer fresh.Close()
+	newSetup := time.Since(begin).Seconds() * 1000
+	all := []result{}
+	for _, name := range []string{"accepted", "changed-reopen", "changed-page-basis", "changed-refresh-scope", "changed-cross-revision", "missing-middle-step", "disabled-first-action", "complete-prefix"} {
+		t.Run(name, func(t *testing.T) {
+			var l ledger
+			if e := json.Unmarshal(raw, &l); e != nil {
+				t.Fatal(e)
+			}
+			switch name {
+			case "changed-reopen":
+				l.Reopened.Explore.Count = "1206"
+			case "changed-page-basis":
+				l.Second.Explore.Basis = "shifted"
+			case "changed-refresh-scope":
+				l.Refreshed.Receipt.Question.Explore.Environment = "other"
+			case "changed-cross-revision":
+				l.CrossRevisionStatus = 200
+			}
+			steps := observations(l)
+			if name == "missing-middle-step" {
+				steps = append(steps[:1], steps[2:]...)
+			}
+			if name == "disabled-first-action" {
+				steps[0].Action = "reopen"
+			}
+			if name == "complete-prefix" {
+				steps = steps[:3]
+			}
+			var wire bytes.Buffer
+			if e := oldtrace.WriteJSONL(&wire, steps); e != nil {
+				t.Fatal(e)
+			}
+			os.WriteFile(filepath.Join("results", name+".jsonl"), wire.Bytes(), 0600)
+			older, e := oldtrace.ReadJSONL(bytes.NewReader(wire.Bytes()))
+			if e != nil {
+				t.Fatal(e)
+			}
+			newer, e := newtrace.ReadJSONL(bytes.NewReader(wire.Bytes()))
+			if e != nil {
+				t.Fatal(e)
+			}
+			odir := filepath.Join("results", name, "old")
+			ndir := filepath.Join("results", name, "new")
+			old.Options.Dir = odir
+			fresh.Options.Dir = ndir
+			ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+			defer cancel()
+			start := time.Now()
+			a, e := old.Check(ctx, older)
+			if e != nil {
+				t.Fatal(e)
+			}
+			ad := time.Since(start).Seconds() * 1000
+			start = time.Now()
+			b, e := fresh.Check(ctx, newer)
+			if e != nil {
+				t.Fatal(e)
+			}
+			bd := time.Since(start).Seconds() * 1000
+			av := verdict{OK: a.OK(), Summary: a.Summary(), Milliseconds: ad, ArtifactBytes: size(odir)}
+			bv := verdict{OK: b.OK(), Summary: b.Summary(), Milliseconds: bd, ArtifactBytes: size(ndir)}
+			if len(a.Actors) > 0 {
+				av.Conformance = string(a.Actors[0].Conforms)
+				if f := a.Actors[0].Failure; f != nil {
+					av.FailureKind = f.Kind
+					i := f.Index
+					av.FailureIndex = &i
+				}
+			}
+			if len(b.Actors) > 0 {
+				bv.Conformance = string(b.Actors[0].Conforms)
+				if f := b.Actors[0].Failure; f != nil {
+					bv.FailureKind = f.Kind
+					i := f.Index
+					bv.FailureIndex = &i
+				}
+			}
+			expected := name == "accepted" || name == "complete-prefix"
+			same := av.OK == bv.OK && av.Conformance == bv.Conformance && av.FailureKind == bv.FailureKind && reflect.DeepEqual(av.FailureIndex, bv.FailureIndex)
+			r := result{Name: name, Expected: expected, Old: av, New: bv, Equal: same}
+			all = append(all, r)
+			save(filepath.Join("results", name+".json"), r)
+			if !same || av.OK != expected || bv.OK != expected {
+				t.Fatalf("different/unexpected verdicts: old=%s new=%s", av.Summary, bv.Summary)
+			}
+			t.Logf("old/new=%t/%t; failure=%s index=%v; %.1f/%.1f ms", av.OK, bv.OK, bv.FailureKind, bv.FailureIndex, ad, bd)
+		})
+	}
+	t.Run("torn-tail-never-green", func(t *testing.T) {
+		var l ledger
+		json.Unmarshal(raw, &l)
+		steps := observations(l)
+		var wire bytes.Buffer
+		oldtrace.WriteJSONL(&wire, steps[:3])
+		last, _ := steps[3].MarshalLine()
+		wire.Write(last[:len(last)/2])
+		os.WriteFile("results/torn-tail.jsonl", wire.Bytes(), 0600)
+		_, oe := oldtrace.ReadJSONL(bytes.NewReader(wire.Bytes()))
+		prefix, ne := newtrace.ReadJSONL(bytes.NewReader(wire.Bytes()))
+		var torn *newtrace.TornTail
+		if oe == nil || !errors.As(ne, &torn) || len(prefix) != 3 {
+			t.Fatalf("incomplete trace not propagated: old=%v new=%v prefix=%d", oe, ne, len(prefix))
+		}
+		save("results/incomplete.json", map[string]any{"oldError": oe.Error(), "newError": ne.Error(), "retainedNewPrefix": len(prefix), "checkedPrefix": false, "acceptance": "incomplete, never pass"})
+	})
+	after, e := os.ReadFile(path)
+	if e != nil || !bytes.Equal(raw, after) {
+		t.Fatal("original capture evidence changed", e)
+	}
+	save("results/summary.json", map[string]any{"gotogether": "50157b805ae455de165f37bf39da78690958763c", "quint": strings.TrimSpace(string(version)), "go": "go1.27.2", "ledger": path, "ledgerSHA256": hex.EncodeToString(before[:]), "setupOldMS": oldSetup, "setupNewMS": newSetup, "eval": "quint", "backend": "typescript", "cases": all, "originalBytesUnchanged": true, "prefixCaveat": "A complete finite prefix conforms to this safety-only model; workflow completion is a separate oracle.", "skipsAllowed": false})
+	fmt.Println("actual-archive shadow report: results/summary.json")
+}

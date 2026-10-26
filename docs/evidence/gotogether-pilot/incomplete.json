@@ -1,0 +1,7 @@
+{
+  "acceptance": "incomplete, never pass",
+  "checkedPrefix": false,
+  "newError": "line 4: the log ends in the middle of a step (109 bytes, no newline): the writer stopped while writing it; the steps before it are kept",
+  "oldError": "line 4: unexpected EOF",
+  "retainedNewPrefix": 3
+}

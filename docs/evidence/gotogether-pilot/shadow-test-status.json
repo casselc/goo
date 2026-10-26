@@ -1,0 +1,56 @@
+[
+  {
+    "Action": "pass",
+    "Test": "TestShadowCaptureWorkflow/accepted",
+    "Elapsed": 2.51
+  },
+  {
+    "Action": "pass",
+    "Test": "TestShadowCaptureWorkflow/changed-reopen",
+    "Elapsed": 15.64
+  },
+  {
+    "Action": "pass",
+    "Test": "TestShadowCaptureWorkflow/changed-page-basis",
+    "Elapsed": 4.86
+  },
+  {
+    "Action": "pass",
+    "Test": "TestShadowCaptureWorkflow/changed-refresh-scope",
+    "Elapsed": 3.46
+  },
+  {
+    "Action": "pass",
+    "Test": "TestShadowCaptureWorkflow/changed-cross-revision",
+    "Elapsed": 3.78
+  },
+  {
+    "Action": "pass",
+    "Test": "TestShadowCaptureWorkflow/missing-middle-step",
+    "Elapsed": 3.15
+  },
+  {
+    "Action": "pass",
+    "Test": "TestShadowCaptureWorkflow/disabled-first-action",
+    "Elapsed": 3.63
+  },
+  {
+    "Action": "pass",
+    "Test": "TestShadowCaptureWorkflow/complete-prefix",
+    "Elapsed": 3.38
+  },
+  {
+    "Action": "pass",
+    "Test": "TestShadowCaptureWorkflow/torn-tail-never-green",
+    "Elapsed": 0
+  },
+  {
+    "Action": "pass",
+    "Test": "TestShadowCaptureWorkflow",
+    "Elapsed": 42.44
+  },
+  {
+    "Action": "pass",
+    "Elapsed": 42.459
+  }
+]

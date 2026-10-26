@@ -2373,3 +2373,12 @@ GOO_POOL_SIGNALS_LEDGER=/workspace/goo/artifacts/pool-signals/pool-signals-64f08
 GOO_POOL_SIGNALS_OWNER_LEDGER=/workspace/goo/artifacts/pool-signals/pool-signals-a40b948f32/ownership.json \
 go test -run '^TestPoolSignals(Observed|OwnershipObserved)$' -v .
 ```
+
+## Gotogether consumer pilot
+
+The [isolated gotogether pilot](../docs/GOTOGETHER_PILOT.md) exercised pinned
+external onboarding and shadowed one existing capture workflow. Existing quintgo
+imports and dependencies remain authoritative and unchanged. The experiment
+found a reproducible malformed-log parser defect; its expected-failing regression
+and ready-to-file issue are retained as text evidence, not added to normal CI.
+No gotogether runtime, skill install or Hegel upgrade was applied to this project.

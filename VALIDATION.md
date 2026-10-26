@@ -11011,3 +11011,28 @@ initially; the final combined run also adds shared content-ID checks. No app,
 fixture or accepted source result changed. Log:
 `artifacts/pool-signals/native-validation.txt`. Existing navigation/read/custody
 owners remain in use; no new Quint model is claimed for this bounded adoption.
+
+## Isolated gotogether consumer/shadow pilot (2026-10-26 UTC)
+
+Pinned `50157b805ae455de165f37bf39da78690958763c`, outside Goo in scratch.
+Fresh remote CLI/core install, installed skill files and four actual hello core
+checks passed on Go 1.27.2 / Quint 0.32.0 / TypeScript (99.675s); deliberate mutant
+rejection and shrinking to one fault were observed. One documented optional
+unwoven test skipped; no missing-Quint or unexpected skip counted as acceptance.
+CLI faithful/mutant replay returned expected 0/1 statuses.
+
+An archived actual Goo capture ledger was checked through both the existing
+quintgo and pinned gotogether checker, with the original model/binding/oracles.
+Eight cases agree on acceptance/rejection and failing transition, including six
+rejecting controls and a valid finite prefix. The shadow test passed in 42.459s,
+zero skips; a torn JSON tail remains incomplete rather than green. Original ledger
+SHA/bytes stayed unchanged. Gotogether explicitly used its Quint evaluator here;
+this does not benchmark its default Go evaluator or migrate existing checks.
+
+A separate expected-failing parser regression reproduced discarded trailing JSON
+or garbage on a newline-terminated line (1 step, nil error), confirmed by
+independent source review. That failure was not weakened or reclassified as a
+passing test. GitHub issue posting returned Forbidden; the reviewed issue draft,
+minimal reproduction, compact results and adoption limits are in
+[the pilot report](docs/GOTOGETHER_PILOT.md). No Goo dependencies, skills, app code
+or existing testing oracles changed. No gotogether source patch was made.

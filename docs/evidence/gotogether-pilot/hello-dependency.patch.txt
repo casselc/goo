@@ -1,0 +1,23 @@
+diff --git a/tmp/goo-gotogether-pilot/onboarding/logs/06-hello-original-go.mod b/go.mod
+index 044ca34..a2e18f2 100644
+--- a/tmp/goo-gotogether-pilot/onboarding/logs/06-hello-original-go.mod
++++ b/go.mod
+@@ -3,8 +3,8 @@ module github.com/chucklehead-dev/gotogether/examples/hello
+ go 1.26.1
+ 
+ require (
+-	github.com/chucklehead-dev/gotogether v0.0.0
+-	github.com/chucklehead-dev/gotogether/qhegel v0.0.0-00010101000000-000000000000
++	github.com/chucklehead-dev/gotogether v0.0.0-20261026025747-50157b805ae4
++	github.com/chucklehead-dev/gotogether/qhegel v0.0.0-20261026025747-50157b805ae4
+ 	hegel.dev/go/hegel v0.9.27
+ )
+ 
+@@ -16,7 +16,3 @@ require (
+ 	golang.org/x/sys v0.48.0 // indirect
+ 	gopkg.in/yaml.v3 v3.0.1 // indirect
+ )
+-
+-replace github.com/chucklehead-dev/gotogether => ../..
+-
+-replace github.com/chucklehead-dev/gotogether/qhegel => ../../qhegel

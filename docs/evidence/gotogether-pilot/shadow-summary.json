@@ -1,0 +1,192 @@
+{
+  "backend": "typescript",
+  "cases": [
+    {
+      "name": "accepted",
+      "expected": true,
+      "Old": {
+        "ok": true,
+        "conformance": "pass",
+        "summary": "actor captures: 4 steps\n  conformance: PASS\n  invariant safety: PASS\n  module: /tmp/goo-gotogether-pilot/shadow/results/accepted/old/observed_captures.qnt\n  itf: /tmp/goo-gotogether-pilot/shadow/results/accepted/old/observed_captures_conformsTest.itf.json\n",
+        "milliseconds": 986.692223,
+        "artifactBytes": 2734
+      },
+      "New": {
+        "ok": true,
+        "conformance": "pass",
+        "summary": "actor captures: 4 steps\n  conformance: PASS\n  invariant safety: PASS\n  module: /tmp/goo-gotogether-pilot/shadow/results/accepted/new/check-1/observed_captures.qnt\n  itf: /tmp/goo-gotogether-pilot/shadow/results/accepted/new/check-1/observed_captures_allTest.itf.json\n",
+        "milliseconds": 1516.751703,
+        "artifactBytes": 1568
+      },
+      "equal": true
+    },
+    {
+      "name": "changed-reopen",
+      "expected": false,
+      "Old": {
+        "ok": false,
+        "conformance": "fail",
+        "failureKind": "state",
+        "failureIndex": 3,
+        "summary": "actor captures: 4 steps\n  conformance: FAIL\n    after step [3] the model's state does not match what was observed\n      quint:    reopen\n      observed: seq 4 reopen() (line 4)\n      Error [QNT508]: Expect condition does not hold true\n  invariant safety: N/A\n  module: /tmp/goo-gotogether-pilot/shadow/results/changed-reopen/old/observed_captures.qnt\n",
+        "milliseconds": 1160.05121,
+        "artifactBytes": 1725
+      },
+      "New": {
+        "ok": false,
+        "conformance": "fail",
+        "failureKind": "state",
+        "failureIndex": 3,
+        "summary": "actor captures: 4 steps\n  conformance: FAIL\n    after step 4 the model's state does not match what was observed\n      quint:    reopen\n      expect:   coherent == false\n      binding:  coherent == {{.obs.coherent}}\n      observed: reopen() (seq 4, line 4)\n      obs:      coherent=false\n      model state: not reported: the TypeScript backend writes no ITF for a failing test (QUINT_BACKEND=rust shows it)\n  invariant safety: not checked: the run does not conform, so the model's states after the failure are not the run's\n  instance: INITIAL = 0\n  module: /tmp/goo-gotogether-pilot/shadow/results/changed-reopen/new/check-2/observed_captures_detail.qnt\n",
+        "milliseconds": 14475.290842,
+        "artifactBytes": 2313
+      },
+      "equal": true
+    },
+    {
+      "name": "changed-page-basis",
+      "expected": false,
+      "Old": {
+        "ok": false,
+        "conformance": "fail",
+        "failureKind": "state",
+        "failureIndex": 1,
+        "summary": "actor captures: 4 steps\n  conformance: FAIL\n    after step [1] the model's state does not match what was observed\n      quint:    page\n      observed: seq 2 page() (line 2)\n      Error [QNT508]: Expect condition does not hold true\n  invariant safety: N/A\n  module: /tmp/goo-gotogether-pilot/shadow/results/changed-page-basis/old/observed_captures.qnt\n",
+        "milliseconds": 1814.9303830000001,
+        "artifactBytes": 1725
+      },
+      "New": {
+        "ok": false,
+        "conformance": "fail",
+        "failureKind": "state",
+        "failureIndex": 1,
+        "summary": "actor captures: 4 steps\n  conformance: FAIL\n    after step 2 the model's state does not match what was observed\n      quint:    page\n      expect:   coherent == false\n      binding:  coherent == {{.obs.coherent}}\n      observed: page() (seq 2, line 2)\n      obs:      coherent=false\n      model state: not reported: the TypeScript backend writes no ITF for a failing test (QUINT_BACKEND=rust shows it)\n  invariant safety: not checked: the run does not conform, so the model's states after the failure are not the run's\n  instance: INITIAL = 0\n  module: /tmp/goo-gotogether-pilot/shadow/results/changed-page-basis/new/check-3/observed_captures_detail.qnt\n",
+        "milliseconds": 3041.794097,
+        "artifactBytes": 2313
+      },
+      "equal": true
+    },
+    {
+      "name": "changed-refresh-scope",
+      "expected": false,
+      "Old": {
+        "ok": false,
+        "conformance": "fail",
+        "failureKind": "state",
+        "failureIndex": 2,
+        "summary": "actor captures: 4 steps\n  conformance: FAIL\n    after step [2] the model's state does not match what was observed\n      quint:    refresh\n      observed: seq 3 refresh() (line 3)\n      Error [QNT508]: Expect condition does not hold true\n  invariant safety: N/A\n  module: /tmp/goo-gotogether-pilot/shadow/results/changed-refresh-scope/old/observed_captures.qnt\n",
+        "milliseconds": 980.19694,
+        "artifactBytes": 1725
+      },
+      "New": {
+        "ok": false,
+        "conformance": "fail",
+        "failureKind": "state",
+        "failureIndex": 2,
+        "summary": "actor captures: 4 steps\n  conformance: FAIL\n    after step 3 the model's state does not match what was observed\n      quint:    refresh\n      expect:   coherent == false\n      binding:  coherent == {{.obs.coherent}}\n      observed: refresh() (seq 3, line 3)\n      obs:      coherent=false\n      model state: not reported: the TypeScript backend writes no ITF for a failing test (QUINT_BACKEND=rust shows it)\n  invariant safety: not checked: the run does not conform, so the model's states after the failure are not the run's\n  instance: INITIAL = 0\n  module: /tmp/goo-gotogether-pilot/shadow/results/changed-refresh-scope/new/check-4/observed_captures_detail.qnt\n",
+        "milliseconds": 2472.985083,
+        "artifactBytes": 2313
+      },
+      "equal": true
+    },
+    {
+      "name": "changed-cross-revision",
+      "expected": false,
+      "Old": {
+        "ok": false,
+        "conformance": "fail",
+        "failureKind": "state",
+        "failureIndex": 2,
+        "summary": "actor captures: 4 steps\n  conformance: FAIL\n    after step [2] the model's state does not match what was observed\n      quint:    refresh\n      observed: seq 3 refresh() (line 3)\n      Error [QNT508]: Expect condition does not hold true\n  invariant safety: N/A\n  module: /tmp/goo-gotogether-pilot/shadow/results/changed-cross-revision/old/observed_captures.qnt\n",
+        "milliseconds": 1352.2477529999999,
+        "artifactBytes": 1725
+      },
+      "New": {
+        "ok": false,
+        "conformance": "fail",
+        "failureKind": "state",
+        "failureIndex": 2,
+        "summary": "actor captures: 4 steps\n  conformance: FAIL\n    after step 3 the model's state does not match what was observed\n      quint:    refresh\n      expect:   coherent == false\n      binding:  coherent == {{.obs.coherent}}\n      observed: refresh() (seq 3, line 3)\n      obs:      coherent=false\n      model state: not reported: the TypeScript backend writes no ITF for a failing test (QUINT_BACKEND=rust shows it)\n  invariant safety: not checked: the run does not conform, so the model's states after the failure are not the run's\n  instance: INITIAL = 0\n  module: /tmp/goo-gotogether-pilot/shadow/results/changed-cross-revision/new/check-5/observed_captures_detail.qnt\n",
+        "milliseconds": 2416.532055,
+        "artifactBytes": 2313
+      },
+      "equal": true
+    },
+    {
+      "name": "missing-middle-step",
+      "expected": false,
+      "Old": {
+        "ok": false,
+        "conformance": "fail",
+        "failureKind": "disabled",
+        "failureIndex": 1,
+        "summary": "actor captures: 3 steps\n  issue: error gap: recorder 2159720a4a64 is missing seq [2] (of 1..4): steps were lost or sampled out\n  conformance: FAIL\n    step [1] is not a transition of the model from the state reached\n      quint:    refresh\n      observed: seq 3 refresh() (line 2)\n      Error [QNT508]: Cannot continue to \"expect\"\n  invariant safety: N/A\n  module: /tmp/goo-gotogether-pilot/shadow/results/missing-middle-step/old/observed_captures.qnt\n",
+        "milliseconds": 1164.582051,
+        "artifactBytes": 750
+      },
+      "New": {
+        "ok": false,
+        "conformance": "fail",
+        "failureKind": "disabled",
+        "failureIndex": 1,
+        "summary": "actor captures: 3 steps\n  issue: error gap: recorder 2159720a4a64 is missing seq [2] (of 1..4): steps were lost or sampled out\n  conformance: FAIL\n    step 2 is not a transition of the model from the state reached\n      quint:    refresh\n      observed: refresh() (seq 3, line 2)\n      obs:      coherent=true\n      model state: not reported: the TypeScript backend writes no ITF for a failing test (QUINT_BACKEND=rust shows it)\n  invariant safety: not checked: the run does not conform, so the model's states after the failure are not the run's\n  instance: INITIAL = 0\n  module: /tmp/goo-gotogether-pilot/shadow/results/missing-middle-step/new/check-6/observed_captures_detail.qnt\n",
+        "milliseconds": 1959.620878,
+        "artifactBytes": 1272
+      },
+      "equal": true
+    },
+    {
+      "name": "disabled-first-action",
+      "expected": false,
+      "Old": {
+        "ok": false,
+        "conformance": "fail",
+        "failureKind": "disabled",
+        "failureIndex": 0,
+        "summary": "actor captures: 4 steps\n  conformance: FAIL\n    step [0] is not a transition of the model from the state reached\n      quint:    reopen\n      observed: seq 1 reopen() (line 1)\n      Error [QNT508]: Cannot continue to \"expect\"\n  invariant safety: N/A\n  module: /tmp/goo-gotogether-pilot/shadow/results/disabled-first-action/old/observed_captures.qnt\n",
+        "milliseconds": 1328.986349,
+        "artifactBytes": 865
+      },
+      "New": {
+        "ok": false,
+        "conformance": "fail",
+        "failureKind": "disabled",
+        "failureIndex": 0,
+        "summary": "actor captures: 4 steps\n  conformance: FAIL\n    step 1 is not a transition of the model from the state reached\n      quint:    reopen\n      observed: reopen() (seq 1, line 1)\n      obs:      coherent=true\n      model state: not reported: the TypeScript backend writes no ITF for a failing test (QUINT_BACKEND=rust shows it)\n  invariant safety: not checked: the run does not conform, so the model's states after the failure are not the run's\n  instance: INITIAL = 0\n  module: /tmp/goo-gotogether-pilot/shadow/results/disabled-first-action/new/check-7/observed_captures_detail.qnt\n",
+        "milliseconds": 2296.4287759999997,
+        "artifactBytes": 1447
+      },
+      "equal": true
+    },
+    {
+      "name": "complete-prefix",
+      "expected": true,
+      "Old": {
+        "ok": true,
+        "conformance": "pass",
+        "summary": "actor captures: 3 steps\n  conformance: PASS\n  invariant safety: PASS\n  module: /tmp/goo-gotogether-pilot/shadow/results/complete-prefix/old/observed_captures.qnt\n  itf: /tmp/goo-gotogether-pilot/shadow/results/complete-prefix/old/observed_captures_conformsTest.itf.json\n",
+        "milliseconds": 1548.136909,
+        "artifactBytes": 2370
+      },
+      "New": {
+        "ok": true,
+        "conformance": "pass",
+        "summary": "actor captures: 3 steps\n  conformance: PASS\n  invariant safety: PASS\n  module: /tmp/goo-gotogether-pilot/shadow/results/complete-prefix/new/check-8/observed_captures.qnt\n  itf: /tmp/goo-gotogether-pilot/shadow/results/complete-prefix/new/check-8/observed_captures_allTest.itf.json\n",
+        "milliseconds": 1827.472386,
+        "artifactBytes": 1365
+      },
+      "equal": true
+    }
+  ],
+  "eval": "quint",
+  "go": "go1.27.2",
+  "gotogether": "50157b805ae455de165f37bf39da78690958763c",
+  "ledger": "/workspace/goo/artifacts/captures/capture-968a089abf/ledger.json",
+  "ledgerSHA256": "d7b47942244035a4d3e8be51c5e990a41b709c0e7432a4cb347d7e8798cd4307",
+  "originalBytesUnchanged": true,
+  "prefixCaveat": "A complete finite prefix conforms to this safety-only model; workflow completion is a separate oracle.",
+  "quint": "0.32.0",
+  "setupNewMS": 666.103294,
+  "setupOldMS": 923.3624080000001,
+  "skipsAllowed": false
+}

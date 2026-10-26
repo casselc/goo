@@ -1,0 +1,209 @@
+{
+  "source_commit": "50157b805ae455de165f37bf39da78690958763c",
+  "remote_version": "v0.0.0-20261026025747-50157b805ae4",
+  "go": "go1.27.2",
+  "quint": "0.32.0",
+  "backend": "typescript",
+  "cli_sha256": "c0f64398708e25b694c2b4e13aa40385b073f028dca3f99bd6d1b5ef8ed90725",
+  "skill_default_targets": [
+    ".agents/skills",
+    ".claude/skills"
+  ],
+  "skills_files": [
+    {
+      "file": "gotogether-faults/SKILL.md",
+      "sha256": "c8468befc1bf5001ef9ce3107e994d483b919880697ab96e1da62ccf20bac300",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-faults/references/coverage-and-mutants.md",
+      "sha256": "3f700faa4df3d3c1310d5feab4af5fee3d41eae9609c5646773c1bf36a9db196",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-faults/references/fault-points.md",
+      "sha256": "37775690f075ed85c34aa62231e139a3fc92d568551594160ec74fc5ce0a90bd",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-faults/references/fuzzing.md",
+      "sha256": "f833f7cf2565fdfee735f493f05a4b0696dce740f12254d6c14619a8c8b7ba22",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-faults/references/gosim.md",
+      "sha256": "bd7667c8fab5243d37df3c1d875b0a8f87a5a688993426de436e5b503ea01f76",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-faults/references/services.md",
+      "sha256": "d981e5ce33da78c5e249edc63b840cb86812eb09a8274fd0204ba9fa354390f6",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-faults/references/sweeps.md",
+      "sha256": "c6598d0dfa7f2b43e1dfad200f812329f6beb800d87d8973643ddc85ad55b30f",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-faults/references/weaving.md",
+      "sha256": "d1ac49383607b086a2f0940f63177be4044cfc8267f7e87f677426af7c430e5c",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-faults/references/workloads.md",
+      "sha256": "c158b01ebcfdadb2832fdc3dba3e1861c95962af8ecaa2e319a0541e27118696",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-hegel/SKILL.md",
+      "sha256": "8ef7928b41607d800a771b68bdd10766063e8405492421b0ae9373fa4c94ed08",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-hegel/references/modes.md",
+      "sha256": "899f0dbae9927abcdd08e5ffd4c6191031e3651a7a55f543af40fdcfc5d03e5d",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-hegel/references/pitfalls.md",
+      "sha256": "6415f041f508a6d9231871d472e0d83e4e883c8787d1e29009dc88b8b5d2f948",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-mbt/SKILL.md",
+      "sha256": "98e24d58af93a80bab82eecb40e3b3d781e47415bf548181d803e782d458aeb7",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-metastability/SKILL.md",
+      "sha256": "c8f69c5330062af2a04f0bf17e07cbd081af83042dc62aff0b6f4da1e0bc867c",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-metastability/references/alerts.md",
+      "sha256": "24baceb307282a2d72212194a5fe14bb8cd4c8fd10f44b80f3329a8f73d0e842",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-metastability/references/experiment.md",
+      "sha256": "d90a96f3794202376f834d3a5ec3b9325114575fb4916f69ca008e49fa355121",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-metastability/references/simulation.md",
+      "sha256": "8693f76fa39cb88dc5235950f3d4b30f0f9f5cceaea35b92737d7cab00e52510",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-model/SKILL.md",
+      "sha256": "030a954c89f79278fa1fb3f99cd0292fef9017fda9b73cba749f216c15b2ee4b",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-patterns/SKILL.md",
+      "sha256": "d077a3eff5b5a987972fb0b459b0e2ffb16326daf561a94b9a41b55335178fd7",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-start/SKILL.md",
+      "sha256": "062742b616b3fa3fc75e45446d0fea2a27b4ebed7cb071ac27d9127c557b6b9b",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-traces/SKILL.md",
+      "sha256": "79c9b9e01c34e75b5bf99d328be85b56d8b7656fdbbe0da1aa0b8046b3f07afe",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-traces/references/binding.md",
+      "sha256": "85a1e53473e9945978f727ab416a73a774ecd5c6c348c60cce18f8e640d75a31",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-traces/references/emitting.md",
+      "sha256": "ba4c8818c2745e809a3e263ab30d8954f6878bdcef167bb8a66a8682ac19eb3b",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-traces/references/histories.md",
+      "sha256": "8749f8ba5ff34075b968499fb5425278d6656f9a709489b619ca99bcf657f101",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-traces/references/patterns.md",
+      "sha256": "2dd8efe1a703830b23e091dcb5e86cce9c0cf3adfc69612b6f6a569dbc75d4b2",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-traces/references/production-logs.md",
+      "sha256": "4240cebbb6e74c2cbef72ba1cae23e1551704d8f5e3beaf1e23ce63d51a8d5b6",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-workflow/SKILL.md",
+      "sha256": "88ffc2935846491ab27107e8ce2947a35eefdbd65f18891aef0b105556853d31",
+      "claude_matches": true
+    },
+    {
+      "file": "gotogether-workflow/references/verdicts.md",
+      "sha256": "00adc2dc79e1d9cd3eb05afb756d4a429d71f98bed4a29a0176fca5752cd4dca",
+      "claude_matches": true
+    }
+  ],
+  "skill_order": [
+    "gotogether-start",
+    "gotogether-workflow",
+    "gotogether-traces"
+  ],
+  "consumer_uses_local_replace": false,
+  "hello_example_change": "Only go.mod: remove development replacements; pin core and qhegel remote modules to same commit; go mod tidy. Source/test/model/binding unchanged.",
+  "tutorial_results": [
+    {
+      "Test": "TestFaithfulConforms",
+      "Action": "pass",
+      "Elapsed": 5.26
+    },
+    {
+      "Test": "TestNoDedupeCountsRetries",
+      "Action": "pass",
+      "Elapsed": 37.1
+    },
+    {
+      "Test": "TestExhaustive",
+      "Action": "pass",
+      "Elapsed": 21.05
+    },
+    {
+      "Test": "TestHegelShrinks",
+      "Action": "pass",
+      "Elapsed": 36.23
+    },
+    {
+      "Test": "TestMutationOfTheCounter",
+      "Action": "skip",
+      "Elapsed": 0
+    }
+  ],
+  "tutorial_package_seconds": 99.675,
+  "accepted_core_tests": [
+    "TestFaithfulConforms",
+    "TestNoDedupeCountsRetries",
+    "TestExhaustive",
+    "TestHegelShrinks"
+  ],
+  "optional_weaving_skip": "TestMutationOfTheCounter: no mutants woven; qweave intentionally not installed",
+  "cli_replay": {
+    "faithful_corrected_exit": 0,
+    "mutant_exit": 1,
+    "prior_faithful_wrong_path_exit": 2
+  },
+  "setup_deviations": [
+    "Existing Go/module/build caches reused; fresh module and remote pin, not a cold-cache benchmark.",
+    "Pinned source archive rather than latest clone; only example go.mod/go.sum adjusted to remote commit pins; no local replace.",
+    "Existing Quint0.32 TypeScript backend selected explicitly; Rust evaluator and qweave not installed.",
+    "Initial scratch CWD creation command failed before execution; corrected setup.",
+    "First faithful CLI replay guessed wrong step-log path and returned2; corrected actual runs/seed1 path passes; mutant CLI rejection1 already passed."
+  ],
+  "scope": "No Goo files, existing dependencies, production code, or global tool configuration changed; no public issues posted."
+}

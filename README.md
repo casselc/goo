@@ -268,3 +268,7 @@ independently evaluated exact-stream measurements from a selected named pool.
 Default service reads remain bounded; explicit Run and individual capture retain
 the original window, identity and separate clocks. Numerical capacity/utilization
 joins, causal attribution and automatic runtime/host panels remain follow-ons.
+
+[Gotogether consumer pilot](docs/GOTOGETHER_PILOT.md): isolated onboarding and
+capture-workflow compatibility results, one parser defect and adoption boundaries;
+Goo's existing testing dependencies remain unchanged.

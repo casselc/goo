@@ -1,0 +1,9 @@
+=== RUN   TestMalformedJSONLRejectsTrailingData
+    malformed_test.go:17: trailing="{\"quint.action\":\"reopen\",\"quint.seq\":2,\"quint.recorder\":\"r\",\"quint.actor\":\"captures\",\"quint.outcome\":\"ok\"}" steps=1 error=<nil>
+    malformed_test.go:19: accepted malformed line and silently discarded trailing bytes
+    malformed_test.go:17: trailing="garbage" steps=1 error=<nil>
+    malformed_test.go:19: accepted malformed line and silently discarded trailing bytes
+--- FAIL: TestMalformedJSONLRejectsTrailingData (0.00s)
+FAIL
+exit status 1
+FAIL	goo-gotogether-shadow	0.008s
