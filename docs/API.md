@@ -670,3 +670,23 @@ when `stocks` is absent. The actual handler workflow can be exported with
 and checked using `scripts/check_openapi.py --stock-observations <path>`; the
 workflow covers execute, capture, offline reopen and delta/monotonic refusals.
 See [cumulative stock semantics](CUMULATIVE_STOCKS.md).
+
+`definition.stockDomain: nonnegative-integer` optionally narrows a stock package's
+value domain for named-pool connection observations. It is valid only with
+`kind: stock`; invalid kind/policy combinations return 400 before source access.
+For opted-in, recorded samples the evaluator requires an integer >= 0 and < 2^53;
+negative, fractional or unsafe-integer source values return 502. Missing-value
+flags remain unknown and do not become observed values. Omitting the policy
+retains generic signed finite fractional stock semantics and existing wire bytes.
+
+The policy is carried in the planned/executed/captured question and participates
+in package identity. Capture/reopen preserves it and the original native evidence
+without rereading telemetry. It is a domain constraint, not proof of pool health,
+capacity, utilization, or semantic-convention conformance. The named-pool dashboard
+may derive a domain-qualified question from an eligible observation; no route or
+transport limit changes. API schemas apply the bounded integer value contract
+only when the retained question opts in. Actual execute/capture/offline-reopen,
+negative/fractional/unsafe refusals, the accepted maximum safe integer and missing
+flags can be exported with `GOO_STOCK_DOMAIN_API_OBSERVATIONS` while running
+`TestStockDomainHTTPExecuteCaptureAndOfflineReopen`, then checked with
+`scripts/check_openapi.py --stock-domain-observations <path>`.

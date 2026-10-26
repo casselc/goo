@@ -381,6 +381,15 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 	raw, _ := json.Marshal(in.Instruments)
 	var instruments []measurements.Instrument
 	json.Unmarshal(raw, &instruments)
+	// Derive the certified pool domain on detached definitions before hashing
+	// options, so selection identity and executed definition cannot diverge.
+	for index := range instruments {
+		if measurements.PoolConnectionsCandidate(instruments[index]) {
+			d := *instruments[index].Definition
+			d.StockDomain = "nonnegative-integer"
+			instruments[index].Definition = &d
+		}
+	}
 	sort.Slice(instruments, func(i, j int) bool {
 		if in.Profile != "" {
 			if httpActive {
@@ -406,6 +415,10 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 				if a != b {
 					return a
 				}
+			}
+			aPool, bPool := measurements.PoolConnectionsCandidate(instruments[i]), measurements.PoolConnectionsCandidate(instruments[j])
+			if aPool != bPool {
+				return aPool
 			}
 			a, _ := json.Marshal(instruments[i].Definition)
 			b, _ := json.Marshal(instruments[j].Definition)
@@ -483,6 +496,10 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 				w.Family = "messaging-consumer"
 				w.Reason = "Independent native messaging process duration binding in seconds; not all Consumer receive/process spans, message throughput or queue health"
 			}
+		}
+		if measurements.PoolConnectionsCandidate(instrument) {
+			w.Family = "database-pool-connections"
+			w.Reason = "Named-pool connection stocks with certified nonnegative-integer domain; states, pools, instances and read clocks remain independent. No capacity ratio or pool health is inferred"
 		}
 		p.Widgets = append(p.Widgets, w)
 	}

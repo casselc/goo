@@ -9,6 +9,7 @@ import (
 	"github.com/casselc/goo/internal/sourcehttp"
 	"github.com/casselc/goo/metrics"
 	"math"
+	"math/big"
 	"net/http"
 	"net/url"
 	"sort"
@@ -273,6 +274,22 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 				continue
 			}
 			if d.Kind == "stock" {
+				if d.StockDomain == "nonnegative-integer" && !missing {
+					// Certify the raw decimal, not its rounded float64 approximation.
+					if len(row.Value) > 128 || strings.ContainsAny(row.Value, "xXpP/") {
+						return nil, fmt.Errorf("stock domain requires a bounded decimal observation")
+					}
+					if at := strings.IndexAny(row.Value, "eE"); at >= 0 {
+						exponent, err := strconv.Atoi(row.Value[at+1:])
+						if err != nil || exponent < -400 || exponent > 400 {
+							return nil, fmt.Errorf("stock domain decimal exponent exceeds bounds")
+						}
+					}
+					exact, ok := new(big.Rat).SetString(row.Value)
+					if !ok || !exact.IsInt() || exact.Sign() < 0 || exact.Num().Cmp(new(big.Int).Lsh(big.NewInt(1), 53)) >= 0 {
+						return nil, fmt.Errorf("stock domain requires a nonnegative integer below 2^53")
+					}
+				}
 				ss = append(ss, metrics.StockPoint{Stream: stream, Temporality: map[int]string{1: "delta", 2: "cumulative"}[row.Temporality], Monotonic: row.Monotonic, StartNS: row.StartNS, EndNS: row.EndNS, Value: value, NoRecordedValue: missing})
 				continue
 			}

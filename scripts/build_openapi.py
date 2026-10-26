@@ -42,6 +42,11 @@ stock_sample=schemas['metrics.StockSample']
 stock_sample['properties']['value']={'type':'number','description':'Finite observed cumulative tally, possibly signed/fractional. Omitted when unknown; stale observations retain their value.'}
 stock_sample['properties']['atNS']['pattern']='^(0|[1-9][0-9]*)$'
 stock_sample['allOf']=[{'if':{'properties':{'state':{'enum':['observed','stale']}},'required':['state']},'then':{'required':['value']}},{'if':{'properties':{'state':{'const':'unknown'}},'required':['state']},'then':{'not':{'required':['value']}}}]
+# stockDomain is optional; legacy generic stocks keep signed fractional semantics.
+for name in ('measurements.Definition','measurements.DefinitionInput'):
+ schemas[name]['properties']['stockDomain']['description']='Optional stock-only nonnegative-integer policy. Recorded values must be integers >=0 and <2^53; missing-value flags remain unknown. Empty/omitted keeps generic signed finite fractional stock semantics.'
+schemas['measurements.Definition']['properties']['stockDomain']['const']='nonnegative-integer'
+schemas['measurements.Result']['allOf']=[{'if':{'properties':{'question':{'properties':{'definition':{'properties':{'stockDomain':{'const':'nonnegative-integer'}},'required':['stockDomain']}},'required':['definition']}},'required':['question']},'then':{'properties':{'stocks':{'properties':{'series':{'type':'array','items':{'properties':{'samples':{'type':'array','items':{'properties':{'value':{'type':'integer','minimum':0,'maximum':9007199254740991}}}}}}}}}}}}]
 # Runtime metadata is encoded by small Go/Python maps; schemas are authored here.
 schemas['RuntimeCapabilityState']={'type':'object','required':['state'],'properties':{'state':{'enum':['configured','unconfigured']}},'additionalProperties':False}
 schemas['RuntimeCapabilities']={'type':'object','required':['version','profile','preparedHTTP','declaredOperations'],'properties':{'version':{'const':'goo/runtime-capabilities/v1'},'profile':{'enum':['lab','generic']},'preparedHTTP':{'$ref':'#/components/schemas/RuntimeCapabilityState'},'declaredOperations':{'$ref':'#/components/schemas/RuntimeCapabilityState'}},'additionalProperties':False,'description':'Source-free startup configuration only. Configured does not establish source availability, authorization, telemetry coverage, ingestion completeness or service health.'}

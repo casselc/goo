@@ -11193,6 +11193,9 @@
       "source": {
         "$ref": "#/components/schemas/measurements.Binding"
       },
+      "stockDomain": {
+        "type": "string"
+      },
       "title": {
         "type": "string"
       }
@@ -11322,6 +11325,16 @@
         "anyOf": [
           {
             "$ref": "#/components/schemas/measurements.BindingInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "stockDomain": {
+        "anyOf": [
+          {
+            "type": "string"
           },
           {
             "type": "null"

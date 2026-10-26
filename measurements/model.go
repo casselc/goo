@@ -51,6 +51,7 @@ type LifecycleBinding struct {
 	AllowanceMS    int64    `json:"allowanceMs" yaml:"allowanceMs"`
 }
 type Definition struct {
+	StockDomain       string            `json:"stockDomain,omitempty" yaml:"stockDomain,omitempty"`
 	HistogramBucketMS *int64            `json:"histogramBucketMs,omitempty" yaml:"histogramBucketMs,omitempty"`
 	APIVersion        string            `json:"apiVersion" yaml:"apiVersion"`
 	Name              string            `json:"name" yaml:"name"`
@@ -102,6 +103,10 @@ func text(s string, max int) bool {
 	return len(s) <= max && utf8.ValidString(s) && !strings.ContainsRune(s, 0)
 }
 func (d Definition) Validate() error {
+	if d.StockDomain != "" && (d.Kind != "stock" || d.StockDomain != "nonnegative-integer") {
+		return fmt.Errorf("stockDomain requires stock kind and nonnegative-integer policy")
+	}
+
 	if err := d.Source.Namespace.Validate(); err != nil {
 		return err
 	}

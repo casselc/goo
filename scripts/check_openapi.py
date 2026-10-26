@@ -81,7 +81,7 @@ def check(spec):
                 requests += 1
                 if isinstance(request, dict):
                     accepted.append((shape, request))
-    assert responses == 315 and requests == 109 and mux_refusals == 18, (responses, requests)
+    assert responses == 322 and requests == 113 and mux_refusals == 18, (responses, requests)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)
@@ -177,11 +177,32 @@ def check_stock_observed(spec,path):
     print('Stock API workflow: 6 actual handler responses conform; capture/reopen and rejecting controls pass')
 
 
+def check_stock_domain_observed(spec,path):
+    observations=json.loads(Path(path).read_text())
+    assert len(observations)==10, 'Expected domain execute/capture/reopen/refusals/boundary/missing workflow'
+    for case in observations:
+        op=spec['paths'][case['path']][case['method'].lower()]
+        validator(spec,op['responses'][str(case['status'])]['content']['application/json']['schema']).validate(case['response'])
+        if case.get('request') is not None and 'requestBody' in op:
+            validator(spec,op['requestBody']['content']['application/json']['schema']).validate(case['request'])
+    executed=next(c['response'] for c in observations if c['path']=='/measurements' and c['status']==200)
+    assert executed['question']['definition']['stockDomain']=='nonnegative-integer'
+    for value in (-1,7.5,9007199254740992):
+        wrong=copy.deepcopy(executed);wrong['stocks']['series'][0]['samples'][1]['value']=value
+        assert list(validator(spec,{'$ref':'#/components/schemas/NativeResult'}).iter_errors(wrong)), 'Stock domain value control accepted'
+    assert len([c for c in observations if c['status']==502])==3
+    captured=next(c['response']['measurement'] for c in observations if c['path']=='/captures' and c['status']==201)
+    reopened=next(c['response']['measurement'] for c in observations if c['path']=='/captures/{id}' and c['status']==200)
+    assert captured==reopened
+    print('Stock domain API workflow: 10 actual handler responses conform; domain controls and offline reopen pass')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--observations')
     parser.add_argument('--proxy-observations')
     parser.add_argument('--stock-observations')
+    parser.add_argument('--stock-domain-observations')
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
@@ -192,3 +213,6 @@ if __name__ == '__main__':
 
     if args.stock_observations:
         check_stock_observed(spec,args.stock_observations)
+
+    if args.stock_domain_observations:
+        check_stock_domain_observed(spec,args.stock_domain_observations)

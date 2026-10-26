@@ -9,6 +9,7 @@ const CapabilityPlanVersion = "goo/instrument-capability-plan/v1alpha1"
 const HTTPRuleSet = "OpenTelemetry semantic conventions v1.30.0"
 const HTTPSchema = "https://opentelemetry.io/schemas/1.30.0"
 const DiscoveryStreamLimit = 25
+const PoolConnectionsSchema = "https://opentelemetry.io/schemas/1.37.0"
 
 type DimensionPresence struct {
 	Key   string `json:"key"`
@@ -81,6 +82,9 @@ func observedCoverage(i Instrument, observations []DiscoveryObservation) Instrum
 	case "http.server.request.duration":
 		keys["http.request.method"] = true
 		keys["http.response.status_code"] = true
+	case "db.client.connection.count":
+		keys["db.client.connection.pool.name"] = true
+		keys["db.client.connection.state"] = true
 	case "messaging.process.duration":
 		for _, key := range []string{"messaging.system", "messaging.operation.type", "messaging.operation.name", "messaging.destination.name", "messaging.destination.template", "messaging.consumer.group.name"} {
 			keys[key] = true
@@ -168,6 +172,20 @@ func PlanInstrument(i Instrument, observations []DiscoveryObservation) Instrumen
 	if !p.Eligible && len(p.Reasons) == 0 {
 		p.Reasons = append(p.Reasons, "No valid package binding is available from the current kernels.")
 	}
+	if i.Metric == "db.client.connection.count" {
+		candidate := i
+		candidate.CapabilityPlan = &p
+		if PoolConnectionsCandidate(candidate) {
+			p.Profile = "database-pool-connections"
+			p.Title = "Named database pool connections candidate"
+			p.RuleSet = "OpenTelemetry semantic conventions v1.37.0 (database pool: development)"
+			p.ShapeMatches = true
+			p.Hints = append(p.Hints, "A supplied observed stream reports a named pool, nonempty instance and nonempty literal state. Execution must use stockDomain=nonnegative-integer; values and freshness still require evaluation. States, pools and instances remain separate; capacity, utilization and pool health are unbound.")
+		} else {
+			p.Hints = append(p.Hints, "Named-pool eligibility is unconfirmed: it requires the pinned cumulative nonmonotonic connection stock binding and one of the first 25 observed streams reporting the same nonempty instance, pool name and nonempty literal state. Missing preview evidence is not absence; the generic binding remains available.")
+		}
+		return p
+	}
 	if i.Metric == "messaging.process.duration" {
 		p.Profile = "messaging-process-duration"
 		p.Title = "Messaging processing duration candidate"
@@ -229,4 +247,36 @@ func PlanInstrument(i Instrument, observations []DiscoveryObservation) Instrumen
 		p.Hints = append(p.Hints, "HTTP duration views are not established by this metadata. Retain the generic binding if it is eligible.")
 	}
 	return p
+}
+
+// PoolConnectionsCandidate uses positive same-stream preview evidence only. The
+// preview is metadata, not proof of stock values, completeness or capacity.
+func PoolConnectionsCandidate(i Instrument) bool {
+	if !i.Supported || i.Definition == nil || i.Kind != "stock" || i.Temporality != 2 || i.Monotonic || i.Metric != "db.client.connection.count" || i.Unit != "{connection}" || i.SchemaURL != PoolConnectionsSchema || i.CapabilityPlan == nil {
+		return false
+	}
+	d := i.Definition
+	if d.Validate() != nil || d.Kind != i.Kind || d.Source.Metric != i.Metric || d.Source.Unit != i.Unit || d.Source.Scope != i.Scope || d.Source.Version != i.Version || d.Source.SchemaURL != i.SchemaURL {
+		return false
+	}
+	streams := i.CapabilityPlan.Coverage.Streams
+	if len(streams) > DiscoveryStreamLimit {
+		streams = streams[:DiscoveryStreamLimit]
+	}
+	for _, observed := range streams {
+		stream := observed.Stream
+		state := stream.Attributes["db.client.connection.state"]
+		if stream.Resource["service.instance.id"] == "" || stream.Attributes["db.client.connection.pool.name"] == "" || state == "" {
+			continue
+		}
+		if d.Source.ExactStream != nil && !sameExactStream(*d.Source.ExactStream, stream) {
+			continue
+		}
+		bound := *d
+		bound.Source.ExactStream = &stream
+		if bound.Validate() == nil {
+			return true
+		}
+	}
+	return false
 }
