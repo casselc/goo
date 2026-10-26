@@ -2478,3 +2478,27 @@ GOO_POD_DISCOVERY_OWNER_LEDGER=/workspace/goo/artifacts/kubernetes/pod-observed-
 GOO_POD_SERVICES_OWNER_LEDGER=/workspace/goo/artifacts/kubernetes/runtime-observed-d0f8f65630/services-ownership.json \
 go test -run '^Test(PodDiscoveryObserved|PodDiscoveryOwnershipObserved|PodServicesDepartureObserved)$' -v .
 ```
+
+### Exact pod-native memory gauges (journey202)
+
+`TestHegelPodNativeAuthorityAndRawReplay` crosses ten raw pod UID identities with both admitted receiver gauges and five raw values (zero, ordinary bytes, negative, fractional and unsafe integer), requiring exact resource/schema/UID/cluster identity and service-authority isolation. Raw invalid byte counts remain generic gauge evidence. Profile/authoring checks cover20 usage variants plus working set (both defaults retained before the16-candidate cap, five omissions), the separate semconv usage-only profile, known-schema requirement, fresh YAML nil-map canonicalization versus unchanged direct JSON custody, unsupported source-kind crossover and old service/host kernel boundaries. A guaranteed stale/missing/conflict table refuses older-value fallback. This focused gate passed0.491s (`artifacts/pod-native-properties.txt`). Positive preview indices24/25 and seven missing required metadata fields were checked separately in0.014s (`artifacts/pod-native-preview-boundaries.txt`).
+
+Actual main `artifacts/pod-memory/pod-memory-5979da1993/ledger.json` passed14.8s and owner `pod-memory-e424b30f5f/ownership.json` passed11.6s. These are generated ordinary OTLP reports matching explicit profiles, not a running kubeletstats receiver, Kubernetes cluster or phase/readiness health claim. Primary usage32768By and working-set16384By each retain exact Collector0.137.0 receiver scope/version and empty scope schema. Eight deliberately opened controls cover partial/semconv usage-only/stale/conflicting/missing/negative/fractional/unsafe evidence. Raw negative/fractional/unsafe samples stay observed while the displayed byte counts and timeline are masked; no stored value is replaced by zero.
+
+Main page source22 comprises one pod inventory, nine exact resource-metadata reads, eleven explicit gauge reads and one fresh individual capture. Eleven pure plans include existing native stage/Run planning. The two-default budget is unchanged: eight later control panels were explicitly opened, each adding metadata and one selected measurement. Stage, retained Back, facets, frozen reopen and blocked-POST reload add no source calls. Each input's read clock/basis is bound to the actual response journal rather than inferred from a shared snapshot.
+
+Complete individual gauge custody is checked against the full store:6062 byte-identical bytes, SHA256 `3f09e5b7e315f322ffe65b41314feb63fbdc12aa23f5896cf474b89946b9070a`, exact original question/content-addressed receipt and unchanged raw samples. There is no composed pod snapshot/capture authority. Native record-context actions remain absent for this gauge-only resource slice.
+
+`TestPodNativeObserved` and `TestPodNativeOwnershipObserved` passed on the first corrected invocation in 0.545s (main 0.41s, ownership 0.12s), rejecting ten main and four owner serialized changed controls. The independent oracle checks all raw gauge rows and timestamp groups, exact resource/schema/UID and receiver profile, stale/conflicting/missing states, valid byte titles and invalid timeline masks, network-bound clocks/bases, explicit source costs and complete immutable capture custody. Five genuine held-response cases cover metadata/filter, native/close, native/row replacement, metadata/tab departure and native/scope edit; no late pure plan, follow-on read or publication is allowed. Final stdout is `artifacts/pod-memory/native-validation.txt`.
+
+The initial main observer declared timeline point values as numeric pointers, but the shared presentation contract carries valid values as exact decimal strings. JSON decoding failed before the full oracle ran; separate diagnostics confirmed every raw profile/state check passed. The observer DTO was corrected to string pointers, decode errors are now explicit, and invalid masked point values still must be absent. Initial diagnostics (`native-validation.initial-observer.txt`, `native-observer-diagnostic.txt`, `native-observer-diagnostic2.txt`) are retained. The first ownership run passed. No application, fixture, raw evidence or assertion contract changed; no additional campaigns followed the corrected pass.
+
+The corrected actor `artifacts/pod-memory/pod-memory-5c0d43f61d/bombadil/acceptance-summary.json` passed32.4s (33.9s invocation), phases0–8/449 snapshots, final source5/pure2/terminal true. Its initial harness selector hit a nested timeline-point button instead of direct Inspect; the preserved diagnostic was corrected only by narrowing that selector, with no application change. Main/owner receipts passed first and were not repeated. No display replay was needed. No additional Quint model is introduced for the existing explicit native/panel owner algebra; raw authority and five actual invalidation cases are checked directly.
+
+Run the bounded actual gate with the toolchain/cache environment above:
+
+```sh
+GOO_POD_NATIVE_LEDGER=/workspace/goo/artifacts/pod-memory/pod-memory-5979da1993/ledger.json \
+GOO_POD_NATIVE_OWNER_LEDGER=/workspace/goo/artifacts/pod-memory/pod-memory-e424b30f5f/ownership.json \
+go test -run '^TestPodNative(Observed|OwnershipObserved)$' -v .
+```

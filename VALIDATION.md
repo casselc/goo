@@ -11524,3 +11524,77 @@ The two-second pure pre/post deadline is not a CPU interruption guarantee.
 
 Independent source review approves deployment. Live ordinary OTLP/panel ownership,
 strict-byte masking, authoring/capture custody and actual frames remain pending.
+
+
+## Pod memory observations — live acceptance (202)
+
+Source `454088a` is deployed with binary SHA256
+`f3e5c83a342f5b737361b8cd3eea37779dcf5c44aca1d2c6cb19e1e50a88cd9c`.
+Twelve actual assets/specs match HTTP status/MIME/SHA; server, schemas and source
+guides are verified. No image build/prune or traffic pause was used.
+[Contract](docs/POD_METRICS.md), [storyboard](journeys/202-pod-memory-storyboard.md)
+and [compact receipt](docs/evidence/pod-memory-202.json).
+
+Main passes first in 14.8s and panel ownership in 11.6s; focused prior host and
+Kubernetes owners pass in 7.8s and 4.1s. Ordinary generated OTLP traverses the
+actual collector/ClickHouse pipeline without positive source/UI mocks. Primary
+usage is 65,536→32,768 By and working set 16,384 By, each an independent gauge.
+Receiver scope/version 0.137.0/empty instrumentation schema are exact, as is the
+known empty resource schema; no service/instance is manufactured. This is not a
+running kubeletstats scrape, Kubernetes API/RBAC or state/readiness acceptance.
+
+One inventory read followed by explicit metadata and two native reads reaches
+four logical source operations/one pure plan. Native staging and retained Back
+stay at four; explicit Run is five and fresh individual capture six. Eight
+explicitly selected boundary panels each add one metadata plus one native read,
+ending at 22 sources/11 pure plans. The endpoint breakdown is inventory 1,
+pod-metric metadata 9, measurement 11, fresh capture 1. The larger acceptance
+journal is not an increase in the automatic two-native-default budget or a count
+of SQL scans. Separate partial-receiver and semconv-only rows retain independent
+profiles; unknown trace schema keeps Observe metrics disabled.
+
+Stale 4,096 By remains labeled stale, with no fallback. Conflicting and missing
+latest samples are unknown/unavailable. Negative -1, fractional 1.5 and unsafe
+9,007,199,254,740,992 By remain unmodified observed raw gauges, while the pod
+headline is invalid and its plotted copy withholds those values. Source result
+states are not rewritten by presentation masking. Raw questions/maps/schemas and
+clocks are inspected independently. Five held metadata/native cases verify panel,
+filter/scope/tab/row withdrawal without late planning, follow-on reads or widgets.
+Completed native inspection/capture returns preserve held filters/focus.
+
+The individual capture remains 6,062 bytes, ID
+`ea43a2aa8c6693e8f3e226ff43b628c51354d1330c36d6ffd337e8c7f6f5c454`, SHA256
+`3f09e5b7e315f322ffe65b41314feb63fbdc12aa23f5896cf474b89946b9070a`.
+Full stored bytes are unchanged through public/UI reopening. The browser frozen
+reopen attempts no telemetry POSTs under a rejecting guard; it is not a live
+ClickHouse-outage claim. A separate actual handler gate reopens with unavailable
+source configuration. There is no combined dashboard capture or mutable store.
+
+Corrected Bombadil passes in 32.4s (33.9s invocation), nine phases 0–8 with
+449 snapshots, final source 5/pure plans 2/terminal true. Its first eventual check
+failed because a broad descendant button selector clicked a timeline mark instead
+of the direct Inspect measurement button, leaving source 4/pure plan 1. The
+qualified selector preserves all source/terminal assertions. Only the actor was
+rerun; failed diagnostics and the accepted main/owners are retained unchanged.
+
+Independent native validation passes first after its decoder correction in
+0.545s (main 0.41s/owner 0.12s), rejecting ten main plus four owner mutations.
+Its initial main decoder wrongly expected numeric timeline values; the shared
+passive timeline stores exact decimal strings. The observer now declares that
+field as a string and reports decode errors explicitly. Initial diagnostics and
+the first passing owner are retained. No application/fixture/raw-value/clock/
+custody assertion was changed to accommodate the observer fix. Exact identities,
+profiles, raw states, valid and invalid plotted copies, request journals and full
+capture SHA/content ID all pass; native work is quiet afterward.
+
+Actual desktop/mobile frames were inspected by root and browser reviewers after
+geometry/UTC/ns checks. No layout patch or display replay was needed in this
+round. Diagrams, reusable component contracts, API docs, roadmap and executable
+storyboard distinguish memory observations from deferred typed phase/readiness.
+
+Final independent release review approves the bounded memory slice, raw/custody
+controls, source-cost accounting and actual presentation. All 3,297 local
+Markdown links resolve; the compact receipt's three frame hashes and new journey
+JavaScript syntax checks pass. Workers are closed, normal diagnostic retention
+is applied, and exact task binaries/research/SQL helpers are removed. Traffic and
+data volumes remain intact. Typed phase/readiness remains the next planned slice.

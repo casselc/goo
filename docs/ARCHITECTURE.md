@@ -1023,3 +1023,21 @@ Pod native lookup requires a known resource-schema string (including reported em
 The first supported receiver profile is Collector kubeletstats0.137.0: exact receiver scope path and version, empty scope schema, `k8s.pod.memory.usage` and `k8s.pod.memory.working_set` gauges in `By`. The semconv1.37 usage-only profile stays separate; no working-set alias, container sum, limit ratio, ordinal pod-phase or container-readiness health panel is inferred. Full resource/schema/scope/version/attribute identity is retained. Positive preview metadata is bounded to25 streams and16 displayed candidates; default usage/working-set selection precedes candidate truncation so component variants cannot displace both defaults.
 
 Raw gauge evidence may contain zero, negative, fractional or unsafe byte values. The gauge engine preserves it; presentation must mask invalid byte counts rather than rewrite stored evidence or fall back from stale/missing/conflicting latest reports. Fresh YAML authoring canonicalizes nil attribute maps on its detached definition; direct JSON evidence/capture retains its original bytes and identity. Existing independent read clocks, explicit native Run/individual capture and retained-owner cancellation apply.
+
+```mermaid
+flowchart LR
+  Inventory[Retained pod resource variant] --> Schema{Known schema string and nonempty UID?}
+  Schema -->|No| Context[Contextual records only; no native lookup]
+  Schema -->|Yes| Lookup[Explicit exact-map pod metric metadata read]
+  Lookup --> Plan[Pure profile-specific planner]
+  Plan --> Gauges[At most two independent exact gauge reads]
+  Gauges --> Panel[Raw evidence plus byte-count presentation checks]
+  Panel --> Preview[Source-free native stage and retained Back]
+  Preview --> Capture[Explicit Run or individual fresh capture]
+  Gauges --> Raw[Negative or fractional values retained as raw evidence]
+  Raw --> Mask[Invalid byte counts masked in presentation]
+```
+
+Journey 202 used generated ordinary OTLP reports, not a running receiver or cluster. The main and owner runs passed in 14.8s and 11.6s. Primary usage 32768 By and working set 16384 By were independent default reads; eight later control panels were explicitly opened for partial/semconv, stale, conflicting, missing and invalid-byte evidence. The final page journal contained 22 source operations (one inventory, nine exact metadata reads, eleven gauges and one fresh capture) and eleven pure plans. This does not increase the two-default budget.
+
+The corrected bounded native gate passed in 0.545s with fourteen changed controls rejected. Full individual capture custody remained byte-identical at 6062 bytes, SHA256 `3f09e5b7e315f322ffe65b41314feb63fbdc12aa23f5896cf474b89946b9070a`; invalid presentation never rewrote the stored raw gauge. The actor passed in 32.4s across nine phases and 449 snapshots. Existing read/panel-owner semantics were exercised directly without a new formal model or a broader scheduling/completeness claim.

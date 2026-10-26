@@ -308,3 +308,12 @@ context; pod names do not replace UIDs. This is telemetry discovery, not a live
 Kubernetes API inventory or a readiness/health dashboard.
 See [journey 201](journeys/201-kubernetes-storyboard.md) for the executed discovery,
 record membership, cancellation and actual desktop/mobile views.
+
+
+[Pod memory observations](docs/POD_METRICS.md) add an explicit Observe metrics
+flow to known-schema Kubernetes resource variants. It loads independent memory
+usage/working-set defaults from the supported kubeletstats profile, with native
+inspection and individual capture. Semconv usage remains a separate profile;
+phase/readiness, memory ratios and health inference are not included.
+See [journey 202](journeys/202-pod-memory-storyboard.md) for actual default/control
+reads, capture reopening, ownership checks and desktop/mobile frames.

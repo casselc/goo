@@ -1,0 +1,233 @@
+{
+  "version": 1,
+  "featureSourceCommit": "454088a3c1c7929222d17d121a611c0440be1f5d",
+  "binarySHA256": "f3e5c83a342f5b737361b8cd3eea37779dcf5c44aca1d2c6cb19e1e50a88cd9c",
+  "mainSeconds": 14.8,
+  "ownershipSeconds": 11.6,
+  "hostOwnershipRegressionSeconds": 7.8,
+  "kubernetesOwnershipRegressionSeconds": 4.1,
+  "actorSeconds": 32.4,
+  "nativeSeconds": 0.545,
+  "nativeRejectingControls": {
+    "main": 10,
+    "ownership": 4
+  },
+  "ownershipCases": 5,
+  "mainLedger": "artifacts/pod-memory/pod-memory-5979da1993/ledger.json",
+  "ownershipLedger": "artifacts/pod-memory/pod-memory-e424b30f5f/ownership.json",
+  "hostOwnershipLedger": "artifacts/hosts/host-observed-63b524952b/ownership.json",
+  "kubernetesOwnershipLedger": "artifacts/kubernetes/pod-observed-cb64e50395/ownership.json",
+  "actorSummary": {
+    "phases": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "snapshots": 449,
+    "final": {
+      "phase": 8,
+      "source": 5,
+      "plans": 2,
+      "target": "e81e480c75cca801053be48c6e670c4545744733fcef2e1625ca38535ea524de",
+      "usageKey": "b8422299e16b63987c17bd924b46ef4db2f1edeb1844d660ba62d9a2bbd50799",
+      "ready": true,
+      "loaded": true,
+      "nativeReady": true,
+      "nativeComplete": true,
+      "terminal": true
+    }
+  },
+  "mainEvents": [
+    {
+      "action": "inventory",
+      "source": 1,
+      "plans": 0
+    },
+    {
+      "action": "primary-pair",
+      "source": 4,
+      "plans": 1
+    },
+    {
+      "action": "native-staged",
+      "source": 4,
+      "plans": 2
+    },
+    {
+      "action": "retained-back",
+      "source": 4,
+      "plans": 2
+    },
+    {
+      "action": "native-run",
+      "source": 5,
+      "plans": 3
+    },
+    {
+      "action": "individual-capture",
+      "source": 6,
+      "plans": 3
+    },
+    {
+      "action": "capture-retained-return",
+      "source": 6,
+      "plans": 3
+    },
+    {
+      "action": "boundary-uid-b",
+      "source": 8,
+      "plans": 4
+    },
+    {
+      "action": "boundary-semconv",
+      "source": 10,
+      "plans": 5
+    },
+    {
+      "action": "boundary-stale",
+      "source": 12,
+      "plans": 6
+    },
+    {
+      "action": "boundary-conflict",
+      "source": 14,
+      "plans": 7
+    },
+    {
+      "action": "boundary-missing-data",
+      "source": 16,
+      "plans": 8
+    },
+    {
+      "action": "boundary-negative",
+      "source": 18,
+      "plans": 9
+    },
+    {
+      "action": "boundary-fractional",
+      "source": 20,
+      "plans": 10
+    },
+    {
+      "action": "boundary-unsafe",
+      "source": 22,
+      "plans": 11
+    },
+    {
+      "action": "frozen-reopen-no-posts",
+      "source": 22,
+      "plans": 11
+    }
+  ],
+  "capture": {
+    "id": "ea43a2aa8c6693e8f3e226ff43b628c51354d1330c36d6ffd337e8c7f6f5c454",
+    "bytes": 6062,
+    "sha256": "3f09e5b7e315f322ffe65b41314feb63fbdc12aa23f5896cf474b89946b9070a",
+    "immutableOnReopen": true
+  },
+  "boundaries": [
+    {
+      "uid": "uid-b",
+      "displayState": "observed",
+      "displayValue": 8192
+    },
+    {
+      "uid": "semconv",
+      "displayState": "observed",
+      "displayValue": 12345
+    },
+    {
+      "uid": "stale",
+      "displayState": "stale"
+    },
+    {
+      "uid": "conflict",
+      "displayState": "unknown"
+    },
+    {
+      "uid": "missing-data",
+      "displayState": "unknown"
+    },
+    {
+      "uid": "negative",
+      "displayState": "invalid",
+      "displayValue": -1
+    },
+    {
+      "uid": "fractional",
+      "displayState": "invalid",
+      "displayValue": 1.5
+    },
+    {
+      "uid": "unsafe",
+      "displayState": "invalid",
+      "displayValue": 9007199254740992
+    }
+  ],
+  "frames": [
+    {
+      "path": "docs/journeys/screenshots/202a-pod-memory.png",
+      "bytes": 44033,
+      "sha256": "c1b9f5bc1a1bc52b4a0df44bc67980e429085110362f14536f9df431def87362"
+    },
+    {
+      "path": "docs/journeys/screenshots/202b-mobile-pod-memory.png",
+      "bytes": 46197,
+      "sha256": "ba504dc4cf092dde8a9a454c4aa582b2a4de7b66897734808e5d34fac3bd3b00"
+    },
+    {
+      "path": "docs/journeys/screenshots/202c-pod-memory-in-context.png",
+      "bytes": 252786,
+      "sha256": "0cbf9edd586ca82717b17da4f77dc364735a2ad1e2d64007dc898214011ee1d8"
+    }
+  ],
+  "scope": {
+    "source": "Generated ordinary OTLP, actual collector and ClickHouse; not a receiver scrape or Kubernetes API test.",
+    "primaryValuesBy": {
+      "usage": 32768,
+      "workingSet": 16384
+    },
+    "rawPrimaryUsageSequenceBy": [
+      65536,
+      32768
+    ],
+    "nativeDefaultBudget": 2,
+    "primaryFlowSourceOperations": 4,
+    "primaryFlowPurePlans": 1,
+    "mainTotalSourceOperations": 22,
+    "mainTotalPurePlans": 11,
+    "explicitBoundaryPanels": 8,
+    "sourceOperationBreakdown": {
+      "inventory": 1,
+      "podMetricMetadata": 9,
+      "nativeMeasurements": 11,
+      "freshCapture": 1
+    },
+    "knownEmptyResourceSchema": true,
+    "receiverScopeSchema": "",
+    "receiverVersion": "0.137.0",
+    "semconvUsageProfileSeparate": true,
+    "stateReadinessDefaults": false,
+    "sourceGaugeValuesRewritten": false,
+    "podByteMaskIsPresentationOnly": true,
+    "frozenReopenAttemptedTelemetryPosts": 0,
+    "actualClickHouseOutageProvenByBrowser": false,
+    "offlineHandlerCheckSeparate": true,
+    "combinedDashboardCapture": false,
+    "newMutableMetricStore": false,
+    "realReceiverOrKubernetesScrape": false,
+    "healthOrRatioInference": false,
+    "arbitrarySchedulesProven": false
+  },
+  "diagnostics": {
+    "firstActor": "Broad button selector hit timeline point instead of direct Inspect measurement; qualified selector corrected, actor alone rerun.",
+    "initialNativeObserver": "Timeline point.value decoder incorrectly expected numeric pointer instead of decimal string; corrected observer type and explicit decode errors, raw/model/custody assertions retained.",
+    "applicationChangesForHarnessCorrections": false
+  }
+}

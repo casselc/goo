@@ -120,8 +120,13 @@ with one inventory read. These receipts do not claim a live Kubernetes cluster,
 collector enrichment/RBAC acceptance, arbitrary schedules or a new inventory
 capture/store.
 
-Readiness, restarts, requests/limits, CPU/memory, node pressure, ownership facts,
-resource changes and workload rollups need explicit receiver, identity,
-temporality, calculation and coverage contracts. This initial inventory does
-not introduce native Kubernetes measurement authority or infer health from
-client spans.
+The adjacent **Observe metrics** action follows the separate
+[pod memory contract](POD_METRICS.md): a reported UID and known resource-schema
+string admit explicit metric discovery and at most two native defaults. Its
+source cost and gauge authority are independent of this inventory and its
+record-context actions. Unknown trace schema does not silently become empty.
+
+Phase/readiness, restarts, requests/limits, CPU, node pressure, ownership facts,
+resource changes and workload rollups still need explicit receiver, identity,
+temporality, calculation and coverage contracts. Discovery alone grants no
+native authority and does not infer health from client spans.

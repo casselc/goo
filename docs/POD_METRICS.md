@@ -1,7 +1,9 @@
 # Pod memory observations
 
-Milestone 202 implements explicit pod-resource gauge authority
-and the first memory defaults to [Kubernetes discovery](KUBERNETES_RESOURCES.md).
+Implemented and accepted in [journey 202](../journeys/202-pod-memory-storyboard.md).
+This adds explicit pod gauge authority and the first memory defaults to
+[Kubernetes discovery](KUBERNETES_RESOURCES.md).
+[Compact receipt](evidence/pod-memory-202.json).
 Reported phase/readiness requires a separate typed state contract.
 
 ## Supported profiles
@@ -89,6 +91,33 @@ typing. Neither is an alias for pod readiness, and the current native scalar
 kernel's nonempty-unit contract is not relaxed to accommodate them.
 
 Typed phase/readiness, requests/limits, CPU calculations, ownership and workload
-rollups remain separate deliveries. Live validation for this memory slice is
-pending; generated ordinary OTLP will test the collector/ClickHouse workflow,
-not a running Kubernetes cluster, receiver scraping or RBAC configuration.
+rollups remain separate deliveries. Generated ordinary OTLP acceptance passes
+through the actual collector and ClickHouse; it is not a receiver scrape, live
+Kubernetes cluster or RBAC configuration test.
+
+## Accepted workflow
+
+The primary receiver resource has no service/instance identity and a known empty
+resource-schema string. Usage changes from 65,536 to 32,768 bytes; working set is
+16,384 bytes, observed independently. Exact receiver scope/version/empty
+instrumentation schema are retained. Separate partial-receiver and semconv-only
+resources, stale/conflicting/missing observations and negative/fractional/unsafe
+byte values are explicitly read through the UI. Stale values stay visibly labeled
+stale; unknown samples do not fall back, and invalid byte counts are masked only
+in the display copy.
+
+The default path costs one resource inventory operation, one explicit metric
+metadata read and two native reads (four source operations/one pure plan).
+Native staging and retained Back are source-free. Explicit native Run and fresh
+individual capture advance to six source operations. Eight deliberately selected
+boundary panels each add one metadata and one gauge read, ending at 22 source
+operations/11 pure plans; this is not a larger automatic default budget.
+
+The individual capture remains 6,062 bytes with its original full stored SHA-256
+through public and UI reopening. Browser frozen reopening attempts no telemetry
+POSTs, and a separate HTTP handler check proves reopening with its source
+unavailable. That is not a claim of a live ClickHouse outage. Five actual held
+response cases check panel ownership, and prior host/Kubernetes owner regressions
+pass. Independent raw/profile/mask/clock/journal/custody validation rejects
+fourteen changed controls. The storyboard links actual desktop/mobile frames and
+records the corrected actor and observer diagnostics.
