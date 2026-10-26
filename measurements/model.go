@@ -259,5 +259,17 @@ func Read(text string) (Definition, error) {
 	if dec.Decode(new(any)) != io.EOF {
 		return d, fmt.Errorf("one YAML document required")
 	}
+	// Authoring canonicalization is deliberately confined to host YAML input.
+	// Publishing emits an empty services sequence; normalize it before hashing
+	// so omitted/null inputs reopen with the same package identity. Direct JSON
+	// questions and frozen results retain their original nil/empty distinction.
+	if d.Source.Resource != nil && d.Source.Resource.Kind == "host" {
+		if d.Source.Services == nil {
+			d.Source.Services = []string{}
+		}
+		if d.Source.ExactStream != nil && d.Source.ExactStream.Attributes == nil {
+			d.Source.ExactStream.Attributes = map[string]string{}
+		}
+	}
 	return d, d.Validate()
 }

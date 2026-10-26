@@ -17,6 +17,7 @@
   for(const k of ['namespace','exactStream','resource'])if(source[k]===null)delete source[k];
   if(source.namespace?.value==='')delete source.namespace.value;
   if(source.resource?.kind==='host'&&source.services==null)source.services=[];
+  if(source.resource?.kind==='host'&&source.exactStream&&source.exactStream.attributes==null)source.exactStream.attributes={};
   if(d.stockDomain===null||d.stockDomain==='')delete d.stockDomain;
   for(const k of ['histogramBucketMs','lifecycle'])if(d[k]===null)delete d[k];
   return d;
