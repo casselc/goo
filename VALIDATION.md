@@ -12503,3 +12503,22 @@ eight examples each in 0.931s: byte-admission boundaries and actual-JS-owner
 withdrawal/release schedules. Source review found no blocker; unexpected renderer
 errors now finish the owner cleanly. Live journey, actor/raw/Quint and frames are
 pending at this source gate.
+
+
+## 212 — Explicit host network throughput accepted
+
+Network expands beneath unchanged CPU/memory defaults. One exact interface may
+load an unambiguous receive/transmit pair (at most two reads); multiple interfaces,
+duplicate directions and incomplete metadata remain explicit. Independent streams
+share a rate scale, retain reset/gap/missing unknowns, and reuse native interval
+record investigation and individual capture/offline reopen. The pinned OTel
+network byte profile certifies whole safe byte tallies and cumulative temporality;
+no interface total, capacity percentage, saturation or disk I/O is inferred.
+
+Source/presentation reviews, full Go, 101 Node files, proxy/startup/API, Hegel,
+real OTLP main/owner/ambiguity journeys, Bombadil and independent raw/Quint checks
+pass. [Journey 212](journeys/212-host-network-storyboard.md) and
+[evidence](docs/evidence/host-network-212.json) record concrete checks, source costs,
+reviewed frames, capture bytes and finite proof boundaries.
+
+Final display follow-up: charts now disclose when the existing 200-point presentation cap omits observations or intervals. A focused 201-interval renderer check verifies the count, retained full result, and unchanged shared scale; both focused Node test files passed (0.311 s). This omission-only branch was added after the successful live campaigns; those campaigns and their screenshots were not rerun.

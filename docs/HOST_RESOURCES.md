@@ -139,3 +139,10 @@ and the original pure plan, with zero telemetry/custody/browser operations.
 [Desktop](journeys/screenshots/199a-host-observations.png) ·
 [Mobile](journeys/screenshots/199b-mobile-host-observations.png) ·
 [Whole viewport](journeys/screenshots/199c-hosts-in-context.png).
+
+
+[Network throughput](HOST_NETWORK_THROUGHPUT.md) is accepted in 212 as an explicit
+per-interface receive/transmit expansion. Network candidates stay out of the two
+CPU/memory default slots. It uses the decimal rate kernel with a stricter whole
+byte policy and cumulative-only profile; interface sums, bandwidth capacity and
+other network/broker/disk instruments remain separate work.

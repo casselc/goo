@@ -1,0 +1,12 @@
+spec: host_network.qnt
+module: host_network
+constants: {MAX_READS: 9}
+invariants: [safety]
+actions:
+  defaults: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}}'}
+  network: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}}'}
+  local: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}}'}
+  native: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}}'}
+  logs: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}}'}
+  spans: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}}'}
+  capture: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}}'}

@@ -974,3 +974,15 @@ window comparison contracts remain separate. The first default is pinned host
 `system.cpu.time` cumulative monotonic seconds. Nine real mux observations cover
 execution, capture/offline reopen and five source/profile refusals; validate with
 `check_openapi.py --cpu-time-observations PATH`. See [contract](CPU_TIME_RATES.md).
+
+
+### Explicit host network profile (212)
+
+No operation or wire envelope is added. Retained host plans may offer pinned
+`system.network.io`/`By` cumulative candidates with reported interface and
+receive/transmit attributes; they never enter automatic default widgets. Source
+reads certify nonnegative whole byte values below 2^53, preserving unknown flags
+and rejecting fractional/unsafe tallies or temporal drift. Existing native
+capture/reopen and host interval-context contracts apply. Eleven mux observations
+include seven source/profile refusals; `check_openapi.py --network-observations
+PATH` validates them beside unchanged frozen fixtures. See [contract](HOST_NETWORK_THROUGHPUT.md).

@@ -1,0 +1,154 @@
+{
+  "milestone": 212,
+  "status": "accepted",
+  "sourceCommit": "eb2f788",
+  "binarySHA256": "fde55ee582ada87195a420a7ae57ecaa2d553e7318dc2fe8e7b0a21e59f30813",
+  "research": {
+    "url": "https://raw.githubusercontent.com/open-telemetry/semantic-conventions/v1.37.0/docs/system/system-metrics.md",
+    "sha256": "8aa9a4c287145b382648705564b1b0698f62d4a374af7a2e79702626c8a92291",
+    "profile": "system.network.io Counter By; reported interface; receive/transmit; cumulative-only binding"
+  },
+  "checks": {
+    "go": {
+      "stdout": "/tmp/goo-212-go-all.txt",
+      "scope": "Full root regression; CPU and network HTTP helper remain green."
+    },
+    "node": {
+      "files": 101,
+      "seconds": 20.051128244,
+      "stdout": "/tmp/goo-212-node-all.txt"
+    },
+    "python": {
+      "proxyTests": 17,
+      "proxySeconds": 4.964,
+      "startupTests": 8,
+      "startupSeconds": 2.875,
+      "stdout": "/tmp/goo-212-python.txt"
+    },
+    "api": {
+      "goOperations": 83,
+      "totalOperations": 90,
+      "schemas": 517,
+      "frozenResponses": 429,
+      "admittedRequests": 159,
+      "muxRefusals": 28,
+      "networkObservations": 11,
+      "networkSourceProfileRefusals": 7,
+      "stdout": "/tmp/goo-212-api.txt",
+      "observations": "/tmp/goo-212-api-observed-final.json"
+    },
+    "hegel": {
+      "properties": 2,
+      "examplesEach": 8,
+      "seconds": 0.931,
+      "stdout": "/tmp/goo-212-properties.txt",
+      "scope": "Byte-admission boundary cases plus actual-JS-owner first-reply/withdrawal schedules under deterministic unit transport; separate real held-response browser proof."
+    },
+    "main": {
+      "seconds": 24.1,
+      "invocationSeconds": 27.4,
+      "ledger": "artifacts/host-network/host-network-3daa78a5ba/ledger.json",
+      "sourcePOSTs": 9,
+      "initialSourcePOSTs": 3,
+      "defaultNativeReads": 2,
+      "networkExpansionReads": 2,
+      "explicitNativeReads": 1,
+      "recordRunReads": 2,
+      "freshCaptureReads": 1,
+      "hostPlans": 1,
+      "contextMembersPerSignal": 3,
+      "sharedDomain": {
+        "min": "0",
+        "max": "1024"
+      },
+      "reopenSourceReads": 0
+    },
+    "owners": {
+      "closeSeconds": 8.9,
+      "close": "artifacts/host-network/host-network-352c05a050/ownership.json",
+      "ambiguitySeconds": 15.7,
+      "ambiguity": "artifacts/host-network/host-network-bbd6b2f011/ambiguity.json",
+      "batchSeconds": 37.0,
+      "scope": "Complete late network replies cannot publish after closure; unchanged CPU/memory. Multiple interfaces require choice; duplicate receive streams need exact native Preview/Run; retained return is source-free."
+    },
+    "actor": {
+      "seconds": 31.9,
+      "invocationSeconds": 33.4,
+      "configuredSeconds": 30,
+      "path": "artifacts/host-network/host-network-c2726a0b81/bombadil/acceptance-summary.json",
+      "phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "snapshots": 282,
+      "final": {
+        "phase": 8,
+        "source": 6,
+        "plans": 1,
+        "key": "8c1f281abcc85c7cfa089bd5d0a6d81c8014f0a9898beca372abce14d3884f3a",
+        "network": 2,
+        "networkReady": true,
+        "defaults": 2,
+        "nativeReady": true,
+        "nativeComplete": true,
+        "recordReady": false,
+        "terminal": true,
+        "error": ""
+      }
+    },
+    "raw": {
+      "seconds": 0.1,
+      "controlsRejected": 7,
+      "cpuCompatibilitySeconds": 0.09,
+      "stdout": "/tmp/goo-212-native.txt",
+      "scope": "Shared independent raw/std-SHA/rational interval/context oracles; both directions plus shared plot scales and complete capture bytes. No production evaluator expected-value oracle."
+    },
+    "quint": {
+      "seconds": 14.01,
+      "actualFiniteTraces": 1,
+      "macrosteps": 7,
+      "badTracesRejected": 1,
+      "stdout": "/tmp/goo-212-native.txt",
+      "scope": "Observed main read protocol only, not arbitrary concurrency or full source/model proof."
+    }
+  },
+  "capture": {
+    "bytes": 10082,
+    "sha256": "a74c1279004cba0bbf7cf21a9d6840635486d0560e20e097206f409ab69f5270",
+    "storedBytesBeforeAfterEqual": true,
+    "reopenBlockedSourcePOSTs": []
+  },
+  "frames": {
+    "docs/journeys/screenshots/212b-mobile-network.png": "7fe29a77eaded78185f048d2fe409c0a187156495e2c77978ed064f1f4ffd05b",
+    "docs/journeys/screenshots/212a-host-network-throughput.png": "71d9d44e9a9d7ee56380487bce1498cd08da892378a1da12b847d70cae812c8c",
+    "docs/journeys/screenshots/212c-network-in-context.png": "d2cafe65ac11945636ebe814c1bb9643b3b330c2d9dc222d2879e5411fbc7f5a"
+  },
+  "deployment": "artifacts/host-network/deployment.json",
+  "limits": [
+    "CPU/memory defaults stay within two native reads; network expansion is independent and deliberate.",
+    "Only pinned schema/unit/cumulative monotonic profile; whole byte tallies below 2^53, no pre-export precision recovery.",
+    "Multiple exact direction streams and incomplete metadata are not guessed; no background interface scan.",
+    "No interface/host sum, bandwidth capacity, saturation, error rate or disk-I/O profile.",
+    "Host.id/environment record context crosses SDK maps but does not establish physical identity, ownership or causality.",
+    "Prepared ordinary OTLP validates collector/ClickHouse/app behavior, not a deployed host scraper or telemetry authenticity."
+  ],
+  "diagnostics": [
+    "An initial network unit fixture used stock as a physical discovery family; corrected to the source sum/counter descriptor before its successful run.",
+    "All main/owner/actor/live raw/Quint acceptance invocations pass on their first execution. Shared CPU raw-oracle compatibility also passes."
+  ],
+  "displayCapFollowup": {
+    "scope": "After live campaigns, added a coverage label only when the existing 200-point display cap omits intervals or observations. Held results and supplied scale are unchanged. The successful live campaigns were not rerun for this branch.",
+    "tests": "node --test tests/host-dashboard.test.js tests/host-network.test.js",
+    "filesPassed": 2,
+    "seconds": 0.311356302,
+    "stdout": "/tmp/goo-212-display-cap.txt",
+    "assetSHA256": "3165860bb1a470df47c35cc429656e3b3130712a0eb82b44e763e9b19d668f6a"
+  }
+}

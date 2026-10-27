@@ -1,6 +1,7 @@
 # Host network throughput
 
-Milestone 212 is implemented and source-reviewed; live acceptance is pending.
+Milestone 212 is implemented and accepted with live OTLP/ClickHouse main/owner
+journeys, Bombadil, Hegel properties and independent raw/Quint validation.
 
 The pinned OTel v1.37 `system.network.io` Counter has unit `By`, recommended
 `network.interface.name`, and well-known `network.io.direction` values `receive`
@@ -63,4 +64,9 @@ flowchart LR
  G --> J[Individual capture and offline reopen]
 ```
 
-[Journey 212](../journeys/212-host-network-storyboard.md) tracks live acceptance.
+[Journey 212](../journeys/212-host-network-storyboard.md) records acceptance.
+
+[Machine-readable evidence](evidence/host-network-212.json) records actual runs,
+asset/frame hashes, custody and bounded proof scope.
+
+Final display follow-up: charts now disclose when the existing 200-point presentation cap omits observations or intervals. A focused 201-interval renderer check verifies the count, retained full result, and unchanged shared scale; both focused Node test files passed (0.311 s). This omission-only branch was added after the successful live campaigns; those campaigns and their screenshots were not rerun.

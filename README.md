@@ -377,4 +377,4 @@ records acceptance.
 [Host network throughput](docs/HOST_NETWORK_THROUGHPUT.md) adds explicit
 per-interface receive/transmit byte rates without expanding CPU/memory defaults.
 It reuses native interval investigation and individual capture; [Journey 212](journeys/212-host-network-storyboard.md)
-tracks live acceptance.
+records acceptance.

@@ -1123,3 +1123,12 @@ manufactures service labels. A pinned host CPU-time definition is cumulative-onl
 generic decimal delta evaluation remains separate. Existing supplied-data
 resource/native presenters consume the result, while app navigation stages
 reported host.id/environment plus exact time context.
+
+
+[Network throughput](HOST_NETWORK_THROUGHPUT.md) extends pinned host interval
+counter authority without a new API or numeric kernel. Original-token and exact
+byte certification precede evaluation. Retained metadata supplies explicit
+network candidates; a separate application generation owns interface selection,
+two direction reads and cancellation, leaving CPU/memory evidence untouched.
+Common display domains are supplied to passive resource/timeline presenters;
+this visual comparison does not join or sum independent streams.

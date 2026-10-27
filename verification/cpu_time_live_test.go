@@ -24,9 +24,14 @@ import (
 )
 
 func ctRaw(f psMap, r *measurements.Result) bool {
+	return hostRateRaw(f, r, "system.cpu.time", "s", map[string]string{"cpu.logical_number": "0", "cpu.mode": "user"})
+}
+
+// Independent finite-fixture oracle shared by CPU-time and network-byte journeys.
+func hostRateRaw(f psMap, r *measurements.Result, name, unit string, attributes map[string]string) bool {
 	d := r.Question.Definition
 	s := d.Source.ExactStream
-	if s == nil || d.Kind != "counter" || d.CounterDomain != metrics.DecimalCounterDomain || d.Environment != f["environment"] || d.Source.Resource == nil || d.Source.Resource.Kind != "host" || d.Source.Resource.ID != "cpu-host" || s.Name != "system.cpu.time" || s.Unit != "s" || s.SchemaURL != measurements.HostMetricsSchema || len(d.Source.Services) != 0 || d.Source.Namespace != nil || s.Attributes["cpu.logical_number"] != "0" || s.Attributes["cpu.mode"] != "user" || !chBasis(r) || r.Counters == nil || r.Gauges != nil || r.Stocks != nil || r.Histograms != nil {
+	if s == nil || d.Kind != "counter" || d.CounterDomain != metrics.DecimalCounterDomain || d.Environment != f["environment"] || d.Source.Resource == nil || d.Source.Resource.Kind != "host" || d.Source.Resource.ID != "cpu-host" || s.Name != name || s.Unit != unit || s.SchemaURL != measurements.HostMetricsSchema || len(d.Source.Services) != 0 || d.Source.Namespace != nil || !reflect.DeepEqual(s.Attributes, attributes) || !chBasis(r) || r.Counters == nil || r.Gauges != nil || r.Stocks != nil || r.Histograms != nil {
 		return false
 	}
 	expected := []psMap{}
@@ -100,39 +105,7 @@ func ctRaw(f psMap, r *measurements.Result) bool {
 	}
 	return true
 }
-func ctOK(d psMap) bool {
-	f := psObj(d["facts"])
-	defaults := psArr(d["defaults"])
-	if len(defaults) != 2 {
-		return false
-	}
-	counterSeen := 0
-	for _, v := range defaults {
-		var r measurements.Result
-		if !rsDecode(v, &r) {
-			return false
-		}
-		if r.Counters != nil {
-			counterSeen++
-			if !ctRaw(f, &r) {
-				return false
-			}
-		} else if !hrRaw(f, &r) {
-			return false
-		}
-	}
-	if counterSeen != 1 {
-		return false
-	}
-	var individual measurements.Result
-	if !rsDecode(d["individual"], &individual) || !ctRaw(f, &individual) {
-		return false
-	}
-	var page exploration.CapturePage
-	if !rsDecode(d["saved"], &page) || page.Measurement == nil || !ctRaw(f, page.Measurement) || !peLiveCaptureHash(page) {
-		return false
-	}
-	contexts := psArr(d["context"])
+func hostRateContexts(f psMap, contexts []any) bool {
 	if len(contexts) != 2 {
 		return false
 	}
@@ -190,6 +163,43 @@ func ctOK(d psMap) bool {
 		if len(expected) != 0 {
 			return false
 		}
+	}
+	return true
+}
+func ctOK(d psMap) bool {
+	f := psObj(d["facts"])
+	defaults := psArr(d["defaults"])
+	if len(defaults) != 2 {
+		return false
+	}
+	counterSeen := 0
+	for _, v := range defaults {
+		var r measurements.Result
+		if !rsDecode(v, &r) {
+			return false
+		}
+		if r.Counters != nil {
+			counterSeen++
+			if !ctRaw(f, &r) {
+				return false
+			}
+		} else if !hrRaw(f, &r) {
+			return false
+		}
+	}
+	if counterSeen != 1 {
+		return false
+	}
+	var individual measurements.Result
+	if !rsDecode(d["individual"], &individual) || !ctRaw(f, &individual) {
+		return false
+	}
+	var page exploration.CapturePage
+	if !rsDecode(d["saved"], &page) || page.Measurement == nil || !ctRaw(f, page.Measurement) || !peLiveCaptureHash(page) {
+		return false
+	}
+	if !hostRateContexts(f, psArr(d["context"])) {
+		return false
 	}
 	sources, hostPlans, nativeReads, captures := 0, 0, 0, 0
 	for _, v := range psArr(d["requests"]) {

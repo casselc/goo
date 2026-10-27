@@ -2862,3 +2862,38 @@ The final pinned-profile cumulative-only refusal guard was deployed after browse
 model acceptance. Final source/HTTP checks pass; one real source reexecution of
 the original fixed question has identical rows/counters. Browser/model runs were
 not repeated for this refusal-only guard. See [evidence](../docs/evidence/cpu-time-211.json).
+
+
+## Host network throughput (212)
+
+`TestHegelNetworkByteAdmission` draws safe-boundary and fractional raw byte values;
+`TestHegelNetworkOwnerSchedules` draws actual JavaScript-owner first-reply/
+withdrawal/release schedules. Eight examples each pass in 0.931s. The deterministic
+unit transport is distinct from live held-response acceptance. No duplicate
+execution state machine or fixed swarm quota was added.
+
+`TestHostNetworkObserved` passes in 0.10s with seven rejected controls. It reuses
+independent raw/std-SHA/rational-interval and host-context helpers extracted from
+the CPU-time oracle. Both directions, exact six interval cases, common 0–1024
+By/s plot scales/unknowns, exact record AST/raw membership, issued source budgets
+and complete unchanged 10,082-byte capture are checked. The prior CPU raw oracle
+still passes (0.09s); the production rate evaluator is not an expected-value oracle.
+
+`TestQuintHostNetworkObserved` passes in 14.01s: one actual seven-step main trace
+plus one rejected bad local-read trace. This validates observed effect ordering
+and counts, not arbitrary concurrency. The live closure case (8.9s), ambiguity/
+interface case (15.7s) and bounded actor (31.9s, 282 snapshots, phases 0–8) are
+separate evidence. All acceptance campaigns passed on their first execution.
+
+```sh
+# From verification/, with the existing pinned tools/cache settings:
+export GOO_HOST_NETWORK_LEDGER=/workspace/goo/artifacts/host-network/host-network-3daa78a5ba/ledger.json
+go test -run '^TestHostNetworkObserved$' -v .
+go test -run '^TestQuintHostNetworkObserved$' -v .
+go test -run '^TestHegelNetwork' -v .
+```
+
+See [evidence](../docs/evidence/host-network-212.json) for actual receipts, exact
+source costs, byte-domain limits, frame hashes and declared source/model scope.
+
+Final display follow-up: charts now disclose when the existing 200-point presentation cap omits observations or intervals. A focused 201-interval renderer check verifies the count, retained full result, and unchanged shared scale; both focused Node test files passed (0.311 s). This omission-only branch was added after the successful live campaigns; those campaigns and their screenshots were not rerun.

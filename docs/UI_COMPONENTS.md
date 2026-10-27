@@ -1131,3 +1131,11 @@ resource view adapters. Interval labels use CPU-seconds/s and UTC; exact decimal
 delta/rational rate belongs to selected evidence. Unknown/reset regions remain
 unknown, with no interpolation or older fallback headline. No new generic
 component or lifecycle source effect is introduced. See [contract](CPU_TIME_RATES.md).
+
+
+The 212 Network app adapter owns source effects and interface/ambiguity choices.
+It reuses resource cards, evidence disclosures, native inspection and
+`goo-value-timeline`. The passive resource presenter adds compact byte-rate
+formatting (including tiny nonzero values) and an optional supplied chart domain.
+Two direction charts receive a common domain, while exact values/units, clocks
+and unknowns remain independent. No reusable lifecycle starts a source read.

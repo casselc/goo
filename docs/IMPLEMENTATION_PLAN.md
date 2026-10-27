@@ -1462,3 +1462,20 @@ pass. [Journey 211](../journeys/211-cpu-time-storyboard.md) and
 [evidence](evidence/cpu-time-211.json) record exact scope and the final
 cumulative-only admission followup. Container CPU-time adoption and broader
 counter/window composition remain separate contracts.
+
+
+## 212 — Explicit host network throughput accepted
+
+Network expands beneath unchanged CPU/memory defaults. One exact interface may
+load an unambiguous receive/transmit pair (at most two reads); multiple interfaces,
+duplicate directions and incomplete metadata remain explicit. Independent streams
+share a rate scale, retain reset/gap/missing unknowns, and reuse native interval
+record investigation and individual capture/offline reopen. The pinned OTel
+network byte profile certifies whole safe byte tallies and cumulative temporality;
+no interface total, capacity percentage, saturation or disk I/O is inferred.
+
+Source/presentation reviews, full Go, 101 Node files, proxy/startup/API, Hegel,
+real OTLP main/owner/ambiguity journeys, Bombadil and independent raw/Quint checks
+pass. [Journey 212](../journeys/212-host-network-storyboard.md) and
+[evidence](evidence/host-network-212.json) record concrete checks, source costs,
+reviewed frames, capture bytes and finite proof boundaries.
