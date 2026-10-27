@@ -1070,3 +1070,12 @@ qualifier-state-to-predicate conversion are centralized in kubernetes-context.js
 Kubernetes owns local filtering and navigation; existing record owners execute,
 capture and restore fixed questions. Shared readiness rendering adds a literal
 container cue without changing the passive component, source or stored bytes.
+
+[Container memory context](CONTAINER_MEMORY.md) extends scalar resource authority
+without changing service kernels: literal container/pod/name identity and exact
+raw streams → existing metadata/planning → explicit independent gauge reads → a
+pure Go replay-validating composer. Full context qualifiers govern independent
+display, while stricter resource/schema/attribute/time/domain/policy proof governs
+percentages. No SQL join or fabricated denominator is introduced. The browser
+owner retains up to four explicitly discovered variants and selects at most
+three reads; shared table/bar/UTC primitives only render supplied values.

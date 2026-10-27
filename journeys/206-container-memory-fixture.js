@@ -1,0 +1,21 @@
+// Generated ordinary OTLP; not a running kubeletstats/k8scluster receiver or Kubernetes agent.
+const previous=require('./202-pod-memory-fixture'),{randomBytes}=require('node:crypto');
+const scopes={workingSet:'github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver',request:'github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver',limit:'github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver'};
+const names={workingSet:'container.memory.working_set',request:'k8s.container.memory_request',limit:'k8s.container.memory_limit'},clusterSchema='https://opentelemetry.io/schemas/1.18.0';
+function fixture(){
+ const toMs=Date.now(),environment='container-memory-'+randomBytes(5).toString('hex'),primary={'deployment.environment.name':environment,'k8s.cluster.uid':'cluster-a','k8s.cluster.name':'shared-cluster','k8s.namespace.name':'team-a','k8s.pod.uid':'pod-a','k8s.pod.name':'same-pod','container.id':'container-a','k8s.container.name':'worker','telemetry.sdk.language':'python'};
+ const facts={environment,fromMs:toMs-120000,toMs,primary,schemaURL:clusterSchema,scopes,names,points:[],records:[]};
+ function point(role,value,options={}){const resource={...primary,...options.resource};for(const key of options.missingResource||[])delete resource[key];facts.points.push({kind:options.kind||'gauge',family:options.kind||'gauge',role,metric:options.metric||names[role],unit:options.unit??'By',value:String(value),valueType:options.double?'double':'int',resource,resourceSchemaURL:options.resourceSchemaURL??clusterSchema,schemaURL:options.schemaURL??'',scope:options.scope||scopes[role],version:options.version||'0.137.0',attributes:options.attributes||{},flags:options.flags||0,startNS:'0',endNS:String(BigInt(toMs-(options.age||3000))*1000000n),temporality:2,monotonic:false,case:options.case||'primary'});}
+ // Realistic receiver variants have different raw schema/map identities: independent values only.
+ point('workingSet',32768,{resourceSchemaURL:'',resource:{'k8s.node.name':'node-a'},case:'primary-working-set'});point('request',65536,{case:'primary-request'});point('limit',131072,{case:'primary-limit'});
+ const cases=[['aligned',32768,65536,131072],['zero-denominator',32768,0,0],['partial',32768,null,null],['negative',-1,65536,131072],['fractional',1.5,65536,131072],['unsafe','9007199254740992',65536,131072],['stale',32768,65536,131072],['conflict',32768,65536,131072],['missing',32768,65536,131072],['time-mismatch',32768,65536,131072],['attributes-mismatch',32768,65536,131072]];
+ for(const [label,working,request,limit] of cases){const resource={'container.id':label,'k8s.pod.uid':'pod-'+label},values={workingSet:working,request,limit};for(const role of ['workingSet','request','limit']){const value=values[role];if(value===null)continue;const options={resource,case:label,double:label==='fractional'&&role==='workingSet',age:label==='stale'?90000:label==='time-mismatch'&&role!=='workingSet'?4000:3000,flags:label==='missing'&&role==='workingSet'?1:0,attributes:label==='attributes-mismatch'&&role!=='workingSet'?{'reported.variant':'other'}:{}};point(role,value,options);if(label==='conflict'&&role==='workingSet')point(role,16384,options);}}
+ // Same pod/name with a replacement ID must not join the primary authority.
+ for(const role of ['workingSet','request','limit'])point(role,999999,{resource:{'container.id':'container-replacement'},case:'replacement-id'});
+ point('workingSet',111,{resourceSchemaURL:'',resource:{'container.id':'container-a','k8s.cluster.uid':'cluster-b'},case:'wrong-cluster'});
+ point('workingSet',112,{resourceSchemaURL:'',resource:{'container.id':'container-a','k8s.namespace.name':'team-b'},case:'wrong-namespace'});
+ point('workingSet',113,{resource:{'container.id':''},case:'empty-container-id'});point('workingSet',114,{missingResource:['container.id'],case:'missing-container-id'});
+ for(const [label,options] of [['wrong-scope',{scope:'kubeletstatsreceiver'}],['wrong-version',{version:'v0.137.0'}],['wrong-unit',{unit:'MiBy'}],['wrong-schema',{schemaURL:clusterSchema}],['wrong-kind',{kind:'sum'}]])point('workingSet',117,{...options,resource:{'container.id':label},case:label});
+ return facts;
+}
+module.exports={...previous,fixture,scopes,names,clusterSchema};

@@ -27,8 +27,9 @@ verified ownership.
 ## State contract
 
 Use `kind: state`, `stateProfile: k8scluster-container-ready/0.137.0`, and
-`grain: per-stream`. This initial container authority admits only this readiness
-state profile, not scalar gauges, stocks, counters, histograms or lifecycle data.
+`grain: per-stream`. Readiness uses only this pinned state profile. Separate explicit scalar container
+gauges now support [container memory context](CONTAINER_MEMORY.md); stocks,
+counters, histograms and lifecycle data remain unsupported by this authority.
 It requires an exact stream, empty service selection and no namespace selector.
 It fabricates no service/instance labels.
 

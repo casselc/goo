@@ -16,6 +16,7 @@ import (
 )
 
 func registerMeasurements(mux *http.ServeMux, source measurements.Source, dir string) {
+	registerContainerMemoryView(mux)
 	registerHostMeasurements(mux, source)
 	registerPodMeasurements(mux, source)
 	packagesDir := filepath.Join(dir, "measurement-packages")

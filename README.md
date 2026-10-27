@@ -337,3 +337,11 @@ qualified workload filtering and explicit cross-pod log/span drilldown to
 Kubernetes observations. Deployment/ReplicaSet and Job/CronJob remain independent
 reported attributes. Readiness cards expose compact literal container identity.
 [Journey 205](journeys/205-workload-context-storyboard.md) tracks acceptance.
+
+
+[Container memory context](docs/CONTAINER_MEMORY.md) explicitly loads working
+set, request and limit observations on a shared byte scale. Choose exact reported
+source variants and signals; existing automatic defaults stay bounded. Each
+signal retains its own quality/UTC, and percentages require strict replay-backed
+alignment. [Journey 206](journeys/206-container-memory-storyboard.md) tracks source
+and ordinary OTLP/browser acceptance.

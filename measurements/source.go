@@ -248,9 +248,10 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 	ss := []metrics.StockPoint{}
 	d := q.Definition
 	for rowIndex, raw := range copied {
-		if d.Kind == "state" {
+		strictContainerGauge := d.Kind == "gauge" && d.Source.Resource != nil && d.Source.Resource.Kind == "kubernetes-container"
+		if d.Kind == "state" || strictContainerGauge {
 			validationRaw := raw
-			if d.StateProfile == metrics.ContainerReadyProfile {
+			if d.StateProfile == metrics.ContainerReadyProfile || strictContainerGauge {
 				validationRaw = rows[rowIndex]
 			}
 			var fields map[string]json.RawMessage
@@ -261,10 +262,14 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 				value, exists := fields[key]
 				var known string
 				if !exists || string(value) == "null" || json.Unmarshal(value, &known) != nil {
-					return nil, fmt.Errorf("state source requires known string %s", key)
+					prefix := "state"
+					if strictContainerGauge {
+						prefix = "container gauge"
+					}
+					return nil, fmt.Errorf("%s source requires known string %s", prefix, key)
 				}
 			}
-			if d.StateProfile == metrics.ContainerReadyProfile {
+			if d.StateProfile == metrics.ContainerReadyProfile || strictContainerGauge {
 				// Empty maps and a zero flag are reported values, not defaults
 				// for absent/null source fields at this new authority boundary.
 				for _, key := range []string{"resource", "attributes"} {
@@ -384,7 +389,9 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 			r.Stocks, e = metrics.EvaluateStocks(fromNS, toNS, ns(d.MaxGapMS), ss)
 		}
 	case "gauge":
-		if d.Source.Resource != nil && d.Source.Resource.Kind == "kubernetes-pod" {
+		if d.Source.Resource != nil && d.Source.Resource.Kind == "kubernetes-container" {
+			r.Gauges, e = metrics.EvaluateContainerGauges(fromNS, toNS, ns(d.MaxGapMS), d.Source.Resource.ID, gs)
+		} else if d.Source.Resource != nil && d.Source.Resource.Kind == "kubernetes-pod" {
 			r.Gauges, e = metrics.EvaluatePodGauges(fromNS, toNS, ns(d.MaxGapMS), d.Source.Resource.ID, gs)
 		} else if d.Source.Resource != nil {
 			r.Gauges, e = metrics.EvaluateHostGauges(fromNS, toNS, ns(d.MaxGapMS), d.Source.Resource.ID, gs)

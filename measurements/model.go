@@ -183,7 +183,7 @@ func (d Definition) Validate() error {
 				return fmt.Errorf("pod resource binding requires gauge or state, exact stream, per-stream grain and no service or namespace selector")
 			}
 		} else if r.Kind == "kubernetes-container" {
-			if r.ID == "" || !text(r.ID, 512) || d.Kind != "state" || d.StateProfile != metrics.ContainerReadyProfile || len(d.Source.Services) != 0 || d.Source.Namespace != nil || d.Source.ExactStream == nil || d.Grain != "per-stream" {
+			if r.ID == "" || !text(r.ID, 512) || (d.Kind != "gauge" && (d.Kind != "state" || d.StateProfile != metrics.ContainerReadyProfile)) || len(d.Source.Services) != 0 || d.Source.Namespace != nil || d.Source.ExactStream == nil || d.Grain != "per-stream" {
 				return fmt.Errorf("container authority requires exact per-stream readiness state and no service or namespace selectors")
 			}
 			for _, key := range []string{"k8s.pod.uid", "k8s.container.name"} {

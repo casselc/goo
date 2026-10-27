@@ -12016,3 +12016,38 @@ and [compact receipt](docs/evidence/workload-context-205.json) contain exact
 artifact paths, frame hashes, operation budgets and honest limits. Temporary
 helpers are removed; normal retention preserves current evidence and actor
 diagnostics while expiring only old browser recordings. Data/traffic unchanged.
+
+## Container memory context — source gates (206)
+
+Added explicit scalar container gauges and three pinned receiver memory roles,
+listed only as explicit candidates. The pure 8 MiB-bounded composer replays held
+results, preserves each clock/basis and original qualified container context,
+then certifies exact raw byte domain before strict aligned percentages. Independent
+maps/schemas remain separately useful values. Invalid byte-domain display retains
+original observationState; missing inputs and zero denominators are not inferred
+capacity. Automatic defaults and individual capture formats are unchanged.
+
+All four affected Go suites pass: metrics 0.671s, measurements 1.596s,
+exploration 2.298s, cmd/goo 2.708s. Twelve new frozen HTTP cases add eleven JSON
+responses, five admitted requests and one method refusal; pure cancellation and
+fresh individual capture/offline exact-byte reopen pass. OpenAPI has 81 Go/88
+total operations and 502 schemas; 406 responses, 149 admitted requests and 26 mux
+refusals plus percentage/signal/SSE negative controls pass. The first parallel
+checker ran before expected fixture counters were updated and reported only the
+new 406/149 totals; final exact counters and controls pass without fixture
+weakening.
+
+All 97 Node test files pass (10.40s). Subsequent focused cases verify preserved
+explicit stream/skip intent, automatic unique-to-ambiguous refusal, separate
+invalid/stale rendering and the updated actual Go wire fixture. All 23 Python
+startup/proxy tests pass (11.65s), including static modules and exact 8 MiB pure
+proxy admission/refusal. Hegel passes on its first focused run (0.482s): eight
+generated contexts × 22 modes plus full three-role compositions, independent
+rational arithmetic, zero/missing/stale/conflict/raw precision and identity/time/
+schema/attribute/freshness refusals, unchanged raw input and independent clocks.
+
+Independent source review approves the final deterministic planner, payload and
+strict decimal/ID bounds, lifecycle and percentage gates. The source research
+pins nine upstream files and their hashes. Live OTLP/browser/owner/actor/raw-
+custody acceptance is pending at this source freeze. No real receiver/Kubernetes
+API/RBAC, full inventory, transactional snapshot, health or CPU claim is made.

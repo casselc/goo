@@ -1077,3 +1077,11 @@ mapping; display elements do not query or infer controller relationships. The
 shared state app renderer exposes a wrapping full literal container name/ID cue
 for defaults/native/frozen evidence, independent of its generic passive category
 component. No new component or automatic read is required.
+
+The container-memory app owner explicitly discovers chosen held resource
+variants, preserves deliberate per-role choices/skips, and loads at most three
+signals before the pure composer. Its supplied display adapter reuses goo-table,
+GooComparisonVisual byte bars, byteSI and exact UTC primitives. It owns no fetch,
+join eligibility or capture operation. The app retains request cancellation and
+native Back; stale invalid bytes retain both display-domain and observation
+quality labels. No new passive component or lifecycle subscription is added.

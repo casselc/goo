@@ -62,7 +62,8 @@ func TestContainerReadinessRefusesBroadeningAndPrecisionLoss(t *testing.T) {
 		func(q *Question) { q.Definition.Source.ExactStream = nil },
 		func(q *Question) {
 			q.Definition.Kind = "gauge"
-			q.Definition.StateProfile = ""
+			// Scalar container gauges are now explicit authority, but a state
+			// profile cannot be carried into a scalar package as an alias.
 			q.Definition.Source.Unit = "1"
 			q.Definition.Source.ExactStream.Unit = "1"
 		},

@@ -16,6 +16,7 @@ type PodDashboardRequest struct {
 	Discovery PodMetricDiscovery `json:"discovery"`
 }
 type PodMetricWidget struct {
+	Role     string   `json:"role,omitempty"`
 	Key      string   `json:"key"`
 	Title    string   `json:"title"`
 	State    string   `json:"state"`
@@ -37,6 +38,9 @@ type PodDashboardPlan struct {
 }
 
 func podMetricProfile(i Instrument) string {
+	if role := ContainerMemoryRole(i); role != "" {
+		return containerMemoryProfile(role)
+	}
 	if i.Kind == "gauge" && i.Temporality == 0 && !i.Monotonic && (metrics.ValidatePodPhaseStream(metrics.Stream{Scope: i.Scope, Version: i.Version, SchemaURL: i.SchemaURL, Name: i.Metric, Unit: i.Unit}) == nil || metrics.ValidateContainerReadyStream(metrics.Stream{Scope: i.Scope, Version: i.Version, SchemaURL: i.SchemaURL, Name: i.Metric, Unit: i.Unit}) == nil) {
 		return PodClusterProfile
 	}
@@ -102,7 +106,7 @@ func PlanPodDashboard(input PodDashboardRequest) (*PodDashboardPlan, error) {
 		def := i.Definition
 		expectedKind := i.Kind
 		resourceKind, resourceID := "kubernetes-pod", q.Resource["k8s.pod.uid"]
-		if i.Metric == "k8s.container.ready" {
+		if i.Metric == "k8s.container.ready" || ContainerMemoryRole(i) != "" {
 			resourceKind, resourceID = "kubernetes-container", q.Resource["container.id"]
 		}
 		if profile == PodClusterProfile {
@@ -134,6 +138,10 @@ func PlanPodDashboard(input PodDashboardRequest) (*PodDashboardPlan, error) {
 			selected.Title = ""
 			selected.Name = "pod-observation-" + Hash(selected)[:24]
 			selected.Title = "Pod memory usage"
+			role := ContainerMemoryRole(i)
+			if role != "" {
+				selected.Title = containerMemoryTitle(role)
+			}
 			if profile == PodClusterProfile {
 				selected.Title = "Reported pod phase"
 				if i.Metric == "k8s.container.ready" {
@@ -170,33 +178,40 @@ func PlanPodDashboard(input PodDashboardRequest) (*PodDashboardPlan, error) {
 				family = "working-set"
 				title = "Pod memory working set"
 			}
+			if role != "" {
+				family = "container-memory-" + role
+				title = containerMemoryTitle(role)
+			}
 			grain := "pod-resource-stream"
 			if resourceKind == "kubernetes-container" {
 				grain = "container-resource-stream"
 			}
-			all = append(all, candidate{widget: PodMetricWidget{Key: Hash(question), Title: title, State: "candidate", Profile: profile, Grain: grain, Question: question}, family: family})
+			all = append(all, candidate{widget: PodMetricWidget{Role: role, Key: Hash(question), Title: title, State: "candidate", Profile: profile, Grain: grain, Question: question}, family: family})
 		}
 	}
-	rank := map[string]int{PodReceiverProfile: 0, PodSemconvProfile: 1, PodClusterProfile: 2}
+	rank := map[string]int{PodReceiverProfile: 0, PodSemconvProfile: 1, PodClusterProfile: 2, ContainerMemoryKubeletProfile: 3, ContainerMemoryClusterProfile: 4}
 	sort.Slice(all, func(a, b int) bool {
 		left, right := all[a], all[b]
 		if left.widget.Profile != right.widget.Profile {
 			return rank[left.widget.Profile] < rank[right.widget.Profile]
 		}
 		if left.family != right.family {
-			familyRank := map[string]int{"usage": 0, "working-set": 1, "phase": 2, "readiness": 3}
+			familyRank := map[string]int{"usage": 0, "working-set": 1, "phase": 2, "readiness": 3, "container-memory-working-set": 4, "container-memory-request": 5, "container-memory-limit": 6}
 			return familyRank[left.family] < familyRank[right.family]
 		}
 		return left.widget.Key < right.widget.Key
 	})
 	defaultProfile := ""
-	if len(all) > 0 {
-		defaultProfile = all[0].widget.Profile
+	for _, candidate := range all {
+		if candidate.widget.Role == "" {
+			defaultProfile = candidate.widget.Profile
+			break
+		}
 	}
 	families := map[string]bool{}
 	defaultKeys := map[string]bool{}
 	for _, c := range all {
-		if c.widget.Profile == defaultProfile && !families[c.family] && len(defaultKeys) < 2 {
+		if c.widget.Role == "" && c.widget.Profile == defaultProfile && !families[c.family] && len(defaultKeys) < 2 {
 			defaultKeys[c.widget.Key] = true
 			families[c.family] = true
 		}

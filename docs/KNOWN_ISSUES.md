@@ -1,5 +1,11 @@
 # Known issues and gaps
 
+[Container memory context](CONTAINER_MEMORY.md) is implemented in source with
+explicit selected-source reads; live acceptance is pending. Receiver resource
+maps/schemas/times normally differ, so independent bytes are useful while
+percentages remain unavailable. Missing/zero requests or limits never mean
+unlimited. CPU/throttling and workload aggregation remain separate.
+
 [Reported workload context](KUBERNETES_WORKLOAD_CONTEXT.md) uses literal resource
 attributes, with local exact-context facets and explicit matching-record queries.
 Source and ordinary OTLP/browser, owner, actor and raw/custody acceptance pass. No controller

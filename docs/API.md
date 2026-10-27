@@ -931,3 +931,13 @@ than becoming missing. Existing `/pod-metric-discovery` and `/pod-dashboard/plan
 now recognize exact container-bearing variants. Readiness widgets use
 `container-resource-stream` grain and container authority; phase and memory retain
 pod grain. No new endpoint or comparison format is added.
+
+`POST /container-memory/view` is a pure 8 MiB-bounded composition of `parent`
+(known-schema exact container resource context) and optional `workingSet`,
+`request`, `limit` native gauge results. Every result is replay-validated and
+retains its exact source question, read clock and basis. Fixed three-row output
+separates byte-domain display state from optional original `observationState`;
+valid bytes and certified percentages are exact strings, with rounded percentage
+text supplied separately. It performs no source read or custody publication.
+Existing pod metadata/plan routes expose pinned container memory role candidates
+only; they never add automatic widgets. See [contract](CONTAINER_MEMORY.md).

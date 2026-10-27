@@ -81,7 +81,9 @@ def check(spec):
                 requests += 1
                 if isinstance(request, dict):
                     accepted.append((shape, request))
-    assert responses == 395 and requests == 144 and mux_refusals == 25, (responses, requests)
+    # The 12 container-memory cases add 11 JSON responses, 5 accepted
+    # requests and one method-mux refusal to the previous 395/144/25.
+    assert responses == 406 and requests == 149 and mux_refusals == 26, (responses, requests, mux_refusals)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)
@@ -113,6 +115,16 @@ def check(spec):
         wrong=copy.deepcopy(pool_view);wrong['utilization']=change
         assert list(validator(spec,pool_view_shape).iter_errors(wrong)), 'Pool-view utilization control accepted'
     assert pool_view['utilization']['state']=='observed' and pool_view['utilization']['numerator']=='1' and pool_view['utilization']['denominator']=='1'
+    memory_cases=json.loads((ROOT/'testdata/http/container-memory.json').read_text())['cases']
+    memory=next(json.loads(c['response']) for c in memory_cases if c['name']=='aligned-three-signals')
+    memory_shape={'$ref':'#/components/schemas/ContainerMemoryView'}
+    for change in ({'state':'observed'},{'state':'observed','value':50,'text':'50.0%'},{'state':'unavailable','reason':'missing','value':'0'},{'state':'healthy'}):
+        wrong=copy.deepcopy(memory);wrong['percentages']['request']=change
+        assert list(validator(spec,memory_shape).iter_errors(wrong)), 'Container memory percentage control accepted'
+    for field,value in (('value',50),('value','-1'),('observationState','healthy'),('role','pod-total')):
+        wrong=copy.deepcopy(memory);wrong['signals'][0][field]=value
+        assert list(validator(spec,memory_shape).iter_errors(wrong)), 'Container memory signal control accepted'
+
     host_cases=json.loads((ROOT/'testdata/http/host.json').read_text())['cases']
     host_plan=next(json.loads(c['response']) for c in host_cases if c['name']=='host-plan')
     host_plan_shape={'$ref':'#/components/schemas/HostDashboardPlan'}

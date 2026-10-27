@@ -199,7 +199,11 @@ func discoverPodMetricRows(q PodMetricDiscoveryQuestion, rows []json.RawMessage)
 		coverage := observedCoverage(*i, observations[key])
 		clusterState := podMetricProfile(*i) == PodClusterProfile
 		ready := clusterState && i.Metric == "k8s.container.ready"
+		memoryRole := ContainerMemoryRole(*i)
 		i.Supported = clusterState || i.Kind == "gauge" && i.Scope != "" && i.Metric != "" && i.Unit != "" && i.Temporality == 0
+		if memoryRole != "" && (q.Resource["container.id"] == "" || q.Resource["k8s.container.name"] == "") {
+			i.Supported = false
+		}
 		if i.Supported && len(coverage.Streams) > 0 {
 			stream := coverage.Streams[0].Stream
 			def := Definition{APIVersion: Version, Name: "pod-metric-" + key[:12], Title: i.Metric, Kind: "gauge", Environment: q.Environment, LookbackMinutes: 2, MaxGapMS: 60000, Grain: "per-stream", Source: Binding{Resource: &ResourceBinding{Kind: "kubernetes-pod", ID: q.Resource["k8s.pod.uid"]}, Services: []string{}, Scope: i.Scope, Version: i.Version, SchemaURL: i.SchemaURL, Metric: i.Metric, Unit: i.Unit, ExactStream: &stream}}
@@ -212,6 +216,10 @@ func discoverPodMetricRows(q PodMetricDiscoveryQuestion, rows []json.RawMessage)
 					def.Source.Resource = &ResourceBinding{Kind: "kubernetes-container", ID: q.Resource["container.id"]}
 					def.Title = "Reported container readiness"
 				}
+			}
+			if memoryRole != "" {
+				def.Source.Resource = &ResourceBinding{Kind: "kubernetes-container", ID: q.Resource["container.id"]}
+				def.Title = containerMemoryTitle(memoryRole)
 			}
 			if def.Validate() == nil {
 				i.Definition = &def

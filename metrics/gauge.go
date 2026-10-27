@@ -52,6 +52,22 @@ func EvaluatePodGauges(fromText, toText, maxAgeText, podUID string, points []Gau
 	}
 	return evaluateResourceGauges(fromText, toText, maxAgeText, "k8s.pod.uid", podUID, points)
 }
+
+// EvaluateContainerGauges preserves actual container identity without synthesizing
+// service labels. Pod UID and container name remain required reported context.
+func EvaluateContainerGauges(fromText, toText, maxAgeText, containerID string, points []GaugePoint) (*GaugeResult, error) {
+	if err := validateHostObservationID(containerID); err != nil {
+		return nil, fmt.Errorf("require a nonempty bounded container ID")
+	}
+	for _, point := range points {
+		for _, key := range []string{"k8s.pod.uid", "k8s.container.name"} {
+			if err := validateHostObservationID(point.Stream.Resource[key]); err != nil {
+				return nil, fmt.Errorf("container gauge requires reported %s", key)
+			}
+		}
+	}
+	return evaluateResourceGauges(fromText, toText, maxAgeText, "container.id", containerID, points)
+}
 func evaluateResourceGauges(fromText, toText, maxAgeText, key, id string, points []GaugePoint) (*GaugeResult, error) {
 	canonical := make([]GaugePoint, len(points))
 	for index, point := range points {
