@@ -3541,6 +3541,64 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/container-resources/history": {
+      "post": {
+        "operationId": "post_container_resources_history",
+        "summary": "POST /container-resources/history",
+        "tags": [
+          "container-resources"
+        ],
+        "description": "Current owner: cmd/goo/container_resource_history_http.go. Effect: pure-plan-or-supplied-summary. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/container_resource_history_http.go",
+        "x-effects": "pure-plan-or-supplied-summary",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContainerResourceHistory"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContainerResourceHistoryRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 8388608,
+        "x-browser-body-limit-bytes": 8388608,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/dashboards/plan": {
       "post": {
         "operationId": "post_dashboards_plan",
@@ -6325,6 +6383,19 @@
         "anyOf": [
           {
             "$ref": "#/components/schemas/measurements.ContainerMemoryViewRequestInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "ContainerResourceHistory": {
+        "$ref": "#/components/schemas/measurements.ContainerResourceHistory"
+      },
+      "ContainerResourceHistoryRequest": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.ContainerResourceHistoryRequestInput"
           },
           {
             "type": "null"
@@ -18557,6 +18628,64 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.Binding"
       },
+      "measurements.ContainerCPUHistoryResultsInput": {
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/measurements.ResultInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "request": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/measurements.ResultInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/measurements.ResultInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.ContainerCPUHistoryResults"
+      },
       "measurements.ContainerCPUPercentage": {
         "properties": {
           "reason": {
@@ -18838,6 +18967,64 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.ContainerCPUViewRequest"
       },
+      "measurements.ContainerMemoryHistoryResultsInput": {
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/measurements.ResultInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "request": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/measurements.ResultInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "workingSet": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/measurements.ResultInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.ContainerMemoryHistoryResults"
+      },
       "measurements.ContainerMemoryPercentage": {
         "properties": {
           "reason": {
@@ -19115,6 +19302,443 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.ContainerMemoryViewRequest"
+      },
+      "measurements.ContainerResourceHistory": {
+        "properties": {
+          "parent": {
+            "$ref": "#/components/schemas/measurements.PodMetricDiscoveryQuestion"
+          },
+          "series": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/measurements.ContainerResourceHistorySeries"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxItems": 6
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/container-resources-history/v1"
+          },
+          "warnings": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "version",
+          "parent",
+          "series",
+          "warnings"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.ContainerResourceHistory",
+        "additionalProperties": false
+      },
+      "measurements.ContainerResourceHistoryPoint": {
+        "properties": {
+          "atNS": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20
+          },
+          "observationReason": {
+            "type": "string"
+          },
+          "observationState": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "stale",
+              "unknown"
+            ]
+          },
+          "rawRowIndices": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "minItems": 1,
+            "maxItems": 10000,
+            "uniqueItems": true,
+            "items": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9999
+            }
+          },
+          "reason": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "stale",
+              "unknown",
+              "invalid"
+            ]
+          },
+          "value": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]*[1-9])?$",
+            "maxLength": 512
+          }
+        },
+        "required": [
+          "atNS",
+          "state",
+          "observationState",
+          "rawRowIndices"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.ContainerResourceHistoryPoint",
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "enum": [
+                    "unknown",
+                    "invalid"
+                  ]
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "not": {
+                "required": [
+                  "value"
+                ]
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "enum": [
+                    "observed",
+                    "stale"
+                  ]
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "required": [
+                "value"
+              ]
+            }
+          }
+        ]
+      },
+      "measurements.ContainerResourceHistoryRequestInput": {
+        "additionalProperties": false,
+        "properties": {
+          "cpu": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/measurements.ContainerCPUHistoryResultsInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "memory": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/measurements.ContainerMemoryHistoryResultsInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "parent": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.PodMetricDiscoveryQuestionInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.ContainerResourceHistoryRequest",
+        "anyOf": [
+          {
+            "required": [
+              "memory"
+            ],
+            "properties": {
+              "memory": {
+                "not": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          {
+            "required": [
+              "cpu"
+            ],
+            "properties": {
+              "cpu": {
+                "not": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "measurements.ContainerResourceHistorySeries": {
+        "properties": {
+          "basis": {
+            "type": "string"
+          },
+          "family": {
+            "type": "string",
+            "enum": [
+              "memory",
+              "cpu"
+            ]
+          },
+          "fromNS": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string",
+            "enum": [
+              "memory/working-set",
+              "memory/request",
+              "memory/limit",
+              "cpu/usage",
+              "cpu/request",
+              "cpu/limit"
+            ]
+          },
+          "maxGapNS": {
+            "type": "string"
+          },
+          "points": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/measurements.ContainerResourceHistoryPoint"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxItems": 10000
+          },
+          "question": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.Question"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "readAt": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "working-set",
+              "usage",
+              "request",
+              "limit"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "unavailable",
+              "no_data",
+              "observations"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "toNS": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "By",
+              "{cpu}"
+            ]
+          }
+        },
+        "required": [
+          "key",
+          "family",
+          "role",
+          "title",
+          "unit",
+          "state",
+          "points"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.ContainerResourceHistorySeries",
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "family": {
+                  "const": "memory"
+                }
+              },
+              "required": [
+                "family"
+              ]
+            },
+            "then": {
+              "properties": {
+                "key": {
+                  "enum": [
+                    "memory/working-set",
+                    "memory/request",
+                    "memory/limit"
+                  ]
+                },
+                "role": {
+                  "enum": [
+                    "working-set",
+                    "request",
+                    "limit"
+                  ]
+                },
+                "unit": {
+                  "const": "By"
+                },
+                "points": {
+                  "items": {
+                    "properties": {
+                      "value": {
+                        "pattern": "^(0|[1-9][0-9]*)$"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "key": {
+                  "enum": [
+                    "cpu/usage",
+                    "cpu/request",
+                    "cpu/limit"
+                  ]
+                },
+                "role": {
+                  "enum": [
+                    "usage",
+                    "request",
+                    "limit"
+                  ]
+                },
+                "unit": {
+                  "const": "{cpu}"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "observations"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "required": [
+                "question",
+                "readAt",
+                "basis",
+                "fromNS",
+                "toNS",
+                "maxGapNS"
+              ],
+              "properties": {
+                "points": {
+                  "minItems": 1
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "points": {
+                  "maxItems": 0
+                }
+              }
+            }
+          }
+        ]
       },
       "measurements.Definition": {
         "properties": {

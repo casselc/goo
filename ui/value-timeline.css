@@ -19,3 +19,5 @@ goo-value-timeline[brush]>.value-timeline-plot{cursor:crosshair;touch-action:pan
 goo-value-timeline[touch-brush]>.value-timeline-plot{touch-action:none}
 goo-value-timeline>.value-timeline-plot>.value-timeline-brush{position:absolute;inset-block:0;z-index:4;pointer-events:none;border-inline:2px solid var(--accent,#67ddbb);background:#77d9cb33}
 goo-value-timeline>.value-timeline-plot>.value-timeline-brush[hidden]{display:none}
+/* An unavailable point remains a point; only caller-supplied intervals paint a band. */
+goo-value-timeline>.value-timeline-plot>.value-timeline-mark[data-interval=false]:is([data-state=unknown],[data-state=no_data]){height:18px;width:18px;transform:translate(-50%,-50%);border-radius:50%;background:var(--surface,#17202c);line-height:16px}

@@ -358,3 +358,10 @@ reports CPU usage; no counter derivative is inferred.
 under one Kubernetes entry with shared metadata discovery and independent explicit
 loads. Each panel retains its own units, clocks and individual native inspection.
 [Journey 208](journeys/208-container-resources-storyboard.md) tracks acceptance.
+
+
+[Resource history](docs/CONTAINER_RESOURCE_HISTORY.md) adds sparse usage/request/
+limit timelines over held container evidence. Compare role observations on one
+family scale, inspect exact points and stage precise time-scoped logs/spans.
+Chart interaction stays local; existing explicit Run owns record reads.
+[Journey 209](journeys/209-container-history-storyboard.md) tracks acceptance.

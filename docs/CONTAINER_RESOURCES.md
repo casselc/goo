@@ -91,3 +91,10 @@ effects and family loaded/pending bindings; the Go raw/endpoint oracle supplies
 per-family provenance and actual metadata/late-response withdrawal evidence.
 No duplicate state/swarm machine is introduced where the UI has no pure
 execution seam. Existing Hegel properties retain the numeric-domain proof.
+
+
+[Resource history](CONTAINER_RESOURCE_HISTORY.md) extends each loaded family
+with all-timestamp raw certification, sparse shared-scale dots, local point/
+range inspection and exact contextual log/span questions. Existing summary
+and capture versions stay unchanged; the new pure history follow-up performs
+no source read. Context selection is not a gauge interval or causal join.

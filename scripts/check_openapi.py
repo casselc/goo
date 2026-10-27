@@ -81,9 +81,9 @@ def check(spec):
                 requests += 1
                 if isinstance(request, dict):
                     accepted.append((shape, request))
-    # Each 12-case container view adds 11 JSON responses, 5 accepted
-    # requests and one method-mux refusal; CPU follows memory 406/149/26.
-    assert responses == 417 and requests == 154 and mux_refusals == 27, (responses, requests, mux_refusals)
+    # The 13-case history envelope adds 12 JSON responses, 5 accepted
+    # requests and one method-mux refusal to previous417/154/27.
+    assert responses == 429 and requests == 159 and mux_refusals == 28, (responses, requests, mux_refusals)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)
@@ -134,6 +134,16 @@ def check(spec):
     for change in ({'state':'observed'},{'state':'observed','value':50,'text':'50.0%'},{'state':'unavailable','reason':'missing','value':'0'},{'state':'healthy'}):
         wrong=copy.deepcopy(cpu);wrong['percentages']['request']=change
         assert list(validator(spec,cpu_shape).iter_errors(wrong)), 'Container CPU percentage control accepted'
+
+    history_cases=json.loads((ROOT/'testdata/http/container-resource-history.json').read_text())['cases']
+    history=next(json.loads(c['response']) for c in history_cases if c['name']=='held-memory-and-cpu')
+    history_shape={'$ref':'#/components/schemas/ContainerResourceHistory'}
+    for field,value in (('value',50),('value','-1'),('state','healthy'),('observationState','fresh-when-observed'),('rawRowIndices',[]),('rawRowIndices',[0,0]),('rawRowIndices',[10000])):
+        wrong=copy.deepcopy(history);wrong['series'][0]['points'][0][field]=value
+        assert list(validator(spec,history_shape).iter_errors(wrong)), 'Resource history point control accepted'
+    for field,value in (('unit','{cpu}'),('role','usage'),('state','healthy')):
+        wrong=copy.deepcopy(history);wrong['series'][0][field]=value
+        assert list(validator(spec,history_shape).iter_errors(wrong)), 'Resource history series control accepted'
 
     host_cases=json.loads((ROOT/'testdata/http/host.json').read_text())['cases']
     host_plan=next(json.loads(c['response']) for c in host_cases if c['name']=='host-plan')

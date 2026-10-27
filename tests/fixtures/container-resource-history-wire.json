@@ -1,0 +1,1352 @@
+{
+  "request": {
+    "parent": {
+      "environment": "prod",
+      "fromMs": 100000,
+      "toMs": 160000,
+      "resource": {
+        "container.id": "containerd://literal-one",
+        "deployment.environment.name": "prod",
+        "k8s.container.name": "worker",
+        "k8s.pod.name": "same-name",
+        "k8s.pod.uid": "pod-one"
+      },
+      "resourceSchemaURL": ""
+    },
+    "memory": {
+      "workingSet": {
+        "question": {
+          "definition": {
+            "apiVersion": "goo/measurement-package/v1alpha1",
+            "name": "memory-working-set",
+            "title": "working-set",
+            "kind": "gauge",
+            "environment": "prod",
+            "lookbackMinutes": 1,
+            "maxGapMs": 20000,
+            "grain": "per-stream",
+            "source": {
+              "resource": {
+                "kind": "kubernetes-container",
+                "id": "containerd://literal-one"
+              },
+              "exactStream": {
+                "resource": {
+                  "container.id": "containerd://literal-one",
+                  "deployment.environment.name": "prod",
+                  "k8s.container.name": "worker",
+                  "k8s.pod.name": "same-name",
+                  "k8s.pod.uid": "pod-one"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "container.memory.working_set",
+                "unit": "By",
+                "attributes": {}
+              },
+              "services": [],
+              "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver",
+              "version": "0.137.0",
+              "schemaURL": "",
+              "metric": "container.memory.working_set",
+              "unit": "By"
+            }
+          },
+          "fromMs": 100000,
+          "toMs": 160000
+        },
+        "plan": {
+          "sql": "SELECT ResourceAttributes AS resource, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schema_url, ResourceSchemaUrl AS resource_schema_url, MetricName AS name, MetricUnit AS unit, Attributes AS attributes, toString(toUnixTimestamp64Nano(StartTimeUnix)) AS start_ns, toString(toUnixTimestamp64Nano(TimeUnix)) AS end_ns, Flags AS flags, toString(Value) AS value FROM otel_metrics_gauge WHERE TimeUnix\u003e=fromUnixTimestamp64Milli({p0:Int64}) AND TimeUnix\u003cfromUnixTimestamp64Milli({p1:Int64}) AND ResourceAttributes['deployment.environment.name']={p2:String} AND mapContains(ResourceAttributes,'container.id') AND ResourceAttributes['container.id']={p3:String} AND ScopeName={p4:String} AND ScopeVersion={p5:String} AND ScopeSchemaUrl={p6:String} AND MetricName={p7:String} AND MetricUnit={p8:String} AND ResourceSchemaUrl={p9:String} AND arraySort(arrayZip(mapKeys(ResourceAttributes),mapValues(ResourceAttributes)))=arraySort(JSONExtractKeysAndValues({p10:String},'String')) AND arraySort(arrayZip(mapKeys(Attributes),mapValues(Attributes)))=arraySort(JSONExtractKeysAndValues({p11:String},'String')) ORDER BY TimeUnix LIMIT 10001 FORMAT JSONEachRow",
+          "parameters": {
+            "p0": "100000",
+            "p1": "160000",
+            "p10": "{\"container.id\":\"containerd://literal-one\",\"deployment.environment.name\":\"prod\",\"k8s.container.name\":\"worker\",\"k8s.pod.name\":\"same-name\",\"k8s.pod.uid\":\"pod-one\"}",
+            "p11": "{}",
+            "p2": "prod",
+            "p3": "containerd://literal-one",
+            "p4": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver",
+            "p5": "0.137.0",
+            "p6": "",
+            "p7": "container.memory.working_set",
+            "p8": "By",
+            "p9": ""
+          },
+          "revision": "b095509af9e338bad8a6787025f92f0c706c5949f8a9cad3b6b92ed45f0b3993"
+        },
+        "readAt": "1970-01-01T00:03:22Z",
+        "basis": "61a63cf781369ce69a17d8e92c1778a81050ce4ceef467a6b7cf5e02379fa5b9",
+        "count": "5",
+        "state": "observed",
+        "warnings": [
+          "Captured observations do not establish ingestion completeness or application health. Source limits fail closed; no measurement total comes from a row page.",
+          "Streams retain complete resource, scope, metric and attribute identity. No automatic fleet merging, interpolation or averaging of percentiles.",
+          "Consumer-group observations may be repeated by multiple workers. Never sum repeated broker observations across instances."
+        ],
+        "rows": [
+          {
+            "attributes": {},
+            "bounds": null,
+            "bucket_counts": null,
+            "count": "",
+            "end_ns": "150000000000",
+            "flags": 0,
+            "monotonic": false,
+            "name": "container.memory.working_set",
+            "resource": {
+              "container.id": "containerd://literal-one",
+              "deployment.environment.name": "prod",
+              "k8s.container.name": "worker",
+              "k8s.pod.name": "same-name",
+              "k8s.pod.uid": "pod-one"
+            },
+            "resource_schema_url": "",
+            "schema_url": "",
+            "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver",
+            "start_ns": "",
+            "temporality": 0,
+            "unit": "By",
+            "value": "100",
+            "version": "0.137.0"
+          },
+          {
+            "attributes": {},
+            "bounds": null,
+            "bucket_counts": null,
+            "count": "",
+            "end_ns": "120000000000",
+            "flags": 0,
+            "monotonic": false,
+            "name": "container.memory.working_set",
+            "resource": {
+              "container.id": "containerd://literal-one",
+              "deployment.environment.name": "prod",
+              "k8s.container.name": "worker",
+              "k8s.pod.name": "same-name",
+              "k8s.pod.uid": "pod-one"
+            },
+            "resource_schema_url": "",
+            "schema_url": "",
+            "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver",
+            "start_ns": "",
+            "temporality": 0,
+            "unit": "By",
+            "value": "50",
+            "version": "0.137.0"
+          },
+          {
+            "attributes": {},
+            "bounds": null,
+            "bucket_counts": null,
+            "count": "",
+            "end_ns": "110000000000",
+            "flags": 0,
+            "monotonic": false,
+            "name": "container.memory.working_set",
+            "resource": {
+              "container.id": "containerd://literal-one",
+              "deployment.environment.name": "prod",
+              "k8s.container.name": "worker",
+              "k8s.pod.name": "same-name",
+              "k8s.pod.uid": "pod-one"
+            },
+            "resource_schema_url": "",
+            "schema_url": "",
+            "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver",
+            "start_ns": "",
+            "temporality": 0,
+            "unit": "By",
+            "value": "10",
+            "version": "0.137.0"
+          },
+          {
+            "attributes": {},
+            "bounds": null,
+            "bucket_counts": null,
+            "count": "",
+            "end_ns": "120000000000",
+            "flags": 0,
+            "monotonic": false,
+            "name": "container.memory.working_set",
+            "resource": {
+              "container.id": "containerd://literal-one",
+              "deployment.environment.name": "prod",
+              "k8s.container.name": "worker",
+              "k8s.pod.name": "same-name",
+              "k8s.pod.uid": "pod-one"
+            },
+            "resource_schema_url": "",
+            "schema_url": "",
+            "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver",
+            "start_ns": "",
+            "temporality": 0,
+            "unit": "By",
+            "value": "50.00000000000000001",
+            "version": "0.137.0"
+          },
+          {
+            "attributes": {},
+            "bounds": null,
+            "bucket_counts": null,
+            "count": "",
+            "end_ns": "140000000000",
+            "flags": 1,
+            "monotonic": false,
+            "name": "container.memory.working_set",
+            "resource": {
+              "container.id": "containerd://literal-one",
+              "deployment.environment.name": "prod",
+              "k8s.container.name": "worker",
+              "k8s.pod.name": "same-name",
+              "k8s.pod.uid": "pod-one"
+            },
+            "resource_schema_url": "",
+            "schema_url": "",
+            "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver",
+            "start_ns": "",
+            "temporality": 0,
+            "unit": "By",
+            "value": "50",
+            "version": "0.137.0"
+          }
+        ],
+        "gauges": {
+          "fromNS": "100000000000",
+          "toNS": "160000000000",
+          "series": [
+            {
+              "stream": {
+                "resource": {
+                  "container.id": "containerd://literal-one",
+                  "deployment.environment.name": "prod",
+                  "k8s.container.name": "worker",
+                  "k8s.pod.name": "same-name",
+                  "k8s.pod.uid": "pod-one"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "container.memory.working_set",
+                "unit": "By",
+                "attributes": {}
+              },
+              "state": "observed",
+              "samples": [
+                {
+                  "atNS": "110000000000",
+                  "value": 10,
+                  "state": "stale",
+                  "reason": "older than declared freshness"
+                },
+                {
+                  "atNS": "120000000000",
+                  "value": 50,
+                  "state": "stale",
+                  "reason": "older than declared freshness"
+                },
+                {
+                  "atNS": "140000000000",
+                  "state": "unknown",
+                  "reason": "no recorded value"
+                },
+                {
+                  "atNS": "150000000000",
+                  "value": 100,
+                  "state": "observed"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "request": {
+        "question": {
+          "definition": {
+            "apiVersion": "goo/measurement-package/v1alpha1",
+            "name": "memory-request",
+            "title": "request",
+            "kind": "gauge",
+            "environment": "prod",
+            "lookbackMinutes": 1,
+            "maxGapMs": 60000,
+            "grain": "per-stream",
+            "source": {
+              "resource": {
+                "kind": "kubernetes-container",
+                "id": "containerd://literal-one"
+              },
+              "exactStream": {
+                "resource": {
+                  "container.id": "containerd://literal-one",
+                  "deployment.environment.name": "prod",
+                  "k8s.container.name": "worker",
+                  "k8s.pod.name": "same-name",
+                  "k8s.pod.uid": "pod-one"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "k8s.container.memory_request",
+                "unit": "By",
+                "attributes": {}
+              },
+              "services": [],
+              "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+              "version": "0.137.0",
+              "schemaURL": "",
+              "metric": "k8s.container.memory_request",
+              "unit": "By"
+            }
+          },
+          "fromMs": 100000,
+          "toMs": 160000
+        },
+        "plan": {
+          "sql": "SELECT ResourceAttributes AS resource, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schema_url, ResourceSchemaUrl AS resource_schema_url, MetricName AS name, MetricUnit AS unit, Attributes AS attributes, toString(toUnixTimestamp64Nano(StartTimeUnix)) AS start_ns, toString(toUnixTimestamp64Nano(TimeUnix)) AS end_ns, Flags AS flags, toString(Value) AS value FROM otel_metrics_gauge WHERE TimeUnix\u003e=fromUnixTimestamp64Milli({p0:Int64}) AND TimeUnix\u003cfromUnixTimestamp64Milli({p1:Int64}) AND ResourceAttributes['deployment.environment.name']={p2:String} AND mapContains(ResourceAttributes,'container.id') AND ResourceAttributes['container.id']={p3:String} AND ScopeName={p4:String} AND ScopeVersion={p5:String} AND ScopeSchemaUrl={p6:String} AND MetricName={p7:String} AND MetricUnit={p8:String} AND ResourceSchemaUrl={p9:String} AND arraySort(arrayZip(mapKeys(ResourceAttributes),mapValues(ResourceAttributes)))=arraySort(JSONExtractKeysAndValues({p10:String},'String')) AND arraySort(arrayZip(mapKeys(Attributes),mapValues(Attributes)))=arraySort(JSONExtractKeysAndValues({p11:String},'String')) ORDER BY TimeUnix LIMIT 10001 FORMAT JSONEachRow",
+          "parameters": {
+            "p0": "100000",
+            "p1": "160000",
+            "p10": "{\"container.id\":\"containerd://literal-one\",\"deployment.environment.name\":\"prod\",\"k8s.container.name\":\"worker\",\"k8s.pod.name\":\"same-name\",\"k8s.pod.uid\":\"pod-one\"}",
+            "p11": "{}",
+            "p2": "prod",
+            "p3": "containerd://literal-one",
+            "p4": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+            "p5": "0.137.0",
+            "p6": "",
+            "p7": "k8s.container.memory_request",
+            "p8": "By",
+            "p9": ""
+          },
+          "revision": "595edf06a099375161621d01c79f9ea5662f78db79268b6ed4b393ad4e0b9608"
+        },
+        "readAt": "1970-01-01T00:03:20Z",
+        "basis": "faef0887f051fc72c93386b3f46fe28774ac240edab77d05313e3f333961321f",
+        "count": "1",
+        "state": "observed",
+        "warnings": [
+          "Captured observations do not establish ingestion completeness or application health. Source limits fail closed; no measurement total comes from a row page.",
+          "Streams retain complete resource, scope, metric and attribute identity. No automatic fleet merging, interpolation or averaging of percentiles.",
+          "Consumer-group observations may be repeated by multiple workers. Never sum repeated broker observations across instances."
+        ],
+        "rows": [
+          {
+            "attributes": {},
+            "bounds": null,
+            "bucket_counts": null,
+            "count": "",
+            "end_ns": "120000000000",
+            "flags": 0,
+            "monotonic": false,
+            "name": "k8s.container.memory_request",
+            "resource": {
+              "container.id": "containerd://literal-one",
+              "deployment.environment.name": "prod",
+              "k8s.container.name": "worker",
+              "k8s.pod.name": "same-name",
+              "k8s.pod.uid": "pod-one"
+            },
+            "resource_schema_url": "",
+            "schema_url": "",
+            "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+            "start_ns": "",
+            "temporality": 0,
+            "unit": "By",
+            "value": "100",
+            "version": "0.137.0"
+          }
+        ],
+        "gauges": {
+          "fromNS": "100000000000",
+          "toNS": "160000000000",
+          "series": [
+            {
+              "stream": {
+                "resource": {
+                  "container.id": "containerd://literal-one",
+                  "deployment.environment.name": "prod",
+                  "k8s.container.name": "worker",
+                  "k8s.pod.name": "same-name",
+                  "k8s.pod.uid": "pod-one"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "k8s.container.memory_request",
+                "unit": "By",
+                "attributes": {}
+              },
+              "state": "observed",
+              "samples": [
+                {
+                  "atNS": "120000000000",
+                  "value": 100,
+                  "state": "observed"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "limit": {
+        "question": {
+          "definition": {
+            "apiVersion": "goo/measurement-package/v1alpha1",
+            "name": "memory-limit",
+            "title": "limit",
+            "kind": "gauge",
+            "environment": "prod",
+            "lookbackMinutes": 1,
+            "maxGapMs": 60000,
+            "grain": "per-stream",
+            "source": {
+              "resource": {
+                "kind": "kubernetes-container",
+                "id": "containerd://literal-one"
+              },
+              "exactStream": {
+                "resource": {
+                  "container.id": "containerd://literal-one",
+                  "deployment.environment.name": "prod",
+                  "k8s.container.name": "worker",
+                  "k8s.pod.name": "same-name",
+                  "k8s.pod.uid": "pod-one"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "k8s.container.memory_limit",
+                "unit": "By",
+                "attributes": {}
+              },
+              "services": [],
+              "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+              "version": "0.137.0",
+              "schemaURL": "",
+              "metric": "k8s.container.memory_limit",
+              "unit": "By"
+            }
+          },
+          "fromMs": 100000,
+          "toMs": 160000
+        },
+        "plan": {
+          "sql": "SELECT ResourceAttributes AS resource, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schema_url, ResourceSchemaUrl AS resource_schema_url, MetricName AS name, MetricUnit AS unit, Attributes AS attributes, toString(toUnixTimestamp64Nano(StartTimeUnix)) AS start_ns, toString(toUnixTimestamp64Nano(TimeUnix)) AS end_ns, Flags AS flags, toString(Value) AS value FROM otel_metrics_gauge WHERE TimeUnix\u003e=fromUnixTimestamp64Milli({p0:Int64}) AND TimeUnix\u003cfromUnixTimestamp64Milli({p1:Int64}) AND ResourceAttributes['deployment.environment.name']={p2:String} AND mapContains(ResourceAttributes,'container.id') AND ResourceAttributes['container.id']={p3:String} AND ScopeName={p4:String} AND ScopeVersion={p5:String} AND ScopeSchemaUrl={p6:String} AND MetricName={p7:String} AND MetricUnit={p8:String} AND ResourceSchemaUrl={p9:String} AND arraySort(arrayZip(mapKeys(ResourceAttributes),mapValues(ResourceAttributes)))=arraySort(JSONExtractKeysAndValues({p10:String},'String')) AND arraySort(arrayZip(mapKeys(Attributes),mapValues(Attributes)))=arraySort(JSONExtractKeysAndValues({p11:String},'String')) ORDER BY TimeUnix LIMIT 10001 FORMAT JSONEachRow",
+          "parameters": {
+            "p0": "100000",
+            "p1": "160000",
+            "p10": "{\"container.id\":\"containerd://literal-one\",\"deployment.environment.name\":\"prod\",\"k8s.container.name\":\"worker\",\"k8s.pod.name\":\"same-name\",\"k8s.pod.uid\":\"pod-one\"}",
+            "p11": "{}",
+            "p2": "prod",
+            "p3": "containerd://literal-one",
+            "p4": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+            "p5": "0.137.0",
+            "p6": "",
+            "p7": "k8s.container.memory_limit",
+            "p8": "By",
+            "p9": ""
+          },
+          "revision": "1384b97d99395e8fd1e98d85fd74cc4d78b7e0d9a78ead6b52d9899c124b77c4"
+        },
+        "readAt": "1970-01-01T00:03:20Z",
+        "basis": "4c5e1ca709b2e8d3e31c0e73e62c09c9755f1825eb0582f7ea58d12a2b9e3e7d",
+        "count": "1",
+        "state": "observed",
+        "warnings": [
+          "Captured observations do not establish ingestion completeness or application health. Source limits fail closed; no measurement total comes from a row page.",
+          "Streams retain complete resource, scope, metric and attribute identity. No automatic fleet merging, interpolation or averaging of percentiles.",
+          "Consumer-group observations may be repeated by multiple workers. Never sum repeated broker observations across instances."
+        ],
+        "rows": [
+          {
+            "attributes": {},
+            "bounds": null,
+            "bucket_counts": null,
+            "count": "",
+            "end_ns": "120000000000",
+            "flags": 0,
+            "monotonic": false,
+            "name": "k8s.container.memory_limit",
+            "resource": {
+              "container.id": "containerd://literal-one",
+              "deployment.environment.name": "prod",
+              "k8s.container.name": "worker",
+              "k8s.pod.name": "same-name",
+              "k8s.pod.uid": "pod-one"
+            },
+            "resource_schema_url": "",
+            "schema_url": "",
+            "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+            "start_ns": "",
+            "temporality": 0,
+            "unit": "By",
+            "value": "200",
+            "version": "0.137.0"
+          }
+        ],
+        "gauges": {
+          "fromNS": "100000000000",
+          "toNS": "160000000000",
+          "series": [
+            {
+              "stream": {
+                "resource": {
+                  "container.id": "containerd://literal-one",
+                  "deployment.environment.name": "prod",
+                  "k8s.container.name": "worker",
+                  "k8s.pod.name": "same-name",
+                  "k8s.pod.uid": "pod-one"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "k8s.container.memory_limit",
+                "unit": "By",
+                "attributes": {}
+              },
+              "state": "observed",
+              "samples": [
+                {
+                  "atNS": "120000000000",
+                  "value": 200,
+                  "state": "observed"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "cpu": {
+      "usage": {
+        "question": {
+          "definition": {
+            "apiVersion": "goo/measurement-package/v1alpha1",
+            "name": "cpu-usage",
+            "title": "usage",
+            "kind": "gauge",
+            "environment": "prod",
+            "lookbackMinutes": 1,
+            "maxGapMs": 60000,
+            "grain": "per-stream",
+            "source": {
+              "resource": {
+                "kind": "kubernetes-container",
+                "id": "containerd://literal-one"
+              },
+              "exactStream": {
+                "resource": {
+                  "container.id": "containerd://literal-one",
+                  "deployment.environment.name": "prod",
+                  "k8s.container.name": "worker",
+                  "k8s.pod.name": "same-name",
+                  "k8s.pod.uid": "pod-one"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "container.cpu.usage",
+                "unit": "{cpu}",
+                "attributes": {}
+              },
+              "services": [],
+              "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver",
+              "version": "0.137.0",
+              "schemaURL": "",
+              "metric": "container.cpu.usage",
+              "unit": "{cpu}"
+            }
+          },
+          "fromMs": 100000,
+          "toMs": 160000
+        },
+        "plan": {
+          "sql": "SELECT ResourceAttributes AS resource, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schema_url, ResourceSchemaUrl AS resource_schema_url, MetricName AS name, MetricUnit AS unit, Attributes AS attributes, toString(toUnixTimestamp64Nano(StartTimeUnix)) AS start_ns, toString(toUnixTimestamp64Nano(TimeUnix)) AS end_ns, Flags AS flags, toString(Value) AS value FROM otel_metrics_gauge WHERE TimeUnix\u003e=fromUnixTimestamp64Milli({p0:Int64}) AND TimeUnix\u003cfromUnixTimestamp64Milli({p1:Int64}) AND ResourceAttributes['deployment.environment.name']={p2:String} AND mapContains(ResourceAttributes,'container.id') AND ResourceAttributes['container.id']={p3:String} AND ScopeName={p4:String} AND ScopeVersion={p5:String} AND ScopeSchemaUrl={p6:String} AND MetricName={p7:String} AND MetricUnit={p8:String} AND ResourceSchemaUrl={p9:String} AND arraySort(arrayZip(mapKeys(ResourceAttributes),mapValues(ResourceAttributes)))=arraySort(JSONExtractKeysAndValues({p10:String},'String')) AND arraySort(arrayZip(mapKeys(Attributes),mapValues(Attributes)))=arraySort(JSONExtractKeysAndValues({p11:String},'String')) ORDER BY TimeUnix LIMIT 10001 FORMAT JSONEachRow",
+          "parameters": {
+            "p0": "100000",
+            "p1": "160000",
+            "p10": "{\"container.id\":\"containerd://literal-one\",\"deployment.environment.name\":\"prod\",\"k8s.container.name\":\"worker\",\"k8s.pod.name\":\"same-name\",\"k8s.pod.uid\":\"pod-one\"}",
+            "p11": "{}",
+            "p2": "prod",
+            "p3": "containerd://literal-one",
+            "p4": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver",
+            "p5": "0.137.0",
+            "p6": "",
+            "p7": "container.cpu.usage",
+            "p8": "{cpu}",
+            "p9": ""
+          },
+          "revision": "aaa6cafcfd37635ad2363a583313fdd9342d34f67ce02405eb9c70efe11bdd5b"
+        },
+        "readAt": "1970-01-01T00:03:20Z",
+        "basis": "13dc0705f67446ecd7e2c0f10b0c836cb0abdf5a8e6da828cdd79469c3a74545",
+        "count": "1",
+        "state": "observed",
+        "warnings": [
+          "Captured observations do not establish ingestion completeness or application health. Source limits fail closed; no measurement total comes from a row page.",
+          "Streams retain complete resource, scope, metric and attribute identity. No automatic fleet merging, interpolation or averaging of percentiles.",
+          "Consumer-group observations may be repeated by multiple workers. Never sum repeated broker observations across instances."
+        ],
+        "rows": [
+          {
+            "attributes": {},
+            "bounds": null,
+            "bucket_counts": null,
+            "count": "",
+            "end_ns": "120000000000",
+            "flags": 0,
+            "monotonic": false,
+            "name": "container.cpu.usage",
+            "resource": {
+              "container.id": "containerd://literal-one",
+              "deployment.environment.name": "prod",
+              "k8s.container.name": "worker",
+              "k8s.pod.name": "same-name",
+              "k8s.pod.uid": "pod-one"
+            },
+            "resource_schema_url": "",
+            "schema_url": "",
+            "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver",
+            "start_ns": "",
+            "temporality": 0,
+            "unit": "{cpu}",
+            "value": "0.125",
+            "version": "0.137.0"
+          }
+        ],
+        "gauges": {
+          "fromNS": "100000000000",
+          "toNS": "160000000000",
+          "series": [
+            {
+              "stream": {
+                "resource": {
+                  "container.id": "containerd://literal-one",
+                  "deployment.environment.name": "prod",
+                  "k8s.container.name": "worker",
+                  "k8s.pod.name": "same-name",
+                  "k8s.pod.uid": "pod-one"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "container.cpu.usage",
+                "unit": "{cpu}",
+                "attributes": {}
+              },
+              "state": "observed",
+              "samples": [
+                {
+                  "atNS": "120000000000",
+                  "value": 0.125,
+                  "state": "observed"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "request": {
+        "question": {
+          "definition": {
+            "apiVersion": "goo/measurement-package/v1alpha1",
+            "name": "cpu-request",
+            "title": "request",
+            "kind": "gauge",
+            "environment": "prod",
+            "lookbackMinutes": 1,
+            "maxGapMs": 60000,
+            "grain": "per-stream",
+            "source": {
+              "resource": {
+                "kind": "kubernetes-container",
+                "id": "containerd://literal-one"
+              },
+              "exactStream": {
+                "resource": {
+                  "container.id": "containerd://literal-one",
+                  "deployment.environment.name": "prod",
+                  "k8s.container.name": "worker",
+                  "k8s.pod.name": "same-name",
+                  "k8s.pod.uid": "pod-one"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "k8s.container.cpu_request",
+                "unit": "{cpu}",
+                "attributes": {}
+              },
+              "services": [],
+              "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+              "version": "0.137.0",
+              "schemaURL": "",
+              "metric": "k8s.container.cpu_request",
+              "unit": "{cpu}"
+            }
+          },
+          "fromMs": 100000,
+          "toMs": 160000
+        },
+        "plan": {
+          "sql": "SELECT ResourceAttributes AS resource, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schema_url, ResourceSchemaUrl AS resource_schema_url, MetricName AS name, MetricUnit AS unit, Attributes AS attributes, toString(toUnixTimestamp64Nano(StartTimeUnix)) AS start_ns, toString(toUnixTimestamp64Nano(TimeUnix)) AS end_ns, Flags AS flags, toString(Value) AS value FROM otel_metrics_gauge WHERE TimeUnix\u003e=fromUnixTimestamp64Milli({p0:Int64}) AND TimeUnix\u003cfromUnixTimestamp64Milli({p1:Int64}) AND ResourceAttributes['deployment.environment.name']={p2:String} AND mapContains(ResourceAttributes,'container.id') AND ResourceAttributes['container.id']={p3:String} AND ScopeName={p4:String} AND ScopeVersion={p5:String} AND ScopeSchemaUrl={p6:String} AND MetricName={p7:String} AND MetricUnit={p8:String} AND ResourceSchemaUrl={p9:String} AND arraySort(arrayZip(mapKeys(ResourceAttributes),mapValues(ResourceAttributes)))=arraySort(JSONExtractKeysAndValues({p10:String},'String')) AND arraySort(arrayZip(mapKeys(Attributes),mapValues(Attributes)))=arraySort(JSONExtractKeysAndValues({p11:String},'String')) ORDER BY TimeUnix LIMIT 10001 FORMAT JSONEachRow",
+          "parameters": {
+            "p0": "100000",
+            "p1": "160000",
+            "p10": "{\"container.id\":\"containerd://literal-one\",\"deployment.environment.name\":\"prod\",\"k8s.container.name\":\"worker\",\"k8s.pod.name\":\"same-name\",\"k8s.pod.uid\":\"pod-one\"}",
+            "p11": "{}",
+            "p2": "prod",
+            "p3": "containerd://literal-one",
+            "p4": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+            "p5": "0.137.0",
+            "p6": "",
+            "p7": "k8s.container.cpu_request",
+            "p8": "{cpu}",
+            "p9": ""
+          },
+          "revision": "4c4103b3d8e8903b525afd70305cd73c073142eeb971c82555159946e21a06d6"
+        },
+        "readAt": "1970-01-01T00:03:20Z",
+        "basis": "ac946d2726c121f30496b2d9cf394e21299bb705e99aee78459dde229b159569",
+        "count": "1",
+        "state": "observed",
+        "warnings": [
+          "Captured observations do not establish ingestion completeness or application health. Source limits fail closed; no measurement total comes from a row page.",
+          "Streams retain complete resource, scope, metric and attribute identity. No automatic fleet merging, interpolation or averaging of percentiles.",
+          "Consumer-group observations may be repeated by multiple workers. Never sum repeated broker observations across instances."
+        ],
+        "rows": [
+          {
+            "attributes": {},
+            "bounds": null,
+            "bucket_counts": null,
+            "count": "",
+            "end_ns": "120000000000",
+            "flags": 0,
+            "monotonic": false,
+            "name": "k8s.container.cpu_request",
+            "resource": {
+              "container.id": "containerd://literal-one",
+              "deployment.environment.name": "prod",
+              "k8s.container.name": "worker",
+              "k8s.pod.name": "same-name",
+              "k8s.pod.uid": "pod-one"
+            },
+            "resource_schema_url": "",
+            "schema_url": "",
+            "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+            "start_ns": "",
+            "temporality": 0,
+            "unit": "{cpu}",
+            "value": "0.25",
+            "version": "0.137.0"
+          }
+        ],
+        "gauges": {
+          "fromNS": "100000000000",
+          "toNS": "160000000000",
+          "series": [
+            {
+              "stream": {
+                "resource": {
+                  "container.id": "containerd://literal-one",
+                  "deployment.environment.name": "prod",
+                  "k8s.container.name": "worker",
+                  "k8s.pod.name": "same-name",
+                  "k8s.pod.uid": "pod-one"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "k8s.container.cpu_request",
+                "unit": "{cpu}",
+                "attributes": {}
+              },
+              "state": "observed",
+              "samples": [
+                {
+                  "atNS": "120000000000",
+                  "value": 0.25,
+                  "state": "observed"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "limit": {
+        "question": {
+          "definition": {
+            "apiVersion": "goo/measurement-package/v1alpha1",
+            "name": "cpu-limit",
+            "title": "limit",
+            "kind": "gauge",
+            "environment": "prod",
+            "lookbackMinutes": 1,
+            "maxGapMs": 60000,
+            "grain": "per-stream",
+            "source": {
+              "resource": {
+                "kind": "kubernetes-container",
+                "id": "containerd://literal-one"
+              },
+              "exactStream": {
+                "resource": {
+                  "container.id": "containerd://literal-one",
+                  "deployment.environment.name": "prod",
+                  "k8s.container.name": "worker",
+                  "k8s.pod.name": "same-name",
+                  "k8s.pod.uid": "pod-one"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "k8s.container.cpu_limit",
+                "unit": "{cpu}",
+                "attributes": {}
+              },
+              "services": [],
+              "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+              "version": "0.137.0",
+              "schemaURL": "",
+              "metric": "k8s.container.cpu_limit",
+              "unit": "{cpu}"
+            }
+          },
+          "fromMs": 100000,
+          "toMs": 160000
+        },
+        "plan": {
+          "sql": "SELECT ResourceAttributes AS resource, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schema_url, ResourceSchemaUrl AS resource_schema_url, MetricName AS name, MetricUnit AS unit, Attributes AS attributes, toString(toUnixTimestamp64Nano(StartTimeUnix)) AS start_ns, toString(toUnixTimestamp64Nano(TimeUnix)) AS end_ns, Flags AS flags, toString(Value) AS value FROM otel_metrics_gauge WHERE TimeUnix\u003e=fromUnixTimestamp64Milli({p0:Int64}) AND TimeUnix\u003cfromUnixTimestamp64Milli({p1:Int64}) AND ResourceAttributes['deployment.environment.name']={p2:String} AND mapContains(ResourceAttributes,'container.id') AND ResourceAttributes['container.id']={p3:String} AND ScopeName={p4:String} AND ScopeVersion={p5:String} AND ScopeSchemaUrl={p6:String} AND MetricName={p7:String} AND MetricUnit={p8:String} AND ResourceSchemaUrl={p9:String} AND arraySort(arrayZip(mapKeys(ResourceAttributes),mapValues(ResourceAttributes)))=arraySort(JSONExtractKeysAndValues({p10:String},'String')) AND arraySort(arrayZip(mapKeys(Attributes),mapValues(Attributes)))=arraySort(JSONExtractKeysAndValues({p11:String},'String')) ORDER BY TimeUnix LIMIT 10001 FORMAT JSONEachRow",
+          "parameters": {
+            "p0": "100000",
+            "p1": "160000",
+            "p10": "{\"container.id\":\"containerd://literal-one\",\"deployment.environment.name\":\"prod\",\"k8s.container.name\":\"worker\",\"k8s.pod.name\":\"same-name\",\"k8s.pod.uid\":\"pod-one\"}",
+            "p11": "{}",
+            "p2": "prod",
+            "p3": "containerd://literal-one",
+            "p4": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+            "p5": "0.137.0",
+            "p6": "",
+            "p7": "k8s.container.cpu_limit",
+            "p8": "{cpu}",
+            "p9": ""
+          },
+          "revision": "a8338cd8d7d9582770de030eaf88db3d0a986224fc7ef836446deb23f9da74a1"
+        },
+        "readAt": "1970-01-01T00:03:20Z",
+        "basis": "9ed82447f57096d596ffd0ac155c9c76a9d1b5032751a020e74235c52cba5d0d",
+        "count": "1",
+        "state": "observed",
+        "warnings": [
+          "Captured observations do not establish ingestion completeness or application health. Source limits fail closed; no measurement total comes from a row page.",
+          "Streams retain complete resource, scope, metric and attribute identity. No automatic fleet merging, interpolation or averaging of percentiles.",
+          "Consumer-group observations may be repeated by multiple workers. Never sum repeated broker observations across instances."
+        ],
+        "rows": [
+          {
+            "attributes": {},
+            "bounds": null,
+            "bucket_counts": null,
+            "count": "",
+            "end_ns": "120000000000",
+            "flags": 0,
+            "monotonic": false,
+            "name": "k8s.container.cpu_limit",
+            "resource": {
+              "container.id": "containerd://literal-one",
+              "deployment.environment.name": "prod",
+              "k8s.container.name": "worker",
+              "k8s.pod.name": "same-name",
+              "k8s.pod.uid": "pod-one"
+            },
+            "resource_schema_url": "",
+            "schema_url": "",
+            "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+            "start_ns": "",
+            "temporality": 0,
+            "unit": "{cpu}",
+            "value": "0.5",
+            "version": "0.137.0"
+          }
+        ],
+        "gauges": {
+          "fromNS": "100000000000",
+          "toNS": "160000000000",
+          "series": [
+            {
+              "stream": {
+                "resource": {
+                  "container.id": "containerd://literal-one",
+                  "deployment.environment.name": "prod",
+                  "k8s.container.name": "worker",
+                  "k8s.pod.name": "same-name",
+                  "k8s.pod.uid": "pod-one"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "k8s.container.cpu_limit",
+                "unit": "{cpu}",
+                "attributes": {}
+              },
+              "state": "observed",
+              "samples": [
+                {
+                  "atNS": "120000000000",
+                  "value": 0.5,
+                  "state": "observed"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "response": {
+    "version": "goo/container-resources-history/v1",
+    "parent": {
+      "environment": "prod",
+      "fromMs": 100000,
+      "toMs": 160000,
+      "resource": {
+        "container.id": "containerd://literal-one",
+        "deployment.environment.name": "prod",
+        "k8s.container.name": "worker",
+        "k8s.pod.name": "same-name",
+        "k8s.pod.uid": "pod-one"
+      },
+      "resourceSchemaURL": ""
+    },
+    "series": [
+      {
+        "key": "memory/working-set",
+        "family": "memory",
+        "role": "working-set",
+        "title": "Container memory working set",
+        "unit": "By",
+        "state": "observations",
+        "question": {
+          "definition": {
+            "apiVersion": "goo/measurement-package/v1alpha1",
+            "name": "memory-working-set",
+            "title": "working-set",
+            "kind": "gauge",
+            "environment": "prod",
+            "lookbackMinutes": 1,
+            "maxGapMs": 20000,
+            "grain": "per-stream",
+            "source": {
+              "resource": {
+                "kind": "kubernetes-container",
+                "id": "containerd://literal-one"
+              },
+              "exactStream": {
+                "resource": {
+                  "container.id": "containerd://literal-one",
+                  "deployment.environment.name": "prod",
+                  "k8s.container.name": "worker",
+                  "k8s.pod.name": "same-name",
+                  "k8s.pod.uid": "pod-one"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "container.memory.working_set",
+                "unit": "By",
+                "attributes": {}
+              },
+              "services": [],
+              "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver",
+              "version": "0.137.0",
+              "schemaURL": "",
+              "metric": "container.memory.working_set",
+              "unit": "By"
+            }
+          },
+          "fromMs": 100000,
+          "toMs": 160000
+        },
+        "readAt": "1970-01-01T00:03:22Z",
+        "basis": "61a63cf781369ce69a17d8e92c1778a81050ce4ceef467a6b7cf5e02379fa5b9",
+        "fromNS": "100000000000",
+        "toNS": "160000000000",
+        "maxGapNS": "20000000000",
+        "points": [
+          {
+            "atNS": "110000000000",
+            "value": "10",
+            "state": "stale",
+            "observationState": "stale",
+            "reason": "older than declared freshness",
+            "observationReason": "older than declared freshness",
+            "rawRowIndices": [
+              2
+            ]
+          },
+          {
+            "atNS": "120000000000",
+            "state": "invalid",
+            "observationState": "stale",
+            "reason": "invalid-byte-domain",
+            "observationReason": "older than declared freshness",
+            "rawRowIndices": [
+              1,
+              3
+            ]
+          },
+          {
+            "atNS": "140000000000",
+            "state": "unknown",
+            "observationState": "unknown",
+            "reason": "no recorded value",
+            "observationReason": "no recorded value",
+            "rawRowIndices": [
+              4
+            ]
+          },
+          {
+            "atNS": "150000000000",
+            "value": "100",
+            "state": "observed",
+            "observationState": "observed",
+            "rawRowIndices": [
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "key": "memory/request",
+        "family": "memory",
+        "role": "request",
+        "title": "Reported memory request",
+        "unit": "By",
+        "state": "observations",
+        "question": {
+          "definition": {
+            "apiVersion": "goo/measurement-package/v1alpha1",
+            "name": "memory-request",
+            "title": "request",
+            "kind": "gauge",
+            "environment": "prod",
+            "lookbackMinutes": 1,
+            "maxGapMs": 60000,
+            "grain": "per-stream",
+            "source": {
+              "resource": {
+                "kind": "kubernetes-container",
+                "id": "containerd://literal-one"
+              },
+              "exactStream": {
+                "resource": {
+                  "container.id": "containerd://literal-one",
+                  "deployment.environment.name": "prod",
+                  "k8s.container.name": "worker",
+                  "k8s.pod.name": "same-name",
+                  "k8s.pod.uid": "pod-one"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "k8s.container.memory_request",
+                "unit": "By",
+                "attributes": {}
+              },
+              "services": [],
+              "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+              "version": "0.137.0",
+              "schemaURL": "",
+              "metric": "k8s.container.memory_request",
+              "unit": "By"
+            }
+          },
+          "fromMs": 100000,
+          "toMs": 160000
+        },
+        "readAt": "1970-01-01T00:03:20Z",
+        "basis": "faef0887f051fc72c93386b3f46fe28774ac240edab77d05313e3f333961321f",
+        "fromNS": "100000000000",
+        "toNS": "160000000000",
+        "maxGapNS": "60000000000",
+        "points": [
+          {
+            "atNS": "120000000000",
+            "value": "100",
+            "state": "observed",
+            "observationState": "observed",
+            "rawRowIndices": [
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "key": "memory/limit",
+        "family": "memory",
+        "role": "limit",
+        "title": "Reported memory limit",
+        "unit": "By",
+        "state": "observations",
+        "question": {
+          "definition": {
+            "apiVersion": "goo/measurement-package/v1alpha1",
+            "name": "memory-limit",
+            "title": "limit",
+            "kind": "gauge",
+            "environment": "prod",
+            "lookbackMinutes": 1,
+            "maxGapMs": 60000,
+            "grain": "per-stream",
+            "source": {
+              "resource": {
+                "kind": "kubernetes-container",
+                "id": "containerd://literal-one"
+              },
+              "exactStream": {
+                "resource": {
+                  "container.id": "containerd://literal-one",
+                  "deployment.environment.name": "prod",
+                  "k8s.container.name": "worker",
+                  "k8s.pod.name": "same-name",
+                  "k8s.pod.uid": "pod-one"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "k8s.container.memory_limit",
+                "unit": "By",
+                "attributes": {}
+              },
+              "services": [],
+              "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+              "version": "0.137.0",
+              "schemaURL": "",
+              "metric": "k8s.container.memory_limit",
+              "unit": "By"
+            }
+          },
+          "fromMs": 100000,
+          "toMs": 160000
+        },
+        "readAt": "1970-01-01T00:03:20Z",
+        "basis": "4c5e1ca709b2e8d3e31c0e73e62c09c9755f1825eb0582f7ea58d12a2b9e3e7d",
+        "fromNS": "100000000000",
+        "toNS": "160000000000",
+        "maxGapNS": "60000000000",
+        "points": [
+          {
+            "atNS": "120000000000",
+            "value": "200",
+            "state": "observed",
+            "observationState": "observed",
+            "rawRowIndices": [
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "key": "cpu/usage",
+        "family": "cpu",
+        "role": "usage",
+        "title": "Reported container CPU usage",
+        "unit": "{cpu}",
+        "state": "observations",
+        "question": {
+          "definition": {
+            "apiVersion": "goo/measurement-package/v1alpha1",
+            "name": "cpu-usage",
+            "title": "usage",
+            "kind": "gauge",
+            "environment": "prod",
+            "lookbackMinutes": 1,
+            "maxGapMs": 60000,
+            "grain": "per-stream",
+            "source": {
+              "resource": {
+                "kind": "kubernetes-container",
+                "id": "containerd://literal-one"
+              },
+              "exactStream": {
+                "resource": {
+                  "container.id": "containerd://literal-one",
+                  "deployment.environment.name": "prod",
+                  "k8s.container.name": "worker",
+                  "k8s.pod.name": "same-name",
+                  "k8s.pod.uid": "pod-one"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "container.cpu.usage",
+                "unit": "{cpu}",
+                "attributes": {}
+              },
+              "services": [],
+              "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver",
+              "version": "0.137.0",
+              "schemaURL": "",
+              "metric": "container.cpu.usage",
+              "unit": "{cpu}"
+            }
+          },
+          "fromMs": 100000,
+          "toMs": 160000
+        },
+        "readAt": "1970-01-01T00:03:20Z",
+        "basis": "13dc0705f67446ecd7e2c0f10b0c836cb0abdf5a8e6da828cdd79469c3a74545",
+        "fromNS": "100000000000",
+        "toNS": "160000000000",
+        "maxGapNS": "60000000000",
+        "points": [
+          {
+            "atNS": "120000000000",
+            "value": "0.125",
+            "state": "observed",
+            "observationState": "observed",
+            "rawRowIndices": [
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "key": "cpu/request",
+        "family": "cpu",
+        "role": "request",
+        "title": "Reported CPU request",
+        "unit": "{cpu}",
+        "state": "observations",
+        "question": {
+          "definition": {
+            "apiVersion": "goo/measurement-package/v1alpha1",
+            "name": "cpu-request",
+            "title": "request",
+            "kind": "gauge",
+            "environment": "prod",
+            "lookbackMinutes": 1,
+            "maxGapMs": 60000,
+            "grain": "per-stream",
+            "source": {
+              "resource": {
+                "kind": "kubernetes-container",
+                "id": "containerd://literal-one"
+              },
+              "exactStream": {
+                "resource": {
+                  "container.id": "containerd://literal-one",
+                  "deployment.environment.name": "prod",
+                  "k8s.container.name": "worker",
+                  "k8s.pod.name": "same-name",
+                  "k8s.pod.uid": "pod-one"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "k8s.container.cpu_request",
+                "unit": "{cpu}",
+                "attributes": {}
+              },
+              "services": [],
+              "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+              "version": "0.137.0",
+              "schemaURL": "",
+              "metric": "k8s.container.cpu_request",
+              "unit": "{cpu}"
+            }
+          },
+          "fromMs": 100000,
+          "toMs": 160000
+        },
+        "readAt": "1970-01-01T00:03:20Z",
+        "basis": "ac946d2726c121f30496b2d9cf394e21299bb705e99aee78459dde229b159569",
+        "fromNS": "100000000000",
+        "toNS": "160000000000",
+        "maxGapNS": "60000000000",
+        "points": [
+          {
+            "atNS": "120000000000",
+            "value": "0.25",
+            "state": "observed",
+            "observationState": "observed",
+            "rawRowIndices": [
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "key": "cpu/limit",
+        "family": "cpu",
+        "role": "limit",
+        "title": "Reported CPU limit",
+        "unit": "{cpu}",
+        "state": "observations",
+        "question": {
+          "definition": {
+            "apiVersion": "goo/measurement-package/v1alpha1",
+            "name": "cpu-limit",
+            "title": "limit",
+            "kind": "gauge",
+            "environment": "prod",
+            "lookbackMinutes": 1,
+            "maxGapMs": 60000,
+            "grain": "per-stream",
+            "source": {
+              "resource": {
+                "kind": "kubernetes-container",
+                "id": "containerd://literal-one"
+              },
+              "exactStream": {
+                "resource": {
+                  "container.id": "containerd://literal-one",
+                  "deployment.environment.name": "prod",
+                  "k8s.container.name": "worker",
+                  "k8s.pod.name": "same-name",
+                  "k8s.pod.uid": "pod-one"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "k8s.container.cpu_limit",
+                "unit": "{cpu}",
+                "attributes": {}
+              },
+              "services": [],
+              "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+              "version": "0.137.0",
+              "schemaURL": "",
+              "metric": "k8s.container.cpu_limit",
+              "unit": "{cpu}"
+            }
+          },
+          "fromMs": 100000,
+          "toMs": 160000
+        },
+        "readAt": "1970-01-01T00:03:20Z",
+        "basis": "9ed82447f57096d596ffd0ac155c9c76a9d1b5032751a020e74235c52cba5d0d",
+        "fromNS": "100000000000",
+        "toNS": "160000000000",
+        "maxGapNS": "60000000000",
+        "points": [
+          {
+            "atNS": "120000000000",
+            "value": "0.5",
+            "state": "observed",
+            "observationState": "observed",
+            "rawRowIndices": [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    "warnings": [
+      "Every point is a reported observation certified from its original raw rows; absence is not zero. No interpolation or held-forward request or limit is supplied.",
+      "Observation quality and declared freshness are evaluated at the original fixed question end, not at the instant the observation was recorded. Sparse observations do not establish continuity or an outage.",
+      "Different reported values establish only different observations, not a configuration-change event or its time. No percentage history, atomic snapshot, health or causal relationship is inferred.",
+      "Raw row indices refer to the corresponding supplied result in its original order. Each series retains independent source read time and evidence basis; no new custody or source read is created."
+    ]
+  }
+}

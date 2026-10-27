@@ -949,3 +949,14 @@ results. It retains independent evidence and applies fractional-core domain rule
 before strict alignment checks. CPU usage is the pinned reported gauge, not a
 derivative of cumulative CPU time. See [contract](CONTAINER_CPU.md) for scope and
 accepted evidence; automatic widget and individual capture budgets are unchanged.
+
+
+`POST /container-resources/history` is a pure 8 MiB-bounded projection of held
+`parent` plus optional `memory` and/or `cpu` result groups. It replay-validates
+original evidence and certifies every raw timestamp group, retaining original
+quality/reason and raw-row indices separately from numeric domain admission.
+Stable family/role series retain original questions, clocks, bases and freshness
+policy. More than 10,000 total points or 8 MiB output refuses the whole request.
+No source admission/read, custody publication, interpolation or percentage
+history is added. Existing CPU/memory view response bytes remain unchanged.
+See [history contract](CONTAINER_RESOURCE_HISTORY.md).

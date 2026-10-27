@@ -12345,3 +12345,49 @@ are preserved. Ordinary acceptance telemetry is appended, not a reset or
 production receiver deployment. Ten historical entrance browser specs remain
 explicitly skipped; current 208 checks replace their superseded navigation while
 native/API/Node/Hegel/raw regressions stay active.
+
+## Container resource history — recovery and source gates (209)
+
+The cloud restart cleared /tmp tool/cache/ignored-artifact targets. Official
+Go 1.27.2, lockfile Node tooling and Python venvs were restored under /tmp without
+dependency-version changes or overlay installs. Existing capture storage survived;
+prior ignored raw journals are unavailable and are not claimed as replays.
+Two stopped ClickHouse diagnostic files were completely archived and independently
+SHA-verified before exact truncation preserving ownership/mode, reclaiming
+929,461,327 diagnostic bytes. Existing dependency containers were started without
+recreation or data reset. GET health/readiness passes; an inherited XTDB HEAD
+probe returns 405, and its source override is corrected for future recreation.
+[Recovery record](docs/RUNTIME_RECOVERY_209.md) distinguishes each action.
+
+The additive pure history endpoint certifies every retained raw timestamp group,
+preserves fixed-window-end observation quality and original raw-row references,
+and separately applies byte/core domain rules. Input/output are bounded at
+8 MiB and 10,000 total points with whole refusal. Existing summary DTOs/bytes
+are unchanged. UI role histories share one complete-family numeric and time
+axis across explicit 256-mark pages/focus. Source-free point/brush interactions
+stage exact qualified record questions, leaving native evidence unchanged.
+
+Focused CPU/memory/history/private-kernel tests pass (2.477s), including the
+10,000-point boundary and 10,001 refusal. Thirteen new frozen HTTP cases plus
+24 unchanged CPU/memory cases and pure/capture/offline checks pass (0.372s).
+The affected broad suites pass: metrics 0.380s, measurements 4.044s, exploration
+0.879s, cmd/goo 1.254s. OpenAPI has 83 Go/90 total operations, 517 schemas;
+429 fixture responses, 159 admitted requests, 28 mux refusals and negative/SSE
+controls pass. No prior fixture was regenerated to accommodate changed semantics.
+
+All 100 Node files pass (12.918s), followed by focused timeline tooltip wording
+and raw-witness UTC presentation checks. All 25 Python tests pass (17 proxy
+3.179s, eight startup 1.588s), including the exact 8 MiB pure proxy boundary.
+The two focused Hegel properties pass (0.551s): Node context AST→actual Go
+compile and sub-millisecond membership/qualifier boundaries; independent
+all-timestamp domain/freshness/raw-index/detachment over both families, seven
+groups/nine shuffled reports, equal duplicates/conflicts/missing/invalid/zero and
+exact freshness-boundary cases. Each has eight generated examples. An initial
+property attempt stopped before tests because the reset cache lacked pinned
+modules and sandbox proxy access; checksummed module restoration and the
+escalated rerun pass without source or dependency-version changes.
+
+Source review approves core/UI with no blockers. Latest summary contracts,
+individual capture and source budgets remain unchanged; each family adds only
+one pure history follow-up. Fresh live 209 browser/owner/Bombadil, raw/custody,
+observed traces and actual frames are pending at this source gate.

@@ -7,11 +7,13 @@ function observe(page) {
   page.on('request', request => {
     const endpoint = new URL(request.url()).pathname;
     const entry = observed.requests.at(-1);
+    if (entry && entry.endpoint === endpoint && request.method() === 'POST' && endpoint === '/api/container-resources/history') entry.effect = 'history';
     if (entry && entry.endpoint === endpoint && request.method() === 'POST' &&
         ['/api/container-memory/view', '/api/container-cpu/view'].includes(endpoint)) entry.effect = 'composition';
   });
   return { ...observed,
-    compositions: () => observed.requests.filter(r => r.effect === 'composition').length };
+    compositions: () => observed.requests.filter(r => r.effect === 'composition').length,
+    histories: () => observed.requests.filter(r => r.effect === 'history').length };
 }
 async function seed(request) {
   const facts = fixture.fixture();
@@ -58,12 +60,17 @@ const loadIntents = [];
 async function loadFamily(page, panel, family) {
   const target = familyPanel(panel, family);
   await shared.openConfiguration(target);
+  const historyPending = page.waitForResponse(r => r.url().endsWith('/api/container-resources/history') && r.request().method() === 'POST');
   const pending = page.waitForResponse(r => r.url().endsWith('/api/container-' + family + '/view') && r.request().method() === 'POST');
   const selection = await target.locator('.container-memory-choices select').evaluateAll(ns=>ns.map(n=>({label:n.getAttribute('aria-label'),key:n.value})));
   loadIntents.push({phase:'invoke',family,selection,selected:selection.filter(r=>r.key).length});
   await target.locator('[data-container-' + family + '-load]').click();
   const response = await pending;
   const result = { request: response.request().postDataJSON(), response: await shared.json(response) };
+  const historyResponse = await historyPending;
+  result.history = { request: historyResponse.request().postDataJSON(), response: await shared.json(historyResponse) };
+  await expect(target.locator('.container-resource-history[data-history-family="' + family + '"]')).toBeVisible();
+  await expect(target.locator('.container-memory-configuration')).not.toHaveAttribute('open','');
   loadIntents.push({phase:'complete',family,selection});
   return result;
 }

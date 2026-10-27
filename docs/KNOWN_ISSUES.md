@@ -987,3 +987,17 @@ property/raw contracts remain active and current navigation is tested in 208.
 Journey 208 is accepted. Its model covers recorded bounded macrosteps, not
 arbitrary concurrent schedules; actual family provenance and withdrawal are
 checked separately against raw and held-response evidence.
+
+
+[Resource history](CONTAINER_RESOURCE_HISTORY.md) is source-implemented in 209;
+live acceptance is pending. Histories are sparse reports, not continuous usage
+or configuration events. Freshness labels are relative to the original fixed
+question end. The API refuses more than 10,000 points or 8 MiB rather than
+truncating facts; the UI explicitly pages 256 marks. A point has no inferred
+record interval, and matching logs/spans remain contextual. No percentage
+history, combined capture or live subscription is added.
+
+[Runtime recovery](RUNTIME_RECOVERY_209.md) records restored /tmp tool targets
+and lost ignored prior journals. Existing captures survived. XTDB GET health
+checks succeed; its running inherited HEAD health probe still reports unhealthy
+until normal container recreation applies the corrected source override.

@@ -1095,3 +1095,12 @@ held results; metadata-only withdrawal does not cancel unchanged sibling work.
 Global scope/close withdraws all pending operations. The private Go composition
 kernel shares authority/replay/alignment mechanics behind unchanged concrete CPU
 and memory DTOs and domain callbacks. Public APIs and capture formats are unchanged.
+
+
+[Resource history](CONTAINER_RESOURCE_HISTORY.md) reuses held native results and
+shared exact-container admission, then indexes original rows by timestamp for
+linear all-point domain certification. The additive pure endpoint leaves latest
+composers and individual custody unchanged. The app supplies bounded paged dots
+to the generic timeline, retains full-family numeric/time domains, and turns
+local brush choices into qualified exact-NS record questions. Existing record
+Run/capture/retained Back own effects; a gauge point supplies no invented interval.

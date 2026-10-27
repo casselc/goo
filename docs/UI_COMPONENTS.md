@@ -1101,3 +1101,18 @@ family owns independent Load, result, cancellation and native Inspect. The outer
 coordinator owns global withdrawal. Family displays keep byte/core axes separate,
 reuse supplied table/bar/UTC primitives and lead with held answers before setup.
 No new custom element, endpoint or lifecycle subscription is introduced.
+
+
+`goo-value-timeline` now accepts opt-in supplied `domain: {min,max}`, `scaleLabel`
+and point `series` tokens. Domain values contain zero and all supplied known
+points; defaults retain automatic scaling. Exact decimal input is bounded at
+512 characters. Series tokens only become mark data attributes for app-scoped
+palettes. Unknown point glyphs stay compact; unknown intervals keep interval
+geometry. No lifecycle/disclosure fetch or measurement eligibility is introduced.
+
+container-resource-history.js supplies all three family roles on one scale,
+256-mark pages with explicit retained totals, role focus and UTC axes. It owns
+exact held-point/raw-row inspection and record-context intents. The existing
+controlled time-range element supplies keyboard/touch fallback; point selection
+leaves the displayed context range unchanged. Original result/custody objects
+are retained, not relabeled as narrowed native execution.

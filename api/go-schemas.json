@@ -159,6 +159,19 @@
       }
     ]
   },
+  "ContainerResourceHistory": {
+    "$ref": "#/components/schemas/measurements.ContainerResourceHistory"
+  },
+  "ContainerResourceHistoryRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/measurements.ContainerResourceHistoryRequestInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
   "CorrectRequest": {
     "anyOf": [
       {
@@ -12291,6 +12304,64 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/measurements.Binding"
   },
+  "measurements.ContainerCPUHistoryResultsInput": {
+    "additionalProperties": false,
+    "properties": {
+      "limit": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.ResultInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "request": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.ResultInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "usage": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.ResultInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.ContainerCPUHistoryResults"
+  },
   "measurements.ContainerCPUPercentage": {
     "properties": {
       "reason": {
@@ -12492,6 +12563,64 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/measurements.ContainerCPUViewRequest"
   },
+  "measurements.ContainerMemoryHistoryResultsInput": {
+    "additionalProperties": false,
+    "properties": {
+      "limit": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.ResultInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "request": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.ResultInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "workingSet": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.ResultInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.ContainerMemoryHistoryResults"
+  },
   "measurements.ContainerMemoryPercentage": {
     "properties": {
       "reason": {
@@ -12692,6 +12821,218 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/measurements.ContainerMemoryViewRequest"
+  },
+  "measurements.ContainerResourceHistory": {
+    "properties": {
+      "parent": {
+        "$ref": "#/components/schemas/measurements.PodMetricDiscoveryQuestion"
+      },
+      "series": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.ContainerResourceHistorySeries"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "type": "string"
+      },
+      "warnings": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "version",
+      "parent",
+      "series",
+      "warnings"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.ContainerResourceHistory"
+  },
+  "measurements.ContainerResourceHistoryPoint": {
+    "properties": {
+      "atNS": {
+        "type": "string"
+      },
+      "observationReason": {
+        "type": "string"
+      },
+      "observationState": {
+        "type": "string"
+      },
+      "rawRowIndices": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "reason": {
+        "type": "string"
+      },
+      "state": {
+        "type": "string"
+      },
+      "value": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "atNS",
+      "state",
+      "observationState",
+      "rawRowIndices"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.ContainerResourceHistoryPoint"
+  },
+  "measurements.ContainerResourceHistoryRequestInput": {
+    "additionalProperties": false,
+    "properties": {
+      "cpu": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.ContainerCPUHistoryResultsInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "memory": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.ContainerMemoryHistoryResultsInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "parent": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.PodMetricDiscoveryQuestionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.ContainerResourceHistoryRequest"
+  },
+  "measurements.ContainerResourceHistorySeries": {
+    "properties": {
+      "basis": {
+        "type": "string"
+      },
+      "family": {
+        "type": "string"
+      },
+      "fromNS": {
+        "type": "string"
+      },
+      "key": {
+        "type": "string"
+      },
+      "maxGapNS": {
+        "type": "string"
+      },
+      "points": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.ContainerResourceHistoryPoint"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "question": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.Question"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "readAt": {
+        "type": "string"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "role": {
+        "type": "string"
+      },
+      "state": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "toNS": {
+        "type": "string"
+      },
+      "unit": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "key",
+      "family",
+      "role",
+      "title",
+      "unit",
+      "state",
+      "points"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.ContainerResourceHistorySeries"
   },
   "measurements.Definition": {
     "properties": {

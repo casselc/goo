@@ -1,0 +1,54 @@
+{
+  "milestone": 209,
+  "status": "source accepted; live acceptance pending",
+  "checks": {
+    "go": {
+      "focusedSeconds": 2.477,
+      "httpSeconds": 0.372,
+      "newHttpCases": 13,
+      "unchangedMemoryCpuHttpCases": 24,
+      "metricsSeconds": 0.38,
+      "measurementsSeconds": 4.044,
+      "explorationSeconds": 0.879,
+      "cmdSeconds": 1.254,
+      "stdout": "/tmp/goo-209-go-broad.log"
+    },
+    "node": {
+      "files": 100,
+      "seconds": 12.91825177,
+      "stdout": "/tmp/goo-209-node.log",
+      "focusedFollowups": "Timeline exact displayed-domain tooltip and raw-witness UTC tests pass"
+    },
+    "python": {
+      "proxyTests": 17,
+      "proxySeconds": 3.179,
+      "startupTests": 8,
+      "startupSeconds": 1.588
+    },
+    "openapi": {
+      "goOperations": 83,
+      "totalOperations": 90,
+      "schemas": 517,
+      "responses": 429,
+      "requests": 159,
+      "muxRefusals": 28,
+      "stdout": "/tmp/goo-209-openapi-root.log"
+    },
+    "hegel": {
+      "properties": 2,
+      "examplesEach": 8,
+      "seconds": 0.551,
+      "stdout": "/tmp/goo-209-history-properties-restored.txt",
+      "initialSetupDiagnostic": "/tmp/goo-209-history-properties.txt; missing reset-cache modules and sandbox proxy access, tests not reached"
+    }
+  },
+  "recovery": "docs/RUNTIME_RECOVERY_209.md",
+  "runtimeRestoration": "artifacts/runtime-restore-209/restoration.json",
+  "limits": [
+    "Sparse observations, not continuous usage/configuration events",
+    "Freshness as of original fixed question end",
+    "10,000 total points / 8MiB whole refusal; UI256 visible marks",
+    "No percentage history, new capture format or live subscription",
+    "Prior ignored journals lost during cloud restart; fresh209 evidence required"
+  ]
+}

@@ -134,7 +134,20 @@ func ComposeContainerCPUView(input ContainerCPUViewRequest) (*ContainerCPUView, 
 		return nil, e
 	}
 	view := &ContainerCPUView{Version: ContainerCPUVersion, Parent: in.Parent, Signals: []ContainerCPUSignal{}, Warnings: []string{"Each signal retains independent captured evidence, source read time and observation clock. No paired custody or transactional snapshot is created.", "Matching container ID, pod UID, container name and cluster/namespace qualification permits independent display only. Different full resources, resource schemas, point attributes, clocks or freshness policies withhold percentages.", "Missing inputs are unavailable, not zero or unlimited. Explicit zero is reported evidence; a zero denominator has no percentage. No CPU-time derivative, container aggregation, ownership or health is inferred."}}
-	policy := containerResourcePolicy{label: "container CPU", invalidReason: "invalid-core-domain", role: ContainerCPURole, title: containerCPUTitle, parse: exactContainerCPU, format: containerCPUDecimal, percentage: func(ratio *big.Rat) containerResourcePercentageValue {
+	policy := containerCPUPolicy()
+	signals, facts, e := composeContainerResourceSignals(in.Parent, []containerResourceEntry{{"usage", in.Usage}, {"request", in.Request}, {"limit", in.Limit}}, policy)
+	if e != nil {
+		return nil, e
+	}
+	for _, signal := range signals {
+		view.Signals = append(view.Signals, ContainerCPUSignal(signal))
+	}
+	view.Percentages = ContainerCPUPercentages{Request: ContainerCPUPercentage(containerResourcePercentage(facts, "usage", "request", policy)), Limit: ContainerCPUPercentage(containerResourcePercentage(facts, "usage", "limit", policy))}
+	return view, nil
+}
+
+func containerCPUPolicy() containerResourcePolicy {
+	return containerResourcePolicy{label: "container CPU", invalidReason: "invalid-core-domain", role: ContainerCPURole, title: containerCPUTitle, parse: exactContainerCPU, format: containerCPUDecimal, percentage: func(ratio *big.Rat) containerResourcePercentageValue {
 		value, text := ratio.RatString(), ratio.FloatString(1)+"%"
 		if ratio.Sign() > 0 && ratio.Cmp(big.NewRat(1, 10)) < 0 {
 			text = "<0.1%"
@@ -146,13 +159,4 @@ func ComposeContainerCPUView(input ContainerCPUViewRequest) (*ContainerCPUView, 
 		}
 		return containerResourcePercentageValue{State: "observed", Value: value, Text: text}
 	}}
-	signals, facts, e := composeContainerResourceSignals(in.Parent, []containerResourceEntry{{"usage", in.Usage}, {"request", in.Request}, {"limit", in.Limit}}, policy)
-	if e != nil {
-		return nil, e
-	}
-	for _, signal := range signals {
-		view.Signals = append(view.Signals, ContainerCPUSignal(signal))
-	}
-	view.Percentages = ContainerCPUPercentages{Request: ContainerCPUPercentage(containerResourcePercentage(facts, "usage", "request", policy)), Limit: ContainerCPUPercentage(containerResourcePercentage(facts, "usage", "limit", policy))}
-	return view, nil
 }

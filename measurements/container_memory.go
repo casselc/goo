@@ -127,15 +127,7 @@ func ComposeContainerMemoryView(input ContainerMemoryViewRequest) (*ContainerMem
 		return nil, e
 	}
 	view := &ContainerMemoryView{Version: ContainerMemoryVersion, Parent: in.Parent, Signals: []ContainerMemorySignal{}, Warnings: []string{"Each signal retains independent captured evidence, source read time and observation clock. No paired custody or transactional snapshot is created.", "Matching container ID, pod UID, container name and cluster/namespace qualification permits independent display only. Different full resources, resource schemas, point attributes, clocks or freshness policies withhold percentages.", "Missing inputs are unavailable, not zero or unlimited. Explicit zero is reported evidence; a zero denominator has no percentage. No CPU, container aggregation, ownership or health is inferred."}}
-	policy := containerResourcePolicy{label: "container memory", invalidReason: "invalid-byte-domain", role: ContainerMemoryRole, title: containerMemoryTitle, parse: func(raw string) (*big.Rat, bool) {
-		n, ok := exactContainerBytes(raw)
-		if !ok {
-			return nil, false
-		}
-		return new(big.Rat).SetInt(n), true
-	}, format: func(value *big.Rat) string { return value.Num().String() }, percentage: func(ratio *big.Rat) containerResourcePercentageValue {
-		return containerResourcePercentageValue{State: "observed", Value: ratio.RatString(), Text: ratio.FloatString(1) + "%"}
-	}}
+	policy := containerMemoryPolicy()
 	signals, facts, e := composeContainerResourceSignals(in.Parent, []containerResourceEntry{{"working-set", in.WorkingSet}, {"request", in.Request}, {"limit", in.Limit}}, policy)
 	if e != nil {
 		return nil, e
@@ -145,4 +137,16 @@ func ComposeContainerMemoryView(input ContainerMemoryViewRequest) (*ContainerMem
 	}
 	view.Percentages = ContainerMemoryPercentages{Request: ContainerMemoryPercentage(containerResourcePercentage(facts, "working-set", "request", policy)), Limit: ContainerMemoryPercentage(containerResourcePercentage(facts, "working-set", "limit", policy))}
 	return view, nil
+}
+
+func containerMemoryPolicy() containerResourcePolicy {
+	return containerResourcePolicy{label: "container memory", invalidReason: "invalid-byte-domain", role: ContainerMemoryRole, title: containerMemoryTitle, parse: func(raw string) (*big.Rat, bool) {
+		n, ok := exactContainerBytes(raw)
+		if !ok {
+			return nil, false
+		}
+		return new(big.Rat).SetInt(n), true
+	}, format: func(value *big.Rat) string { return value.Num().String() }, percentage: func(ratio *big.Rat) containerResourcePercentageValue {
+		return containerResourcePercentageValue{State: "observed", Value: ratio.RatString(), Text: ratio.FloatString(1) + "%"}
+	}}
 }

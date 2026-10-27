@@ -29,7 +29,7 @@ test('208 family-local ownership preserves sibling loads and withdraws only affe
   if(reason==='global-close'){
    await expect(panel).toBeHidden();expect(await s.snapshot(panel)).toEqual(before);expect(o.compositions()).toBe(countsBefore.compositions);
   }else{
-   await expect(cpu.locator('.container-cpu-view')).toHaveCount(1);expect(o.compositions()).toBe(countsBefore.compositions+1);
+   await expect(cpu.locator('.container-cpu-view')).toHaveCount(1);await expect(cpu.locator('.container-resource-history')).toHaveCount(1);expect(o.compositions()).toBe(countsBefore.compositions+1);
    if(expected===2)await expect(memory.locator('.container-memory-view')).toHaveCount(0);
   }
   cases.push({reason,loadIntents,initial,primary,metadata,held,before,after:await s.snapshot(panel),countsBefore,countsAfter:{source:o.source(),plans:o.plans(),compositions:o.compositions()}});

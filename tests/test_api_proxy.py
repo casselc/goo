@@ -214,6 +214,18 @@ class ProxyContracts(unittest.TestCase):
         self.assertEqual(status,400)
         self.assertEqual(len(Upstream.calls),before)
 
+    def test_container_resources_history_proxy_exact_8mib_limit(self):
+        payload = b'{}' + b' ' * (8388608-2)
+        status, _, body = self.request('POST','/api/container-resources/history',payload)
+        self.assertEqual(status,400)
+        self.assertEqual(json.loads(body),{'error':'backend refusal'})
+        self.assertEqual(Upstream.calls[-1][1],'/container-resources/history')
+        self.assertEqual(Upstream.calls[-1][3],payload)
+        before=len(Upstream.calls)
+        status, _, body = self.request('POST','/api/container-resources/history',payload+b' ')
+        self.assertEqual(status,400)
+        self.assertEqual(len(Upstream.calls),before)
+
     def test_pool_view_asset_is_served_without_upstream(self):
         conn=http.client.HTTPConnection('127.0.0.1',self.proxy.server_port,timeout=5)
         try:
@@ -268,7 +280,7 @@ class ProxyContracts(unittest.TestCase):
         before = len(Upstream.calls)
         self.assertEqual(self.request('POST', '/api/pod-discovery', payload+b' ')[0], 400)
         self.assertEqual(len(Upstream.calls), before)
-        for asset in ('container-memory.js', 'container-memory-view.js', 'container-cpu.js', 'container-cpu-view.js', 'container-resources.js', 'kubernetes-context.js', 'kubernetes-browser.js', 'resource-scope.js', 'resource-tabs.js', 'kubernetes.css'):
+        for asset in ('container-memory.js', 'container-memory-view.js', 'container-cpu.js', 'container-cpu-view.js', 'container-resources.js', 'container-resource-history.js', 'kubernetes-context.js', 'kubernetes-browser.js', 'resource-scope.js', 'resource-tabs.js', 'kubernetes.css'):
             conn = http.client.HTTPConnection('127.0.0.1', self.proxy.server_port, timeout=5)
             try:
                 conn.request('GET', '/'+asset)
