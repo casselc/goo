@@ -1033,3 +1033,32 @@ native requests. Kubernetes rows retain one full-width selected panel; filtering
 redraw, scope changes and departure withdraw pending work. Completed panel
 inspection/capture navigation uses the existing native owner and returns to held
 filters/focus. Display elements and raw-resource disclosures never fetch.
+
+
+### Categorical observations
+
+`goo-state-observations` is a framework-neutral passive display for supplied state
+categories, not a decoder or query owner. Supply `data={title?, samples}` using a
+JSON HTML attribute (64 KiB maximum) or a detached/cloned `.data` property (2 MiB).
+Each sample has canonical decimal `atNS`, observation `state` observed/stale/unknown,
+optional finite numeric or bounded string `code`, supplied `label`, independent
+`codeState` supported/unsupported and optional reason. Known supported samples need
+a bounded label; unsupported samples retain raw code without an invented label;
+unknown samples have neither code nor label. Latest state is selected by time,
+never by code ordering or severity. The history is closed by default and retains
+the latest 200 of at most 10,000 supplied samples, with totals/omissions explicit.
+UTC timestamps reuse the exact-nanosecond tooltip primitive.
+
+Load components.js, evidence-summary.js, state-observations.js and the matching CSS.
+The existing gallery includes clearly synthetic server-rendered and detached SPA
+examples from a non-Kubernetes domain. Property updates, pre-definition upgrade,
+cloning, literal text, bounded input and disclosure/focus preservation use the same
+component contract. No lifecycle, disclosure or update fetches or publishes.
+
+`GooStateMeasurement` in state-measurement.js is a separate application adapter.
+It owns the pinned k8scluster phase mapping, typed definition, resource/schema and
+exact-stream proof, including Go's historically omitted empty binding unit. It
+rejects fabricated health labels or broadened identities before mounting the
+component, and accepts an app-owned Inspect callback without performing reads.
+Pod and native/saved views share this adapter. Other categorical domains may use
+the display directly with their own validated supplied labels.

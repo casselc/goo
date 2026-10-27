@@ -309,6 +309,30 @@ def check_pod_state_observed(spec, path):
     print('Pod-state API: 4 actual handler responses conform; captured phase reopens unchanged')
 
 
+def check_pod_phase_discovery_observed(spec, path):
+    cases = json.loads(Path(path).read_text())
+    assert [(c['method'], c['path'], c['status']) for c in cases] == [
+        ('POST', '/pod-metric-discovery', 200), ('POST', '/pod-dashboard/plan', 200),
+        ('POST', '/measurements', 200)]
+    for case in cases:
+        op = spec['paths'][case['path']]['post']
+        validator(spec, op['requestBody']['content']['application/json']['schema']).validate(case['request'])
+        validator(spec, op['responses']['200']['content']['application/json']['schema']).validate(case['response'])
+    plan = cases[1]['response']
+    assert len(plan['widgets']) == 1 and plan['widgets'][0]['question']['definition']['kind'] == 'state'
+    shape = spec['components']['schemas']['measurements.PodDashboardPlan']
+    for kind in ('gauge', 'stock'):
+        bad = copy.deepcopy(plan)
+        for key in ('widgets', 'candidates'):
+            bad[key][0]['question']['definition']['kind'] = kind
+        assert list(validator(spec, shape).iter_errors(bad)), 'Phase profile accepted scalar kernel'
+    bad = copy.deepcopy(plan)
+    for key in ('widgets', 'candidates'):
+        bad[key][0]['profile'] = 'collector-kubeletstats-v0.137.0'
+    assert list(validator(spec, shape).iter_errors(bad)), 'Memory profile accepted state kernel'
+    print('Pod phase discovery API: 3 actual handler responses conform; 3 profile/kind mutations rejected')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--observations')
@@ -318,6 +342,7 @@ if __name__ == '__main__':
     parser.add_argument('--pool-signals-observations')
     parser.add_argument('--host-observations')
     parser.add_argument('--pod-state-observations')
+    parser.add_argument('--pod-phase-discovery-observations')
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
@@ -340,3 +365,6 @@ if __name__ == '__main__':
 
     if args.pod_state_observations:
         check_pod_state_observed(spec,args.pod_state_observations)
+
+    if args.pod_phase_discovery_observations:
+        check_pod_phase_discovery_observed(spec,args.pod_phase_discovery_observations)

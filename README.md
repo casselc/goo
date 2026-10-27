@@ -320,4 +320,6 @@ reads, capture reopening, ownership checks and desktop/mobile frames.
 
 [Typed pod states](docs/POD_STATES.md) decode pinned receiver phase codes through
 exact-resource native packages and individual captures, independently of observation
-quality. Automatic discovery/planning and UI presentation remain pending.
+quality. Pinned phase discovery now feeds a compact categorical pod/native view;
+memory keeps its default read budget and phase can be selected explicitly. Live
+acceptance for this UI slice is recorded in [the phase contract](docs/POD_STATES.md).

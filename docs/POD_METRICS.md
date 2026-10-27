@@ -91,8 +91,9 @@ typing. Neither is an alias for pod readiness, and the current native scalar
 kernel's nonempty-unit contract is not relaxed to accommodate them.
 
 The [typed phase contract](POD_STATES.md) now supports exact-source native
-execution and individual capture/replay. Discovery/planning/UI remains pending.
-Typed phase/readiness views, requests/limits, CPU calculations, ownership and workload
+execution and individual capture/replay, plus exact-profile discovery and a
+compact categorical view. Its separate live acceptance is tracked in that contract.
+Container readiness, requests/limits, CPU calculations, ownership and workload
 rollups remain separate deliveries. Generated ordinary OTLP acceptance passes
 through the actual collector and ClickHouse; it is not a receiver scrape, live
 Kubernetes cluster or RBAC configuration test.

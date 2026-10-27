@@ -1046,6 +1046,7 @@ The corrected bounded native gate passed in 0.545s with fourteen changed control
 physical gauges: explicit pinned profile and exact pod authority → parameterized
 source compilation → independent observation quality/domain decoding → ordinary
 immutable capture and source-free replay. Scalar kernels remain separate;
-categorical comparison is explicitly unsupported. Discovery/presentation and live
-receiver acceptance remain follow-ons, as recorded in the
+categorical comparison is explicitly unsupported. Discovery and presentation now use the same exact-resource path, with generic
+passive categorical display separated from the pinned application decoder. Live
+acceptance is tracked in the phase contract; the earlier API-level scope is recorded in the
 [API-level storyboard](../journeys/203b-pod-state-contract-storyboard.md).

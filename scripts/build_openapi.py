@@ -122,8 +122,10 @@ for name in ('measurements.PodMetricDiscoveryQuestion','measurements.PodMetricDi
 for name,version in (('measurements.PodMetricDiscovery','goo/pod-metric-discovery/v1'),('measurements.PodDashboardPlan','goo/pod-dashboard/v1')):
  schemas[name]['properties']['version']['const']=version
 podplan=schemas['measurements.PodDashboardPlan']['properties'];podplan['widgets']['anyOf'][0]['maxItems']=2;podplan['candidates']['anyOf'][0]['maxItems']=16;podplan['state']['enum']=['candidates','unconfirmed']
-podwidget=schemas['measurements.PodMetricWidget']['properties'];podwidget['state']['const']='candidate';podwidget['grain']['const']='pod-resource-stream';podwidget['profile']['enum']=['collector-kubeletstats-v0.137.0','otel-k8s-v1.37.0']
-podwidget['question']={'allOf':[{'$ref':'#/components/schemas/measurements.Question'},{'properties':{'definition':{'properties':{'kind':{'const':'gauge'},'source':{'required':['resource','exactStream'],'properties':{'resource':{'type':'object','properties':{'kind':{'const':'kubernetes-pod'}}},'exactStream':{'type':'object'},'services':{'type':['array','null'],'maxItems':0},'namespace':{'type':'null'}}}}}}}]}
+podwidget=schemas['measurements.PodMetricWidget']['properties'];podwidget['state']['const']='candidate';podwidget['grain']['const']='pod-resource-stream';podwidget['profile']['enum']=['collector-kubeletstats-v0.137.0','otel-k8s-v1.37.0','collector-k8scluster-v0.137.0']
+podwidget['question']={'allOf':[{'$ref':'#/components/schemas/measurements.Question'},{'properties':{'definition':{'properties':{'kind':{'enum':['gauge','state']},'source':{'required':['resource','exactStream'],'properties':{'resource':{'type':'object','properties':{'kind':{'const':'kubernetes-pod'}}},'exactStream':{'type':'object'},'services':{'type':['array','null'],'maxItems':0},'namespace':{'type':'null'}}}}}}}]}
+podwidget_schema=schemas['measurements.PodMetricWidget']
+podwidget_schema['allOf']=[{'if':{'properties':{'profile':{'const':'collector-k8scluster-v0.137.0'}},'required':['profile']},'then':{'properties':{'question':{'properties':{'definition':{'required':['stateProfile'],'properties':{'kind':{'const':'state'},'stateProfile':{'const':'k8scluster-pod-phase/0.137.0'}}}}}}},'else':{'properties':{'question':{'properties':{'definition':{'properties':{'kind':{'const':'gauge'}}}}}}}}]
 poddiscovery=schemas['measurements.PodMetricDiscovery']['properties'];poddiscovery['instruments']['anyOf'][0]['maxItems']=16
 for name in ('records','instrumentsOmitted'):poddiscovery[name].update({'minimum':0,'maximum':10000})
 

@@ -20684,7 +20684,8 @@
             "type": "string",
             "enum": [
               "collector-kubeletstats-v0.137.0",
-              "otel-k8s-v1.37.0"
+              "otel-k8s-v1.37.0",
+              "collector-k8scluster-v0.137.0"
             ]
           },
           "question": {
@@ -20697,7 +20698,10 @@
                   "definition": {
                     "properties": {
                       "kind": {
-                        "const": "gauge"
+                        "enum": [
+                          "gauge",
+                          "state"
+                        ]
                       },
                       "source": {
                         "required": [
@@ -20751,7 +20755,57 @@
           "question"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/measurements.PodMetricWidget"
+        "x-go-type": "github.com/casselc/goo/measurements.PodMetricWidget",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "profile": {
+                  "const": "collector-k8scluster-v0.137.0"
+                }
+              },
+              "required": [
+                "profile"
+              ]
+            },
+            "then": {
+              "properties": {
+                "question": {
+                  "properties": {
+                    "definition": {
+                      "required": [
+                        "stateProfile"
+                      ],
+                      "properties": {
+                        "kind": {
+                          "const": "state"
+                        },
+                        "stateProfile": {
+                          "const": "k8scluster-pod-phase/0.137.0"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "question": {
+                  "properties": {
+                    "definition": {
+                      "properties": {
+                        "kind": {
+                          "const": "gauge"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
       },
       "measurements.PoolSignalOption": {
         "properties": {

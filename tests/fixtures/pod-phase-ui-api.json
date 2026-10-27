@@ -1,0 +1,339 @@
+{
+  "discovery": {
+    "version": "goo/pod-metric-discovery/v1",
+    "question": {
+      "environment": "prod",
+      "fromMs": 100000,
+      "toMs": 104000,
+      "resource": {
+        "deployment.environment.name": "prod",
+        "k8s.pod.uid": "pod-1"
+      },
+      "resourceSchemaURL": ""
+    },
+    "key": "d0bf96ed6f2637e4d68301431e4a0abca4fb37859e5ea04cba35acc8588425fd",
+    "instruments": [
+      {
+        "capabilityPlan": {
+          "version": "goo/instrument-capability-plan/v1alpha1",
+          "profile": "pod-metric",
+          "title": "Reported pod resource metric",
+          "shapeMatches": false,
+          "eligible": true,
+          "verification": "not-run",
+          "reasons": [],
+          "hints": [
+            "Pod resource authority supports scalar gauges and the exact pinned k8scluster pod-phase state profile. Other unitless metrics, container readiness and stock/counter/histogram metrics remain unsupported. No aliases, service labels or health state are inferred."
+          ],
+          "coverage": {
+            "state": "observed",
+            "totalStreams": 1,
+            "omittedStreams": 0,
+            "dimensions": [],
+            "streams": [
+              {
+                "id": "d61dc2be089c51a9409670679dbe2cd4d1d01985d2e9d095d19f8ccf19c2b642",
+                "stream": {
+                  "resource": {
+                    "deployment.environment.name": "prod",
+                    "k8s.pod.uid": "pod-1"
+                  },
+                  "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+                  "version": "0.137.0",
+                  "schemaURL": "",
+                  "name": "k8s.pod.phase",
+                  "unit": "",
+                  "attributes": {}
+                },
+                "records": 1,
+                "instance": "missing",
+                "dimensions": []
+              }
+            ]
+          }
+        },
+        "kind": "gauge",
+        "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+        "version": "0.137.0",
+        "schemaURL": "",
+        "metric": "k8s.pod.phase",
+        "unit": "",
+        "temporality": 0,
+        "monotonic": false,
+        "dimensions": null,
+        "records": 1,
+        "supported": true,
+        "definition": {
+          "stateProfile": "k8scluster-pod-phase/0.137.0",
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "pod-metric-248e737214a9",
+          "title": "Reported pod phase",
+          "kind": "state",
+          "environment": "prod",
+          "lookbackMinutes": 2,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "resource": {
+              "kind": "kubernetes-pod",
+              "id": "pod-1"
+            },
+            "exactStream": {
+              "resource": {
+                "deployment.environment.name": "prod",
+                "k8s.pod.uid": "pod-1"
+              },
+              "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+              "version": "0.137.0",
+              "schemaURL": "",
+              "name": "k8s.pod.phase",
+              "unit": "",
+              "attributes": {}
+            },
+            "services": [],
+            "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+            "version": "0.137.0",
+            "schemaURL": "",
+            "metric": "k8s.pod.phase"
+          }
+        }
+      }
+    ],
+    "records": 1,
+    "instrumentsOmitted": 0,
+    "warning": "Reported metadata for one exact raw resource and known resource schema. No service identity, complete pod inventory, phase, readiness, health, capacity or container aggregation is inferred. Receiver-specific names and semconv profiles remain distinct."
+  },
+  "plan": {
+    "version": "goo/pod-dashboard/v1",
+    "question": {
+      "environment": "prod",
+      "fromMs": 100000,
+      "toMs": 104000,
+      "resource": {
+        "deployment.environment.name": "prod",
+        "k8s.pod.uid": "pod-1"
+      },
+      "resourceSchemaURL": ""
+    },
+    "resourceKey": "d0bf96ed6f2637e4d68301431e4a0abca4fb37859e5ea04cba35acc8588425fd",
+    "state": "candidates",
+    "widgets": [
+      {
+        "key": "3bea4db2a6e8bd03e27a9849b9c6640e7bd4ce726fbd8a1c91ebf59238e66929",
+        "title": "Reported pod phase",
+        "state": "candidate",
+        "profile": "collector-k8scluster-v0.137.0",
+        "grain": "pod-resource-stream",
+        "question": {
+          "definition": {
+            "stateProfile": "k8scluster-pod-phase/0.137.0",
+            "apiVersion": "goo/measurement-package/v1alpha1",
+            "name": "pod-observation-65784f3fe237a048af36c2ea",
+            "title": "Reported pod phase",
+            "kind": "state",
+            "environment": "prod",
+            "lookbackMinutes": 2,
+            "maxGapMs": 60000,
+            "grain": "per-stream",
+            "source": {
+              "resource": {
+                "kind": "kubernetes-pod",
+                "id": "pod-1"
+              },
+              "exactStream": {
+                "resource": {
+                  "deployment.environment.name": "prod",
+                  "k8s.pod.uid": "pod-1"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "k8s.pod.phase",
+                "unit": "",
+                "attributes": {}
+              },
+              "services": [],
+              "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+              "version": "0.137.0",
+              "schemaURL": "",
+              "metric": "k8s.pod.phase"
+            }
+          },
+          "fromMs": 100000,
+          "toMs": 104000
+        }
+      }
+    ],
+    "candidates": [
+      {
+        "key": "3bea4db2a6e8bd03e27a9849b9c6640e7bd4ce726fbd8a1c91ebf59238e66929",
+        "title": "Reported pod phase",
+        "state": "candidate",
+        "profile": "collector-k8scluster-v0.137.0",
+        "grain": "pod-resource-stream",
+        "question": {
+          "definition": {
+            "stateProfile": "k8scluster-pod-phase/0.137.0",
+            "apiVersion": "goo/measurement-package/v1alpha1",
+            "name": "pod-observation-65784f3fe237a048af36c2ea",
+            "title": "Reported pod phase",
+            "kind": "state",
+            "environment": "prod",
+            "lookbackMinutes": 2,
+            "maxGapMs": 60000,
+            "grain": "per-stream",
+            "source": {
+              "resource": {
+                "kind": "kubernetes-pod",
+                "id": "pod-1"
+              },
+              "exactStream": {
+                "resource": {
+                  "deployment.environment.name": "prod",
+                  "k8s.pod.uid": "pod-1"
+                },
+                "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+                "version": "0.137.0",
+                "schemaURL": "",
+                "name": "k8s.pod.phase",
+                "unit": "",
+                "attributes": {}
+              },
+              "services": [],
+              "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+              "version": "0.137.0",
+              "schemaURL": "",
+              "metric": "k8s.pod.phase"
+            }
+          },
+          "fromMs": 100000,
+          "toMs": 104000
+        }
+      }
+    ],
+    "candidatesOmitted": 0,
+    "instrumentsOmitted": 0,
+    "streamsOmitted": 0,
+    "warnings": [
+      "Reported metadata for one exact pod resource variant and known schema, not a verified pod entity, health or complete Kubernetes inventory.",
+      "Collector kubeletstats v0.137.0 memory usage and working set gauges remain separate from the semconv v1.37.0 usage-only profile. No aliases, container sums, CPU/limit ratios or ownership are inferred.",
+      "At most two exact-stream default reads run; all values, freshness and read clocks require independent evaluation. Negative, fractional or unsafe byte values remain raw gauge evidence but cannot be displayed as valid byte counts.",
+      "Pinned k8scluster v0.137.0 pod phase is categorical, not health. Memory defaults retain priority; phase remains an explicit candidate when memory is available. Container readiness and other state profiles remain unsupported. Missing or omitted metadata does not establish absence."
+    ]
+  },
+  "measurement": {
+    "states": {
+      "fromNS": "100000000000",
+      "toNS": "104000000000",
+      "series": [
+        {
+          "stream": {
+            "resource": {
+              "deployment.environment.name": "prod",
+              "k8s.pod.uid": "pod-1"
+            },
+            "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+            "version": "0.137.0",
+            "schemaURL": "",
+            "name": "k8s.pod.phase",
+            "unit": "",
+            "attributes": {}
+          },
+          "state": "observed",
+          "samples": [
+            {
+              "atNS": "102000000000",
+              "code": 5,
+              "label": "Unknown",
+              "codeState": "supported",
+              "state": "observed"
+            }
+          ]
+        }
+      ]
+    },
+    "question": {
+      "definition": {
+        "stateProfile": "k8scluster-pod-phase/0.137.0",
+        "apiVersion": "goo/measurement-package/v1alpha1",
+        "name": "pod-observation-65784f3fe237a048af36c2ea",
+        "title": "Reported pod phase",
+        "kind": "state",
+        "environment": "prod",
+        "lookbackMinutes": 2,
+        "maxGapMs": 60000,
+        "grain": "per-stream",
+        "source": {
+          "resource": {
+            "kind": "kubernetes-pod",
+            "id": "pod-1"
+          },
+          "exactStream": {
+            "resource": {
+              "deployment.environment.name": "prod",
+              "k8s.pod.uid": "pod-1"
+            },
+            "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+            "version": "0.137.0",
+            "schemaURL": "",
+            "name": "k8s.pod.phase",
+            "unit": "",
+            "attributes": {}
+          },
+          "services": [],
+          "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+          "version": "0.137.0",
+          "schemaURL": "",
+          "metric": "k8s.pod.phase"
+        }
+      },
+      "fromMs": 100000,
+      "toMs": 104000
+    },
+    "plan": {
+      "sql": "SELECT ResourceAttributes AS resource, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schema_url, ResourceSchemaUrl AS resource_schema_url, MetricName AS name, MetricUnit AS unit, Attributes AS attributes, toString(toUnixTimestamp64Nano(StartTimeUnix)) AS start_ns, toString(toUnixTimestamp64Nano(TimeUnix)) AS end_ns, Flags AS flags, toString(Value) AS value FROM otel_metrics_gauge WHERE TimeUnix>=fromUnixTimestamp64Milli({p0:Int64}) AND TimeUnix<fromUnixTimestamp64Milli({p1:Int64}) AND ResourceAttributes['deployment.environment.name']={p2:String} AND mapContains(ResourceAttributes,'k8s.pod.uid') AND ResourceAttributes['k8s.pod.uid']={p3:String} AND ScopeName={p4:String} AND ScopeVersion={p5:String} AND ScopeSchemaUrl={p6:String} AND MetricName={p7:String} AND MetricUnit={p8:String} AND ResourceSchemaUrl={p9:String} AND arraySort(arrayZip(mapKeys(ResourceAttributes),mapValues(ResourceAttributes)))=arraySort(JSONExtractKeysAndValues({p10:String},'String')) AND arraySort(arrayZip(mapKeys(Attributes),mapValues(Attributes)))=arraySort(JSONExtractKeysAndValues({p11:String},'String')) ORDER BY TimeUnix LIMIT 10001 FORMAT JSONEachRow",
+      "parameters": {
+        "p0": "100000",
+        "p1": "104000",
+        "p10": "{\"deployment.environment.name\":\"prod\",\"k8s.pod.uid\":\"pod-1\"}",
+        "p11": "{}",
+        "p2": "prod",
+        "p3": "pod-1",
+        "p4": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+        "p5": "0.137.0",
+        "p6": "",
+        "p7": "k8s.pod.phase",
+        "p8": "",
+        "p9": ""
+      },
+      "revision": "8a6ab0c35dce0ae5810f43f7aa2aa5d29a206810ecac34140af0f7603722a5e9"
+    },
+    "readAt": "2026-10-27T13:33:32.082110563Z",
+    "basis": "88aaab6815a3d8928c44e1a1e81da04f73dc6f52279bd7ee9f220cfbaaa2d148",
+    "count": "1",
+    "state": "observed",
+    "warnings": [
+      "Captured observations do not establish ingestion completeness or application health. Source limits fail closed; no measurement total comes from a row page.",
+      "Streams retain complete resource, scope, metric and attribute identity. No automatic fleet merging, interpolation or averaging of percentiles.",
+      "Consumer-group observations may be repeated by multiple workers. Never sum repeated broker observations across instances."
+    ],
+    "rows": [
+      {
+        "attributes": {},
+        "end_ns": "102000000000",
+        "flags": 0,
+        "name": "k8s.pod.phase",
+        "resource": {
+          "deployment.environment.name": "prod",
+          "k8s.pod.uid": "pod-1"
+        },
+        "resource_schema_url": "",
+        "schema_url": "",
+        "scope": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver",
+        "unit": "",
+        "value": "5",
+        "version": "0.137.0"
+      }
+    ]
+  }
+}

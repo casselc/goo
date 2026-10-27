@@ -3,12 +3,14 @@ package measurements
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/metrics"
 	"maps"
 	"sort"
 )
 
 const PodReceiverProfile = "collector-kubeletstats-v0.137.0"
 const PodSemconvProfile = "otel-k8s-v1.37.0"
+const PodClusterProfile = "collector-k8scluster-v0.137.0"
 
 type PodDashboardRequest struct {
 	Discovery PodMetricDiscovery `json:"discovery"`
@@ -35,6 +37,10 @@ type PodDashboardPlan struct {
 }
 
 func podMetricProfile(i Instrument) string {
+	if i.Kind == "gauge" && i.Temporality == 0 && !i.Monotonic && metrics.ValidatePodPhaseStream(metrics.Stream{Scope: i.Scope, Version: i.Version, SchemaURL: i.SchemaURL, Name: i.Metric, Unit: i.Unit}) == nil {
+		return PodClusterProfile
+	}
+
 	if i.Kind != "gauge" || i.Unit != "By" || i.Temporality != 0 || i.Scope == "" {
 		return ""
 	}
@@ -64,7 +70,7 @@ func PlanPodDashboard(input PodDashboardRequest) (*PodDashboardPlan, error) {
 	}
 	discovery = in.Discovery
 	q := discovery.Question
-	result := &PodDashboardPlan{Version: PodDashboardVersion, Question: q, ResourceKey: discovery.Key, State: "unconfirmed", Widgets: []PodMetricWidget{}, Candidates: []PodMetricWidget{}, InstrumentsOmitted: discovery.InstrumentsOmitted, Warnings: []string{"Reported metadata for one exact pod resource variant and known schema, not a verified pod entity, health or complete Kubernetes inventory.", "Collector kubeletstats v0.137.0 memory usage and working set gauges remain separate from the semconv v1.37.0 usage-only profile. No aliases, container sums, CPU/limit ratios or ownership are inferred.", "At most two exact-stream default reads run; all values, freshness and read clocks require independent evaluation. Negative, fractional or unsafe byte values remain raw gauge evidence but cannot be displayed as valid byte counts.", "Ordinal pod phase and container readiness from other receiver profiles are not supported state or health panels in this slice. Missing or omitted metadata does not establish absence."}}
+	result := &PodDashboardPlan{Version: PodDashboardVersion, Question: q, ResourceKey: discovery.Key, State: "unconfirmed", Widgets: []PodMetricWidget{}, Candidates: []PodMetricWidget{}, InstrumentsOmitted: discovery.InstrumentsOmitted, Warnings: []string{"Reported metadata for one exact pod resource variant and known schema, not a verified pod entity, health or complete Kubernetes inventory.", "Collector kubeletstats v0.137.0 memory usage and working set gauges remain separate from the semconv v1.37.0 usage-only profile. No aliases, container sums, CPU/limit ratios or ownership are inferred.", "At most two exact-stream default reads run; all values, freshness and read clocks require independent evaluation. Negative, fractional or unsafe byte values remain raw gauge evidence but cannot be displayed as valid byte counts.", "Pinned k8scluster v0.137.0 pod phase is categorical, not health. Memory defaults retain priority; phase remains an explicit candidate when memory is available. Container readiness and other state profiles remain unsupported. Missing or omitted metadata does not establish absence."}}
 	type candidate struct {
 		widget PodMetricWidget
 		family string
@@ -94,7 +100,11 @@ func PlanPodDashboard(input PodDashboardRequest) (*PodDashboardPlan, error) {
 			continue
 		}
 		def := i.Definition
-		if def.Validate() != nil || def.Kind != i.Kind || def.Source.Metric != i.Metric || def.Source.Unit != i.Unit || def.Source.Scope != i.Scope || def.Source.Version != i.Version || def.Source.SchemaURL != i.SchemaURL || def.Source.Resource == nil || def.Source.Resource.Kind != "kubernetes-pod" || def.Source.Resource.ID != q.Resource["k8s.pod.uid"] || def.Environment != q.Environment {
+		expectedKind := i.Kind
+		if profile == PodClusterProfile {
+			expectedKind = "state"
+		}
+		if def.Validate() != nil || def.Kind != expectedKind || def.Source.Metric != i.Metric || def.Source.Unit != i.Unit || def.Source.Scope != i.Scope || def.Source.Version != i.Version || def.Source.SchemaURL != i.SchemaURL || def.Source.Resource == nil || def.Source.Resource.Kind != "kubernetes-pod" || def.Source.Resource.ID != q.Resource["k8s.pod.uid"] || def.Environment != q.Environment {
 			continue
 		}
 		for _, observed := range preview {
@@ -120,6 +130,9 @@ func PlanPodDashboard(input PodDashboardRequest) (*PodDashboardPlan, error) {
 			selected.Title = ""
 			selected.Name = "pod-observation-" + Hash(selected)[:24]
 			selected.Title = "Pod memory usage"
+			if profile == PodClusterProfile {
+				selected.Title = "Reported pod phase"
+			}
 			if i.Metric == "k8s.pod.memory.working_set" {
 				selected.Title = "Pod memory working set"
 			}
@@ -138,6 +151,10 @@ func PlanPodDashboard(input PodDashboardRequest) (*PodDashboardPlan, error) {
 			seen[dedupKey] = true
 			family := "usage"
 			title := "Pod memory usage"
+			if profile == PodClusterProfile {
+				family = "phase"
+				title = "Reported pod phase"
+			}
 			if i.Metric == "k8s.pod.memory.working_set" {
 				family = "working-set"
 				title = "Pod memory working set"
@@ -145,10 +162,11 @@ func PlanPodDashboard(input PodDashboardRequest) (*PodDashboardPlan, error) {
 			all = append(all, candidate{widget: PodMetricWidget{Key: Hash(question), Title: title, State: "candidate", Profile: profile, Grain: "pod-resource-stream", Question: question}, family: family})
 		}
 	}
+	rank := map[string]int{PodReceiverProfile: 0, PodSemconvProfile: 1, PodClusterProfile: 2}
 	sort.Slice(all, func(a, b int) bool {
 		left, right := all[a], all[b]
 		if left.widget.Profile != right.widget.Profile {
-			return left.widget.Profile == PodReceiverProfile
+			return rank[left.widget.Profile] < rank[right.widget.Profile]
 		}
 		if left.family != right.family {
 			return left.family == "usage"

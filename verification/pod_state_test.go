@@ -72,3 +72,48 @@ func TestHegelPodStateNativeReplayRejectsLabelMutation(t *testing.T) {
 		}
 	}, options(40)...)
 }
+
+func TestHegelPodPhaseDiscoveryPreservesExactStreamAndReadBudget(t *testing.T) {
+	hegel.Test(t, func(tc *hegel.T) {
+		q := pnQuestion(fmt.Sprintf("phase-%d", hegel.Draw(tc, hegel.Integers(1, 100000))))
+		attr := fmt.Sprint(hegel.Draw(tc, hegel.Integers(0, 10000)))
+		var row map[string]any
+		_ = json.Unmarshal(pnMetadata(q, "k8s.pod.phase", "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver", "0.137.0", "", map[string]string{"reported.dimension": attr}), &row)
+		row["unit"] = ""
+		b, _ := json.Marshal(row)
+		discovered, err := pnDiscover(q, []json.RawMessage{b})
+		if err != nil {
+			tc.Errorf("phase metadata: %v", err)
+			return
+		}
+		plan, err := measurements.PlanPodDashboard(measurements.PodDashboardRequest{Discovery: *discovered})
+		if err != nil || len(plan.Widgets) != 1 || len(plan.Candidates) != 1 {
+			tc.Errorf("phase plan: %v", err)
+			return
+		}
+		w := plan.Widgets[0]
+		d := w.Question.Definition
+		s := d.Source.ExactStream
+		if d.Kind != "state" || d.StateProfile != metrics.PodPhaseProfile || s == nil || !reflect.DeepEqual(s.Resource, q.Resource) || s.Attributes["reported.dimension"] != attr || s.ResourceSchemaURL != *q.ResourceSchemaURL || len(d.Source.Services) != 0 || d.Source.Namespace != nil {
+			tc.Errorf("phase authority lost")
+			return
+		}
+		// Mixed metadata preserves memory defaults; state does not add an automatic read.
+		mixed := []json.RawMessage{b, pnMetadata(q, "k8s.pod.memory.usage", measurements.KubeletStatsScope, "0.137.0", "", map[string]string{}), pnMetadata(q, "k8s.pod.memory.working_set", measurements.KubeletStatsScope, "0.137.0", "", map[string]string{})}
+		discovered, err = pnDiscover(q, mixed)
+		if err != nil {
+			tc.Errorf("mixed metadata: %v", err)
+			return
+		}
+		plan, err = measurements.PlanPodDashboard(measurements.PodDashboardRequest{Discovery: *discovered})
+		if err != nil || len(plan.Widgets) != 2 || len(plan.Candidates) != 3 {
+			tc.Errorf("mixed budget: %v", err)
+			return
+		}
+		for _, w := range plan.Widgets {
+			if w.Question.Definition.Kind != "gauge" {
+				tc.Errorf("state grew default read budget")
+			}
+		}
+	}, options(40)...)
+}

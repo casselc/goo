@@ -11673,3 +11673,61 @@ comparison refusal; the reviewer ran no independent builds/tests. Documentation,
 architecture flow and [API storyboard](journeys/203b-pod-state-contract-storyboard.md)
 separate implemented contracts from remaining discovery/planning/UI and actual
 OTLP/browser/ownership acceptance. No deployment binary or telemetry data changed.
+
+## 203c — phase discovery and categorical presentation (source freeze)
+
+Pinned k8sclusterreceiver v0.137.0 phase metadata remains a physical gauge but
+now produces explicit state definitions and approved phase candidates. Phase-only
+metadata defaults to one exact stream; memory keeps its prior at-most-two reads,
+with phase an explicit candidate. Candidate cap/omission tests cover phase being
+outside the retained 16 after many memory streams. No unit/name/version aliases,
+container readiness, aggregation, phase arithmetic or health inference is added.
+
+A domain-neutral passive `goo-state-observations` element handles supplied labels,
+raw codes, separate observation quality, UTC/exact-ns clock and bounded closed
+history. `state-measurement.js` owns the pinned phase mapping and question/stream
+proof. Pod panels, native inspection and saved measurements reuse it. Existing
+request/capture/retained Back owners remain. Synthetic SSR/detached-SPA gallery
+examples and browser component cases are separate from ordinary OTLP acceptance.
+
+Source checks: all 94 Node test files pass (19.968s); focused UI files pass after
+review (1.85s). All Go packages pass except the initial five frozen HTTP text
+cases, then the complete cmd/goo suite passes in 1.939s after exact advisory updates.
+Other first-pass packages include annotations 4.052s, exploration 1.785s,
+measurements 0.468s and workbench 0.376s. The frozen fixture update changes only
+four descriptor hint occurrences and three planner warning occurrences in
+response bodies. Requests, status, headers, limits, other fields and assertions
+are unchanged. Its 21 cases also pass separately in 0.189s. Review approved this
+intentional text-contract evolution; the old text incorrectly claimed all phase
+metrics unsupported. Stored measurement serialization/replay is unchanged.
+
+Hegel's existing phase quality/native replay and new 40-case discovery/identity/read
+budget properties pass together in 0.096s. Focused actual handlers pass in 0.026s for
+phase discovery→pure planning→execution: one metadata read, zero plan source IO,
+one native read. Their three responses conform to generated OpenAPI; three
+profile/kind mutations are rejected. Full OpenAPI validation passes 80 Go
+operations, 395 frozen responses, 144 admitted requests, 25 mux refusals and existing
+negative/SSE controls; total operations 87 and schemas 495 remain unchanged.
+
+Root review caught Go's omitted empty source.unit: the app guard now accepts
+omission only for the pinned categorical binding with explicitly empty stream
+unit, and rejects null. An initially phase-specific component was split into a
+generic display and pinned app adapter; false mappings, broadened paired
+question/result identities and mixed result families are rejected. The first
+new HTTP test registered pod routes twice; removing the duplicate test-only
+registration corrected it without application changes. Independent read-only
+core and final integration reviews approve with no blockers; no independent
+build/test was claimed by the reviewer.
+
+Workspace headroom was restored by relocating exact node_modules contents to
+/tmp and individually SHA256-archiving six rotated ClickHouse diagnostic logs
+(594,850,797 bytes) before deleting only those verified originals. The archive
+manifest is /tmp/goo-clickhouse-debug-archive-203c/manifest.json. Active logs,
+tables, volumes, history and traffic were untouched; concurrent ClickHouse merges
+also affected free space, so logs are not claimed as the sole writer.
+
+Live ordinary OTLP/browser, component browser, ownership, actor, independent raw/
+custody checks and actual documentation frames are pending this source freeze.
+No running receiver, Kubernetes API/RBAC or deployment acceptance is yet claimed.
+
+Python generic UI startup/static-serving regressions also pass (see /tmp/goo-203c-python.log); new static assets remain source-free.

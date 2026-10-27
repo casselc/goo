@@ -5,8 +5,10 @@ Collector Contrib v0.137.0 `k8sclusterreceiver` unitless `k8s.pod.phase` gauge.
 The native measurement kind `state` binds this decoder through
 `stateProfile: k8scluster-pod-phase/0.137.0`. Existing measurement execution,
 YAML publication and individual capture/reopen paths support it; no endpoint is
-added. Automatic discovery/planning and UI presentation remain pending. Existing
-memory UI and screenshots are unchanged.
+added. Exact-resource discovery and planning now recognize the pinned phase profile.
+A compact categorical component is shared by pod panels, native inspection and
+individual saved captures. Ordinary OTLP/browser acceptance for this UI slice is
+recorded separately below.
 
 The decoder requires the exact receiver scope, version, empty instrumentation
 schema and empty unit, plus a matching reported pod UID. Full resource maps,
@@ -72,7 +74,42 @@ Individual captures reopen without a telemetry read. Generic capture comparisons
 return unsupported for categorical states; phase subtraction is not meaningful.
 Existing native record-context and live counter paths do not admit state results.
 
-Next: metadata discovery/planning and UI presentation, followed by ordinary
-OTLP/browser, custody and ownership acceptance before phase dashboards can be
-claimed. Readiness requires its own container-grain contract; no unit or pod-level
-health alias is introduced here.
+## Discover and inspect
+
+From Services & resources → Kubernetes, select a known-schema resource variant
+and choose Observe metrics. Exact-resource metadata keeps the physical instrument
+kind gauge while its executable definition uses state and the pinned decoder.
+Only the actual receiver scope/version, empty unit and instrumentation schema,
+zero temporality and nonmonotonic metadata qualify. Other versions, unit aliases,
+container-ready metrics and sum instruments are not phase aliases.
+
+Memory defaults retain priority and the existing at-most-two native-read budget.
+A phase-only inventory selects one exact phase stream. When supported memory is
+present, phase remains an explicit Preview candidate, followed by Run. Candidate
+and source bounds remain unchanged: 16 instrument descriptors, 25 previews per
+instrument and 16 retained candidates; omissions are disclosed. Many memory
+candidates can exclude phase from the retained choices, so metadata omission is
+not absence of phase telemetry.
+
+The compact view shows one supplied category, its independent observation quality
+and a UTC sample time with exact-nanosecond tooltip. History is closed by default,
+with the latest 200 of at most 10,000 supplied samples and an explicit total.
+Reported Unknown remains observed; stale values stay marked stale; unsupported
+codes retain their raw value without a category label; conflicting/missing latest
+samples withhold the value. No numeric phase axis, severity scale or health colors
+are used. Exact-stream/profile details remain available in a disclosure.
+
+The framework-neutral `goo-state-observations` component is a generic supplied-data
+display with no Kubernetes mapping or IO. The `state-measurement.js` application
+adapter checks the pinned receiver/code mapping and exact question/stream proof.
+It allows the historical Go omission of an empty binding unit only with an
+explicitly empty exact-stream unit, and rejects null or mismatched identities.
+Native Inspect stages the same fixed question; Run and capture remain explicit
+reads. Back restores held resource context, and closed/changed panels withdraw
+pending work without late follow-on reads or rendering.
+
+The source/handler/property/Node checks and independent source review pass for
+this slice. Live ordinary OTLP/browser, owner, actor and raw/custody acceptance is
+pending at source freeze; no receiver deployment or Kubernetes API/RBAC claim is
+made. Readiness still requires its own container-grain contract; no pod-health
+alias is introduced.

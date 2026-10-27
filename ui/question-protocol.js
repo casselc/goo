@@ -18,6 +18,7 @@
   if(source.namespace?.value==='')delete source.namespace.value;
   if(['host','kubernetes-pod'].includes(source.resource?.kind)&&source.services==null)source.services=[];
   if(['host','kubernetes-pod'].includes(source.resource?.kind)&&source.exactStream&&source.exactStream.attributes==null)source.exactStream.attributes={};
+  if(d.stateProfile===null||d.stateProfile==='')delete d.stateProfile;
   if(d.stockDomain===null||d.stockDomain==='')delete d.stockDomain;
   for(const k of ['histogramBucketMs','lifecycle'])if(d[k]===null)delete d[k];
   return d;
