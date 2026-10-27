@@ -5,7 +5,7 @@ This adds explicit pod gauge authority and the first memory defaults to
 [Kubernetes discovery](KUBERNETES_RESOURCES.md).
 [Compact receipt](evidence/pod-memory-202.json).
 [Reported pod phase](POD_STATES.md) uses a separate typed state contract;
-container readiness remains unsupported.
+[container readiness](CONTAINER_READINESS.md) uses a separate exact container-ID state profile.
 
 ## Supported profiles
 
@@ -94,8 +94,8 @@ kernel's nonempty-unit contract is not relaxed to accommodate them.
 The [typed phase contract](POD_STATES.md) now supports exact-source native
 execution and individual capture/replay, plus exact-profile discovery and a
 compact categorical view. Its separate live acceptance is tracked in that contract.
-Container readiness, requests/limits, CPU calculations, ownership and workload
-rollups remain separate deliveries. Generated ordinary OTLP acceptance passes
+Container readiness now uses its own container authority and categorical view.
+Requests/limits, CPU calculations, ownership and workload rollups remain separate deliveries. Generated ordinary OTLP acceptance passes
 through the actual collector and ClickHouse; it is not a receiver scrape, live
 Kubernetes cluster or RBAC configuration test.
 

@@ -2,7 +2,9 @@
 
 Implemented: exact container authority, pinned readiness decoding, existing native
 API execution/capture/replay, pod-bearing resource discovery and native UI.
-Live ordinary OTLP/browser acceptance for the discovery/UI slice is pending.
+Ordinary OTLP/ClickHouse, browser, ownership, Bombadil and independent raw/custody
+acceptance pass; [journey 204b](../journeys/204b-container-readiness-storyboard.md)
+records actual costs, frames and limits.
 
 ## Receiver evidence and identity
 

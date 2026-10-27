@@ -129,7 +129,8 @@ capture/frame digests and limits. Readiness still requires its own container-gra
 contract; no pod-health alias is introduced.
 
 
-The next [container readiness contract](CONTAINER_READINESS.md) now has a native
-identity/decoder/API prerequisite. It uses actual container.id plus reported pod
-UID/container-name context, not pod authority. Discovery/UI and live acceptance
-remain separate work; it is not a pod-readiness or health alias.
+The separate [container readiness contract](CONTAINER_READINESS.md) uses actual
+container.id plus reported pod UID/container-name context, not pod authority.
+Its discovery/UI integration reuses this passive categorical display and retained
+interaction path; [journey 204b](../journeys/204b-container-readiness-storyboard.md)
+tracks its own live acceptance. It is not a pod-readiness or health alias.

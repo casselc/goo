@@ -11894,3 +11894,53 @@ strings; requests, status, headers, identities and budgets remain unchanged.
 Independent source/UI review found no blockers. Live browser/OTLP acceptance is
 pending at this source freeze; no receiver, health, probe-success or complete
 inventory claim is made.
+
+## Container readiness discovery/UI — live acceptance (204b)
+
+The source milestone `c8f7fd6` and a subsequent caption-only UI correction are
+accepted on the running lab. One Go build SHA256
+`55b5226fffd4bc7b17d67b58823e5443b0e2704f931396d5d2b93c94c20158db`
+serves the combined native prerequisite and integration. Exact changed assets,
+container copies, served MIME/hashes and metadata readiness are verified.
+
+Actual serial checks: ordinary OTLP main 55.9s, five actual held-response owner
+cases 15.2s, prior phase ownership 18.3s (three-case batch 1.6m). Thirty metric
+points plus eleven contextual records flow through the collector into ClickHouse.
+Memory defaults retain priority; cluster-only phase/readiness defaults are two
+independent reads, readiness-only one. Eight explicit domain/quality/replacement
+controls and five physical-profile refusals pass. The full main journal has 32
+logical source operations and 19 pure plans; explicit staging, retained Back and
+frozen reopen do not read source. Setup/ingest and direct store GET checks are
+excluded; this is not a physical SQL-scan count or atomic snapshot claim.
+
+Actual frame review found a phase-only shared caption. The sole production polish
+replaces it with compact domain-neutral wording. Focused Node/syntax checks pass;
+a separate actual display journey passes in 9.0s with three source operations and
+one pure plan, preserving original semantic/custody receipts. Desktop/mobile
+frames 204ba/b/c are reviewed, readable and contained. Existing 202/203c actor and
+journey status expectations are aligned with the shared caption only; their
+accepted semantic campaigns are not repeated for text.
+
+The first final-assets Bombadil invocation passes: configured 30-second campaign,
+42.4-second test including setup, 45.6-second invocation, nine phases and 167
+snapshots, terminal native completion/Back, four source operations and two pure
+plans. No browser invocation failed this round. Independent native main/owner
+replay passes in 0.75s/0.05s and rejects 12+4 changed controls. Prior accepted phase
+main/fresh owner replay passes in 0.65s/0.13s with 12+4 controls after sharing only
+the independent categorical raw oracle. Combined package 1.608s, first invocation
+passed, no observer correction or new model claim.
+
+The individual capture remains exactly 6,719 bytes; full store/public/browser
+reopen SHA256 is `c8811efbcf80172fa3338852d974f40c0910610c45d6a17fa068f349f1e883bf`.
+Exact source/custody details, frame hashes and artifact paths are in the
+[storyboard](journeys/204b-container-readiness-storyboard.md) and
+[compact receipt](docs/evidence/container-readiness-204b.json). Browser frozen
+reopen attempted no telemetry POST; actual unavailable-source custody is a
+separate native API check. This is generated OTLP, not a real Kubernetes
+receiver/API/RBAC deployment, probe validation, global identity, complete
+inventory, readiness ratio or inferred pod health.
+
+Source/UI, final frames and independent oracle reviews found no blockers.
+Temporary binary/deployment helpers are removed. Normal recording retention
+found zero expired bundles and no budget excess; traffic, data, history and
+receipts remain unchanged.

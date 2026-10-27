@@ -19,7 +19,7 @@ test('203c actual pod metadata and native replies cannot publish after panel own
     else {
       const other=initial.response.observations.find(r=>r.resource['k8s.pod.uid']==='reported-unknown'&&r.resourceSchemaURL===''); expect(other).toBeTruthy();
       await page.locator('[data-pod-observe="'+other.key+'"]').click();
-      await expect(page.locator('.pod-metrics-panel[data-pod-metrics="'+other.key+'"] [role=status]')).toContainText('Independent reported pod observations');
+      await expect(page.locator('.pod-metrics-panel[data-pod-metrics="'+other.key+'"] [role=status]')).toContainText('Independent observations in the fixed window');
     }
     const snapshot=async()=>({url:page.url(),source:observation.source(),plans:observation.plans(),activeTab:await page.locator('#entitiesKubernetes').getAttribute('aria-selected'),kubernetesHidden:await page.locator('.kubernetes-browser').isHidden(),rows:await page.locator('tr[data-pod-variant]').count(),
       panels:await page.locator('.pod-metrics-panel').evaluateAll(nodes=>nodes.map(n=>({key:n.dataset.podMetrics,hidden:n.hidden,text:n.textContent,widgets:n.querySelectorAll('.pod-metric-widget').length}))) });

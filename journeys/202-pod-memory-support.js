@@ -28,7 +28,7 @@ async function openMetrics(page, row) {
   await page.locator('button[data-pod-observe="' + row.key + '"]').click();
   const discoveryResponse = await discoveryWait, discovery = await shared.json(discoveryResponse), planResponse = await planWait, plan = await shared.json(planResponse);
   const panel = page.locator('.pod-metrics-panel[data-pod-metrics="' + row.key + '"]');
-  await expect(panel.locator('[role=status]')).toContainText('Independent reported pod observations');
+  await expect(panel.locator('[role=status]')).toContainText('Independent observations in the fixed window');
   return { discoveryRequest: discoveryResponse.request().postDataJSON(), discovery, planRequest: planResponse.request().postDataJSON(), plan };
 }
 function assertRaw(facts, result) {

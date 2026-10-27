@@ -3,7 +3,7 @@ import { extract, actions, registerCustomAction } from '@antithesishq/bombadil/b
 export { noUncaughtExceptions, noUnhandledPromiseRejections } from '@antithesishq/bombadil/browser/defaults/properties';
 const state=extract(({document})=>({phase:Number(document.documentElement.dataset.containerReadyPhase||0),source:Number(document.documentElement.dataset.containerReadySource||0),plans:Number(document.documentElement.dataset.containerReadyPlans||0),
  target:document.documentElement.dataset.containerReadyTarget||'',usageKey:document.documentElement.dataset.containerReadyUsageKey||'',ready:!!document.querySelector('tr[data-pod-variant]'),
- loaded:[...document.querySelectorAll('.pod-metrics-panel [role=status]')].some(e=>e.textContent?.includes('Independent reported pod observations')),
+ loaded:[...document.querySelectorAll('.pod-metrics-panel [role=status]')].some(e=>e.textContent?.includes('Independent observations in the fixed window')),
  nativeReady:!!document.querySelector('#measureRun')&&!document.querySelector<HTMLButtonElement>('#measureRun')!.disabled,
  nativeComplete:!!document.querySelector('#measureResult')?.children.length&&!document.querySelector<HTMLButtonElement>('#measureCapture')?.disabled,
  terminal:document.documentElement.dataset.containerReadyTerminal==='true'}));

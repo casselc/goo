@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "journey": "204b",
+  "status": "accepted",
+  "sourceCommit": "c8f7fd68e3c7a7470df4af8d027ec2587d4c3fb0",
+  "binarySHA256": "55b5226fffd4bc7b17d67b58823e5443b0e2704f931396d5d2b93c94c20158db",
+  "main": {
+    "artifact": "artifacts/container-readiness/container-ready-bbe4e5ac12/ledger.json",
+    "seconds": 55.9,
+    "sourceOperations": 32,
+    "purePlans": 19,
+    "eventCount": 24
+  },
+  "owner": {
+    "artifact": "artifacts/container-readiness/container-ready-3e854f1ce6/ownership.json",
+    "seconds": 15.2,
+    "cases": 5
+  },
+  "priorPhaseOwner": {
+    "artifact": "artifacts/pod-phase/pod-phase-b73122ee9f/ownership.json",
+    "seconds": 18.3
+  },
+  "capture": {
+    "id": "b269d19fe1c3d8d9eef8bed76f6723f829c194825a695cf65729217734e250dc",
+    "bytes": 6719,
+    "sha256": "c8811efbcf80172fa3338852d974f40c0910610c45d6a17fa068f349f1e883bf",
+    "unchanged": true
+  },
+  "limits": [
+    "Generated ordinary OTLP; not an actual receiver/Kubernetes API/RBAC deployment.",
+    "Read operations are logical HTTP effects; setup/ingest and direct store GETs excluded.",
+    "Independent fixed-window reads are not an atomic state snapshot.",
+    "Browser frozen replay checks zero attempted telemetry POSTs, not a ClickHouse outage.",
+    "No pod-health, probe-existence, readiness ratio or complete inventory claim."
+  ],
+  "display": {
+    "artifact": "artifacts/container-readiness/container-ready-a2b7e4c5e5/display.json",
+    "seconds": 9.0,
+    "sourceOperations": 3,
+    "purePlans": 1,
+    "desktop": {
+      "width": 1104,
+      "height": 312.09375,
+      "clientWidth": 1104,
+      "scrollWidth": 1104,
+      "issues": [],
+      "clocks": [
+        {
+          "text": "2026-10-27 14:37:02.064 UTC",
+          "title": "1793111822064000000 ns since Unix epoch",
+          "dateTime": "2026-10-27T14:37:02.064000000Z"
+        }
+      ]
+    },
+    "mobile": {
+      "width": 310.8125,
+      "height": 379.234375,
+      "clientWidth": 311,
+      "scrollWidth": 311,
+      "issues": [],
+      "clocks": [
+        {
+          "text": "2026-10-27 14:37:02.064 UTC",
+          "title": "1793111822064000000 ns since Unix epoch",
+          "dateTime": "2026-10-27T14:37:02.064000000Z"
+        }
+      ]
+    },
+    "screenshots": [
+      {
+        "file": "docs/journeys/screenshots/204ba-container-readiness.png",
+        "sha256": "c0153c16d0ac0f9ff89522d7668b34c07a4adf99ecfb7dd07d3fc17bbde92330"
+      },
+      {
+        "file": "docs/journeys/screenshots/204bb-mobile-container-readiness.png",
+        "sha256": "3734f73abb3b58cd504316dc1964d900c52a3196d640172daff046875c050c0d"
+      },
+      {
+        "file": "docs/journeys/screenshots/204bc-container-readiness-in-context.png",
+        "sha256": "8151456785ddfc7b5e6cff675ceabe20a4a0133f3d356c113d672ecc2506cfa5"
+      }
+    ]
+  },
+  "actor": {
+    "artifact": "artifacts/container-readiness/container-ready-c4b854e7c5/bombadil/acceptance-summary.json",
+    "campaignSeconds": 30,
+    "testSeconds": 42.4,
+    "invocationSeconds": 45.6,
+    "phases": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "snapshots": 167,
+    "final": {
+      "phase": 8,
+      "source": 4,
+      "plans": 2,
+      "target": "39951290667b356f6b1b2f5e986036171e0b26c892f10a37ab6f51c1212dc72a",
+      "usageKey": "1fb7449b747994c52e00f57cc30d5e4e15a85e643bda2ea37b387c6148b098e5",
+      "ready": true,
+      "loaded": true,
+      "nativeReady": true,
+      "nativeComplete": true,
+      "terminal": true
+    }
+  },
+  "nativeValidation": {
+    "artifact": "artifacts/container-readiness/native-validation.txt",
+    "packageSeconds": 1.608,
+    "mainSeconds": 0.75,
+    "ownerSeconds": 0.05,
+    "mainRejectingControls": 12,
+    "ownerRejectingControls": 4,
+    "priorPhaseMainSeconds": 0.65,
+    "priorPhaseOwnerSeconds": 0.13,
+    "priorPhaseRejectingControls": [
+      12,
+      4
+    ],
+    "firstInvocationPassed": true
+  },
+  "captionAssetSHA256": "0a4194d182bef0e244283b7e7279ca8afecb4785cbb398293321ebc0c37ee81a"
+}

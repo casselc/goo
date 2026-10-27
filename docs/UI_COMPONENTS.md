@@ -1058,9 +1058,14 @@ component contract. Descendant focus across data rerenders is not guaranteed;
 app-owned retained Back focus is tested separately. No lifecycle, disclosure or update fetches or publishes.
 
 `GooStateMeasurement` in state-measurement.js is a separate application adapter.
-It owns the pinned k8scluster phase mapping, typed definition, resource/schema and
+It owns the pinned k8scluster phase and container-readiness mappings, typed definition, resource/schema and
 exact-stream proof, including Go's historically omitted empty binding unit. It
 rejects fabricated health labels or broadened identities before mounting the
 component, and accepts an app-owned Inspect callback without performing reads.
 Pod and native/saved views share this adapter. Other categorical domains may use
 the display directly with their own validated supplied labels.
+
+The container mapping requires literal reported container.id plus pod UID and
+container-name context, and validates Ready/Not ready as 1/0 independently of
+quality. Zero is never a missing-value test. The passive element itself has no
+Kubernetes knowledge; readiness adds no new display component or automatic read.

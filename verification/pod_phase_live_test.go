@@ -21,6 +21,16 @@ import (
 // ppRaw derives categorical domain and observation quality independently from
 // ordinary raw fixture records; it never calls the production phase decoder.
 func ppRaw(f psMap, r *measurements.Result) bool {
+	return categoricalRaw(f, r, false)
+}
+
+func categoricalRaw(f psMap, r *measurements.Result, container bool) bool {
+	profile, kind, identity, metric := "k8scluster-pod-phase/0.137.0", "kubernetes-pod", "k8s.pod.uid", "k8s.pod.phase"
+	labels := map[int64]string{1: "Pending", 2: "Running", 3: "Succeeded", 4: "Failed", 5: "Unknown"}
+	if container {
+		profile, kind, identity, metric = "k8scluster-container-ready/0.137.0", "kubernetes-container", "container.id", "k8s.container.ready"
+		labels = map[int64]string{0: "Not ready", 1: "Ready"}
+	}
 	q, d := r.Question, r.Question.Definition
 	if _, e := time.Parse(time.RFC3339Nano, r.ReadAt); e != nil {
 		return false
@@ -30,7 +40,7 @@ func ppRaw(f psMap, r *measurements.Result) bool {
 	}
 
 	s := d.Source.ExactStream
-	if d.Kind != "state" || d.StateProfile != "k8scluster-pod-phase/0.137.0" || d.Source.Resource == nil || d.Source.Resource.Kind != "kubernetes-pod" || s == nil || d.Source.Resource.ID == "" || d.Source.Resource.ID != s.Resource["k8s.pod.uid"] || len(d.Source.Services) != 0 || d.Source.Namespace != nil || d.Environment != f["environment"] || r.States == nil || r.Gauges != nil || r.Stocks != nil || r.Counters != nil || r.Histograms != nil {
+	if d.Kind != "state" || d.StateProfile != profile || d.Source.Resource == nil || d.Source.Resource.Kind != kind || s == nil || d.Source.Resource.ID == "" || d.Source.Resource.ID != s.Resource[identity] || len(d.Source.Services) != 0 || d.Source.Namespace != nil || d.Environment != f["environment"] || r.States == nil || r.Gauges != nil || r.Stocks != nil || r.Counters != nil || r.Histograms != nil {
 		return false
 	}
 	if d.Grain != "per-stream" || d.StockDomain != "" || d.HistogramBucketMS != nil || s.Resource["deployment.environment.name"] != d.Environment || d.Source.Metric != s.Name || d.Source.Unit != s.Unit || d.Source.Scope != s.Scope || d.Source.Version != s.Version || d.Source.SchemaURL != s.SchemaURL {
@@ -41,7 +51,10 @@ func ppRaw(f psMap, r *measurements.Result) bool {
 			return false
 		}
 	}
-	if s.Name != "k8s.pod.phase" || s.Unit != "" || s.Scope != "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver" || s.Version != "0.137.0" || s.SchemaURL != "" {
+	if container && (s.Resource["k8s.pod.uid"] == "" || s.Resource["k8s.container.name"] == "") {
+		return false
+	}
+	if s.Name != metric || s.Unit != "" || s.Scope != "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver" || s.Version != "0.137.0" || s.SchemaURL != "" {
 		return false
 	}
 	lo, hi := q.BoundsNS()
@@ -106,7 +119,6 @@ func ppRaw(f psMap, r *measurements.Result) bool {
 	if len(series.Samples) != len(times) {
 		return false
 	}
-	labels := map[int64]string{1: "Pending", 2: "Running", 3: "Succeeded", 4: "Failed", 5: "Unknown"}
 	latestQuality, latestDomain := "", ""
 	for n, at := range times {
 		points := groups[at]

@@ -2555,3 +2555,27 @@ go test -run '^TestPodPhaseObserved$' -count=1 .
 
 Discovery, UI and real ordinary OTLP/ownership/actor validation remain the next
 slice. The running lab and its actual 203c screenshots are unchanged.
+
+### Container-readiness discovery and ordinary-source adoption (204b)
+
+`TestHegelContainerReadinessDiscoveryAuthority` passes in 0.103s (0.09s test body). Ten generated literal container/pod identities exercise the public metadata Source decoder and dashboard planner with full resource/schema preservation. Missing and empty container IDs and names remain unsupported; reported metadata cannot acquire service or pod authority. The checks preserve the two-read default budget, keep memory defaults ahead of categorical candidates, and verify input immutability and arrival-order independence. This is generated adapter/planner evidence, not an actual receiver or cluster test.
+
+`TestContainerReadinessObserved` and `TestContainerReadinessOwnershipObserved` passed on the first actual invocation: main 0.75s and ownership 0.05s, rejecting 12 main and four owner serialized changed controls. They share the independent raw categorical oracle with the phase wrapper, retaining distinct exact profiles, authority and label domains. The container domain is 0/1 (Not ready/Ready); zero is supported reported evidence, and freshness remains independent. Eight actual boundary resources cover reported zero, a replacement container ID, unsupported/fractional code, stale supported/unsupported code, conflicting reports and a latest missing-data flag after earlier Ready. The separate phase/readiness pair is checked against both raw result populations; mixed memory keeps its two memory defaults. No new lifecycle model is claimed for the reused native owner protocol.
+
+Actual ordinary-OTLP main `artifacts/container-readiness/container-ready-bbe4e5ac12/ledger.json` passed in 55.9s; owner `container-ready-3e854f1ce6/ownership.json` passed in 15.2s. The exact 24-event journal contains 32 telemetry API operations and 19 pure plans: one inventory, 16 resource metadata lookups, 14 native reads and one fresh individual capture. Stage, retained Back, categorical display and blocked-POST frozen reload add no telemetry reads. These are browser-observed API costs, not upstream SQL counts. Five real held-response withdrawal cases preserve owner state, publication, URL and counters; malformed and unavailable metadata cannot manufacture a readiness read.
+
+The full individual capture remains byte-identical at 6,719 bytes, SHA256 `c8811efbcf80172fa3338852d974f40c0910610c45d6a17fa068f349f1e883bf`, content ID `b269d19fe1c3d8d9eef8bed76f6723f829c194825a695cf65729217734e250dc`. The native gate validates complete stored before/after bytes, exact question, raw rows, domain/quality, receipt and content addressing, not a paginated public-page hash. It also binds exact resource/schema/container authority, source clocks/bases and every component sample/current value. Controls reject changed labels, quality/domain, identity/schema, raw membership, clock/basis, local read count, rendered label and reopened receipt.
+
+Because the raw helper was shared, the same invocation also replayed the prior accepted 203c main `artifacts/pod-phase/pod-phase-0313f9b522/ledger.json` (0.65s) and the fresh prior-phase owner regression `pod-phase-b73122ee9f/ownership.json` (0.13s), retaining its 12 + 4 changed controls. All four tests passed together in **1.608s**, with no observer correction, application change, ingestion or browser repetition. Stdout is `artifacts/container-readiness/native-validation.txt`. No subsequent campaign was needed.
+
+Final-assets actor `artifacts/container-readiness/container-ready-c4b854e7c5/bombadil/acceptance-summary.json` passed in 42.4s, nine phases / 167 snapshots, final source 4 / plans 2 / terminal true. A bounded display-only fresh receipt `container-ready-a2b7e4c5e5/display.json` uses three source operations and one pure plan after a caption-only correction; the accepted semantic ledger was not repeated. The prior phase owner browser regression passed in 18.3s. These fixtures use ordinary OTLP and the actual source adapter, not a running Kubernetes cluster or k8sclusterreceiver; labels do not prove probe success, pod health or physical readiness.
+
+With the toolchain/cache environment above, run from this module:
+
+```sh
+GOO_CONTAINER_READY_LEDGER=/workspace/goo/artifacts/container-readiness/container-ready-bbe4e5ac12/ledger.json \
+GOO_CONTAINER_READY_OWNER_LEDGER=/workspace/goo/artifacts/container-readiness/container-ready-3e854f1ce6/ownership.json \
+GOO_POD_PHASE_LEDGER=/workspace/goo/artifacts/pod-phase/pod-phase-0313f9b522/ledger.json \
+GOO_POD_PHASE_OWNER_LEDGER=/workspace/goo/artifacts/pod-phase/pod-phase-b73122ee9f/ownership.json \
+go test -run '^(TestContainerReadiness|TestPodPhase)(Observed|OwnershipObserved)$' -v .
+```
