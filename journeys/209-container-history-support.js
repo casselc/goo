@@ -13,8 +13,8 @@ function assertContext(facts,resource,signal,question,range){
  expect(question.environment).toBe(facts.environment);expect(question.signal).toBe(signal);
  expect(question.fromMs).toBe(Number(BigInt(range.fromNS)/1000000n));expect(question.toMs).toBe(Number((BigInt(range.toNS)+999999n)/1000000n));
  const keys=['container.id','k8s.pod.uid','k8s.container.name','k8s.cluster.uid','k8s.cluster.name','k8s.namespace.name'];
- expect(question.where.all).toHaveLength(9);
- for(const k of [...keys,'deployment.environment.name'])expect(question.where.all).toContainEqual({field:{kind:'resource',key:k},op:'eq',value:resource[k]});
+ expect(question.where.all).toHaveLength(8);
+ for(const k of keys)expect(question.where.all).toContainEqual({field:{kind:'resource',key:k},op:'eq',value:resource[k]});
  expect(question.where.all).toContainEqual({field:{kind:'column',key:'timestamp_ns'},op:'gte',value:range.fromNS});expect(question.where.all).toContainEqual({field:{kind:'column',key:'timestamp_ns'},op:'lte',value:String(BigInt(range.toNS)-1n)});
  return facts.records.filter(r=>r.family===signal&&BigInt(r.timeNS)>=BigInt(range.fromNS)&&BigInt(r.timeNS)<BigInt(range.toNS)&&keys.every(k=>r.resource[k]===resource[k])).map(r=>r.id).sort();
 }

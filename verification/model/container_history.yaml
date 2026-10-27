@@ -1,0 +1,18 @@
+spec: container_history.qnt
+module: container_history
+constants: {MAX_READS: 32}
+invariants: [safety]
+actions:
+  metadata: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}} and compositions == {{.obs.compositions}} and histories == {{.obs.histories}}'}
+  both_histories: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}} and compositions == {{.obs.compositions}} and histories == {{.obs.histories}}'}
+  local_point: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}} and compositions == {{.obs.compositions}} and histories == {{.obs.histories}}'}
+  local_range: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}} and compositions == {{.obs.compositions}} and histories == {{.obs.histories}}'}
+  context_run_back: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}} and compositions == {{.obs.compositions}} and histories == {{.obs.histories}}'}
+  native_stage: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}} and compositions == {{.obs.compositions}} and histories == {{.obs.histories}}'}
+  native_run_capture: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}} and compositions == {{.obs.compositions}} and histories == {{.obs.histories}}'}
+  frozen: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}} and compositions == {{.obs.compositions}} and histories == {{.obs.histories}}'}
+  hold_history: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}} and compositions == {{.obs.compositions}} and histories == {{.obs.histories}}'}
+  withdraw: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}} and compositions == {{.obs.compositions}} and histories == {{.obs.histories}}'}
+  late_ignored: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}} and compositions == {{.obs.compositions}} and histories == {{.obs.histories}}'}
+  sibling_load: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}} and compositions == {{.obs.compositions}} and histories == {{.obs.histories}}'}
+  held_finishes: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}} and compositions == {{.obs.compositions}} and histories == {{.obs.histories}}'}

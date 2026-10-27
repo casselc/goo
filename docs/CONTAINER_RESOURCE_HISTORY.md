@@ -1,6 +1,6 @@
 # Container resource history
 
-Milestone 209 is implemented in source; live acceptance is pending. It extends
+Milestone 209 is implemented and accepted. It extends
 [Resources](CONTAINER_RESOURCES.md) with histories projected from the same held
 native results used by the latest-value memory and CPU summaries.
 

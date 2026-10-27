@@ -1410,3 +1410,20 @@ actor. A real mobile heading-width defect is fixed and all four refreshed frames
 are reviewed. Independent raw checks reject 22 controls; Quint validates nine
 actual traces and rejects four separate bad traces. No combined capture or
 arbitrary concurrency proof is claimed.
+
+
+## 209 — Resource history accepted
+
+Resources now projects CPU/memory usage, request and limit histories from the
+same held native results. Shared-scale sparse dots, compact UTC point evidence,
+local paging/focus and exact time-range log/span context preserve missing,
+invalid and stale observations. Loading adds a pure history proof, with no extra
+telemetry read; context Run and individual capture remain explicit.
+
+Live OTLP/ClickHouse journeys, five held-history ownership cases, current
+Resources regressions, a bounded Bombadil actor, two Hegel properties and
+independent raw/Quint validation pass. Three final desktop/mobile frames are
+reviewed. See [Journey 209](../journeys/209-container-history-storyboard.md) and
+[evidence](evidence/container-history-209.json). Configuration-event history,
+continuous interpolation, fleet totals and combined custody remain separate
+contracts; this milestone does not imply those features.

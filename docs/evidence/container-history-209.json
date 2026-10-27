@@ -1,6 +1,6 @@
 {
   "milestone": 209,
-  "status": "source accepted; live acceptance pending",
+  "status": "accepted",
   "checks": {
     "go": {
       "focusedSeconds": 2.477,
@@ -50,5 +50,137 @@
     "10,000 total points / 8MiB whole refusal; UI256 visible marks",
     "No percentage history, new capture format or live subscription",
     "Prior ignored journals lost during cloud restart; fresh209 evidence required"
-  ]
+  ],
+  "live": {
+    "productionSource": "eed20c9",
+    "binarySHA256": "2f1b1dd7d3988c4b7e42dba9d1e68c743aece2e20ba5542f4d5e056ba226633a",
+    "main": {
+      "path": "artifacts/container-history/container-history-8d952431ba/ledger.json",
+      "seconds": 14.4,
+      "invocationSeconds": 15.9,
+      "directTelemetryPosts": 12,
+      "freshCapturePosts": 1,
+      "purePlans": 3,
+      "pureLatestCompositions": 2,
+      "pureHistories": 2,
+      "presentation": "Accepted semantic fixture before compact inspector presentation polish; final frames use the separate display fixture.",
+      "fixture": "container-history-8d952431ba"
+    },
+    "owners": {
+      "path": "container-history-9f023bc8ac/ownership.json",
+      "seconds": 10.4,
+      "cases": 5
+    },
+    "syntheticPrimitive": {
+      "seconds": 1.5,
+      "sourceReads": 0,
+      "label": "Explicit supplied synthetic SSR/detached data, separate from generated ordinary OTLP."
+    },
+    "current208Regression": {
+      "familyOwnerSeconds": 15.9,
+      "withdrawalSeconds": 7.0,
+      "invocationSeconds": 25.1,
+      "paths": [
+        "artifacts/container-resources/container-resources-cc60d092e3/ownership.json",
+        "artifacts/container-resources/container-resources-f2d6813322/withdrawal.json"
+      ],
+      "historicalFramesOverwritten": false,
+      "priorIgnoredRawReplaysAvailable": false
+    },
+    "actor": {
+      "path": "container-history-80d29e55e4/bombadil/acceptance-summary.json",
+      "seconds": 35.8,
+      "invocationSeconds": 38.0,
+      "configuredSeconds": 30,
+      "phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "snapshots": 46,
+      "sourcePosts": 10,
+      "purePlans": 3,
+      "pureLatestCompositions": 2,
+      "pureHistories": 2,
+      "terminal": true,
+      "presentation": "Accepted before the compact inspector-only polish; action selectors, read behavior and semantics unchanged, so actor was not repeated."
+    },
+    "capture": {
+      "id": "fb5a358a49d310e32a01ddb0fbe41126c90d81a0909b54937c3d36297c5d142d",
+      "bytes": 7268,
+      "sha256": "6b8c87b0683aa022cf76c0dd9e42c7cab167b55b950ab23b0da315841237f15d",
+      "afterEqual": true,
+      "postActorLocalRehashEqual": true,
+      "postDisplayLocalRehashEqual": true,
+      "postDisplaySHA256": "6b8c87b0683aa022cf76c0dd9e42c7cab167b55b950ab23b0da315841237f15d"
+    },
+    "diagnostic": {
+      "path": "first-harness-diagnostics",
+      "reason": "First main compared staged question without groupBy to the actual Workbench execution which adds explicit groupBy:[]. Only this empty grouping expectation was corrected; selectors/window/environment/limits and actual three boundary members remained strict. Owner and generic passed and were not repeated."
+    },
+    "frames": "Three final actual frames use separate display fixture container-history-0bcbb90786. Original accepted main frames/hashes are preserved under first-accepted-inspector-frames and frame-manifest-before-point-polish.json.",
+    "native": {
+      "mainSeconds": 6.84,
+      "ownerSeconds": 1.49,
+      "changedControlsRejected": 16,
+      "quintSeconds": 11.485,
+      "actualFiniteTraces": 6,
+      "finiteSteps": 25,
+      "badTracesRejected": 3,
+      "diagnostics": "Observer capture endpoint count corrected to POST only; model import gained a meaningful MAX_READS=32 safety binding. Diagnostics retained; no app/fixture/browser changes.",
+      "finalMainSeconds": 7.825,
+      "finalChangedControlsRejected": 17,
+      "finalMainChangedControlsRejected": 13,
+      "finalHardening": "Declared context signal must equal actual question.signal; one synchronized cross-signal mutation rejected. Owner/model not repeated."
+    },
+    "display": {
+      "path": "container-history-0bcbb90786/display.json",
+      "seconds": 7.6,
+      "invocationSeconds": 10.2,
+      "directTelemetryPosts": 9,
+      "purePlans": 2,
+      "pureLatestCompositions": 2,
+      "pureHistories": 2,
+      "capturePosts": 0,
+      "source": "Separate fresh generated ordinary OTLP fixture on presentation-polished assets; accepted main/owners/actor not repeated.",
+      "fixture": "container-history-0bcbb90786"
+    },
+    "presentationAssets": {
+      "ui/container-resource-history.js": "e88b1d2df886b3cd458b33aef2b9815a2a66a4d240c4eb562e6b2d24449f371e",
+      "ui/kubernetes.css": "09883018fc86e2eef968cb9fefdbb8580d8b6dfd9382f5abc33d6779178b3437"
+    },
+    "cleanup": {
+      "taskBinaryRemoved": true,
+      "deploymentHelperRemoved": true,
+      "pointPolishHelperRemoved": true,
+      "taskTarRemoved": true,
+      "runtimeToolsAndDiagnosticArchivePreserved": true,
+      "retention": "Dry-run only; no deletion/apply."
+    },
+    "retentionPlan": {
+      "mode": "dry-run",
+      "root": "/tmp/goo-session-artifacts",
+      "bundles": 4,
+      "expired_bundles": 0,
+      "files": 0,
+      "logical_bytes": 0,
+      "reclaimable_allocated_bytes": 0,
+      "pinned_bundles": 0,
+      "budget_bytes": 536870912,
+      "retained_allocated_bytes": 7634944,
+      "budget_exceeded": false
+    }
+  }
 }

@@ -2679,3 +2679,117 @@ GOO_CONTAINER_RESOURCES_OWNER_LEDGER=/workspace/goo/artifacts/container-resource
 GOO_CONTAINER_RESOURCES_WITHDRAWAL_LEDGER=/workspace/goo/artifacts/container-resources/container-resources-5fb0c695cc/withdrawal.json \
 go test -run '^(TestContainerResources(Observed|OwnershipObserved|WithdrawalObserved)|TestQuintContainerResourcesObserved)$' -v .
 ```
+
+### 209 held container resource history (accepted)
+
+`container_history_test.go` adds two bounded independent Hegel properties. The
+public JavaScript `contextQuestion` helper runs in Node with fetching forbidden;
+its complete predicate AST compiles through Go, preserves exact missing/empty
+resource qualifiers, and admits only raw timestamps in the selected half-open
+nanosecond range. Enclosing milliseconds do not admit either outside endpoint.
+The second property constructs replayable held memory/CPU evidence, then checks
+raw timestamp groups, duplicate row indices, conflicting/missing reports, invalid
+domains, true zero, independent provenance, and freshness at the original question
+end, including exact max-gap equality and one nanosecond beyond it. Expected
+history values and states come from raw facts and independent domain arithmetic,
+not the production history composer or its gauge samples.
+
+The two properties passed in **0.551s** (0.50s context; 0.04s projection), eight
+examples each. The first invocation stopped before tests because the restarted
+environment lacked verification-only pinned modules and sandboxed proxy access;
+restoring those exact dependencies with checksums enabled allowed the unchanged
+properties to pass. Logs are `/tmp/goo-209-history-properties.txt` and
+`/tmp/goo-209-history-properties-restored.txt`. No prior ignored 206–208 raw
+artifacts survived the environment reset, so no old raw replay is claimed here.
+
+Fresh 209 acceptance uses ordinary generated OTLP, not an actual receiver or
+Kubernetes cluster. Main `artifacts/container-history/container-history-8d952431ba/ledger.json`
+passed in **14.4s**; owner `container-history-9f023bc8ac/ownership.json` passed in
+**10.4s**. There are 282 raw metric reports and 16 raw record controls. The
+independent oracle binds all nine memory and 272 CPU history points to exact raw
+timestamp groups, duplicate indices, original exported values, domains and
+observation quality; each held question/read clock/raw-row tuple is independently
+SHA-bound to its evidence basis. It checks full-family scale preservation through
+256-point paging, exact selected-point raw evidence, and matching logs/spans with
+three raw members each under exclusive nanosecond bounds. Local selection/range
+changes and retained Back create no reads. Actual browser assertions separately
+check point selection leaves the context range unchanged and loading CPU retains
+the exact memory HTML.
+
+Main has **13 source effects** (12 direct telemetry POSTs plus one fresh capture),
+**three pure plans**, **two latest compositions** and **two pure histories**.
+The original individual CPU-request capture is **7,268 bytes**, ID
+`fb5a358a49d310e32a01ddb0fbe41126c90d81a0909b54937c3d36297c5d142d`,
+SHA-256 `6b8c87b0683aa022cf76c0dd9e42c7cab167b55b950ab23b0da315841237f15d`.
+Full before/after store bytes are identical, the complete receipt hash verifies,
+and frozen reopen performs no POST. No multi-series atomic custody is inferred.
+
+`TestContainerHistoryObserved` first passed in **6.84s** with **12** serialized
+changed controls. Final self-review then added an explicit context-label versus
+compiled-question signal binding and a synchronized wrong-signal-copy mutant;
+the justified main-only hardening rerun passed in **7.825s** (body 7.80s), with
+**13** controls. Owner passed initially in **1.49s** with **four**. History-value,
+raw-index, quality, basis and clock mutants also update the duplicated network
+response, so transport equality alone cannot reject them: independent raw and
+provenance checks must fail. Other controls target paging/domain changes,
+duplicate context signals, a copied logs question/result under a spans label,
+raw membership count, local reads/history effects and
+frozen receipt substitution. Five real held-history cases establish withdrawal
+on family-role edit, disclosure close, scope change and global close, while an
+unrelated sibling load preserves accepted memory history. The owner source
+counter ends at 16, with five plans, six compositions and six histories.
+
+The first combined invocation was not green: owner passed, but the main observer
+counted source-free `GET /api/captures` list requests as capture POSTs. Restricting
+that endpoint tally to POSTs corrected the observer without changing exact effect
+totals, raw checks or artifacts. Initial stdout is
+`artifacts/container-history/native-validation.initial.txt`; the corrected main
+pass is in `native-validation.corrected.txt`; final signal hardening is in
+`native-main-hardened.txt`. The first model execution then
+exposed quintgo's generated empty-parameter module import for a model without
+constants. Adding the explicit `MAX_READS: 32` bounded safety parameter made the
+existing generated import valid; no application, fixture, toolkit dependency or
+semantic expectation changed. `native-validation.initial-model.txt` preserves
+that parser diagnostic. Only the model was rerun after the raw gates passed.
+
+Final `TestQuintContainerHistoryObserved` passed in **11.485s** (body 11.46s):
+**six actual finite traces / 25 macrosteps**, plus **three rejected model-only
+bad traces** for an extra local read, context Run before the held range, and a
+late withdrawn history effect. Logs are in
+`artifacts/container-history/native-model-validation.txt`; per-trace JSON and
+reports sit beside the main ledger. The model checks fixed observed
+range/context/read/capture and held-history macrosteps. Its `phase` is an internal
+order guard, not independently observed application state. Go binds actual
+family provenance and withdrawal/publication snapshots; there is no
+arbitrary-concurrency, generated schedule or full UI proof. No duplicate pure
+execution state machine or additional state/swarm quota was introduced.
+
+The actual actor `container-history-80d29e55e4` passed in **35.8s**, phases 0–14,
+46 snapshots, ending at source 10 / plans 3 / compositions 2 / histories 2. The
+generic component passed in 1.5s. Final presentation-only display acceptance
+`container-history-0bcbb90786/display.json` passed in 7.6s on a separate fresh
+fixture; semantic main/capture bytes remain unchanged. Fresh current-208 ownership regressions passed
+in 15.9s and 7.0s; these are new runtime executions, not recovered historical raw
+replays. The initial main harness empty-`groupBy` normalization diagnostic is
+retained separately; neither it nor the observer correction required app changes.
+
+Reproduce from `verification/` with restored pinned dependencies and Quint 0.32:
+
+```sh
+export PATH=/workspace/.toolchains/go/bin:$PATH
+export GOPATH=/workspace/.go GOMODCACHE=/tmp/goo-module-cache
+export GOCACHE=/tmp/goo-go-build-cache-20261023 GOTOOLCHAIN=local GOMAXPROCS=2
+export QUINT_BIN=/workspace/goo/node_modules/.bin/quint
+export GOO_CONTAINER_HISTORY_LEDGER=/workspace/goo/artifacts/container-history/container-history-8d952431ba/ledger.json
+export GOO_CONTAINER_HISTORY_OWNER_LEDGER=/workspace/goo/artifacts/container-history/container-history-9f023bc8ac/ownership.json
+go test -run '^TestHegelContainerHistory' -v .
+go test -run '^TestContainerHistory(Observed|OwnershipObserved)$' -v .
+go test -run '^TestQuintContainerHistoryObserved$' -v .
+```
+
+The recorded execution used the initial combined selector, then corrected main
+and model, model-only, and the justified signal-hardening main-only check. No
+property, owner or successful model campaign was repeated; the main rerun was
+required by its new semantic guard and rejecting control. Missing Quint fails rather than
+skips. The old `/tmp/goo-quint-208` launcher was lost in the environment reset;
+209 uses the restored normal dependency path above.

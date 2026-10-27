@@ -989,8 +989,7 @@ arbitrary concurrent schedules; actual family provenance and withdrawal are
 checked separately against raw and held-response evidence.
 
 
-[Resource history](CONTAINER_RESOURCE_HISTORY.md) is source-implemented in 209;
-live acceptance is pending. Histories are sparse reports, not continuous usage
+[Resource history](CONTAINER_RESOURCE_HISTORY.md) is accepted in 209 with live journeys and independent raw/model checks. Histories are sparse reports, not continuous usage
 or configuration events. Freshness labels are relative to the original fixed
 question end. The API refuses more than 10,000 points or 8 MiB rather than
 truncating facts; the UI explicitly pages 256 marks. A point has no inferred

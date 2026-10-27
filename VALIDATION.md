@@ -12391,3 +12391,20 @@ Source review approves core/UI with no blockers. Latest summary contracts,
 individual capture and source budgets remain unchanged; each family adds only
 one pure history follow-up. Fresh live 209 browser/owner/Bombadil, raw/custody,
 observed traces and actual frames are pending at this source gate.
+
+
+## 209 — Resource history accepted
+
+Resources now projects CPU/memory usage, request and limit histories from the
+same held native results. Shared-scale sparse dots, compact UTC point evidence,
+local paging/focus and exact time-range log/span context preserve missing,
+invalid and stale observations. Loading adds a pure history proof, with no extra
+telemetry read; context Run and individual capture remain explicit.
+
+Live OTLP/ClickHouse journeys, five held-history ownership cases, current
+Resources regressions, a bounded Bombadil actor, two Hegel properties and
+independent raw/Quint validation pass. Three final desktop/mobile frames are
+reviewed. See [Journey 209](journeys/209-container-history-storyboard.md) and
+[evidence](docs/evidence/container-history-209.json). Configuration-event history,
+continuous interpolation, fleet totals and combined custody remain separate
+contracts; this milestone does not imply those features.
