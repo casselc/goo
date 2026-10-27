@@ -12408,3 +12408,12 @@ reviewed. See [Journey 209](journeys/209-container-history-storyboard.md) and
 [evidence](docs/evidence/container-history-209.json). Configuration-event history,
 continuous interpolation, fleet totals and combined custody remain separate
 contracts; this milestone does not imply those features.
+
+## Development disk cleanup — 2026-10-27
+
+[Diagnostic retention](docs/DEVELOPMENT_DIAGNOSTIC_RETENTION.md) records the narrow
+ClickHouse internal-log cleanup and persistent development policy. Overlay free
+space increased from 39 MB to 3.9 GB; all six application table row counts were
+preserved or increased. Compose validation, ClickHouse ping, capabilities and UI
+configuration pass; retained query/part/error logs have one-day TTLs. No
+application telemetry, captures, images or volumes were deleted.
