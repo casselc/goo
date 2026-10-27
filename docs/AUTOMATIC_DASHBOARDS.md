@@ -494,3 +494,19 @@ reviewed. See [Journey 209](../journeys/209-container-history-storyboard.md) and
 [evidence](evidence/container-history-209.json). Configuration-event history,
 continuous interpolation, fleet totals and combined custody remain separate
 contracts; this milestone does not imply those features.
+
+
+## 210 — Automatic resource usage accepted
+
+Opening container Resources now discovers its exact source and loads complete,
+unambiguous memory/CPU usage defaults (at most two value reads). The compact
+overview hides unrequested capacity rows. First family expansion loads up to two
+capacity signals while reusing held usage; failed/canceled usage needs explicit
+retry. Other variants and ambiguous choices remain explicit.
+
+Source and presentation reviews, all 100 Node files, live main/held-response
+journeys, updated Bombadil, generated Hegel owner schedules and independent
+raw/finite Quint checks pass. [Journey 210](../journeys/210-resource-defaults-storyboard.md)
+and [evidence](evidence/resource-defaults-210.json) record actual results and
+harness corrections. No new API, capture format, source profile or Go numerical
+semantics. Broader receiver coverage and workload totals remain separate slices.

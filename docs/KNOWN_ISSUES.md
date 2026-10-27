@@ -1007,4 +1007,4 @@ the opened exact variant and complete, unambiguous pinned candidates. Other
 variants remain manual; no receiver deployment or arbitrary-source autodetection
 is claimed. Historical 208/209 manual-entrance browser specs are explicit skips;
 210 replaces their entry/owner/actor coverage while native/API/property/raw and
-generic timeline checks remain active. Final actor acceptance is pending.
+generic timeline checks remain active. Journey 210 is accepted; its finite model and generated schedules do not prove arbitrary concurrency.

@@ -1104,3 +1104,12 @@ composers and individual custody unchanged. The app supplies bounded paged dots
 to the generic timeline, retains full-family numeric/time domains, and turns
 local brush choices into qualified exact-NS record questions. Existing record
 Run/capture/retained Back own effects; a gauge point supplies no invented interval.
+
+
+[Automatic resource defaults](AUTOMATIC_RESOURCE_DEFAULTS.md) reuse the shared
+metadata owner and separate family generations. Opening composes one exact
+metadata discovery with at most two primary reads. Capacity expansion reuses the
+exact held primary result and adds only selected capacity reads. Visibility and
+generation guards precede effects; failed/canceled automatic primary reads revoke
+automatic expansion. This remains application orchestration above unchanged Go
+measurement/history contracts and supplied-data display components.

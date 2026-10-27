@@ -1116,3 +1116,11 @@ exact held-point/raw-row inspection and record-context intents. The existing
 controlled time-range element supplies keyboard/touch fallback; point selection
 leaves the displayed context range unchanged. Original result/custody objects
 are retained, not relabeled as narrowed native execution.
+
+
+The 210 automatic Resources overview uses the existing family view adapter's
+`primaryOnly` display option: one usage row without unrequested capacity/ratio
+clutter. Full validated DTOs and explicit expanded rendering remain unchanged.
+Automatic loading, cached results and expansion intent belong to the app owner;
+no reusable custom-element lifecycle gains source effects. See
+[automatic defaults](AUTOMATIC_RESOURCE_DEFAULTS.md).

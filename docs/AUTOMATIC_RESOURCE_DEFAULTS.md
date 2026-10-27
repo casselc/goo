@@ -1,7 +1,8 @@
 # Automatic container resource defaults
 
-Milestone 210 implements automatic usage in the Resources entrance. Live
-acceptance is in progress; the previous manual-entrance journeys are historical.
+Milestone 210 is implemented and accepted with live OTLP/ClickHouse journeys,
+held-response ownership checks, Bombadil and independent raw/model validation.
+The previous manual-entrance journeys are historical.
 
 Opening Resources discovers metadata for the exact opened resource/schema
 variant once. The existing pinned receiver profiles validate candidates. A
@@ -44,3 +45,6 @@ flowchart LR
  I --> J[Stage logs or spans]
  J --> K[Explicit Run or retained Back]
 ```
+
+[Journey and frames](../journeys/210-resource-defaults-storyboard.md) and
+[check receipts](evidence/resource-defaults-210.json) record the accepted scope.

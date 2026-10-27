@@ -12430,3 +12430,19 @@ validates one actual five-macrostep trace and rejects two model-only bad traces
 (10.19s on the initial semantic ledger). No Go numerical/API contract changed.
 The updated Bombadil actor is pending diagnosis at initial discovery; no green
 actor claim is made at this gate. Final docs/release acceptance is pending.
+
+
+## 210 — Automatic resource usage accepted
+
+Opening container Resources now discovers its exact source and loads complete,
+unambiguous memory/CPU usage defaults (at most two value reads). The compact
+overview hides unrequested capacity rows. First family expansion loads up to two
+capacity signals while reusing held usage; failed/canceled usage needs explicit
+retry. Other variants and ambiguous choices remain explicit.
+
+Source and presentation reviews, all 100 Node files, live main/held-response
+journeys, updated Bombadil, generated Hegel owner schedules and independent
+raw/finite Quint checks pass. [Journey 210](journeys/210-resource-defaults-storyboard.md)
+and [evidence](docs/evidence/resource-defaults-210.json) record actual results and
+harness corrections. No new API, capture format, source profile or Go numerical
+semantics. Broader receiver coverage and workload totals remain separate slices.

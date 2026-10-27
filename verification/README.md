@@ -2793,3 +2793,34 @@ property, owner or successful model campaign was repeated; the main rerun was
 required by its new semantic guard and rejecting control. Missing Quint fails rather than
 skips. The old `/tmp/goo-quint-208` launcher was lost in the environment reset;
 209 uses the restored normal dependency path above.
+
+
+## Automatic resource defaults (210)
+
+`TestResourceDefaultsObserved` checks the actual native replies against existing
+independent OTLP/raw-row, SHA basis, family and all-timestamp history oracles. It
+checks exact issued budgets and distinct native source keys, including byte-exact
+held usage reuse; four changed controls must fail. Final ledger validation passes
+in 1.53s. `TestHegelResourceDefaultWithdrawal` passes eight generated actual-JS-owner
+schedules (0.96s); its deterministic unit transport is distinct from the two live
+held-response journeys. No duplicate execution state machine or swarm quota.
+
+`TestQuintResourceDefaultsObserved` passes in 10.19s: one actual five-macrostep
+trace plus two rejected model-only bad traces (a local source read and a primary
+reread during capacity). It uses the initial semantic main ledger; final compact
+presentation has a separate raw-validated ledger with the same effect sequence.
+This is bounded observed-effect replay, not arbitrary concurrency proof.
+
+```sh
+export GOO_RESOURCE_DEFAULTS_LEDGER=/workspace/goo/artifacts/resource-defaults/resource-defaults-86eba9655d/ledger.json
+# From verification/, with the pinned Go/Hegel/Quint tools described above:
+go test -run '^(TestResourceDefaultsObserved|TestHegelResourceDefaultWithdrawal)$' -v .
+export GOO_RESOURCE_DEFAULTS_LEDGER=/workspace/goo/artifacts/resource-defaults/resource-defaults-bc8b259b77/ledger.json
+go test -run '^TestQuintResourceDefaultsObserved$' -v .
+```
+
+Source/API/native checks from 208/209 remain active; only their historical manual
+entrance browser specs are explicit skips, replaced by 210 main/owners/actor.
+The generic value-timeline SSR/detached journey remains active. See the
+[210 evidence](../docs/evidence/resource-defaults-210.json) for exact runtime
+receipts, frame hashes, harness diagnostics and declared limitations.

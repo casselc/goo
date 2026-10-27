@@ -1,0 +1,107 @@
+{
+  "milestone": 210,
+  "status": "accepted",
+  "sourceCommit": "a9130f3",
+  "checks": {
+    "node": {
+      "files": 100,
+      "seconds": 12.927233016,
+      "stdout": "/tmp/goo-210-node-all.txt"
+    },
+    "main": {
+      "seconds": 13.3,
+      "invocationSeconds": 17.1,
+      "ledger": "artifacts/resource-defaults/resource-defaults-86eba9655d/ledger.json",
+      "sourcePosts": 8,
+      "purePlans": 2,
+      "compositions": 4,
+      "histories": 4,
+      "initialUsageSourcePosts": 4,
+      "capacityAdditionalSourcePosts": 2,
+      "ambiguousFamilyValueReads": 0
+    },
+    "owners": {
+      "withdrawalSeconds": 16.2,
+      "withdrawal": "artifacts/resource-defaults/resource-defaults-a51d8e288f/ownership.json",
+      "deferredSeconds": 19.5,
+      "deferred": "artifacts/resource-defaults/resource-defaults-081bfb51f1/deferred.json"
+    },
+    "actor": {
+      "seconds": 31.6,
+      "invocationSeconds": 32.7,
+      "configuredSeconds": 30,
+      "path": "artifacts/resource-defaults/resource-defaults-38e5d7819b/bombadil/acceptance-summary.json",
+      "phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "snapshots": 523,
+      "final": {
+        "phase": 6,
+        "source": 6,
+        "histories": 3,
+        "compositions": 3,
+        "target": "fa8dc655f34570514aa8be16246649d6b9690ba59efc668be4ebd34a03611c80",
+        "ready": true,
+        "rendered": 2,
+        "recordReady": true,
+        "terminal": true,
+        "error": "",
+        "status": "Fixed 2026-10-27T22:09:53.666Z \u2192 2026-10-27T22:11:53.666Z \u00b7 8 source-family groups. Coverage and Kubernetes API state remain unknown."
+      }
+    },
+    "native": {
+      "seconds": 1.53,
+      "changedControlsRejected": 4,
+      "stdout": "/tmp/goo-210-native-final.txt"
+    },
+    "hegel": {
+      "properties": 1,
+      "examples": 8,
+      "seconds": 0.96,
+      "scope": "Generated withdrawal schedules against actual JavaScript owner, deterministic unit transport; separate live held-response journeys.",
+      "stdout": "/tmp/goo-210-native-final.txt"
+    },
+    "quint": {
+      "seconds": 10.19,
+      "actualFiniteTraces": 1,
+      "macrosteps": 5,
+      "badTracesRejected": 2,
+      "ledger": "artifacts/resource-defaults/resource-defaults-bc8b259b77/ledger.json",
+      "stdout": "/tmp/goo-210-native.txt",
+      "scope": "Initial semantic ledger has identical effect sequence; final compact-presentation ledger independently raw-validated. No arbitrary concurrency proof."
+    }
+  },
+  "assets": {
+    "grammar-observability-packages-1": {
+      "ui/container-memory.js": "967aad1f0863fa850d68f29dd1f45e2d838081035f99dff37d553c68de3d9a2b",
+      "ui/container-resources.js": "fbaff3d8fe81ac968eb7f62c47fe00231d7821b6d3b03fc8f7e30bbe6026bc24",
+      "ui/container-memory-view.js": "d523e0d1e279e5ad9a396926e68527c4babcc0995ee7d0b8ff2c23f0539ba103"
+    },
+    "grammar-observability-query-1": {
+      "ui/container-memory.js": "967aad1f0863fa850d68f29dd1f45e2d838081035f99dff37d553c68de3d9a2b",
+      "ui/container-resources.js": "fbaff3d8fe81ac968eb7f62c47fe00231d7821b6d3b03fc8f7e30bbe6026bc24",
+      "ui/container-memory-view.js": "d523e0d1e279e5ad9a396926e68527c4babcc0995ee7d0b8ff2c23f0539ba103"
+    }
+  },
+  "frames": {
+    "docs/journeys/screenshots/210b-mobile-resource-capacity.png": "71537efb353e8fbf7849f15cd4b597e9473ec3a6098b6bb2cad0c4964e71a6f7",
+    "docs/journeys/screenshots/210a-automatic-resource-usage.png": "0838ba602b2233c7eb5c6ec57975d6aaabb90f822773e3fe174a210768a7bd95"
+  },
+  "diagnostics": [
+    "First ownership harness unroute raced route.fulfill; wait for handler completion fixed it. Only withdrawal reran; deferred case retained.",
+    "Three initial actor attempts failed because browser Fetch response.ok was incorrectly called as Playwright ok(); additional status diagnostics exposed it. Asynchronous observation hook retained. App budgets, timeout and semantic expectations unchanged.",
+    "Hegel initial setup attempt matched no tests after wrong working directory; excluded. Actual sandbox attempt failed native-library cache permissions before property execution; escalated actual runs pass."
+  ],
+  "limits": [
+    "Only opened exact source variant automatically discovered; others explicit.",
+    "Complete pinned receiver plans only; missing/ambiguous families stay explicit.",
+    "At most two usage reads, then up to two additional capacity reads per expanded family.",
+    "No Go/API/numerical/capture contract change; no receiver deployment proof."
+  ]
+}
