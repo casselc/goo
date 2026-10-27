@@ -12051,3 +12051,60 @@ strict decimal/ID bounds, lifecycle and percentage gates. The source research
 pins nine upstream files and their hashes. Live OTLP/browser/owner/actor/raw-
 custody acceptance is pending at this source freeze. No real receiver/Kubernetes
 API/RBAC, full inventory, transactional snapshot, health or CPU claim is made.
+
+## Container memory context — live acceptance and compact view (206)
+
+Source `b938ba8` plus the bounded answer-first disclosure refinement are accepted.
+One Go binary SHA256 `fdf13a2576e40a1adadecad7c091c5eb4acc39c5eb3061803c5b626baf2a2bea`
+serves the new pure composition route; changed Python/UI/spec files and actual
+served MIME/hashes are verified. Only packages/query restarted; no image build.
+
+Ordinary OTLP main passes in 37.4s, five actual held-response owner cases in 17.1s
+(serial invocation 58.0s). Forty-seven metric points supply prepared cases; the
+main visits primary independent plus seven aligned/boundary contexts. Receiver-
+realistic working set/request/limit show independent 32768/65536/131072 bytes
+without a fabricated percentage across differing maps/schemas. The deliberately
+same-map/schema/time report case shows 50.0%/25.0%, not claimed as real receiver
+defaults. Zero denominator, absent roles, unsafe byte count, stale, conflict and
+missing recorded value remain explicit. Other prepared vectors are unit/property
+evidence, not overstated live coverage. The main has 34 source operations
+(inventory 1/metadata 9/measurement 23/fresh capture 1), 11 pure plans and eight pure
+compositions. Staging, selection, retained Back and frozen reopen add no reads.
+Setup/ingest and direct store GET checks are outside this logical HTTP journal;
+there is no physical-scan, complete coverage or atomic snapshot claim.
+
+Initial frames fit but controls dominated. The approved small refinement puts
+existing setup in Sources and inspection, collapsed only after successful load;
+reopening is local, manual closure withdraws pending work, and synchronous closed-
+state checks prevent publication before queued toggle delivery. Wide open roles
+use three columns. Focused Node tests cover late metadata/native replies, hidden
+controls, accepted collapse, retained Back and preserved deliberate choices/skips.
+No byte/percentage/default/custody semantics change.
+
+Final display passes in 15.2s: ten source operations/four plans/two compositions,
+no Run/capture. The new actual disclosure owner passes in 9.2s with source 2/plan 0/
+composition 0 and no late publication. The first actor passes in 31.0s/352 snapshots;
+the updated final-assets actor passes in 31.1s (34.4s invocation), 13 phases/440
+snapshots, source 7/plans 3/composition 1/terminal Back. No browser invocation failed.
+Final visual reviews approve compact desktop/mobile values, shared scales, UTC
+and conditional percentages. A manual aligned-frame concern led to stronger DOM/
+geometry/font/paint guards and a bounded aligned-only replay (7.5s, source 5/plan 1/
+composition 1, no capture). Pixel/OCR verification confirms the original questioned
+frame already contained all labels/clocks; no app or rasterization defect is
+established. Final 206d has separate fixture provenance from 206a/b/c.
+
+Independent native raw/custody validation passes on its first invocation: package
+1.814s (main 1.65/owner 0.12/disclosure 0.03), rejecting 16 + 6 + 4 changed controls. Exact
+raw byte arithmetic/quality/alignment and actual composition are independently
+derived; no production-evaluator oracle loop or new model claim. The full 6,436-byte
+individual capture is unchanged, SHA256
+`7b6acd7772ed4ae266c82e238765d3a0fdda2dfe562a9bdb5fa708001368f8da`.
+Browser frozen reopen attempts no telemetry POST; the separate Go HTTP test covers
+actual unavailable-source transport. No paired custody, live Kubernetes API/RBAC,
+running receiver, resource-schema normalization, inferred health/unlimited memory
+or CPU claim is made. [Storyboard](journeys/206-container-memory-storyboard.md)
+and [compact receipt](docs/evidence/container-memory-206.json) record exact costs,
+frames, fixture separation and hashes. Source/lifecycle/final frame and independent
+oracle reviews approve. Exact temporary binary/helpers/tars are removed; normal
+retention preserves current custody and review diagnostics while expiring old
+recordings only. Traffic/data/history remain intact.

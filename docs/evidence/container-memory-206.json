@@ -1,0 +1,262 @@
+{
+  "version": 1,
+  "journey": "206",
+  "status": "accepted",
+  "sourceCommit": "b938ba8",
+  "binarySHA256": "fdf13a2576e40a1adadecad7c091c5eb4acc39c5eb3061803c5b626baf2a2bea",
+  "main": {
+    "artifact": "artifacts/container-memory/container-memory-a36db96747/ledger.json",
+    "seconds": 37.4,
+    "sourceOperations": 34,
+    "purePlans": 11,
+    "pureCompositions": 8,
+    "events": [
+      {
+        "action": "inventory",
+        "source": 1,
+        "plans": 0,
+        "compositions": 0
+      },
+      {
+        "action": "explicit-first-metadata-no-values",
+        "source": 2,
+        "plans": 1,
+        "compositions": 0
+      },
+      {
+        "action": "explicit-second-metadata",
+        "source": 3,
+        "plans": 2,
+        "compositions": 0
+      },
+      {
+        "action": "local-role-selection",
+        "source": 3,
+        "plans": 2,
+        "compositions": 0
+      },
+      {
+        "action": "independent-three-signals",
+        "source": 6,
+        "plans": 2,
+        "compositions": 1
+      },
+      {
+        "action": "native-staged",
+        "source": 6,
+        "plans": 3,
+        "compositions": 1
+      },
+      {
+        "action": "retained-back",
+        "source": 6,
+        "plans": 3,
+        "compositions": 1
+      },
+      {
+        "action": "native-run",
+        "source": 7,
+        "plans": 4,
+        "compositions": 1
+      },
+      {
+        "action": "individual-capture",
+        "source": 8,
+        "plans": 4,
+        "compositions": 1
+      },
+      {
+        "action": "capture-retained-return",
+        "source": 8,
+        "plans": 4,
+        "compositions": 1
+      },
+      {
+        "action": "boundary-aligned",
+        "source": 12,
+        "plans": 5,
+        "compositions": 2
+      },
+      {
+        "action": "boundary-zero-denominator",
+        "source": 16,
+        "plans": 6,
+        "compositions": 3
+      },
+      {
+        "action": "boundary-partial",
+        "source": 18,
+        "plans": 7,
+        "compositions": 4
+      },
+      {
+        "action": "boundary-unsafe",
+        "source": 22,
+        "plans": 8,
+        "compositions": 5
+      },
+      {
+        "action": "boundary-stale",
+        "source": 26,
+        "plans": 9,
+        "compositions": 6
+      },
+      {
+        "action": "boundary-conflict",
+        "source": 30,
+        "plans": 10,
+        "compositions": 7
+      },
+      {
+        "action": "boundary-missing",
+        "source": 34,
+        "plans": 11,
+        "compositions": 8
+      },
+      {
+        "action": "frozen-reopen",
+        "source": 34,
+        "plans": 11,
+        "compositions": 8
+      }
+    ],
+    "fixtureMetricPoints": 47
+  },
+  "owner": {
+    "artifact": "artifacts/container-memory/container-memory-930ea80256/ownership.json",
+    "seconds": 17.1,
+    "cases": 5
+  },
+  "display": {
+    "artifact": "artifacts/container-memory/container-memory-10e83dffb9/display.json",
+    "seconds": 15.2,
+    "sourceOperations": 10,
+    "purePlans": 4,
+    "pureCompositions": 2,
+    "nativeRun": false,
+    "capture": false,
+    "screenshots": [
+      {
+        "file": "docs/journeys/screenshots/206a-independent-container-memory.png",
+        "sha256": "eee87b762ff59540db464f1da70dbebbc267ad361e51856b7fa6f0d71132f6b0",
+        "fixture": "container-memory-10e83dffb9"
+      },
+      {
+        "file": "docs/journeys/screenshots/206b-mobile-container-memory.png",
+        "sha256": "ff9aa0231cb73ee5832a36b9148c43519bd81ddd8078b2a9644dde73aeef7e81",
+        "fixture": "container-memory-10e83dffb9"
+      },
+      {
+        "file": "docs/journeys/screenshots/206c-container-memory-in-context.png",
+        "sha256": "35f2f6b0207dc30336a818aa9a2f9880a61fecf1b6f1a87d42bcd59bcdcd459f",
+        "fixture": "container-memory-10e83dffb9"
+      },
+      {
+        "file": "docs/journeys/screenshots/206d-explicit-aligned-percentage.png",
+        "sha256": "1a710e4791576c27526cab14f2e9cfbaee8c9238e5a96e0ee2b82d10eb750f58",
+        "fixture": "container-memory-ca31753a9d"
+      }
+    ]
+  },
+  "disclosureOwner": {
+    "artifact": "artifacts/container-memory/container-memory-dc230fb189/disclosure-ownership.json",
+    "seconds": 9.2,
+    "sourceOperations": 2,
+    "purePlans": 0,
+    "pureCompositions": 0
+  },
+  "actor": {
+    "artifact": "artifacts/container-memory/container-memory-83fcdeaad3/bombadil/acceptance-summary.json",
+    "campaignSeconds": 30,
+    "testSeconds": 31.1,
+    "invocationSeconds": 34.4,
+    "phases": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "snapshots": 440,
+    "final": {
+      "phase": 12,
+      "source": 7,
+      "plans": 3,
+      "compositions": 1,
+      "target": "24afd58879554b3511db1092e6a8a4dca8e584634d7e47097e6e4f776f686928",
+      "cluster": "82296ad7a9d1b1b1d6eb159abb9fa87d4a5e0232ead7e1f3a33b2b946dcea5bf",
+      "ready": true,
+      "choices": true,
+      "threeChoices": true,
+      "view": true,
+      "nativeReady": true,
+      "nativeComplete": true,
+      "terminal": true
+    }
+  },
+  "firstActor": {
+    "artifact": "artifacts/container-memory/container-memory-9fe1c92fee/bombadil/acceptance-summary.json",
+    "testSeconds": 31.0,
+    "snapshots": 352,
+    "sourceOperations": 7,
+    "purePlans": 3,
+    "pureCompositions": 1
+  },
+  "capture": {
+    "id": "ee3313d33bb73a041259172eff6e779a1b1f363f582d4286f80172425b64b823",
+    "bytes": 6436,
+    "sha256": "7b6acd7772ed4ae266c82e238765d3a0fdda2dfe562a9bdb5fa708001368f8da",
+    "unchanged": true
+  },
+  "finalAssets": {
+    "ui/container-memory.js": "0274814f90b76ee2dece0f0da3ed72e7cbfdc91158abc70148c63a8e123344b4",
+    "ui/kubernetes.css": "0425308e0a0ea34fcdbc21dc03baafaf107eed4ecaabc11851fb31fc092f2020"
+  },
+  "failedBrowserInvocations": 0,
+  "limits": [
+    "Generated ordinary OTLP through collector and ClickHouse, not real Kubernetes API/RBAC or running receivers.",
+    "Independent source maps/resource schemas normally differ; percentages are withheld, not normalized.",
+    "Positive percentages use intentionally aligned supplied raw reports, not receiver defaults.",
+    "Counts are logical HTTP effects excluding setup/ingest and direct custody GETs, not physical SQL scans.",
+    "Held independent source bases do not certify a transactional snapshot or source authenticity.",
+    "Only individual native capture exists, not paired memory custody.",
+    "Prepared fixture vectors not visited by main are property/unit evidence only.",
+    "Browser frozen reopen attempts no telemetry POSTs; actual unavailable-source transport is separate native HTTP custody evidence."
+  ],
+  "nativeValidation": {
+    "artifact": "artifacts/container-memory/native-validation.txt",
+    "packageSeconds": 1.814,
+    "mainSeconds": 1.65,
+    "ownerSeconds": 0.12,
+    "disclosureOwnerSeconds": 0.03,
+    "rejectingControls": {
+      "main": 16,
+      "owner": 6,
+      "disclosure": 4
+    },
+    "firstInvocationPassed": true,
+    "noNewModel": true
+  },
+  "alignedFrame": {
+    "artifact": "artifacts/container-memory/container-memory-ca31753a9d/aligned-frame.json",
+    "seconds": 7.5,
+    "sourceOperations": 5,
+    "purePlans": 1,
+    "pureCompositions": 1,
+    "capture": false,
+    "reason": "Additional exact DOM/geometry/font/paint-settlement guards following visual-review uncertainty; no proven application or rasterization defect."
+  },
+  "visualReviewDiagnostic": {
+    "file": "artifacts/container-memory/final-display-frame-diagnostic/206d-first-paint.png",
+    "conclusion": "Original frame already contains summary, Working set and all three UTC clocks, confirmed by OCR/pixel analysis; no missing-paint claim.",
+    "checkedCropsIdentical": true
+  }
+}

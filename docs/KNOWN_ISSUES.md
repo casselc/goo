@@ -1,7 +1,8 @@
 # Known issues and gaps
 
 [Container memory context](CONTAINER_MEMORY.md) is implemented in source with
-explicit selected-source reads; live acceptance is pending. Receiver resource
+explicit selected-source reads and source/property/API plus ordinary OTLP/browser,
+owner, actor and raw/custody acceptance. Receiver resource
 maps/schemas/times normally differ, so independent bytes are useful while
 percentages remain unavailable. Missing/zero requests or limits never mean
 unlimited. CPU/throttling and workload aggregation remain separate.

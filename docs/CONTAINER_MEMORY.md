@@ -1,6 +1,7 @@
 # Container memory context
 
-Implemented in source; source and ordinary OTLP/browser acceptance are pending.
+Implemented and accepted with source/property/API and ordinary OTLP/ClickHouse,
+browser, owner, Bombadil and independent raw/custody evidence in journey 206.
 This is an explicit context view over independently captured working-set,
 request and limit gauges. It creates no pod/fleet aggregation or combined capture.
 [Source research](CONTAINER_MEMORY_SOURCE_RESEARCH.md) pins the receiver evidence.
@@ -46,8 +47,12 @@ require an explicit choice; a unique candidate may be preselected without IO.
 then calls the pure `/container-memory/view` composer. These are opt-in contextual
 reads; the existing two-default automatic budget is unchanged. Changing source
 or role selection withdraws pending work and clears applied display. Late replies
-cannot publish a view. Native Inspect stages the exact individual question;
-existing Run/capture owners execute it. Retained Back does not discover or load
+cannot publish a view. After a successful load, setup collapses under **Sources and inspection** so
+values lead the view. Reopening it is local; closing during a pending operation
+withdraws that work. Original explicit stream/skip choices survive additional
+metadata discovery; an automatic unique choice clears if it becomes ambiguous.
+Native Inspect stages the exact individual question; existing Run/capture owners
+execute it. Retained Back does not discover or load
 again. Scope/facet/row replacement disposes the context owner.
 
 ## Comparable bytes, conditional percentages
