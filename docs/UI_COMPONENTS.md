@@ -1039,7 +1039,8 @@ filters/focus. Display elements and raw-resource disclosures never fetch.
 
 `goo-state-observations` is a framework-neutral passive display for supplied state
 categories, not a decoder or query owner. Supply `data={title?, samples}` using a
-JSON HTML attribute (64 KiB maximum) or a detached/cloned `.data` property (2 MiB).
+JSON HTML attribute (at most 65,536 UTF-16 code units) or a detached/cloned
+`.data` property (2 MiB of JSON).
 Each sample has canonical decimal `atNS`, observation `state` observed/stale/unknown,
 optional finite numeric or bounded string `code`, supplied `label`, independent
 `codeState` supported/unsupported and optional reason. Known supported samples need
@@ -1052,8 +1053,9 @@ UTC timestamps reuse the exact-nanosecond tooltip primitive.
 Load components.js, evidence-summary.js, state-observations.js and the matching CSS.
 The existing gallery includes clearly synthetic server-rendered and detached SPA
 examples from a non-Kubernetes domain. Property updates, pre-definition upgrade,
-cloning, literal text, bounded input and disclosure/focus preservation use the same
-component contract. No lifecycle, disclosure or update fetches or publishes.
+cloning, literal text, bounded input and disclosure-open retention use the same
+component contract. Descendant focus across data rerenders is not guaranteed;
+app-owned retained Back focus is tested separately. No lifecycle, disclosure or update fetches or publishes.
 
 `GooStateMeasurement` in state-measurement.js is a separate application adapter.
 It owns the pinned k8scluster phase mapping, typed definition, resource/schema and

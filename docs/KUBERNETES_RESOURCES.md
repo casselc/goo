@@ -126,7 +126,9 @@ string admit explicit metric discovery and at most two native defaults. Its
 source cost and gauge authority are independent of this inventory and its
 record-context actions. Unknown trace schema does not silently become empty.
 
-Phase/readiness, restarts, requests/limits, CPU, node pressure, ownership facts,
+[Typed reported pod phase](POD_STATES.md) is now supported through its separate
+exact receiver and categorical observation contract. Container readiness,
+restarts, requests/limits, CPU, node pressure, ownership facts,
 resource changes and workload rollups still need explicit receiver, identity,
 temporality, calculation and coverage contracts. Discovery alone grants no
 native authority and does not infer health from client spans.

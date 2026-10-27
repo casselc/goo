@@ -108,8 +108,22 @@ Native Inspect stages the same fixed question; Run and capture remain explicit
 reads. Back restores held resource context, and closed/changed panels withdraw
 pending work without late follow-on reads or rendering.
 
-The source/handler/property/Node checks and independent source review pass for
-this slice. Live ordinary OTLP/browser, owner, actor and raw/custody acceptance is
-pending at source freeze; no receiver deployment or Kubernetes API/RBAC claim is
-made. Readiness still requires its own container-grain contract; no pod-health
-alias is introduced.
+## Accepted workflow
+
+Source `8d785ee` passes source/property/API and ordinary OTLP/browser acceptance.
+The main journey passes in 24.6s; phase and prior memory owners in 14.6s/17.3s;
+the separate synthetic component cases in 2.5s/8.8s. Corrected Bombadil passes in
+31.0s with 379 snapshots and nine phases. Independent native validation passes in
+0.627s, rejecting twelve main and four owner mutations. Initial actor-selector and
+observer event-sequence diagnostics remain preserved; neither changed application
+source or required repeating the accepted main journey.
+
+The main records 27 logical source operations and 17 pure plans across explicitly
+opened default, boundary and refusal resources. Native staging, retained Back and
+frozen reopen add no telemetry reads. The individual 6,145-byte capture stays
+byte-identical through public/UI reopening. This is generated ordinary OTLP,
+not a running receiver, Kubernetes API/RBAC or real ClickHouse outage claim.
+See the [actual storyboard and frames](../journeys/203c-pod-phase-storyboard.md)
+and [compact evidence receipt](evidence/pod-phase-203c.json) for exact costs,
+capture/frame digests and limits. Readiness still requires its own container-grain
+contract; no pod-health alias is introduced.

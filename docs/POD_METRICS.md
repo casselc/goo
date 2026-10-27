@@ -4,7 +4,8 @@ Implemented and accepted in [journey 202](../journeys/202-pod-memory-storyboard.
 This adds explicit pod gauge authority and the first memory defaults to
 [Kubernetes discovery](KUBERNETES_RESOURCES.md).
 [Compact receipt](evidence/pod-memory-202.json).
-Reported phase/readiness requires a separate typed state contract.
+[Reported pod phase](POD_STATES.md) uses a separate typed state contract;
+container readiness remains unsupported.
 
 ## Supported profiles
 

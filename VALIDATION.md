@@ -11731,3 +11731,74 @@ custody checks and actual documentation frames are pending this source freeze.
 No running receiver, Kubernetes API/RBAC or deployment acceptance is yet claimed.
 
 Python generic UI startup/static-serving regressions also pass (see /tmp/goo-203c-python.log); new static assets remain source-free.
+
+### 203c — live acceptance complete
+
+Functional source `8d785eea03e934f3be357796ed4745c68a4381ab` is deployed with binary
+SHA256 `24ca91df0f0a130f4bc1aa8d55d638a3b0c52e399f1bbaf3d3693281707190cb`.
+Initial deployment verified twenty changed files in both runtime roots and ten
+actual served asset/spec SHA/MIME matches, plus capabilities/UI-config 200.
+[Actual storyboard](journeys/203c-pod-phase-storyboard.md) and
+[compact receipt](docs/evidence/pod-phase-203c.json) retain exact accepted paths,
+source/capture/frame digests, costs and stated limits.
+
+First serial browser batch passes all five cases in 1.2 minutes: main 24.6s,
+phase owner 14.6s, prior 202 memory owner 17.3s, synthetic component 2.5s/8.8s.
+Twenty-two generated ordinary OTLP metric points plus eleven logs/spans traverse
+the actual collector/ClickHouse pipeline without positive source/UI mocks. This
+is not a running k8scluster receiver, Kubernetes API/RBAC or physical-pod claim.
+Primary phase Pending→Running retains empty unit/scope schema and known empty
+resource schema, without service/instance fabrication. A separate same-UID
+resource map/schema cannot broaden its exact source.
+
+Actual boundary panels prove fresh code 5 Unknown remains observed, codes 7/1.5
+remain unsupported raw values, stale supported/unsupported remain independently
+stale, and conflicts/no-recorded-value withhold the code/label. Five wrong receiver
+version/scope/schema/unit/physical-kind resources produce no approved phase widget.
+Mixed memory defaults retain their prior pair; phase is explicitly staged. Root
+and browser reviewers inspected actual compact desktop/mobile PNGs; final release
+reviewer also inspected mobile. Geometry and UTC/ns checks pass without an app
+layout correction or display replay.
+
+The page journal ends at 27 logical source operations / 17 pure plans: inventory 1,
+metadata 14, native measurement 11 and fresh individual capture 1. Fixture ingestion,
+readiness probes and direct store GETs are outside this page journal; these are
+API effects, not SQL scan counts. The larger total covers seven explicitly opened
+boundary resources and five refusals, not an expanded automatic read budget.
+Stage/Back leave source unchanged; Run advances 6→7 and fresh capture 7→8; all later
+controls end at 27. Final frozen reopen attempts zero telemetry POSTs under a
+rejecting guard. It is not an actual ClickHouse-outage claim; the separate native
+handler tests cover reopening with unavailable source configuration.
+
+Full individual capture remains 6,145 bytes, ID
+`5c9a9c2a15d4bb0e4c11b37db29d60c6f163411b049868052f354e43c7f7981f`, SHA256
+`ea2851f4c30cb122fcb825e68a4d4de936aa1964fd93b659233f0247838dd9c2`.
+Complete stored bytes/content ID and normalized public/UI evidence stay unchanged.
+Five actual held-response cases preserve current filter/row/tab/scope/close
+ownership without late rendering, planning or follow-on reads. Retained Back
+restores context and opener focus. Generic component data updates preserve
+history disclosure state, not child focus; documentation corrects the earlier
+broader focus wording. No live update guarantee is introduced.
+
+Corrected Bombadil passes in 31.0s (32.2s invocation), nine phases 0–8 / 379 snapshots,
+final source 4 / pure 2 / terminal true. Its first run stopped at phase 3 / source 3 / pure 1
+because the readiness selector expected nonexistent status text. The actual
+panel was loaded; there was no application exception or extra read. Only that
+exact selector was corrected. Full initial trace/screens remain preserved; main,
+owners and synthetic component cases were not repeated.
+
+Independent native validation passes in 0.627s (main 0.54s / owner 0.07s), rejecting twelve
+main and four owner mutations. Initial main composite validation failed because
+its prepared expected journal had 21 events rather than 22: the final browser
+storyboard added explicit phase-candidate staging/Back after memory defaults.
+The exact sequence now includes that source-free step; all raw/category/quality,
+metadata, clock/basis, snapshot and full custody predicates remain. Initial main
+and diagnostic outputs are retained; first owner passed. No product, fixture or
+browser rerun was needed. Native/browser/build workers are quiet afterward.
+
+Independent final release review approves with no blockers. No new Quint model
+or broader historical browser campaign is claimed for unchanged explicit native/
+retained-owner semantics. Ordinary OTLP and independent raw controls complement
+the source/Hegel/API gates. Normal diagnostic retention removed only expired
+browser recordings; current full capture copies and initial actor/observer traces
+remain. Exact task binary/helpers/tar were removed, and traffic/data were preserved.

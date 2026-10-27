@@ -1,0 +1,212 @@
+{
+  "version": 1,
+  "featureSourceCommit": "8d785eea03e934f3be357796ed4745c68a4381ab",
+  "binarySHA256": "24ca91df0f0a130f4bc1aa8d55d638a3b0c52e399f1bbaf3d3693281707190cb",
+  "mainSeconds": 24.6,
+  "ownershipSeconds": 14.6,
+  "memoryOwnershipRegressionSeconds": 17.3,
+  "syntheticComponentSeconds": [
+    2.5,
+    8.8
+  ],
+  "actorSeconds": 31.0,
+  "actorInvocationSeconds": 32.2,
+  "nativeSeconds": 0.627,
+  "nativeRejectingControls": {
+    "main": 12,
+    "ownership": 4
+  },
+  "ownershipCases": 5,
+  "mainLedger": "artifacts/pod-phase/pod-phase-0313f9b522/ledger.json",
+  "ownershipLedger": "artifacts/pod-phase/pod-phase-a272d10e81/ownership.json",
+  "memoryOwnershipLedger": "artifacts/pod-memory/pod-memory-6835e1dac1/ownership.json",
+  "actorSummary": {
+    "phases": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "snapshots": 379,
+    "final": {
+      "phase": 8,
+      "source": 4,
+      "plans": 2,
+      "target": "3a49f46f9bd94211726973b8ff2bd76b6a9ff9da17baefb879a78a9559c927a2",
+      "usageKey": "e51b556adf2da38c51ff5711d73e9a76644453831b137ad3a73336fd56ca6b17",
+      "ready": true,
+      "loaded": true,
+      "nativeReady": true,
+      "nativeComplete": true,
+      "terminal": true
+    }
+  },
+  "actorReceipt": "artifacts/pod-phase/pod-phase-f636229d27/bombadil/acceptance-summary.json",
+  "firstActorDiagnostic": "artifacts/pod-phase/first-actor-diagnostics",
+  "nativeValidation": "artifacts/pod-phase/native-validation.txt",
+  "initialNativeDiagnostic": "artifacts/pod-phase/native-validation.initial-observer.txt",
+  "logicalSourceOperations": {
+    "inventory": 1,
+    "metadata": 14,
+    "measurement": 11,
+    "freshCapture": 1,
+    "total": 27
+  },
+  "purePlans": 17,
+  "events": [
+    {
+      "action": "inventory",
+      "source": 1,
+      "plans": 0
+    },
+    {
+      "action": "memory-defaults-phase-candidate",
+      "source": 4,
+      "plans": 1
+    },
+    {
+      "action": "explicit-phase-candidate-staged-back",
+      "source": 4,
+      "plans": 2
+    },
+    {
+      "action": "phase-only-default",
+      "source": 6,
+      "plans": 3
+    },
+    {
+      "action": "native-staged",
+      "source": 6,
+      "plans": 4
+    },
+    {
+      "action": "retained-back",
+      "source": 6,
+      "plans": 4
+    },
+    {
+      "action": "native-run",
+      "source": 7,
+      "plans": 5
+    },
+    {
+      "action": "individual-capture",
+      "source": 8,
+      "plans": 5
+    },
+    {
+      "action": "capture-retained-return",
+      "source": 8,
+      "plans": 5
+    },
+    {
+      "action": "boundary-reported-unknown",
+      "source": 10,
+      "plans": 6
+    },
+    {
+      "action": "boundary-unsupported",
+      "source": 12,
+      "plans": 7
+    },
+    {
+      "action": "boundary-fractional",
+      "source": 14,
+      "plans": 8
+    },
+    {
+      "action": "boundary-stale-phase",
+      "source": 16,
+      "plans": 9
+    },
+    {
+      "action": "boundary-stale-unsupported",
+      "source": 18,
+      "plans": 10
+    },
+    {
+      "action": "boundary-phase-conflict",
+      "source": 20,
+      "plans": 11
+    },
+    {
+      "action": "boundary-phase-missing",
+      "source": 22,
+      "plans": 12
+    },
+    {
+      "action": "refusal-wrong-version",
+      "source": 23,
+      "plans": 13
+    },
+    {
+      "action": "refusal-wrong-scope",
+      "source": 24,
+      "plans": 14
+    },
+    {
+      "action": "refusal-wrong-schema",
+      "source": 25,
+      "plans": 15
+    },
+    {
+      "action": "refusal-wrong-unit",
+      "source": 26,
+      "plans": 16
+    },
+    {
+      "action": "refusal-wrong-kind",
+      "source": 27,
+      "plans": 17
+    },
+    {
+      "action": "frozen-reopen-no-posts",
+      "source": 27,
+      "plans": 17
+    }
+  ],
+  "capture": {
+    "id": "5c9a9c2a15d4bb0e4c11b37db29d60c6f163411b049868052f354e43c7f7981f",
+    "bytes": 6145,
+    "sha256": "ea2851f4c30cb122fcb825e68a4d4de936aa1964fd93b659233f0247838dd9c2",
+    "unchanged": true
+  },
+  "frames": [
+    {
+      "path": "docs/journeys/screenshots/203ca-pod-phase.png",
+      "bytes": 32581,
+      "sha256": "b4d3fe3207e166bd50425d98dff0dbe3b1e952e260d2f4dab8b8c31ed765e2a9",
+      "fixture": "pod-phase-0313f9b522",
+      "sourceCommit": "8d785eea03e934f3be357796ed4745c68a4381ab"
+    },
+    {
+      "path": "docs/journeys/screenshots/203cb-mobile-pod-phase.png",
+      "bytes": 30409,
+      "sha256": "4b6af2d137ba2781a796d93d5416166a353c4209bb5439b6081161244487210d",
+      "fixture": "pod-phase-0313f9b522",
+      "sourceCommit": "8d785eea03e934f3be357796ed4745c68a4381ab"
+    },
+    {
+      "path": "docs/journeys/screenshots/203cc-pod-phase-in-context.png",
+      "bytes": 285553,
+      "sha256": "eee5d09071647ad0e49c376a4a6afe381554a38dff8d86bf370ce6da6966e89d",
+      "fixture": "pod-phase-0313f9b522",
+      "sourceCommit": "8d785eea03e934f3be357796ed4745c68a4381ab"
+    }
+  ],
+  "limits": [
+    "Generated ordinary OTLP through actual Collector/ClickHouse; not a running k8sclusterreceiver, Kubernetes API or RBAC test.",
+    "Synthetic component gallery and pre-definition/detached cases are separate display-contract evidence.",
+    "Browser frozen reopen attempts zero telemetry POSTs under a rejecting guard; not a ClickHouse outage claim.",
+    "Setup ingestion/readiness probes and direct store GETs are outside browser logical source costs; API operations are not SQL scan counts.",
+    "Memory retains at most two default reads; phase-only defaults one stream. Candidate omissions remain explicit.",
+    "No arithmetic, inferred pod health, container readiness, composite store or automatic refresh.",
+    "No new Quint model; existing ownership semantics are checked through actual responses and independent rejecting controls.",
+    "Generic updates preserve disclosure-open state, not descendant focus; app retained Back focus is separately verified."
+  ]
+}

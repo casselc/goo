@@ -2502,3 +2502,27 @@ GOO_POD_NATIVE_LEDGER=/workspace/goo/artifacts/pod-memory/pod-memory-5979da1993/
 GOO_POD_NATIVE_OWNER_LEDGER=/workspace/goo/artifacts/pod-memory/pod-memory-e424b30f5f/ownership.json \
 go test -run '^TestPodNative(Observed|OwnershipObserved)$' -v .
 ```
+
+### Categorical pod phase observations (journey 203c)
+
+`TestPodPhaseObserved` independently derives state evidence from ordinary raw OTLP fixture facts, without calling the production phase evaluator. It matches the full resource/resource schema, pod UID, attributes, exact receiver scope/version, empty instrumentation schema and unit, fixed window and raw row multiset. Timestamp groups independently determine duplicate/conflicting/missing observations and freshness. Exact numeric code membership determines only Pending/Running/Succeeded/Failed/Unknown labels; it never orders severity, computes a phase average or converts a label into health. Fresh code 5 remains observed telemetry labelled Unknown. Unsupported and fractional codes retain raw code without an invented domain label, including when stale; missing/conflicting observations have no code or label. Native results must use `states`, with no scalar result sections.
+
+The observed gate binds metadata, exact planned questions, source response clocks/bases, every categorical component sample and `current` sample, and separate displayed domain/quality. Mixed memory resources retain the two memory defaults and expose phase as an explicit candidate. The source-free explicit phase-candidate stage/Back is checked before the separate phase-only resource executes its one default. Seven actual boundary resources cover reported Unknown, unsupported/fractional code, stale supported/unsupported code, conflict and missing data. Five wrong-version/scope/schema/unit/kind resources retain metadata but admit no phase read. The source journal contains exactly 22 named events, 27 telemetry API operations and 17 pure plans: one inventory, 14 exact metadata lookups, 11 native measurements (including the two memory defaults) and one fresh individual capture. These are browser-observed API operations, not a claim about upstream SQL query counts.
+
+Actual first-pass main `artifacts/pod-phase/pod-phase-0313f9b522/ledger.json` passed in 24.6s; owner `pod-phase-a272d10e81/ownership.json` passed in 14.6s. They used generated ordinary OTLP, not a running Kubernetes cluster or k8sclusterreceiver. Separate synthetic categorical component/SSR checks passed in 2.5s and 8.8s; those are not substituted for ordinary-source integration evidence. The prior pod-memory owner regression also passed in the same browser batch.
+
+The corrected bounded native gate passed in **0.627s** (main 0.54s, owner 0.07s), rejecting **12 main + 4 owner serialized changed controls**. Controls change domain labels, observed Unknown quality, unsupported/fractional classification, pod/schema authority, raw rows, basis/read clock, local read count, categorical rendering and capture identity. Five genuine held-response cases cover metadata/filter, native/close, native/row replacement, metadata/tab and native/scope; late responses cannot change publication, source count, pure planning or retained owner state. No new lifecycle model or arbitrary-schedule proof is claimed for this reused native owner algebra.
+
+Complete individual state capture remained byte-identical at 6,145 bytes, SHA256 `ea2851f4c30cb122fcb825e68a4d4de936aa1964fd93b659233f0247838dd9c2`, content ID `5c9a9c2a15d4bb0e4c11b37db29d60c6f163411b049868052f354e43c7f7981f`. The gate reads the actual full before/after store files, verifies content addressing and the original exact question/raw state rows; it does not hash the public page as a complete store. Capture reopening, including a reload with telemetry POSTs blocked, remained source-free. There is no scalar phase comparison, readiness alias, health inference or new inventory custody store.
+
+The initial native main rejected an outdated 21-event observer expectation: the frozen journey had added `explicit-phase-candidate-staged-back` with the source count unchanged at 4. Independent diagnostics confirmed all inventory, metadata, raw domain/quality, exact-question, component and refusal predicates already passed. The observer now checks the exact 22-action source/pure-plan sequence and corresponding request journal. The first owner run passed. Original stdout and detailed diagnostics remain in `artifacts/pod-phase/native-validation.initial-observer.txt` and `native-observer-diagnostic.txt`; final stdout is `artifacts/pod-phase/native-validation.txt`. No application, fixture or browser main was changed or repeated to satisfy this correction, and no tests followed the corrected pass.
+
+The corrected actor `artifacts/pod-phase/pod-phase-f636229d27/bombadil/acceptance-summary.json` passed in 31.0s (32.2s invocation), phases 0–8 with 379 snapshots, final source 4 / pure plans 2 / terminal true. An initial actor status-selector diagnostic was corrected in the harness only, with no application change. The receipts establish bounded ordinary-source behavior, not source authenticity, physical pod state or arbitrary concurrent scheduling.
+
+With the toolchain/cache environment documented above, reproduce only the bounded observed gate:
+
+```sh
+GOO_POD_PHASE_LEDGER=/workspace/goo/artifacts/pod-phase/pod-phase-0313f9b522/ledger.json \
+GOO_POD_PHASE_OWNER_LEDGER=/workspace/goo/artifacts/pod-phase/pod-phase-a272d10e81/ownership.json \
+go test -run '^TestPodPhase(Observed|OwnershipObserved)$' -v .
+```

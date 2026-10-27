@@ -6,8 +6,8 @@ null cannot admit native lookup. Automatic profiles are pinned kubeletstats
 v0.137.0 usage/working-set or separate semconv v1.37 usage-only; other versions
 and names are not aliases. Byte-domain masking is presentation-only over native
 Float64 gauge observations; raw evidence stays inspectable. [Typed pod phases](POD_STATES.md) now support native execution and individual
-capture/replay plus discovery/planning and categorical UI; live acceptance for the
-new view is pending, and container readiness remains open;
+capture/replay plus discovery/planning and categorical UI with ordinary OTLP/live
+browser acceptance; container readiness remains open;
 no memory ratio, health or ownership is inferred.
 
 [Kubernetes resource discovery](KUBERNETES_RESOURCES.md) observes pod-bearing OTel
@@ -18,7 +18,7 @@ empty schemas differ. The 1,000 source-family-group refusal and 100 returned
 variant limit can require a narrower window; local facets do not query omitted
 data. Matching-resource record context is not exact map/schema equality or all
 telemetry for a pod. [Pod memory gauges](POD_METRICS.md) are now supported separately. Ownership,
-phase/readiness, restarts, requests/limits, pressure and workload rollups remain
+container readiness, restarts, requests/limits, pressure and workload rollups remain
 separate work.
 
 [Go runtime observations](GO_RUNTIME.md) support only the pinned OTel v1.37
