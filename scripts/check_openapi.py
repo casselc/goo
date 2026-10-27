@@ -257,6 +257,22 @@ def check_cpu_time_observed(spec,path):
     print('CPU-time observations: nine real handler responses/requests, five source/profile refusals and offline capture reopen conform')
 
 
+def check_network_observed(spec,path):
+    observations=json.loads(Path(path).read_text())
+    assert len(observations)==11
+    for case in observations:
+        op=spec['paths'][case['path']][case['method'].lower()]
+        validator(spec,op['responses'][str(case['status'])]['content']['application/json']['schema']).validate(case['response'])
+        if case.get('request') is not None and 'requestBody' in op:
+            validator(spec,op['requestBody']['content']['application/json']['schema']).validate(case['request'])
+    r=next(c['response'] for c in observations if c['path']=='/measurements' and c['status']==200)
+    assert r['question']['definition']['source']['metric']=='system.network.io'
+    interval=r['counters']['series'][0]['intervals'][0]
+    assert interval['delta']=='512' and interval['exactPerSecond']=='256' and interval['perSecond']==256
+    assert sum(c['status']==502 for c in observations)==7
+    print('Network observations: eleven real handler responses/requests, seven source/profile refusals and offline reopen conform')
+
+
 def check_stock_observed(spec,path):
     observations=json.loads(Path(path).read_text())
     assert len(observations)==6, 'Expected execute/capture/reopen/delta/monotonic/invalid stock workflow'
@@ -427,6 +443,7 @@ if __name__ == '__main__':
     parser.add_argument('--pool-signals-observations')
     parser.add_argument('--host-observations')
     parser.add_argument('--cpu-time-observations')
+    parser.add_argument('--network-observations')
     parser.add_argument('--pod-state-observations')
     parser.add_argument('--container-state-observations')
     parser.add_argument('--pod-phase-discovery-observations')
@@ -434,6 +451,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    if args.network_observations:
+        check_network_observed(spec,args.network_observations)
     if args.cpu_time_observations:
         check_cpu_time_observed(spec,args.cpu_time_observations)
     if args.observations:

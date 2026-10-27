@@ -14,12 +14,27 @@ import (
 )
 
 func TestCPUTimeHTTPExecuteCaptureAndOfflineReopen(t *testing.T) {
+	testHostIntervalCounterHTTP(t, false)
+}
+func TestNetworkHTTPExecuteCaptureAndOfflineReopen(t *testing.T) {
+	testHostIntervalCounterHTTP(t, true)
+}
+func testHostIntervalCounterHTTP(t *testing.T, network bool) {
 	s := metrics.Stream{Resource: map[string]string{"host.id": "host", "deployment.environment.name": "prod"}, Scope: "hostmetrics", SchemaURL: measurements.HostMetricsSchema, Name: "system.cpu.time", Unit: "s", Attributes: map[string]string{"cpu.mode": "user", "cpu.logical_number": "0"}}
+	if network {
+		s.Name = "system.network.io"
+		s.Unit = "By"
+		s.Attributes = map[string]string{"network.interface.name": "eth0", "network.io.direction": "receive"}
+	}
+	first, last := "1.25", "1.75"
+	if network {
+		first, last = "100", "612"
+	}
 	q := measurements.Question{Definition: measurements.Definition{APIVersion: measurements.Version, Name: "cpu-time", Title: "CPU time", Kind: "counter", CounterDomain: metrics.DecimalCounterDomain, Environment: "prod", LookbackMinutes: 2, MaxGapMS: 60000, Grain: "per-stream", Source: measurements.Binding{Resource: &measurements.ResourceBinding{Kind: "host", ID: "host"}, Services: []string{}, Scope: s.Scope, SchemaURL: s.SchemaURL, Metric: s.Name, Unit: s.Unit, ExactStream: &s}}, FromMS: 1000, ToMS: 3000}
 	rows := func() string {
 		var b strings.Builder
 		for i, end := range []string{"1000000000", "3000000000"} {
-			raw, _ := json.Marshal(map[string]any{"resource": s.Resource, "resource_schema_url": "", "scope": s.Scope, "version": "", "schema_url": s.SchemaURL, "name": s.Name, "unit": s.Unit, "attributes": s.Attributes, "flags": 0, "monotonic": true, "temporality": 2, "start_ns": "0", "end_ns": end, "value": []string{"1.25", "1.75"}[i]})
+			raw, _ := json.Marshal(map[string]any{"resource": s.Resource, "resource_schema_url": "", "scope": s.Scope, "version": "", "schema_url": s.SchemaURL, "name": s.Name, "unit": s.Unit, "attributes": s.Attributes, "flags": 0, "monotonic": true, "temporality": 2, "start_ns": "0", "end_ns": end, "value": []string{first, last}[i]})
 			b.Write(raw)
 			b.WriteByte('\n')
 		}
@@ -39,8 +54,12 @@ func TestCPUTimeHTTPExecuteCaptureAndOfflineReopen(t *testing.T) {
 		}
 		body := rows()
 		switch mode {
+		case "fractional-bytes":
+			body = strings.ReplaceAll(body, `"value":"`+first+`"`, `"value":"100.000000000000000001"`)
+		case "unsafe-bytes":
+			body = strings.ReplaceAll(body, `"value":"`+first+`"`, `"value":"9007199254740992"`)
 		case "negative":
-			body = strings.ReplaceAll(body, `"value":"1.25"`, `"value":"-1"`)
+			body = strings.ReplaceAll(body, `"value":"`+first+`"`, `"value":"-1"`)
 		case "flags-missing":
 			body = strings.ReplaceAll(body, `"flags":0,`, ``)
 		case "delta-profile":
@@ -80,7 +99,11 @@ func TestCPUTimeHTTPExecuteCaptureAndOfflineReopen(t *testing.T) {
 		t.Fatal(string(raw))
 	}
 	p := result.Counters.Series[0].Intervals[0]
-	if p.Delta != "0.5" || p.ExactPerSecond != "1/4" || p.PerSecond == nil || *p.PerSecond != .25 {
+	delta, exact, rate := "0.5", "1/4", .25
+	if network {
+		delta, exact, rate = "512", "256", 256
+	}
+	if p.Delta != delta || p.ExactPerSecond != exact || p.PerSecond == nil || *p.PerSecond != rate {
 		t.Fatal(p)
 	}
 	raw = call("POST", "/captures", "/captures", map[string]any{"title": "CPU activity", "question": exploration.CaptureQuestion{Kind: "measurement", Measurement: &q}}, 201)
@@ -104,10 +127,20 @@ func TestCPUTimeHTTPExecuteCaptureAndOfflineReopen(t *testing.T) {
 		mode = bad
 		call("POST", "/measurements", "/measurements", q, 502)
 	}
+	if network {
+		for _, bad := range []string{"fractional-bytes", "unsafe-bytes"} {
+			mode = bad
+			call("POST", "/measurements", "/measurements", q, 502)
+		}
+	}
 	bad := q
 	bad.Definition.CounterDomain = ""
 	call("POST", "/measurements", "/measurements", bad, 400)
-	if file := os.Getenv("GOO_CPU_TIME_API_OBSERVATIONS"); file != "" {
+	variable := "GOO_CPU_TIME_API_OBSERVATIONS"
+	if network {
+		variable = "GOO_NETWORK_API_OBSERVATIONS"
+	}
+	if file := os.Getenv(variable); file != "" {
 		b, _ := json.MarshalIndent(observed, "", "  ")
 		if e := os.WriteFile(file, b, 0644); e != nil {
 			t.Fatal(e)

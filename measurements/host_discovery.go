@@ -198,12 +198,12 @@ func discoverHostRows(q HostDiscoveryQuestion, rows []json.RawMessage) (*HostDis
 				i.Dimensions = append(i.Dimensions, d)
 			}
 			sort.Strings(i.Dimensions)
-			i.Supported = i.Scope != "" && i.Metric != "" && i.Unit != "" && (i.Kind == "gauge" || i.Kind == "stock" && i.Temporality == 2 && !i.Monotonic || HostCPUTimeInstrument(*i))
+			i.Supported = i.Scope != "" && i.Metric != "" && i.Unit != "" && (i.Kind == "gauge" || i.Kind == "stock" && i.Temporality == 2 && !i.Monotonic || (HostCPUTimeInstrument(*i) || HostNetworkInstrument(*i)))
 			coverage := observedCoverage(*i, g.observations[key])
 			if i.Supported && len(coverage.Streams) > 0 {
 				stream := coverage.Streams[0].Stream
 				d := Definition{APIVersion: Version, Name: "host-metric-" + key[:12], Title: i.Metric, Kind: i.Kind, Environment: q.Environment, LookbackMinutes: 2, MaxGapMS: 60000, Grain: "per-stream", Source: Binding{Resource: &ResourceBinding{Kind: "host", ID: g.entry.Resource["host.id"]}, Services: []string{}, Scope: i.Scope, Version: i.Version, SchemaURL: i.SchemaURL, Metric: i.Metric, Unit: i.Unit, ExactStream: &stream}}
-				if HostCPUTimeInstrument(*i) {
+				if HostCPUTimeInstrument(*i) || HostNetworkInstrument(*i) {
 					d.CounterDomain = metrics.DecimalCounterDomain
 				}
 				if d.Validate() == nil {

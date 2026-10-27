@@ -12488,3 +12488,18 @@ pass. [Journey 211](journeys/211-cpu-time-storyboard.md) and
 [evidence](docs/evidence/cpu-time-211.json) record exact scope and the final
 cumulative-only admission followup. Container CPU-time adoption and broader
 counter/window composition remain separate contracts.
+
+## 212 source gate — explicit host network throughput
+
+Full root Go regression passes. All 101 Node files pass (20.051s); network owner
+checks cover closed/hidden/withdrawn/disposed late replies, explicit interfaces,
+ambiguity/incomplete metadata, retained reopen and common display scales. Seventeen
+proxy and eight startup tests pass, including the new static network asset.
+OpenAPI remains 83 Go / 90 total operations and 517 schemas; 429 frozen responses,
+159 admitted requests and 28 mux refusals pass. Eleven network HTTP observations
+cover exact execution, fresh capture/offline reopen and seven source/profile
+refusals; the existing CPU-time helper remains green. Two Hegel properties pass
+eight examples each in 0.931s: byte-admission boundaries and actual-JS-owner
+withdrawal/release schedules. Source review found no blocker; unexpected renderer
+errors now finish the owner cleanly. Live journey, actor/raw/Quint and frames are
+pending at this source gate.

@@ -1014,3 +1014,9 @@ raw/model evidence. The first profile is pinned host cumulative `system.cpu.time
 No container CPU-time profile, whole-host/core sum, saturation or inferred
 capacity percentage is added. Count-ratio/fleet/window-comparison contracts do
 not accept decimal counters. Exported precision cannot recover pre-export loss.
+
+[Host network throughput](HOST_NETWORK_THROUGHPUT.md) in 212 is source-reviewed;
+live acceptance is pending. Its first binding requires pinned cumulative
+`system.network.io` byte counters with reported interface and receive/transmit.
+Unsafe/fractional byte tallies refuse; omitted/ambiguous metadata is not absence.
+No interface sum, utilization, capacity, error-rate or disk-I/O profile is added.

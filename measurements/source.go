@@ -293,8 +293,8 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 					if !exists || string(value) == "null" || json.Unmarshal(value, &temporality) != nil || (temporality != 1 && temporality != 2) {
 						return nil, fmt.Errorf("decimal counter requires explicit integer temporality")
 					}
-					if d.Source.Resource != nil && d.Source.Resource.Kind == "host" && d.Source.Metric == "system.cpu.time" && d.Source.Unit == "s" && d.Source.SchemaURL == HostMetricsSchema && temporality != 2 {
-						return nil, fmt.Errorf("pinned host CPU-time profile requires cumulative temporality")
+					if HostIntervalCounterDefinition(d) && temporality != 2 {
+						return nil, fmt.Errorf("pinned host interval-counter profile requires cumulative temporality")
 					}
 					var monotonic bool
 					value, exists = fields["monotonic"]
@@ -393,6 +393,9 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 					exact, ok := metrics.ExportedNonnegativeDecimal(row.Value)
 					if !ok {
 						return nil, fmt.Errorf("invalid exported decimal counter")
+					}
+					if HostNetworkDefinition(d) && (!exact.IsInt() || exact.Num().Cmp(new(big.Int).Lsh(big.NewInt(1), 53)) >= 0) {
+						return nil, fmt.Errorf("network byte counter requires nonnegative integer below 2^53")
 					}
 					canonical = metrics.CounterDecimal(exact)
 				}

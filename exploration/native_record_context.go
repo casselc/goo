@@ -23,7 +23,7 @@ type NativeRecordContext struct {
 // [atNS,atNS+1); no lookaround or current-time fallback is inferred.
 func PlanNativeRecordContext(parent measurements.Question, stream metrics.Stream, signal, fromNS, toNS string) (*NativeRecordContext, error) {
 	d := parent.Definition
-	hostCPU := d.Source.Resource != nil && d.Source.Resource.Kind == "host" && d.Kind == "counter" && d.CounterDomain == metrics.DecimalCounterDomain && d.Source.Metric == "system.cpu.time" && d.Source.Unit == "s" && d.Source.SchemaURL == measurements.HostMetricsSchema
+	hostCPU := measurements.HostIntervalCounterDefinition(d)
 	if d.Source.Resource != nil && !hostCPU {
 		return nil, fmt.Errorf("service record context does not support resource-bound measurements")
 	}

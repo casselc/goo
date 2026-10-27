@@ -373,3 +373,8 @@ Chart interaction stays local; existing explicit Run owns record reads.
 and pinned host CPU activity fallback. Existing integer counters stay unchanged;
 logical CPUs/modes retain separate interval evidence. [Journey 211](journeys/211-cpu-time-storyboard.md)
 records acceptance.
+
+[Host network throughput](docs/HOST_NETWORK_THROUGHPUT.md) adds explicit
+per-interface receive/transmit byte rates without expanding CPU/memory defaults.
+It reuses native interval investigation and individual capture; [Journey 212](journeys/212-host-network-storyboard.md)
+tracks live acceptance.
