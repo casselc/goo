@@ -1000,3 +1000,11 @@ history, combined capture or live subscription is added.
 and lost ignored prior journals. Existing captures survived. XTDB GET health
 checks succeed; its running inherited HEAD health probe still reports unhealthy
 until normal container recreation applies the corrected source override.
+
+
+[Automatic resource defaults](AUTOMATIC_RESOURCE_DEFAULTS.md) in 210 use only
+the opened exact variant and complete, unambiguous pinned candidates. Other
+variants remain manual; no receiver deployment or arbitrary-source autodetection
+is claimed. Historical 208/209 manual-entrance browser specs are explicit skips;
+210 replaces their entry/owner/actor coverage while native/API/property/raw and
+generic timeline checks remain active. Final actor acceptance is pending.

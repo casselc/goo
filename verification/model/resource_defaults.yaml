@@ -1,0 +1,9 @@
+spec: resource_defaults.qnt
+module: resource_defaults
+constants: {MAX_READS: 8}
+invariants: [safety]
+actions:
+  usage: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}} and compositions == {{.obs.compositions}} and histories == {{.obs.histories}}'}
+  capacity: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}} and compositions == {{.obs.compositions}} and histories == {{.obs.histories}}'}
+  local: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}} and compositions == {{.obs.compositions}} and histories == {{.obs.histories}}'}
+  ambiguous: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}} and compositions == {{.obs.compositions}} and histories == {{.obs.histories}}'}

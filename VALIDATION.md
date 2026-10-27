@@ -12417,3 +12417,16 @@ space increased from 39 MB to 3.9 GB; all six application table row counts were
 preserved or increased. Compose validation, ClickHouse ping, capabilities and UI
 configuration pass; retained query/part/error logs have one-day TTLs. No
 application telemetry, captures, images or volumes were deleted.
+
+
+## 210 source and live main gate
+
+Automatic Resources defaults are source-reviewed. All 100 Node files pass
+(12.927s). Final compact usage browser journey passes (13.3s); deferred capacity
+passes (19.5s), withdrawal passes (16.2s) after a route-cleanup race in its first
+harness run. Final raw observer passes (1.53s, four rejecting controls); the
+actual-owner Hegel property passes eight generated schedules (0.96s). Quint
+validates one actual five-macrostep trace and rejects two model-only bad traces
+(10.19s on the initial semantic ledger). No Go numerical/API contract changed.
+The updated Bombadil actor is pending diagnosis at initial discovery; no green
+actor claim is made at this gate. Final docs/release acceptance is pending.

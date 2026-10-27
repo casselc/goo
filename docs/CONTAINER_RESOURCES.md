@@ -7,6 +7,10 @@ Bombadil and independent raw/custody plus observed Quint validation. This consol
 Kubernetes Resources entry. Both existing composition APIs and individual
 measurement/capture formats remain separate and retain their semantics.
 
+Current entrance: [automatic usage defaults](AUTOMATIC_RESOURCE_DEFAULTS.md)
+extends this owner in 210. The explicit metadata/Load contracts below remain
+available; opening Resources now composes one discovery with up to two usage reads.
+
 ## One discovery, independent loads
 
 A single resource owner retains the original environment, fixed window and

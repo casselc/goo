@@ -1,4 +1,5 @@
 const {test,expect}=require('@playwright/test'),fs=require('node:fs/promises'),path=require('node:path'),s=require('./209-container-history-support'),{startBombadil}=require('./support/cross-app');
+test.beforeEach(()=>test.skip(true,'Historical manual Resources entrance; current automatic entry and ownership are exercised in journey 210. Native/API/property/raw contracts remain active.'));
 test('209 bounded retained history focus and explicit context/native staging',async({request})=>{
  test.skip(process.env.GOO_CONTAINER_HISTORY_BOMBADIL!=='1','Explicit ordinary OTLP campaign');test.setTimeout(110000);
  const facts=await s.seed(request),dir=await s.write(facts,'actor-fixture.json',facts),primary=facts.points.find(p=>p.case==='primary-usage').resource;

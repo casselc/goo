@@ -1,4 +1,5 @@
 const { test, expect } = require('@playwright/test');
+test.beforeEach(()=>test.skip(true,'Historical manual Resources entrance; current automatic entry and ownership are exercised in journey 210. Native/API/property/raw contracts remain active.'));
 const s = require('./208-container-resources-support');
 async function frame(panel, file) {
   await panel.evaluate(async e => { e.scrollIntoView({block:'center'}); await document.fonts.ready; await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))); });

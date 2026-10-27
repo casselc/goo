@@ -355,8 +355,9 @@ reports CPU usage; no counter derivative is inferred.
 
 
 [Container Resources](docs/CONTAINER_RESOURCES.md) consolidates memory and CPU
-under one Kubernetes entry with shared metadata discovery and independent explicit
-loads. Each panel retains its own units, clocks and individual native inspection.
+under one Kubernetes entry with shared metadata discovery and independent family
+loads. [Automatic usage defaults](docs/AUTOMATIC_RESOURCE_DEFAULTS.md) now load
+unambiguous usage first; expanding capacity reuses held usage. Each panel retains its own units, clocks and individual native inspection.
 [Journey 208](journeys/208-container-resources-storyboard.md) tracks acceptance.
 
 
@@ -365,3 +366,5 @@ limit timelines over held container evidence. Compare role observations on one
 family scale, inspect exact points and stage precise time-scoped logs/spans.
 Chart interaction stays local; existing explicit Run owns record reads.
 [Journey 209](journeys/209-container-history-storyboard.md) tracks acceptance.
+
+[Journey 210](journeys/210-resource-defaults-storyboard.md) exercises the automatic entrance.

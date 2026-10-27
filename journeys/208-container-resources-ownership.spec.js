@@ -1,4 +1,5 @@
 const {test,expect}=require('@playwright/test'),s=require('./208-container-resources-support');
+test.beforeEach(()=>test.skip(true,'Historical manual Resources entrance; current automatic entry and ownership are exercised in journey 210. Native/API/property/raw contracts remain active.'));
 test('208 family-local ownership preserves sibling loads and withdraws only affected work',async({page,request})=>{
  test.setTimeout(180000);const facts=await s.seed(request),o=s.observe(page),cases=[];
  for(const reason of ['next-source-close','metadata-auto-close','memory-ambiguity','memory-role','global-close']){

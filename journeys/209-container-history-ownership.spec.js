@@ -1,4 +1,5 @@
 const {test,expect}=require('@playwright/test'),s=require('./209-container-history-support');
+test.beforeEach(()=>test.skip(true,'Historical manual Resources entrance; current automatic entry and ownership are exercised in journey 210. Native/API/property/raw contracts remain active.'));
 test('209 actual delayed pure history respects family and global owners',async({page,request})=>{
  test.setTimeout(150000);const facts=await s.seed(request),o=s.observe(page),cases=[];
  for(const reason of ['role','disclosure','scope','close','sibling-load-survives']){

@@ -1,4 +1,5 @@
 const {test,expect}=require('@playwright/test'),fs=require('node:fs/promises'),path=require('node:path'),s=require('./208-container-resources-support'),{startBombadil}=require('./support/cross-app');
+test.beforeEach(()=>test.skip(true,'Historical manual Resources entrance; current automatic entry and ownership are exercised in journey 210. Native/API/property/raw contracts remain active.'));
 test('208 bounded shared metadata and independent memory CPU workflow',async({request})=>{
  test.skip(process.env.GOO_CONTAINER_RESOURCES_BOMBADIL!=='1','Explicit ordinary OTLP campaign');test.setTimeout(110000);
  const facts=await s.seed(request),dir=await s.write(facts,'actor-fixture.json',facts),primary=facts.points.find(p=>p.case==='primary-usage').resource;
