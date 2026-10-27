@@ -11624,3 +11624,52 @@ supplies an empty map. No production behavior was changed to satisfy that test.
 No browser, Bombadil, new Quint model or live receiver acceptance is claimed for
 this pure prerequisite. Existing screenshots continue to represent the unchanged
 product. Native/source/UI integration and container readiness remain open.
+
+## 203b — native pod phase definition, source and custody binding
+
+Adds explicit `kind: state` / pinned `stateProfile`, full exact pod-resource
+compilation against the gauge table, typed `states` results and existing individual
+capture/replay support. Empty-unit handling remains state-only. Physical state
+identity strings must be present and non-null, including known-empty schemas/unit.
+Unsupported codes retain raw code/quality without a domain label; result quality
+is unknown. Exact-decimal guards refuse values that would round into supported
+integral phases. Generic categorical capture comparisons explicitly return
+unsupported before arithmetic. New optional fields preserve legacy serialization.
+
+Affected Go suites pass: metrics (cached after prior 1.000s pass), measurements
+1.669s, exploration 6.429s, cmd/goo 8.158s. Subsequent precision rejecting cases
+pass in 0.037s; final handler/custody check passes in 0.026s. That real-handler
+check uses a controlled dependency transport, actual temporary filesystem custody
+and a fresh offline mux: execute + capture make exactly two source requests,
+reopen makes zero, full stored bytes remain unchanged, domain Unknown stays
+observed, comparison declines arithmetic and bad profiles fail before source IO.
+It is not actual collector/ClickHouse ingestion or a receiver deployment.
+
+Hegel's existing 60-case quality/permutation property plus new 40-case native
+replay/label-mutation property pass together in 0.079s after final source changes.
+The new property rejects invented Healthy labels across supported and unsupported
+codes. No new Quint model, phase UI or Bombadil campaign is claimed.
+
+Regenerated OpenAPI has 477 reflected / 495 total schemas and 87 operations.
+The full validator passes its unchanged 395 response fixtures, 144 admitted
+requests, 25 mux refusals, negative controls and SSE checks; the dedicated
+pod-state workflow validates four additional actual handler responses and exact
+captured/reopened measurement equality. API documentation route tests pass (two,
+0.014s). The actual API-docs browser check passes desktop/mobile, filter/disclosure,
+87-operation coverage and no page errors. Existing API-doc frame output is unchanged.
+
+Initial measurements execution hit sandbox-denied loopback; the supported test
+escalation passed. One new phase test initially inherited a freshness threshold
+that correctly classified its sample stale; declaring the intended 60-second test
+threshold fixed the fixture. System/project Python environments lacked validator
+dependencies; the existing /tmp/goo-openapi-venv passed. The generic workflow
+checker deliberately requires at least 12 entries, so a separate four-response
+state checker was added without weakening that guard. API-docs browser loopback
+also required the supported escalation. No production assertion was relaxed.
+
+Independent read-only architecture review approves the API-level slice with no
+blockers, confirming exact authority, scalar isolation, precision, replay and
+comparison refusal; the reviewer ran no independent builds/tests. Documentation,
+architecture flow and [API storyboard](journeys/203b-pod-state-contract-storyboard.md)
+separate implemented contracts from remaining discovery/planning/UI and actual
+OTLP/browser/ownership acceptance. No deployment binary or telemetry data changed.

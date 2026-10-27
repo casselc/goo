@@ -318,6 +318,6 @@ phase/readiness, memory ratios and health inference are not included.
 See [journey 202](journeys/202-pod-memory-storyboard.md) for actual default/control
 reads, capture reopening, ownership checks and desktop/mobile frames.
 
-The [pod state core prerequisite](docs/POD_STATES.md) decodes the pinned receiver
-phase codes independently of observation quality. It is not yet connected to
-source discovery, native packages or the UI.
+[Typed pod states](docs/POD_STATES.md) decode pinned receiver phase codes through
+exact-resource native packages and individual captures, independently of observation
+quality. Automatic discovery/planning and UI presentation remain pending.

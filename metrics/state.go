@@ -40,10 +40,8 @@ func EvaluatePodPhases(fromNS, toNS, maxAgeNS, podUID string, points []GaugePoin
 	}
 	canonical := make([]GaugePoint, len(points))
 	for i, p := range points {
-		if p.Stream.Name != "k8s.pod.phase" || p.Stream.Unit != "" ||
-			p.Stream.Scope != "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver" ||
-			p.Stream.Version != "0.137.0" || p.Stream.SchemaURL != "" {
-			return nil, fmt.Errorf("unsupported pod phase profile")
+		if err := ValidatePodPhaseStream(p.Stream); err != nil {
+			return nil, err
 		}
 		p.Stream = cloneStream(p.Stream)
 		if p.Value == 0 {
@@ -79,4 +77,15 @@ func EvaluatePodPhases(fromNS, toNS, maxAgeNS, podUID string, points []GaugePoin
 		result.Series = append(result.Series, out)
 	}
 	return result, nil
+}
+
+// PodPhaseProfile pins the domain mapping separately from its physical gauge kind.
+const PodPhaseProfile = "k8scluster-pod-phase/0.137.0"
+
+// ValidatePodPhaseStream checks the physical profile, not resource authority.
+func ValidatePodPhaseStream(s Stream) error {
+	if s.Name != "k8s.pod.phase" || s.Unit != "" || s.Scope != "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver" || s.Version != "0.137.0" || s.SchemaURL != "" {
+		return fmt.Errorf("unsupported pod phase profile")
+	}
+	return nil
 }

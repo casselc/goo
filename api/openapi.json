@@ -18461,6 +18461,10 @@
           "source": {
             "$ref": "#/components/schemas/measurements.Binding"
           },
+          "stateProfile": {
+            "type": "string",
+            "description": "Required only for kind state: k8scluster-pod-phase/0.137.0. Exact pod-resource unitless receiver gauge; no numeric arithmetic or health inference."
+          },
           "stockDomain": {
             "type": "string",
             "description": "Optional stock-only nonnegative-integer policy. Recorded values must be integers >=0 and <2^53; missing-value flags remain unknown. Empty/omitted keeps generic signed finite fractional stock semantics.",
@@ -18600,6 +18604,17 @@
                 "type": "null"
               }
             ]
+          },
+          "stateProfile": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Required only for kind state: k8scluster-pod-phase/0.137.0. Exact pod-resource unitless receiver gauge; no numeric arithmetic or health inference."
           },
           "stockDomain": {
             "anyOf": [
@@ -21428,6 +21443,16 @@
           "state": {
             "type": "string"
           },
+          "states": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/metrics.StateResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "stocks": {
             "anyOf": [
               {
@@ -21693,6 +21718,23 @@
             "anyOf": [
               {
                 "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "states": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/metrics.StateResultInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               {
                 "type": "null"
@@ -23834,6 +23876,291 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/metrics.RatioSeries"
+      },
+      "metrics.StateResult": {
+        "properties": {
+          "fromNS": {
+            "type": "string"
+          },
+          "series": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/metrics.StateSeries"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "toNS": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "fromNS",
+          "toNS",
+          "series"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.StateResult",
+        "description": "Exact-stream categorical observations. state is observation quality; codeState is supported/unsupported domain decoding. Fresh reported phase Unknown is observed. Unsupported finite codes retain raw code and quality without a label."
+      },
+      "metrics.StateResultInput": {
+        "additionalProperties": false,
+        "properties": {
+          "fromNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "series": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/metrics.StateSeriesInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "toNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.StateResult"
+      },
+      "metrics.StateSample": {
+        "properties": {
+          "atNS": {
+            "type": "string"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "codeState": {
+            "type": "string",
+            "enum": [
+              "supported",
+              "unsupported"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "enum": [
+              "Pending",
+              "Running",
+              "Succeeded",
+              "Failed",
+              "Unknown"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "stale",
+              "unknown"
+            ]
+          }
+        },
+        "required": [
+          "atNS",
+          "state"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.StateSample"
+      },
+      "metrics.StateSampleInput": {
+        "additionalProperties": false,
+        "properties": {
+          "atNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "code": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "codeState": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.StateSample"
+      },
+      "metrics.StateSeries": {
+        "properties": {
+          "samples": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/metrics.StateSample"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "stale",
+              "unknown"
+            ]
+          },
+          "stream": {
+            "$ref": "#/components/schemas/metrics.Stream"
+          }
+        },
+        "required": [
+          "stream",
+          "state",
+          "samples"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.StateSeries"
+      },
+      "metrics.StateSeriesInput": {
+        "additionalProperties": false,
+        "properties": {
+          "samples": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/metrics.StateSampleInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/metrics.StreamInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/metrics.StateSeries"
       },
       "metrics.StockResult": {
         "properties": {

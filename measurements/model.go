@@ -69,6 +69,7 @@ type LifecycleBinding struct {
 	AllowanceMS    int64    `json:"allowanceMs" yaml:"allowanceMs"`
 }
 type Definition struct {
+	StateProfile      string            `json:"stateProfile,omitempty" yaml:"stateProfile,omitempty"`
 	StockDomain       string            `json:"stockDomain,omitempty" yaml:"stockDomain,omitempty"`
 	HistogramBucketMS *int64            `json:"histogramBucketMs,omitempty" yaml:"histogramBucketMs,omitempty"`
 	APIVersion        string            `json:"apiVersion" yaml:"apiVersion"`
@@ -95,6 +96,7 @@ type Plan struct {
 	Revision   string            `json:"revision"`
 }
 type Result struct {
+	States        *metrics.StateResult         `json:"states,omitempty"`
 	Stocks        *metrics.StockResult         `json:"stocks,omitempty"`
 	HistogramTime *metrics.HistogramTimeResult `json:"histogramTime,omitempty"`
 	Events        []lifecycle.Event            `json:"events,omitempty"`
@@ -121,6 +123,17 @@ func text(s string, max int) bool {
 	return len(s) <= max && utf8.ValidString(s) && !strings.ContainsRune(s, 0)
 }
 func (d Definition) Validate() error {
+	if d.Kind == "state" {
+		if d.StateProfile != metrics.PodPhaseProfile || d.Source.Resource == nil || d.Source.Resource.Kind != "kubernetes-pod" || d.Source.ExactStream == nil {
+			return fmt.Errorf("state requires pinned pod-phase profile and exact pod resource authority")
+		}
+		if err := metrics.ValidatePodPhaseStream(*d.Source.ExactStream); err != nil {
+			return err
+		}
+	} else if d.StateProfile != "" {
+		return fmt.Errorf("stateProfile requires state kind")
+	}
+
 	if d.StockDomain != "" && (d.Kind != "stock" || d.StockDomain != "nonnegative-integer") {
 		return fmt.Errorf("stockDomain requires stock kind and nonnegative-integer policy")
 	}
@@ -134,7 +147,7 @@ func (d Definition) Validate() error {
 	if d.HistogramBucketMS != nil && (d.Kind != "histogram" || *d.HistogramBucketMS < 1 || *d.HistogramBucketMS > 7200000) {
 		return fmt.Errorf("histogramBucketMs requires a histogram and a positive width <=120 minutes")
 	}
-	if d.Kind != "gauge" && d.Kind != "counter" && d.Kind != "histogram" && d.Kind != "lifecycle" && d.Kind != "stock" {
+	if d.Kind != "gauge" && d.Kind != "counter" && d.Kind != "histogram" && d.Kind != "lifecycle" && d.Kind != "stock" && d.Kind != "state" {
 		return fmt.Errorf("unsupported measurement kind")
 	}
 	if d.Grain != "per-stream" && d.Grain != "consumer-group" && d.Grain != "subject" {
@@ -149,8 +162,8 @@ func (d Definition) Validate() error {
 				return fmt.Errorf("host resource binding requires gauge or stock, exact stream, per-stream grain and no service or namespace selector")
 			}
 		} else if r.Kind == "kubernetes-pod" {
-			if r.ID == "" || !text(r.ID, 512) || d.Kind != "gauge" || len(d.Source.Services) != 0 || d.Source.Namespace != nil || d.Source.ExactStream == nil || d.Grain != "per-stream" {
-				return fmt.Errorf("pod resource binding requires gauge, exact stream, per-stream grain and no service or namespace selector")
+			if r.ID == "" || !text(r.ID, 512) || (d.Kind != "gauge" && d.Kind != "state") || len(d.Source.Services) != 0 || d.Source.Namespace != nil || d.Source.ExactStream == nil || d.Grain != "per-stream" {
+				return fmt.Errorf("pod resource binding requires gauge or state, exact stream, per-stream grain and no service or namespace selector")
 			}
 		} else {
 			return fmt.Errorf("host resource binding requires gauge or stock, exact stream, per-stream grain and no service or namespace selector")
@@ -169,7 +182,7 @@ func (d Definition) Validate() error {
 		}
 	}
 	if d.Kind != "lifecycle" {
-		if d.Lifecycle != nil || d.Source.Scope == "" || d.Source.Metric == "" || !text(d.Source.Metric, 256) || d.Source.Unit == "" || !text(d.Source.Unit, 64) || d.Grain == "subject" {
+		if d.Lifecycle != nil || d.Source.Scope == "" || d.Source.Metric == "" || !text(d.Source.Metric, 256) || (d.Source.Unit == "" && d.Kind != "state") || !text(d.Source.Unit, 64) || d.Grain == "subject" {
 			return fmt.Errorf("require typed metric/unit binding")
 		}
 		return validateExactStream(d)

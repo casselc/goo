@@ -291,6 +291,24 @@ def check_host_observed(spec,path):
     print('Host API workflow: 8 real handler responses conform; host-only gauge/stock execution and offline exact reopen pass')
 
 
+def check_pod_state_observed(spec, path):
+    cases = json.loads(Path(path).read_text())
+    assert [(c['method'], c['path'], c['status']) for c in cases] == [
+        ('POST', '/measurements', 200), ('POST', '/captures', 201),
+        ('GET', '/captures/{id}', 200), ('POST', '/measurements', 400)]
+    for case in cases:
+        op = spec['paths'][case['path']][case['method'].lower()]
+        validator(spec, op['responses'][str(case['status'])]['content']['application/json']['schema']).validate(case['response'])
+        if case['method'] == 'POST':
+            validator(spec, op['requestBody']['content']['application/json']['schema']).validate(case['request'])
+    result = cases[0]['response']
+    assert result['question']['definition']['kind'] == 'state'
+    assert result['states']['series'][0]['samples'][0]['label'] == 'Unknown'
+    assert result['state'] == 'observed'
+    assert cases[1]['response']['measurement'] == cases[2]['response']['measurement']
+    print('Pod-state API: 4 actual handler responses conform; captured phase reopens unchanged')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--observations')
@@ -299,6 +317,7 @@ if __name__ == '__main__':
     parser.add_argument('--stock-domain-observations')
     parser.add_argument('--pool-signals-observations')
     parser.add_argument('--host-observations')
+    parser.add_argument('--pod-state-observations')
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
@@ -318,3 +337,6 @@ if __name__ == '__main__':
 
     if args.host_observations:
         check_host_observed(spec,args.host_observations)
+
+    if args.pod_state_observations:
+        check_pod_state_observed(spec,args.pod_state_observations)

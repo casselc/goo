@@ -45,14 +45,14 @@ func Compile(q Question) (Plan, error) {
 		from -= d.Lifecycle.DeadlineMS + d.Lifecycle.AllowanceMS
 	}
 	timeColumn := "TimeUnix"
-	table := "otel_metrics_" + map[string]string{"gauge": "gauge", "counter": "sum", "stock": "sum", "histogram": "histogram"}[d.Kind]
+	table := "otel_metrics_" + map[string]string{"state": "gauge", "gauge": "gauge", "counter": "sum", "stock": "sum", "histogram": "histogram"}[d.Kind]
 	resourceColumn := "mapUpdate(ResourceAttributes,map('service.name',toString(ServiceName)))"
 	if d.Source.Resource != nil {
 		resourceColumn = "ResourceAttributes"
 	}
 	fields := resourceColumn + ` AS resource, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schema_url, ResourceSchemaUrl AS resource_schema_url, MetricName AS name, MetricUnit AS unit, Attributes AS attributes, toString(toUnixTimestamp64Nano(StartTimeUnix)) AS start_ns, toString(toUnixTimestamp64Nano(TimeUnix)) AS end_ns, Flags AS flags`
 	switch d.Kind {
-	case "gauge":
+	case "gauge", "state":
 		fields += ", toString(Value) AS value"
 	case "counter", "stock":
 		fields += ", toString(Value) AS value, AggregationTemporality AS temporality, IsMonotonic AS monotonic"
@@ -248,6 +248,19 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 	ss := []metrics.StockPoint{}
 	d := q.Definition
 	for _, raw := range copied {
+		if d.Kind == "state" {
+			var fields map[string]json.RawMessage
+			if err := json.Unmarshal(raw, &fields); err != nil {
+				return nil, err
+			}
+			for _, key := range []string{"resource_schema_url", "scope", "version", "schema_url", "name", "unit"} {
+				value, exists := fields[key]
+				var known string
+				if !exists || string(value) == "null" || json.Unmarshal(value, &known) != nil {
+					return nil, fmt.Errorf("state source requires known string %s", key)
+				}
+			}
+		}
 		var row metricRow
 		if e = json.Unmarshal(raw, &row); e != nil {
 			return nil, e
@@ -274,7 +287,7 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 			return nil, fmt.Errorf("metric exact stream selector mismatch")
 		}
 		missing := row.Flags&1 != 0
-		if d.Kind == "gauge" || d.Kind == "counter" || d.Kind == "stock" {
+		if d.Kind == "state" || d.Kind == "gauge" || d.Kind == "counter" || d.Kind == "stock" {
 			value := float64(0)
 			if !missing {
 				value, e = strconv.ParseFloat(row.Value, 64)
@@ -282,7 +295,23 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 					return nil, fmt.Errorf("invalid numeric observation")
 				}
 			}
-			if d.Kind == "gauge" {
+			if d.Kind == "state" && !missing && value >= 1 && value <= 5 && math.Trunc(value) == value {
+				// A raw fractional decimal must not round into a supported phase.
+				if len(row.Value) > 128 || strings.ContainsAny(row.Value, "xXpP/") {
+					return nil, fmt.Errorf("state code requires a bounded decimal")
+				}
+				if at := strings.IndexAny(row.Value, "eE"); at >= 0 {
+					exponent, err := strconv.Atoi(row.Value[at+1:])
+					if err != nil || exponent < -400 || exponent > 400 {
+						return nil, fmt.Errorf("state decimal exponent exceeds bounds")
+					}
+				}
+				exact, ok := new(big.Rat).SetString(row.Value)
+				if !ok || !exact.IsInt() || exact.Num().Cmp(big.NewInt(int64(value))) != 0 {
+					return nil, fmt.Errorf("state code loses domain precision")
+				}
+			}
+			if d.Kind == "gauge" || d.Kind == "state" {
 				gs = append(gs, metrics.GaugePoint{Stream: stream, EndNS: row.EndNS, Value: value, NoRecordedValue: missing})
 				continue
 			}
@@ -317,6 +346,8 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 	}
 	fromNS, toNS := q.BoundsNS()
 	switch d.Kind {
+	case "state":
+		r.States, e = metrics.EvaluatePodPhases(fromNS, toNS, ns(d.MaxGapMS), d.Source.Resource.ID, gs)
 	case "stock":
 		if d.Source.Resource != nil {
 			r.Stocks, e = metrics.EvaluateHostStocks(fromNS, toNS, ns(d.MaxGapMS), d.Source.Resource.ID, ss)
@@ -347,6 +378,16 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 	}
 	if len(rows) > 0 {
 		r.State = "observed"
+	}
+	if r.States != nil {
+		for _, series := range r.States.Series {
+			if series.State != "observed" {
+				r.State = "unknown"
+			}
+			if len(series.Samples) > 0 && series.Samples[len(series.Samples)-1].CodeState == "unsupported" {
+				r.State = "unknown"
+			}
+		}
 	}
 	if r.Gauges != nil {
 		for _, s := range r.Gauges.Series {

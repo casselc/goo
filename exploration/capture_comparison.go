@@ -120,6 +120,11 @@ func CompareEvidence(a, b *SavedCapture) (*EvidenceComparison, error) {
 			r.State = "incompatible"
 		}
 	} else {
+		if qa.Measurement.Definition.Kind == "state" || qb.Measurement.Definition.Kind == "state" {
+			r.State = "unsupported"
+			r.Differences = append(r.Differences, "Categorical state comparison requires an explicit domain comparison contract")
+			return r, nil
+		}
 		x, y := *qa.Measurement, *qb.Measurement
 		ea, eb = x.Definition.Environment, y.Definition.Environment
 		fa, ta, fb, tb = x.FromMS, x.ToMS, y.FromMS, y.ToMS

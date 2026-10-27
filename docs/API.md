@@ -914,3 +914,10 @@ capture and exact offline reopening, plus duplicate publication/fresh catalog
 reopening for omitted/null/empty services and attributes. Exact generated
 resource-map/schema SQL also executes read-only against the local ClickHouse
 schema. This syntax check is distinct from receiver ingestion evidence.
+
+
+Native measurement execution and capture also support [typed pod phases](POD_STATES.md)
+via `kind: state` and the pinned `stateProfile`; responses carry `states` with
+independent observation quality and domain decoding. No route is added. Generic
+capture comparison explicitly declines categorical state arithmetic. This is
+API-level support; automatic phase discovery and UI presentation remain pending.

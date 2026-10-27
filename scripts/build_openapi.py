@@ -42,6 +42,14 @@ stock_sample=schemas['metrics.StockSample']
 stock_sample['properties']['value']={'type':'number','description':'Finite observed cumulative tally, possibly signed/fractional. Omitted when unknown; stale observations retain their value.'}
 stock_sample['properties']['atNS']['pattern']='^(0|[1-9][0-9]*)$'
 stock_sample['allOf']=[{'if':{'properties':{'state':{'enum':['observed','stale']}},'required':['state']},'then':{'required':['value']}},{'if':{'properties':{'state':{'const':'unknown'}},'required':['state']},'then':{'not':{'required':['value']}}}]
+# Categorical native states preserve observation quality separately from domain codes.
+for name in ('measurements.Definition','measurements.DefinitionInput'):
+ schemas[name]['properties']['stateProfile']['description']='Required only for kind state: k8scluster-pod-phase/0.137.0. Exact pod-resource unitless receiver gauge; no numeric arithmetic or health inference.'
+schemas['metrics.StateResult']['description']='Exact-stream categorical observations. state is observation quality; codeState is supported/unsupported domain decoding. Fresh reported phase Unknown is observed. Unsupported finite codes retain raw code and quality without a label.'
+for name in ('metrics.StateSample','metrics.StateSeries'):
+ schemas[name]['properties']['state']['enum']=['observed','stale','unknown']
+schemas['metrics.StateSample']['properties']['codeState']['enum']=['supported','unsupported']
+schemas['metrics.StateSample']['properties']['label']['enum']=['Pending','Running','Succeeded','Failed','Unknown']
 # stockDomain is optional; legacy generic stocks keep signed fractional semantics.
 for name in ('measurements.Definition','measurements.DefinitionInput'):
  schemas[name]['properties']['stockDomain']['description']='Optional stock-only nonnegative-integer policy. Recorded values must be integers >=0 and <2^53; missing-value flags remain unknown. Empty/omitted keeps generic signed finite fractional stock semantics.'

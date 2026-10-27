@@ -1041,3 +1041,11 @@ flowchart LR
 Journey 202 used generated ordinary OTLP reports, not a running receiver or cluster. The main and owner runs passed in 14.8s and 11.6s. Primary usage 32768 By and working set 16384 By were independent default reads; eight later control panels were explicitly opened for partial/semconv, stale, conflicting, missing and invalid-byte evidence. The final page journal contained 22 source operations (one inventory, nine exact metadata reads, eleven gauges and one fresh capture) and eleven pure plans. This does not increase the two-default budget.
 
 The corrected bounded native gate passed in 0.545s with fourteen changed controls rejected. Full individual capture custody remained byte-identical at 6062 bytes, SHA256 `3f09e5b7e315f322ffe65b41314feb63fbdc12aa23f5896cf474b89946b9070a`; invalid presentation never rewrote the stored raw gauge. The actor passed in 32.4s across nine phases and 449 snapshots. Existing read/panel-owner semantics were exercised directly without a new formal model or a broader scheduling/completeness claim.
+
+[Typed pod states](POD_STATES.md) add a categorical native measurement path over
+physical gauges: explicit pinned profile and exact pod authority → parameterized
+source compilation → independent observation quality/domain decoding → ordinary
+immutable capture and source-free replay. Scalar kernels remain separate;
+categorical comparison is explicitly unsupported. Discovery/presentation and live
+receiver acceptance remain follow-ons, as recorded in the
+[API-level storyboard](../journeys/203b-pod-state-contract-storyboard.md).
