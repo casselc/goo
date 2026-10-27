@@ -454,3 +454,26 @@ a 30-second Bombadil campaign and independent raw/custody replay. Main totals
 contexts; staging and retained Back add no reads. Four actual desktop/mobile
 frames are reviewed. CPU-time derivatives, throttling, configuration history
 and workload totals remain separate contracts.
+
+
+### C2d — unified container Resources (208, accepted)
+
+One Resources entrance and exact-variant metadata cache now supply both memory
+and CPU choices. Each family loads explicitly (up to three reads), retains its
+own units/quality/clocks and shares the existing native inspection/Back flow.
+Metadata-only edits preserve unchanged sibling loads/results; family edits
+invalidate only that family; global withdrawal cancels all pending work.
+Private Go composition plumbing is shared behind unchanged concrete APIs,
+domain policies, frozen responses and individual capture formats.
+
+Source checks and independent reviews pass. [Journey 208](../journeys/208-container-resources-storyboard.md)
+records accepted browser/ownership/Bombadil/raw/protocol evidence. Combined
+custody, atomic six-signal reads, configuration history, throttling and workload
+totals remain separate contracts.
+
+208 final acceptance passes: shared metadata, both family-retention directions,
+selective held-response continuation/withdrawal, individual custody and a bounded
+actor. A real mobile heading-width defect is fixed and all four refreshed frames
+are reviewed. Independent raw checks reject 22 controls; Quint validates nine
+actual traces and rejects four separate bad traces. No combined capture or
+arbitrary concurrency proof is claimed.

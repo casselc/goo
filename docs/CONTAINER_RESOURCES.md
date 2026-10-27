@@ -1,6 +1,8 @@
 # Container Resources
 
-Milestone 208 is in development; live acceptance is pending. This consolidates
+Milestone 208 is implemented and accepted with source/API/property checks,
+ordinary OTLP/ClickHouse browser and ownership journeys, reviewed frames,
+Bombadil and independent raw/custody plus observed Quint validation. This consolidates
 [container memory](CONTAINER_MEMORY.md) and [CPU](CONTAINER_CPU.md) into one
 Kubernetes Resources entry. Both existing composition APIs and individual
 measurement/capture formats remain separate and retain their semantics.
@@ -77,3 +79,15 @@ respectively. Journey 208 replaces their current entrance coverage rather than
 pretending the old effect journals describe the new shared owner. Existing
 standalone family Node tests, frozen HTTP contracts, Hegel properties and
 independent raw/custody replays remain active regression checks.
+
+## Verification boundary
+
+The observed protocol model uses bounded recorded macrosteps: three selected
+reads for main family loads, one selected read for held-owner cases, and a
+seven-read context-change/load macrostep. It does not prove arbitrary role-count
+combinations or concurrent schedules. `active` and `pendingMetadata` are internal
+model guards, not independently observed UI fields. Quint checks aggregate
+effects and family loaded/pending bindings; the Go raw/endpoint oracle supplies
+per-family provenance and actual metadata/late-response withdrawal evidence.
+No duplicate state/swarm machine is introduced where the UI has no pure
+execution seam. Existing Hegel properties retain the numeric-domain proof.

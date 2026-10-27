@@ -1,6 +1,6 @@
 {
   "milestone": 208,
-  "status": "source accepted; live acceptance pending",
+  "status": "accepted",
   "checks": {
     "go": {
       "focusedSeconds": 0.205,
@@ -53,5 +53,116 @@
     "No new API or combined capture",
     "No atomic six-signal read",
     "No new domain/health/controller inference"
-  ]
+  ],
+  "sourceCommit": "1901964",
+  "binarySHA256": "37b3d26dc62ef2ec46b14a9dc623ec0b79e85c64ea77f5a7d8f712381932b34c",
+  "live": {
+    "source": "1901964",
+    "binarySHA256": "37b3d26dc62ef2ec46b14a9dc623ec0b79e85c64ea77f5a7d8f712381932b34c",
+    "main": {
+      "path": "container-resources-4f9a0df436/ledger.json",
+      "seconds": 19.6,
+      "directTelemetryPosts": 20,
+      "freshCapturePosts": 1,
+      "purePlans": 5,
+      "pureCompositions": 5
+    },
+    "owners": [
+      {
+        "path": "container-resources-ee69b49ff5/ownership.json",
+        "seconds": 21.1
+      },
+      {
+        "path": "container-resources-5fb0c695cc/withdrawal.json",
+        "seconds": 11.3
+      }
+    ],
+    "capture": {
+      "id": "b7268cfe509330e635e2efc50df68a88e43a878402b2da5fc4bd5dad2034ec2a",
+      "bytes": 6407,
+      "sha256": "17c2d718aff5053f9ad9a5c801447d87ca203db2545e678b6afcb23c902a2df4",
+      "afterEqual": true,
+      "localPostActorSHA256": "17c2d718aff5053f9ad9a5c801447d87ca203db2545e678b6afcb23c902a2df4"
+    },
+    "diagnostics": [
+      {
+        "type": "deployment helper URL",
+        "detail": "Readiness helper used obsolete /ui/ static paths, returned404; corrected to root static paths. No app change."
+      },
+      {
+        "type": "interrupted harness",
+        "detail": "First ownership invocation attempted disabled absent-role select, interrupted cleanly; two tests did not run. Corrected affected case, then all three passed.",
+        "path": "first-harness-diagnostics"
+      },
+      {
+        "type": "actual mobile presentation",
+        "detail": "One-character role-label wrapping in208b; reported to root, actor held.",
+        "resolution": "Scoped mobile header width:auto CSS; actual DOM text-line/width/X-Y guards and PNG inspection passed in separate display-only fixture."
+      }
+    ],
+    "actor": {
+      "path": "container-resources-b301bd7c8d/bombadil/acceptance-summary.json",
+      "seconds": 41.8,
+      "invocationSeconds": 44.2,
+      "configuredCampaignSeconds": 30,
+      "phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "snapshots": 357,
+      "sourcePosts": 10,
+      "metadataPosts": 2,
+      "purePlans": 3,
+      "pureCompositions": 2,
+      "terminal": true
+    },
+    "display": {
+      "path": "container-resources-6786ebe35e/display.json",
+      "seconds": 41.8,
+      "invocationSeconds": 46.7,
+      "directTelemetryPosts": 16,
+      "purePlans": 3,
+      "pureCompositions": 4,
+      "capturePosts": 0,
+      "cssSHA256": "c456951ff831a9c8a2dac6e1f045f4e91c3a549ffa1fb901dd7bbcaea435d277"
+    },
+    "native": "Pending independent verification; browser released."
+  },
+  "independent208": {
+    "raw": {
+      "mainSeconds": 3.33,
+      "ownerSeconds": 0.34,
+      "withdrawalSeconds": 0.09,
+      "rejectingControls": 22,
+      "firstInvocation": true
+    },
+    "quint": {
+      "seconds": 37.441,
+      "actualTraces": 9,
+      "badTracesRejected": 4,
+      "stdout": "artifacts/container-resources/native-model-validation.txt",
+      "scope": "Bounded macrosteps; active/pendingMetadata internal; Go binds family endpoint provenance and withdrawal"
+    },
+    "diagnostics": {
+      "tooling": "artifacts/container-resources/native-validation.initial-tooling.txt",
+      "modelSyntax": "artifacts/container-resources/native-model-validation.initial-syntax.txt"
+    },
+    "repair": "Isolated Quint0.32.0 NODE_PATH launcher; no install/dependency change; explicit bool return annotation; raw tests not repeated",
+    "runtimeReceipt": "/tmp/goo-quint-208/receipt.json"
+  },
+  "cleanup": {
+    "exactTaskTempsRemoved": true,
+    "retentionDryRunExpiredBundles": 1,
+    "retentionApplied": false,
+    "preexistingDataTrafficHistoryPreserved": true
+  }
 }

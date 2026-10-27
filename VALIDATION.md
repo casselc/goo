@@ -12253,3 +12253,95 @@ are explicitly historical skips with visible reproduction releases, preserving
 their assertions and frames. Current entry coverage moves to journey 208;
 Node/API/property/raw contracts remain active. Live 208 browser/owner/Bombadil,
 observed protocol validation and actual frames are pending at this source gate.
+
+## Unified container Resources — live workflow and presentation (208)
+
+Source `1901964` is deployed with binary SHA256
+`37b3d26dc62ef2ec46b14a9dc623ec0b79e85c64ea77f5a7d8f712381932b34c`.
+Fifteen changed runtime/doc files matched both containers and nine served assets/
+spec matched HTTP 200, MIME and SHA; capabilities/UI-config are ready. The first
+readiness helper used obsolete /ui/ asset URLs and received 404; correcting it to
+root asset URLs required no source change, rebuild or additional restart.
+
+The first browser invocation was interrupted by a harness attempt to change
+intentionally disabled absent-role selectors; two other tests did not run.
+Corrected ownership uses an actual memory-only metadata variant to leave pending
+CPU choices unchanged, rather than inventing skips on disabled controls. First
+trace/frame/context diagnostics are preserved. No application change was needed
+for this harness correction.
+
+The corrected serial batch passes (56.5s invocation): five-family-owner 21.1s,
+metadata/composition/tab withdrawal 11.3s and main 19.6s. Twenty-three ordinary
+OTLP points exercise shared receiver-realistic metadata and intentionally
+aligned reports. First two metadata responses supply both family choice sets;
+explicit CPU Load preserves memory, and explicit memory reload preserves CPU.
+Known mismatched resources/schemas withhold percentages; aligned inputs yield
+50.0%/25.0% per family. The main has 20 direct telemetry POSTs (inventory 1,
+metadata 3, measurements 16), plus one fresh individual capture POST, five pure
+plans and five pure compositions. The existing observer calls that source 21.
+These are logical API effects, not physical SQL scans; setup ingestion/readiness
+and direct store GETs are excluded. Local selection, native staging/Back and
+frozen reopen add no telemetry read.
+
+Initial real mobile frames exposed a material label-width defect: the shared
+20% table heading rule overrode the mobile grid width and wrapped headings one
+character per line. A scoped mobile width:auto override fixes it. The original
+frames are retained. A separate final display passes (41.8s test/46.7s invocation),
+16 direct telemetry reads, three pure plans, four compositions and no capture.
+Rendered text Range lines (<=2), heading width (>=60px), X/Y containment, exact
+UTC tooltips, font/two-frame settlement and source-free resizing are checked.
+All four final desktop/mobile/context/aligned frames are reviewed and belong to
+fresh display fixture 6786ebe35e, distinct from main/custody fixture 4f9a0df436.
+Final CSS SHA256 is
+`c456951ff831a9c8a2dac6e1f045f4e91c3a549ffa1fb901dd7bbcaea435d277`.
+Only that asset was copied; the Go binary was not rebuilt or restarted.
+
+The first actor on final CSS passes: configured 30-second campaign, 41.8s test /
+44.2s invocation, all 11 phases, 357 snapshots, terminal retained Back,
+source 10/metadata 2/pure plans 3/compositions 2. Full individual CPU capture is
+unchanged at 6,407 bytes, SHA256
+`17c2d718aff5053f9ad9a5c801447d87ca203db2545e678b6afcb23c902a2df4`.
+It is an individual fresh source read, not combined custody. Browser frozen
+reload attempts no telemetry POST; a real source outage is not claimed.
+[Journey 208](journeys/208-container-resources-storyboard.md) and
+[compact receipt](docs/evidence/container-resources-208.json) retain exact paths,
+counts and final frame provenance. Independent 208 raw/custody and observed
+Quint protocol acceptance is pending at this record.
+
+## Unified container Resources — independent acceptance (208)
+
+The three new raw gates pass on their first invocation: main 3.33s, selective
+family ownership 0.34s and metadata/composition/tab withdrawal 0.09s, rejecting
+22 changed controls. Existing independent byte/core raw/domain and capture
+helpers are reused. Selected candidate keys, family-specific network responses,
+UTC/quality/clocks/bases, both retention directions and full 6,407-byte custody
+are checked without a production evaluator/composer as the expected oracle.
+
+The initial combined package exits unsuccessfully only when Quint cannot resolve
+yargs from the relocated real dependency directory. The original stdout is
+preserved as native-validation.initial-tooling.txt. Dependencies existed; an
+isolated Quint 0.32.0 launcher supplies NODE_PATH for that CLI only, with no
+network/package installation or project dependency change. Typecheck then
+reports a missing explicit bool return annotation on the typed model helper;
+that is corrected before any trace judgment and its diagnostic is preserved.
+Only the Quint test is rerun, not the successful raw/property/browser gates.
+
+The final observed Quint test passes (37.441s): nine actual traces (main, five
+selective owners, three withdrawals), plus four model-only bad traces rejected.
+The model deliberately covers bounded recorded macrosteps, including three-read
+main loads and one-read held-owner starts. active/pendingMetadata are internal
+guards; composition totals alone do not establish family provenance. The Go
+raw/endpoint and real held-response checks supply those observations. No full
+UI/arbitrary concurrency proof, duplicate generated state machine or new numeric
+property generator is claimed. Final source, observer and visual reviews find
+no blockers, subject to recorded scope. Compact per-trace JSON/reports and exact
+commands are retained/documented; the isolated runtime launcher receipt remains
+under /tmp/goo-quint-208.
+
+Task binary/helpers/tars are removed. Ordinary retention dry-run finds one
+eligible expired bundle, below the 512 MiB retained-raw budget; no deletion is
+applied. Existing application data, captures, history and traffic configuration
+are preserved. Ordinary acceptance telemetry is appended, not a reset or
+production receiver deployment. Ten historical entrance browser specs remain
+explicitly skipped; current 208 checks replace their superseded navigation while
+native/API/Node/Hegel/raw regressions stay active.
