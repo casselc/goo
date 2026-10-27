@@ -11,7 +11,13 @@ import (
 )
 
 func workloadScopeOK(q exploration.Query, r map[string]string, kind string, from int64) bool {
-	if q.Environment != "workload-property" || q.FromMS != from || q.ToMS != from+60000 || q.Limit != 100 || q.Offset != 0 || len(q.Where.All) != 6 {
+	return workloadScope(q, r, kind, "workload-property", from, from+60000)
+}
+func workloadScope(q exploration.Query, r map[string]string, kind, environment string, from, to int64) bool {
+	if q.Where == nil || q.Where.Field != nil || q.Where.Numeric != nil || len(q.Where.Any) != 0 || q.Where.Op != "" || q.Where.Value != "" || q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || len(q.GroupBy) > 0 || q.BucketMS != 0 || q.Summary != "" || q.SpanStatus || q.GroupTimeSeries {
+		return false
+	}
+	if q.Environment != environment || q.FromMS != from || q.ToMS != to || q.Limit != 100 || q.Offset != 0 || len(q.Where.All) != 6 {
 		return false
 	}
 	keys := map[string]bool{}
@@ -19,7 +25,7 @@ func workloadScopeOK(q exploration.Query, r map[string]string, kind string, from
 		keys[k] = true
 	}
 	for _, p := range q.Where.All {
-		if p.Field == nil || p.Field.Kind != "resource" || !keys[p.Field.Key] || len(p.All) > 0 || len(p.Any) > 0 {
+		if p.Numeric != nil || p.Field == nil || p.Field.Kind != "resource" || !keys[p.Field.Key] || len(p.All) > 0 || len(p.Any) > 0 {
 			return false
 		}
 		delete(keys, p.Field.Key)
@@ -63,7 +69,7 @@ func TestHegelKubernetesWorkloadContextScope(t *testing.T) {
 			resources = append(resources, r)
 		}
 		input, _ := json.Marshal(map[string]any{"resources": resources, "kinds": kinds, "question": map[string]any{"environment": "workload-property", "fromMs": from, "toMs": from + 60000}})
-		script := `const fs=require('fs'),a=require('assert/strict'),h=require('../ui/kubernetes-context'),p=JSON.parse(fs.readFileSync(0,'utf8')),before=JSON.stringify(p);global.fetch=()=>{throw Error('unexpected read')};const out=p.resources.map((resource,i)=>{const row={resource},w=h.workloads(resource).find(w=>w.kind===p.kinds[i]);a.ok(w?.actionable);a.equal(h.filtered([row,{resource:{...resource,'k8s.pod.uid':'another','service.name':'another'}}],{workloadKey:w.key}).length,2);a.equal(h.filtered([row],{workloadKey:h.NOT_REPORTED}).length,0);a.throws(()=>h.workloadQuestion({...p.question,environment:'other'},row,w.key,'logs'));return ['logs','spans'].map(signal=>h.workloadQuestion(p.question,row,w.key,signal))});a.equal(JSON.stringify(p),before);console.log(JSON.stringify(out));`
+		script := `const fs=require('fs'),a=require('assert/strict'),h=require('../ui/kubernetes-context'),p=JSON.parse(fs.readFileSync(0,'utf8')),before=JSON.stringify(p);global.fetch=()=>{throw Error('unexpected read')};const out=p.resources.map((resource,i)=>{const row={resource},w=h.workloads(resource).find(w=>w.kind===p.kinds[i]);a.ok(w?.actionable);a.equal(h.filtered([row,{resource:{...resource,'k8s.pod.uid':'another','service.name':'another'}}],{workloadKey:w.key}).length,2);a.equal(h.filtered([row],{workloadKey:h.NOT_REPORTED}).length,0);a.throws(()=>h.workloadQuestion({...p.question,environment:'other'},row,w.key,'logs'));for(const field of ['fromNS','toNS'])a.throws(()=>h.workloadQuestion({...p.question,[field]:'1'},row,w.key,'logs'));return ['logs','spans'].map(signal=>h.workloadQuestion(p.question,row,w.key,signal))});a.equal(JSON.stringify(p),before);console.log(JSON.stringify(out));`
 		cmd := exec.Command("node", "-e", script)
 		cmd.Stdin = bytes.NewReader(input)
 		raw, e := cmd.CombinedOutput()

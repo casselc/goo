@@ -2,7 +2,7 @@
 
 [Reported workload context](KUBERNETES_WORKLOAD_CONTEXT.md) uses literal resource
 attributes, with local exact-context facets and explicit matching-record queries.
-Source implementation is complete; live acceptance is pending. No controller
+Source and ordinary OTLP/browser, owner, actor and raw/custody acceptance pass. No controller
 graph, verified owner, workload-health or complete inventory claim is made.
 
 

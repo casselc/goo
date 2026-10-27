@@ -6,3 +6,5 @@
 .container-state-identity{font-size:.78rem;overflow-wrap:anywhere;margin:.25rem 0 .4rem}
 
 .pod-workloads{font-size:.75rem;margin-top:.3rem}.pod-workloads>summary{overflow-wrap:anywhere}.pod-workloads>div{margin:.35rem 0}.pod-workloads>div>small{display:block}.pod-workloads a{display:inline-block;margin:.2rem .5rem .2rem 0}
+
+@container pod-inventory (max-width:650px){.pod-inventory-table>tbody>tr:has(.pod-workloads)>td:nth-child(2){grid-column:1/-1}}

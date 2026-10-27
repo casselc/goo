@@ -11968,3 +11968,51 @@ intentional unrelated-field exclusion, immutability and local facets; 144 UID
 missing/empty and 144 wrong-scope changed controls reject. No new formal model is
 claimed for the unchanged explicit-read/retained-owner protocol. Actual
 OTLP/browser/actor/raw-membership acceptance is pending at this source freeze.
+
+## Reported Kubernetes workload context — live acceptance (205)
+
+Source milestone `9045d4a` plus the approved mobile-only layout rule are accepted.
+The Go binary is unchanged; existing inventory, native and record endpoints and
+capture formats are reused. Static/Python/index copies and actual served MIME/
+hashes are verified; only Python query restarted for the new module allowlist.
+
+Main ordinary OTLP journey passes in 19.2s and actual held-response owner in 8.6s
+(serial invocation 30.7s). The fixture has 21 metric points and 24 logs/spans.
+Selected UID-qualified Deployment logs and spans each return three raw members
+across original/replacement/sibling contexts while differently qualified records
+are excluded. Partial/name-only and other-kind browser checks cover local facets;
+actual expanded record membership uses the UID-qualified case. The main has
+seven logical source operations and two pure plans. Filtering, disclosure,
+staging and retained Back add no source reads; setup/ingest and direct store
+GETs are outside this journal, not counted as physical SQL scans.
+
+Frame review found cramped half-width mobile context. One scoped CSS rule fixes
+it; the separate final display passes in 8.4s (three source operations/one pure
+plan, no capture). Final five desktop/mobile frames are visually approved.
+The first Bombadil run had an ambiguous same-ID harness selector, corrected to
+full resource-map/schema identity. A second corrected run reached terminal but
+exited with CDP driver timeouts and is not a passing campaign. The unchanged
+corrected retry passes cleanly: 31.6s test/32.8s invocation, configured 30 seconds,
+nine phases, 450 snapshots, two source operations and terminal Back. Both earlier
+diagnostics remain preserved; no application change or assertion weakening.
+
+Independent raw/custody replay passes in 0.524s (main 0.44s/owner 0.06s), rejecting
+19 main and four owner controls. The hardened 144-question Hegel property passes
+in 1.16s. Initial verifier assumptions about fixture versus applied time bounds,
+empty groupBy wire syntax and omitted protobuf Flags=0 are corrected in the
+observer only, with initial diagnostics retained. The final observer verifies
+retained raw OTLP before normalizing only omitted zero flags in a detached copy;
+actual source flags remain explicit and missing/nonzero mutations reject.
+Membership, exact qualifier scope and full capture custody are not weakened.
+
+The 8,193-byte capture remains SHA256
+`a5ee560a7de880da6288413392d8e845327185d67e6b9fb7002ef652e0ba2ded`
+through full store/public/UI reopen. Browser frozen reopen attempts no telemetry
+POST; no real source-outage or Kubernetes receiver/API/RBAC test is claimed.
+Reported workload attributes do not prove controller edges, complete inventory,
+workload health or entity counts. No new model is introduced for the unchanged
+read/retained-owner algebra. [Storyboards](journeys/205-workload-context-storyboard.md)
+and [compact receipt](docs/evidence/workload-context-205.json) contain exact
+artifact paths, frame hashes, operation budgets and honest limits. Temporary
+helpers are removed; normal retention preserves current evidence and actor
+diagnostics while expiring only old browser recordings. Data/traffic unchanged.

@@ -1,6 +1,7 @@
 # Reported Kubernetes workload context
 
-Implemented in source; ordinary OTLP/browser acceptance pending for journey 205.
+Implemented and accepted with ordinary OTLP/ClickHouse, browser, ownership,
+Bombadil and independent raw/custody checks in journey 205.
 This extends [Kubernetes resource observations](KUBERNETES_RESOURCES.md) using
 already reported resource attributes. It does not contact Kubernetes or infer
 controller edges, workload health, physical entity counts or complete ownership.

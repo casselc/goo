@@ -1,0 +1,177 @@
+{
+  "version": 1,
+  "journey": "205",
+  "status": "accepted",
+  "sourceCommit": "9045d4a",
+  "binarySHA256": "55b5226fffd4bc7b17d67b58823e5443b0e2704f931396d5d2b93c94c20158db",
+  "main": {
+    "artifact": "artifacts/workload-context/workload-context-77da2fc2a2/ledger.json",
+    "seconds": 19.2,
+    "sourceOperations": 7,
+    "purePlans": 2,
+    "events": [
+      {
+        "action": "inventory",
+        "source": 1,
+        "plans": 0
+      },
+      {
+        "action": "local-workload-facet",
+        "source": 1,
+        "plans": 0
+      },
+      {
+        "action": "logs-staged",
+        "source": 1,
+        "plans": 0
+      },
+      {
+        "action": "logs-run",
+        "source": 2,
+        "plans": 0
+      },
+      {
+        "action": "logs-retained-back",
+        "source": 2,
+        "plans": 0
+      },
+      {
+        "action": "spans-staged",
+        "source": 2,
+        "plans": 0
+      },
+      {
+        "action": "spans-run",
+        "source": 3,
+        "plans": 0
+      },
+      {
+        "action": "spans-retained-back",
+        "source": 3,
+        "plans": 0
+      },
+      {
+        "action": "exact-container-identity",
+        "source": 5,
+        "plans": 1
+      },
+      {
+        "action": "native-run",
+        "source": 6,
+        "plans": 2
+      },
+      {
+        "action": "individual-capture",
+        "source": 7,
+        "plans": 2
+      },
+      {
+        "action": "frozen-reopen",
+        "source": 7,
+        "plans": 2
+      }
+    ],
+    "fixtureMetricPoints": 21,
+    "fixtureRecords": 24,
+    "memberCounts": {
+      "logs": 3,
+      "spans": 3
+    }
+  },
+  "owner": {
+    "artifact": "artifacts/workload-context/workload-context-c53e32f9cf/ownership.json",
+    "seconds": 8.6
+  },
+  "display": {
+    "artifact": "artifacts/workload-context/workload-context-ee710324ce/display.json",
+    "seconds": 8.4,
+    "sourceOperations": 3,
+    "purePlans": 1,
+    "cssSHA256": "561e9ba3cc44a077885dcc5df2a963fad84a8f08e8db14c90d10bfa9a201444f",
+    "screenshots": [
+      {
+        "file": "docs/journeys/screenshots/205a-reported-workload.png",
+        "sha256": "f86fcbbadfaa154f8a6cf4a285bcf7f6454ebe4bce255ac26b0d7b61c065964b"
+      },
+      {
+        "file": "docs/journeys/screenshots/205b-mobile-workload.png",
+        "sha256": "ef4853b9b77511c624913289573922af8a41087adeb9a6591c3135ed95ab9d9d"
+      },
+      {
+        "file": "docs/journeys/screenshots/205c-workload-in-context.png",
+        "sha256": "94497d20ecc5128753815b485087814a3ec18b75cbbd4e39f81d450f0523bf04"
+      },
+      {
+        "file": "docs/journeys/screenshots/205d-literal-container-identity.png",
+        "sha256": "9d7e29fd668a0370f1632369be5a4dc3b99b5ea474b8641a5a01bc7e7cbef633"
+      },
+      {
+        "file": "docs/journeys/screenshots/205e-mobile-container-identity.png",
+        "sha256": "c59cdd00e1e19f974118fd5ca4df15c222adbe32de3210afacaa2eb4e864c324"
+      }
+    ]
+  },
+  "actor": {
+    "artifact": "artifacts/workload-context/workload-context-4bba599166/bombadil/acceptance-summary.json",
+    "campaignSeconds": 30,
+    "testSeconds": 31.6,
+    "invocationSeconds": 32.8,
+    "phases": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "snapshots": 450,
+    "final": {
+      "phase": 8,
+      "source": 2,
+      "target": "7996777509060af3279185ead0812e2cde7d694695c98b53b633b5136b710e2b",
+      "key": "[\"deployment\",{\"state\":\"present\",\"value\":\"cluster-a\"},{\"state\":\"present\",\"value\":\"shared-cluster\"},{\"state\":\"present\",\"value\":\"team-a\"},{\"state\":\"present\",\"value\":\"deployment-a\"},{\"state\":\"present\",\"value\":\"same-work\"}]",
+      "ready": true,
+      "staged": true,
+      "complete": true,
+      "terminal": true
+    }
+  },
+  "diagnostics": {
+    "first": "artifacts/workload-context/first-actor-diagnostics",
+    "firstReason": "Harness selected a different same-container-ID resource; corrected to full resource map and exact schema.",
+    "secondReason": "Corrected workflow reached terminal but driver exited with CDP timeouts; rejected as a campaign pass.",
+    "retry": "Exact unchanged corrected executable passed on the next invocation."
+  },
+  "capture": {
+    "id": "cf8157897a9fcad3576586a3314fd372916a00a2b932ba69380de0dbeb252940",
+    "bytes": 8193,
+    "sha256": "a5ee560a7de880da6288413392d8e845327185d67e6b9fb7002ef652e0ba2ded",
+    "unchanged": true
+  },
+  "limits": [
+    "Reported workload context, not verified controller edges or physical entity counts.",
+    "Generated OTLP through the lab collector/ClickHouse; no real Kubernetes API/receiver/RBAC test.",
+    "Local facets cover the bounded retained inventory; omitted resources remain unknown.",
+    "Separate inventory/record reads are not atomic or complete workload telemetry.",
+    "Browser frozen reopening attempts no telemetry POSTs; no source outage claim.",
+    "Name-only/missing/empty and all-kind local facets have browser coverage; actual widened record membership uses the UID-qualified Deployment case."
+  ],
+  "nativeValidation": {
+    "artifact": "artifacts/workload-context/native-validation.txt",
+    "packageSeconds": 0.524,
+    "mainSeconds": 0.44,
+    "ownerSeconds": 0.06,
+    "mainRejectingControls": 19,
+    "ownerRejectingControls": 4,
+    "hardenedHegelSeconds": 1.16,
+    "observerCorrections": [
+      "Bind to authoritative initial inventory request window instead of fixture construction time.",
+      "Admit only empty groupBy in the actual raw request envelope, preserving nonempty projection refusal.",
+      "Verify retained OTLP fields before applying omitted protobuf Flags=0 only to a detached expected-fixture copy; source flags remain explicit."
+    ],
+    "noApplicationFixtureOrStoreChanges": true
+  }
+}
