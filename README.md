@@ -314,7 +314,7 @@ record membership, cancellation and actual desktop/mobile views.
 flow to known-schema Kubernetes resource variants. It loads independent memory
 usage/working-set defaults from the supported kubeletstats profile, with native
 inspection and individual capture. Semconv usage remains a separate profile;
-phase/readiness, memory ratios and health inference are not included.
+memory ratios and health inference are not included; phase/readiness use separate state profiles below.
 See [journey 202](journeys/202-pod-memory-storyboard.md) for actual default/control
 reads, capture reopening, ownership checks and desktop/mobile frames.
 
@@ -326,7 +326,7 @@ memory keeps its default read budget and phase can be selected explicitly.
 owner/actor/raw-custody acceptance and compact desktop/mobile frames.
 
 
-The [container-readiness native prerequisite](docs/CONTAINER_READINESS.md) adds
-exact reported container identity and pinned Ready/Not ready observations to
-source/API execution and individual capture/replay. Discovery/UI and live
-acceptance remain the next slice; the running lab is unchanged.
+The [container-readiness profile](docs/CONTAINER_READINESS.md) uses exact reported
+container IDs and pinned Ready/Not ready observations in discovery, native
+inspection and individual capture/replay. Freshness stays separate from readiness;
+no pod-health or probe-success inference is made. [Journey 204b](journeys/204b-container-readiness-storyboard.md) tracks live acceptance.

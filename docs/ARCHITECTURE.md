@@ -1057,5 +1057,8 @@ path with a real reported container-ID authority. Required pod UID/container-nam
 context remains in the exact resource; no synthetic service or composite ID is
 introduced. A private shared quality kernel separates pinned domain decoding
 from stale/missing/conflicting data. Source decimal validation certifies both
-supported codes, including zero. This API prerequisite is not discovery/UI or
-live receiver acceptance.
+supported codes, including zero. Existing pod-bearing discovery derives container
+state authority; the pure planner preserves memory priority and at most two
+independent default reads. The passive categorical element receives validated
+labels and quality from the shared app adapter. No receiver deployment, complete
+container enumeration or pod-health inference is implied.

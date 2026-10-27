@@ -346,6 +346,29 @@ def check_pod_phase_discovery_observed(spec, path):
     print('Pod phase discovery API: 3 actual handler responses conform; 3 profile/kind mutations rejected')
 
 
+def check_container_discovery_observed(spec, path):
+    check_pod_phase_discovery_observed(spec, path)
+    cases = json.loads(Path(path).read_text())
+    plan = cases[1]['response']
+    widget = plan['widgets'][0]
+    assert widget['grain'] == 'container-resource-stream'
+    definition = widget['question']['definition']
+    assert definition['stateProfile'] == 'k8scluster-container-ready/0.137.0'
+    assert definition['source']['resource']['kind'] == 'kubernetes-container'
+    assert definition['source']['resource']['id'] == plan['question']['resource']['container.id']
+    assert cases[2]['response']['states']['series'][0]['samples'][0]['code'] == 0
+    shape = spec['components']['schemas']['measurements.PodDashboardPlan']
+    for field, value in [('grain', 'pod-resource-stream'), ('authority', 'kubernetes-pod')]:
+        bad = copy.deepcopy(plan)
+        for key in ('widgets', 'candidates'):
+            if field == 'grain':
+                bad[key][0]['grain'] = value
+            else:
+                bad[key][0]['question']['definition']['source']['resource']['kind'] = value
+        assert list(validator(spec, shape).iter_errors(bad)), 'Container readiness accepted pod grain/authority'
+    print('Container readiness discovery API: exact container authority and zero state conform; 2 authority/grain mutations rejected')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--observations')
@@ -357,6 +380,7 @@ if __name__ == '__main__':
     parser.add_argument('--pod-state-observations')
     parser.add_argument('--container-state-observations')
     parser.add_argument('--pod-phase-discovery-observations')
+    parser.add_argument('--container-discovery-observations')
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
@@ -385,3 +409,6 @@ if __name__ == '__main__':
 
     if args.container_state_observations:
         check_container_state_observed(spec,args.container_state_observations)
+
+    if args.container_discovery_observations:
+        check_container_discovery_observed(spec,args.container_discovery_observations)

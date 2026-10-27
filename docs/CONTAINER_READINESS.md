@@ -1,10 +1,8 @@
-# Container identity and reported readiness — native prerequisite
+# Container identity and reported readiness
 
-Implemented in source: exact container authority, readiness decoding and existing
-native API execution/capture/replay. Container discovery, planning, UI integration
-and live ordinary OTLP/browser acceptance are not implemented in this slice.
-The running lab remains on the accepted pod-phase build until that integration.
-Existing screenshots still describe its unchanged interface.
+Implemented: exact container authority, pinned readiness decoding, existing native
+API execution/capture/replay, pod-bearing resource discovery and native UI.
+Live ordinary OTLP/browser acceptance for the discovery/UI slice is pending.
 
 ## Receiver evidence and identity
 
@@ -86,6 +84,41 @@ flowchart LR
   F --> G[Source-free replay]
 ```
 
-The [API storyboard](../journeys/204a-container-readiness-storyboard.md) distinguishes
-implemented native contracts from the next discovery/UI and actual OTLP/browser
-acceptance work. No new UI surface, automatic read or deployment is claimed here.
+## Discovery and interaction
+
+Kubernetes discovery retains full pod-bearing resource variants. Observe metrics
+uses the existing exact known-schema metadata route; a readiness candidate needs
+reported container ID, pod UID and container name in that resource. The physical
+instrument remains a gauge; its executable definition is a categorical state
+with container authority and `container-resource-stream` dashboard grain.
+No synthetic container or service identity is created from names.
+
+Memory defaults retain their existing profile priority and two-read budget.
+On cluster-only variants, one phase and one readiness stream can be defaults;
+readiness alone uses one. Candidates remain deterministic and bounded at 16,
+with at most 16 instruments and 25 preview streams per instrument. Omission is
+not absence. Reads remain independent rather than an atomic state snapshot.
+
+The shared passive categorical component renders supported Ready/Not ready
+labels and separate observation quality, UTC times and raw-code history. App
+adapters validate pinned profiles, exact authority and stream identity. Explicit
+Preview stages native inspection; Run and fresh capture perform source reads.
+Retained Back and frozen capture reopening do not reread telemetry. Components
+perform no fetching or navigation on their own. No numeric state chart or health
+color is introduced.
+
+```mermaid
+flowchart LR
+  A[Exact pod-bearing resource variant] --> B[Observe metrics metadata read]
+  B --> C[Pure bounded plan]
+  C --> D[At most two independent default reads]
+  D --> E[Compact category plus quality]
+  C --> F[Explicit Preview]
+  F --> G[Native Run or fresh capture]
+  G --> H[Immutable source-free reopen]
+  F --> I[Retained Back without read]
+```
+
+The [API storyboard](../journeys/204a-container-readiness-storyboard.md) records
+the native prerequisite. Discovery/UI live acceptance is tracked separately in
+[journey 204b](../journeys/204b-container-readiness-storyboard.md).

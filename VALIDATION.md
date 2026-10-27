@@ -11873,3 +11873,24 @@ The new readiness Hegel property also passes separately in 0.075s after the map/
 flag guard; no additional browser or deployment campaign ran.
 
 Final read-only review confirms the original-token flag guard and approves the complete API prerequisite. All 998 changed-document local links resolve; formatting and diff checks pass.
+
+## Container readiness discovery/UI — source gates (204b)
+
+Existing exact pod-bearing metadata discovery now derives pinned container-ID
+readiness questions. Physical instruments stay gauges; native questions are
+state/container authority and dashboard grain is container-resource-stream.
+Memory defaults and at most two independent reads are preserved. The shared
+passive categorical renderer remains unchanged; app adapters validate exact
+profile, identity and Ready/Not ready separately from quality.
+
+Actual source checks: all 94 Node test files pass (9.07s), all four affected Go
+packages pass (cmd/goo 1.210s; other three cached on final retry), and focused
+Hegel discovery authority passes (10 generated identities, 0.103s package).
+OpenAPI still has 87 total/80 Go operations and 495 schemas; 395 frozen responses,
+144 admitted requests and 25 mux refusals pass. Three real handler readiness
+discovery/plan/execute responses conform; five profile/kind/grain/authority
+mutations reject. Five old HTTP fixtures changed only declared advisory response
+strings; requests, status, headers, identities and budgets remain unchanged.
+Independent source/UI review found no blockers. Live browser/OTLP acceptance is
+pending at this source freeze; no receiver, health, probe-success or complete
+inventory claim is made.

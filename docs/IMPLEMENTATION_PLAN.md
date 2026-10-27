@@ -1309,3 +1309,20 @@ container-variant discovery/planning and native UI integration, then ordinary
 OTLP/browser/owner/actor/raw-custody acceptance before deployment. No pod-health,
 probe-existence or complete inventory claim is introduced. Ownership facts,
 requests/limits and workload rollups remain separately scoped family work.
+
+
+### C2d — container readiness discovery and UI (204b)
+
+Implemented in source: existing pod-bearing exact-resource discovery recognizes
+pinned receiver readiness when reported container ID, pod UID and container name
+are present. The executable question uses container authority and the shared
+categorical renderer; zero stays observed Not ready, with quality independent.
+Memory priority and the two-default budget remain unchanged. Cluster-only
+variants can select one phase plus one readiness stream. Full resource/schema
+and point identity, explicit native Run, retained Back and individual custody
+remain the same contracts. No additional endpoint or generic health claim.
+
+[Journey 204b](../journeys/204b-container-readiness-storyboard.md) tracks pending
+ordinary OTLP/browser/owner/actor/raw-custody acceptance. Next family work remains
+separately scoped ownership facts, requests/limits and workload rollups; do not
+infer these from reported readiness.

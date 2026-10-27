@@ -920,12 +920,14 @@ Native measurement execution and capture also support [typed pod phases](POD_STA
 via `kind: state` and the pinned `stateProfile`; responses carry `states` with
 independent observation quality and domain decoding. No route is added. Generic
 capture comparison explicitly declines categorical state arithmetic. This is
-API-level support; automatic phase discovery and UI presentation remain pending.
+also used by exact phase discovery and categorical UI presentation.
 
 
 The [native container readiness prerequisite](CONTAINER_READINESS.md) adds
 `source.resource.kind: kubernetes-container` with the reported container.id and
 `stateProfile: k8scluster-container-ready/0.137.0`. Existing measurement/capture
 routes return Ready/Not ready categorical samples; code 0 stays observed rather
-than becoming missing. This source/API change is not yet deployed or connected
-to automatic discovery and UI presentation.
+than becoming missing. Existing `/pod-metric-discovery` and `/pod-dashboard/plan`
+now recognize exact container-bearing variants. Readiness widgets use
+`container-resource-stream` grain and container authority; phase and memory retain
+pod grain. No new endpoint or comparison format is added.

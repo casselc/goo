@@ -197,15 +197,21 @@ func discoverPodMetricRows(q PodMetricDiscoveryQuestion, rows []json.RawMessage)
 		}
 		sort.Strings(i.Dimensions)
 		coverage := observedCoverage(*i, observations[key])
-		phase := podMetricProfile(*i) == PodClusterProfile
-		i.Supported = phase || i.Kind == "gauge" && i.Scope != "" && i.Metric != "" && i.Unit != "" && i.Temporality == 0
+		clusterState := podMetricProfile(*i) == PodClusterProfile
+		ready := clusterState && i.Metric == "k8s.container.ready"
+		i.Supported = clusterState || i.Kind == "gauge" && i.Scope != "" && i.Metric != "" && i.Unit != "" && i.Temporality == 0
 		if i.Supported && len(coverage.Streams) > 0 {
 			stream := coverage.Streams[0].Stream
 			def := Definition{APIVersion: Version, Name: "pod-metric-" + key[:12], Title: i.Metric, Kind: "gauge", Environment: q.Environment, LookbackMinutes: 2, MaxGapMS: 60000, Grain: "per-stream", Source: Binding{Resource: &ResourceBinding{Kind: "kubernetes-pod", ID: q.Resource["k8s.pod.uid"]}, Services: []string{}, Scope: i.Scope, Version: i.Version, SchemaURL: i.SchemaURL, Metric: i.Metric, Unit: i.Unit, ExactStream: &stream}}
-			if phase {
+			if clusterState {
 				def.Kind = "state"
 				def.StateProfile = metrics.PodPhaseProfile
 				def.Title = "Reported pod phase"
+				if ready {
+					def.StateProfile = metrics.ContainerReadyProfile
+					def.Source.Resource = &ResourceBinding{Kind: "kubernetes-container", ID: q.Resource["container.id"]}
+					def.Title = "Reported container readiness"
+				}
 			}
 			if def.Validate() == nil {
 				i.Definition = &def
@@ -213,7 +219,7 @@ func discoverPodMetricRows(q PodMetricDiscoveryQuestion, rows []json.RawMessage)
 				i.Supported = false
 			}
 		}
-		p := InstrumentCapabilityPlan{Version: CapabilityPlanVersion, Profile: "pod-metric", Title: "Reported pod resource metric", Eligible: i.Supported && i.Definition != nil, Verification: "not-run", Reasons: []string{}, Hints: []string{"Pod resource authority supports scalar gauges and the exact pinned k8scluster pod-phase state profile. Other unitless metrics, container readiness and stock/counter/histogram metrics remain unsupported. No aliases, service labels or health state are inferred."}, Coverage: coverage}
+		p := InstrumentCapabilityPlan{Version: CapabilityPlanVersion, Profile: "pod-metric", Title: "Reported pod resource metric", Eligible: i.Supported && i.Definition != nil, Verification: "not-run", Reasons: []string{}, Hints: []string{"Pod-bearing resource discovery supports scalar pod gauges and exact pinned k8scluster pod-phase and container-readiness state profiles. Container readiness requires reported container.id, pod UID and container name, and uses container authority. Other unitless metrics and stock/counter/histogram metrics remain unsupported. No aliases, service labels or health state are inferred."}, Coverage: coverage}
 		i.CapabilityPlan = &p
 		out.Instruments = append(out.Instruments, *i)
 	}
