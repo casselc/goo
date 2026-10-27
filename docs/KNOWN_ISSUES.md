@@ -6,7 +6,8 @@ null cannot admit native lookup. Automatic profiles are pinned kubeletstats
 v0.137.0 usage/working-set or separate semconv v1.37 usage-only; other versions
 and names are not aliases. Byte-domain masking is presentation-only over native
 Float64 gauge observations; raw evidence stays inspectable. Phase/readiness needs
-a typed state contract, and no memory ratio, health or ownership is inferred.
+native/source/UI integration of the new [phase core contract](POD_STATES.md);
+no memory ratio, health or ownership is inferred.
 
 [Kubernetes resource discovery](KUBERNETES_RESOURCES.md) observes pod-bearing OTel
 resource variants in a fixed explicit environment/window, not live Kubernetes

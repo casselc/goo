@@ -317,3 +317,7 @@ inspection and individual capture. Semconv usage remains a separate profile;
 phase/readiness, memory ratios and health inference are not included.
 See [journey 202](journeys/202-pod-memory-storyboard.md) for actual default/control
 reads, capture reopening, ownership checks and desktop/mobile frames.
+
+The [pod state core prerequisite](docs/POD_STATES.md) decodes the pinned receiver
+phase codes independently of observation quality. It is not yet connected to
+source discovery, native packages or the UI.

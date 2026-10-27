@@ -64,6 +64,10 @@ func evaluateResourceGauges(fromText, toText, maxAgeText, key, id string, points
 	return evaluateGauges(fromText, toText, maxAgeText, canonical, func(s Stream) bool { return s.Resource[key] == id })
 }
 func evaluateGauges(fromText, toText, maxAgeText string, points []GaugePoint, identity func(Stream) bool) (*GaugeResult, error) {
+	return evaluateGaugeObservations(fromText, toText, maxAgeText, points, identity, false)
+}
+
+func evaluateGaugeObservations(fromText, toText, maxAgeText string, points []GaugePoint, identity func(Stream) bool, unitless bool) (*GaugeResult, error) {
 	from, e := nano(fromText)
 	if e != nil {
 		return nil, e
@@ -80,7 +84,7 @@ func evaluateGauges(fromText, toText, maxAgeText string, points []GaugePoint, id
 	streams := map[string]Stream{}
 	for _, p := range points {
 		at, e := nano(p.EndNS)
-		if !identity(p.Stream) || p.Stream.Scope == "" || p.Stream.Name == "" || p.Stream.Unit == "" || e != nil || at < from || at >= to || math.IsNaN(p.Value) || math.IsInf(p.Value, 0) {
+		if !identity(p.Stream) || p.Stream.Scope == "" || p.Stream.Name == "" || (!unitless && p.Stream.Unit == "") || e != nil || at < from || at >= to || math.IsNaN(p.Value) || math.IsInf(p.Value, 0) {
 			return nil, fmt.Errorf("invalid gauge observation")
 		}
 		encoded, _ := json.Marshal(p.Stream)

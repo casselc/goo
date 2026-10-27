@@ -11598,3 +11598,29 @@ Markdown links resolve; the compact receipt's three frame hashes and new journey
 JavaScript syntax checks pass. Workers are closed, normal diagnostic retention
 is applied, and exact task binaries/research/SQL helpers are removed. Traffic and
 data volumes remain intact. Typed phase/readiness remains the next planned slice.
+
+## 203a — pod phase semantic prerequisite
+
+Implemented storage-independent `metrics.EvaluatePodPhases` for the exact
+k8sclusterreceiver v0.137.0 unitless phase gauge. Raw codes, domain decoding and
+observation quality remain separate; unsupported codes preserve stale/observed
+quality without receiving a label. Missing/conflicting values do not fall back.
+Full resource variants remain separate and existing scalar unit validation stays
+mandatory. No endpoint, definition kind, source query, UI or deployed binary changes.
+See [contract and next integration work](docs/POD_STATES.md).
+
+Affected Go suites pass: metrics 1.552s, measurements 1.034s, exploration 3.439s,
+cmd/goo 3.891s. Table/rejecting cases cover codes, unsupported fractions/ranges,
+NaN/Inf, wrong scope/version/schema/unit/name/UID, resource isolation, input/result
+map ownership, conflicts, freshness, absent data and unchanged scalar rejection.
+Hegel's 60-case phase quality/permutation property passes in 0.030s, including
+conflicting-code mutations that must withhold labels. Its first invocation failed
+before properties ran because XDG_CACHE_HOME was omitted and Hegel tried the
+read-only home cache; rerunning with the established /workspace/.cache succeeds.
+An initial table test snapshot used cloneStream (which normalizes nil maps) and
+therefore mismatched its own nil-attribute fixture; the fixture now explicitly
+supplies an empty map. No production behavior was changed to satisfy that test.
+
+No browser, Bombadil, new Quint model or live receiver acceptance is claimed for
+this pure prerequisite. Existing screenshots continue to represent the unchanged
+product. Native/source/UI integration and container readiness remain open.

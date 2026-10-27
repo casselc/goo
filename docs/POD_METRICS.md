@@ -90,7 +90,9 @@ container-ready gauge is container-scoped and differs from current semconv
 typing. Neither is an alias for pod readiness, and the current native scalar
 kernel's nonempty-unit contract is not relaxed to accommodate them.
 
-Typed phase/readiness, requests/limits, CPU calculations, ownership and workload
+The [phase decoder core](POD_STATES.md) now preserves observation quality and
+reported state codes separately. Native/source/UI integration is still pending.
+Typed phase/readiness views, requests/limits, CPU calculations, ownership and workload
 rollups remain separate deliveries. Generated ordinary OTLP acceptance passes
 through the actual collector and ClickHouse; it is not a receiver scrape, live
 Kubernetes cluster or RBAC configuration test.
