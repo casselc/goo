@@ -3425,6 +3425,64 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/container-cpu/view": {
+      "post": {
+        "operationId": "post_container_cpu_view",
+        "summary": "POST /container-cpu/view",
+        "tags": [
+          "container-cpu"
+        ],
+        "description": "Current owner: cmd/goo/container_cpu_http.go. Effect: pure-plan-or-supplied-summary. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/container_cpu_http.go",
+        "x-effects": "pure-plan-or-supplied-summary",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContainerCPUView"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContainerCPUViewRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 8388608,
+        "x-browser-body-limit-bytes": 8388608,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/container-memory/view": {
       "post": {
         "operationId": "post_container_memory_view",
@@ -6246,6 +6304,19 @@
       },
       "ComparisonReceipt": {
         "$ref": "#/components/schemas/workbench.ComparisonReceipt"
+      },
+      "ContainerCPUView": {
+        "$ref": "#/components/schemas/measurements.ContainerCPUView"
+      },
+      "ContainerCPUViewRequest": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.ContainerCPUViewRequestInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
       },
       "ContainerMemoryView": {
         "$ref": "#/components/schemas/measurements.ContainerMemoryView"
@@ -18486,6 +18557,287 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.Binding"
       },
+      "measurements.ContainerCPUPercentage": {
+        "properties": {
+          "reason": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "unavailable"
+            ]
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 1024
+          },
+          "value": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+            "maxLength": 1024
+          }
+        },
+        "required": [
+          "state"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.ContainerCPUPercentage",
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "observed"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "required": [
+                "value",
+                "text"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "unavailable"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "required": [
+                "reason"
+              ],
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "text"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "measurements.ContainerCPUPercentages": {
+        "properties": {
+          "limit": {
+            "$ref": "#/components/schemas/measurements.ContainerCPUPercentage"
+          },
+          "request": {
+            "$ref": "#/components/schemas/measurements.ContainerCPUPercentage"
+          }
+        },
+        "required": [
+          "request",
+          "limit"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.ContainerCPUPercentages"
+      },
+      "measurements.ContainerCPUSignal": {
+        "properties": {
+          "atNS": {
+            "type": "string"
+          },
+          "basis": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "observationState": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "stale",
+              "unknown"
+            ]
+          },
+          "question": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.Question"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "readAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "usage",
+              "request",
+              "limit"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "stale",
+              "unknown",
+              "invalid",
+              "no_data",
+              "unavailable"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]*[1-9])?$",
+            "maxLength": 512
+          }
+        },
+        "required": [
+          "role",
+          "title",
+          "state"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.ContainerCPUSignal",
+        "additionalProperties": false
+      },
+      "measurements.ContainerCPUView": {
+        "properties": {
+          "parent": {
+            "$ref": "#/components/schemas/measurements.PodMetricDiscoveryQuestion"
+          },
+          "percentages": {
+            "$ref": "#/components/schemas/measurements.ContainerCPUPercentages"
+          },
+          "signals": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": {
+              "$ref": "#/components/schemas/measurements.ContainerCPUSignal"
+            }
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/container-cpu-view/v1"
+          },
+          "warnings": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "version",
+          "parent",
+          "signals",
+          "percentages",
+          "warnings"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.ContainerCPUView",
+        "additionalProperties": false,
+        "description": "Replay-validated held container gauge evidence; independently useful signals, strict exact-resource/schema/attribute/observation/freshness alignment for rational percentages. No source reads, new custody, inferred health or missing-as-zero semantics."
+      },
+      "measurements.ContainerCPUViewRequestInput": {
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/measurements.ResultInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "parent": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.PodMetricDiscoveryQuestionInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "request": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/measurements.ResultInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/measurements.ResultInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.ContainerCPUViewRequest"
+      },
       "measurements.ContainerMemoryPercentage": {
         "properties": {
           "reason": {
@@ -21039,7 +21391,9 @@
               "otel-k8s-v1.37.0",
               "collector-k8scluster-v0.137.0",
               "container-memory-kubeletstats-v0.137.0",
-              "container-memory-k8scluster-v0.137.0"
+              "container-memory-k8scluster-v0.137.0",
+              "container-cpu-kubeletstats-v0.137.0",
+              "container-cpu-k8scluster-v0.137.0"
             ]
           },
           "question": {
@@ -21099,6 +21453,7 @@
             "type": "string",
             "enum": [
               "working-set",
+              "usage",
               "request",
               "limit"
             ]
@@ -21181,6 +21536,7 @@
                     "role": {
                       "enum": [
                         "working-set",
+                        "usage",
                         "request",
                         "limit"
                       ]
@@ -21280,7 +21636,9 @@
                 "profile": {
                   "enum": [
                     "container-memory-kubeletstats-v0.137.0",
-                    "container-memory-k8scluster-v0.137.0"
+                    "container-memory-k8scluster-v0.137.0",
+                    "container-cpu-kubeletstats-v0.137.0",
+                    "container-cpu-k8scluster-v0.137.0"
                   ]
                 },
                 "question": {
@@ -21303,7 +21661,9 @@
                 "profile": {
                   "enum": [
                     "container-memory-kubeletstats-v0.137.0",
-                    "container-memory-k8scluster-v0.137.0"
+                    "container-memory-k8scluster-v0.137.0",
+                    "container-cpu-kubeletstats-v0.137.0",
+                    "container-cpu-k8scluster-v0.137.0"
                   ]
                 }
               },
@@ -21315,6 +21675,92 @@
               "required": [
                 "role"
               ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "profile": {
+                  "const": "container-memory-kubeletstats-v0.137.0"
+                }
+              },
+              "required": [
+                "profile"
+              ]
+            },
+            "then": {
+              "properties": {
+                "role": {
+                  "enum": [
+                    "working-set"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "profile": {
+                  "const": "container-memory-k8scluster-v0.137.0"
+                }
+              },
+              "required": [
+                "profile"
+              ]
+            },
+            "then": {
+              "properties": {
+                "role": {
+                  "enum": [
+                    "request",
+                    "limit"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "profile": {
+                  "const": "container-cpu-kubeletstats-v0.137.0"
+                }
+              },
+              "required": [
+                "profile"
+              ]
+            },
+            "then": {
+              "properties": {
+                "role": {
+                  "enum": [
+                    "usage"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "profile": {
+                  "const": "container-cpu-k8scluster-v0.137.0"
+                }
+              },
+              "required": [
+                "profile"
+              ]
+            },
+            "then": {
+              "properties": {
+                "role": {
+                  "enum": [
+                    "request",
+                    "limit"
+                  ]
+                }
+              }
             }
           }
         ]

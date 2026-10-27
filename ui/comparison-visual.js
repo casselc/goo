@@ -1,7 +1,7 @@
 /* Shared zero-based scales. Values remain exact strings; only bounded pixel ratios use Number. */
 (function(global){
- function decimal(v){if(v===null||v===undefined||!/^\d+(\.\d+)?$/.test(String(v))||String(v).length>256)return null;const [a,b='']=String(v).split('.');return {n:BigInt(a+b),p:b.length}}
- function ratio(v){const x=decimal(v);if(x)return {n:x.n,d:10n**BigInt(x.p)};if(typeof v!=='string'||v.length>256||!/^\d+\/[1-9]\d*$/.test(v))return null;const [n,d]=v.split('/');return {n:BigInt(n),d:BigInt(d)}}
+ function decimal(v){if(v===null||v===undefined||!/^\d+(\.\d+)?$/.test(String(v))||String(v).length>1024)return null;const [a,b='']=String(v).split('.');return {n:BigInt(a+b),p:b.length}}
+ function ratio(v){const x=decimal(v);if(x)return {n:x.n,d:10n**BigInt(x.p)};if(typeof v!=='string'||v.length>1024||!/^\d+\/[1-9]\d*$/.test(v))return null;const [n,d]=v.split('/');return {n:BigInt(n),d:BigInt(d)}}
  function maximum(values){const valid=values.filter(v=>ratio(v)!==null);return valid.reduce((a,b)=>{const x=ratio(a),y=ratio(b);return x.n*y.d>=y.n*x.d?a:b},'0')}
  function scale(values,ceiling){const max=maximum([...values,...(ceiling!==undefined?[ceiling]:[])]),m=ratio(max);return {max,widths:values.map(v=>{const x=ratio(v);return !x?null:m.n===0n?0:Number(x.n*m.d*10000n/(m.n*x.d))/100})}}
  function signedRatio(value){if(typeof value!=='string'||value.length>256||!/^(-?(?:0|[1-9]\d*))(?:\/([1-9]\d*))?$/.test(value))return null;const [n,d='1']=value.split('/');if(n==='-0')return null;return {n:BigInt(n),d:BigInt(d)}}

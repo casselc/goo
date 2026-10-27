@@ -12108,3 +12108,52 @@ frames, fixture separation and hashes. Source/lifecycle/final frame and independ
 oracle reviews approve. Exact temporary binary/helpers/tars are removed; normal
 retention preserves current custody and review diagnostics while expiring old
 recordings only. Traffic/data/history remain intact.
+
+## Container CPU context — source gates (207)
+
+Added pinned receiver fractional-core gauge roles and explicit-only candidates,
+with a pure 8 MiB-bounded CPU composer. Original exported decimals are certified
+before display and ratio computation; byte-integer rules are not reused. Usage
+is already a sample-window-averaged receiver gauge. No cumulative CPU-time rate,
+reset logic or invented sample interval is introduced. Strict context/alignment,
+latest observation quality, independent clocks and individual custody follow
+206. Shared configured browser factories preserve memory's wire and ownership
+contracts while avoiding a second source-selection/navigation implementation.
+
+All four affected Go suites pass: metrics 0.334s, measurements 1.353s,
+exploration 1.388s and cmd/goo 2.214s. Twelve new frozen CPU HTTP cases add eleven
+JSON responses, five admitted requests and one mux refusal. Pure cancellation,
+source-free composition and individual capture/offline reopening pass. OpenAPI
+has 82 Go/89 total operations and 509 schemas; 417 fixture responses, 154 admitted
+requests and 27 mux refusals plus negative controls pass. One initial nanosecond
+refusal test constructed invalid paired bounds before composer admission; it was
+corrected to valid +1 ns bounds within the original enclosing milliseconds and
+then proves the intended composer refusal. This was a test construction error.
+
+All 98 Node files pass (13.398s). Focused subsequent tests pass after CPU dataset
+name normalization and fixing a shared role-selector accessible-label shadow;
+CPU and memory labels are asserted. Tests cover tiny/fractional values, exact
+exported decimals, bounded supplied percentages, unchanged memory validation,
+explicit read budgets and cancellation before late publication. All 24 Python
+proxy/startup checks pass (16 in 2.344s; eight in 1.736s). A premature proxy run
+used the old generated OpenAPI and failed only CPU route lookup in its contract
+helper; the regenerated-spec rerun passes. Initial diagnostics remain retained.
+
+Pinned public source research records eight exact upstream file hashes. Live
+ordinary OTLP/browser/owner/Bombadil/raw-custody acceptance is pending. No running
+Kubernetes receiver/API/RBAC, pre-export quantity precision, common sample interval,
+transactional snapshot, CPU saturation/throttling or health claim is made.
+
+Workspace preparation copied the Go toolchain to /tmp and verified all 15,657
+files (244,137,476 bytes) before replacing its original path with a symlink and
+removing only that verified original copy. Toolchain functionality and path are
+preserved. Normal diagnostic retention proposed zero expired files. Application
+data, history and retained custody are unchanged; disk remains constrained.
+
+The independent Hegel property passes on its first invocation (0.511s package):
+eight generated fractional/qualifier contexts × 23 modes plus three-role
+compositions. Independent decimal normalization and exact IEEE rounding
+boundaries validate domain admission; a separate rational oracle checks ratios.
+Input bytes and individual clocks/bases remain unchanged. Final source review
+approves the release boundary without blockers. Private Go composer deduplication
+is a follow-up, preserving concrete DTOs and existing wire/custody controls.

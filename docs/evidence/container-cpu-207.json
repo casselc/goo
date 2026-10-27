@@ -1,0 +1,63 @@
+{
+  "milestone": 207,
+  "status": "source gates accepted; live acceptance pending",
+  "source": {
+    "receiver": "Collector Contrib v0.137.0",
+    "research": "docs/CONTAINER_CPU_SOURCE_RESEARCH.md",
+    "usage": "container.cpu.usage",
+    "unit": "{cpu}",
+    "interpretation": "exported sample-window-averaged gauge; no counter derivative"
+  },
+  "checks": {
+    "node": {
+      "files": 98,
+      "durationMs": 13397.754886,
+      "log": "/tmp/goo-207-node.log",
+      "postRunChange": "CPU dataset naming and shared role accessible-label correction; focused tests pass"
+    },
+    "python": {
+      "proxy": {
+        "tests": 16,
+        "seconds": 2.344,
+        "log": "/tmp/goo-207-python-proxy-final.log"
+      },
+      "startup": {
+        "tests": 8,
+        "seconds": 1.736,
+        "log": "/tmp/goo-207-python-startup.log"
+      },
+      "initialDiagnostic": "Premature proxy run before generated CPU OpenAPI failed only CPU route lookup; preserved /tmp/goo-207-python-proxy.log"
+    },
+    "openapi": {
+      "goOperations": 82,
+      "totalOperations": 89,
+      "schemas": 509,
+      "fixtureResponses": 417,
+      "admittedRequests": 154,
+      "muxRefusals": 27,
+      "log": "/tmp/goo-207-openapi-check.log"
+    },
+    "go": {
+      "metricsSeconds": 0.334,
+      "measurementsSeconds": 1.353,
+      "explorationSeconds": 1.388,
+      "cmdSeconds": 2.214,
+      "log": "/tmp/goo-207-go-broad.log"
+    },
+    "hegel": {
+      "test": "TestHegelContainerCPUExportedDecimals",
+      "seconds": 0.511,
+      "generatedContexts": 8,
+      "modesPerContext": 23,
+      "threeRoleCompositions": true,
+      "oracle": "Independent decimal normalization and exact IEEE rounding boundaries; exact rational percentages"
+    }
+  },
+  "limits": [
+    "No running Kubernetes receiver/API/RBAC claim",
+    "No inferred sample interval or atomic snapshot",
+    "No paired capture",
+    "No CPU-time derivative, throttling or health inference"
+  ],
+  "sourceReview": "Approved, no blockers; duplicated Go composer internals retained as a later refactoring opportunity"
+}

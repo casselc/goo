@@ -81,9 +81,9 @@ def check(spec):
                 requests += 1
                 if isinstance(request, dict):
                     accepted.append((shape, request))
-    # The 12 container-memory cases add 11 JSON responses, 5 accepted
-    # requests and one method-mux refusal to the previous 395/144/25.
-    assert responses == 406 and requests == 149 and mux_refusals == 26, (responses, requests, mux_refusals)
+    # Each 12-case container view adds 11 JSON responses, 5 accepted
+    # requests and one method-mux refusal; CPU follows memory 406/149/26.
+    assert responses == 417 and requests == 154 and mux_refusals == 27, (responses, requests, mux_refusals)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)
@@ -124,6 +124,16 @@ def check(spec):
     for field,value in (('value',50),('value','-1'),('observationState','healthy'),('role','pod-total')):
         wrong=copy.deepcopy(memory);wrong['signals'][0][field]=value
         assert list(validator(spec,memory_shape).iter_errors(wrong)), 'Container memory signal control accepted'
+
+    cpu_cases=json.loads((ROOT/'testdata/http/container-cpu.json').read_text())['cases']
+    cpu=next(json.loads(c['response']) for c in cpu_cases if c['name']=='aligned-three-signals')
+    cpu_shape={'$ref':'#/components/schemas/ContainerCPUView'}
+    for field,value in (('value',0.125),('value','-0.1'),('value','1e-3'),('value','0.0'),('value','1'*513),('role','working-set'),('observationState','healthy')):
+        wrong=copy.deepcopy(cpu);wrong['signals'][0][field]=value
+        assert list(validator(spec,cpu_shape).iter_errors(wrong)), 'Container CPU signal control accepted'
+    for change in ({'state':'observed'},{'state':'observed','value':50,'text':'50.0%'},{'state':'unavailable','reason':'missing','value':'0'},{'state':'healthy'}):
+        wrong=copy.deepcopy(cpu);wrong['percentages']['request']=change
+        assert list(validator(spec,cpu_shape).iter_errors(wrong)), 'Container CPU percentage control accepted'
 
     host_cases=json.loads((ROOT/'testdata/http/host.json').read_text())['cases']
     host_plan=next(json.loads(c['response']) for c in host_cases if c['name']=='host-plan')

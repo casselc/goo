@@ -200,8 +200,9 @@ func discoverPodMetricRows(q PodMetricDiscoveryQuestion, rows []json.RawMessage)
 		clusterState := podMetricProfile(*i) == PodClusterProfile
 		ready := clusterState && i.Metric == "k8s.container.ready"
 		memoryRole := ContainerMemoryRole(*i)
+		cpuRole := ContainerCPURole(*i)
 		i.Supported = clusterState || i.Kind == "gauge" && i.Scope != "" && i.Metric != "" && i.Unit != "" && i.Temporality == 0
-		if memoryRole != "" && (q.Resource["container.id"] == "" || q.Resource["k8s.container.name"] == "") {
+		if (memoryRole != "" || cpuRole != "") && (q.Resource["container.id"] == "" || q.Resource["k8s.container.name"] == "") {
 			i.Supported = false
 		}
 		if i.Supported && len(coverage.Streams) > 0 {
@@ -217,9 +218,12 @@ func discoverPodMetricRows(q PodMetricDiscoveryQuestion, rows []json.RawMessage)
 					def.Title = "Reported container readiness"
 				}
 			}
-			if memoryRole != "" {
+			if memoryRole != "" || cpuRole != "" {
 				def.Source.Resource = &ResourceBinding{Kind: "kubernetes-container", ID: q.Resource["container.id"]}
 				def.Title = containerMemoryTitle(memoryRole)
+				if cpuRole != "" {
+					def.Title = containerCPUTitle(cpuRole)
+				}
 			}
 			if def.Validate() == nil {
 				i.Definition = &def

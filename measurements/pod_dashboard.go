@@ -38,6 +38,9 @@ type PodDashboardPlan struct {
 }
 
 func podMetricProfile(i Instrument) string {
+	if role := ContainerCPURole(i); role != "" {
+		return containerCPUProfile(role)
+	}
 	if role := ContainerMemoryRole(i); role != "" {
 		return containerMemoryProfile(role)
 	}
@@ -106,7 +109,7 @@ func PlanPodDashboard(input PodDashboardRequest) (*PodDashboardPlan, error) {
 		def := i.Definition
 		expectedKind := i.Kind
 		resourceKind, resourceID := "kubernetes-pod", q.Resource["k8s.pod.uid"]
-		if i.Metric == "k8s.container.ready" || ContainerMemoryRole(i) != "" {
+		if i.Metric == "k8s.container.ready" || ContainerMemoryRole(i) != "" || ContainerCPURole(i) != "" {
 			resourceKind, resourceID = "kubernetes-container", q.Resource["container.id"]
 		}
 		if profile == PodClusterProfile {
@@ -139,8 +142,17 @@ func PlanPodDashboard(input PodDashboardRequest) (*PodDashboardPlan, error) {
 			selected.Name = "pod-observation-" + Hash(selected)[:24]
 			selected.Title = "Pod memory usage"
 			role := ContainerMemoryRole(i)
+			cpuRole := ContainerCPURole(i)
+			if cpuRole != "" {
+				role = cpuRole
+				selected.Title = containerCPUTitle(role)
+			}
 			if role != "" {
-				selected.Title = containerMemoryTitle(role)
+				if cpuRole != "" {
+					selected.Title = containerCPUTitle(role)
+				} else {
+					selected.Title = containerMemoryTitle(role)
+				}
 			}
 			if profile == PodClusterProfile {
 				selected.Title = "Reported pod phase"
@@ -181,6 +193,10 @@ func PlanPodDashboard(input PodDashboardRequest) (*PodDashboardPlan, error) {
 			if role != "" {
 				family = "container-memory-" + role
 				title = containerMemoryTitle(role)
+				if cpuRole != "" {
+					family = "container-cpu-" + role
+					title = containerCPUTitle(role)
+				}
 			}
 			grain := "pod-resource-stream"
 			if resourceKind == "kubernetes-container" {
@@ -189,14 +205,14 @@ func PlanPodDashboard(input PodDashboardRequest) (*PodDashboardPlan, error) {
 			all = append(all, candidate{widget: PodMetricWidget{Role: role, Key: Hash(question), Title: title, State: "candidate", Profile: profile, Grain: grain, Question: question}, family: family})
 		}
 	}
-	rank := map[string]int{PodReceiverProfile: 0, PodSemconvProfile: 1, PodClusterProfile: 2, ContainerMemoryKubeletProfile: 3, ContainerMemoryClusterProfile: 4}
+	rank := map[string]int{PodReceiverProfile: 0, PodSemconvProfile: 1, PodClusterProfile: 2, ContainerMemoryKubeletProfile: 3, ContainerMemoryClusterProfile: 4, ContainerCPUKubeletProfile: 5, ContainerCPUClusterProfile: 6}
 	sort.Slice(all, func(a, b int) bool {
 		left, right := all[a], all[b]
 		if left.widget.Profile != right.widget.Profile {
 			return rank[left.widget.Profile] < rank[right.widget.Profile]
 		}
 		if left.family != right.family {
-			familyRank := map[string]int{"usage": 0, "working-set": 1, "phase": 2, "readiness": 3, "container-memory-working-set": 4, "container-memory-request": 5, "container-memory-limit": 6}
+			familyRank := map[string]int{"usage": 0, "working-set": 1, "phase": 2, "readiness": 3, "container-memory-working-set": 4, "container-memory-request": 5, "container-memory-limit": 6, "container-cpu-usage": 7, "container-cpu-request": 8, "container-cpu-limit": 9}
 			return familyRank[left.family] < familyRank[right.family]
 		}
 		return left.widget.Key < right.widget.Key

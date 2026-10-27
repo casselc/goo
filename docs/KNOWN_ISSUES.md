@@ -967,3 +967,11 @@ independently evaluated exact-stream measurements from a selected named pool.
 Default service reads remain bounded; explicit Run and individual capture retain
 the original window, identity and separate clocks. Numerical capacity/utilization
 joins, causal attribution and automatic runtime/host panels remain follow-ons.
+
+
+[Container CPU context](CONTAINER_CPU.md) is in development for 207. It consumes
+the pinned reported usage gauge and independent request/limit gauges; CPU-time
+derivatives, throttling and workload totals remain separate. Exact matching
+observation timestamps do not establish a common sample interval. Receiver
+conversion has already rounded source quantities before their exported decimal
+reaches Goo. Live acceptance is pending.

@@ -122,31 +122,33 @@ for name in ('measurements.PodMetricDiscoveryQuestion','measurements.PodMetricDi
 for name,version in (('measurements.PodMetricDiscovery','goo/pod-metric-discovery/v1'),('measurements.PodDashboardPlan','goo/pod-dashboard/v1')):
  schemas[name]['properties']['version']['const']=version
 podplan=schemas['measurements.PodDashboardPlan']['properties'];podplan['widgets']['anyOf'][0]['maxItems']=2;podplan['candidates']['anyOf'][0]['maxItems']=16;podplan['state']['enum']=['candidates','unconfirmed']
-podwidget=schemas['measurements.PodMetricWidget']['properties'];podwidget['state']['const']='candidate';podwidget['grain']['enum']=['pod-resource-stream','container-resource-stream'];podwidget['profile']['enum']=['collector-kubeletstats-v0.137.0','otel-k8s-v1.37.0','collector-k8scluster-v0.137.0','container-memory-kubeletstats-v0.137.0','container-memory-k8scluster-v0.137.0']
-podwidget['role']={'type':'string','enum':['working-set','request','limit']}
+podwidget=schemas['measurements.PodMetricWidget']['properties'];podwidget['state']['const']='candidate';podwidget['grain']['enum']=['pod-resource-stream','container-resource-stream'];podwidget['profile']['enum']=['collector-kubeletstats-v0.137.0','otel-k8s-v1.37.0','collector-k8scluster-v0.137.0','container-memory-kubeletstats-v0.137.0','container-memory-k8scluster-v0.137.0','container-cpu-kubeletstats-v0.137.0','container-cpu-k8scluster-v0.137.0']
+podwidget['role']={'type':'string','enum':['working-set','usage','request','limit']}
 podwidget['question']={'allOf':[{'$ref':'#/components/schemas/measurements.Question'},{'properties':{'definition':{'properties':{'kind':{'enum':['gauge','state']},'source':{'required':['resource','exactStream'],'properties':{'resource':{'type':'object','properties':{'kind':{'enum':['kubernetes-pod','kubernetes-container']}}},'exactStream':{'type':'object'},'services':{'type':['array','null'],'maxItems':0},'namespace':{'type':'null'}}}}}}}]}
 podwidget_schema=schemas['measurements.PodMetricWidget']
 podwidget_schema['allOf']=[{'if':{'properties':{'profile':{'const':'collector-k8scluster-v0.137.0'}},'required':['profile']},'then':{'properties':{'question':{'properties':{'definition':{'required':['stateProfile'],'properties':{'kind':{'const':'state'},'stateProfile':{'enum':['k8scluster-pod-phase/0.137.0','k8scluster-container-ready/0.137.0']}}}}}}},'else':{'properties':{'question':{'properties':{'definition':{'properties':{'kind':{'const':'gauge'}}}}}}}}]
 # Exact container readiness is a separate authority/grain, never a pod alias.
-podwidget_schema['allOf'].append({'if': {'anyOf':[{'properties':{'role':{'enum':['working-set','request','limit']}},'required':['role']},{'properties':{'question':{'properties':{'definition':{'properties':{'stateProfile':{'const':'k8scluster-container-ready/0.137.0'}},'required':['stateProfile']}},'required':['definition']}},'required':['question']}]}, 'then':{'properties':{'grain':{'const':'container-resource-stream'},'question':{'properties':{'definition':{'properties':{'source':{'properties':{'resource':{'properties':{'kind':{'const':'kubernetes-container'}}}}}}}}}}},'else':{'properties':{'grain':{'const':'pod-resource-stream'},'question':{'properties':{'definition':{'properties':{'source':{'properties':{'resource':{'properties':{'kind':{'const':'kubernetes-pod'}}}}}}}}}}}})
+podwidget_schema['allOf'].append({'if': {'anyOf':[{'properties':{'role':{'enum':['working-set','usage','request','limit']}},'required':['role']},{'properties':{'question':{'properties':{'definition':{'properties':{'stateProfile':{'const':'k8scluster-container-ready/0.137.0'}},'required':['stateProfile']}},'required':['definition']}},'required':['question']}]}, 'then':{'properties':{'grain':{'const':'container-resource-stream'},'question':{'properties':{'definition':{'properties':{'source':{'properties':{'resource':{'properties':{'kind':{'const':'kubernetes-container'}}}}}}}}}}},'else':{'properties':{'grain':{'const':'pod-resource-stream'},'question':{'properties':{'definition':{'properties':{'source':{'properties':{'resource':{'properties':{'kind':{'const':'kubernetes-pod'}}}}}}}}}}}})
 
-podwidget_schema['allOf'].append({'if':{'required':['role']},'then':{'properties':{'profile':{'enum':['container-memory-kubeletstats-v0.137.0','container-memory-k8scluster-v0.137.0']},'question':{'properties':{'definition':{'properties':{'kind':{'const':'gauge'}}}}}}}})
-podwidget_schema['allOf'].append({'if':{'properties':{'profile':{'enum':['container-memory-kubeletstats-v0.137.0','container-memory-k8scluster-v0.137.0']}},'required':['profile']},'then':{'required':['role']}})
+podwidget_schema['allOf'].append({'if':{'required':['role']},'then':{'properties':{'profile':{'enum':['container-memory-kubeletstats-v0.137.0','container-memory-k8scluster-v0.137.0','container-cpu-kubeletstats-v0.137.0','container-cpu-k8scluster-v0.137.0']},'question':{'properties':{'definition':{'properties':{'kind':{'const':'gauge'}}}}}}}})
+podwidget_schema['allOf'].append({'if':{'properties':{'profile':{'enum':['container-memory-kubeletstats-v0.137.0','container-memory-k8scluster-v0.137.0','container-cpu-kubeletstats-v0.137.0','container-cpu-k8scluster-v0.137.0']}},'required':['profile']},'then':{'required':['role']}})
 poddiscovery=schemas['measurements.PodMetricDiscovery']['properties'];poddiscovery['instruments']['anyOf'][0]['maxItems']=16
 for name in ('records','instrumentsOmitted'):poddiscovery[name].update({'minimum':0,'maximum':10000})
 
 
 reads = {'/pod-metric-discovery','/host-discovery','/pod-discovery','/http-package', '/operations', '/counter-rates', '/histograms', '/inventory', '/discovery', '/explore', '/explore/counted-values', '/record-aggregates', '/trace-search', '/population/explain', '/metric-discovery', '/measurements', '/investigations', '/captures', '/tail', '/query'}
-plans = {'/pod-dashboard/plan','/host-dashboard/plan','/pool-signals/plan','/pool-signals/view','/container-memory/view','/measurement-packages/plan', '/telemetry-packages/draft', '/telemetry-packages/numeric-plan', '/telemetry-packages/plan', '/recipes', '/dashboards/plan', '/population/plan', '/population/explain/plan', '/population/explain/filter', '/numeric-histograms/selection', '/numeric-histograms/comparison-selection', '/compare', '/explain'}
+for profile,roles in [('container-memory-kubeletstats-v0.137.0',['working-set']),('container-memory-k8scluster-v0.137.0',['request','limit']),('container-cpu-kubeletstats-v0.137.0',['usage']),('container-cpu-k8scluster-v0.137.0',['request','limit'])]:
+ podwidget_schema['allOf'].append({'if':{'properties':{'profile':{'const':profile}},'required':['profile']},'then':{'properties':{'role':{'enum':roles}}}})
+plans = {'/pod-dashboard/plan','/host-dashboard/plan','/pool-signals/plan','/pool-signals/view','/container-memory/view','/container-cpu/view','/measurement-packages/plan', '/telemetry-packages/draft', '/telemetry-packages/numeric-plan', '/telemetry-packages/plan', '/recipes', '/dashboards/plan', '/population/plan', '/population/explain/plan', '/population/explain/filter', '/numeric-histograms/selection', '/numeric-histograms/comparison-selection', '/compare', '/explain'}
 publications = {'/activity-views','/measurement-packages', '/telemetry-packages', '/annotations', '/exploration-views', '/deployments', '/documents', '/captures/comparisons'}
-requests = {'/pod-metric-discovery':'PodMetricDiscoveryQuestion','/pod-dashboard/plan':'PodDashboardRequest','/host-discovery':'HostDiscoveryQuestion','/pod-discovery':'PodDiscoveryQuestion','/host-dashboard/plan':'HostDashboardRequest','/pool-signals/plan':'PoolSignalsRequest','/pool-signals/view':'PoolViewRequest','/container-memory/view':'ContainerMemoryViewRequest','/activity-views':'ActivityViewRequest',
+requests = {'/pod-metric-discovery':'PodMetricDiscoveryQuestion','/pod-dashboard/plan':'PodDashboardRequest','/host-discovery':'HostDiscoveryQuestion','/pod-discovery':'PodDiscoveryQuestion','/host-dashboard/plan':'HostDashboardRequest','/pool-signals/plan':'PoolSignalsRequest','/pool-signals/view':'PoolViewRequest','/container-memory/view':'ContainerMemoryViewRequest','/container-cpu/view':'ContainerCPUViewRequest','/activity-views':'ActivityViewRequest',
  '/retained-evidence/tail':'TailIntent','/compare':'CompareRequest','/inventory':'InventoryRequest','/discovery':'InventoryRequest','/explore':'RecordQuery','/explore/counted-values':'RecordQuery','/record-aggregates':'RecordQuery','/trace-search':'TraceSearchRequest','/tail':'TailSelector',
  '/measurements':'NativeQuestion','/metric-discovery':'MetricDiscoveryRequest','/measurement-packages/plan':'NativePlanRequest','/measurement-packages':'YAMLRequest',
  '/telemetry-packages':'YAMLRequest','/telemetry-packages/draft':'TelemetryDraftRequest','/telemetry-packages/numeric-plan':'NumericPlanRequest','/telemetry-packages/plan':'TelemetryPlanRequest',
  '/recipes':'RecipeRequest','/dashboards/plan':'DashboardRequest','/population/plan':'PopulationRequest','/numeric-histograms/selection':'NumericHistogramSelectionRequest','/numeric-histograms/comparison-selection':'DistributionSelectionRequest','/annotations':'MeaningInput','/exploration-views':'ExplorationView','/deployments':'DeploymentInput','/documents':'DocumentRequest',
  '/population/explain':'ExplanationRequest','/population/explain/plan':'ExplanationRequest','/population/explain/filter':'ExplanationFilterRequest','/captures':'CaptureRequest','/captures/live':'LiveComparisonRequest','/captures/comparisons':'SaveComparisonRequest','/investigations':'InvestigationRequest','/retained-evidence':'RetainRequest','/retained-evidence/{id}/annotations':'CorrectRequest',
 }
-responses = {('post','/pod-metric-discovery'):'PodMetricDiscovery',('post','/pod-dashboard/plan'):'PodDashboardPlan',('post','/host-discovery'):'HostDiscovery',('post','/pod-discovery'):'PodDiscovery',('post','/host-dashboard/plan'):'HostDashboardPlan',('post','/pool-signals/plan'):'PoolSignalsPlan',('post','/pool-signals/view'):'PoolView',('post','/container-memory/view'):'ContainerMemoryView',('get','/capabilities'):'RuntimeCapabilities',('post','/population/explain'):'ExplanationResult',('post','/population/explain/plan'):'ExplanationPlan',('post','/population/explain/filter'):'ExplanationStagedQuestion',('post','/activity-views'):'ActivityView',('get','/activity-views/{id}'):'ActivityView',('get','/activity-views'):'ActivityViewList',
+responses = {('post','/pod-metric-discovery'):'PodMetricDiscovery',('post','/pod-dashboard/plan'):'PodDashboardPlan',('post','/host-discovery'):'HostDiscovery',('post','/pod-discovery'):'PodDiscovery',('post','/host-dashboard/plan'):'HostDashboardPlan',('post','/pool-signals/plan'):'PoolSignalsPlan',('post','/pool-signals/view'):'PoolView',('post','/container-memory/view'):'ContainerMemoryView',('post','/container-cpu/view'):'ContainerCPUView',('get','/capabilities'):'RuntimeCapabilities',('post','/population/explain'):'ExplanationResult',('post','/population/explain/plan'):'ExplanationPlan',('post','/population/explain/filter'):'ExplanationStagedQuestion',('post','/activity-views'):'ActivityView',('get','/activity-views/{id}'):'ActivityView',('get','/activity-views'):'ActivityViewList',
  ('post','/compare'):'CompareResult',('post','/inventory'):'InventoryResult',('post','/discovery'):'ServiceDiscovery',('post','/explore'):'RecordResult',('post','/explore/counted-values'):'CountedValuesResult',('post','/record-aggregates'):'RecordAggregatesResult',('post','/trace-search'):'TraceSearchResult',
  ('post','/measurements'):'NativeResult',('post','/metric-discovery'):'MetricDiscoveryResult',('post','/telemetry-packages/draft'):'PackagePlan',('post','/telemetry-packages/plan'):'PackagePlan',('post','/telemetry-packages/numeric-plan'):'NumericPlan',('post','/telemetry-packages'):'SavedPackage',('get','/telemetry-packages/{revision}'):'SavedPackage',
  ('post','/recipes'):'RecipePlan',('post','/dashboards/plan'):'DashboardPlan',('post','/population/plan'):'PopulationPlan',('post','/numeric-histograms/selection'):'NumericHistogramSelection',('post','/numeric-histograms/comparison-selection'):'NumericHistogramSelection',
@@ -187,6 +189,22 @@ percentage['properties']['value']['pattern']='^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$'
 percentage['allOf']=[{'if':{'properties':{'state':{'const':'observed'}},'required':['state']},'then':{'required':['value','text']}},{'if':{'properties':{'state':{'const':'unavailable'}},'required':['state']},'then':{'required':['reason'],'not':{'anyOf':[{'required':['value']},{'required':['text']}]}}}]
 schemas['measurements.ContainerMemoryView']['additionalProperties']=False
 schemas['measurements.ContainerMemoryView']['description']='Replay-validated held container gauge evidence; independently useful signals, strict exact-resource/schema/attribute/observation/freshness alignment for rational percentages. No source reads, new custody, inferred health or missing-as-zero semantics.'
+# Pure container memory composition preserves independent evidence and exact rational percentages.
+cm=schemas['measurements.ContainerCPUView']['properties'];cm['version']['const']='goo/container-cpu-view/v1'
+cm['signals']={'type':'array','minItems':3,'maxItems':3,'items':{'$ref':'#/components/schemas/measurements.ContainerCPUSignal'}}
+signal=schemas['measurements.ContainerCPUSignal'];signal['additionalProperties']=False
+signal['properties']['role']['enum']=['usage','request','limit'];signal['properties']['state']['enum']=['observed','stale','unknown','invalid','no_data','unavailable']
+signal['properties']['value'].update(pattern=r'^(0|[1-9][0-9]*)(\.[0-9]*[1-9])?$',maxLength=512)
+signal['properties']['observationState']['enum']=['observed','stale','unknown']
+signal['properties']['basis']['pattern']='^[a-f0-9]{64}$';signal['properties']['readAt']['format']='date-time'
+percentage=schemas['measurements.ContainerCPUPercentage'];percentage['additionalProperties']=False
+percentage['properties']['state']['enum']=['observed','unavailable']
+percentage['properties']['value']['pattern']='^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$'
+percentage['allOf']=[{'if':{'properties':{'state':{'const':'observed'}},'required':['state']},'then':{'required':['value','text']}},{'if':{'properties':{'state':{'const':'unavailable'}},'required':['state']},'then':{'required':['reason'],'not':{'anyOf':[{'required':['value']},{'required':['text']}]}}}]
+schemas['measurements.ContainerCPUView']['additionalProperties']=False
+schemas['measurements.ContainerCPUView']['description']='Replay-validated held container gauge evidence; independently useful signals, strict exact-resource/schema/attribute/observation/freshness alignment for rational percentages. No source reads, new custody, inferred health or missing-as-zero semantics.'
+schemas['measurements.ContainerCPUPercentage']['properties']['value']['maxLength']=1024
+schemas['measurements.ContainerCPUPercentage']['properties']['text']['maxLength']=1024
 # Native registry responses are envelopes rather than Definition directly.
 schemas['NativePackage'] = {'type':'object','required':['definition','revision','yaml'],'properties':{'definition':ref('measurements.Definition'),'revision':{'type':'string'},'yaml':{'type':'string'}}}
 schemas['NativePlan'] = {'allOf':[ref('NativePackage'),{'type':'object','required':['question','plan'],'properties':{'question':ref('measurements.Question'),'plan':ref('measurements.Plan')}}]}
@@ -199,7 +217,7 @@ for name in ['measurements.Definition','measurements.Question','measurements.Pla
  if name not in schemas: raise ValueError(f'Missing reflected type: {name}')
 
 def go_limit(path):
- if path == '/container-memory/view': return 8388608
+ if path in ('/container-memory/view','/container-cpu/view'): return 8388608
  if path == '/pool-signals/view': return 2097152
  if path in ('/compare','/numeric-histograms/comparison-selection'): return 1048576
  if path == '/dashboards/plan': return 262144
@@ -209,7 +227,7 @@ def go_limit(path):
  return 16384
 
 def browser_limit(path):
- if path == '/container-memory/view': return 8388608
+ if path in ('/container-memory/view','/container-cpu/view'): return 8388608
  if path == '/pool-signals/view': return 2097152
  if path in ('/population/plan', '/numeric-histograms/selection','/exploration-views','/documents','/captures/comparisons'): return 131072
  if path in ('/compare','/numeric-histograms/comparison-selection'): return 1048576

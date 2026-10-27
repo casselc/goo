@@ -345,3 +345,10 @@ source variants and signals; existing automatic defaults stay bounded. Each
 signal retains its own quality/UTC, and percentages require strict replay-backed
 alignment. [Journey 206](journeys/206-container-memory-storyboard.md) tracks source
 and ordinary OTLP/browser acceptance.
+
+
+[Container CPU context](docs/CONTAINER_CPU.md) is in development: explicit usage,
+request and limit gauges on a shared fractional-core scale, using the same
+source-selection and retained-inspection flow as memory. The receiver already
+reports CPU usage; no counter derivative is inferred.
+[Journey 207](journeys/207-container-cpu-storyboard.md) tracks acceptance.

@@ -133,6 +133,19 @@
   "ComparisonReceipt": {
     "$ref": "#/components/schemas/workbench.ComparisonReceipt"
   },
+  "ContainerCPUView": {
+    "$ref": "#/components/schemas/measurements.ContainerCPUView"
+  },
+  "ContainerCPUViewRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/measurements.ContainerCPUViewRequestInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
   "ContainerMemoryView": {
     "$ref": "#/components/schemas/measurements.ContainerMemoryView"
   },
@@ -12277,6 +12290,207 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/measurements.Binding"
+  },
+  "measurements.ContainerCPUPercentage": {
+    "properties": {
+      "reason": {
+        "type": "string"
+      },
+      "state": {
+        "type": "string"
+      },
+      "text": {
+        "type": "string"
+      },
+      "value": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "state"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.ContainerCPUPercentage"
+  },
+  "measurements.ContainerCPUPercentages": {
+    "properties": {
+      "limit": {
+        "$ref": "#/components/schemas/measurements.ContainerCPUPercentage"
+      },
+      "request": {
+        "$ref": "#/components/schemas/measurements.ContainerCPUPercentage"
+      }
+    },
+    "required": [
+      "request",
+      "limit"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.ContainerCPUPercentages"
+  },
+  "measurements.ContainerCPUSignal": {
+    "properties": {
+      "atNS": {
+        "type": "string"
+      },
+      "basis": {
+        "type": "string"
+      },
+      "observationState": {
+        "type": "string"
+      },
+      "question": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.Question"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "readAt": {
+        "type": "string"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "role": {
+        "type": "string"
+      },
+      "state": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "value": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "role",
+      "title",
+      "state"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.ContainerCPUSignal"
+  },
+  "measurements.ContainerCPUView": {
+    "properties": {
+      "parent": {
+        "$ref": "#/components/schemas/measurements.PodMetricDiscoveryQuestion"
+      },
+      "percentages": {
+        "$ref": "#/components/schemas/measurements.ContainerCPUPercentages"
+      },
+      "signals": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.ContainerCPUSignal"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "type": "string"
+      },
+      "warnings": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "version",
+      "parent",
+      "signals",
+      "percentages",
+      "warnings"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.ContainerCPUView"
+  },
+  "measurements.ContainerCPUViewRequestInput": {
+    "additionalProperties": false,
+    "properties": {
+      "limit": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.ResultInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "parent": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.PodMetricDiscoveryQuestionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "request": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.ResultInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "usage": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.ResultInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.ContainerCPUViewRequest"
   },
   "measurements.ContainerMemoryPercentage": {
     "properties": {

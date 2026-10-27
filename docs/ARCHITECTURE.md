@@ -1079,3 +1079,11 @@ display, while stricter resource/schema/attribute/time/domain/policy proof gover
 percentages. No SQL join or fabricated denominator is introduced. The browser
 owner retains up to four explicitly discovered variants and selects at most
 three reads; shared table/bar/UTC primitives only render supplied values.
+
+
+[Container CPU context](CONTAINER_CPU.md), in development for 207, follows the
+same explicit gauge composition boundary. Reported fractional-core usage is
+already a receiver gauge; cumulative CPU time remains a separate instrument.
+CPU domain validation operates on bounded exported decimal values rather than
+integer bytes. The shared browser owner is parameterized by the domain adapter;
+source effects and native retention remain in the same application layer.

@@ -941,3 +941,11 @@ valid bytes and certified percentages are exact strings, with rounded percentage
 text supplied separately. It performs no source read or custody publication.
 Existing pod metadata/plan routes expose pinned container memory role candidates
 only; they never add automatic widgets. See [contract](CONTAINER_MEMORY.md).
+
+
+Milestone 207 is developing `POST /container-cpu/view`, a pure 8 MiB-bounded
+composition of `parent` and optional `usage`, `request`, `limit` native gauge
+results. It retains independent evidence and applies fractional-core domain rules
+before strict alignment checks. CPU usage is the pinned reported gauge, not a
+derivative of cumulative CPU time. See [contract](CONTAINER_CPU.md) for scope and
+pending acceptance; automatic widget and individual capture budgets are unchanged.
