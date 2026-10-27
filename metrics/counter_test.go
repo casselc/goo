@@ -28,7 +28,7 @@ func TestCounterIntervals(t *testing.T) {
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			r, e := EvaluateCounters(CounterRequest{"10", "20", "10", c.points})
+			r, e := EvaluateCounters(CounterRequest{FromNS: "10", ToNS: "20", MaxGapNS: "10", Points: c.points})
 			if e != nil {
 				t.Fatal(e)
 			}
@@ -43,7 +43,7 @@ func TestCounterIntervals(t *testing.T) {
 	}
 }
 func TestCounterGapsLatePointsAndIdentity(t *testing.T) {
-	request := CounterRequest{"10", "30", "10", []CounterPoint{point("0", "10", "0"), point("0", "30", "4")}}
+	request := CounterRequest{FromNS: "10", ToNS: "30", MaxGapNS: "10", Points: []CounterPoint{point("0", "10", "0"), point("0", "30", "4")}}
 	old, e := EvaluateCounters(request)
 	if e != nil {
 		t.Fatal(e)
@@ -82,34 +82,34 @@ func TestCounterDeltaAndInvalidEvidence(t *testing.T) {
 	a, b := point("10", "20", "3"), point("20", "30", "4")
 	a.Temporality = "delta"
 	b.Temporality = "delta"
-	r, e := EvaluateCounters(CounterRequest{"10", "30", "10", []CounterPoint{a, b}})
+	r, e := EvaluateCounters(CounterRequest{FromNS: "10", ToNS: "30", MaxGapNS: "10", Points: []CounterPoint{a, b}})
 	if e != nil || r.Series[0].State != "ok" {
 		t.Fatal(r, e)
 	}
 	a.NoRecordedValue = true
-	r, e = EvaluateCounters(CounterRequest{"10", "30", "10", []CounterPoint{a, b}})
+	r, e = EvaluateCounters(CounterRequest{FromNS: "10", ToNS: "30", MaxGapNS: "10", Points: []CounterPoint{a, b}})
 	if e != nil || r.Series[0].State != "unknown" || r.Series[0].Intervals[0].PerSecond != nil {
 		t.Fatal("missing point became zero", e)
 	}
 	a.NoRecordedValue = false
 	b.StartNS = "19"
-	if _, e = EvaluateCounters(CounterRequest{"10", "30", "10", []CounterPoint{a, b}}); e == nil {
+	if _, e = EvaluateCounters(CounterRequest{FromNS: "10", ToNS: "30", MaxGapNS: "10", Points: []CounterPoint{a, b}}); e == nil {
 		t.Fatal("overlap accepted")
 	}
 	a = point("0", "10", "1")
 	b = point("0", "10", "2")
-	if _, e = EvaluateCounters(CounterRequest{"10", "30", "10", []CounterPoint{a, b}}); e == nil {
+	if _, e = EvaluateCounters(CounterRequest{FromNS: "10", ToNS: "30", MaxGapNS: "10", Points: []CounterPoint{a, b}}); e == nil {
 		t.Fatal("conflicting copy accepted")
 	}
 	a = point("0", "10", "1")
 	b = point("0", "20", "2")
 	b.Temporality = "delta"
-	if _, e = EvaluateCounters(CounterRequest{"10", "30", "10", []CounterPoint{a, b}}); e == nil {
+	if _, e = EvaluateCounters(CounterRequest{FromNS: "10", ToNS: "30", MaxGapNS: "10", Points: []CounterPoint{a, b}}); e == nil {
 		t.Fatal("mixed temporality accepted")
 	}
 	a = point("0", "10", "1")
 	b = point("0", "20", "2")
-	r, e = EvaluateCounters(CounterRequest{"11", "19", "10", []CounterPoint{a, b}})
+	r, e = EvaluateCounters(CounterRequest{FromNS: "11", ToNS: "19", MaxGapNS: "10", Points: []CounterPoint{a, b}})
 	if e != nil || r.Series[0].Intervals[0].Reason != "boundary-crossing" {
 		t.Fatal("interpolated boundary")
 	}

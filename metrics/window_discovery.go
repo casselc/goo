@@ -55,7 +55,12 @@ func DiscoverCounterWindows(r *CounterResult) WindowDiscovery {
 	for _, s := range r.Series {
 		v := supportSeries{stream: s.Stream, temp: s.Temporality}
 		for j := range s.Intervals {
-			i := &s.Intervals[j]
+			point := s.Intervals[j]
+			if r.ValueDomain != "" {
+				point.State = "unknown"
+				point.Reason = "unsupported-decimal-counter-window-comparison"
+			}
+			i := &point
 			v.intervals = append(v.intervals, supportInterval{i.FromNS, i.ToNS, i.State, i.Reason, i, nil})
 		}
 		ss = append(ss, v)

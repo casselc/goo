@@ -71,6 +71,7 @@ type LifecycleBinding struct {
 	AllowanceMS    int64    `json:"allowanceMs" yaml:"allowanceMs"`
 }
 type Definition struct {
+	CounterDomain     string            `json:"counterDomain,omitempty" yaml:"counterDomain,omitempty"`
 	StateProfile      string            `json:"stateProfile,omitempty" yaml:"stateProfile,omitempty"`
 	StockDomain       string            `json:"stockDomain,omitempty" yaml:"stockDomain,omitempty"`
 	HistogramBucketMS *int64            `json:"histogramBucketMs,omitempty" yaml:"histogramBucketMs,omitempty"`
@@ -125,6 +126,9 @@ func text(s string, max int) bool {
 	return len(s) <= max && utf8.ValidString(s) && !strings.ContainsRune(s, 0)
 }
 func (d Definition) Validate() error {
+	if d.CounterDomain != "" && (d.Kind != "counter" || d.CounterDomain != metrics.DecimalCounterDomain || d.Grain != "per-stream") {
+		return fmt.Errorf("counterDomain requires per-stream counter and nonnegative-decimal policy")
+	}
 	if d.Kind == "state" {
 		if d.Source.Resource == nil || d.Source.ExactStream == nil {
 			return fmt.Errorf("state requires exact resource authority")
@@ -175,7 +179,7 @@ func (d Definition) Validate() error {
 	}
 	if r := d.Source.Resource; r != nil {
 		if r.Kind == "host" {
-			if r.ID == "" || !text(r.ID, 512) || d.Kind != "gauge" && d.Kind != "stock" || len(d.Source.Services) != 0 || d.Source.Namespace != nil || d.Source.ExactStream == nil || d.Grain != "per-stream" {
+			if r.ID == "" || !text(r.ID, 512) || d.Kind != "gauge" && d.Kind != "stock" && !(d.Kind == "counter" && d.CounterDomain == metrics.DecimalCounterDomain) || len(d.Source.Services) != 0 || d.Source.Namespace != nil || d.Source.ExactStream == nil || d.Grain != "per-stream" {
 				return fmt.Errorf("host resource binding requires gauge or stock, exact stream, per-stream grain and no service or namespace selector")
 			}
 		} else if r.Kind == "kubernetes-pod" {

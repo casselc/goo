@@ -17,14 +17,14 @@
   // Match Go's stream wire encoding size, including HTML/line-separator escaping.
   const wire={...(s.resourceSchemaURL?{resourceSchemaURL:s.resourceSchemaURL}:{}),resource:s._resourceNil?null:s.resource,scope:s.scope,version:s.version,schemaURL:s.schemaURL,name:s.name,unit:s.unit,attributes:s._attributesNil?null:s.attributes};
   if(bytes(JSON.stringify(wire).replace(/[<>&\u2028\u2029]/g,c=>'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0')))>16384)fail();
-  if(!b.services.includes(s.resource['service.name'])||!s.resource['service.instance.id']||s.resource['deployment.environment.name']!==d.environment||!matches(n,s.resource)||s.scope!==b.scope||s.version!==str(b,'version')||s.schemaURL!==str(b,'schemaURL')||s.name!==b.metric||s.unit!==b.unit)fail();
+  if((b.resource?.kind==='host'?s.resource['host.id']!==b.resource.id:!b.services.includes(s.resource['service.name'])||!s.resource['service.instance.id'])||s.resource['deployment.environment.name']!==d.environment||!matches(n,s.resource)||s.scope!==b.scope||s.version!==str(b,'version')||s.schemaURL!==str(b,'schemaURL')||s.name!==b.metric||s.unit!==b.unit)fail();
   for(const [k,v]of Object.entries(b.attributes||{}))if(!has(s.attributes,k)||s.attributes[k]!==v)fail();
  }
  function plan(parent,actual,signal,fromNS,toNS){
   if(!['logs','spans'].includes(signal)||!plain(parent)||!plain(parent.definition))fail();
-  const d=parent.definition,b=d.source;if(!plain(b))fail();const n=namespace(b.namespace);
+  const d=parent.definition,b=d.source;if(!plain(b))fail();const n=namespace(b.namespace),hostCPU=b.resource?.kind==='host'&&d.kind==='counter'&&d.counterDomain==='nonnegative-decimal'&&b.metric==='system.cpu.time'&&b.unit==='s'&&b.schemaURL==='https://opentelemetry.io/schemas/1.37.0';if(b.resource&&!hostCPU)fail();if(d.counterDomain!==undefined&&(d.counterDomain!=='nonnegative-decimal'||d.kind!=='counter'||d.grain!=='per-stream'))fail();if(hostCPU&&(!b.resource.id||!text(b.resource.id,512)||!b.exactStream||n||d.grain!=='per-stream'||str(d,'stockDomain')!==''||str(d,'stateProfile')!==''))fail();
   if(d.apiVersion!=='goo/measurement-package/v1alpha1'||typeof d.name!=='string'||!/^[A-Za-z][A-Za-z0-9_.-]{0,127}$/.test(d.name)||!d.title||!text(d.title,160)||!d.environment||!text(d.environment,128)||!integer(d.lookbackMinutes)||d.lookbackMinutes<1||d.lookbackMinutes>120||!integer(d.maxGapMs)||d.maxGapMs<1||d.maxGapMs>600000||!['gauge','counter','histogram'].includes(d.kind)||!['per-stream','consumer-group'].includes(d.grain)||d.lifecycle!=null)fail();
-  if(!Array.isArray(b.services)||b.services.length<1||b.services.length>8||new Set(b.services).size!==b.services.length||b.services.some(s=>!s||!text(s,128))||!b.scope||!text(b.scope,256)||!text(str(b,'version'),128)||!text(str(b,'schemaURL'),1024)||!b.metric||!text(b.metric,256)||!b.unit||!text(b.unit,64))fail();
+  if(!Array.isArray(b.services)||(hostCPU?b.services.length!==0:b.services.length<1||b.services.length>8)||new Set(b.services).size!==b.services.length||b.services.some(s=>!s||!text(s,128))||!b.scope||!text(b.scope,256)||!text(str(b,'version'),128)||!text(str(b,'schemaURL'),1024)||!b.metric||!text(b.metric,256)||!b.unit||!text(b.unit,64))fail();
   mapping(b.attributes,16,128,512);
   const a=parent.fromMs,z=parent.toMs;if(!integer(a)||!integer(z)||a<0||z<=a||z-a>7200000||z>=4102444800000)fail();
   let lo=BigInt(a)*1000000n,hi=BigInt(z)*1000000n;
@@ -33,9 +33,9 @@
   const s=streamValue(actual);if(b.exactStream!=null){const old=streamValue(b.exactStream);validateStream(old,d,b,n);if(!same(old,s))fail()}validateStream(s,d,b,n);
   const from=ns(fromNS),to=ns(toNS);if(to<=from||from<lo||to>hi||d.kind==='gauge'&&to-from!==1n)fail();
   const fromMs=Number(from/1000000n),toMs=Number((to+999999n)/1000000n);if(toMs-fromMs>7200000)fail();
-  const r=s.resource,namespaceValue=r['service.namespace'];if(!text(r['service.instance.id'],1024)||has(r,'service.namespace')&&!text(namespaceValue,1024))fail();
+  const r=s.resource,namespaceValue=r['service.namespace'];if(!hostCPU&&(!text(r['service.instance.id'],1024)||has(r,'service.namespace')&&!text(namespaceValue,1024)))fail();
   const leaf=(kind,key,op,value)=>({field:{kind,key},op,...(value!==undefined&&value!==''?{value}: {})});
-  return {question:{signal,environment:d.environment,fromMs,toMs,where:{all:[leaf('column','service','eq',r['service.name']),has(r,'service.namespace')?leaf('resource','service.namespace','eq',namespaceValue):leaf('resource','service.namespace','missing'),leaf('resource','service.instance.id','eq',r['service.instance.id']),leaf('column','timestamp_ns','gte',fromNS),leaf('column','timestamp_ns','lte',String(to-1n))]},limit:100,offset:0},fromNS,toNS,grain:d.kind==='gauge'?'point-context':'interval-context'};
+  return {question:{signal,environment:d.environment,fromMs,toMs,where:{all:[...(hostCPU?[leaf('resource','host.id','eq',r['host.id'])]:[leaf('column','service','eq',r['service.name']),has(r,'service.namespace')?leaf('resource','service.namespace','eq',namespaceValue):leaf('resource','service.namespace','missing'),leaf('resource','service.instance.id','eq',r['service.instance.id'])]),leaf('column','timestamp_ns','gte',fromNS),leaf('column','timestamp_ns','lte',String(to-1n))]},limit:100,offset:0},fromNS,toNS,grain:d.kind==='gauge'?'point-context':'interval-context'};
  }
  const api={plan};if(typeof module!=='undefined')module.exports=api;else global.GooNativeRecordContext=api;
 })(typeof window==='undefined'?globalThis:window);

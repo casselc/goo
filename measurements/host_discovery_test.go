@@ -52,7 +52,7 @@ func TestHostDiscoveryRawIdentityAndCandidateDefaults(t *testing.T) {
 	}
 	before, _ := json.Marshal(result)
 	plan, e := PlanHostDashboard(HostDashboardRequest{Question: result.Question, Host: host})
-	if e != nil || len(plan.Widgets) != 2 || len(plan.Candidates) != 5 {
+	if e != nil || len(plan.Widgets) != 2 || len(plan.Candidates) != 6 {
 		t.Fatal(plan, e)
 	}
 	haveCPU, haveMemory := false, false
@@ -86,8 +86,8 @@ func TestHostDiscoveryRawIdentityAndCandidateDefaults(t *testing.T) {
 		t.Fatal("planning mutated retained inventory")
 	}
 	for _, i := range host.Instruments {
-		if i.Metric == "system.cpu.time" && i.Supported {
-			t.Fatal("fractional CPU seconds counter unsupported was enabled")
+		if i.Metric == "system.cpu.time" && (!i.Supported || i.Definition == nil || i.Definition.CounterDomain != "nonnegative-decimal") {
+			t.Fatal("pinned CPU-time domain missing", i)
 		}
 	}
 }

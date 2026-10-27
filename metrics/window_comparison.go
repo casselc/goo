@@ -254,7 +254,13 @@ func CompareCounterWindows(a, b *CounterResult) []WindowComparison {
 	for side, r := range []*CounterResult{a, b} {
 		if r != nil {
 			for _, s := range r.Series {
-				addWindow(m, s.Stream, counterWindow(r.FromNS, r.ToNS, s), side)
+				summary := window(r.FromNS, r.ToNS, s.Temporality)
+				if r.ValueDomain != "" {
+					summary.reject("unsupported-decimal-counter-window-comparison")
+				} else {
+					summary = counterWindow(r.FromNS, r.ToNS, s)
+				}
+				addWindow(m, s.Stream, summary, side)
 			}
 		}
 	}

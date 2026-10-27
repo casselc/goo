@@ -19,8 +19,10 @@ Original service-source validation, SQL, serialized definitions and saved eviden
 remain unchanged when the additive resource binding is omitted.
 
 Explicit host gauge and cumulative nonmonotonic-stock evaluators share the
-existing numerical kernels under a separate identity policy. Host counters,
-delta-stock reconstruction, histograms and lifecycle definitions are refused.
+existing numerical kernels under a separate identity policy. Legacy integer host counters, delta-stock reconstruction, histograms and
+lifecycle definitions remain refused. [CPU-time rates](CPU_TIME_RATES.md) adds
+an explicit decimal counter authority and pinned cumulative CPU-time profile in
+211; its live acceptance is tracked separately.
 The service-only native record-context planner also refuses host authority rather
 than creating a query for an empty service name. Full raw-result replay and
 individual native captures retain their existing consistency/custody checks.

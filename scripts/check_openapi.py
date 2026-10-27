@@ -240,6 +240,23 @@ def check_observed(spec, path):
     print(f"Observed API workflow: {len(observations)} real handler responses conform (including optional XTDB only when configured)")
 
 
+def check_cpu_time_observed(spec,path):
+    observations=json.loads(Path(path).read_text())
+    assert len(observations)==8
+    for case in observations:
+        op=spec['paths'][case['path']][case['method'].lower()]
+        validator(spec,op['responses'][str(case['status'])]['content']['application/json']['schema']).validate(case['response'])
+        if case.get('request') is not None and 'requestBody' in op:
+            validator(spec,op['requestBody']['content']['application/json']['schema']).validate(case['request'])
+    result=next(c['response'] for c in observations if c['path']=='/measurements' and c['status']==200)
+    assert result['question']['definition']['counterDomain']=='nonnegative-decimal'
+    interval=result['counters']['series'][0]['intervals'][0]
+    assert interval['delta']=='0.5' and interval['exactPerSecond']=='1/4' and interval['perSecond']==.25
+    assert sum(c['status']==502 for c in observations)==4
+    assert any(c['path']=='/captures/{id}' and c['status']==200 for c in observations)
+    print('CPU-time observations: eight real handler responses/requests, four original-source refusals and offline capture reopen conform')
+
+
 def check_stock_observed(spec,path):
     observations=json.loads(Path(path).read_text())
     assert len(observations)==6, 'Expected execute/capture/reopen/delta/monotonic/invalid stock workflow'
@@ -409,6 +426,7 @@ if __name__ == '__main__':
     parser.add_argument('--stock-domain-observations')
     parser.add_argument('--pool-signals-observations')
     parser.add_argument('--host-observations')
+    parser.add_argument('--cpu-time-observations')
     parser.add_argument('--pod-state-observations')
     parser.add_argument('--container-state-observations')
     parser.add_argument('--pod-phase-discovery-observations')
@@ -416,6 +434,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    if args.cpu_time_observations:
+        check_cpu_time_observed(spec,args.cpu_time_observations)
     if args.observations:
         check_observed(spec, args.observations)
     if args.proxy_observations:

@@ -1,10 +1,8 @@
 package measurements
 
 import (
-	"math"
+	"github.com/casselc/goo/metrics"
 	"math/big"
-	"strconv"
-	"strings"
 )
 
 const ContainerCPUVersion = "goo/container-cpu-view/v1"
@@ -83,51 +81,9 @@ type ContainerCPUView struct {
 
 // exactContainerCPU certifies the bounded reported decimal, not pre-export CPU
 // precision. No derivative, reset interpretation or integer rounding is applied.
-func exactContainerCPU(raw string) (*big.Rat, bool) {
-	if len(raw) > 128 || !containerByteDecimal.MatchString(raw) {
-		return nil, false
-	}
-	if at := strings.IndexAny(raw, "eE"); at >= 0 {
-		exponent, ok := new(big.Int).SetString(raw[at+1:], 10)
-		if !ok || !exponent.IsInt64() || exponent.Int64() < -400 || exponent.Int64() > 400 {
-			return nil, false
-		}
-	}
-	value, ok := new(big.Rat).SetString(raw)
-	if !ok || value.Sign() < 0 {
-		return nil, false
-	}
-	finite, err := strconv.ParseFloat(raw, 64)
-	if err != nil || math.IsInf(finite, 0) || math.IsNaN(finite) || finite == 0 && value.Sign() != 0 {
-		return nil, false
-	}
-	if len(containerCPUDecimal(value)) > 512 {
-		return nil, false
-	}
-	return value, true
-}
-func containerCPUDecimal(value *big.Rat) string {
-	denominator := new(big.Int).Set(value.Denom())
-	two, five := 0, 0
-	for new(big.Int).Mod(denominator, big.NewInt(2)).Sign() == 0 {
-		denominator.Quo(denominator, big.NewInt(2))
-		two++
-	}
-	for new(big.Int).Mod(denominator, big.NewInt(5)).Sign() == 0 {
-		denominator.Quo(denominator, big.NewInt(5))
-		five++
-	}
-	places := max(two, five)
-	out := value.FloatString(places)
-	if strings.Contains(out, ".") {
-		out = strings.TrimRight(strings.TrimRight(out, "0"), ".")
-	}
-	return out
-}
+func exactContainerCPU(raw string) (*big.Rat, bool) { return metrics.ExportedNonnegativeDecimal(raw) }
+func containerCPUDecimal(value *big.Rat) string     { return metrics.CounterDecimal(value) }
 
-// ComposeContainerCPUView validates independent held evidence. Matching
-// resources and clocks certify only the descriptive ratio, never an atomic
-// snapshot, capacity availability, application health or source authenticity.
 func ComposeContainerCPUView(input ContainerCPUViewRequest) (*ContainerCPUView, error) {
 	in, e := cloneContainerResourceEvidence(input, input.Parent, []*Result{input.Usage, input.Request, input.Limit}, "container CPU")
 	if e != nil {

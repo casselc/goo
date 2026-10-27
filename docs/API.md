@@ -960,3 +960,17 @@ policy. More than 10,000 total points or 8 MiB output refuses the whole request.
 No source admission/read, custody publication, interpolation or percentage
 history is added. Existing CPU/memory view response bytes remain unchanged.
 See [history contract](CONTAINER_RESOURCE_HISTORY.md).
+
+
+### Explicit decimal counters (211)
+
+`Definition.counterDomain: nonnegative-decimal` opts a per-stream counter into
+exact exported decimal subtraction; omission retains integer behavior. Its
+`CounterResult.valueDomain` is explicit, and known intervals add rational
+`exactPerSecond` beside exact decimal `delta` and approximate finite `perSecond`.
+Unknown intervals carry no arithmetic. Decimal results refuse above 8 MiB, with
+1,024-byte deltas and 2,048-byte exact-rate schema bounds. Count/fleet and whole
+window comparison contracts remain separate. The first default is pinned host
+`system.cpu.time` cumulative monotonic seconds. Eight real mux observations cover
+execution, capture/offline reopen and four original-source refusals; validate with
+`check_openapi.py --cpu-time-observations PATH`. See [contract](CPU_TIME_RATES.md).

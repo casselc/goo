@@ -101,3 +101,9 @@ The 25.8s browser actor covered eight phases and 418 snapshots with two source
 operations. A separate native-entry frame receipt used one fresh native read;
 selecting its interval was source-free. These are bounded local checks, not
 production metric-to-record association or arbitrary schedule proofs.
+
+
+The pinned host CPU-time decimal profile gains exact interval context in 211;
+[CPU-time rates](CPU_TIME_RATES.md) specifies host.id/environment scope across
+SDK maps. This is an explicit exception to the original service-only contract,
+not automatic context for other host/container/gauge sources.

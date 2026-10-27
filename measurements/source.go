@@ -248,10 +248,11 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 	ss := []metrics.StockPoint{}
 	d := q.Definition
 	for rowIndex, raw := range copied {
+		strictDecimalCounter := d.Kind == "counter" && d.CounterDomain == metrics.DecimalCounterDomain
 		strictContainerGauge := d.Kind == "gauge" && d.Source.Resource != nil && d.Source.Resource.Kind == "kubernetes-container"
-		if d.Kind == "state" || strictContainerGauge {
+		if d.Kind == "state" || strictContainerGauge || strictDecimalCounter {
 			validationRaw := raw
-			if d.StateProfile == metrics.ContainerReadyProfile || strictContainerGauge {
+			if d.StateProfile == metrics.ContainerReadyProfile || strictContainerGauge || strictDecimalCounter {
 				validationRaw = rows[rowIndex]
 			}
 			var fields map[string]json.RawMessage
@@ -263,13 +264,16 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 				var known string
 				if !exists || string(value) == "null" || json.Unmarshal(value, &known) != nil {
 					prefix := "state"
+					if strictDecimalCounter {
+						prefix = "decimal counter"
+					}
 					if strictContainerGauge {
 						prefix = "container gauge"
 					}
 					return nil, fmt.Errorf("%s source requires known string %s", prefix, key)
 				}
 			}
-			if d.StateProfile == metrics.ContainerReadyProfile || strictContainerGauge {
+			if d.StateProfile == metrics.ContainerReadyProfile || strictContainerGauge || strictDecimalCounter {
 				// Empty maps and a zero flag are reported values, not defaults
 				// for absent/null source fields at this new authority boundary.
 				for _, key := range []string{"resource", "attributes"} {
@@ -281,6 +285,18 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 						if len(value) == 0 || value[0] != '"' {
 							return nil, fmt.Errorf("readiness source requires string labels")
 						}
+					}
+				}
+				if strictDecimalCounter {
+					var temporality int
+					value, exists := fields["temporality"]
+					if !exists || string(value) == "null" || json.Unmarshal(value, &temporality) != nil || (temporality != 1 && temporality != 2) {
+						return nil, fmt.Errorf("decimal counter requires explicit integer temporality")
+					}
+					var monotonic bool
+					value, exists = fields["monotonic"]
+					if !exists || string(value) == "null" || json.Unmarshal(value, &monotonic) != nil || !monotonic {
+						return nil, fmt.Errorf("decimal counter requires reported monotonic true")
 					}
 				}
 				var flags uint32
@@ -365,11 +381,26 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 				ss = append(ss, metrics.StockPoint{Stream: stream, Temporality: map[int]string{1: "delta", 2: "cumulative"}[row.Temporality], Monotonic: row.Monotonic, StartNS: row.StartNS, EndNS: row.EndNS, Value: value, NoRecordedValue: missing})
 				continue
 			}
-			if value < 0 || value >= 9007199254740992 || math.Trunc(value) != value || !row.Monotonic {
-				return nil, fmt.Errorf("counter precision/monotonicity unsupported")
+			if d.CounterDomain == metrics.DecimalCounterDomain {
+				if !row.Monotonic {
+					return nil, fmt.Errorf("decimal counters require monotonic source")
+				}
+				canonical := "0"
+				if !missing {
+					exact, ok := metrics.ExportedNonnegativeDecimal(row.Value)
+					if !ok {
+						return nil, fmt.Errorf("invalid exported decimal counter")
+					}
+					canonical = metrics.CounterDecimal(exact)
+				}
+				cs = append(cs, metrics.CounterPoint{Stream: stream, Temporality: map[int]string{1: "delta", 2: "cumulative"}[row.Temporality], Monotonic: true, StartNS: row.StartNS, EndNS: row.EndNS, Value: canonical, NoRecordedValue: missing})
+			} else {
+				if value < 0 || value >= 9007199254740992 || math.Trunc(value) != value || !row.Monotonic {
+					return nil, fmt.Errorf("counter precision/monotonicity unsupported")
+				}
+				temp := map[int]string{1: "delta", 2: "cumulative"}[row.Temporality]
+				cs = append(cs, metrics.CounterPoint{Stream: stream, Temporality: temp, Monotonic: true, StartNS: row.StartNS, EndNS: row.EndNS, Value: strconv.FormatUint(uint64(value), 10), NoRecordedValue: missing})
 			}
-			temp := map[int]string{1: "delta", 2: "cumulative"}[row.Temporality]
-			cs = append(cs, metrics.CounterPoint{Stream: stream, Temporality: temp, Monotonic: true, StartNS: row.StartNS, EndNS: row.EndNS, Value: strconv.FormatUint(uint64(value), 10), NoRecordedValue: missing})
 		} else {
 			hs = append(hs, metrics.HistogramPoint{Stream: stream, Temporality: map[int]string{1: "delta", 2: "cumulative"}[row.Temporality], StartNS: row.StartNS, EndNS: row.EndNS, Bounds: row.Bounds, BucketCounts: row.BucketCounts, Count: row.Count, NoRecordedValue: missing})
 		}
@@ -399,7 +430,12 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 			r.Gauges, e = metrics.EvaluateGauges(fromNS, toNS, ns(d.MaxGapMS), gs)
 		}
 	case "counter":
-		r.Counters, e = metrics.EvaluateCounters(metrics.CounterRequest{FromNS: fromNS, ToNS: toNS, MaxGapNS: ns(d.MaxGapMS), Points: cs})
+		request := metrics.CounterRequest{ValueDomain: d.CounterDomain, FromNS: fromNS, ToNS: toNS, MaxGapNS: ns(d.MaxGapMS), Points: cs}
+		if d.Source.Resource != nil {
+			r.Counters, e = metrics.EvaluateHostCounters(request, d.Source.Resource.ID)
+		} else {
+			r.Counters, e = metrics.EvaluateCounters(request)
+		}
 	case "histogram":
 		r.Histograms, e = metrics.EvaluateHistograms(metrics.HistogramRequest{FromNS: fromNS, ToNS: toNS, MaxGapNS: ns(d.MaxGapMS), Points: hs})
 	}
@@ -454,5 +490,11 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 		}
 	}
 
+	if d.CounterDomain == metrics.DecimalCounterDomain {
+		encoded, err := json.Marshal(r)
+		if err != nil || len(encoded) > 8<<20 {
+			return nil, fmt.Errorf("decimal counter result exceeds 8 MiB; no partial result")
+		}
+	}
 	return r, nil
 }

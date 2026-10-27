@@ -12446,3 +12446,26 @@ raw/finite Quint checks pass. [Journey 210](journeys/210-resource-defaults-story
 and [evidence](docs/evidence/resource-defaults-210.json) record actual results and
 harness corrections. No new API, capture format, source profile or Go numerical
 semantics. Broader receiver coverage and workload totals remain separate slices.
+
+## 211 source gate — fractional CPU-time counters
+
+Reviewed opt-in decimal arithmetic preserves omitted-domain integer contracts.
+Metrics, measurements and existing numerical/capture tests pass; new strict
+original-token tests cover identity maps, flags, temporality and monotonicity.
+The four host metadata/plan wire fixtures intentionally gain the pinned CPU-time
+candidate; existing utilization/memory defaults remain selected when available.
+OpenAPI remains 83 Go / 90 total operations and 517 schemas; 429 frozen responses,
+159 admitted requests and 28 mux refusals pass. Eight new CPU-time handler
+observations include exact execution, capture/offline reopen and four invalid
+source refusals. Two Hegel properties pass eight examples each: reused counter
+state/swarm rules (20 steps) under a fractional affine transform and JS/Go exact
+host-context parity. Actual property execution passes in 0.622s; an initial
+wrong-directory command matched no tests and is excluded. All 100 Node files
+pass in 7.697s before final focused presentation followups. Live journey, actor,
+raw/Quint and refreshed frames remain pending at this gate.
+
+Final 211 source gate: full root Go regression passes; final focused native
+presentation/context checks pass (49 tests, 0.195s). Two Python API-doc tests
+pass, and the real API docs browser passes after its initial sandbox-only
+loopback-server refusal. The final exact-rate/host-context presentation was
+covered by the focused follow-up rather than repeating all 100 Node files.

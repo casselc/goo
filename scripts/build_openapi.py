@@ -34,6 +34,14 @@ aggregate['count']['pattern']='^(0|[1-9][0-9]*)$';aggregate['basis']['pattern']=
 schemas['RecordAggregateGroup']={'type':'object','required':['g0','count'],'properties':{'g0':{'type':['string','null']},'count':{'type':'string','pattern':'^[1-9][0-9]*$'},'duration':{'$ref':'#/components/schemas/exploration.DurationSummary'},'spanStatus':{'$ref':'#/components/schemas/exploration.SpanStatusSummary'}},'additionalProperties':True}
 aggregate['groups']={'type':'array','items':{'$ref':'#/components/schemas/RecordAggregateGroup'}}
 schemas['exploration.RecordAggregatesResult']['description']='Aggregate-only record projection: exactly count and groups reads plus one optional time-series read. Separate clocks/content bases do not establish a transactional snapshot. Changed aggregates are diagnostic and non-actionable. Never includes source rows, fields, plan, pagination or retention token.'
+# Fractional counters are explicit; omitted domain preserves integer contracts.
+for name in ('measurements.Definition','measurements.DefinitionInput'):
+ schemas[name]['properties']['counterDomain'].update({'enum':['nonnegative-decimal'],'description':'Optional per-stream counter-only exact exported decimal domain. Omitted keeps integer counter semantics. Host authority requires this opt-in; pinned CPU-time defaults use cumulative seconds.'})
+for name in ('metrics.CounterResult',):
+ schemas[name]['properties']['valueDomain'].update({'enum':['nonnegative-decimal'],'description':'Explicit bounded nonnegative decimal arithmetic. Omitted retains uint64 input/count semantics.'})
+schemas['metrics.CounterInterval']['properties']['delta'].update({'maxLength':1024,'description':'Exact canonical base-ten interval difference, present only for ok intervals. Decimal differences can be longer than individual input values.'})
+schemas['metrics.CounterInterval']['properties']['exactPerSecond'].update({'maxLength':2048,'pattern':'^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$','description':'Reduced exact nonnegative rational rate for opted-in decimal counters, in source units per second. perSecond is its finite floating-point display approximation.'})
+schemas['metrics.CounterResult']['description']='Per-stream native counter intervals. Explicit decimal domain adds exact decimal deltas/rational rates; count ratios/fleet and window-comparison contracts do not accept that domain. Unknown intervals have no rate; resets, gaps, missing values and clipped boundaries are not interpolated.'
 # Additive cumulative nonmonotonic sum observations, distinct from counter rates.
 schemas['metrics.StockResult']['description']='Per-stream cumulative nonmonotonic sum observations. Signed finite fractional values and accumulation epochs are preserved; decreases are not resets. No delta integration, fleet total, rate, capacity or utilization is inferred.'
 for name in ('metrics.StockSample','metrics.StockSeries'):

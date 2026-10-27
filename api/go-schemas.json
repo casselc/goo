@@ -13039,6 +13039,9 @@
       "apiVersion": {
         "type": "string"
       },
+      "counterDomain": {
+        "type": "string"
+      },
       "environment": {
         "type": "string"
       },
@@ -13108,6 +13111,16 @@
     "additionalProperties": false,
     "properties": {
       "apiVersion": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "counterDomain": {
         "anyOf": [
           {
             "type": "string"
@@ -16458,6 +16471,9 @@
       "delta": {
         "type": "string"
       },
+      "exactPerSecond": {
+        "type": "string"
+      },
       "fromNS": {
         "type": "string"
       },
@@ -16493,6 +16509,16 @@
     "additionalProperties": false,
     "properties": {
       "delta": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "exactPerSecond": {
         "anyOf": [
           {
             "type": "string"
@@ -16590,6 +16616,9 @@
       "toNS": {
         "type": "string"
       },
+      "valueDomain": {
+        "type": "string"
+      },
       "warnings": {
         "anyOf": [
           {
@@ -16669,6 +16698,16 @@
         ]
       },
       "toNS": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "valueDomain": {
         "anyOf": [
           {
             "type": "string"

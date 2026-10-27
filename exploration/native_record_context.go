@@ -22,7 +22,9 @@ type NativeRecordContext struct {
 // an enclosing millisecond source window. Gauge points must be supplied as
 // [atNS,atNS+1); no lookaround or current-time fallback is inferred.
 func PlanNativeRecordContext(parent measurements.Question, stream metrics.Stream, signal, fromNS, toNS string) (*NativeRecordContext, error) {
-	if parent.Definition.Source.Resource != nil {
+	d := parent.Definition
+	hostCPU := d.Source.Resource != nil && d.Source.Resource.Kind == "host" && d.Kind == "counter" && d.CounterDomain == metrics.DecimalCounterDomain && d.Source.Metric == "system.cpu.time" && d.Source.Unit == "s" && d.Source.SchemaURL == measurements.HostMetricsSchema
+	if d.Source.Resource != nil && !hostCPU {
 		return nil, fmt.Errorf("service record context does not support resource-bound measurements")
 	}
 	if signal != "logs" && signal != "spans" {
@@ -89,6 +91,13 @@ func PlanNativeRecordContext(parent measurements.Question, stream metrics.Stream
 		{Field: &Field{Kind: "column", Key: "timestamp_ns"}, Op: "gte", Value: fromNS},
 		{Field: &Field{Kind: "column", Key: "timestamp_ns"}, Op: "lte", Value: strconv.FormatUint(to-1, 10)},
 	}}}
+	if hostCPU {
+		q.Where.All = []Predicate{
+			{Field: &Field{Kind: "resource", Key: "host.id"}, Op: "eq", Value: d.Source.Resource.ID},
+			{Field: &Field{Kind: "column", Key: "timestamp_ns"}, Op: "gte", Value: fromNS},
+			{Field: &Field{Kind: "column", Key: "timestamp_ns"}, Op: "lte", Value: strconv.FormatUint(to-1, 10)},
+		}
+	}
 	if e := q.Validate(); e != nil {
 		return nil, e
 	}

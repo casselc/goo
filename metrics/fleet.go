@@ -67,6 +67,11 @@ func ValidateFleetMembers(members []string) error {
 // EvaluateFleet sums member populations only when every declared member has a
 // valid, exactly aligned outcome distribution. It never averages percentages.
 func EvaluateFleet(request FleetRequest) (*FleetResult, error) {
+	for _, in := range request.Inputs {
+		if in.Counter != nil && in.Counter.ValueDomain != "" {
+			return nil, fmt.Errorf("fleet count ratios require integer counters")
+		}
+	}
 	if e := ValidateFleetMembers(request.Members); e != nil {
 		return nil, e
 	}

@@ -3,6 +3,7 @@ package measurements
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/metrics"
 	"sort"
 	"strconv"
 )
@@ -10,6 +11,11 @@ import (
 const HostDashboardVersion = "goo/host-dashboard/v1"
 const HostMetricsSchema = "https://opentelemetry.io/schemas/1.37.0"
 const HostCandidateLimit = 16
+
+// HostCPUTimeInstrument is the pinned monotonic cumulative seconds binding.
+func HostCPUTimeInstrument(i Instrument) bool {
+	return i.SchemaURL == HostMetricsSchema && i.Kind == "counter" && i.Metric == "system.cpu.time" && i.Unit == "s" && i.Temporality == 2 && i.Monotonic
+}
 
 type HostDashboardRequest struct {
 	Question HostDiscoveryQuestion `json:"question"`
@@ -89,6 +95,9 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 		}
 		out.StreamsOmitted += extra + coverage.OmittedStreams
 		family := ""
+		if HostCPUTimeInstrument(i) {
+			family = "cpu-time"
+		}
 		if i.SchemaURL == HostMetricsSchema && i.Kind == "gauge" && i.Metric == "system.cpu.utilization" && i.Unit == "1" {
 			family = "cpu"
 		}
@@ -110,6 +119,9 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 				return nil, e
 			}
 			d := Definition{APIVersion: Version, Name: "host-signal", Title: i.Metric, Kind: i.Kind, Environment: in.Question.Environment, LookbackMinutes: 2, MaxGapMS: 60000, Grain: "per-stream", Source: Binding{Resource: &ResourceBinding{Kind: "host", ID: h.Resource["host.id"]}, Services: []string{}, Scope: i.Scope, Version: i.Version, SchemaURL: i.SchemaURL, Metric: i.Metric, Unit: i.Unit, ExactStream: &s}}
+			if family == "cpu-time" {
+				d.CounterDomain = metrics.DecimalCounterDomain
+			}
 			if family == "memory" {
 				d.StockDomain = "nonnegative-integer"
 			}
@@ -126,8 +138,11 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 			priority := 0
 			numeric := false
 			core := uint64(0)
-			if family == "cpu" {
+			if family == "cpu" || family == "cpu-time" {
 				title = "CPU utilization"
+				if family == "cpu-time" {
+					title = "CPU activity (CPU-seconds/s)"
+				}
 				mode, ok := s.Attributes["cpu.mode"]
 				if ok {
 					title += " · mode " + strconv.Quote(mode)
@@ -149,7 +164,7 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 					title += " · logical CPU unreported"
 				}
 			}
-			if family != "cpu" {
+			if family != "cpu" && family != "cpu-time" {
 				if family == "memory-fraction" {
 					title = "Reported memory utilization fraction"
 				}
@@ -174,8 +189,10 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 				return 0
 			case "cpu":
 				return 1
-			default:
+			case "cpu-time":
 				return 2
+			default:
+				return 3
 			}
 		}
 		if rank(x.family) != rank(y.family) {
@@ -184,13 +201,13 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 		if x.priority != y.priority {
 			return x.priority < y.priority
 		}
-		if x.family == "cpu" && x.numeric != y.numeric {
+		if (x.family == "cpu" || x.family == "cpu-time") && x.numeric != y.numeric {
 			return x.numeric
 		}
 		if x.numeric && y.numeric && x.core != y.core {
 			return x.core < y.core
 		}
-		if x.family == "cpu" && !x.numeric && !y.numeric {
+		if (x.family == "cpu" || x.family == "cpu-time") && !x.numeric && !y.numeric {
 			a := x.widget.Question.Definition.Source.ExactStream.Attributes["cpu.logical_number"]
 			b := y.widget.Question.Definition.Source.ExactStream.Attributes["cpu.logical_number"]
 			if a != b {
@@ -208,7 +225,7 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 			defaults = append(defaults, c)
 			haveMemory = true
 		}
-		if c.family == "cpu" && !haveCPU {
+		if (c.family == "cpu" || c.family == "cpu-time") && !haveCPU {
 			defaults = append(defaults, c)
 			haveCPU = true
 		}

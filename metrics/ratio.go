@@ -63,6 +63,9 @@ func ValidateRatioPolicy(policy RatioPolicy) error {
 // EvaluateErrorRatios partitions at every observed endpoint. Only complete,
 // exactly aligned intervals are divided; it never prorates counts or fills gaps.
 func EvaluateErrorRatios(input CounterResult, policy RatioPolicy) (*RatioResult, error) {
+	if input.ValueDomain != "" {
+		return nil, fmt.Errorf("error ratios require integer count counters")
+	}
 	if e := ValidateRatioPolicy(policy); e != nil {
 		return nil, e
 	}

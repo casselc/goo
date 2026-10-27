@@ -141,3 +141,35 @@ func TestNativeRecordContextRejectsResourceBinding(t *testing.T) {
 		t.Fatal("resource measurement gained service context", e)
 	}
 }
+
+func TestHostCPUTimeExactIntervalContext(t *testing.T) {
+	s := metrics.Stream{Resource: map[string]string{"host.id": "host", "deployment.environment.name": "prod", "telemetry.sdk.language": "go"}, Scope: "hostmetrics", SchemaURL: measurements.HostMetricsSchema, Name: "system.cpu.time", Unit: "s", Attributes: map[string]string{"cpu.mode": "user", "cpu.logical_number": "0"}}
+	q := measurements.Question{Definition: measurements.Definition{APIVersion: measurements.Version, Name: "cpu-time", Title: "CPU activity", Kind: "counter", CounterDomain: metrics.DecimalCounterDomain, Environment: "prod", LookbackMinutes: 2, MaxGapMS: 60000, Grain: "per-stream", Source: measurements.Binding{Resource: &measurements.ResourceBinding{Kind: "host", ID: "host"}, Services: []string{}, Scope: s.Scope, SchemaURL: s.SchemaURL, Metric: s.Name, Unit: s.Unit, ExactStream: &s}}, FromMS: 1000, ToMS: 2000}
+	for _, signal := range []string{"logs", "spans"} {
+		p, e := PlanNativeRecordContext(q, s, signal, "1000000001", "1999999999")
+		if e != nil || len(p.Question.Where.All) != 3 || p.Question.Environment != "prod" {
+			t.Fatal(p, e)
+		}
+		if _, e := Compile(p.Question); e != nil {
+			t.Fatal(e)
+		}
+		record := map[Field]string{{Kind: "resource", Key: "host.id"}: "host", {Kind: "column", Key: "timestamp_ns"}: "1000000001"}
+		if !Match(p.Question.Where, record) {
+			t.Fatal("lower boundary missing")
+		}
+		record[Field{Kind: "column", Key: "timestamp_ns"}] = "1999999999"
+		if Match(p.Question.Where, record) {
+			t.Fatal("exclusive endpoint included")
+		}
+		record[Field{Kind: "column", Key: "timestamp_ns"}] = "1500000000"
+		record[Field{Kind: "resource", Key: "host.id"}] = "other"
+		if Match(p.Question.Where, record) {
+			t.Fatal("other host included")
+		}
+	}
+	bad := q
+	bad.Definition.CounterDomain = ""
+	if _, e := PlanNativeRecordContext(bad, s, "logs", "1000000001", "1999999999"); e == nil {
+		t.Fatal("legacy host gained interval context")
+	}
+}

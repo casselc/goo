@@ -19745,6 +19745,13 @@
           "apiVersion": {
             "type": "string"
           },
+          "counterDomain": {
+            "type": "string",
+            "enum": [
+              "nonnegative-decimal"
+            ],
+            "description": "Optional per-stream counter-only exact exported decimal domain. Omitted keeps integer counter semantics. Host authority requires this opt-in; pinned CPU-time defaults use cumulative seconds."
+          },
           "environment": {
             "type": "string"
           },
@@ -19825,6 +19832,20 @@
                 "type": "null"
               }
             ]
+          },
+          "counterDomain": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "enum": [
+              "nonnegative-decimal"
+            ],
+            "description": "Optional per-stream counter-only exact exported decimal domain. Omitted keeps integer counter semantics. Host authority requires this opt-in; pinned CPU-time defaults use cumulative seconds."
           },
           "environment": {
             "anyOf": [
@@ -23701,7 +23722,15 @@
       "metrics.CounterInterval": {
         "properties": {
           "delta": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 1024,
+            "description": "Exact canonical base-ten interval difference, present only for ok intervals. Decimal differences can be longer than individual input values."
+          },
+          "exactPerSecond": {
+            "type": "string",
+            "maxLength": 2048,
+            "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+            "description": "Reduced exact nonnegative rational rate for opted-in decimal counters, in source units per second. perSecond is its finite floating-point display approximation."
           },
           "fromNS": {
             "type": "string"
@@ -23738,6 +23767,16 @@
         "additionalProperties": false,
         "properties": {
           "delta": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "exactPerSecond": {
             "anyOf": [
               {
                 "type": "string"
@@ -23835,6 +23874,13 @@
           "toNS": {
             "type": "string"
           },
+          "valueDomain": {
+            "type": "string",
+            "enum": [
+              "nonnegative-decimal"
+            ],
+            "description": "Explicit bounded nonnegative decimal arithmetic. Omitted retains uint64 input/count semantics."
+          },
           "warnings": {
             "anyOf": [
               {
@@ -23858,7 +23904,8 @@
           "warnings"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/metrics.CounterResult"
+        "x-go-type": "github.com/casselc/goo/metrics.CounterResult",
+        "description": "Per-stream native counter intervals. Explicit decimal domain adds exact decimal deltas/rational rates; count ratios/fleet and window-comparison contracts do not accept that domain. Unknown intervals have no rate; resets, gaps, missing values and clipped boundaries are not interpolated."
       },
       "metrics.CounterResultInput": {
         "additionalProperties": false,
@@ -23914,6 +23961,16 @@
             ]
           },
           "toNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "valueDomain": {
             "anyOf": [
               {
                 "type": "string"

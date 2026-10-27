@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"math"
 	"math/big"
 	"sort"
 	"strconv"
@@ -31,18 +32,20 @@ type CounterPoint struct {
 	NoRecordedValue bool   `json:"noRecordedValue,omitempty"`
 }
 type CounterRequest struct {
-	FromNS   string         `json:"fromNS"`
-	ToNS     string         `json:"toNS"`
-	MaxGapNS string         `json:"maxGapNS"`
-	Points   []CounterPoint `json:"points"`
+	ValueDomain string         `json:"valueDomain,omitempty"`
+	FromNS      string         `json:"fromNS"`
+	ToNS        string         `json:"toNS"`
+	MaxGapNS    string         `json:"maxGapNS"`
+	Points      []CounterPoint `json:"points"`
 }
 type CounterInterval struct {
-	FromNS    string   `json:"fromNS"`
-	ToNS      string   `json:"toNS"`
-	State     string   `json:"state"`
-	Reason    string   `json:"reason,omitempty"`
-	Delta     string   `json:"delta,omitempty"`
-	PerSecond *float64 `json:"perSecond,omitempty"`
+	ExactPerSecond string   `json:"exactPerSecond,omitempty"`
+	FromNS         string   `json:"fromNS"`
+	ToNS           string   `json:"toNS"`
+	State          string   `json:"state"`
+	Reason         string   `json:"reason,omitempty"`
+	Delta          string   `json:"delta,omitempty"`
+	PerSecond      *float64 `json:"perSecond,omitempty"`
 }
 type CounterSeries struct {
 	Stream      Stream            `json:"stream"`
@@ -51,17 +54,18 @@ type CounterSeries struct {
 	Intervals   []CounterInterval `json:"intervals"`
 }
 type CounterResult struct {
-	APIVersion string          `json:"apiVersion"`
-	Basis      string          `json:"basis"`
-	FromNS     string          `json:"fromNS"`
-	ToNS       string          `json:"toNS"`
-	Series     []CounterSeries `json:"series"`
-	Warnings   []string        `json:"warnings"`
+	ValueDomain string          `json:"valueDomain,omitempty"`
+	APIVersion  string          `json:"apiVersion"`
+	Basis       string          `json:"basis"`
+	FromNS      string          `json:"fromNS"`
+	ToNS        string          `json:"toNS"`
+	Series      []CounterSeries `json:"series"`
+	Warnings    []string        `json:"warnings"`
 }
 type parsedPoint struct {
 	raw        CounterPoint
 	start, end int64
-	value      uint64
+	value      *big.Rat
 }
 
 func nano(s string) (int64, error) {
@@ -95,6 +99,24 @@ func rate(delta uint64, ns int64) float64 {
 // EvaluateCounters sorts late/out-of-order observations into a new result. It
 // never interpolates boundaries, bridges gaps or subtracts across counter epochs.
 func EvaluateCounters(request CounterRequest) (*CounterResult, error) {
+	return evaluateCounters(request, serviceObservationIdentity)
+}
+
+// EvaluateHostCounters is opt-in decimal authority, without synthetic services.
+func EvaluateHostCounters(request CounterRequest, hostID string) (*CounterResult, error) {
+	if err := validateHostObservationID(hostID); err != nil {
+		return nil, err
+	}
+	if request.ValueDomain != DecimalCounterDomain {
+		return nil, fmt.Errorf("host counters require explicit decimal domain")
+	}
+	return evaluateCounters(request, func(s Stream) bool { return s.Resource["host.id"] == hostID })
+}
+func evaluateCounters(request CounterRequest, validIdentity func(Stream) bool) (*CounterResult, error) {
+	if request.ValueDomain != "" && request.ValueDomain != DecimalCounterDomain {
+		return nil, fmt.Errorf("unsupported counter value domain")
+	}
+
 	from, e := nano(request.FromNS)
 	if e != nil {
 		return nil, e
@@ -112,7 +134,7 @@ func EvaluateCounters(request CounterRequest) (*CounterResult, error) {
 	}
 	groups := map[string][]parsedPoint{}
 	for _, p := range request.Points {
-		if p.Stream.Resource["service.name"] == "" || p.Stream.Resource["service.instance.id"] == "" || p.Stream.Scope == "" || p.Stream.Name == "" || p.Stream.Unit == "" {
+		if !validIdentity(p.Stream) || p.Stream.Scope == "" || p.Stream.Name == "" || p.Stream.Unit == "" {
 			return nil, fmt.Errorf("require explicit resource instance and instrumentation/name/unit identity")
 		}
 		if !p.Monotonic || (p.Temporality != "cumulative" && p.Temporality != "delta") {
@@ -126,12 +148,20 @@ func EvaluateCounters(request CounterRequest) (*CounterResult, error) {
 		if e != nil || end <= start {
 			return nil, fmt.Errorf("require startNS < endNS")
 		}
-		value := uint64(0)
+		value := new(big.Rat)
 		if !p.NoRecordedValue {
-			var e error
-			value, e = strconv.ParseUint(p.Value, 10, 64)
-			if e != nil || strconv.FormatUint(value, 10) != p.Value {
-				return nil, fmt.Errorf("require canonical uint64 counter value")
+			if request.ValueDomain == DecimalCounterDomain {
+				var err error
+				value, err = ParseCounterDecimal(p.Value)
+				if err != nil {
+					return nil, err
+				}
+			} else {
+				v, err := strconv.ParseUint(p.Value, 10, 64)
+				if err != nil || strconv.FormatUint(v, 10) != p.Value {
+					return nil, fmt.Errorf("require canonical uint64 counter value")
+				}
+				value.SetInt(new(big.Int).SetUint64(v))
 			}
 		}
 		p.Stream = cloneStream(p.Stream)
@@ -139,7 +169,7 @@ func EvaluateCounters(request CounterRequest) (*CounterResult, error) {
 		key := string(keyBytes)
 		groups[key] = append(groups[key], parsedPoint{p, start, end, value})
 	}
-	result := &CounterResult{APIVersion: "goo/counter-result/v1alpha1", FromNS: request.FromNS, ToNS: request.ToNS, Series: []CounterSeries{}, Warnings: []string{"Rates describe observed intervals, not sampling or ingestion completeness.", "No boundary interpolation, fleet aggregation, error ratio or durable custody is inferred."}}
+	result := &CounterResult{ValueDomain: request.ValueDomain, APIVersion: "goo/counter-result/v1alpha1", FromNS: request.FromNS, ToNS: request.ToNS, Series: []CounterSeries{}, Warnings: []string{"Rates describe observed intervals, not sampling or ingestion completeness.", "No boundary interpolation, fleet aggregation, error ratio or durable custody is inferred."}}
 	keys := []string{}
 	for k := range groups {
 		keys = append(keys, k)
@@ -173,7 +203,7 @@ func EvaluateCounters(request CounterRequest) (*CounterResult, error) {
 		}
 		series := CounterSeries{Stream: unique[0].raw.Stream, Temporality: unique[0].raw.Temporality, State: "no_data", Intervals: []CounterInterval{}}
 		tainted := false
-		appendInterval := func(start, end int64, delta uint64, reason string) {
+		appendInterval := func(start, end int64, delta *big.Rat, reason string) {
 			if end <= from || start >= to {
 				return
 			}
@@ -190,9 +220,22 @@ func EvaluateCounters(request CounterRequest) (*CounterResult, error) {
 			interval := CounterInterval{FromNS: strconv.FormatInt(clippedStart, 10), ToNS: strconv.FormatInt(clippedEnd, 10), State: "unknown", Reason: reason}
 			if reason == "" {
 				interval.State = "ok"
-				interval.Delta = strconv.FormatUint(delta, 10)
-				v := rate(delta, end-start)
-				interval.PerSecond = &v
+				interval.Delta = CounterDecimal(delta)
+				exact := new(big.Rat).Mul(delta, big.NewRat(1000000000, end-start))
+				v, _ := exact.Float64()
+				if request.ValueDomain == DecimalCounterDomain {
+					interval.ExactPerSecond = exact.RatString()
+					if math.IsInf(v, 0) || math.IsNaN(v) || v == 0 && exact.Sign() != 0 {
+						interval.State = "unknown"
+						interval.Reason = "unrepresentable-rate"
+						interval.Delta = ""
+						interval.ExactPerSecond = ""
+					} else {
+						interval.PerSecond = &v
+					}
+				} else {
+					interval.PerSecond = &v
+				}
 			}
 			series.Intervals = append(series.Intervals, interval)
 		}
@@ -216,12 +259,12 @@ func EvaluateCounters(request CounterRequest) (*CounterResult, error) {
 			}
 			prior := unique[i-1]
 			reason := ""
-			delta := uint64(0)
+			delta := new(big.Rat)
 			switch {
 			case p.start != prior.start:
 				reason = "counter-epoch-change"
 				tainted = false
-			case p.value < prior.value && !p.raw.NoRecordedValue && !prior.raw.NoRecordedValue:
+			case p.value.Cmp(prior.value) < 0 && !p.raw.NoRecordedValue && !prior.raw.NoRecordedValue:
 				reason = "counter-decrease"
 				tainted = true
 			case tainted:
@@ -231,7 +274,7 @@ func EvaluateCounters(request CounterRequest) (*CounterResult, error) {
 			case p.end-prior.end > gap:
 				reason = "excessive-gap"
 			default:
-				delta = p.value - prior.value
+				delta.Sub(p.value, prior.value)
 			}
 			appendInterval(prior.end, p.end, delta, reason)
 		}
@@ -252,8 +295,14 @@ func EvaluateCounters(request CounterRequest) (*CounterResult, error) {
 		}
 		result.Series = append(result.Series, series)
 	}
-	payload, _ := json.Marshal(CounterRequest{FromNS: request.FromNS, ToNS: request.ToNS, MaxGapNS: request.MaxGapNS, Points: canonical})
+	payload, _ := json.Marshal(CounterRequest{ValueDomain: request.ValueDomain, FromNS: request.FromNS, ToNS: request.ToNS, MaxGapNS: request.MaxGapNS, Points: canonical})
 	sum := sha256.Sum256(payload)
 	result.Basis = hex.EncodeToString(sum[:])
+	if request.ValueDomain == DecimalCounterDomain {
+		encoded, err := json.Marshal(result)
+		if err != nil || len(encoded) > 8<<20 {
+			return nil, fmt.Errorf("decimal counter result exceeds 8 MiB; no partial result")
+		}
+	}
 	return result, nil
 }
