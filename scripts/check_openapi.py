@@ -291,7 +291,7 @@ def check_host_observed(spec,path):
     print('Host API workflow: 8 real handler responses conform; host-only gauge/stock execution and offline exact reopen pass')
 
 
-def check_pod_state_observed(spec, path):
+def check_state_observed(spec, path, profile, label):
     cases = json.loads(Path(path).read_text())
     assert [(c['method'], c['path'], c['status']) for c in cases] == [
         ('POST', '/measurements', 200), ('POST', '/captures', 201),
@@ -303,10 +303,23 @@ def check_pod_state_observed(spec, path):
             validator(spec, op['requestBody']['content']['application/json']['schema']).validate(case['request'])
     result = cases[0]['response']
     assert result['question']['definition']['kind'] == 'state'
-    assert result['states']['series'][0]['samples'][0]['label'] == 'Unknown'
+    assert result['question']['definition']['stateProfile'] == profile
+    assert result['states']['series'][0]['samples'][0]['label'] == label
     assert result['state'] == 'observed'
     assert cases[1]['response']['measurement'] == cases[2]['response']['measurement']
-    print('Pod-state API: 4 actual handler responses conform; captured phase reopens unchanged')
+    print('State API: 4 actual handler responses conform; captured state reopens unchanged')
+
+
+def check_pod_state_observed(spec, path):
+    check_state_observed(spec, path, 'k8scluster-pod-phase/0.137.0', 'Unknown')
+
+
+def check_container_state_observed(spec, path):
+    check_state_observed(spec, path, 'k8scluster-container-ready/0.137.0', 'Not ready')
+    cases = json.loads(Path(path).read_text())
+    result = cases[0]['response']
+    assert result['question']['definition']['source']['resource']['kind'] == 'kubernetes-container'
+    assert result['states']['series'][0]['samples'][0]['code'] == 0
 
 
 def check_pod_phase_discovery_observed(spec, path):
@@ -342,6 +355,7 @@ if __name__ == '__main__':
     parser.add_argument('--pool-signals-observations')
     parser.add_argument('--host-observations')
     parser.add_argument('--pod-state-observations')
+    parser.add_argument('--container-state-observations')
     parser.add_argument('--pod-phase-discovery-observations')
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
@@ -368,3 +382,6 @@ if __name__ == '__main__':
 
     if args.pod_phase_discovery_observations:
         check_pod_phase_discovery_observed(spec,args.pod_phase_discovery_observations)
+
+    if args.container_state_observations:
+        check_container_state_observed(spec,args.container_state_observations)

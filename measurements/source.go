@@ -247,10 +247,14 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 	hs := []metrics.HistogramPoint{}
 	ss := []metrics.StockPoint{}
 	d := q.Definition
-	for _, raw := range copied {
+	for rowIndex, raw := range copied {
 		if d.Kind == "state" {
+			validationRaw := raw
+			if d.StateProfile == metrics.ContainerReadyProfile {
+				validationRaw = rows[rowIndex]
+			}
 			var fields map[string]json.RawMessage
-			if err := json.Unmarshal(raw, &fields); err != nil {
+			if err := json.Unmarshal(validationRaw, &fields); err != nil {
 				return nil, err
 			}
 			for _, key := range []string{"resource_schema_url", "scope", "version", "schema_url", "name", "unit"} {
@@ -258,6 +262,26 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 				var known string
 				if !exists || string(value) == "null" || json.Unmarshal(value, &known) != nil {
 					return nil, fmt.Errorf("state source requires known string %s", key)
+				}
+			}
+			if d.StateProfile == metrics.ContainerReadyProfile {
+				// Empty maps and a zero flag are reported values, not defaults
+				// for absent/null source fields at this new authority boundary.
+				for _, key := range []string{"resource", "attributes"} {
+					var labels map[string]json.RawMessage
+					if json.Unmarshal(fields[key], &labels) != nil || labels == nil {
+						return nil, fmt.Errorf("readiness source requires known %s map", key)
+					}
+					for _, value := range labels {
+						if len(value) == 0 || value[0] != '"' {
+							return nil, fmt.Errorf("readiness source requires string labels")
+						}
+					}
+				}
+				var flags uint32
+				value, exists := fields["flags"]
+				if !exists || string(value) == "null" || json.Unmarshal(value, &flags) != nil {
+					return nil, fmt.Errorf("readiness source requires reported flags")
 				}
 			}
 		}
@@ -295,8 +319,9 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 					return nil, fmt.Errorf("invalid numeric observation")
 				}
 			}
-			if d.Kind == "state" && !missing && value >= 1 && value <= 5 && math.Trunc(value) == value {
-				// A raw fractional decimal must not round into a supported phase.
+			_, supportedStateCode := metrics.StateCodeLabel(d.StateProfile, value)
+			if d.Kind == "state" && !missing && supportedStateCode {
+				// A raw fractional decimal must not round into a supported state.
 				if len(row.Value) > 128 || strings.ContainsAny(row.Value, "xXpP/") {
 					return nil, fmt.Errorf("state code requires a bounded decimal")
 				}
@@ -347,7 +372,11 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 	fromNS, toNS := q.BoundsNS()
 	switch d.Kind {
 	case "state":
-		r.States, e = metrics.EvaluatePodPhases(fromNS, toNS, ns(d.MaxGapMS), d.Source.Resource.ID, gs)
+		if d.StateProfile == metrics.ContainerReadyProfile {
+			r.States, e = metrics.EvaluateContainerReadiness(fromNS, toNS, ns(d.MaxGapMS), d.Source.Resource.ID, gs)
+		} else {
+			r.States, e = metrics.EvaluatePodPhases(fromNS, toNS, ns(d.MaxGapMS), d.Source.Resource.ID, gs)
+		}
 	case "stock":
 		if d.Source.Resource != nil {
 			r.Stocks, e = metrics.EvaluateHostStocks(fromNS, toNS, ns(d.MaxGapMS), d.Source.Resource.ID, ss)

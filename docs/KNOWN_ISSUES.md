@@ -1,5 +1,10 @@
 # Known issues and gaps
 
+[Container readiness](CONTAINER_READINESS.md) has an exact reported-ID native
+execution/capture prerequisite in source. Discovery/UI and ordinary OTLP/browser
+acceptance remain open; the running lab is unchanged. A reported status does not
+establish probe existence, pod health or complete container inventory.
+
 [Pod memory observations](POD_METRICS.md) require a known retained resource-schema
 string, full exact resource/stream identity and a reported pod UID. Trace-schema
 null cannot admit native lookup. Automatic profiles are pinned kubeletstats

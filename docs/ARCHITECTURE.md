@@ -1050,3 +1050,12 @@ categorical comparison is explicitly unsupported. Discovery and presentation now
 passive categorical display separated from the pinned application decoder. Live
 acceptance is tracked in the phase contract; the earlier API-level scope is recorded in the
 [API-level storyboard](../journeys/203b-pod-state-contract-storyboard.md).
+
+
+[Container readiness](CONTAINER_READINESS.md) extends the existing native state
+path with a real reported container-ID authority. Required pod UID/container-name
+context remains in the exact resource; no synthetic service or composite ID is
+introduced. A private shared quality kernel separates pinned domain decoding
+from stale/missing/conflicting data. Source decimal validation certifies both
+supported codes, including zero. This API prerequisite is not discovery/UI or
+live receiver acceptance.

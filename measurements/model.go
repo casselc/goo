@@ -36,6 +36,8 @@ func (r ResourceBinding) AttributeKey() string {
 		return "host.id"
 	case "kubernetes-pod":
 		return "k8s.pod.uid"
+	case "kubernetes-container":
+		return "container.id"
 	}
 	return ""
 }
@@ -124,11 +126,26 @@ func text(s string, max int) bool {
 }
 func (d Definition) Validate() error {
 	if d.Kind == "state" {
-		if d.StateProfile != metrics.PodPhaseProfile || d.Source.Resource == nil || d.Source.Resource.Kind != "kubernetes-pod" || d.Source.ExactStream == nil {
-			return fmt.Errorf("state requires pinned pod-phase profile and exact pod resource authority")
+		if d.Source.Resource == nil || d.Source.ExactStream == nil {
+			return fmt.Errorf("state requires exact resource authority")
 		}
-		if err := metrics.ValidatePodPhaseStream(*d.Source.ExactStream); err != nil {
-			return err
+		switch d.StateProfile {
+		case metrics.PodPhaseProfile:
+			if d.Source.Resource.Kind != "kubernetes-pod" {
+				return fmt.Errorf("phase requires pod authority")
+			}
+			if err := metrics.ValidatePodPhaseStream(*d.Source.ExactStream); err != nil {
+				return err
+			}
+		case metrics.ContainerReadyProfile:
+			if d.Source.Resource.Kind != "kubernetes-container" {
+				return fmt.Errorf("readiness requires container authority")
+			}
+			if err := metrics.ValidateContainerReadyStream(*d.Source.ExactStream); err != nil {
+				return err
+			}
+		default:
+			return fmt.Errorf("unsupported state profile")
 		}
 	} else if d.StateProfile != "" {
 		return fmt.Errorf("stateProfile requires state kind")
@@ -164,6 +181,16 @@ func (d Definition) Validate() error {
 		} else if r.Kind == "kubernetes-pod" {
 			if r.ID == "" || !text(r.ID, 512) || (d.Kind != "gauge" && d.Kind != "state") || len(d.Source.Services) != 0 || d.Source.Namespace != nil || d.Source.ExactStream == nil || d.Grain != "per-stream" {
 				return fmt.Errorf("pod resource binding requires gauge or state, exact stream, per-stream grain and no service or namespace selector")
+			}
+		} else if r.Kind == "kubernetes-container" {
+			if r.ID == "" || !text(r.ID, 512) || d.Kind != "state" || d.StateProfile != metrics.ContainerReadyProfile || len(d.Source.Services) != 0 || d.Source.Namespace != nil || d.Source.ExactStream == nil || d.Grain != "per-stream" {
+				return fmt.Errorf("container authority requires exact per-stream readiness state and no service or namespace selectors")
+			}
+			for _, key := range []string{"k8s.pod.uid", "k8s.container.name"} {
+				value := d.Source.ExactStream.Resource[key]
+				if value == "" || !text(value, 512) {
+					return fmt.Errorf("container authority requires reported %s", key)
+				}
 			}
 		} else {
 			return fmt.Errorf("host resource binding requires gauge or stock, exact stream, per-stream grain and no service or namespace selector")
@@ -291,11 +318,11 @@ func Read(text string) (Definition, error) {
 	if dec.Decode(new(any)) != io.EOF {
 		return d, fmt.Errorf("one YAML document required")
 	}
-	// Authoring canonicalization is confined to explicit host/pod YAML input.
+	// Authoring canonicalization is confined to explicit resource YAML input.
 	// Publishing emits an empty services sequence; normalize it before hashing
 	// so omitted/null inputs reopen with the same package identity. Direct JSON
 	// questions and frozen results retain their original nil/empty distinction.
-	if d.Source.Resource != nil && (d.Source.Resource.Kind == "host" || d.Source.Resource.Kind == "kubernetes-pod") {
+	if d.Source.Resource != nil && (d.Source.Resource.Kind == "host" || d.Source.Resource.Kind == "kubernetes-pod" || d.Source.Resource.Kind == "kubernetes-container") {
 		if d.Source.Services == nil {
 			d.Source.Services = []string{}
 		}

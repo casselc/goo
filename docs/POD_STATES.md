@@ -127,3 +127,9 @@ See the [actual storyboard and frames](../journeys/203c-pod-phase-storyboard.md)
 and [compact evidence receipt](evidence/pod-phase-203c.json) for exact costs,
 capture/frame digests and limits. Readiness still requires its own container-grain
 contract; no pod-health alias is introduced.
+
+
+The next [container readiness contract](CONTAINER_READINESS.md) now has a native
+identity/decoder/API prerequisite. It uses actual container.id plus reported pod
+UID/container-name context, not pod authority. Discovery/UI and live acceptance
+remain separate work; it is not a pod-readiness or health alias.

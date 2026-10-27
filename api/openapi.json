@@ -18463,7 +18463,7 @@
           },
           "stateProfile": {
             "type": "string",
-            "description": "Required only for kind state: k8scluster-pod-phase/0.137.0. Exact pod-resource unitless receiver gauge; no numeric arithmetic or health inference."
+            "description": "Required only for kind state: pinned k8scluster-pod-phase/0.137.0 or k8scluster-container-ready/0.137.0 with matching exact resource authority. Unitless receiver gauges; no numeric arithmetic, probe-existence or health inference."
           },
           "stockDomain": {
             "type": "string",
@@ -18614,7 +18614,7 @@
                 "type": "null"
               }
             ],
-            "description": "Required only for kind state: k8scluster-pod-phase/0.137.0. Exact pod-resource unitless receiver gauge; no numeric arithmetic or health inference."
+            "description": "Required only for kind state: pinned k8scluster-pod-phase/0.137.0 or k8scluster-container-ready/0.137.0 with matching exact resource authority. Unitless receiver gauges; no numeric arithmetic, probe-existence or health inference."
           },
           "stockDomain": {
             "anyOf": [
@@ -21362,13 +21362,14 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 512,
-            "description": "Exact reported host.id or k8s.pod.uid for the selected resource kind; never a name or manufactured service/instance identity."
+            "description": "Exact reported host.id, k8s.pod.uid or container.id for the selected resource kind; never a name, normalized runtime ID or manufactured service/instance identity."
           },
           "kind": {
             "type": "string",
             "enum": [
               "host",
-              "kubernetes-pod"
+              "kubernetes-pod",
+              "kubernetes-container"
             ]
           }
         },
@@ -21396,7 +21397,8 @@
             "type": "string",
             "enum": [
               "host",
-              "kubernetes-pod"
+              "kubernetes-pod",
+              "kubernetes-container"
             ]
           }
         },
@@ -24038,7 +24040,9 @@
               "Running",
               "Succeeded",
               "Failed",
-              "Unknown"
+              "Unknown",
+              "Not ready",
+              "Ready"
             ]
           },
           "reason": {

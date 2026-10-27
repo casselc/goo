@@ -2526,3 +2526,32 @@ GOO_POD_PHASE_LEDGER=/workspace/goo/artifacts/pod-phase/pod-phase-0313f9b522/led
 GOO_POD_PHASE_OWNER_LEDGER=/workspace/goo/artifacts/pod-phase/pod-phase-a272d10e81/ownership.json \
 go test -run '^TestPodPhase(Observed|OwnershipObserved)$' -v .
 ```
+
+### Container-readiness native prerequisite (204a)
+
+`TestHegelContainerReadinessAuthorityAndZeroQuality` exercises 60 reported
+container IDs/codes/freshness combinations. Codes 0/1 map to observed Not ready/
+Ready independently of stale quality; unsupported values remain raw. Replacement
+IDs with the same pod/name are rejected, as are tiny nonzero decimals rounding
+to zero and invented Healthy pod labels. The table tests add conflict/missing/
+empty-source cases, resource-schema separation, literal ID preservation, wrong
+profiles and scalar-unit isolation. This uses native source/evaluation contracts,
+not actual collector ingestion or a browser readiness journey.
+
+The new property plus existing pod-state quality/replay properties pass together
+in 0.393s. After sharing the private categorical kernel,
+`TestPodPhaseObserved` replays the prior accepted ordinary-source main ledger and
+its twelve rejecting controls in 0.505s. It performs no telemetry requests or
+browser repetition and preserves the previously captured phase bytes/semantics.
+No new Quint model is claimed for this pure decoder/source-authority prerequisite.
+
+With the established cache/toolchain environment, run from this module:
+
+```sh
+go test -run 'TestHegel(ContainerReadiness|PodState)' -count=1 .
+GOO_POD_PHASE_LEDGER=/workspace/goo/artifacts/pod-phase/pod-phase-0313f9b522/ledger.json \
+go test -run '^TestPodPhaseObserved$' -count=1 .
+```
+
+Discovery, UI and real ordinary OTLP/ownership/actor validation remain the next
+slice. The running lab and its actual 203c screenshots are unchanged.

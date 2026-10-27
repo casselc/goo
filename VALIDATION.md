@@ -11802,3 +11802,74 @@ retained-owner semantics. Ordinary OTLP and independent raw controls complement
 the source/Hegel/API gates. Normal diagnostic retention removed only expired
 browser recordings; current full capture copies and initial actor/observer traces
 remain. Exact task binary/helpers/tar were removed, and traffic/data were preserved.
+
+## 204a — reported container authority and readiness API prerequisite
+
+Pinned Contrib v0.137.0 metadata and actual pod/container emitters were read from
+upstream before implementation. Ready is an empty-unit integer gauge recorded
+from ContainerStatus.Ready, with reported container.id, pod UID and container name.
+The emitter strips runtime prefixes and omits empty-ID statuses; goo consumes
+reported IDs verbatim, never repeats that normalization or synthesizes an ID.
+A reported Ready does not establish that a probe exists or that a pod is healthy.
+Links and exact scope are in [the contract](docs/CONTAINER_READINESS.md) and
+[API storyboard](journeys/204a-container-readiness-storyboard.md).
+
+Added state-only exact container authority, pinned readiness profile and shared
+private categorical quality/decode kernel. Supported 0/1 labels remain separate
+from observed/stale/unknown quality; unsupported, conflicting, missing and empty
+source remain distinct. Source precision checks now use supported profile/code
+membership, including zero: tiny nonzero decimals cannot round into Not ready.
+Existing scalar units, pod authority/profile, full raw resource/schema/attribute
+isolation, row budgets and comparison refusal remain unchanged. YAML source
+canonicalization extends only to the explicit new resource kind.
+
+Affected suites pass: metrics 0.329s, measurements 0.499s, exploration 1.470s,
+cmd/goo 1.308s. Focused readiness/phase tests passed before these; new actual-handler
+execute/capture/reopen test passes in 0.021s. It uses the real handlers/compiler/
+evaluator and temporary filesystem custody with a controlled dependency
+transport: exactly two source reads (execute and fresh capture), then a fresh
+offline handler reopens with zero source reads and full stored bytes unchanged.
+Code 0 remains observed Not ready, comparison refuses state arithmetic, and an
+unsupported profile fails before source access. No actual collector/browser or
+real ClickHouse outage is claimed by this API-level test.
+
+Hegel's new 60-case container identity/code/freshness property plus prior phase
+quality/replay properties pass together in 0.393s. Replacement-ID, decimal-underflow
+and invented-label controls are rejected. The prior accepted pod-phase actual
+raw/custody oracle and its twelve controls replay source-free in 0.505s after the
+kernel refactor; the existing browser evidence is not recaptured or changed.
+OpenAPI remains 87 operations / 495 schemas, with additive container kind/readiness
+labels/profile descriptions. Full validation passes 80 Go operations, 395 fixture
+responses, 144 admitted requests, 25 mux refusals and existing negative/SSE controls;
+four new actual-handler responses conform and capture/reopen equality passes.
+Existing frozen fixtures are unchanged.
+
+Independent design and implementation reviews approve with no blockers. The
+review specifically required exact decimal validation of supported zero and
+verbatim IDs; both are implemented and tested. The reviewer ran no builds/tests.
+Initial sandbox curl could not reach the session proxy; supported escalation
+retrieved the pinned public files. One guessed singular upstream container file
+path returned 404; the actual plural containers.go was read. No product test
+failure or assertion relaxation was needed.
+
+This is source/API-only work. The running lab remains on accepted 203c; no UI,
+browser, image, deployment, new Quint model, container inventory or health claim
+is introduced. Existing frames remain accurate. Discovery/planning/native UI and
+ordinary OTLP/browser/owner/actor/raw-custody acceptance precede deployment of the
+combined container feature.
+
+Final review also tightened only the new readiness raw-source boundary: resource/
+attribute maps and uint32 flags must be reported and non-null, and label values
+must be strings. Missing flags cannot silently become zero, and null dimensions
+cannot become known-empty labels. New rejecting cases cover those distinctions;
+phase/legacy parser behavior is unchanged. A literal runtime-prefixed reported
+ID is preserved verbatim by execution and query parameters (focused check 0.053s).
+
+Final readiness raw-field checks inspect the original row representation so JSON
+number canonicalization cannot turn fractional flags into uint32 zero/one.
+Missing/null map/flag and fractional/underflow flag controls pass, alongside the
+new handler/custody path (final focused measurements 0.021s, HTTP 0.015s).
+The new readiness Hegel property also passes separately in 0.075s after the map/
+flag guard; no additional browser or deployment campaign ran.
+
+Final read-only review confirms the original-token flag guard and approves the complete API prerequisite. All 998 changed-document local links resolve; formatting and diff checks pass.

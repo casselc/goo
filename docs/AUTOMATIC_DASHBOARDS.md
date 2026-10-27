@@ -359,3 +359,20 @@ Remaining family work needs explicit contracts: container-grain identity before
 readiness, then separately scoped ownership facts, CPU/request-limit calculations,
 resource changes and workload rollups. Generic live-update focus preservation is
 also follow-on work; current retained app Back focus is already verified.
+
+
+### C2d — container identity/readiness native prerequisite (204a)
+
+[Container readiness](CONTAINER_READINESS.md) now has exact reported-container-ID
+state authority and existing API execution/capture/replay. Required reported pod
+UID/container-name context and full resource/schema isolation distinguish names,
+restarts and resource variants. The pinned unitless receiver gauge maps 0/1 to
+Not ready/Ready independently of observation quality; exact decimal validation
+prevents underflow from manufacturing false readiness. Pod phase shares the
+private quality kernel while preserving its prior results and scalar unit rules.
+
+This is the native/API prerequisite, not a deployed container dashboard. Next:
+container-variant discovery/planning and native UI integration, then ordinary
+OTLP/browser/owner/actor/raw-custody acceptance before deployment. No pod-health,
+probe-existence or complete inventory claim is introduced. Ownership facts,
+requests/limits and workload rollups remain separately scoped family work.

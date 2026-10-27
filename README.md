@@ -324,3 +324,9 @@ quality. Pinned phase discovery now feeds a compact categorical pod/native view;
 memory keeps its default read budget and phase can be selected explicitly.
 [Journey 203c](journeys/203c-pod-phase-storyboard.md) records actual OTLP/browser,
 owner/actor/raw-custody acceptance and compact desktop/mobile frames.
+
+
+The [container-readiness native prerequisite](docs/CONTAINER_READINESS.md) adds
+exact reported container identity and pinned Ready/Not ready observations to
+source/API execution and individual capture/replay. Discovery/UI and live
+acceptance remain the next slice; the running lab is unchanged.

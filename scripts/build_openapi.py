@@ -44,12 +44,12 @@ stock_sample['properties']['atNS']['pattern']='^(0|[1-9][0-9]*)$'
 stock_sample['allOf']=[{'if':{'properties':{'state':{'enum':['observed','stale']}},'required':['state']},'then':{'required':['value']}},{'if':{'properties':{'state':{'const':'unknown'}},'required':['state']},'then':{'not':{'required':['value']}}}]
 # Categorical native states preserve observation quality separately from domain codes.
 for name in ('measurements.Definition','measurements.DefinitionInput'):
- schemas[name]['properties']['stateProfile']['description']='Required only for kind state: k8scluster-pod-phase/0.137.0. Exact pod-resource unitless receiver gauge; no numeric arithmetic or health inference.'
+ schemas[name]['properties']['stateProfile']['description']='Required only for kind state: pinned k8scluster-pod-phase/0.137.0 or k8scluster-container-ready/0.137.0 with matching exact resource authority. Unitless receiver gauges; no numeric arithmetic, probe-existence or health inference.'
 schemas['metrics.StateResult']['description']='Exact-stream categorical observations. state is observation quality; codeState is supported/unsupported domain decoding. Fresh reported phase Unknown is observed. Unsupported finite codes retain raw code and quality without a label.'
 for name in ('metrics.StateSample','metrics.StateSeries'):
  schemas[name]['properties']['state']['enum']=['observed','stale','unknown']
 schemas['metrics.StateSample']['properties']['codeState']['enum']=['supported','unsupported']
-schemas['metrics.StateSample']['properties']['label']['enum']=['Pending','Running','Succeeded','Failed','Unknown']
+schemas['metrics.StateSample']['properties']['label']['enum']=['Pending','Running','Succeeded','Failed','Unknown','Not ready','Ready']
 # stockDomain is optional; legacy generic stocks keep signed fractional semantics.
 for name in ('measurements.Definition','measurements.DefinitionInput'):
  schemas[name]['properties']['stockDomain']['description']='Optional stock-only nonnegative-integer policy. Recorded values must be integers >=0 and <2^53; missing-value flags remain unknown. Empty/omitted keeps generic signed finite fractional stock semantics.'
@@ -72,9 +72,9 @@ util=schemas['measurements.PoolViewUtilization'];util['properties']['state']['en
 util['properties']['numerator']['pattern']='^(0|[1-9][0-9]*)$';util['properties']['denominator']['pattern']='^[1-9][0-9]*$'
 util['allOf']=[{'if':{'properties':{'state':{'const':'observed'}},'required':['state']},'then':{'required':['numerator','denominator']},'else':{'not':{'anyOf':[{'required':['numerator']},{'required':['denominator']}]}}}]
 evidence=schemas['measurements.PoolViewEvidence']['properties'];evidence['basis']['pattern']='^[a-f0-9]{64}$';evidence['readAt']['format']='date-time'
-schemas['measurements.ResourceBinding']['properties']['kind']['enum']=['host','kubernetes-pod']
-schemas['measurements.ResourceBindingInput']['properties']['kind']={'type':'string','enum':['host','kubernetes-pod']}
-schemas['measurements.ResourceBinding']['properties']['id'].update({'minLength':1,'maxLength':512,'description':'Exact reported host.id or k8s.pod.uid for the selected resource kind; never a name or manufactured service/instance identity.'})
+schemas['measurements.ResourceBinding']['properties']['kind']['enum']=['host','kubernetes-pod','kubernetes-container']
+schemas['measurements.ResourceBindingInput']['properties']['kind']={'type':'string','enum':['host','kubernetes-pod','kubernetes-container']}
+schemas['measurements.ResourceBinding']['properties']['id'].update({'minLength':1,'maxLength':512,'description':'Exact reported host.id, k8s.pod.uid or container.id for the selected resource kind; never a name, normalized runtime ID or manufactured service/instance identity.'})
 host=schemas['measurements.HostDiscovery']['properties'];host['version']['const']='goo/host-discovery/v1';host['hosts']['anyOf'][0]['maxItems']=100
 schemas['measurements.HostDiscovery']['description']='One bounded host-bearing metadata read over gauge/sum/histogram tables. Raw full resource maps/schemas remain separate identities. Unidentified source rows are not queried/countable; decoder missingHostIDRecords does not establish source absence. Metadata is not health/completeness.'
 for name in ('records','missingHostIDRecords','hostsOmitted'):host[name]['minimum']=0
