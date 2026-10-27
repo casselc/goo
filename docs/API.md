@@ -971,6 +971,6 @@ exact exported decimal subtraction; omission retains integer behavior. Its
 Unknown intervals carry no arithmetic. Decimal results refuse above 8 MiB, with
 1,024-byte deltas and 2,048-byte exact-rate schema bounds. Count/fleet and whole
 window comparison contracts remain separate. The first default is pinned host
-`system.cpu.time` cumulative monotonic seconds. Eight real mux observations cover
-execution, capture/offline reopen and four original-source refusals; validate with
+`system.cpu.time` cumulative monotonic seconds. Nine real mux observations cover
+execution, capture/offline reopen and five source/profile refusals; validate with
 `check_openapi.py --cpu-time-observations PATH`. See [contract](CPU_TIME_RATES.md).

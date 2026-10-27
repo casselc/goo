@@ -1,6 +1,7 @@
 # Fractional counter rates and host CPU activity
 
-Milestone 211 is source-reviewed; live acceptance is pending.
+Milestone 211 is implemented and accepted with live OTLP/ClickHouse journeys,
+held-response checks, Bombadil, Hegel properties and independent raw/Quint checks.
 
 ## Explicit arithmetic domain
 
@@ -36,7 +37,9 @@ Individual native capture and offline replay use the existing format.
 
 Host `system.cpu.time`, unit `s`, monotonic cumulative sum, under the pinned
 [OTel v1.37 system conventions](https://github.com/open-telemetry/semantic-conventions/blob/v1.37.0/docs/system/system-metrics.md)
-opts into the decimal domain. Full host resource/schema, scope/version/schema,
+opts into the decimal domain. A later delta export in this pinned profile is
+refused explicitly; the generic decimal kernel separately supports delta
+intervals. Full host resource/schema, scope/version/schema,
 metric/unit and point attributes remain exact. It needs no fabricated service or
 instance labels. Logical CPUs and reported modes remain separate streams.
 
@@ -74,4 +77,7 @@ flowchart LR
  F --> J[Existing individual capture and offline replay]
 ```
 
-[Journey 211](../journeys/211-cpu-time-storyboard.md) tracks live acceptance.
+[Journey 211](../journeys/211-cpu-time-storyboard.md) records acceptance.
+
+[Machine-readable evidence](evidence/cpu-time-211.json) separates actual runs,
+profile-guard followup, source effects and proof limitations.

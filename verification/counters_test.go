@@ -8,6 +8,7 @@ import (
 	"github.com/casselc/observability/quintgo/qobs"
 	"github.com/casselc/observability/quintgo/validate"
 	"hegel.dev/go/hegel"
+	"math/big"
 	"os"
 	"strconv"
 	"testing"
@@ -75,35 +76,71 @@ func TestHegelCounterStateSwarm(t *testing.T) {
 		hegel.RunStateful(tc, m, hegel.WithStatefulStepCount(30), hegel.WithAlwaysCheckInvariants("InvariantNoInventedRate"))
 	}, options(100)...)
 }
-func TestQuintObservedCounterEpochs(t *testing.T) {
+func TestQuintObservedCounterEpochs(t *testing.T)        { testQuintObservedCounterEpochs(t, false) }
+func TestQuintObservedDecimalCounterEpochs(t *testing.T) { testQuintObservedCounterEpochs(t, true) }
+
+// The existing integer model uses tenths as its explicit model units when the
+// observed evaluator uses decimal values. No Float64 coercion enters the binding.
+func testQuintObservedCounterEpochs(t *testing.T, decimal bool) {
+	domain, prefix := "", ""
+	makePoint := cp
+	parseDelta := func(value string) int64 {
+		v, e := strconv.ParseInt(value, 10, 64)
+		if e != nil {
+			t.Fatal(e)
+		}
+		return v
+	}
+	if decimal {
+		domain = metrics.DecimalCounterDomain
+		prefix = "decimal-"
+		makePoint = func(start, end, value int64) metrics.CounterPoint {
+			p := cp(start, end, value)
+			p.Value = metrics.CounterDecimal(big.NewRat(value, 10))
+			p.Stream.Unit = "s"
+			return p
+		}
+		parseDelta = func(value string) int64 {
+			r, ok := new(big.Rat).SetString(value)
+			if !ok {
+				t.Fatal("invalid observed decimal delta")
+			}
+			r.Mul(r, big.NewRat(10, 1))
+			if !r.IsInt() || !r.Num().IsInt64() {
+				t.Fatal("model units lost exactness")
+			}
+			return r.Num().Int64()
+		}
+	}
+
 	sink := &qobs.MemorySink{}
 	rec := qobs.NewRecorder(sink, qobs.WithActor("counter"), qobs.WithProcess("fixture"))
-	points := []metrics.CounterPoint{cp(1, 10, 5)}
+	points := []metrics.CounterPoint{makePoint(1, 10, 5)}
 	for _, step := range []struct {
 		action string
 		point  metrics.CounterPoint
 		from   int64
-	}{{"increase", cp(1, 20, 8), 10}, {"restart", cp(21, 30, 2), 20}, {"increase", cp(21, 40, 4), 30}, {"gap", cp(21, 70, 9), 40}} {
+	}{{"increase", makePoint(1, 20, 8), 10}, {"restart", makePoint(21, 30, 2), 20}, {"increase", makePoint(21, 40, 4), 30}, {"gap", makePoint(21, 70, 9), 40}} {
 		points = append(points, step.point)
-		r, err := metrics.EvaluateCounters(metrics.CounterRequest{FromNS: fmt.Sprint(step.from), ToNS: step.point.EndNS, MaxGapNS: "10", Points: points})
+		r, err := metrics.EvaluateCounters(metrics.CounterRequest{ValueDomain: domain, FromNS: fmt.Sprint(step.from), ToNS: step.point.EndNS, MaxGapNS: "10", Points: points})
 		if err != nil {
 			t.Fatal(err)
 		}
 		known := r.Series[0].State == "ok"
 		delta := int64(-1)
 		if known {
-			delta, _ = strconv.ParseInt(r.Series[0].Intervals[0].Delta, 10, 64)
+			delta = parseDelta(r.Series[0].Intervals[0].Delta)
 		}
 		rec.Record(context.Background(), step.action, nil, "obs.known", known, "obs.delta", delta)
 	}
-	points = append(points, cp(21, 50, 6), cp(21, 60, 8))
-	repaired, err := metrics.EvaluateCounters(metrics.CounterRequest{FromNS: "40", ToNS: "70", MaxGapNS: "10", Points: points})
+	points = append(points, makePoint(21, 50, 6), makePoint(21, 60, 8))
+	repaired, err := metrics.EvaluateCounters(metrics.CounterRequest{ValueDomain: domain, FromNS: "40", ToNS: "70", MaxGapNS: "10", Points: points})
 	if err != nil {
 		t.Fatal(err)
 	}
 	delta := int64(0)
 	for _, interval := range repaired.Series[0].Intervals {
-		d, _ := strconv.ParseInt(interval.Delta, 10, 64)
+		d := parseDelta(interval.Delta)
 		delta += d
 	}
 	rec.Record(context.Background(), "late_repair", nil, "obs.known", repaired.Series[0].State == "ok", "obs.delta", delta)
@@ -119,7 +156,7 @@ func TestQuintObservedCounterEpochs(t *testing.T) {
 	if !report.OK() {
 		t.Fatal(report.Summary())
 	}
-	if err = artifact("counter-validation.txt", []byte(report.Summary())); err != nil {
+	if err = artifact(prefix+"counter-validation.txt", []byte(report.Summary())); err != nil {
 		t.Fatal(err)
 	}
 	for _, actor := range report.Actors {
@@ -128,11 +165,11 @@ func TestQuintObservedCounterEpochs(t *testing.T) {
 			if e != nil {
 				t.Fatal(e)
 			}
-			artifact("counter-observed.itf.json", data)
+			artifact(prefix+"counter-observed.itf.json", data)
 		}
 	}
 	data, _ := json.MarshalIndent(steps, "", "  ")
-	artifact("counter-observed.json", data)
+	artifact(prefix+"counter-observed.json", data)
 	steps[1].Obs["known"] = true
 	steps[1].Obs["delta"] = int64(2)
 	bad, err := checker.Check(context.Background(), steps)
@@ -142,5 +179,5 @@ func TestQuintObservedCounterEpochs(t *testing.T) {
 	if bad.OK() {
 		t.Fatal("accepted rate crossing restart")
 	}
-	artifact("counter-negative.txt", []byte(bad.Summary()))
+	artifact(prefix+"counter-negative.txt", []byte(bad.Summary()))
 }

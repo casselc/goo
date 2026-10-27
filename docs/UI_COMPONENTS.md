@@ -1124,3 +1124,10 @@ clutter. Full validated DTOs and explicit expanded rendering remain unchanged.
 Automatic loading, cached results and expansion intent belong to the app owner;
 no reusable custom-element lifecycle gains source effects. See
 [automatic defaults](AUTOMATIC_RESOURCE_DEFAULTS.md).
+
+
+The 211 host CPU-time profile reuses `goo-value-timeline`, native inspection and
+resource view adapters. Interval labels use CPU-seconds/s and UTC; exact decimal
+delta/rational rate belongs to selected evidence. Unknown/reset regions remain
+unknown, with no interpolation or older fallback headline. No new generic
+component or lifecycle source effect is introduced. See [contract](CPU_TIME_RATES.md).

@@ -43,6 +43,8 @@ func TestCPUTimeHTTPExecuteCaptureAndOfflineReopen(t *testing.T) {
 			body = strings.ReplaceAll(body, `"value":"1.25"`, `"value":"-1"`)
 		case "flags-missing":
 			body = strings.ReplaceAll(body, `"flags":0,`, ``)
+		case "delta-profile":
+			body = strings.ReplaceAll(body, `"temporality":2`, `"temporality":1`)
 		case "fractional-temporality":
 			body = strings.ReplaceAll(body, `"temporality":2`, `"temporality":2.0000000000000000001`)
 		case "fractional-flags":
@@ -98,7 +100,7 @@ func TestCPUTimeHTTPExecuteCaptureAndOfflineReopen(t *testing.T) {
 		t.Fatal("frozen CPU-time evidence changed/reread")
 	}
 	offline = false
-	for _, bad := range []string{"negative", "flags-missing", "fractional-flags", "fractional-temporality"} {
+	for _, bad := range []string{"negative", "flags-missing", "fractional-flags", "fractional-temporality", "delta-profile"} {
 		mode = bad
 		call("POST", "/measurements", "/measurements", q, 502)
 	}

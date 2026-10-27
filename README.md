@@ -372,4 +372,4 @@ Chart interaction stays local; existing explicit Run owns record reads.
 [CPU-time rates](docs/CPU_TIME_RATES.md) add an explicit fractional counter domain
 and pinned host CPU activity fallback. Existing integer counters stay unchanged;
 logical CPUs/modes retain separate interval evidence. [Journey 211](journeys/211-cpu-time-storyboard.md)
-tracks live acceptance.
+records acceptance.

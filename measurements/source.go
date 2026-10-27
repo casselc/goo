@@ -293,6 +293,9 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 					if !exists || string(value) == "null" || json.Unmarshal(value, &temporality) != nil || (temporality != 1 && temporality != 2) {
 						return nil, fmt.Errorf("decimal counter requires explicit integer temporality")
 					}
+					if d.Source.Resource != nil && d.Source.Resource.Kind == "host" && d.Source.Metric == "system.cpu.time" && d.Source.Unit == "s" && d.Source.SchemaURL == HostMetricsSchema && temporality != 2 {
+						return nil, fmt.Errorf("pinned host CPU-time profile requires cumulative temporality")
+					}
 					var monotonic bool
 					value, exists = fields["monotonic"]
 					if !exists || string(value) == "null" || json.Unmarshal(value, &monotonic) != nil || !monotonic {

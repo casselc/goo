@@ -242,7 +242,7 @@ def check_observed(spec, path):
 
 def check_cpu_time_observed(spec,path):
     observations=json.loads(Path(path).read_text())
-    assert len(observations)==8
+    assert len(observations)==9
     for case in observations:
         op=spec['paths'][case['path']][case['method'].lower()]
         validator(spec,op['responses'][str(case['status'])]['content']['application/json']['schema']).validate(case['response'])
@@ -252,9 +252,9 @@ def check_cpu_time_observed(spec,path):
     assert result['question']['definition']['counterDomain']=='nonnegative-decimal'
     interval=result['counters']['series'][0]['intervals'][0]
     assert interval['delta']=='0.5' and interval['exactPerSecond']=='1/4' and interval['perSecond']==.25
-    assert sum(c['status']==502 for c in observations)==4
+    assert sum(c['status']==502 for c in observations)==5
     assert any(c['path']=='/captures/{id}' and c['status']==200 for c in observations)
-    print('CPU-time observations: eight real handler responses/requests, four original-source refusals and offline capture reopen conform')
+    print('CPU-time observations: nine real handler responses/requests, five source/profile refusals and offline capture reopen conform')
 
 
 def check_stock_observed(spec,path):

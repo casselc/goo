@@ -1113,3 +1113,13 @@ exact held primary result and adds only selected capacity reads. Visibility and
 generation guards precede effects; failed/canceled automatic primary reads revoke
 automatic expansion. This remains application orchestration above unchanged Go
 measurement/history contracts and supplied-data display components.
+
+
+[Decimal counter rates](CPU_TIME_RATES.md) use an explicit arithmetic domain above
+the existing interval kernel. Integer omission semantics remain unchanged;
+private value arithmetic is exact rational, and source decoder policy checks
+original token types before canonicalization. Separate host authority never
+manufactures service labels. A pinned host CPU-time definition is cumulative-only;
+generic decimal delta evaluation remains separate. Existing supplied-data
+resource/native presenters consume the result, while app navigation stages
+reported host.id/environment plus exact time context.

@@ -1,0 +1,147 @@
+{
+  "milestone": 211,
+  "status": "accepted",
+  "sourceCommit": "c40bcba",
+  "finalProfileGuard": {
+    "binarySHA256": "6cd88bac4fbd2792b2b449587a09f58681fc64cac7c1d0abb48d48ae90ce3c58",
+    "actualSourceReexecution": true,
+    "originalLedger": "cpu-time-1bbbd4aa3b/ledger.json",
+    "counterAndRowsEqual": true,
+    "extraSourceReads": 1,
+    "scope": "Cumulative-only admission guard; no success-path, UI or numerical changes. Final positive source replay equals accepted original data; no browser/model reruns."
+  },
+  "checks": {
+    "go": {
+      "fullRoot": "/tmp/goo-211-root-final.txt",
+      "finalPinnedMeasurementsSeconds": 4.802,
+      "finalPinnedCmdSeconds": 3.617,
+      "finalPinnedStdout": "/tmp/goo-211-pinned-final.txt"
+    },
+    "node": {
+      "files": 100,
+      "seconds": 7.697098347,
+      "stdout": "/tmp/goo-211-node-all.txt",
+      "finalFocusedTests": 49,
+      "finalFocusedSeconds": 0.195271089,
+      "focusedStdout": "/tmp/goo-211-ui-final-followup.txt"
+    },
+    "api": {
+      "goOperations": 83,
+      "totalOperations": 90,
+      "schemas": 517,
+      "frozenResponses": 429,
+      "admittedRequests": 159,
+      "muxRefusals": 28,
+      "cpuTimeObservations": 9,
+      "sourceProfileRefusals": 5,
+      "stdout": "/tmp/goo-211-openapi-pinned.txt",
+      "observations": "/tmp/goo-211-api-observed-pinned.json",
+      "docsPythonTests": 2,
+      "docsBrowser": "/tmp/goo-211-api-browser-docs.txt"
+    },
+    "hegel": {
+      "properties": 2,
+      "examplesEach": 8,
+      "stateStepsConfigured": 20,
+      "seconds": 0.622,
+      "stdout": "/tmp/goo-211-properties-actual.txt",
+      "scope": "Reused counter state/swarm rules with a fractional affine transform; JS/Go exact host interval mapping and source compilation. No exhaustive schedule claim."
+    },
+    "main": {
+      "seconds": 10.1,
+      "invocationSeconds": 12.1,
+      "ledger": "artifacts/cpu-time/cpu-time-1bbbd4aa3b/ledger.json",
+      "sourcePOSTs": 7,
+      "initialSourcePOSTs": 3,
+      "hostPlans": 1,
+      "defaultValueReads": 2,
+      "nativeExplicitReads": 1,
+      "contextRunReads": 2,
+      "freshCaptureReads": 1,
+      "matchingRecordsEachSignal": 3
+    },
+    "owners": {
+      "withdrawalSeconds": 4.2,
+      "withdrawal": "artifacts/cpu-time/cpu-time-0eb443162c/ownership.json",
+      "gapMissingSeconds": 4.1,
+      "gapMissing": "artifacts/cpu-time/cpu-time-61b6211853/unknowns.json"
+    },
+    "actor": {
+      "seconds": 31.3,
+      "invocationSeconds": 32.7,
+      "configuredSeconds": 30,
+      "path": "artifacts/cpu-time/cpu-time-8e73d55864/bombadil/acceptance-summary.json",
+      "phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "snapshots": 512,
+      "final": {
+        "phase": 7,
+        "source": 4,
+        "hostPlans": 1,
+        "key": "6412980dc95968cc23c15f7f3c05edbde583985308fd8535faf58642b1915fcc",
+        "widgets": 2,
+        "nativeReady": true,
+        "nativeComplete": true,
+        "recordReady": false,
+        "terminal": true,
+        "error": ""
+      }
+    },
+    "raw": {
+      "seconds": 0.12,
+      "changedControlsRejected": 7,
+      "stdout": "/tmp/goo-211-native-hardened.txt",
+      "initialPassSeconds": 0.16
+    },
+    "quint": {
+      "browserSeconds": 4.97,
+      "browserActualFiniteTraces": 1,
+      "browserMacrosteps": 5,
+      "browserBadTracesRejected": 1,
+      "browserStdout": "/tmp/goo-211-native.txt",
+      "decimalEpochSeconds": 10.56,
+      "decimalEpochActualTraces": 1,
+      "decimalEpochSteps": 5,
+      "decimalEpochBadTracesRejected": 1,
+      "decimalEpochStdout": "/tmp/goo-211-quint-epochs.txt",
+      "legacyHelperSeconds": 9.71,
+      "legacyHelperStdout": "/tmp/goo-211-quint-legacy-helper.txt",
+      "scope": "Observed browser effects and actual decimal-kernel epochs/gaps/late repair are separate finite traces. Existing integer Quint model reused with an exact tenths binding; not arbitrary concurrency or continuous host authenticity."
+    }
+  },
+  "capture": {
+    "id": "0ed195dafc3ec7f64c771b47e1a4f9a3d2cc4c6333508d68b5bc0c594be20915",
+    "bytes": 9752,
+    "sha256": "e4bc3a8faec3562f25e8544bee58761e2248764ee1cf08d6d55f8f70c22627e0",
+    "storedBytesBeforeAfterEqual": true,
+    "blockedSourcePOSTsOnReopen": []
+  },
+  "frames": {
+    "docs/journeys/screenshots/211b-mobile-cpu-time.png": "3f89ada019af761e5d89fa96e26b5793fae4b7e07afbf102456020722382a1c6",
+    "docs/journeys/screenshots/211c-cpu-time-native-interval.png": "19cc37cf6ae7576ff790384c589461083992dfffda86ab0ce591f3d0fa50804a",
+    "docs/journeys/screenshots/211a-cpu-time-host.png": "2772ffe93d7598bbcd165f532b09b1782f8eccea59e0d0362f1c8c802e8d8679"
+  },
+  "diagnostics": [
+    "Initial source tests encountered sandbox loopback restrictions; elevated actual suites pass.",
+    "Initial HTTP test setup syntax/envelope corrections are excluded; dedicated CPU-time API check replaced an inapplicable saved-workflow observation-count gate without weakening it.",
+    "First withdrawal harness expected every hidden widget deleted; corrected to preserve already-held hidden memory while asserting unchanged DOM, no late CPU widget and no new reads. Only withdrawal reran; gap/missing pass retained.",
+    "Final raw observer binds exact result question, raw record timestamps/attributes/trace/span IDs and rejects unknown-interval arithmetic; only raw main reran after hardening. Browser and successful model campaigns not repeated.",
+    "Final cumulative-only source/profile guard was added after live browser/model acceptance. Final measurements/mux tests and nine wire observations pass, and one real historical source replay matches accepted raw rows and counters byte-for-byte structurally; no success-path or UI change."
+  ],
+  "limits": [
+    "Pinned host system.cpu.time cumulative monotonic seconds only for automatic defaults.",
+    "Explicit decimal domain; omitted legacy integer semantics and frozen counter bytes preserved.",
+    "No host/core sum, capacity percentage, instantaneous utilization, saturation or health inference.",
+    "Context matches reported host.id/environment across SDK maps, not proven physical ownership or causality.",
+    "Prepared ordinary OTLP does not prove a deployed scraper or recover pre-export Float64 precision.",
+    "Count/fleet and whole-window comparisons do not admit decimal counters; no new capture format."
+  ]
+}

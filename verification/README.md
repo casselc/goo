@@ -2824,3 +2824,41 @@ entrance browser specs are explicit skips, replaced by 210 main/owners/actor.
 The generic value-timeline SSR/detached journey remains active. See the
 [210 evidence](../docs/evidence/resource-defaults-210.json) for exact runtime
 receipts, frame hashes, harness diagnostics and declared limitations.
+
+
+## Decimal CPU-time rates (211)
+
+`TestHegelDecimalCounterStateSwarm` reuses counter increase/gap/restart/decrease/
+duplicate rules under a fractional affine transform with a large offset. Eight
+examples configure 20 steps each, independently checking exact delta/rate and
+withheld arithmetic for unknown intervals. `TestHegelCPUTimeRecordContextParity`
+draws eight exact sub-ms host intervals and compares JS mapping to Go/SQL planning.
+Actual combined execution passes in 0.622s; initial no-test setup is excluded.
+
+`TestCPUTimeObserved` independently checks fresh OTLP/raw rows, full identities,
+outer and kernel SHA bases, six expected interval cases, exact rational rates,
+context AST and raw timestamps/attributes/trace/span IDs, read budgets and complete
+9,752-byte unchanged capture. Final hardened pass is 0.12s with seven rejected
+controls; no production counter evaluator supplies its expected numerical result.
+
+`TestQuintCPUTimeObserved` validates one actual browser trace / five macrosteps
+and rejects one extra-read trace (4.97s). `TestQuintObservedDecimalCounterEpochs`
+reuses `model/counter.yaml` with exact integer tenths as model units: actual decimal
+evaluator epoch/gap/late-repair steps pass and a restart-crossing rate fails
+(10.56s). The shared helper's original integer case passes (9.71s). These finite
+models cover declared effects/epochs, not arbitrary decimal concurrency or source
+authenticity. Live withdrawal and gap/missing cases are separate browser evidence.
+
+```sh
+# From verification/, with the pinned tools/cache settings described above:
+export GOO_CPU_TIME_LEDGER=/workspace/goo/artifacts/cpu-time/cpu-time-1bbbd4aa3b/ledger.json
+go test -run '^TestCPUTimeObserved$' -v .
+go test -run '^TestQuintCPUTimeObserved$' -v .
+go test -run '^TestQuintObservedDecimalCounterEpochs$' -v .
+go test -run '^TestHegel(DecimalCounterStateSwarm|CPUTimeRecordContextParity)$' -v .
+```
+
+The final pinned-profile cumulative-only refusal guard was deployed after browser/
+model acceptance. Final source/HTTP checks pass; one real source reexecution of
+the original fixed question has identical rows/counters. Browser/model runs were
+not repeated for this refusal-only guard. See [evidence](../docs/evidence/cpu-time-211.json).

@@ -1009,8 +1009,8 @@ is claimed. Historical 208/209 manual-entrance browser specs are explicit skips;
 210 replaces their entry/owner/actor coverage while native/API/property/raw and
 generic timeline checks remain active. Journey 210 is accepted; its finite model and generated schedules do not prove arbitrary concurrency.
 
-[CPU-time rates](CPU_TIME_RATES.md) in 211 are source-reviewed; live acceptance is
-pending. The first profile is pinned host cumulative `system.cpu.time` seconds.
+[CPU-time rates](CPU_TIME_RATES.md) in 211 are accepted with live and independent
+raw/model evidence. The first profile is pinned host cumulative `system.cpu.time` seconds.
 No container CPU-time profile, whole-host/core sum, saturation or inferred
 capacity percentage is added. Count-ratio/fleet/window-comparison contracts do
 not accept decimal counters. Exported precision cannot recover pre-export loss.

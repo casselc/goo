@@ -1443,3 +1443,22 @@ raw/finite Quint checks pass. [Journey 210](../journeys/210-resource-defaults-st
 and [evidence](evidence/resource-defaults-210.json) record actual results and
 harness corrections. No new API, capture format, source profile or Go numerical
 semantics. Broader receiver coverage and workload totals remain separate slices.
+
+
+## 211 — Exact decimal counters and host CPU time accepted
+
+An explicit decimal counter domain preserves exact exported differences and
+rational rates while retaining reset/gap/missing/boundary unknowns. Legacy
+integer behavior stays unchanged. The pinned cumulative host CPU-time profile
+provides an automatic fallback to reported utilization, within the existing
+memory-plus-one-CPU budget. Logical cores/modes remain separate; no saturation,
+capacity percentage or whole-host total is inferred.
+
+Existing host/native components provide CPU-seconds/s, UTC/exact interval details,
+explicit host-scoped record investigation and individual capture/offline reopen.
+Source and presentation reviews, Go/Node/API gates, live main/withdrawal/unknown
+cases, Bombadil, Hegel state/parity properties and independent raw/Quint checks
+pass. [Journey 211](../journeys/211-cpu-time-storyboard.md) and
+[evidence](evidence/cpu-time-211.json) record exact scope and the final
+cumulative-only admission followup. Container CPU-time adoption and broader
+counter/window composition remain separate contracts.
