@@ -1,6 +1,6 @@
 {
   "milestone": 207,
-  "status": "source gates accepted; live acceptance pending",
+  "status": "accepted",
   "source": {
     "receiver": "Collector Contrib v0.137.0",
     "research": "docs/CONTAINER_CPU_SOURCE_RESEARCH.md",
@@ -59,5 +59,255 @@
     "No paired capture",
     "No CPU-time derivative, throttling or health inference"
   ],
-  "sourceReview": "Approved, no blockers; duplicated Go composer internals retained as a later refactoring opportunity"
+  "sourceReview": "Approved, no blockers; duplicated Go composer internals retained as a later refactoring opportunity",
+  "sourceCommit": "eca6bf9",
+  "deployment": {
+    "sourceCommit": "eca6bf9",
+    "binarySHA256": "64ec1c7f24c78511ffa8dcb7b82f220930667445ca36ca20fabb164d8244605f",
+    "manifest": "artifacts/container-cpu/deployment.json",
+    "productionFilesBothRoots": 22,
+    "servedAssetsAndSpec": 9
+  },
+  "live": {
+    "disclosure": {
+      "seconds": 14.1,
+      "artifact": "artifacts/container-cpu/container-cpu-cbb1cf804b/disclosure-ownership.json"
+    },
+    "owners": {
+      "seconds": 41.2,
+      "cases": 5,
+      "artifact": "artifacts/container-cpu/container-cpu-070b6fd735/ownership.json"
+    },
+    "main": {
+      "seconds": 50.4,
+      "artifact": "artifacts/container-cpu/container-cpu-576bd5f540/ledger.json",
+      "points": 51,
+      "events": [
+        {
+          "action": "inventory",
+          "source": 1,
+          "plans": 0,
+          "compositions": 0
+        },
+        {
+          "action": "explicit-first-metadata-no-values",
+          "source": 2,
+          "plans": 1,
+          "compositions": 0
+        },
+        {
+          "action": "explicit-second-metadata",
+          "source": 3,
+          "plans": 2,
+          "compositions": 0
+        },
+        {
+          "action": "local-role-selection",
+          "source": 3,
+          "plans": 2,
+          "compositions": 0
+        },
+        {
+          "action": "independent-three-signals",
+          "source": 6,
+          "plans": 2,
+          "compositions": 1
+        },
+        {
+          "action": "native-staged",
+          "source": 6,
+          "plans": 3,
+          "compositions": 1
+        },
+        {
+          "action": "retained-back",
+          "source": 6,
+          "plans": 3,
+          "compositions": 1
+        },
+        {
+          "action": "native-run",
+          "source": 7,
+          "plans": 4,
+          "compositions": 1
+        },
+        {
+          "action": "individual-capture",
+          "source": 8,
+          "plans": 4,
+          "compositions": 1
+        },
+        {
+          "action": "capture-retained-return",
+          "source": 8,
+          "plans": 4,
+          "compositions": 1
+        },
+        {
+          "action": "boundary-aligned",
+          "source": 12,
+          "plans": 5,
+          "compositions": 2
+        },
+        {
+          "action": "boundary-over-100",
+          "source": 16,
+          "plans": 6,
+          "compositions": 3
+        },
+        {
+          "action": "boundary-zero-denominator",
+          "source": 20,
+          "plans": 7,
+          "compositions": 4
+        },
+        {
+          "action": "boundary-partial",
+          "source": 22,
+          "plans": 8,
+          "compositions": 5
+        },
+        {
+          "action": "boundary-negative",
+          "source": 26,
+          "plans": 9,
+          "compositions": 6
+        },
+        {
+          "action": "boundary-fractional",
+          "source": 30,
+          "plans": 10,
+          "compositions": 7
+        },
+        {
+          "action": "boundary-stale",
+          "source": 34,
+          "plans": 11,
+          "compositions": 8
+        },
+        {
+          "action": "boundary-conflict",
+          "source": 38,
+          "plans": 12,
+          "compositions": 9
+        },
+        {
+          "action": "boundary-missing",
+          "source": 42,
+          "plans": 13,
+          "compositions": 10
+        },
+        {
+          "action": "frozen-reopen",
+          "source": 42,
+          "plans": 13,
+          "compositions": 10
+        }
+      ],
+      "sourceOperations": 42,
+      "purePlans": 13,
+      "pureCompositions": 10,
+      "boundaries": [
+        "aligned",
+        "over-100",
+        "zero-denominator",
+        "partial",
+        "negative",
+        "fractional",
+        "stale",
+        "conflict",
+        "missing"
+      ],
+      "custody": {
+        "file": "capture-before.json",
+        "bytes": 6377,
+        "sha256": "573b800ef141d2af4623d7926197eed574080f9a0dc3623f405c14b272140678",
+        "id": "71ce83c995e51b591967a6ab22eb27a15572624af200f1ff606dcd06c7ada646"
+      }
+    },
+    "actor": {
+      "seconds": 31.1,
+      "invocationSeconds": 32.9,
+      "configuredSeconds": 30,
+      "artifact": "artifacts/container-cpu/container-cpu-9971104c2f/bombadil/acceptance-summary.json",
+      "phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "snapshots": 418,
+      "final": {
+        "phase": 12,
+        "source": 7,
+        "plans": 3,
+        "compositions": 1,
+        "target": "d75ebcaa80dbf054c9a1ba6bdd417f51d2c3a1658ab20c00925ba752a98d69f3",
+        "cluster": "6f5268cb942e152cc3e16aa51195637dc979cba3bfa47b07bbbd61d284200422",
+        "ready": true,
+        "choices": true,
+        "threeChoices": true,
+        "view": true,
+        "nativeReady": true,
+        "nativeComplete": true,
+        "terminal": true
+      }
+    },
+    "independentRawCustody": {
+      "seconds": 5.71,
+      "cpuMainSeconds": 3.36,
+      "cpuOwnerSeconds": 0.17,
+      "cpuDisclosureSeconds": 0.06,
+      "cpuRejectingControls": {
+        "main": 18,
+        "owner": 6,
+        "disclosure": 4
+      },
+      "prior206RegressionSeconds": {
+        "main": 1.89,
+        "owner": 0.16,
+        "disclosure": 0.05
+      },
+      "stdout": "artifacts/container-cpu/native-validation.txt",
+      "firstInvocation": true,
+      "snapshotScope": "Actual short canonical decimals; long canonical outputs have pure property coverage"
+    }
+  },
+  "frames": [
+    {
+      "path": "docs/journeys/screenshots/207a-independent-container-cpu.png",
+      "sha256": "5bc15e5a5edcca2263104e3e24c3c7662b84d90d86d23c08ea2e8213a38993ab",
+      "fixture": "container-cpu-576bd5f540"
+    },
+    {
+      "path": "docs/journeys/screenshots/207b-mobile-container-cpu.png",
+      "sha256": "2379d2c764d49c86349cf563056d05ffdb821a7c531ffd7854a75341b354150b",
+      "fixture": "container-cpu-576bd5f540"
+    },
+    {
+      "path": "docs/journeys/screenshots/207c-container-cpu-in-context.png",
+      "sha256": "fc87b385a7fd5c880c5658c662008a7f660a40cf83cc363aa71195835b8d9746",
+      "fixture": "container-cpu-576bd5f540"
+    },
+    {
+      "path": "docs/journeys/screenshots/207d-explicit-aligned-cpu-percentage.png",
+      "sha256": "c34c42e8c80206fee8c3eb69313b5bac46250d00d03188dca1f9fc8ed5127d95",
+      "fixture": "container-cpu-576bd5f540"
+    }
+  ],
+  "designReview": "All four actual frames approved; tiny/large formatting is Node evidence, not claimed as live frame coverage",
+  "cleanup": {
+    "taskBinaryHelpersTarRemoved": true,
+    "normalRetentionExpiredFiles": 0,
+    "dataTrafficHistoryUnchanged": true
+  }
 }

@@ -347,7 +347,7 @@ alignment. [Journey 206](journeys/206-container-memory-storyboard.md) tracks sou
 and ordinary OTLP/browser acceptance.
 
 
-[Container CPU context](docs/CONTAINER_CPU.md) is in development: explicit usage,
+[Container CPU context](docs/CONTAINER_CPU.md) adds explicit usage,
 request and limit gauges on a shared fractional-core scale, using the same
 source-selection and retained-inspection flow as memory. The receiver already
 reports CPU usage; no counter derivative is inferred.

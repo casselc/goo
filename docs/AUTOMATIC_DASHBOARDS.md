@@ -437,9 +437,9 @@ work. Exact percentages remain conditional, not receiver-default promises. CPU/t
 resource configuration changes and workload rollups remain separate work.
 
 
-### C2d — explicit container CPU context (207, in development)
+### C2d — explicit container CPU context (207, accepted)
 
-Extend the accepted memory flow with the pinned reported CPU-usage gauge and
+Extended the accepted memory flow with the pinned reported CPU-usage gauge and
 request/limit gauges in fractional cores. Reuse explicit source selection, at
 most three native reads, compact shared scales and retained native inspection.
 Strict raw decimal validation and matching identity/resource/schema/attributes/
@@ -447,3 +447,10 @@ observation time/window/freshness govern conditional percentages. The separately
 reported cumulative CPU-time sum is outside this slice; no derivative or
 throttling/health inference. See [contract](CONTAINER_CPU.md) and
 [journey 207](../journeys/207-container-cpu-storyboard.md) for acceptance status.
+
+207 acceptance passes source/property/API, main/owner/disclosure browser journeys,
+a 30-second Bombadil campaign and independent raw/custody replay. Main totals
+42 logical source operations, 13 pure plans and ten compositions across explicit
+contexts; staging and retained Back add no reads. Four actual desktop/mobile
+frames are reviewed. CPU-time derivatives, throttling, configuration history
+and workload totals remain separate contracts.

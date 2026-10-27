@@ -82,13 +82,16 @@ type cmFact struct {
 // and exact byte certification. The ordinary gauge remains float-backed while
 // descriptive percentages are certified from the original decimal strings.
 func cmRawGauge(f psMap, r *measurements.Result) (cmFact, bool) {
+	return rawContainerGauge(f, r, cmRole)
+}
+func rawContainerGauge(f psMap, r *measurements.Result, classify func(metrics.Stream) string) (cmFact, bool) {
 	out := cmFact{}
 	if r == nil {
 		return out, false
 	}
 	q, d := r.Question, r.Question.Definition
 	s := d.Source.ExactStream
-	if s == nil || d.Kind != "gauge" || d.StateProfile != "" || d.StockDomain != "" || d.Source.Resource == nil || d.Source.Resource.Kind != "kubernetes-container" || d.Source.Resource.ID == "" || d.Source.Resource.ID != s.Resource["container.id"] || s.Resource["k8s.pod.uid"] == "" || s.Resource["k8s.container.name"] == "" || len(d.Source.Services) != 0 || d.Source.Namespace != nil || d.Environment != f["environment"] || s.Resource["deployment.environment.name"] != d.Environment || d.Source.Metric != s.Name || d.Source.Unit != s.Unit || d.Source.Scope != s.Scope || d.Source.Version != s.Version || d.Source.SchemaURL != s.SchemaURL || cmRole(*s) == "" || r.Gauges == nil || r.States != nil || r.Stocks != nil || r.Counters != nil || r.Histograms != nil {
+	if s == nil || d.Kind != "gauge" || d.StateProfile != "" || d.StockDomain != "" || d.Source.Resource == nil || d.Source.Resource.Kind != "kubernetes-container" || d.Source.Resource.ID == "" || d.Source.Resource.ID != s.Resource["container.id"] || s.Resource["k8s.pod.uid"] == "" || s.Resource["k8s.container.name"] == "" || len(d.Source.Services) != 0 || d.Source.Namespace != nil || d.Environment != f["environment"] || s.Resource["deployment.environment.name"] != d.Environment || d.Source.Metric != s.Name || d.Source.Unit != s.Unit || d.Source.Scope != s.Scope || d.Source.Version != s.Version || d.Source.SchemaURL != s.SchemaURL || classify(*s) == "" || r.Gauges == nil || r.States != nil || r.Stocks != nil || r.Counters != nil || r.Histograms != nil {
 		return out, false
 	}
 	if _, e := time.Parse(time.RFC3339Nano, r.ReadAt); e != nil {

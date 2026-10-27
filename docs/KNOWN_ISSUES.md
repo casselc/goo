@@ -969,9 +969,10 @@ the original window, identity and separate clocks. Numerical capacity/utilizatio
 joins, causal attribution and automatic runtime/host panels remain follow-ons.
 
 
-[Container CPU context](CONTAINER_CPU.md) is in development for 207. It consumes
+[Container CPU context](CONTAINER_CPU.md) is accepted in 207. It consumes
 the pinned reported usage gauge and independent request/limit gauges; CPU-time
 derivatives, throttling and workload totals remain separate. Exact matching
 observation timestamps do not establish a common sample interval. Receiver
 conversion has already rounded source quantities before their exported decimal
-reaches Goo. Live acceptance is pending.
+reaches Goo. Tiny/large display formatting has Node/property evidence; actual
+frames cover ordinary fractional values, not long canonical decimals.

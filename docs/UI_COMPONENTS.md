@@ -1087,7 +1087,7 @@ native Back; stale invalid bytes retain both display-domain and observation
 quality labels. No new passive component or lifecycle subscription is added.
 
 
-Container CPU context (207, in development) reuses the memory owner's configured
+Container CPU context (207, accepted) reuses the memory owner's configured
 source/read/navigation factory and the existing supplied table/bar/UTC display
 primitives. Domain adapters retain distinct byte and fractional-core rules, labels
 and wire versions. This adds no passive lifecycle fetch or domain-specific web

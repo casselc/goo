@@ -12157,3 +12157,57 @@ boundaries validate domain admission; a separate rational oracle checks ratios.
 Input bytes and individual clocks/bases remain unchanged. Final source review
 approves the release boundary without blockers. Private Go composer deduplication
 is a follow-up, preserving concrete DTOs and existing wire/custody controls.
+
+## Container CPU context — live acceptance (207)
+
+Source `eca6bf9` is accepted. Binary SHA256
+`64ec1c7f24c78511ffa8dcb7b82f220930667445ca36ca20fabb164d8244605f`
+and 22 changed runtime assets/spec/docs were verified in both app roots; nine
+served assets/spec returned matching HTTP 200, MIME and SHA. The cached build
+was refreshed at the same temporary output path after the source commit was
+amended to include its generated HTTP fixture; no deployment occurred before
+that refresh. A copied owner close-button test label was corrected before its
+first run. Neither change required a product correction or weakened assertion.
+
+All actual browser invocations pass on their first runs: main 50.4s, five owner
+cases 41.2s and disclosure-close owner 14.1s (single-worker invocation 2.0m).
+Fifty-one prepared ordinary OTLP points flow through the collector and ClickHouse.
+The main visits receiver-realistic independent 0.125/0.25/0.5 core observations
+and nine explicit contexts: aligned, above 100%, zero denominator, partial,
+negative, nonbinary fractional, stale, conflict and missing. Other prepared
+vectors remain unit/property evidence. The complete journal has 42 logical
+source operations, 13 pure plans and ten pure compositions. Setup/ingestion,
+readiness and direct store GETs are excluded; these are not physical SQL counts.
+Local selection, staging, retained Back and frozen reopen add no source reads.
+
+The 30-second Bombadil campaign passes in 31.1s (32.9s invocation), all 13 phases,
+418 snapshots, source 7/plan 3/composition 1 and terminal retained Back. All four
+actual desktop/mobile frames are reviewed: closed setup, shared core bars,
+separate UTC/quality and conditional ratios are readable and contained. No
+historical frame was overwritten. Tiny/large scientific formatting is Node and
+property evidence, not additional live screenshot coverage.
+
+Independent raw/custody validation passes on its first released gate: CPU main
+3.36s, owner 0.17s and disclosure 0.06s, rejecting 18 + 6 + 4 changed controls.
+The private raw-gauge verifier helper now takes a pinned classifier; the existing
+memory wrapper is retained. The required prior 206 observed main/owner/disclosure
+regression also passes (1.89s/0.16s/0.05s); combined package 5.710s. Domain,
+quality, exact rational percentage/refusal and bar geometry derive independently
+from original fixture/raw rows, not the production evaluator/composer. No
+observer correction or repeated semantic campaign was required. The live
+snapshot oracle currently exercises ordinary short canonical decimals; longer
+canonical subnormal outputs are covered by the pure property, not these frames.
+
+The complete individual CPU capture remains 6,377 bytes, SHA256
+`573b800ef141d2af4623d7926197eed574080f9a0dc3623f405c14b272140678`,
+content ID `71ce83c995e51b591967a6ab22eb27a15572624af200f1ff606dcd06c7ada646`.
+Stored before/after/public/UI evidence is unchanged. Browser frozen reload attempts
+no telemetry POST; actual unavailable-source transport is a separate Go HTTP
+custody check. No combined capture, source authenticity, running Kubernetes
+receiver/API/RBAC, original Quantity precision, common sample interval,
+transactional snapshot, saturation, throttling or health claim is made.
+[Journey 207](journeys/207-container-cpu-storyboard.md) and the
+[compact receipt](docs/evidence/container-cpu-207.json) retain operation budgets,
+frame hashes and exact artifact paths. Task binary/helpers/tar are removed;
+normal retention finds no expired recordings, so no deletion is applied.
+Application data, traffic and history remain unchanged.

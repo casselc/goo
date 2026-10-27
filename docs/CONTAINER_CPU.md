@@ -1,6 +1,7 @@
 # Container CPU context
 
-In development for milestone 207; live acceptance is pending. The pinned
+Implemented and accepted in milestone 207 with source, property, API, ordinary
+OTLP/ClickHouse, browser, owner, Bombadil and independent raw/custody checks. The pinned
 [source research](CONTAINER_CPU_SOURCE_RESEARCH.md) defines the supported signals.
 This extends the explicit [container memory workflow](CONTAINER_MEMORY.md) with
 fractional CPU cores, independent observations and conditional percentages.
@@ -59,3 +60,7 @@ flowchart LR
 
 CPU-time derivatives, throttling, resource configuration history, workload totals
 and production receiver/enrichment deployment remain separate work.
+
+[Journey 207](../journeys/207-container-cpu-storyboard.md) records commands,
+actual operation counts and frames. [Compact receipt](evidence/container-cpu-207.json)
+retains hashes and evidence paths.

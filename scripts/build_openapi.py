@@ -189,7 +189,7 @@ percentage['properties']['value']['pattern']='^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$'
 percentage['allOf']=[{'if':{'properties':{'state':{'const':'observed'}},'required':['state']},'then':{'required':['value','text']}},{'if':{'properties':{'state':{'const':'unavailable'}},'required':['state']},'then':{'required':['reason'],'not':{'anyOf':[{'required':['value']},{'required':['text']}]}}}]
 schemas['measurements.ContainerMemoryView']['additionalProperties']=False
 schemas['measurements.ContainerMemoryView']['description']='Replay-validated held container gauge evidence; independently useful signals, strict exact-resource/schema/attribute/observation/freshness alignment for rational percentages. No source reads, new custody, inferred health or missing-as-zero semantics.'
-# Pure container memory composition preserves independent evidence and exact rational percentages.
+# Pure container CPU composition preserves independent evidence and fractional cores.
 cm=schemas['measurements.ContainerCPUView']['properties'];cm['version']['const']='goo/container-cpu-view/v1'
 cm['signals']={'type':'array','minItems':3,'maxItems':3,'items':{'$ref':'#/components/schemas/measurements.ContainerCPUSignal'}}
 signal=schemas['measurements.ContainerCPUSignal'];signal['additionalProperties']=False
