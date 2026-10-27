@@ -397,3 +397,20 @@ caption-only display check uses three source operations and one pure plan; the
 30-second actor reaches all nine phases. No receiver/API/RBAC deployment is claimed. Next family work remains
 separately scoped ownership facts, requests/limits and workload rollups; do not
 infer these from reported readiness.
+
+
+### C2d — reported workload context and container cues (205)
+
+Implemented in source: a pinned OTel v1.37 six-kind app adapter exposes literal
+reported workload UID/name pairs over the existing resource inventory. Local
+facets preserve missing/empty/present cluster UID/name, namespace and workload
+UID/name. Explicit logs/spans actions stage an original-window context query,
+intentionally expanding beyond pod/container/service fields. Existing Run,
+capture and retained Back own effects; missing pod UID does not disable a valid
+workload context. No new API, inferred owner hierarchy or workload total.
+
+The shared readiness app renderer also shows compact literal container name/ID
+in resource defaults, native and frozen evidence. Source/Node/static-serving
+checks and read-only review pass; [journey 205](../journeys/205-workload-context-storyboard.md)
+tracks pending ordinary OTLP/browser/actor/raw-membership acceptance. Requests/
+limits, verified controller facts and workload rollups remain separate work.

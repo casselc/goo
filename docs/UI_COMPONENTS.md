@@ -1069,3 +1069,11 @@ The container mapping requires literal reported container.id plus pod UID and
 container-name context, and validates Ready/Not ready as 1/0 independently of
 quality. Zero is never a missing-value test. The passive element itself has no
 Kubernetes knowledge; readiness adds no new display component or automatic read.
+
+The Kubernetes app adapter now adds compact reported workload summaries, one
+local qualified-context select, and per-kind staged record actions using existing
+select/details/table patterns. The pure kubernetes-context.js catalog owns field
+mapping; display elements do not query or infer controller relationships. The
+shared state app renderer exposes a wrapping full literal container name/ID cue
+for defaults/native/frozen evidence, independent of its generic passive category
+component. No new component or automatic read is required.

@@ -11944,3 +11944,27 @@ Source/UI, final frames and independent oracle reviews found no blockers.
 Temporary binary/deployment helpers are removed. Normal recording retention
 found zero expired bundles and no budget excess; traffic, data, history and
 receipts remain unchanged.
+
+## Reported Kubernetes workload context — source gates (205)
+
+The existing full resource inventory now feeds a pure six-kind workload catalog,
+local qualified-context facet and explicit original-window record staging. All
+five qualifier/pair states remain exact, including missing/empty UID in name-only
+context. Pod/container/service/unrelated workload fields are intentionally
+omitted from the expanded question. No production Go, API schema, capture format
+or backend endpoint changes. The shared readiness app renderer shows literal
+container name/ID without changing passive state or native source semantics.
+
+All 95 Node test files pass (15.82s). All 22 Python startup/proxy tests pass
+(4.49s), including serving the new module. Read-only design/source review approves
+scope guards, visibility/held-owner checks and pinned catalog evidence. A raw
+lexical tie-breaker makes equal-collation facet options deterministic; the two
+focused helper/browser tests pass after that polish.
+
+Hegel exercises 12 generated qualifier-state combinations × six workload kinds
+× logs/spans = 144 executable questions through the actual Node helper and Go
+compiler (0.972s package). It checks exact qualifiers/window, absence semantics,
+intentional unrelated-field exclusion, immutability and local facets; 144 UID
+missing/empty and 144 wrong-scope changed controls reject. No new formal model is
+claimed for the unchanged explicit-read/retained-owner protocol. Actual
+OTLP/browser/actor/raw-membership acceptance is pending at this source freeze.

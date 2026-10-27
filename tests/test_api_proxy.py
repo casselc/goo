@@ -244,7 +244,7 @@ class ProxyContracts(unittest.TestCase):
         before = len(Upstream.calls)
         self.assertEqual(self.request('POST', '/api/pod-discovery', payload+b' ')[0], 400)
         self.assertEqual(len(Upstream.calls), before)
-        for asset in ('kubernetes-browser.js', 'resource-scope.js', 'resource-tabs.js', 'kubernetes.css'):
+        for asset in ('kubernetes-context.js', 'kubernetes-browser.js', 'resource-scope.js', 'resource-tabs.js', 'kubernetes.css'):
             conn = http.client.HTTPConnection('127.0.0.1', self.proxy.server_port, timeout=5)
             try:
                 conn.request('GET', '/'+asset)

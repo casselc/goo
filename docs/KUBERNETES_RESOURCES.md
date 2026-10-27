@@ -133,3 +133,12 @@ Restarts, requests/limits, CPU, node pressure, ownership facts,
 resource changes and workload rollups still need explicit receiver, identity,
 temporality, calculation and coverage contracts. Discovery alone grants no
 native authority and does not infer health from client spans.
+
+[Reported workload context](KUBERNETES_WORKLOAD_CONTEXT.md) now exposes the
+independent six-kind resource pairs already retained by discovery. One local
+qualified-context facet and explicit matching workload logs/spans actions reuse
+the existing fixed-question and Back owners. The expanded query preserves all
+cluster/namespace/selected-workload identity states while intentionally omitting
+pod/container/service constraints. It does not add an owner graph, new source
+query/endpoint or a workload rollup. Readiness cards share a visible literal
+container name/ID cue across default/native/frozen owners.

@@ -1,11 +1,16 @@
 # Known issues and gaps
 
+[Reported workload context](KUBERNETES_WORKLOAD_CONTEXT.md) uses literal resource
+attributes, with local exact-context facets and explicit matching-record queries.
+Source implementation is complete; live acceptance is pending. No controller
+graph, verified owner, workload-health or complete inventory claim is made.
+
+
 [Container readiness](CONTAINER_READINESS.md) has an exact reported-ID native
 execution/capture and discovery/UI support with ordinary OTLP/browser, owner,
 actor and raw/custody acceptance. A reported status does not
-establish probe existence, pod health or complete container inventory. Container
-name/ID currently require opening the exact-stream disclosure; a compact identity
-cue for similar variants remains a nonblocking usability follow-on.
+establish probe existence, pod health or complete container inventory. A compact
+container name/ID cue now makes similar variants distinguishable.
 
 [Pod memory observations](POD_METRICS.md) require a known retained resource-schema
 string, full exact resource/stream identity and a reported pod UID. Trace-schema

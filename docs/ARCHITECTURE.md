@@ -1062,3 +1062,11 @@ state authority; the pure planner preserves memory priority and at most two
 independent default reads. The passive categorical element receives validated
 labels and quality from the shared app adapter. No receiver deployment, complete
 container enumeration or pod-health inference is implied.
+
+[Reported Kubernetes workload context](KUBERNETES_WORKLOAD_CONTEXT.md) is a pure
+application adapter over existing full resource maps, rather than another
+inventory endpoint or entity store. The pinned six-kind catalog and exact
+qualifier-state-to-predicate conversion are centralized in kubernetes-context.js.
+Kubernetes owns local filtering and navigation; existing record owners execute,
+capture and restore fixed questions. Shared readiness rendering adds a literal
+container cue without changing the passive component, source or stored bytes.

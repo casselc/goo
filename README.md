@@ -330,3 +330,10 @@ The [container-readiness profile](docs/CONTAINER_READINESS.md) uses exact report
 container IDs and pinned Ready/Not ready observations in discovery, native
 inspection and individual capture/replay. Freshness stays separate from readiness;
 no pod-health or probe-success inference is made. [Journey 204b](journeys/204b-container-readiness-storyboard.md) tracks live acceptance.
+
+
+[Reported workload context](docs/KUBERNETES_WORKLOAD_CONTEXT.md) adds local
+qualified workload filtering and explicit cross-pod log/span drilldown to
+Kubernetes observations. Deployment/ReplicaSet and Job/CronJob remain independent
+reported attributes. Readiness cards expose compact literal container identity.
+[Journey 205](journeys/205-workload-context-storyboard.md) tracks acceptance.
