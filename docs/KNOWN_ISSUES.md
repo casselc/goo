@@ -976,3 +976,12 @@ observation timestamps do not establish a common sample interval. Receiver
 conversion has already rounded source quantities before their exported decimal
 reaches Goo. Tiny/large display formatting has Node/property evidence; actual
 frames cover ordinary fractional values, not long canonical decimals.
+
+
+[Container Resources](CONTAINER_RESOURCES.md) consolidates discovery and controls
+without composing one six-signal snapshot or capture. Its metadata cache is
+ephemeral and exact to the current fixed context, bounded to four explicit
+variants. The next discovery target does not relabel held evidence. Historical
+206/207 standalone entrance browser specs are explicit skips; their native/API/
+property/raw contracts remain active and current navigation is tested in 208.
+Live 208 acceptance is pending.

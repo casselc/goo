@@ -1,4 +1,6 @@
+// Historical standalone entrance; reproduce against accepted source commit 87c6293.
 const {test,expect}=require('@playwright/test'),s=require('./206-container-memory-support');
+test.skip(true, 'Historical standalone 206 entrance superseded by 208 shared Container Resources; reproduce at 87c6293. Native/API/Node contracts remain active.');
 test('206 closing sources disclosure withdraws actual held metadata before planning',async({page,request})=>{
  test.setTimeout(120000);const facts=await s.seed(request),o=s.observe(page),initial=await s.discover(page,facts),raw=facts.points.find(p=>p.case==='primary-working-set'),primary=initial.response.observations.find(r=>s.canonical(r.resource)===s.canonical(raw.resource)&&r.resourceSchemaURL==='');let release,entered,finished,held;const gate=new Promise(r=>release=r),started=new Promise(r=>entered=r),done=new Promise(r=>finished=r);
  await page.route('**/api/pod-metric-discovery',async route=>{const response=await route.fetch();held={request:route.request().postDataJSON(),status:response.status(),body:await response.json()};entered();await gate;try{await route.fulfill({response})}catch{}finally{finished()}});

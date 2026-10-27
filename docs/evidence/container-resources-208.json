@@ -1,0 +1,57 @@
+{
+  "milestone": 208,
+  "status": "source accepted; live acceptance pending",
+  "checks": {
+    "go": {
+      "focusedSeconds": 0.205,
+      "httpFrozenCases": 24,
+      "httpSeconds": 0.329,
+      "metrics": "cached; unchanged",
+      "measurementsSeconds": 0.758,
+      "explorationSeconds": 1.785,
+      "cmdSeconds": 1.929,
+      "log": "/tmp/goo-208-go-broad.log"
+    },
+    "priorNative": {
+      "seconds": 9.627,
+      "hegelProperties": 2,
+      "observedTests": 6,
+      "rejectingControls": 54,
+      "stdout": "artifacts/container-resources/prior-native-validation.txt"
+    },
+    "node": {
+      "files": 99,
+      "seconds": 16.984461848,
+      "log": "/tmp/goo-208-node.log",
+      "focusedStatusFollowup": "pass; held family edit clears its held-value cue without IO"
+    },
+    "python": {
+      "proxyTests": 16,
+      "proxySeconds": 4.803,
+      "startupTests": 8,
+      "startupSeconds": 2.951
+    },
+    "openapi": {
+      "goOperations": 82,
+      "totalOperations": 89,
+      "schemas": 509,
+      "responses": 417,
+      "requests": 154,
+      "muxRefusals": 27,
+      "unchangedContract": true
+    }
+  },
+  "historicalBrowserSpecs": {
+    "count": 10,
+    "memory": 6,
+    "cpu": 4,
+    "reason": "Superseded standalone entrances; current acceptance moves to journey208; assertions and frames preserved",
+    "reproduceMemory": "87c6293",
+    "reproduceCPU": "8ccc951"
+  },
+  "limits": [
+    "No new API or combined capture",
+    "No atomic six-signal read",
+    "No new domain/health/controller inference"
+  ]
+}

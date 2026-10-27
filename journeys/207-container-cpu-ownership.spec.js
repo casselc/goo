@@ -1,4 +1,6 @@
+// Historical standalone entrance; reproduce against accepted source commit 8ccc951.
 const {test,expect}=require('@playwright/test'),s=require('./207-container-cpu-support');
+test.skip(true, 'Historical standalone 207 entrance superseded by 208 shared Container Resources; reproduce at 8ccc951. Native/API/Node contracts remain active.');
 test('207 actual metadata, selected measurement and pure view cannot publish after owner withdrawal',async({page,request})=>{
  test.setTimeout(180000);const facts=await s.seed(request),o=s.observe(page),cases=[];
  for(const item of [{phase:'metadata',reason:'filter'},{phase:'measurement',reason:'close'},{phase:'measurement',reason:'role'},{phase:'composition',reason:'variant'},{phase:'measurement',reason:'tab'}]){

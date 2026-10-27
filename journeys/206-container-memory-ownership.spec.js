@@ -1,4 +1,6 @@
+// Historical standalone entrance; reproduce against accepted source commit 87c6293.
 const {test,expect}=require('@playwright/test'),s=require('./206-container-memory-support');
+test.skip(true, 'Historical standalone 206 entrance superseded by 208 shared Container Resources; reproduce at 87c6293. Native/API/Node contracts remain active.');
 test('206 actual metadata, selected measurement and pure view cannot publish after owner withdrawal',async({page,request})=>{
  test.setTimeout(180000);const facts=await s.seed(request),o=s.observe(page),cases=[];
  for(const item of [{phase:'metadata',reason:'filter'},{phase:'measurement',reason:'close'},{phase:'measurement',reason:'role'},{phase:'composition',reason:'variant'},{phase:'measurement',reason:'tab'}]){

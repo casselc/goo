@@ -352,3 +352,9 @@ request and limit gauges on a shared fractional-core scale, using the same
 source-selection and retained-inspection flow as memory. The receiver already
 reports CPU usage; no counter derivative is inferred.
 [Journey 207](journeys/207-container-cpu-storyboard.md) tracks acceptance.
+
+
+[Container Resources](docs/CONTAINER_RESOURCES.md) consolidates memory and CPU
+under one Kubernetes entry with shared metadata discovery and independent explicit
+loads. Each panel retains its own units, clocks and individual native inspection.
+[Journey 208](journeys/208-container-resources-storyboard.md) tracks acceptance.

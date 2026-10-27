@@ -1,5 +1,11 @@
 # Journey 207 — explicit container CPU context
 
+Historical standalone entrance, executed at `8ccc951`. The current unified
+Resources entrance is covered by [journey 208](208-container-resources-storyboard.md).
+Prior frames and raw/custody evidence remain valid for their recorded version;
+standalone entrance browser specs are explicitly skipped on the consolidated app.
+
+
 Status: accepted with source/property/API, ordinary OTLP/browser, ownership,
 Bombadil, independent raw/custody evidence and reviewed desktop/mobile frames.
 [Contract and process diagram](../docs/CONTAINER_CPU.md).

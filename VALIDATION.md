@@ -12211,3 +12211,45 @@ transactional snapshot, saturation, throttling or health claim is made.
 frame hashes and exact artifact paths. Task binary/helpers/tar are removed;
 normal retention finds no expired recordings, so no deletion is applied.
 Application data, traffic and history remain unchanged.
+
+## Unified container Resources — source gates (208)
+
+One Resources entrance now replaces the two standalone container entries. One
+exact-variant metadata cache (at most four) supplies both family choice sets;
+no metadata discovery executes native values. Each family retains its own
+selection, explicit three-read maximum, cancellation generation, composed view
+and native inspection/capture. Sources closure or changing its next target
+withdraws metadata only. Family role changes invalidate only that family's
+pending/held evidence; unchanged sibling loads/results survive unrelated metadata.
+Global close, scope replacement and navigation withdrawal cancel all pending
+work. Loaded answers precede compact family setup, with one source selector and
+one container identity/Close control. No six-signal or combined capture is added.
+
+The private Go kernel now shares bounded replay/detachment, exact stream/context
+admission, latest-only raw-value certification and ordered percentage gates.
+Concrete DTOs, domain parsers/formatters, warnings, error/refusal ordering and
+frozen HTTP bytes are unchanged. Focused CPU/memory tests pass (0.205s), including
+raw decimal conflicts that round to the same Float64; 24 frozen HTTP fixtures
+and pure/capture/offline checks pass (0.329s). Affected broad checks pass:
+metrics cached (unchanged), measurements 0.758s, exploration 1.785s, cmd/goo 1.929s.
+
+The first prior-acceptance verification gate passes (9.627s): existing CPU and
+memory Hegel properties plus six raw/custody/owner replays, retaining all 54
+rejecting controls. No property repetition or prior browser replay is needed.
+Both backend and UI source reviews approve the extraction and selective
+ownership protocol with no blockers.
+
+All 99 Node files pass (16.984s). Subsequent focused tests pass after correcting
+a shared-mode status cue: an edited/cleared family no longer claims held values;
+there is no effect or wire change. Tests include shared metadata, independent
+loads, queued Sources auto-close, must-survive sibling replies, affected-family
+ambiguity cancellation and global withdrawal. All 24 Python checks pass (16 proxy
+in 4.803s, eight startup in 2.951s). OpenAPI remains 82 Go/89 total operations,
+509 schemas; 417 responses, 154 admitted requests, 27 mux refusals and rejecting
+controls pass without schema/fixture regeneration.
+
+Exactly ten superseded standalone entrance browser specs (six 206, four 207)
+are explicitly historical skips with visible reproduction releases, preserving
+their assertions and frames. Current entry coverage moves to journey 208;
+Node/API/property/raw contracts remain active. Live 208 browser/owner/Bombadil,
+observed protocol validation and actual frames are pending at this source gate.

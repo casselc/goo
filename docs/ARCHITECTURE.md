@@ -1087,3 +1087,11 @@ already a receiver gauge; cumulative CPU time remains a separate instrument.
 CPU domain validation operates on bounded exported decimal values rather than
 integer bytes. The shared browser owner is parameterized by the domain adapter;
 source effects and native retention remain in the same application layer.
+
+
+[Container Resources](CONTAINER_RESOURCES.md) now owns one exact-question metadata
+cache for both families. Separate family owners retain native reads, choices and
+held results; metadata-only withdrawal does not cancel unchanged sibling work.
+Global scope/close withdraws all pending operations. The private Go composition
+kernel shares authority/replay/alignment mechanics behind unchanged concrete CPU
+and memory DTOs and domain callbacks. Public APIs and capture formats are unchanged.

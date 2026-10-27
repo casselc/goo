@@ -30,7 +30,9 @@ are declared requests, not guaranteed available memory or free capacity.
 
 ## Explicit discovery and reads
 
-From a known-schema Kubernetes resource variant, choose **Container memory**.
+From a known-schema Kubernetes resource variant, choose **Resources**, then use
+the Memory panel. [Resources](CONTAINER_RESOURCES.md) shares one source selector
+and metadata cache with CPU. The prior standalone entrance is historical.
 The app reads metadata for that chosen exact variant and derives the plan without
 executing native candidates. Compatible already-held variants share literal
 container ID, pod UID, container name and exact missing/empty/present cluster

@@ -18,6 +18,11 @@ expected. A missing entry has no sample; explicit zero remains zero. Neither
 means unlimited capacity. Exported decimal precision is distinct from the
 original Kubernetes Quantity or kubelet nanocore input before receiver conversion.
 
+The current entrance is **Resources** in Kubernetes observations, with one
+source selector and metadata cache shared with Memory; see the
+[Resources contract](CONTAINER_RESOURCES.md). The prior standalone entrance and
+207 frames remain historical acceptance evidence.
+
 The interaction retains the original environment, fixed window and
 qualified container identity. Choose exact already-held resource variants,
 discover their metadata explicitly, then load up to three selected signals.
