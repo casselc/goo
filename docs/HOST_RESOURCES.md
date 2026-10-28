@@ -155,3 +155,8 @@ remain CPU/memory; device names/directions must be reported and unambiguous.
 Filesystem disclosure. Used bytes and opt-in reported capacity are independent
 stocks on a common scale; defaults remain CPU/memory. Existing matching-resource
 record links retain their broader fixed-window scope.
+
+[Reported filesystem utilization](FILESYSTEM_UTILIZATION.md) 215 adds a closed
+child disclosure tied to the selected filesystem group. Its explicit single gauge
+read, separate scale and owner preserve byte/default read budgets. It is not a
+calculated byte ratio or evidence of saturation/health.

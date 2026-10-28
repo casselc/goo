@@ -273,7 +273,7 @@ def check_network_observed(spec,path,metric="system.network.io"):
     print(metric+' observations: eleven real handler responses/requests, seven source/profile refusals and offline reopen conform')
 
 
-def check_filesystem_observed(spec,path):
+def check_filesystem_observed(spec,path,utilization=False):
     observations=json.loads(Path(path).read_text())
     assert len(observations)==13
     for case in observations:
@@ -282,10 +282,10 @@ def check_filesystem_observed(spec,path):
         if case.get('request') is not None and 'requestBody' in op:
             validator(spec,op['requestBody']['content']['application/json']['schema']).validate(case['request'])
     r=next(c['response'] for c in observations if c['path']=='/measurements' and c['status']==200)
-    assert r['question']['definition']['source']['metric']=='system.filesystem.usage'
-    assert [p['value'] for p in r['stocks']['series'][0]['samples']]==[4096,2048]
+    assert r['question']['definition']['source']['metric']==('system.filesystem.utilization' if utilization else 'system.filesystem.usage')
+    assert [p['value'] for p in r['gauges' if utilization else 'stocks']['series'][0]['samples']]==([.25,.75] if utilization else [4096,2048])
     assert sum(c['status']==502 for c in observations)==9
-    print('Filesystem observations: thirteen handler responses/requests, nine source/profile refusals, stock decreases and offline reopen conform')
+    print('Filesystem '+('utilization' if utilization else 'stock')+' observations: thirteen handler responses/requests, nine source/profile refusals and offline reopen conform')
 
 
 def check_stock_observed(spec,path):
@@ -461,6 +461,7 @@ if __name__ == '__main__':
     parser.add_argument('--network-observations')
     parser.add_argument('--disk-observations')
     parser.add_argument('--filesystem-observations')
+    parser.add_argument('--filesystem-utilization-observations')
     parser.add_argument('--pod-state-observations')
     parser.add_argument('--container-state-observations')
     parser.add_argument('--pod-phase-discovery-observations')
@@ -468,6 +469,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    if args.filesystem_utilization_observations:
+        check_filesystem_observed(spec,args.filesystem_utilization_observations,True)
     if args.filesystem_observations:
         check_filesystem_observed(spec,args.filesystem_observations)
     if args.disk_observations:

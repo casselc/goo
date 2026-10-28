@@ -1027,5 +1027,10 @@ partition merge, IOPS, latency, capacity or saturation profile is implied.
 
 [Filesystem stocks](HOST_FILESYSTEM_USAGE.md) 214 are accepted for pinned cumulative
 nonmonotonic usage/limit whole bytes. Usage used-state and absent-state limit are
-conservative Goo selections; no inferred capacity, summed states, percent, inode
+conservative Goo selections; no inferred capacity, summed states, derived percent, inode
 profile, alias/deduplication or stock-point record-context API is added.
+
+[Reported filesystem utilization](FILESYSTEM_UTILIZATION.md) 215 is accepted as a
+pinned independent Gauge/1/used-state view. It refuses a whole read on invalid
+original fractions, including rounded boundary epsilon; missing exports remain
+unknown. No byte-derived ratio, alignment, threshold or health interpretation.

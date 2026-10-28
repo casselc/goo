@@ -1149,3 +1149,9 @@ Filesystem uses existing native resource cards and value timelines with a suppli
 common byte domain. The app-owned pair profile validates cumulative stock questions,
 selects used/capacity roles and retains exact device/mount/mode/type identities.
 Source loading, selection, cancellation and custody remain outside display elements.
+
+The shared app-owned pair adapter supports closed nested adapters with inherited
+selection, reset/withdrawal/disposal hooks and role-count read captions. Filesystem
+bytes use two roles; reported utilization uses one role and a fixed 0–1 domain,
+with no duplicated visible mount selector. The passive resource view formats the
+reported fraction as percent while preserving raw-value/UTC inspection.

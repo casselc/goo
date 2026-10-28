@@ -1,0 +1,12 @@
+spec: filesystem_utilization.qnt
+module: filesystem_utilization
+constants: {MAX_READS: 8}
+invariants: [safety]
+actions:
+  defaults: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}}'}
+  bytes: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}}'}
+  utilization: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}}'}
+  local: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}}'}
+  parent: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}}'}
+  native: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}}'}
+  capture: {expect: 'reads == {{.obs.source}} and plans == {{.obs.plans}}'}

@@ -1514,3 +1514,20 @@ ambiguity/missing cases, Bombadil and independent raw/finite Quint checks pass.
 [Journey 214](../journeys/214-host-filesystem-storyboard.md) and
 [evidence](evidence/host-filesystem-214.json) record actual checks, the observer
 point-schema correction, reviewed frames, source costs and proof boundaries.
+
+
+## 215 — Reported filesystem utilization accepted
+
+Filesystem now offers a nested reported-gauge disclosure using the already
+selected mount. One additional explicit unambiguous read uses its own owner and
+fixed fraction scale; byte charts and default read budgets remain unchanged.
+Parent group changes clear/close child evidence, parent/global withdrawal cancels
+it, and child closure leaves accepted byte evidence intact. Original decimal range
+certification rejects an entire invalid gauge read rather than rounding or clamping.
+No byte-derived percentage, alignment, health threshold or point-context API is added.
+
+Source/presentation reviews, full Go/UI/Python/API, Hegel, real OTLP main/held/
+ambiguity/state journeys, Bombadil and independent raw/finite Quint checks pass.
+[Journey 215](../journeys/215-filesystem-utilization-storyboard.md) and
+[evidence](evidence/filesystem-utilization-215.json) record concrete checks,
+read budgets, reviewed frames, the test-helper correction and proof limits.

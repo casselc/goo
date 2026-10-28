@@ -997,3 +997,9 @@ Pinned usage/limit stocks opt into nonnegative-integer bytes below 2^53 and requ
 strict reported cumulative nonmonotonic source metadata. Used-state versus limit
 without state is a conservative catalog policy. No new endpoint, version, computed
 percentage or stock-point native-record-context contract is added.
+
+Reported filesystem utilization 215 uses existing host-plan/measurement/capture
+operations. Its pinned Gauge/1 binding validates original known identity/maps/flags
+and exact exported decimal bounds 0..1; malformed or out-of-range source data
+refuses the whole read. Missing-value flags stay unknown. Generic wire schemas
+and versions remain unchanged; profile admission remains semantic Go validation.

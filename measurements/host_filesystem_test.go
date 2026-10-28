@@ -104,3 +104,70 @@ func TestFilesystemPlanKeepsDefaultsAndReportedRolesExplicit(t *testing.T) {
 		}
 	}
 }
+
+func filesystemUtilizationQuestion() Question {
+	q := filesystemQuestion("system.filesystem.usage")
+	q.Definition.Kind = "gauge"
+	q.Definition.StockDomain = ""
+	q.Definition.Source.Metric = "system.filesystem.utilization"
+	q.Definition.Source.Unit = "1"
+	s := *q.Definition.Source.ExactStream
+	s.Name = q.Definition.Source.Metric
+	s.Unit = "1"
+	q.Definition.Source.ExactStream = &s
+	return q
+}
+func TestFilesystemUtilizationCertifiesOriginalFractionAndFlags(t *testing.T) {
+	q := filesystemUtilizationQuestion()
+	for _, value := range []string{"0", "0.25", "1"} {
+		r, e := Evaluate(q, []json.RawMessage{cpuTimeRow(q, "1000000000", value)}, time.Unix(3, 0), "", nil)
+		if e != nil || r.Gauges == nil || r.Gauges.Series[0].Samples[0].Value == nil {
+			t.Fatal(r, e)
+		}
+	}
+	for _, value := range []string{"-0.0000000000000000000001", "1.0000000000000000000001", "1.1", "NaN"} {
+		if _, e := Evaluate(q, []json.RawMessage{cpuTimeRow(q, "1000000000", value)}, time.Unix(3, 0), "", nil); e == nil {
+			t.Fatal("invalid reported fraction admitted", value)
+		}
+	}
+	raw := cpuTimeRow(q, "1000000000", "0.25")
+	for _, change := range [][2]string{{`"flags":0,`, ``}, {`"flags":0`, `"flags":null`}, {`"flags":0`, `"flags":0.000000000000000001`}, {`"attributes":{`, `"attributes":null,"ignored":{`}} {
+		bad := strings.Replace(string(raw), change[0], change[1], 1)
+		if _, e := Evaluate(q, []json.RawMessage{json.RawMessage(bad)}, time.Unix(3, 0), "", nil); e == nil {
+			t.Fatal("fraction metadata coerced", change)
+		}
+	}
+	missing := strings.Replace(string(cpuTimeRow(q, "2000000000", "-1")), `"flags":0`, `"flags":1`, 1)
+	r, e := Evaluate(q, []json.RawMessage{raw, json.RawMessage(missing)}, time.Unix(3, 0), "", nil)
+	if e != nil || r.Gauges.Series[0].Samples[1].Value != nil || r.Gauges.Series[0].Samples[1].State != "unknown" {
+		t.Fatal("missing fraction used numerically", r, e)
+	}
+}
+func TestFilesystemUtilizationIsAnExplicitUsedGaugeCandidate(t *testing.T) {
+	for _, state := range []string{"used", "free", ""} {
+		attrs := map[string]string{"system.device": "/dev/sda", "system.filesystem.mountpoint": "/data", "system.filesystem.state": state}
+		rows := append(hostTestRows()[:5], hostTestRow("system.filesystem.utilization", "gauge", "1", attrs, nil))
+		inv, e := discoverHostRows(hostTestQuestion(), rows)
+		if e != nil {
+			t.Fatal(e)
+		}
+		p, e := PlanHostDashboard(HostDashboardRequest{Question: inv.Question, Host: inv.Hosts[0]})
+		if e != nil || len(p.Widgets) != 2 {
+			t.Fatal(p, e)
+		}
+		n := 0
+		for _, w := range p.Widgets {
+			if HostFilesystemUtilizationDefinition(w.Question.Definition) {
+				t.Fatal("fraction became automatic default")
+			}
+		}
+		for _, w := range p.Candidates {
+			if HostFilesystemUtilizationDefinition(w.Question.Definition) {
+				n++
+			}
+		}
+		if (state == "used" && n != 1) || (state != "used" && n != 0) {
+			t.Fatal("guessed fraction role", state, n)
+		}
+	}
+}

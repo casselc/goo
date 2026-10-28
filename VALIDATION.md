@@ -12583,3 +12583,37 @@ POST-blocked reopen. These are finite fixtures/workflows, not exhaustive
 concurrency, scraper deployment, ingestion completeness or provenance proofs.
 [Evidence](docs/evidence/host-filesystem-214.json) and
 [storyboard](journeys/214-host-filesystem-storyboard.md) record actual receipts.
+
+## 215 source and live checks — reported filesystem utilization
+
+Pinned Gauge/unit 1/used-state candidates are explicit, nested under the selected
+filesystem group with their own one-read owner and fixed fraction scale. Byte
+reads/default CPU/memory budgets stay unchanged. Original decimal fraction range
+certification refuses the whole read for negative or greater-than-one exports,
+including values that would round into range. Missing values stay unknown.
+
+Source review, full Go regression, all 103 Node files (567 tests, 26.005 s), Python 17
+proxy (6.482 s) and 8 startup (2.204 s), frozen OpenAPI/negative controls and 13 real
+utilization handler observations pass; nine source/profile refusals and offline
+capture reopen conform. After test-harness extraction, an omitted helper import
+was corrected; focused 8 UI tests pass (0.128 s) and two Hegel properties pass eight
+examples each (package 0.416 s). This was a test-helper issue, not an app change.
+
+Live main 6.9 s, parent-held cancellation 5.1 s and ambiguity/mount/state 7.1 s pass
+first campaign (batch 22.2 s), with three approved actual frames. Independent raw
+checks 0.11 s reject nine changed controls; Quint 2.11 s accepts the seven-step
+actual effect trace and rejects an extra local read (package 2.233 s). Final
+Bombadil and compatibility receipts are still being collected.
+
+
+## 215 final acceptance
+
+Bombadil passes in 30.6 s, phases 0–8/642 snapshots/seven source POSTs. Existing
+disk ownership/ambiguity (2.4/3.6 s) and filesystem byte ownership/ambiguity/missing
+cases (2.4/3.4/3.1 s) also pass (combined six-test batch 46.9 s). Full 7,625 B
+capture remains identical under source-POST-blocked reopen. All source, actual
+frame and independent proof reviews approved without blockers. Scope remains
+finite known gauge/byte fixtures and bounded workflows; no authentication,
+ingestion completeness, aligned ratio or exhaustive concurrency claim.
+[Evidence](docs/evidence/filesystem-utilization-215.json) and
+[storyboard](journeys/215-filesystem-utilization-storyboard.md) retain receipts.

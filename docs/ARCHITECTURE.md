@@ -1143,3 +1143,10 @@ policies for stock candidates, exact group/role/result validation and display sc
 Network/Disk retain their counter branches and independent owners. Passive native
 resource charts now honor supplied scales for stocks as well as counter rates.
 No numerical primitive or automatic usage/capacity join is introduced.
+
+Reported filesystem utilization 215 is a nested one-role app adapter sharing the
+selected filesystem group through an external selection callback. The parent
+paired-reader owns child reset/withdrawal/disposal; the child retains its own
+request generation and fixed fraction domain. Passive charts have no new reads.
+Source validation certifies the original gauge decimal in 0..1 before trusting
+its Float64 representation; no new numerical primitive or ratio is introduced.

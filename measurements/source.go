@@ -249,11 +249,12 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 	d := q.Definition
 	for rowIndex, raw := range copied {
 		strictFilesystem := HostFilesystemDefinition(d)
+		strictFilesystemGauge := HostFilesystemUtilizationDefinition(d)
 		strictDecimalCounter := d.Kind == "counter" && d.CounterDomain == metrics.DecimalCounterDomain
 		strictContainerGauge := d.Kind == "gauge" && d.Source.Resource != nil && d.Source.Resource.Kind == "kubernetes-container"
-		if d.Kind == "state" || strictContainerGauge || strictDecimalCounter || strictFilesystem {
+		if d.Kind == "state" || strictContainerGauge || strictDecimalCounter || strictFilesystem || strictFilesystemGauge {
 			validationRaw := raw
-			if d.StateProfile == metrics.ContainerReadyProfile || strictContainerGauge || strictDecimalCounter || strictFilesystem {
+			if d.StateProfile == metrics.ContainerReadyProfile || strictContainerGauge || strictDecimalCounter || strictFilesystem || strictFilesystemGauge {
 				validationRaw = rows[rowIndex]
 			}
 			var fields map[string]json.RawMessage
@@ -274,7 +275,7 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 					return nil, fmt.Errorf("%s source requires known string %s", prefix, key)
 				}
 			}
-			if d.StateProfile == metrics.ContainerReadyProfile || strictContainerGauge || strictDecimalCounter || strictFilesystem {
+			if d.StateProfile == metrics.ContainerReadyProfile || strictContainerGauge || strictDecimalCounter || strictFilesystem || strictFilesystemGauge {
 				// Empty maps and a zero flag are reported values, not defaults
 				// for absent/null source fields at this new authority boundary.
 				for _, key := range []string{"resource", "attributes"} {
@@ -369,6 +370,12 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 				exact, ok := new(big.Rat).SetString(row.Value)
 				if !ok || !exact.IsInt() || exact.Num().Cmp(big.NewInt(int64(value))) != 0 {
 					return nil, fmt.Errorf("state code loses domain precision")
+				}
+			}
+			if strictFilesystemGauge && !missing {
+				fraction, ok := metrics.ExportedNonnegativeDecimal(row.Value)
+				if !ok || fraction.Cmp(big.NewRat(1, 1)) > 0 {
+					return nil, fmt.Errorf("reported filesystem utilization requires exported fraction within 0..1")
 				}
 			}
 			if d.Kind == "gauge" || d.Kind == "state" {

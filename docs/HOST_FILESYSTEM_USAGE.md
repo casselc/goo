@@ -68,3 +68,6 @@ flowchart LR
 ```
 
 [Executable storyboard](../journeys/214-host-filesystem-storyboard.md).
+
+[Reported utilization](FILESYSTEM_UTILIZATION.md) is now available in milestone 215
+as a separate nested gauge; it does not derive a used/capacity percentage.

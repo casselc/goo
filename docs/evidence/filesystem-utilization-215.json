@@ -1,0 +1,183 @@
+{
+  "milestone": 215,
+  "status": "accepted",
+  "baseCommit": "1c05d66",
+  "binarySHA256": "63f5f1dcfd2577f5230b71d948f736fd0f91502159aad3d5811ffbdd07930cdb",
+  "research": {
+    "url": "https://raw.githubusercontent.com/open-telemetry/semantic-conventions/v1.37.0/docs/system/system-metrics.md",
+    "sha256": "8aa9a4c287145b382648705564b1b0698f62d4a374af7a2e79702626c8a92291",
+    "profile": "Development Gauge/unit1; Goo used-state selection and exact reported device/mount/mode/type group. Original exported fraction certified within0..1; whole-read refusal for out-of-range values."
+  },
+  "checks": {
+    "go": {
+      "stdout": "/tmp/goo-215-go.txt",
+      "scope": "Full root regression including utilization HTTP/capture/refusal cases."
+    },
+    "node": {
+      "files": 103,
+      "tests": 567,
+      "seconds": 26.005450207,
+      "stdout": "/tmp/goo-215-node.txt",
+      "harnessExtractionFollowup": {
+        "tests": 8,
+        "seconds": 0.128270062,
+        "stdout": "/tmp/goo-215-harness-fixed.txt"
+      }
+    },
+    "python": {
+      "proxyTests": 17,
+      "proxySeconds": 6.482,
+      "startupTests": 8,
+      "startupSeconds": 2.204,
+      "stdout": "/tmp/goo-215-python.txt"
+    },
+    "api": {
+      "stdout": "/tmp/goo-215-api.txt",
+      "observedResponses": 13,
+      "sourceProfileRefusals": 9,
+      "goOperations": 83,
+      "totalOperations": 90,
+      "schemas": 517,
+      "frozenResponses": 429,
+      "admittedRequests": 159,
+      "muxRefusals": 28,
+      "scope": "Reported gauge execution/capture/offline reopen; original negative/above-one/rounded-epsilon and malformed identity/map/flag refusals."
+    },
+    "hegel": {
+      "stdout": "/tmp/goo-215-properties-fixed.txt",
+      "seconds": 0.416,
+      "examplesEach": 8,
+      "properties": [
+        "Original fraction admission",
+        "Actual nested-owner header/body response and withdrawal schedules"
+      ],
+      "scope": "Child close, parent close, scope withdrawal, disposal, mount switch; bytes retained and late gauge publication prevented. Not exhaustive interleaving/swarm proof.",
+      "diagnostic": "Initial extracted test helper omitted the widget import. Corrected helper passed focused UI and Hegel checks. Product source unchanged by this correction."
+    },
+    "live": {
+      "ledger": "artifacts/filesystem-utilization/filesystem-utilization-af193759aa/ledger.json",
+      "mainSeconds": 6.9,
+      "ownership": "artifacts/filesystem-utilization/filesystem-utilization-824880ae62/ownership.json",
+      "ownershipSeconds": 5.1,
+      "ambiguityAndStates": "artifacts/filesystem-utilization/filesystem-utilization-d4fabf6a04/ambiguity-states.json",
+      "ambiguityAndStatesSeconds": 7.1,
+      "batchSeconds": 22.2,
+      "stdout": "/tmp/goo-215-live.txt",
+      "firstPass": true
+    },
+    "bombadil": {
+      "summary": "artifacts/filesystem-utilization/filesystem-utilization-343593ef3a/bombadil/acceptance-summary.json",
+      "seconds": 30.6,
+      "phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "snapshots": 642,
+      "finalSourceReads": 7,
+      "plans": 1,
+      "scope": "Finite defaults/bytes/nested gauge/local reopen/native gauge Run/retained Back workflow. Main Playwright covers capture and POST-blocked offline reopen."
+    },
+    "existingBrowserCompatibility": {
+      "stdout": "/tmp/goo-215-actor-regression.txt",
+      "diskSeconds": [
+        2.4,
+        3.6
+      ],
+      "filesystemSeconds": [
+        2.4,
+        3.4,
+        3.1
+      ],
+      "batchWithActorSeconds": 46.9,
+      "scope": "Existing disk ownership/ambiguity and filesystem byte ownership/ambiguity/missing-zero-absent cases pass."
+    },
+    "rawAndQuint": {
+      "stdout": "/tmp/goo-215-native.txt",
+      "rawSeconds": 0.11,
+      "quintSeconds": 2.11,
+      "packageSeconds": 2.233,
+      "negativeControls": 9,
+      "actualModelSteps": 7,
+      "badLocalReadTraceRejected": true,
+      "firstPass": true,
+      "scope": "Finite three-known-timestamp raw gauge fixture: exact original fractions/maps/identity/stdSHA/freshness/reasons/latest states, independent byte stock evidence/scales, full capture bytes and issued source POST counts. Separate browser/Hegel cases cover unknowns/ambiguity/withdrawal. Not source authentication, ingestion completeness, or arbitrary concurrency."
+    }
+  },
+  "events": [
+    {
+      "action": "defaults",
+      "source": 3,
+      "plans": 1
+    },
+    {
+      "action": "bytes",
+      "source": 5,
+      "plans": 1
+    },
+    {
+      "action": "utilization",
+      "source": 6,
+      "plans": 1
+    },
+    {
+      "action": "local",
+      "source": 6,
+      "plans": 1
+    },
+    {
+      "action": "parent-local",
+      "source": 6,
+      "plans": 1
+    },
+    {
+      "action": "native",
+      "source": 7,
+      "plans": 1
+    },
+    {
+      "action": "capture",
+      "source": 8,
+      "plans": 1
+    }
+  ],
+  "readBudgetMeaning": "Issued source POSTs, not SQL counts: inventory1+CPU/memory2+byte stocks2+reported gauge1+native1+capture1=8; host plan1 is pure. Nested and parent reopen/staging/Back are local.",
+  "capture": {
+    "bytes": 7625,
+    "sha256": "95b7ebec153a49ca575b1b0ba29233ff5545ba40504446f92cc0bd325afc33e2"
+  },
+  "captureID": "27422f3ab406d0ba677a7c4193ab5e903aaff6c7774a186fb1a7a6a89f57c10f",
+  "offlineBlockedPOSTs": [],
+  "geometry": {
+    "client": 324,
+    "scroll": 324
+  },
+  "frames": {
+    "docs/journeys/screenshots/215a-reported-filesystem-utilization.png": "24cf0064c68c90a75b768b9b119ef441e3246244cff8f89b94775cba88c60b29",
+    "docs/journeys/screenshots/215b-mobile-filesystem-utilization.png": "ccd6668f1672763988c99f9c00574df26892f3b89df641ff6096ad084f2e577d",
+    "docs/journeys/screenshots/215c-filesystem-utilization-in-context.png": "54e30aaef59bf0ae0e7e1bf273873f653dac4a428cf934806f9b1408c28e6901"
+  },
+  "assets": {
+    "ui/host-counter-pair.js": "b1f5bb6c70f46bdb8331cb16db657aa0b22b06f4153eedf5a4937b562fe4472d",
+    "ui/host-filesystem.js": "7d3ac507be9c63bc7b72b2da19a526171ac0e35ec6bda0688521e88ea1b36a73",
+    "ui/resource-native-view.js": "301b2cbd1573af551934d9f1ed060570a3d5d8ab768b86985c74540f438cbdf5",
+    "ui/host.css": "2bca020d42f0b5378a6e573b4a88f2530bbb484709644f58db4714db4ce3c4c0"
+  },
+  "reviews": [
+    "Source/architecture and independent raw/model checks approved; no blockers.",
+    "Actual desktop/mobile/whole-host frames approved; no presentation blockers."
+  ],
+  "limits": [
+    "No byte-derived ratio, aligned snapshot, state sum, threshold or health classification.",
+    "Required used-state/device/mount selection is conservative Goo policy, not a closed OTel attribute requirement.",
+    "Invalid original fraction refuses the whole gauge read; no clamp or rounded admission.",
+    "No new point record-context API, alias/deduplication or physical ownership inference.",
+    "Ordinary OTLP fixtures through collector/ClickHouse, not a deployed filesystem scraper."
+  ]
+}

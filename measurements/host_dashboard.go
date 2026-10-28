@@ -98,6 +98,9 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 		if HostNetworkInstrument(i) {
 			family = "network"
 		}
+		if i.Kind == "gauge" && i.Metric == "system.filesystem.utilization" && i.Unit == "1" && i.SchemaURL == HostMetricsSchema {
+			family = "filesystem-utilization"
+		}
 		if HostFilesystemInstrument(i) {
 			family = "filesystem"
 		}
@@ -134,13 +137,13 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 					continue
 				}
 			}
-			if family == "filesystem" {
+			if family == "filesystem" || family == "filesystem-utilization" {
 				device, mount := s.Attributes["system.device"], s.Attributes["system.filesystem.mountpoint"]
 				if device == "" || mount == "" || !text(device, 512) || !text(mount, 512) {
 					continue
 				}
 				state, hasState := s.Attributes["system.filesystem.state"]
-				if i.Metric == "system.filesystem.usage" && state != "used" || i.Metric == "system.filesystem.limit" && hasState {
+				if (i.Metric == "system.filesystem.usage" || i.Metric == "system.filesystem.utilization") && state != "used" || i.Metric == "system.filesystem.limit" && hasState {
 					continue
 				}
 			}
@@ -196,7 +199,7 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 					title += " · logical CPU unreported"
 				}
 			}
-			if family != "cpu" && family != "cpu-time" && family != "network" && family != "disk" && family != "filesystem" {
+			if family != "cpu" && family != "cpu-time" && family != "network" && family != "disk" && family != "filesystem" && family != "filesystem-utilization" {
 				if family == "memory-fraction" {
 					title = "Reported memory utilization fraction"
 				}
@@ -222,6 +225,9 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 					role = "Reported capacity"
 				}
 				title = role + " · " + strconv.Quote(s.Attributes["system.filesystem.mountpoint"]) + " · " + strconv.Quote(s.Attributes["system.device"])
+			}
+			if family == "filesystem-utilization" {
+				title = "Reported utilization · " + strconv.Quote(s.Attributes["system.filesystem.mountpoint"]) + " · " + strconv.Quote(s.Attributes["system.device"])
 			}
 			candidates = append(candidates, candidate{widget: HostWidget{Key: key, Title: title, State: "candidate", Grain: "host-exact-stream", Question: q}, family: family, priority: priority, numeric: numeric, core: core})
 		}
