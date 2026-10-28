@@ -177,3 +177,10 @@ filters. Both stage before Run, disclose editing separately and return to the
 paused parent without resubscribing. Neither preserves held rows as evidence.
 
 [Activity navigation](ACTIVITY_NAVIGATION.md) consolidates current-window analysis and fixed authoring under the folded Investigate menu. Rolling configuration discovery remains in Views; the duplicated below-stream question/saved entrance is hidden while Activity is active.
+
+## Compact observation rows (218)
+
+Short log/span summaries now share one desktop scan line for status, message and
+duration, with existing actions alongside. Long bodies preview two complete lines;
+full text remains in the local inspector. No new source read or control is added.
+See [the real OTel storyboard and current frames](../journeys/218-compact-activity-storyboard.md).

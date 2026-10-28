@@ -2496,3 +2496,9 @@ Explicit exact-resource lookup and pure planning load at most two receiver-pinne
 real delayed operation/rate/histogram/HTTP responses, leave/scope/visibility
 cancellation, source-free return and explicit retry, plus a bounded Bombadil actor.
 This behavior-only cut changes no layout or historical screenshots.
+
+218 records [dense ordinary OTel observation rows](../../journeys/218-compact-activity-storyboard.md)
+with current log/span desktop/mobile frames. Short rows stay below 48px at the
+checked desktop size; full message inspection, UTC details and touch/keyboard
+controls remain. Journey 102 frames and its Bombadil inspect/close/density checks
+are updated; the observed entry Quint contract remains unchanged.

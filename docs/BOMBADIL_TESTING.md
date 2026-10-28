@@ -552,3 +552,11 @@ actor. Actions inspect operations, evaluate HTTP previews, change scope and leav
 workspaces. Invariants require exercised source reads, query IDs, visible owners,
 stopped hidden readers and no uncaught errors. It performs no saves or workload
 changes. See [the storyboard](../journeys/217-legacy-query-ownership-storyboard.md).
+
+## Compact Activity (218)
+
+The existing `stream-entry.ts` actor now checks short desktop row density and
+exercises pause → inspect → close without adding a source read. It keeps its
+buffer/overflow and no-eager-editor invariants. Run the 102 entry journey with
+`GOO_ENTRY_BOMBADIL=1`; the [218 storyboard](../journeys/218-compact-activity-storyboard.md)
+adds real log/span geometry, full-text and touch/keyboard checks.

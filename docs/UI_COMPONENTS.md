@@ -199,6 +199,27 @@ flowchart LR
   Q[Application: queries and evidence state] --> SPA
 ```
 
+## Compact record scan lines (218)
+
+`goo-record-summary[compact]` now keeps ordinary severity/status, message and
+duration inline on desktop, with a two-line message preview for long values.
+The label cannot collapse into a vertical letter column. Full noncompact summaries
+and the owner-provided inspector retain the original record text. The behavior is
+in `record-presentation.css`; duplicate Activity-specific height/clipping overrides
+are removed from product CSS. No event, subscription or data API is added.
+
+```html
+<link rel="stylesheet" href="/record-presentation.css">
+<script type="module" src="/display.mjs"></script>
+<goo-record-summary compact signal="logs"
+  record='{"Body":"Catalog loaded","SeverityText":"INFO"}'></goo-record-summary>
+```
+
+Opt-in record tables keep caller-owned actions beside short summaries at desktop
+widths. Existing narrow row grouping, exact UTC metadata and touch targets remain.
+SSR/detached-SPA, standalone/nested and real ordinary-OTel checks are in
+[the 218 storyboard](../journeys/218-compact-activity-storyboard.md).
+
 ## Supplied record and range composition
 
 `goo-record-columns` accepts a `model` JSON attribute for server HTML or a

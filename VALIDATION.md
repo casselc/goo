@@ -1,5 +1,29 @@
 # Validation record
 
+## Compact shared observation rows — 218 (2026-10-28 UTC)
+
+Compact record summaries now align severity/status, body and duration on one
+short desktop scan line. Long bodies preview two complete lines with an ellipsis;
+labels do not squeeze into vertical letters. Full noncompact detail remains
+available. Shared record CSS owns the behavior and desktop action spacing;
+duplicate Activity message-height overrides are removed from product CSS.
+No data API, source read, filter, saved format or widget state is added.
+
+Validation: real ordinary-OTLP log/span journey 218 and expanded standalone/nested
+SSR/detached-SPA component journey 161 pass in Chromium. Short rows stay under
+48px at the checked 1440px viewport; long labels/text, exact UTC tooltips, local
+full-text inspection and keyboard focus return pass. Narrow 320/390/700/701px
+layouts avoid page overflow and preserve 28px mobile action targets. Journey 102
+passes with its observed Quint ledger/negative checks and updated Bombadil
+pause/inspect/close and short-row-density invariants. Current 218 desktop/mobile
+frames and the affected 102 entry frames are regenerated from the real app.
+
+Updated component docs, storyboard, live-activity guidance and roadmap status.
+No new Go/Hegel or whole-Node rerun was needed for this CSS-only production cut;
+R1's full frontend suite remains the preceding JS baseline. Firefox/Safari
+conformance is not established. Disposable local review/build/campaign artifacts
+are removed, while useful documentation frames and all saved lab volumes remain.
+
 ## Legacy browser source ownership — 217 (2026-10-28 UTC)
 
 The four admitted legacy source GETs now use decoded `getJSON` transport with

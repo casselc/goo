@@ -5,7 +5,11 @@ goo-record-summary .record-label[data-tone=error]{color:var(--danger,#f59a9a)}
 goo-record-summary .record-label[data-tone=warn]{color:var(--warn,#e1bd77)}
 goo-record-summary .record-message{white-space:pre-wrap;overflow-wrap:anywhere}
 goo-record-summary:not([compact])>.record-message{max-height:none;overflow:visible;min-width:0}
-goo-record-summary[compact] .record-message{max-height:4.2em;overflow:hidden}
+/* Short compact records keep metadata and message on one scan line; full detail
+   remains a block. Native table cells retain their own actions and ownership. */
+goo-record-summary[compact]{display:inline-flex;gap:2px 6px;align-items:baseline;vertical-align:middle;max-width:100%}
+goo-record-summary[compact]>.record-label,goo-record-summary[compact]>.record-duration{flex:0 0 auto;min-width:0;max-width:min(12em,100%)}
+goo-record-summary[compact]>.record-message{flex:1 1 auto;min-width:0;margin:0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;max-height:2lh;overflow:hidden}
 goo-record-summary details{border:0;margin:0;padding:0}
 goo-record-context{display:block;min-width:0;margin:4px 0;font-size:11px}
 goo-record-context>details{padding-top:4px;margin-top:4px}
@@ -15,6 +19,9 @@ goo-record-context .record-reference{display:inline-block;margin:4px 6px 4px 0;b
 .record-time-short{display:none}
 
 /* Opt-in supplied record rows, shared by SSR tables and application adapters. */
+@media(min-width:701px){
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=summary]>goo-record-summary[compact]{margin-inline-end:6px}
+}
 @media(max-width:700px){
  goo-table[record-layout=compact] .record-time-full{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
  goo-table[record-layout=compact] .record-time-short{display:inline}
