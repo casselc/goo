@@ -16,3 +16,10 @@ test('typed numeric editor rejects invalid drafts without mutating or dropping t
 });
 
 test('explicit null numeric envelope preserves a legacy string predicate as omitted numeric',()=>{const p={...leaf('eq','canary'),numeric:null};validate(p);assert.deepEqual(normalize(p),leaf('eq','canary'))});
+
+// Retained incompatible predicates must identify the repairable field.
+test('signal-specific refusal names the qualified field without changing the tree',()=>{
+ const where={all:[leaf('eq',''),{field:{kind:'column',key:'body'},op:'contains',value:'failed'}]},before=structuredClone(where);
+ assert.throws(()=>validate(where,'spans'),{message:'Field column:body is unavailable for spans.'});
+ assert.deepEqual(where,before);validate(where,'logs');
+});

@@ -8,6 +8,12 @@ to reimplement its feature. Synthetic component conformance fixtures remain
 separate from real OTLP/application stories, as labeled below. Screenshots are
 generated evidence; no frames were fabricated for this documentation repair.
 
+## Signal scope continuity
+
+[Journey239](../../journeys/239-activity-signal-scope-storyboard.md) checks complete
+predicate retention across Logs/Spans, explicit incompatible-draft repair, actual
+request counts and rejection of a delayed old-signal response.
+
 ## Single Go runtime
 
 [Journey238](../../journeys/238-single-go-runtime-storyboard.md) starts one compiled

@@ -14,7 +14,7 @@ function validate(where,signal='logs'){
    if(p.all||p.any){const keys=Object.keys(p),list=p.all||p.any;if(keys.length!==1||!Array.isArray(list)||!list.length)throw Error('Each group needs a condition.');list.forEach(x=>visit(x,depth+1));return}
    if(p.numeric!=null){protocol().validateNumericPredicate(p);return}
    const f=p.field;if(!f||!['column','attribute','resource'].includes(f.kind)||typeof f.key!=='string'||!f.key||bytes(f.key)>128||f.key.includes('\0'))throw Error('Choose a qualified field (up to 128 bytes).');
-   if(f.kind==='column'&&(!columns.includes(f.key)||(signal==='logs'&&['name','kind','status','duration_ns','duration_bucket','status_class','exception_event','exception_type','exception_type_state'].includes(f.key))||(signal==='spans'&&['body','severity','severity_number','body_pattern_v1'].includes(f.key))))throw Error('Field is unavailable for '+signal+'.');
+   if(f.kind==='column'&&(!columns.includes(f.key)||(signal==='logs'&&['name','kind','status','duration_ns','duration_bucket','status_class','exception_event','exception_type','exception_type_state'].includes(f.key))||(signal==='spans'&&['body','severity','severity_number','body_pattern_v1'].includes(f.key))))throw Error('Field '+f.kind+':'+f.key+' is unavailable for '+signal+'.');
    const numeric=f.kind==='column'&&uintColumn(f.key),v=p.value??'';
    if(typeof v!=='string'||bytes(v)>1024||v.includes('\0'))throw Error('Use a value up to 1024 bytes.');
    if(!['eq','ne','contains','gte','lte','exists','missing'].includes(p.op)||numeric&&p.op==='contains'||!numeric&&['gte','lte'].includes(p.op))throw Error('Operator does not match the field type.');

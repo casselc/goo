@@ -1,5 +1,43 @@
 # Validation record
 
+## Activity signal-scope continuity — 239 (2026-10-28 UTC)
+
+Logs/Spans changes retain the complete predicate tree. Compatible applied filters
+start one replacement stream; incompatible fields are named and kept in the
+existing editor, with the old stream paused and no replacement read. Pending
+filter/environment edits, invalid editor input and staged saved views require
+explicit Apply/Start. Returning a staged view to its exact saved selector keeps
+its original filters and restores one Start control. The pending-scope analysis
+guard also checks signal mismatch; it cannot stage a new signal from held old rows.
+Application ownership and passive display/network boundaries are unchanged.
+
+Passed 606 frontend tests. New real-OTLP journey239 checks actual request bodies and
+counts across both signals, nested AND/OR, resource/attribute keys with the same
+name, missing versus present-empty operators, saved selectors, invalid fields,
+environment drafts and explicit repair. A browser transport negative control
+holds one actual SSE response, ignores its abort and releases it after the new
+span stream is visible; no old rows or extra reconnect/read publish. The observed
+read-count ledger passed the existing Quint Activity checker and rejecting
+mutations. A 20-second Bombadil campaign passed with 368 trace records and four deliberate
+signal actions, checking retained predicate identity and one read per transition.
+
+Existing deployed journeys passed: Activity fixed analysis, live field filters,
+fresh stream entry and scroll/background pause/resume (four cases, 1.3m). Saved
+Activity view regression also passed, including source-free signal changes and
+explicit Start after restoring the exact saved selector. Its earlier assertion
+expected a Start to refuse even that exact selector because the old implementation
+had cleared filters; the updated case asserts preserved canary scope, no automatic
+read, and the subsequent explicit successful read. No source-free assertion was
+removed. Initial new-harness selector/group-shape/reload mistakes were corrected;
+failed attempts are not passing validation.
+
+The embedded Go image was rebuilt; affected served ESM bytes were compared with
+the checkout. Existing telemetry/evidence volumes and sample services remain.
+Current [storyboard](journeys/239-activity-signal-scope-storyboard.md), mobile review
+frame, Activity diagram and backlog are updated. No Go API/wire/storage format or
+query compiler changed. Inspector reveal/focus remains P1b, next.
+
+
 ## Single Go runtime and image boundaries — 238 (2026-10-28 UTC)
 
 Six agents handled runtime architecture/review, Go asset/routing implementation,

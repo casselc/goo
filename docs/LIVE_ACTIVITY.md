@@ -89,8 +89,12 @@ Exclude uses the existing `ne` predicate: the field must exist and differ.
 Staging or removing filters pauses transport and retains the held rows/inspector.
 Draft chips are marked; the previous applied environment/signal is shown and its
 selector is available in the tooltip. Apply replaces the buffer with a new scoped
-read. Resume refuses an unapplied scope; changing signals clears signal-specific
-filters. Opening a fixed investigation from the inspector stages the drafted
+read. Resume refuses an unapplied scope. Changing signals keeps the complete
+predicate tree. Shared fields carry into a replacement read only when no filter
+or environment draft is pending. An incompatible field pauses the old stream,
+opens Filters and requires review; no branch is dropped or source read started.
+Invalid editor input and saved selectors remain intact until explicitly edited
+and applied. Opening a fixed investigation from the inspector stages the drafted
 predicate in the selected row's original 60-second read window. It does not fetch;
 the existing Run action explicitly rereads that fixed question. It is not a
 capture or an assertion of complete source coverage.
@@ -184,3 +188,22 @@ Short log/span summaries now share one desktop scan line for status, message and
 duration, with existing actions alongside. Long bodies preview two complete lines;
 full text remains in the local inspector. No new source read or control is added.
 See [the real OTel storyboard and current frames](../journeys/218-compact-activity-storyboard.md).
+
+## Signal scope continuity — 239
+
+The Activity owner keeps complete predicates across Logs/Spans. An incompatible
+column is named in the error, with the old applied scope retained below the
+paused buffer. No filter subtree or pending invalid input is silently discarded.
+See [journey239](../journeys/239-activity-signal-scope-storyboard.md).
+
+```mermaid
+flowchart LR
+  Change[Choose Logs or Spans] --> Keep[Keep complete editor predicate and environment]
+  Keep --> Validate[Validate against chosen signal]
+  Validate -->|Incompatible or invalid| Review[Pause and review existing Filters]
+  Validate -->|Valid but another draft is pending| Draft[Keep unapplied scope]
+  Validate -->|Valid applied scope| Read[One replacement stream with same predicates]
+  Review -->|Explicit edit and Apply| Read
+  Draft -->|Explicit Apply| Read
+  Read --> Guard[Abort old reader and reject its late frames]
+```

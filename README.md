@@ -3,7 +3,8 @@
 Start with what is happening now. Narrow logs and spans, inspect a population,
 compare evidence, and preserve an explanation you can revisit or reuse. Goo works
 with ordinary OpenTelemetry data; application manifests and Go annotations add
-shared definitions when available.
+shared definitions when available. Logs/Spans switching preserves shared filters;
+incompatible fields stay as explicit drafts ([scope continuity](journeys/239-activity-signal-scope-storyboard.md)).
 
 [Reviewed roadmap](docs/ROADMAP_2026_10_28.md) · [Execution backlog](docs/BACKLOG_2026_10_28.md) ·
 [Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md) ·
