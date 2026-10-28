@@ -2528,3 +2528,7 @@ and fixed workflow questions that survive unrelated default edits.
 224 adds [retained discovery scope](../../journeys/224-retained-discovery-scope-storyboard.md):
 completed service/host/pod windows survive next-read default edits, return restores
 identity/filters/focus without a reread, and pending discovery still cancels.
+
+225 adds [one shared resource return path](../../journeys/225-resource-return-storyboard.md):
+latest-origin replacement, qualified identity/UTC scope, stale action refusal,
+independent retained owners and a compact responsive bar.

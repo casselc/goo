@@ -1,22 +1,25 @@
 import { always, eventually } from '@antithesishq/bombadil';
 import { extract, actions, registerCustomAction } from '@antithesishq/bombadil/browser';
 export { noUncaughtExceptions, noUnhandledPromiseRejections } from '@antithesishq/bombadil/browser/defaults/properties';
-const state = extract(({ document }) => ({ phase: Number(document.documentElement.dataset.podPhase || 0), source: Number(document.documentElement.dataset.podSource || 0),
+const state = extract(({ document }) => ({
+  returns:document.querySelectorAll('.resource-return:not([hidden])').length,
+  returnClocks:[...document.querySelectorAll('.resource-return:not([hidden])')].every(bar=>bar.querySelectorAll('time').length===2&&[...bar.querySelectorAll('time')].every(t=>!!t.getAttribute('datetime')&&t.textContent?.includes('UTC'))), phase: Number(document.documentElement.dataset.podPhase || 0), source: Number(document.documentElement.dataset.podSource || 0),
   terminal: document.documentElement.dataset.podTerminal === 'true', target: document.documentElement.dataset.podTargetKey || '',
   ready: !!document.querySelector('tr[data-pod-variant]'), observed: document.documentElement.dataset.podMembersObserved === 'true',
   runReady: !!document.querySelector('#exploreRun') && !document.querySelector<HTMLButtonElement>('#exploreRun')!.disabled }));
+export const oneResourceReturn=always(()=>state.current.returns<=1&&state.current.returnClocks);
 export const bounded = always(() => state.current.source <= 2);
 export const complete = eventually(() => state.current.terminal).within(25, 'seconds');
 const step = registerCustomAction('goo.podStep', async (document, window) => {
   const root = document.documentElement, phase = Number(root.dataset.podPhase || 0), clusterKey = JSON.stringify([['missing'], ['present', 'shared-cluster']]), namespaceKey = JSON.stringify(['missing']);
   if (phase === 0) {
-    const parameters = new URLSearchParams(window.location.hash.slice(1)), environment = parameters.get('podEnvironment')!, expectedIDs = parameters.get('podExpectedLogIDs')!.split(',').sort(), original = window.fetch.bind(window);
+    const parameters = new URLSearchParams(window.location.hash.slice(1)), environment = parameters.get('podEnvironment')!, expectedResource=JSON.parse(parameters.get('podExpectedResource')!), expectedIDs = parameters.get('podExpectedLogIDs')!.split(',').sort(), original = window.fetch.bind(window);
     window.fetch = async (input, init) => {
       const url = new URL(typeof input === 'string' ? input : input instanceof URL ? input.href : input.url, window.location.href), method = init?.method || (input instanceof Request ? input.method : 'GET');
       if (method === 'POST' && url.pathname.startsWith('/api/') && !url.pathname.endsWith('/plan') && !url.pathname.endsWith('/cancel')) root.dataset.podSource = String(Number(root.dataset.podSource || 0) + 1);
       const response = await original(input, init);
       if (response.ok && method === 'POST' && url.pathname === '/api/pod-discovery') {
-        const data = await response.clone().json(), row = data.observations.find((r: any) => r.resource['k8s.pod.uid'] === 'uid-a' && !Object.hasOwn(r.resource, 'service.name') && !Object.hasOwn(r.resource, 'k8s.cluster.uid') && !Object.hasOwn(r.resource, 'k8s.namespace.name') && r.resourceSchemaURL === 'https://opentelemetry.io/schemas/1.37.0' && r.families.some((f: any) => f.family === 'gauge'));
+        const data = await response.clone().json(), row = data.observations.find((r: any) => Object.keys(r.resource).length===Object.keys(expectedResource).length&&Object.entries(expectedResource).every(([key,value])=>r.resource[key]===value) && r.resourceSchemaURL === 'https://opentelemetry.io/schemas/1.37.0' && r.families.some((f: any) => f.family === 'gauge'));
         if (!row) throw Error('Exact pod resource variant absent'); root.dataset.podTargetKey = row.key;
       }
       if (response.ok && method === 'POST' && url.pathname === '/api/explore') {

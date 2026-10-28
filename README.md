@@ -91,7 +91,9 @@ family tabs. Switching families preserves drafts and selections and cancels a hi
 HTTP preview; browsing families does not read telemetry. The HTTP lookback appears
 only in App contracts and preserves its chosen default when hidden. Editing the
 next discovery lookback preserves completed service/host/pod observations and their
-fixed-window return paths; pending discovery reads still cancel. Mobile workspaces share
+fixed-window return paths; pending discovery reads still cancel. Resource drill-downs
+share one latest-origin return bar with qualified identity, environment and UTC
+window; returning reopens the retained detail without a read. Mobile workspaces share
 one compact Menu bar, with Escape to close and return focus.
 
 Services, Operations and Definitions enter the same investigation flow with a

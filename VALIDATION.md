@@ -1,5 +1,31 @@
 # Validation record
 
+## Shared resource return presentation — 225 (2026-10-28 UTC)
+
+Service, host and Kubernetes owners use one application return presenter. The
+latest resource origin replaces older resource returns, preserving each owner's
+retained data. The bar shows qualified service identity, environment and fixed
+UTC timestamps with exact nanosecond metadata and an excluded end. Native
+measurement returns obtain environment from their definition and use the supplied
+interval bounds. Clearing/disposing an older owner cannot clear the current bar;
+stale and previously consumed callbacks cannot navigate.
+
+Validation: 585 frontend tests pass, plus targeted native-environment/ownership
+checks. All 20 Python proxy/static-asset checks pass, including registration of
+the new module. Real Chromium 225 crosses host → pod → retained host → service,
+checks replacement, stale actions, independent invalidation and source-free return,
+and fits 320/390/700/1024px. All five 224 retention/cancellation journeys pass.
+Updated host and Kubernetes Bombadil campaigns pass with one-return/two-clock
+invariants; Kubernetes now selects the exact emitted fixture resource map rather
+than an arbitrary same-UID variant. Both 213 disk ownership/preview tasks pass.
+Service journey 46 and its observed Quint validation pass. Current 224/225 and
+46/48 documentation frames are regenerated.
+
+The adapter owns presentation/action validity, without source reads or persisted
+history. Native interval navigation retains its distinct measurement parent chain.
+This completes the bounded R5 resource-origin consolidation; remaining scope/default
+presentation still needs its follow-up audit.
+
 ## Retained resource discovery context — 224 (2026-10-28 UTC)
 
 The global new-discovery lookback no longer discards completed service, host or

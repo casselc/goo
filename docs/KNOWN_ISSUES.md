@@ -32,7 +32,8 @@ observations but no synthetic zero baselines. This is not a full SDK cardinality
 limit. See [runtime ownership](GOO_ANNOTATIONS.md#runtime-ownership-and-startup).
 Examples galleries/workflows and legacy Definitions/Operations catalogs now load
 on first workspace use. Local startup requests fell from 14 to 7 in the checked
-lab recording; 136 modules still load, and two retention-status requests remain.
+219 lab recording, which loaded 136 modules and included two retention-status
+requests. The shared resource-return adapter adds one application module in 225.
 This is not a latency/load benchmark or complete startup-work optimization.
 Saved now presents a compact typed capture table before secondary tools, with
 exact capture-clock tooltips and existing stored order/paging. This is not a
@@ -45,7 +46,10 @@ default and fixed workflow questions. R5 still tracks broader scope/window and
 return presentation across service/resource investigations. Completed service/host/pod
 observations now survive next-discovery lookback edits (224), with pending-read
 cancellation retained. Context is tab-local; explicit rediscovery/environment edits
-replace it, and it is not saved evidence.
+replace it, and it is not saved evidence. Service/host/Kubernetes origins now use
+one shared latest-origin return presenter (225), with qualified service identity
+and UTC scope. Native interval return retains its separate parent chain; persistent
+or arbitrary investigation history remains out of scope.
 Browser conformance is currently checked in Chromium; Firefox/Safari coverage
 is not established.
 

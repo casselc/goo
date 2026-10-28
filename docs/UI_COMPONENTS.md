@@ -1286,3 +1286,11 @@ from completed fixed observations (224): cancel pending work, retain completed
 context, and read again only on explicit discovery. Environment changes and
 rediscovery still invalidate replaced host/pod return controls. Display components
 continue to receive supplied data without owning these transitions.
+
+Resource drill-downs share the application adapter `resource-return.mjs` (225).
+Its per-parent ownership selects the latest resource origin and guards stale
+callbacks; each browser retains its own data and navigation callback. The common
+bar reuses supplied-data UTC timestamp presentation. Source reads, publication
+and persistent history stay with their existing owners. Native interval return
+continues to represent its distinct parent measurement. See the executable
+[storyboard](../journeys/225-resource-return-storyboard.md).

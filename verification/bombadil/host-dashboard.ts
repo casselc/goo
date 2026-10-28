@@ -2,11 +2,14 @@ import { always, eventually } from '@antithesishq/bombadil';
 import { extract, actions, registerCustomAction } from '@antithesishq/bombadil/browser';
 export { noUncaughtExceptions, noUnhandledPromiseRejections } from '@antithesishq/bombadil/browser/defaults/properties';
 const state = extract(({ document }) => ({
+  returns:document.querySelectorAll('.resource-return:not([hidden])').length,
+  returnClocks:[...document.querySelectorAll('.resource-return:not([hidden])')].every(bar=>bar.querySelectorAll('time').length===2&&[...bar.querySelectorAll('time')].every(t=>!!t.getAttribute('datetime')&&t.textContent?.includes('UTC'))),
   phase: Number(document.documentElement.dataset.hostPhase || 0), source: Number(document.documentElement.dataset.hostSource || 0),
   plans: Number(document.documentElement.dataset.hostPlans || 0), terminal: document.documentElement.dataset.hostTerminal === 'true',
   hostKey: document.documentElement.dataset.hostKey || '', inventory: !!document.querySelector('button[data-host-key]'),
   ready: document.querySelectorAll('.host-widget').length === 2, nativeComplete: !!document.querySelector('#measureResult')?.children.length && !document.querySelector<HTMLButtonElement>('#measureCapture')?.disabled, nativeReady: !document.querySelector<HTMLButtonElement>('#measureRun')?.disabled
 }));
+export const oneResourceReturn=always(()=>state.current.returns<=1&&state.current.returnClocks);
 export const bounded = always(() => state.current.source <= 4 && state.current.plans <= 1);
 export const complete = eventually(() => state.current.terminal).within(25, 'seconds');
 const step = registerCustomAction('goo.hostStep', async (document, window) => {
