@@ -4,6 +4,7 @@ import { extract, actions, registerCustomAction } from '@antithesishq/bombadil/b
 export { noUncaughtExceptions, noUnhandledPromiseRejections } from '@antithesishq/bombadil/browser/defaults/properties';
 
 const shell = extract(({ document, window }) => ({
+  nativeSelected:document.querySelector('#exploreMeasurementsMode')?.getAttribute('aria-selected')==='true',
   savedLookbackHidden: document.querySelector('#minutes')?.closest<HTMLElement>('.scope-control')?.hidden === true,
   liveOwned: document.querySelector('#operations')?.closest('[data-workspace-panel]')?.getAttribute('data-workspace-panel') === 'operations',
   savedHasEditor: !!document.querySelector('[data-workspace-panel=investigations] #operationPackage'),
@@ -19,6 +20,8 @@ const shell = extract(({ document, window }) => ({
 }));
 
 export const sharedMenuState = always(() => !shell.current.ready || (shell.current.menuCount === 1 && shell.current.menuExpanded === shell.current.navExpanded));
+
+export const nativeHasOwnWindow=always(()=>!shell.current.ready||shell.current.selected[0]!=='explore'||!shell.current.nativeSelected||shell.current.savedLookbackHidden);
 
 export const savedHasNoLiveLookback = always(() => !shell.current.ready || shell.current.selected[0] !== 'investigations' || shell.current.savedLookbackHidden);
 

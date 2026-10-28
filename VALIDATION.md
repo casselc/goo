@@ -1,5 +1,30 @@
 # Validation record
 
+## Native time-control ownership and UTC scope — 226 (2026-10-28 UTC)
+
+Measurements now hides the unrelated global lookback; empty global toolbar chrome
+also collapses in Saved and non-HTTP definition families. Native description and
+mode remain correct when Activity mounts after delayed UI configuration. Scope
+uses readable UTC timestamps with focusable exact nanosecond metadata. Fixed
+re-preview preserves a validated exact question; fresh preview applies the package
+lookback, and edited UTC inputs use explicit millisecond bounds.
+
+Validation: all 585 frontend tests pass. Ten distinct real browser tasks pass:
+226 delays actual UI configuration, checks no automatic source reads, retained
+bounds after another view's default edit, exact Run/Share/re-preview, explicit
+fresh/edited windows and narrow UTC presentation; 222 covers 320/390/700px
+navigation, and 223 retains HTTP/fixed workflow scope. The updated native-to-record
+Bombadil campaign passes with native-control/timestamp invariants. Exact-window
+support/comparison (55) and reusable-question (56) journeys pass with their observed
+Quint validation. Their exact-reopen checks now assert timestamp metadata; an old
+retained-draft wording assertion is updated. Current 222/223/226 and 55/56 frames
+are regenerated from the lab.
+
+No telemetry source, native numeric semantics or saved question schema changed.
+UTC field editing remains millisecond precision; exact unchanged questions and
+shared links preserve nanosecond precision. R5's entry/return scope changes are
+ready for a review gate before further scope UI or library consolidation.
+
 ## Shared resource return presentation — 225 (2026-10-28 UTC)
 
 Service, host and Kubernetes owners use one application return presenter. The

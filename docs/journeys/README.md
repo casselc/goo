@@ -2532,3 +2532,7 @@ identity/filters/focus without a reread, and pending discovery still cancels.
 225 adds [one shared resource return path](../../journeys/225-resource-return-storyboard.md):
 latest-origin replacement, qualified identity/UTC scope, stale action refusal,
 independent retained owners and a compact responsive bar.
+
+226 adds [native time controls and UTC scope](../../journeys/226-native-scope-controls-storyboard.md):
+correct delayed initialization, contextual global chrome, readable exact timestamp
+metadata, fixed re-preview precision and explicit package-lookback/edited windows.

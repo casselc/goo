@@ -50,6 +50,10 @@ replace it, and it is not saved evidence. Service/host/Kubernetes origins now us
 one shared latest-origin return presenter (225), with qualified service identity
 and UTC scope. Native interval return retains its separate parent chain; persistent
 or arbitrary investigation history remains out of scope.
+Native Measurements now hides the unrelated global lookback and uses UTC scope
+timestamps with exact focusable metadata (226). Unchanged fixed re-preview retains
+nanosecond precision. UTC input editing remains millisecond precision; fresh
+preview explicitly applies the package lookback ending now.
 Browser conformance is currently checked in Chromium; Firefox/Safari coverage
 is not established.
 

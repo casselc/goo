@@ -1294,3 +1294,10 @@ bar reuses supplied-data UTC timestamp presentation. Source reads, publication
 and persistent history stay with their existing owners. Native interval return
 continues to represent its distinct parent measurement. See the executable
 [storyboard](../journeys/225-resource-return-storyboard.md).
+
+Native workbench scope (226) reuses `EvidenceSummary.timestamp` for readable UTC
+with exact nanosecond metadata. Workspace responds to the existing Explore-mode
+event to hide irrelevant global lookback/empty toolbar chrome; Activity initializes
+from the actual selected mode after delayed configuration. These are application
+layout transitions. Fixed re-preview preserves a validated exact window; edited
+UTC inputs and fresh package preview retain their explicit respective semantics.

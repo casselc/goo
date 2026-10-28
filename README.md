@@ -93,7 +93,9 @@ only in App contracts and preserves its chosen default when hidden. Editing the
 next discovery lookback preserves completed service/host/pod observations and their
 fixed-window return paths; pending discovery reads still cancel. Resource drill-downs
 share one latest-origin return bar with qualified identity, environment and UTC
-window; returning reopens the retained detail without a read. Mobile workspaces share
+window; returning reopens the retained detail without a read. Measurements uses
+its own package/fixed-window controls, readable UTC scope and exact timestamp
+metadata. Re-previewing an unchanged fixed question preserves native precision. Mobile workspaces share
 one compact Menu bar, with Escape to close and return focus.
 
 Services, Operations and Definitions enter the same investigation flow with a

@@ -2,6 +2,8 @@ import { always, eventually } from '@antithesishq/bombadil';
 import { extract, actions, registerCustomAction } from '@antithesishq/bombadil/browser';
 export { noUncaughtExceptions, noUnhandledPromiseRejections } from '@antithesishq/bombadil/browser/defaults/properties';
 const state = extract(({ document }) => ({
+  nativeScope:document.querySelector('#exploreMeasurementsMode')?.getAttribute('aria-selected')!=='true'||document.querySelector('#minutes')?.closest<HTMLElement>('.scope-control')?.hidden===true,
+  scopeClocks:!document.querySelector<HTMLButtonElement>('#measureRun')||document.querySelector<HTMLButtonElement>('#measureRun')!.disabled||document.querySelectorAll('#measureScope time').length===2,
   phase: Number(document.documentElement.dataset.nativeContextPhase || 0),
   source: Number(document.documentElement.dataset.nativeContextSource || 0),
   ready: !!document.querySelector<HTMLButtonElement>('#measureRun') && !document.querySelector<HTMLButtonElement>('#measureRun')!.disabled,
@@ -13,6 +15,7 @@ const state = extract(({ document }) => ({
   proof: document.documentElement.dataset.nativeContextProof || '',
   overflow: document.documentElement.scrollWidth > innerWidth,
 }));
+export const nativeWindowOwnership=always(()=>state.current.nativeScope&&state.current.scopeClocks);
 export const bounded = always(() => !state.current.overflow && state.current.source <= 2);
 export const complete = eventually(() => state.current.terminal).within(20, 'seconds');
 const step = registerCustomAction('goo.nativeRecordContextStep', async (document, window) => {
