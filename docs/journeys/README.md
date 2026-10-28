@@ -2568,3 +2568,15 @@ Bombadil checks the service tab/focus outcome within the existing source budget.
 
 ![Service return focus](screenshots/234-service-retained-opener.png)
 ![Container history return focus](screenshots/234-kubernetes-retained-opener.png)
+
+## 235. Whole-product review frames
+
+The [review refresh](../WHOLE_PRODUCT_REVIEW_2026_10_28_REFRESH.md) records a
+read-only walkthrough of the five main destinations, with current desktop and
+mobile Activity frames. These are expert-review observations against existing
+local OTel traffic, not a new executable regression suite or user study. Existing
+journeys remain the behavioral acceptance for delivered features.
+
+[Desktop Activity](screenshots/235-review-activity-desktop.png) ·
+[Mobile Activity](screenshots/235-review-activity-mobile.png) ·
+[Saved](screenshots/235-review-investigations.png)

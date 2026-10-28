@@ -1,5 +1,31 @@
 # Validation record
 
+## Whole-product review and roadmap refresh — 235 (2026-10-28 UTC)
+
+Reviewed `db03e6f` across the five primary destinations with read-only Chromium
+navigation at 1440×1000 and retained Activity at 390×844. Service discovery and
+Activity used existing local OTel data. No workload/publication/store mutation
+was performed. All six frames had no page-level horizontal overflow and no
+uncaught page errors were observed. Operations was inspected unrun; no execution,
+load benchmark, accessibility certification or new external-doc research is claimed.
+
+One fresh load observed seven API calls (six configuration/catalog/status and one
+tail POST), including duplicate retained-evidence status; 137 ESM resources and
+3,060 DOM nodes at the Activity sample. Final navigation sampled 3,378 nodes.
+These are local observations, not a production performance baseline. Desktop
+record density improved; mobile repeats per-record action rows. The capture list
+still pages 20 entries in ID order without title/scope search; source confirms the
+cursor-only catalog contract. Comparison support and reusable trace-question gaps
+are reconciled against current docs/source rather than older proposed statuses.
+
+New review, bounded backlog and refreshed roadmap prioritize mobile scanning,
+capture discovery, comparison support and recurring trace reuse, closing the finite
+217–234 ownership/library/return cycle. README and issue index point to this current
+queue; earlier research/delivery records remain historical. Local links and diff
+whitespace were checked. No runtime code changed, so Go/Node/property/model/browser
+regression suites were not repeated; recent 233/234 acceptance remains separate.
+
+
 ## Consistent retained service/Kubernetes returns — 234 (2026-10-28 UTC)
 
 Back to service now explicitly selects Services and restores the actual opening

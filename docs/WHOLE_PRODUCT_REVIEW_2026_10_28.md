@@ -1,5 +1,9 @@
 # Whole-product review — 2026-10-28
 
+> Historical same-day review. The [post-234 refresh](WHOLE_PRODUCT_REVIEW_2026_10_28_REFRESH.md)
+> reconciles delivery and owns current recommendations; this file preserves its
+> original observations and external-research limits.
+
 Reviewed source at `9154922`, earlier product/architecture/usability/library reviews,
 and the running local Chromium app. This combines product, design, architecture,
 performance and reliability findings. It is a technical/design review, not a user

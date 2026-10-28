@@ -5,7 +5,7 @@ compare evidence, and preserve an explanation you can revisit or reuse. Goo work
 with ordinary OpenTelemetry data; application manifests and Go annotations add
 shared definitions when available.
 
-[Reviewed roadmap](docs/ROADMAP_2026_10_25.md) · [Execution backlog](docs/BACKLOG_2026_10_25.md) ·
+[Reviewed roadmap](docs/ROADMAP_2026_10_28.md) · [Execution backlog](docs/BACKLOG_2026_10_28.md) ·
 [Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md) ·
 [Go/frontend library review and proposal](docs/LIBRARY_REFACTOR_PLAN_2026_10_28.md)
 
@@ -441,7 +441,7 @@ storage-free. Lifecycle custody/correction uses `measurements.ObserveLifecycle`
 explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-evaluation-and-lifecycle-observation).
 
 Current priorities and acceptance are in the [2026-10-28 roadmap](docs/ROADMAP_2026_10_28.md),
-based on the [whole-product review](docs/WHOLE_PRODUCT_REVIEW_2026_10_28.md).
+based on the [refreshed whole-product review](docs/WHOLE_PRODUCT_REVIEW_2026_10_28_REFRESH.md).
 
 Go library entry points: `subjectfacts` provides portable prepared-fact aggregation
 and offline ClickHouse/Databricks compilation; `measurements` binds/evaluates native
