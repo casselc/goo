@@ -1,5 +1,26 @@
 # Validation record
 
+## Unified Go baseline (2026-10-28)
+
+All six modules now declare Go 1.27.0. `.go-version` pins the validated 1.27.2
+compiler and selects it for CI, matching the three existing Docker builders.
+CI now checks instrumentation and both example modules in addition to root.
+
+Checks on Go 1.27.2 linux/amd64: root `go test ./... -count=1` and `go vet ./...`
+pass; instrumentation tests pass. Both examples and both verification modules
+compile with `go test ./... -run '^$'`. That compile check does not run native
+properties, models or Orchestrion-woven scenarios. No UI or runtime deployment
+changed, and no screenshots or additional evidence artifacts were generated.
+
+A temporary old-directive modfile confirmed the root main previously compiled
+with Go 1.24 compatibility defaults, including `containermaxprocs=0` and
+`updatemaxprocs=0`. With the new directive, `DefaultGODEBUG` is empty: Go 1.27's
+normal defaults apply, including container-aware CPU selection/updates unless
+explicitly overridden. The repository's Compose/Docker configuration has no
+GOMAXPROCS/GODEBUG override. Existing running binaries have not been rebuilt;
+no performance claim is made. The temporary comparison files were removed.
+
+
 ## Categorical selected-versus-rest populations (2026-10-23 UTC)
 
 The existing facet tray now offers Compare with rest. A bounded generated

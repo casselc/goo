@@ -25,6 +25,16 @@ then choose an environment and **Start stream**. The existing ClickStack-shaped
 source adapters apply; this does not install a collector or create source tables.
 Optional prepared/example capabilities stay explicitly unconfigured.
 
+## Build from source
+
+All six Go modules require Go 1.27 or newer. [`.go-version`](.go-version)
+pins the validated compiler (currently 1.27.2) used by CI and Docker builds.
+Keep that file and the three Docker build images aligned when updating it.
+Instrumentation, examples and verification retain separate dependency graphs;
+`go test ./...` at the root does not test nested modules. See
+[verification setup](verification/README.md) for the sibling checkout and native
+requirements, and [compiler commands](docs/PORTABLE_COMPILER.md) for local setup.
+
 ## Run the local lab
 
 Install Docker with Compose v2. The lab needs roughly 4 GB of memory and several

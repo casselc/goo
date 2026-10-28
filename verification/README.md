@@ -30,7 +30,11 @@ The live fault-ledger test skips unless `GOO_FAULT_LEDGER` is supplied.
 This separate Go module keeps Hegel's native loader/development dependencies out
 of the runtime module. It uses hegel-go **0.9.8** (embedded libhegel 0.43.4), Quint
 **0.32.0**, and the checked-out sibling `observability/quintgo` tools. No sibling
-source is modified. Go 1.27+ is needed for the sibling tool module.
+source is modified. All Goo modules and the sibling tool module require Go 1.27+;
+[`.go-version`](../.go-version) pins the validated compiler. The root CI job
+checks root, instrumentation and both examples. These two verification modules
+still need the sibling checkout and native/model tooling described here; a green
+root CI job does not establish that they passed.
 
 From the root, install JavaScript tools with `npm ci`, then:
 

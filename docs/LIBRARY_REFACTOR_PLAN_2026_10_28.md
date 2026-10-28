@@ -29,6 +29,17 @@ work without exposing a generic algebra to callers. Public generics or iterators
 are also allowed when a normal usage example shows a real benefit; none is needed
 merely to consolidate existing query types.
 
+## Implementation status
+
+The Go baseline cut is implemented: all six modules declare Go 1.27.0;
+`.go-version`, CI and Docker builders select the validated Go 1.27.2 compiler.
+Root tests/vet and instrumentation tests pass, and all nested modules compile.
+CI additionally checks instrumentation and both examples. Native verification
+compilation is not a full Hegel/Quint or woven campaign result. See
+[compiler setup and runtime defaults](PORTABLE_COMPILER.md) and
+[the current validation entry](../VALIDATION.md#unified-go-baseline-2026-10-28).
+The remaining cuts below, including native ESM, are still proposals.
+
 ## Preferred cuts
 
 | Cut | Recommendation | Benefit and implementation boundary |

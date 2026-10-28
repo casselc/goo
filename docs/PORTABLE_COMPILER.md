@@ -9,7 +9,8 @@ expression runtime.
 
 ## Working commands
 
-From the repository root, with Go 1.24+ on PATH:
+From the repository root, with Go 1.27+ on PATH (the validated toolchain is pinned in
+[`.go-version`](../.go-version)):
 
 ```sh
 go test ./...
@@ -28,6 +29,20 @@ In this cloud environment, initialize Go first:
 export PATH=/workspace/.toolchains/go/bin:$PATH
 export GOPATH=/workspace/.go GOCACHE=/workspace/.cache/go GOTOOLCHAIN=local
 ```
+
+The root module now uses the same Go 1.27 language baseline as instrumentation,
+examples and verification. CI selects the compiler from `.go-version`; the root
+and two example Dockerfiles pin that same patch version. Nested modules remain
+independent: run their checks from their own directories.
+
+Raising the root `go` directive also removes Go 1.24 compatibility defaults from
+newly built executables. In particular, Go now chooses container-aware
+`GOMAXPROCS` and can update it periodically. A positive `GOMAXPROCS` environment
+setting or an explicit runtime call overrides that automatic policy. The checked-in
+Compose/Docker configuration supplies no such override. Existing running binaries
+retain their compiled defaults until rebuilt. This is a policy change, with no
+performance improvement claimed; the full set of compiled compatibility settings
+can be inspected with `go list -f '{{.DefaultGODEBUG}}' ./cmd/goo`.
 
 `compile` writes a JSON plan containing parameter types, the normalized definition,
 source requirements, and query SQL. The Databricks plan additionally contains

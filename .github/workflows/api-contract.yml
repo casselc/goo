@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
-          go-version-file: go.mod
+          go-version-file: .go-version
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -22,6 +22,11 @@ jobs:
         run: |
           go test ./... -count=1
           npm run test:visualizations
+      - name: Check independently versioned application modules
+        run: |
+          for module_dir in instrumentation examples/operation-app examples/report-app; do
+            (cd "$module_dir" && go test ./... -count=1)
+          done
       - run: pip install -r requirements-api.txt
       - name: Regenerate wire shapes and API; refuse drift
         run: |
