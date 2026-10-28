@@ -224,7 +224,7 @@ test('07 live HTTP package renders the shared Go descriptor',async({page,request
       data.results.some(row=>row.dimensions.route==='/reserve'&&row.measures.successful.count>=1);
   },{timeout:30_000,intervals:[1000]}).toBeTruthy();
   await page.goto(investigation+'/#definitions');
-  await page.locator('#minutes').fill('5');
+  await page.locator('#definitionsContracts').click();await page.locator('#minutes').fill('5');
   const response=page.waitForResponse(r=>r.url().includes('/api/http-package?'));
   await page.locator('#definitionsContracts').click();await page.getByRole('button',{name:'Evaluate HTTP package',exact:true}).click();
   const data=await(await response).json();

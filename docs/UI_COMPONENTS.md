@@ -1275,3 +1275,8 @@ The workspace shell owns the shared responsive Menu disclosure (222), including
 Escape/focus and route-selection collapse. Activity owns its stream and local
 controls; mounting or disposing it does not create or remove navigation. Menu
 disclosure itself makes no source reads or publications.
+
+Definition-family selection reports to the workspace shell for contextual global
+lookback visibility (223). This application adapter preserves the next-read default;
+passive tabs and display components do not reinterpret fixed query windows or read
+telemetry when a panel is selected.

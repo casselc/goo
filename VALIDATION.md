@@ -1,5 +1,24 @@
 # Validation record
 
+## Contextual Definition lookback — 223 (2026-10-28 UTC)
+
+Definitions exposes the shared HTTP lookback only in App contracts. Workspace
+owns its visibility from the selected family, including direct entry and route
+return; the tab adapter reports selection without changing the default value or
+reading telemetry. Records and Measurements retain their existing package/window
+controls. Saved still hides the shared default.
+
+Validation: all 583 frontend tests pass. Nine real Chromium checks pass: 223
+retains the default across family/workspace changes, checks a real HTTP request
+uses seven minutes, and verifies a fixed workflow preview submits the original
+question after an unrelated HTTP default edit. Existing 221 draft/keyboard,
+delayed cancellation/retry and its updated Bombadil family invariant pass; 222
+passes at 320/390/700px; 07 renders the live HTTP descriptor. Current 222/223 and
+07/40/110 frames are regenerated from the lab. The 40 service/measurement handoff
+and 110 exact-revision/annotation-draft/stale-refresh journeys also pass.
+This is a bounded R5 slice, not completion
+of the wider service/resource scope and return-state audit.
+
 ## Shared compact mobile navigation — 222 (2026-10-28 UTC)
 
 Workspace now owns one static Menu disclosure and its route/Escape/focus behavior.

@@ -2520,3 +2520,7 @@ App contracts preview becomes hidden.
 222 adds [shared mobile navigation](../../journeys/222-shared-mobile-navigation-storyboard.md):
 compact entry across workspaces, keyboard/focus behavior, retained local filters,
 and a mobile workspace Bombadil campaign.
+
+223 adds [contextual Definition lookback](../../journeys/223-contextual-lookback-storyboard.md):
+family-owned visibility, retained next-read defaults, real HTTP request parameters
+and fixed workflow questions that survive unrelated default edits.

@@ -40,8 +40,9 @@ recent-first sort or cross-store search. Definitions now uses Records, Measureme
 preserving drafts/selections and cancelling HTTP reads when their pane hides.
 Mobile workspaces now share the compact shell/menu (222); deeper service/detail
 density and cross-surface scope/window clarity remain separate work. Definitions
-still shows the global HTTP lookback while browsing other families; R5 tracks
-removing irrelevant controls without changing frozen question bounds.
+now limits the HTTP lookback to App contracts (223), preserving the chosen next-read
+default and fixed workflow questions. R5 still tracks broader scope/window and
+return presentation across service/resource investigations.
 Browser conformance is currently checked in Chromium; Firefox/Safari coverage
 is not established.
 

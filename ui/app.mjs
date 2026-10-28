@@ -188,7 +188,7 @@ const definitionTabs=ResourceTabs.mount([
  {key:'records',button:el('definitionsRecords'),panel:el('definitionRecordsPanel')},
  {key:'measurements',button:el('definitionsMeasurements'),panel:el('definitionMeasurementsPanel')},
  {key:'contracts',button:el('definitionsContracts'),panel:el('definitionContractsPanel'),leave:()=>stopHTTPRead()},
-],{initial:'records'});
+],{initial:'records',onSelect:family=>appWorkspace.setDefinitionFamily(family)});
 for(const event of ['goo:draft-telemetry-package','goo:preview-telemetry-package'])globalThis.addEventListener(event,()=>{appWorkspace.navigate('definitions');definitionTabs.select('records')});
 TelemetryPackages.mount(el('telemetryPackages'));
 globalThis.addEventListener('goo:navigate-explore',()=>appWorkspace.navigate('explore'));

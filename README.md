@@ -88,7 +88,8 @@ See [scope and clock boundaries](docs/ACTIVITY_EXPLANATIONS.md).
 
 Definitions separates Records, Measurements and App contracts into keyboard-accessible
 family tabs. Switching families preserves drafts and selections and cancels a hidden
-HTTP preview; browsing families does not read telemetry. Mobile workspaces share
+HTTP preview; browsing families does not read telemetry. The HTTP lookback appears
+only in App contracts and preserves its chosen default when hidden. Mobile workspaces share
 one compact Menu bar, with Escape to close and return focus.
 
 Services, Operations and Definitions enter the same investigation flow with a
