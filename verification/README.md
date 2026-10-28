@@ -2959,3 +2959,23 @@ go test -C verification -run '^(TestFilesystemUtilizationObserved|TestQuintFiles
 ```
 
 Accepted raw 0.11 s/Quint 2.11 s, package 2.233 s.
+
+216 is a UI-only round. Existing network/filesystem/nested Hegel owner properties
+pass eight examples each (1.391 s). `host_controls_live_test.go` validates every
+actual native result using prior independent raw-profile helpers, then binds nine
+plot keys to exact plan questions and checks point/time/state/unit/domain/coverage
+parity, full capture and issued read budgets. Six changed controls reject.
+`model/host_controls.qnt`/`.yaml` validate nine actual main steps and reject a local
+read; main ends at14 issued source POSTs, while the separate Bombadil filesystem
+workflow ends at9. Neither model proves arbitrary concurrency or source authenticity.
+
+Set `GOO_HOST_CONTROLS_LEDGER=/absolute/path/to/ledger.json` and
+`QUINT_BIN=/absolute/path/to/quint`, then run:
+
+```sh
+go test -C verification -run '^(TestHostControlsObserved|TestQuintHostControlsObserved)$' -v .
+```
+
+Accepted raw 0.18 s/Quint 2.19 s, package 2.379 s. The first browser check exposed
+a second inspection step inside Evidence; direct local lazy attribute mounting
+fixed it, and the revised journey passed. Root Go/API/backend behavior is unchanged.

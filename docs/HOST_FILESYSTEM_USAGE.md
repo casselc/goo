@@ -71,3 +71,6 @@ flowchart LR
 
 [Reported utilization](FILESYSTEM_UTILIZATION.md) is now available in milestone 215
 as a separate nested gauge; it does not derive a used/capacity percentage.
+
+[Current host-control presentation](HOST_CONTROL_COHERENCE.md) consolidates
+selection/Refresh and direct structured Evidence; measurement semantics stay the same.

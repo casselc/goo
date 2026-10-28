@@ -1,0 +1,169 @@
+{
+  "milestone": 216,
+  "status": "accepted",
+  "baseCommit": "95d1688",
+  "scope": "UI-only host presentation and local evidence consolidation; no source/query/numerical/wire/backend binary changes.",
+  "binarySHA256": "63f5f1dcfd2577f5230b71d948f736fd0f91502159aad3d5811ffbdd07930cdb",
+  "checks": {
+    "node": {
+      "files": 103,
+      "seconds": 3.785051388,
+      "stdout": "/tmp/goo-216-node-final.txt",
+      "scope": "Final full UI regression after direct lazy structured Evidence mounting."
+    },
+    "hegel": {
+      "stdout": "/tmp/goo-216-properties.txt",
+      "seconds": 1.391,
+      "examplesEach": 8,
+      "properties": [
+        "Network actual-owner schedules",
+        "Filesystem byte actual-owner schedules",
+        "Nested fraction actual-owner schedules"
+      ],
+      "scope": "Generated bounded withdrawals/late replies; no exhaustive interleaving claim."
+    },
+    "live": {
+      "ledger": "artifacts/host-controls/host-controls-cd22cc9dd6/ledger.json",
+      "mainSeconds": 10.3,
+      "invocationSeconds": 12.7,
+      "stdout": "/tmp/goo-216-live-final.txt",
+      "diagnostic": "Initial live check /tmp/goo-216-live.txt exposed a second Inspect stream step inside Evidence. The UI was fixed to mount the structured viewer directly and lazily, then this journey was rerun successfully. Not a first-pass claim."
+    },
+    "bombadil": {
+      "summary": "artifacts/host-controls/host-controls-272bc13ed1/bombadil/acceptance-summary.json",
+      "seconds": 30.4,
+      "phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "snapshots": 646,
+      "finalSourceReads": 9,
+      "plans": 1,
+      "scope": "Finite filesystem expansion, local Evidence/search/close, explicit two-read Refresh, nested reported gauge, native Run and retained Back. Main journey covers all resource families and capture."
+    },
+    "existingBrowserCompatibility": {
+      "stdout": "/tmp/goo-216-actor-regression.txt",
+      "networkSeconds": [
+        2.6,
+        5.2
+      ],
+      "nestedUtilizationSeconds": [
+        3.1,
+        5.2
+      ],
+      "batchWithActorSeconds": 48.1,
+      "scope": "Pending-close, exact choice/ambiguity, parent withdrawal, mount changes and missing/invalid/utilization-only cases."
+    },
+    "rawAndQuint": {
+      "stdout": "/tmp/goo-216-native.txt",
+      "rawSeconds": 0.18,
+      "quintSeconds": 2.19,
+      "packageSeconds": 2.379,
+      "negativeControls": 6,
+      "actualModelSteps": 9,
+      "badLocalReadTraceRejected": true,
+      "scope": "Existing independent raw profile helpers validate every actual native response; nine distinct displayed widget keys bind to exact plan questions and plotted points/times/states/units/domains/total/omitted. Full capture and issued read counts checked. Finite fixture, not arbitrary unknowns/ingestion completeness/source authentication."
+    }
+  },
+  "events": [
+    {
+      "action": "defaults",
+      "source": 3,
+      "plans": 1
+    },
+    {
+      "action": "network",
+      "source": 5,
+      "plans": 1
+    },
+    {
+      "action": "disk",
+      "source": 7,
+      "plans": 1
+    },
+    {
+      "action": "bytes",
+      "source": 9,
+      "plans": 1
+    },
+    {
+      "action": "utilization",
+      "source": 10,
+      "plans": 1
+    },
+    {
+      "action": "local",
+      "source": 10,
+      "plans": 1
+    },
+    {
+      "action": "refresh",
+      "source": 12,
+      "plans": 1
+    },
+    {
+      "action": "native",
+      "source": 13,
+      "plans": 1
+    },
+    {
+      "action": "capture",
+      "source": 14,
+      "plans": 1
+    }
+  ],
+  "readBudgetMeaning": "Issued source POSTs, not physical SQL counts: inventory1+CPU/memory2+network2+disk2+filesystem bytes2+reported gauge1+explicit network refresh2+native1+capture1=14; host plan1 pure. Evidence/search/disclosure reopen/staging/Back local. Actor is a separate filesystem workflow ending at9 source POSTs.",
+  "capture": {
+    "bytes": 7547,
+    "sha256": "d0a24c0a1605f62a4d8c76cb7c257439c4808a461486ff4dfbdddfb144119785"
+  },
+  "captureID": "b3e33e8dd83e4a16dc6ae65f50e570801eaa4c6602d178d6473909605db1a0ae",
+  "offlineBlockedPOSTs": [],
+  "geometry": {
+    "hostMobile": {
+      "client": 324,
+      "scroll": 324
+    },
+    "evidenceDesktop": {
+      "width": 537,
+      "scroll": 537
+    },
+    "evidenceMobile": {
+      "client": 302,
+      "scroll": 302
+    }
+  },
+  "frames": {
+    "docs/journeys/screenshots/216a-host-resource-controls.png": "063d7c8ca96ad44807821af5e163969a61b4adc31e7e2d8c2c95d4be8ff47012",
+    "docs/journeys/screenshots/216b-mobile-host-controls.png": "45118b1c442ea6a08a1c9c2c4f4ca0e4ebbf1cb0f53d47c6123c99c344559224",
+    "docs/journeys/screenshots/216c-host-controls-in-context.png": "b572854b3945247756b219a7c418a063cb4c6d02b6a74041c9c03e4765d1f190",
+    "docs/journeys/screenshots/216d-host-evidence.png": "e01156a8e831df0feaac5f8b9af9f6bd4b07af93b6f8835e9889490db361d08c"
+  },
+  "assets": {
+    "ui/host-counter-pair.js": "4d47159b7b0ab1bd02a353aa053a3a8a90370de8b21e1f9b39e0091f0324fca4",
+    "ui/host-dashboard.js": "fdb87f08670a16194ce4e7c4461011f7d7a07e7f82f35c561db3638d322502b7",
+    "ui/resource-native-view.js": "f0288204336e3c62a996a8b3a5bb1c5b9c2bee3f07e42fb2247cce1d84a5090b",
+    "ui/host.css": "6b9ee168c0099176c7f69cf28dabdb671287a5040d8ce3c5cb44c6a7b1fe3458",
+    "ui/attributes.js": "2931743332f78d4b091ef890f9efa0a43bde5d39e04773e03b58b679f908b574"
+  },
+  "reviews": [
+    "Source/architecture and independent proof approved; no blockers.",
+    "Four actual whole-host/mobile/expanded-evidence frames approved; no presentation blockers."
+  ],
+  "limits": [
+    "Hide selectors only for complete metadata with one exact group, or inherited child selection; summary retains full group and read cost.",
+    "Refresh after an attempt does not imply the previous read succeeded.",
+    "Host-only compact option; noncompact renderer and default raw stream inspection preserved.",
+    "No new aggregate, ratio, subscription, health classification or point-context API.",
+    "OTLP fixtures through collector/ClickHouse; not a deployed host scraper or generic unknown-state proof."
+  ]
+}

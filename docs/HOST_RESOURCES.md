@@ -160,3 +160,7 @@ record links retain their broader fixed-window scope.
 child disclosure tied to the selected filesystem group. Its explicit single gauge
 read, separate scale and owner preserve byte/default read budgets. It is not a
 calculated byte ratio or evidence of saturation/health.
+
+[Host control coherence](HOST_CONTROL_COHERENCE.md) 216 reduces repeated selectors
+and dimension text while retaining exact summary selection/cost and local Evidence.
+Inspect/Back/focus, explicit refresh, unknowns and bounded source reads are preserved.

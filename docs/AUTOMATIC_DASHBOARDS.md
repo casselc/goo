@@ -598,3 +598,20 @@ ambiguity/state journeys, Bombadil and independent raw/finite Quint checks pass.
 [Journey 215](../journeys/215-filesystem-utilization-storyboard.md) and
 [evidence](evidence/filesystem-utilization-215.json) record concrete checks,
 read budgets, reviewed frames, the test-helper correction and proof limits.
+
+
+## 216 — Host controls and evidence consolidation accepted
+
+Family summaries retain full selections/read budgets, complete single choices
+hide redundant selectors, and common Refresh follows attempts without hidden
+retries. Host cards keep values/states/UTC/reasons/coverage visible while grouping
+Inspect and direct lazy Evidence together. The shared structured viewer retains
+full supplied stream identity; metric attributes are correctly named. Noncompact
+renderer defaults remain available. No query, numerical, source or wire change.
+
+Final UI regression, three Hegel owner properties, combined live host journey,
+Bombadil and existing ownership/state regressions, independent nine-plot raw
+parity and finite Quint checks pass. Four actual frames and source/proof reviews
+are approved. [Journey 216](../journeys/216-host-controls-storyboard.md) and
+[evidence](evidence/host-controls-216.json) record costs, custody, the initial
+extra-inspection UX fix, geometry and proof limits.

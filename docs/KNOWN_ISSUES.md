@@ -1034,3 +1034,8 @@ profile, alias/deduplication or stock-point record-context API is added.
 pinned independent Gauge/1/used-state view. It refuses a whole read on invalid
 original fractions, including rounded boundary epsilon; missing exports remain
 unknown. No byte-derived ratio, alignment, threshold or health interpretation.
+
+[Host control consolidation](HOST_CONTROL_COHERENCE.md) 216 is accepted. Complete
+single-choice selectors may be hidden; exact selection/read cost remains in the
+summary. Evidence is local, lazy structured metadata; Refresh never implies the
+prior attempt succeeded. No new numerical or source capability is added.

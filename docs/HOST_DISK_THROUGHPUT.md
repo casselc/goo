@@ -50,3 +50,6 @@ flowchart LR
 ```
 
 [Executable storyboard](../journeys/213-host-disk-storyboard.md).
+
+[Current host-control presentation](HOST_CONTROL_COHERENCE.md) consolidates
+selection/Refresh and direct structured Evidence; measurement semantics stay the same.

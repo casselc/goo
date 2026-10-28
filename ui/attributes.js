@@ -116,7 +116,7 @@
  function mountShared(container,records,options={}){return mountModel(container,null,commonGroups(records),{...options,raw:false})}
  // Native identity stays separate from record time and measurement values.
  function streamRecord(stream){const s=structuredClone(stream);return {name:s.name,unit:s.unit,ResourceAttributes:s.resource,Attributes:s.attributes,scope:s.scope,version:s.version,schema:s.schemaURL,resourceSchema:s.resourceSchemaURL}}
- function mountStream(container,stream){return mount(container,streamRecord(stream))}
+ function mountStream(container,stream,options={}){const record=streamRecord(stream),model=groups(record);model[2].name='Metric attributes';return mountModel(container,record,model,options)}
  // Application adapter for an already supplied native stream; no source client.
  function streamInspection(stream){
   const snapshot=structuredClone(stream),root=node('div',undefined,'stream-inspection'),button=node('button','Inspect stream'),panel=node('section'),inspector=global.GooUI.inspector(panel,{onClose:()=>button.setAttribute('aria-expanded','false')});

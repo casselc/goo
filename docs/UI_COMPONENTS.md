@@ -1155,3 +1155,11 @@ selection, reset/withdrawal/disposal hooks and role-count read captions. Filesys
 bytes use two roles; reported utilization uses one role and a fixed 0–1 domain,
 with no duplicated visible mount selector. The passive resource view formats the
 reported fraction as percent while preserving raw-value/UTC inspection.
+
+Host cards opt into `compact` in the shared passive resource renderer: sibling
+Inspect/Evidence actions, with raw dimensions in direct lazy structured Evidence.
+The full-width expanded disclosure preserves UTC/epoch/read basis and raw stream
+identity. `GooAttributes.mountStream(container,stream,options)` now accepts the
+existing viewer options, preserving default raw inspection and naming native metric
+attributes correctly. Other callers retain noncompact defaults. Family controls
+hide only complete single choices and standardize Refresh after attempts.

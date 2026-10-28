@@ -70,3 +70,6 @@ flowchart LR
 asset/frame hashes, custody and bounded proof scope.
 
 Final display follow-up: charts now disclose when the existing 200-point presentation cap omits observations or intervals. A focused 201-interval renderer check verifies the count, retained full result, and unchanged shared scale; both focused Node test files passed (0.311 s). This omission-only branch was added after the successful live campaigns; those campaigns and their screenshots were not rerun.
+
+[Current host-control presentation](HOST_CONTROL_COHERENCE.md) consolidates
+selection/Refresh and direct structured Evidence; measurement semantics stay the same.

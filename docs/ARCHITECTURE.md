@@ -1150,3 +1150,9 @@ paired-reader owns child reset/withdrawal/disposal; the child retains its own
 request generation and fixed fraction domain. Passive charts have no new reads.
 Source validation certifies the original gauge decimal in 0..1 before trusting
 its Float64 representation; no new numerical primitive or ratio is introduced.
+
+Host-control presentation 216 opts into compact shared resource rendering through
+the host facade. Inspect remains an app-owned action; Evidence builds once from a
+cloned supplied stream with the existing attribute viewer and no source callbacks.
+Selection/defaults/withdrawal/refresh budgets stay in the paired application owner.
+The unchanged backend binary and numerical/query/wire contracts are retained.

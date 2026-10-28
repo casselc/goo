@@ -387,3 +387,6 @@ explicit mount selection and independent byte stocks on a shared scale.
 
 [Reported filesystem utilization](docs/FILESYSTEM_UTILIZATION.md) adds one explicit
 gauge read for the selected mount, with a separate fixed fraction scale.
+
+[Host resource controls](docs/HOST_CONTROL_COHERENCE.md) consolidate selection,
+explicit Refresh and direct local Evidence without changing telemetry reads.

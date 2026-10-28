@@ -12617,3 +12617,34 @@ finite known gauge/byte fixtures and bounded workflows; no authentication,
 ingestion completeness, aligned ratio or exhaustive concurrency claim.
 [Evidence](docs/evidence/filesystem-utilization-215.json) and
 [storyboard](journeys/215-filesystem-utilization-storyboard.md) retain receipts.
+
+## 216 source and live checks — host controls
+
+Presentation-only consolidation keeps full selection/read-budget summaries,
+hides only complete single choices, uses common explicit Refresh after attempts,
+and opts host cards into compact sibling Inspect/Evidence actions. Evidence lazily
+mounts cloned supplied stream attributes locally; other renderer defaults remain.
+
+All 103 Node test files pass (3.785 s final run). Three Hegel actual-owner schedule
+properties pass eight examples each (network, filesystem bytes and nested fraction;
+package 1.391 s). Root Go, source/query and wire formats are unchanged; the existing
+backend binary is retained rather than rebuilt. Source review approved.
+
+The first live check found a second Inspect stream step inside Evidence. Direct
+lazy use of the shared viewer fixes it. The revised actual OTLP combined-host
+journey passes in 10.3 s (12.7 s invocation), with four reviewed frames, local
+Evidence/Back focus and explicit Refresh/capture. Raw/plot checks 0.18 s reject six
+changed controls; Quint 2.19 s validates nine actual effect steps and rejects one
+local reread (package 2.379 s). Final actor/compatibility receipts are pending.
+
+
+## 216 final acceptance
+
+Bombadil passes in 30.4 s, phases 0–10/646 snapshots/nine source POSTs, including
+local Evidence search and explicit Refresh. Existing network ownership/ambiguity
+(2.6/5.2 s) and nested-utilization withdrawal/ambiguity/state (3.1/5.2 s) pass;
+combined five-test batch 48.1 s. Main retains full 7,547 B capture under source-
+POST-blocked reopen. Four actual frames and all source/proof reviews approved.
+No backend rebuild or root Go/API rerun is claimed for this UI-only round.
+[Evidence](docs/evidence/host-controls-216.json) and
+[storyboard](journeys/216-host-controls-storyboard.md) retain actual receipts.
