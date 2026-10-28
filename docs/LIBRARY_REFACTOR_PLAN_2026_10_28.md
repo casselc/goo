@@ -51,9 +51,13 @@ See [the embedding contract](UI_COMPONENTS.md#native-module-entrypoints).
 The browser response-consumption cancellation cut is also implemented: source
 owners use `postJSON`, which retains cancellation through decoding and rejects
 late aborted results. Real HTTP regressions cover Chromium, the Python proxy and
-Go's already-correct body-generation lifetime. Endpoint policy consolidation,
-server extraction and executable shutdown/export flushing remain planned; the
-broader request/server cut below is not complete.
+Go's already-correct body-generation lifetime. The first endpoint-policy and
+server extraction is implemented: `internal/recordhttp` owns record-family limits,
+deadlines, effects and typed handlers; `internal/queryhttp` owns shared admission
+and cancellation mechanics. Command code composes their configured dependencies.
+Native/capture policy adoption, per-server snapshot ownership and executable
+shutdown/export flushing remain planned; the broader request/server cut below is
+not complete.
 
 ## Preferred cuts
 

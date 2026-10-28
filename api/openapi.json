@@ -3374,8 +3374,8 @@
         "tags": [
           "compare"
         ],
-        "description": "Current owner: cmd/goo/exploration_http.go. Effect: pure-plan-or-supplied-summary. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/exploration_http.go",
+        "description": "Current owner: internal/recordhttp/routes.go. Effect: pure-plan-or-supplied-summary. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/recordhttp/routes.go",
         "x-effects": "pure-plan-or-supplied-summary",
         "parameters": [],
         "responses": {
@@ -3664,8 +3664,8 @@
         "tags": [
           "discovery"
         ],
-        "description": "Current owner: cmd/goo/exploration_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/exploration_http.go",
+        "description": "Current owner: internal/recordhttp/routes.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/recordhttp/routes.go",
         "x-effects": "source-read",
         "parameters": [
           {
@@ -3752,8 +3752,8 @@
         "tags": [
           "explore"
         ],
-        "description": "Current owner: cmd/goo/exploration_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/exploration_http.go",
+        "description": "Current owner: internal/recordhttp/routes.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/recordhttp/routes.go",
         "x-effects": "source-read",
         "parameters": [
           {
@@ -3840,8 +3840,8 @@
         "tags": [
           "explore"
         ],
-        "description": "Current owner: cmd/goo/exploration_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/exploration_http.go",
+        "description": "Current owner: internal/recordhttp/routes.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/recordhttp/routes.go",
         "x-effects": "source-read",
         "parameters": [
           {
@@ -4074,8 +4074,8 @@
         "tags": [
           "inventory"
         ],
-        "description": "Current owner: cmd/goo/exploration_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/exploration_http.go",
+        "description": "Current owner: internal/recordhttp/routes.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/recordhttp/routes.go",
         "x-effects": "source-read",
         "parameters": [
           {
@@ -5202,8 +5202,8 @@
         "tags": [
           "queries"
         ],
-        "description": "Current owner: cmd/goo/query_budget.go. Effect: cancel-capability. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/query_budget.go",
+        "description": "Current owner: internal/queryhttp/budget.go. Effect: cancel-capability. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/queryhttp/budget.go",
         "x-effects": "cancel-capability",
         "parameters": [
           {
@@ -5279,8 +5279,8 @@
         "tags": [
           "record-aggregates"
         ],
-        "description": "Current owner: cmd/goo/exploration_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/exploration_http.go",
+        "description": "Current owner: internal/recordhttp/routes.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/recordhttp/routes.go",
         "x-effects": "source-read",
         "parameters": [
           {
@@ -5731,8 +5731,8 @@
         "tags": [
           "trace-search"
         ],
-        "description": "Current owner: cmd/goo/trace_search_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/trace_search_http.go",
+        "description": "Current owner: internal/recordhttp/routes.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/recordhttp/routes.go",
         "x-effects": "source-read",
         "parameters": [
           {

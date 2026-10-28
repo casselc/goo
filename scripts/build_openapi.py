@@ -4,6 +4,7 @@ Run after go run ./scripts/openapi-schema api/go-schemas.json.
 import json
 import re
 from pathlib import Path
+from go_http_routes import route_sources
 
 ROOT = Path(__file__).resolve().parents[1]
 ref = lambda name: {'$ref': '#/components/schemas/' + name}
@@ -279,14 +280,7 @@ spec = {
  'paths':{},'components':{'schemas':schemas},
  'x-contract-notes':['Direct Go accepts any request Content-Type; application/json is the supported client encoding.','Python reparses/reserializes JSON and enforces Content-Length before Go; fixture byte equality describes direct Go, not browser serialization.','Browser proxy: dashboard plan 16 KiB vs Go 256 KiB; metric discovery 16 KiB vs Go 64 KiB; annotations/deployments 16 KiB vs Go 128 KiB.','Direct operation GET validation uses http.Error text/plain with JSON-looking text; browser re-encodes errors as JSON.','Direct tail early errors omit Cache-Control; proxy early JSON errors include no-store.','Python GET prefix routing can forward unsupported suffixes; these are not supported operations.','Malformed non-JSON upstream HTTP errors now return JSON 502 instead of disconnecting; valid JSON errors preserve status.', 'No generated handlers, semantic validator replacement, API stability guarantee or new authorization layer is introduced.'],
 }
-route_source={}
-for file in sorted((ROOT/'cmd/goo').glob('*http.go')):
- text=file.read_text()
- matches=list(re.finditer(r'HandleFunc\("(GET|POST) ([^" ]+)"',text))
- for index,m in enumerate(matches):
-  method,path=m[1].lower(),m[2]
-  route_source[method,path]=(str(file.relative_to(ROOT)),text[m.end(): matches[index+1].start() if index+1<len(matches) else len(text)])
-route_source['post','/queries/{id}/cancel']=('cmd/goo/query_budget.go','')
+route_source=route_sources(ROOT)
 for (method,path),(file,block) in sorted(route_source.items()):
  e=effect(method,path)
  op={'operationId':method+'_'+re.sub(r'[^a-zA-Z0-9]+','_',path).strip('_'),'summary':method.upper()+' '+path,'tags':[path.split('/')[1]],'description':f'Current owner: {file}. Effect: {e}. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.','x-go-source':file,'x-effects':e,'parameters':[],'responses':{}}

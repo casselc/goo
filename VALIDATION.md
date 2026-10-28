@@ -1,5 +1,34 @@
 # Validation record
 
+## Record HTTP policy and handler extraction (2026-10-28 UTC)
+
+`internal/recordhttp` now owns the seven record-family routes and their effect,
+body-limit and source-deadline declarations. Typed handlers share internal generic
+mechanics without changing ordinary registration APIs. Admission consumes the
+same family policy. `internal/queryhttp` owns the shared cancellation registry,
+slots, tombstones and enclosing deadline; command code supplies classification
+for other families. The configured source and existing snapshot bank are explicit
+record-family dependencies. Durable publication, SSE and native-family policies
+remain with their current owners; application-wide snapshot ownership is unchanged.
+
+Validation: the full root Go suite and focused vet checks pass. Race-detector
+checks pass for both extracted packages. Existing wire, decoding, deadline,
+source-error, admission and cancellation regressions pass through command wiring.
+New composition tests verify pure comparison under exhausted source admission,
+method/path separation, policy/OpenAPI agreement and independent snapshot banks.
+The OpenAPI checker passes route/schema/fixture coverage; regeneration changes
+only source-owner metadata for eight operations, with no wire-schema difference.
+The rebuilt local server passes the real core query/capture/discovery/cancel
+journey, including observed Quint validation, and trace-search drilldown and
+closed/hidden/superseded-result journeys. The 55-second trace-search Bombadil
+campaign also passes all expected phases and terminal invariants.
+
+The API build/check tools share source indexing for extracted typed registration.
+Architecture and boundary diagrams are updated. No UI layout, storage format or
+source computation changed; incidental screenshot updates and disposable run
+outputs are excluded. Native/capture policy adoption, per-server snapshot
+ownership and executable shutdown/export flushing remain planned.
+
 ## Cancellation through JSON consumption (2026-10-28 UTC)
 
 `queries.mjs` now returns decoded `{ok, status, data}` replies through `postJSON`.

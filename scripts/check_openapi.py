@@ -11,6 +11,7 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 from openapi_spec_validator import validate_spec
+from go_http_routes import route_sources
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -22,10 +23,7 @@ def validator(spec, schema):
 
 def check(spec):
     validate_spec(spec)
-    routes = set()
-    for file in (ROOT / 'cmd/goo').glob('*http.go'):
-        routes.update((m.lower(), p) for m, p in re.findall(r'HandleFunc\("(GET|POST) ([^" ]+)"', file.read_text()))
-    routes.add(('post', '/queries/{id}/cancel'))
+    routes = set(route_sources(ROOT))
     documented = {(m, p) for p, item in spec['paths'].items() for m in item if m in ('get', 'post') and 'x-go-source' in item[m]}
     assert routes == documented, f'Go route coverage changed: missing={routes-documented}, stale={documented-routes}'
     # Check the Python-only public API explicitly; proxy-forwarded routes are Go's.

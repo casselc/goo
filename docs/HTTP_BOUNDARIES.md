@@ -3,9 +3,56 @@
 This inventory describes the current Go server routes, not a new API. Browser
 `/api` proxy mapping remains in Python. `serve-http` loads binding/inventory and
 operation packages at startup, expands plans, builds one 15-second HTTP client,
-registers route families and wraps the mux in `newQueryBudget(..., 4)`. Server
+registers route families and wraps the mux in `queryhttp.NewBudget` through the
+application's `newQueryBudget(..., 4)` composition function. Server
 header timeout is five seconds; write timeout is 90 seconds. Pure planning, source
 execution, filesystem publication and XTDB transactions retain different owners.
+
+## Record-family policy and handler extraction (2026-10-28)
+
+Implemented: `internal/recordhttp` owns `/inventory`, `/discovery`, `/explore`,
+`/explore/counted-values`, `/record-aggregates`, `/trace-search` and pure `/compare`.
+`PolicyFor(method, path)` returns a value copy of the family's effect, JSON ceiling
+and source deadline. Registration uses those declarations for decoding/deadlines;
+application admission uses the same declarations to distinguish the six source
+reads from pure comparison. Limits remain 16 KiB/15–55 seconds for record reads,
+64 KiB/55 seconds for trace search and 1 MiB for pure comparison. Deadline setup
+still follows typed decoding and semantic validation.
+
+An internal inferred generic shares the typed decode/validate/read/write boundary;
+validators and source methods keep their concrete types and existing 400/502
+mapping. Source/compiler behavior remains in `exploration`. Registration accepts
+the configured source and existing snapshot bank; only `/explore` holds an
+expiring result token. Snapshot exhaustion still adds a warning to a successful
+read. The application still supplies its existing bank to other capture/retention
+owners; per-server snapshot-bank ownership has not been redesigned by this cut.
+
+`internal/queryhttp` owns shared admission, the cancellation registry, tombstones,
+60-second enclosing deadline and cleanup after the handler/body completes. The
+command supplies effect classification; it retains an explicit list for native,
+population-explanation and capture routes outside the extracted record family.
+Publication, SSE, native deadlines and Python proxy policies remain separate.
+No endpoint, wire response, source query, status policy or storage format changed.
+API source indexing now recognizes the family's explicit `registerRead` calls;
+build/check tools share that index. Published source-owner metadata points to the
+extracted files, while contract tests compare policy body/admission boundaries to
+OpenAPI. Existing source/JSON/deadline fixtures still run through command composition.
+
+Focused checks are `go test ./internal/queryhttp ./internal/recordhttp ./cmd/goo`,
+`go test -race ./internal/queryhttp ./internal/recordhttp`, and
+`python scripts/check_openapi.py` in the documented API development environment.
+
+```mermaid
+flowchart LR
+    Request[HTTP request] --> Budget[queryhttp: admission and cancellation]
+    Policy[recordhttp: effect, body limit, deadline] -. source classification .-> Budget
+    Policy -. decode and deadline .-> Records[recordhttp handlers]
+    Budget --> Records
+    Budget --> Other[Other application-owned families]
+    Records --> Semantics[exploration: validate, compile, execute]
+    Records -->|Explore result only| Snapshots[Supplied ephemeral snapshot bank]
+    Startup[cmd/goo: configured source and bank] --> Records
+```
 
 ## Endpoint effects
 

@@ -1,4 +1,4 @@
-package main
+package queryhttp
 
 import (
 	"bytes"
@@ -158,4 +158,12 @@ func TestCancellationBeforeAdmission(t *testing.T) {
 	if w.Code != 400 {
 		t.Fatal(w.Code)
 	}
+}
+
+// These are middleware mechanics tests; application effect classification is
+// exercised by the cmd/goo route-family and composition tests.
+func newQueryBudget(next http.Handler, limit int) http.Handler {
+	return NewBudget(next, limit, func(r *http.Request) bool {
+		return r.Method == "POST" && (r.URL.Path == "/explore" || r.URL.Path == "/inventory")
+	})
 }

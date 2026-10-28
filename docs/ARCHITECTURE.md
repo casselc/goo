@@ -212,13 +212,19 @@ Two live checkout instances now support [bounded-skew comparison](FLEET_COMPARIS
 
 Immutable capture storage lives in `investigations/`; the Go packages HTTP boundary captures trusted source results, retains separate bases/errors and publishes receipts to a local named volume. Browser reopening renders stored evidence and refresh creates a successor with the same fixed question. See [Saved investigations](SAVED_INVESTIGATIONS.md) and architecture diagram 9.
 
-The bounded general exploration AST, reference predicates and ClickHouse compiler/source executor live in `exploration/`; `cmd/goo/exploration_http.go` exposes the Go API and the CLI shares its compiler. The UI retains original query and expanded trace/log bases separately. See [design](EXPLORATION_DESIGN.md) and architecture diagram 10.
+The bounded general exploration AST, reference predicates and ClickHouse compiler/source executor live in `exploration/`; `internal/recordhttp` owns record/inventory/discovery/trace-search HTTP decoding,
+source deadlines and effects, with `cmd/goo/exploration_http.go` composing the
+configured source/snapshot bank and adjacent families. The CLI shares the same
+compiler. Family policy declarations also drive admission; shared cancellation
+mechanics live in `internal/queryhttp`. See the
+[record-family boundary diagram](HTTP_BOUNDARIES.md#record-family-policy-and-handler-extraction-2026-10-28). The UI retains original query and expanded trace/log bases separately. See [design](EXPLORATION_DESIGN.md) and architecture diagram 10.
 
 Application-specific examples and general-purpose product boundaries are documented
 in [the workspace contract](PRODUCT_WORKSPACE.md#general-purpose-boundary).
 
 The shared Explore Go query now includes optional duration summaries/time buckets;
-`query_budget.go` bounds general execution/cancellation, while service discovery
+`internal/queryhttp` bounds selected execution/cancellation through application
+effect classification in `cmd/goo/query_budget.go`, while service discovery
 keeps event age and reported-parent uncertainty explicit. See
 [core workbench](CORE_WORKBENCH.md) and architecture flow 20 for code contracts
 and remaining production boundaries.
