@@ -273,6 +273,21 @@ def check_network_observed(spec,path,metric="system.network.io"):
     print(metric+' observations: eleven real handler responses/requests, seven source/profile refusals and offline reopen conform')
 
 
+def check_filesystem_observed(spec,path):
+    observations=json.loads(Path(path).read_text())
+    assert len(observations)==13
+    for case in observations:
+        op=spec['paths'][case['path']][case['method'].lower()]
+        validator(spec,op['responses'][str(case['status'])]['content']['application/json']['schema']).validate(case['response'])
+        if case.get('request') is not None and 'requestBody' in op:
+            validator(spec,op['requestBody']['content']['application/json']['schema']).validate(case['request'])
+    r=next(c['response'] for c in observations if c['path']=='/measurements' and c['status']==200)
+    assert r['question']['definition']['source']['metric']=='system.filesystem.usage'
+    assert [p['value'] for p in r['stocks']['series'][0]['samples']]==[4096,2048]
+    assert sum(c['status']==502 for c in observations)==9
+    print('Filesystem observations: thirteen handler responses/requests, nine source/profile refusals, stock decreases and offline reopen conform')
+
+
 def check_stock_observed(spec,path):
     observations=json.loads(Path(path).read_text())
     assert len(observations)==6, 'Expected execute/capture/reopen/delta/monotonic/invalid stock workflow'
@@ -445,6 +460,7 @@ if __name__ == '__main__':
     parser.add_argument('--cpu-time-observations')
     parser.add_argument('--network-observations')
     parser.add_argument('--disk-observations')
+    parser.add_argument('--filesystem-observations')
     parser.add_argument('--pod-state-observations')
     parser.add_argument('--container-state-observations')
     parser.add_argument('--pod-phase-discovery-observations')
@@ -452,6 +468,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    if args.filesystem_observations:
+        check_filesystem_observed(spec,args.filesystem_observations)
     if args.disk_observations:
         check_network_observed(spec,args.disk_observations,"system.disk.io")
     if args.network_observations:

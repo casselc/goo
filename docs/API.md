@@ -991,3 +991,9 @@ Disk 213 uses existing host discovery/plan and measurement/capture operations.
 The pinned system.disk.io Counter/By cumulative profile requires the explicit
 nonnegative-decimal domain and certifies whole counts below 2^53. Discovery
 retains system.device/read-write candidates; no new endpoint or wire version.
+
+Filesystem 214 uses existing host discovery/plan, measurement and capture endpoints.
+Pinned usage/limit stocks opt into nonnegative-integer bytes below 2^53 and require
+strict reported cumulative nonmonotonic source metadata. Used-state versus limit
+without state is a conservative catalog policy. No new endpoint, version, computed
+percentage or stock-point native-record-context contract is added.

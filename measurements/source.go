@@ -248,11 +248,12 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 	ss := []metrics.StockPoint{}
 	d := q.Definition
 	for rowIndex, raw := range copied {
+		strictFilesystem := HostFilesystemDefinition(d)
 		strictDecimalCounter := d.Kind == "counter" && d.CounterDomain == metrics.DecimalCounterDomain
 		strictContainerGauge := d.Kind == "gauge" && d.Source.Resource != nil && d.Source.Resource.Kind == "kubernetes-container"
-		if d.Kind == "state" || strictContainerGauge || strictDecimalCounter {
+		if d.Kind == "state" || strictContainerGauge || strictDecimalCounter || strictFilesystem {
 			validationRaw := raw
-			if d.StateProfile == metrics.ContainerReadyProfile || strictContainerGauge || strictDecimalCounter {
+			if d.StateProfile == metrics.ContainerReadyProfile || strictContainerGauge || strictDecimalCounter || strictFilesystem {
 				validationRaw = rows[rowIndex]
 			}
 			var fields map[string]json.RawMessage
@@ -273,7 +274,7 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 					return nil, fmt.Errorf("%s source requires known string %s", prefix, key)
 				}
 			}
-			if d.StateProfile == metrics.ContainerReadyProfile || strictContainerGauge || strictDecimalCounter {
+			if d.StateProfile == metrics.ContainerReadyProfile || strictContainerGauge || strictDecimalCounter || strictFilesystem {
 				// Empty maps and a zero flag are reported values, not defaults
 				// for absent/null source fields at this new authority boundary.
 				for _, key := range []string{"resource", "attributes"} {
@@ -300,6 +301,16 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 					value, exists = fields["monotonic"]
 					if !exists || string(value) == "null" || json.Unmarshal(value, &monotonic) != nil || !monotonic {
 						return nil, fmt.Errorf("decimal counter requires reported monotonic true")
+					}
+				}
+				if strictFilesystem {
+					var temp int
+					var mono bool
+					if v, ok := fields["temporality"]; !ok || string(v) == "null" || json.Unmarshal(v, &temp) != nil || temp != 2 {
+						return nil, fmt.Errorf("filesystem stock requires reported cumulative temporality")
+					}
+					if v, ok := fields["monotonic"]; !ok || string(v) == "null" || json.Unmarshal(v, &mono) != nil || mono {
+						return nil, fmt.Errorf("filesystem stock requires reported monotonic false")
 					}
 				}
 				var flags uint32

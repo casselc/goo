@@ -12554,3 +12554,32 @@ and new static asset delivery. [Evidence](docs/evidence/host-disk-213.json) and
 Existing Network ownership/ambiguity browser regressions also pass through the
 shared factory (4.1 s and 4.7 s, batch10.7 s). Updated static-asset proxy coverage
 passes all 17 tests (1.267 s), including both new JS files without upstream reads.
+
+## 214 source checks — filesystem stocks
+
+Pinned OTel 1.37 usage/limit cumulative nonmonotonic By profiles now retain exact
+whole safe stock values. Explicit device/mount/mode/type groups load at most two
+independent used/capacity streams; CPU/memory defaults remain unchanged. Source
+review approved. Full root Go, 103 Node files (5.937 s), Python 17 proxy (2.240 s)
+and 8 startup (0.999 s), frozen OpenAPI/negative controls and 13 real filesystem
+handler observations pass; nine source/profile refusals and offline capture reopen
+conform. Hegel stock-admission/order/decrease and actual-owner withdrawal properties
+pass eight examples each (package 0.545 s). Live acceptance and independent raw/model
+checks are in progress. The separately added filesystem HTTP test also passes.
+
+
+## 214 live acceptance
+
+Main 10.7 s, pending-close 3.7 s, mount/ambiguity 7.5 s and missing/zero/absent 5.2 s
+pass first campaign (batch 29.1 s), with three actual reviewed frames. Actor 30.6 s
+passes phases 0–7/six source POSTs; existing Network 3.5+3.4 s and Disk 3.2+3.6 s
+ownership/ambiguity regressions pass (combined batch 46.1 s). Raw 0.16 s rejects 11
+changed controls, including exact contextual AST/transforms and sample freshness/
+latest state checks. Quint 2.30 s accepts the actual seven-step effect trace and
+rejects an extra local read (package 2.479 s). Initial observer failure assumed
+atNS on chart points; correcting it to the existing fromNS=toNS contract passed
+without app changes or browser reruns. Full 7,856 B capture stays identical during
+POST-blocked reopen. These are finite fixtures/workflows, not exhaustive
+concurrency, scraper deployment, ingestion completeness or provenance proofs.
+[Evidence](docs/evidence/host-filesystem-214.json) and
+[storyboard](journeys/214-host-filesystem-storyboard.md) record actual receipts.

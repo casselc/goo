@@ -60,7 +60,7 @@ schemas['metrics.StateSample']['properties']['codeState']['enum']=['supported','
 schemas['metrics.StateSample']['properties']['label']['enum']=['Pending','Running','Succeeded','Failed','Unknown','Not ready','Ready']
 # stockDomain is optional; legacy generic stocks keep signed fractional semantics.
 for name in ('measurements.Definition','measurements.DefinitionInput'):
- schemas[name]['properties']['stockDomain']['description']='Optional stock-only nonnegative-integer policy. Recorded values must be integers >=0 and <2^53; missing-value flags remain unknown. Empty/omitted keeps generic signed finite fractional stock semantics.'
+ schemas[name]['properties']['stockDomain']['description']='Optional stock-only nonnegative-integer policy. Recorded values must be integers >=0 and <2^53; missing-value flags remain unknown. Pinned filesystem stocks additionally require reported cumulative nonmonotonic export and strict source metadata. Empty/omitted keeps generic signed finite fractional stock semantics.'
 schemas['measurements.Definition']['properties']['stockDomain']['const']='nonnegative-integer'
 schemas['measurements.Result']['allOf']=[{'if':{'properties':{'question':{'properties':{'definition':{'properties':{'stockDomain':{'const':'nonnegative-integer'}},'required':['stockDomain']}},'required':['definition']}},'required':['question']},'then':{'properties':{'stocks':{'properties':{'series':{'type':'array','items':{'properties':{'samples':{'type':'array','items':{'properties':{'value':{'type':'integer','minimum':0,'maximum':9007199254740991}}}}}}}}}}}}]
 pool=schemas['measurements.PoolSignalsPlan']['properties']

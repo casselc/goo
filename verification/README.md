@@ -2916,3 +2916,23 @@ go test -C verification -run '^(TestHostDiskObserved|TestQuintHostDiskObserved)$
 Accepted package3.805 s: disk.17 s, prior CPU.16 s and network.17 s, Quint3.27 s.
 The bounded Bombadil actor covers staging/retained Back; main Playwright executes
 actual records and capture. See [storyboard](../journeys/213-host-disk-storyboard.md).
+
+214 adds `host_filesystem_test.go`: eight-example Hegel stock-domain/order/decrease
+and actual paired-owner withdrawal properties. `host_filesystem_live_test.go`
+independently reconstructs finite unique-timestamp stock values/epochs/freshness
+and latest states, exact host-wide Query AST and membership, capture bytes and
+issued POST budgets. Eleven changed controls reject; missing/zero/absent cases
+are separately exercised by actual browser journeys. `model/host_filesystem.qnt`
+and `.yaml` validate one actual seven-step trace and reject one local reread.
+
+Set `GOO_HOST_FILESYSTEM_LEDGER=/absolute/path/to/ledger.json` and
+`QUINT_BIN=/absolute/path/to/quint`, then run:
+
+```sh
+go test -C verification -run '^(TestHostFilesystemObserved|TestQuintHostFilesystemObserved)$' -v .
+```
+
+Accepted raw 0.16 s/Quint 2.30 s, package 2.479 s. The initial observer expected atNS
+in chart points; existing timelines encode a point as fromNS=toNS. This observer
+correction needed no app change/live rerun. The Bombadil actor covers native stock
+Run and retained Back; main Playwright executes host context and capture.

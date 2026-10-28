@@ -1,0 +1,176 @@
+{
+  "milestone": 214,
+  "status": "accepted",
+  "baseCommit": "2274c85",
+  "binarySHA256": "146a413c74bbffc981cc7805f8b6a25c33a8b6142f42d8c1782e482df44fb3a2",
+  "research": {
+    "url": "https://raw.githubusercontent.com/open-telemetry/semantic-conventions/v1.37.0/docs/system/system-metrics.md",
+    "sha256": "8aa9a4c287145b382648705564b1b0698f62d4a374af7a2e79702626c8a92291",
+    "profile": "system.filesystem.usage and opt-in system.filesystem.limit UpDownCounter By; Development. Goo profile requires cumulative nonmonotonic safe whole bytes; used state vs explicit limit without state; reported device/mount and exact optional mode/type grouping."
+  },
+  "checks": {
+    "go": {
+      "stdout": "/tmp/goo-214-go.txt",
+      "scope": "Full root regression passes; subsequently added filesystem HTTP test separately passed /tmp/goo-214-http.txt."
+    },
+    "node": {
+      "files": 103,
+      "seconds": 5.937498148,
+      "stdout": "/tmp/goo-214-node.txt"
+    },
+    "python": {
+      "proxyTests": 17,
+      "proxySeconds": 2.24,
+      "startupTests": 8,
+      "startupSeconds": 0.999,
+      "stdout": "/tmp/goo-214-python.txt"
+    },
+    "api": {
+      "stdout": "/tmp/goo-214-api.txt",
+      "filesystemObservedResponses": 13,
+      "sourceProfileRefusals": 9,
+      "goOperations": 83,
+      "totalOperations": 90,
+      "schemas": 517,
+      "frozenResponses": 429,
+      "admittedRequests": 159,
+      "muxRefusals": 28,
+      "scope": "Stock decreases, invalid original metadata/byte domains, capture and offline reopen; no API version/endpoint change."
+    },
+    "hegel": {
+      "stdout": "/tmp/goo-214-properties.txt",
+      "seconds": 0.545,
+      "properties": [
+        "Stock byte admission, independent decreases and input order",
+        "Actual shared-owner response/withdrawal schedules through filesystem profile"
+      ],
+      "examplesEach": 8,
+      "scope": "Generated partial reply plus close/scope/hidden/dispose schedules. Not exhaustive interleavings or swarm coverage."
+    },
+    "live": {
+      "ledger": "artifacts/host-filesystem/host-filesystem-74bdf88e86/ledger.json",
+      "mainSeconds": 10.7,
+      "ownership": "artifacts/host-filesystem/host-filesystem-0d6cb7b2dd/ownership.json",
+      "ownershipSeconds": 3.7,
+      "ambiguity": "artifacts/host-filesystem/host-filesystem-4ad13ac799/ambiguity.json",
+      "ambiguitySeconds": 7.5,
+      "missing": "artifacts/host-filesystem/host-filesystem-251ce74e70/missing.json",
+      "missingSeconds": 5.2,
+      "batchSeconds": 29.1,
+      "stdout": "/tmp/goo-214-live.txt",
+      "firstPass": true
+    },
+    "bombadil": {
+      "summary": "artifacts/host-filesystem/host-filesystem-faee692bc0/bombadil/acceptance-summary.json",
+      "seconds": 30.6,
+      "phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "snapshots": 575,
+      "finalSourceReads": 6,
+      "plans": 1,
+      "scope": "Finite expansion/sharedscale/local reopen/native stock Run/retained Back workflow. Actual host record Run and capture are in main Playwright."
+    },
+    "existingPairBrowserRegression": {
+      "stdout": "/tmp/goo-214-actor-regression.txt",
+      "networkSeconds": [
+        3.5,
+        3.4
+      ],
+      "diskSeconds": [
+        3.2,
+        3.6
+      ],
+      "batchWithActorSeconds": 46.1,
+      "scope": "Existing pending-close and ambiguity/choice journeys for both counter wrappers pass through the extended pair factory."
+    },
+    "rawAndQuint": {
+      "stdout": "/tmp/goo-214-native-fixed.txt",
+      "rawSeconds": 0.16,
+      "quintSeconds": 2.3,
+      "packageSeconds": 2.479,
+      "negativeControls": 11,
+      "actualModelSteps": 7,
+      "badLocalReadTraceRejected": true,
+      "diagnostic": "Initial observer expected atNS in stock chart points. Existing shared chart schema encodes points as fromNS=toNS; the observer was corrected. No app change or live campaign rerun was needed.",
+      "scope": "Finite unique-timestamp known-stock fixture: raw maps/identity/epochs/value/time, standard SHA basis, independent freshness/reasons/latest states, exact host context Query AST and membership, full capture bytes and issued POST effects. Separate browser cases cover missing/zero/absent values; no arbitrary state, provenance authentication or ingestion completeness claim."
+    }
+  },
+  "events": [
+    {
+      "action": "defaults",
+      "source": 3,
+      "plans": 1
+    },
+    {
+      "action": "filesystem",
+      "source": 5,
+      "plans": 1
+    },
+    {
+      "action": "local",
+      "source": 5,
+      "plans": 1
+    },
+    {
+      "action": "logs",
+      "source": 6,
+      "plans": 1
+    },
+    {
+      "action": "spans",
+      "source": 7,
+      "plans": 1
+    },
+    {
+      "action": "native",
+      "source": 8,
+      "plans": 1
+    },
+    {
+      "action": "capture",
+      "source": 9,
+      "plans": 1
+    }
+  ],
+  "readBudgetMeaning": "Issued source POSTs, not SQL executions: inventory1+CPU/memory2+filesystem2+host logs/spans2+native1+capture1=9. Reopen, staging and Back local.",
+  "capture": {
+    "bytes": 7856,
+    "sha256": "a1652ba0a3d956edf07587302ce17a46e972735748fe06d6e34a30b778cc6274"
+  },
+  "captureID": "e1f1dcfdcd6c0536098a39ff2222e7f786f9ae7b9b46afd8aa4daa28dfb25aca",
+  "offlineBlockedPOSTs": [],
+  "geometry": {
+    "client": 324,
+    "scroll": 324
+  },
+  "frames": {
+    "docs/journeys/screenshots/214a-filesystem-stocks.png": "371d59bdd49157e1222134a9ca4fb6ad4b5c0b2e3fb71b525d3ad4662b1842a8",
+    "docs/journeys/screenshots/214b-mobile-filesystem.png": "a237c17ff206a68c2cd474f9b71088c52b9dc3caa36361727a37b7a025d3371f",
+    "docs/journeys/screenshots/214c-filesystem-in-context.png": "0e23873a3472ff86ae8f2abcec94501735d80297d1dfe1758cc00bc0e2b04737"
+  },
+  "assets": {
+    "ui/host-counter-pair.js": "e3de64396f6ef3fd08d856395029340ea705bb820416131fa8122050e2da7e67",
+    "ui/host-filesystem.js": "8c3f7567e055b9182536108cb2001acfadfb20bd1ec25ce30941dfafa9de06e9",
+    "ui/resource-native-view.js": "c001da8ce692811a7482c8ecfd570a9e144c0aff2320848c712b72b77e0755cb",
+    "ui/host-browser.js": "33e67a94355cb974b635d6635a4f14a24c6a2c0fe42ce212b4415850bf2c5204"
+  },
+  "reviews": [
+    "Source/architecture and strengthened raw/model proof approved; no blockers.",
+    "Actual desktop/mobile/whole-host frames approved; no presentation blockers."
+  ],
+  "limits": [
+    "Goo required device/mount/used role and absent limit state are conservative selection policies, not closed OTel attribute requirements.",
+    "No sum of usage states, inferred capacity, aligned snapshot, derived percentage, inode or health profile.",
+    "No device alias/bind mount deduplication/physical ownership inference.",
+    "Existing host-wide resource context only; no new stock-point context API.",
+    "Ordinary OTLP fixtures through collector/ClickHouse, not a deployed host scraper."
+  ]
+}

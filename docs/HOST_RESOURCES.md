@@ -150,3 +150,8 @@ other network/broker/disk instruments remain separate work.
 [Per-device disk throughput](HOST_DISK_THROUGHPUT.md) 213 adds an explicit closed
 Disk expansion with independent read/write streams on a shared scale. Defaults
 remain CPU/memory; device names/directions must be reported and unambiguous.
+
+[Filesystem usage/capacity](HOST_FILESYSTEM_USAGE.md) 214 adds a separate explicit
+Filesystem disclosure. Used bytes and opt-in reported capacity are independent
+stocks on a common scale; defaults remain CPU/memory. Existing matching-resource
+record links retain their broader fixed-window scope.

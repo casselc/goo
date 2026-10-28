@@ -381,3 +381,6 @@ records acceptance.
 
 [Per-device disk throughput](docs/HOST_DISK_THROUGHPUT.md) adds explicit read/write
 byte rates on a shared scale, with native investigation and capture.
+
+[Filesystem usage and reported capacity](docs/HOST_FILESYSTEM_USAGE.md) provides
+explicit mount selection and independent byte stocks on a shared scale.

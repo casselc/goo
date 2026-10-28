@@ -19799,7 +19799,7 @@
           },
           "stockDomain": {
             "type": "string",
-            "description": "Optional stock-only nonnegative-integer policy. Recorded values must be integers >=0 and <2^53; missing-value flags remain unknown. Empty/omitted keeps generic signed finite fractional stock semantics.",
+            "description": "Optional stock-only nonnegative-integer policy. Recorded values must be integers >=0 and <2^53; missing-value flags remain unknown. Pinned filesystem stocks additionally require reported cumulative nonmonotonic export and strict source metadata. Empty/omitted keeps generic signed finite fractional stock semantics.",
             "const": "nonnegative-integer"
           },
           "title": {
@@ -19971,7 +19971,7 @@
                 "type": "null"
               }
             ],
-            "description": "Optional stock-only nonnegative-integer policy. Recorded values must be integers >=0 and <2^53; missing-value flags remain unknown. Empty/omitted keeps generic signed finite fractional stock semantics."
+            "description": "Optional stock-only nonnegative-integer policy. Recorded values must be integers >=0 and <2^53; missing-value flags remain unknown. Pinned filesystem stocks additionally require reported cumulative nonmonotonic export and strict source metadata. Empty/omitted keeps generic signed finite fractional stock semantics."
           },
           "title": {
             "anyOf": [

@@ -98,6 +98,9 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 		if HostNetworkInstrument(i) {
 			family = "network"
 		}
+		if HostFilesystemInstrument(i) {
+			family = "filesystem"
+		}
 		if HostDiskInstrument(i) {
 			family = "disk"
 		}
@@ -131,6 +134,16 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 					continue
 				}
 			}
+			if family == "filesystem" {
+				device, mount := s.Attributes["system.device"], s.Attributes["system.filesystem.mountpoint"]
+				if device == "" || mount == "" || !text(device, 512) || !text(mount, 512) {
+					continue
+				}
+				state, hasState := s.Attributes["system.filesystem.state"]
+				if i.Metric == "system.filesystem.usage" && state != "used" || i.Metric == "system.filesystem.limit" && hasState {
+					continue
+				}
+			}
 			if s.ResourceSchemaURL != h.ResourceSchemaURL || hostResourceKey(s.Resource, s.ResourceSchemaURL) != h.Key || s.Scope != i.Scope || s.Version != i.Version || s.SchemaURL != i.SchemaURL || s.Name != i.Metric || s.Unit != i.Unit {
 				continue
 			}
@@ -141,7 +154,7 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 			if family == "cpu-time" || family == "network" || family == "disk" {
 				d.CounterDomain = metrics.DecimalCounterDomain
 			}
-			if family == "memory" {
+			if family == "memory" || family == "filesystem" {
 				d.StockDomain = "nonnegative-integer"
 			}
 			q := Question{Definition: d, FromMS: in.Question.FromMS, ToMS: in.Question.ToMS}
@@ -183,7 +196,7 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 					title += " · logical CPU unreported"
 				}
 			}
-			if family != "cpu" && family != "cpu-time" && family != "network" && family != "disk" {
+			if family != "cpu" && family != "cpu-time" && family != "network" && family != "disk" && family != "filesystem" {
 				if family == "memory-fraction" {
 					title = "Reported memory utilization fraction"
 				}
@@ -202,6 +215,13 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 			}
 			if family == "disk" {
 				title = "Disk " + s.Attributes["disk.io.direction"] + " · " + strconv.Quote(s.Attributes["system.device"])
+			}
+			if family == "filesystem" {
+				role := "Used bytes"
+				if i.Metric == "system.filesystem.limit" {
+					role = "Reported capacity"
+				}
+				title = role + " · " + strconv.Quote(s.Attributes["system.filesystem.mountpoint"]) + " · " + strconv.Quote(s.Attributes["system.device"])
 			}
 			candidates = append(candidates, candidate{widget: HostWidget{Key: key, Title: title, State: "candidate", Grain: "host-exact-stream", Question: q}, family: family, priority: priority, numeric: numeric, core: core})
 		}

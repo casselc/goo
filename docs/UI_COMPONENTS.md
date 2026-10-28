@@ -1144,3 +1144,8 @@ and unknowns remain independent. No reusable lifecycle starts a source read.
 Disk; thin profile wrappers retain their public candidates/choices/result/mount API.
 Request ownership, role ambiguity, incomplete discovery, scale selection and
 withdrawal stay outside passive reusable charts and resource-native rendering.
+
+Filesystem uses existing native resource cards and value timelines with a supplied
+common byte domain. The app-owned pair profile validates cumulative stock questions,
+selects used/capacity roles and retains exact device/mount/mode/type identities.
+Source loading, selection, cancellation and custody remain outside display elements.

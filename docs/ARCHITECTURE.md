@@ -1137,3 +1137,9 @@ Host Network and Disk use the same app-owned `host-counter-pair.js` factory with
 closed profile metric/dimension/role/label parameters and independent owners.
 Neither passive display lifecycle nor disclosure subscribes to telemetry. Disk
 adds pinned system.disk.io/By cumulative admission, not a new numerical primitive.
+
+Filesystem 214 extends the app-owned paired-reader with closed frozen profile
+policies for stock candidates, exact group/role/result validation and display scale.
+Network/Disk retain their counter branches and independent owners. Passive native
+resource charts now honor supplied scales for stocks as well as counter rates.
+No numerical primitive or automatic usage/capacity join is introduced.

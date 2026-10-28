@@ -1024,3 +1024,8 @@ No interface sum, utilization, capacity, error-rate or disk-I/O profile is added
 [Disk throughput](HOST_DISK_THROUGHPUT.md) 213 is accepted for pinned cumulative
 whole safe bytes, reported system.device and read/write. No device sum, aliases,
 partition merge, IOPS, latency, capacity or saturation profile is implied.
+
+[Filesystem stocks](HOST_FILESYSTEM_USAGE.md) 214 are accepted for pinned cumulative
+nonmonotonic usage/limit whole bytes. Usage used-state and absent-state limit are
+conservative Goo selections; no inferred capacity, summed states, percent, inode
+profile, alias/deduplication or stock-point record-context API is added.
