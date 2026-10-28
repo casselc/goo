@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/casselc/goo/exploration"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -9,8 +10,9 @@ import (
 )
 
 func TestWorkbenchHTTPRejectsUntrustedReceiptsAndUnavailableLinks(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	mux := http.NewServeMux()
-	registerWorkbench(mux, t.TempDir(), retentionConnection{})
+	registerWorkbench(mux, t.TempDir(), retentionConnection{}, resultSnapshots, nil)
 	call := func(method, path, body string) *httptest.ResponseRecorder {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest(method, path, strings.NewReader(body)))
@@ -39,8 +41,9 @@ func TestWorkbenchHTTPRejectsUntrustedReceiptsAndUnavailableLinks(t *testing.T) 
 }
 
 func TestAnnotationHTTPStrictMetadataContract(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	mux := http.NewServeMux()
-	registerWorkbench(mux, t.TempDir(), retentionConnection{})
+	registerWorkbench(mux, t.TempDir(), retentionConnection{}, resultSnapshots, nil)
 	call := func(method, path, body string) *httptest.ResponseRecorder {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest(method, path, strings.NewReader(body)))

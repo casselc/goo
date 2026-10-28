@@ -21,6 +21,7 @@ import (
 )
 
 func TestRetentionStartupAndIndependentAvailability(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	t.Setenv("GOO_XTDB_URL", "")
 	empty := retentionConnectionFromEnvironment()
 	t.Setenv("GOO_XTDB_URL", "postgres://fixture@127.0.0.1:1/xtdb?sslmode=disable")
@@ -34,7 +35,7 @@ func TestRetentionStartupAndIndependentAvailability(t *testing.T) {
 		configured bool
 	}{{empty, false}, {configured, true}} {
 		mux := http.NewServeMux()
-		registerWorkbench(mux, t.TempDir(), c.connection)
+		registerWorkbench(mux, t.TempDir(), c.connection, resultSnapshots, nil)
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest("GET", "/retained-evidence/status", nil))
 		want := fmt.Sprintf("{\"configured\":%t}\n", c.configured)
@@ -54,6 +55,7 @@ func TestRetentionStartupAndIndependentAvailability(t *testing.T) {
 }
 
 func TestXTDBHTTPInjectedCitationBasisAndOfflineDocument(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	address := os.Getenv("GOO_XTDB_TEST_URL")
 	if address == "" {
 		t.Skip("optional XTDB instance required")
@@ -94,7 +96,7 @@ func TestXTDBHTTPInjectedCitationBasisAndOfflineDocument(t *testing.T) {
 	t.Setenv("GOO_XTDB_URL", "")
 	root := t.TempDir()
 	mux := http.NewServeMux()
-	registerWorkbench(mux, root, connection)
+	registerWorkbench(mux, root, connection, resultSnapshots, nil)
 	connection.URL = "postgres://fixture@127.0.0.1:1/xtdb?sslmode=disable"
 	call := func(mux *http.ServeMux, method, path string, body any) *httptest.ResponseRecorder {
 		b, _ := json.Marshal(body)
@@ -129,7 +131,7 @@ func TestXTDBHTTPInjectedCitationBasisAndOfflineDocument(t *testing.T) {
 	wg.Wait()
 	// Documents reopen from their own files even without optional-store configuration.
 	offline := http.NewServeMux()
-	registerWorkbench(offline, root, retentionConnection{})
+	registerWorkbench(offline, root, retentionConnection{}, resultSnapshots, nil)
 	w = call(offline, "GET", "/documents/"+doc.ID, nil)
 	var reopened workbench.Document
 	if w.Code != 200 || json.Unmarshal(w.Body.Bytes(), &reopened) != nil || reopened.ID != doc.ID || reopened.Cards[1].Review != corrected.ID || reopened.Cards[1].ReadBasis != corrected.AwaitToken {

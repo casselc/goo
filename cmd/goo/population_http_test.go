@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/casselc/goo/exploration"
 	"github.com/casselc/goo/workbench"
 	"net/http"
 	"net/http/httptest"
@@ -10,8 +11,9 @@ import (
 )
 
 func TestPopulationConfigurationHTTP(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	mux := http.NewServeMux()
-	registerWorkbench(mux, t.TempDir(), retentionConnection{})
+	registerWorkbench(mux, t.TempDir(), retentionConnection{}, resultSnapshots, nil)
 	call := func(method, url, body string) *httptest.ResponseRecorder {
 		r := httptest.NewRequest(method, url, strings.NewReader(body))
 		w := httptest.NewRecorder()

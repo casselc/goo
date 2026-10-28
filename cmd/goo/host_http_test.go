@@ -174,6 +174,7 @@ func TestHostHTTPSourceAdmissionAndPurePlanning(t *testing.T) {
 }
 
 func TestHostHTTPNativeExecuteCaptureOfflineReopen(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	dir := t.TempDir()
 	reads := 0
 	offline := false
@@ -213,7 +214,7 @@ func TestHostHTTPNativeExecuteCaptureOfflineReopen(t *testing.T) {
 	makeMux := func() *http.ServeMux {
 		m := http.NewServeMux()
 		registerMeasurements(m, measurements.Source{Endpoint: "http://source", Client: client}, dir)
-		registerCaptures(m, exploration.Source{Endpoint: "http://source", Client: client}, dir)
+		registerCaptures(m, exploration.Source{Endpoint: "http://source", Client: client}, dir, resultSnapshots)
 		return m
 	}
 	mux := makeMux()

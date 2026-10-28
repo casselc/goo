@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-func registerRetention(mux *http.ServeMux, dir string, connection retentionConnection, banks ...*exploration.TailMembershipSnapshots) {
+func registerRetention(mux *http.ServeMux, dir string, connection retentionConnection, resultSnapshots *exploration.ResultSnapshots, bank *exploration.TailMembershipSnapshots) {
 	store := connection.store("")
 	captures := exploration.CaptureStore{Dir: filepath.Join(dir, "exploration")}
 	reply := func(w http.ResponseWriter, code int, value any) {
@@ -43,10 +43,6 @@ func registerRetention(mux *http.ServeMux, dir string, connection retentionConne
 			return errors.New("expected one request")
 		}
 		return nil
-	}
-	var bank *exploration.TailMembershipSnapshots
-	if len(banks) > 0 {
-		bank = banks[0]
 	}
 	mux.HandleFunc("POST /retained-evidence/tail", func(w http.ResponseWriter, r *http.Request) {
 		var in retention.TailIntent

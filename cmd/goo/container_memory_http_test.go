@@ -130,6 +130,7 @@ func TestContainerMemoryHTTPFrozenContracts(t *testing.T) {
 	}
 }
 func TestContainerMemoryPureHTTPAndOfflineNativeCapture(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	dir := t.TempDir()
 	calls := 0
 	held := containerMemoryHTTPRequest(t)
@@ -158,7 +159,7 @@ func TestContainerMemoryPureHTTPAndOfflineNativeCapture(t *testing.T) {
 	q := held.WorkingSet.Question
 	request, _ := json.Marshal(map[string]any{"title": "Container working set", "question": exploration.CaptureQuestion{Kind: "measurement", Measurement: &q}})
 	captures := http.NewServeMux()
-	registerCaptures(captures, exploration.Source{Endpoint: source.Endpoint, Client: source.Client}, dir)
+	registerCaptures(captures, exploration.Source{Endpoint: source.Endpoint, Client: source.Client}, dir, resultSnapshots)
 	w = httptest.NewRecorder()
 	captures.ServeHTTP(w, httptest.NewRequest("POST", "/captures", strings.NewReader(string(request))))
 	if w.Code != 201 || calls != 1 {
@@ -173,7 +174,7 @@ func TestContainerMemoryPureHTTPAndOfflineNativeCapture(t *testing.T) {
 	registerCaptures(offline, exploration.Source{Endpoint: "http://offline", Client: &http.Client{Transport: nativeDependencyTransport(func(r *http.Request) (*http.Response, error) {
 		t.Fatal("offline reopen contacted source")
 		return nil, nil
-	})}}, dir)
+	})}}, dir, resultSnapshots)
 	w = httptest.NewRecorder()
 	offline.ServeHTTP(w, httptest.NewRequest("GET", "/captures/"+page.Receipt.ID, nil))
 	if w.Code != 200 {

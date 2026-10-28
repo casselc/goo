@@ -13,6 +13,7 @@ import (
 )
 
 func TestWindowDiscoverySourceFreeAndStrictHTTP(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	b, e := os.ReadFile("../../config/measurements/checkout-calls.yaml")
 	if e != nil {
 		t.Fatal(e)
@@ -28,7 +29,7 @@ func TestWindowDiscoverySourceFreeAndStrictHTTP(t *testing.T) {
 	}))
 	defer source.Close()
 	mux := http.NewServeMux()
-	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, t.TempDir())
+	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, t.TempDir(), resultSnapshots)
 	payload, _ := json.Marshal(map[string]any{"title": "SDK support", "question": exploration.CaptureQuestion{Kind: "measurement", Measurement: &measurements.Question{Definition: d, FromMS: 100000, ToMS: 103000}}})
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, httptest.NewRequest("POST", "/captures", bytes.NewReader(payload)))

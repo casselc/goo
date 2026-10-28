@@ -12,11 +12,7 @@ import (
 	"time"
 )
 
-func registerTail(mux *http.ServeMux, source exploration.Source, banks ...*exploration.TailMembershipSnapshots) {
-	var bank *exploration.TailMembershipSnapshots
-	if len(banks) > 0 {
-		bank = banks[0]
-	}
+func registerTail(mux *http.ServeMux, source exploration.Source, bank *exploration.TailMembershipSnapshots) {
 	slots := make(chan struct{}, 4)
 	mux.HandleFunc("POST /tail", func(w http.ResponseWriter, r *http.Request) {
 		fail := func(code int, message string) {

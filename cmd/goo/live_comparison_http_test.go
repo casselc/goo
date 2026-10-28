@@ -17,6 +17,7 @@ import (
 )
 
 func TestLiveComparisonHTTPExactFreezeAndBoundedCapabilities(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	var reads atomic.Int64
 	source := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		reads.Add(1)
@@ -29,7 +30,7 @@ func TestLiveComparisonHTTPExactFreezeAndBoundedCapabilities(t *testing.T) {
 	}))
 	defer source.Close()
 	mux := http.NewServeMux()
-	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, t.TempDir())
+	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, t.TempDir(), resultSnapshots)
 	call := func(path string, body any) *httptest.ResponseRecorder {
 		b, _ := json.Marshal(body)
 		w := httptest.NewRecorder()
@@ -105,6 +106,7 @@ func TestLiveComparisonHTTPExactFreezeAndBoundedCapabilities(t *testing.T) {
 }
 
 func TestLiveComparisonRetainedSeriesFreezeWithoutReread(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	var reads, seriesReads atomic.Int64
 	source := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		reads.Add(1)
@@ -121,7 +123,7 @@ func TestLiveComparisonRetainedSeriesFreezeWithoutReread(t *testing.T) {
 	}))
 	defer source.Close()
 	mux := http.NewServeMux()
-	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, t.TempDir())
+	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, t.TempDir(), resultSnapshots)
 	call := func(body any) *httptest.ResponseRecorder {
 		b, _ := json.Marshal(body)
 		w := httptest.NewRecorder()

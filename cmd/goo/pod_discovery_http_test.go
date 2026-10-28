@@ -38,6 +38,7 @@ func podHTTPRows() string {
 	return strings.Join(rows, "\n") + "\n"
 }
 func podHTTPWireResponse(t *testing.T, c planningWireCase) *httptest.ResponseRecorder {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	t.Helper()
 	reads := 0
 	source := exploration.Source{Endpoint: "http://source", Client: &http.Client{Transport: nativeDependencyTransport(func(r *http.Request) (*http.Response, error) {
@@ -68,7 +69,7 @@ func podHTTPWireResponse(t *testing.T, c planningWireCase) *httptest.ResponseRec
 		return &http.Response{StatusCode: status, Body: io.NopCloser(strings.NewReader(payload)), Header: make(http.Header)}, nil
 	})}}
 	mux := http.NewServeMux()
-	registerExploration(mux, source)
+	registerExploration(mux, source, resultSnapshots, nil)
 	body := c.Body + c.Suffix
 	if c.PadTo > len(body) {
 		body += strings.Repeat(" ", c.PadTo-len(body))
@@ -166,6 +167,7 @@ func TestPodDiscoveryHTTPWireContracts(t *testing.T) {
 	}
 }
 func TestPodDiscoverySharedAdmissionAndInflightCancellation(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	called := false
 	budget := newQueryBudget(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { called = true }), 1)
 	id := "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"
@@ -185,7 +187,7 @@ func TestPodDiscoverySharedAdmissionAndInflightCancellation(t *testing.T) {
 		return nil, r.Context().Err()
 	})}}
 	mux := http.NewServeMux()
-	registerExploration(mux, source)
+	registerExploration(mux, source, resultSnapshots, nil)
 	budget = newQueryBudget(mux, 1)
 	id = "ffffffff-ffff-ffff-ffff-ffffffffffff"
 	req = httptest.NewRequest("POST", "/pod-discovery", strings.NewReader(podDiscoveryHTTPBody))

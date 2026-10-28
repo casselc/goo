@@ -18,7 +18,7 @@ func TestTailHTTPValidationFramesAndDisconnect(t *testing.T) {
 	}))
 	defer source.Close()
 	mux := http.NewServeMux()
-	registerTail(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()})
+	registerTail(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, nil)
 	for _, s := range []string{`{"environment":"prod","sql":"select 1"}`, `{"environment":""}`, `{"environment":"prod","signal":"metrics"}`, `{"environment":"prod"} {}`} {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest("POST", "/tail", strings.NewReader(s)))
@@ -50,7 +50,7 @@ func TestTailAdmissionAndReleasedCancellation(t *testing.T) {
 	// Keep the source read pending after the initial reset so all four slots are held.
 
 	mux := http.NewServeMux()
-	registerTail(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()})
+	registerTail(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, nil)
 	server := httptest.NewServer(mux)
 	defer server.Close()
 	var cancels []context.CancelFunc

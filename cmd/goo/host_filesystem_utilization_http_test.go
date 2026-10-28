@@ -14,6 +14,7 @@ import (
 )
 
 func TestFilesystemUtilizationHTTPExecuteCaptureAndOfflineReopen(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	s := metrics.Stream{Resource: map[string]string{"host.id": "host", "deployment.environment.name": "prod"}, Scope: "hostmetrics", SchemaURL: measurements.HostMetricsSchema, Name: "system.filesystem.utilization", Unit: "1", Attributes: map[string]string{"system.device": "/dev/sda", "system.filesystem.mountpoint": "/data", "system.filesystem.state": "used"}}
 	q := measurements.Question{Definition: measurements.Definition{APIVersion: measurements.Version, Name: "filesystem", Title: "Filesystem", Kind: "gauge", Environment: "prod", LookbackMinutes: 2, MaxGapMS: 60000, Grain: "per-stream", Source: measurements.Binding{Resource: &measurements.ResourceBinding{Kind: "host", ID: "host"}, Services: []string{}, Scope: s.Scope, SchemaURL: s.SchemaURL, Metric: s.Name, Unit: s.Unit, ExactStream: &s}}, FromMS: 1000, ToMS: 3000}
 	first, last := "0.25", "0.75"
@@ -67,7 +68,7 @@ func TestFilesystemUtilizationHTTPExecuteCaptureAndOfflineReopen(t *testing.T) {
 	makeMux := func() *http.ServeMux {
 		mux := http.NewServeMux()
 		registerMeasurements(mux, measurements.Source{Endpoint: "http://source", Client: client}, dir)
-		registerCaptures(mux, exploration.Source{Endpoint: "http://source", Client: client}, dir)
+		registerCaptures(mux, exploration.Source{Endpoint: "http://source", Client: client}, dir, resultSnapshots)
 		return mux
 	}
 	mux := makeMux()

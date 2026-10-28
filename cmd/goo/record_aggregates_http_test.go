@@ -18,6 +18,7 @@ const recordAggregatesRichHTTPBody = `{"signal":"spans","environment":"prod","fr
 const recordAggregatesHTTPBody = `{"signal":"logs","environment":"prod","fromMs":1000,"toMs":61000,"limit":20,"groupBy":[{"kind":"column","key":"severity"}]}`
 
 func recordAggregatesWireResponse(t *testing.T, c planningWireCase) *httptest.ResponseRecorder {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	t.Helper()
 	reads := 0
 	client := &http.Client{Transport: nativeDependencyTransport(func(r *http.Request) (*http.Response, error) {
@@ -64,7 +65,7 @@ func recordAggregatesWireResponse(t *testing.T, c planningWireCase) *httptest.Re
 		return &http.Response{StatusCode: 503, Body: io.NopCloser(strings.NewReader("fixture unavailable")), Header: make(http.Header)}, nil
 	})}
 	mux := http.NewServeMux()
-	registerExploration(mux, exploration.Source{Endpoint: "http://source", Client: client})
+	registerExploration(mux, exploration.Source{Endpoint: "http://source", Client: client}, resultSnapshots, nil)
 	body := c.Body + strings.Repeat("x", c.FillBytes) + c.Suffix
 	if c.PadTo > 0 {
 		body += strings.Repeat(" ", c.PadTo-len(body))
@@ -208,13 +209,14 @@ func TestRecordAggregatesUsesSharedCancellationAdmission(t *testing.T) {
 	}
 }
 func TestRecordAggregatesHTTPRejectsUnsupportedModesBeforeSource(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	reads := 0
 	source := exploration.Source{Endpoint: "http://source", Client: &http.Client{Transport: nativeDependencyTransport(func(r *http.Request) (*http.Response, error) {
 		reads++
 		return &http.Response{StatusCode: 500, Body: io.NopCloser(strings.NewReader("unexpected")), Header: make(http.Header)}, nil
 	})}}
 	mux := http.NewServeMux()
-	registerExploration(mux, source)
+	registerExploration(mux, source, resultSnapshots, nil)
 	for _, extra := range []string{`,"offset":1`, `,"groupTimeSeries":true`, `,"summary":"other"`} {
 		body := strings.TrimSuffix(recordAggregatesHTTPBody, "}") + extra + "}"
 		w := httptest.NewRecorder()
@@ -229,6 +231,7 @@ func TestRecordAggregatesHTTPRejectsUnsupportedModesBeforeSource(t *testing.T) {
 }
 
 func TestRecordAggregatesInflightCancellationStopsSource(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	started := make(chan struct{}, 1)
 	source := exploration.Source{Endpoint: "http://source", Client: &http.Client{Transport: nativeDependencyTransport(func(r *http.Request) (*http.Response, error) {
 		started <- struct{}{}
@@ -236,7 +239,7 @@ func TestRecordAggregatesInflightCancellationStopsSource(t *testing.T) {
 		return nil, r.Context().Err()
 	})}}
 	mux := http.NewServeMux()
-	registerExploration(mux, source)
+	registerExploration(mux, source, resultSnapshots, nil)
 	budget := newQueryBudget(mux, 1)
 	id := "cccccccc-cccc-cccc-cccc-cccccccccccc"
 	req := httptest.NewRequest("POST", "/record-aggregates", strings.NewReader(recordAggregatesHTTPBody))

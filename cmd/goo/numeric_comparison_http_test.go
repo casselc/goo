@@ -10,6 +10,7 @@ import (
 )
 
 func TestNumericComparisonIntentHTTP(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	binding := exploration.NumericBinding{Field: exploration.Field{Kind: "attribute", Key: "work.items"}, Type: "int64", Unit: "items", Parse: "canonical-decimal"}
 	q := exploration.Query{Signal: "logs", Environment: "prod", FromMS: 1000, ToMS: 2000, Limit: 100, GroupBy: []exploration.Field{{Kind: "column", Key: "service"}}, Numeric: &binding}
 	cohort := func(values ...string) exploration.Cohort {
@@ -26,7 +27,7 @@ func TestNumericComparisonIntentHTTP(t *testing.T) {
 	}
 	request := exploration.ComparisonRequest{Numeric: true, Baseline: cohort("-1", "0", "0"), Selection: cohort("0", "0", "0")}
 	mux := http.NewServeMux()
-	registerExploration(mux, exploration.Source{})
+	registerExploration(mux, exploration.Source{}, resultSnapshots, nil)
 	call := func(v exploration.ComparisonRequest) *httptest.ResponseRecorder {
 		raw, e := json.Marshal(v)
 		if e != nil {

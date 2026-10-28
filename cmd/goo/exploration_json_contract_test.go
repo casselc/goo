@@ -14,6 +14,7 @@ import (
 )
 
 func explorationJSONWireResponse(t *testing.T, c planningWireCase) *httptest.ResponseRecorder {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	t.Helper()
 	mux := http.NewServeMux()
 	reads := 0
@@ -27,7 +28,7 @@ func explorationJSONWireResponse(t *testing.T, c planningWireCase) *httptest.Res
 		}
 		return &http.Response{StatusCode: 503, Body: io.NopCloser(strings.NewReader("fixture unavailable")), Header: make(http.Header)}, nil
 	})}
-	registerExploration(mux, exploration.Source{Endpoint: "http://source", Client: client})
+	registerExploration(mux, exploration.Source{Endpoint: "http://source", Client: client}, resultSnapshots, nil)
 	body := c.Body + strings.Repeat("x", c.FillBytes) + c.Suffix
 	if c.PadTo > 0 {
 		if c.PadTo < len(body) {

@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-func registerCaptures(mux *http.ServeMux, source exploration.Source, dir string) {
+func registerCaptures(mux *http.ServeMux, source exploration.Source, dir string, resultSnapshots *exploration.ResultSnapshots) {
 	store := exploration.CaptureStore{Dir: filepath.Join(dir, "exploration")}
 	registerLiveComparison(mux, source, store)
 	reply := func(w http.ResponseWriter, code int, value any) {

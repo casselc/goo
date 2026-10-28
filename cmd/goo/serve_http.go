@@ -106,10 +106,12 @@ func configuredHTTPServer(args []string) (*http.Server, error) {
 	registerInvestigations(mux, plans, connection, *captureDir)
 	registerDashboards(mux, ordered)
 	recordSource := connection.explorationSource()
+	// Ephemeral capabilities belong to this server, never another configured mux.
+	resultSnapshots := &exploration.ResultSnapshots{}
 	tailMembership := exploration.NewTailMembershipSnapshots(time.Now)
-	registerExploration(mux, recordSource, tailMembership)
-	registerCaptures(mux, recordSource, *captureDir)
-	registerWorkbench(mux, *captureDir, retentionConnectionFromEnvironment(), tailMembership)
+	registerExploration(mux, recordSource, resultSnapshots, tailMembership)
+	registerCaptures(mux, recordSource, *captureDir, resultSnapshots)
+	registerWorkbench(mux, *captureDir, retentionConnectionFromEnvironment(), resultSnapshots, tailMembership)
 	registerTelemetryPackages(mux, filepath.Join(*captureDir, "telemetry-packages"))
 	server := &http.Server{Addr: *listen, Handler: newQueryBudget(mux, 4), ReadHeaderTimeout: 5 * time.Second, WriteTimeout: 90 * time.Second}
 	return server, nil

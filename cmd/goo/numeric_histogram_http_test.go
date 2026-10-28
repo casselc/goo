@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/casselc/goo/exploration"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -9,8 +10,9 @@ import (
 )
 
 func TestNumericHistogramSelectionHTTP(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	mux := http.NewServeMux()
-	registerWorkbench(mux, t.TempDir(), retentionConnection{})
+	registerWorkbench(mux, t.TempDir(), retentionConnection{}, resultSnapshots, nil)
 	parent := `{"signal":"spans","environment":"prod","fromMs":1000,"toMs":2000,"limit":100,"numeric":{"field":{"kind":"attribute","key":"work.items"},"type":"uint64","unit":"items","parse":"canonical-decimal"},"numericHistogram":{"binning":"powers-of-two"}}`
 	for _, tc := range []struct {
 		body string

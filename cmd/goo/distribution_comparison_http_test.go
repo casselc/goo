@@ -11,6 +11,7 @@ import (
 )
 
 func TestDistributionComparisonSelectionHTTP(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	binding := exploration.NumericBinding{Field: exploration.Field{Kind: "attribute", Key: "work.items"}, Type: "uint64", Unit: "items", Parse: "canonical-decimal"}
 	cohort := func(service string, from, to int64) exploration.Cohort {
 		q := exploration.Query{Signal: "spans", Environment: "prod", FromMS: from, ToMS: to, Limit: 100, Numeric: &binding, NumericHistogram: &exploration.NumericHistogramSpec{Binning: "powers-of-two"}, Where: &exploration.Predicate{Field: &exploration.Field{Kind: "column", Key: "service"}, Op: "eq", Value: service}}
@@ -28,7 +29,7 @@ func TestDistributionComparisonSelectionHTTP(t *testing.T) {
 	}
 	req := exploration.ComparisonRequest{Numeric: true, Distribution: true, Baseline: cohort("earlier-worker", 1000, 2000), Selection: cohort("later-worker", 4000, 5000)}
 	mux := http.NewServeMux()
-	registerWorkbench(mux, t.TempDir(), retentionConnection{})
+	registerWorkbench(mux, t.TempDir(), retentionConnection{}, resultSnapshots, nil)
 	call := func(body map[string]any) *httptest.ResponseRecorder {
 		raw, e := json.Marshal(body)
 		if e != nil {

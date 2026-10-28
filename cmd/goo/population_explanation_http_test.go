@@ -15,9 +15,7 @@ import (
 )
 
 func TestPopulationExplanationHTTPObservedPromotionAndFilters(t *testing.T) {
-	previous := resultSnapshots
-	resultSnapshots = &exploration.ResultSnapshots{}
-	t.Cleanup(func() { resultSnapshots = previous })
+	resultSnapshots := &exploration.ResultSnapshots{}
 	sourceReads := 0
 	badGroup := false
 	client := &http.Client{Transport: nativeDependencyTransport(func(r *http.Request) (*http.Response, error) {
@@ -51,8 +49,8 @@ func TestPopulationExplanationHTTPObservedPromotionAndFilters(t *testing.T) {
 	})}
 	source := exploration.Source{Endpoint: "http://explanation-source.invalid", Client: client}
 	mux := http.NewServeMux()
-	registerExploration(mux, source)
-	registerCaptures(mux, source, t.TempDir())
+	registerExploration(mux, source, resultSnapshots, nil)
+	registerCaptures(mux, source, t.TempDir(), resultSnapshots)
 	q := exploration.Query{Signal: "spans", Environment: "test", FromMS: 1000, ToMS: 2000, Limit: 100, Where: &exploration.Predicate{Field: &exploration.Field{Kind: "column", Key: "service"}, Op: "eq", Value: "baseline"}}
 	selected := q
 	selected.Where = &exploration.Predicate{Field: &exploration.Field{Kind: "column", Key: "service"}, Op: "eq", Value: "selected"}
@@ -138,11 +136,12 @@ func TestPopulationExplanationHTTPObservedPromotionAndFilters(t *testing.T) {
 }
 
 func TestPopulationExplanationAdmissionCancelBeforeRead(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	mux := http.NewServeMux()
 	registerExploration(mux, exploration.Source{Client: &http.Client{Transport: nativeDependencyTransport(func(*http.Request) (*http.Response, error) {
 		t.Fatal("cancelled request reached source")
 		return nil, context.Canceled
-	})}})
+	})}}, resultSnapshots, nil)
 	handler := newQueryBudget(mux, 1)
 	id := "11111111-1111-4111-8111-111111111111"
 	cancel := httptest.NewRecorder()

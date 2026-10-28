@@ -70,6 +70,7 @@ func TestActivityViewsHTTPSourceFreeAndStrict(t *testing.T) {
 }
 
 func TestActivityBaselineHTTPStoredReferenceOnly(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	var reads atomic.Int64
 	source := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		reads.Add(1)
@@ -88,7 +89,7 @@ func TestActivityBaselineHTTPStoredReferenceOnly(t *testing.T) {
 	defer source.Close()
 	root := t.TempDir()
 	mux := http.NewServeMux()
-	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, root)
+	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, root, resultSnapshots)
 	registerActivityViews(mux, root)
 	call := func(method, path, body string) *httptest.ResponseRecorder {
 		w := httptest.NewRecorder()

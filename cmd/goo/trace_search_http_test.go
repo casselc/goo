@@ -16,6 +16,7 @@ import (
 const traceSearchHTTPBody = `{"version":"goo/trace-search/v1","environment":"prod","fromMs":1000,"toMs":61000,"conditions":[{"field":{"kind":"column","key":"service"},"op":"eq","value":"db"}],"limit":20}`
 
 func traceSearchWireResponse(t *testing.T, c planningWireCase) *httptest.ResponseRecorder {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	t.Helper()
 	reads := 0
 	client := &http.Client{Transport: nativeDependencyTransport(func(r *http.Request) (*http.Response, error) {
@@ -31,7 +32,7 @@ func traceSearchWireResponse(t *testing.T, c planningWireCase) *httptest.Respons
 		return &http.Response{StatusCode: 503, Body: io.NopCloser(strings.NewReader("fixture unavailable")), Header: make(http.Header)}, nil
 	})}
 	mux := http.NewServeMux()
-	registerExploration(mux, exploration.Source{Endpoint: "http://source", Client: client})
+	registerExploration(mux, exploration.Source{Endpoint: "http://source", Client: client}, resultSnapshots, nil)
 	body := c.Body + strings.Repeat("x", c.FillBytes) + c.Suffix
 	if c.PadTo > 0 {
 		body += strings.Repeat(" ", c.PadTo-len(body))
@@ -104,13 +105,14 @@ func TestTraceSearchHTTPWireFixtures(t *testing.T) {
 	}
 }
 func TestTraceSearchHTTPSuccessIsSingleReadWithoutRetention(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	reads := 0
 	source := exploration.Source{Endpoint: "http://source", Client: &http.Client{Transport: nativeDependencyTransport(func(r *http.Request) (*http.Response, error) {
 		reads++
 		return &http.Response{StatusCode: 200, Body: io.NopCloser(strings.NewReader("")), Header: make(http.Header)}, nil
 	})}}
 	mux := http.NewServeMux()
-	registerExploration(mux, source)
+	registerExploration(mux, source, resultSnapshots, nil)
 	request := httptest.NewRequest("POST", "/trace-search", strings.NewReader(traceSearchHTTPBody))
 	request.Header.Set("Content-Type", "text/plain")
 	response := httptest.NewRecorder()
@@ -141,6 +143,7 @@ func TestTraceSearchUsesSharedCancellationAdmission(t *testing.T) {
 }
 
 func TestTraceSearchHTTPPredicateBudgetRefusedBeforeSource(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	var request exploration.TraceSearchRequest
 	if err := json.Unmarshal([]byte(traceSearchHTTPBody), &request); err != nil {
 		t.Fatal(err)
@@ -169,7 +172,7 @@ func TestTraceSearchHTTPPredicateBudgetRefusedBeforeSource(t *testing.T) {
 		return &http.Response{StatusCode: 200, Body: io.NopCloser(strings.NewReader("")), Header: make(http.Header)}, nil
 	})}}
 	mux := http.NewServeMux()
-	registerExploration(mux, source)
+	registerExploration(mux, source, resultSnapshots, nil)
 	response := httptest.NewRecorder()
 	mux.ServeHTTP(response, httptest.NewRequest("POST", "/trace-search", strings.NewReader(string(raw))))
 	if response.Code != 400 || called || !strings.Contains(response.Body.String(), "exceeds 64 predicate nodes") {

@@ -23,6 +23,7 @@ func TestDiskHTTPExecuteCaptureAndOfflineReopen(t *testing.T) {
 	testHostIntervalCounterHTTP(t, "system.disk.io")
 }
 func testHostIntervalCounterHTTP(t *testing.T, metric string) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	network := metric != "system.cpu.time"
 	s := metrics.Stream{Resource: map[string]string{"host.id": "host", "deployment.environment.name": "prod"}, Scope: "hostmetrics", SchemaURL: measurements.HostMetricsSchema, Name: "system.cpu.time", Unit: "s", Attributes: map[string]string{"cpu.mode": "user", "cpu.logical_number": "0"}}
 	if network {
@@ -83,7 +84,7 @@ func testHostIntervalCounterHTTP(t *testing.T, metric string) {
 	makeMux := func() *http.ServeMux {
 		mux := http.NewServeMux()
 		registerMeasurements(mux, measurements.Source{Endpoint: "http://source", Client: client}, dir)
-		registerCaptures(mux, exploration.Source{Endpoint: "http://source", Client: client}, dir)
+		registerCaptures(mux, exploration.Source{Endpoint: "http://source", Client: client}, dir, resultSnapshots)
 		return mux
 	}
 	mux := makeMux()

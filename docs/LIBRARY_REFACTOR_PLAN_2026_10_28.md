@@ -58,9 +58,12 @@ and cancellation mechanics. Command code composes their configured dependencies.
 Native measurement/discovery and host/pod planners now have family-owned policies
 and handlers in `internal/nativehttp`. Source and pure-plan mechanics are shared
 in `queryhttp`, including their distinct deadline ordering and optional lifecycle
-custody effect. Explanation/capture policy adoption, per-server snapshot ownership
-and executable shutdown/export flushing remain planned; the broader request/server
-cut below is not complete.
+custody effect. Server startup now owns the result/explanation bank explicitly;
+tail membership and comparison drafts also remain within their server registrations.
+Cross-server/replacement tests distinguish live capabilities from durable captures
+and retention recovery. Explanation/capture policy adoption and executable
+shutdown/export flushing remain planned; the broader request/server cut below is
+not complete.
 
 ## Preferred cuts
 

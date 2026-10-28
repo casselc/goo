@@ -1,5 +1,34 @@
 # Validation record
 
+## Server-owned snapshot banks (2026-10-28 UTC)
+
+`configuredHTTPServer` now creates one result/explanation bank per server and
+passes it explicitly to record/explanation producers, capture promotion and
+workbench/retention consumers. The package-global bank is removed. Tail proof
+sharing is explicit rather than variadic; comparison drafts remain registration-
+local. Existing retention recovery and shared durable capture storage are preserved.
+Registration tests own their banks instead of resetting production globals.
+
+Validation: the full root Go suite, command race suite and focused vet pass.
+An actual configured-server regression checks owning/foreign record-token loads,
+explanation promotion/refusal, same-server promotion idempotence, retention's
+unavailable-token recovery ordering, replacement-server token loss and reopening
+shared durable captures without source rereads. Its source is a real HTTP fixture;
+optional XTDB connection-error paths are tested without a live XTDB transaction.
+OpenAPI/schema/fixture checks pass and regeneration is byte-identical.
+
+The rebuilt local server passes the full observed population-explanation journey,
+including promotion retry without rereading, Quint trace/negative checks and its
+Bombadil campaign. Both live-stream entry and background/scroll ownership journeys
+pass. The ownership diagram, architecture, known limits and refactor status are
+updated. Existing snapshot TTL/capacity bounds now apply to each server's bank;
+this is not authentication or partitioning of configured durable stores. No wire,
+storage-format or UI-layout change. Disposable run outputs and incidental
+historical screenshot updates are excluded; saved app volumes are preserved.
+
+Explanation/capture policy extraction and bounded executable shutdown/export
+flushing remain planned.
+
 ## Native HTTP policies and shared typed handlers (2026-10-28 UTC)
 
 `internal/nativehttp` owns native metric/host/pod discovery, measurement execution

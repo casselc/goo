@@ -28,6 +28,7 @@ func TestExplorationStartupDefaultsAndSnapshot(t *testing.T) {
 	}
 }
 func TestExplorationAndTailRegistrationsKeepInjectedSources(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	var forbidden atomic.Int32
 	trap := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		forbidden.Add(1)
@@ -63,7 +64,7 @@ func TestExplorationAndTailRegistrationsKeepInjectedSources(t *testing.T) {
 		})
 		s := exploration.Source{Endpoint: backend.URL, User: name, Password: "local-only", Client: client}
 		mux := http.NewServeMux()
-		registerExploration(mux, s)
+		registerExploration(mux, s, resultSnapshots, nil)
 		s.Endpoint = trap.URL
 		registrations = append(registrations, registration{mux, reads, clientCalls})
 	}

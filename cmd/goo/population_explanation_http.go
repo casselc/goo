@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func registerPopulationExplanations(mux *http.ServeMux, source exploration.Source) {
+func registerPopulationExplanations(mux *http.ServeMux, source exploration.Source, resultSnapshots *exploration.ResultSnapshots) {
 	fail := func(w http.ResponseWriter, code int, e error) {
 		httpjson.Write(w, code, map[string]string{"error": e.Error()})
 	}

@@ -64,6 +64,13 @@ its configured custody-directory effect, while discovery/planning do not write.
 The [native boundary diagram](HTTP_BOUNDARIES.md#native-measurementdiscovery-policy-extraction-2026-10-28)
 shows the two configured source adapters and separate planner/custody paths.
 
+Server startup now creates the result/explanation snapshot bank beside the existing
+tail membership bank and passes both explicitly to their producers and consumers.
+Capture promotion and retention share their own server's results; neither consults
+a package global. Comparison drafts remain registration-local. New server instances
+forget live capabilities while durable captures and request recovery retain their
+configured storage semantics. See the [ownership diagram](HTTP_BOUNDARIES.md#server-owned-snapshot-capabilities-2026-10-28).
+
 [Immutable publication](IMMUTABLE_PUBLICATION.md) shares write/sync/link mechanics
 across reusable telemetry packages, workbench artifacts, capture stores, lifecycle
 custody and native YAML. The latter two retain explicit file-only sync.
@@ -88,7 +95,7 @@ does not infer causes or execute queries. `exploration/explanation.go` projects
 count-only questions, validates complete groups, preserves per-read bases and
 ranks exact descriptive share changes. `cmd/goo/population_explanation_http.go`
 keeps pure plans/filter plans separate from the controlled aggregate read.
-Observed promotion uses the shared bounded `ResultSnapshots` pool and immutable
+Observed promotion uses the configured server's bounded `ResultSnapshots` pool and immutable
 capture publication: the server-held result is saved without a second source
 read. Durable explanation captures hold aggregate facts and reusable questions,
 not raw inspection rows or ephemeral result tokens. Final journey 177 acceptance

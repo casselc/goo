@@ -16,9 +16,10 @@ type exceptionFieldTransport func(*http.Request) (*http.Response, error)
 func (f exceptionFieldTransport) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }
 
 func TestComparisonHTTPNullableDerivedFieldBoundary(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	reads := 0
 	mux := http.NewServeMux()
-	registerExploration(mux, exploration.Source{Client: &http.Client{Transport: exceptionFieldTransport(func(*http.Request) (*http.Response, error) { reads++; return nil, errors.New("unexpected source read") })}})
+	registerExploration(mux, exploration.Source{Client: &http.Client{Transport: exceptionFieldTransport(func(*http.Request) (*http.Response, error) { reads++; return nil, errors.New("unexpected source read") })}}, resultSnapshots, nil)
 	worker, empty := "worker", ""
 	for _, tc := range []struct {
 		name   string

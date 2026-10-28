@@ -28,6 +28,7 @@ func stockHTTPRows(temporality int, monotonic bool) string {
 	return strings.Join(rows, "\n") + "\n"
 }
 func TestStockHTTPExecuteCaptureAndOfflineReopen(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	dir := t.TempDir()
 	reads := 0
 	offline := false
@@ -53,7 +54,7 @@ func TestStockHTTPExecuteCaptureAndOfflineReopen(t *testing.T) {
 	makeMux := func() *http.ServeMux {
 		mux := http.NewServeMux()
 		registerMeasurements(mux, measurements.Source{Endpoint: "http://source", Client: client}, dir)
-		registerCaptures(mux, exploration.Source{Endpoint: "http://source", Client: client}, dir)
+		registerCaptures(mux, exploration.Source{Endpoint: "http://source", Client: client}, dir, resultSnapshots)
 		return mux
 	}
 	mux := makeMux()

@@ -78,8 +78,9 @@ func TestTailHTTPIssuesServerOwnedMembership(t *testing.T) {
 	}
 }
 func TestTailPublicationHTTPValidation(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	mux := http.NewServeMux()
-	registerRetention(mux, t.TempDir(), retentionConnection{})
+	registerRetention(mux, t.TempDir(), retentionConnection{}, resultSnapshots, nil)
 	for _, body := range []string{`{"rows":[]}`, `{}`, `{"version":"goo/tail-evidence/v1alpha1","refs":[]}`} {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest("POST", "/retained-evidence/tail", strings.NewReader(body)))
@@ -89,6 +90,7 @@ func TestTailPublicationHTTPValidation(t *testing.T) {
 	}
 }
 func TestXTDBTailHTTPCommittedRecoveryWithoutBank(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	url := os.Getenv("GOO_XTDB_TEST_URL")
 	if url == "" {
 		t.Skip("optional XTDB instance required")
@@ -98,7 +100,7 @@ func TestXTDBTailHTTPCommittedRecoveryWithoutBank(t *testing.T) {
 	in.RequestID = fmt.Sprintf("%064x", time.Now().UnixNano())
 	raw, _ := json.Marshal(in)
 	mux := http.NewServeMux()
-	registerRetention(mux, t.TempDir(), retentionConnection{URL: url}, bank)
+	registerRetention(mux, t.TempDir(), retentionConnection{URL: url}, resultSnapshots, bank)
 	publish := func(m *http.ServeMux, body []byte) *httptest.ResponseRecorder {
 		w := httptest.NewRecorder()
 		m.ServeHTTP(w, httptest.NewRequest("POST", "/retained-evidence/tail", strings.NewReader(string(body))))
@@ -109,7 +111,7 @@ func TestXTDBTailHTTPCommittedRecoveryWithoutBank(t *testing.T) {
 		t.Fatal(first.Code, first.Body.String())
 	}
 	restarted := http.NewServeMux()
-	registerRetention(restarted, t.TempDir(), retentionConnection{URL: url})
+	registerRetention(restarted, t.TempDir(), retentionConnection{URL: url}, resultSnapshots, nil)
 	recovered := publish(restarted, raw)
 	var a, b retention.TailReceipt
 	json.Unmarshal(first.Body.Bytes(), &a)

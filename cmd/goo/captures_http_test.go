@@ -15,6 +15,7 @@ import (
 )
 
 func TestCaptureHTTPServerCustodyAndSourceFreePaging(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	var reads atomic.Int64
 	source := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		reads.Add(1)
@@ -35,7 +36,7 @@ func TestCaptureHTTPServerCustodyAndSourceFreePaging(t *testing.T) {
 	defer source.Close()
 	dir := t.TempDir()
 	mux := http.NewServeMux()
-	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, dir)
+	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, dir, resultSnapshots)
 	call := func(method, path, body string) *httptest.ResponseRecorder {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest(method, path, bytes.NewBufferString(body)))
@@ -69,8 +70,8 @@ func TestCaptureHTTPServerCustodyAndSourceFreePaging(t *testing.T) {
 	source.Close()
 	// New handler/store instance simulates process restart; source is now unavailable.
 	mux = http.NewServeMux()
-	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, dir)
-	registerWorkbench(mux, dir, retentionConnection{})
+	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, dir, resultSnapshots)
+	registerWorkbench(mux, dir, retentionConnection{}, resultSnapshots, nil)
 	metadata := call("GET", "/captures/"+first.Receipt.ID+"/receipt", "")
 	var brief struct {
 		Receipt exploration.CaptureReceipt           `json:"receipt"`

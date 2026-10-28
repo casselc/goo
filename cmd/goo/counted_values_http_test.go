@@ -16,6 +16,7 @@ import (
 const countedValuesHTTPBody = `{"signal":"logs","environment":"prod","fromMs":1000,"toMs":61000,"limit":20,"groupBy":[{"kind":"column","key":"severity"}]}`
 
 func countedValuesWireResponse(t *testing.T, c planningWireCase) *httptest.ResponseRecorder {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	t.Helper()
 	reads := 0
 	client := &http.Client{Transport: nativeDependencyTransport(func(r *http.Request) (*http.Response, error) {
@@ -48,7 +49,7 @@ func countedValuesWireResponse(t *testing.T, c planningWireCase) *httptest.Respo
 		return &http.Response{StatusCode: 503, Body: io.NopCloser(strings.NewReader("fixture unavailable")), Header: make(http.Header)}, nil
 	})}
 	mux := http.NewServeMux()
-	registerExploration(mux, exploration.Source{Endpoint: "http://source", Client: client})
+	registerExploration(mux, exploration.Source{Endpoint: "http://source", Client: client}, resultSnapshots, nil)
 	body := c.Body + strings.Repeat("x", c.FillBytes) + c.Suffix
 	if c.PadTo > 0 {
 		body += strings.Repeat(" ", c.PadTo-len(body))
@@ -175,13 +176,14 @@ func TestCountedValuesUsesSharedCancellationAdmission(t *testing.T) {
 	}
 }
 func TestCountedValuesHTTPRejectsUnsupportedModesBeforeSource(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	reads := 0
 	source := exploration.Source{Endpoint: "http://source", Client: &http.Client{Transport: nativeDependencyTransport(func(r *http.Request) (*http.Response, error) {
 		reads++
 		return &http.Response{StatusCode: 500, Body: io.NopCloser(strings.NewReader("unexpected")), Header: make(http.Header)}, nil
 	})}}
 	mux := http.NewServeMux()
-	registerExploration(mux, source)
+	registerExploration(mux, source, resultSnapshots, nil)
 	for _, extra := range []string{`,"offset":1`, `,"bucketMs":1000`, `,"summary":"span-duration"`, `,"spanStatus":true`, `,"groupTimeSeries":true`} {
 		body := strings.TrimSuffix(countedValuesHTTPBody, "}") + extra + "}"
 		w := httptest.NewRecorder()

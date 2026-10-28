@@ -19,7 +19,7 @@ func TestAPITailSSEWireContract(t *testing.T) {
 		return &http.Response{StatusCode: 503, Body: io.NopCloser(strings.NewReader("unavailable")), Header: make(http.Header)}, nil
 	})}
 	mux := http.NewServeMux()
-	registerTail(mux, exploration.Source{Endpoint: "http://source", Client: client})
+	registerTail(mux, exploration.Source{Endpoint: "http://source", Client: client}, nil)
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, httptest.NewRequest("POST", "/tail", strings.NewReader(`{"environment":"prod"}`)))
 	want, err := os.ReadFile("../../testdata/http/tail.sse")

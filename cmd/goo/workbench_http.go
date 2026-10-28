@@ -17,8 +17,8 @@ import (
 	"github.com/casselc/goo/workbench"
 )
 
-func registerWorkbench(mux *http.ServeMux, dir string, connection retentionConnection, banks ...*exploration.TailMembershipSnapshots) {
-	registerRetention(mux, dir, connection, banks...)
+func registerWorkbench(mux *http.ServeMux, dir string, connection retentionConnection, resultSnapshots *exploration.ResultSnapshots, bank *exploration.TailMembershipSnapshots) {
+	registerRetention(mux, dir, connection, resultSnapshots, bank)
 	registerActivityViews(mux, dir)
 	store := workbench.Store{Dir: filepath.Join(dir, "workbench")}
 	captures := exploration.CaptureStore{Dir: filepath.Join(dir, "exploration")}

@@ -15,6 +15,7 @@ import (
 )
 
 func TestCaptureRegistrationsIsolateSourcesDraftsAndFrozenEvidence(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	var forbidden atomic.Int32
 	trap := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		forbidden.Add(1)
@@ -64,7 +65,7 @@ func TestCaptureRegistrationsIsolateSourcesDraftsAndFrozenEvidence(t *testing.T)
 		s := exploration.Source{Endpoint: backend.URL, User: name, Password: "local-only", Client: client}
 		dir := t.TempDir()
 		mux := http.NewServeMux()
-		registerCaptures(mux, s, dir)
+		registerCaptures(mux, s, dir, resultSnapshots)
 		s.Endpoint = trap.URL
 		regs = append(regs, registration{mux: mux, backend: backend, dir: dir, reads: reads, clientCalls: clientCalls, count: count})
 	}
@@ -131,7 +132,7 @@ func TestCaptureRegistrationsIsolateSourcesDraftsAndFrozenEvidence(t *testing.T)
 			t.Fatal("freeze idempotence")
 		}
 		reopened := http.NewServeMux()
-		registerCaptures(reopened, exploration.Source{Endpoint: trap.URL, Client: reg.backend.Client()}, reg.dir)
+		registerCaptures(reopened, exploration.Source{Endpoint: trap.URL, Client: reg.backend.Client()}, reg.dir, resultSnapshots)
 		for _, id := range []string{reg.baseline.Receipt.ID, frozen.Receipt.ID} {
 			w = call(reopened, "GET", "/captures/"+id, nil)
 			if w.Code != 200 {

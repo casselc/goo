@@ -177,6 +177,7 @@ func TestPoolSignalsHTTPIsPureAndHonorsCancelledContext(t *testing.T) {
 }
 
 func TestPoolSignalsHTTPExecuteCaptureOfflineReopen(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	dir := t.TempDir()
 	req := poolSignalsHTTPRequest()
 	reads := 0
@@ -238,7 +239,7 @@ func TestPoolSignalsHTTPExecuteCaptureOfflineReopen(t *testing.T) {
 		m := http.NewServeMux()
 		registerPoolSignals(m)
 		registerMeasurements(m, measurements.Source{Endpoint: "http://source", Client: client}, dir)
-		registerCaptures(m, exploration.Source{Endpoint: "http://source", Client: client}, dir)
+		registerCaptures(m, exploration.Source{Endpoint: "http://source", Client: client}, dir, resultSnapshots)
 		return m
 	}
 	mux := makeMux()

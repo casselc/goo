@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/casselc/goo/exploration"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -8,9 +9,10 @@ import (
 )
 
 func TestRetentionHTTPOptionalAndServerOwned(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	connection := retentionConnection{}
 	mux := http.NewServeMux()
-	registerRetention(mux, t.TempDir(), connection)
+	registerRetention(mux, t.TempDir(), connection, resultSnapshots, nil)
 	call := func(method, path, body string) *httptest.ResponseRecorder {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest(method, path, strings.NewReader(body)))
@@ -25,7 +27,7 @@ func TestRetentionHTTPOptionalAndServerOwned(t *testing.T) {
 	}
 	connection = retentionConnection{URL: "postgres://xtdb@127.0.0.1:1/xtdb?sslmode=disable"}
 	mux = http.NewServeMux()
-	registerRetention(mux, t.TempDir(), connection)
+	registerRetention(mux, t.TempDir(), connection, resultSnapshots, nil)
 	for _, body := range []string{`{"requestID":"` + strings.Repeat("a", 64) + `","tailRefs":[{"token":"server-only","key":"untrusted"}]}`, `{"captureID":"x","rows":[{"forged":true}]}`, `{"captureID":"x"} {}`, `{"captureID":"../escape","indexes":[0],"tags":["review"]}`, `{"captureID":"x","origin":"trusted-user"}`} {
 		w = call("POST", "/retained-evidence", body)
 		if w.Code != 400 {
@@ -35,9 +37,10 @@ func TestRetentionHTTPOptionalAndServerOwned(t *testing.T) {
 }
 
 func TestRetentionRecoveryDoesNotTreatUnavailableStoreAsAbsentCommit(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	connection := retentionConnection{URL: "postgres://xtdb@127.0.0.1:1/xtdb?sslmode=disable"}
 	mux := http.NewServeMux()
-	registerRetention(mux, t.TempDir(), connection)
+	registerRetention(mux, t.TempDir(), connection, resultSnapshots, nil)
 	w := httptest.NewRecorder()
 	body := `{"requestID":"` + strings.Repeat("a", 64) + `","resultToken":"` + strings.Repeat("b", 64) + `","indexes":[0],"tags":["review"],"note":"original draft"}`
 	mux.ServeHTTP(w, httptest.NewRequest("POST", "/retained-evidence", strings.NewReader(body)))
@@ -54,13 +57,14 @@ func TestRetentionRecoveryDoesNotTreatUnavailableStoreAsAbsentCommit(t *testing.
 }
 
 func TestEvidenceOriginReadHTTPGuards(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	for _, configured := range []bool{false, true} {
 		connection := retentionConnection{}
 		if configured {
 			connection.URL = "postgres://xtdb@127.0.0.1:1/xtdb?connect_timeout=1&sslmode=disable"
 		}
 		mux := http.NewServeMux()
-		registerRetention(mux, t.TempDir(), connection)
+		registerRetention(mux, t.TempDir(), connection, resultSnapshots, nil)
 		id := strings.Repeat("a", 64)
 		cases := []struct {
 			path   string

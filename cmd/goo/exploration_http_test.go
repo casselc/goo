@@ -13,6 +13,7 @@ import (
 )
 
 func TestExplorationHTTPValidationAndSourceFailure(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	var reads atomic.Int64
 	source := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		reads.Add(1)
@@ -22,7 +23,7 @@ func TestExplorationHTTPValidationAndSourceFailure(t *testing.T) {
 		}
 	}))
 	mux := http.NewServeMux()
-	registerExploration(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()})
+	registerExploration(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, resultSnapshots, nil)
 	call := func(body string) *httptest.ResponseRecorder {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest("POST", "/explore", bytes.NewBufferString(body)))
@@ -47,8 +48,9 @@ func TestExplorationHTTPValidationAndSourceFailure(t *testing.T) {
 }
 
 func TestCohortComparisonHTTPRejectsDriftAndUnknownPayloads(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	mux := http.NewServeMux()
-	registerExploration(mux, exploration.Source{Client: http.DefaultClient})
+	registerExploration(mux, exploration.Source{Client: http.DefaultClient}, resultSnapshots, nil)
 	cohort := `{"question":{"signal":"spans","environment":"local","fromMs":1,"toMs":60001,"limit":100,"groupBy":[{"kind":"attribute","key":"region"}]},"basis":"client-capture","count":"2","state":"observed","groups":[{"g0":"east","count":"2"}]}`
 	valid := `{"baseline":` + cohort + `,"selection":` + cohort + `}`
 	for _, tc := range []struct {
@@ -67,9 +69,10 @@ func TestCohortComparisonHTTPRejectsDriftAndUnknownPayloads(t *testing.T) {
 }
 
 func TestInventoryHTTPStrictScopeAndUnavailable(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	source := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {}))
 	mux := http.NewServeMux()
-	registerExploration(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()})
+	registerExploration(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, resultSnapshots, nil)
 	call := func(body string) *httptest.ResponseRecorder {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest("POST", "/inventory", strings.NewReader(body)))

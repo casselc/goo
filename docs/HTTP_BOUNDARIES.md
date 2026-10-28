@@ -24,8 +24,8 @@ validators and source methods keep their concrete types and existing 400/502
 mapping. Source/compiler behavior remains in `exploration`. Registration accepts
 the configured source and existing snapshot bank; only `/explore` holds an
 expiring result token. Snapshot exhaustion still adds a warning to a successful
-read. The application still supplies its existing bank to other capture/retention
-owners; per-server snapshot-bank ownership has not been redesigned by this cut.
+read. The configured server creates one bank and supplies it explicitly to
+capture/retention owners too; its lifetime is described below.
 
 `internal/queryhttp` owns shared admission, the cancellation registry, tombstones,
 60-second enclosing deadline and cleanup after the handler/body completes. The
@@ -50,7 +50,7 @@ flowchart LR
     Budget --> Records
     Budget --> Other[Other application-owned families]
     Records --> Semantics[exploration: validate, compile, execute]
-    Records -->|Explore result only| Snapshots[Supplied ephemeral snapshot bank]
+    Records -->|Explore result only| Snapshots[This server's ephemeral snapshot bank]
     Startup[cmd/goo: configured source and bank] --> Records
 ```
 
@@ -98,6 +98,52 @@ flowchart LR
     Metrics -->|Lifecycle Run only| Custody[Configured first-observation directory]
     Plan --> Pure[Supplied-data host/pod planners]
 ```
+
+## Server-owned snapshot capabilities (2026-10-28)
+
+`configuredHTTPServer` creates a fresh `ResultSnapshots` bank for each server and
+passes it explicitly through Explore, population explanations, capture promotion
+and workbench/retention registration. No package-wide result bank remains.
+Registration fixtures use local banks rather than resetting production globals.
+
+| State | Owner and sharing |
+| --- | --- |
+| Live record pages and observed explanations | One bank per configured server; producers and load/promotion consumers share that exact instance. Existing TTL, entry, per-result and byte bounds apply per bank. |
+| Tail membership proofs | One bank created at server startup and explicitly shared by the tail and retention routes. A nil bank in a fixture explicitly means membership proof is unavailable. |
+| Live-comparison drafts | Already owned by the `registerLiveComparison` closure inside each server's capture registration. |
+| Published captures and optional XTDB records | Configured durable stores, independently of the ephemeral banks; servers using the same storage can reopen those saved records. |
+
+A different server or fresh replacement cannot load/promote another server's live
+result token, even inside the same process with the same capture directory. Such
+requests retain their existing unavailable-token responses. Native retention still
+attempts durable request recovery when a page is unavailable; a lost bank must not
+turn an ambiguous commit into a false failure or trigger an implicit source reread.
+Same-server explanation promotion remains idempotent. Server-local capability
+ownership is not an authentication boundary or a new partition of shared storage.
+Multi-instance clients still need affinity for live capabilities or an explicit
+new observation; saved captures follow their configured storage.
+
+```mermaid
+flowchart LR
+    Startup[configuredHTTPServer] --> Results[One result/explanation bank]
+    Startup --> Proofs[One tail membership bank]
+    Explore[Record and explanation reads] -->|freeze| Results
+    Results -->|load or promote| Capture[Capture routes]
+    Results -->|load selected records| Retain[Workbench retention]
+    Tail[Tail route] -->|retain exact membership| Proofs
+    Proofs -->|validate selection| Retain
+    Capture --> Durable[Configured durable stores]
+    Retain --> Durable
+    Replacement[Fresh configured server] --> Fresh[Fresh independent banks]
+    Replacement -->|reopen saved captures| Durable
+```
+
+Acceptance uses separately configured servers against a real HTTP source fixture:
+foreign record/explanation tokens are refused, the owning server can promote,
+retention keeps its retry/recovery ordering, a replacement forgets live tokens,
+and shared saved captures still reopen without telemetry reads. The full command
+race suite also runs with independent registration fixtures. Live XTDB publication
+is separate from these configuration/error-path checks.
 
 ## Endpoint effects
 

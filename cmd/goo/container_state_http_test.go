@@ -16,6 +16,7 @@ import (
 )
 
 func TestContainerReadinessHTTPExecuteCaptureAndOfflineReopen(t *testing.T) {
+	resultSnapshots := &exploration.ResultSnapshots{}
 	scope := "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver"
 	s := metrics.Stream{Resource: map[string]string{"k8s.pod.uid": "pod-a", "container.id": "reported-container", "k8s.container.name": "worker", "deployment.environment.name": "prod"}, Attributes: map[string]string{}, Scope: scope, Version: "0.137.0", Name: "k8s.container.ready"}
 	q := measurements.Question{FromMS: 100000, ToMS: 104000, Definition: measurements.Definition{APIVersion: measurements.Version, Name: "container-ready", Title: "Reported container readiness", Kind: "state", StateProfile: metrics.ContainerReadyProfile, Environment: "prod", LookbackMinutes: 1, MaxGapMS: 60000, Grain: "per-stream", Source: measurements.Binding{Services: []string{}, Resource: &measurements.ResourceBinding{Kind: "kubernetes-container", ID: "reported-container"}, ExactStream: &s, Scope: scope, Version: s.Version, Metric: s.Name}}}
@@ -37,7 +38,7 @@ func TestContainerReadinessHTTPExecuteCaptureAndOfflineReopen(t *testing.T) {
 	makeMux := func() *http.ServeMux {
 		mux := http.NewServeMux()
 		registerMeasurements(mux, measurements.Source{Endpoint: "http://source", Client: client}, dir)
-		registerCaptures(mux, exploration.Source{Endpoint: "http://source", Client: client}, dir)
+		registerCaptures(mux, exploration.Source{Endpoint: "http://source", Client: client}, dir, resultSnapshots)
 		return mux
 	}
 	mux := makeMux()
