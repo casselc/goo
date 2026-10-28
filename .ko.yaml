@@ -1,0 +1,11 @@
+# Keep the Go build toolchain aligned with .go-version. Tool installation is
+# pinned separately in docs/CONTAINER_IMAGES.md; ko's default rolling base is not
+# used. This is the inspected multi-platform distroless nonroot image index.
+defaultBaseImage: gcr.io/distroless/static-debian12:nonroot@sha256:afa5c872c891853ca7fcf1f12c3edb23f7eeef36189728842dd51042ff57f7ab
+builds:
+  - id: goo
+    main: ./cmd/goo
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -mod=readonly

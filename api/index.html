@@ -6,7 +6,7 @@
 <h1>goo API</h1><p>Questions, telemetry, and saved evidence. Browse the current HTTP contract and expand an operation to inspect its schemas.</p>
 <nav><a href="/openapi.json">Download OpenAPI 3.1</a><a href="https://github.com/casselc/goo/blob/work/docs/API.md">Contract and limitations</a></nav>
 <p class="note">Read-only documentation. Endpoint effects distinguish source reads, plans, and publication. Wire schemas do not replace domain validation.</p>
-<label for="server">Server boundary</label><select id="server"></select>
+<label for="server">API path</label><select id="server"></select>
 <label for="search">Find an operation</label><input id="search" type="search" placeholder="Filter by path, method, or effect" autocomplete="off">
 <p id="status" role="status">Loading API contract…</p><main id="operations"></main>
 <script>
@@ -20,8 +20,8 @@ fetch('/openapi.json').then(r=>{if(!r.ok)throw Error(`HTTP ${r.status}`);return 
  const text=`${method} ${path} ${op['x-effects']}`;
  if(!text.toLowerCase().includes(search.value.toLowerCase()))continue;
  const detail=el('details'),summary=el('summary');summary.append(el('strong',method.toUpperCase()),el('code',path),el('span',op['x-effects']));detail.append(summary,el('p',op.description||op.summary));
- const allowed=op.servers||spec.servers,chosen=allowed.find(s=>s.url===servers.value)||allowed[0];detail.append(el('p',`URL: ${chosen.url}${path}${chosen.url===servers.value?'':' (operation-specific server)'}`));
- if(op['x-go-body-limit-bytes'])detail.append(el('p',`Request bytes: Go ${op['x-go-body-limit-bytes'].toLocaleString()}; browser ${op['x-browser-body-limit-bytes'].toLocaleString()}.`));
+ const allowed=op.servers||spec.servers,chosen=allowed.find(s=>s.url===servers.value)||allowed[0];detail.append(el('p',`URL: ${chosen.url.replace(/\/$/,'')}${path}${chosen.url===servers.value?'':' (operation-specific server)'}`));
+ if(op['x-go-body-limit-bytes'])detail.append(el('p',`Request bytes: ${op['x-go-body-limit-bytes'].toLocaleString()} (same for /api and unprefixed paths).`));
  detail.append(el('p',`Schema coverage: ${op['x-schema-coverage']}.`));
  const shape=el('details'),head=el('summary','Operation contract');shape.append(head,el('pre',JSON.stringify(op,null,2)));detail.append(shape);root.append(detail);count++;
  }}status.textContent=`${count} operations · OpenAPI ${spec.openapi}`;};

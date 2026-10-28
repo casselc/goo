@@ -2,11 +2,17 @@
 
 This index preserves executable storyboards and their historical acceptance
 records. Current product entry is Explore's Activity stream, with explicit staged
-analysis and preservation; use the [roadmap](../ROADMAP_2026_10_24.md) for current
+analysis and preservation; use the [roadmap](../ROADMAP_2026_10_28.md) for current
 status and [README](../../README.md) for startup. A dated journey is not a request
 to reimplement its feature. Synthetic component conformance fixtures remain
 separate from real OTLP/application stories, as labeled below. Screenshots are
 generated evidence; no frames were fabricated for this documentation repair.
+
+## Single Go runtime
+
+[Journey238](../../journeys/238-single-go-runtime-storyboard.md) starts one compiled
+Go binary from an empty directory and exercises embedded assets, real OTel Activity,
+saved evidence and abortable SSE. The retired Python runtime is absent.
 
 ## Recent source-backed entries
 

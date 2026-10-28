@@ -1,125 +1,91 @@
-# Start goo without the sample application
+# Start Goo without the sample application
 
-The implemented `generic` startup profiles run the Go observation API and Python
-UI gateway without loading the lab's prepared HTTP binding, example grammar or
-operation packages. Standard OTel telemetry remains the input. This separates
-optional example capabilities from ordinary Activity, discovery, typed questions,
-service dashboards and stored evidence; it is not a deployment installer or a new
-telemetry storage schema.
+Goo is one Go process serving its embedded browser UI, API documentation and typed
+observation API. No Python gateway, Node process, separate asset deployment or
+sample manifest is required. The `generic` profile leaves optional lab declarations
+unconfigured while ordinary Activity, discovery, dashboards and stored evidence
+remain available. See [runtime rationale](SINGLE_GO_RUNTIME.md).
 
-## Start the two processes
+## Start one process
 
-Build `cmd/goo` using the repository's supported Go toolchain, then start the API
-with an explicit generic profile and a persistent evidence directory:
+Build with the supported Go toolchain, then start with an explicit profile and
+persistent evidence directory:
 
 ```sh
 go build -o /tmp/goo ./cmd/goo
 CLICKHOUSE_URL=http://127.0.0.1:8123 /tmp/goo serve-http \
-  --profile generic --listen 127.0.0.1:8089 \
+  --profile generic --listen 127.0.0.1:8088 \
   --investigations-dir /path/to/goo-evidence
 ```
 
-Supply the ClickHouse credentials required by that instance through
-`CLICKHOUSE_USER` and `CLICKHOUSE_PASSWORD`. The API uses existing source adapters,
-query budgets and read-only query semantics. Startup and capability discovery do
-not connect to the telemetry source or establish that it is reachable.
+Open **http://127.0.0.1:8088**. Supply `CLICKHOUSE_USER` and
+`CLICKHOUSE_PASSWORD` for that installation. The binary works from an empty
+working directory; browser assets, ordinary example definitions and local API docs
+are embedded at build time. Generic mode does not load sample declarations or read
+an external example grammar. UI configuration and API capabilities share the same
+Go `--profile`; the retired Python `GOO_PROFILE`, `GOO_HOST`, `GOO_PORT` and
+`PACKAGES_URL` settings no longer configure the product.
 
-From the shipped UI asset directory, start the Python gateway separately:
+The default Go listener is loopback. Choose an explicit `--listen` for another bind
+address. Startup validates declarations before listening, without probing telemetry.
+Existing ClickStack-shaped source adapters and read-only queries apply; starting
+Goo does not install a collector, create source tables or configure authentication.
 
-```sh
-GOO_PROFILE=generic GOO_HOST=127.0.0.1 GOO_PORT=8088 \
-PACKAGES_URL=http://127.0.0.1:8089 \
-CLICKHOUSE_URL=http://127.0.0.1:8123 python3 server.py
-```
+## One origin and one execution policy
 
-The generic UI needs `server.py`, `ui/` and `api/` assets. It does not import
-`grammar.py` or read `config/`, `definitions/` or the example catalog. Its default
-listener is loopback; an explicit `GOO_HOST` changes the bind address. It validates
-profile, host, port and explicitly supplied upstream base URLs before listening.
-Both upstream URLs must describe the intended installation; changing the startup
-profile does not configure authentication, create OTel tables or install a collector.
-
-The profiles are independent: `GOO_PROFILE` configures Python, while `--profile`
-configures Go. Set both explicitly. The existing lab defaults remain available;
-this change does not turn a missing or broken lab configuration into generic mode.
-The Compose lab still supplies its explicit prepared binding and operation packages.
-
-## Capability states are configuration, not telemetry health
+The browser sends `/api/*` requests directly to existing Go handlers. Native paths
+such as `/explore` remain available on the same listener for API clients; both
+surfaces use the same admission budget, cancellation registry and snapshot/store
+owners. There is no HTTP forwarding hop or second body-size policy. JSON receive
+has a 15-second transport ceiling and cancellation interrupt; source work and SSE
+retain their own handler policies. An error during receive closes that request's
+connection rather than draining an unfinished upload.
 
 | Endpoint | Meaning | Source effect |
 | --- | --- | --- |
-| Python `GET /api/ui-config` | `goo/ui-config/v1`, profile and example configuration state | None |
-| Go `GET /capabilities` (proxied as `/api/capabilities`) | `goo/runtime-capabilities/v1`, profile, `preparedHTTP` and `declaredOperations` states | None |
-| Unconfigured prepared/declared-family GET | HTTP 503 with `code: capability_unconfigured` and the unavailable capability | None |
-| Ordinary explicit observation question | Existing typed query and source/limit semantics | Actual read on execution |
+| `GET /api/ui-config` | Profile and example configuration | None |
+| `GET /api/capabilities` | Prepared/operation configuration states | None |
+| `GET /health` | Process liveness only | None |
+| Unconfigured prepared/declared-family GET | HTTP 503 with `capability_unconfigured` | None |
+| Explicit observation question | Typed validation and actual read | Telemetry read |
+| Retained evidence GET | Load existing immutable evidence | No telemetry read |
 
-`configured` means configuration loaded, not that telemetry exists or a service is
-healthy. `unconfigured` is different from observed no-data, source failure and
-unknown evidence. A capability request failure must not enable example actions or
-manufacture empty observations. Generic views remain usable while optional example
-areas explain that their capability is not configured.
-
-Without prepared HTTP configuration, `/http-package` is unavailable. Without
-operation packages, `/operation-packages`, `/operations`, `/counter-rates` and
-`/histograms` return the explicit unavailable-family response. Python's example
-package/catalog endpoints likewise refuse in generic mode rather than reading
-missing assets. Normal discovery and pure dashboard planning remain registered.
+`configured` means configuration loaded, not healthy or observed. `/health` no
+longer runs the historical Python SELECT 1 readiness probe. Use an explicit scoped
+query to establish source access; process liveness cannot establish ingestion
+completeness. Missing data, source failure and unconfigured capabilities remain
+distinct states.
 
 ## Choose scope before reading
 
-Generic startup waits for UI configuration and opens Activity with a blank
-environment and an explicit **Start stream** action. Opening the page does not
-start a local-environment tail. Typing the initial environment changes local
-intent; the first explicit start applies it. An unknown or failed UI-configuration
-response also remains blank and does not automatically read telemetry. This gate
-prevents an installation from silently querying the lab's `local` environment.
-The lab profile retains its existing local automatic-start behavior.
+Generic Activity starts with a blank environment and an explicit **Start stream**
+action. Typing changes intent; starting applies it. Failed/unknown UI configuration
+also withholds automatic reads. Lab mode retains automatic local streaming and its
+explicit prepared/operation declarations. The standalone component gallery is
+`/ui-components`; browsable API docs are `/api-docs` and the spec is `/openapi.json`.
 
-## Add optional declarations explicitly
+The obsolete reservation-specific JSON query panel and `/api/query`, `/api/explain`,
+`/api/package` are removed. Ordinary YAML examples and Go-backed package planning,
+native measurements and operation investigation remain supported. Sample
+applications may emit any ordinary OTel data independently of Goo's runtime.
 
-Generic Go startup accepts repeatable `--operation-package /path/package.yaml`
-arguments. These load only the supplied registry declarations; no checkout package
-is implicitly added. Prepared HTTP requires all four explicit flags together:
-`--binding`, `--inventory`, `--scope-name` and `--scope-version`. Supplying a partial
-set, an explicitly empty required value, a malformed file or an unreadable path
-fails startup. A supplied invalid operation package also fails; it is not silently
-ignored. Omission of optional configuration and explicit invalid configuration are
-different cases.
+## Add declarations explicitly
 
-Existing investigation and capture stores remain usable independently of the
-current registry. A stored operation observation can reopen from its retained
-receipt without telemetry reads. Refreshing it requires the matching package
-revision: when unavailable, the existing HTTP 409 refusal preserves the original
-question and evidence. It must not be relabelled as an unavailable-family GET or
-re-executed under an unrelated declaration. Use the same evidence directory across
-restarts when retaining this local store is intended.
+Generic startup accepts repeatable `--operation-package /path/package.yaml`.
+Prepared HTTP requires `--binding`, `--inventory`, `--scope-name` and
+`--scope-version` together. Partial, explicitly empty, malformed or unreadable
+configuration fails startup; omitted optional configuration stays unconfigured.
+Lab mode retains its existing default declaration requirements.
 
-## Verification boundary
+Use the same evidence directory across restarts. Stored observations reopen from
+retained receipts without querying telemetry; refresh requires the matching
+package revision and otherwise retains its existing 409 refusal. This migration
+does not rewrite stored bytes, identifiers or volumes.
 
-Go startup tests run a child process from an empty working directory, verify
-source-free capability/refusal wires and exercise optional configuration. Python
-tests run from an asset-only tree with an import guard for the example grammar,
-check explicit configuration failures and verify proxy behavior. These tests do
-not prove source connectivity or production deployment. [Journey191](../journeys/191-generic-startup-storyboard.md) passed in an isolated
-asset-only runtime: main 20s, a 30.9s generated browser actor (six phases, 465
-snapshots), a 2s offline supplement and a 6s existing-lab regression. The main
-used 150 spans and 140 logs with Python SDK resource attributes; this was ordinary
-Python-tagged OTLP fixture data, not a separate instrumented Python application.
-The overview measured all 140 matching server-span records with a 100-row page.
+## Verification
 
-The offline process used an actually unavailable ClickHouse endpoint:
-`http://127.0.0.1:1`. Valid discovery failed with 502, optional families remained
-503, capabilities stayed source-free 200, and the saved receipt reopened with
-identical complete stored bytes. A read-only audit matched all 132 runtime asset
-hashes and the binary, confirmed the isolated root was removed, and matched the
-retained capture store against its manifest and the complete capture copy.
-
-Acceptance required two real startup fixes. The initial run automatically started
-a `local` tail; the second still requested the disabled example catalog. Both
-failed logs are retained, and the accepted main is the third run. The configuration
-and no-read assertions were preserved rather than relaxed. These are bounded
-local acceptance results, not production onboarding or source-connectivity proofs.
-
-See [service dashboards](SERVICE_DASHBOARDS.md) for manifest-free record/native
-population contracts and [architecture diagrams](ARCHITECTURE_DIAGRAMS.md#generic-startup-and-optional-capabilities)
-for the startup boundary.
+Go runtime tests cover embedded assets, prefix routing and capability behavior.
+Executable generic/runtime journeys start the compiled binary from an empty
+working directory and use real OTLP data. Current results and limitations are
+recorded in [VALIDATION.md](../VALIDATION.md); earlier journey191 two-process results
+are historical, not evidence of this migration.

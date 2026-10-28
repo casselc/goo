@@ -2,7 +2,6 @@
 No source/database calls. Request schemas cover decoding shape; Go still owns
 semantic validation, byte budgets, capability lifetimes and effects.
 """
-import ast
 import argparse
 import copy
 import json
@@ -26,11 +25,16 @@ def check(spec):
     routes = set(route_sources(ROOT))
     documented = {(m, p) for p, item in spec['paths'].items() for m in item if m in ('get', 'post') and 'x-go-source' in item[m]}
     assert routes == documented, f'Go route coverage changed: missing={routes-documented}, stale={documented-routes}'
-    # Check the Python-only public API explicitly; proxy-forwarded routes are Go's.
-    python_tree = ast.parse((ROOT / 'server.py').read_text())
-    literals = {n.value for n in ast.walk(python_tree) if isinstance(n, ast.Constant) and isinstance(n.value, str)}
-    for path in ('/package', '/example-questions', '/prebuilts', '/query', '/explain', '/ui-config'):
-        assert '/api' + path in literals and path in spec['paths']
+    assert not any(path in spec['paths'] for path in ('/package','/query','/explain')), 'Retired demo API reintroduced'
+    assert not any('x-python-source' in op for item in spec['paths'].values() for op in item.values())
+    for path in ('/example-questions','/prebuilts','/ui-config','/health'):
+        assert spec['paths'][path]['get']['x-go-source'] == 'cmd/goo/serve_ui.go'
+    assert set(spec['paths']['/queries/{id}/cancel']['post']['responses']) == {'202','400','429'}
+    for profile in ('lab','generic'):
+        validator(spec, {'$ref':'#/components/schemas/UIConfig'}).validate({'version':'goo/ui-config/v1','profile':profile,'examples':{'state':'configured' if profile=='lab' else 'unconfigured'}})
+    validator(spec, {'$ref':'#/components/schemas/Liveness'}).validate({'ok':True})
+    assert list(validator(spec, {'$ref':'#/components/schemas/Liveness'}).iter_errors({'ok':False})), 'Liveness mutation accepted'
+    validator(spec, {'$ref':'#/components/schemas/PrebuiltRegistry'}).validate(json.loads((ROOT/'definitions/prebuilts.json').read_text()))
     for path, item in spec['paths'].items():
         for method, op in item.items():
             if 'x-go-source' not in op:
@@ -450,7 +454,6 @@ def check_container_discovery_observed(spec, path):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--observations')
-    parser.add_argument('--proxy-observations')
     parser.add_argument('--stock-observations')
     parser.add_argument('--stock-domain-observations')
     parser.add_argument('--pool-signals-observations')
@@ -479,8 +482,6 @@ if __name__ == '__main__':
         check_cpu_time_observed(spec,args.cpu_time_observations)
     if args.observations:
         check_observed(spec, args.observations)
-    if args.proxy_observations:
-        check_observed(spec, args.proxy_observations)
 
     if args.stock_observations:
         check_stock_observed(spec,args.stock_observations)

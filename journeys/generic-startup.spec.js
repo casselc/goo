@@ -27,7 +27,7 @@ test('191 isolated generic startup observes Python-tagged OTel without lab asset
     const capabilities = await json(await request.get(runtime.base + '/api/capabilities'));
     expect(capabilities).toEqual({ version: 'goo/runtime-capabilities/v1', profile: 'generic', preparedHTTP: { state: 'unconfigured' }, declaredOperations: { state: 'unconfigured' } });
     const unavailable = [];
-    for (const endpoint of ['/api/http-package', '/api/operations', '/api/operation-packages', '/api/package', '/api/example-questions', '/api/prebuilts']) {
+    for (const endpoint of ['/api/http-package', '/api/operations', '/api/operation-packages', '/api/example-questions', '/api/prebuilts']) {
       const response = await request.get(runtime.base + endpoint), body = await response.json();
       expect(response.status()).toBe(503); expect(body.code).toBe('capability_unconfigured');
       unavailable.push({ endpoint, status: response.status(), body });
@@ -107,12 +107,12 @@ test('191 isolated generic startup observes Python-tagged OTel without lab asset
       const run = spawnSync(process.env.GOO_GENERIC_BINARY, args, { cwd: runtime.root, env: runtime.environment, encoding: 'utf8', timeout: 5000 });
       expect(run.status).not.toBe(0); expect(run.error).toBeUndefined(); refusals.push({ args, status: run.status, output: run.stderr + run.stdout });
     }
-    const malformedPort = spawnSync(process.env.PYTHON || 'python3', ['server.py'], { cwd: runtime.root, env: { ...runtime.environment, GOO_PORT: 'not-a-port' }, encoding: 'utf8', timeout: 5000 });
-    expect(malformedPort.status).not.toBe(0); expect(malformedPort.error).toBeUndefined();
-    refusals.push({ args: ['server.py'], port: 'not-a-port', status: malformedPort.status, output: malformedPort.stderr + malformedPort.stdout });
-    const python = spawnSync(process.env.PYTHON || 'python3', ['server.py'], { cwd: runtime.root, env: { ...runtime.environment, GOO_PROFILE: 'unknown' }, encoding: 'utf8', timeout: 5000 });
-    expect(python.status).not.toBe(0); expect(python.error).toBeUndefined();
-    refusals.push({ args: ['server.py'], profile: 'unknown', status: python.status, output: python.stderr + python.stdout });
+    const malformedListen = spawnSync(process.env.GOO_GENERIC_BINARY, ['serve-http', '--profile', 'generic', '--listen', '127.0.0.1:not-a-port'], { cwd: runtime.root, env: runtime.environment, encoding: 'utf8', timeout: 5000 });
+    expect(malformedListen.status).not.toBe(0); expect(malformedListen.error).toBeUndefined();
+    refusals.push({ args: ['serve-http', '--listen', '127.0.0.1:not-a-port'], status: malformedListen.status, output: malformedListen.stderr + malformedListen.stdout });
+    expect(runtime.receipt.commands).toHaveLength(1);
+    expect(runtime.receipt.commands[0].label).toBe('go');
+    expect(runtime.receipt.files.every(file => !/server\.py|\.(?:mjs|css|html)$/.test(file.path))).toBe(true);
     expect(errors).toEqual([]);
     await fs.writeFile(path.join(directory, 'ledger.json'), JSON.stringify({ version: 1, facts, config, capabilities, unavailable, startupRequests, traceAck, logAck, ready, logsReady, activity, discovery, plan, overview, staged, result, saved, reopened, requests, responses, refusals, errors }, null, 2));
     console.log('191 ledger:', path.join(directory, 'ledger.json'));

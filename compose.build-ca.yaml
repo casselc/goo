@@ -1,9 +1,12 @@
 # Optional managed-environment build trust. The CA bundle is mounted only while
 # downloading dependencies, never copied into the image. Runtime config unchanged.
 services:
-  query:
+  reservations: &sample-build-trust
     build:
       secrets: [build_ca]
+  consumer: *sample-build-trust
+  web: *sample-build-trust
+  traffic: *sample-build-trust
   packages:
     build:
       secrets: [build_ca]

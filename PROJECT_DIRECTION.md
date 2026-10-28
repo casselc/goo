@@ -1,8 +1,9 @@
 # Project direction
 
 The user supplied the Grammar of Observability chat handoff to start this repository.
-The final implementation should be **Rust or Go**. The choice between them remains
-open. The imported Python lab is a reference prototype, not the final runtime.
+The final implementation should be **Rust or Go**. Goo now implements the product runtime and semantic libraries in Go. The imported
+Python server is retired; Python remains only in independent sample workloads and
+offline tooling/reference tests. See [runtime decision](docs/SINGLE_GO_RUNTIME.md).
 Clojure/EDN suggestions in the historical handoff are background ideas, not a
 requirement to migrate to Clojure. The attached continuation prompt is a proposed
 backlog; importing it does not mean all its milestones have been implemented.

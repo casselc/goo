@@ -10,6 +10,7 @@ def route_sources(root):
     sources = {}
     files = sorted((root / 'cmd/goo').glob('*http.go'))
     files.extend(root / path for path in (
+        'cmd/goo/serve_ui.go',
         'internal/recordhttp/routes.go',
         'internal/nativehttp/routes.go',
         'internal/explanationhttp/routes.go',

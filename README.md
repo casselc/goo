@@ -16,18 +16,18 @@ similarly skip unused pages and field inventories while retaining full service
 inspection and capture paths. See the [service walkthrough](journeys/194-service-dashboard-projection-storyboard.md).
 See the [counted-values walkthrough](journeys/193-counted-values-projection-storyboard.md).
 
-Go JSON uploads now have a 15-second receive ceiling and cancellation interrupt,
-separate from source execution and streaming responses. The Python UI proxy
-upload boundary remains a [known follow-up](docs/BACKLOG_2026_10_28.md#b1p--next-python-proxy-receive-boundary).
+Goo runs as **one Go process** with embedded UI and API documentation. Browser
+`/api/*` requests go directly to the typed Go handlers; there is no Python proxy.
+See the [runtime consolidation](docs/SINGLE_GO_RUNTIME.md) and
+[pinned ko/container image builds](docs/CONTAINER_IMAGES.md).
 
 ## Use your existing OTel data
 
-[Generic startup](docs/GENERIC_STARTUP.md) runs the Go API and Python UI without
-sample definitions, bindings or manifests. Set Go `--profile generic` and Python
-`GOO_PROFILE=generic`, supply your ClickHouse connection and an evidence directory,
-then choose an environment and **Start stream**. The existing ClickStack-shaped
-source adapters apply; this does not install a collector or create source tables.
-Optional prepared/example capabilities stay explicitly unconfigured.
+[Generic startup](docs/GENERIC_STARTUP.md) runs without sample definitions, bindings
+or manifests. Start `goo serve-http --profile generic --listen 127.0.0.1:8088`,
+supply your ClickHouse connection and an evidence directory, then choose an
+environment and **Start stream**. The existing ClickStack-shaped source adapters
+apply; this does not install a collector or create source tables.
 
 ## Build from source
 
@@ -164,7 +164,7 @@ namespace bridge. Source-query cancellation now stays active through JSON body
 consumption; saves and live streams keep separate lifetimes. See the
 [request flow](docs/ARCHITECTURE.md) and [test commands](tests/README.md).
 
-The semantic core is Go, with a Python lab/proxy and framework-neutral display
+The runtime and semantic core are Go, with embedded framework-neutral display
 Web Components. Source adapters lower typed questions to parameterized ClickHouse
 queries. Current typed YAML resources are supported; richer expression languages,
 arbitrary SQL execution and live Databricks acceptance remain separate work.
@@ -207,31 +207,18 @@ pinned tools/sibling source; `--suite woven` and `--suite lab` are explicit opt-
 journeys from synthetic component checks; Bombadil explores bounded UI actions
 and invariants. See [VALIDATION.md](VALIDATION.md) for checks actually executed.
 
-The Python compatibility lab additionally uses `requirements-dev.txt`,
+Independent Python sample workloads and offline reference tests use `requirements-dev.txt`,
 `python -m unittest discover -s tests -v` and `python tests/local_flow.py`.
 The local-flow check starts real HTTP/gRPC services against a fake Redis TCP
 server and needs ports 8081/50051 free. It is separate from the real Compose smoke.
 
-## Specialized reservation lab (optional)
+## Sample workloads
 
-In Examples, expand **Specialized reservation lifecycle and resource lab**. These
-compatibility views illustrate declared business identity; the general workbench
-does not require reservation attributes.
-
-1. Query **Completion SLO**, grouped by release or scenario. Good and retried requests usually finish on v1; the v2 cohort contains late, missing, and rejected work.
-2. Click a reservation ID to inspect its processing spans. The consumer deliberately starts a separate trace linked to the producer span, so business identity works across trace IDs.
-3. Change to **Logs** to inspect events for that selected reservation. Clear the selection to return to the full population.
-4. Inspect **Latency heatmap**, click a populated cell, select a span, then open its reservation waterfall. **gRPC latency** also shows percentile summaries. Fast synchronous acceptance can coexist with failed asynchronous completion.
-5. Inspect **Native metric points**. These are cumulative exported counter points; the UI does not sum them or claim they are rates.
-6. Edit the JSON query and run it. Unknown operations, invalid dimensions, and unsupported metric filters are rejected. Expand the compiled SQL panel to inspect parameters.
-
-The application-owned definition is `definitions/reservations.json`. Edit it and rebuild the application images to change the deadline, target, allowed views, or grouping dimensions. The current JSON subset is designed for portable data authoring; EDN parsing and the full package resource model are not yet implemented.
-
-Example query:
-
-```json
-{"view":"completion","minutes":30,"groupBy":"region","scenario":"missing"}
-```
+The independent reservation sample emits HTTP/gRPC/messaging telemetry. Explore
+it through ordinary Activity, service dashboards and trace views; Goo does not
+require its reservation attributes. The former reservation-specific query panel
+and its Python API/compiler are retired. Modern YAML examples and Go-backed
+operation/measurement workflows remain available under Examples.
 
 Create a chosen scenario manually:
 
@@ -274,7 +261,7 @@ HyperDX 2.41.0 is specified explicitly. The optional profile needs MongoDB and e
 | 8080 / 8000 | Optional HyperDX UI / API |
 
 The gRPC service and Redis stay internal to Compose. The lab combines Python
-compatibility services/proxy with the Go semantic server and woven Go samples.
+sample workload services with the single Go product server and woven Go samples.
 ClickHouse and Redis use named volumes; no kind cluster is required.
 
 ## Operational limits and stopping

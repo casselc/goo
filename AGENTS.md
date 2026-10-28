@@ -8,7 +8,7 @@ Build a Grammar of Observability over existing OTel/ClickStack-shaped data. The 
 
 - Keep implemented behavior and proposed behavior explicit. Update validation evidence after meaningful checks.
 - Implement milestones in docs/IMPLEMENTATION_PLAN.md as small reviewable changes. Finish the current milestone's acceptance criteria before adding unrelated features.
-- Preserve the runnable Python lab while evolving the semantic core. Record a rationale before a language/runtime migration; JSON is current transport and EDN is a proposed authoring option.
+- Goo runs as one Go server with embedded UI/docs and in-process API routes. Preserve the runnable lab and stored evidence; Python may remain in independent sample workloads and offline tooling, never as a product gateway. See docs/SINGLE_GO_RUNTIME.md.
 - Use source adapters for physical columns. Do not scatter new map-key conventions through presentation code.
 - Prefer pure AST validation and evaluation functions with a fixed evaluation time. Use typed query parameters for values and allowlisted or validated identifiers.
 - Presentation limits must not define measurement totals. Distinguish exact relationships, declared business identity, and time-based contextual search.

@@ -1,5 +1,5 @@
-# Optional local experiment: docker compose -f compose.yaml -f compose.xtdb.yaml up -d --no-build xtdb packages query
-# Build query/packages first using the main Dockerfile. No production deployment claim.
+# Optional local experiment: docker compose -f compose.yaml -f compose.xtdb.yaml up -d --no-build xtdb packages
+# Build the Go packages runtime first using the main Dockerfile. No production deployment claim.
 services:
   xtdb:
     image: ghcr.io/xtdb/xtdb:2.2.0@sha256:a6a426505b95a36e4e0e1d0de88efcf4220cb6bde8f1f5e594b0a1f92a948a77

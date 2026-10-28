@@ -4,7 +4,7 @@ This describes implemented module and lifetime boundaries. The explicitly labele
 target diagram is design context, not another execution queue; current priorities
 are in the [reviewed roadmap](ROADMAP_2026_10_28.md). See
 [known limits](KNOWN_ISSUES.md) and [executed validation](../VALIDATION.md) for
-capability/acceptance boundaries. HTTP paths and direct/proxy differences are
+capability/acceptance boundaries. HTTP paths and native/browser entry points are
 indexed in [the API contract](API.md).
 
 [HTTP boundary inventory](HTTP_BOUNDARIES.md) distinguishes pure planning, source
@@ -68,20 +68,16 @@ publications and SSE retain their separate owners and retry/continuity semantics
 sequenceDiagram
     participant Owner as Query owner
     participant Read as postJSON
-    participant Proxy as Python proxy
-    participant Go as Go query budget/source
+    participant Go as Single Go UI/API server
     Owner->>Read: fixed question + AbortSignal
-    Read->>Proxy: POST + X-Goo-Query-ID
-    Proxy->>Go: forward question + ID
-    Go-->>Proxy: headers, then JSON body
+    Read->>Go: /api POST + X-Goo-Query-ID
+    Go-->>Read: headers, then JSON body
     Note over Read,Go: Cancellation remains active while bodies are consumed
     opt owner cancels before JSON read completes
         Owner->>Read: abort
-        Read->>Proxy: independent POST /queries/ID/cancel
-        Proxy->>Go: cancel matching context
+        Read->>Go: independent POST /api/queries/ID/cancel
         Read-->>Owner: AbortError, no result
     end
-    Note over Proxy: Proxy buffers upstream JSON before its response
     Note over Read: Finally removes abort listener; completed reads cannot cancel later
 ```
 
@@ -172,13 +168,13 @@ from remaining work; [validation](../VALIDATION.md) records actual checks.
 
 | Component | Source | Responsibility |
 | --- | --- | --- |
-| Local stack | compose.yaml | Default services: capture/storage, Python sample roles, two woven Go apps, query and Go packages; optional MongoDB/HyperDX |
+| Local stack | compose.yaml | Default services: capture/storage, Python sample roles, woven Go apps and one Go UI/API server; optional MongoDB/HyperDX |
 | OTel pipeline | config/collector.yaml | Receive OTLP logs/traces/metrics, batch, export to ClickHouse baseline tables |
 | Sample roles | sample.py | HTTP gateway, unary gRPC acceptance, Redis publisher, consumer attempts, traffic generator |
 | Telemetry setup | telemetry.py | Python SDK providers, explicit always-on demo tracing, OTLP/HTTP exporters |
-| Prototype query compiler | grammar.py | Validate the original lab request and select bounded SQL templates |
-| Query service | server.py | Serve UI/API docs, Python compatibility query/explain and the JSON/SSE browser proxy on 8088; Go routes remain native on 8089 |
-| Browser workspace | ui/workspace.js, ui/product.css, ui/index.html | Navigation/layout facade and visual system; Examples contains the original Python reservation workflow |
+| Historical offline reference | grammar.py | Original reservation SQL templates used only by offline tests; no runtime route |
+| Product runtime | cmd/goo/serve_http.go, cmd/goo/serve_ui.go | One Go process serves embedded UI/docs and same-process typed API routes; Compose exposes the same listener on 8088/8089 |
+| Browser workspace | ui/workspace.js, ui/product.css, ui/index.html | Navigation/layout facade and visual system; Examples uses Go-backed packages and ordinary YAML questions |
 | Pure question protocol | ui/question-protocol.js | Browser/Node step/link/capture projection and comparison-only native-default equivalence; compatibility exports retain identical function references |
 | Activity and retained analysis | ui/stream-entry.js, ui/investigation-trail.js, ui/exploration.js | Visit-gated live entry, explicit lazy fixed-owner mounting, paused-parent return and independent source generations |
 | Ordinary draft recovery | ui/investigation-draft.js, ui/documents.js | Bounded same-tab authored checkpoints and explicit source-free Restore/Discard, separate from immutable publication and native retry journals |
@@ -200,14 +196,15 @@ from remaining work; [validation](../VALIDATION.md) records actual checks.
 
 The sample has no durable business outbox or complete acceptance ledger. It emits application-defined log attributes and can lose telemetry independently of queue acknowledgement. The consumer deliberately creates a new trace with a producer link. gRPC application payloads use a JSON codec; telemetry uses standard protobuf OTLP.
 
-The original Python query backend uses fixed table names and logical assumptions embedded in SQL. Values are passed through ClickHouse typed parameters. The result summary is calculated from the bounded returned rows. The alarm is a preview calculated when a user queries. None of these constitute a general package compiler or operational SLO evaluator.
+The original Python reservation query runtime and its UI panel are retired. Its
+offline SQL reference is not a product API or an operational SLO evaluator.
+See [single-runtime rationale and diagram](SINGLE_GO_RUNTIME.md).
 
 The Go operation path now separates [YAML package planning](OPERATION_PACKAGES.md),
 source normalization and evaluation. [Native counter rates](NATIVE_COUNTERS.md)
 use actual metric points; span links from rate intervals are contextual, with a
 separate basis. [Subject navigation](SUBJECT_NAVIGATION.md) uses declared scoped
-identity, not inferred causality or durable completion. Neither path repairs the
-original Python reservation-preview accounting gaps automatically.
+identity, not inferred causality or durable completion. Neither path infers durable completion from missing observations.
 
 ## Target boundaries (partly implemented)
 
@@ -319,7 +316,7 @@ Components do not infer OTel aliases or issue source reads.
 ## Live observation adapter
 
 The Go tail handler validates a supported log/span selector, performs bounded rolling row reads
-and emits SSE observations through the Python streaming proxy. Explore owns
+and emits SSE observations directly to the browser from the same Go server. Explore owns
 connection generations, reconnect gaps, retention and focus/follow behavior.
 The passive table and attribute components retain caller rows. No tail buffer
 becomes a measurement population. See the [sequence diagram](LIVE_LOG_TAIL.md).
@@ -818,7 +815,7 @@ withdraw pending results. This contextual adapter introduces no capture format.
 ## Counted field values as a bounded source projection
 
 The first counted-values adoption adds `Source.FetchCountedValues` and
-`POST /explore/counted-values` (UI proxy `/api/explore/counted-values`). This is a
+`POST /explore/counted-values` (browser `/api/explore/counted-values`). This is a
 separate `goo/counted-values/v1` result, not a new mode on the full record result.
 Existing `Source.Fetch`, record/capture DTOs, saved bytes and their custody paths
 remain unchanged.
@@ -868,7 +865,7 @@ universal adoption by every grouped read or a replacement for capture semantics.
 ## Service record aggregates without inspection reads
 
 The second narrow-projection adoption adds `Source.FetchRecordAggregates` and
-`POST /record-aggregates` (UI proxy `/api/record-aggregates`), with version
+`POST /record-aggregates` (browser `/api/record-aggregates`), with version
 `goo/record-aggregates/v1`. Service widgets execute their existing exact typed
 questions through this aggregate-only path. The service browser's initial full
 Explore metadata page remains a separate positive witness and inspection source;

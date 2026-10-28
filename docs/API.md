@@ -1,35 +1,36 @@
 # HTTP API contract
 
 The current OpenAPI 3.1 contract is [api/openapi.json](../api/openapi.json).
-Run the Python UI server and open [API docs](http://localhost:8088/api-docs), or
+Run `goo serve-http` and open [API docs](http://localhost:8088/api-docs), or
 [download the spec](http://localhost:8088/openapi.json). The docs are read-only,
 searchable and self-contained: no CDN, telemetry query or API execution widget.
 The running server must include the current routes and assets; changing the
 checkout alone does not update an existing process. Rebuild an older image, or
 use the supported local code/asset installation and restart procedure.
 
-The spec inventories 78 supported operations: 71 Go operations, six Python-only
-`/api` operations and the Python root `/health` probe. Go paths are unprefixed on
-port 8089; the browser proxy exposes them under `/api` on port 8088. Python-only
-operations override the server list. `/api-docs`, `/openapi.json`, the UI, static
-assets and unsupported prefix suffixes are documentation/application resources,
-not additional observability API operations. Go's automatic HEAD/mux refusal
-behavior is not a separately supported browser endpoint. These counts come from
-the checked-in spec's method entries and `x-go-source` ownership, not from the
-number of path strings. [Executed acceptance](API_ACCEPTANCE.md) and
-[known limits](KNOWN_ISSUES.md) are separate from structural API coverage.
+The spec inventories 87 supported Go operations. One Go process serves the UI,
+embedded assets, API documentation and observation/storage handlers. Browser
+`/api/*` requests and unprefixed API requests dispatch in process to the same mux,
+query budget, cancellation registry and stores. Compose publishes this one server
+on loopback ports 8088 and 8089; standalone deployments need only one listener.
+`/api-docs`, `/openapi.json`, the UI and static assets are application resources,
+not extra observability operations. Automatic HEAD/mux refusal behavior is not a
+separately supported operation. The checked-in spec records ownership and
+[known limits](KNOWN_ISSUES.md); executed coverage remains separately stated.
 
 ```mermaid
 flowchart LR
-  Browser[Browser or API client] --> Proxy[Python /api boundary]
-  Browser --> Go[Direct Go HTTP boundary]
-  Proxy --> Go
-  Python[Python-only query / explain / declarations] --> Proxy
+  Browser[Browser or API client] --> Entry[Single Go HTTP server]
+  Entry --> UI[Embedded UI and API documentation]
+  Entry --> Routes[Same handlers: /api and unprefixed routes]
+  Routes --> Budget[Shared admission and cancellation]
+  Budget --> Source[ClickHouse telemetry reads]
+  Routes --> Store[Saved questions and evidence]
   Types[Go JSON wire types] --> Shapes[Reflected wire schemas]
-  Policy[Reviewed route effects / limits / SSE contract] --> Spec[OpenAPI 3.1]
+  Policy[Reviewed effects / limits / SSE contract] --> Spec[OpenAPI 3.1]
   Shapes --> Spec
-  Spec --> Docs[Read-only API docs]
-  Fixtures[Frozen Go wire fixtures and actual SSE frames] --> Check[CI conformance and rejecting controls]
+  Spec --> UI
+  Fixtures[Frozen wire fixtures and actual SSE frames] --> Check[Conformance and rejecting controls]
   Spec --> Check
 ```
 
@@ -37,9 +38,9 @@ flowchart LR
 
 All supported Go request and response envelopes have typed shapes. Nested
 `json.RawMessage`, dynamic record rows, arbitrary exporter maps and interface
-values remain open where the implementation is open. Python legacy query results
-have a typed envelope with adapter-shaped rows; the legacy package keeps its
-extensible declaration shape. This is the implemented development API, not a
+values remain open where the implementation is open. The former Python demo
+`/package`, `/query` and `/explain` operations are retired; modern definition and
+example catalogs remain Go-served. This is the implemented development API, not a
 stability promise or a replacement for semantic validation.
 
 The Go generator reflects JSON field names, embedded structs, pointers, arrays,
@@ -61,11 +62,11 @@ do. No generated handler/client or request-validation middleware was introduced.
 ## Legacy source GET controls
 
 The browser's legacy source owners now use decoded `getJSON` transport with query
-IDs through the Python proxy. Leaving/changing/hiding the owner aborts the source
+IDs directly through Go. Leaving/changing/hiding the owner aborts the source
 read and prevents sequential hidden follow-ons. Returning requires an explicit
 read. GETs have no JSON request body; declaration/catalog GETs remain separate.
-Direct Go supplies Retry-After on saturation; Python retains its existing behavior
-of forwarding the error body/status without that header.
+Both path forms preserve `Retry-After` on saturation and the owning handler's
+status, content type and response bytes.
 
 `/http-package`, `/operations`, `/counter-rates` and `/histograms` now share the
 four-slot source budget and optional `X-Goo-Query-ID` cancellation control. Their
@@ -77,26 +78,31 @@ source-free declaration read outside this admission. Existing success bodies,
 query validation and source-error mapping are unchanged. See the
 [boundary details](HTTP_BOUNDARIES.md#legacy-operation-source-admission-2026-10-28).
 
-## Two boundaries, with existing differences
+## One transport boundary
 
-Every Go POST operation documents `x-go-body-limit-bytes` and
-`x-browser-body-limit-bytes`. These are byte ceilings, not string lengths. The
-Python proxy checks positive Content-Length before forwarding. In particular:
+`x-go-body-limit-bytes` documents each JSON request ceiling in bytes. `/api` and
+unprefixed requests have identical route limits and decoding. There is no proxy
+Content-Length gate, JSON reserialization, status translation or dropped-header
+boundary. Representative limits are:
 
-| Route | Go | Browser proxy |
-| --- | --- | --- |
-| `/dashboards/plan` | 256 KiB | 16 KiB |
-| `/metric-discovery` | 64 KiB | 16 KiB |
-| `/annotations`, `/deployments` | 128 KiB | 16 KiB |
-| `/compare` | 1 MiB | 1 MiB |
+| Route | Both path forms |
+| --- | --- |
+| `/dashboards/plan` | 256 KiB |
+| `/metric-discovery` | 64 KiB |
+| `/annotations`, `/deployments` | 128 KiB |
+| `/compare` | 1 MiB |
 
-Direct Go decoders accept JSON without enforcing Content-Type; application/json
-is the documented client encoding. Trailing-input errors differ by owner. The
-proxy reparses/reserializes JSON, so byte-identical response fixtures describe Go,
-not Python's JSON formatting. Direct operation GET validation uses text/plain
-`http.Error` bodies containing JSON-looking text; the browser re-encodes parsed
-errors as JSON. The proxy does not forward all upstream headers (including query
-budget Retry-After). These are current discrepancies, not changes made by this spec.
+Go decoders accept JSON without enforcing Content-Type; `application/json` is the
+supported client encoding. Trailing-input errors remain owned by each route.
+JSON receive is bounded to 15 seconds and interrupted by request cancellation;
+complete successful decoding clears that deadline before source/response work.
+Decode errors expire it and close the HTTP/1 connection to avoid implicit-drain
+stalls. Middleware wrapping response writers must expose transport capabilities
+via `Unwrap` or equivalent response-controller methods.
+
+Operation GET validation uses text/plain `http.Error` bodies containing
+JSON-looking text; both path forms preserve that representation. `/health` is
+process liveness only: it performs no source read and does not certify ingestion.
 
 `x-effects` distinguishes pure plans/supplied-summary comparisons, source reads,
 source reads with possible custody/capture publication, saved reads, file
@@ -123,7 +129,7 @@ captures, hashes and unrequested row SQL are unchanged. See [error triage](ERROR
 
 ## Population explanations
 
-Three Go routes are exposed through the browser proxy under `/api`:
+These Go routes are available through the same-process `/api` path:
 
 | Route | Effect | Request |
 | --- | --- | --- |
@@ -168,14 +174,14 @@ line. `x-sse-events` binds event names to schemas:
 | `gap` | Source unavailable, identity budget exhausted, or connection ended |
 
 The Go stream has four local slots, a 60-second context, two-second polls and
-five-second write deadlines. Python's upstream socket timeout is 45 seconds, not
-a guaranteed stream duration. Disconnect releases the upstream slot. Use POST
+five-second write deadlines. There is no proxy socket or second streaming
+lifetime. Disconnect releases the Go tail slot. Use POST
 fetch streaming; browser EventSource cannot submit the selector body. Last-Event-ID
 does not provide replay/resume. This polls an event-time window, not an ingestion
 cursor or complete capture. A gap after headers remains HTTP 200, and disconnect
 can prevent delivery of a final frame. Successful streams set no-store and
-X-Accel-Buffering: no; direct early JSON errors omit no-store, whereas the proxy's
-JSON errors include it. The JSON response helper must not buffer SSE.
+X-Accel-Buffering: no; early JSON errors omit no-store. Both path forms preserve
+these headers. The JSON response helper must not buffer SSE.
 
 Actual reset/source-unavailable gap bytes are frozen in
 [testdata/http/tail.sse](../testdata/http/tail.sse) and executed by
@@ -201,7 +207,7 @@ python3 -m venv /tmp/goo-api-tools
 /tmp/goo-api-tools/bin/pip install -r requirements-api.txt
 /tmp/goo-api-tools/bin/python scripts/check_openapi.py
 go test ./cmd/goo -run 'Test(APITailSSEWireContract|PlanningHTTPWireFixtures|TelemetryHTTPWireFixtures|NativeJSONHTTPWireFixtures|ExplorationJSONHTTPWireFixtures|TraceSearchHTTPWireFixtures)$' -count=1
-python3 -m unittest discover -s tests -p test_api_docs.py -v
+go test ./cmd/goo -run '^(TestEmbeddedUI|TestBrowserAPI)' -count=1
 node scripts/check_api_docs.cjs
 ```
 
@@ -210,7 +216,7 @@ refuses drift, validates OpenAPI/references and every Go route, and checks typed
 requests/responses against the existing wire fixtures. Unknown-field, wrong-error-
 type and malformed SSE controls must fail. The checker validates documented-operation responses, default mux refusals and
 admitted request bodies; it emits the current fixture counts on each invocation. The workflow executes those wire tests plus the actual SSE fixture,
-and tests the Python docs routes. The browser journey runs locally with the
+and tests embedded Go docs/assets, same-process API dispatch and cancellation. The browser journey runs locally with the
 existing Playwright/Chromium setup and captures a real docs screenshot; it does
 not start the full lab or mutate telemetry.
 
@@ -229,13 +235,13 @@ Route discovery is an inventory aid, not authority to invent an endpoint policy:
 new routes must have reviewed effects, request/response roots, limits, supported
 statuses and fixture coverage. Extensions describe current behavior and do not
 change runtime enforcement. Executed coverage now also includes the capture/live-freeze/document workflow and
-browser proxy contracts. The optional local XTDB branch covers retention, correction,
+same-process browser API contracts. The optional local XTDB branch covers retention, correction,
 pinned review and source-free document reopen. Broader endpoint/branch coverage and
 the remaining C2 acceptance work are still explicit gaps. The spec pauses further mechanical
 JSON migration while those contracts become the common API reference.
 
 
-## Observed workflow and proxy contracts
+## Observed workflows and same-process routes
 
 `TestAPISavedEvidenceObservedContracts` exports actual handler observations when
 `GOO_API_OBSERVATIONS` is set. Its base branch has 12 responses: source-backed
@@ -246,24 +252,19 @@ current/pinned review, pinned document creation and offline file reopen. The tes
 refuses any telemetry read after the source is marked unavailable. CI runs the
 base branch; the real XTDB branch requires the lab explicitly.
 
-`tests/test_api_proxy.py` puts real HTTP servers on both sides of the Python
-proxy. It checks exact/overflow browser limits using the spec's byte ceilings,
-query-string and cancellation-ID forwarding, deliberately unforwarded Retry-After,
-JSON re-encoding of text/plain Go errors, early tail headers and idle upstream
-closure within two seconds of browser abort. It can export 20 actual proxy JSON
-responses using `GOO_PROXY_OBSERVATIONS`. Both observation files are validated by:
+`TestEmbeddedUIAndMetadataWithoutSource` checks embedded HTML/CSS/ESM,
+documentation, profile/catalog metadata, denied source-file paths and absent
+fallback routing. `TestBrowserAPIPreservesRequestAndStreamsCancellation` exercises
+real request/cancellation behavior through both path forms sharing one budget;
+`TestBrowserAPICancelsIncompleteIncomingBody` holds an upload peer open while
+cancelling through the opposite prefix. Former Python proxy tests were retired
+with the runtime they tested; Go fixture and domain checks remain intact.
+
+Validate observed saved-workflow responses with:
 
 ```sh
-python scripts/check_openapi.py --observations /path/saved.json --proxy-observations /path/proxy.json
+python scripts/check_openapi.py --observations /path/saved.json
 ```
-
-These tests found and corrected two contract issues: `/documents` takes an outer
-`{document, parent}` envelope, and browser cancellation requires a nonempty body
-(send `{}`) even though Go ignores it. They also found a runtime bug: non-JSON
-upstream HTTP errors previously disconnected clients while handling the error.
-GET, POST and pre-stream tail now return a bounded-description JSON 502 instead;
-valid JSON errors retain their status. No backend error body is echoed by this
-fallback. Existing limit/header differences remain unchanged.
 
 `scripts/check_deployed_api.py` validates the running spec against the checkout
 and performs readonly real API checks. The API-docs browser journey can target the
@@ -272,22 +273,21 @@ starts its own ephemeral server. These are distinct from synthetic loopback data
 
 ## Managed lab rebuild
 
-The Go build now binds source read-only in one build step, so `internal` packages
-are included and VFS builders avoid copying a complete toolchain for each package.
-The same Go version uses the smaller Alpine build image; the binary stays
-CGO-disabled and the runtime remains Python slim. Go caches are disposable build
-mounts. For a managed TLS proxy, use an optional trusted combined CA bundle:
+The product image runs the CGO-disabled Go binary and contains embedded UI/API
+assets. Python fixture workloads use a separate named build target; they are not
+part of the product HTTP request path. Go caches are disposable build mounts. For
+a managed TLS proxy, keep the supplied trust bundle and certificate verification:
 
 ```sh
-GOO_BUILD_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt docker compose -f compose.yaml -f compose.xtdb.yaml -f compose.build-ca.yaml build query packages
-docker compose -f compose.yaml -f compose.xtdb.yaml up -d --no-deps --no-build query packages
+GOO_BUILD_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt docker compose -f compose.yaml -f compose.xtdb.yaml -f compose.build-ca.yaml build packages
+docker compose -f compose.yaml -f compose.xtdb.yaml up -d --no-deps --no-build packages
 ```
 
-The overlay mounts trust only for dependency downloads and keeps certificate
-verification enabled; it does not copy certificates into layers or alter runtime
-configuration. Omit the XTDB overlay if the optional store is not deployed. Build
-and recreate only these two owned services; preserve telemetry volumes, stream
-entries, capture ledgers and the previous image for rollback.
+The initial migration must stop/remove the retired `query` container before
+publishing the Go service on host port 8088. Preserve the named investigations and
+telemetry volumes, retained IDs, stream entries and previous image for rollback.
+No `down -v`, source reset or capture-store rewrite is needed. Omit the XTDB
+overlay when that optional store is not deployed.
 
 [Executed API conformance and deployed acceptance](API_ACCEPTANCE.md) records the
 workflow layers, replay commands, fixes, build recovery and remaining coverage.
@@ -374,7 +374,7 @@ without a subscription. No display component fetches or starts telemetry.
 
 `POST /activity-views`, `GET /activity-views/{id}` and `GET /activity-views` expose
 immutable version-1 rolling selector and column configuration. Publication has a
-16 KiB Go/proxy bound and rejects execution/custody fields. List supports exact
+16 KiB Go bound and rejects execution/custody fields. List supports exact
 optional environment and cursor parameters, returning up to 20 items. These
 source-free file routes are independent of fixed `/exploration-views` and XTDB.
 Opening configuration never opens a tail connection. See [Activity views](ACTIVITY_VIEWS.md).
@@ -392,7 +392,7 @@ editor/protocol and real telemetry capture/reuse acceptance are documented in
 the linked TF2/TF3 contract.
 
 The source-free `POST /numeric-histograms/selection` planner derives exact integer
-range and remainder questions from half-open bin indices. Its `/api` proxy has
+range and remainder questions from half-open bin indices. Its same-process `/api` path has
 the same contract. See [integer distributions](NUMERIC_HISTOGRAMS.md).
 
 Numeric measure comparison is an explicit `numeric: true` mode on `POST /compare`.
@@ -507,8 +507,8 @@ existing record-context read. See [the semantic contract](TRACE_SEARCH.md).
 `POST /dashboards/plan` remains a pure planning operation. It accepts optional
 `DashboardRequest.profile`: `auto`, `all-spans` or `http-server`. Omitting it
 (including its existing empty/null decoding) preserves the legacy v2 response
-without new profile/family fields. Existing request ceilings are unchanged: Go
-256 KiB and the browser proxy 16 KiB. No source execution or new route is added.
+without new profile/family fields. Both path forms accept the same 256 KiB
+request ceiling. No source execution or new route is added.
 
 Opt-in plans add selected `profile`, `families` descriptors and optional widget
 `family` identities. A descriptor carries key, title, state, grain, selected
@@ -614,21 +614,20 @@ operations returns JSON 503 from `/operation-packages`, `/operations`,
 responses retain their previous wire behavior. Generic record exploration,
 discovery and supplied-data planning do not require those optional capabilities.
 
-Python `GET /api/ui-config` separately returns pure startup configuration:
+Go `GET /api/ui-config` returns pure startup configuration:
 `{version:"goo/ui-config/v1",profile:"lab"|"generic",
-examples:{state:"configured"|"unconfigured"}}`. It does not contact Go or
-ClickHouse. `/api/capabilities` transparently forwards Go's capability response;
-UI configuration and Go configuration describe their own processes. In generic
-mode the optional lab routes `/api/package`, `/api/query`, `/api/explain`,
-`/api/example-questions` and `/api/prebuilts` return JSON 503 with the same code
-and `capability:"example-grammar"` or `"example-catalog"`. This is intentional
-unconfigured functionality, not a claim that the telemetry source failed.
+examples:{state:"configured"|"unconfigured"}}`. It does not contact ClickHouse.
+`/api/capabilities` uses the same process and profile. In generic mode the optional
+`/api/example-questions` and `/api/prebuilts` catalog routes return JSON 503 with
+`code:"capability_unconfigured"` and `capability:"example-catalog"`. Retired
+`/api/package`, `/api/query` and `/api/explain` routes are absent rather than
+pretending to provide unsupported functionality.
 
 `POST /explore/counted-values` (browser `/api/explore/counted-values`) accepts the
 existing strict `RecordQuery` shape, restricted to exactly one string `groupBy`,
 zero offset and no measure, histogram, summary, bucket, time-series or span-status
 projections. Numeric predicates and reported-edge scope remain supported. Go and
-proxy accept at most 16 KiB; Go uses the same 55-second timeout, admission budget
+same-process API accept at most 16 KiB; Go uses the same 55-second timeout, admission budget
 and `X-Goo-Query-ID` cancellation owner as `/explore`.
 
 The `goo/counted-values/v1` response contains the original question, total count,

@@ -40,9 +40,8 @@ jobs:
       - name: Execute actual wire fixtures
         run: go test ./cmd/goo -run 'Test(APITailSSEWireContract|PlanningHTTPWireFixtures|TelemetryHTTPWireFixtures|NativeJSONHTTPWireFixtures|ExplorationJSONHTTPWireFixtures|TraceSearchHTTPWireFixtures)$' -count=1
       - name: Exercise browsable documentation routes
-        run: python -m unittest discover -s tests -p test_api_docs.py -v
+        run: go test ./cmd/goo -run '^(TestEmbeddedUI|TestBrowserAPI)' -count=1
       - name: Exercise saved workflows and validate actual responses
         run: |
           GOO_API_OBSERVATIONS="$RUNNER_TEMP/saved-api.json" go test ./cmd/goo -run '^TestAPISavedEvidenceObservedContracts$' -count=1
-          GOO_PROXY_OBSERVATIONS="$RUNNER_TEMP/proxy-api.json" python -m unittest discover -s tests -p test_api_proxy.py -v
-          python scripts/check_openapi.py --observations "$RUNNER_TEMP/saved-api.json" --proxy-observations "$RUNNER_TEMP/proxy-api.json"
+          python scripts/check_openapi.py --observations "$RUNNER_TEMP/saved-api.json"

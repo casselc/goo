@@ -31,3 +31,16 @@ test('investigation exports are stable entrypoints before an editor mounts',asyn
   assert.throws(()=>documents[key](),/editor is not mounted/);
  }
 });
+
+test('application entry uses native examples without the retired Python query surface',async()=>{
+  const [entry,html]=await Promise.all(['app.mjs','index.html'].map(file=>readFile(new URL('../ui/'+file,import.meta.url),'utf8')));
+  assert.doesNotMatch(entry,/['"]\/api\/(?:query|explain|package)['"]/);
+  assert.doesNotMatch(entry,/workflows\.mjs|legacyExamples/);
+  assert.doesNotMatch(html,/id="(?:legacyExamples|workflows|view|group|scenario|runExpression|expression|package)"/);
+  for(const id of ['minutes','exampleQuestions','guidedMeasurements','prebuilts','runOperations','runHttpPackage']){
+    assert.ok(html.includes('id="'+id+'"'),id+' must remain available');
+  }
+  for(const path of ['/api/example-questions','/api/prebuilts','/api/operations','/api/http-package']){
+    assert.ok(entry.includes(path),path+' must remain available');
+  }
+});

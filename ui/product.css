@@ -437,25 +437,6 @@ td details {
   background:#152337;
   color:#72869b;
 }
-.workflow-steps {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:14px;
-  margin-top:14px;
-}
-.workflow-steps p {
-  font-size:12px;
-}
-.workflow-steps button {
-  width:100%;
-  text-align:left;
-}
-.workflow-steps button[aria-current=step] {
-  border-color:var(--accent);
-}
-#workflows label {
-  max-width:450px;
-}
 .bar {
   height:18px;
   background:var(--accent);
@@ -590,12 +571,9 @@ td details {
   border-radius:8px;
   background:#141b25;
 }
-#status,#operationStatus,#captureStatus,:is(#exploreStatus,#savedexploreStatus) {
+#operationStatus,#captureStatus,:is(#exploreStatus,#savedexploreStatus) {
   font-size:12px;
   line-height:1.7;
-}
-#guided {
-  margin-bottom:20px;
 }
 #operationPackage {
   max-width:400px;
@@ -942,7 +920,6 @@ td details {
 .reusable-questions h3 { margin-top: .75rem; }
 #recipePlan { border-left: 3px solid var(--accent, #5479dc); padding: .2rem 1rem; margin: 1rem 0; }
 #exampleQuestions { margin-bottom: 1.5rem; }
-#legacyExamples > summary { font-weight: 600; padding: 1rem 0; }
 
 .explore-modes {display:flex;gap:4px;margin:0 0 20px;border-bottom:1px solid var(--border);padding-bottom:10px}
 .explore-modes [aria-selected=true] {border-color:var(--accent);color:var(--accent)}

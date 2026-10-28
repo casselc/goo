@@ -1,7 +1,12 @@
-# HTTP effects and dependency boundaries — C2 active
+# HTTP effects and dependency boundaries
+
+Current runtime: one Go process with embedded assets and in-process browser API
+routing (238). Dated sections below preserve earlier extraction/acceptance history;
+any Python/proxy descriptions there are historical, superseded by
+[SINGLE_GO_RUNTIME.md](SINGLE_GO_RUNTIME.md) and [API.md](API.md).
 
 This inventory describes the current Go server routes, not a new API. Browser
-`/api` proxy mapping remains in Python. `serve-http` loads binding/inventory and
+`/api` paths dispatch in-process to the same Go handler graph; there is no proxy. `serve-http` loads binding/inventory and
 operation packages at startup, expands plans, builds one 15-second HTTP client,
 registers route families and wraps the mux in `queryhttp.NewBudget` through the
 application's `newQueryBudget(..., 4)` composition function. Server
@@ -14,9 +19,9 @@ The four admitted source GETs now use `ui/queries.mjs` → `getJSON(url, signal)
 It shares POST transport mechanics: a fresh optional query ID, cancellation owned
 through JSON consumption, late-result abort rejection, and an independent
 best-effort cancel control. GETs carry no body or Content-Type. Pure declaration
-reads keep their existing configuration transport. Python forwards query IDs only
-for these exact source GET paths; declaration/catalog reads do not receive them.
-It still buffers upstream JSON and retains its existing error-header behavior.
+reads keep their existing configuration transport. Browser and native paths share
+the same Go admission/cancellation owner, with no response buffering or duplicate
+upload policy. See [runtime consolidation](SINGLE_GO_RUNTIME.md).
 
 Operations owns one controller for its sequential operation/rate/histogram read;
 Definitions owns a separate controller for the prepared HTTP preview. Leaving the
@@ -30,14 +35,11 @@ SSE are not tied to these controllers. See [journey 217](../journeys/217-legacy-
 sequenceDiagram
     participant UI as Visible legacy owner
     participant Read as getJSON
-    participant Proxy as Python proxy
     participant Go as Go source admission
     UI->>Read: source GET + owner signal
-    Read->>Proxy: GET + X-Goo-Query-ID
-    Proxy->>Go: forward exact source GET + ID
+    Read->>Go: /api GET + X-Goo-Query-ID
     UI->>Read: leave / scope change / hidden: abort
-    Read->>Proxy: independent cancel POST
-    Proxy->>Go: cancel matching ID
+    Read->>Go: independent /api cancellation POST
     Read-->>UI: abort; late body rejected
     Note over UI,Go: No hidden rate/histogram follow-on; explicit retry uses fresh IDs
 ```

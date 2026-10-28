@@ -1,5 +1,5 @@
 """Readonly API contract smoke against the rebuilt local lab, using real data.
-Run with requirements-api.txt installed; optional base URL is the Python server.
+Run with requirements-api.txt installed; optional base URL is the Go server.
 """
 import json
 import sys
@@ -14,7 +14,7 @@ from check_openapi import validator
 base = sys.argv[1].rstrip('/') if len(sys.argv) > 1 else 'http://127.0.0.1:8088'
 spec = json.loads((Path(__file__).resolve().parents[1] / 'api/openapi.json').read_text())
 with urllib.request.urlopen(base + '/openapi.json', timeout=15) as response:
-    assert json.load(response) == spec, 'Running specification differs from checkout; rebuild query image'
+    assert json.load(response) == spec, 'Running specification differs from checkout; rebuild Go product image'
 checks = 0
 
 
@@ -27,11 +27,14 @@ def check(method, path, pattern, payload=None, want=200):
     except urllib.error.HTTPError as error:
         response = error
     with response:
-        result = json.load(response)
+        raw = response.read().decode()
+        media = response.headers.get_content_type()
+        result = json.loads(raw) if media == 'application/json' else raw
         assert response.status == want, (path, response.status, result)
-        assert response.headers['Cache-Control'] == 'no-store'
+        if media == 'application/json':
+            assert response.headers['Cache-Control'] == 'no-store'
         op = spec['paths'][pattern][method.lower()]
-        validator(spec, op['responses'][str(want)]['content']['application/json']['schema']).validate(result)
+        validator(spec, op['responses'][str(want)]['content'][media]['schema']).validate(result)
         if payload is not None:
             validator(spec, op['requestBody']['content']['application/json']['schema']).validate(payload)
     checks += 1

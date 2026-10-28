@@ -10,7 +10,7 @@ stream and clears the local buffer.
 
 The Go `/tail` endpoint accepts POST JSON `{environment, where?}` with the same
 bounded log AST validation and parameterized physical adapter as ordinary Explore.
-The Python app proxies `/api/tail` as flushed SSE rather than buffering JSON. The
+The same Go process handles `/api/tail` directly with flushed SSE. The
 app uses fetch streaming so selectors remain in the request body, not a URL.
 Components have no network behavior.
 
@@ -57,12 +57,10 @@ from an old connection publishing into the current selector.
 sequenceDiagram
   participant User
   participant Explore as Explore tail adapter
-  participant Proxy as Python SSE proxy
   participant Go as Go tail source adapter
   participant CH as ClickHouse logs
   User->>Explore: Tail applied log selector
-  Explore->>Proxy: POST /api/tail {environment,where}
-  Proxy->>Go: POST /tail
+  Explore->>Go: POST /api/tail {environment,where}
   Go-->>Explore: reset (no replay; rolling window)
   loop Every 2 seconds, bounded connection
     Go->>CH: Parameterized recent-row read
@@ -71,9 +69,9 @@ sequenceDiagram
     Explore->>Explore: Patch retained rows; cap count and bytes
   end
   User->>Explore: Pause or inspect with keyboard
-  Explore->>Proxy: Abort stream
+  Explore->>Go: Abort stream
   User->>Explore: Resume with recent logs
-  Explore->>Go: New connection via proxy
+  Explore->>Go: New direct connection
   Go-->>Explore: Reset; show continuity gap
 ```
 
@@ -91,7 +89,7 @@ Fresh entry reuses this transport with compact supplied rows and application-own
 inspection: [Live Activity](LIVE_ACTIVITY.md). Scroll-away pauses transport; Resume
 shows the new-window gap. Reconnect retains the last-good buffer until the first
 successful replacement batch. Explicit scope changes clear the old buffer. The
-HTTP proxy closes upstream reads on downstream disconnect; the four-reader
+Go request context cancels source reads on browser disconnect; the four-reader
 admission limit is unchanged.
 
 Compact tail row buttons pause in their click handler. Pointer focus on a button

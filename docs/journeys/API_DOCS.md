@@ -2,10 +2,10 @@
 
 Implemented documentation surface; no telemetry or publication is executed.
 Run `node scripts/check_api_docs.cjs` after installing the project's npm tools and
-Chromium. It serves the actual checkout's Python handler on an ephemeral loopback
-port and closes that server afterward, leaving the running lab untouched.
+Chromium. It builds and starts the checkout's embedded Go runtime from an empty directory
+on an ephemeral loopback port, then closes it, leaving the running lab untouched.
 
-1. Open `/api-docs`: see 66 operations and choose browser versus direct-Go boundary.
+1. Open `/api-docs`: see 87 Go operations and choose browser-prefixed versus native paths.
 2. Search `/tail`: expand the operation and its contract, inspect SSE media type,
    effect, request limits and event schemas. No Execute button or network source read.
 3. Search `/measurements`: see the source/custody effect and 65,536-byte body limits.

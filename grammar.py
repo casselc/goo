@@ -1,4 +1,4 @@
-"""Small typed query subset: fixed sources, validated dimensions, CH parameters."""
+"""Historical offline reservation SQL reference; not served by the Go runtime."""
 import json
 from pathlib import Path
 

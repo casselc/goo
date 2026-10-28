@@ -106,11 +106,11 @@ observation['properties']['resourceSchemaURL']['description']='Explicit null for
 observation['allOf']=[{'if':{'properties':{'podUIDState':{'const':'present'}},'required':['podUIDState']},'then':{'properties':{'actionable':{'const':True}}},'else':{'properties':{'actionable':{'const':False}}}}]
 family=schemas['exploration.PodFamilyObservation']['properties'];family['family']['enum']=['logs','spans','gauge','sum','histogram'];family['count']['pattern']='^[1-9][0-9]*$'
 for name in ('firstNS','lastNS'):family[name]['pattern']='^(0|[1-9][0-9]*)$'
-# Runtime metadata is encoded by small Go/Python maps; schemas are authored here.
+# Runtime metadata is encoded by small Go maps; schemas are authored here.
 schemas['RuntimeCapabilityState']={'type':'object','required':['state'],'properties':{'state':{'enum':['configured','unconfigured']}},'additionalProperties':False}
 schemas['RuntimeCapabilities']={'type':'object','required':['version','profile','preparedHTTP','declaredOperations'],'properties':{'version':{'const':'goo/runtime-capabilities/v1'},'profile':{'enum':['lab','generic']},'preparedHTTP':{'$ref':'#/components/schemas/RuntimeCapabilityState'},'declaredOperations':{'$ref':'#/components/schemas/RuntimeCapabilityState'}},'additionalProperties':False,'description':'Source-free startup configuration only. Configured does not establish source availability, authorization, telemetry coverage, ingestion completeness or service health.'}
 schemas['RuntimeCapabilityRefusal']={'type':'object','required':['error','code','capability'],'properties':{'error':{'type':'string'},'code':{'const':'capability_unconfigured'},'capability':{'enum':['prepared-http','declared-operations','example-grammar','example-catalog']}},'additionalProperties':False}
-schemas['UIConfig']={'type':'object','required':['version','profile','examples'],'properties':{'version':{'const':'goo/ui-config/v1'},'profile':{'enum':['lab','generic']},'examples':{'$ref':'#/components/schemas/RuntimeCapabilityState'}},'additionalProperties':False,'description':'Pure Python UI startup configuration. Does not query or report readiness of ClickHouse or Go.'}
+schemas['UIConfig']={'type':'object','required':['version','profile','examples'],'properties':{'version':{'const':'goo/ui-config/v1'},'profile':{'enum':['lab','generic']},'examples':{'$ref':'#/components/schemas/RuntimeCapabilityState'}},'additionalProperties':False,'description':'Pure Go startup configuration. Does not query or report readiness of ClickHouse.'}
 # Additive dashboard profiles opt in; omitted/empty/null retain the legacy plan.
 schemas['exploration.DashboardRequestInput']['properties']['profile']['description']='Optional auto, all-spans, http-server, rpc-server, db-client, messaging-consumer or messaging-producer selection. Omitted/empty/null preserves the legacy v2 response. auto selects HTTP only with a positive supplied server-observation hint plus current-key metadata, or a compatible native HTTP instrument. Automatic precedence is HTTP, legacy RPC, DB client, messaging consumer, messaging producer, then All spans. RPC admission requires both legacy rpc.system/rpc.method keys plus a positive rpcServerObserved hint, or an eligible legacy RPC duration instrument. Flat keys alone leave All spans selected; hints are advisory, not authenticated conformance.'
 schemas['exploration.DashboardRequestInput']['properties']['httpServerObserved']['description']='Optional advisory positive hint from already-held, same-scope span observations. false/omitted means no positive hint, not HTTP absence; no new probe or semantic-convention compliance claim is implied.'
@@ -252,17 +252,10 @@ def go_limit(path):
  if path in ('/annotations','/exploration-views','/deployments','/documents','/population/plan', '/numeric-histograms/selection','/captures/comparisons'): return 131072
  return 16384
 
-def browser_limit(path):
- if path in ('/container-memory/view','/container-cpu/view','/container-resources/history'): return 8388608
- if path == '/pool-signals/view': return 2097152
- if path in ('/population/plan', '/numeric-histograms/selection','/exploration-views','/documents','/captures/comparisons'): return 131072
- if path in ('/compare','/numeric-histograms/comparison-selection'): return 1048576
- if path == '/pod-dashboard/plan': return 8389632
- if path in ('/pod-metric-discovery','/host-dashboard/plan','/pool-signals/plan','/population/explain','/population/explain/plan','/population/explain/filter','/trace-search') or path.startswith(('/telemetry-packages','/measurement-packages','/measurements')): return 65536
- return 16384
-
 def effect(method,path):
- if path == '/capabilities': return 'configuration-only'
+ if path in ('/capabilities','/ui-config'): return 'configuration-only'
+ if path == '/health': return 'liveness-only'
+ if path in ('/example-questions','/prebuilts'): return 'embedded-definition-read'
  if path == '/queries/{id}/cancel': return 'cancel-capability'
  if path == '/captures': return 'source-read-and-capture-or-held-explanation-publication'
  if path == '/captures/live': return 'source-read-or-held-draft-publication'
@@ -275,10 +268,10 @@ def effect(method,path):
 
 spec = {
  'openapi':'3.1.0',
- 'info':{'title':'goo observability API','version':'0.1.0','description':'Current development API. Browser server prefixes paths with /api; direct Go server uses unprefixed paths. Python-only operations override servers. Wire-shape schemas describe encoding, not all domain validation. Semantic constraints, custody and source effects remain authoritative in Go. Unknown input fields are rejected; null and omitted fields can decode and then fail domain validation. No authentication is implemented by this lab; cancellation IDs are local capabilities, not authorization.'},
- 'servers':[{'url':'http://localhost:8088/api','description':'Browser Python proxy (default local lab)'},{'url':'http://localhost:8089','description':'Direct Go service; Go-specific limits/headers apply'}],
+ 'info':{'title':'goo observability API','version':'0.1.0','description':'Current development API served by one Go process. Browser paths under /api and unprefixed API paths dispatch to the same handlers, admission controls and state. No proxy or JSON reserialization boundary. Wire-shape schemas describe encoding, not all domain validation. Semantic constraints, custody and source effects remain authoritative in Go. Unknown input fields are rejected; null and omitted fields can decode and then fail domain validation. No authentication is implemented by this lab; cancellation IDs are local capabilities, not authorization.'},
+ 'servers':[{'url':'/api','description':'Go browser API on this origin'},{'url':'/','description':'Same Go handlers without /api prefix'}],
  'paths':{},'components':{'schemas':schemas},
- 'x-contract-notes':['Direct Go accepts any request Content-Type; application/json is the supported client encoding.','Python reparses/reserializes JSON and enforces Content-Length before Go; fixture byte equality describes direct Go, not browser serialization.','Browser proxy: dashboard plan 16 KiB vs Go 256 KiB; metric discovery 16 KiB vs Go 64 KiB; annotations/deployments 16 KiB vs Go 128 KiB.','Direct operation GET validation uses http.Error text/plain with JSON-looking text; browser re-encodes errors as JSON.','Direct tail early errors omit Cache-Control; proxy early JSON errors include no-store.','Python GET prefix routing can forward unsupported suffixes; these are not supported operations.','Malformed non-JSON upstream HTTP errors now return JSON 502 instead of disconnecting; valid JSON errors preserve status.', 'No generated handlers, semantic validator replacement, API stability guarantee or new authorization layer is introduced.'],
+ 'x-contract-notes':['Go accepts any request Content-Type; application/json is the supported client encoding.','Browser /api and unprefixed API requests have the same byte limits, headers, cancellation and streaming semantics.','JSON receive is bounded to 15 seconds and interrupted by request cancellation; successful decoding clears the receive deadline before source/response work.','Operation GET validation uses http.Error text/plain with JSON-looking text; /api preserves that status, type and body.','Tail early JSON errors omit Cache-Control; streaming responses set no-store and X-Accel-Buffering: no.','Health is process liveness only; it does not query ClickHouse or certify telemetry ingestion.','No generated handlers, semantic validator replacement, API stability guarantee or new authorization layer is introduced.'],
 }
 route_source=route_sources(ROOT)
 for (method,path),(file,block) in sorted(route_source.items()):
@@ -295,28 +288,27 @@ for (method,path),(file,block) in sorted(route_source.items()):
  if controlled:op['parameters'].append({'name':'X-Goo-Query-ID','in':'header','schema':{'type':'string','pattern':'^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$'},'description':'Optional short-lived cancellation capability; repeated/cancelled IDs are refused.'})
  if method=='post' and path in requests:
   op['requestBody']={'required':True,'content':{'application/json':{'schema':ref(requests[path])}}}
-  op['x-go-body-limit-bytes']=go_limit(path);op['x-browser-body-limit-bytes']=browser_limit(path)
- success='201' if method=='post' and (path in publications or path in ('/retained-evidence/tail','/captures','/investigations','/retained-evidence','/retained-evidence/{id}/annotations')) else '200'
+  op['x-go-body-limit-bytes']=go_limit(path)
+ success='202' if path=='/queries/{id}/cancel' else '201' if method=='post' and (path in publications or path in ('/retained-evidence/tail','/captures','/investigations','/retained-evidence','/retained-evidence/{id}/annotations')) else '200'
  model=responses.get((method,path));body=ref(model) if model else {}
  op['x-schema-coverage']='typed' if model else 'response-envelope-pending'
  op['responses'][success]={'description':'Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.','content':{'application/json':{'schema':body}}}
  codes = {int(n) for n in re.findall(r'(?:fail|send|reply)\(\s*w,\s*(\d{3})|fail\(\s*(\d{3})|WriteHeader\((\d{3})\)|code\s*:?=\s*(\d{3})',block) for n in n if n}
  codes.update(int(n) for n in re.findall(r'http.Error\(w,.*?,\s*(\d{3})\)',block))
- codes.add(502)  # Python proxy connection/JSON forwarding failure.
+ if 'source-read' in e or e.startswith('xtdb-'): codes.add(502)
  if method=='post': codes.add(400)
  if controlled: codes.update((400,409,429))
  if path.startswith('/retained-evidence') and not path.endswith('/status'): codes.add(503)
  if method=='get' and path in ('/http-package','/operation-packages','/operations','/counter-rates','/histograms'): codes.add(503)
  if path=='/queries/{id}/cancel':codes.update((400,429))
  for status in map(str,sorted(n for n in codes if n>=400)):
-  op['responses'][status]={'description':'Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.','content':{'application/json':{'schema':ref('Error')}}}
+  op['responses'][status]={'description':'Existing route refusal. Semantic validation and effect ordering remain in the owner.','content':{'application/json':{'schema':ref('Error')}}}
  if method=='get' and path in ('/http-package','/operation-packages','/operations','/counter-rates','/histograms'):
   op['responses']['503']['content']['application/json']['schema']=ref('RuntimeCapabilityRefusal')
   op['responses']['400']['content']['text/plain']={'schema':{'type':'string'},'example':'{"error":"unsupported query parameter"}\n'}
  if path=='/queries/{id}/cancel':
-  op['responses']['200']['content']['application/json']['schema']=ref('Cancellation');op['x-schema-coverage']='typed'
-  op['requestBody']={'required':True,'description':'Send {} through the browser proxy, which requires a positive Content-Length; direct Go ignores the cancellation body.','content':{'application/json':{'schema':{},'example':{}}}}
-  op['x-browser-body-limit-bytes']=16384
+  op['responses']['202']['content']['application/json']['schema']=ref('Cancellation');op['x-schema-coverage']='typed'
+  op['requestBody']={'required':False,'description':'Cancellation ignores the request body. An empty body or {} is supported.','content':{'application/json':{'schema':{},'example':{}}}}
  if path=='/captures/live': op['responses']['201']={'description':'Freeze held draft without rereading source.','content':{'application/json':{'schema':ref('CapturePage')}}}
  spec['paths'].setdefault(path,{})[method]=op
 
@@ -328,26 +320,16 @@ tail=spec['paths']['/tail']['post']
 tail['responses']['200']={'description':'SSE frames: per-connection numeric id, event (reset/batch/gap), JSON data, blank line. POST via fetch, not browser EventSource. No resumable cursor or replay guarantee.','headers':{'Cache-Control':{'schema':{'const':'no-store'}},'X-Accel-Buffering':{'schema':{'const':'no'}}},'content':{'text/event-stream':{'schema':{'type':'string'},'example':'id: 1\nevent: reset\ndata: {"connection":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","windowMs":60000,"selector":{"environment":"prod"},"continuity":"unknown","replay":false}\n\n'}}}
 tail['x-sse-events']={'reset':ref('TailReset'),'batch':ref('TailBatch'),'gap':ref('TailGap')}
 tail['x-schema-coverage']='typed-events'
-tail['description']+=' Rolling 60-second event-time window; polling every 2 seconds; four local slots; 60-second Go lifetime; 5-second write deadlines. Proxy upstream socket timeout is 45 seconds. Disconnect releases slot. Last-Event-ID is not replay support. Gap frames after headers retain HTTP 200; abort can prevent a final frame.'
-# Python-only API: keep these out of the direct-Go server entry.
-legacy_props={'view':{'enum':list(json.loads((ROOT/'definitions/reservations.json').read_text())['views'])},'minutes':{'type':'integer','minimum':1,'maximum':120},'groupBy':{'enum':['release','region','scenario']},'reservationId':{'type':'string','maxLength':100},'scenario':{'enum':['','good','retry','late','missing','reject']},'spanFilter':{'type':'object','required':['fromMs','toMs','minMs','maxMs'],'properties':{k:{'type':'integer','minimum':0,'maximum':9007199254740991} for k in ('fromMs','toMs','minMs','maxMs')},'additionalProperties':False}}
-schemas['LegacyQuery']={'type':'object','properties':legacy_props,'additionalProperties':False}
-for method,path in [('get','/package'),('get','/example-questions'),('get','/prebuilts'),('post','/query'),('post','/explain')]:
- op={'operationId':method+'_python_'+path[1:].replace('-','_'),'summary':method.upper()+' '+path,'tags':['Python lab'],'servers':[spec['servers'][0]],'x-python-source':'server.py','x-effects':'source-read' if path=='/query' else 'pure-plan' if path=='/explain' else 'definition-read','x-schema-coverage':'response-envelope-pending','responses':{'200':{'description':'Existing Python lab response; detailed result schema pending.','content':{'application/json':{'schema':{}}}},'400':{'description':'Invalid input.','content':{'application/json':{'schema':ref('Error')}}},'502':{'description':'Source/proxy failure.','content':{'application/json':{'schema':ref('Error')}}}}}
- if method=='post':op['requestBody']={'required':True,'content':{'application/json':{'schema':ref('LegacyQuery')}}};op['x-browser-body-limit-bytes']=8192
- spec['paths'][path]={method:op}
-
-schemas['ExampleQuestions']={'type':'array','items':{'type':'object','required':['name','yaml'],'properties':{'name':{'type':'string'},'yaml':{'type':'string'}}}}
-schemas['LegacyPackage']={'type':'object','required':['apiVersion','id','views'],'additionalProperties':True,'description':'Legacy demo package declaration; grammar-specific attributes are preserved.'}
-schemas['LegacyResult']={'type':'object','required':['expression','sql','parameters','evaluatedAt','evidence','limit'],'properties':{'expression':ref('LegacyQuery'),'sql':{'type':'string'},'parameters':{'type':'object','additionalProperties':{'type':'string'}},'evaluatedAt':{'type':'integer'},'evidence':{'const':'demo-unverified'},'limit':{'type':['integer','null']},'rows':{'type':'array','items':{'type':'object','additionalProperties':True}},'summary':{'type':['object','null']},'possiblyTruncated':{'type':'boolean'}}}
-for method,path,model in [('get','/package','LegacyPackage'),('get','/prebuilts','PrebuiltRegistry'),('get','/example-questions','ExampleQuestions'),('post','/query','LegacyResult'),('post','/explain','LegacyResult')]:
- op=spec['paths'][path][method];op['responses']['200']['content']['application/json']['schema']=ref(model);op['responses']['200']['description']='Current Python lab response; record rows remain adapter-shaped objects.';op['x-schema-coverage']='typed-envelope'
-ui_config={'operationId':'get_python_ui_config','summary':'UI startup configuration','tags':['Python configuration'],'servers':[spec['servers'][0]],'x-python-source':'server.py','x-effects':'configuration-only','x-schema-coverage':'typed','responses':{'200':{'description':'Pure startup metadata; no source probe.','content':{'application/json':{'schema':ref('UIConfig')}}}}}
-spec['paths']['/ui-config']={'get':ui_config}
-for method,path in [('get','/package'),('get','/example-questions'),('get','/prebuilts'),('post','/query'),('post','/explain')]:
- spec['paths'][path][method]['responses']['503']={'description':'Optional lab example capability is unconfigured; no source read.','content':{'application/json':{'schema':ref('RuntimeCapabilityRefusal')}}}
-health={'operationId':'get_python_health','summary':'ClickHouse lab health probe','tags':['Python lab'],'servers':[{'url':'http://localhost:8088','description':'Python root (no /api prefix)'}],'x-python-source':'server.py','x-effects':'source-read','x-schema-coverage':'typed','responses':{}}
-for status in ('200','503'):health['responses'][status]={'description':'Readonly SELECT 1 probe; does not establish ingestion completeness.','content':{'application/json':{'schema':{'type':'object','required':['ok'],'properties':{'ok':{'type':'boolean'},'error':{'type':'string'}}}}}}
-spec['paths']['/health']={'get':health}
+tail['description']+=' Rolling 60-second event-time window; polling every 2 seconds; four local slots; 60-second Go lifetime; 5-second write deadlines. Disconnect releases slot. Last-Event-ID is not replay support. Gap frames after headers retain HTTP 200; abort can prevent a final frame.'
+# Pure embedded metadata is registered by the same Go mux as observations.
+schemas['ExampleQuestions']={'type':'array','items':{'type':'object','required':['name','yaml'],'properties':{'name':{'type':'string'},'yaml':{'type':'string'}},'additionalProperties':False}}
+schemas['Liveness']={'type':'object','required':['ok'],'properties':{'ok':{'const':True}},'additionalProperties':False,'description':'The Go HTTP process is running; no source or ingestion check.'}
+for path,model in [('/ui-config','UIConfig'),('/example-questions','ExampleQuestions'),('/prebuilts','PrebuiltRegistry'),('/health','Liveness')]:
+ op=spec['paths'][path]['get']
+ op['responses']['200']['content']['application/json']['schema']=ref(model)
+ op['x-schema-coverage']='typed'
+ op['responses']['400']={'description':'Query parameters are unsupported.','content':{'application/json':{'schema':ref('Error')}}}
+ if path in ('/example-questions','/prebuilts'):
+  op['responses']['503']={'description':'Optional example catalog is unconfigured; no source read.','content':{'application/json':{'schema':ref('RuntimeCapabilityRefusal')}}}
 (ROOT/'api/openapi.json').write_text(json.dumps(spec,indent=2,ensure_ascii=False)+'\n')
 print(f'Built OpenAPI: {sum(len(p) for p in spec["paths"].values())} operations, {len(schemas)} schemas')

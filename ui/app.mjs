@@ -22,26 +22,18 @@ import * as Retention from './retention.mjs';
 import * as SavedWorkspace from './saved-workspace.mjs';
 import * as StreamEntry from './stream-entry.mjs';
 import * as TelemetryPackages from './telemetry-packages.mjs';
-import * as Visuals from './visualizations.mjs';
-import * as Workflows from './workflows.mjs';
 import * as Workspace from './workspace.mjs';
 const el=id=>document.getElementById(id);
-let selected='';
-let spanFilter;
-let controlRevision=0,queryGeneration=0;
-for(const id of ['view','group','minutes','scenario'])for(const event of ['input','change'])el(id).addEventListener(event,()=>controlRevision++);
-const initial={view:'completion',minutes:30,groupBy:'release',reservationId:'',scenario:''};
-function controls(){return{view:el('view').value,minutes:Number(el('minutes').value),groupBy:el('group').value,reservationId:selected,scenario:el('scenario').value,...(spanFilter&&el('view').value==='traces'?{spanFilter}: {})}}
 function textNode(tag,value){const n=document.createElement(tag);n.textContent=value;return n}
 async function configurationJSON(url){const response=await fetch(url),data=await response.json();if(!response.ok)throw Error(data.error||'Configuration unavailable');return data}
 const uiConfiguration=configurationJSON('/api/ui-config').then(config=>{
  if(config.version!=='goo/ui-config/v1'||!['lab','generic'].includes(config.profile)||!['configured','unconfigured'].includes(config.examples?.state))throw Error('Invalid UI configuration');
  document.documentElement.dataset.profile=config.profile;document.documentElement.dataset.examples=config.examples.state;
- const examples=config.examples.state==='configured';el('sampleApplicationLink').hidden=!examples;document.querySelector('[data-workspace=examples]').hidden=!examples;el('legacyExamples').hidden=!examples;
+ const examples=config.examples.state==='configured';el('sampleApplicationLink').hidden=!examples;document.querySelector('[data-workspace=examples]').hidden=!examples;
  for(const link of document.querySelectorAll('.operation-sample-links'))link.hidden=!examples;
- if(!examples){el('exampleQuestions').append(textNode('h2','Sample applications not configured'),textNode('p','Explore your telemetry or define reusable questions in Definitions.'));el('package').textContent='Example grammar is not configured.';el('prebuilts').textContent='Example catalog is not configured.';}
+ if(!examples){el('exampleQuestions').append(textNode('h2','Sample applications not configured'),textNode('p','Explore your telemetry or define reusable questions in Definitions.'));el('prebuilts').textContent='Example catalog is not configured.';}
  return config;
-}).catch(error=>{el('package').textContent='Example configuration unavailable · '+error.message;el('prebuilts').textContent='Example configuration unavailable · '+error.message;return null});
+}).catch(error=>{el('prebuilts').textContent='Example configuration unavailable · '+error.message;return null});
 el('runOperations').disabled=true;
 el('runHttpPackage').disabled=true;
 const runtimeCapabilities=configurationJSON('/api/capabilities').then(config=>{
@@ -52,27 +44,6 @@ const runtimeCapabilities=configurationJSON('/api/capabilities').then(config=>{
  if(!prepared)el('httpPackageStatus').textContent='Prepared HTTP package is not configured. Discover HTTP services in Services.';
  return config;
 }).catch(error=>{el('operationStatus').textContent='Operation configuration unavailable · '+error.message;el('httpPackageStatus').textContent='Prepared HTTP configuration unavailable · '+error.message;return null});
-async function run(spec){
- const generation=++queryGeneration,revision=controlRevision;
- el('expression').value=JSON.stringify(spec,null,2);el('status').textContent='Querying…';el('run').disabled=true;
- try{const r=await fetch('/api/query',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(spec)});const data=await r.json();if(generation!==queryGeneration)return;if(!r.ok)throw Error(data.error);
- const expression=data.expression;if(revision===controlRevision){spanFilter=expression.spanFilter;el('view').value=expression.view;el('group').value=expression.groupBy;el('minutes').value=expression.minutes;el('scenario').value=expression.scenario||'';selected=expression.reservationId||'';workflow.update(expression);el('selection').textContent=(selected?'Reservation: '+selected:'')+(spanFilter?' · Heatmap selection: '+new Date(spanFilter.fromMs).toISOString()+' to '+new Date(spanFilter.toMs).toISOString()+' · '+spanFilter.minMs+'–'+spanFilter.maxMs+' ms (upper bounds exclusive)':'');}
- el('explain').textContent=data.sql+'\n\n'+JSON.stringify(data.parameters,null,2);el('cards').replaceChildren();el('results').replaceChildren();el('chart').replaceChildren();
- if(data.summary){const s=data.summary;for(const [label,value] of [['Good',s.good],['Bad',s.bad],['Pending',s.pending],['Success preview',s.successRatio===null?'Unknown':(s.successRatio*100).toFixed(1)+'%']]){let c=textNode('div',label);c.className='card muted';c.append(textNode('b',value));el('cards').append(c)}
- el('status').textContent=`Burn preview: ${s.burnRate===null?'unknown':s.burnRate.toFixed(2)+'×'} · Alarm: ${s.alarmPreview} · Unknown subjects: ${s.unknown}. ${data.possiblyTruncated?'ROW LIMIT REACHED; values cover only displayed subjects.':''}`;
- const groups={};for(const row of data.rows){const g=groups[row.cohort]??={good:0,bad:0,pending:0,unknown:0};g[row.classification]++}for(const [name,g]of Object.entries(groups)){const line=document.createElement('div');line.append(textNode('span',name+' '));const b=document.createElement('span');b.className='bar';b.style.width=Math.min(70,Math.max(1,g.bad/(g.good+g.bad||1)*70))+'%';line.append(b,textNode('span',`${g.good} good / ${g.bad} bad / ${g.pending} pending / ${g.unknown} unknown`));el('chart').append(line)}el('chartSection').hidden=false;el('chartTitle').textContent='Bad share of mature known subjects by cohort';
- }else{el('chartSection').hidden=true;el('status').textContent=`${data.rows.length} rows${data.possiblyTruncated?' · row limit reached':''}${expression.view==='metrics'?' · Native metrics are exported point values, not derived rates.':''}`}
- if(['traces','heatmap','queue'].includes(expression.view)){
- el('chartSection').hidden=false;el('chartTitle').textContent=expression.view==='traces'?'Trace waterfall':expression.view==='queue'?'Queue and worker evidence':'gRPC duration heatmap';
- if(expression.view==='traces') Visuals.waterfall(el('chart'),data.rows,data.possiblyTruncated,row=>{const id=(row.SpanAttributes||{})['app.reservation.id'];return id?[{label:'Open reservation waterfall',select:()=>run({...expression,reservationId:id,spanFilter:undefined})}]:[]});
- else if(expression.view==='queue') Visuals.queue(el('chart'),data.rows,data);
- else Visuals.heatmap(el('chart'),data.rows,data,selection=>run({...expression,view:'traces',spanFilter:selection}));
- }
- if(!data.rows.length){el('results').textContent='No rows yet. Allow 15–30 seconds for traffic and ingestion.';return}
- const keys=Object.keys(data.rows[0]);const table=document.createElement('table'),head=document.createElement('tr');keys.forEach(k=>head.append(textNode('th',k)));table.append(head);
- for(const row of data.rows){const tr=document.createElement('tr');for(const key of keys){const td=document.createElement('td');const value=row[key];if(key==='reservation_id'){const b=textNode('button',String(value).slice(0,8)+' → spans');b.onclick=()=>{selected=value;el('view').value='traces';el('selection').textContent='Reservation: '+value;run(controls())};td.append(b)}else td.textContent=typeof value==='object'?JSON.stringify(value):value;tr.append(td)}table.append(tr)}el('results').append(table);
- }catch(e){if(generation===queryGeneration)el('status').textContent=e.message}finally{if(generation===queryGeneration)el('run').disabled=false}
-}
 let operationController=null,httpController=null,httpGeneration=0;
 function stopOperationRead(message='Read stopped. Inspect operations to read again.'){if(!operationController)return;operationController.abort();operationController=null;operationGeneration++;el('runOperations').disabled=false;el('operationStatus').textContent=message}
 function stopHTTPRead(message='Read stopped. Evaluate the package to read again.'){if(!httpController)return;httpController.abort();httpController=null;httpGeneration++;el('runHttpPackage').disabled=false;el('httpPackageStatus').textContent=message}
@@ -132,17 +103,10 @@ el('runHttpPackage').onclick=async()=>{
  el('httpPackageExplain').textContent=JSON.stringify({revision:data.expansion.revision,inventoryBasis:data.expansion.inventoryBasis,source:data.source,fromMs:data.fromMs,toMs:data.toMs,policy:data.expansion.binding.policy,query:data.query,parameters:data.parameters,duplicates:data.duplicateRecords,recipe:data.expansion.recipe,diagnostics:data.expansion.diagnostics},null,2);
  }catch(error){if(current())el('httpPackageStatus').textContent=error.message}finally{if(httpController===controller)httpController=null;if(generation===httpGeneration)button.disabled=false}
 };
-el('run').onclick=()=>run(controls());
-el('runExpression').onclick=()=>{try{run(JSON.parse(el('expression').value))}catch(e){el('status').textContent=e.message}};
-el('clear').onclick=()=>{selected='';spanFilter=undefined;el('selection').textContent='';el('scenario').value='';run(controls())};
-el('view').onchange=()=>{spanFilter=undefined;if(['metrics','queue'].includes(el('view').value)){selected='';el('scenario').value='';el('selection').textContent=''}};
-const workflow=Workflows.mount(el('workflows'),run,controls);
-
 // Declaration catalogs and hidden sample UI belong to their first opened workspace.
 let definitionExamplesStarted=false,exampleCatalogsStarted=false;
 function loadDefinitionExamples(){if(definitionExamplesStarted)return;definitionExamplesStarted=true;
 uiConfiguration.then(config=>config?.examples.state==='configured'?configurationJSON('/api/prebuilts'):null).then(catalog=>{if(!catalog)return;for(const profile of catalog.profiles){const d=document.createElement('details');d.append(textNode('summary',profile.id+' · '+profile.stability));d.append(textNode('p',profile.description));d.append(textNode('pre',JSON.stringify({requirements:profile.requirements,features:profile.features,caveats:profile.caveats},null,2)));el('prebuilts').append(d)}}).catch(error=>{el('prebuilts').textContent='Example catalog unavailable · '+error.message});
-uiConfiguration.then(config=>config?.examples.state==='configured'?configurationJSON('/api/package'):null).then(p=>{if(p)el('package').textContent=JSON.stringify(p,null,2)}).catch(error=>{el('package').textContent='Example grammar unavailable · '+error.message});
 }
 function loadExampleCatalogs(){
  uiConfiguration.then(config=>{
@@ -158,8 +122,6 @@ function openWorkspaceCatalogs(route){
  if(route==='definitions')loadDefinitionExamples();
  if(route==='definitions'||route==='operations')loadOperationCatalog();
 }
-let examplesStarted=false;
-el('legacyExamples').addEventListener('toggle',()=>{if(document.documentElement.dataset.examples==='configured'&&el('legacyExamples').open&&!examplesStarted){examplesStarted=true;run(initial)}});
 const appWorkspace=Workspace.mount();
 openWorkspaceCatalogs(appWorkspace.current());
 // Source owners stop hidden/superseded work; saved publications are independent.
@@ -202,5 +164,3 @@ Retention.mount(el('savedRetainedWorkspace'),{catalogHost:el('savedRetainedCatal
 SavedWorkspace.mount();
 ActivityViews.library(el('savedActivityViews'));
 Investigations.mount({generation:()=>operationGeneration,question:()=>activeOperation?{package:activeOperation.package.definition.name,packageRevision:activeOperation.package.revision,fromMs:activeOperation.fromMs,toMs:activeOperation.toMs}:null,selection:()=>({...activeExplorer?.getState(),...(activeRatio?.getState()?{ratio:activeRatio.getState()}:{}),...(activeComparison?.getState()?{comparison:activeComparison.getState()}: {})}),show:showSavedCapture});
-
-el('expression').value=JSON.stringify(initial,null,2);

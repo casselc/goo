@@ -10,7 +10,7 @@ const shell = extract(({ document, window }) => ({
   savedHasEditor: !!document.querySelector('[data-workspace-panel=investigations] #operationPackage'),
   examples: document.documentElement.dataset.examples === 'configured',
   visited: (document.documentElement.dataset.catalogVisited || '').split(','),
-  catalogs: ['/api/operation-packages','/api/prebuilts','/api/package','/api/example-questions','/api/investigation-workflows'].map(path => window.performance.getEntriesByType('resource').filter(entry => new URL(entry.name).pathname === path).length),
+  catalogs: ['/api/operation-packages','/api/prebuilts','/api/example-questions','/api/investigation-workflows'].map(path => window.performance.getEntriesByType('resource').filter(entry => new URL(entry.name).pathname === path).length),
   menuCount: document.querySelectorAll('.entry-menu').length,
   menuExpanded: document.querySelector('.entry-menu')?.getAttribute('aria-expanded') === 'true',
   navExpanded: document.querySelector('.app-sidebar')?.classList.contains('navigation-expanded') === true,

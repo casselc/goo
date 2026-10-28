@@ -14,6 +14,10 @@ COPY prebuilt ./prebuilt
 COPY exploration ./exploration
 COPY workbench ./workbench
 COPY investigations ./investigations
+COPY ui ./ui
+COPY api ./api
+COPY definitions ./definitions
+COPY examples/telemetry ./examples/telemetry
 COPY cmd ./cmd
 COPY instrumentation ./instrumentation
 COPY examples/report-app ./examples/report-app

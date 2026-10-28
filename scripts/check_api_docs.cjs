@@ -1,6 +1,10 @@
-// Documentation-only browser journey against this checkout's actual Python
-// handler, on an ephemeral loopback port; does not touch the running lab.
-const { spawn } = require('node:child_process');
+// Documentation-only journey against this checkout's embedded Go runtime.
+// Uses an isolated generic server unless an explicit running URL is supplied.
+const { spawn, execFile } = require('node:child_process');
+const { promisify } = require('node:util');
+const fs = require('node:fs/promises');
+const os = require('node:os');
+const net = require('node:net');
 const { once } = require('node:events');
 const { chromium } = require('playwright');
 const assert = require('node:assert/strict');
@@ -9,16 +13,33 @@ const root = path.resolve(__dirname, '..');
 const operations = Object.values(require('../api/openapi.json').paths).reduce((n,item)=>n+Object.keys(item).filter(m=>['get','post'].includes(m)).length,0);
 (async () => {
   const remote = process.env.GOO_API_DOCS_URL;
-  const server = remote ? null : spawn(process.env.PYTHON || 'python3', ['-u', '-c',
-    'from server import Handler, ThreadingHTTPServer; s=ThreadingHTTPServer(("127.0.0.1",0),Handler); print(s.server_port,flush=True); s.serve_forever()'], { cwd: root, stdio: ['ignore', 'pipe', 'inherit'] });
-  let browser;
+  let server, browser, temporary;
   try {
-    const port = remote ? 0 : await Promise.race([once(server.stdout, 'data').then(([b]) => Number(String(b).trim())), once(server, 'exit').then(([code]) => { throw Error(`Server exited ${code}`); })]);
-    assert.ok(remote || port > 0);
+    let base = remote;
+    if (!remote) {
+      temporary = await fs.mkdtemp(path.join(os.tmpdir(), 'goo-api-docs-'));
+      const binary = path.join(temporary, 'goo');
+      await promisify(execFile)('go', ['build', '-mod=readonly', '-o', binary, './cmd/goo'], { cwd: root, timeout: 120000 });
+      const reservation = net.createServer();
+      reservation.listen(0, '127.0.0.1');
+      await once(reservation, 'listening');
+      const port = reservation.address().port;
+      await new Promise(resolve => reservation.close(resolve));
+      server = spawn(binary, ['serve-http', '--profile', 'generic', '--listen', `127.0.0.1:${port}`, '--investigations-dir', path.join(temporary, 'evidence')], { cwd: temporary, stdio: ['ignore', 'ignore', 'inherit'] });
+      base = `http://127.0.0.1:${port}/api-docs`;
+      let ready = false;
+      for (let attempt = 0; attempt < 100; attempt++) {
+        if (server.exitCode !== null) throw Error(`Go server exited ${server.exitCode}`);
+        try { ready = (await fetch(`http://127.0.0.1:${port}/health`)).ok; } catch {}
+        if (ready) break;
+        await new Promise(resolve => setTimeout(resolve, 50));
+      }
+      assert.ok(ready, 'Go docs server did not become ready');
+    }
     browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', args: ['--no-sandbox'] });
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     const errors = []; page.on('pageerror', e => errors.push(e.message));
-    await page.goto(remote || `http://127.0.0.1:${port}/api-docs`);
+    await page.goto(base);
     await page.getByRole('status').filter({ hasText: operations+' operations' }).waitFor();
     assert.equal(await page.locator('#operations > details').count(), operations);
     await page.getByRole('searchbox').fill('/tail');
@@ -54,6 +75,11 @@ const operations = Object.values(require('../api/openapi.json').paths).reduce((n
     console.log(`API docs browser journey passes: ${operations} operations, origin-aware content, filter/disclosure, limits, desktop screenshot, mobile overflow, no page errors`);
   } finally {
     if (browser) await browser.close();
-    if (server) server.kill('SIGTERM');
+    if (server && server.exitCode === null) {
+      const exited = once(server, 'close');
+      server.kill('SIGTERM');
+      await exited;
+    }
+    if (temporary) await fs.rm(temporary, {recursive: true, force: true});
   }
 })().catch(e => { console.error(e); process.exitCode = 1; });

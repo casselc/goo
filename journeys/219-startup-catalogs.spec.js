@@ -1,9 +1,9 @@
 const {test,expect}=require('@playwright/test');
 const {startBombadil}=require('./support/cross-app');
 const fs=require('node:fs/promises'),path=require('node:path'),os=require('node:os');
-const base='http://127.0.0.1:8088';
+const base=process.env.GOO_QUERY_URL||'http://127.0.0.1:8088';
 test.use({actionTimeout:15000,navigationTimeout:45000});
-const deferredPaths=['/api/prebuilts','/api/package','/api/operation-packages','/api/example-questions','/api/investigation-workflows'];
+const deferredPaths=['/api/prebuilts','/api/operation-packages','/api/example-questions','/api/investigation-workflows'];
 function observe(page){const calls=[],errors=[];page.on('request',r=>{if(new URL(r.url()).pathname.startsWith('/api/'))calls.push({method:r.method(),path:new URL(r.url()).pathname})});page.on('pageerror',e=>errors.push(e.message));return {calls,errors,count:path=>calls.filter(c=>c.path===path).length,source:()=>calls.filter(c=>c.method==='POST'&&['/api/tail','/api/explore','/api/query','/api/measurements'].includes(c.path)).length}}
 
 test('219 Activity defers workspace catalogs, first open loads once, explicit refresh stays fresh',async({page})=>{
@@ -17,10 +17,9 @@ test('219 Activity defers workspace catalogs, first open loads once, explicit re
  await page.locator('[data-workspace=definitions]').click();
  await expect(page.locator('#definitionCatalog .definition-card')).not.toHaveCount(0);
  await expect(page.locator('#prebuilts details')).not.toHaveCount(0);
- await expect(page.locator('#package')).toContainText('{');
- for(const path of ['/api/prebuilts','/api/package','/api/operation-packages'])expect(observed.count(path),path).toBe(1);
+ for(const path of ['/api/prebuilts','/api/operation-packages'])expect(observed.count(path),path).toBe(1);
  await page.locator('[data-workspace=services]').click();await page.locator('[data-workspace=definitions]').click();
- for(const path of ['/api/prebuilts','/api/package','/api/operation-packages'])expect(observed.count(path),path).toBe(1);
+ for(const path of ['/api/prebuilts','/api/operation-packages'])expect(observed.count(path),path).toBe(1);
  await page.locator('#definitionsContracts').click();await page.locator('[data-workspace=examples]').click();
  await expect(page.locator('#exampleQuestionCards .definition-card')).not.toHaveCount(0);
  await expect(page.locator('#measurementCards .definition-card')).not.toHaveCount(0);

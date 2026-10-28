@@ -119,7 +119,14 @@ func configuredHTTPServer(args []string) (*http.Server, error) {
 	capturehttp.Register(mux, recordSource, *captureDir, resultSnapshots)
 	registerWorkbench(mux, *captureDir, retentionConnectionFromEnvironment(), resultSnapshots, tailMembership)
 	registerTelemetryPackages(mux, filepath.Join(*captureDir, "telemetry-packages"))
-	server := &http.Server{Addr: *listen, Handler: newQueryBudget(mux, 4), ReadHeaderTimeout: 5 * time.Second, WriteTimeout: 90 * time.Second}
+	if err := registerUIAPI(mux, *profile); err != nil {
+		return nil, err
+	}
+	handler, err := newUIHandler(newQueryBudget(mux, 4))
+	if err != nil {
+		return nil, err
+	}
+	server := &http.Server{Addr: *listen, Handler: handler, ReadHeaderTimeout: 5 * time.Second, WriteTimeout: 90 * time.Second}
 	return server, nil
 }
 

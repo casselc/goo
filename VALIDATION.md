@@ -1,5 +1,67 @@
 # Validation record
 
+## Single Go runtime and image boundaries — 238 (2026-10-28 UTC)
+
+Six agents handled runtime architecture/review, Go asset/routing implementation,
+frontend retirement, deployment packaging, API contracts and executable journeys.
+The pre-implementation rationale is [SINGLE_GO_RUNTIME.md](docs/SINGLE_GO_RUNTIME.md).
+One Go process now serves embedded UI/docs and routes browser `/api/*` directly
+into the same handlers, admission/cancellation registry and snapshot/store owners
+as native API paths. No forwarding hop, JSON buffer or duplicate body policy
+remains. Python server.py and its runtime-only tests are removed. The obsolete
+reservation-specific query panel/compiler endpoints and dead workflow module are
+retired; modern examples, native packages, operation investigation and reusable
+components remain. Python sample workloads and offline tools/reference tests are
+explicitly separate. `/health` is now source-free process liveness.
+
+Passed root Go suite and vet, independently focused Go tests and focused race
+checks for assets, same-state cross-prefix cancellation/SSE, browser-prefix stalled
+uploads and empty-directory startup. The runtime-layout test reconstructs actual
+Docker COPY inputs and verifies lab startup plus nonempty workflow/package
+catalogs. Full frontend suite passed 605/605; remaining Python offline tests passed
+31/31. OpenAPI now documents 87 Go operations, validates 429 frozen responses,
+159 admitted requests, 28 method refusals and rejecting/SSE controls. Twelve actual
+saved-workflow responses also validated. The documented cancellation status is
+corrected to the handler's existing 202. Actual Go-served API docs passed browser
+checks and its frame was regenerated.
+
+Real browser checks passed: new 238 single-process/real OTLP/held inspection/
+capture-reopen/SSE-capacity-abort journey (including default autobuild), updated
+191 generic startup, existing 141 recovery, 219 catalog/direct-entry cases,
+investigation18 delayed catalog/lookback ownership and full37 recipe/capture/notes/
+reuse/mobile with strict Quint validation. Final-image Bombadil navigation ran
+20 seconds, 52 trace records and 51 navigation actions, no invariant violation.
+One combined-run 219 click timed out; the unchanged standalone case passed, so a
+full single-pass campaign is not claimed. No full historical journey suite or new
+Databricks/XTDB acceptance is claimed.
+
+Deployment caught two real image closure omissions before acceptance: annotated
+operation sources were absent, then workflows lacked their referenced telemetry
+YAML. Both were added to the lab image and the runtime-layout regression now
+covers them; failed attempts are not passing checks. Final local Docker image
+7f1f9f8440fa is 31,830,360 bytes and contains no Python executable/server. Both
+loopback host ports8088/8089 reach its one Go listener. The existing named evidence
+volume/mount is unchanged; three original capture HTTP responses retained their
+exact byte hashes after rollout. The retired stopped query container was removed
+without deleting volumes; unrelated telemetry/sample/XTDB containers remain.
+Real sample smoke observes newly correlated logs and spans via Go; the final
+read-only deployed checker passed nine actual handler responses and a matching
+embedded spec. Passing temporary browser/runtime artifacts were cleaned, useful
+storyboard/screenshots retained. See [container build boundaries](docs/CONTAINER_IMAGES.md)
+for the separately tested ko path and filesystem-declaration limits.
+
+Ko v0.19.1 also built/loaded a separate local generic image using the pinned
+distroless nonroot base. An isolated UID65532 container with read-only rootfs,
+owned tmpfs and ephemeral loopback port served embedded HTML/ESM/spec, health and
+capabilities without ClickHouse. Exported image inspection found no shell or
+Python. No image was pushed and no existing volume permission was changed. Bare
+ko does not yet include the lab's external filesystem declarations/native example
+workflows; its empty measurement catalog is documented. Source installation hit
+two unavailable transitive module downloads; the official pinned release binary
+with matching published checksum was used. ARM64, registry publication and
+persistent nonroot volume migration were not tested.
+
+
 ## Bounded Go receive and required ledger verdicts — 237 (2026-10-28 UTC)
 
 Go JSON receive now has a 15-second transport deadline, shortened immediately by

@@ -19,15 +19,12 @@ async function startRuntime(binary, artifactDir, options = {}) {
   if (!binary || !path.isAbsolute(binary)) throw Error('GOO_GENERIC_BINARY must name an explicit absolute compiled binary');
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'goo-generic-191-'));
   await fs.mkdir(artifactDir, { recursive: true });
-  await fs.copyFile(path.resolve('server.py'), path.join(root, 'server.py'));
-  for (const name of ['ui', 'api']) await fs.cp(path.resolve(name), path.join(root, name), { recursive: true });
   await fs.mkdir(path.join(root, 'captures'));
   if (options.captureStore) await fs.cp(options.captureStore, path.join(root, 'captures'), { recursive: true });
   const files = await inventory(root);
   if (files.some(file => /(^|\/)(grammar\.py|definitions|config|prebuilts|samples)(\/|$)/.test(file.path))) throw Error('Lab assets leaked into isolated runtime');
   const environment = { ...process.env, CLICKHOUSE_URL: options.clickHouseURL || process.env.GOO_TEST_CLICKHOUSE_URL || 'http://127.0.0.1:8123',
-    CLICKHOUSE_USER: process.env.GOO_TEST_CLICKHOUSE_USER || 'lab', CLICKHOUSE_PASSWORD: process.env.GOO_TEST_CLICKHOUSE_PASSWORD || 'lab-local',
-    GOO_PROFILE: 'generic', GOO_HOST: '127.0.0.1', GOO_PORT: '18088', PACKAGES_URL: 'http://127.0.0.1:18089', PYTHONDONTWRITEBYTECODE: '1' };
+    CLICKHOUSE_USER: process.env.GOO_TEST_CLICKHOUSE_USER || 'lab', CLICKHOUSE_PASSWORD: process.env.GOO_TEST_CLICKHOUSE_PASSWORD || 'lab-local' };
   // Explicitly remove optional ambient feature selectors from the acceptance process.
   delete environment.GOO_XTDB_URL;
   delete environment.PYTHONPATH;
@@ -42,7 +39,7 @@ async function startRuntime(binary, artifactDir, options = {}) {
     return child;
   }
   const receipt = { version: 1, profile: 'generic', root, files, binarySHA256: sha(await fs.readFile(binary)), commands,
-    connection: { clickHouse: 'explicit existing lab connection; credentials omitted', packages: environment.PACKAGES_URL }, cleanup: false };
+    connection: { clickHouse: 'explicit existing lab connection; credentials omitted', runtime: base }, cleanup: false };
   async function stop() {
     for (const child of children) if (child.pid && child.exitCode === null) child.kill('SIGTERM');
     await Promise.all(children.map(child => !child.pid || child.exitCode !== null || child.signalCode !== null ? Promise.resolve() : new Promise(resolve => {
@@ -56,9 +53,8 @@ async function startRuntime(binary, artifactDir, options = {}) {
     await fs.rm(root, { recursive: true, force: true });
   }
   try {
-    await launch(binary, ['serve-http', '--profile', 'generic', '--listen', '127.0.0.1:18089', '--investigations-dir', path.join(root, 'captures')], 'go');
-    await launch(process.env.PYTHON || 'python3', ['server.py'], 'ui');
-    for (const url of ['http://127.0.0.1:18089/capabilities', base + '/api/ui-config']) {
+    await launch(binary, ['serve-http', '--profile', 'generic', '--listen', '127.0.0.1:18088', '--investigations-dir', path.join(root, 'captures')], 'go');
+    for (const url of [base + '/capabilities', base + '/api/ui-config']) {
       let ready = false;
       for (let attempt = 0; attempt < 100; attempt++) {
         if (children.some(child => child.exitCode !== null)) throw Error('Generic startup exited before readiness');

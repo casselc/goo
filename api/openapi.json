@@ -3,16 +3,16 @@
   "info": {
     "title": "goo observability API",
     "version": "0.1.0",
-    "description": "Current development API. Browser server prefixes paths with /api; direct Go server uses unprefixed paths. Python-only operations override servers. Wire-shape schemas describe encoding, not all domain validation. Semantic constraints, custody and source effects remain authoritative in Go. Unknown input fields are rejected; null and omitted fields can decode and then fail domain validation. No authentication is implemented by this lab; cancellation IDs are local capabilities, not authorization."
+    "description": "Current development API served by one Go process. Browser paths under /api and unprefixed API paths dispatch to the same handlers, admission controls and state. No proxy or JSON reserialization boundary. Wire-shape schemas describe encoding, not all domain validation. Semantic constraints, custody and source effects remain authoritative in Go. Unknown input fields are rejected; null and omitted fields can decode and then fail domain validation. No authentication is implemented by this lab; cancellation IDs are local capabilities, not authorization."
   },
   "servers": [
     {
-      "url": "http://localhost:8088/api",
-      "description": "Browser Python proxy (default local lab)"
+      "url": "/api",
+      "description": "Go browser API on this origin"
     },
     {
-      "url": "http://localhost:8089",
-      "description": "Direct Go service; Go-specific limits/headers apply"
+      "url": "/",
+      "description": "Same Go handlers without /api prefix"
     }
   ],
   "paths": {
@@ -54,16 +54,6 @@
                 }
               }
             }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
           }
         },
         "x-schema-coverage": "typed"
@@ -90,17 +80,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -121,7 +101,6 @@
           }
         },
         "x-go-body-limit-bytes": 16384,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed"
       }
     },
@@ -153,16 +132,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ActivityView"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -227,17 +196,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -271,17 +230,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -302,7 +251,6 @@
           }
         },
         "x-go-body-limit-bytes": 131072,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed"
       }
     },
@@ -339,7 +287,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -349,17 +297,7 @@
             }
           },
           "404": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -395,17 +333,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -450,7 +378,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -460,7 +388,7 @@
             }
           },
           "500": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -470,7 +398,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -514,7 +442,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -524,7 +452,7 @@
             }
           },
           "404": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -534,7 +462,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -544,7 +472,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -554,7 +482,7 @@
             }
           },
           "500": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -564,7 +492,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -585,7 +513,6 @@
           }
         },
         "x-go-body-limit-bytes": 16384,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed"
       }
     },
@@ -622,7 +549,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -632,17 +559,7 @@
             }
           },
           "404": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -696,7 +613,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -706,17 +623,7 @@
             }
           },
           "404": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -778,7 +685,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -788,17 +695,7 @@
             }
           },
           "404": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -852,7 +749,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -862,17 +759,7 @@
             }
           },
           "404": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -918,7 +805,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -928,17 +815,7 @@
             }
           },
           "404": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -984,7 +861,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -994,17 +871,7 @@
             }
           },
           "404": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1074,7 +941,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1090,7 +957,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1100,7 +967,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1110,7 +977,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1120,7 +987,7 @@
             }
           },
           "503": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1181,7 +1048,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1191,17 +1058,7 @@
             }
           },
           "500": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1235,7 +1092,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1245,17 +1102,7 @@
             }
           },
           "500": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1276,7 +1123,6 @@
           }
         },
         "x-go-body-limit-bytes": 131072,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed"
       }
     },
@@ -1313,17 +1159,7 @@
             }
           },
           "404": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1368,17 +1204,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1412,17 +1238,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1443,7 +1259,6 @@
           }
         },
         "x-go-body-limit-bytes": 131072,
-        "x-browser-body-limit-bytes": 131072,
         "x-schema-coverage": "typed"
       }
     },
@@ -1480,7 +1295,43 @@
             }
           },
           "404": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-schema-coverage": "typed"
+      }
+    },
+    "/example-questions": {
+      "get": {
+        "operationId": "get_example_questions",
+        "summary": "GET /example-questions",
+        "tags": [
+          "example-questions"
+        ],
+        "description": "Current owner: cmd/goo/serve_ui.go. Effect: embedded-definition-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/serve_ui.go",
+        "x-effects": "embedded-definition-read",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExampleQuestions"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Query parameters are unsupported.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1489,12 +1340,12 @@
               }
             }
           },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+          "503": {
+            "description": "Optional example catalog is unconfigured; no source read.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/RuntimeCapabilityRefusal"
                 }
               }
             }
@@ -1535,17 +1386,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1579,17 +1420,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1610,7 +1441,6 @@
           }
         },
         "x-go-body-limit-bytes": 131072,
-        "x-browser-body-limit-bytes": 131072,
         "x-schema-coverage": "typed"
       }
     },
@@ -1647,7 +1477,7 @@
             }
           },
           "404": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1655,9 +1485,35 @@
                 }
               }
             }
+          }
+        },
+        "x-schema-coverage": "typed"
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "get_health",
+        "summary": "GET /health",
+        "tags": [
+          "health"
+        ],
+        "description": "Current owner: cmd/goo/serve_ui.go. Effect: liveness-only. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/serve_ui.go",
+        "x-effects": "liveness-only",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Liveness"
+                }
+              }
+            }
           },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+          "400": {
+            "description": "Query parameters are unsupported.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1727,7 +1583,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1743,7 +1599,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1753,7 +1609,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1763,7 +1619,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1773,7 +1629,7 @@
             }
           },
           "503": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1827,7 +1683,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1843,7 +1699,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1853,7 +1709,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1863,7 +1719,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1873,7 +1729,7 @@
             }
           },
           "503": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1904,16 +1760,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WorkflowList"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -1955,17 +1801,7 @@
             }
           },
           "404": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1999,16 +1835,6 @@
                 }
               }
             }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
           }
         },
         "x-schema-coverage": "typed"
@@ -2035,17 +1861,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2066,7 +1882,6 @@
           }
         },
         "x-go-body-limit-bytes": 65536,
-        "x-browser-body-limit-bytes": 65536,
         "x-schema-coverage": "typed"
       }
     },
@@ -2093,7 +1908,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2108,18 +1923,8 @@
               }
             }
           },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
           "503": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2181,7 +1986,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2197,7 +2002,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2207,7 +2012,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2217,7 +2022,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2227,7 +2032,53 @@
             }
           },
           "503": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeCapabilityRefusal"
+                }
+              }
+            }
+          }
+        },
+        "x-schema-coverage": "typed"
+      }
+    },
+    "/prebuilts": {
+      "get": {
+        "operationId": "get_prebuilts",
+        "summary": "GET /prebuilts",
+        "tags": [
+          "prebuilts"
+        ],
+        "description": "Current owner: cmd/goo/serve_ui.go. Effect: embedded-definition-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/serve_ui.go",
+        "x-effects": "embedded-definition-read",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrebuiltRegistry"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Query parameters are unsupported.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Optional example catalog is unconfigured; no source read.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2261,16 +2112,6 @@
                 }
               }
             }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
           }
         },
         "x-schema-coverage": "typed"
@@ -2297,17 +2138,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2328,7 +2159,6 @@
           }
         },
         "x-go-body-limit-bytes": 16384,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed"
       }
     },
@@ -2404,7 +2234,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2414,7 +2244,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2424,7 +2254,7 @@
             }
           },
           "503": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2458,7 +2288,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2468,7 +2298,7 @@
             }
           },
           "410": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2478,7 +2308,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2488,7 +2318,7 @@
             }
           },
           "503": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2509,7 +2339,6 @@
           }
         },
         "x-go-body-limit-bytes": 16384,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed"
       }
     },
@@ -2593,7 +2422,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2603,7 +2432,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2613,7 +2442,7 @@
             }
           },
           "503": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2644,16 +2473,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RetentionStatus"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -2703,7 +2522,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2713,7 +2532,7 @@
             }
           },
           "404": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2723,7 +2542,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2733,7 +2552,7 @@
             }
           },
           "503": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2803,7 +2622,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2813,7 +2632,7 @@
             }
           },
           "404": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2823,7 +2642,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2833,7 +2652,7 @@
             }
           },
           "503": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2877,7 +2696,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2887,7 +2706,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2897,7 +2716,7 @@
             }
           },
           "503": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2918,7 +2737,6 @@
           }
         },
         "x-go-body-limit-bytes": 16384,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed"
       }
     },
@@ -2972,7 +2790,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2982,7 +2800,7 @@
             }
           },
           "404": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2992,7 +2810,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3002,7 +2820,7 @@
             }
           },
           "503": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3056,7 +2874,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3066,7 +2884,7 @@
             }
           },
           "404": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3076,7 +2894,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3086,7 +2904,7 @@
             }
           },
           "503": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3122,17 +2940,7 @@
             }
           },
           "500": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3166,7 +2974,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3176,17 +2984,7 @@
             }
           },
           "500": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3207,7 +3005,6 @@
           }
         },
         "x-go-body-limit-bytes": 65536,
-        "x-browser-body-limit-bytes": 65536,
         "x-schema-coverage": "typed"
       }
     },
@@ -3244,7 +3041,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3254,7 +3051,7 @@
             }
           },
           "404": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3262,9 +3059,35 @@
                 }
               }
             }
+          }
+        },
+        "x-schema-coverage": "typed"
+      }
+    },
+    "/ui-config": {
+      "get": {
+        "operationId": "get_ui_config",
+        "summary": "GET /ui-config",
+        "tags": [
+          "ui-config"
+        ],
+        "description": "Current owner: cmd/goo/serve_ui.go. Effect: configuration-only. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/serve_ui.go",
+        "x-effects": "configuration-only",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UIConfig"
+                }
+              }
+            }
           },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+          "400": {
+            "description": "Query parameters are unsupported.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3300,7 +3123,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3310,17 +3133,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3341,7 +3154,6 @@
           }
         },
         "x-go-body-limit-bytes": 131072,
-        "x-browser-body-limit-bytes": 131072,
         "x-schema-coverage": "typed"
       }
     },
@@ -3378,7 +3190,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3388,7 +3200,7 @@
             }
           },
           "404": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3398,7 +3210,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3408,7 +3220,7 @@
             }
           },
           "410": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3418,7 +3230,7 @@
             }
           },
           "413": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3428,7 +3240,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3438,7 +3250,7 @@
             }
           },
           "500": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3448,7 +3260,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3479,7 +3291,6 @@
           }
         },
         "x-go-body-limit-bytes": 16384,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed"
       }
     },
@@ -3506,17 +3317,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3537,7 +3338,6 @@
           }
         },
         "x-go-body-limit-bytes": 1048576,
-        "x-browser-body-limit-bytes": 1048576,
         "x-schema-coverage": "typed"
       }
     },
@@ -3564,17 +3364,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3595,7 +3385,6 @@
           }
         },
         "x-go-body-limit-bytes": 8388608,
-        "x-browser-body-limit-bytes": 8388608,
         "x-schema-coverage": "typed"
       }
     },
@@ -3622,17 +3411,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3653,7 +3432,6 @@
           }
         },
         "x-go-body-limit-bytes": 8388608,
-        "x-browser-body-limit-bytes": 8388608,
         "x-schema-coverage": "typed"
       }
     },
@@ -3680,17 +3458,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3711,7 +3479,6 @@
           }
         },
         "x-go-body-limit-bytes": 8388608,
-        "x-browser-body-limit-bytes": 8388608,
         "x-schema-coverage": "typed"
       }
     },
@@ -3738,17 +3505,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3769,7 +3526,6 @@
           }
         },
         "x-go-body-limit-bytes": 262144,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed"
       }
     },
@@ -3806,7 +3562,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3816,7 +3572,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3826,7 +3582,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3836,7 +3592,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3857,7 +3613,6 @@
           }
         },
         "x-go-body-limit-bytes": 16384,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed"
       }
     },
@@ -3894,7 +3649,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3904,7 +3659,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3914,7 +3669,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3924,7 +3679,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3945,7 +3700,6 @@
           }
         },
         "x-go-body-limit-bytes": 16384,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed"
       }
     },
@@ -3982,7 +3736,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3992,7 +3746,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4002,7 +3756,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4012,7 +3766,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4033,7 +3787,6 @@
           }
         },
         "x-go-body-limit-bytes": 16384,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed"
       }
     },
@@ -4060,17 +3813,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4091,7 +3834,6 @@
           }
         },
         "x-go-body-limit-bytes": 65536,
-        "x-browser-body-limit-bytes": 65536,
         "x-schema-coverage": "typed"
       }
     },
@@ -4128,7 +3870,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4138,7 +3880,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4148,7 +3890,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4158,7 +3900,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4179,7 +3921,6 @@
           }
         },
         "x-go-body-limit-bytes": 16384,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed"
       }
     },
@@ -4216,7 +3957,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4226,7 +3967,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4236,7 +3977,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4246,7 +3987,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4267,7 +4008,6 @@
           }
         },
         "x-go-body-limit-bytes": 16384,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed"
       }
     },
@@ -4294,7 +4034,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4304,7 +4044,7 @@
             }
           },
           "404": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4314,7 +4054,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4324,7 +4064,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4345,7 +4085,6 @@
           }
         },
         "x-go-body-limit-bytes": 16384,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed"
       }
     },
@@ -4372,17 +4111,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4403,7 +4132,6 @@
           }
         },
         "x-go-body-limit-bytes": 65536,
-        "x-browser-body-limit-bytes": 65536,
         "x-schema-coverage": "typed"
       }
     },
@@ -4440,7 +4168,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4450,7 +4178,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4460,7 +4188,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4470,7 +4198,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4491,7 +4219,6 @@
           }
         },
         "x-go-body-limit-bytes": 65536,
-        "x-browser-body-limit-bytes": 65536,
         "x-schema-coverage": "typed"
       }
     },
@@ -4528,7 +4255,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4538,7 +4265,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4548,7 +4275,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4558,7 +4285,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4579,7 +4306,6 @@
           }
         },
         "x-go-body-limit-bytes": 65536,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed"
       }
     },
@@ -4606,17 +4332,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4637,7 +4353,6 @@
           }
         },
         "x-go-body-limit-bytes": 1048576,
-        "x-browser-body-limit-bytes": 1048576,
         "x-schema-coverage": "typed"
       }
     },
@@ -4664,17 +4379,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4695,7 +4400,6 @@
           }
         },
         "x-go-body-limit-bytes": 131072,
-        "x-browser-body-limit-bytes": 131072,
         "x-schema-coverage": "typed"
       }
     },
@@ -4722,17 +4426,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4753,7 +4447,6 @@
           }
         },
         "x-go-body-limit-bytes": 8389632,
-        "x-browser-body-limit-bytes": 8389632,
         "x-schema-coverage": "typed"
       }
     },
@@ -4790,7 +4483,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4800,7 +4493,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4810,7 +4503,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4820,7 +4513,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4841,7 +4534,6 @@
           }
         },
         "x-go-body-limit-bytes": 16384,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed"
       }
     },
@@ -4878,7 +4570,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4888,7 +4580,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4898,7 +4590,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4908,7 +4600,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4929,7 +4621,6 @@
           }
         },
         "x-go-body-limit-bytes": 65536,
-        "x-browser-body-limit-bytes": 65536,
         "x-schema-coverage": "typed"
       }
     },
@@ -4956,17 +4647,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4987,7 +4668,6 @@
           }
         },
         "x-go-body-limit-bytes": 65536,
-        "x-browser-body-limit-bytes": 65536,
         "x-schema-coverage": "typed"
       }
     },
@@ -5014,17 +4694,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5045,7 +4715,6 @@
           }
         },
         "x-go-body-limit-bytes": 2097152,
-        "x-browser-body-limit-bytes": 2097152,
         "x-schema-coverage": "typed"
       }
     },
@@ -5082,7 +4751,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5092,7 +4761,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5102,7 +4771,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5112,7 +4781,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5133,7 +4802,6 @@
           }
         },
         "x-go-body-limit-bytes": 65536,
-        "x-browser-body-limit-bytes": 65536,
         "x-schema-coverage": "typed"
       }
     },
@@ -5160,17 +4828,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5191,7 +4849,6 @@
           }
         },
         "x-go-body-limit-bytes": 65536,
-        "x-browser-body-limit-bytes": 65536,
         "x-schema-coverage": "typed"
       }
     },
@@ -5218,17 +4875,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5249,7 +4896,6 @@
           }
         },
         "x-go-body-limit-bytes": 65536,
-        "x-browser-body-limit-bytes": 65536,
         "x-schema-coverage": "typed"
       }
     },
@@ -5276,17 +4922,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5307,7 +4943,6 @@
           }
         },
         "x-go-body-limit-bytes": 131072,
-        "x-browser-body-limit-bytes": 131072,
         "x-schema-coverage": "typed"
       }
     },
@@ -5333,7 +4968,7 @@
           }
         ],
         "responses": {
-          "200": {
+          "202": {
             "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
             "content": {
               "application/json": {
@@ -5344,7 +4979,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5354,17 +4989,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5376,16 +5001,15 @@
         },
         "x-schema-coverage": "typed",
         "requestBody": {
-          "required": true,
-          "description": "Send {} through the browser proxy, which requires a positive Content-Length; direct Go ignores the cancellation body.",
+          "required": false,
+          "description": "Cancellation ignores the request body. An empty body or {} is supported.",
           "content": {
             "application/json": {
               "schema": {},
               "example": {}
             }
           }
-        },
-        "x-browser-body-limit-bytes": 16384
+        }
       }
     },
     "/record-aggregates": {
@@ -5421,7 +5045,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5431,7 +5055,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5441,7 +5065,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5451,7 +5075,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5472,7 +5096,6 @@
           }
         },
         "x-go-body-limit-bytes": 16384,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed"
       }
     },
@@ -5499,7 +5122,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5509,7 +5132,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5519,7 +5142,7 @@
             }
           },
           "410": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5529,7 +5152,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5539,7 +5162,7 @@
             }
           },
           "503": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5560,7 +5183,6 @@
           }
         },
         "x-go-body-limit-bytes": 16384,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed"
       }
     },
@@ -5571,7 +5193,7 @@
         "tags": [
           "tail"
         ],
-        "description": "Current owner: cmd/goo/tail_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits. Rolling 60-second event-time window; polling every 2 seconds; four local slots; 60-second Go lifetime; 5-second write deadlines. Proxy upstream socket timeout is 45 seconds. Disconnect releases slot. Last-Event-ID is not replay support. Gap frames after headers retain HTTP 200; abort can prevent a final frame.",
+        "description": "Current owner: cmd/goo/tail_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits. Rolling 60-second event-time window; polling every 2 seconds; four local slots; 60-second Go lifetime; 5-second write deadlines. Disconnect releases slot. Last-Event-ID is not replay support. Gap frames after headers retain HTTP 200; abort can prevent a final frame.",
         "x-go-source": "cmd/goo/tail_http.go",
         "x-effects": "source-read",
         "parameters": [],
@@ -5600,7 +5222,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5610,7 +5232,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5620,7 +5242,7 @@
             }
           },
           "500": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5630,7 +5252,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5651,7 +5273,6 @@
           }
         },
         "x-go-body-limit-bytes": 16384,
-        "x-browser-body-limit-bytes": 16384,
         "x-schema-coverage": "typed-events",
         "x-sse-events": {
           "reset": {
@@ -5689,17 +5310,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5720,7 +5331,6 @@
           }
         },
         "x-go-body-limit-bytes": 65536,
-        "x-browser-body-limit-bytes": 65536,
         "x-schema-coverage": "typed"
       }
     },
@@ -5747,17 +5357,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5778,7 +5378,6 @@
           }
         },
         "x-go-body-limit-bytes": 65536,
-        "x-browser-body-limit-bytes": 65536,
         "x-schema-coverage": "typed"
       }
     },
@@ -5805,17 +5404,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5836,7 +5425,6 @@
           }
         },
         "x-go-body-limit-bytes": 65536,
-        "x-browser-body-limit-bytes": 65536,
         "x-schema-coverage": "typed"
       }
     },
@@ -5873,7 +5461,7 @@
             }
           },
           "400": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5883,7 +5471,7 @@
             }
           },
           "409": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5893,7 +5481,7 @@
             }
           },
           "429": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5903,7 +5491,7 @@
             }
           },
           "502": {
-            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5924,422 +5512,7 @@
           }
         },
         "x-go-body-limit-bytes": 65536,
-        "x-browser-body-limit-bytes": 65536,
         "x-schema-coverage": "typed"
-      }
-    },
-    "/package": {
-      "get": {
-        "operationId": "get_python_package",
-        "summary": "GET /package",
-        "tags": [
-          "Python lab"
-        ],
-        "servers": [
-          {
-            "url": "http://localhost:8088/api",
-            "description": "Browser Python proxy (default local lab)"
-          }
-        ],
-        "x-python-source": "server.py",
-        "x-effects": "definition-read",
-        "x-schema-coverage": "typed-envelope",
-        "responses": {
-          "200": {
-            "description": "Current Python lab response; record rows remain adapter-shaped objects.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LegacyPackage"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Source/proxy failure.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Optional lab example capability is unconfigured; no source read.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RuntimeCapabilityRefusal"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/example-questions": {
-      "get": {
-        "operationId": "get_python_example_questions",
-        "summary": "GET /example-questions",
-        "tags": [
-          "Python lab"
-        ],
-        "servers": [
-          {
-            "url": "http://localhost:8088/api",
-            "description": "Browser Python proxy (default local lab)"
-          }
-        ],
-        "x-python-source": "server.py",
-        "x-effects": "definition-read",
-        "x-schema-coverage": "typed-envelope",
-        "responses": {
-          "200": {
-            "description": "Current Python lab response; record rows remain adapter-shaped objects.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExampleQuestions"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Source/proxy failure.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Optional lab example capability is unconfigured; no source read.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RuntimeCapabilityRefusal"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/prebuilts": {
-      "get": {
-        "operationId": "get_python_prebuilts",
-        "summary": "GET /prebuilts",
-        "tags": [
-          "Python lab"
-        ],
-        "servers": [
-          {
-            "url": "http://localhost:8088/api",
-            "description": "Browser Python proxy (default local lab)"
-          }
-        ],
-        "x-python-source": "server.py",
-        "x-effects": "definition-read",
-        "x-schema-coverage": "typed-envelope",
-        "responses": {
-          "200": {
-            "description": "Current Python lab response; record rows remain adapter-shaped objects.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PrebuiltRegistry"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Source/proxy failure.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Optional lab example capability is unconfigured; no source read.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RuntimeCapabilityRefusal"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/query": {
-      "post": {
-        "operationId": "post_python_query",
-        "summary": "POST /query",
-        "tags": [
-          "Python lab"
-        ],
-        "servers": [
-          {
-            "url": "http://localhost:8088/api",
-            "description": "Browser Python proxy (default local lab)"
-          }
-        ],
-        "x-python-source": "server.py",
-        "x-effects": "source-read",
-        "x-schema-coverage": "typed-envelope",
-        "responses": {
-          "200": {
-            "description": "Current Python lab response; record rows remain adapter-shaped objects.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LegacyResult"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Source/proxy failure.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Optional lab example capability is unconfigured; no source read.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RuntimeCapabilityRefusal"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LegacyQuery"
-              }
-            }
-          }
-        },
-        "x-browser-body-limit-bytes": 8192
-      }
-    },
-    "/explain": {
-      "post": {
-        "operationId": "post_python_explain",
-        "summary": "POST /explain",
-        "tags": [
-          "Python lab"
-        ],
-        "servers": [
-          {
-            "url": "http://localhost:8088/api",
-            "description": "Browser Python proxy (default local lab)"
-          }
-        ],
-        "x-python-source": "server.py",
-        "x-effects": "pure-plan",
-        "x-schema-coverage": "typed-envelope",
-        "responses": {
-          "200": {
-            "description": "Current Python lab response; record rows remain adapter-shaped objects.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LegacyResult"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Source/proxy failure.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Optional lab example capability is unconfigured; no source read.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RuntimeCapabilityRefusal"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LegacyQuery"
-              }
-            }
-          }
-        },
-        "x-browser-body-limit-bytes": 8192
-      }
-    },
-    "/ui-config": {
-      "get": {
-        "operationId": "get_python_ui_config",
-        "summary": "UI startup configuration",
-        "tags": [
-          "Python configuration"
-        ],
-        "servers": [
-          {
-            "url": "http://localhost:8088/api",
-            "description": "Browser Python proxy (default local lab)"
-          }
-        ],
-        "x-python-source": "server.py",
-        "x-effects": "configuration-only",
-        "x-schema-coverage": "typed",
-        "responses": {
-          "200": {
-            "description": "Pure startup metadata; no source probe.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UIConfig"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/health": {
-      "get": {
-        "operationId": "get_python_health",
-        "summary": "ClickHouse lab health probe",
-        "tags": [
-          "Python lab"
-        ],
-        "servers": [
-          {
-            "url": "http://localhost:8088",
-            "description": "Python root (no /api prefix)"
-          }
-        ],
-        "x-python-source": "server.py",
-        "x-effects": "source-read",
-        "x-schema-coverage": "typed",
-        "responses": {
-          "200": {
-            "description": "Readonly SELECT 1 probe; does not establish ingestion completeness.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "ok"
-                  ],
-                  "properties": {
-                    "ok": {
-                      "type": "boolean"
-                    },
-                    "error": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Readonly SELECT 1 probe; does not establish ingestion completeness.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "ok"
-                  ],
-                  "properties": {
-                    "ok": {
-                      "type": "boolean"
-                    },
-                    "error": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
       }
     }
   },
@@ -29920,7 +29093,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Pure Python UI startup configuration. Does not query or report readiness of ClickHouse or Go."
+        "description": "Pure Go startup configuration. Does not query or report readiness of ClickHouse."
       },
       "RetentionStatus": {
         "type": "object",
@@ -30103,81 +29276,6 @@
           }
         ]
       },
-      "LegacyQuery": {
-        "type": "object",
-        "properties": {
-          "view": {
-            "enum": [
-              "completion",
-              "latency",
-              "logs",
-              "traces",
-              "metrics",
-              "heatmap",
-              "queue"
-            ]
-          },
-          "minutes": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 120
-          },
-          "groupBy": {
-            "enum": [
-              "release",
-              "region",
-              "scenario"
-            ]
-          },
-          "reservationId": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "scenario": {
-            "enum": [
-              "",
-              "good",
-              "retry",
-              "late",
-              "missing",
-              "reject"
-            ]
-          },
-          "spanFilter": {
-            "type": "object",
-            "required": [
-              "fromMs",
-              "toMs",
-              "minMs",
-              "maxMs"
-            ],
-            "properties": {
-              "fromMs": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991
-              },
-              "toMs": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991
-              },
-              "minMs": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991
-              },
-              "maxMs": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991
-              }
-            },
-            "additionalProperties": false
-          }
-        },
-        "additionalProperties": false
-      },
       "ExampleQuestions": {
         "type": "array",
         "items": {
@@ -30193,82 +29291,32 @@
             "yaml": {
               "type": "string"
             }
-          }
+          },
+          "additionalProperties": false
         }
       },
-      "LegacyPackage": {
+      "Liveness": {
         "type": "object",
         "required": [
-          "apiVersion",
-          "id",
-          "views"
-        ],
-        "additionalProperties": true,
-        "description": "Legacy demo package declaration; grammar-specific attributes are preserved."
-      },
-      "LegacyResult": {
-        "type": "object",
-        "required": [
-          "expression",
-          "sql",
-          "parameters",
-          "evaluatedAt",
-          "evidence",
-          "limit"
+          "ok"
         ],
         "properties": {
-          "expression": {
-            "$ref": "#/components/schemas/LegacyQuery"
-          },
-          "sql": {
-            "type": "string"
-          },
-          "parameters": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            }
-          },
-          "evaluatedAt": {
-            "type": "integer"
-          },
-          "evidence": {
-            "const": "demo-unverified"
-          },
-          "limit": {
-            "type": [
-              "integer",
-              "null"
-            ]
-          },
-          "rows": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "additionalProperties": true
-            }
-          },
-          "summary": {
-            "type": [
-              "object",
-              "null"
-            ]
-          },
-          "possiblyTruncated": {
-            "type": "boolean"
+          "ok": {
+            "const": true
           }
-        }
+        },
+        "additionalProperties": false,
+        "description": "The Go HTTP process is running; no source or ingestion check."
       }
     }
   },
   "x-contract-notes": [
-    "Direct Go accepts any request Content-Type; application/json is the supported client encoding.",
-    "Python reparses/reserializes JSON and enforces Content-Length before Go; fixture byte equality describes direct Go, not browser serialization.",
-    "Browser proxy: dashboard plan 16 KiB vs Go 256 KiB; metric discovery 16 KiB vs Go 64 KiB; annotations/deployments 16 KiB vs Go 128 KiB.",
-    "Direct operation GET validation uses http.Error text/plain with JSON-looking text; browser re-encodes errors as JSON.",
-    "Direct tail early errors omit Cache-Control; proxy early JSON errors include no-store.",
-    "Python GET prefix routing can forward unsupported suffixes; these are not supported operations.",
-    "Malformed non-JSON upstream HTTP errors now return JSON 502 instead of disconnecting; valid JSON errors preserve status.",
+    "Go accepts any request Content-Type; application/json is the supported client encoding.",
+    "Browser /api and unprefixed API requests have the same byte limits, headers, cancellation and streaming semantics.",
+    "JSON receive is bounded to 15 seconds and interrupted by request cancellation; successful decoding clears the receive deadline before source/response work.",
+    "Operation GET validation uses http.Error text/plain with JSON-looking text; /api preserves that status, type and body.",
+    "Tail early JSON errors omit Cache-Control; streaming responses set no-store and X-Accel-Buffering: no.",
+    "Health is process liveness only; it does not query ClickHouse or certify telemetry ingestion.",
     "No generated handlers, semantic validator replacement, API stability guarantee or new authorization layer is introduced."
   ]
 }

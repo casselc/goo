@@ -113,26 +113,23 @@ loopback ports are not a production authorization model. See
 sequenceDiagram
   actor User
   participant UI as Investigation browser
-  participant Proxy as Query proxy - Python today
-  participant Goo as Go package service
+  participant Goo as Single Go UI/API server
   participant CH as ClickHouse
   User->>UI: Select package and time window; inspect operations
-  UI->>Proxy: Same-origin operation request
-  Proxy->>Goo: Forward selected package and bounds
+  UI->>Goo: Same-origin /api operation request with package and bounds
   Goo->>Goo: Validate bound plan; freeze span-start window
   Goo->>CH: Bounded SQL with typed values and explicit resource/scope
   CH-->>Goo: Captured completed spans and nested events
   Goo->>Goo: Validate records; deduplicate exact copies; reject conflicts/overflow
   Goo->>Goo: Compare source contract; summarize observed invocations
-  Goo-->>Proxy: Rows, exact span evidence, diagnostics, query and evidence basis
-  Proxy-->>UI: Captured response
+  Goo-->>UI: Rows, exact span evidence, diagnostics, query and evidence basis
   User->>UI: Select operation/errors; select duration cell
   UI->>UI: Filter exact contributing spans within captured evidence
   User->>UI: Open trace waterfall; inspect declared subject event
   UI->>UI: Follow scoped subject to related event-bearing traces
   Note over UI,CH: These drilldowns reuse the captured response; no new operation fetch
   User->>UI: Refresh observation
-  UI->>Proxy: New query; late arrivals may change evidence and basis
+  UI->>Goo: New query; late arrivals may change evidence and basis
 ```
 
 Overview counts are observed **invocations**, not unique business requests or
@@ -650,7 +647,7 @@ flowchart TD
   UI[Explore: filters / measures / time width] --> AST[Shared Go Query AST]
   PKG[Saved package revision] -->|fresh resolved window| AST
   AST --> GATE[Four-request local admission gate]
-  CANCEL[Browser cancellation UUID] -->|proxy forwards cancel| CTX[Bounded Go context]
+  CANCEL[Browser cancellation UUID] -->|same-process cancellation route| CTX[Bounded Go context]
   GATE --> CTX
   CTX --> PLAN[Parameterized ClickHouse plan]
   PLAN --> TOTAL[Full count + exact duration summary]
@@ -1461,7 +1458,8 @@ the corrected supplemental-log API probes, remains authoritative in VALIDATION.m
 
 The implemented generic profiles separate optional examples from ordinary
 observation. Go validates explicitly supplied configuration before listening;
-Python generic mode serves UI/API assets without importing the example grammar.
+The same Go process serves embedded UI/API assets without an example grammar or
+second application server.
 Neither startup capability response queries telemetry or certifies source health.
 Generic Activity waits for UI configuration, then requires an explicitly applied
 environment and Start stream; unknown configuration also withholds automatic reads.
@@ -1472,7 +1470,7 @@ flowchart LR
     G[Go generic profile] --> V[Validate supplied optional configuration]
     V --> A[Typed observation API and evidence store]
     V --> C[Source-free runtime capabilities]
-    P[Python generic profile] --> U[UI assets and source-free UI configuration]
+    V --> U[Embedded UI assets and source-free UI configuration]
     U --> C
     U --> S[Blank generic scope and explicit Start stream]
     S --> A

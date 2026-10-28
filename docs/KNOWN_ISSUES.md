@@ -5,7 +5,9 @@ adds verified ingress/admission, Activity signal-scope/inspection and required-t
 verdict gaps ahead of cosmetic work. A malformed prepared-string grouping defect
 is reproduced; native catalog publication/capacity mismatch is source-confirmed.
 Direct-Go body receive and required browser-ledger verdicts are fixed in 237;
-Python proxy incoming uploads still need their own bounded receive policy.
+The Python proxy is removed in runtime consolidation 238; browser uploads now
+reach the same bounded Go path. The obsolete reservation query panel and API
+are retired; ordinary YAML examples and native/operation workflows remain.
 Activity and integrity findings remain open. Current order and
 acceptance live in the [roadmap](ROADMAP_2026_10_28.md) and
 [backlog](BACKLOG_2026_10_28.md); older statuses below retain their bounded history.
