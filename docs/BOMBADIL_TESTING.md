@@ -543,3 +543,12 @@ elements; application adapters own navigation, read lifecycle and scope. Journey
 Bombadil actor covers selection and returning to retained evidence. Hegel
 selection properties and the question-session state swarm complement observed
 quint-go validation against the existing question-links model.
+
+## Legacy source ownership (217)
+
+`GOO_LEGACY_OWNER_BOMBADIL=1 npx playwright test journeys/217-legacy-query-ownership.spec.js --reporter=line`
+runs the delayed real-response journey and bounded `legacy-query-ownership.ts`
+actor. Actions inspect operations, evaluate HTTP previews, change scope and leave
+workspaces. Invariants require exercised source reads, query IDs, visible owners,
+stopped hidden readers and no uncaught errors. It performs no saves or workload
+changes. See [the storyboard](../journeys/217-legacy-query-ownership-storyboard.md).

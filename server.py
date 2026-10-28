@@ -106,7 +106,13 @@ class Handler(BaseHTTPRequestHandler):
                 parsed = urllib.parse.urlsplit(self.path)
                 if not (parsed.path.startswith('/api/retained-evidence/') or parsed.path.startswith('/api/annotations/') or parsed.path.startswith('/api/activity-views/') or parsed.path.startswith('/api/exploration-views/') or parsed.path.startswith('/api/documents/') or parsed.path.startswith('/api/deployments/') or parsed.path.startswith('/api/captures/') or parsed.path.startswith('/api/investigations/') or parsed.path.startswith('/api/telemetry-packages/') or parsed.path in ('/api/capabilities','/api/retained-evidence','/api/annotations','/api/activity-views','/api/exploration-views','/api/http-package', '/api/operations', '/api/operation-packages', '/api/counter-rates', '/api/histograms', '/api/captures', '/api/telemetry-packages', '/api/measurement-packages', '/api/investigation-workflows', '/api/recipes', '/api/documents', '/api/deployments')): self.send_error(404); return
                 endpoint = os.getenv('PACKAGES_URL', 'http://localhost:8089') + parsed.path.removeprefix('/api')
-                with urllib.request.urlopen(endpoint + ('?' + parsed.query if parsed.query else ''), timeout=90) as response:
+                headers = {}
+                if parsed.path in ('/api/http-package', '/api/operations', '/api/counter-rates', '/api/histograms'):
+                    query_id = self.headers.get('X-Goo-Query-ID')
+                    if query_id:
+                        headers['X-Goo-Query-ID'] = query_id
+                request = urllib.request.Request(endpoint + ('?' + parsed.query if parsed.query else ''), headers=headers)
+                with urllib.request.urlopen(request, timeout=90) as response:
                     self.json_response(200, json.load(response))
             except urllib.error.HTTPError as exc:
                 self.upstream_error(exc)

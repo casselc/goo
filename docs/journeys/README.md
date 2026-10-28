@@ -2491,3 +2491,8 @@ Explicit discovery retains 18 raw resource/schema variants, 22 family groups and
 [Executable storyboard](../../journeys/202-pod-memory-storyboard.md) · [Desktop](screenshots/202a-pod-memory.png) · [Mobile](screenshots/202b-mobile-pod-memory.png) · [Workspace context](screenshots/202c-pod-memory-in-context.png).
 
 Explicit exact-resource lookup and pure planning load at most two receiver-pinned byte gauges. Main 14.8s checks usage 32,768/working set 16,384, separate semconv usage, partial/stale/conflict/missing and strict invalid-byte masking without changing raw gauge evidence; full individual capture bytes reopen unchanged. Five-case owner 11.6s, focused host/Kubernetes owners 7.8s/4.1s, corrected nine-phase actor 32.4s/449 snapshots and independent validation 0.545s/fourteen controls pass. Native staging and retained Back preserve filters/focus without reads. Generated ordinary OTLP does not establish a running kubeletstats receiver, Kubernetes API/RBAC, capacity or health; no pod memory ratio or composite store is added.
+
+217 adds [legacy read ownership](../../journeys/217-legacy-query-ownership-storyboard.md):
+real delayed operation/rate/histogram/HTTP responses, leave/scope/visibility
+cancellation, source-free return and explicit retry, plus a bounded Bombadil actor.
+This behavior-only cut changes no layout or historical screenshots.

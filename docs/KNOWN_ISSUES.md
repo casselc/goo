@@ -17,6 +17,10 @@ Legacy operation source GET/HEAD reads now share source admission, cancellation
 and post-validation deadlines. Declarations remain outside admission; mixed
 publication/retention and SSE retain their own lifetimes. Python process lifecycle
 remains separate work.
+Legacy operation/HTTP browser GETs now own cancellation through JSON and forward
+query IDs through the Python proxy. Leaving/changing/hiding their workspace stops
+pending work and follow-ons. Cancellation controls are best effort; proxy JSON
+remains buffered and direct Go Retry-After is not forwarded by Python.
 Native numeric/state evaluation now has a storage-free three-argument Go API;
 lifecycle publication/correction uses explicit `ObserveLifecycle`. The HTTP source
 adapter remains a declared mixed operation. Existing result metadata and hashes

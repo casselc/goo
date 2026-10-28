@@ -1,5 +1,33 @@
 # Validation record
 
+## Legacy browser source ownership — 217 (2026-10-28 UTC)
+
+The four admitted legacy source GETs now use decoded `getJSON` transport with
+query IDs and cancellation owned through JSON consumption. Python forwards those
+IDs for the exact source GET paths, keeping declaration/catalog reads separate.
+Operations owns its sequential operation/rate/histogram pipeline; Definitions owns
+its HTTP preview. Leave, package/lookback change, document hiding and pagehide stop
+pending reads. Stale responses cannot render or launch follow-ons; returning does
+not automatically read. Saved publication and SSE lifetimes remain independent.
+
+Validation: all 583 frontend tests and 20 actual-HTTP proxy contracts pass,
+including GET cancellation while the upstream JSON body is stalled. The current
+Go executable was rebuilt and installed in the local packages lab; the updated
+Python/static source was synced to query/packages, restarting only those two
+services. Three real Chromium 217 journeys pass: delayed responses at all four
+source phases, scope/synthetic-visibility cancellation and explicit retry, plus
+the bounded Bombadil actor. Its invariants require an exercised source read,
+matching visible owner/query IDs, stopped hidden readers and no uncaught errors.
+Campaign directories are isolated per run and successful temporary outputs clean
+up automatically; a rerun collision in the first fixed-path harness was corrected.
+
+The storyboard, boundary/architecture flow, API/proxy limits, Bombadil guide and
+roadmap status are updated. Existing result encodings and layout are unchanged;
+no new screenshot or Quint/Hegel campaign is claimed for this ownership cut. Go
+source was unchanged here. Python still buffers JSON and does not forward upstream
+Retry-After; cancellation controls are best effort. Temporary binaries/logs and
+owned failed-run outputs are removed; saved lab volumes remain intact.
+
 ## Whole-product review and roadmap revision (2026-10-28 UTC)
 
 Reviewed source at 9154922, prior specialist/product reviews and real Chromium

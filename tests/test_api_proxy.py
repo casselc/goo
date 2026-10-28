@@ -152,7 +152,26 @@ class ProxyContracts(unittest.TestCase):
         self.assertNotIn('Retry-After', headers)
         self.assertEqual(json.loads(body)['error'], 'backend refusal')
 
+    def test_source_get_capability_forwarded_without_declaration_leak(self):
+        query_id = '01234567-1234-1234-1234-012345678901'
+        Upstream.mode = 'busy'
+        for path in ('/http-package', '/operations', '/counter-rates', '/histograms'):
+            with self.subTest(path=path):
+                status, _, _ = self.request('GET', '/api' + path + '?minutes=5', headers={'X-Goo-Query-ID': query_id})
+                self.assertEqual(status, 429)
+                method, forwarded, headers, body = Upstream.calls[-1]
+                self.assertEqual((method, forwarded, body), ('GET', path + '?minutes=5', b''))
+                self.assertEqual({k.lower(): v for k, v in headers.items()}['x-goo-query-id'], query_id)
+        self.request('GET', '/api/operation-packages', headers={'X-Goo-Query-ID': query_id})
+        self.assertNotIn('x-goo-query-id', {k.lower(): v for k, v in Upstream.calls[-1][2].items()})
+
     def test_cancellation_is_forwarded_while_upstream_json_body_is_pending(self):
+        self.pending_json_cancellation('POST', '/api/explore', b'{}')
+
+    def test_cancellation_is_forwarded_while_get_json_body_is_pending(self):
+        self.pending_json_cancellation('GET', '/api/operations?minutes=5', None)
+
+    def pending_json_cancellation(self, method, path, payload):
         Upstream.mode = 'pending-json'
         query_id = '01234567-1234-1234-1234-012345678901'
         result = []
@@ -161,7 +180,7 @@ class ProxyContracts(unittest.TestCase):
         def read_source():
             conn = http.client.HTTPConnection('127.0.0.1', self.proxy.server_port, timeout=5)
             try:
-                conn.request('POST', '/api/explore', b'{}', {'X-Goo-Query-ID': query_id})
+                conn.request(method, path, payload, {'X-Goo-Query-ID': query_id})
                 response = conn.getresponse()
                 result.append((response.status, json.loads(response.read())))
             except Exception as exc:
@@ -181,7 +200,7 @@ class ProxyContracts(unittest.TestCase):
             self.assertFalse(reader.is_alive(), 'pending upstream body survived cancellation')
             self.assertEqual(failures, [])
             self.assertEqual(result, [(200, {'cancelled': True})])
-            source = next(call for call in Upstream.calls if call[1] == '/explore')
+            source = next(call for call in Upstream.calls if call[1] == path.removeprefix('/api'))
             self.assertEqual({k.lower(): v for k, v in source[2].items()}['x-goo-query-id'], query_id)
         finally:
             Upstream.cancelled.set()

@@ -60,6 +60,13 @@ do. No generated handler/client or request-validation middleware was introduced.
 
 ## Legacy source GET controls
 
+The browser's legacy source owners now use decoded `getJSON` transport with query
+IDs through the Python proxy. Leaving/changing/hiding the owner aborts the source
+read and prevents sequential hidden follow-ons. Returning requires an explicit
+read. GETs have no JSON request body; declaration/catalog GETs remain separate.
+Direct Go supplies Retry-After on saturation; Python retains its existing behavior
+of forwarding the error body/status without that header.
+
 `/http-package`, `/operations`, `/counter-rates` and `/histograms` now share the
 four-slot source budget and optional `X-Goo-Query-ID` cancellation control. Their
 implicit HEAD requests use the same limits. Saturation returns 429 with

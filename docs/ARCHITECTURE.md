@@ -46,13 +46,15 @@ closing remaining connections. Go sample apps then shut down their own SDK
 providers with independent five-second flush budgets; Compose allows 20 seconds.
 No exporter is owned by the goo query server or instrumentation library.
 
-Browser source reads use `ui/queries.mjs` → `postJSON(url, body, signal)`.
+Browser source reads use `ui/queries.mjs` → `postJSON(url, body, signal)` or
+`getJSON(url, signal)` for the four admitted legacy source GETs.
 It returns `{ok, status, data}` after decoding the body; owners keep their HTTP
 error messages and question/generation checks. The abort listener remains attached
 through both fetch and JSON consumption, then is removed on every exit. An abort
 also sends a best-effort, independent cancellation control with the same query ID.
 A late result from a transport that ignores abort is rejected before returning.
-Pure POST planners can use `jsonResponse(fetch(...))` without creating query IDs;
+Legacy operation/HTTP owners cancel pending work on leave, scope change and hiding;
+late responses cannot start sequential reads in hidden workspaces. Pure POST planners can use `jsonResponse(fetch(...))` without creating query IDs;
 publications and SSE retain their separate owners and retry/continuity semantics.
 
 ```mermaid

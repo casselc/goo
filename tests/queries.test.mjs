@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
 import {once} from 'node:events';
-import {postJSON,jsonResponse} from '../ui/queries.mjs';
+import {postJSON,getJSON,jsonResponse} from '../ui/queries.mjs';
 
 const deferred=()=>{let resolve;const promise=new Promise(done=>resolve=done);return {promise,resolve}};
 
@@ -98,4 +98,30 @@ test('cancel transport failure cannot replace the original abort',async t=>{
 
 test('pure JSON decoding does not add a query capability or cancellation request',async()=>{
   assert.deepEqual(await jsonResponse(new Response('{"plan":true}',{status:200})),{ok:true,status:200,data:{plan:true}});
+});
+
+test('source GET cancellation owns the decoded body without a JSON request body',async t=>{
+ const body=deferred(),reading=deferred(),controller=new AbortController(),calls=[];
+ t.mock.method(globalThis,'fetch',async(url,options)=>{
+  calls.push({url,options});
+  return {ok:true,status:200,json:()=>{reading.resolve();return body.promise}};
+ });
+ const pending=getJSON('/api/operations?minutes=5',controller.signal);
+ await reading.promise;
+ assert.equal(calls[0].options.method,'GET');
+ assert.equal(Object.hasOwn(calls[0].options,'body'),false);
+ assert.equal(Object.hasOwn(calls[0].options.headers,'Content-Type'),false);
+ assert.match(calls[0].options.headers['X-Goo-Query-ID'],/^[a-f0-9-]{36}$/);
+ const rejected=assert.rejects(pending,{name:'AbortError'});controller.abort();body.resolve({late:true});await rejected;
+ assert.equal(calls[1].url,'/api/queries/'+calls[0].options.headers['X-Goo-Query-ID']+'/cancel');
+ assert.equal(calls[1].options.signal,undefined);
+});
+
+test('successful source GET releases cancellation and preserves refused status',async t=>{
+ const controller=new AbortController();
+ const fetch=t.mock.method(globalThis,'fetch',async()=>({ok:false,status:429,json:async()=>({error:'busy'})}));
+ assert.deepEqual(await getJSON('/api/histograms',controller.signal),{ok:false,status:429,data:{error:'busy'}});
+ controller.abort();assert.equal(fetch.mock.callCount(),1);
+ await assert.rejects(getJSON('/api/operations',AbortSignal.abort()),{name:'AbortError'});
+ assert.equal(fetch.mock.callCount(),1);
 });
