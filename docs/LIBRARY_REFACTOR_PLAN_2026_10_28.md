@@ -1,65 +1,61 @@
 # Cross-stack library refactor proposal — 2026-10-28
 
-**Review and proposal only.** Specialists inspected the full project at `af107b7`,
-including all six Go modules, frontend application/display libraries, Python
-forwarding, instrumentation/weaving, authoring and verification. This is broad
-structural coverage, not a line-by-line correctness audit. No production code,
-public API, dependency, toolchain, runtime settings or deployment changed. No new
-regression suites, browser campaigns or performance benchmarks were run for this
-review. Source references and past acceptance are evidence of current structure,
-not a new passing execution result.
+**Proposal, revised for the user's prerelease and evidence priorities.** Current
+API names, Go/browser versions and stored artifact formats are negotiable. Prefer
+a clean first-party cutover over permanent compatibility wrappers when that gives
+a simpler library. Evidence retention, custody hashes, replay receipts and historical
+byte compatibility are not architectural goals unless a concrete feature needs them.
 
-The recommendation is to improve the internals while keeping ordinary OTel,
-concrete Go questions/results, validated YAML, and supplied-data HTML components
-the simple public paths. Preserve the existing semantic layers; share mechanics
-where they are demonstrably the same. An advanced facility is useful when it
-removes a real ownership or performance problem, not when it merely reduces lines
-or exposes more type parameters.
+Specialists inspected the full project at `af107b7`, including all six Go modules,
+frontend application/display libraries, Python forwarding, instrumentation/weaving,
+authoring and verification. This is broad structural review, not a line-by-line
+correctness audit. No production code, dependencies, versions, runtime settings,
+tests or data were changed. No new regression campaigns or benchmarks were run.
+The first review was recorded in `40d03aa`; this revision incorporates the user's
+subsequent clarifications rather than carrying its compatibility-first policy forward.
 
-## Specialist reports and usability decisions
+## Specialist reports and confirmed API directions
 
-- [Go libraries and runtime](reviews/GO_LIBRARY_REVIEW_2026_10_28.md): module/package
-  coverage, eight proposals, internal generics and recent stdlib/runtime assessment.
-- [Frontend libraries](reviews/FRONTEND_LIBRARY_REVIEW_2026_10_28.md): whole-app
-  coverage, eight proposals, browser/platform gates and extraction/conformance plan.
-- [API design/usability](reviews/LIBRARY_API_USABILITY_REVIEW_2026_10_28.md): public
-  API dispositions, integration examples and confirmation of both platform matrices.
+- [Go libraries/runtime](reviews/GO_LIBRARY_REVIEW_2026_10_28.md): package/module
+  coverage, structural proposals and verified recent Go facilities.
+- [Frontend libraries](reviews/FRONTEND_LIBRARY_REVIEW_2026_10_28.md): lifecycle,
+  component/library boundaries, ESM cutover and modern platform assessment.
+- [Design/usability](reviews/LIBRARY_API_USABILITY_REVIEW_2026_10_28.md): explicit
+  dispositions on the proposed breaking changes and evidence simplification.
 
-These are inputs to **one sequence**, not three independent framework projects.
-Earlier reviews were reconciled against current code: generic startup, narrow HTTP
-and publication primitives, request owners, facet composition, record/evidence
-adapters, definition rows and host-control consolidation already exist. Do not
-rebuild them because an older review described them as future work. Product C2 and
-other existing roadmap work remain separate; this proposal does not turn every
-library idea into a prerequisite for the next product feature.
+The common path should stay ordinary OTel, understandable Go functions and supplied
+HTML components. Internal generics and modern platform features can do substantial
+work without exposing a generic algebra to callers. Public generics or iterators
+are also allowed when a normal usage example shows a real benefit; none is needed
+merely to consolidate existing query types.
 
-## Recommended sequence
+## Preferred cuts
 
-| Cut | Concrete outcome and pilot | Consumer impact and acceptance |
+| Cut | Recommendation | Benefit and implementation boundary |
 | --- | --- | --- |
-| **R0 — Contract and compatibility ledger** | Inventory route effects/admission/deadline owners; map normative Go/browser identity, bounds and error contracts to existing fixtures. Record root Go 1.24 versus nested Go 1.27 requirements and the current Chromium-only browser evidence. | No API change. Preserve canonical IDs, nil/missing/empty distinctions, exact strings, unknown states, source-free staging/reopen and per-family read budgets. Extend existing fixtures rather than create a parallel schema system. |
-| **R1 — Request lifetime and orderly shutdown** | First add a held-headers/delayed-body cancellation regression across browser, Python and Go, with downstream cancellation/admission release observation. Then pilot an internal JSON helper in two read-only owners if the contract warrants it. Separately add bounded server/example shutdown and exporter flushing at executable boundaries. | Keep existing raw Response support and SSE separate. A small `{ok, status, headers, data}` result can preserve caller distinctions; do not return a consumed Response or attach source cancellation to every pure/save/publication request. No claim of an existing leaked server query is established by the review. |
-| **R2 — Route policy and source boundaries** | Introduce a small internal method/pattern/effect/admission/deadline inventory that initially reproduces current membership. Move one cohesive handler family out of `cmd/goo` only after its dependencies are explicit. Corpus-test equivalent ClickHouse escaping/settings fragments before sharing them. | Concrete DTOs and wire behavior stay unchanged. Pure POSTs, executing GETs, SSE, optional retained-store commits and capture publication have different policies. Changing admission membership or error/budget ordering is an explicit behavior change, not mechanical cleanup. |
-| **R3 — Frontend ownership and input leaves** | Relocate proven `RequestOwner`/`PendingScope` mechanics from feature modules with compatibility aliases for identified callers. Pilot private property-upgrade/bounded-JSON helpers in two compatible snapshot elements. | Keep visibility, selected identity, open-panel and active-route publication guards in app adapters. Preserve snapshot versus child-preserving element contracts, pre-definition properties, SSR attributes, focus and zero lifecycle reads. Do not introduce a universal owner or public custom-element superclass. |
-| **R4 — Checked revisions and explicit copies** | Add checked domain-specific hashing helpers internally, then named clones for stable owned structures where useful. Freeze current IDs and mutation-isolation behavior first. | Existing `Hash` and stored records remain compatible. Generic `Hash[T]` does not prove JSON encodability; `maps.Clone` is shallow and does not preserve deliberate nil-to-empty normalization by itself. A public checked revision helper is additive only if an actual consumer needs it. |
-| **R5 — Prepared numeric keys, measured** | Benchmark parsing/canonical serialization in sort/group preparation, then cache the existing parsed times and canonical ordering bytes in private prepared records. | No public generic evaluator. Preserve duplicate/conflict/freshness/epoch behavior, tie ordering and replay bytes. Compare 1/100/10,000 points, multiple streams, shuffled inputs and adversarial ties with allocations. There is no measured speedup yet. |
-| **R6 — Explicit instrumentation runtime, additive** | A proposed `NewRuntime(Config) (*Runtime, error)` can own instrument handles and bounded initialization state for direct integrations/tests. Keep package helpers and annotations working. | Design/usability accepts with revisions below. Provider setup/shutdown belongs to callers; errors must surface. The first scope is manual consumers/tests because existing woven aspects still call package globals. No public generic machinery or mandatory panic/recover boilerplate. |
-| **R7 — Delivery, styles and remaining adoption** | Validate existing asset/dependency lists and display-only gallery isolation. Consolidate touched owner CSS and remaining label/evidence duplication using already shipped adapters. Measure startup and supported large-view interactions before optional loading/yield/containment changes. | No mandatory bundler, framework, ESM-only entrypoint, new global store or broad CSS rewrite. Preserve standalone/nested component contracts and native keyboard/touch behavior; update affected real frames only when implementing a change. |
+| **1 — Simplify the scope** | Map libraries and stored/verification artifacts to current user workflows. Keep useful investigation, comparison, saved-question and annotation capabilities; remove or isolate bookkeeping with no consumer. Replace repetitive acceptance paperwork with concise current validation guidance. | A short keep/simplify/defer/remove list, not another universal registry. Keep targeted correctness, cancellation and failure tests. No data deletion occurs in this review. |
+| **2 — One Go baseline** | Prefer Go 1.27 across all six modules, validating with the already used Go 1.27.2 toolchain. Update root/CI/build/setup declarations in one cut. Retain separate dependency graphs for instrumentation, verification and weaving. | One compiler policy and direct access to newer test/concurrency/error facilities. This is a maintenance/testing benefit, not a claimed speedup. Check actual built-main GODEBUG/container defaults and all modules; a named older consumer could justify a different negotiated choice. |
+| **3 — Explicit frontend modules** | Prefer native ESM: first a display entry/feature graph, then the application graph. Replace globals/CommonJS dual paths with explicit imports and migrate Node tests, gallery, examples and Python asset serving together. Remove the old graph after the pilot unless a real consumer needs a transition. | Clear dependencies and simpler embedding/maintenance. A plain module script or feature import remains sufficient; framework-neutral SSR HTML and SPA properties remain capabilities, not frozen names. Bundling/lazy loading are separate measured decisions. |
+| **4 — Storage-independent evaluation** | Separate numeric/native evaluation and source reads from optional snapshots, custody/publication and retention experiments. Make lifecycle correction/storage effects explicit rather than hiding them in a broadly named Evaluate call. Minimize live result metadata and hashes to what actual consumers use. | A library consumer can calculate or query without learning an evidence subsystem. Keep exact numbers/time, units, reset/unknown semantics and honest population identity. Optional saves need only the data required by their workflow; they do not justify generalized cryptographic custody everywhere. |
+| **5 — Request and server ownership** | Establish cancellation through headers/body consumption across browser, Python and Go, then use one clear JSON-read helper for appropriate source owners. Consolidate endpoint effect/admission/deadline policy and move a coherent HTTP family out of cmd. Add bounded executable shutdown/export flushing. | Reliability and easier source-route maintenance. This is an identified seam, not a reproduced backend leak. Keep pure computations, source reads, publications/ambiguous commits and SSE lifetimes distinct; cleanly replace obsolete helper signatures when useful. |
+| **6 — Clear package and revision APIs** | Prefer renaming prepared aggregate compiler `measurement` to `subjectfacts`, distinguishing it from native/live `measurements`. Migrate imports/docs/tests directly. Delete unused hashes; replace unchecked Hash(any) only where a real definition/reference ID is needed, using checked concrete functions. | Import sites explain which library the user needs. No permanent alias package or unchecked legacy wrapper by default. Persisted development fixtures may be reseeded; a retained saved workflow gets an explicit migration/export decision. |
+| **7 — Owned instrumentation runtime** | Design NewRuntime(Config) (*Runtime,error), its default weaving binding and examples as one coordinated cutover. Own instruments and bounded initialization state per runtime, surface errors, and retire ambiguous global initialization paths. | Isolated manual integrations/tests and understandable startup. Applications own SDK providers/exporter shutdown. Generated annotations must use the chosen binding without per-operation plumbing or panic/recover boilerplate. Exact binding/rebinding semantics still need a concrete design. |
+| **8 — Measured/private optimizations** | Parse numeric times and prepare sort/group keys once; use narrow generic/stdlib helpers where they remove real repetition. Relocate existing request-owner mechanics and extract only compatible component-input leaves. Consolidate touched CSS. | Benchmark allocation-sensitive paths before claiming gains. Preserve meaningful semantic differences, not old serialization accidents. Each extraction needs a real consumer and should delete its superseded path. |
 
-R1's cancellation contract and R2's route inventory are the most useful first
-reliability cuts. R0 should be a small ledger/conformance addition, not an open-ended
-architecture phase. After that, R2 Go boundary work and R3 frontend mechanics can
-proceed independently behind the same fixtures. R4/R5 are separable internal pilots;
-R6 should be driven by an isolation/error-reporting consumer. R7 is opportunistic
-maintenance and measurement, not a platform migration.
+Start with a small scope/ownership decision and the Go baseline, then pilot the
+display ESM graph and one storage-independent numeric path in parallel. Request
+lifetime/route policy can proceed behind focused shared fixtures. Package renaming
+and instrumentation deserve coordinated cuts rather than half-migrated facades.
+Do not turn this into a prerequisite to every product feature or eight simultaneous
+framework projects.
 
-## Public API decision: simple defaults, explicit ownership where useful
+## Public API sketches and usability review
 
-The only concrete new public API candidate in this review is illustrative:
+Design/usability accepts these **directions**, not an implemented API:
 
 ```go
-// PROPOSED; this constructor is not implemented by the review.
-runtime, err := instrumentation.NewRuntime(instrumentation.Config{
+// PROPOSED: not an existing constructor.
+rt, err := instrumentation.NewRuntime(instrumentation.Config{
     MeterProvider:  meterProvider,
     TracerProvider: tracerProvider,
 })
@@ -68,70 +64,81 @@ if err != nil {
 }
 ```
 
-Design/usability **accepts this direction with revisions**:
+A coordinated default binding should let woven annotations use the owned runtime
+without changing every function. Constructing an unbound runtime does not isolate
+today's woven calls, which still use package globals. Specify nil providers,
+initialization errors, cardinality, exactly-once finalization and whether rebinding
+is prohibited or safely scoped. An executable-level default is not a promise that
+parallel tests of that global binding are isolated; direct runtime tests can be.
+The reviewed change may remove obsolete APIs rather than maintain two permanent
+ways to initialize the same state.
 
-- Runtime owns its instrument/initialization bookkeeping. Applications own SDK
-  installation, exporters and shutdown. Nil/default-provider behavior is explicit.
-- Constructor failures are returned. Two instances with the same operation names
-  must remain isolated; finalizers stay concurrent-safe and exactly once.
-- Existing annotations and package functions remain the ordinary path. Current
-  weaving calls those globals, so constructing Runtime alone does not isolate a
-  woven app. A weaving binding would be a separate reviewed change.
-- The low-level `(error, panicked)` finish hook must not force ordinary users to
-  implement recover/repanic boilerplate. Examples show the appropriate common path.
+The proposed frontend embedding can be as simple as:
 
-No public generic query DSL, `Result[T]` hierarchy, generic numeric policy plugin,
-universal store repository or subscribing dashboard component is recommended.
-Concrete Query/Question/Result types and existing component property/event APIs
-remain the public contracts. Advanced internals may implement them without adding
-conceptual work for callers.
+```html
+<!-- PROPOSED entrypoint; display.js is not added by this review. -->
+<script type="module" src="/display.js"></script>
+<goo-table density="compact"><table><!-- native content --></table></goo-table>
+```
 
-## Modern features: use the benefit, respect the floor
+Direct feature imports can serve SPA consumers. Document the CSS dependency.
+Current property/event names may change if the replacement is clearer. What matters
+is plain embedding, supplied-data displays, native children, keyboard/focus behavior
+and no query client or hidden subscription in a chart. The proposed browser policy
+is current/previous stable Chromium, Firefox and Safari; it is a target requiring
+conformance tests, **not established support from current Chromium-only campaigns**.
 
-The Go specialist verified feature versions against the installed Go 1.27.2
-specification/API history/source. The root module declares Go 1.24; instrumentation,
-verification, verification/weaving and both examples declare Go 1.27. A newer verification compiler
-does not establish root minimum-toolchain acceptance.
+No generic public query/evaluator hierarchy, universal store, framework migration
+or mandatory custom-element superclass has a demonstrated consumer benefit here.
+That is a benefit judgment, not a compatibility prohibition.
 
-Good immediate internal candidates include `testing.B.Loop` for the proposed
-benchmarks and test-owned contexts, both within the root floor. Existing private
-generic helpers and ordinary typed prepared records are appropriate. Standard
-`maps`/`slices` helpers can simplify touched code while preserving shallow/deep-copy,
-nil and stable-order policies. Generic aliases are available at the root floor but
-need a real compatibility use case; they are not a reason to expose type machinery.
+## Evidence proportional to a useful feature
 
-`testing/synctest`, `WaitGroup.Go` and newer generic error inspection can be useful
-in already newer nested modules, subject to their documented semantics. They are
-not reasons to raise the root minimum or replace real HTTP/browser tests. Runtime
-container defaults depend on the built executable's compatibility settings: merely
-building a Go 1.24 main with a newer compiler does not establish the same
-container-aware GOMAXPROCS defaults as a Go 1.27 main. Inspect actual main/build and
-runtime settings before tuning or claiming a benefit. No GC/JSON/runtime switch,
-pooling, unsafe allocation strategy or toolchain upgrade is proposed.
+Keep enough information to explain what is being viewed and to support actual
+saved investigations, comparison baselines, reusable definitions, annotations or a
+chosen training-data workflow. Those may need a question, scope, timestamps,
+selected rows/values, labels or a small schema version. They do not automatically
+need byte-identical historical replay, cryptographic IDs or custody receipts.
 
-On the frontend, the existing custom elements, BigInt, structured clones, native
-HTML, abort signals, streams and scoped layout are already strong foundations.
-Conditional internal improvements include signal-owned listener cleanup, compatible
-abort composition and measured rendering yields/containment or optional loading.
-Document browser/version support before requiring additional platform features;
-current Chromium campaigns do not prove Firefox/Safari support. Keep exact
-integer/decimal/nanosecond strings and existing SSR/property/events. Temporal,
-Shadow DOM, a new module loader or a new gesture is not a prerequisite for cleanup.
-The usability reviewer confirmed both modern-feature matrices on these terms.
+Move optional retention/XTDB/bitemporal experiments behind their own boundary unless
+a named feature uses them. Remove per-result proof fields and transient hashing
+when they have no consumer. Useful metric attributes and why-a-value-is-unknown
+inspection remain ordinary observability details; hashes, lineage and proof chrome
+need not be primary product concepts. No existing capture/annotation feature is
+being removed merely because this review questions its infrastructure.
 
-## Verification and stopping rules
+Old disposable development artifacts can normally be declared obsolete and reseeded.
+If actual saved work or a future training dataset needs continuity, decide explicitly
+what to migrate/export. Do not silently present an old snapshot as a new read or
+change what a number means. No data or artifact has been deleted by this review.
 
-Each implementation cut needs a concrete consumer benefit, the narrow relevant
-contract checks and removal of its superseded path. Use existing wire/golden
-fixtures, rejecting controls, focused Node/Go tests, Hegel owner schedules,
-representative real OTel journeys and Bombadil/model traces as appropriate. Do not
-repeat every live campaign for a leaf helper or invent a new finite model per
-button. New structural work must keep docs/examples/skills, applicable diagrams and
-actual UI frames synchronized; this review itself requires no screenshot rerun.
+Validation should be proportionate: focused unit/property tests, a few useful
+cross-language fixtures, representative real-source/DOM cases, and adversarial
+ownership schedules. Keep Bombadil/Hegel/Quint where they catch a distinct failure
+class; consolidate repetitive finite scripts and generated receipt bundles when
+they do not. Screenshots help changed visual interactions and explanation; every
+internal cleanup does not need a new historical evidence package.
 
-Stop or split a proposed abstraction when its configuration reproduces every
-family's semantic branches, changes historical IDs, makes a display fetch data,
-loses ownership/unknown distinctions, or requires users to learn a generic algebra
-for an existing concrete task. Performance proposals need equal-output benchmarks;
-reliability proposals need a failing boundary case or explicit conformance gap.
-Ordinary app adoption remains the test of API ergonomics.
+## Modern features without consumer cleverness
+
+The Go review verifies generic aliases and benchmark/test-context APIs in 1.24,
+stable synctest and WaitGroup.Go in 1.25, generic errors.AsType in 1.26, and newer
+nested test facilities in the installed 1.27 toolchain. With a negotiated 1.27
+baseline these become available throughout the project; adopt each where it solves
+an actual problem. Synctest is for isolated in-memory concurrency, not a replacement
+for actual HTTP/browser testing. WaitGroup.Go's panic contract matters for
+instrumentation tests. Standard maps/slices operations and private generics can
+simplify preparation, but shallow copies and semantic missing/empty distinctions
+still require deliberate ownership.
+
+Newer compiler/GC/runtime behavior may already provide benefits. Check actual build
+and executable compatibility settings before tuning or attributing a speedup;
+changing a go directive can change defaults. No runtime switch, unsafe allocation
+strategy or JSON implementation swap is recommended without a measured problem.
+
+Frontend signal-owned listener cleanup and compatible abort composition are useful
+internal candidates. Task yielding, rendering containment and optional loading need
+a measured interaction/startup problem. Negotiate the browser baseline and then use
+its facilities directly; do not maintain fallback machinery solely out of habit.
+Exact numeric strings/BigInt and sensible UTC formatting remain useful, while
+Temporal or a new visual gesture needs a concrete product requirement.
