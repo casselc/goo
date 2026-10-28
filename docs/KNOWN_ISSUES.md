@@ -38,7 +38,10 @@ Saved now presents a compact typed capture table before secondary tools, with
 exact capture-clock tooltips and existing stored order/paging. This is not a
 recent-first sort or cross-store search. Definitions now uses Records, Measurements and App contracts family tabs (221),
 preserving drafts/selections and cancelling HTTP reads when their pane hides.
-Shared mobile chrome remains separate cohesion work.
+Mobile workspaces now share the compact shell/menu (222); deeper service/detail
+density and cross-surface scope/window clarity remain separate work. Definitions
+still shows the global HTTP lookback while browsing other families; R5 tracks
+removing irrelevant controls without changing frozen question bounds.
 Browser conformance is currently checked in Chromium; Firefox/Safari coverage
 is not established.
 

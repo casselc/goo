@@ -1360,12 +1360,12 @@ td details {
 .stream-entry .tail-meta .tail-counts{margin:0}
 .stream-entry .compact-tail caption{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 @media(max-width:700px){
- .live-entry-mode .app-sidebar{padding:8px 16px;min-height:48px}
- .live-entry-mode .brand{display:inline-flex;margin:0;font-size:20px}
- .live-entry-mode .entry-menu{display:block;position:absolute;right:16px;top:8px;padding:4px 10px;font-size:12px;min-height:32px}
- .live-entry-mode .app-sidebar:not(.navigation-expanded) nav,
- .live-entry-mode .app-sidebar:not(.navigation-expanded) .sidebar-bottom{display:none}
- .live-entry-mode .app-sidebar.navigation-expanded nav{margin-top:8px}
+ .app-sidebar{padding:8px 16px;min-height:48px}
+ .app-sidebar .brand{display:inline-flex;margin:0;font-size:20px}
+ .app-sidebar .entry-menu{display:block;position:absolute;right:16px;top:8px;padding:4px 10px;font-size:12px;min-height:32px}
+ .app-sidebar:not(.navigation-expanded) nav,
+ .app-sidebar:not(.navigation-expanded) .sidebar-bottom{display:none}
+ .app-sidebar.navigation-expanded nav{margin-top:8px}
  .live-entry-mode .workspace-header{padding:8px 16px 4px}
  .live-entry-mode .result-tabs button{padding:6px 8px;font-size:12px}
  .live-entry-mode .workspace-content{padding-inline:12px}

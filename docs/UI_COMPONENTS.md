@@ -1270,3 +1270,8 @@ is scoped to `.capture-catalog` in product CSS; the display primitive owns no
 store/client. Focusable UTC metadata retains the exact stored capture clock.
 Retry-recovery cards remain a separate consumer of their existing card style.
 See [the real stored-page journey](../journeys/220-saved-catalog-storyboard.md).
+
+The workspace shell owns the shared responsive Menu disclosure (222), including
+Escape/focus and route-selection collapse. Activity owns its stream and local
+controls; mounting or disposing it does not create or remove navigation. Menu
+disclosure itself makes no source reads or publications.

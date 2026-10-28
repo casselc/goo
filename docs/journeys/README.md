@@ -2516,3 +2516,7 @@ stored-page Bombadil actor covers list/recovery navigation without telemetry rea
 221 adds [Definition families](../../journeys/221-definition-families-storyboard.md):
 keyboard discovery, retained drafts and filters, and source cancellation when an
 App contracts preview becomes hidden.
+
+222 adds [shared mobile navigation](../../journeys/222-shared-mobile-navigation-storyboard.md):
+compact entry across workspaces, keyboard/focus behavior, retained local filters,
+and a mobile workspace Bombadil campaign.

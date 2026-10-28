@@ -1,5 +1,24 @@
 # Validation record
 
+## Shared compact mobile navigation — 222 (2026-10-28 UTC)
+
+Workspace now owns one static Menu disclosure and its route/Escape/focus behavior.
+Activity no longer creates or disposes navigation. At widths through 700px all
+workspaces use the compact shell; desktop navigation remains visible. The menu
+precedes its links in keyboard order and controls main and secondary navigation.
+Opening/closing it changes only local disclosure state.
+
+Validation: all 583 frontend tests pass. Real Chromium 222 checks pass at
+320/390/700px for a collapsed header no taller than 65px, disclosure state,
+Escape focus, zero menu-only API requests, route collapse/heading focus, retained
+definition filter and desktop restoration. The mobile workspace Bombadil campaign
+passes with the shared-menu invariant and visible navigation gestures. The 221
+family/cancellation and 40 source-handoff journeys also pass after shell adoption.
+The final Enter/Tab sequence passes at all three widths. Activity 102 also passes
+with one owned stream, paused-return behavior, its observed Quint ledger check
+and Bombadil campaign. Current 222/40/102 screenshots reflect the shared shell. Frozen questions, source
+read ownership and saved volumes are unchanged.
+
 ## Definition family discovery — 221 (2026-10-28 UTC)
 
 Definitions now separates Records, Measurements and App contracts through the
