@@ -140,9 +140,10 @@ recorded in [VALIDATION.md](VALIDATION.md).
 
 The [display library](docs/UI_COMPONENTS.md#native-module-entrypoints) now has a
 native module entrypoint: `<script type="module" src="/display.mjs"></script>`.
-Core/chart features also support direct imports, supplied SSR attributes and SPA
-properties, without an application runtime. Remaining mixed widgets and owners
-use a private adapter while their dependencies are separated.
+Core/chart, attribute/record, exception, field-picker, tag and aligned-numeric
+features support direct imports, supplied SSR attributes and SPA properties.
+The gallery loads only this public graph. Application owners still use a private
+adapter pending their import cutover.
 
 The semantic core is Go, with a Python lab/proxy and framework-neutral display
 Web Components. Source adapters lower typed questions to parameterized ClickHouse

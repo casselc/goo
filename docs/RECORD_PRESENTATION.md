@@ -48,9 +48,17 @@ Open trace remains a separately named source action in each application adapter.
 ## Server HTML and SPA use
 
 The [component reference](../ui/components.html) contains synthetic server-rendered
-fixtures. Load `components.mjs`, `evidence-summary.mjs`, `service-identity.js` and
-`record-presentation.js`, plus `record-presentation.css`. The application detail
-helper also uses `attributes.js`. For example:
+fixtures. Import `record-presentation.mjs` as a native module; its core, exact
+clock, service identity, attribute and exception dependencies load automatically.
+Load `components.css` and `record-presentation.css`, plus `exception-detail.css`
+when using exception details. No application namespace adapter is required.
+
+```js
+import {table, detail} from '/record-presentation.mjs';
+```
+
+Applications own supplied rows and action callbacks, along with any source reads,
+navigation and persistence. The same API works outside Goo's application shell.
 
 ```html
 <goo-record-summary signal="logs"

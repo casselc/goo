@@ -10,7 +10,7 @@
  // Exact, signal-local string predicates; draft changes never mutate the applied selector.
  class ScopeFilters{
   constructor(){this.draft=[];this.applied=[];this.base=null;this.appliedBase=null}
-  stage(field,value,mode){const attributes=global.GooAttributes||(typeof require==='function'?require('./attributes'):null);if(!attributes.selectable({field,value})||!['include','exclude'].includes(mode))throw Error('Choose a recorded string field.');const p={field:structuredClone(field),op:mode==='include'?'eq':'ne',value},key=x=>JSON.stringify([x.field.kind,x.field.key,x.value]),i=this.draft.findIndex(x=>key(x)===key(p));if(i>=0)this.draft[i]=p;else{if(this.draft.length>=16)throw Error('Use at most 16 live filters.');this.draft.push(p)}}
+  stage(field,value,mode){const attributes=global.GooAttributes||(typeof require==='function'?require('./attributes.mjs'):null);if(!attributes.selectable({field,value})||!['include','exclude'].includes(mode))throw Error('Choose a recorded string field.');const p={field:structuredClone(field),op:mode==='include'?'eq':'ne',value},key=x=>JSON.stringify([x.field.kind,x.field.key,x.value]),i=this.draft.findIndex(x=>key(x)===key(p));if(i>=0)this.draft[i]=p;else{if(this.draft.length>=16)throw Error('Use at most 16 live filters.');this.draft.push(p)}}
   replace(where){this.base=structuredClone(where||null);this.draft=[]}
   remove(index){this.draft.splice(index,1)}
   apply(){this.applied=structuredClone(this.draft);this.appliedBase=structuredClone(this.base)}

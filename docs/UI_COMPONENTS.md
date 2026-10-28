@@ -23,8 +23,10 @@ future priority. Earlier audits are dated design inputs, not another execution q
 | `goo-table` | Caller-owned native table; density, labels, optional sticky header | Native-table section below; no row/query ownership. |
 | `goo-result-state` | Explicit `state`, caller-authored text/actions | Result-state section below. |
 | `goo-facet-list` | Caller-owned rows; local `query` / `.query` | Facet section below; counts/scales remain supplied. |
-| `goo-field-value`, `goo-attribute-list` | JSON `value` / `.value`, explicit presence; caller-owned field list | Typed-value section below; [source](../ui/attributes.js). |
+| `goo-field-value`, `goo-attribute-list` | JSON `value` / `.value`, explicit presence; caller-owned field list | Typed-value section below; [source](../ui/attributes.mjs). |
 | `goo-metric-comparison`, `goo-comparison-context` | `data` JSON / `.data` | Supplied paired values and independent side clocks; [comparison context](COMPARISON_CONTEXT.md). |
+| `goo-trace-page-breakdown` | Supplied rows/truncation / `.data`; row-selection intent | Observed page intervals and diagnostics; [source](../ui/trace-page-breakdown-view.mjs). |
+| `goo-trace-comparison` | Supplied baseline/current trace pages / `.data` | Page comparison and exact attribute differences; [source](../ui/trace-comparison-view.mjs). |
 | `goo-trace-waterfall` | `data` / `.data`, controlled `selected-index` / `.selectedIndex` | [Waterfall](UI_WATERFALL.md); supplied spans, not complete-trace inference. |
 | `goo-aligned-histogram` | `data` JSON / `.data`, count/share mode, optional range intent | [Aligned distributions](DISTRIBUTION_COMPARISONS.md); supplied exact paired bins, no source ownership. |
 | `goo-time-bars` | `data` / `.data`, controlled key and optional range intent | [Time bars](UI_TIME_BARS.md); exact supplied count domain. |
@@ -37,20 +39,25 @@ future priority. Earlier audits are dated design inputs, not another execution q
 | `goo-record-summary`, `goo-record-context` | Supplied `record`, signal, optional bounded companion `records` | [Record presentation](RECORD_PRESENTATION.md). |
 | `goo-record-columns` | `model` JSON / `.model`; controlled layout intent | [Supplied column picker](RECORD_COLUMNS.md). |
 | `goo-grouping-control` | `data` JSON / `.data`; controlled grouping intent | [Grouping control](GROUPING_CONTROL.md). |
-| `goo-tag-list` | `tags` JSON / `.tags`, optional `interactive` | Authored tag display/selection; [source](../ui/meaning.js), [authored context](WORKBENCH_ANNOTATIONS.md). |
+| `goo-tag-list` | `tags` JSON / `.tags`, optional `interactive` | Authored tag display/selection; [source](../ui/tag-list.mjs), [authored context](WORKBENCH_ANNOTATIONS.md). |
 
 ## Native module entrypoints
 
-The core and chart graph now uses native ES modules. Load a single feature for
-its element/helpers, or use [display.mjs](../ui/display.mjs) to register the graph:
+The supplied-data display graph uses native ES modules, including records,
+attributes, field pickers, exceptions, tags and aligned numeric distributions.
+Load a single feature for its element/helpers, or use [display.mjs](../ui/display.mjs) to register the graph:
 
 ```html
 <script type="module" src="/display.mjs"></script>
 ```
 
-The entry exports named feature namespaces (`UI`, `Waterfall`, `ComparisonVisual`,
+The entry exports named feature namespaces: `UI`, `Waterfall`, `ComparisonVisual`,
 `TimeBars`, `ValueTimeline`, `ChartFrame`, `BucketHeatmap`, `ComparisonSeries`,
-`TimeRange`, `EvidenceSummary`, `GroupingControl`, `StateObservations`). Direct
+`TimeRange`, `EvidenceSummary`, `GroupingControl`, `StateObservations`,
+`FieldPresentation`, `Attributes`, `RecordPresentation`, `RecordColumns`,
+`ExceptionDetail`, `ServiceIdentity`, `AlignedHistogram`, `TagList`,
+`TracePageBreakdown`, `TracePageBreakdownView`, `TracePageComparison` and
+`TraceComparisonView`. Direct
 feature imports include their own JavaScript dependencies:
 
 ```html
@@ -73,19 +80,34 @@ for the existing application test harness; external integrations should import.
 Browser conformance was checked in Chromium only; Firefox/Safari conformance is
 not yet established.
 
-The attribute/record, authored-tag and aligned-numeric widgets listed above still
-have legacy application dependencies and are **outside this first module cut**.
-The application and mixed gallery use the private
-[app-display.mjs](../ui/app-display.mjs) adapter to supply namespaces to those
-owners. It imports the same module implementations, contains no display logic,
-and must go when the remaining application graph moves to explicit imports.
-Embedders of the converted graph do not need it. `GooUI` and other converted
-`Goo*` helper names in the application-adoption notes below refer to that private
-adapter; external consumers import `UI`, `ComparisonVisual`, etc. from
-`/display.mjs`, or named helpers directly from the feature. The gallery's remaining legacy
-scripts and application scripts are loaded as ordered module scripts so the
-adapter executes before their initialization. No second display implementation
-or classic-script export path is retained.
+The gallery loads only `/display.mjs`. It creates no `Goo*` namespaces and loads
+no query, annotation, retention or numeric-question owners. Record detail imports
+its attribute/exception presenters, aligned histograms import pure numeric bins
+and exact formatters, and tags import only core DOM helpers. Log-pattern labels
+use the same versioned pure identity decoder as application validation.
+
+Application owners still use the private [app-display.mjs](../ui/app-display.mjs)
+adapter while their graph migrates to explicit imports. It maps the same modules
+and three extracted helpers to legacy owner names; it contains no display logic.
+`Goo*` helper references in application-adoption notes below refer to that adapter.
+External consumers import namespaces from `/display.mjs` or named feature helpers.
+The adapter is not needed by any supplied-data element or by the gallery. Removing
+it from the main app remains a separate application-owner cutover.
+
+Optional action callbacks remain caller-owned. For example:
+
+```js
+import {mount} from '/attributes.mjs';
+mount(document.querySelector('#details'), suppliedRecord, {
+  canTraceSearch: () => canAct,
+  onTraceSearch: intent => stageTraceQuestion(intent),
+});
+```
+
+The supplied callback works without `GooVisuals` or an app runtime. The shared
+visibility guard rejects hidden/detached trace actions; the element never executes
+the question. Tag validation/rendering is similarly separate from annotation reads
+and writes. No second display implementation or classic-script export path is kept.
 
 ```mermaid
 flowchart LR
@@ -319,7 +341,7 @@ and full-population explanatory status stay with the caller. Reconnects and
 searches retain row/action nodes. App adapters should show an explicit local
 no-match state, distinct from absence of source records.
 
-`goo-field-value` (attributes.js) accepts JSON `value` attributes or detached
+`goo-field-value` (attributes.mjs) accepts JSON `value` attributes or detached
 `.value` properties. It renders text with a type label, preserving empty strings,
 null, false, zero and exact integer strings. `state` / `.state` distinguishes
 present, missing, unknown and unavailable. With no supplied value, presence
@@ -802,7 +824,7 @@ retained-child, mobile and zero-source-effect contracts.
 ## Supplied exception details
 
 `goo-exception-details` is a passive display element exported by
-`ui/exception-detail.js`, styled by `ui/exception-detail.css`. It accepts the
+`ui/exception-detail.mjs`, styled by `ui/exception-detail.css`. It accepts the
 standard `data` JSON attribute or detached/connected `.data` property:
 
 ```html
@@ -911,7 +933,7 @@ the existing inspector and coordinates page and full-query highlights.
 
 `<goo-trace-comparison>` is a passive display of two bounded supplied pages. Load
 `components.mjs`, `comparison-visual.mjs`, `trace-page-breakdown.js`,
-`trace-page-breakdown-view.js`, `trace-page-comparison.js`, `attributes.js`, and
+`trace-page-breakdown-view.js`, `trace-page-comparison.js`, `attributes.mjs`, and
 `trace-comparison-view.js`, with `trace-comparison-view.css`. Set `.data` to
 `{baseline:{rows,truncated},selection:{rows,truncated}}`; each side accepts at most
 1,000 rows. A JSON `data` attribute supports server rendering up to 64 KiB;

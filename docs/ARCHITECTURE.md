@@ -212,9 +212,15 @@ children across upgrade, attribute changes and reconnects; adapters own row
 patches and status explanations. Implemented live transport remains application-owned, outside display elements.
 
 Facets retain caller rows and filter them locally; typed field values render
-JSON-compatible snapshot values with explicit presence. `attributes.js` remains
-the app adapter for record mapping and query actions while exporting the reusable
-value/list elements. Components do not interpret OTel namespaces or issue reads.
+JSON-compatible snapshot values with explicit presence. `attributes.mjs` maps
+supplied records and renders local actions; owners receive explicit intent
+callbacks and execute any query/navigation. It imports field presentation and a
+shared visibility rule, never an application visualization owner. All supplied-data
+elements are available through the closed native `display.mjs` graph. Numeric
+formatting/bins, pattern identity decoding and tag rendering are pure display
+helpers shared with legacy application owners. The gallery uses that entry alone;
+only the main application's remaining owners need the private namespace adapter.
+Components do not infer OTel aliases or issue source reads.
 
 ## Live observation adapter
 
@@ -395,7 +401,7 @@ Local selection does not mutate the fixed draft or execute a query.
 
 ## Record field display boundary — B2 first slice
 
-`field-presentation.js` shares qualified field/operator labels and record predicate
+`field-presentation.mjs` shares qualified field/operator labels and record predicate
 text across fixed chips, the existing live selector summary and record package
 handoffs. It consumes supplied predicates without changing them. Shared Go/JS wire
 fixtures pin omitted empty defaults, field-family separation and exact decimal

@@ -2,9 +2,13 @@
 
 The first B2 slice shares pure record-field display helpers across live selector
 summaries, fixed filter chips and record-package instrumentation field handoffs.
-`ui/field-presentation.js` owns qualified field labels, operator labels, leaf chip
+`ui/field-presentation.mjs` owns qualified field labels, operator labels, leaf chip
 parts and nested selector text. It never validates a source binding, changes a
 predicate, coerces numeric attributes, issues requests or publishes evidence.
+It imports only pure log-pattern identity decoding; it does not load the log-query
+owner. External consumers use native imports, for example
+`import {label} from '/field-presentation.mjs'`.
+
 
 | Record predicate | Display distinction |
 | --- | --- |

@@ -33,7 +33,7 @@ Activity layouts are page-local and per signal; saving an Activity preference
 across browser sessions is not implemented.
 
 The passive `goo-record-columns` element and supplied-row projector live in
-`ui/record-columns.js`; applications own filtering, saving and execution. See
+`ui/record-columns.mjs`; applications own filtering, saving and execution. See
 [component contract](UI_COMPONENTS.md) and
 [population ownership](POPULATION_WORKSPACE.md).
 

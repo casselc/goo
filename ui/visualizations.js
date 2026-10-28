@@ -6,7 +6,7 @@
   const waterfallAPI=()=>typeof module!=='undefined'?require('./waterfall.mjs'):global.GooWaterfall;
   const layout=rows=>waterfallAPI().layout(rows);
   function node(tag, text, cls) { const n = document.createElement(tag); if (text !== undefined) n.textContent = text; if (cls) n.className = cls; return n; }
-  function actionVisible(element){return !!element?.isConnected&&!document.hidden&&!element.closest('[hidden], [aria-hidden="true"], details:not([open])')&&element.getClientRects().length>0}
+  const actionVisible=typeof module!=='undefined'?require('./dom-visibility.mjs').actionVisible:global.GooUI.actionVisible;
   const pageHighlights=new WeakMap();
   function waterfall(container, rows, truncated, relatedActions, detailsId = 'spanDetails', {facts,canAct=()=>true} = {}) {
     let page=null,analysis=null;if(global.GooTracePageBreakdown&&global.GooTracePageBreakdownView){try{analysis=global.GooTracePageBreakdown.analyze(rows,!!truncated);page=node('goo-trace-page-breakdown');page.data={rows,truncated:!!truncated};container.append(page)}catch{}}

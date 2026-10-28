@@ -8,11 +8,7 @@ test('display entry imports a closed passive graph without publishing namespaces
   assert.equal(display.UI, await import('../ui/components.mjs'));
   assert.equal(display.ComparisonVisual, await import('../ui/comparison-visual.mjs'));
   assert.equal(display, await import('../ui/display.mjs'));
-  assert.deepEqual(Object.keys(display).sort(), [
-    'BucketHeatmap', 'ChartFrame', 'ComparisonSeries', 'ComparisonVisual',
-    'EvidenceSummary', 'GroupingControl', 'StateObservations', 'TimeBars',
-    'TimeRange', 'UI', 'ValueTimeline', 'Waterfall',
-  ]);
+  assert.deepEqual(Object.keys(display).sort(), ['AlignedHistogram', 'Attributes', 'BucketHeatmap', 'ChartFrame', 'ComparisonSeries', 'ComparisonVisual', 'EvidenceSummary', 'ExceptionDetail', 'FieldPresentation', 'GroupingControl', 'RecordColumns', 'RecordPresentation', 'ServiceIdentity', 'StateObservations', 'TagList', 'TimeBars', 'TimeRange', 'TraceComparisonView', 'TracePageBreakdown', 'TracePageBreakdownView', 'TracePageComparison', 'UI', 'ValueTimeline', 'Waterfall']);
   assert.deepEqual(Object.getOwnPropertyNames(globalThis).filter(k => !before.has(k)), []);
 
   // The public graph must remain independent of app owners and their bridge.
@@ -29,7 +25,7 @@ test('display entry imports a closed passive graph without publishing namespaces
     }
   }
   await visit(new URL('../ui/display.mjs', import.meta.url));
-  assert.equal(visited.size, 13);
+  assert.equal(visited.size, 29);
 });
 
 test('feature imports expose the existing exact-data helpers through ESM', async () => {

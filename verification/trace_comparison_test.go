@@ -181,7 +181,7 @@ func TestHegelTraceComparisonJavaScriptParity(t *testing.T) {
 			return
 		}
 		input, _ := json.Marshal(map[string]any{"baseline": a, "selection": b, "baselineTruncated": at, "selectionTruncated": bt})
-		cmd := exec.Command("node", "-e", `const fs=require('fs'),m=require('../ui/trace-page-comparison.js'),x=JSON.parse(fs.readFileSync(0,'utf8'));process.stdout.write(JSON.stringify(m.compare(x.baseline,x.selection,x.baselineTruncated,x.selectionTruncated)));`)
+		cmd := exec.Command("node", "-e", `const fs=require('fs'),m=require('../ui/trace-page-comparison.mjs'),x=JSON.parse(fs.readFileSync(0,'utf8'));process.stdout.write(JSON.stringify(m.compare(x.baseline,x.selection,x.baselineTruncated,x.selectionTruncated)));`)
 		cmd.Stdin = bytes.NewReader(input)
 		raw, e := cmd.Output()
 		if e != nil {

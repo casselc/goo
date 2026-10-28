@@ -38,10 +38,12 @@ CI additionally checks instrumentation and both examples. Native verification
 compilation is not a full Hegel/Quint or woven campaign result. See
 [compiler setup and runtime defaults](PORTABLE_COMPILER.md) and
 [the current validation entry](../VALIDATION.md#unified-go-baseline-2026-10-28).
-The first native ESM display cut is also implemented: core/chart modules have
-explicit imports and a public `display.mjs` entry. The app/gallery temporarily use
-one private namespace adapter for remaining legacy owners; the converted display
-graph has no global/CommonJS exports. See [the embedding contract](UI_COMPONENTS.md#native-module-entrypoints).
+The native ESM display graph is implemented, including attributes/records, field
+pickers, exceptions, tags and aligned numeric distributions. Pure formatters, bins,
+pattern decoding and visibility rules are separate from application owners. The
+gallery loads only `display.mjs`, with no app namespaces or source requests.
+The main app still uses a private namespace adapter pending owner migration.
+See [the embedding contract](UI_COMPONENTS.md#native-module-entrypoints).
 The broader application graph and remaining cuts below are still proposals.
 
 ## Preferred cuts

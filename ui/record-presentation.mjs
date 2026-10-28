@@ -1,6 +1,11 @@
+import * as UI from './components.mjs';
+import * as EvidenceSummary from './evidence-summary.mjs';
+import * as ServiceIdentity from './service-identity.mjs';
+import * as Attributes from './attributes.mjs';
+import * as ExceptionDetail from './exception-detail.mjs';
 /* Supplied-record presentation only: no transport, clocks, selection or navigation. */
-(function(global){
- const ui=typeof module!=='undefined'?require('./components.mjs'):global.GooUI,evidence=typeof module!=='undefined'?require('./evidence-summary.mjs'):global.GooEvidenceSummary,identity=typeof module!=='undefined'?require('./service-identity'):global.GooServiceIdentity;
+const global=globalThis;
+ const ui=UI,evidence=EvidenceSummary,identity=ServiceIdentity;
  const validID=(value,n)=>typeof value==='string'&&new RegExp('^[a-f0-9]{'+n+'}$').test(value)&&!/^0+$/.test(value);
  function describe(record,signal){const r=record||{},time=typeof r.timestamp_ns==='string'&&r.timestamp_ns.length<=32?evidence.unixNs(r.timestamp_ns):null,namespace=r.ResourceAttributes?.['service.namespace'];let duration='Duration unavailable';try{if(typeof r.duration_ns==='string'&&/^\d{1,20}$/.test(r.duration_ns)&&BigInt(r.duration_ns)<=18446744073709551615n)duration=ui.durationMS(r.duration_ns)}catch{}
   const ns=identity.namespace(typeof namespace==='string'?namespace:undefined),name=typeof r.ServiceName==='string'?(r.ServiceName||'Empty service name'):'Service not reported';return {qualifiedService:identity.name(name,ns),signal:signal==='spans'?'spans':'logs',time:time?{...time,compact:time.exact.split('T')[1].slice(0,12)+'Z'}:null,service:typeof r.ServiceName==='string'?(r.ServiceName||'Empty service name'):'Service not reported',namespace:typeof namespace==='string'?(namespace||'Empty namespace'):'Namespace not reported',message:signal==='spans'?(typeof r.SpanName==='string'&&r.SpanName||'Unnamed span'):typeof r.Body==='string'?(r.Body||'Empty log body'):'Log body unavailable',label:signal==='spans'?(typeof r.StatusCode==='string'&&r.StatusCode||'Unreported status'):(typeof r.SeverityText==='string'&&r.SeverityText||'Unset severity'),duration:signal==='spans'?duration:null};
@@ -13,8 +18,8 @@
  function description(record){const e=ui.node('span');e.append(service(record),' · ',timestamp(record));return e}
  // Supplied rows only. Owners retain insertion, selection, actions and source lifecycle.
  function table({signal='logs',compact=false,mobileCompact=compact,context=true,labels,caption='Supplied record observations',label=caption}={}){labels=labels||['UTC','Service',signal==='spans'?'Span / duration':'Severity / body',...(context?[signal==='logs'?'Trace / time context':'Trace context']:[])];const viewport=ui.node('goo-table'),element=ui.node('table'),head=ui.node('thead'),header=ui.node('tr'),body=ui.node('tbody');viewport.setAttribute('density','compact');if(mobileCompact)viewport.setAttribute('record-layout','compact');viewport.setAttribute('aria-label',label);element.append(ui.node('caption',caption));for(const [i,text] of labels.entries()){const th=ui.node('th',text);th.scope='col';th.dataset.recordCore=['utc','service','summary','context'][i];header.append(th)}head.append(header);element.append(head,body);viewport.append(element);return {viewport,element,header,body,row(record,kind=signal){const row=ui.node('tr'),cells=labels.map((text,i)=>{const cell=ui.node('td');cell.dataset.label=text;cell.dataset.recordCore=['utc','service','summary','context'][i];return cell});cells[0].append(timestamp(record,{compact,mobileCompact}));cells[1].append(service(record));cells[2].append(summary(record,kind,{compact}));row.append(...cells);return {row,cells}}}}
- function attributes(host,record,options={}){return global.GooAttributes.mount(host,record,{...options,renderField:entry=>entry.key==='timestamp_ns'&&!entry.field?timestamp(record):options.renderField?.(entry)})}
- function detail(record,signal,options={},records=[]){const e=ui.node('div',undefined,'record-detail');e.append(summary(record,signal));const context=ui.node('goo-record-context');context.setAttribute('signal',signal);context.record=record;context.records=records.map(r=>({TraceId:r.TraceId,SpanId:r.SpanId,ParentSpanId:r.ParentSpanId}));e.append(context);attributes(e,record,options);const exceptions=global.GooExceptionDetail||(typeof module!=='undefined'?require('./exception-detail'):null);exceptions?.mount(e,record,signal);return e}
+ function attributes(host,record,options={}){return Attributes.mount(host,record,{...options,renderField:entry=>entry.key==='timestamp_ns'&&!entry.field?timestamp(record):options.renderField?.(entry)})}
+ function detail(record,signal,options={},records=[]){const e=ui.node('div',undefined,'record-detail');e.append(summary(record,signal));const context=ui.node('goo-record-context');context.setAttribute('signal',signal);context.record=record;context.records=records.map(r=>({TraceId:r.TraceId,SpanId:r.SpanId,ParentSpanId:r.ParentSpanId}));e.append(context);attributes(e,record,options);const exceptions=ExceptionDetail;exceptions?.mount(e,record,signal);return e}
  if(global.customElements&&global.HTMLElement){
   class SuppliedRecord extends global.HTMLElement{
    static get observedAttributes(){return ['record','records','signal','compact']}
@@ -32,5 +37,4 @@
   if(!global.customElements.get('goo-record-summary'))global.customElements.define('goo-record-summary',GooRecordSummary);
   if(!global.customElements.get('goo-record-context'))global.customElements.define('goo-record-context',GooRecordContext);
  }
- const api={describe,ancestry,validID,timestamp,service,summary,description,attributes,detail,table};if(typeof module!=='undefined')module.exports=api;else global.GooRecordPresentation=api;
-})(typeof window==='undefined'?globalThis:window);
+ export {describe,ancestry,validID,timestamp,service,summary,description,attributes,detail,table};

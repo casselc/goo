@@ -2,8 +2,7 @@
 (function(global){
  const protocol=()=>typeof module!=='undefined'?require('./question-protocol'):global.GooQuestionProtocol;
  const decimal=s=>typeof s==='string'&&/^(0|[1-9][0-9]*|-[1-9][0-9]*)$/.test(s),count=s=>typeof s==='string'&&/^(0|[1-9][0-9]*)$/.test(s)&&s.length<=20&&BigInt(s)<=18446744073709551615n;
- function edges(type){if(type==='decimal64')type='int64';if(!['int64','uint64'].includes(type))throw Error('Unsupported integer type.');const values=[];if(type==='int64')for(let i=63;i>=0;i--)values.push(String(-(1n<<BigInt(i))));values.push('0');for(let i=0;i<=(type==='int64'?63:64);i++)values.push(String(1n<<BigInt(i)));return values}
- function displayBound(value,binding){const api=typeof module!=='undefined'?require('./numeric-measures'):global.GooNumericMeasures;return api.coefficientText(value,binding?.scale)}
+ const {edges,displayBound}=typeof module!=='undefined'?require('./numeric-bins.mjs'):global.GooNumericBins;
  function model(data){try{
   const q=data?.question,h=data?.numericHistogram,s=data?.numeric;if(!q?.numeric||!q.numericHistogram||q.numericHistogram.binning!=='powers-of-two'||h?.binning!=='powers-of-two'||!s||!['observed','no_data'].includes(data.state))return null;
   protocol().validateNumericPredicate({numeric:q.numeric,op:'valid'});const bounds=edges(q.numeric.type);if(!Array.isArray(h.bins)||h.bins.length!==bounds.length-1||!count(data.count)||!['valid','missing','empty','invalid','count'].every(k=>count(s[k])))return null;

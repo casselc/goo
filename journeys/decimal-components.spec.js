@@ -108,7 +108,7 @@ test('180 passive decimal components preserve scaled SSR and detached SPA labels
   }));
   await page.goto(base + '/decimal-components-standalone');
   await page.locator('#spa').evaluate((e, data) => e.data = data, aligned('share'));
-  for (const script of ['app-display.mjs', 'numeric-measures.js', 'time-bars.mjs', 'numeric-distribution.js', 'aligned-histogram.js', 'comparison-visual.mjs', 'numeric-comparison.js']) await page.addScriptTag({type:'module',url: base + '/' + script
+  for (const script of ['app-display.mjs', 'numeric-measures.js', 'time-bars.mjs', 'numeric-distribution.js', 'aligned-histogram.mjs', 'comparison-visual.mjs', 'numeric-comparison.js']) await page.addScriptTag({type:'module',url: base + '/' + script
   });
   for (const id of ['ssr', 'spa']) {
     await expect(page.locator('#' + id + ' goo-time-bars')).toHaveCount(2);

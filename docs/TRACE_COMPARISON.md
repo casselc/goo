@@ -1,6 +1,6 @@
 # Supplied trace-page comparison
 
-`exploration.CompareTracePages(baselineRows, selectionRows, baselineTruncated, selectionTruncated)` is the normative Go projection. `GooTracePageComparison.compare(...)` mirrors it for supplied-data display. Both accept at most 1,000 observations per page. They perform no source reads, HTTP requests, persistence or capture mutation. The shared fixtures in `tests/fixtures/trace-page-comparison.json` check the complete Go/JavaScript result.
+`exploration.CompareTracePages(baselineRows, selectionRows, baselineTruncated, selectionTruncated)` is the normative Go projection. `compare(...)` from `trace-page-comparison.mjs` mirrors it for supplied-data display. Both accept at most 1,000 observations per page. They perform no source reads, HTTP requests, persistence or capture mutation. The shared fixtures in `tests/fixtures/trace-page-comparison.json` check the complete Go/JavaScript result.
 
 The version is `goo/trace-page-comparison/v1`. Each side includes the existing `goo/trace-page-breakdown/v1` analysis, its timing extent, and reported trace classification. All durations and signed differences are exact integer nanosecond strings. Missing numeric properties and explicit nulls mean unavailable, while `"0"` means known zero.
 

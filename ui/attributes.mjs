@@ -1,6 +1,9 @@
+import * as FieldPresentation from './field-presentation.mjs';
+import * as UI from './components.mjs';
+import {actionVisible} from './dom-visibility.mjs';
 /* Structured record inspection. Telemetry is always rendered as text, never HTML. */
-(function(global){
- const presentation=()=>typeof module!=='undefined'?require('./field-presentation'):global.GooFieldPresentation;
+const global=globalThis;
+ const presentation=()=>FieldPresentation;
  const maps=new Set(['ResourceAttributes','Attributes','SpanAttributes','LogAttributes']);
  const columns={ServiceName:'service',SpanName:'name',TraceId:'trace_id',SpanId:'span_id',ScopeName:'scope',ScopeVersion:'scope_version',StatusCode:'status',SpanKind:'kind',duration_ns:'duration_ns',duration_bucket:'duration_bucket',Body:'body',body_pattern_v1:'body_pattern_v1',SeverityText:'severity',severity_number:'severity_number',exception_event:'exception_event',exception_type:'exception_type',exception_type_state:'exception_type_state'};
  const node=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n};
@@ -100,7 +103,7 @@
      const custom=renderField?.(entry);if(custom)value.append(custom);else if(entry.field?.kind==='column'&&entry.field.key==='body_pattern_v1'&&typeof entry.value==='string'){const exact=node('details');exact.append(node('summary','Exact pattern identity'),valueNode(entry.value));value.append(node('span',presentation()?.valueText(entry.field,entry.value)),exact)}else value.append(valueNode(entry.value));
      const copyButton=node('button','Copy');copyButton.type='button';copyButton.setAttribute('aria-label','Copy value for '+entry.key);copyButton.onclick=()=>copy(entry.value,entry.key);actions.append(copyButton);
      if(selectable(entry)&&onFacet)for(const mode of ['include','exclude']){const action=node('button',mode==='include'?'Include':'Exclude');action.type='button';action.disabled=!canRefine();action.setAttribute('aria-label',(mode==='include'?'Include ':'Exclude ')+entry.field.kind+':'+entry.field.key+' from record');action.onclick=()=>{if(!canRefine())return;onFacet(structuredClone(entry.field),entry.value,mode);status.textContent=facetHint||'Staged '+mode+' for '+entry.field.kind+':'+entry.field.key+'. Apply or Open in the selection tray; displayed measurements are unchanged.'};actions.append(action)}
-     if(onTraceSearch&&selectable(entry)){const traceSearch=node('button','Find traces containing…');traceSearch.type='button';traceSearch.disabled=!canTraceSearch();traceSearch.setAttribute('aria-label','Find traces containing '+entry.field.kind+':'+entry.field.key);traceSearch.onclick=()=>{if(canTraceSearch()&&global.GooVisuals?.actionVisible?.(traceSearch))onTraceSearch({field:structuredClone(entry.field),op:'eq',value:entry.value},traceSearch)};actions.append(traceSearch)}
+     if(onTraceSearch&&selectable(entry)){const traceSearch=node('button','Find traces containing…');traceSearch.type='button';traceSearch.disabled=!canTraceSearch();traceSearch.setAttribute('aria-label','Find traces containing '+entry.field.kind+':'+entry.field.key);traceSearch.onclick=()=>{if(canTraceSearch()&&actionVisible(traceSearch))onTraceSearch({field:structuredClone(entry.field),op:'eq',value:entry.value},traceSearch)};actions.append(traceSearch)}
      if(onPlot&&plottable(entry.field)){const plot=node('button','Plot values');plot.type='button';plot.disabled=!canPlot();plot.setAttribute('aria-label','Plot values of '+entry.field.kind+':'+entry.field.key);plot.title='Declare a numeric type and unit, then stage a full-population distribution. No source read until Run.';plot.onclick=()=>{if(canPlot())onPlot(structuredClone(entry.field),plot)};actions.append(plot)}
      if(entry.field&&typeof entry.value==='string'&&onFilter){const filter=node('button','Filter and run');filter.type='button';filter.disabled=!canRefine();filter.title=filter.disabled?'Choose All filters to narrow this question.':'Read a fresh result with this exact value in the fixed window';filter.setAttribute('aria-label','Filter and run by '+entry.field.kind+':'+entry.field.key);filter.onclick=()=>onFilter(entry.field,entry.value);actions.append(filter)}
      if(entry.field&&onBreakdown){const breakdown=node('button','Break down and run');breakdown.type='button';if(h)breakdown.title='Group by '+h.label+' · '+entry.field.kind+':'+entry.field.key;breakdown.setAttribute('aria-label','Break down and run by '+entry.field.kind+':'+entry.field.key);breakdown.onclick=()=>onBreakdown(entry.field);actions.append(breakdown)}
@@ -119,7 +122,7 @@
  function mountStream(container,stream,options={}){const record=streamRecord(stream),model=groups(record);model[2].name='Metric attributes';return mountModel(container,record,model,options)}
  // Application adapter for an already supplied native stream; no source client.
  function streamInspection(stream){
-  const snapshot=structuredClone(stream),root=node('div',undefined,'stream-inspection'),button=node('button','Inspect stream'),panel=node('section'),inspector=global.GooUI.inspector(panel,{onClose:()=>button.setAttribute('aria-expanded','false')});
+  const snapshot=structuredClone(stream),root=node('div',undefined,'stream-inspection'),button=node('button','Inspect stream'),panel=node('section'),inspector=UI.inspector(panel,{onClose:()=>button.setAttribute('aria-expanded','false')});
   button.type='button';button.setAttribute('aria-expanded','false');
   // The shared shell owns close-to-opener focus and local body/scroll retention.
   button.onclick=()=>{if(!inspector.has('stream')){const content=node('div');content.append(node('p','Supplied stream identity only; inspection does not reread telemetry.','evidence-note'));mountStream(content,snapshot);inspector.show({key:'stream',title:'Native stream identity',description:snapshot.name+' ['+snapshot.unit+']',content,opener:button})}else inspector.show({key:'stream',title:'Native stream identity',opener:button});button.setAttribute('aria-expanded','true')};root.append(button,panel);return root;
@@ -131,5 +134,4 @@
   const raw=node('details',undefined,'raw-record');raw.append(node('summary','Raw record'),node('pre',JSON.stringify(record,null,2)));detail.append(raw);
   let built=false;detail.addEventListener('toggle',()=>{if(detail.open&&!built){built=true;mount(host,record,{...options,raw:false})}});return detail;
  }
- const api={plottable,suggestionData,groups,commonGroups,selectable,type,text,matches,fieldModel,isJSONValue,mount,mountShared,streamRecord,mountStream,streamInspection,disclosure};if(typeof module!=='undefined')module.exports=api;else global.GooAttributes=api;
-})(typeof window==='undefined'?globalThis:window);
+ export {plottable,suggestionData,groups,commonGroups,selectable,type,text,matches,fieldModel,isJSONValue,mount,mountShared,streamRecord,mountStream,streamInspection,disclosure};

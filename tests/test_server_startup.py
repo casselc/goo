@@ -117,7 +117,7 @@ class GenericStartup(unittest.TestCase):
         code, _, body = self.request('GET', '/api/ui-config')
         self.assertEqual(code, 200)
         self.assertEqual(json.loads(body), {'version': 'goo/ui-config/v1', 'profile': 'generic', 'examples': {'state': 'unconfigured'}})
-        for path in ('/', '/ui-components', '/display.mjs', '/app-display.mjs', '/components.mjs', '/service-dashboard.js', '/product.css', '/api-docs', '/openapi.json'):
+        for path in ('/', '/ui-components', '/display.mjs', '/app-display.mjs', '/components.mjs', '/attributes.mjs', '/record-presentation.mjs', '/record-columns.mjs', '/exception-detail.mjs', '/aligned-histogram.mjs', '/tag-list.mjs', '/numeric-bins.mjs', '/trace-page-breakdown-view.mjs', '/trace-comparison-view.mjs', '/service-dashboard.js', '/product.css', '/api-docs', '/openapi.json'):
             with self.subTest(path=path):
                 code, content_type, body = self.request('GET', path)
                 self.assertEqual(code, 200)

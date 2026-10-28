@@ -1,16 +1,8 @@
 /* Shared authored context. Source reads and evidence semantics remain in their owners. */
 (function(global){
  const node=(tag,text,cls)=>{const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(cls)el.className=cls;return el};
- function tags(value){if(!Array.isArray(value)||value.length>16||new Set(value).size!==value.length||value.some(t=>typeof t!=='string'||!/^[a-z0-9][a-z0-9._:/-]{0,63}$/.test(t)))throw Error('Invalid tags');return [...value]}
- function describe(t){return t.kind==='service'?t.environment+' · '+(t.service||'(empty service)')+' · '+(typeof module!=='undefined'?require('./service-identity'):global.GooServiceIdentity).label(t.namespace,{lowercase:true}):(t.kind==='evidence'?'retained evidence':t.kind)+' revision '+t.id.slice(0,12)}
- if(global.customElements&&global.HTMLElement){class GooTagList extends global.HTMLElement{
-  static get observedAttributes(){return ['tags','interactive']}
-  set tags(value){try{this._tags=tags(value);this._invalid=false}catch{this._tags=[];this._invalid=true}if(this.isConnected)this.render()}
-  get tags(){if(this._tags)return [...this._tags];try{return tags(JSON.parse(this.getAttribute('tags')||'[]'))}catch{return []}}
-  connectedCallback(){if(Object.hasOwn(this,'tags')){const v=this.tags;delete this.tags;this.tags=v}this.render()}
-  attributeChangedCallback(name){if(name==='tags'){this._tags=null;this._invalid=false}if(this.isConnected)this.render()}
-  render(){this.replaceChildren();let items;try{items=this._tags||tags(JSON.parse(this.getAttribute('tags')||'[]'));if(this._invalid)throw Error()}catch{this.dataset.state='invalid';this.append(node('span','Tags unavailable'));return}this.dataset.state='ready';for(const tag of items){const el=node(this.hasAttribute('interactive')?'button':'span',tag);if(el.tagName==='BUTTON'){el.type='button';el.onclick=()=>this.dispatchEvent(new CustomEvent('goo-tag-select',{bubbles:true,detail:{tag}}))}this.append(el)}}
- };if(!customElements.get('goo-tag-list'))customElements.define('goo-tag-list',GooTagList)}
+ const {tags}=typeof module!=='undefined'?require('./tag-list.mjs'):global.GooTagList;
+ function describe(t){return t.kind==='service'?t.environment+' · '+(t.service||'(empty service)')+' · '+(typeof module!=='undefined'?require('./service-identity.mjs'):global.GooServiceIdentity).label(t.namespace,{lowercase:true}):(t.kind==='evidence'?'retained evidence':t.kind)+' revision '+t.id.slice(0,12)}
  const api=async(path='',body,signal,base='/api/annotations')=>{const r=await fetch(base+path,body===undefined?{signal}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal});const d=await r.json();if(!r.ok)throw Error(d.error||'Annotation unavailable');return d};
  const chipList=values=>{const el=node('goo-tag-list');el.tags=values;return el};
  function subject(t){const wrap=node('span',describe(t));if(t.kind==='view'||t.kind==='document'){const link=node('a','Open saved '+t.kind);link.href='#'+(t.kind==='view'?'exploration-view':'document')+'='+t.id;wrap.append(' · ',link)}else if(t.kind==='package'){const open=node('button','Open saved package');open.onclick=()=>{document.querySelector('[data-workspace=definitions]').click();global.dispatchEvent(new CustomEvent('goo:open-annotated-package',{detail:{id:t.id}}))};wrap.append(' · ',open)}return wrap}

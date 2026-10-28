@@ -1,10 +1,10 @@
 # Known issues and gaps
 
-The [native display-module pilot](UI_COMPONENTS.md#native-module-entrypoints)
-covers core/chart elements. Attribute/record, authored-tag and aligned-numeric
-widgets still have legacy owner dependencies. Application/gallery initialization
-uses one private namespace adapter pending their cutover. Browser conformance is
-currently checked in Chromium; Firefox/Safari coverage is not established.
+The [native display graph](UI_COMPONENTS.md#native-module-entrypoints) now includes
+all supplied-data widgets and the standalone gallery. Main application owners
+still use a private namespace adapter pending their explicit-import cutover.
+Browser conformance is currently checked in Chromium; Firefox/Safari coverage
+is not established.
 
 
 [Container memory context](CONTAINER_MEMORY.md) is implemented in source with

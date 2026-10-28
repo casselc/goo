@@ -204,7 +204,7 @@ func TestHegelTracePageJavaScriptParity(t *testing.T) {
 		}
 
 		input, _ := json.Marshal(map[string]any{"rows": rows, "truncated": mode%2 == 0})
-		cmd := exec.Command("node", "-e", `const fs=require('fs'),m=require('../ui/trace-page-breakdown.js'),x=JSON.parse(fs.readFileSync(0,'utf8'));process.stdout.write(JSON.stringify(m.analyze(x.rows,x.truncated)));`)
+		cmd := exec.Command("node", "-e", `const fs=require('fs'),m=require('../ui/trace-page-breakdown.mjs'),x=JSON.parse(fs.readFileSync(0,'utf8'));process.stdout.write(JSON.stringify(m.analyze(x.rows,x.truncated)));`)
 		cmd.Stdin = bytes.NewReader(input)
 		raw, e := cmd.Output()
 		if e != nil {

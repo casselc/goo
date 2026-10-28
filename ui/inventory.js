@@ -1,6 +1,6 @@
 /* Observed services are discovery evidence, never a declaration of healthy fleet membership. */
 (function(global){
- const identity=typeof module!=='undefined'?require('./service-identity'):global.GooServiceIdentity;
+ const identity=typeof module!=='undefined'?require('./service-identity.mjs'):global.GooServiceIdentity;
  function question(capture,row){const q=capture.question;return {signal:'spans',environment:q.environment,fromMs:q.fromMs,toMs:q.toMs,where:identity.and(identity.serviceWhere(row.service,q.namespace),{field:{kind:'column',key:'name'},op:'eq',value:row.name}),groupBy:[],limit:100,offset:0};}
  const node=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n};
  function metricContext(capture,row){return {service:row.service,environment:capture.question.environment,fromMs:capture.question.fromMs,toMs:capture.question.toMs,...(capture.question.namespace?{namespace:structuredClone(capture.question.namespace)}:{})}}

@@ -1,5 +1,33 @@
 # Validation record
 
+## Supplied-data display isolation (2026-10-27 PDT)
+
+The public native graph now includes attributes, record summaries/context/details,
+field pickers, exceptions, authored tags and aligned numeric histograms. The
+standalone gallery loads only `display.mjs`, with no app namespace, query client,
+annotation/retention owner or source requests. Exact numeric formatting/bins,
+log-pattern identity decoding and action visibility are shared pure helpers.
+Record trace callbacks work independently and reject hidden/detached actions.
+Main application owners still use the private adapter; their explicit-import
+cutover is not completed by this change.
+
+Validation passes: the full Node suite; eight Python startup/HTTP/MIME checks;
+the two existing Hegel shared-record/presentation properties; 19 Chromium display
+and owner checks; the separate real record journey and 30-second Bombadil host
+actor. The public graph also includes the two trace detail elements and their pure
+models. Its check covers 24 feature namespaces and 29 modules with
+no global exports or application imports. Five final direct-import/graph checks
+pass after the trace-family conversion, and the existing Go/JavaScript trace-model
+parity properties pass. The remaining dynamic Node dependency
+on the old attribute filename was corrected. No source/wire/retained format or
+visible layout changed. Firefox/Safari and performance were not measured.
+
+Current embedding docs and the dependency diagram are updated. Regenerated
+historical screenshots and disposable run outputs are excluded; no new custody
+ledger or model receipt is added. Superseded source copies in the local lab are
+removed only after checking their native replacements.
+
+
 ## Native display module pilot (2026-10-27 PDT)
 
 Twelve core/chart feature modules now use explicit native imports/exports and

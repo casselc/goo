@@ -1,6 +1,6 @@
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
-const {groups,matches,type,text}=require('../ui/attributes.js');
+const {groups,matches,type,text}=require('../ui/attributes.mjs');
 test('inspection preserves scope, empty values, scalar types and exact integer strings',()=>{
  const record={SpanName:'work',duration_ns:'18446744073709551615',ResourceAttributes:{same:'resource'},Attributes:{same:'',nullable:null,flag:false,count:'9007199254740993'},SpanAttributes:{same:'duplicate-alias'}};
  const result=groups(record);
@@ -21,7 +21,7 @@ test('inspection searches literal hostile keys/values without evaluating them',(
  assert.ok(!matches(entry,'a.*b'));assert.equal(groups(JSON.parse('{"Attributes":{"__proto__":"literal"}}'))[2].entries[0].value,'literal');
 });
 test('field display distinguishes absence from present null, empty, false and exact strings',()=>{
- const {fieldModel}=require('../ui/attributes.js');
+ const {fieldModel}=require('../ui/attributes.mjs');
  assert.deepEqual(fieldModel(undefined),{state:'missing',kind:null,label:'Missing value'});
  assert.deepEqual(fieldModel(null),{state:'present',kind:'null',label:'Null'});
  assert.deepEqual(fieldModel(''),{state:'present',kind:'string',label:'Empty string'});
@@ -33,7 +33,7 @@ test('field display distinguishes absence from present null, empty, false and ex
 });
 
 test('field properties withhold non-JSON values without coercion or executable hooks',()=>{
- const {isJSONValue,fieldModel}=require('../ui/attributes.js');const cycle={};cycle.self=cycle;let reads=0;
+ const {isJSONValue,fieldModel}=require('../ui/attributes.mjs');const cycle={};cycle.self=cycle;let reads=0;
  const accessor={get secret(){reads++;return 'side effect'}};
  class HookedArray extends Array{toJSON(){reads++;return 'changed'}}
  const inheritedHook=Object.setPrototypeOf([], {toJSON(){reads++;return 'changed'}});
@@ -46,14 +46,14 @@ test('field properties withhold non-JSON values without coercion or executable h
 });
 
 test('shared record fields retain namespaces and exact strings without inferring absence',()=>{
- const {commonGroups}=require('../ui/attributes'),records=[{ServiceName:'api',ResourceAttributes:{region:'west'},Attributes:{region:'',large:'9007199254740993',null:null,flag:false,one:'x'}},{ServiceName:'worker',ResourceAttributes:{region:'west'},Attributes:{region:'',large:'9007199254740993',null:null,flag:false}}],before=structuredClone(records),model=commonGroups(records);
+ const {commonGroups}=require('../ui/attributes.mjs'),records=[{ServiceName:'api',ResourceAttributes:{region:'west'},Attributes:{region:'',large:'9007199254740993',null:null,flag:false,one:'x'}},{ServiceName:'worker',ResourceAttributes:{region:'west'},Attributes:{region:'',large:'9007199254740993',null:null,flag:false}}],before=structuredClone(records),model=commonGroups(records);
  assert.equal(model[0].entries.some(e=>e.key==='ServiceName'),false);assert.equal(model[1].entries[0].value,'west');assert.deepEqual(model[2].entries.map(e=>e.key),['region','large']);assert.equal(model[2].entries[0].value,'');model[1].entries[0].field.kind='attribute';assert.deepEqual(records,before);assert.throws(()=>commonGroups([]));assert.throws(()=>commonGroups(Array(21).fill(records[0])));assert.equal(commonGroups([{Attributes:{a:'x'}},{Attributes:{a:'y'}}])[2].entries.length,0);
 });
 
 test('record population actions withhold values the typed query cannot represent',()=>{
- const {selectable}=require('../ui/attributes'),field={kind:'attribute',key:'region'};for(const value of [null,false,1,'x'.repeat(1025),'雪'.repeat(400),'a\0b','\ud800'])assert.equal(selectable({field,value}),false);assert.equal(selectable({field,value:'x'.repeat(1024)}),true);assert.equal(selectable({field,value:'😀'}),true);assert.equal(selectable({field:{kind:'attribute',key:'雪'.repeat(50)},value:'ok'}),false);
+ const {selectable}=require('../ui/attributes.mjs'),field={kind:'attribute',key:'region'};for(const value of [null,false,1,'x'.repeat(1025),'雪'.repeat(400),'a\0b','\ud800'])assert.equal(selectable({field,value}),false);assert.equal(selectable({field,value:'x'.repeat(1024)}),true);assert.equal(selectable({field,value:'😀'}),true);assert.equal(selectable({field:{kind:'attribute',key:'雪'.repeat(50)},value:'ok'}),false);
 });
 
-test('native identity snapshots preserve qualified fields, omitted schemas and exact values',()=>{const {streamRecord}=require('../ui/attributes'),s={name:'http.server.request.duration',unit:'s',resource:{region:'',large:'9007199254740993'},attributes:{region:'west'},scope:'otel.http',version:'1',schemaURL:'schema'};const r=streamRecord(s);assert.equal(r.ResourceAttributes.region,'');assert.equal(r.Attributes.region,'west');assert.equal(r.ResourceAttributes.large,'9007199254740993');assert.equal(r.resourceSchema,undefined);assert.equal(r.schema,'schema');assert.equal(Object.hasOwn(r,'timestamp_ns'),false);r.ResourceAttributes.region='mutated';assert.equal(s.resource.region,'')});
+test('native identity snapshots preserve qualified fields, omitted schemas and exact values',()=>{const {streamRecord}=require('../ui/attributes.mjs'),s={name:'http.server.request.duration',unit:'s',resource:{region:'',large:'9007199254740993'},attributes:{region:'west'},scope:'otel.http',version:'1',schemaURL:'schema'};const r=streamRecord(s);assert.equal(r.ResourceAttributes.region,'');assert.equal(r.Attributes.region,'west');assert.equal(r.ResourceAttributes.large,'9007199254740993');assert.equal(r.resourceSchema,undefined);assert.equal(r.schema,'schema');assert.equal(Object.hasOwn(r,'timestamp_ns'),false);r.ResourceAttributes.region='mutated';assert.equal(s.resource.region,'')});
 
 test('optional derived record projections retain qualified field identity without changing null or number strings',()=>{const entries=groups({exception_event:'yes',exception_type:null,exception_type_state:'multiple',severity_number:'17'})[0].entries;for(const item of entries)assert.deepEqual(item.field,{kind:'column',key:item.key});assert.equal(entries.find(e=>e.key==='exception_type').value,null);assert.equal(entries.find(e=>e.key==='severity_number').value,'17')});

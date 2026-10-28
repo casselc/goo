@@ -1,4 +1,4 @@
-const {test}=require('node:test'),assert=require('node:assert/strict'),{suggestionData}=require('../ui/attributes');
+const {test}=require('node:test'),assert=require('node:assert/strict'),{suggestionData}=require('../ui/attributes.mjs');
 const f=(kind,key)=>({kind,key}),field=f('attribute','release');
 test('supplied observations preserve qualified empty and missing values without coercing null or absent maps',()=>{
  const records=[{Body:'a',Attributes:{release:''},ResourceAttributes:{release:'resource'}},{Body:'b',Attributes:{},ResourceAttributes:{}},{Body:'c',Attributes:{release:null}},{Body:'d'},{Body:'e',Attributes:{release:'Present empty string'}}];

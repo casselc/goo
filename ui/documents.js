@@ -1,8 +1,8 @@
 /* Narrative revisions reference immutable receipts; they never execute queries. */
 (function(global){
- function population(p){if(!p)return 'All records in the captured scope';if(p.numeric)return (typeof module!=='undefined'?require('./field-presentation'):global.GooFieldPresentation).selectorText(p);if(p.all)return '('+p.all.map(population).join(' AND ')+')';if(p.any)return '('+p.any.map(population).join(' OR ')+')';return (p.field?.kind||'field')+':'+(p.field?.key||'unknown')+' '+p.op+(p.value===undefined?'':' '+JSON.stringify(p.value));}
+ function population(p){if(!p)return 'All records in the captured scope';if(p.numeric)return (typeof module!=='undefined'?require('./field-presentation.mjs'):global.GooFieldPresentation).selectorText(p);if(p.all)return '('+p.all.map(population).join(' AND ')+')';if(p.any)return '('+p.any.map(population).join(' OR ')+')';return (p.field?.kind||'field')+':'+(p.field?.key||'unknown')+' '+p.op+(p.value===undefined?'':' '+JSON.stringify(p.value));}
  const idPattern=/^[a-f0-9]{64}$/;
- function recordPopulation(q){const e=q.reportedEdge;if(!e)return population(q.where);const id=typeof module!=='undefined'?require('./service-identity'):global.GooServiceIdentity;return 'Reported parent '+id.name(e.parent.service,e.parent.namespace)+' → '+id.name(e.child.service,e.child.namespace)+(q.where?' · '+population(q.where):'')}
+ function recordPopulation(q){const e=q.reportedEdge;if(!e)return population(q.where);const id=typeof module!=='undefined'?require('./service-identity.mjs'):global.GooServiceIdentity;return 'Reported parent '+id.name(e.parent.service,e.parent.namespace)+' → '+id.name(e.child.service,e.child.namespace)+(q.where?' · '+population(q.where):'')}
  function move(cards,index,delta){const next=index+delta;if(next<0||next>=cards.length)return cards.slice();const result=cards.slice();[result[index],result[next]]=[result[next],result[index]];return result;}
  function mount(host){
   const node=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n};

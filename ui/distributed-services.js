@@ -1,6 +1,6 @@
 /* Only resolved reported parent links become observed edges. No causal inference. */
 (function(global){
- const identity=typeof module!=='undefined'?require('./service-identity'):global.GooServiceIdentity;
+ const identity=typeof module!=='undefined'?require('./service-identity.mjs'):global.GooServiceIdentity;
  function model(evidence){const edges=evidence.dependencies.filter(x=>x.kind==='edge').map(x=>({...x})).sort((a,b)=>a.parent.localeCompare(b.parent)||a.child.localeCompare(b.child)),diagnostics={};for(const kind of ['unresolved','ambiguous','invalid','internal'])diagnostics[kind]=evidence.dependencies.filter(x=>x.kind===kind).reduce((n,x)=>n+BigInt(x.count),0n).toString();return {edges,diagnostics}}
  function widerQuestion(scope,edge,qualified=false){return {signal:'spans',environment:scope.environment,fromMs:scope.fromMs,toMs:scope.toMs,limit:100,offset:0,where:identity.serviceWhere(edge.child,qualified?identity.namespace(edge.childNamespace):scope.namespace)}}
  function edgeQuestion(scope,edge){return {signal:'spans',environment:scope.environment,fromMs:scope.fromMs,toMs:scope.toMs,limit:100,offset:0,summary:'span-duration',spanStatus:true,groupBy:[{kind:'column',key:'name'}],reportedEdge:{parent:{service:edge.parent,namespace:identity.namespace(edge.parentNamespace)},child:{service:edge.child,namespace:identity.namespace(edge.childNamespace)},...(scope.namespace?{discoveryNamespace:structuredClone(scope.namespace)}:{})}}}

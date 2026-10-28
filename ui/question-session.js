@@ -5,7 +5,7 @@
  function predicateIdentity(p){if(!p)return p;const out=clone(p);if(out.numeric===null)delete out.numeric;if(out.numeric?.scale===0)delete out.numeric.scale;if(out.value==='')delete out.value;if(out.all)out.all=out.all.map(predicateIdentity);if(out.any)out.any=out.any.map(predicateIdentity);return out}
  function identity(q){const v=clone(q);if(v.where)v.where=predicateIdentity(v.where);if(v.numeric?.scale===0)delete v.numeric.scale;for(const key of ['numeric','numericHistogram','where','summary','bucketMs','groupTimeSeries','spanStatus','reportedEdge'])if(!v[key])delete v[key];if(!v.groupBy?.length)delete v.groupBy;return JSON.stringify(canonical(v))}
  function combineWhere(base,filters,join,shortcuts){const authored=base&&filters.length?{all:[base,{[join]:clone(filters)}]}:base?clone(base):filters.length?{[join]:clone(filters)}:undefined;if(!shortcuts.length)return authored;return {all:[...(authored?[authored]:[]),...clone(shortcuts)]}}
- const selectorText=(...args)=>(typeof module!=='undefined'?require('./field-presentation'):global.GooFieldPresentation).selectorText(...args);
+ const selectorText=(...args)=>(typeof module!=='undefined'?require('./field-presentation.mjs'):global.GooFieldPresentation).selectorText(...args);
  class Session {
   constructor(observe=()=>{}){this.state={generation:0,phase:'initial',applied:null,requested:null,bounds:null};this.observe=observe}
   snapshot(){return clone(this.state)}

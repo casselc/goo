@@ -1,6 +1,6 @@
 /* Service browsing composes existing typed record and native metric questions. */
 (function(global){
- const identity=typeof module!=='undefined'?require('./service-identity'):global.GooServiceIdentity;
+ const identity=typeof module!=='undefined'?require('./service-identity.mjs'):global.GooServiceIdentity;
  const clone=x=>structuredClone(x);
  function scopeQuestion(scope,service,signal='spans'){
   return {environment:scope.environment,fromMs:scope.fromMs,toMs:scope.toMs,signal,where:identity.serviceWhere(service,scope.namespace),limit:100,offset:0};

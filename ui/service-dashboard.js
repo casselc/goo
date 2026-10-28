@@ -4,7 +4,7 @@
  function state(kind,text,cls){const e=node('goo-result-state',text,cls);e.setAttribute('state',kind);return e}
  function question(widget){return widget.query?{kind:'explore',explore:clone(widget.query)}:{kind:'measurement',measurement:clone(widget.measurement)}}
  function step(widget){return widget.query?global.GooWorkspace.recordStep(widget.query):global.GooWorkspace.measurementStep(widget.measurement)}
- function sameScope(a,b){const identity=typeof module!=='undefined'?require('./service-identity'):global.GooServiceIdentity;return identity.same(a?.namespace,b?.namespace)&&a?.environment===b?.environment&&a?.fromMs===b?.fromMs&&a?.toMs===b?.toMs}
+ function sameScope(a,b){const identity=typeof module!=='undefined'?require('./service-identity.mjs'):global.GooServiceIdentity;return identity.same(a?.namespace,b?.namespace)&&a?.environment===b?.environment&&a?.fromMs===b?.fromMs&&a?.toMs===b?.toMs}
  function matches(widget,data){const q=widget.query||widget.measurement,r=data.question;if(!r)return false;const stable=x=>{if(Array.isArray(x))return x.map(stable);if(x&&typeof x==='object')return Object.fromEntries(Object.keys(x).sort().filter(k=>x[k]!==undefined).map(k=>[k,stable(x[k])]));return x};return JSON.stringify(stable(q))===JSON.stringify(stable(r))}
  function recordAggregates(widget,data){
   const q=widget.query,fail=message=>{throw Error('Invalid record aggregates: '+message)},uint=(v,bits=64)=>typeof v==='string'&&!/\s/u.test(v)&&/^(0|[1-9][0-9]*)$/.test(v)&&BigInt(v)<(1n<<BigInt(bits));
