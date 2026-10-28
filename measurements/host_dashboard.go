@@ -98,6 +98,9 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 		if HostNetworkInstrument(i) {
 			family = "network"
 		}
+		if HostDiskInstrument(i) {
+			family = "disk"
+		}
 		if HostCPUTimeInstrument(i) {
 			family = "cpu-time"
 		}
@@ -122,6 +125,12 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 					continue
 				}
 			}
+			if family == "disk" {
+				name, direction := s.Attributes["system.device"], s.Attributes["disk.io.direction"]
+				if name == "" || !text(name, 128) || (direction != "read" && direction != "write") {
+					continue
+				}
+			}
 			if s.ResourceSchemaURL != h.ResourceSchemaURL || hostResourceKey(s.Resource, s.ResourceSchemaURL) != h.Key || s.Scope != i.Scope || s.Version != i.Version || s.SchemaURL != i.SchemaURL || s.Name != i.Metric || s.Unit != i.Unit {
 				continue
 			}
@@ -129,7 +138,7 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 				return nil, e
 			}
 			d := Definition{APIVersion: Version, Name: "host-signal", Title: i.Metric, Kind: i.Kind, Environment: in.Question.Environment, LookbackMinutes: 2, MaxGapMS: 60000, Grain: "per-stream", Source: Binding{Resource: &ResourceBinding{Kind: "host", ID: h.Resource["host.id"]}, Services: []string{}, Scope: i.Scope, Version: i.Version, SchemaURL: i.SchemaURL, Metric: i.Metric, Unit: i.Unit, ExactStream: &s}}
-			if family == "cpu-time" || family == "network" {
+			if family == "cpu-time" || family == "network" || family == "disk" {
 				d.CounterDomain = metrics.DecimalCounterDomain
 			}
 			if family == "memory" {
@@ -174,7 +183,7 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 					title += " · logical CPU unreported"
 				}
 			}
-			if family != "cpu" && family != "cpu-time" && family != "network" {
+			if family != "cpu" && family != "cpu-time" && family != "network" && family != "disk" {
 				if family == "memory-fraction" {
 					title = "Reported memory utilization fraction"
 				}
@@ -190,6 +199,9 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 			}
 			if family == "network" {
 				title = "Network " + s.Attributes["network.io.direction"] + " · " + strconv.Quote(s.Attributes["network.interface.name"])
+			}
+			if family == "disk" {
+				title = "Disk " + s.Attributes["disk.io.direction"] + " · " + strconv.Quote(s.Attributes["system.device"])
 			}
 			candidates = append(candidates, candidate{widget: HostWidget{Key: key, Title: title, State: "candidate", Grain: "host-exact-stream", Question: q}, family: family, priority: priority, numeric: numeric, core: core})
 		}

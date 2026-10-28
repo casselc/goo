@@ -257,7 +257,7 @@ def check_cpu_time_observed(spec,path):
     print('CPU-time observations: nine real handler responses/requests, five source/profile refusals and offline capture reopen conform')
 
 
-def check_network_observed(spec,path):
+def check_network_observed(spec,path,metric="system.network.io"):
     observations=json.loads(Path(path).read_text())
     assert len(observations)==11
     for case in observations:
@@ -266,11 +266,11 @@ def check_network_observed(spec,path):
         if case.get('request') is not None and 'requestBody' in op:
             validator(spec,op['requestBody']['content']['application/json']['schema']).validate(case['request'])
     r=next(c['response'] for c in observations if c['path']=='/measurements' and c['status']==200)
-    assert r['question']['definition']['source']['metric']=='system.network.io'
+    assert r['question']['definition']['source']['metric']==metric
     interval=r['counters']['series'][0]['intervals'][0]
     assert interval['delta']=='512' and interval['exactPerSecond']=='256' and interval['perSecond']==256
     assert sum(c['status']==502 for c in observations)==7
-    print('Network observations: eleven real handler responses/requests, seven source/profile refusals and offline reopen conform')
+    print(metric+' observations: eleven real handler responses/requests, seven source/profile refusals and offline reopen conform')
 
 
 def check_stock_observed(spec,path):
@@ -444,6 +444,7 @@ if __name__ == '__main__':
     parser.add_argument('--host-observations')
     parser.add_argument('--cpu-time-observations')
     parser.add_argument('--network-observations')
+    parser.add_argument('--disk-observations')
     parser.add_argument('--pod-state-observations')
     parser.add_argument('--container-state-observations')
     parser.add_argument('--pod-phase-discovery-observations')
@@ -451,6 +452,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    if args.disk_observations:
+        check_network_observed(spec,args.disk_observations,"system.disk.io")
     if args.network_observations:
         check_network_observed(spec,args.network_observations)
     if args.cpu_time_observations:

@@ -2897,3 +2897,22 @@ See [evidence](../docs/evidence/host-network-212.json) for actual receipts, exac
 source costs, byte-domain limits, frame hashes and declared source/model scope.
 
 Final display follow-up: charts now disclose when the existing 200-point presentation cap omits observations or intervals. A focused 201-interval renderer check verifies the count, retained full result, and unchanged shared scale; both focused Node test files passed (0.311 s). This omission-only branch was added after the successful live campaigns; those campaigns and their screenshots were not rerun.
+
+213 uses `host_disk_test.go` for Hegel byte-domain admission and existing network
+shared-owner generated schedules. `host_disk_live_test.go` independently checks
+actual disk ledger raw facts, rational intervals, shared scale, contextual records,
+capture bytes and source POST costs. `model/host_disk.qnt` and `.yaml` validate
+one actual seven-step effect trace and reject an added local read. Shared
+`hostRateRaw` derives clipped/omitted pair intervals from recorded bounds, with
+fixed fixture reset/epoch cases; this is a finite oracle, not arbitrary counters.
+
+Run with `GOO_HOST_DISK_LEDGER=/absolute/path/to/ledger.json` and
+`QUINT_BIN=/absolute/path/to/quint` using:
+
+```sh
+go test -C verification -run '^(TestHostDiskObserved|TestQuintHostDiskObserved)$' -v .
+```
+
+Accepted package3.805 s: disk.17 s, prior CPU.16 s and network.17 s, Quint3.27 s.
+The bounded Bombadil actor covers staging/retained Back; main Playwright executes
+actual records and capture. See [storyboard](../journeys/213-host-disk-storyboard.md).

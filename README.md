@@ -378,3 +378,6 @@ records acceptance.
 per-interface receive/transmit byte rates without expanding CPU/memory defaults.
 It reuses native interval investigation and individual capture; [Journey 212](journeys/212-host-network-storyboard.md)
 records acceptance.
+
+[Per-device disk throughput](docs/HOST_DISK_THROUGHPUT.md) adds explicit read/write
+byte rates on a shared scale, with native investigation and capture.

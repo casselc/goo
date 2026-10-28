@@ -20,7 +20,7 @@
   if((b.resource?.kind==='host'?s.resource['host.id']!==b.resource.id:!b.services.includes(s.resource['service.name'])||!s.resource['service.instance.id'])||s.resource['deployment.environment.name']!==d.environment||!matches(n,s.resource)||s.scope!==b.scope||s.version!==str(b,'version')||s.schemaURL!==str(b,'schemaURL')||s.name!==b.metric||s.unit!==b.unit)fail();
   for(const [k,v]of Object.entries(b.attributes||{}))if(!has(s.attributes,k)||s.attributes[k]!==v)fail();
  }
- function hostCounterDefinition(d){const b=d?.source;return b?.resource?.kind==='host'&&d.kind==='counter'&&d.counterDomain==='nonnegative-decimal'&&b.schemaURL==='https://opentelemetry.io/schemas/1.37.0'&&(b.metric==='system.cpu.time'&&b.unit==='s'||b.metric==='system.network.io'&&b.unit==='By')}
+ function hostCounterDefinition(d){const b=d?.source;return b?.resource?.kind==='host'&&d.kind==='counter'&&d.counterDomain==='nonnegative-decimal'&&b.schemaURL==='https://opentelemetry.io/schemas/1.37.0'&&(b.metric==='system.cpu.time'&&b.unit==='s'||['system.network.io','system.disk.io'].includes(b.metric)&&b.unit==='By')}
  function plan(parent,actual,signal,fromNS,toNS){
   if(!['logs','spans'].includes(signal)||!plain(parent)||!plain(parent.definition))fail();
   const d=parent.definition,b=d.source;if(!plain(b))fail();const n=namespace(b.namespace),hostCPU=hostCounterDefinition(d);if(b.resource&&!hostCPU)fail();if(d.counterDomain!==undefined&&(d.counterDomain!=='nonnegative-decimal'||d.kind!=='counter'||d.grain!=='per-stream'))fail();if(hostCPU&&(!b.resource.id||!text(b.resource.id,512)||!b.exactStream||n||d.grain!=='per-stream'||str(d,'stockDomain')!==''||str(d,'stateProfile')!==''))fail();

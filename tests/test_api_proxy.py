@@ -248,7 +248,7 @@ class ProxyContracts(unittest.TestCase):
             before=len(Upstream.calls)
             self.assertEqual(self.request('POST',path,payload+b' ')[0],400)
             self.assertEqual(len(Upstream.calls),before)
-        for asset in ('host-browser.js','host-network.js','host-dashboard.js','host.css'):
+        for asset in ('host-browser.js','host-counter-pair.js','host-disk.js','host-network.js','host-dashboard.js','host.css'):
             conn=http.client.HTTPConnection('127.0.0.1',self.proxy.server_port,timeout=5)
             try:
                 conn.request('GET','/'+asset);response=conn.getresponse()

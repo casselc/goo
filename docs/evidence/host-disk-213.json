@@ -1,0 +1,172 @@
+{
+  "milestone": 213,
+  "status": "accepted",
+  "baseCommit": "20c4fa7",
+  "binarySHA256": "5a11c185195b09be83d69a17f926a62d5156bdff57c967ec89e31eac2d6b0091",
+  "research": {
+    "url": "https://raw.githubusercontent.com/open-telemetry/semantic-conventions/v1.37.0/docs/system/system-metrics.md",
+    "sha256": "8aa9a4c287145b382648705564b1b0698f62d4a374af7a2e79702626c8a92291",
+    "profile": "system.disk.io Counter By; system.device; disk.io.direction read/write; development convention, cumulative-only binding"
+  },
+  "checks": {
+    "go": {
+      "stdout": "/tmp/goo-213-go.txt",
+      "scope": "Full root regression passed; initial sandboxed focused invocation could not bind httptest loopback."
+    },
+    "node": {
+      "files": 102,
+      "seconds": 5.535369908,
+      "stdout": "/tmp/goo-213-node-all.txt",
+      "additionalDiskChecks": "/tmp/goo-213-disk-followup.txt",
+      "additionalDiskSeconds": 0.165591972
+    },
+    "python": {
+      "proxyTests": 17,
+      "initialProxySeconds": 1.984,
+      "assetFollowup": "/tmp/goo-213-python-assets.txt",
+      "startupTests": 8,
+      "startupSeconds": 1.888,
+      "startupStdout": "/tmp/goo-213-startup.txt",
+      "note": "Initial startup wildcard selected zero tests; exact filename run passes eight.",
+      "assetFollowupSeconds": 1.267
+    },
+    "api": {
+      "stdout": "/tmp/goo-213-api.txt",
+      "diskObservedResponses": 11,
+      "diskSourceProfileRefusals": 7,
+      "goOperations": 83,
+      "totalOperations": 90,
+      "schemas": 517,
+      "frozenResponses": 429,
+      "admittedRequests": 159,
+      "muxRefusals": 28
+    },
+    "hegel": {
+      "stdout": "/tmp/goo-213-properties.txt",
+      "seconds": 0.874,
+      "properties": [
+        "Disk byte admission, eight examples",
+        "Network wrapper actual shared-owner schedules, eight examples"
+      ],
+      "scope": "Disk role/profile wiring and independent owner withdrawal also covered by focused JS and actual browser cases; no exhaustive interleaving claim."
+    },
+    "live": {
+      "ledger": "artifacts/host-disk/host-disk-889a507260/ledger.json",
+      "mainSeconds": 35.7,
+      "ownership": "artifacts/host-disk/host-disk-fcfd5fa61d/ownership.json",
+      "ownershipSeconds": 6.4,
+      "ambiguity": "artifacts/host-disk/host-disk-14fcb9122c/ambiguity.json",
+      "ambiguitySeconds": 5.4,
+      "batchSeconds": 50.3,
+      "stdout": "/tmp/goo-213-live.txt",
+      "firstPass": true
+    },
+    "bombadil": {
+      "summary": "artifacts/host-disk/host-disk-c1f5f17b23/bombadil/acceptance-summary.json",
+      "seconds": 31.3,
+      "phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "snapshots": 503,
+      "finalSourceReads": 6,
+      "plans": 1,
+      "scope": "Finite workflow: defaults, expansion, local reopen, native Run, context staging and retained Back; record Run and capture are in main journey."
+    },
+    "rawAndQuint": {
+      "stdout": "/tmp/goo-213-native-fixed.txt",
+      "diskSeconds": 0.17,
+      "cpuCompatibilitySeconds": 0.16,
+      "networkCompatibilitySeconds": 0.17,
+      "quintSeconds": 3.27,
+      "packageSeconds": 3.805,
+      "negativeControls": 7,
+      "actualModelSteps": 7,
+      "badLocalReadTraceRejected": true,
+      "diagnostic": "Initial oracle assumed no clipping of the first raw interval. Actual later browser window correctly yielded boundary-crossing unknown. Oracle now independently derives intersections/clipping from raw times and question bounds. No app change or live rerun was needed.",
+      "scope": "Finite fixture raw/full-identity and standard SHA checks; exact rational deltas/rates; boundary membership across SDK maps; full stored capture; issued POST budgets. Not arbitrary concurrency, ingestion completeness or provenance authentication."
+    },
+    "networkBrowserCompatibility": {
+      "stdout": "/tmp/goo-213-network-regression.txt",
+      "ownershipSeconds": 4.1,
+      "ambiguitySeconds": 4.7,
+      "batchSeconds": 10.7,
+      "scope": "Both existing 212 ownership/ambiguity journeys pass through the extracted factory."
+    }
+  },
+  "events": [
+    {
+      "action": "defaults",
+      "source": 3,
+      "plans": 1
+    },
+    {
+      "action": "disk",
+      "source": 5,
+      "plans": 1
+    },
+    {
+      "action": "reopen-local",
+      "source": 5,
+      "plans": 1
+    },
+    {
+      "action": "native",
+      "source": 6,
+      "plans": 1
+    },
+    {
+      "action": "logs",
+      "source": 7,
+      "plans": 1
+    },
+    {
+      "action": "spans",
+      "source": 8,
+      "plans": 1
+    },
+    {
+      "action": "capture",
+      "source": 9,
+      "plans": 1
+    }
+  ],
+  "readBudgetMeaning": "Issued source POSTs, not physical SQL counts: discovery1 + defaults2 + disk2 + native1 + records2 + capture1 =9. Local reopen/staging/Back issue no source POST.",
+  "capture": {
+    "bytes": 9778,
+    "sha256": "910062fd1301562278ef1eaabc62081a3a0f43876ec1e506fcd42dfca602e565"
+  },
+  "captureID": "b16dadd2e7591a3f7685d95d7d3330f3592233a72b6cc3b97e2dd73cafa960d2",
+  "offlineBlockedPOSTs": [],
+  "geometry": {
+    "client": 324,
+    "scroll": 324
+  },
+  "frames": {
+    "docs/journeys/screenshots/213a-host-disk-throughput.png": "83ba0b252160b4b382bfc9760fa927858070ee083341ec02e713a57dc593058b",
+    "docs/journeys/screenshots/213b-mobile-disk.png": "5fb2f5e625e1708c0c5369c39a0d99e2ad2d1db7885601e731cfae3e79ea30ab",
+    "docs/journeys/screenshots/213c-disk-in-context.png": "f6c1fe5ed86f2393cce0788e6e19959446fe42a14b0f65a5970f5eeef283a04f"
+  },
+  "assets": {
+    "ui/host-counter-pair.js": "f595b7ead1ab5d1ecb65cb6248cb903d5b08d515d9da62cece9c544bd65d68bd",
+    "ui/host-disk.js": "6c67f9cc10e805fb8fbca66ef9074d1f3d4165c39e594f406dff978051b09ad6",
+    "ui/host-network.js": "75ef7be99141fbfe8dfddc45716e0966d3687ba5f42cf23b38fdd1e544caf2eb"
+  },
+  "reviews": [
+    "Architecture/source and raw/model accepted; no blockers.",
+    "Actual three desktop/mobile frames accepted; no presentation blockers."
+  ],
+  "limits": [
+    "No automatic disk reads or device totals.",
+    "No capacity, saturation, IOPS or latency profile.",
+    "No alias, partition merge or physical/causal ownership inference.",
+    "No claim this lab deploys a real host scraper; fixtures travel through ordinary OTLP collector/ClickHouse."
+  ]
+}

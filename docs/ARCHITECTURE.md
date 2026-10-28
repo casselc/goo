@@ -1132,3 +1132,8 @@ network candidates; a separate application generation owns interface selection,
 two direction reads and cancellation, leaving CPU/memory evidence untouched.
 Common display domains are supplied to passive resource/timeline presenters;
 this visual comparison does not join or sum independent streams.
+
+Host Network and Disk use the same app-owned `host-counter-pair.js` factory with
+closed profile metric/dimension/role/label parameters and independent owners.
+Neither passive display lifecycle nor disclosure subscribes to telemetry. Disk
+adds pinned system.disk.io/By cumulative admission, not a new numerical primitive.

@@ -71,15 +71,40 @@ func hostRateRaw(f psMap, r *measurements.Result, name, unit string, attributes 
 		return false
 	}
 	series := r.Counters.Series[0]
-	if !reflect.DeepEqual(series.Stream, *s) || series.Temporality != "cumulative" || series.State != "unknown" || len(series.Intervals) != 6 {
+	if !reflect.DeepEqual(series.Stream, *s) || series.Temporality != "cumulative" || series.State != "unknown" {
 		return false
 	}
 	// This finite fixture deliberately fixes six interval cases. Expected values
 	// come from independent raw decimals, not the production counter evaluator.
 	reasons := []string{"", "", "counter-decrease", "invalid-counter-epoch", "counter-epoch-change", ""}
-	for i, p := range series.Intervals {
+	lower, _ := strconv.ParseInt(lo, 10, 64)
+	upper, _ := strconv.ParseInt(hi, 10, 64)
+	expectedIndex := []int{}
+	for i := 0; i < len(expected)-1; i++ {
+		left, _ := strconv.ParseInt(expected[i]["endNS"].(string), 10, 64)
+		right, _ := strconv.ParseInt(expected[i+1]["endNS"].(string), 10, 64)
+		if right > lower && left < upper {
+			expectedIndex = append(expectedIndex, i)
+		}
+	}
+	if len(series.Intervals) != len(expectedIndex) {
+		return false
+	}
+	for j, p := range series.Intervals {
+		i := expectedIndex[j]
 		a, z := expected[i], expected[i+1]
-		if p.FromNS != a["endNS"] || p.ToNS != z["endNS"] || p.Reason != reasons[i] {
+		left, _ := strconv.ParseInt(a["endNS"].(string), 10, 64)
+		right, _ := strconv.ParseInt(z["endNS"].(string), 10, 64)
+		wantFrom, wantTo := left, right
+		if left < lower {
+			wantFrom = lower
+			reasons[i] = "boundary-crossing"
+		}
+		if right > upper {
+			wantTo = upper
+			reasons[i] = "boundary-crossing"
+		}
+		if p.FromNS != strconv.FormatInt(wantFrom, 10) || p.ToNS != strconv.FormatInt(wantTo, 10) || p.Reason != reasons[i] {
 			return false
 		}
 		if reasons[i] != "" {

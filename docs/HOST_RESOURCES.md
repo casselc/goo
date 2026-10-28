@@ -146,3 +146,7 @@ per-interface receive/transmit expansion. Network candidates stay out of the two
 CPU/memory default slots. It uses the decimal rate kernel with a stricter whole
 byte policy and cumulative-only profile; interface sums, bandwidth capacity and
 other network/broker/disk instruments remain separate work.
+
+[Per-device disk throughput](HOST_DISK_THROUGHPUT.md) 213 adds an explicit closed
+Disk expansion with independent read/write streams on a shared scale. Defaults
+remain CPU/memory; device names/directions must be reported and unambiguous.

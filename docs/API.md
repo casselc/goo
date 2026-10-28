@@ -986,3 +986,8 @@ and rejecting fractional/unsafe tallies or temporal drift. Existing native
 capture/reopen and host interval-context contracts apply. Eleven mux observations
 include seven source/profile refusals; `check_openapi.py --network-observations
 PATH` validates them beside unchanged frozen fixtures. See [contract](HOST_NETWORK_THROUGHPUT.md).
+
+Disk 213 uses existing host discovery/plan and measurement/capture operations.
+The pinned system.disk.io Counter/By cumulative profile requires the explicit
+nonnegative-decimal domain and certifies whole counts below 2^53. Discovery
+retains system.device/read-write candidates; no new endpoint or wire version.

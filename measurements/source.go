@@ -394,8 +394,8 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 					if !ok {
 						return nil, fmt.Errorf("invalid exported decimal counter")
 					}
-					if HostNetworkDefinition(d) && (!exact.IsInt() || exact.Num().Cmp(new(big.Int).Lsh(big.NewInt(1), 53)) >= 0) {
-						return nil, fmt.Errorf("network byte counter requires nonnegative integer below 2^53")
+					if HostByteCounterDefinition(d) && (!exact.IsInt() || exact.Num().Cmp(new(big.Int).Lsh(big.NewInt(1), 53)) >= 0) {
+						return nil, fmt.Errorf("host byte counter requires nonnegative integer below 2^53")
 					}
 					canonical = metrics.CounterDecimal(exact)
 				}

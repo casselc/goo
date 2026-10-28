@@ -1479,3 +1479,20 @@ real OTLP main/owner/ambiguity journeys, Bombadil and independent raw/Quint chec
 pass. [Journey 212](../journeys/212-host-network-storyboard.md) and
 [evidence](evidence/host-network-212.json) record concrete checks, source costs,
 reviewed frames, capture bytes and finite proof boundaries.
+
+
+## 213 — Explicit per-device disk throughput accepted
+
+Disk expands beneath unchanged CPU/memory defaults, loading at most one exact
+read/write byte stream per unambiguous reported device/direction. Multiple devices
+and duplicate directions remain explicit. Network and Disk now share paired-read
+adapter mechanics while retaining independent owners, held results and cancellation.
+Pinned OTel system.disk.io/By cumulative admission reuses strict safe whole-byte
+certification and exact interval arithmetic. Shared-scale compact B/s plots preserve
+reset/gap/boundary unknowns and reuse native context, capture and offline reopen.
+No device total, alias/partition merge, IOPS, latency, capacity or saturation is inferred.
+
+Source/presentation reviews, Go/Node/Python/API, Hegel, real OTLP main/owner/ambiguity,
+Bombadil and independent raw/finite Quint checks pass. [Journey 213](../journeys/213-host-disk-storyboard.md)
+and [evidence](evidence/host-disk-213.json) record actual checks, the observer clipping
+correction, source costs, reviewed frames and proof limits.

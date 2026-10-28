@@ -1139,3 +1139,8 @@ It reuses resource cards, evidence disclosures, native inspection and
 formatting (including tiny nonzero values) and an optional supplied chart domain.
 Two direction charts receive a common domain, while exact values/units, clocks
 and unknowns remain independent. No reusable lifecycle starts a source read.
+
+`host-counter-pair.js` shares app-owned exact paired-byte reads for Network and
+Disk; thin profile wrappers retain their public candidates/choices/result/mount API.
+Request ownership, role ambiguity, incomplete discovery, scale selection and
+withdrawal stay outside passive reusable charts and resource-native rendering.

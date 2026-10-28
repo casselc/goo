@@ -1,0 +1,2 @@
+/* Pinned host byte profile; app-owned loading is shared. */
+(function(global){const factory=typeof module!=='undefined'?require('./host-counter-pair'):global.GooHostCounterPair;const api=factory.create({"metric": "system.disk.io", "dimension": "system.device", "direction": "disk.io.direction", "roles": ["read", "write"], "title": "Disk", "noun": "Device", "css": "host-disk"});if(typeof module!=='undefined')module.exports=api;else global.GooHostDisk=api;})(typeof window==='undefined'?globalThis:window);

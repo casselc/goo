@@ -12522,3 +12522,35 @@ pass. [Journey 212](journeys/212-host-network-storyboard.md) and
 reviewed frames, capture bytes and finite proof boundaries.
 
 Final display follow-up: charts now disclose when the existing 200-point presentation cap omits observations or intervals. A focused 201-interval renderer check verifies the count, retained full result, and unchanged shared scale; both focused Node test files passed (0.311 s). This omission-only branch was added after the successful live campaigns; those campaigns and their screenshots were not rerun.
+
+## 213 source checks — disk throughput
+
+Implemented the pinned OTel 1.37 system.disk.io By/cumulative host binding and
+explicit system.device read/write pair, sharing the network adapter mechanics.
+Source review approved. Full root Go, all 102 Node test files (5.535 s), three
+interval-counter HTTP profiles, OpenAPI frozen/negative checks and 11 disk
+handler observations pass. The seven disk source/profile refusals and offline
+capture reopen conform. Seventeen Python proxy checks pass. An initial sandboxed
+Go invocation could not bind httptest loopback; the complete permitted run passed.
+Live acceptance, final frames and independent raw/Quint checks remain pending.
+
+
+## 213 live acceptance
+
+All three disk journeys pass first invocation: main35.7 s, close-held6.4 s,
+device/ambiguity5.4 s (batch50.3 s). Actor31.3 s passes phases0–8/503 snapshots,
+six source POSTs. Three actual frames are approved. Raw disk.17 s, CPU.16 s,
+network.17 s and Quint3.27 s pass (package3.805 s), with seven changed raw/effect
+controls and one bad local-read model trace rejected. The initial raw oracle
+failed because it assumed the first interval was never clipped; the application
+correctly withheld boundary-crossing arithmetic. The oracle now independently
+clips raw pair bounds against the recorded question. No product change/live rerun.
+Eight startup checks pass using their exact filename (the initial wildcard selected
+zero tests). Focused follow-ups verify missing/unknown device directions, exact
+local previews under incomplete discovery, separate pending network/disk owners,
+and new static asset delivery. [Evidence](docs/evidence/host-disk-213.json) and
+[storyboard](journeys/213-host-disk-storyboard.md) retain scope and receipts.
+
+Existing Network ownership/ambiguity browser regressions also pass through the
+shared factory (4.1 s and 4.7 s, batch10.7 s). Updated static-asset proxy coverage
+passes all 17 tests (1.267 s), including both new JS files without upstream reads.

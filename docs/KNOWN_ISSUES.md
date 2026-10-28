@@ -1020,3 +1020,7 @@ live and independent raw/model checks. Its first binding requires pinned cumulat
 `system.network.io` byte counters with reported interface and receive/transmit.
 Unsafe/fractional byte tallies refuse; omitted/ambiguous metadata is not absence.
 No interface sum, utilization, capacity, error-rate or disk-I/O profile is added.
+
+[Disk throughput](HOST_DISK_THROUGHPUT.md) 213 is accepted for pinned cumulative
+whole safe bytes, reported system.device and read/write. No device sum, aliases,
+partition merge, IOPS, latency, capacity or saturation profile is implied.
