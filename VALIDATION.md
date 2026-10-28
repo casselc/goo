@@ -1,5 +1,42 @@
 # Validation record
 
+## Bounded Go receive and required ledger verdicts — 237 (2026-10-28 UTC)
+
+Go JSON receive now has a 15-second transport deadline, shortened immediately by
+request cancellation. The callback is joined before leaving decode. Successful
+complete bodies clear the receive deadline before source/response work; failures
+expire it and close the connection so implicit unread-body drain cannot stall error
+writes. Tail, investigation, retention and workbench decoders now share this path;
+route limits, unknown-field/trailing-input rules remain owned by callers.
+Cancellation found during body receive returns the route's decode-error 400,
+whereas existing execution cancellation may return 502; neither may start effects.
+
+Passed: root `go test ./...`, `go vet ./...`; targeted real-socket HTTP/race tests;
+existing 100-case HegelPlanningJSONBoundaries property. Socket tests hold peers
+open for partial JSON, complete value/unclosed body, malformed prefix and >5KB
+unknown-field errors, then assert no effects and successful next admission after
+Budget returns. Separate receive-deadline test uses a short injected timeout;
+streaming response finishes beyond that receive interval. Focused independent
+review caught and corrected implicit-drain and admission-test synchronization gaps.
+No UI, schema, live binary, data or retained identifier changes.
+
+B2: 16 shared Go-event protocol fixture cases pass in JS and the optional Python
+runner's 8 tests pass. Actual browser helper refuses nonexistent test selection
+(Go exits 0), unset-ledger skip (Go exits 0), and invalid ledger (Go exits 1).
+An existing retained StreamEntry ledger passed its actual Quint validator and
+negative controls. No new browser campaign or full nested suite is claimed.
+Browser helper uses readonly modules, separate diagnostic stderr and bounded
+Go/process lifetimes. Exact top-level run/pass plus package pass are required;
+skipped children, failed/missing and malformed/torn verdicts are refused.
+
+Limits: direct Go net/http deadline support is required; opaque custom wrappers
+must expose Unwrap/deadline capabilities. The Python proxy still blocks on partial
+incoming bodies: isolated real-socket Handler probe remained blocked after 150ms,
+zero forwarding calls, released on peer close. This finite observation does not
+claim an indefinitely measured wait. Proxy receive policy is B1p, next. Lab binaries
+were not redeployed. Temporary probe outputs were not retained.
+
+
 ## Six delegated reviews and reconciliation — 236 (2026-10-28 UTC)
 
 Five independent domain agents reviewed product/usability, frontend, architecture,

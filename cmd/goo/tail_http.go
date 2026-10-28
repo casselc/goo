@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/casselc/goo/exploration"
-	"io"
+	"github.com/casselc/goo/internal/httpjson"
 	"net/http"
 	"time"
 )
@@ -21,14 +21,8 @@ func registerTail(mux *http.ServeMux, source exploration.Source, bank *explorati
 			json.NewEncoder(w).Encode(map[string]string{"error": message})
 		}
 		var selector exploration.TailSelector
-		d := json.NewDecoder(http.MaxBytesReader(w, r.Body, 16384))
-		d.DisallowUnknownFields()
-		if e := d.Decode(&selector); e != nil {
+		if e := httpjson.Decode(w, r, &selector, 16384, "expected one JSON object"); e != nil {
 			fail(400, e.Error())
-			return
-		}
-		if d.Decode(new(any)) != io.EOF {
-			fail(400, "expected one JSON object")
 			return
 		}
 		if e := selector.Query(time.Now().UnixMilli()).Validate(); e != nil {

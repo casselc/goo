@@ -4,6 +4,7 @@ const fs = require('node:fs/promises');
 const path = require('node:path');
 const { spawn } = require('node:child_process');
 const { stripVTControlCharacters } = require('node:util');
+const { validateGoEvents } = require('./go-verdict');
 const goo = process.env.GOO_QUERY_URL || 'http://127.0.0.1:8088';
 const frames = path.resolve('docs/journeys/screenshots');
 
@@ -144,17 +145,21 @@ async function startBombadil({ dir, url, specification, seconds, width, height }
 }
 
 async function verifyWithGo(dir, testName, variables) {
-  const env = { ...process.env, ...variables, NO_COLOR: '1' };
+  if (!/^Test[A-Za-z0-9_]+$/.test(testName)) throw new Error('Expected one exact top-level Go test name');
+  const env = { ...process.env, ...variables, NO_COLOR: '1', GOWORK: 'off', GOTOOLCHAIN: 'local' };
   delete env.FORCE_COLOR;
-  const output = [];
-  const child = spawn('go', ['test', '-count=1', '-v', '-run', '^' + testName + '$', '.'], {
+  const output = [], diagnostics = [];
+  const child = spawn('go', ['test', '-mod=readonly', '-json', '-count=1', '-timeout=50s', '-run', '^' + testName + '$', '.'], {
     cwd: path.resolve('verification'), env, timeout: 60000, stdio: ['ignore', 'pipe', 'pipe'],
   });
+  child.stdout.setEncoding('utf8');
+  child.stderr.setEncoding('utf8');
   child.stdout.on('data', data => output.push(data.toString()));
-  child.stderr.on('data', data => output.push(data.toString()));
+  child.stderr.on('data', data => diagnostics.push(data.toString()));
   const code = await new Promise((resolve, reject) => { child.on('error', reject); child.on('close', resolve); });
-  await fs.writeFile(path.join(dir, testName + '.log'), output.join(''));
-  expect(code, output.join('')).toBe(0);
+  await fs.writeFile(path.join(dir, testName + '.log'), output.join('') + diagnostics.join(''));
+  expect(code, output.join('') + diagnostics.join('')).toBe(0);
+  validateGoEvents(output.join(''), [testName]);
 }
 
 async function capturedReport(dir) {

@@ -12,7 +12,7 @@ spec.loader.exec_module(runner)
 
 
 def events(*rows):
-    return '\n'.join(json.dumps(row) for row in rows)
+    return '\n'.join(json.dumps({'Package': 'pkg', **row}) for row in rows) + '\n'
 
 
 class RequiredVerdict(unittest.TestCase):
@@ -32,6 +32,16 @@ class RequiredVerdict(unittest.TestCase):
     def test_non_json_fails(self):
         with self.assertRaises(RuntimeError):
             runner.validate_events('not a test event', ['Required'])
+
+    def test_shared_protocol_cases(self):
+        cases = json.loads((Path(__file__).parent / 'fixtures/go-test-verdicts.json').read_text())
+        for case in cases:
+            with self.subTest(case=case['name']):
+                if case['accept']:
+                    runner.validate_events(case['output'], case['expected'])
+                else:
+                    with self.assertRaises(RuntimeError):
+                        runner.validate_events(case['output'], case['expected'])
 
     def test_missing_quint_has_install_guidance(self):
         with tempfile.TemporaryDirectory() as directory:

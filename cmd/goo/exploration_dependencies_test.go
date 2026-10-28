@@ -88,7 +88,8 @@ func TestExplorationAndTailRegistrationsKeepInjectedSources(t *testing.T) {
 			cancel()
 			w = httptest.NewRecorder()
 			reg.mux.ServeHTTP(w, httptest.NewRequest("POST", route.path, strings.NewReader(route.body)).WithContext(ctx))
-			if w.Code != 502 || reg.reads.Load() != before {
+			// Cancellation may stop at body receive (400) or source execution (502).
+			if (w.Code != 400 && w.Code != 502) || reg.reads.Load() != before {
 				t.Fatal("cancelled request reached backend", route.path, w.Code)
 			}
 		}

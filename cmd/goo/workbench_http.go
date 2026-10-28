@@ -30,15 +30,7 @@ func registerWorkbench(mux *http.ServeMux, dir string, connection retentionConne
 	}
 	fail := func(w http.ResponseWriter, code int, e error) { reply(w, code, map[string]string{"error": e.Error()}) }
 	decode := func(w http.ResponseWriter, r *http.Request, v any) error {
-		d := json.NewDecoder(http.MaxBytesReader(w, r.Body, workbench.MaxBytes))
-		d.DisallowUnknownFields()
-		if e := d.Decode(v); e != nil {
-			return e
-		}
-		if d.Decode(new(any)) != io.EOF {
-			return fmt.Errorf("expected one JSON object")
-		}
-		return nil
+		return httpjson.Decode(w, r, v, workbench.MaxBytes, "expected one JSON object")
 	}
 	mux.HandleFunc("POST /annotations", func(w http.ResponseWriter, r *http.Request) {
 		var in workbench.MeaningInput

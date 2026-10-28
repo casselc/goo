@@ -118,7 +118,8 @@ func TestNativeMeasurementRegistrationsUseIndependentInjectedSources(t *testing.
 			body, _ := json.Marshal(measurements.Question{Definition: d, FromMS: 100000, ToMS: 220000})
 			cancelled := httptest.NewRecorder()
 			mux.ServeHTTP(cancelled, httptest.NewRequest("POST", "/measurements", strings.NewReader(string(body))).WithContext(ctx))
-			if cancelled.Code != 502 || reads.Load() != 2 {
+			// Cancellation may stop at body receive (400) or source execution (502).
+			if (cancelled.Code != 400 && cancelled.Code != 502) || reads.Load() != 2 {
 				t.Fatal("cancelled native request reached source", cancelled.Code)
 			}
 			if _, e := os.Stat(filepath.Join(root, "exploration", "custody")); !os.IsNotExist(e) {

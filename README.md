@@ -16,6 +16,10 @@ similarly skip unused pages and field inventories while retaining full service
 inspection and capture paths. See the [service walkthrough](journeys/194-service-dashboard-projection-storyboard.md).
 See the [counted-values walkthrough](journeys/193-counted-values-projection-storyboard.md).
 
+Go JSON uploads now have a 15-second receive ceiling and cancellation interrupt,
+separate from source execution and streaming responses. The Python UI proxy
+upload boundary remains a [known follow-up](docs/BACKLOG_2026_10_28.md#b1p--next-python-proxy-receive-boundary).
+
 ## Use your existing OTel data
 
 [Generic startup](docs/GENERIC_STARTUP.md) runs the Go API and Python UI without

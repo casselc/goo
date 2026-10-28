@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/internal/httpjson"
 	"github.com/casselc/goo/retention"
 	"github.com/casselc/goo/workbench"
 	"github.com/jackc/pgx/v5"
@@ -34,15 +35,7 @@ func registerRetention(mux *http.ServeMux, dir string, connection retentionConne
 		return true
 	}
 	decode := func(w http.ResponseWriter, r *http.Request, v any) error {
-		d := json.NewDecoder(http.MaxBytesReader(w, r.Body, 16384))
-		d.DisallowUnknownFields()
-		if e := d.Decode(v); e != nil {
-			return e
-		}
-		if d.Decode(new(any)) != io.EOF {
-			return errors.New("expected one request")
-		}
-		return nil
+		return httpjson.Decode(w, r, v, 16384, "expected one request")
 	}
 	mux.HandleFunc("POST /retained-evidence/tail", func(w http.ResponseWriter, r *http.Request) {
 		var in retention.TailIntent

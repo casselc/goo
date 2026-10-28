@@ -4,7 +4,9 @@ The [independent review reconciliation](reviews/INDEPENDENT_REVIEW_SUMMARY_236.m
 adds verified ingress/admission, Activity signal-scope/inspection and required-test
 verdict gaps ahead of cosmetic work. A malformed prepared-string grouping defect
 is reproduced; native catalog publication/capacity mismatch is source-confirmed.
-These findings are not fixed by this documentation round. Current order and
+Direct-Go body receive and required browser-ledger verdicts are fixed in 237;
+Python proxy incoming uploads still need their own bounded receive policy.
+Activity and integrity findings remain open. Current order and
 acceptance live in the [roadmap](ROADMAP_2026_10_28.md) and
 [backlog](BACKLOG_2026_10_28.md); older statuses below retain their bounded history.
 

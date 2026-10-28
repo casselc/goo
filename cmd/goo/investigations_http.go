@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/casselc/goo/annotations"
+	"github.com/casselc/goo/internal/httpjson"
 	"github.com/casselc/goo/investigations"
-	"io"
 	"net/http"
 )
 
@@ -32,14 +32,8 @@ func registerInvestigations(mux *http.ServeMux, plans map[string]*annotations.Op
 			Selection json.RawMessage         `json:"selection"`
 			Parent    string                  `json:"parent"`
 		}
-		d := json.NewDecoder(http.MaxBytesReader(w, r.Body, 16384))
-		d.DisallowUnknownFields()
-		if e := d.Decode(&in); e != nil {
+		if e := httpjson.Decode(w, r, &in, 16384, "expected one JSON object"); e != nil {
 			fail(w, 400, e)
-			return
-		}
-		if d.Decode(new(any)) != io.EOF {
-			fail(w, 400, fmt.Errorf("expected one JSON object"))
 			return
 		}
 		if in.Parent != "" {

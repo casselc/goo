@@ -17,11 +17,11 @@ SUITES = {
 }
 
 
-def command(args, cwd=ROOT, env=None):
+def command(args, cwd=ROOT, env=None, strip=True):
     result = subprocess.run(args, cwd=cwd, env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if result.returncode:
         raise RuntimeError(f"{' '.join(args)} failed:\n{result.stdout}{result.stderr}")
-    return result.stdout.strip()
+    return result.stdout.strip() if strip else result.stdout
 
 
 def require_version(label, actual, expected):
@@ -54,20 +54,32 @@ def preflight():
 
 def validate_events(output, expected):
     """Require every named test to pass, and refuse any skipped subtest."""
-    passed, skipped, failed = set(), [], []
+    if not output.endswith('\n'):
+        raise RuntimeError('Incomplete Go test event stream')
+    passed, ran, packages, skipped, failed = {}, set(), set(), [], []
+    actions = {'start', 'run', 'pause', 'cont', 'pass', 'bench', 'fail', 'output', 'skip', 'build-output', 'build-fail'}
     for line in output.splitlines():
         try:
             event = json.loads(line)
         except json.JSONDecodeError as exc:
             raise RuntimeError('Non-JSON output in Go test event stream: ' + line[:200]) from exc
-        action, name = event.get('Action'), event.get('Test')
+        if not isinstance(event, dict) or not isinstance(event.get('Action'), str) or event['Action'] not in actions:
+            raise RuntimeError('Malformed Go test event')
+        action, name, package = event.get('Action'), event.get('Test'), event.get('Package')
+        if action in ('run', 'pass') and (not isinstance(package, str) or not package or ('Test' in event and (not isinstance(name, str) or not name))):
+            raise RuntimeError('Malformed Go test verdict')
+        if action == 'run' and name:
+            ran.add((package, name))
         if action == 'skip':
             skipped.append(name or event.get('Package', 'package'))
-        elif action == 'fail':
+        elif action in ('fail', 'build-fail'):
             failed.append(name or event.get('Package', 'package'))
-        elif action == 'pass' and name:
-            passed.add(name)
-    missing = set(expected) - passed
+        elif action == 'pass':
+            if name:
+                passed[name] = package
+            else:
+                packages.add(package)
+    missing = {name for name in expected if name not in passed or (passed[name], name) not in ran or passed[name] not in packages}
     if skipped or failed or missing:
         raise RuntimeError(f"Required verdict missing: skipped={skipped}, failed={failed}, missing={sorted(missing)}")
 
@@ -77,7 +89,7 @@ def run_suite(suite, env):
         prefix = ['go', 'run', '-mod=readonly', 'github.com/DataDog/orchestrion', 'go'] if suite == 'woven' else ['go']
         args = prefix + ['test', '-mod=readonly', '-json', '-count=1', '-timeout=5m', '-run', '^(' + '|'.join(tests) + ')$', package]
         print(f"Running {suite}: {directory} ({len(tests)} required tests)", flush=True)
-        output = command(args, cwd=ROOT / directory, env=env)
+        output = command(args, cwd=ROOT / directory, env=env, strip=False)
         try:
             validate_events(output, tests)
         except RuntimeError:

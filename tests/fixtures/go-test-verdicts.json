@@ -1,0 +1,130 @@
+[
+  {
+    "name": "exact named run and package pass",
+    "output": "{\"Package\": \"pkg\", \"Action\": \"run\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\"}\n",
+    "expected": [
+      "TestRequired"
+    ],
+    "accept": true
+  },
+  {
+    "name": "no match package success",
+    "output": "{\"Package\": \"pkg\", \"Action\": \"pass\"}\n",
+    "expected": [
+      "TestRequired"
+    ],
+    "accept": false
+  },
+  {
+    "name": "misspelled name",
+    "output": "{\"Package\": \"pkg\", \"Action\": \"run\", \"Test\": \"TestOther\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\", \"Test\": \"TestOther\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\"}\n",
+    "expected": [
+      "TestRequired"
+    ],
+    "accept": false
+  },
+  {
+    "name": "unset ledger skip",
+    "output": "{\"Package\": \"pkg\", \"Action\": \"run\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"skip\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\"}\n",
+    "expected": [
+      "TestRequired"
+    ],
+    "accept": false
+  },
+  {
+    "name": "skipped child with parent pass",
+    "output": "{\"Package\": \"pkg\", \"Action\": \"run\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"skip\", \"Test\": \"TestRequired/child\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\"}\n",
+    "expected": [
+      "TestRequired"
+    ],
+    "accept": false
+  },
+  {
+    "name": "failed model",
+    "output": "{\"Package\": \"pkg\", \"Action\": \"run\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"fail\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"fail\"}\n",
+    "expected": [
+      "TestRequired"
+    ],
+    "accept": false
+  },
+  {
+    "name": "failure after apparent pass",
+    "output": "{\"Package\": \"pkg\", \"Action\": \"run\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\"}\n{\"Package\": \"pkg\", \"Action\": \"fail\"}\n",
+    "expected": [
+      "TestRequired"
+    ],
+    "accept": false
+  },
+  {
+    "name": "malformed JSON",
+    "output": "{\"Package\": \"pkg\", \"Action\": \"run\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\"}\ngarbage\n",
+    "expected": [
+      "TestRequired"
+    ],
+    "accept": false
+  },
+  {
+    "name": "non object JSON",
+    "output": "{\"Package\": \"pkg\", \"Action\": \"run\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\"}\n[]\n",
+    "expected": [
+      "TestRequired"
+    ],
+    "accept": false
+  },
+  {
+    "name": "missing action",
+    "output": "{\"Package\": \"pkg\", \"Action\": \"run\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\"}\n{}\n",
+    "expected": [
+      "TestRequired"
+    ],
+    "accept": false
+  },
+  {
+    "name": "torn suffix",
+    "output": "{\"Package\": \"pkg\", \"Action\": \"run\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\"}\n{\"Action\":",
+    "expected": [
+      "TestRequired"
+    ],
+    "accept": false
+  },
+  {
+    "name": "missing terminal newline",
+    "output": "{\"Package\": \"pkg\", \"Action\": \"run\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\"}",
+    "expected": [
+      "TestRequired"
+    ],
+    "accept": false
+  },
+  {
+    "name": "no package verdict",
+    "output": "{\"Package\": \"pkg\", \"Action\": \"run\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\", \"Test\": \"TestRequired\"}\n",
+    "expected": [
+      "TestRequired"
+    ],
+    "accept": false
+  },
+  {
+    "name": "pass without run",
+    "output": "{\"Package\": \"pkg\", \"Action\": \"pass\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\"}\n",
+    "expected": [
+      "TestRequired"
+    ],
+    "accept": false
+  },
+  {
+    "name": "invalid verdict package",
+    "output": "{\"Package\": \"pkg\", \"Action\": \"run\", \"Test\": \"TestRequired\"}\n{\"Package\": null, \"Action\": \"pass\", \"Test\": \"TestRequired\"}\n{\"Package\": \"pkg\", \"Action\": \"pass\"}\n",
+    "expected": [
+      "TestRequired"
+    ],
+    "accept": false
+  },
+  {
+    "name": "empty output",
+    "output": "",
+    "expected": [
+      "TestRequired"
+    ],
+    "accept": false
+  }
+]
