@@ -440,3 +440,8 @@ explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-eva
 
 Current priorities and acceptance are in the [2026-10-28 roadmap](docs/ROADMAP_2026_10_28.md),
 based on the [whole-product review](docs/WHOLE_PRODUCT_REVIEW_2026_10_28.md).
+
+Go library entry points: `subjectfacts` provides portable prepared-fact aggregation
+and offline ClickHouse/Databricks compilation; `measurements` binds/evaluates native
+OTel instruments. See the [portable compiler guide](docs/PORTABLE_COMPILER.md#go-library-boundary)
+and its executable external-consumer example.

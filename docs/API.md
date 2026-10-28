@@ -182,6 +182,14 @@ Actual reset/source-unavailable gap bytes are frozen in
 `TestAPITailSSEWireContract`. Batch schema examples and rejecting controls complement
 existing real-loopback batch/disconnect tests; they do not replace those tests.
 
+## Prepared-fact component names (227)
+
+The prepared-fact Go library is now `subjectfacts`. Reflected schema component
+names and `x-go-type` paths change from `measurement.*` to `subjectfacts.*` in both
+checked-in API artifacts. HTTP routes, payload fields and schema bodies are
+unchanged. Regenerate clients that use the old generated component/type names.
+Native `measurements.*` components retain their existing names.
+
 ## Updating and checking
 
 From the repository root:
@@ -200,9 +208,8 @@ node scripts/check_api_docs.cjs
 [CI](../.github/workflows/api-contract.yml) regenerates both checked-in artifacts,
 refuses drift, validates OpenAPI/references and every Go route, and checks typed
 requests/responses against the existing wire fixtures. Unknown-field, wrong-error-
-type and malformed SSE controls must fail. The 236 HTTP response cases comprise
-222 documented-operation responses and 14 default mux refusals; the checker also
-validates 56 admitted request bodies. The workflow executes those wire tests plus the actual SSE fixture,
+type and malformed SSE controls must fail. The checker validates documented-operation responses, default mux refusals and
+admitted request bodies; it emits the current fixture counts on each invocation. The workflow executes those wire tests plus the actual SSE fixture,
 and tests the Python docs routes. The browser journey runs locally with the
 existing Playwright/Chromium setup and captures a real docs screenshot; it does
 not start the full lab or mutate telemetry.

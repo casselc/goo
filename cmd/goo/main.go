@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/casselc/goo/lifecycle"
-	"github.com/casselc/goo/measurement"
 	"github.com/casselc/goo/prebuilt"
+	"github.com/casselc/goo/subjectfacts"
 )
 
 func run(args []string, out io.Writer) error {
@@ -102,7 +102,7 @@ func run(args []string, out io.Writer) error {
 		return err
 	}
 	defer f.Close()
-	d, err := measurement.Read(f)
+	d, err := subjectfacts.Read(f)
 	if err != nil {
 		return err
 	}
@@ -122,7 +122,7 @@ func run(args []string, out io.Writer) error {
 		var b []byte
 		b, err = os.ReadFile(*factsPath)
 		if err == nil {
-			var facts []measurement.Fact
+			var facts []subjectfacts.Fact
 			if err = json.Unmarshal(b, &facts); err == nil {
 				result, err = d.Evaluate(facts, *evaluation, groups)
 			}

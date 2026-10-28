@@ -163,8 +163,8 @@ flowchart TB
   Prepare["Go lifecycle preparer - fixture/CLI pilot"]
   Facts["Prepared subject facts"]
   Definition["Typed portable measurement definition: dimensions, counts, ratios"]
-  Validate["Go validation and compiler"]
-  Ref["Go reference evaluator"]
+  Validate["subjectfacts validation and compiler"]
+  Ref["subjectfacts reference evaluator"]
   CHPlan["Generated ClickHouse aggregate SQL"]
   DBPlan["Generated Databricks metric-view YAML, DDL and query"]
   CHRun["Fixture/embedded ClickHouse parity checks"]
@@ -180,7 +180,9 @@ flowchart TB
   Facts -.-> DBFuture
 ```
 
-This compiler supports a bounded prepared-fact count/ratio model. Lifecycle
+The `subjectfacts` Go package owns this bounded prepared-fact count/ratio model.
+`measurements` owns native OTel source binding and evaluation. The package names
+changed in 227; grammar and generated artifact contracts are unchanged. Lifecycle
 preparation handles explicit event/custody/evaluation-time rules in its separate
 pilot. The live operation-package UI does not automatically lower to this compiler,
 Databricks or durable lifecycle accounting. Generated Databricks artifacts require

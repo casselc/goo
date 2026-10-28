@@ -1,5 +1,10 @@
 # Whole-product architecture review — 2026-10-25
 
+> Historical package-path note: the prepared-fact `measurement/` package was
+> renamed to `subjectfacts/` in 227. The review below retains its original names;
+> current usage is in [the compiler guide](PORTABLE_COMPILER.md).
+
+
 Reviewed baseline: `9e07b88`. This is a read-only review of source, contracts, prior reviews and recorded acceptance. No implementation, tests, browser campaign, deployment or new performance measurement was performed. Recommendations are inputs to the revised roadmap, not an activated implementation queue.
 
 ## Recommendation
@@ -45,7 +50,7 @@ The present package boundaries are useful:
 
 1. `exploration/`: record predicates, physical record lowering, record populations, full-source trace search, and supplied-page models.
 2. `metrics/` and `measurements/`: exact native stream identity, unit, temporality, reset, interval coverage and supported compositions.
-3. `measurement/`: portable aggregates over explicitly prepared, typed subject facts. [`compile.go:10–20,65–84`](../measurement/compile.go#L10) labels the artifact `requires-prepared-source` and does not deploy it.
+3. `measurement/`: portable aggregates over explicitly prepared, typed subject facts. [`compile.go:10–20,65–84`](../subjectfacts/compile.go#L10) labels the artifact `requires-prepared-source` and does not deploy it.
 4. `annotations/` and `instrumentation/`: source declarations/build weaving and runtime OTel instruments. [`manifest.go:40–50,75–83`](../annotations/manifest.go#L40) binds source revisions; [`runtime.go:16–33,36–80`](../instrumentation/runtime.go#L16) emits named standard OTel signals with explicit goo attributes/outcomes. A declaration is not runtime coverage, and goo operation outcomes are not a generic business outcome policy for arbitrary OTel spans.
 5. `workbench/`, immutable captures and optional retention: authored context, reusable configuration, observed evidence and exact external citations, each with its own authority.
 6. Passive components and pure browser display models: supplied-data display and bounded intent. Application owners retain source effects, navigation, cancellation and publication.

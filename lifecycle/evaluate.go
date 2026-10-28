@@ -3,13 +3,13 @@ package lifecycle
 import (
 	"fmt"
 
-	"github.com/casselc/goo/measurement"
+	"github.com/casselc/goo/subjectfacts"
 )
 
 // Evaluate consumes the complete prepared artifact, not facts alone. A strict
 // request-wide receipt guard covers impaired scopes even when they have no rows.
 // This is intentionally conservative for cross-scope grouping.
-func (p *Prepared) Evaluate(d *measurement.Definition, groups []string) (*Evaluation, error) {
+func (p *Prepared) Evaluate(d *subjectfacts.Definition, groups []string) (*Evaluation, error) {
 	if _, err := p.Receipt.Policy.validate(); err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (p *Prepared) Evaluate(d *measurement.Definition, groups []string) (*Evalua
 		for _, row := range rows {
 			for name, m := range d.Measures {
 				if m.Op == "ratio" {
-					row.Measures[name] = measurement.Value{State: "unknown"}
+					row.Measures[name] = subjectfacts.Value{State: "unknown"}
 				}
 			}
 		}

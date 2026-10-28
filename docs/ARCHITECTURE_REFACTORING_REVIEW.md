@@ -1,5 +1,10 @@
 # Architecture refactoring review
 
+> Historical package-path note: the prepared-fact `measurement/` package was
+> renamed to `subjectfacts/` in 227. The review below retains its original names;
+> current usage is in [the compiler guide](PORTABLE_COMPILER.md).
+
+
 Prepared 2026-10-22. **Recommendations, not approved implementation work.** This
 source review follows the [consolidated product proposal](PRODUCT_IMPLEMENTATION_PROPOSAL.md)
 and [whole-product usability review](WHOLE_PRODUCT_USABILITY_REVIEW.md). The companion

@@ -13,7 +13,7 @@ import (
 	"strings"
 
 	"github.com/casselc/goo/internal/sourcehttp"
-	"github.com/casselc/goo/measurement"
+	"github.com/casselc/goo/subjectfacts"
 )
 
 // HTTPSource is an explicit library/version binding. The pinned exporter does
@@ -31,16 +31,16 @@ type HTTPSpanRow struct {
 	Attributes  map[string]string `json:"attributes"`
 }
 type LiveHTTPResult struct {
-	Expansion        *Expansion           `json:"expansion"`
-	Prepared         *HTTPPrepared        `json:"prepared"`
-	Results          []measurement.Result `json:"results"`
-	Source           HTTPSource           `json:"source"`
-	FromMS           int64                `json:"fromMs"`
-	ToMS             int64                `json:"toMs"`
-	DuplicateRecords int                  `json:"duplicateRecords"`
-	Query            string               `json:"query"`
-	Parameters       map[string]string    `json:"parameters"`
-	Warnings         []string             `json:"warnings"`
+	Expansion        *Expansion            `json:"expansion"`
+	Prepared         *HTTPPrepared         `json:"prepared"`
+	Results          []subjectfacts.Result `json:"results"`
+	Source           HTTPSource            `json:"source"`
+	FromMS           int64                 `json:"fromMs"`
+	ToMS             int64                 `json:"toMs"`
+	DuplicateRecords int                   `json:"duplicateRecords"`
+	Query            string                `json:"query"`
+	Parameters       map[string]string     `json:"parameters"`
+	Warnings         []string              `json:"warnings"`
 }
 
 func (e *Expansion) HTTPSourceQuery(source HTTPSource, from, to int64) (string, map[string]string, error) {
@@ -70,7 +70,7 @@ func (e *Expansion) HTTPSourceQuery(source HTTPSource, from, to int64) (string, 
 	sql := "SELECT toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, TraceId AS trace_id, SpanId AS span_id, mapUpdate(ResourceAttributes, map('service.name', toString(ServiceName))) AS resource, SpanAttributes AS attributes FROM otel_traces WHERE " + strings.Join(filters, " AND ") + " ORDER BY Timestamp, TraceId, SpanId LIMIT 1001 FORMAT JSONEachRow"
 	return sql, params, nil
 }
-func (e *Expansion) EvaluateHTTPRows(rows []HTTPSpanRow, evaluation string) (*HTTPPrepared, []measurement.Result, int, error) {
+func (e *Expansion) EvaluateHTTPRows(rows []HTTPSpanRow, evaluation string) (*HTTPPrepared, []subjectfacts.Result, int, error) {
 	if len(rows) > 1000 {
 		return nil, nil, 0, fmt.Errorf("source bound exceeded (1000 raw spans); narrow the window; partial population not evaluated")
 	}

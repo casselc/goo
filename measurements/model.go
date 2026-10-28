@@ -1,4 +1,5 @@
 // Package measurements binds typed measurement kernels to bounded OTel sources.
+// The separate subjectfacts package compiles portable aggregates over prepared facts.
 package measurements
 
 import (

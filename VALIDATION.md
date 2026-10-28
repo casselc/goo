@@ -1,5 +1,37 @@
 # Validation record
 
+## Scope review gate and prepared-fact package boundary — 227 (2026-10-28 UTC)
+
+The bounded 220–226 entry/scope/return review is accepted in the whole-product
+review and roadmap. Native mobile secondary-action density and nested ancestry
+remain named UI follow-ups. L1 begins with `measurement` → `subjectfacts`, migrating
+all eight CLI/lifecycle/prebuilt import sites and the fixture runner. There is no
+alias package. External-package examples demonstrate general request facts/offline
+compilation and supplied native gauge evaluation at a fixed time. The native
+service-bound example explicitly supplies its required reported instance ID.
+
+Validation: full root Go tests and vet pass, including both public examples;
+subjectfacts/lifecycle/prebuilt race checks pass. Six before/after CLI outputs are
+byte-identical for validation, evaluation and both compiler targets. Independent
+embedded ClickHouse parity passes ten fixture/group comparisons plus the declarative
+extension; Databricks artifacts are checked structurally, not executed. Corrected
+sample Docker source-copy closures each build the root CLI and emit their manifest
+in isolated temporary trees; full images and woven binaries were not rebuilt here.
+
+OpenAPI components/type paths move from `measurement.*` to `subjectfacts.*`.
+Normalized comparison of both generated artifacts proves only those names/paths
+changed; payload shapes remain identical. The spec/route/fixture checker passes
+83 Go operations, 429 responses, 159 admitted requests and 28 mux refusals, with
+negative/SSE controls. Browsable API checks and both Python docs-route checks pass.
+The running lab serves the regenerated specification. Generated clients should
+regenerate for renamed component types. Stored formats, SQL/metric-view output,
+identifiers and native numeric semantics are unchanged; no store migration occurs.
+
+Current diagrams/guides and historical source-path notes are updated. This round
+uses the existing product browser/model acceptance for its review; it does not
+claim a fresh whole-product browser campaign or new vendor research. Next L1 work
+maps unchecked revision/hash consumers before removing or replacing any API.
+
 ## Native time-control ownership and UTC scope — 226 (2026-10-28 UTC)
 
 Measurements now hides the unrelated global lookback; empty global toolbar chrome

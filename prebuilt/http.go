@@ -2,7 +2,7 @@ package prebuilt
 
 import (
 	"fmt"
-	"github.com/casselc/goo/measurement"
+	"github.com/casselc/goo/subjectfacts"
 )
 
 type HTTPRequest struct {
@@ -15,11 +15,11 @@ type HTTPRequest struct {
 	Status   *int              `json:"status"`
 }
 type HTTPPrepared struct {
-	ExpansionRevision string             `json:"expansionRevision"`
-	EvaluationID      string             `json:"evaluationId"`
-	InputDigest       string             `json:"inputDigest"`
-	Evidence          string             `json:"evidence"`
-	Facts             []measurement.Fact `json:"facts"`
+	ExpansionRevision string              `json:"expansionRevision"`
+	EvaluationID      string              `json:"evaluationId"`
+	InputDigest       string              `json:"inputDigest"`
+	Evidence          string              `json:"evidence"`
+	Facts             []subjectfacts.Fact `json:"facts"`
 }
 
 // PrepareHTTP accepts already selected normalized requests, not raw OTLP. Resource
@@ -38,7 +38,7 @@ func (e *Expansion) PrepareHTTP(requests []HTTPRequest, evaluation string) (resu
 	if evaluation == "" {
 		return nil, fmt.Errorf("evaluation ID is required")
 	}
-	out := &HTTPPrepared{ExpansionRevision: e.Revision, EvaluationID: evaluation, InputDigest: digest(requests), Evidence: "unverified-input-selection-and-completeness", Facts: []measurement.Fact{}}
+	out := &HTTPPrepared{ExpansionRevision: e.Revision, EvaluationID: evaluation, InputDigest: digest(requests), Evidence: "unverified-input-selection-and-completeness", Facts: []subjectfacts.Fact{}}
 	for i, r := range requests {
 		if r.Kind != "server" {
 			return nil, fmt.Errorf("request %d must be a normalized server span", i)
@@ -70,7 +70,7 @@ func (e *Expansion) PrepareHTTP(requests []HTTPRequest, evaluation string) (resu
 				}
 			}
 		}
-		out.Facts = append(out.Facts, measurement.Fact{"evaluation_id": evaluation, "scope_id": e.Binding.Scope, "trace_id": r.TraceID, "span_id": r.SpanID, "route": route, "method": method, "classification": class})
+		out.Facts = append(out.Facts, subjectfacts.Fact{"evaluation_id": evaluation, "scope_id": e.Binding.Scope, "trace_id": r.TraceID, "span_id": r.SpanID, "route": route, "method": method, "classification": class})
 	}
 	if _, err := e.Measurement.Evaluate(out.Facts, evaluation, nil); err != nil {
 		return nil, err

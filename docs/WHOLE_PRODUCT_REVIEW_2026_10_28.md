@@ -113,3 +113,39 @@ those families easier to choose is the next bounded opportunity. Mobile navigati
 outside Activity still consumes substantial vertical space and deserves a shared
 chrome pass, not another Saved-only menu. No new vendor/latency/load claim is made
 by this follow-up; the external research and its limits above remain the basis.
+
+## R4/R5 review gate after 226; first L1 cut (227)
+
+This follow-up reviews current source, the 220–226 task checks recorded in
+`VALIDATION.md`, and their current screenshots. It does not claim a new vendor
+survey, production deployment, browser campaign or latency benchmark.
+
+The bounded scope-coherence gate is accepted:
+
+| Task | Current behavior and basis |
+| --- | --- |
+| Enter and scope | Activity remains the ordinary-OTel entry. Definitions has explicit families; global defaults appear where consumed, and empty toolbar chrome collapses. 222/223/226 cover direct entry, mobile/keyboard and delayed initialization. |
+| Follow and return | Resource origin uses one latest-owner presenter with qualified identity and UTC scope. Native interval return retains its distinct parent chain. 192/224/225 cover exact windows, retained data/focus, stale actions and cancellation. |
+| Change a default | Next-discovery lookback does not discard completed service/host/pod observations. Unchanged native fixed re-preview retains nanoseconds; fresh or edited windows are explicit. 224/226 and 55/56 cover these transitions and reusable exact questions. |
+| Save and reuse | Saved capture rows precede secondary controls; definitions keep distinct revisions and drafts. Existing store order, independent publication/recovery and receipt formats remain. 110/117/220/221 retain these separate contracts. |
+
+This closes the bounded entry/scope/return queue. It does not establish complete
+trace coverage, a universal navigation stack, production isolation, cross-store
+search or all OTel profiles. Query-cost presentation stays deferred until usable
+source diagnostics exist; returned row counts are not a cost estimate.
+
+Two follow-ups remain concrete. First, the 390px native workbench frame in 226
+still stacks secondary save/share/capture actions before results. A bounded action
+bar/disclosure pass should improve that layout while keeping Run, preview and
+pending/retry state obvious. Native/resource ancestry composition also merits a
+real nested task before introducing any shared history abstraction. These are
+named UI follow-ups, not reasons to reopen every delivered catalog or dashboard.
+
+The first L1 cut renames the small prepared-fact compiler to `subjectfacts`, using
+the actual eight importing files in CLI, lifecycle and prebuilt adapters as its
+migration boundary. The native library stays `measurements`. No alias package,
+new expression hierarchy, stored-format migration or hash change is introduced.
+External-package examples demonstrate general request facts/offline compilation
+and supplied native gauge evaluation with a fixed clock. Sample Docker source recipes also include their actual root CLI
+package dependencies; isolated copied-source builds check those recipes without
+building images. Broader unchecked-hash removal requires its own consumer map.

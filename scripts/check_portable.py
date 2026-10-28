@@ -69,7 +69,7 @@ def main():
                 reservation_id String, service_name String, release String,
                 classification String, quality_impaired Bool, is_mature Bool
             ) ENGINE=Memory""")
-            cases = json.loads((ROOT / "measurement/testdata/cohorts.json").read_text())["cases"]
+            cases = json.loads((ROOT / "subjectfacts/testdata/cohorts.json").read_text())["cases"]
             comparisons = 0
             for case in cases:
                 facts = expand(case["blocks"])

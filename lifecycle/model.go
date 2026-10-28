@@ -9,7 +9,7 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/casselc/goo/measurement"
+	"github.com/casselc/goo/subjectfacts"
 	"gopkg.in/yaml.v3"
 )
 
@@ -98,14 +98,14 @@ type Receipt struct {
 }
 
 type Prepared struct {
-	Receipt  Receipt            `json:"receipt"`
-	Subjects []Subject          `json:"subjects"`
-	Facts    []measurement.Fact `json:"facts"`
+	Receipt  Receipt             `json:"receipt"`
+	Subjects []Subject           `json:"subjects"`
+	Facts    []subjectfacts.Fact `json:"facts"`
 }
 
 type Evaluation struct {
-	Receipt Receipt              `json:"receipt"`
-	Results []measurement.Result `json:"results"`
+	Receipt Receipt               `json:"receipt"`
+	Results []subjectfacts.Result `json:"results"`
 }
 
 type bounds struct{ evaluation, cutoff, deadline, allowance, start, end int64 }

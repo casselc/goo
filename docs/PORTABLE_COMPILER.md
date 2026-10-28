@@ -7,6 +7,29 @@ every future runtime choice. YAML+CEL and KCL remain authoring candidates; this
 pilot implements a deliberately bounded YAML representation without either
 expression runtime.
 
+## Go library boundary
+
+Import `github.com/casselc/goo/subjectfacts` for this prepared-fact language.
+`Read` validates a definition, `Definition.Evaluate` calculates over prepared facts,
+and `Definition.Compile` produces inspectable ClickHouse or Databricks artifacts.
+The [external-package example](../subjectfacts/example_test.go) uses general request
+outcomes and runs without a database, telemetry exporter or evidence store.
+
+Use `github.com/casselc/goo/measurements` for bounded native OTel instrument
+binding/evaluation. Those questions retain instrument identity, units, temporality
+and reset/unknown semantics. Its [external evaluation example](../measurements/example_test.go)
+uses supplied adapter rows, an explicit reported instance and a fixed clock without
+a database or storage.
+Preparation of lifecycle events remains in `lifecycle`.
+
+The old Go `measurement` package is renamed directly to `subjectfacts` (227).
+Callers update the import and qualifier; there is no compatibility alias. Existing
+`goo/v1alpha1` grammar, CLI commands, JSON fields, generated SQL/metric-view YAML
+and saved identifiers keep their existing contracts. Reflected OpenAPI components
+move from `measurement.*` to `subjectfacts.*`; generated clients should regenerate
+against the updated specification. The component bodies and HTTP payload shapes
+are unchanged.
+
 ## Working commands
 
 From the repository root, with Go 1.27+ on PATH (the validated toolchain is pinned in

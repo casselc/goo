@@ -11751,328 +11751,6 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/lifecycle.Subject"
   },
-  "measurement.Definition": {
-    "properties": {
-      "apiVersion": {
-        "type": "string"
-      },
-      "dimensions": {
-        "anyOf": [
-          {
-            "additionalProperties": {
-              "type": "string"
-            },
-            "type": "object"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "measures": {
-        "anyOf": [
-          {
-            "additionalProperties": {
-              "$ref": "#/components/schemas/measurement.Measure"
-            },
-            "type": "object"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "name": {
-        "type": "string"
-      },
-      "population": {
-        "anyOf": [
-          {
-            "$ref": "#/components/schemas/measurement.Predicate"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "source": {
-        "$ref": "#/components/schemas/measurement.Source"
-      }
-    },
-    "required": [
-      "apiVersion",
-      "name",
-      "source",
-      "dimensions",
-      "measures"
-    ],
-    "type": "object",
-    "x-go-type": "github.com/casselc/goo/measurement.Definition"
-  },
-  "measurement.Measure": {
-    "properties": {
-      "denominator": {
-        "type": "string"
-      },
-      "numerator": {
-        "type": "string"
-      },
-      "op": {
-        "type": "string"
-      },
-      "unknownWhen": {
-        "anyOf": [
-          {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "where": {
-        "anyOf": [
-          {
-            "$ref": "#/components/schemas/measurement.Predicate"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      }
-    },
-    "required": [
-      "op"
-    ],
-    "type": "object",
-    "x-go-type": "github.com/casselc/goo/measurement.Measure"
-  },
-  "measurement.Plan": {
-    "properties": {
-      "ddl": {
-        "type": "string"
-      },
-      "definition": {
-        "anyOf": [
-          {
-            "$ref": "#/components/schemas/measurement.Definition"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "metricYaml": {
-        "type": "string"
-      },
-      "parameters": {
-        "anyOf": [
-          {
-            "additionalProperties": {
-              "type": "string"
-            },
-            "type": "object"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "query": {
-        "type": "string"
-      },
-      "requirements": {
-        "anyOf": [
-          {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "status": {
-        "type": "string"
-      },
-      "target": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "target",
-      "status",
-      "requirements",
-      "parameters",
-      "query",
-      "definition"
-    ],
-    "type": "object",
-    "x-go-type": "github.com/casselc/goo/measurement.Plan"
-  },
-  "measurement.Predicate": {
-    "properties": {
-      "eq": {},
-      "field": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "field",
-      "eq"
-    ],
-    "type": "object",
-    "x-go-type": "github.com/casselc/goo/measurement.Predicate"
-  },
-  "measurement.Result": {
-    "properties": {
-      "dimensions": {
-        "anyOf": [
-          {
-            "additionalProperties": {},
-            "type": "object"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "measures": {
-        "anyOf": [
-          {
-            "additionalProperties": {
-              "$ref": "#/components/schemas/measurement.Value"
-            },
-            "type": "object"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      }
-    },
-    "required": [
-      "dimensions",
-      "measures"
-    ],
-    "type": "object",
-    "x-go-type": "github.com/casselc/goo/measurement.Result"
-  },
-  "measurement.Source": {
-    "properties": {
-      "bindings": {
-        "anyOf": [
-          {
-            "additionalProperties": {
-              "type": "string"
-            },
-            "type": "object"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "enums": {
-        "anyOf": [
-          {
-            "additionalProperties": {
-              "anyOf": [
-                {
-                  "items": {
-                    "type": "string"
-                  },
-                  "type": "array"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "type": "object"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "fields": {
-        "anyOf": [
-          {
-            "additionalProperties": {
-              "type": "string"
-            },
-            "type": "object"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "kind": {
-        "type": "string"
-      },
-      "subjectKey": {
-        "anyOf": [
-          {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      }
-    },
-    "required": [
-      "kind",
-      "fields",
-      "subjectKey",
-      "bindings"
-    ],
-    "type": "object",
-    "x-go-type": "github.com/casselc/goo/measurement.Source"
-  },
-  "measurement.Value": {
-    "properties": {
-      "count": {
-        "anyOf": [
-          {
-            "minimum": 0,
-            "type": "integer"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "ratio": {
-        "anyOf": [
-          {
-            "type": "number"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "state": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "state"
-    ],
-    "type": "object",
-    "x-go-type": "github.com/casselc/goo/measurement.Value"
-  },
   "measurements.Binding": {
     "properties": {
       "attributes": {
@@ -19618,7 +19296,7 @@
       "measurement": {
         "anyOf": [
           {
-            "$ref": "#/components/schemas/measurement.Definition"
+            "$ref": "#/components/schemas/subjectfacts.Definition"
           },
           {
             "type": "null"
@@ -19631,7 +19309,7 @@
             "additionalProperties": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/measurement.Plan"
+                  "$ref": "#/components/schemas/subjectfacts.Plan"
                 },
                 {
                   "type": "null"
@@ -19872,7 +19550,7 @@
         "anyOf": [
           {
             "items": {
-              "$ref": "#/components/schemas/measurement.Result"
+              "$ref": "#/components/schemas/subjectfacts.Result"
             },
             "type": "array"
           },
@@ -20645,6 +20323,328 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/retention.TailReceipt"
+  },
+  "subjectfacts.Definition": {
+    "properties": {
+      "apiVersion": {
+        "type": "string"
+      },
+      "dimensions": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "measures": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/subjectfacts.Measure"
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "name": {
+        "type": "string"
+      },
+      "population": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/subjectfacts.Predicate"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "source": {
+        "$ref": "#/components/schemas/subjectfacts.Source"
+      }
+    },
+    "required": [
+      "apiVersion",
+      "name",
+      "source",
+      "dimensions",
+      "measures"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/subjectfacts.Definition"
+  },
+  "subjectfacts.Measure": {
+    "properties": {
+      "denominator": {
+        "type": "string"
+      },
+      "numerator": {
+        "type": "string"
+      },
+      "op": {
+        "type": "string"
+      },
+      "unknownWhen": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "where": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/subjectfacts.Predicate"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "op"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/subjectfacts.Measure"
+  },
+  "subjectfacts.Plan": {
+    "properties": {
+      "ddl": {
+        "type": "string"
+      },
+      "definition": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/subjectfacts.Definition"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "metricYaml": {
+        "type": "string"
+      },
+      "parameters": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "query": {
+        "type": "string"
+      },
+      "requirements": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "status": {
+        "type": "string"
+      },
+      "target": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "target",
+      "status",
+      "requirements",
+      "parameters",
+      "query",
+      "definition"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/subjectfacts.Plan"
+  },
+  "subjectfacts.Predicate": {
+    "properties": {
+      "eq": {},
+      "field": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "field",
+      "eq"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/subjectfacts.Predicate"
+  },
+  "subjectfacts.Result": {
+    "properties": {
+      "dimensions": {
+        "anyOf": [
+          {
+            "additionalProperties": {},
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "measures": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/subjectfacts.Value"
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "dimensions",
+      "measures"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/subjectfacts.Result"
+  },
+  "subjectfacts.Source": {
+    "properties": {
+      "bindings": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "enums": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "fields": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "kind": {
+        "type": "string"
+      },
+      "subjectKey": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "kind",
+      "fields",
+      "subjectKey",
+      "bindings"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/subjectfacts.Source"
+  },
+  "subjectfacts.Value": {
+    "properties": {
+      "count": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "ratio": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "state": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "state"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/subjectfacts.Value"
   },
   "workbench.ActivityView": {
     "properties": {

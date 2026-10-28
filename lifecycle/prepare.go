@@ -10,7 +10,7 @@ import (
 	"sort"
 	"strconv"
 
-	"github.com/casselc/goo/measurement"
+	"github.com/casselc/goo/subjectfacts"
 )
 
 type scopeKey struct{ Environment, Tenant, Service string }
@@ -65,7 +65,7 @@ func (p Policy) PrepareRaw(raw []json.RawMessage) (*Prepared, error) {
 	p.TerminalOutcomes = append([]string(nil), p.TerminalOutcomes...)
 	sort.Slice(p.Scopes, func(i, j int) bool { return encoded(p.Scopes[i]) < encoded(p.Scopes[j]) })
 	sort.Strings(p.TerminalOutcomes)
-	out := &Prepared{Subjects: []Subject{}, Facts: []measurement.Fact{}}
+	out := &Prepared{Subjects: []Subject{}, Facts: []subjectfacts.Fact{}}
 	r := &out.Receipt
 	r.Policy = p
 	r.CohortStartNS, r.CohortEndNS = strconv.FormatInt(b.start, 10), strconv.FormatInt(b.end, 10)
@@ -292,7 +292,7 @@ func (p Policy) PrepareRaw(raw []json.RawMessage) (*Prepared, error) {
 	}
 	for _, s := range out.Subjects {
 		quality := receipts[scopeOf(s.Environment, s.TenantID, s.ServiceName)].Quality
-		out.Facts = append(out.Facts, measurement.Fact{
+		out.Facts = append(out.Facts, subjectfacts.Fact{
 			"evaluation_id": p.EvaluationID, "environment": s.Environment, "tenant_id": s.TenantID,
 			"service_name": s.ServiceName, p.SubjectField: s.SubjectID, "release": s.Release,
 			"classification": s.Classification, "quality_impaired": quality != "complete",

@@ -1,6 +1,7 @@
-// Package measurement implements a portable aggregate subset over prepared
+// Package subjectfacts implements a portable aggregate subset over prepared
 // subject facts. It does not infer lifecycle outcomes from raw telemetry.
-package measurement
+// Native OTel measurement binding and evaluation live in the measurements package.
+package subjectfacts
 
 import (
 	"fmt"

@@ -1,4 +1,4 @@
-package measurement
+package subjectfacts
 
 import (
 	"encoding/json"

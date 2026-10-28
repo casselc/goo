@@ -1,5 +1,10 @@
 # Whole-product architecture review — 2026-10-24
 
+> Historical package-path note: the prepared-fact `measurement/` package was
+> renamed to `subjectfacts/` in 227. The review below retains its original names;
+> current usage is in [the compiler guide](PORTABLE_COMPILER.md).
+
+
 Reviewed baseline: `86e35a5`, with concurrent implementation intentionally excluded from this assessment. This is a source and documentation review, not new live-stack acceptance. Recommendations feed the revised roadmap and backlog; historical review documents are evidence, not parallel work queues.
 
 ## Architectural direction

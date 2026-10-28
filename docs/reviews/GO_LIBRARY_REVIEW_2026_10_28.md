@@ -1,5 +1,10 @@
 # Go libraries and runtime structure review — 2026-10-28
 
+> Historical package-path note: the prepared-fact `measurement/` package was
+> renamed to `subjectfacts/` in 227. The review below retains its original names;
+> current usage is in [the compiler guide](../PORTABLE_COMPILER.md).
+
+
 Proposal only; no implementation, dependency or toolchain changes. Revised after user clarification: this is a prerelease; current module versions, API shapes and artifact formats are migration facts, not nonnegotiable compatibility floors. The preferred negotiated cutover is detailed below. Reviewed checkout `af107b7`. This review used source inspection and the installed compiler's source/specification, not new execution, load, browser or semantic acceptance. Existing checks in `VALIDATION.md` are historical evidence, not checks performed here. No broad suites or builds were run.
 
 ## Recommendation

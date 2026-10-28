@@ -2,10 +2,13 @@
 FROM golang:1.27.2 AS build
 WORKDIR /src
 COPY go.mod go.sum ./
+COPY identity ./identity
+COPY internal ./internal
+COPY retention ./retention
 COPY annotations ./annotations
 COPY metrics ./metrics
 COPY measurements ./measurements
-COPY measurement ./measurement
+COPY subjectfacts ./subjectfacts
 COPY lifecycle ./lifecycle
 COPY prebuilt ./prebuilt
 COPY exploration ./exploration

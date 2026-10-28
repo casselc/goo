@@ -8,7 +8,7 @@ import (
 	"io"
 	"sort"
 
-	"github.com/casselc/goo/measurement"
+	"github.com/casselc/goo/subjectfacts"
 	"gopkg.in/yaml.v3"
 )
 
@@ -46,18 +46,18 @@ type Diagnostic struct {
 	Reason     string `json:"reason"`
 }
 type Expansion struct {
-	APIVersion        string                       `json:"apiVersion"`
-	Revision          string                       `json:"revision"`
-	ProfileRevision   string                       `json:"profileRevision"`
-	InventoryRevision string                       `json:"inventoryRevision"`
-	InventoryBasis    string                       `json:"inventoryBasis"`
-	Binding           Binding                      `json:"binding"`
-	Resource          map[string]string            `json:"resource"`
-	Measurement       *measurement.Definition      `json:"measurement"`
-	Views             []View                       `json:"views"`
-	Recipe            []Step                       `json:"recipe"`
-	Plans             map[string]*measurement.Plan `json:"plans"`
-	Diagnostics       []Diagnostic                 `json:"diagnostics"`
+	APIVersion        string                        `json:"apiVersion"`
+	Revision          string                        `json:"revision"`
+	ProfileRevision   string                        `json:"profileRevision"`
+	InventoryRevision string                        `json:"inventoryRevision"`
+	InventoryBasis    string                        `json:"inventoryBasis"`
+	Binding           Binding                       `json:"binding"`
+	Resource          map[string]string             `json:"resource"`
+	Measurement       *subjectfacts.Definition      `json:"measurement"`
+	Views             []View                        `json:"views"`
+	Recipe            []Step                        `json:"recipe"`
+	Plans             map[string]*subjectfacts.Plan `json:"plans"`
+	Diagnostics       []Diagnostic                  `json:"diagnostics"`
 }
 
 func digest(value any) string {
@@ -142,15 +142,15 @@ func Expand(in Inventory, b Binding) (*Expansion, error) {
 	b.Policy.FailureStatusRanges = append([]StatusRange(nil), b.Policy.FailureStatusRanges...)
 	// Canonical policy order makes equivalent authoring order revision-neutral.
 	sort.Slice(b.Policy.FailureStatusRanges, func(i, j int) bool { return b.Policy.FailureStatusRanges[i].Min < b.Policy.FailureStatusRanges[j].Min })
-	d := &measurement.Definition{APIVersion: "goo/v1alpha1", Name: b.Name,
-		Source:     measurement.Source{Kind: "subject-facts", Fields: map[string]string{"evaluation_id": "string", "scope_id": "string", "trace_id": "string", "span_id": "string", "route": "string", "method": "string", "classification": "string"}, Enums: map[string][]string{"classification": {"success", "failure", "unknown"}}, SubjectKey: []string{"scope_id", "trace_id", "span_id"}, Bindings: b.PreparedTables},
-		Population: &measurement.Predicate{Field: "scope_id", Eq: b.Scope}, Dimensions: map[string]string{"route": "route", "method": "method"},
-		Measures: map[string]measurement.Measure{"requests": {Op: "count"}, "successful": {Op: "count", Where: &measurement.Predicate{Field: "classification", Eq: "success"}}, "failures": {Op: "count", Where: &measurement.Predicate{Field: "classification", Eq: "failure"}}, "unknown": {Op: "count", Where: &measurement.Predicate{Field: "classification", Eq: "unknown"}}, "success_ratio": {Op: "ratio", Numerator: "successful", Denominator: "requests", UnknownWhen: []string{"unknown"}}}}
+	d := &subjectfacts.Definition{APIVersion: "goo/v1alpha1", Name: b.Name,
+		Source:     subjectfacts.Source{Kind: "subject-facts", Fields: map[string]string{"evaluation_id": "string", "scope_id": "string", "trace_id": "string", "span_id": "string", "route": "string", "method": "string", "classification": "string"}, Enums: map[string][]string{"classification": {"success", "failure", "unknown"}}, SubjectKey: []string{"scope_id", "trace_id", "span_id"}, Bindings: b.PreparedTables},
+		Population: &subjectfacts.Predicate{Field: "scope_id", Eq: b.Scope}, Dimensions: map[string]string{"route": "route", "method": "method"},
+		Measures: map[string]subjectfacts.Measure{"requests": {Op: "count"}, "successful": {Op: "count", Where: &subjectfacts.Predicate{Field: "classification", Eq: "success"}}, "failures": {Op: "count", Where: &subjectfacts.Predicate{Field: "classification", Eq: "failure"}}, "unknown": {Op: "count", Where: &subjectfacts.Predicate{Field: "classification", Eq: "unknown"}}, "success_ratio": {Op: "ratio", Numerator: "successful", Denominator: "requests", UnknownWhen: []string{"unknown"}}}}
 	if err := d.Validate(); err != nil {
 		return nil, err
 	}
 	out := &Expansion{APIVersion: "goo/expansion/v1alpha1", ProfileRevision: digest(profile), InventoryBasis: in.Basis, Binding: b, Resource: scope.Resource, Measurement: d,
-		Views: []View{{ID: "route-overview", Kind: "aggregate-table", Measurement: b.Name, GroupBy: []string{"route", "method"}, Measures: []string{"requests", "successful", "failures", "unknown", "success_ratio"}}}, Recipe: []Step{{Question: "Which routes have observed failures or unknown outcomes?", View: "route-overview"}}, Plans: map[string]*measurement.Plan{}, Diagnostics: []Diagnostic{{Capability: "raw-span-preparation", Status: "required", Reason: "A source adapter must enforce resource bindings, fixed evaluation selection, scoped span identity and the bound classification policy before these aggregate plans execute."}, {Capability: "duration-heatmap-and-waterfall", Status: "unsupported", Reason: "Duration distributions and relation lookup are not operators in the current aggregate IR."}, {Capability: "objective-and-alert", Status: "not-configured", Reason: "No target, objective window or notification policy is inferred."}}}
+		Views: []View{{ID: "route-overview", Kind: "aggregate-table", Measurement: b.Name, GroupBy: []string{"route", "method"}, Measures: []string{"requests", "successful", "failures", "unknown", "success_ratio"}}}, Recipe: []Step{{Question: "Which routes have observed failures or unknown outcomes?", View: "route-overview"}}, Plans: map[string]*subjectfacts.Plan{}, Diagnostics: []Diagnostic{{Capability: "raw-span-preparation", Status: "required", Reason: "A source adapter must enforce resource bindings, fixed evaluation selection, scoped span identity and the bound classification policy before these aggregate plans execute."}, {Capability: "duration-heatmap-and-waterfall", Status: "unsupported", Reason: "Duration distributions and relation lookup are not operators in the current aggregate IR."}, {Capability: "objective-and-alert", Status: "not-configured", Reason: "No target, objective window or notification policy is inferred."}}}
 	// Only the selected scope/contract contributes to the inventory revision.
 	normalized := scope
 	normalized.Signals = nil

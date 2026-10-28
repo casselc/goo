@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/casselc/goo/measurement"
+	"github.com/casselc/goo/subjectfacts"
 )
 
 type fixture struct {
@@ -92,14 +92,14 @@ func eventsFor(defaults map[string]any, recipes []map[string]any) []json.RawMess
 	return out
 }
 
-func definition(t *testing.T) *measurement.Definition {
+func definition(t *testing.T) *subjectfacts.Definition {
 	t.Helper()
 	f, err := os.Open("../examples/lifecycle/measurement.yaml")
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer f.Close()
-	d, err := measurement.Read(f)
+	d, err := subjectfacts.Read(f)
 	if err != nil {
 		t.Fatal(err)
 	}

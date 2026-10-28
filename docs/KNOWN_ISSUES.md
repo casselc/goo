@@ -1,5 +1,13 @@
 # Known issues and gaps
 
+The bounded entry/scope/return review is accepted through 226/227. Native mobile
+secondary-action density and nested native/resource ancestry remain named UI
+follow-ups. The prepared-fact Go compiler is now `subjectfacts`; the former
+`measurement` import is removed. Native OTel binding stays `measurements`. Stored
+formats and compiler output are unchanged; unchecked revision/hash cleanup still
+requires a consumer audit.
+
+
 The [native display graph](UI_COMPONENTS.md#native-module-entrypoints) now includes
 all supplied-data widgets and the standalone gallery. Application owners also
 use native imports, with a single `app.mjs` bootstrap and no namespace adapter.
