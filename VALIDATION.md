@@ -1,5 +1,24 @@
 # Validation record
 
+## Whole-product review and roadmap revision (2026-10-28 UTC)
+
+Reviewed source at 9154922, prior specialist/product reviews and real Chromium
+Activity, Services/resources, Saved and Definitions surfaces. A delayed real
+operation response released after leaving its workspace reproduced hidden
+counter-rate and histogram source reads. A single fresh local entry recorded
+14 API requests (including duplicate declarations/status), 136 modules and 3,252
+DOM nodes; this is a local observation, not a load/performance benchmark. Activity
+controls are compact, but short record rows remain vertically expensive.
+
+Current Grafana Explore, Datadog Log Explorer and ClickStack source documentation
+were read from public GitHub pages; Honeycomb research remains explicitly limited
+to the earlier survey. The combined review and new 2026-10-28 roadmap prioritize
+browser ownership, shared observation density and measured startup work before
+further specialized capabilities. Old roadmap/backlog headers now point to the
+current acceptance index. No product code, saved data or access policy changed in
+this review. Temporary review frames are development aids, not a new evidence
+bundle. Implementation continues under the user's standing authorization.
+
 ## Storage-free supplied measurement evaluation (2026-10-28 UTC)
 
 `measurements.Evaluate(question, rows, at)` now evaluates numeric/state observations

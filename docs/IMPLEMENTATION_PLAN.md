@@ -1,8 +1,8 @@
 # Implementation plan
 
-> Current priority/status index: [2026-10-25 roadmap](ROADMAP_2026_10_25.md) and
-> [review-gated execution backlog](BACKLOG_2026_10_25.md). The long milestone record
-> below is implementation history; conflicting old Next labels are superseded.
+> Current priority and bounded acceptance: [2026-10-28 roadmap](ROADMAP_2026_10_28.md).
+> Earlier roadmaps/backlogs and the long milestone record below preserve delivery
+> history; their competing Next labels are superseded.
 
 
 Updated 2026-10-23 after the user authorized incorporating the product, architecture

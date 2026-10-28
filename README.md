@@ -425,3 +425,6 @@ Manual integrations can use Runtime methods without a process binding. See
 For supplied native observations, `measurements.Evaluate(question, rows, at)` is
 storage-free. Lifecycle custody/correction uses `measurements.ObserveLifecycle`
 explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-evaluation-and-lifecycle-observation).
+
+Current priorities and acceptance are in the [2026-10-28 roadmap](docs/ROADMAP_2026_10_28.md),
+based on the [whole-product review](docs/WHOLE_PRODUCT_REVIEW_2026_10_28.md).

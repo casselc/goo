@@ -2,7 +2,7 @@
 
 This describes implemented module and lifetime boundaries. The explicitly labeled
 target diagram is design context, not another execution queue; current priorities
-are in the [reviewed roadmap](ROADMAP_2026_10_24.md). See
+are in the [reviewed roadmap](ROADMAP_2026_10_28.md). See
 [known limits](KNOWN_ISSUES.md) and [executed validation](../VALIDATION.md) for
 capability/acceptance boundaries. HTTP paths and direct/proxy differences are
 indexed in [the API contract](API.md).
