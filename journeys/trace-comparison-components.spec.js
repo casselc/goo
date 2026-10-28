@@ -39,9 +39,9 @@ test('185 synthetic comparison supports SSR and detached SPA without fetching or
     const open = XMLHttpRequest.prototype.open;
     XMLHttpRequest.prototype.open = function (...args) { fixtureFetches++; return open.apply(this, args); };
   }, input);
-  for (const asset of ['components.js', 'attributes.js', 'comparison-visual.js',
+  for (const asset of ['app-display.mjs', 'attributes.js', 'comparison-visual.mjs',
     'trace-page-breakdown.js', 'trace-page-breakdown-view.js', 'trace-page-comparison.js', 'trace-comparison-view.js']) {
-    await page.addScriptTag({ url: base + '/' + asset });
+    await page.addScriptTag({type:'module',url: base + '/' + asset });
   }
   for (const id of ['ssr', 'upgrade']) await expect(page.locator('#' + id)).toHaveAttribute('data-state', 'available');
   await page.evaluate(data => {

@@ -2,7 +2,7 @@
 
 Service widgets, captured measurements and their investigation links use the same passive `goo-evidence-summary` element. It groups the population, scope, fixed window, source-record count, declared grain and binding into labelled facts. The result state and evidence mode are separate. A visible notice preserves source-completeness and independent-read limits; exact identities and clocks stay in a native disclosure.
 
-The application presenter in `ui/evidence-scope.js` interprets typed measurement captures and validated service-widget results. The custom element in `ui/evidence-summary.js` only renders its supplied display snapshot. It never queries telemetry or metadata, chooses a namespace, infers health, calculates counts, refreshes evidence, navigates, copies or captures. Existing adapter buttons remain outside it.
+The application presenter in `ui/evidence-scope.js` interprets typed measurement captures and validated service-widget results. The custom element in `ui/evidence-summary.mjs` only renders its supplied display snapshot. It never queries telemetry or metadata, chooses a namespace, infers health, calculates counts, refreshes evidence, navigates, copies or captures. Existing adapter buttons remain outside it.
 
 ```js
 summary.data = {

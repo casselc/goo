@@ -1,5 +1,5 @@
 /* Supplied grouping display and intent only. Owners stage/validate/execute queries. */
-(function(global){
+const global = globalThis;
  const key=f=>JSON.stringify([f.kind,f.key]);
  function validData(data){const field=f=>f&&['column','attribute','resource'].includes(f.kind)&&typeof f.key==='string'&&f.key.length>0&&new TextEncoder().encode(f.key).length<=128&&!f.key.includes('\0'),item=i=>i&&field(i.field)&&(i.label===undefined||typeof i.label==='string');return !!data&&Array.isArray(data.fields)&&data.fields.length<=256&&data.fields.every(item)&&Array.isArray(data.grouping)&&data.grouping.length<=2&&data.grouping.every(item)&&new Set(data.grouping.map(i=>key(i.field))).size===data.grouping.length&&(data.disabled===undefined||typeof data.disabled==='boolean')&&(data.label===undefined||typeof data.label==='string')}
  function parseField(value){const at=typeof value==='string'?value.indexOf(':'):-1,field={kind:value?.slice(0,at),key:value?.slice(at+1)};if(at<1||!['column','attribute','resource'].includes(field.kind)||!field.key||new TextEncoder().encode(field.key).length>128||field.key.includes('\0'))throw Error('Use column:, attribute: or resource: followed by an exact field key (up to 128 bytes).');return field}
@@ -22,5 +22,4 @@
   }
   if(!global.customElements.get('goo-grouping-control'))global.customElements.define('goo-grouping-control',GooGroupingControl);
  }
- const api={validData,parseField};if(typeof module!=='undefined')module.exports=api;else global.GooGroupingControl=api;
-})(typeof window==='undefined'?globalThis:window);
+ export {validData,parseField};

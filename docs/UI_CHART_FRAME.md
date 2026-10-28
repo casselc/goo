@@ -2,7 +2,7 @@
 
 `goo-chart-frame` provides consistent chart headings, supplied units, window
 labels, result state and a concise note. It is light DOM and framework neutral.
-Load `chart-frame.js` and `chart-frame.css`; application code supplies the chart,
+Load `chart-frame.mjs` and `chart-frame.css`; application code supplies the chart,
 legend, explanation and native actions as ordinary child elements.
 
 ```html

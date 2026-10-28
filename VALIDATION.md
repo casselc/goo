@@ -1,5 +1,40 @@
 # Validation record
 
+## Native display module pilot (2026-10-27 PDT)
+
+Twelve core/chart feature modules now use explicit native imports/exports and
+`.mjs` extensions. `/display.mjs` registers/exports their closed display graph;
+direct feature imports bring their own JavaScript dependencies. Classic exports
+and original `.js` files are removed. The app/gallery load ordered module
+scripts, with one private `/app-display.mjs` namespace adapter for remaining
+legacy owners. Attribute/record, authored-tag and aligned-numeric widgets remain
+outside this public graph. No source evaluator, telemetry contract or visible
+interaction changed.
+
+Checks: the full Node suite passes, including native-import identity, a closed
+passive dependency graph and unchanged exact-data helpers. Eight Python startup
+checks pass, including actual `.mjs` HTTP/MIME responses and no upstream calls.
+The existing Hegel comparison-series and brush-population properties pass.
+Chromium 154.0.8037.57 exercises SSR fallback upgrades, pre-definition detached
+properties, reconnects, selection/range gestures, exact values and no-source-read
+contracts; real-source record fields, heatmap and host controls also pass.
+The existing explicit 30-second host-control Bombadil actor passes on `.mjs`.
+Initial fixture failures exposed classic-script recipes, a missing numeric
+formatter dependency and an outdated multi-match selector; those were corrected.
+One dynamically assembled bridge URL was corrected and checked again separately.
+The final follow-up batch passes all ten grouping/OTel/actor checks; together
+with the broader component batch, 44 distinct browser checks pass. Disposable
+run outputs were removed after validation.
+Firefox/Safari and startup performance were not measured.
+
+Both local lab source trees match the 31 changed source files. All 14 served
+module files match local bytes and have JavaScript MIME types. Superseded classic
+source copies are removed; the Go backend was not rebuilt. Documentation and the
+module dependency diagram describe the implemented boundary. Regenerated dated
+screenshots are excluded because this cut changes loading, not visible behavior;
+no new evidence ledger or custody format was introduced.
+
+
 ## Unified Go baseline (2026-10-28)
 
 All six modules now declare Go 1.27.0. `.go-version` pins the validated 1.27.2

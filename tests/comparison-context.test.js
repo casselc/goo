@@ -1,5 +1,5 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
-const {comparisonContextSide}=require('../ui/evidence-scope'),{contextModel}=require('../ui/comparison-visual');
+const {comparisonContextSide}=require('../ui/evidence-scope'),{contextModel}=require('../ui/comparison-visual.mjs');
 test('comparison context keeps exact counts, window precision and independent clocks',()=>{
  const q={environment:'prod',fromMs:1000,toMs:2000,fromNS:'1000000123',toNS:'2000000456'},before=structuredClone(q),a=comparisonContextSide(q,{mode:'frozen',state:'observed',count:'18446744073709551616',readAt:'2026-10-23T00:00:01Z',capturedAt:'2026-10-23T00:00:02Z'}),b=comparisonContextSide({...q,fromNS:'3000000789',toNS:'4000000000'},{mode:'live',state:'no_data',count:'0',basis:'separate-current-basis'});
  assert.equal(a.facts[0].value,'18446744073709551616');assert.equal(a.facts[1].value,'[1000000123, 2000000456)');assert.equal(b.facts[0].value,'0');assert.equal(b.state,'no_data');assert.deepEqual(q,before);assert.equal(contextModel({sides:[{label:'Baseline',data:a},{label:'Comparison',data:b}]}),true);

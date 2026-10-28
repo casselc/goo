@@ -48,7 +48,7 @@ Open trace remains a separately named source action in each application adapter.
 ## Server HTML and SPA use
 
 The [component reference](../ui/components.html) contains synthetic server-rendered
-fixtures. Load `components.js`, `evidence-summary.js`, `service-identity.js` and
+fixtures. Load `components.mjs`, `evidence-summary.mjs`, `service-identity.js` and
 `record-presentation.js`, plus `record-presentation.css`. The application detail
 helper also uses `attributes.js`. For example:
 

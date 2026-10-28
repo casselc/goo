@@ -1,6 +1,6 @@
 /* Broad source exploration has independent generations and context evidence. */
 (function(global){
- const ui=typeof module!=='undefined'?require('./components'):global.GooUI,node=ui.node;
+ const ui=typeof module!=='undefined'?require('./components.mjs'):global.GooUI,node=ui.node;
  const fields=typeof module!=='undefined'?require('./field-presentation'):global.GooFieldPresentation,fieldName=fields.qualified;
  const traceQuestion=(...args)=>(typeof module!=='undefined'?require('./record-results'):global.GooRecordResults).traceQuestion(...args);
  function mount(container,{prefix='',readOnly=false,summaryProvided=false,onPage,managed=false,active=()=>true,initialBaseline=null}={}){

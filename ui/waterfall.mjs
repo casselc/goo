@@ -1,6 +1,6 @@
 /* Passive span geometry and native-button display. App adapters own selection intent,
  * detail panels, source reads and navigation. Subtract exact ns before Number. */
-(function(global){
+const global = globalThis;
   function layout(rows) {
     const spans = rows.map((row,index) => ({ row,index, start: BigInt(row.timestamp_ns), duration: BigInt(row.duration_ns) }));
     if (!spans.length) return { spans: [], start: 0n, end: 0n };
@@ -73,5 +73,4 @@
   }
   if(!global.customElements.get('goo-trace-waterfall'))global.customElements.define('goo-trace-waterfall',GooTraceWaterfall);
  }
- const api={layout,validData};if(typeof module!=='undefined')module.exports=api;else global.GooWaterfall=api;
-})(typeof window==='undefined'?globalThis:window);
+ export {layout,validData};

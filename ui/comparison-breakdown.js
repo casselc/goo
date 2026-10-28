@@ -7,7 +7,7 @@
  function difference(row,metric,totals={}){try{
   const natural=v=>{if(typeof v!=='string'||!/^\d+$/.test(v))throw Error('Unknown value');return BigInt(v)},abs=n=>n<0n?-n:n;
   const pair=(an,ad,bn,bd)=>ad===0n||bd===0n?null:{n:abs(bn*ad-an*bd),d:ad*bd};
-  if(metric.startsWith('numeric-')){const value=row.measures?.numeric;if(value?.state!=='comparable')return null;const key=metric.slice(8)+'Difference',ratio=(typeof module!=='undefined'?require('./comparison-visual'):global.GooComparisonVisual).signedRatio(value[key]);return ratio?{n:abs(ratio.n),d:ratio.d}:null}
+  if(metric.startsWith('numeric-')){const value=row.measures?.numeric;if(value?.state!=='comparable')return null;const key=metric.slice(8)+'Difference',ratio=(typeof module!=='undefined'?require('./comparison-visual.mjs'):global.GooComparisonVisual).signedRatio(value[key]);return ratio?{n:abs(ratio.n),d:ratio.d}:null}
   if(metric==='count')return {n:abs(natural(row.selectionCount)-natural(row.baselineCount)),d:1n};
   if(metric==='share')return pair(natural(row.baselineCount),natural(totals.baselineCount),natural(row.selectionCount),natural(totals.selectionCount));
   const m=row.measures,a=metric==='error-rate'?m?.baselineStatus:m?.baselineDuration,b=metric==='error-rate'?m?.selectionStatus:m?.selectionDuration;if(!a||!b||natural(a.count)===0n||natural(b.count)===0n)return null;

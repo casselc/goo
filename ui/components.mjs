@@ -1,5 +1,5 @@
 /* Shared presentation primitives. Query semantics and source reads belong to callers. */
-(function(global){
+const global = globalThis;
  function node(tag,text,cls){const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e}
  function disclosure(label,children=[],{open=false,className=''}={}){const e=node('details',undefined,'ui-disclosure '+className);e.open=open;e.append(node('summary',label),...children);return e}
  function renderStats(items,{className=''}={}){const list=node('dl',undefined,'ui-stats '+className);for(const item of items){const e=node('div');e.append(node('dt',item.label),node('dd',item.value??'Unavailable'));if(item.note)e.append(node('small',item.note));list.append(e)}return list}
@@ -60,5 +60,4 @@
   if(!global.customElements.get('goo-latency'))global.customElements.define('goo-latency',GooLatency);
   if(!global.customElements.get('goo-stat-list'))global.customElements.define('goo-stat-list',GooStatList);
  }
- const api={node,disclosure,stats,actions,inspector,durationMS,latencyModel,latency,parseAttribute};if(typeof module!=='undefined')module.exports=api;else global.GooUI=api;
-})(typeof window==='undefined'?globalThis:window);
+ export {node,disclosure,stats,actions,inspector,durationMS,latencyModel,latency,parseAttribute};

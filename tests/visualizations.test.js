@@ -21,7 +21,7 @@ test('empty and zero-duration traces have finite geometry',()=>{
  assert.equal(s.left,0);assert.equal(s.width,0);
 });
 test('waterfall component withholds malformed or unbounded data without coercing exact times',()=>{
- const {validData}=require('../ui/waterfall.js');const row=span('s','18446744073709551615','0');
+ const {validData}=require('../ui/waterfall.mjs');const row=span('s','18446744073709551615','0');
  assert.equal(validData({rows:[row],truncated:true}),true);
  for(const invalid of [{rows:[{...row,timestamp_ns:'18446744073709551616'}]},{rows:[{...row,duration_ns:'-1'}]},{rows:[{...row,duration_ns:1}]},{rows:[{timestamp_ns:'1',duration_ns:'1'}]},{rows:[row],truncated:'false'},{rows:Array(1001).fill(row)},null])assert.equal(validData(invalid),false);
  assert.equal(row.timestamp_ns,'18446744073709551615');

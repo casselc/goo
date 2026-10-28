@@ -1,5 +1,5 @@
 /* Passive chart chrome. Callers own plots, actions, source reads and subscriptions. */
-(function(global){
+const global = globalThis;
  const states={observed:'Observed',no_data:'No data',unknown:'Coverage unknown',loading:'Loading',partial:'Partial result',stale:'Stale result',unavailable:'Unavailable',incompatible:'Incompatible comparison'};
  const text=(value,fallback='')=>typeof value==='string'?value.slice(0,4096):fallback;
  function model(value){const d=value&&typeof value==='object'?value:{};return {title:text(d.title,'Chart'),unit:text(d.unit),window:text(d.window),state:Object.hasOwn(states,d.state)?d.state:'unknown',note:text(d.note),headingLevel:/^[2-6]$/.test(String(d.headingLevel))?String(d.headingLevel):'3'}}
@@ -23,5 +23,4 @@
   }
   if(!global.customElements.get('goo-chart-frame'))global.customElements.define('goo-chart-frame',GooChartFrame);
  }
- const api={model};if(typeof module!=='undefined')module.exports=api;else global.GooChartFrame=api;
-})(typeof window==='undefined'?globalThis:window);
+ export {model};

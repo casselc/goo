@@ -1,5 +1,5 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
-const {model,safeHref}=require('../ui/time-bars');
+const {model,safeHref}=require('../ui/time-bars.mjs');
 test('count bars preserve exact supplied domain, zero and missing state',()=>{
  const data={ceiling:'900719925474099300',points:[{key:'zero',value:'0',label:'Zero'},{key:'one',value:'900719925474099300',label:'Exact count'},{key:'missing',state:'unknown',label:'Coverage unknown'},{key:'empty',value:'0',state:'no_data',label:'No captured records'}]},before=JSON.stringify(data),result=model(data);
  assert.equal(result.points[0].height,0);assert.equal(result.points[0].positive,false);assert.equal(result.points[1].height,100);assert.equal(result.points[1].value,'900719925474099300');assert.equal(result.points[2].value,null);assert.equal(result.points[2].state,'unknown');assert.equal(result.points[3].state,'no_data');assert.equal(JSON.stringify(data),before);

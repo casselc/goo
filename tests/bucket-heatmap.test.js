@@ -1,5 +1,5 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
-const {model}=require('../ui/bucket-heatmap'),{histogramHeatmapSnapshot:snapshot}=require('../ui/measurements');
+const {model}=require('../ui/bucket-heatmap.mjs'),{histogramHeatmapSnapshot:snapshot}=require('../ui/measurements');
 const data=()=>({ceiling:'9007199254740993',rows:[{key:'b',label:'bucket'}],columns:[{key:'i',label:'interval',cells:[{state:'observed',value:'9007199254740993'}]}]});
 test('exact counts survive display geometry and input stays detached',()=>{const d=data(),m=model(d);assert.equal(m.columns[0].cells[0].value,d.ceiling);assert.equal(m.columns[0].cells[0].intensity,1);m.rows[0].label='changed';assert.equal(d.rows[0].label,'bucket')});
 test('zero, unknown and other layout remain distinct; invalid values fail closed',()=>{for(const cell of [{state:'observed',value:'0'},{state:'unknown'},{state:'outside'}]){const d=data();d.columns[0].cells=[cell];assert.equal(model(d).state,'observed')}for(const cell of [{state:'unknown',value:'0'},{state:'observed',value:'-1'},{state:'observed',value:'01'},{state:'observed',value:'9007199254740994'}]){const d=data();d.columns[0].cells=[cell];assert.equal(model(d).state,'unavailable')}const d=data();d.columns.push(d.columns[0]);assert.equal(model(d).state,'unavailable')});

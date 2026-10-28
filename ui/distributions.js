@@ -1,7 +1,7 @@
 /* Distribution views use complete captured groups, never the displayed row page. */
 (function(global){
  function percent(count,total){const n=BigInt(count),d=BigInt(total);if(d===0n)return null;const value=(n*10000n+d/2n)/d;return String(value/100n)+'.'+String(value%100n).padStart(2,'0');}
- const ui=()=>typeof module!=='undefined'?require('./components'):global.GooUI;
+ const ui=()=>typeof module!=='undefined'?require('./components.mjs'):global.GooUI;
  const durationMS=(...args)=>ui().durationMS(...args);
  function groupMetric(group,metric){if(metric.startsWith('numeric-'))return global.GooNumericMeasures.magnitude(global.GooNumericMeasures.value(group.numeric,metric.slice(8)));if(metric==='error-rate')return group.spanStatus&&group.count!=='0'?{n:BigInt(group.spanStatus.error)*100n,d:BigInt(group.count)}:null;if(metric==='count')return {n:BigInt(group.count),d:1n};const d=group.duration;if(!d||d.state!=='observed')return null;if(metric==='mean')return {n:BigInt(d.sumNs),d:BigInt(d.count)};return {n:BigInt(d[{p95:'p95Ns',p99:'p99Ns',max:'maxNs'}[metric]]),d:1n};}
  function compareMetric(a,b,metric){const x=groupMetric(a,metric),y=groupMetric(b,metric);if(!x||!y)return x?-1:y?1:0;const delta=x.n*y.d-y.n*x.d;if(delta!==0n)return delta>0n?-1:1;const ak=JSON.stringify(a.g0),bk=JSON.stringify(b.g0);return ak<bk?-1:ak>bk?1:0;}

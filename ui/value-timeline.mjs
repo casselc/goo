@@ -1,5 +1,5 @@
 /* Passive supplied scalar observations/intervals. No source or measurement semantics. */
-(function(global){
+const global = globalThis;
  function decimal(value){if(typeof value!=='string'||value.length>512)return null;const m=value.match(/^(-?)(\d+)(?:\.(\d+))?(?:e([+-]?\d+))?$/i);if(!m)return null;const e=Number(m[4]||0)-(m[3]||'').length;if(Math.abs(e)>600)return null;return {n:BigInt(m[2]+(m[3]||''))*(m[1]?-1n:1n)*(e>0?10n**BigInt(e):1n),d:e<0?10n**BigInt(-e):1n}}
  const compare=(a,b)=>a.n*b.d-b.n*a.d;
  const ns=v=>typeof v==='string'&&/^(0|[1-9]\d{0,18})$/.test(v)&&BigInt(v)<=9223372036854775807n;
@@ -55,5 +55,4 @@
   }
   if(!global.customElements.get('goo-value-timeline'))global.customElements.define('goo-value-timeline',GooValueTimeline);
  }
- const api={decimal,model,brushRange};if(typeof module!=='undefined')module.exports=api;else global.GooValueTimeline=api;
-})(typeof window==='undefined'?globalThis:window);
+ export {decimal,model,brushRange};

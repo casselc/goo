@@ -32,22 +32,73 @@ future priority. Earlier audits are dated design inputs, not another execution q
 | `goo-value-timeline` | `data` / `.data`, controlled key, optional brush intent | [Native timelines](NATIVE_TIMELINES.md). |
 | `goo-bucket-heatmap` | `data` / `.data`, controlled cell, optional range intent | [Bucket matrix](NATIVE_HEATMAPS.md); raw-span/native adapters remain separate. |
 | `goo-comparison-series` | `data` / `.data`, UTC/elapsed alignment | [Count-series comparison](COMPARISON_SERIES.md). |
-| `goo-time-range` | `data` JSON / `.data` | Bounded supplied millisecond range; [source](../ui/time-range.js). |
+| `goo-time-range` | `data` JSON / `.data` | Bounded supplied millisecond range; [source](../ui/time-range.mjs). |
 | `goo-evidence-summary` | `data` JSON / `.data` | [Evidence facts and exact clocks](EVIDENCE_SUMMARIES.md). |
 | `goo-record-summary`, `goo-record-context` | Supplied `record`, signal, optional bounded companion `records` | [Record presentation](RECORD_PRESENTATION.md). |
 | `goo-record-columns` | `model` JSON / `.model`; controlled layout intent | [Supplied column picker](RECORD_COLUMNS.md). |
 | `goo-grouping-control` | `data` JSON / `.data`; controlled grouping intent | [Grouping control](GROUPING_CONTROL.md). |
 | `goo-tag-list` | `tags` JSON / `.tags`, optional `interactive` | Authored tag display/selection; [source](../ui/meaning.js), [authored context](WORKBENCH_ANNOTATIONS.md). |
 
-Load `components.css` and `components.js` for the core elements. Feature elements
-load their named module/styles and declared display dependencies; the linked
-contracts and [application script inventory](../ui/index.html) show actual adoption.
-The comparison elements additionally load `comparison-visual.js`. Classic
-script tags or side-effect imports work; no framework or application bootstrap
-is required. Wait for `customElements.whenDefined(name)` if needed. Properties
-assigned before definition are upgraded and remain reactive. Elements can be
-reconnected. Consult the element contract for snapshot-copy and update behavior;
-application presenters and mutable owner models are not interchangeable APIs.
+## Native module entrypoints
+
+The core and chart graph now uses native ES modules. Load a single feature for
+its element/helpers, or use [display.mjs](../ui/display.mjs) to register the graph:
+
+```html
+<script type="module" src="/display.mjs"></script>
+```
+
+The entry exports named feature namespaces (`UI`, `Waterfall`, `ComparisonVisual`,
+`TimeBars`, `ValueTimeline`, `ChartFrame`, `BucketHeatmap`, `ComparisonSeries`,
+`TimeRange`, `EvidenceSummary`, `GroupingControl`, `StateObservations`). Direct
+feature imports include their own JavaScript dependencies:
+
+```html
+<script type="module">
+  import {latencyModel} from '/components.mjs';
+  import '/state-observations.mjs';
+  // Data and event ownership stay with the embedding application.
+</script>
+```
+
+Serve the modules over HTTP(S), with JavaScript MIME types and their relative
+paths intact. Module scripts defer until parsing completes; await
+`customElements.whenDefined(name)` when the caller needs the upgraded element.
+Properties assigned before definition still upgrade and remain reactive, and
+elements can reconnect. Load `components.css` and the feature's named styles
+explicitly: this cut introduces no bundler or CSS injection. No display module
+publishes a `Goo*` global or provides a CommonJS wrapper. Node validation uses
+Node 24.19.0, including its native synchronous `require(ESM)` interoperability
+for the existing application test harness; external integrations should import.
+Browser conformance was checked in Chromium only; Firefox/Safari conformance is
+not yet established.
+
+The attribute/record, authored-tag and aligned-numeric widgets listed above still
+have legacy application dependencies and are **outside this first module cut**.
+The application and mixed gallery use the private
+[app-display.mjs](../ui/app-display.mjs) adapter to supply namespaces to those
+owners. It imports the same module implementations, contains no display logic,
+and must go when the remaining application graph moves to explicit imports.
+Embedders of the converted graph do not need it. `GooUI` and other converted
+`Goo*` helper names in the application-adoption notes below refer to that private
+adapter; external consumers import `UI`, `ComparisonVisual`, etc. from
+`/display.mjs`, or named helpers directly from the feature. The gallery's remaining legacy
+scripts and application scripts are loaded as ordered module scripts so the
+adapter executes before their initialization. No second display implementation
+or classic-script export path is retained.
+
+```mermaid
+flowchart LR
+  Embed[SSR HTML or SPA] --> Feature[Feature module]
+  Embed --> Entry[display.mjs]
+  Entry --> Feature
+  Feature --> Core[Explicit display dependencies]
+  Legacy[Legacy application owners] --> Bridge[Private app-display.mjs adapter]
+  Bridge --> Entry
+```
+
+Consult the element contract for snapshot-copy and update behavior; application
+presenters and mutable owner models are not interchangeable APIs.
 
 ```html
 <link rel="stylesheet" href="/components.css">
@@ -56,7 +107,7 @@ application presenters and mutable owner models are not interchangeable APIs.
   <p>Mean 15 ms; p95 20 ms.</p>
 </goo-latency>
 <goo-stat-list items='[{"label":"Captured spans","value":"900719925474099300"}]'></goo-stat-list>
-<script src="/components.js"></script>
+<script type="module" src="/components.mjs"></script>
 ```
 
 Use the server template engine's ordinary HTML-attribute escaping for JSON,
@@ -166,7 +217,7 @@ the display components acquire no new fetching or subscription behavior.
 
 The general population workspace reuses `goo-time-range`, `goo-value-timeline`, `goo-table` and the existing attribute/record inspector. Population queries, paging, cancellation, selector portability and saved-view publication stay in application adapters/Go services; no display component owns those operations.
 
-`goo-time-range` (`time-range.js` + `time-range.css`) accepts server JSON `data` or detached `.data`: `{fromMs,toMs,selection:{fromMs,toMs}}`. It renders two native UTC-labelled range handles and emits `goo-range-select` with exact safe-integer millisecond bounds. It performs no reads or navigation. Invalid, empty or out-of-domain selections withhold the controls. The standalone reference includes markup; journeys 88–89 exercise composition and keyboard/property upgrades.
+`goo-time-range` (`time-range.mjs` + `time-range.css`) accepts server JSON `data` or detached `.data`: `{fromMs,toMs,selection:{fromMs,toMs}}`. It renders two native UTC-labelled range handles and emits `goo-range-select` with exact safe-integer millisecond bounds. It performs no reads or navigation. Invalid, empty or out-of-domain selections withhold the controls. The standalone reference includes markup; journeys 88–89 exercise composition and keyboard/property upgrades.
 
 ## Adoption and verification
 
@@ -253,7 +304,7 @@ verify native markup and keyboard behavior, not screen-reader output.
 
 ## Facets and typed attributes
 
-`goo-facet-list` (components.js) keeps caller-authored direct children marked
+`goo-facet-list` (components.mjs) keeps caller-authored direct children marked
 `data-facet-item`, with `data-facet-text` as literal searchable text and optional
 `data-facet-key` as an opaque identity. `query` / `.query` applies a local,
 case-insensitive substring search by toggling those rows' `hidden` property.
@@ -605,7 +656,7 @@ record detail presenter and `GooUI.inspector`, with reads and retained-parent st
 in their application owners. See [comparison actions](COMPARISON_ACTIONS.md).
 
 
-`goo-comparison-series` (`comparison-series.js`, `time-bars.css`) renders two supplied count-interval series, with `data` JSON attributes or a cloned `.data` property and `alignment="elapsed|utc"`. It emits `goo-series-select` and `goo-series-range`; it never fetches or navigates. Exact values use a shared BigInt count domain and an expandable interval table. `comparison-series-owner.js` owns alignment controls, UTC range handles, staged continuation and explicit immutable-page reads. See [contract](COMPARISON_SERIES.md).
+`goo-comparison-series` (`comparison-series.mjs`, `time-bars.css`) renders two supplied count-interval series, with `data` JSON attributes or a cloned `.data` property and `alignment="elapsed|utc"`. It emits `goo-series-select` and `goo-series-range`; it never fetches or navigates. Exact values use a shared BigInt count domain and an expandable interval table. `comparison-series-owner.js` owns alignment controls, UTC range handles, staged continuation and explicit immutable-page reads. See [contract](COMPARISON_SERIES.md).
 
 The supplied comparison-series contract accepts an optional exact `ceiling` string. Overflow refuses bars instead of clipping. The application series owner now supports retained `create/update/rescale` controls; rolling selection stays bound to its original question while supplied chart data updates. Polling, pause, inline child navigation and Freeze remain in the live owner.
 
@@ -859,7 +910,7 @@ the existing inspector and coordinates page and full-query highlights.
 ### Supplied trace-page comparison
 
 `<goo-trace-comparison>` is a passive display of two bounded supplied pages. Load
-`components.js`, `comparison-visual.js`, `trace-page-breakdown.js`,
+`components.mjs`, `comparison-visual.mjs`, `trace-page-breakdown.js`,
 `trace-page-breakdown-view.js`, `trace-page-comparison.js`, `attributes.js`, and
 `trace-comparison-view.js`, with `trace-comparison-view.css`. Set `.data` to
 `{baseline:{rows,truncated},selection:{rows,truncated}}`; each side accepts at most
@@ -1050,7 +1101,7 @@ never by code ordering or severity. The history is closed by default and retains
 the latest 200 of at most 10,000 supplied samples, with totals/omissions explicit.
 UTC timestamps reuse the exact-nanosecond tooltip primitive.
 
-Load components.js, evidence-summary.js, state-observations.js and the matching CSS.
+Load components.mjs, evidence-summary.mjs, state-observations.mjs and the matching CSS.
 The existing gallery includes clearly synthetic server-rendered and detached SPA
 examples from a non-Kubernetes domain. Property updates, pre-definition upgrade,
 cloning, literal text, bounded input and disclosure-open retention use the same

@@ -312,7 +312,7 @@ changed deliberately for root monitor arrival—not globally removed.
   [`ui/investigation-trail.js`](../ui/investigation-trail.js),
   [record selection](RECORD_POPULATIONS.md), and
   [native retention](WORKBENCH_ANNOTATIONS.md): existing paths and custody limits.
-- [`ui/waterfall.js`](../ui/waterfall.js): supplied-row reported parent structure;
+- [`ui/waterfall.js`](../ui/waterfall.mjs): supplied-row reported parent structure;
   requires ambiguity/coverage safeguards before it becomes a live breadcrumb.
 - [Display component contract](UI_COMPONENTS.md), [product essence](PRODUCT_ESSENCE.md),
   [active queue](IMPLEMENTATION_PLAN.md) and [actual validation](../VALIDATION.md).

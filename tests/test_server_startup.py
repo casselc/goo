@@ -117,11 +117,13 @@ class GenericStartup(unittest.TestCase):
         code, _, body = self.request('GET', '/api/ui-config')
         self.assertEqual(code, 200)
         self.assertEqual(json.loads(body), {'version': 'goo/ui-config/v1', 'profile': 'generic', 'examples': {'state': 'unconfigured'}})
-        for path in ('/', '/ui-components', '/components.js', '/service-dashboard.js', '/product.css', '/api-docs', '/openapi.json'):
+        for path in ('/', '/ui-components', '/display.mjs', '/app-display.mjs', '/components.mjs', '/service-dashboard.js', '/product.css', '/api-docs', '/openapi.json'):
             with self.subTest(path=path):
-                code, _, body = self.request('GET', path)
+                code, content_type, body = self.request('GET', path)
                 self.assertEqual(code, 200)
                 self.assertTrue(body)
+                if path.endswith('.mjs'):
+                    self.assertIn('javascript', content_type)
         self.assertEqual(GenericUpstream.calls, [])
 
     def test_disabled_examples_refuse_instead_of_empty_inventory_or_grammar_import(self):

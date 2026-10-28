@@ -22,7 +22,7 @@ test('184 synthetic supplied-page component supports SSR, detached SPA and contr
   await page.route(base + '/trace-page-synthetic', route => route.fulfill({ contentType: 'text/html', body: html }));
   await page.goto(base + '/trace-page-synthetic');
   await page.evaluate(data => { document.querySelector('#upgrade').data = data; }, supplied);
-  for (const asset of ['components.js', 'comparison-visual.js', 'trace-page-breakdown.js', 'trace-page-breakdown-view.js']) await page.addScriptTag({ url: base + '/' + asset });
+  for (const asset of ['app-display.mjs', 'comparison-visual.mjs', 'trace-page-breakdown.js', 'trace-page-breakdown-view.js']) await page.addScriptTag({type:'module',url: base + '/' + asset });
   await expect(page.locator('#ssr')).toHaveAttribute('data-state', 'observed');
   await expect(page.locator('#upgrade')).toHaveAttribute('data-truncated', 'true');
   await page.evaluate(data => {

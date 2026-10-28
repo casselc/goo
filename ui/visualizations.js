@@ -3,7 +3,7 @@
 (function (global) {
   const edges = [0, 10, 50, 100, 500, 1000, 10000, 18446744073710];
   const labels = ['0–10 ms', '10–50 ms', '50–100 ms', '100–500 ms', '0.5–1 s', '1–10 s', '≥10 s'];
-  const waterfallAPI=()=>typeof module!=='undefined'?require('./waterfall'):global.GooWaterfall;
+  const waterfallAPI=()=>typeof module!=='undefined'?require('./waterfall.mjs'):global.GooWaterfall;
   const layout=rows=>waterfallAPI().layout(rows);
   function node(tag, text, cls) { const n = document.createElement(tag); if (text !== undefined) n.textContent = text; if (cls) n.className = cls; return n; }
   function actionVisible(element){return !!element?.isConnected&&!document.hidden&&!element.closest('[hidden], [aria-hidden="true"], details:not([open])')&&element.getClientRects().length>0}

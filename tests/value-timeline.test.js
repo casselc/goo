@@ -1,5 +1,5 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
-const {model}=require('../ui/value-timeline'),{timelineSnapshot}=require('../ui/measurements');
+const {model}=require('../ui/value-timeline.mjs'),{timelineSnapshot}=require('../ui/measurements');
 const point=(key,value,fromNS='10',toNS=fromNS)=>({key,value,fromNS,toNS,label:key});
 test('timeline geometry preserves exact nanoseconds, signed/scientific values, zero and unknown',()=>{
  const data={fromNS:'900719925474099300',toNS:'900719925474099400',points:[point('negative','-1e-3','900719925474099310'),point('zero','0','900719925474099320'),point('positive','0.001','900719925474099340','900719925474099360'),{key:'gap',fromNS:'900719925474099360',toNS:'900719925474099380',label:'Unknown',state:'unknown'}]},before=structuredClone(data),m=model(data);
@@ -24,7 +24,7 @@ test('generated visual positions stay bounded and monotonic without mutating exa
 });
 
 test('brush geometry uses exact supplied timestamps, clamps no invalid inputs and treats reverse drags identically',()=>{
- const {brushRange}=require('../ui/value-timeline'),data={fromNS:'900719925474099300',toNS:'900719925474099400'},before=structuredClone(data);
+ const {brushRange}=require('../ui/value-timeline.mjs'),data={fromNS:'900719925474099300',toNS:'900719925474099400'},before=structuredClone(data);
  assert.deepEqual(brushRange(data,.2,.8),{fromNS:'900719925474099320',toNS:'900719925474099380'});assert.deepEqual(brushRange(data,.8,.2),brushRange(data,.2,.8));assert.equal(brushRange(data,.5,.5),null);
  for(const pair of [[-1,1],[0,1.1],[NaN,1],[0,Infinity]])assert.equal(brushRange(data,...pair),null);
  for(let i=1;i<100;i++){const r=brushRange(data,0,i/100);assert.equal(BigInt(r.fromNS),BigInt(data.fromNS));assert.ok(BigInt(r.toNS)>BigInt(r.fromNS)&&BigInt(r.toNS)<=BigInt(data.toNS))}assert.deepEqual(data,before);

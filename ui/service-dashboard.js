@@ -1,6 +1,6 @@
 /* Dashboard widgets execute existing typed questions; planning never reads telemetry. */
 (function(global){
- const ui=()=>typeof module!=='undefined'?require('./components'):global.GooUI,clone=x=>structuredClone(x),node=(...args)=>ui().node(...args);
+ const ui=()=>typeof module!=='undefined'?require('./components.mjs'):global.GooUI,clone=x=>structuredClone(x),node=(...args)=>ui().node(...args);
  function state(kind,text,cls){const e=node('goo-result-state',text,cls);e.setAttribute('state',kind);return e}
  function question(widget){return widget.query?{kind:'explore',explore:clone(widget.query)}:{kind:'measurement',measurement:clone(widget.measurement)}}
  function step(widget){return widget.query?global.GooWorkspace.recordStep(widget.query):global.GooWorkspace.measurementStep(widget.measurement)}

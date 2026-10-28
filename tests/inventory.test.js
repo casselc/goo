@@ -48,7 +48,7 @@ test('declared services retain absent telemetry, exact namespaces, multiple bind
 });
 test('reported edge handoffs retain namespaces and captured parent-search scope without source reads',()=>{
  const {edgeQuestion}=require('../ui/distributed-services'),{recordStep,stepLink,readStepLink}=require('../ui/workspace');const scope={environment:'prod',fromMs:1000,toMs:61000},edge={parent:'api',parentNamespace:'payments',child:'api',childNamespace:''};const q=edgeQuestion(scope,edge);assert.equal(q.summary,'span-duration');assert.deepEqual(q.reportedEdge.child.namespace,{mode:'value'});assert.equal(q.reportedEdge.parent.namespace.value,'payments');assert.deepEqual(readStepLink(stepLink(recordStep(q))).record,q);
- const visual=require('../ui/comparison-visual');assert.deepEqual(visual.scale(['900719925474099300','1801439850948198600']).widths,[50,100]);assert.deepEqual(visual.scale([null,'0'],'100').widths,[null,0]);assert.deepEqual(visual.scale(['0.25','0.5'],'1').widths,[25,50]);assert.equal(visual.maximum(['0.01','0.1']),'0.1');
+ const visual=require('../ui/comparison-visual.mjs');assert.deepEqual(visual.scale(['900719925474099300','1801439850948198600']).widths,[50,100]);assert.deepEqual(visual.scale([null,'0'],'100').widths,[null,0]);assert.deepEqual(visual.scale(['0.25','0.5'],'1').widths,[25,50]);assert.equal(visual.maximum(['0.01','0.1']),'0.1');
 });
 test('native cards show evaluated latest intervals without claiming whole-window coverage or hiding a newer unknown',()=>{
  const {nativeSummary}=require('../ui/service-dashboard'),stream={resource:{'service.instance.id':'one','service.namespace':''},resourceSchemaURL:'resource-v1',attributes:{route:'/search'},unit:'{request}'};

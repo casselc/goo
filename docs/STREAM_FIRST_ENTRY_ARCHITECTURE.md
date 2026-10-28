@@ -134,7 +134,7 @@ explicit states:
 | Log with valid trace/span IDs only | Show the reported trace/span reference. A span name or ancestry requires observed span context. |
 | Async span links | Show a link/reference affordance, never append it as a parent edge. |
 
-The existing [`ui/waterfall.js`](../ui/waterfall.js) can inspire reported-parent
+The existing [`ui/waterfall.js`](../ui/waterfall.mjs) can inspire reported-parent
 labels, cycle treatment and passive display. Its `layout` currently builds a
 single-value map for `(TraceId, SpanId)` and warns that duplicates can be ambiguous.
 Do not reuse that map as proof of a unique ancestry path. A stream breadcrumb

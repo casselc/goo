@@ -1,4 +1,6 @@
 const {test,expect}=require('@playwright/test');
+const {moduleFixture}=require('./module-fixture');
+test.beforeEach(async({page})=>moduleFixture(page));
 const {randomBytes}=require('node:crypto');const path=require('node:path');const {startBombadil}=require('./support/cross-app');
 const base=process.env.GOO_QUERY_URL||'http://127.0.0.1:8088';
 test('121 raw span heatmap stages exact time-duration populations without hidden reads',async({page,request})=>{
@@ -22,7 +24,7 @@ test('121 raw span heatmap stages exact time-duration populations without hidden
 
 });
 test('121b passive range grid supports detached data, reverse drags and cancellation',async({page})=>{
- await page.setContent('<goo-bucket-heatmap range-select></goo-bucket-heatmap>');await page.evaluate(()=>{const grid=document.querySelector('goo-bucket-heatmap');grid.data={ceiling:'1',rows:[{key:'a',label:'A'},{key:'b',label:'B'}],columns:[{key:'0',label:'First',cells:[{state:'observed',value:'1'},{state:'unknown'}]},{key:'1',label:'Second',cells:[{state:'observed',value:'0'},{state:'observed',value:'1'}]}]};window.ranges=[];grid.addEventListener('goo-heatmap-range',e=>window.ranges.push(e.detail))});await page.addScriptTag({path:require('node:path').resolve('ui/bucket-heatmap.js')});
+ await page.setContent('<goo-bucket-heatmap range-select></goo-bucket-heatmap>');await page.evaluate(()=>{const grid=document.querySelector('goo-bucket-heatmap');grid.data={ceiling:'1',rows:[{key:'a',label:'A'},{key:'b',label:'B'}],columns:[{key:'0',label:'First',cells:[{state:'observed',value:'1'},{state:'unknown'}]},{key:'1',label:'Second',cells:[{state:'observed',value:'0'},{state:'observed',value:'1'}]}]};window.ranges=[];grid.addEventListener('goo-heatmap-range',e=>window.ranges.push(e.detail))});await page.addScriptTag({type:'module',url:'http://127.0.0.1:8088/bucket-heatmap.mjs'});
  const first=page.locator('[data-column="0"][data-row="a"]'),last=page.locator('[data-column="1"][data-row="b"]');await last.focus();await page.keyboard.press('Space');await page.keyboard.press('Shift+ArrowLeft');await page.keyboard.press('Shift+ArrowUp');await page.keyboard.press('Escape');expect(await page.evaluate(()=>ranges)).toEqual([]);
  const a=await last.boundingBox(),b=await first.boundingBox();await page.mouse.move(a.x+5,a.y+5);await page.mouse.down();await page.mouse.move(b.x+5,b.y+5,{steps:4});await page.mouse.up();expect(await page.evaluate(()=>ranges)).toEqual([{fromColumn:0,toColumn:1,fromRow:0,toRow:1}]);await page.locator('goo-bucket-heatmap').evaluate(el=>{el.removeAttribute('range-select')});await first.focus();await page.keyboard.press('Space');await page.keyboard.press('Enter');expect(await page.evaluate(()=>ranges.length)).toBe(1);
 });

@@ -38,7 +38,11 @@ CI additionally checks instrumentation and both examples. Native verification
 compilation is not a full Hegel/Quint or woven campaign result. See
 [compiler setup and runtime defaults](PORTABLE_COMPILER.md) and
 [the current validation entry](../VALIDATION.md#unified-go-baseline-2026-10-28).
-The remaining cuts below, including native ESM, are still proposals.
+The first native ESM display cut is also implemented: core/chart modules have
+explicit imports and a public `display.mjs` entry. The app/gallery temporarily use
+one private namespace adapter for remaining legacy owners; the converted display
+graph has no global/CommonJS exports. See [the embedding contract](UI_COMPONENTS.md#native-module-entrypoints).
+The broader application graph and remaining cuts below are still proposals.
 
 ## Preferred cuts
 
@@ -87,8 +91,8 @@ ways to initialize the same state.
 The proposed frontend embedding can be as simple as:
 
 ```html
-<!-- PROPOSED entrypoint; display.js is not added by this review. -->
-<script type="module" src="/display.js"></script>
+<!-- Implemented core/chart entrypoint; mixed legacy widgets remain outside it. -->
+<script type="module" src="/display.mjs"></script>
 <goo-table density="compact"><table><!-- native content --></table></goo-table>
 ```
 

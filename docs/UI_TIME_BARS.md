@@ -5,7 +5,7 @@ Explore time chart and automatic service widgets. It shares count geometry,
 axis/scale labels, zero/unknown treatment and accessible interval labels. It does
 not replace grouped numeric/duration charts or native metric evaluators.
 
-Load `time-bars.css` after product styles and `time-bars.js` before the adopting
+Load `time-bars.css` after product styles and `time-bars.mjs` before the adopting
 app adapters. The standalone element has no dependency on the app or `GooUI`.
 Use a JSON `data` attribute or detached `.data` property; properties assigned
 before registration upgrade, and reconnects rerender retained snapshot data.

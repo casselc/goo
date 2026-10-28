@@ -1,5 +1,5 @@
 /* Passive, exact count intervals. No resampling, transport, or question ownership. */
-(function(global){
+const global = globalThis;
  const integer=v=>Number.isSafeInteger(v)&&v>=0&&v<=4102444800000,uint=v=>typeof v==='string'&&/^(0|[1-9][0-9]{0,127})$/.test(v);
  function model(data,alignment='elapsed'){
   const bad={state:'unavailable',sides:[]};if(!['elapsed','utc'].includes(alignment)||!Array.isArray(data?.sides)||data.sides.length!==2)return bad;
@@ -40,5 +40,4 @@
   }
 
  }if(!global.customElements.get('goo-comparison-series'))global.customElements.define('goo-comparison-series',Series)}
- const api={model,label,brush};if(typeof module!=='undefined')module.exports=api;else global.GooComparisonSeries=api;
-})(typeof window==='undefined'?globalThis:window);
+ export {model,label,brush};

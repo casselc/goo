@@ -1,5 +1,5 @@
 /* Supplied bucket populations only. Layout compatibility and reads belong to callers. */
-(function(global){
+const global = globalThis;
  const uint=v=>typeof v==='string'&&/^(0|[1-9]\d*)$/.test(v)&&v.length<=128;
  function model(data){
   const bad={state:'unavailable',rows:[],columns:[]};if(!data||!uint(data.ceiling)||!Array.isArray(data.rows)||!Array.isArray(data.columns)||!data.rows.length||data.rows.length>64||data.columns.length>32)return bad;
@@ -39,5 +39,4 @@
   }
   if(!global.customElements.get('goo-bucket-heatmap'))global.customElements.define('goo-bucket-heatmap',GooBucketHeatmap);
  }
- const api={model};if(typeof module!=='undefined')module.exports=api;else global.GooBucketHeatmap=api;
-})(typeof window==='undefined'?globalThis:window);
+ export {model};

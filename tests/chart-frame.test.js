@@ -1,5 +1,5 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
-const {model}=require('../ui/chart-frame');
+const {model}=require('../ui/chart-frame.mjs');
 test('chart frame preserves caller window and units without deriving health or a window',()=>{
  const input={title:'HTTP requests',unit:'source records',window:'[12:00, 12:05) UTC',state:'stale',note:'Last completed read 12:05:02 UTC',headingLevel:2},before=structuredClone(input);
  assert.deepEqual(model(input),{...input,headingLevel:'2'});assert.deepEqual(input,before);

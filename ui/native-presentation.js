@@ -1,6 +1,6 @@
 /* Supplied native values and coverage. No source reads, query ownership or evidence clocks. */
 (function(global){
- const node=(...args)=>(typeof module!=='undefined'?require('./components'):global.GooUI).node(...args);
+ const node=(...args)=>(typeof module!=='undefined'?require('./components.mjs'):global.GooUI).node(...args);
  const reasonDescriptions={
   'missing-coverage':['Exports do not cover this time range.','Excluded time is not a measured zero or evidence of ingestion completeness.'],
   'unknown-interval':['This interval cannot be evaluated.','Inspect retained exports before selecting a supported scope.'],

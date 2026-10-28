@@ -1,6 +1,6 @@
 # Passive trace waterfall
 
-`ui/waterfall.js` defines `goo-trace-waterfall`. Load its independent stylesheet
+`ui/waterfall.mjs` defines `goo-trace-waterfall`. Load its independent stylesheet
 `waterfall.css`; no application runtime or query client is needed. It is a display
 of supplied span records, not a trace retrieval API, completeness evaluator,
 critical-path calculator or unique-invocation counter.
@@ -10,7 +10,7 @@ critical-path calculator or unique-invocation counter.
   data='{"rows":[{"timestamp_ns":"1700000000000000000","duration_ns":"1000000","TraceId":"a","SpanId":"b","ServiceName":"api","SpanName":"GET /items"}],"truncated":false}'
   selected-index="0">
 </goo-trace-waterfall>
-<script src="/waterfall.js"></script>
+<script type="module" src="/waterfall.mjs"></script>
 ```
 
 `data` / `.data` accepts `{rows, truncated}`. Attribute JSON is bounded to 64 KiB;
@@ -49,7 +49,7 @@ requires callers to also provide a redundant floating-point `duration_ms`.
 Existing `.waterfall-row`, `.span-label`, `.span-track`, `.span-bar`, trace/span
 metadata and detail IDs remain available to app handlers and tests.
 
-The app loads `waterfall.js` before `visualizations.js`. `waterfall.css` supplies
+The app loads `waterfall.mjs` before `visualizations.js`. `waterfall.css` supplies
 component-scoped fallback styling. Embedding view styles still own context-panel
 layout. Query scope, trace expansion, paging and saved evidence formats are
 unchanged. A component upgrade starts no subscription or source read.

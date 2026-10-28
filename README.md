@@ -138,6 +138,12 @@ are retained. Passive SSR/SPA checks use supplied synthetic data, separately fro
 OTLP acceptance. Final review/push and corrected supplemental-log evidence are
 recorded in [VALIDATION.md](VALIDATION.md).
 
+The [display library](docs/UI_COMPONENTS.md#native-module-entrypoints) now has a
+native module entrypoint: `<script type="module" src="/display.mjs"></script>`.
+Core/chart features also support direct imports, supplied SSR attributes and SPA
+properties, without an application runtime. Remaining mixed widgets and owners
+use a private adapter while their dependencies are separated.
+
 The semantic core is Go, with a Python lab/proxy and framework-neutral display
 Web Components. Source adapters lower typed questions to parameterized ClickHouse
 queries. Current typed YAML resources are supported; richer expression languages,

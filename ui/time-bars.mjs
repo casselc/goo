@@ -1,5 +1,5 @@
 /* Supplied count-bar snapshots. Question scope and source actions belong to adapters. */
-(function(global){
+const global = globalThis;
  const uint=value=>typeof value==='string'&&/^(0|[1-9][0-9]*)$/.test(value)&&value.length<=128;
  function rational(value){if(typeof value!=='string'||value.length>256||!/^(0|[1-9]\d*)(?:\/([1-9]\d*))?$/.test(value))return null;const [n,d='1']=value.split('/');return {n:BigInt(n),d:BigInt(d)}}
  function model(data){
@@ -55,5 +55,4 @@
   }
   if(!global.customElements.get('goo-time-bars'))global.customElements.define('goo-time-bars',GooTimeBars);
  }
- const api={model,safeHref,rational};if(typeof module!=='undefined')module.exports=api;else global.GooTimeBars=api;
-})(typeof window==='undefined'?globalThis:window);
+ export {model,safeHref,rational};
