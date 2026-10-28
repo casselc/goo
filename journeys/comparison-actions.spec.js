@@ -1,5 +1,5 @@
 const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');
-const {recordStep}=require('../ui/workspace'),{verifyWithGo,startBombadil}=require('./support/cross-app');const base=process.env.GOO_QUERY_URL||'http://127.0.0.1:8088';
+const {recordStep}=require('../ui/workspace.mjs'),{verifyWithGo,startBombadil}=require('./support/cross-app');const base=process.env.GOO_QUERY_URL||'http://127.0.0.1:8088';
 async function frame(el,file){await el.scrollIntoViewIfNeeded();await el.evaluate(el=>{for(let p=el.parentElement;p;p=p.parentElement)if(p.scrollTop>0)p.scrollTop=Math.max(0,p.scrollTop-120)});await el.screenshot({path:file})}
 test('127 inspect either comparison population and stored evidence without replacing the parent',async({page,request})=>{
  test.setTimeout(180000);const environment='compare-actions-'+randomBytes(4).toString('hex'),now=Date.now(),attrs=o=>Object.entries(o).map(([key,stringValue])=>({key,value:{stringValue}}));

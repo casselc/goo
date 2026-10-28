@@ -220,7 +220,7 @@ func TestHegelTraceSearchContextualClientRequest(t *testing.T) {
 		row := map[string]string{"ServiceName": "checkout", "SpanName": "observed work"}
 		seedPredicate := exploration.Predicate{All: []exploration.Predicate{tsLeaf("column", "service", "eq", "checkout"), tsLeaf("column", "name", "eq", "observed work")}}
 		input, _ := json.Marshal(map[string]any{"parent": parent, "row": row, "second": request.Conditions[1], "limit": limit})
-		cmd := exec.Command("node", "-e", `const fs=require('fs'),m=require('../ui/trace-search'),x=JSON.parse(fs.readFileSync(0,'utf8')),before=JSON.stringify(x),seed=m.seedFromRow(x.row),first=m.seedCondition(x.parent,seed),request=m.buildRequest(x.parent,[first,x.second],x.limit),saved=structuredClone(request);request.conditions[0].op='mutated';process.stdout.write(JSON.stringify({request:saved,unchanged:before===JSON.stringify(x)}));`)
+		cmd := exec.Command("node", "-e", `const fs=require('fs'),m=require('../ui/trace-search.mjs'),x=JSON.parse(fs.readFileSync(0,'utf8')),before=JSON.stringify(x),seed=m.seedFromRow(x.row),first=m.seedCondition(x.parent,seed),request=m.buildRequest(x.parent,[first,x.second],x.limit),saved=structuredClone(request);request.conditions[0].op='mutated';process.stdout.write(JSON.stringify({request:saved,unchanged:before===JSON.stringify(x)}));`)
 		cmd.Stdin = bytes.NewReader(input)
 		raw, e := cmd.Output()
 		if e != nil {

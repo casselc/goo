@@ -1,5 +1,5 @@
 const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');
-const {stepLink,measurementStep}=require('../ui/workspace'),{verifyWithGo,startBombadil}=require('./support/cross-app');const base='http://127.0.0.1:8088';
+const {stepLink,measurementStep}=require('../ui/workspace.mjs'),{verifyWithGo,startBombadil}=require('./support/cross-app');const base='http://127.0.0.1:8088';
 test('82 inspect shared evidence summaries across captures and investigation links',async({page,request,browser})=>{
  test.setTimeout(240000);const token=randomBytes(5).toString('hex'),environment='time-buckets-'+token,fromMs=Date.now()-40000,toMs=fromMs+19000,ns=s=>String(BigInt(fromMs+s*1000)*1000000n),schema='https://opentelemetry.io/schemas/1.30.0',attrs=o=>Object.entries(o).map(([key,stringValue])=>({key,value:{stringValue}}));
  const point=(a,b,counts,bounds=[.1,.5],flags=0)=>({startTimeUnixNano:ns(a),timeUnixNano:ns(b),count:String(counts.reduce((a,b)=>a+b,0)),bucketCounts:counts.map(String),explicitBounds:bounds,flags});

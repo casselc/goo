@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const { readStepLink } = require('../ui/workspace');
+const { readStepLink } = require('../ui/workspace.mjs');
 const { base, json, seed, observe, loaded, snapshot, assertPopulation, write } = require('./187-http-dashboard-support');
 
 test.use({ actionTimeout: 15000, navigationTimeout: 45000 });

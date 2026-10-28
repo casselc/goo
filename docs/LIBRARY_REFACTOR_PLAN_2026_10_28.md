@@ -42,9 +42,14 @@ The native ESM display graph is implemented, including attributes/records, field
 pickers, exceptions, tags and aligned numeric distributions. Pure formatters, bins,
 pattern decoding and visibility rules are separate from application owners. The
 gallery loads only `display.mjs`, with no app namespaces or source requests.
-The main app still uses a private namespace adapter pending owner migration.
+The application-owner cutover is now implemented: 105 former classic/CommonJS
+modules use explicit imports and `app.mjs` preserves mount order. The namespace
+bridge and unused API assembly objects are removed. Predicate validation and
+request/listener ownership are independent internal modules. The retained client
+has isolated per-client state and keeps its existing default entrypoints.
 See [the embedding contract](UI_COMPONENTS.md#native-module-entrypoints).
-The broader application graph and remaining cuts below are still proposals.
+The other cuts below remain proposals; response-consumption cancellation is still
+a separate follow-up and was not changed by the module migration.
 
 ## Preferred cuts
 

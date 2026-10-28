@@ -31,7 +31,7 @@ const step=registerCustomAction('goo.numericComparison',async(document,window,ph
  }
  if(['mean','sum','min','max'].includes(phase)){const select=document.getElementById('paircomparisonMeasure') as HTMLSelectElement;select.value='numeric-'+phase;select.dispatchEvent(new Event('change'))}
  if(phase==='coverage'){const summary=document.querySelector<HTMLElement>('#paircohortMeasures .numeric-comparison details > summary')!;summary.click()}
- if(phase==='staged')window.location.hash=globals.GooQuestionProtocol.questionLink(globals.ncQuestion);
+ if(phase==='staged')window.location.hash=(await import(new URL('/question-protocol.mjs',window.location.href).href)).questionLink(globals.ncQuestion);
  if(phase==='reading')(document.getElementById('exploreRun') as HTMLButtonElement).click();
  if(phase==='pinning'){const pin=document.getElementById('baselinePin') as HTMLButtonElement;const details=pin.closest('details');if(details)details.open=true;pin.click()}
  if(phase==='invalid'||phase==='complete'){

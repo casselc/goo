@@ -1,5 +1,5 @@
 const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');
-const {measurementStep,stepLink}=require('../ui/workspace'),{verifyWithGo,startBombadil}=require('./support/cross-app');
+const {measurementStep,stepLink}=require('../ui/workspace.mjs'),{verifyWithGo,startBombadil}=require('./support/cross-app');
 const base='http://127.0.0.1:8088';
 test.use({actionTimeout:15000});
 async function post(request,url,data){const r=await request.post(base+url,{data});expect(r.ok(),await r.text()).toBe(true);return r.json()}

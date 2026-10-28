@@ -1,4 +1,4 @@
-const {test}=require('node:test'),assert=require('node:assert/strict'),{Journal,entry,storageKey}=require('../ui/pending-saves');
+const {test}=require('node:test'),assert=require('node:assert/strict'),{Journal,entry,storageKey}=require('../ui/pending-saves.mjs');
 const key='a'.repeat(64),token='b'.repeat(64),storage=()=>{const values=new Map();return {getItem:k=>values.get(k)||null,setItem:(k,v)=>values.set(k,v)}};
 const body=()=>({requestID:key,resultToken:token,indexes:[0,1],tags:['review'],note:'Original exact intent'});
 test('pending intent survives a new journal and remains detached until acknowledged',()=>{const s=storage(),a=new Journal(s),b=body();a.begin('',b);b.note='changed';const next=new Journal(s);assert.equal(next.list()[0].body.note,'Original exact intent');const loaded=next.list();loaded[0].body.indexes.push(2);assert.deepEqual(next.list()[0].body.indexes,[0,1]);assert.equal(next.begin('',body()).body.requestID,key);assert.throws(()=>next.begin('',{...body(),note:'different'}));next.complete(key);assert.equal(next.list().length,0)});

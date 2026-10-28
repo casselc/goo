@@ -1,4 +1,4 @@
-const {test}=require('node:test'),assert=require('node:assert/strict'),fields=require('../ui/field-presentation.mjs'),{suggestionData,matches}=require('../ui/attributes.mjs'),{normalize,validate}=require('../ui/filter-editor');
+const {test}=require('node:test'),assert=require('node:assert/strict'),fields=require('../ui/field-presentation.mjs'),{suggestionData,matches}=require('../ui/attributes.mjs'),{normalize,validate}=require('../ui/filter-editor.mjs');
 const f=(kind,key)=>({kind,key});
 test('OTel hints require exact qualified keys; aliases remain independent and detached',()=>{
  for(const [kind,key,label] of [['attribute','http.route','HTTP route'],['attribute','rpc.system.name','RPC system'],['attribute','db.operation.name','Database operation'],['attribute','messaging.destination.name','Message destination'],['resource','service.name','Service']]){

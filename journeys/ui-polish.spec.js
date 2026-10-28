@@ -4,7 +4,7 @@ const { randomBytes } = require('node:crypto');
 const path = require('node:path');
 const fs = require('node:fs/promises');
 const {startBombadil}=require('./support/cross-app');
-const GooWorkspace=require('../ui/workspace');
+const GooWorkspace=require('../ui/workspace.mjs');
 const goo = process.env.GOO_QUERY_URL || 'http://127.0.0.1:8088';
 const field = (kind,key) => ({kind,key});
 test.use({actionTimeout:15000});

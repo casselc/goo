@@ -1,5 +1,5 @@
 const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');
-const {questionLink}=require('../ui/workspace'),{openFilters}=require('./support/explore'),{verifyWithGo,startBombadil}=require('./support/cross-app');
+const {questionLink}=require('../ui/workspace.mjs'),{openFilters}=require('./support/explore'),{verifyWithGo,startBombadil}=require('./support/cross-app');
 const base='http://127.0.0.1:8088';
 async function json(r){expect(r.ok(),await r.text()).toBe(true);return r.json()}
 const gcd=(a,b)=>{a=a<0n?-a:a;b=b<0n?-b:b;while(b){[a,b]=[b,a%b]}return a};

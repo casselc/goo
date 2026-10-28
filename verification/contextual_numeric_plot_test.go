@@ -48,7 +48,7 @@ func TestHegelContextualNumericPlotScope(t *testing.T) {
 		if err != nil {
 			tc.Fatal(err)
 		}
-		const script = `const fs=require('fs'),p=require('./ui/numeric-plot');const x=JSON.parse(fs.readFileSync(0,'utf8')),before=JSON.stringify(x),q=p.plotQuestion(x.parent,x.binding),snapshot=structuredClone(q);q.where.all[0].value='0';q.numeric.field.key='mutated';console.log(JSON.stringify({question:snapshot,unchanged:JSON.stringify(x)===before}));`
+		const script = `const fs=require('fs'),p=require('./ui/numeric-plot.mjs');const x=JSON.parse(fs.readFileSync(0,'utf8')),before=JSON.stringify(x),q=p.plotQuestion(x.parent,x.binding),snapshot=structuredClone(q);q.where.all[0].value='0';q.numeric.field.key='mutated';console.log(JSON.stringify({question:snapshot,unchanged:JSON.stringify(x)===before}));`
 		cmd := exec.Command("node", "-e", script)
 		cmd.Dir = ".."
 		cmd.Stdin = bytes.NewReader(raw)

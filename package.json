@@ -5,7 +5,7 @@
     "test:journeys": "bash scripts/run_journeys.sh",
     "model:check": "quint typecheck verification/model/lifecycle.qnt",
     "model:test": "quint run verification/model/lifecycle.qnt --main=lifecycleInstance --backend=typescript --max-samples=100 --max-steps=30 --invariant=safety --seed=42 --verbosity=1",
-    "test:visualizations": "node --test tests/*.test.js tests/*.test.mjs",
+    "test:visualizations": "node --experimental-test-module-mocks --test tests/*.test.js tests/*.test.mjs",
     "test:bombadil": "bombadil browser test --headless --time-limit 1m --exit-on-violation http://localhost:8088 verification/bombadil/workspace.ts",
     "test:cross-app": "playwright test journeys/cross-app.spec.js",
     "test:generated-campaign": "GOO_GENERATED_CAMPAIGN=1 playwright test journeys/generated-campaign.spec.js",

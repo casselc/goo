@@ -46,7 +46,7 @@ Three concrete findings determine the order:
   spans include mixed kinds and retries and are not request throughput. Existing
   HTTP/RPC/database/messaging suggestions change useful dimensions; they do not
   silently establish a request-grain denominator.
-- [`filter-values.js`](../ui/filter-values.js) needs complete counted groups but
+- [`filter-values.js`](../ui/filter-values.mjs) needs complete counted groups but
   posts an ordinary exploration query. [`Source.Fetch`](../exploration/source.go)
   also reads rows and fields. A one-row limit bounds the returned page, not the
   count/group scans or number of source reads. This is a source-backed reason to

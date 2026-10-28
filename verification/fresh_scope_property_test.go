@@ -30,7 +30,7 @@ func TestHegelFreshScopeContract(t *testing.T) {
 		to := from + int64(width)
 		step := workbench.Step{Version: 1, Kind: "measurement", Scope: workbench.StepScope{Environment: d.Environment, FromMS: from / 1000000, ToMS: (to + 999999) / 1000000, FromNS: strconv.FormatInt(from, 10), ToNS: strconv.FormatInt(to, 10)}, View: "Overview", Measurement: &d}
 		input, _ := json.Marshal(map[string]any{"step": step, "now": int64(1800000000000)})
-		cmd := exec.Command("node", "-e", `const p=JSON.parse(require('fs').readFileSync(0,'utf8')),before=JSON.stringify(p.step),fresh=require('../ui/fresh-comparison').propose(p.step,p.now);process.stdout.write(JSON.stringify({fresh,unchanged:before===JSON.stringify(p.step)}))`)
+		cmd := exec.Command("node", "-e", `const p=JSON.parse(require('fs').readFileSync(0,'utf8')),before=JSON.stringify(p.step),fresh=require('../ui/fresh-comparison.mjs').propose(p.step,p.now);process.stdout.write(JSON.stringify({fresh,unchanged:before===JSON.stringify(p.step)}))`)
 		cmd.Stdin = bytes.NewReader(input)
 		out, e := cmd.CombinedOutput()
 		if e != nil {

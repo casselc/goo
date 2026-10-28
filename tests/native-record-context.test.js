@@ -1,5 +1,5 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
-const {plan}=require('../ui/native-record-context');
+const {plan}=require('../ui/native-record-context.mjs');
 const fixtures=require('./fixtures/native-record-context.json');
 for(const c of fixtures)test('native record context shared Go fixture: '+c.name,()=>{
  const input=structuredClone(c),run=()=>plan(c.parent,c.stream,c.signal,c.fromNS,c.toNS);

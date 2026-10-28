@@ -1,5 +1,5 @@
 const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');
-const {source,verifyWithGo,startBombadil}=require('./support/cross-app'),Workspace=require('../ui/workspace'),base='http://127.0.0.1:8088';
+const {source,verifyWithGo,startBombadil}=require('./support/cross-app'),Workspace=require('../ui/workspace.mjs'),base='http://127.0.0.1:8088';
 test('139 select live Activity occurrences and recover the original committed save after reload',async({page,request})=>{
  test.setTimeout(180000);test.skip(!(await(await request.get(base+'/api/retained-evidence/status')).json()).configured,'optional XTDB required');
  const environment='tail-select-'+randomBytes(4).toString('hex'),now=Date.now(),attrs=o=>Object.entries(o).map(([key,stringValue])=>({key,value:{stringValue}}));

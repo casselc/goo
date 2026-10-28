@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs/promises'), path = require('node:path');
-const { questionLink } = require('../ui/workspace');
+const { questionLink } = require('../ui/workspace.mjs');
 const { fixture, question, logs, field } = require('./193-counted-values-fixture');
 const { openFilters } = require('./support/explore');
 const base = 'http://127.0.0.1:8088';

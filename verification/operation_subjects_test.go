@@ -60,7 +60,7 @@ func TestHegelSubjectScopeIsolation(t *testing.T) {
 			rows = append(rows, map[string]any{"spanID": fmt.Sprint(i), "traceID": fmt.Sprint(i), "events": []map[string]any{{"subject": subject, "timeNS": "1792209000000000000", "name": "accepted"}}})
 		}
 		input, _ := json.Marshal(map[string]any{"spans": rows, "subject": base})
-		cmd := exec.Command("node", "-e", `const fs=require('fs'),o=require('../ui/operations.js'),x=JSON.parse(fs.readFileSync(0,'utf8'));console.log(o.subjectSpans(x.spans,x.subject).length)`)
+		cmd := exec.Command("node", "-e", `const fs=require('fs'),o=require('../ui/operations.mjs'),x=JSON.parse(fs.readFileSync(0,'utf8'));console.log(o.subjectSpans(x.spans,x.subject).length)`)
 		cmd.Stdin = bytes.NewReader(input)
 		out, err := cmd.CombinedOutput()
 		if err != nil {

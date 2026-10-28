@@ -19,7 +19,7 @@ func TestHegelPopulationExpansion(t *testing.T) {
 		width := hegel.Draw(tc, hegel.Integers(1, 110))
 		before := hegel.Draw(tc, hegel.Integers(1, 5))
 		after := hegel.Draw(tc, hegel.Integers(0, 5))
-		script := `const assert=require('node:assert/strict'),{widenQueries}=require('../ui/population-workspace');const [width,before,after]=process.argv.slice(1).map(Number),qs=['spans','logs'].map((signal,i)=>({signal,environment:'test',fromMs:7200000-width*60000,toMs:7200000,limit:1,offset:10,where:{field:{kind:i?'resource':'attribute',key:'region'},op:i?'missing':'eq',...(i?{}:{value:''})}})),saved=JSON.stringify(qs),out=widenQueries(qs,{fromMs:qs[0].fromMs-before*60000,toMs:qs[0].toMs+after*60000});assert.equal(JSON.stringify(qs),saved);for(let i=0;i<2;i++)assert.deepEqual(out[i],{...qs[i],fromMs:out[0].fromMs,toMs:out[0].toMs,offset:0});process.stdout.write(JSON.stringify(out));`
+		script := `const assert=require('node:assert/strict'),{widenQueries}=require('../ui/population-workspace.mjs');const [width,before,after]=process.argv.slice(1).map(Number),qs=['spans','logs'].map((signal,i)=>({signal,environment:'test',fromMs:7200000-width*60000,toMs:7200000,limit:1,offset:10,where:{field:{kind:i?'resource':'attribute',key:'region'},op:i?'missing':'eq',...(i?{}:{value:''})}})),saved=JSON.stringify(qs),out=widenQueries(qs,{fromMs:qs[0].fromMs-before*60000,toMs:qs[0].toMs+after*60000});assert.equal(JSON.stringify(qs),saved);for(let i=0;i<2;i++)assert.deepEqual(out[i],{...qs[i],fromMs:out[0].fromMs,toMs:out[0].toMs,offset:0});process.stdout.write(JSON.stringify(out));`
 		raw, err := exec.Command("node", "-e", script, strconv.Itoa(width), strconv.Itoa(before), strconv.Itoa(after)).Output()
 		if err != nil {
 			tc.Fatal(err)

@@ -1,4 +1,4 @@
-const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),{recordStep}=require('../ui/workspace'),{startBombadil}=require('./support/cross-app');
+const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),{recordStep}=require('../ui/workspace.mjs'),{startBombadil}=require('./support/cross-app');
 const base=process.env.GOO_QUERY_URL||'http://127.0.0.1:8088';
 test('120 find a low-share regression, retain count ranking and inspect captured coverage',async({page,request})=>{
  test.setTimeout(180000);page.setDefaultTimeout(15000);const environment='ranking-'+randomBytes(4).toString('hex'),now=Date.now(),attrs=o=>Object.entries(o).map(([key,stringValue])=>({key,value:{stringValue}})),spans=[];

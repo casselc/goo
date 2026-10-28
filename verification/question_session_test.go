@@ -86,7 +86,7 @@ func TestHegelQuestionSessionStateSwarm(t *testing.T) {
 		m := &sessionMachine{state: sessionOracle{Phase: "initial"}, questions: map[int]*exploration.Query{}}
 		hegel.RunStateful(tc, m, hegel.WithStatefulStepCount(25))
 		data, _ := json.Marshal(m.commands)
-		script := `const fs=require('node:fs'),{Session}=require('../ui/question-session');const s=new Session(),questions={},states=[];for(const c of JSON.parse(fs.readFileSync(0,'utf8'))){if(c.action==='start'){const token=s.start(c.question);questions[token]=c.question}else if(c.action==='edit')s.edit(c.reset);else if(c.action==='cancel')s.cancel();else if(c.action==='fail')s.fail(c.token);else s.publish(c.token,{question:questions[c.token]||{},basis:'basis',count:'1',state:'observed'});states.push(s.snapshot())}process.stdout.write(JSON.stringify(states))`
+		script := `const fs=require('node:fs'),{Session}=require('../ui/question-session.mjs');const s=new Session(),questions={},states=[];for(const c of JSON.parse(fs.readFileSync(0,'utf8'))){if(c.action==='start'){const token=s.start(c.question);questions[token]=c.question}else if(c.action==='edit')s.edit(c.reset);else if(c.action==='cancel')s.cancel();else if(c.action==='fail')s.fail(c.token);else s.publish(c.token,{question:questions[c.token]||{},basis:'basis',count:'1',state:'observed'});states.push(s.snapshot())}process.stdout.write(JSON.stringify(states))`
 		cmd := exec.Command("node", "-e", script)
 		cmd.Stdin = bytes.NewReader(data)
 		out, e := cmd.CombinedOutput()

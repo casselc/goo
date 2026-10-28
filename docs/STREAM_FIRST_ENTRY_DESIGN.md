@@ -299,17 +299,17 @@ changed deliberately for root monitor arrival—not globally removed.
 
 ## Source basis
 
-- [`ui/tail.js`](../ui/tail.js): `TailBuffer`, parser, pause/follow, per-connection
+- [`ui/tail.js`](../ui/tail.mjs): `TailBuffer`, parser, pause/follow, per-connection
   generation, 100-row/2 MiB buffer and current large tail panel.
 - [`exploration/tail.go`](../exploration/tail.go): 60-second event-time selector,
   bounded polls and multiplicity-based observation handles.
 - [`cmd/goo/tail_http.go`](../cmd/goo/tail_http.go): four process-wide slots,
   2-second polls, 60-second connection deadline and reset/batch/gap protocol.
-- [`ui/population-workspace.js`](../ui/population-workspace.js) and
+- [`ui/population-workspace.js`](../ui/population-workspace.mjs) and
   [current population contract](POPULATION_WORKSPACE.md): independent signal
   planning, saved configuration, live controls and retained paused children.
-- [`ui/exploration.js`](../ui/exploration.js),
-  [`ui/investigation-trail.js`](../ui/investigation-trail.js),
+- [`ui/exploration.js`](../ui/exploration.mjs),
+  [`ui/investigation-trail.js`](../ui/investigation-trail.mjs),
   [record selection](RECORD_POPULATIONS.md), and
   [native retention](WORKBENCH_ANNOTATIONS.md): existing paths and custody limits.
 - [`ui/waterfall.js`](../ui/waterfall.mjs): supplied-row reported parent structure;

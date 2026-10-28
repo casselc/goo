@@ -1,5 +1,5 @@
 const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');
-const {start}=require('./support/tail-acceptance'),{source,verifyWithGo,startBombadil}=require('./support/cross-app'),{questionLink}=require('../ui/workspace'),{openFilters,addFilter}=require('./support/explore');
+const {start}=require('./support/tail-acceptance'),{source,verifyWithGo,startBombadil}=require('./support/cross-app'),{questionLink}=require('../ui/workspace.mjs'),{openFilters,addFilter}=require('./support/explore');
 test('149 single question uses shared typed filters and preserves fixed drafts without hidden reads',async({page,request})=>{
  test.setTimeout(180000);page.setDefaultTimeout(15000);const environment='single-filters-'+randomBytes(4).toString('hex'),dir=path.resolve('artifacts/single-filter-editor',environment),attrs=o=>Object.entries(o).map(([key,stringValue])=>({key,value:{stringValue}})),field={kind:'attribute',key:'release'};
  const toMs=Date.now(),q={signal:'logs',environment,fromMs:toMs-60000,toMs,limit:100,offset:0,where:{any:[{field,op:'missing'},{field,op:'eq'}]}};

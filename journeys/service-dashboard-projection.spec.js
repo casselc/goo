@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const { readStepLink } = require('../ui/workspace');
+const { readStepLink } = require('../ui/workspace.mjs');
 const { base, json, observe, loaded, snapshot, seed, find, assertAggregate, write, captureBytes } = require('./194-service-projection-support');
 test.use({ actionTimeout: 15000, navigationTimeout: 45000 });
 async function discover(page, facts) {

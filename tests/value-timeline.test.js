@@ -1,5 +1,5 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
-const {model}=require('../ui/value-timeline.mjs'),{timelineSnapshot}=require('../ui/measurements');
+const {model}=require('../ui/value-timeline.mjs'),{timelineSnapshot}=require('../ui/measurements.mjs');
 const point=(key,value,fromNS='10',toNS=fromNS)=>({key,value,fromNS,toNS,label:key});
 test('timeline geometry preserves exact nanoseconds, signed/scientific values, zero and unknown',()=>{
  const data={fromNS:'900719925474099300',toNS:'900719925474099400',points:[point('negative','-1e-3','900719925474099310'),point('zero','0','900719925474099320'),point('positive','0.001','900719925474099340','900719925474099360'),{key:'gap',fromNS:'900719925474099360',toNS:'900719925474099380',label:'Unknown',state:'unknown'}]},before=structuredClone(data),m=model(data);

@@ -1,4 +1,4 @@
-const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),{recordStep}=require('../ui/workspace');
+const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),{recordStep}=require('../ui/workspace.mjs');
 const {startBombadil}=require('./support/cross-app');
 const base=process.env.GOO_QUERY_URL||'http://127.0.0.1:8088';
 test('119 compare ordinary logs with full counts and share rather than span measures',async({page,request})=>{

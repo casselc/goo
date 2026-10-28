@@ -1,6 +1,6 @@
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
-const {layout}=require('../ui/visualizations.js');
+const {layout}=require('../ui/visualizations.mjs');
 const span=(id,start,duration,parent='',trace='a')=>({SpanId:id,TraceId:trace,ParentSpanId:parent,timestamp_ns:String(start),duration_ns:String(duration)});
 test('exact ns subtraction retains submillisecond offsets at modern epochs',()=>{
  const epoch=1700000000000000000n;

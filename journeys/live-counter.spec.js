@@ -1,5 +1,5 @@
 const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');
-const {measurementStep}=require('../ui/workspace'),{verifyWithGo,startBombadil}=require('./support/cross-app');const base='http://127.0.0.1:8088';
+const {measurementStep}=require('../ui/workspace.mjs'),{verifyWithGo,startBombadil}=require('./support/cross-app');const base='http://127.0.0.1:8088';
 async function post(request,url,data){const r=await request.post(base+url,{data});expect(r.ok(),await r.text()).toBe(true);return r.json()}
 const attrs=o=>Object.entries(o).map(([key,stringValue])=>({key,value:{stringValue}}));
 const question=(definition,a,b)=>({definition,fromNS:String(a),toNS:String(b),fromMs:Number(a/1000000n),toMs:Number((b+999999n)/1000000n)});

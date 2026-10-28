@@ -18,7 +18,7 @@ import (
 func TestHegelActivityBaselineAccounting(t *testing.T) {
 	hegel.Test(t, func(tc *hegel.T) {
 		seed := hegel.Draw(tc, hegel.Integers(1, 1000000))
-		script := `const {capture,request}=require('../ui/activity-baseline');const n=9007199254740993n+BigInt(process.argv[1]),q={signal:'spans',environment:'test',fromMs:1700000000000,toMs:1700000060000,limit:100,offset:0,groupBy:[{kind:'column',key:'duration_bucket'}],where:{field:{kind:'attribute',key:'owner'},op:'missing'}},a={question:q,state:'observed',count:String(n+1n),basis:'baseline',capturedAt:'2026-10-24T00:00:01Z',groups:[{g0:'[0,1) ms',count:String(n)},{g0:'[5,10) ms',count:'1'}]},id='a'.repeat(64),frozen=capture({receipt:{id,title:'Prior duration',capturedAt:'2026-10-24T00:00:02Z',question:{kind:'explore',explore:q}},explore:a},id),current={...a,question:{...q,fromMs:q.toMs,toMs:q.toMs+60000,limit:1,where:{field:{kind:'attribute',key:'owner'},op:'eq',value:''}},basis:'activity',count:String(n+2n),groups:[{g0:'[5,10) ms',count:String(n)},{g0:'[10,50) ms',count:'2'}]};process.stdout.write(JSON.stringify(request(frozen,current)));`
+		script := `const {capture,request}=require('../ui/activity-baseline.mjs');const n=9007199254740993n+BigInt(process.argv[1]),q={signal:'spans',environment:'test',fromMs:1700000000000,toMs:1700000060000,limit:100,offset:0,groupBy:[{kind:'column',key:'duration_bucket'}],where:{field:{kind:'attribute',key:'owner'},op:'missing'}},a={question:q,state:'observed',count:String(n+1n),basis:'baseline',capturedAt:'2026-10-24T00:00:01Z',groups:[{g0:'[0,1) ms',count:String(n)},{g0:'[5,10) ms',count:'1'}]},id='a'.repeat(64),frozen=capture({receipt:{id,title:'Prior duration',capturedAt:'2026-10-24T00:00:02Z',question:{kind:'explore',explore:q}},explore:a},id),current={...a,question:{...q,fromMs:q.toMs,toMs:q.toMs+60000,limit:1,where:{field:{kind:'attribute',key:'owner'},op:'eq',value:''}},basis:'activity',count:String(n+2n),groups:[{g0:'[5,10) ms',count:String(n)},{g0:'[10,50) ms',count:'2'}]};process.stdout.write(JSON.stringify(request(frozen,current)));`
 		raw, e := exec.Command("node", "-e", script, strconv.Itoa(seed)).CombinedOutput()
 		if e != nil {
 			tc.Fatal(e, string(raw))
@@ -35,7 +35,7 @@ func TestHegelActivityBaselineAccounting(t *testing.T) {
 		if e != nil {
 			tc.Fatal(e)
 		}
-		validate := exec.Command("node", "-e", `const fs=require('node:fs'),assert=require('node:assert/strict'),{result}=require('../ui/activity-baseline'),{pair,value}=JSON.parse(fs.readFileSync(0,'utf8'));assert.deepEqual(result(pair,value),value);assert.throws(()=>result(pair,{...value,baselineBasis:'other'}));assert.throws(()=>result(pair,{...value,rows:value.rows.slice(1)}));`)
+		validate := exec.Command("node", "-e", `const fs=require('node:fs'),assert=require('node:assert/strict'),{result}=require('../ui/activity-baseline.mjs'),{pair,value}=JSON.parse(fs.readFileSync(0,'utf8'));assert.deepEqual(result(pair,value),value);assert.throws(()=>result(pair,{...value,baselineBasis:'other'}));assert.throws(()=>result(pair,{...value,rows:value.rows.slice(1)}));`)
 		validate.Stdin = bytes.NewReader(body)
 		if out, e := validate.CombinedOutput(); e != nil {
 			tc.Fatal(e, string(out))

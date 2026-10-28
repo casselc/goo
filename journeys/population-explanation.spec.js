@@ -1,5 +1,5 @@
 const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');
-const {questionLink}=require('../ui/workspace'),{verifyWithGo,startBombadil}=require('./support/cross-app');
+const {questionLink}=require('../ui/workspace.mjs'),{verifyWithGo,startBombadil}=require('./support/cross-app');
 const base='http://127.0.0.1:8088',version='goo/explanation/v1';
 async function json(r){expect(r.ok(),await r.text()).toBe(true);return r.json()}
 const isResponse=(route,r)=>r.request().method()==='POST'&&r.url().endsWith('/api/'+route);

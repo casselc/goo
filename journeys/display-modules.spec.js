@@ -106,3 +106,13 @@ test('the whole supplied-data gallery uses the public graph without application 
   expect(await page.evaluate(() => Object.keys(globalThis).filter(k => /^Goo/.test(k)))).toEqual([]);
   expect(errors).toEqual([]);
 });
+
+test('application owners register their tag-created widgets without a namespace bridge',async({page})=>{
+ const errors=[];page.on('pageerror',error=>errors.push(error.message));
+ await page.goto(base+'/#questions');
+ await expect(page.locator('#exploreRun')).toHaveCount(1);
+ const missing=await page.evaluate(()=>['goo-chart-frame','goo-value-timeline','goo-bucket-heatmap','goo-grouping-control','goo-trace-comparison','goo-record-columns','goo-comparison-series','goo-time-range'].filter(tag=>!customElements.get(tag)));
+ expect(missing).toEqual([]);
+ expect(await page.evaluate(()=>Object.keys(globalThis).filter(key=>/^Goo/.test(key)))).toEqual([]);
+ expect(errors).toEqual([]);
+});

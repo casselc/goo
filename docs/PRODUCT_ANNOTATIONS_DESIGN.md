@@ -24,7 +24,7 @@ and every label does not need to target an individual log or span.
 This is a source/design review, not customer usability research or a newly run
 browser campaign. Implemented foundations were checked in:
 
-- [`ui/workspace.js`](../ui/workspace.js): Explore, Services, Operations, Saved
+- [`ui/workspace.js`](../ui/workspace.mjs): Explore, Services, Operations, Saved
   investigations, Definitions and Examples; typed staged questions are separate
   from evidence. [Record selection](RECORD_POPULATIONS.md) is a current bounded
   Explore gesture, not the identity model for the whole product.

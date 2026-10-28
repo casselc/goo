@@ -17,7 +17,7 @@ func TestHegelLinkedTimelineScope(t *testing.T) {
 	hegel.Test(t, func(tc *hegel.T) {
 		from := hegel.Draw(tc, hegel.Integers(1000, 1000000))
 		width := hegel.Draw(tc, hegel.Integers(2, 10000))
-		script := `const a=require('node:assert/strict'),{narrowed}=require('../ui/service-timeline');const from=+process.argv[1],width=+process.argv[2],input={scope:{environment:'prod',namespace:{mode:'missing'},fromMs:from,toMs:from+width},service:'edge',nativeSelection:['exact'],instruments:[{unit:'ms',temporality:2}]},copy=structuredClone(input);const out=narrowed(input,{fromMs:from+1,toMs:from+width});a.deepEqual(input,copy);a.deepEqual({...out.scope,fromMs:from},input.scope);a.deepEqual(out.instruments,input.instruments);a.deepEqual(out.nativeSelection,input.nativeSelection);a.throws(()=>narrowed(input,{fromMs:from-1,toMs:from+width}));`
+		script := `const a=require('node:assert/strict'),{narrowed}=require('../ui/service-timeline.mjs');const from=+process.argv[1],width=+process.argv[2],input={scope:{environment:'prod',namespace:{mode:'missing'},fromMs:from,toMs:from+width},service:'edge',nativeSelection:['exact'],instruments:[{unit:'ms',temporality:2}]},copy=structuredClone(input);const out=narrowed(input,{fromMs:from+1,toMs:from+width});a.deepEqual(input,copy);a.deepEqual({...out.scope,fromMs:from},input.scope);a.deepEqual(out.instruments,input.instruments);a.deepEqual(out.nativeSelection,input.nativeSelection);a.throws(()=>narrowed(input,{fromMs:from-1,toMs:from+width}));`
 		if out, e := exec.Command("node", "-e", script, strconv.Itoa(from), strconv.Itoa(width)).CombinedOutput(); e != nil {
 			tc.Fatalf("%s %v", out, e)
 		}

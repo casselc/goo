@@ -13,7 +13,7 @@ func TestHegelLatencyHistogramPartitions(t *testing.T) {
 	hegel.Test(t, func(tc *hegel.T) {
 		a := hegel.Draw(tc, hegel.Integers(0, 7))
 		b := hegel.Draw(tc, hegel.Integers(a, 7))
-		script := `const {selection}=require('../ui/latency-histogram'),{partition}=require('../ui/population-selection');const [a,b]=process.argv.slice(1);const data={state:'observed',count:'1',groups:[{g0:'[5,10) ms',count:'1'}],question:{signal:'spans',environment:'test',fromMs:1700000000000,toMs:1700000030000,limit:1,offset:100,groupBy:[{kind:'column',key:'duration_bucket'}],where:{any:[{field:{kind:'attribute',key:'owner'},op:'missing'},{field:{kind:'attribute',key:'owner'},op:'eq',value:''}]}}};process.stdout.write(JSON.stringify({base:data.question,...partition(data.question,selection(data,b,a))}));`
+		script := `const {selection}=require('../ui/latency-histogram.mjs'),{partition}=require('../ui/population-selection.mjs');const [a,b]=process.argv.slice(1);const data={state:'observed',count:'1',groups:[{g0:'[5,10) ms',count:'1'}],question:{signal:'spans',environment:'test',fromMs:1700000000000,toMs:1700000030000,limit:1,offset:100,groupBy:[{kind:'column',key:'duration_bucket'}],where:{any:[{field:{kind:'attribute',key:'owner'},op:'missing'},{field:{kind:'attribute',key:'owner'},op:'eq',value:''}]}}};process.stdout.write(JSON.stringify({base:data.question,...partition(data.question,selection(data,b,a))}));`
 		raw, e := exec.Command("node", "-e", script, strconv.Itoa(a), strconv.Itoa(b)).CombinedOutput()
 		if e != nil {
 			tc.Fatal(e, string(raw))

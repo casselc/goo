@@ -201,7 +201,7 @@ func TestHegelErrorTriageProjectionAndRules(t *testing.T) {
 		}
 		parent := exploration.Query{Signal: "spans", Environment: "triage-property", FromMS: 1700000000000, ToMS: 1700000060000, Limit: 1, Offset: seed % 100, Where: &exploration.Predicate{Field: &exploration.Field{Kind: "resource", Key: "team"}, Op: "eq", Value: "core"}}
 		raw, _ := json.Marshal(parent)
-		script := `const t=require('../ui/error-triage');const q=JSON.parse(process.argv[1]);const out=[];for(const signal of ['spans','logs'])for(const rule of signal==='spans'?['reported','status','type','event']:['reported','status','type'])out.push({signal,rule,question:t.triageQuery({...q,signal},{rule})});process.stdout.write(JSON.stringify(out))`
+		script := `const t=require('../ui/error-triage.mjs');const q=JSON.parse(process.argv[1]);const out=[];for(const signal of ['spans','logs'])for(const rule of signal==='spans'?['reported','status','type','event']:['reported','status','type'])out.push({signal,rule,question:t.triageQuery({...q,signal},{rule})});process.stdout.write(JSON.stringify(out))`
 		output, e := exec.Command("node", "-e", script, string(raw)).CombinedOutput()
 		if e != nil {
 			tc.Fatal(e, string(output))

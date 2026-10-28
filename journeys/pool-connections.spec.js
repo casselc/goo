@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const { readStepLink } = require('../ui/workspace');
+const { readStepLink } = require('../ui/workspace.mjs');
 const { base, json, observe, loaded, seed, write, captureBytes, metadataControlRequest } = require('./196-pool-support');
 test.use({ actionTimeout: 15000, navigationTimeout: 45000 });
 async function geometry(page, host) {
@@ -24,7 +24,7 @@ test('196 named pool counts auto assemble exact states without totals or health 
   const response = observation.responses.find(r => r.endpoint === '/api/measurements' && r.body?.question.definition.stockDomain === 'nonnegative-integer');
   expect(response).toBeTruthy(); const widgetResult = response.body; expect(widgetResult.stocks.series).toHaveLength(10);
   const box = dashboard.locator('[data-widget="' + widget.key + '"]'), host = box.locator('.pool-connections'); await expect(host).toBeVisible();
-  const poolModel = await page.evaluate(result => window.GooPoolConnections.model(result), widgetResult);
+  const poolModel = await page.evaluate(async (result)=>{const GooPoolConnections=await import('/pool-connections.mjs');return GooPoolConnections.model(result)}, widgetResult);
   expect(poolModel.ineligible).toHaveLength(2); expect(poolModel.groups).toHaveLength(5);
   const ordersA = host.locator('.pool-connection-row[data-pool="orders"][data-instance="worker-a"]');
   await expect(ordersA.locator('[data-pool-state=used]')).toHaveAttribute('data-value', '3');

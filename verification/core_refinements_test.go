@@ -17,7 +17,7 @@ func TestHegelPopulationSelection(t *testing.T) {
 	hegel.Test(t, func(tc *hegel.T) {
 		low := hegel.Draw(tc, hegel.Integers(0, 1000000))
 		width := hegel.Draw(tc, hegel.Integers(1, 1000000))
-		script := `const {question}=require('../ui/population-selection');const low=process.argv[1],high=process.argv[2];const q={signal:'spans',environment:'prod',fromMs:1000,toMs:10000,limit:100,offset:0,where:{any:[{field:{kind:'attribute',key:'route'},op:'missing'},{field:{kind:'attribute',key:'route'},op:'eq',value:''}]}};process.stdout.write(JSON.stringify(question(q,{fromMs:2000,toMs:9000,minMS:low,maxMS:high})))`
+		script := `const {question}=require('../ui/population-selection.mjs');const low=process.argv[1],high=process.argv[2];const q={signal:'spans',environment:'prod',fromMs:1000,toMs:10000,limit:100,offset:0,where:{any:[{field:{kind:'attribute',key:'route'},op:'missing'},{field:{kind:'attribute',key:'route'},op:'eq',value:''}]}};process.stdout.write(JSON.stringify(question(q,{fromMs:2000,toMs:9000,minMS:low,maxMS:high})))`
 		out, e := exec.Command("node", "-e", script, strconv.Itoa(low), strconv.Itoa(low+width)).Output()
 		if e != nil {
 			tc.Fatal(e)

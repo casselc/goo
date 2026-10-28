@@ -83,7 +83,7 @@ func TestHegelContainerHistoryExactContext(t *testing.T) {
 			}
 		}
 		input, _ := json.Marshal(map[string]any{"parent": map[string]any{"environment": "history-property", "fromMs": 1800000000000, "toMs": 1800000060000, "resource": resource, "resourceSchemaURL": ""}, "range": map[string]string{"fromNS": fmt.Sprint(lo), "toNS": fmt.Sprint(hi)}})
-		script := `const h=require('../ui/container-resource-history'),a=require('assert/strict'),fs=require('fs'),p=JSON.parse(fs.readFileSync(0,'utf8')),before=JSON.stringify(p);global.fetch=()=>{throw Error('unexpected source read')};const out=['logs','spans'].map(s=>h.contextQuestion(p.parent,p.range,s));for(const r of [{fromNS:p.range.toNS,toNS:p.range.fromNS},{fromNS:p.range.fromNS,toNS:p.range.fromNS},{fromNS:'0',toNS:p.range.toNS}])a.throws(()=>h.contextQuestion(p.parent,r,'logs'));a.equal(JSON.stringify(p),before);console.log(JSON.stringify(out))`
+		script := `const h=require('../ui/container-resource-history.mjs'),a=require('assert/strict'),fs=require('fs'),p=JSON.parse(fs.readFileSync(0,'utf8')),before=JSON.stringify(p);global.fetch=()=>{throw Error('unexpected source read')};const out=['logs','spans'].map(s=>h.contextQuestion(p.parent,p.range,s));for(const r of [{fromNS:p.range.toNS,toNS:p.range.fromNS},{fromNS:p.range.fromNS,toNS:p.range.fromNS},{fromNS:'0',toNS:p.range.toNS}])a.throws(()=>h.contextQuestion(p.parent,r,'logs'));a.equal(JSON.stringify(p),before);console.log(JSON.stringify(out))`
 		cmd := exec.Command("node", "-e", script)
 		cmd.Stdin = bytes.NewReader(input)
 		raw, e := cmd.CombinedOutput()

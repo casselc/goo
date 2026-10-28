@@ -239,7 +239,7 @@ test('185 optional real trace comparison Bombadil campaign', async ({ request })
   test.skip(process.env.GOO_TRACE_COMPARISON_BOMBADIL !== '1', 'Explicit ordinary-telemetry campaign');
   test.setTimeout(150000);
   const f = await seed(request), dir = await output(f, 'fixture.json', f);
-  const { questionLink } = require('../ui/workspace');
+  const { questionLink } = require('../ui/workspace.mjs');
   const actor = await startBombadil({ dir: path.join(dir, 'bombadil'),
     url: base + '/' + questionLink(question(f, f.traces[0])),
     specification: 'verification/bombadil/trace-comparison.ts', seconds: 55 });

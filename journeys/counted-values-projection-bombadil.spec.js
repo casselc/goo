@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs/promises'), path = require('node:path');
 const { fixture, question, logs } = require('./193-counted-values-fixture');
-const { questionLink } = require('../ui/workspace');
+const { questionLink } = require('../ui/workspace.mjs');
 const { startBombadil } = require('./support/cross-app');
 test('193 bounded counted-values projection campaign', async ({ request }) => {
   test.skip(process.env.GOO_COUNTED_PROJECTION_BOMBADIL !== '1', 'Explicit ordinary OTLP campaign'); test.setTimeout(100000);

@@ -4,7 +4,7 @@
 // Replays retained real evidence. Modes are explicit: saved-desktop performs no
 // telemetry reads; resource-right-pan performs exactly one named Explore read.
 const {chromium, expect} = require('@playwright/test');
-const {questionLink} = require('../ui/workspace');
+const {questionLink} = require('../ui/workspace.mjs');
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const {createHash} = require('node:crypto');

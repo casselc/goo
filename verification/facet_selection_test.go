@@ -18,7 +18,7 @@ func TestHegelFacetSelection(t *testing.T) {
 	hegel.Test(t, func(tc *hegel.T) {
 		mode := hegel.Draw(tc, hegel.Integers(0, 1))
 		choice := hegel.Draw(tc, hegel.Integers(0, 2))
-		script := `const {selectionQueries}=require('../ui/population-workspace');const q=['spans','logs'].map(signal=>({signal,environment:'prod',fromMs:1000,toMs:2000,limit:100,offset:0,where:{any:[{field:{kind:'resource',key:'team'},op:'missing'},{field:{kind:'resource',key:'team'},op:'eq',value:''}]}}));const before=JSON.stringify(q);const out=selectionQueries(q,[{signal:'spans',field:{kind:'attribute',key:'region'},value:[null,'','west'][Number(process.argv[2])],mode:Number(process.argv[1])?'exclude':'include'}]);if(before!==JSON.stringify(q)||JSON.stringify(q[1])!==JSON.stringify(out[1]))throw Error('parent or companion changed');process.stdout.write(JSON.stringify(out));`
+		script := `const {selectionQueries}=require('../ui/population-workspace.mjs');const q=['spans','logs'].map(signal=>({signal,environment:'prod',fromMs:1000,toMs:2000,limit:100,offset:0,where:{any:[{field:{kind:'resource',key:'team'},op:'missing'},{field:{kind:'resource',key:'team'},op:'eq',value:''}]}}));const before=JSON.stringify(q);const out=selectionQueries(q,[{signal:'spans',field:{kind:'attribute',key:'region'},value:[null,'','west'][Number(process.argv[2])],mode:Number(process.argv[1])?'exclude':'include'}]);if(before!==JSON.stringify(q)||JSON.stringify(q[1])!==JSON.stringify(out[1]))throw Error('parent or companion changed');process.stdout.write(JSON.stringify(out));`
 		raw, e := exec.Command("node", "-e", script, strconv.Itoa(mode), strconv.Itoa(choice)).Output()
 		if e != nil {
 			tc.Fatal(e)

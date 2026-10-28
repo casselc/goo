@@ -21,7 +21,7 @@ func TestHegelServiceSuggestionScope(t *testing.T) {
 		from := hegel.Draw(tc, hegel.Integers(0, 1000000))
 		width := hegel.Draw(tc, hegel.Integers(1, 7200000))
 		alias := hegel.Draw(tc, hegel.Integers(0, 2))
-		script := `const {suggestions}=require('../ui/service-browser');const [from,width,alias]=JSON.parse(process.argv[1]);const key=['db.system','db.system.name','unrelated'][alias];const scope={environment:'prod',fromMs:from,toMs:from+width};const s=suggestions(scope,"literal'\\n",[{kind:'attribute',key}])[1];process.stdout.write(JSON.stringify(s));`
+		script := `const {suggestions}=require('../ui/service-browser.mjs');const [from,width,alias]=JSON.parse(process.argv[1]);const key=['db.system','db.system.name','unrelated'][alias];const scope={environment:'prod',fromMs:from,toMs:from+width};const s=suggestions(scope,"literal'\\n",[{kind:'attribute',key}])[1];process.stdout.write(JSON.stringify(s));`
 		args, _ := json.Marshal([]int{from, width, alias})
 		out, e := exec.Command("node", "-e", script, string(args)).Output()
 		if e != nil {
@@ -166,7 +166,7 @@ func TestHegelServiceCatalogGrain(t *testing.T) {
 			input = append(input, signal{strconv.Itoa(i / 3), []string{"spans", "logs", "metrics"}[i%3], value, 100 + i, 1000 + i})
 		}
 		data, _ := json.Marshal(input)
-		script := `const {catalogRows}=require('../ui/inventory');process.stdout.write(JSON.stringify(catalogRows(JSON.parse(process.argv[1]))));`
+		script := `const {catalogRows}=require('../ui/inventory.mjs');process.stdout.write(JSON.stringify(catalogRows(JSON.parse(process.argv[1]))));`
 		out, e := exec.Command("node", "-e", script, string(data)).Output()
 		if e != nil {
 			tc.Fatal(e)

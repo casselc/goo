@@ -1,2 +1,0 @@
-/* Pinned host byte profile; app-owned loading is shared. */
-(function(global){const factory=typeof module!=='undefined'?require('./host-counter-pair'):global.GooHostCounterPair;const api=factory.create({"metric": "system.network.io", "dimension": "network.interface.name", "direction": "network.io.direction", "roles": ["receive", "transmit"], "title": "Network", "noun": "Interface", "css": "host-network"});if(typeof module!=='undefined')module.exports=api;else global.GooHostNetwork=api;})(typeof window==='undefined'?globalThis:window);

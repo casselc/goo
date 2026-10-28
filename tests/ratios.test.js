@@ -1,4 +1,4 @@
-const {test}=require('node:test');const assert=require('node:assert/strict');const {label}=require('../ui/ratios.js');
+const {test}=require('node:test');const assert=require('node:assert/strict');const {label}=require('../ui/ratios.mjs');
 test('ratio labels preserve exact counts and separate unknown from zero traffic',()=>{
  assert.equal(label({state:'ok',percent:20,errors:'2',calls:'10'}),'20.00% (2/10)');
  assert.equal(label({state:'no_data'}),'No data · zero traffic');

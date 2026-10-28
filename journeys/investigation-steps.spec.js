@@ -1,5 +1,5 @@
 const {test,expect}=require('@playwright/test');const fs=require('node:fs/promises'),path=require('node:path');
-const {questionLink,measurementStep,stepLink}=require('../ui/workspace');const {verifyWithGo,startBombadil}=require('./support/cross-app');
+const {questionLink,measurementStep,stepLink}=require('../ui/workspace.mjs');const {verifyWithGo,startBombadil}=require('./support/cross-app');
 const base='http://127.0.0.1:8088';
 test('50 compose and resume a mixed-signal investigation without implicit reads',async({page,request,context})=>{
  test.setTimeout(240000);let reads=0;const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(r.method()==='POST'&&/\/api\/(explore|measurements|discovery|metric-discovery|inventory|captures)$/.test(r.url()))reads++});

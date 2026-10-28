@@ -85,7 +85,7 @@ const step = registerCustomAction('goo.traceComparisonStep', async (document, wi
     if (leaves.length !== 1 || leaves[0].field?.kind !== 'attribute' || leaves[0].field?.key !== 'work.role' || leaves[0].op !== 'eq' || leaves[0].value !== 'current') throw Error('Actual current query differs from authored selector');
     local(() => button('Compare with reference').click());
     const element = document.querySelector('goo-trace-comparison') as any, input = element.data;
-    const model = (window as any).GooTracePageComparison.compare(input.baseline.rows, input.selection.rows, input.baseline.truncated, input.selection.truncated);
+    const model = (await import(new URL('/trace-page-comparison.mjs',window.location.href).href)).compare(input.baseline.rows, input.selection.rows, input.baseline.truncated, input.selection.truncated);
     const match = model.groups.find((group: any) => group.operation === 'GET /checkout');
     root.dataset.traceComparisonRoot = String(model.groups.indexOf(match));
     root.dataset.traceComparisonProof = JSON.stringify({ inclusiveDifferenceNs: match.inclusiveDifferenceNs,

@@ -1,4 +1,4 @@
-const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),{recordStep}=require('../ui/workspace');
+const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),{recordStep}=require('../ui/workspace.mjs');
 const fs=require('node:fs/promises'),path=require('node:path'),{verifyWithGo,startBombadil}=require('./support/cross-app');
 const base=process.env.GOO_QUERY_URL||'http://127.0.0.1:8088';
 test('128 retained time-series comparison stages the correct side and restores its parent',async({page,request})=>{

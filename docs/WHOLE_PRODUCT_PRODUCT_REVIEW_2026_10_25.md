@@ -39,12 +39,12 @@ below; exact observed-result custody is a separate decision.
 | **4. Preserve and communicate what was learned.** Reopen the same evidence, cite it, explain uncertainty and continue later. | Immutable captures, exact citations, investigation revisions, trace-anchor diagnostics, browser-local ordinary draft recovery, optional XTDB retained evidence and annotation history. | Evidence capabilities remain target-specific; not every displayed result can be frozen without rereading. Cross-store global search, reviewed training exports and shared draft concurrency are not present. |
 | **5. Turn recurring understanding into shared definitions and better telemetry.** Reuse meaning without rebuilding an investigation. | Record/native packages, canonical YAML, definitions library, ordinary OTel discovery, optional reviewed Go annotation/weave handoff and offline portability work. | New trace-search requests are ephemeral. Production IaC lifecycle, arbitrary expressions and live Databricks execution remain separate contracts. Instrumentation suggestions do not verify runtime coverage. |
 
-Source anchors: [Activity owner](../ui/stream-entry.js),
+Source anchors: [Activity owner](../ui/stream-entry.mjs),
 [service planner](../exploration/dashboard.go),
-[population owner](../ui/population-workspace.js),
-[native result owner](../ui/measurements.js),
-[trace search](../ui/trace-search.js),
-[documents](../ui/documents.js),
+[population owner](../ui/population-workspace.mjs),
+[native result owner](../ui/measurements.mjs),
+[trace search](../ui/trace-search.mjs),
+[documents](../ui/documents.mjs),
 [definitions](DEFINITION_LIBRARY.md),
 [annotations](WORKBENCH_ANNOTATIONS.md), and
 [source annotations](GOO_ANNOTATIONS.md).
@@ -78,7 +78,7 @@ remain later profiles or declared contracts, rather than a universal RED label.
 
 The existing operation diagnosis and HTTP/RPC/database/messaging suggestions are
 **delivered** ([core refinements](CORE_EXPERIENCE_REFINEMENTS.md),
-[`ui/service-browser.js`](../ui/service-browser.js)). They should be reused, not
+[`ui/service-browser.js`](../ui/service-browser.mjs)). They should be reused, not
 scheduled again under a new name.
 
 ### 2. Close a native-metric-led incident path
@@ -91,7 +91,7 @@ Service-to-discovery already preserves its incident window
 [native navigation](NATIVE_STREAM_NAVIGATION.md)).
 
 The concrete remaining seam is visible in
-[`ui/measurements.js`](../ui/measurements.js), `renderTimeline`/`choose`: selecting
+[`ui/measurements.js`](../ui/measurements.mjs), `renderTimeline`/`choose`: selecting
 an observation/interval displays exact bounds, stream attributes, bucket counts
 and reasons. It does not offer a direct span/log continuation from that selected
 interval. Existing capture follow-ups in
@@ -162,7 +162,7 @@ repeat that implementation everywhere.
 Keep a small primary decision visible, then reveal authoring and exact provenance.
 In particular, the Measurements opening still introduces a Define → Preview →
 Investigate package workflow before displaying data
-([`ui/measurements.js`](../ui/measurements.js)). That expert workflow is valid,
+([`ui/measurements.js`](../ui/measurements.mjs)). That expert workflow is valid,
 but service-scoped discovery and observed instruments should remain the natural
 entry for an unfamiliar system. Do not add another generic YAML wizard just to
 make discovery feel less package-centric.
@@ -288,7 +288,7 @@ grain, but cannot fabricate observations.
 
 Reuse the existing service dashboard planner and execution owner
 ([`exploration/dashboard.go`](../exploration/dashboard.go),
-[`ui/service-dashboard.js`](../ui/service-dashboard.js)). Extend the capability
+[`ui/service-dashboard.js`](../ui/service-dashboard.mjs)). Extend the capability
 plan with family/entity identity, eligible widget questions, exact prerequisites
 and unavailable reasons. Keep metadata **candidate**, executable supported binding,
 and actual read state distinct. Pin each convention rule set; a matching metric

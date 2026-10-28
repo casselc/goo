@@ -1,6 +1,6 @@
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
-const {select,distribution,waterfallRows}=require('../ui/operations.js');
+const {select,distribution,waterfallRows}=require('../ui/operations.mjs');
 const epoch=1792209000000000000n;
 const span=(id,offset,duration,outcome='error')=>({traceID:'a',spanID:id,parentSpanID:'',startNS:String(epoch+offset),durationNS:String(duration),operation:'checkout.reserve',role:'server',outcome,attributes:{}});
 test('heatmap partitions exact durations and half-open timestamps at a modern epoch',()=>{
@@ -22,7 +22,7 @@ test('operation, role, outcome and trace filtering compose without mutating evid
  const out=waterfallRows(rows,'bound-service');assert.equal(out[0].timestamp_ns,String(epoch));assert.equal(out[0].duration_ns,'1');assert.equal(Object.hasOwn(out[0],'StatusCode'),false);assert.equal(Object.hasOwn(out[1],'StatusCode'),false);
 });
 test('subject navigation separates complete scoped identities and keeps repeated events',()=>{
- const {subjectKey,subjectEvents,subjectSpans}=require('../ui/operations.js');
+ const {subjectKey,subjectEvents,subjectSpans}=require('../ui/operations.mjs');
  const subject={environment:'local',service:'checkout',namespace:'reservation',tenant:'a',id:'same'};
  const event=(s,time)=>({subject:s,timeNS:String(time),name:'accepted'});
  const rows=[{...span('1',0n,1n),events:[event(subject,epoch+2n),event(subject,epoch+2n)]},{...span('2',1n,1n),traceID:'b',events:[event(subject,epoch+1n)]}];
@@ -35,4 +35,4 @@ test('subject navigation separates complete scoped identities and keeps repeated
  assert.equal(subjectEvents(rows,subject)[0].span.spanID,'2');
 });
 
-test('declared outcomes never infer reported OTel status, including old, empty and future evidence',()=>{const {waterfallFacts}=require('../ui/operations');for(const outcome of ['ok','error','panic'])for(const reportedStatus of [undefined,'','Ok','Error','Unset','VendorStatus']){const s={...span('id',0n,1n,outcome),...(reportedStatus===undefined?{}:{reportedStatus})},before=structuredClone(s),row=waterfallRows([s],'svc')[0],facts=waterfallFacts([s])[0];assert.equal(row.operationOutcome,outcome);assert.equal(row.StatusCode,reportedStatus);assert.equal(Object.hasOwn(row,'StatusCode'),reportedStatus!==undefined);assert.equal(facts[0].value,outcome);assert.equal(facts[1].value,reportedStatus===undefined?'Not retained':reportedStatus===''?'Unknown (empty)':reportedStatus==='VendorStatus'?'Unknown (VendorStatus)':reportedStatus);assert.deepEqual(s,before)}});
+test('declared outcomes never infer reported OTel status, including old, empty and future evidence',()=>{const {waterfallFacts}=require('../ui/operations.mjs');for(const outcome of ['ok','error','panic'])for(const reportedStatus of [undefined,'','Ok','Error','Unset','VendorStatus']){const s={...span('id',0n,1n,outcome),...(reportedStatus===undefined?{}:{reportedStatus})},before=structuredClone(s),row=waterfallRows([s],'svc')[0],facts=waterfallFacts([s])[0];assert.equal(row.operationOutcome,outcome);assert.equal(row.StatusCode,reportedStatus);assert.equal(Object.hasOwn(row,'StatusCode'),reportedStatus!==undefined);assert.equal(facts[0].value,outcome);assert.equal(facts[1].value,reportedStatus===undefined?'Not retained':reportedStatus===''?'Unknown (empty)':reportedStatus==='VendorStatus'?'Unknown (VendorStatus)':reportedStatus);assert.deepEqual(s,before)}});

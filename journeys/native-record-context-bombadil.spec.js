@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs/promises'), path = require('node:path');
-const { measurementStep, stepLink } = require('../ui/workspace');
+const { measurementStep, stepLink } = require('../ui/workspace.mjs');
 const { base, question, seed, write } = require('./192-native-context-support');
 const { startBombadil } = require('./support/cross-app');
 test('192 bounded native interval to records campaign', async ({ request }) => {

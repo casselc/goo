@@ -18,7 +18,7 @@ func TestHegelBrushPopulationScope(t *testing.T) {
 	hegel.Test(t, func(tc *hegel.T) {
 		a := hegel.Draw(tc, hegel.Integers(0, 98))
 		b := hegel.Draw(tc, hegel.Integers(a+1, 100))
-		script := `const {brushRange}=require('../ui/value-timeline.mjs'),{rangeQueries}=require('../ui/population-workspace');const qs=['spans','logs'].map(signal=>({signal,environment:'prod',fromMs:1000000,toMs:1300000,limit:100,offset:0,where:{any:[{field:{kind:'attribute',key:'region'},op:'missing'},{field:{kind:'attribute',key:'region'},op:'eq',value:''}]}}));const before=JSON.stringify(qs),r=brushRange({fromNS:'1000000000000',toNS:'1300000000000'},Number(process.argv[1])/100,Number(process.argv[2])/100);const out=rangeQueries(qs,{fromMs:Number(BigInt(r.fromNS)/1000000n),toMs:Number((BigInt(r.toNS)+999999n)/1000000n)});if(JSON.stringify(qs)!==before)throw Error('parent mutated');process.stdout.write(JSON.stringify(out));`
+		script := `const {brushRange}=require('../ui/value-timeline.mjs'),{rangeQueries}=require('../ui/population-workspace.mjs');const qs=['spans','logs'].map(signal=>({signal,environment:'prod',fromMs:1000000,toMs:1300000,limit:100,offset:0,where:{any:[{field:{kind:'attribute',key:'region'},op:'missing'},{field:{kind:'attribute',key:'region'},op:'eq',value:''}]}}));const before=JSON.stringify(qs),r=brushRange({fromNS:'1000000000000',toNS:'1300000000000'},Number(process.argv[1])/100,Number(process.argv[2])/100);const out=rangeQueries(qs,{fromMs:Number(BigInt(r.fromNS)/1000000n),toMs:Number((BigInt(r.toNS)+999999n)/1000000n)});if(JSON.stringify(qs)!==before)throw Error('parent mutated');process.stdout.write(JSON.stringify(out));`
 		out, e := exec.Command("node", "-e", script, strconv.Itoa(a), strconv.Itoa(b)).Output()
 		if e != nil {
 			tc.Fatal(e)

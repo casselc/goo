@@ -1,5 +1,5 @@
 const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');
-const {edgeQuestion}=require('../ui/distributed-services'),{recordStep,readStepLink,stepLink}=require('../ui/workspace'),{verifyWithGo,startBombadil}=require('./support/cross-app');const base='http://127.0.0.1:8088';
+const {edgeQuestion}=require('../ui/distributed-services.mjs'),{recordStep,readStepLink,stepLink}=require('../ui/workspace.mjs'),{verifyWithGo,startBombadil}=require('./support/cross-app');const base='http://127.0.0.1:8088';
 test('62 investigate exact reported child spans without widening parent ownership',async({page,request,browser})=>{
  test.setTimeout(240000);const now=Date.now(),scope={environment:'edge-'+randomBytes(4).toString('hex'),fromMs:now-60000,toMs:now},trace=randomBytes(16).toString('hex'),otherTrace=randomBytes(16).toString('hex'),attrs=o=>Object.entries(o).map(([key,stringValue])=>({key,value:{stringValue}})),id=n=>n.toString(16).padStart(16,'0'),at=BigInt(now-10000)*1000000n;
  const span=(n,parent=0,{duration=10000000,code=1,time=at,traceId=trace}={})=>({traceId,spanId:id(n),parentSpanId:parent?id(parent):'',name:'GET /edge',kind:2,status:{code},startTimeUnixNano:String(time),endTimeUnixNano:String(time+BigInt(duration)),attributes:attrs({'http.route':'/edge'})});

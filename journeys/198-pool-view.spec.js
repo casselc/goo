@@ -51,7 +51,7 @@ test('198 load compact aligned pool evidence with exact ratio and retained indep
  const boundary = [];
  for (const item of [{ pool: 'orders', instance: 'worker-b', reason: 'zero-capacity' }, { pool: 'time-mismatch', reason: 'observation-time-mismatch' }, { pool: 'epoch-mismatch', reason: 'epoch-mismatch' }, { pool: 'archive', reason: 'used-unavailable' }, { pool: 'conflicting', reason: 'used-unavailable' }, { pool: 'used-exceeds', reason: 'used-exceeds-capacity' }]) {
   const stream = initial.countResult.stocks.series.find(s => s.stream.attributes['db.client.connection.pool.name'] === item.pool && s.stream.resource['service.instance.id'] === (item.instance || 'worker-a')).stream;
-  const planRequest = await page.evaluate(({ parent, stream, instruments }) => window.GooPoolSignals.request(parent, stream, instruments), { parent: initial.countResult.question, stream, instruments: facts.discovery.instruments });
+  const planRequest = await page.evaluate(async ({ parent, stream, instruments })=>{const GooPoolSignals=await import('/pool-signals.mjs');return GooPoolSignals.request(parent, stream, instruments)}, { parent: initial.countResult.question, stream, instruments: facts.discovery.instruments });
   const planResponse = await json(await request.post(base + '/api/pool-signals/plan', { data: planRequest })); expect(planResponse.capacity).toHaveLength(1);
   const capacityRequest = planResponse.capacity[0].question, capacityResult = await json(await request.post(base + '/api/measurements', { data: capacityRequest }));
   const composeRequest = { count: initial.countResult, stream, capacity: capacityResult }, composeResponse = await json(await request.post(base + '/api/pool-signals/view', { data: composeRequest }));

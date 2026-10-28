@@ -1,0 +1,101 @@
+import './chart-frame.mjs';
+/* Application-owned refresh, snapshot custody and cancellation. Display elements stay passive. */
+import * as Attributes from './attributes.mjs';
+import * as ComparisonInspection from './comparison-inspection.mjs';
+import * as ComparisonSeriesOwner from './comparison-series-owner.mjs';
+import * as ComparisonVisual from './comparison-visual.mjs';
+import * as Distributions from './distributions.mjs';
+import * as EvidenceScope from './evidence-scope.mjs';
+import * as Measurements from './measurements.mjs';
+import * as NativePresentation from './native-presentation.mjs';
+import * as PopulationWorkspace from './population-workspace.mjs';
+import * as Queries from './queries.mjs';
+import * as RecordResults from './record-results.mjs';
+import * as UI from './components.mjs';
+const global=globalThis;
+let inspectionSerial=0;
+function displayState(phase,comparison){if(phase==='current'||phase==='frozen')return comparison?.state==='comparable'?'observed':comparison?.state==='incompatible'?'incompatible':'unavailable';return phase==='paused'?(comparison?'stale':'unknown'):['loading','stale','unavailable'].includes(phase)?phase:'unknown'}
+function measureView(comparison){
+  if(comparison?.state!=='comparable')return {};
+  const m=comparison.measures||{},a=m.baselineDuration,b=m.selectionDuration,x=m.baselineStatus,y=m.selectionStatus,out={};
+  if(a?.state==='observed'&&b?.state==='observed'&&a.count===comparison.baseline.count&&b.count===comparison.selection.count){const ns=[a,b].flatMap(d=>['p50Ns','p95Ns','p99Ns'].map(k=>d[k]));if(ns.every(v=>typeof v==='string'&&/^\d+$/.test(v)))out.latency={baseline:a,current:b,maximumNs:ns.reduce((m,v)=>BigInt(v)>BigInt(m)?v:m,'0')}}
+  if(x&&y&&x.count===comparison.baseline.count&&y.count===comparison.selection.count&&x.count!=='0'&&y.count!=='0'&&m.errorDifferencePP!==undefined)out.status={baseline:x,current:y,delta:m.errorDifferencePP};
+  return out;
+ }
+const rateText=(...args)=>(NativePresentation).rateText(...args);
+function mount(host,{baseline,current=()=>true,onLink,kind='record'}){
+  const n=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e},section=n('section'),heading=n('h4',kind==='counter'?'Live counter rate':'Live record measures'),controls=n('div'),start=n('button','Start live comparison'),pause=n('button','Pause live comparison'),freeze=n('button','Freeze displayed result'),rescale=n('button','Rescale comparison'),status=n('p','Uses the baseline question and duration. Full-population reads; independent of the log tail.'),scope=n('details'),output=n('goo-chart-frame'),receipt=n('p'),link=n('button','Add frozen result to investigation');
+  if(kind==='counter')status.textContent='Requires a baseline with one complete exact OTel stream. Refresh follows the latest observed export endpoint; gaps, resets and stale endpoints withhold rates.';const scopeText=n('p');scope.append(n('summary','Live source policy and read'),scopeText);scope.hidden=true;output.hidden=true;section.className='live-comparison';section.dataset.baseline=baseline;controls.className='comparison-live-actions';controls.setAttribute('role','group');controls.setAttribute('aria-label','Comparison actions');status.setAttribute('role','status');controls.append(UI.actions([start,pause,freeze,rescale],[]));pause.hidden=rescale.hidden=true;const inspectionHost=n('div');inspectionHost.className='live-capture-inspection';section.append(heading,controls,status,scope,output,receipt,inspectionHost,link);link.hidden=true;host.append(section);pause.disabled=freeze.disabled=rescale.disabled=true;
+  let seriesOwner=null,inspectionChild=null;
+ let generation=0,active=false,timer,controller,last=null,ceiling=null,latencyCeiling=null,rateCeiling=null,busy=false,comparisonContext=null,frozenInspection=null,frozenSeries=null;
+  const valid=()=>section.isConnected&&current(),emit=phase=>{section.dataset.phase=phase;start.hidden=active;pause.hidden=!active;rescale.hidden=rescale.disabled;output.setAttribute('state',displayState(phase,last?.comparison));global.dispatchEvent(new CustomEvent('goo:live-comparison-state',{detail:{phase,baseline,generation,token:last?.token||null,basis:last?.basis||null,readAt:last?.comparison.selection.readAt||null}}))};
+  function stop(){active=false;generation++;clearTimeout(timer);controller?.abort();pause.disabled=true;start.disabled=false;freeze.disabled=!last||busy||Date.now()>=Date.parse(last.expiresAt);emit('paused')}
+  function renderCounter(r){
+   const a=r.baseline,b=r.selection,q=b.receipt.question.measurement,w=r.nativeWindows?.[0];
+   output.setAttribute('heading','Exact-stream counter rate');output.setAttribute('unit',q.definition.source.unit+'/s');
+   output.dataset.basis=last.basis||'';output.dataset.readAt=b.readAt;output.dataset.fromNs=q.fromNS||String(BigInt(q.fromMs)*1000000n);output.dataset.toNs=q.toNS||String(BigInt(q.toMs)*1000000n);
+   output.setAttribute('state',displayState('current',r));scope.hidden=false;
+   const width=BigInt(output.dataset.toNs)-BigInt(output.dataset.fromNs);
+   output.setAttribute('window-label',(last.native?.endpointNS?'Export ended ':'No observed endpoint · searched to ')+new Date(Number(BigInt(output.dataset.toNs)/1000000n)).toISOString()+' · '+UI.durationMS(String(width))+' window');
+   scopeText.textContent='Endpoint policy '+(last.native?.policy||'unavailable')+' · export age '+(last.native?.endpointNS?UI.durationMS(last.native.lagNS):'unknown')+'. Exact window and read basis are shown with their comparison side.';
+   const coverage=n('details');coverage.append(n('summary','Stream identity and window coverage'));output.append(coverage);
+   for(const item of r.nativeWindows||[]){if(Attributes)coverage.append(Attributes.streamInspection(item.stream));for(const [label,s]of[['Baseline',item.baseline],['Current',item.selection]])NativePresentation.renderWindowCoverage(coverage,label,s);NativePresentation.renderReasons(coverage,item.reasons)}
+   const reasons=[...(last.native?.reasons||[]),...(r.nativeWindows||[]).flatMap(x=>[...x.reasons,...(x.selection?.reasons||[])])];
+   if(r.state!=='comparable'||r.nativeWindows?.length!==1||w?.rateDifference===undefined){output.append(n('p','Counter rate unavailable. No interpolation or older-window fallback.'));Measurements.renderReasons(output,reasons.length?reasons:['incomplete-window']);rescale.disabled=true;return}
+   const visual=ComparisonVisual,values=[w.baseline.rate,w.selection.rate],max=visual.maximum(values);if(rateCeiling===null)rateCeiling=max;
+   rescale.disabled=visual.maximum([max,rateCeiling])===rateCeiling;
+   if(!rescale.disabled){output.append(n('p','Counter rate exceeds the fixed axis (0–'+rateText(rateCeiling)+'). Rescale explicitly to view both bars.'));return}
+   const figure=visual.pair(output,{title:'Validated counter rate',values,display:values.map(v=>rateText(v)+' '+w.stream.unit+'/s'),ceiling:rateCeiling,unit:w.stream.unit+'/s',delta:rateText(w.rateDifference),labels:['Baseline','Comparison']});figure.dataset.measure='counter-rate';output.dataset.scaleMax=rateCeiling;
+   const exact=n('details');exact.append(n('summary','Exact increments and rates'));for(const [label,s]of[['Baseline',w.baseline],['Current',w.selection]])exact.append(n('p',label+' · '+s.delta+' validated increments · exact rate '+s.rate+' '+w.stream.unit+'/s'));exact.append(n('p','Exact current − baseline: '+w.rateDifference+' '+w.stream.unit+'/s'));output.append(exact,n('small','One exact OTel stream. No fleet aggregation or inference of missing increments. Retained observations do not establish ingestion completeness.'));
+  }
+  function render(){
+   output.hidden=false;for(const child of Array.from(output.children))if(!child.hasAttribute('data-chart-frame-chrome')&&child!==comparisonContext&&child!==seriesOwner?.element)child.remove();
+   output.removeAttribute('data-scale-max');output.setAttribute('heading','Baseline and rolling current');output.setAttribute('unit','record population');
+   if(!last)return;
+   const r=last.comparison,contextData={sides:[['Baseline',r.baseline,'frozen'],['Comparison',r.selection,'live']].map(([label,s,mode])=>({label,data:EvidenceScope.comparisonContextSide(s.receipt.question.explore||s.receipt.question.measurement,{mode,state:s.state,count:s.count,readAt:s.readAt,basis:mode==='live'?last.basis:undefined,...(mode==='frozen'?{capturedAt:s.receipt.capturedAt}:{})})}))};if(comparisonContext)comparisonContext.data=contextData;else comparisonContext=ComparisonVisual.context(output,contextData);if(r.selection.receipt.question.measurement){renderCounter(r);return}const a=r.baseline,b=r.selection,q=b.receipt.question.explore,view=measureView(r);
+   output.dataset.basis=last.basis||'';output.dataset.readAt=b.readAt;output.dataset.fromMs=q.fromMs;output.dataset.toMs=q.toMs;
+   output.setAttribute('state',displayState('current',r));scope.hidden=false;
+   scopeText.textContent='The baseline remains frozen. Rolling comparison reads are independent of the bounded tail; source completeness is unknown.';
+   output.setAttribute('window-label','['+new Date(q.fromMs).toISOString()+', '+new Date(q.toMs).toISOString()+')');
+   if(last.recordSeries){const results=[['baseline',a],['selection',b]].map(([key,s])=>({question:s.receipt.question.explore,timeSeries:last.recordSeries[key],readAt:s.readAt,state:r.state==='incompatible'?'changed_between_reads':s.state}));if(!seriesOwner)seriesOwner=ComparisonSeriesOwner.create(output,results,{fixedDomain:true,onSelect:openInspection,canSelect:()=>valid()&&!inspectionChild});else seriesOwner.update(results)}else if(seriesOwner){seriesOwner.update([null,null])}
+   if(r.state!=='comparable'){output.append(n('p',r.state+' · '+r.differences.join(' · ')+' · numeric comparison withheld'));if(b.state==='no_data')output.append(n('p','No matching records in the rolling current window. Latency and recorded error share are unavailable.'));else if(a.state==='no_data')output.append(n('p','No matching records in the baseline window. Numeric comparison is unavailable.'));rescale.disabled=!seriesOwner?.overflow;return}
+   const max=ComparisonVisual.maximum([a.count,b.count]);if(ceiling===null)ceiling=max;
+   const countOverflow=BigInt(max)>BigInt(ceiling);
+   if(countOverflow)output.append(n('p','Current count exceeds the fixed axis (0–'+ceiling+'). Rescale explicitly to view both bars.'));
+   else{const counts=ComparisonVisual.pair(output,{title:'Matching source records',values:[a.count,b.count],labels:['Baseline','Comparison'],unit:'records',delta:r.countDifference,ceiling});counts.dataset.measure='record-count';output.dataset.scaleMax=ceiling}
+   let latencyOverflow=false;
+   if(view.latency){
+    if(latencyCeiling===null)latencyCeiling=view.latency.maximumNs;
+    latencyOverflow=BigInt(view.latency.maximumNs)>BigInt(latencyCeiling);
+    if(latencyOverflow){const message=n('p','Span latency exceeds the fixed axis (0–'+UI.durationMS(latencyCeiling)+'). Rescale explicitly to view percentiles.');message.dataset.latencyOverflow='true';output.append(message)}
+    else{const pair=n('div');pair.className='live-latency-pair';pair.dataset.latencyCeilingNs=latencyCeiling;
+     for(const [title,summary,side]of[['Baseline',view.latency.baseline,'baseline'],['Comparison',view.latency.current,'current']]){const element=n('goo-latency');element.dataset.side=side;element.ceilingNs=latencyCeiling;element.heading=title;element.headingLevel=5;element.summary=summary;pair.append(element)}
+     output.append(pair,n('small','Span latency · mean and exact p50 / p95 / p99, shared fixed scale. Source records, not end-to-end request latency.'))}
+   }else if(q.summary==='span-duration')output.append(n('p','Span latency unavailable for this snapshot.'));
+   if(view.status){const {baseline:x,current:y}=view.status,pct=Distributions.percent;
+    const values=[pct(x.error,x.count),pct(y.error,y.count)];
+    const figure=ComparisonVisual.pair(output,{title:'Recorded error share',values,display:[values[0]+'% · '+x.error+'/'+x.count+' spans',values[1]+'% · '+y.error+'/'+y.count+' spans'],unit:'%',ceiling:'100',delta:view.status.delta+' pp',labels:['Baseline','Comparison']});figure.dataset.measure='recorded-error-share';
+    const details=n('details');details.append(n('summary','Recorded status coverage'));
+    for(const [label,s]of[['Baseline',x],['Current',y]])details.append(n('p',label+' · Error '+s.error+' · Ok '+s.ok+' · Unset '+s.unset+' · Unknown '+s.unknown+' / '+s.count+' spans'));
+    details.append(n('p','All matching spans form the denominator. Unset and unknown are not success. Sampling and telemetry completeness remain unknown.'));output.append(details);
+   }else if(q.spanStatus)output.append(n('p','Recorded error share unavailable for this snapshot.'));
+   if(q.signal==='spans'&&q.summary!=='span-duration'&&!q.spanStatus)output.append(n('small','This saved question requests counts only. Capture a question with span duration and recorded status to compare those measures.'));
+   rescale.disabled=!(countOverflow||latencyOverflow||seriesOwner?.overflow);
+  }
+  function closeInspection(focus=true){const child=inspectionChild;if(!child)return;inspectionChild=null;child.api.dispose();child.records.dispose();child.host.remove();for(const [el,hidden]of child.hidden)el.hidden=hidden;if(focus){status.textContent='Paused · selected UTC question retained. Resume explicitly.';if(child.opener?.isConnected)child.opener.focus()}}
+  function openInspection(question,opener){if(!valid()||inspectionChild)return;stop();status.textContent='Paused · selected UTC question staged. Run reads fresh data.';const child={host:n('section'),opener,hidden:[controls,scope,output,receipt,inspectionHost,link].map(el=>[el,el.hidden])};inspectionChild=child;for(const [el]of child.hidden)el.hidden=true;child.host.className='live-series-inspection';child.host.setAttribute('aria-label','Live comparison interval inspection');const back=n('button','Back to live comparison'),body=n('div');back.onclick=()=>closeInspection();child.host.append(back,body);section.append(child.host);const isActive=()=>valid()&&inspectionChild===child,prefix='live-series-'+(++inspectionSerial)+'-';child.records=RecordResults.mount(body,{prefix,readOnly:true,active:isActive,fetchQuery:async q=>{const r=await Queries.post('/api/explore',q),d=await r.json();if(!r.ok)throw Error(d.error);return d}});child.api=PopulationWorkspace.mount(body,{prefix,depth:1,current:()=>null,table:child.records.table,active:isActive,onOpenTrace:(q,row,origin)=>child.records.openTrace(q,row.TraceId,row.SpanId,null,origin)});child.api.stage([question],{columns:['utc','service','summary','context']});back.focus();}
+  async function poll(){if(!active||!valid())return stop();const g=generation;controller=new AbortController();freeze.disabled=true;emit('loading');status.textContent='Refreshing full-population measures…';
+   try{const response=await Queries.post('/api/captures/live',{baseline,...(last?{replace:last.token}:{})},controller.signal),data=await response.json();if(!response.ok)throw Error(data.error||'Current read unavailable');if(g!==generation||!valid())return;last=data;render();freeze.disabled=false;status.textContent='Current as of the displayed source read · refresh every 10 seconds. Freeze expires in two minutes.';emit('current')}
+   catch(e){if(g!==generation||!valid())return;status.textContent=(last?'Stale':'Unavailable')+' · '+e.message+(last?' · previous result retained with its original window.':' · no completed current result.');freeze.disabled=!last||Date.now()>=Date.parse(last.expiresAt);emit(last?'stale':'unavailable')}
+   finally{if(active&&g===generation){if(valid())timer=setTimeout(poll,10000);else stop()}}
+  }
+  start.onclick=()=>{if(busy||!valid())return;frozenInspection?.dispose();frozenInspection=null;frozenSeries?.dispose();frozenSeries=null;freeze.hidden=false;const focused=document.activeElement===start;active=true;generation++;start.disabled=true;pause.disabled=false;poll();if(focused)pause.focus({preventScroll:true})};pause.onclick=()=>{const focused=document.activeElement===pause;stop();if(focused)start.focus({preventScroll:true})};
+  rescale.onclick=()=>{if(!last)return;if(last.comparison.selection.receipt.question.measurement){const w=last.comparison.nativeWindows?.[0];if(w?.baseline?.rate===undefined||w?.selection?.rate===undefined)return;rateCeiling=ComparisonVisual.maximum([w.baseline.rate,w.selection.rate]);render();rescale.hidden=rescale.disabled;return}seriesOwner?.rescale();ceiling=ComparisonVisual.maximum([last.comparison.baseline.count,last.comparison.selection.count]);latencyCeiling=measureView(last.comparison).latency?.maximumNs??null;render();rescale.hidden=rescale.disabled};
+  freeze.onclick=async()=>{if(!last||busy||!valid())return;stop();const selected=last;busy=true;start.disabled=freeze.disabled=true;status.textContent='Freezing the displayed snapshot; no telemetry reread…';try{const response=await fetch('/api/captures/live',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({freeze:selected.token})}),data=await response.json();if(!response.ok)throw Error(data.error);if(!valid())return;receipt.textContent='Frozen displayed evidence: '+data.receipt.id;receipt.className='reference-id';section.dataset.frozen=data.receipt.id;freeze.hidden=true;frozenInspection?.dispose();frozenInspection=ComparisonInspection.mount(inspectionHost,{sides:[{label:'Baseline',side:{receipt:{id:baseline}}},{label:'Comparison',side:{receipt:data.receipt}}],current:()=>valid()&&last===selected,actionsHost:controls.querySelector('.ui-actions')});if(selected.comparison.baseline.receipt.question.explore?.bucketMs&&selected.comparison.selection.receipt.question.explore?.bucketMs)frozenSeries=ComparisonSeriesOwner.stored(inspectionHost,[baseline,data.receipt.id],{current:()=>valid()&&last===selected});const open=n('a',' Open frozen capture');open.href='#capture='+data.receipt.id;receipt.append(open);link.hidden=!onLink;link.onclick=()=>{try{onLink(data.receipt.id)}catch(e){status.textContent=e.message}};status.textContent='Exact displayed result saved in the capture library. Add it to an investigation explicitly.';emit('frozen')}catch(e){if(valid()){status.textContent=e.message;emit('stale')}}finally{busy=false;start.disabled=false;freeze.disabled=false}};
+  const visibility=()=>{if(document.hidden){stop();inspectionChild?.api.suspend()}};document.addEventListener('visibilitychange',visibility);
+  // Scope and document changes stop the application subscription immediately.
+  const leave=()=>{stop();inspectionChild?.api.suspend()};global.addEventListener('goo:workspace',leave);global.addEventListener('hashchange',leave);
+  let disposed=false;const observer=new MutationObserver(()=>{if(!section.isConnected)dispose()});observer.observe(document.body,{childList:true,subtree:true});function dispose(){if(disposed)return;disposed=true;stop();closeInspection(false);seriesOwner?.dispose();frozenInspection?.dispose();frozenSeries?.dispose();observer.disconnect();document.removeEventListener('visibilitychange',visibility);global.removeEventListener('goo:workspace',leave);global.removeEventListener('hashchange',leave);section.remove()}return {dispose,pause:stop};
+ }
+const api={displayState,measureView,rateText,mount};
+export {displayState,measureView,rateText,mount};

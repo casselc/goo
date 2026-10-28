@@ -1,6 +1,6 @@
 const {test,expect}=require('@playwright/test'),fs=require('node:fs/promises'),path=require('node:path');
 const {verifyWithGo,startBombadil}=require('./support/cross-app');
-const {questionLink}=require('../ui/workspace');
+const {questionLink}=require('../ui/workspace.mjs');
 const base='http://127.0.0.1:8088';
 test('109 mount fixed authoring explicitly and retain its draft without a read',async({page,request})=>{
  test.setTimeout(180000);const streams=[],events=[],reads=[],errors=[];page.on('request',r=>{if(r.method()==='POST'&&r.url().endsWith('/api/tail'))streams.push(r.url())});const tail=page.locator('.stream-entry .live-tail');async function event(action){events.push({action,reads:streams.length+reads.length,gap:await tail.getAttribute('data-gap')==='true',retained:Number(await tail.getAttribute('data-retained')||0),coherent:errors.length===0&&reads.length===0})}page.on('request',r=>{if(r.method()==='POST'&&/\/api\/(explore|population\/plan|captures|retained-evidence)$/.test(r.url()))reads.push(r.url())});page.on('pageerror',e=>errors.push(e.message));

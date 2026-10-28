@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const { measurementStep, stepLink, readQuestionLink } = require('../ui/workspace');
+const { measurementStep, stepLink, readQuestionLink } = require('../ui/workspace.mjs');
 const { members } = require('./192-native-context-fixture');
 const { base, json, question, seed, observe, write } = require('./192-native-context-support');
 test.use({ actionTimeout: 15000, navigationTimeout: 45000 });

@@ -1,4 +1,5 @@
-const {test}=require('node:test'),assert=require('node:assert/strict'),{query,result}=require('../ui/filter-values');
+require('./support/module-dependencies.cjs').install(__filename);
+const {test}=require('node:test'),assert=require('node:assert/strict'),{query,result}=require('../ui/filter-values.mjs');
 const scope={signal:'logs',environment:'prod',fromMs:1000,toMs:61000,where:{field:{kind:'column',key:'service'},op:'eq',value:'api'},numeric:{field:{kind:'attribute',key:'latency'},type:'int64'},groupBy:[{kind:'column',key:'service'}],limit:100,offset:100,bucketMs:1000},field={kind:'attribute',key:'release'};
 const response=q=>({version:'goo/counted-values/v1',reads:{count:{readAt:'2026-10-24T00:00:00Z',basis:'a'.repeat(64)},groups:{readAt:'2026-10-24T00:00:01Z',basis:'b'.repeat(64)}},question:q,state:'observed',count:'9007199254740995',capturedAt:'2026-10-24T00:00:00Z',basis:'source-read',groups:[{g0:null,count:'1'},{g0:'',count:'1'},{g0:'canary',count:'9007199254740993'}]});
 test('lookup preserves population scope and strips presentation/measures while requesting one bounded row',()=>{const q=query(scope,field);assert.deepEqual(q.where,scope.where);assert.deepEqual(q.groupBy,[field]);assert.equal(q.limit,1);assert.equal(q.offset,0);assert.equal(q.numeric,undefined);assert.equal(q.bucketMs,undefined);assert.equal(scope.offset,100);assert.throws(()=>query(null,field));assert.throws(()=>query(scope,{kind:'column',key:'duration_ns'}))});
@@ -10,7 +11,7 @@ test('counted query retains typed predicates and reported-edge membership withou
 
 test('projection retains independent source receipts and refuses absent or invalid receipt metadata',()=>{const q=query(scope,field),r=response(q),m=result(q,r);assert.deepEqual(m.reads,r.reads);assert.notEqual(m.reads,r.reads);assert.throws(()=>result(q,{...r,reads:undefined}),/receipt/);assert.throws(()=>result(q,{...r,reads:{...r.reads,count:{readAt:'bad',basis:'x'}}}),/receipt/);});
 test('lookup uses lean endpoint and ignores late completion after scope change or disposal',async()=>{
- const {mount}=require('../ui/filter-values');const old=global.GooQueries;let loader,resolve,request,paused=0,signal,now=scope;const states=[];
+ const {mount}=require('../ui/filter-values.mjs');const old=global.GooQueries;let loader,resolve,request,paused=0,signal,now=scope;const states=[];
  const editor={setValueLoader:f=>{loader=f},setCountedValues:v=>states.push(v)};
  global.GooQueries={post:(path,q,s)=>{request={path,q};signal=s;return new Promise(r=>{resolve=r})}};
  const owner=mount(editor,{current:()=>now,pause:()=>paused++});

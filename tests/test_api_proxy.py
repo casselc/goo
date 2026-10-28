@@ -229,10 +229,10 @@ class ProxyContracts(unittest.TestCase):
     def test_pool_view_asset_is_served_without_upstream(self):
         conn=http.client.HTTPConnection('127.0.0.1',self.proxy.server_port,timeout=5)
         try:
-            conn.request('GET','/pool-view.js')
+            conn.request('GET','/pool-view.mjs')
             response=conn.getresponse()
             self.assertEqual(response.status,200)
-            self.assertEqual(response.read(),Path('ui/pool-view.js').read_bytes())
+            self.assertEqual(response.read(),Path('ui/pool-view.mjs').read_bytes())
             self.assertEqual(Upstream.calls,[])
         finally:
             conn.close()
@@ -248,7 +248,7 @@ class ProxyContracts(unittest.TestCase):
             before=len(Upstream.calls)
             self.assertEqual(self.request('POST',path,payload+b' ')[0],400)
             self.assertEqual(len(Upstream.calls),before)
-        for asset in ('host-browser.js','host-counter-pair.js','host-disk.js','host-filesystem.js','host-network.js','host-dashboard.js','host.css'):
+        for asset in ('host-browser.mjs','host-counter-pair.mjs','host-disk.mjs','host-filesystem.mjs','host-network.mjs','host-dashboard.mjs','host.css'):
             conn=http.client.HTTPConnection('127.0.0.1',self.proxy.server_port,timeout=5)
             try:
                 conn.request('GET','/'+asset);response=conn.getresponse()
@@ -260,10 +260,10 @@ class ProxyContracts(unittest.TestCase):
     def test_runtime_observations_asset_is_served_without_upstream(self):
         conn = http.client.HTTPConnection('127.0.0.1', self.proxy.server_port, timeout=5)
         try:
-            conn.request('GET', '/runtime-observations.js')
+            conn.request('GET', '/runtime-observations.mjs')
             response = conn.getresponse()
             self.assertEqual(response.status, 200)
-            self.assertEqual(response.read(), Path('ui/runtime-observations.js').read_bytes())
+            self.assertEqual(response.read(), Path('ui/runtime-observations.mjs').read_bytes())
             self.assertEqual(Upstream.calls, [])
         finally:
             conn.close()
@@ -280,7 +280,7 @@ class ProxyContracts(unittest.TestCase):
         before = len(Upstream.calls)
         self.assertEqual(self.request('POST', '/api/pod-discovery', payload+b' ')[0], 400)
         self.assertEqual(len(Upstream.calls), before)
-        for asset in ('container-memory.js', 'container-memory-view.js', 'container-cpu.js', 'container-cpu-view.js', 'container-resources.js', 'container-resource-history.js', 'kubernetes-context.js', 'kubernetes-browser.js', 'resource-scope.js', 'resource-tabs.js', 'kubernetes.css'):
+        for asset in ('container-memory.mjs', 'container-memory-view.mjs', 'container-cpu.mjs', 'container-cpu-view.mjs', 'container-resources.mjs', 'container-resource-history.mjs', 'kubernetes-context.mjs', 'kubernetes-browser.mjs', 'resource-scope.mjs', 'resource-tabs.mjs', 'kubernetes.css'):
             conn = http.client.HTTPConnection('127.0.0.1', self.proxy.server_port, timeout=5)
             try:
                 conn.request('GET', '/'+asset)
@@ -308,7 +308,7 @@ class ProxyContracts(unittest.TestCase):
         before = len(Upstream.calls)
         self.assertEqual(self.request('POST', '/api/pod-dashboard/plan', plan_payload+b' ')[0], 400)
         self.assertEqual(len(Upstream.calls), before)
-        for asset in ('pod-metrics.js', 'resource-native-view.js'):
+        for asset in ('pod-metrics.mjs', 'resource-native-view.mjs'):
             conn = http.client.HTTPConnection('127.0.0.1', self.proxy.server_port, timeout=5)
             try:
                 conn.request('GET', '/'+asset)

@@ -1,4 +1,4 @@
-const {test}=require('node:test');const assert=require('node:assert/strict');const {compare}=require('../ui/investigations.js');
+const {test}=require('node:test');const assert=require('node:assert/strict');const {compare}=require('../ui/investigations.mjs');
 test('revision comparison preserves separate evidence bases and exact span identity',()=>{
  const a={question:{fromMs:1,toMs:2},evidence:{operations:{spans:[{traceID:'a',spanID:'b'}],conformance:{basis:'one'}},rates:{basis:'rate-one'},errors:{histograms:'unavailable'}}};
  const b=structuredClone(a);b.evidence.operations.spans.push({traceID:'c',spanID:'d'});b.evidence.operations.conformance.basis='two';

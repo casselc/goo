@@ -1,2 +1,2 @@
-const {test}=require('node:test'),assert=require('node:assert/strict'),{recordMeasures}=require('../ui/comparison-breakdown');
+const {test}=require('node:test'),assert=require('node:assert/strict'),{recordMeasures}=require('../ui/comparison-breakdown.mjs');
 test('record comparison measures follow both signal contracts, not data presence',()=>{for(const signal of ['logs',undefined])assert.deepEqual(recordMeasures({signal},{signal}),{duration:false,status:false});assert.deepEqual(recordMeasures({signal:'spans'},{signal:'logs'}),{duration:false,status:false});assert.deepEqual(recordMeasures({signal:'spans'},{signal:'spans'}),{duration:true,status:true});});

@@ -30,7 +30,7 @@ func TestSharedStepProtocolFixtures(t *testing.T) {
 	if f.Version != 1 || len(f.Cases) != 16 {
 		t.Fatal("fixture coverage changed")
 	}
-	script := `const fs=require('node:fs'),assert=require('node:assert/strict'),w=require('../ui/question-protocol'),compat=require('../ui/workspace'),f=JSON.parse(fs.readFileSync('../testdata/protocol/question-steps.json'));for(const key of Object.keys(w))assert.equal(w[key],compat[key]);console.log(JSON.stringify(f.cases.map(c=>{try{return {valid:true,step:w.readStepLink(w.stepLink(c.input))}}catch{return {valid:false}}})));`
+	script := `const fs=require('node:fs'),assert=require('node:assert/strict'),w=require('../ui/question-protocol.mjs'),compat=require('../ui/workspace.mjs'),f=JSON.parse(fs.readFileSync('../testdata/protocol/question-steps.json'));for(const key of Object.keys(w))assert.equal(w[key],compat[key]);console.log(JSON.stringify(f.cases.map(c=>{try{return {valid:true,step:w.readStepLink(w.stepLink(c.input))}}catch{return {valid:false}}})));`
 	out, e := exec.Command("node", "-e", script).CombinedOutput()
 	if e != nil {
 		t.Fatalf("JS protocol worker: %v %s", e, out)

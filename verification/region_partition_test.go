@@ -15,7 +15,7 @@ func TestHegelTimeDurationPartition(t *testing.T) {
 		b := hegel.Draw(tc, hegel.Integers(a+1, 4))
 		low := hegel.Draw(tc, hegel.Integers(0, 20))
 		high := hegel.Draw(tc, hegel.Integers(low+1, 30))
-		script := `const {partition}=require('../ui/population-selection'),assert=require('node:assert/strict');const [a,b,low,high]=process.argv.slice(1).map(Number),base={signal:'spans',environment:'test',fromMs:1700000000000,toMs:1700000004000,limit:1,offset:100,groupBy:[{kind:'column',key:'duration_bucket'}],where:{any:[{field:{kind:'attribute',key:'owner'},op:'missing'},{field:{kind:'attribute',key:'owner'},op:'eq',value:''}]}},before=JSON.stringify(base),p=partition(base,{fromMs:base.fromMs+a*1000,toMs:base.fromMs+b*1000,minMS:String(low),maxMS:String(high)});assert.equal(JSON.stringify(base),before);process.stdout.write(JSON.stringify({base,...p}));`
+		script := `const {partition}=require('../ui/population-selection.mjs'),assert=require('node:assert/strict');const [a,b,low,high]=process.argv.slice(1).map(Number),base={signal:'spans',environment:'test',fromMs:1700000000000,toMs:1700000004000,limit:1,offset:100,groupBy:[{kind:'column',key:'duration_bucket'}],where:{any:[{field:{kind:'attribute',key:'owner'},op:'missing'},{field:{kind:'attribute',key:'owner'},op:'eq',value:''}]}},before=JSON.stringify(base),p=partition(base,{fromMs:base.fromMs+a*1000,toMs:base.fromMs+b*1000,minMS:String(low),maxMS:String(high)});assert.equal(JSON.stringify(base),before);process.stdout.write(JSON.stringify({base,...p}));`
 		raw, err := exec.Command("node", "-e", script, strconv.Itoa(a), strconv.Itoa(b), strconv.Itoa(low), strconv.Itoa(high)).CombinedOutput()
 		if err != nil {
 			tc.Fatal(err, string(raw))

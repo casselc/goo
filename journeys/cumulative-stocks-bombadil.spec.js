@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs/promises'), path = require('node:path');
-const { measurementStep, stepLink } = require('../ui/workspace');
+const { measurementStep, stepLink } = require('../ui/workspace.mjs');
 const { startBombadil } = require('./support/cross-app');
 test('195 bounded stock control campaign on retained real OTLP facts', async () => {
   test.skip(!process.env.GOO_STOCK_LEDGER, 'Explicit retained stock ledger required'); test.setTimeout(80000);

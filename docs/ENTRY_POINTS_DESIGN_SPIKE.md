@@ -19,10 +19,10 @@ visible text are local evidence under `artifacts/entrypoints-spike/` (generated
 artifacts, not the executable feature-storyboard gallery). Existing storyboards
 33, 37–44 supplement the review of populated workflows; they were not rerun here.
 
-Grounding: [workspace routing](../ui/workspace.js), [Explore](../ui/exploration.js),
-[Services](../ui/inventory.js), [measurements](../ui/measurements.js),
-[documents](../ui/documents.js), [recipes](../ui/recipes.js),
-[follow-ups](../ui/followups.js), [question scope](QUESTION_SCOPE.md),
+Grounding: [workspace routing](../ui/workspace.mjs), [Explore](../ui/exploration.mjs),
+[Services](../ui/inventory.mjs), [measurements](../ui/measurements.mjs),
+[documents](../ui/documents.mjs), [recipes](../ui/recipes.mjs),
+[follow-ups](../ui/followups.mjs), [question scope](QUESTION_SCOPE.md),
 [core workbench](CORE_WORKBENCH.md) and [current journeys](journeys/README.md).
 The numeric-measure release was in progress during the browser audit and completed
 as `bf54b36`; this spike does not alter its code or validation record.

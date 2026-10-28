@@ -263,7 +263,7 @@ func TestHegelLogPatternComparisonExactClientModel(t *testing.T) {
 			Result  *exploration.CohortComparison `json:"result"`
 		}{request, result}
 		raw, _ := json.Marshal(input)
-		const script = `const fs=require('fs'),m=require('./ui/log-pattern-comparison'),x=JSON.parse(fs.readFileSync(0,'utf8')),before=JSON.stringify(x),models=['rate','count','share'].map(metric=>m.model(x.request,x.result,{metric})),frozen=JSON.stringify(models),previous=m.previousQuestion(x.request.selection.question),pair=m.plannedPair(x.request.selection.question,x.request.baseline.question),immutable=JSON.stringify(x)===before;
+		const script = `const fs=require('fs'),m=require('./ui/log-pattern-comparison.mjs'),x=JSON.parse(fs.readFileSync(0,'utf8')),before=JSON.stringify(x),models=['rate','count','share'].map(metric=>m.model(x.request,x.result,{metric})),frozen=JSON.stringify(models),previous=m.previousQuestion(x.request.selection.question),pair=m.plannedPair(x.request.selection.question,x.request.baseline.question),immutable=JSON.stringify(x)===before;
 const mutations=[y=>y.result.baselineBasis+='wrong',y=>y.result.selectionCount+='0',y=>y.result.state=y.result.state==='ok'?'unknown':'ok',y=>{if(y.result.rows.length)y.result.rows.pop();else y.result.rows.push({value:'lp1:e',baselineCount:'0',selectionCount:'0'})},y=>y.request.selection.question.toMs=y.request.selection.question.fromMs,y=>y.request.selection.question.environment+='other',y=>{const c=y.request.selection.groups.length?y.request.selection:y.request.baseline;c.groups[0].g0='lp1:p:31'},y=>y.result.field.key='service'];
 const refusals=mutations.map(change=>{const y=structuredClone(x);change(y);return m.model(y.request,y.result)===null});x.request.baseline.question.environment='edited';x.request.baseline.groups.length=0;console.log(JSON.stringify({models,previous,pair,immutable,stable:JSON.stringify(models)===frozen,refusals}));`
 		cmd := exec.Command("node", "-e", script)
@@ -343,7 +343,7 @@ func TestLogPatternComparisonFullTwoThousandUnion(t *testing.T) {
 		Result  *exploration.CohortComparison `json:"result"`
 	}{request, response}
 	raw, _ := json.Marshal(input)
-	cmd := exec.Command("node", "-e", `const fs=require('fs'),m=require('./ui/log-pattern-comparison'),x=JSON.parse(fs.readFileSync(0,'utf8'));console.log(JSON.stringify(m.model(x.request,x.result)));`)
+	cmd := exec.Command("node", "-e", `const fs=require('fs'),m=require('./ui/log-pattern-comparison.mjs'),x=JSON.parse(fs.readFileSync(0,'utf8'));console.log(JSON.stringify(m.model(x.request,x.result)));`)
 	cmd.Dir = ".."
 	cmd.Stdin = bytes.NewReader(raw)
 	output, e := cmd.CombinedOutput()

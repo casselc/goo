@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs/promises'), path = require('node:path');
-const { measurementStep, stepLink } = require('../ui/workspace');
+const { measurementStep, stepLink } = require('../ui/workspace.mjs');
 const { base, json, observe } = require('./192-native-context-support');
 test.use({ actionTimeout: 15000, navigationTimeout: 45000 });
 test('192 selected native interval frame from an explicit retained source question', async ({ page }) => {

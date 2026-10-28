@@ -1,6 +1,6 @@
 // Replay actual production Journal; the oracle stores only accepted caller intent.
 const assert = require('node:assert/strict');
-const {Journal, storageKey, TTL_MS} = require('../../ui/investigation-draft');
+const {Journal, storageKey, TTL_MS} = require('../../ui/investigation-draft.mjs');
 const readline = require('node:readline').createInterface({input:process.stdin});
 const clone = x => JSON.parse(JSON.stringify(x));
 const id = n => n.toString(16).padStart(64,'0');

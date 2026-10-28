@@ -1,5 +1,30 @@
 # Validation record
 
+## Native application modules (2026-10-28 UTC)
+
+All application owners now use explicit native imports/exports. The HTML has one
+`app.mjs` entry; the private namespace bridge and old UI `.js` paths are removed.
+Tag-created widgets register through their owning modules. Investigation actions
+have stable exports forwarding to the mounted editor. Pure request ownership and
+predicate validation are separate internal modules; retention tests use isolated
+clients without changing the default application's wire or storage contracts.
+
+Validation: 575 Node tests pass with no skips; the root Go suite passes; eight
+Python startup/MIME and 17 API proxy checks pass. Five targeted Hegel scope/state/
+swarm checks and investigation-draft negative model controls pass. Both linked-
+evidence capture journeys pass, including observed Quint trace validation. Chromium journeys cover startup, live/paused Activity, saved
+views, filters, host controls, record columns and trace comparisons. Bombadil
+runs pass for host controls, trace comparisons, Activity explanations, error
+triage, inventory, signed numeric comparisons, population explanations and the
+question protocol. These checks found and corrected missing element-registration
+imports and investigation callbacks previously assigned dynamically at mount.
+The public display graph remains 24 namespaces/29 modules, without app owners.
+
+No intended layout, source schema or retained-format change. Chromium is the
+verified browser; Firefox/Safari and performance were not measured. Cancellation
+through response-body consumption remains a separate planned change. Disposable
+run outputs and incidental historical screenshot updates are excluded.
+
 ## Supplied-data display isolation (2026-10-27 PDT)
 
 The public native graph now includes attributes, record summaries/context/details,

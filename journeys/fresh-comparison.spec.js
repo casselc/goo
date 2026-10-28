@@ -1,4 +1,4 @@
-const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');const {recordStep,measurementStep}=require('../ui/workspace'),{verifyWithGo,startBombadil}=require('./support/cross-app');const base=process.env.GOO_QUERY_URL||'http://127.0.0.1:8088';
+const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');const {recordStep,measurementStep}=require('../ui/workspace.mjs'),{verifyWithGo,startBombadil}=require('./support/cross-app');const base=process.env.GOO_QUERY_URL||'http://127.0.0.1:8088';
 async function post(request,url,data){const r=await request.post(base+url,{data});expect(r.ok(),await r.text()).toBe(true);return r.json()}
 test('57 resume saved questions with previewed fresh scope, one read, retry and shared finding',async({page,request,browser})=>{
  test.setTimeout(240000);const token=randomBytes(4).toString('hex'),end=Date.now(),attrs=o=>Object.entries(o).map(([key,stringValue])=>({key,value:{stringValue}})),fixtures=[];

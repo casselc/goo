@@ -1,6 +1,6 @@
 const {test,expect}=require('@playwright/test');
 const {randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');
-const {questionLink,readQuestionLink}=require('../ui/workspace');
+const {questionLink,readQuestionLink}=require('../ui/workspace.mjs');
 const {openMeasures}=require('./support/explore');
 const {verifyWithGo}=require('./support/cross-app');
 const base='http://127.0.0.1:8088';

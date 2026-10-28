@@ -1,5 +1,5 @@
 const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');
-const {start}=require('./support/tail-acceptance'),{source,verifyWithGo,startBombadil}=require('./support/cross-app'),{questionLink}=require('../ui/workspace');
+const {start}=require('./support/tail-acceptance'),{source,verifyWithGo,startBombadil}=require('./support/cross-app'),{questionLink}=require('../ui/workspace.mjs');
 test('153 brush a supplied latency histogram and stage a disjoint population',async({page,request})=>{
  test.setTimeout(180000);const environment='latency-'+randomBytes(4).toString('hex'),dir=path.resolve('artifacts/latency-selection',environment),toMs=Date.now(),fromMs=toMs-30000,attrs=o=>Object.entries(o).map(([key,stringValue])=>({key,value:{stringValue}}));
  const durations=[0,4999999,5000000,9999999,10000000,1000000000],spans=durations.map((d,i)=>{const ts=BigInt(fromMs+1000+i)*1000000n;return {traceId:randomBytes(16).toString('hex'),spanId:(i+1).toString(16).padStart(16,'0'),name:'ordinary request',kind:2,startTimeUnixNano:String(ts),endTimeUnixNano:String(ts+BigInt(d)),attributes:attrs({owner:i===5?'outside':'core'})}});

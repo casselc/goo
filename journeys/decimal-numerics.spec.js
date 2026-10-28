@@ -11,7 +11,7 @@ const fs = require('node:fs/promises'),
   path = require('node:path');
 const {
   questionLink
-} = require('../ui/workspace');
+} = require('../ui/workspace.mjs');
 const {
   openFilters,
   openMeasures

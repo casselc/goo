@@ -219,7 +219,11 @@ shared visibility rule, never an application visualization owner. All supplied-d
 elements are available through the closed native `display.mjs` graph. Numeric
 formatting/bins, pattern identity decoding and tag rendering are pure display
 helpers shared with legacy application owners. The gallery uses that entry alone;
-only the main application's remaining owners need the private namespace adapter.
+the main app imports owners directly through `app.mjs`, without a namespace
+adapter or script-order dependency. Owner imports themselves perform no source
+reads or screen mounting. Shared request/listener ownership and predicate
+validation have separate internal modules; the retained transport also has an
+isolated `createClient` factory while existing callers use its default client.
 Components do not infer OTel aliases or issue source reads.
 
 ## Live observation adapter

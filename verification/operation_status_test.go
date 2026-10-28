@@ -19,7 +19,7 @@ func TestHegelOperationStatus(t *testing.T) {
 		outcome := hegel.Draw(tc, hegel.Integers(0, 2))
 		status := hegel.Draw(tc, hegel.Integers(0, 5))
 		args, _ := json.Marshal([]int{outcome, status})
-		script := `const a=require('node:assert/strict'),{waterfallRows,waterfallFacts}=require('../ui/operations');const[o,s]=JSON.parse(process.argv[1]),raw=[undefined,'','Ok','Error','Unset','Vendor'][s],span={durationNS:'1',outcome:['ok','error','panic'][o],...(raw===undefined?{}:{reportedStatus:raw})},before=JSON.stringify(span),row=waterfallRows([span],'worker')[0],facts=waterfallFacts([span])[0];a.equal(row.StatusCode,raw);a.equal(Object.hasOwn(row,'StatusCode'),raw!==undefined);a.equal(facts[0].value,span.outcome);a.equal(facts[1].value,raw===undefined?'Not retained':raw===''?'Unknown (empty)':raw==='Vendor'?'Unknown (Vendor)':raw);a.equal(JSON.stringify(span),before);`
+		script := `const a=require('node:assert/strict'),{waterfallRows,waterfallFacts}=require('../ui/operations.mjs');const[o,s]=JSON.parse(process.argv[1]),raw=[undefined,'','Ok','Error','Unset','Vendor'][s],span={durationNS:'1',outcome:['ok','error','panic'][o],...(raw===undefined?{}:{reportedStatus:raw})},before=JSON.stringify(span),row=waterfallRows([span],'worker')[0],facts=waterfallFacts([span])[0];a.equal(row.StatusCode,raw);a.equal(Object.hasOwn(row,'StatusCode'),raw!==undefined);a.equal(facts[0].value,span.outcome);a.equal(facts[1].value,raw===undefined?'Not retained':raw===''?'Unknown (empty)':raw==='Vendor'?'Unknown (Vendor)':raw);a.equal(JSON.stringify(span),before);`
 		if out, e := exec.Command("node", "-e", script, string(args)).CombinedOutput(); e != nil {
 			tc.Fatalf("projection: %s %v", out, e)
 		}

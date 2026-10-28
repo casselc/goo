@@ -4,7 +4,7 @@ const fs = require('node:fs/promises');
 const { spawnSync } = require('node:child_process');
 const { startRuntime } = require('./191-generic-runtime');
 const { fixture, traces, logs } = require('./191-generic-fixture');
-const { readStepLink } = require('../ui/workspace');
+const { readStepLink } = require('../ui/workspace.mjs');
 test.use({ actionTimeout: 15000, navigationTimeout: 45000 });
 const json = async response => { expect(response.ok(), await response.text()).toBe(true); return response.json(); };
 

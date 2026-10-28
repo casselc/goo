@@ -1,5 +1,5 @@
 const {test}=require('node:test');const assert=require('node:assert/strict');
-const {bucketLabel,p95Label}=require('../ui/histograms.js');
+const {bucketLabel,p95Label}=require('../ui/histograms.mjs');
 test('native histogram labels preserve inclusive upper bounds and unbounded tails',()=>{
  assert.equal(bucketLabel([0,.01],0,'s'),'(-∞, 0] s');
  assert.equal(bucketLabel([0,.01],1,'s'),'(0, 0.01] s');

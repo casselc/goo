@@ -68,7 +68,7 @@ draft recovery and a concise README have since been delivered. Numeric binding
 guidance, publication-winner integrity, service/native coverage presentation and
 shared record/component work also exist. Do not reschedule those implementations.
 The old Saved/live-Operations reparenting problem has been addressed by separate
-owners; current [saved-workspace.js](../ui/saved-workspace.js) is task composition,
+owners; current [saved-workspace.js](../ui/saved-workspace.mjs) is task composition,
 not the earlier combined live editor.
 
 ## Top five issues
@@ -79,19 +79,19 @@ not the earlier combined live editor.
 
 A fixed attribute can expose Copy, Include, Exclude, Find traces, Plot values,
 Filter and run, and Break down and run, depending on supplied capabilities
-([attributes.js:101–106](../ui/attributes.js#L101)). These are explicit about their
+([attributes.js:101–106](../ui/attributes.mjs#L101)). These are explicit about their
 individual effects, but the collection makes the user select among implementation
 paths on every field. Numeric selection adds three parallel population/comparison
 buttons plus an explanation disclosure
-([numeric-distribution.js:31–32](../ui/numeric-distribution.js#L31),
+([numeric-distribution.js:31–32](../ui/numeric-distribution.mjs#L31),
 [frame 180a](journeys/screenshots/180a-spans-decimal-range.png)).
 
 Meanwhile the newest trace-search owner is wired into fixed Explore
-([exploration.js:29](../ui/exploration.js#L29)). Activity's inspector has Plot,
+([exploration.js:29](../ui/exploration.mjs#L29)). Activity's inspector has Plot,
 facet and grouping continuations, but no trace-search callback in
-[stream-entry.js](../ui/stream-entry.js). Held service span inspection passes an
+[stream-entry.js](../ui/stream-entry.mjs). Held service span inspection passes an
 empty action set to record detail
-([service-browser.js:23](../ui/service-browser.js#L23)). This is a code-backed
+([service-browser.js:23](../ui/service-browser.mjs#L23)). This is a code-backed
 availability difference, not a fresh browser failure. Plot values already works
 across several origins; it should not be incorrectly classified as missing.
 
@@ -124,21 +124,21 @@ composition, not a new global command engine or shared mutable scope.
 [Saved frame 117a](journeys/screenshots/117a-selected-saved-evidence.png) shows a
 single retained record below several action, frozen-scope, receipt, count and
 paging blocks. That is an older frame, but current
-[index.html:14](../ui/index.html#L14) and [captures.js](../ui/captures.js) still
+[index.html:14](../ui/index.html#L14) and [captures.js](../ui/captures.mjs) still
 compose an outer capture header/receipt with a full inner result owner. Multiple
 places expose exact scope/evidence details; they are not all needed above the
 first useful record.
 
 [Native-service frame 75a](journeys/screenshots/75a-native-service-overview.png)
 shows repeated coverage explanations around per-stream values. Current
-[service-dashboard.js:13–24](../ui/service-dashboard.js#L13) retains summary,
+[service-dashboard.js:13–24](../ui/service-dashboard.mjs#L13) retains summary,
 stream table, coverage text, retained-native detail and widget-level context.
 Its semantic refusal to invent a fleet value is correct; the repeated framing
 can be compressed without removing the unavailable state.
 
 [Operations frame 163](journeys/screenshots/163-readable-operation-events.png)
 shows severe word fragmentation on mobile. Current
-[operations.js:105–113](../ui/operations.js#L105) still emits a plain seven-column
+[operations.js:105–113](../ui/operations.mjs#L105) still emits a plain seven-column
 overview. This is a source-supported presentation concern requiring a fresh
 bounded layout check before calling it a current browser regression. The primary
 button still says **Save investigation** while its title and handler concern an
@@ -171,19 +171,19 @@ that in an actual refreshed journey, not by assuming a universal pixel target.
 **Rank: third. Source observation and navigation-frame evidence.**
 
 Activity maintains its paused return anchor
-([stream-entry.js:75–79](../ui/stream-entry.js#L75)); fixed questions use an
+([stream-entry.js:75–79](../ui/stream-entry.mjs#L75)); fixed questions use an
 investigation trail; service continuation adds its own Back-to-service bar
-([service-browser.js:28–33](../ui/service-browser.js#L28)); saved work can add an
+([service-browser.js:28–33](../ui/service-browser.mjs#L28)); saved work can add an
 active-investigation return banner. [Frame 117a](journeys/screenshots/117a-selected-saved-evidence.png)
 shows that additional banner above the selected evidence. These owners have
 legitimate different lifetimes, but their presentation can compete.
 
 Time has improved: Saved hides the new-query lookback, and Activity hides the
 outer top bar. Do not re-raise those old issues as unfixed. However,
-[workspace.js:9](../ui/workspace.js#L9) still shows **HTTP preview lookback** across
+[workspace.js:9](../ui/workspace.mjs#L9) still shows **HTTP preview lookback** across
 Definitions, which contains record, measurement and application definitions,
 not only the HTTP card. Native discovery and measurement bounds are explicitly
-separate in [measurements.js:94–101](../ui/measurements.js#L94).
+separate in [measurements.js:94–101](../ui/measurements.mjs#L94).
 
 **User impact hypothesis:** users need to infer which scope or Back control owns
 the current view, and whether a time input is relevant to the selected object.
@@ -209,7 +209,7 @@ owners with one global scope store or erase pending-save/recovery state.
 The Measurements landing says **1 Define → 2 Preview → 3 Investigate**, starts
 with a package picker and exposes time/preview/run controls.
 **Discover metrics from an application** is an initially closed disclosure
-([measurements.js:93–95](../ui/measurements.js#L93)). The capability already exists;
+([measurements.js:93–95](../ui/measurements.mjs#L93)). The capability already exists;
 the issue is its ordering and mental model, not a missing metric backend.
 
 Definitions also presents separate record, measurement, application and bound
@@ -218,7 +218,7 @@ HTTP sections ([index.html:17](../ui/index.html#L17)).
 historical example of the lengthy combined landing. Its compact revision rows
 and selected details are progress, not something to rebuild. Annotations are
 already a local disclosure with exact targets
-([meaning.js:17–31](../ui/meaning.js#L17)); they should not become a prerequisite
+([meaning.js:17–31](../ui/meaning.mjs#L17)); they should not become a prerequisite
 for opening an instrument.
 
 **User impact hypothesis:** an engineer with emitting OTel metrics may believe
@@ -254,12 +254,12 @@ library to replace them.
 
 What differs is the surrounding interaction. Numeric selection offers separate
 Run/Stage-count/Stage-numeric actions
-([numeric-distribution.js:31](../ui/numeric-distribution.js#L31)); trace comparison
+([numeric-distribution.js:31](../ui/numeric-distribution.mjs#L31)); trace comparison
 has its own Pin/Compare/Clear tray plus long reference descriptions
-([record-results.js:23–29](../ui/record-results.js#L23)); service time selections
+([record-results.js:23–29](../ui/record-results.mjs#L23)); service time selections
 can reread the overview through their adapter, while a dashboard interval link
-stages a fixed question ([service-browser.js:78](../ui/service-browser.js#L78),
-[service-dashboard.js:59](../ui/service-dashboard.js#L59)). Native interval
+stages a fixed question ([service-browser.js:78](../ui/service-browser.mjs#L78),
+[service-dashboard.js:59](../ui/service-dashboard.mjs#L59)). Native interval
 columns deliberately need not represent equal elapsed time. These are different
 valid semantics, but visual similarity alone does not teach their effects.
 

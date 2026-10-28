@@ -1,5 +1,5 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
-const {displayJSON,model}=require('../ui/retention-presentation');
+const {displayJSON,model}=require('../ui/retention-presentation.mjs');
 test('display exact JSON numeric tokens without altering quoted data',()=>{
  const raw='{"n":18446744073709551615,"negative":-9007199254740993,"zero":-0,"fraction":1.000,"ok":12,"text":"18446744073709551615 \\"n\\": 1e99","nested":[1e999,0.125]}';
  const parsed=displayJSON(raw);assert.equal(parsed.exact,5);assert.equal(parsed.value.n,'Exact JSON number: 18446744073709551615');assert.equal(parsed.value.ok,12);assert.equal(parsed.value.nested[1],0.125);assert.equal(parsed.value.text,JSON.parse(raw).text);

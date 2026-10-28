@@ -3,7 +3,7 @@ const fs = require('node:fs/promises');
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 const { createHash } = require('node:crypto');
-const { questionLink } = require('../ui/workspace');
+const { questionLink } = require('../ui/workspace.mjs');
 const { fixture, payload } = require('./184-trace-fixture');
 const { startBombadil } = require('./support/cross-app');
 const base = process.env.GOO_QUERY_URL || 'http://127.0.0.1:8088';
@@ -65,7 +65,7 @@ async function expand(page, traceId) {
   return result;
 }
 async function snapshot(page, selector = '#exploreTrace goo-trace-page-breakdown') {
-  return page.locator(selector).evaluate(element => ({
+  return page.locator(selector).evaluate(async (element)=>{const GooTracePageBreakdown=await import('/trace-page-breakdown.mjs');return {
     input: element.data,
     model: GooTracePageBreakdown.analyze(element.data.rows, element.data.truncated),
     selectedIndex: element.selectedIndex, selectedGroupIndex: element.selectedGroupIndex,
@@ -86,7 +86,7 @@ async function snapshot(page, selector = '#exploreTrace goo-trace-page-breakdown
       reasons: JSON.parse(row.dataset.reasons),
       values: [...row.querySelectorAll('[data-measure]')].map(cell => ({ measure: cell.dataset.measure, value: cell.dataset.value })),
     })),
-  }));
+  }});
 }
 async function geometry(plot) {
   const value = await plot.evaluate(element => {

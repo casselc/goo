@@ -4,7 +4,7 @@
 // Explicit modes: mobile reopens frozen comparison evidence without source reads;
 // empty runs the retained current scope once and then its two-scope comparison.
 const {chromium, expect} = require('@playwright/test');
-const {questionLink} = require('../ui/workspace');
+const {questionLink} = require('../ui/workspace.mjs');
 const fs = require('node:fs/promises'), path = require('node:path');
 const {parseArgs, promisify} = require('node:util');
 const {execFile} = require('node:child_process');

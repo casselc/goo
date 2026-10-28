@@ -1,3 +1,4 @@
+import './components.mjs';
 /* Supplied bucket populations only. Layout compatibility and reads belong to callers. */
 const global = globalThis;
  const uint=v=>typeof v==='string'&&/^(0|[1-9]\d*)$/.test(v)&&v.length<=128;

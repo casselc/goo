@@ -1,5 +1,5 @@
 const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');
-const {questionLink}=require('../ui/workspace'),{verifyWithGo,startBombadil}=require('./support/cross-app');
+const {questionLink}=require('../ui/workspace.mjs'),{verifyWithGo,startBombadil}=require('./support/cross-app');
 const base='http://127.0.0.1:8088';
 async function json(response){expect(response.ok(),await response.text()).toBe(true);return response.json()}
 test('171 author exact numeric filters over ordinary telemetry and preserve their meaning',async({page,request})=>{

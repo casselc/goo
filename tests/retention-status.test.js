@@ -1,4 +1,4 @@
-const{test}=require('node:test'),assert=require('node:assert/strict'),{failure,availability}=require('../ui/retention-status');
+const{test}=require('node:test'),assert=require('node:assert/strict'),{failure,availability}=require('../ui/retention-status.mjs');
 test('HTTP uncertainty, definitely uncommitted proof and local refusal stay distinct',()=>{
  for(const status of [0,500,502,504]){const v=failure({status,message:'transport down',attempted:true},{tail:true,journaled:true});assert.equal(v.state,'pending');assert.match(v.message,/outcome is unknown/);assert.doesNotMatch(v.message,/was not committed|expired/)}
  const expired=failure({status:410,attempted:true},{tail:true,journaled:true});assert.equal(expired.state,'uncommitted');assert.match(expired.message,/was not committed/);assert.match(expired.message,/unchanged request/);

@@ -1,5 +1,5 @@
 const {test,expect}=require('@playwright/test');
-const {questionLink,readQuestionLink}=require('../ui/workspace');
+const {questionLink,readQuestionLink}=require('../ui/workspace.mjs');
 const fs=require('node:fs');
 const {verifyWithGo,startBombadil}=require('./support/cross-app');
 const base=process.env.GOO_QUERY_URL||'http://127.0.0.1:8088';

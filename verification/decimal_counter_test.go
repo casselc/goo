@@ -78,7 +78,7 @@ func TestHegelCPUTimeRecordContextParity(t *testing.T) {
 			return
 		}
 		input, _ := json.Marshal(map[string]any{"q": q, "s": s, "signal": signal, "lo": lo, "hi": hi})
-		cmd := exec.Command("node", "-e", `const x=JSON.parse(require('fs').readFileSync(0,'utf8'));process.stdout.write(JSON.stringify(require('../ui/native-record-context').plan(x.q,x.s,x.signal,x.lo,x.hi)))`)
+		cmd := exec.Command("node", "-e", `const x=JSON.parse(require('fs').readFileSync(0,'utf8'));process.stdout.write(JSON.stringify(require('../ui/native-record-context.mjs').plan(x.q,x.s,x.signal,x.lo,x.hi)))`)
 		cmd.Stdin = bytes.NewReader(input)
 		raw, e := cmd.CombinedOutput()
 		var got exploration.NativeRecordContext

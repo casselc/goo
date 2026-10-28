@@ -1,3 +1,4 @@
+require('./module-dependencies.cjs').install(__filename);
 const base=require('./host-filesystem-harness'),{widget}=base;
 function utilWidget(mount='/data',key='5',extra={}){const w=widget('used',mount,key,extra),d=w.question.definition;d.kind='gauge';delete d.stockDomain;d.source.metric='system.filesystem.utilization';d.source.unit='1';d.source.exactStream.name=d.source.metric;d.source.exactStream.unit='1';w.title='Reported utilization';return w}
 function utilResult(q,value=.6){return {question:q,basis:'a'.repeat(64),readAt:'2026-10-28T01:00:00Z',gauges:{fromNS:'1000000000',toNS:'3000000000',series:[{stream:structuredClone(q.definition.source.exactStream),state:'observed',samples:[{atNS:'2000000000',state:'observed',value}]}]}}}

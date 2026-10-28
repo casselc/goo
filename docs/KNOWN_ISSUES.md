@@ -1,8 +1,9 @@
 # Known issues and gaps
 
 The [native display graph](UI_COMPONENTS.md#native-module-entrypoints) now includes
-all supplied-data widgets and the standalone gallery. Main application owners
-still use a private namespace adapter pending their explicit-import cutover.
+all supplied-data widgets and the standalone gallery. Application owners also
+use native imports, with a single `app.mjs` bootstrap and no namespace adapter.
+Old `.js` UI paths and `app-display.mjs` are retired.
 Browser conformance is currently checked in Chromium; Firefox/Safari coverage
 is not established.
 

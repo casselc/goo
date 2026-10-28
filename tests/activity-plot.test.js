@@ -1,6 +1,6 @@
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
-const {plotWindow}=require('../ui/stream-entry');
+const {plotWindow}=require('../ui/stream-entry.mjs');
 
 test('Activity row plots retain the original applied window across later same-selector polls',()=>{
  const selector={signal:'spans',environment:'production',where:{field:{kind:'resource',key:'team'},op:'eq',value:'search'}};

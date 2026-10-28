@@ -86,13 +86,16 @@ its attribute/exception presenters, aligned histograms import pure numeric bins
 and exact formatters, and tags import only core DOM helpers. Log-pattern labels
 use the same versioned pure identity decoder as application validation.
 
-Application owners still use the private [app-display.mjs](../ui/app-display.mjs)
-adapter while their graph migrates to explicit imports. It maps the same modules
-and three extracted helpers to legacy owner names; it contains no display logic.
-`Goo*` helper references in application-adoption notes below refer to that adapter.
-External consumers import namespaces from `/display.mjs` or named feature helpers.
-The adapter is not needed by any supplied-data element or by the gallery. Removing
-it from the main app remains a separate application-owner cutover.
+Application owners now import dependencies directly. The full application uses
+one `/app.mjs` bootstrap that preserves explicit mount order; importing an owner
+alone does not mount a screen, read telemetry or publish a `Goo*` namespace.
+The old application namespace adapter and classic/CommonJS UI files are removed.
+Use the supplied-data graph when embedding components, rather than the full app
+bootstrap, which expects the application's HTML shell.
+
+For helpers, use a direct feature import or the namespace exports from
+`display.mjs`. Older `Goo*` names in dated adoption notes describe historical
+application call sites, not global APIs available to an embedding page.
 
 Optional action callbacks remain caller-owned. For example:
 
@@ -115,8 +118,9 @@ flowchart LR
   Embed --> Entry[display.mjs]
   Entry --> Feature
   Feature --> Core[Explicit display dependencies]
-  Legacy[Legacy application owners] --> Bridge[Private app-display.mjs adapter]
-  Bridge --> Entry
+  App[app.mjs bootstrap] --> Owners[Native application owners]
+  Owners --> Feature
+  Owners --> Sources[Explicit source and storage operations]
 ```
 
 Consult the element contract for snapshot-copy and update behavior; application

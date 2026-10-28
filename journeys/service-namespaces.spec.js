@@ -1,6 +1,6 @@
 const {test,expect}=require('@playwright/test');
 const {randomBytes}=require('crypto');
-const {readStepLink}=require('../ui/workspace');
+const {readStepLink}=require('../ui/workspace.mjs');
 const fs=require('node:fs/promises'),path=require('node:path');
 const {verifyWithGo,startBombadil}=require('./support/cross-app');
 const base='http://127.0.0.1:8088';

@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const { questionLink } = require('../ui/workspace');
+const { questionLink } = require('../ui/workspace.mjs');
 const { base, json, query, assertResult, seed, observe, output } = require('./186-trace-search-support');
 test.use({ actionTimeout: 15000, navigationTimeout: 45000 });
 const panel = page => page.locator('.trace-search:visible');
@@ -133,8 +133,8 @@ test('186 find trace-wide span conditions and continue into original-window trac
   expect(current.count).toBe('2'); state.event('open-same'); expect(state.source).toBe(6);
   const beforeCompare = state.network.length;
   await tray.getByRole('button', { name: 'Compare with reference', exact: true }).click();
-  const comparison = await page.locator('goo-trace-comparison:visible').evaluate(element => ({ input: element.data,
-    model: GooTracePageComparison.compare(element.data.baseline.rows, element.data.selection.rows, false, false) }));
+  const comparison = await page.locator('goo-trace-comparison:visible').evaluate(async (element)=>{const GooTracePageComparison=await import('/trace-page-comparison.mjs');return { input: element.data,
+    model: GooTracePageComparison.compare(element.data.baseline.rows, element.data.selection.rows, false, false) }});
   expect(comparison.input.baseline.rows).toEqual(reference.rows); expect(comparison.input.selection.rows).toEqual(current.rows);
   expect(comparison.model.groups.find(group => group.operation === 'GET /checkout')).toMatchObject({ inclusiveDifferenceNs: '100000000', outsideDifferenceNs: '80000000' });
   expect(state.network.length).toBe(beforeCompare); state.event('compare');

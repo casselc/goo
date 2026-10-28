@@ -4,7 +4,7 @@ const {test, expect} = require('@playwright/test');
 const {randomBytes} = require('node:crypto');
 const fs = require('node:fs/promises');
 const path = require('node:path');
-const {questionLink} = require('../ui/workspace');
+const {questionLink} = require('../ui/workspace.mjs');
 const {startBombadil} = require('./support/cross-app');
 const base = process.env.GOO_QUERY_URL || 'http://127.0.0.1:8088';
 const patternField = {kind: 'column', key: 'body_pattern_v1'};
@@ -302,7 +302,7 @@ async function runPair(page, state, records) {
 async function exactView(page, pair, records, metric) {
   const host = section(page);
   await host.getByRole('combobox', {name: 'Pattern comparison measure', exact: true}).selectOption(metric);
-  const model = await page.evaluate(({request, response, metric}) => window.GooLogPatternComparison.model(request, response, {metric}), {...pair, metric});
+  const model = await page.evaluate(async ({request, response, metric})=>{const GooLogPatternComparison=await import('/log-pattern-comparison.mjs');return GooLogPatternComparison.model(request, response, {metric})}, {...pair, metric});
   expect(model).toBeTruthy();
   const expected = comparisonOracle(records, pair.request.baseline.question, pair.request.selection.question);
   expect(model.rows).toHaveLength(expected.length);

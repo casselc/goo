@@ -1,5 +1,5 @@
 const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');
-const {readStepLink}=require('../ui/workspace'),{verifyWithGo,startBombadil}=require('./support/cross-app');const base='http://127.0.0.1:8088';test.use({actionTimeout:15000});
+const {readStepLink}=require('../ui/workspace.mjs'),{verifyWithGo,startBombadil}=require('./support/cross-app');const base='http://127.0.0.1:8088';test.use({actionTimeout:15000});
 const attrs=o=>Object.entries(o).map(([key,stringValue])=>({key,value:{stringValue}}));
 test('76 choose observed native instruments without changing fixed scope or evidence custody',async({page,request,browser})=>{
  test.setTimeout(240000);const token=randomBytes(5).toString('hex'),environment='native-select-'+token,now=Date.now(),at=String(BigInt(now-1000)*1000000n),schema='https://opentelemetry.io/schemas/1.30.0';

@@ -99,7 +99,7 @@ test('180 passive decimal components preserve scaled SSR and detached SPA labels
     if (new URL(r.url()).pathname.startsWith('/api/')) requests.push(r.url());
   });
   page.on('pageerror', e => errors.push(e.message));
-  const metric = require('../ui/numeric-comparison').model(tiny());
+  const metric = require('../ui/numeric-comparison.mjs').model(tiny());
   expect(metric).not.toBeNull();
   const html = '<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/components.css"><link rel="stylesheet" href="/product.css"><link rel="stylesheet" href="/time-bars.css"><link rel="stylesheet" href="/numeric-distribution.css"><style>body{margin:16px;background:#10141c;color:#dce7f5;font:14px/1.5 system-ui;max-width:900px}goo-aligned-histogram,goo-metric-comparison{display:block}</style><h1>Supplied decimal displays</h1><p>Synthetic SSR/SPA fixture. No application runtime or telemetry source.</p><goo-aligned-histogram id="ssr" data="' + escape(JSON.stringify(aligned())) + '"></goo-aligned-histogram><goo-aligned-histogram id="spa"></goo-aligned-histogram><goo-metric-comparison id="metric" data="' + escape(JSON.stringify(metric)) + '"></goo-metric-comparison><div id="detached"></div>';
   await page.route(base + '/decimal-components-standalone', r => r.fulfill({
@@ -108,7 +108,7 @@ test('180 passive decimal components preserve scaled SSR and detached SPA labels
   }));
   await page.goto(base + '/decimal-components-standalone');
   await page.locator('#spa').evaluate((e, data) => e.data = data, aligned('share'));
-  for (const script of ['app-display.mjs', 'numeric-measures.js', 'time-bars.mjs', 'numeric-distribution.js', 'aligned-histogram.mjs', 'comparison-visual.mjs', 'numeric-comparison.js']) await page.addScriptTag({type:'module',url: base + '/' + script
+  for (const script of ['numeric-measures.mjs', 'time-bars.mjs', 'numeric-distribution.mjs', 'aligned-histogram.mjs', 'comparison-visual.mjs', 'numeric-comparison.mjs']) await page.addScriptTag({type:'module',url: base + '/' + script
   });
   for (const id of ['ssr', 'spa']) {
     await expect(page.locator('#' + id + ' goo-time-bars')).toHaveCount(2);
@@ -129,7 +129,7 @@ test('180 passive decimal components preserve scaled SSR and detached SPA labels
   const axis = page.locator('#metric .comparison-row-axis').first();
   await expect(axis).toHaveText('Shared range: 0 … 0.000000002 USD');
   await expect(axis).not.toContainText('1/1000000000');
-  await page.evaluate(data => {
+  await page.evaluate(async (data)=>{const GooNumericComparison=await import('/numeric-comparison.mjs');
     const element = document.createElement('goo-metric-comparison');
     element.id = 'detachedMetric';
     element.data = GooNumericComparison.model(data);

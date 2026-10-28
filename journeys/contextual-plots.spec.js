@@ -11,7 +11,7 @@ const fs = require('node:fs/promises'),
   path = require('node:path');
 const {
   questionLink
-} = require('../ui/workspace');
+} = require('../ui/workspace.mjs');
 const {
   openFilters,
   openMeasures
@@ -429,7 +429,7 @@ function observe(page) {
 }
 
 // A context may supply observed strings; only an explicit declaration supplies units.
-const { readQuestionLink } = require('../ui/workspace');
+const { readQuestionLink } = require('../ui/workspace.mjs');
 const plotField = kind => ({kind, key: 'work.amount'});
 const dialog = page => page.getByRole('dialog', {name: 'Plot attribute values', exact: true});
 const plotButton = (host, kind) => host.getByRole('button', {name: 'Plot values of ' + kind + ':work.amount', exact: true});
@@ -765,7 +765,7 @@ test('181 synthetic contextual owner rejects hidden and detached stale confirmat
   const state = observe(page);
   await page.goto(base + '/#definitions');
   await expect(page.locator('#workspaceTitle')).toHaveText('Definitions');
-  const evidence = await page.evaluate(() => {
+  const evidence = await page.evaluate(async ()=>{const GooNumericPlot=await import('/numeric-plot.mjs');
     const host = document.createElement('section');
     host.setAttribute('aria-label', 'Synthetic contextual declaration lifecycle fixture');
     const opener = document.createElement('button');
@@ -773,7 +773,7 @@ test('181 synthetic contextual owner rejects hidden and detached stale confirmat
     host.append(opener); document.body.append(host);
     const question = {signal: 'logs', environment: 'synthetic-owner-only', fromMs: 1000, toMs: 61000, limit: 100, offset: 0};
     const stages = [];
-    const owner = window.GooNumericPlot.mount(host, {current: () => ({active: true, clean: true, question}), onStage: q => stages.push(q)});
+    const owner = GooNumericPlot.mount(host, {current: () => ({active: true, clean: true, question}), onStage: q => stages.push(q)});
     const field = {kind: 'attribute', key: 'work.amount'};
     function declare() {
       if (!owner.open(field, opener)) throw Error('Synthetic owner did not open');

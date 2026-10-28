@@ -23,7 +23,7 @@ const act=registerCustomAction('goo.inventory',async(document,window,command:str
  if(command==='searchClear')set('operationSearch','');
  if(command==='filter'){set('operationSearch','__missing__');stage('filtered')}
  if(command==='clear'){set('operationSearch','');stage('cleared')}
- if(command==='open'){const capture=JSON.parse(el('inventoryExplain')?.textContent||'null'),row=capture.rows[0],q=(window as any).GooInventory.question(capture,row);let marker=el('inventoryIntent');if(!marker){marker=document.createElement('script');marker.id='inventoryIntent';marker.type='application/json';document.body.append(marker)}marker.textContent=JSON.stringify(q);document.querySelector<HTMLElement>('#inventoryRows tbody button')?.click();stage('opening')}
+ if(command==='open'){const capture=JSON.parse(el('inventoryExplain')?.textContent||'null'),row=capture.rows[0],q=(await import(new URL('/inventory.mjs',window.location.href).href)).question(capture,row);let marker=el('inventoryIntent');if(!marker){marker=document.createElement('script');marker.id='inventoryIntent';marker.type='application/json';document.body.append(marker)}marker.textContent=JSON.stringify(q);document.querySelector<HTMLElement>('#inventoryRows tbody button')?.click();stage('opening')}
  if(command==='browse'){const b=[...document.querySelectorAll<HTMLElement>('#serviceCatalog button')].find(b=>b.textContent?.startsWith('Open service '));if(b){b.click();stage('capturing')}}if(command==='complete'){stage('complete')}
  if(command==='reset'){el('inventoryIntent')?.remove();document.querySelector<HTMLElement>('[data-workspace="services"]')?.click();click('inventoryRun')}
  if(command==='edit'){set('inventoryEnvironment',(el('inventoryEnvironment') as HTMLInputElement).value+'-no-data')}

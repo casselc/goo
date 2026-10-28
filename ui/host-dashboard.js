@@ -1,2 +1,0 @@
-/* Host presentation defaults over the shared passive resource renderer. */
-(function(global){const view=typeof module!=='undefined'?require('./resource-native-view'):global.GooResourceNativeView,api={...view,render:(host,widget,result,options={})=>view.render(host,widget,result,{compact:true,...options})};if(typeof module!=='undefined')module.exports=api;else global.GooHostDashboard=api;})(typeof window==='undefined'?globalThis:window);

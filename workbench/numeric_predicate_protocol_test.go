@@ -27,7 +27,7 @@ func TestTypedNumericPredicateProtocolFixtures(t *testing.T) {
 	if json.Unmarshal(raw, &fixture) != nil || fixture.Version != 1 || len(fixture.Cases) < 40 {
 		t.Fatal("numeric protocol fixture invalid")
 	}
-	script := `const fs=require('node:fs'),p=require('../ui/question-protocol'),f=require('../ui/filter-editor');const x=JSON.parse(fs.readFileSync('../testdata/protocol/numeric-predicates.json'));console.log(JSON.stringify(x.cases.map(c=>{try{const q={signal:'spans',environment:'test',fromMs:1000,toMs:61000,limit:100,offset:0,where:c.predicate};p.validateStep(p.recordStep(q));f.validate(q.where,'spans');return {valid:true,step:p.readStepLink(p.stepLink(p.recordStep(q)))}}catch{return {valid:false}}})))`
+	script := `const fs=require('node:fs'),p=require('../ui/question-protocol.mjs'),f=require('../ui/filter-editor.mjs');const x=JSON.parse(fs.readFileSync('../testdata/protocol/numeric-predicates.json'));console.log(JSON.stringify(x.cases.map(c=>{try{const q={signal:'spans',environment:'test',fromMs:1000,toMs:61000,limit:100,offset:0,where:c.predicate};p.validateStep(p.recordStep(q));f.validate(q.where,'spans');return {valid:true,step:p.readStepLink(p.stepLink(p.recordStep(q)))}}catch{return {valid:false}}})))`
 	out, e := exec.Command("node", "-e", script).CombinedOutput()
 	if e != nil {
 		t.Fatalf("numeric browser worker: %v %s", e, out)

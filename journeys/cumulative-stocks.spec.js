@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs/promises'), path = require('node:path'), crypto = require('node:crypto');
 const { fixture, payload, question } = require('./195-stock-fixture');
-const { measurementStep, stepLink } = require('../ui/workspace');
+const { measurementStep, stepLink } = require('../ui/workspace.mjs');
 const { observe } = require('./192-native-context-support');
 const base = 'http://127.0.0.1:8088';
 const json = async response => { expect(response.ok(), await response.text()).toBe(true); return response.json(); };

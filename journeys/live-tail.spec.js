@@ -1,4 +1,4 @@
-const{test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');const{verifyWithGo,startBombadil}=require('./support/cross-app');const Workspace=require('../ui/workspace');const base='http://127.0.0.1:8088';
+const{test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');const{verifyWithGo,startBombadil}=require('./support/cross-app');const Workspace=require('../ui/workspace.mjs');const base='http://127.0.0.1:8088';
 test('66 tail matching OTel logs with late duplicates, bounded retention, focus pause and explicit resume gaps',async({page,request})=>{
  test.setTimeout(240000);const environment='tail-'+randomBytes(5).toString('hex'),now=Date.now(),trace=randomBytes(16).toString('hex');
  const attrs=o=>Object.entries(o).map(([key,stringValue])=>({key,value:{stringValue}}));
