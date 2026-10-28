@@ -2936,3 +2936,26 @@ Accepted raw 0.16 s/Quint 2.30 s, package 2.479 s. The initial observer expected
 in chart points; existing timelines encode a point as fromNS=toNS. This observer
 correction needed no app change/live rerun. The Bombadil actor covers native stock
 Run and retained Back; main Playwright executes host context and capture.
+
+215 adds `filesystem_utilization_test.go`: original fraction admission and generated
+actual nested-owner schedules (eight examples each; 0.416 s). The schedule driver
+exercises response headers/body versus child close, parent close, scope withdrawal,
+disposal and mount switches while retaining byte evidence. A missing helper import
+in the first harness extraction was fixed, with focused UI and property checks.
+
+`filesystem_utilization_live_test.go` independently reconstructs finite raw gauge
+values/freshness/identity and reuses the independent byte-stock oracle. It checks
+separate scales, reported 0.625 instead of the unrelated byte-number division 0.375,
+full capture bytes and issued POST costs. Nine changed controls reject. The
+`model/filesystem_utilization.qnt`/`.yaml` binding accepts one actual seven-step
+trace and rejects an extra local read. Separate browser/Hegel cases cover missing,
+invalid, ambiguous and withdrawn results; this is not exhaustive state coverage.
+
+Set `GOO_FILESYSTEM_UTILIZATION_LEDGER=/absolute/path/to/ledger.json` and
+`QUINT_BIN=/absolute/path/to/quint`, then run:
+
+```sh
+go test -C verification -run '^(TestFilesystemUtilizationObserved|TestQuintFilesystemUtilizationObserved)$' -v .
+```
+
+Accepted raw 0.11 s/Quint 2.11 s, package 2.233 s.
