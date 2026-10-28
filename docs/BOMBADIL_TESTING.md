@@ -567,3 +567,10 @@ adds real log/span geometry, full-text and touch/keyboard checks.
 uses the workspace actor's first Definitions/Examples visits and catalog-load
 invariant. Returning must not reload one-time declaration catalogs. Explicit
 refresh is separately tested; this is not a global cache invariant.
+
+## Stored capture catalog (220)
+
+`GOO_SAVED_CATALOG_BOMBADIL=1 npx playwright test journeys/220-saved-catalog.spec.js --reporter=line`
+uses the new `saved-catalog.ts` actor. It opens stored evidence and recovery tools,
+then collapses/reopens the catalog; invariants retain typed IDs/UTC, no telemetry
+read, no page overflow and no uncaught errors. No recapture or save action is offered.

@@ -34,6 +34,10 @@ Examples galleries/workflows and legacy Definitions/Operations catalogs now load
 on first workspace use. Local startup requests fell from 14 to 7 in the checked
 lab recording; 136 modules still load, and two retention-status requests remain.
 This is not a latency/load benchmark or complete startup-work optimization.
+Saved now presents a compact typed capture table before secondary tools, with
+exact capture-clock tooltips and existing stored order/paging. This is not a
+recent-first sort or cross-store search. Definitions family discovery and shared
+mobile chrome remain separate cohesion work.
 Browser conformance is currently checked in Chromium; Firefox/Safari coverage
 is not established.
 

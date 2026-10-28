@@ -78,3 +78,14 @@ A cohesive read-only case outline, global search across stores, durable drafts,
 collaboration and a normalized investigation/evidence storage model are not
 implemented by this presentation cut. Wider grouping of context within a selected
 case should build on these owners and explicit references, not replace them.
+
+## Data-first capture catalog (220)
+
+The capture catalog now precedes secondary notes/views/retention disclosures and
+uses the passive table primitive for title, kind and captured UTC. One heading and
+inline refresh/status replace repeated introductory controls. Manual ID recovery
+moves below the rows without changing its IDs or behavior. Direct `#investigations`
+entry loads the stored page; exact capture links still open their own evidence.
+Stored order and cursor behavior are unchanged, with no recent-first sorting claim.
+Selected evidence and investigation drafts retain their independent owners.
+See [the storyboard and current frames](../journeys/220-saved-catalog-storyboard.md).

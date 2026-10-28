@@ -2507,3 +2507,8 @@ are updated; the observed entry Quint contract remains unchanged.
 first-open/direct-link behavior, retained workflow state, pure preview, fresh
 explicit refresh and a Bombadil duplicate-load invariant. Local startup API reads
 fall from 14 to 7; the live telemetry stream and module count are unchanged.
+
+220 adds [the data-first stored capture catalog](../../journeys/220-saved-catalog-storyboard.md):
+exact UTC, typed rows, unchanged paging/order, source-free opening and manual
+recovery. Current 117 frames preserve the authored-draft/recovery flow. The new
+stored-page Bombadil actor covers list/recovery navigation without telemetry reads.

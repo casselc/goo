@@ -1261,3 +1261,12 @@ identity. `GooAttributes.mountStream(container,stream,options)` now accepts the
 existing viewer options, preserving default raw inspection and naming native metric
 attributes correctly. Other callers retain noncompact defaults. Family controls
 hide only complete single choices and standardize Refresh after attempts.
+
+## Stored capture table adoption (220)
+
+The capture catalog now reuses `goo-table` with native title/kind/time cells,
+sticky headers and application-owned open/paging actions. Narrow catalog layout
+is scoped to `.capture-catalog` in product CSS; the display primitive owns no
+store/client. Focusable UTC metadata retains the exact stored capture clock.
+Retry-recovery cards remain a separate consumer of their existing card style.
+See [the real stored-page journey](../journeys/220-saved-catalog-storyboard.md).

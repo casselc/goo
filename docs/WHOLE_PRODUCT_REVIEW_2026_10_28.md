@@ -96,3 +96,20 @@ startup-work reduction, using one real Activity → service/resource → record/
 → saved/reusable question journey. Check mobile and keyboard flows, request counts,
 late/aborted responses and an unavailable source. That is a better next review
 point than another long sequence of tiny specialized capabilities.
+
+## Follow-up at the R1–R3 gate
+
+R1 (217) removes the reproduced hidden operation follow-on reads; R2 (218) gives
+short ordinary-OTel rows one scan line while preserving full inspection; R3 (219)
+reduces measured startup requests from 14 to 7 without changing the live stream or
+module count. Direct workspace links, explicit refresh, isolated generic startup,
+keyboard/mobile display checks and bounded Bombadil/observed-entry checks pass.
+
+This supports continuing with Saved/Definitions cohesion rather than introducing
+another backend or chart family. The 220 Saved slice puts typed capture rows first,
+preserving store order and independent drafts/publication. Definitions still has
+separate record/native/application families stacked in one long entrance; making
+those families easier to choose is the next bounded opportunity. Mobile navigation
+outside Activity still consumes substantial vertical space and deserves a shared
+chrome pass, not another Saved-only menu. No new vendor/latency/load claim is made
+by this follow-up; the external research and its limits above remain the basis.

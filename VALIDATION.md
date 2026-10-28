@@ -1,5 +1,28 @@
 # Validation record
 
+## Data-first Saved capture catalog — 220 (2026-10-28 UTC)
+
+Saved now places its capture catalog before secondary disclosures, with one
+heading and compact refresh/status. Native `goo-table` rows show title, kind and
+readable captured UTC; exact clock strings remain in focusable metadata. Manual
+ID tools stay below the list. Direct Saved entry loads its first stored page.
+Stored order/cursors, publication/retry and selected evidence/drafts are unchanged;
+there is no recent-first sorting, data deletion or universal store.
+
+Validation: all 583 frontend tests pass. Real Chromium 220 checks pass for direct
+entry, server-page ID/order equality, exact clock metadata, keyboard opening,
+source-free inspection, immutable receipt identity, next/previous pages and
+320/390/700/701px page bounds. Existing 117 draft/pending-recovery/error journeys
+pass. The new bounded Saved Bombadil actor passes typed-row/clock, no-source,
+overflow and uncaught-error invariants through stored opening and recovery/list
+navigation. Current 220 and affected 117 documentation frames are regenerated.
+The first stored row is above 400px at the checked desktop viewport.
+
+The post-R1–R3 review keeps Definitions family discovery and shared mobile chrome
+as the next cohesion work. Architecture/store semantics, API schemas and Go code
+are unchanged; no new Go/Hegel/Quint campaign was needed for this composition cut.
+Only disposable owned review/test outputs are removed; all saved lab volumes remain.
+
 ## Workspace-owned declaration startup — 219 (2026-10-28 UTC)
 
 Optional Examples galleries/workflows now mount on first visit and share one
