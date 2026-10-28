@@ -1,12 +1,12 @@
 # Known issues and gaps
 
-The [post-234 whole-product review](WHOLE_PRODUCT_REVIEW_2026_10_28_REFRESH.md)
-refreshes current priorities: mobile Activity action density, general capture
-search/recency, descriptive comparison support and reusable trace questions.
-These are proposals with bounded acceptance in the [current backlog](BACKLOG_2026_10_28.md),
-not claims of new functionality. Older planned statuses below remain historical
-where the current roadmap/validation records a later delivery.
-
+The [independent review reconciliation](reviews/INDEPENDENT_REVIEW_SUMMARY_236.md)
+adds verified ingress/admission, Activity signal-scope/inspection and required-test
+verdict gaps ahead of cosmetic work. A malformed prepared-string grouping defect
+is reproduced; native catalog publication/capacity mismatch is source-confirmed.
+These findings are not fixed by this documentation round. Current order and
+acceptance live in the [roadmap](ROADMAP_2026_10_28.md) and
+[backlog](BACKLOG_2026_10_28.md); older statuses below retain their bounded history.
 
 Optional nested verification has a [pinned bounded entry point](../verification/README.md#reproducible-entry-point)
 through 230. Root CI tests its refusal controls but does not execute native/model

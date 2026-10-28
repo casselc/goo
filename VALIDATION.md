@@ -1,5 +1,34 @@
 # Validation record
 
+## Six delegated reviews and reconciliation — 236 (2026-10-28 UTC)
+
+Five independent domain agents reviewed product/usability, frontend, architecture,
+Go/semantic libraries and verification/process at `5d12ce9`; a sixth planning agent
+read all five and reconciled current/prior proposals. Reports preserve individual
+findings/confidence and reproduction details. The active queue now puts finite
+body-receive/required-verdict gates and Activity scope/Inspect continuity ahead of
+cosmetic density, retaining capture discovery and later comparison/trace reuse.
+
+Targeted observations: architecture reproduced actual Budget/Decode cancellation
+202 followed by 429 until the incomplete peer closed, then 200; Body.Close also
+remained blocked 150 ms. Go independently confirmed the read mechanism and reproduced
+malformed UTF-8 labels merging into one prepared group. Product recorded real tail
+requests losing a valid shared service filter on signal change. Frontend measured
+an offscreen keyboard-opened inspector at 390×844 with focus still on Inspect.
+Verification confirmed nonexistent Go test selection exits 0; its scan found no
+missing current literal validator declarations, so past runs are not asserted false.
+Native package capacity mismatch is source-confirmed, not endpoint-reproduced.
+
+Other source-verified risks and product decisions are explicitly separated from
+reproduced defects. No live workload, capture, annotation, configuration or document
+was published; isolated probes used local synthetic inputs and cleaned their temp
+work. No runtime code/dependencies changed. Broad regression suites were not rerun
+for review documents; local links and diff whitespace were checked. Earlier bounded
+delivery records remain valid for their stated scopes; none of these new findings
+is represented as fixed. README/roadmap/backlog and two stale historical authority
+sections now point to the same current queue.
+
+
 ## Whole-product review and roadmap refresh — 235 (2026-10-28 UTC)
 
 Reviewed `db03e6f` across the five primary destinations with read-only Chromium

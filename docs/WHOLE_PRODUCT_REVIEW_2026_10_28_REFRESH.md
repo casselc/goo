@@ -1,5 +1,9 @@
 # Whole-product review after 234
 
+> The [independent reviews after this pass](reviews/INDEPENDENT_REVIEW_SUMMARY_236.md)
+> challenge its priority order and add reproduced correctness/interaction findings.
+> Preserve this walkthrough as evidence; use the active roadmap for execution.
+
 Reviewed 2026-10-28 against `db03e6f`. This refresh supersedes the execution
 recommendations in the earlier same-day review; its findings and external-source
 research remain historical. This is an expert task/source review, not customer

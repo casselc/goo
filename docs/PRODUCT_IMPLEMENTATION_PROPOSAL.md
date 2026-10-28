@@ -1,5 +1,11 @@
 # Product implementation proposal
 
+> Historical consolidation proposal and delivery record. The
+> [current roadmap](ROADMAP_2026_10_28.md) owns execution order and
+> [current backlog](BACKLOG_2026_10_28.md) owns acceptance, reconciled in the
+> [independent review](reviews/INDEPENDENT_REVIEW_SUMMARY_236.md). Older “active”
+> and “next” labels below describe their original checkpoint, not another queue.
+
 Prepared 2026-10-22; integrated after the architecture/design reviews. **The user
 has authorized working through the bounded active queue below. This is not a claim
 that queued features are implemented, or approval of every long-term research idea.** This reconciles the latest whole-product

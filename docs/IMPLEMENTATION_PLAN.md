@@ -12,10 +12,11 @@ reconciliation, detailed rationale and source links. This active index replaces
 competing historical “next” lists; the history below preserves past scope, not
 additional current commitments.
 
-## Current review result — 2026-10-25
+## Historical review result — 2026-10-25
 
-The queue through TS3 is shipped. The [current roadmap](ROADMAP_2026_10_25.md)
-and [execution backlog](BACKLOG_2026_10_25.md) own the remaining priorities. G1's
+The queue through TS3 was shipped at this historical checkpoint. The linked
+[Oct 25 roadmap](ROADMAP_2026_10_25.md) and [backlog](BACKLOG_2026_10_25.md)
+preserve that proposal; the Oct 28 roadmap/backlog above own current priorities. G1's
 fast root Go/Node gate is delivered. The [dashboard initiative](AUTOMATIC_DASHBOARDS.md)
 has delivered HTTP server-span views ([journey 187](../journeys/187-http-server-dashboard-storyboard.md)),
 explicit legacy RPC views ([journey 188](../journeys/188-rpc-server-dashboard-storyboard.md)),
