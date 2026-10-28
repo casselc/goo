@@ -30,6 +30,10 @@ Instrumentation now requires explicit providers via `NewRuntime` and one-time
 limited to 1,024 operation/role pairs per runtime; later pairs retain actual
 observations but no synthetic zero baselines. This is not a full SDK cardinality
 limit. See [runtime ownership](GOO_ANNOTATIONS.md#runtime-ownership-and-startup).
+Examples galleries/workflows and legacy Definitions/Operations catalogs now load
+on first workspace use. Local startup requests fell from 14 to 7 in the checked
+lab recording; 136 modules still load, and two retention-status requests remain.
+This is not a latency/load benchmark or complete startup-work optimization.
 Browser conformance is currently checked in Chromium; Firefox/Safari coverage
 is not established.
 

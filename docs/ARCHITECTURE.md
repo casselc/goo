@@ -25,6 +25,13 @@ their distinct adapter contracts. The [HTTP acceptance inventory](HTTP_BOUNDARIE
 records adopted transports and remaining endpoint/branch coverage; no common
 semantic evaluator or universal request owner is implied.
 
+Application startup activates optional declaration catalogs by workspace. Examples
+mounts its galleries/workflows on first visit and shares one example-question
+response as independent consumer snapshots. Definitions loads legacy metadata on
+first visit; Operations/Definitions share one operation declaration load. Explicit
+refreshes remain fresh and source query owners are unchanged. See
+[startup work and measured limits](../journeys/219-startup-catalogs-storyboard.md).
+
 Native `measurements.Evaluate(question, rows, at)` is now storage-free and rejects
 lifecycle definitions. `ObserveLifecycle` explicitly owns first-observation custody
 and correction; the HTTP `Source.Run` adapter dispatches by definition kind. Result

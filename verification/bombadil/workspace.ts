@@ -3,10 +3,13 @@ import { always, eventually } from '@antithesishq/bombadil';
 import { extract, actions, registerCustomAction } from '@antithesishq/bombadil/browser';
 export { noUncaughtExceptions, noUnhandledPromiseRejections } from '@antithesishq/bombadil/browser/defaults/properties';
 
-const shell = extract(({ document }) => ({
+const shell = extract(({ document, window }) => ({
   savedLookbackHidden: document.querySelector('#minutes')?.closest<HTMLElement>('.scope-control')?.hidden === true,
   liveOwned: document.querySelector('#operations')?.closest('[data-workspace-panel]')?.getAttribute('data-workspace-panel') === 'operations',
   savedHasEditor: !!document.querySelector('[data-workspace-panel=investigations] #operationPackage'),
+  examples: document.documentElement.dataset.examples === 'configured',
+  visited: (document.documentElement.dataset.catalogVisited || '').split(','),
+  catalogs: ['/api/operation-packages','/api/prebuilts','/api/package','/api/example-questions','/api/investigation-workflows'].map(path => window.performance.getEntriesByType('resource').filter(entry => new URL(entry.name).pathname === path).length),
   ready: !!document.querySelector('[data-workspace][aria-current="page"]'),
   selected: [...document.querySelectorAll('[data-workspace][aria-current="page"]')].map(e => e.getAttribute('data-workspace')),
   visible: [...document.querySelectorAll<HTMLElement>('[data-workspace-panel]')].filter(e => !e.hidden).map(e => e.dataset.workspacePanel),
@@ -15,6 +18,8 @@ const shell = extract(({ document }) => ({
 export const savedHasNoLiveLookback = always(() => !shell.current.ready || shell.current.selected[0] !== 'investigations' || shell.current.savedLookbackHidden);
 
 export const liveAndSavedOwnership = always(() => !shell.current.ready || (shell.current.liveOwned && !shell.current.savedHasEditor));
+
+export const catalogsLoadAtMostOnce = always(() => shell.current.catalogs.every(count => count <= 1));
 
 export const workspaceBecomesReady = eventually(() => shell.current.ready).within(10, 'seconds');
 
@@ -27,8 +32,14 @@ const navigate = registerCustomAction('goo.navigate', async (document, _window, 
   const button = document.querySelector<HTMLButtonElement>(`[data-workspace="${route}"]`);
   if (!button) throw new Error(`Missing workspace: ${route}`);
   button.click();
+  const visited = new Set((document.documentElement.dataset.catalogVisited || '').split(','));
+  visited.add(route);document.documentElement.dataset.catalogVisited = [...visited].join(',');
 });
 
-export const workspaceNavigation = actions(() => shell.current.ready
-  ? ['explore', 'services', 'operations', 'investigations', 'definitions'].map(route => navigate(route))
-  : ['Wait']);
+export const workspaceNavigation = actions(() => {
+  const state = shell.current;
+  if (!state.ready) return ['Wait'];
+  if (!state.visited.includes('definitions')) return [navigate('definitions')];
+  if (state.examples && !state.visited.includes('examples')) return [navigate('examples')];
+  return ['explore', 'services', 'operations', 'investigations', 'definitions', ...(state.examples ? ['examples'] : [])].map(route => navigate(route));
+});

@@ -560,3 +560,10 @@ exercises pause → inspect → close without adding a source read. It keeps its
 buffer/overflow and no-eager-editor invariants. Run the 102 entry journey with
 `GOO_ENTRY_BOMBADIL=1`; the [218 storyboard](../journeys/218-compact-activity-storyboard.md)
 adds real log/span geometry, full-text and touch/keyboard checks.
+
+## First-use workspace catalogs (219)
+
+`GOO_STARTUP_BOMBADIL=1 npx playwright test journeys/219-startup-catalogs.spec.js --reporter=line`
+uses the workspace actor's first Definitions/Examples visits and catalog-load
+invariant. Returning must not reload one-time declaration catalogs. Explicit
+refresh is separately tested; this is not a global cache invariant.

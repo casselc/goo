@@ -98,7 +98,11 @@ function showSavedCapture(c){
  saved('operationMode').textContent='Saved capture '+c.id.slice(0,12)+' · '+c.capturedAt+' · fixed evidence';explorer.restore(c.selection);ratio?.restore(c.selection.ratio);comparison?.restore(c.selection.comparison);
  el('savedOperationLive').onclick=()=>appWorkspace.navigate('operations',{focus:true});
 }
+let operationCatalogStarted=false;
+function loadOperationCatalog(){if(operationCatalogStarted)return;operationCatalogStarted=true;
 runtimeCapabilities.then(config=>config?.declaredOperations.state==='configured'?configurationJSON('/api/operation-packages'):null).then(packages=>{if(!packages)return;const select=el('operationPackage');select.replaceChildren();for(const p of packages){const option=textNode('option',p.definition.title);option.value=p.definition.name;select.append(option);const card=textNode('div');card.className='definition-card';card.append(textNode('h3',p.definition.title),textNode('p',p.definition.resource.service+' · '+p.definition.resource.environment),textNode('p',p.definition.views.join(' · ')));const details=textNode('details');details.append(textNode('summary','Definition and revision'),textNode('pre',JSON.stringify(p,null,2)));card.append(details);el('definitionCatalog').append(card)}if(activeOperation)select.value=activeOperation.package.definition.name}).catch(error=>{el('operationStatus').textContent=error.message});
+}
+
 el('operationPackage').onchange=()=>{stopOperationRead();el('operationMode').textContent='No operation evidence loaded.';activeOperation=null;activeExplorer=null;activeRatio=null;activeComparison=null;operationGeneration++;el('runOperations').disabled=false;el('operationView').replaceChildren();el('operationExplorer').replaceChildren();el('fleetCoverageView').replaceChildren();el('fleetCoverageView').hidden=true;el('fleetCoverageView').open=false;el('errorRatioView').replaceChildren();el('errorRatioView').hidden=true;el('errorRatioView').open=false;el('counterRateView').replaceChildren();el('counterRateView').hidden=true;el('counterRateView').open=false;el('histogramView').replaceChildren();el('histogramView').hidden=true;el('histogramView').open=false;el('operationExplain').textContent='';el('operationPackageTitle').textContent='';el('operationStatus').textContent='Package changed. Inspect operations to capture its evidence.'};
 el('runOperations').onclick=async()=>{
  appWorkspace.navigate('operations',{writeHash:false});stopOperationRead();const controller=operationController=new AbortController();activeOperation=null;activeExplorer=null;activeRatio=null;activeComparison=null;const generation=++operationGeneration;const current=()=>generation===operationGeneration&&!controller.signal.aborted&&appWorkspace.current()==='operations';const button=el('runOperations');button.disabled=true;el('operationStatus').textContent='Reading operation evidence…';el('operationView').replaceChildren();el('operationExplorer').replaceChildren();el('fleetCoverageView').replaceChildren();el('fleetCoverageView').hidden=true;el('fleetCoverageView').open=false;el('errorRatioView').replaceChildren();el('errorRatioView').hidden=true;el('errorRatioView').open=false;el('counterRateView').replaceChildren();el('counterRateView').hidden=true;el('counterRateView').open=false;el('histogramView').replaceChildren();el('histogramView').hidden=true;el('histogramView').open=false;
@@ -132,18 +136,37 @@ el('runExpression').onclick=()=>{try{run(JSON.parse(el('expression').value))}cat
 el('clear').onclick=()=>{selected='';spanFilter=undefined;el('selection').textContent='';el('scenario').value='';run(controls())};
 el('view').onchange=()=>{spanFilter=undefined;if(['metrics','queue'].includes(el('view').value)){selected='';el('scenario').value='';el('selection').textContent=''}};
 const workflow=Workflows.mount(el('workflows'),run,controls);
+
+// Declaration catalogs and hidden sample UI belong to their first opened workspace.
+let definitionExamplesStarted=false,exampleCatalogsStarted=false;
+function loadDefinitionExamples(){if(definitionExamplesStarted)return;definitionExamplesStarted=true;
 uiConfiguration.then(config=>config?.examples.state==='configured'?configurationJSON('/api/prebuilts'):null).then(catalog=>{if(!catalog)return;for(const profile of catalog.profiles){const d=document.createElement('details');d.append(textNode('summary',profile.id+' · '+profile.stability));d.append(textNode('p',profile.description));d.append(textNode('pre',JSON.stringify({requirements:profile.requirements,features:profile.features,caveats:profile.caveats},null,2)));el('prebuilts').append(d)}}).catch(error=>{el('prebuilts').textContent='Example catalog unavailable · '+error.message});
+uiConfiguration.then(config=>config?.examples.state==='configured'?configurationJSON('/api/package'):null).then(p=>{if(p)el('package').textContent=JSON.stringify(p,null,2)}).catch(error=>{el('package').textContent='Example grammar unavailable · '+error.message});
+}
+function loadExampleCatalogs(){
+ uiConfiguration.then(config=>{
+  if(config?.examples.state!=='configured'||exampleCatalogsStarted)return;
+  exampleCatalogsStarted=true;
+  const catalog=configurationJSON('/api/example-questions');
+  ExampleQuestions.mount(el('exampleQuestions'),{catalog:catalog.then(items=>structuredClone(items))});
+  GuidedMeasurements.mount(el('guidedMeasurements'),{exampleState:config.examples.state,telemetryCatalog:catalog.then(items=>structuredClone(items))});
+ });
+}
+function openWorkspaceCatalogs(route){
+ if(route==='examples')loadExampleCatalogs();
+ if(route==='definitions')loadDefinitionExamples();
+ if(route==='definitions'||route==='operations')loadOperationCatalog();
+}
 let examplesStarted=false;
 el('legacyExamples').addEventListener('toggle',()=>{if(document.documentElement.dataset.examples==='configured'&&el('legacyExamples').open&&!examplesStarted){examplesStarted=true;run(initial)}});
 const appWorkspace=Workspace.mount();
+openWorkspaceCatalogs(appWorkspace.current());
 // Source owners stop hidden/superseded work; saved publications are independent.
-globalThis.addEventListener('goo:workspace',event=>{if(event.detail.route!=='operations')stopOperationRead();if(event.detail.route!=='definitions')stopHTTPRead()});
+globalThis.addEventListener('goo:workspace',event=>{if(event.detail.route!=='operations')stopOperationRead();if(event.detail.route!=='definitions')stopHTTPRead();openWorkspaceCatalogs(event.detail.route)});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){stopOperationRead();stopHTTPRead()}});
 globalThis.addEventListener('pagehide',()=>{stopOperationRead();stopHTTPRead()});
 for(const event of ['input','change'])el('minutes').addEventListener(event,()=>{stopOperationRead('Scope changed. Inspect operations to read again.');stopHTTPRead('Scope changed. Evaluate the package to read again.')});
 
-uiConfiguration.then(config=>{if(config?.examples.state==='configured')ExampleQuestions.mount(el('exampleQuestions'))});
-uiConfiguration.then(config=>GuidedMeasurements.mount(el('guidedMeasurements'),{exampleState:config?.examples.state||'unavailable'}));
 el('defineMeasurement').onclick=()=>{dispatchEvent(new CustomEvent('goo:navigate-explore'));dispatchEvent(new CustomEvent('goo:measurements-tab'));el('measureEditor').open=true;el('measureLibrary').focus()};
 const liveExploration=InvestigationTrail.mount(el('exploration'),{lazy:true});
 uiConfiguration.then(config=>{const lab=config?.profile==='lab';if(!lab)el('inventoryEnvironment').value='';StreamEntry.mount(el('exploration'),{environment:lab?'local':'',autoStart:lab,onLeaveFixed:()=>liveExploration.suspend(),onEnterFixed:()=>liveExploration.resume(),onOpenFixed:(q,recordLayout,options)=>liveExploration.openQuestion(q,[],{stage:true,activity:true,recordLayout,...options}),onOpenTrace:(q,row)=>{dispatchEvent(new CustomEvent('goo:navigate-explore'));liveExploration.openTrace(q,row.TraceId,row.SpanId)}})});
@@ -174,5 +197,5 @@ Retention.mount(el('savedRetainedWorkspace'),{catalogHost:el('savedRetainedCatal
 SavedWorkspace.mount();
 ActivityViews.library(el('savedActivityViews'));
 Investigations.mount({generation:()=>operationGeneration,question:()=>activeOperation?{package:activeOperation.package.definition.name,packageRevision:activeOperation.package.revision,fromMs:activeOperation.fromMs,toMs:activeOperation.toMs}:null,selection:()=>({...activeExplorer?.getState(),...(activeRatio?.getState()?{ratio:activeRatio.getState()}:{}),...(activeComparison?.getState()?{comparison:activeComparison.getState()}: {})}),show:showSavedCapture});
-uiConfiguration.then(config=>config?.examples.state==='configured'?configurationJSON('/api/package'):null).then(p=>{if(p)el('package').textContent=JSON.stringify(p,null,2)}).catch(error=>{el('package').textContent='Example grammar unavailable · '+error.message});
+
 el('expression').value=JSON.stringify(initial,null,2);

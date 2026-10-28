@@ -2502,3 +2502,8 @@ with current log/span desktop/mobile frames. Short rows stay below 48px at the
 checked desktop size; full message inspection, UTC details and touch/keyboard
 controls remain. Journey 102 frames and its Bombadil inspect/close/density checks
 are updated; the observed entry Quint contract remains unchanged.
+
+219 adds [workspace-owned startup catalogs](../../journeys/219-startup-catalogs-storyboard.md):
+first-open/direct-link behavior, retained workflow state, pure preview, fresh
+explicit refresh and a Bombadil duplicate-load invariant. Local startup API reads
+fall from 14 to 7; the live telemetry stream and module count are unchanged.

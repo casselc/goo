@@ -1,5 +1,29 @@
 # Validation record
 
+## Workspace-owned declaration startup — 219 (2026-10-28 UTC)
+
+Optional Examples galleries/workflows now mount on first visit and share one
+example-question response through independent consumer snapshots. Definitions
+loads its legacy package/prebuilt metadata on first use; Operations and Definitions
+activate their shared operation declaration load once. Explicit catalog refreshes
+stay fresh. No generic cache, dynamic import/bundler, source-query scope change or
+new saved object is introduced.
+
+Validation: all 583 frontend tests pass. Five real Chromium 219 checks pass,
+covering initial deferral, first-open/revisit retention, direct entry to all three
+owners, actual guided telemetry preview, fresh native refresh and the updated
+workspace Bombadil duplicate-load/navigation invariants. The isolated generic
+startup journey 191 passes with ordinary Python-tagged OTel and no lab assets;
+its current frames include the shared compact record styling. One matched local
+recording with 90 live rows measured 14 → 7 startup API requests and 3,252 → 2,936
+DOM nodes; module count remains 136. These are request/DOM observations, not a
+latency or throughput claim. The automatic telemetry stream is unchanged.
+
+Architecture, storyboard, current roadmap and known limits are updated. Two
+retention-status startup reads and the eager module graph remain explicit
+follow-ons. No Go/Hegel/Quint rerun was needed for this catalog-only JS change.
+Temporary generic binaries/test artifacts are removed; saved lab volumes remain.
+
 ## Compact shared observation rows — 218 (2026-10-28 UTC)
 
 Compact record summaries now align severity/status, body and duration on one
