@@ -2536,3 +2536,14 @@ independent retained owners and a compact responsive bar.
 226 adds [native time controls and UTC scope](../../journeys/226-native-scope-controls-storyboard.md):
 correct delayed initialization, contextual global chrome, readable exact timestamp
 metadata, fixed re-preview precision and explicit package-lookback/edited windows.
+
+## 229. Compact native workbench actions
+
+The [storyboard](../../journeys/229-native-actions-storyboard.md) and
+`journeys/229-native-actions.spec.js` cover 320/390/700px scope controls, keyboard
+Save or share/Escape, exact shared bounds, explicit native and supporting-record
+reads, source-free return with retained focus, and invalidated reuse actions.
+Package discovery and mixed-signal investigation journeys reveal the same controls.
+
+![Compact native actions](screenshots/229-native-actions-390.png)
+![Native reuse disclosure](screenshots/229-native-reuse-open.png)

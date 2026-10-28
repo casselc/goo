@@ -272,7 +272,11 @@ Services and live/frozen Explore use the same latency element and stat-list
 primitive. A related group of mean/P95/P99 comparison values occupies one metric
 matrix instead of three independent cards. Unsupported native percentile ranges
 retain their original interval semantics. Widget secondary actions use one native
-disclosure; opening the question remains visible. Explore combines search,
+disclosure; opening the question remains visible. The native measurement workbench
+also uses `UI.actions`: Run/Capture remain visible, while Save or share groups
+question and definition reuse. Escape restores summary focus; invoking an action
+closes the disclosure and restores focus only if its button still owns it.
+Application handlers retain all reads, navigation and publication. Explore combines search,
 filters and breakdowns in one workbench; advanced measure settings remain closed
 until requested, even when the applied query includes those measures.
 

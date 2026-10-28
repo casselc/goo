@@ -1,5 +1,31 @@
 # Validation record
 
+## Compact native workbench actions — 229 (2026-10-28 UTC)
+
+The workbench uses the shared passive `UI.actions` helper: Run/Capture remain
+visible and question share/investigation plus package save/export live under
+Save or share. Three introductory workflow cards become one sentence. Scope
+editing/preview stays explicit. Shared secondary-action closure now restores
+summary focus if the invoked control still owns it, without overriding a handler
+that moved focus elsewhere. Shared question links remain outside the disclosure.
+
+Validation: all 585 frontend tests pass. Real local OTLP/browser journeys 229 and
+both 226 cases pass: 320/390/700px fit, disclosure/Escape focus and zero requests,
+exact shared timestamps, native → supporting records → source-free retained return,
+Capture confirmation without publication, and edit invalidation. Existing metric
+discovery/package-save and mixed-signal investigation journeys pass, with both
+Quint ledger validators passing. The investigation journey's stale staged-record
+button expectation was updated from Run again to the current Run question label.
+The updated Bombadil native actor passes its 30-second mobile campaign, exercising
+select/disclosure/edit/complete with no preview evidence or capture capability.
+Screenshots and storyboard are updated; inspected 390px closed/open frames.
+
+Only the Python lab's three changed UI assets were synced; no images, Go binary,
+stored IDs or volumes changed. No numeric/source semantics changed, so Go semantic
+property campaigns were not repeated. Nested resource/native ancestry composition
+remains a separate follow-up, and this is not a universal navigation redesign.
+
+
 ## Checked native definition revisions — 228 (2026-10-28 UTC)
 
 `measurements.Definition.Revision()` validates authored definitions and returns no

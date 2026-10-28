@@ -11,7 +11,7 @@ test('39 discover ordinary OTel metrics and build a reusable measurement',async(
  await expect(page.locator('#metricInstruments')).toContainText('jobs.completed');await expect(page.locator('#metricInstruments')).toContainText('version omitted');
  await page.screenshot({path:'docs/journeys/screenshots/39a-metric-discovery.png',fullPage:true});
  await page.getByRole('button',{name:'Build measurement package',exact:true}).click();await expect(page.locator('#measureStatus')).toContainText('Question validated');
- await page.locator('#measureStore').click();await expect(page.locator('#measureStatus')).toContainText('Saved immutable');
+ await page.locator('#measureReuse').evaluate(e=>e.open=true);await page.locator('#measureStore').click();await expect(page.locator('#measureStatus')).toContainText('Saved immutable');
  const response=page.waitForResponse(r=>r.url().endsWith('/api/measurements'));await page.locator('#measureRun').click();const result=await (await response).json();expect(result.counters.series).toHaveLength(2);expect(result.counters.series.every(s=>s.stream.version===''&&s.stream.schemaURL==='')).toBe(true);
  await expect(page.locator('#measureResult')).toContainText('operation=import');await expect(page.locator('#measureResult')).toContainText('outcome=error');
  await page.screenshot({path:'docs/journeys/screenshots/39b-discovered-measurement.png',fullPage:true});

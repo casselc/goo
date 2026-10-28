@@ -956,11 +956,6 @@ td details {
 @media(max-width:600px){#measurementWorkbench .controls{align-items:stretch;flex-direction:column}#measureLibrary{width:100%}#measurementWorkbench input{max-width:100%;box-sizing:border-box}#measureYAML{min-height:240px}}
 
 /* A shared question → evidence → reuse flow across discovery and definitions. */
-.measurement-steps {list-style:none;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:20px 0 24px}
-.measurement-steps li {padding:14px;border:1px solid var(--border);border-radius:8px;background:var(--surface-raised)}
-.measurement-steps strong,.measurement-steps span {display:block}
-.measurement-steps strong {font-size:13px;color:var(--ink)}
-.measurement-steps span {font-size:12px;color:var(--muted);margin-top:5px}
 #metricDiscovery {padding:16px;border:1px solid var(--border);border-radius:8px;background:var(--surface-raised)}
 #metricDiscovery > summary {font-weight:600;color:var(--ink)}
 #metricInstruments {display:block;min-width:0}
@@ -974,7 +969,7 @@ td details {
 #measureRun,#metricDiscover {background:var(--accent-dark);border-color:#367b6e;color:#d8fff5;font-weight:600}
 #measureScope:empty {display:none}
 .inventory-table td:last-child button {margin:3px}
-@media(max-width:600px){.measurement-steps{grid-template-columns:1fr;gap:8px}.measurement-steps li{padding:10px 12px}#measurementDefinitionSearch{min-width:0;width:100%}}
+@media(max-width:600px){#measurementDefinitionSearch{min-width:0;width:100%}}
 
 .investigation-brief {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:18px 0}
 .investigation-brief textarea {width:100%;min-height:110px;resize:vertical}
@@ -1495,3 +1490,12 @@ td details {
 
 /* One Activity entry for fixed-window actions; the editor mounts explicitly. */
 .entry-investigate-options{font-size:12px}.entry-investigate-options[open]{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.entry-investigate-options>summary{cursor:pointer}.entry-investigate-options[open]>button{margin:4px 4px 0 0}
+
+/* Native workbench: scope editing, explicit run, then optional reuse. */
+#measurementWorkbench .measurement-window{display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;align-items:end}
+#measurementWorkbench .measurement-window label{min-width:0;flex:1 1 210px}
+#measurementWorkbench .measurement-window input{width:100%;min-width:0;box-sizing:border-box}
+#measureActions>.ui-actions{gap:8px;align-items:flex-start}
+#measureActions .ui-action-menu{max-width:100%}
+#measureActions .ui-actions-body{max-width:360px}
+#measureQuestionLink{width:100%;box-sizing:border-box}

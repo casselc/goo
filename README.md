@@ -445,3 +445,6 @@ Go library entry points: `subjectfacts` provides portable prepared-fact aggregat
 and offline ClickHouse/Databricks compilation; `measurements` binds/evaluates native
 OTel instruments. See the [portable compiler guide](docs/PORTABLE_COMPILER.md#go-library-boundary)
 and its executable external-consumer example.
+
+The [compact native workbench journey](journeys/229-native-actions-storyboard.md)
+shows fixed-scope preview, explicit Run, reuse actions and return from supporting records.
