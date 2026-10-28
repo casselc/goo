@@ -32,9 +32,12 @@ func registerMeasurements(mux *http.ServeMux, source measurements.Source, dir st
 		}
 		return true
 	}
-	item := func(d measurements.Definition) map[string]any {
-		text, _ := yaml.Marshal(d)
-		return map[string]any{"definition": d, "revision": measurements.Hash(d), "yaml": string(text)}
+	item := func(d measurements.Definition, revision string) (map[string]any, error) {
+		text, err := yaml.Marshal(d)
+		if err != nil {
+			return nil, err
+		}
+		return map[string]any{"definition": d, "revision": revision, "yaml": string(text)}, nil
 	}
 	mux.HandleFunc("GET /investigation-workflows", func(w http.ResponseWriter, r *http.Request) {
 		f, e := os.Open("config/workflows.json")
@@ -109,7 +112,11 @@ func registerMeasurements(mux *http.ServeMux, source measurements.Source, dir st
 					fail(w, e)
 					return
 				}
-				revision := measurements.Hash(d)
+				revision, e := d.Revision()
+				if e != nil {
+					fail(w, e)
+					return
+				}
 				all[revision] = d
 				if directory == "config/measurements" {
 					builtin[revision] = true
@@ -123,7 +130,11 @@ func registerMeasurements(mux *http.ServeMux, source measurements.Source, dir st
 		sort.Strings(ids)
 		out := []any{}
 		for _, id := range ids {
-			entry := item(all[id])
+			entry, e := item(all[id], id)
+			if e != nil {
+				fail(w, e)
+				return
+			}
 			entry["builtin"] = builtin[id]
 			out = append(out, entry)
 		}
@@ -156,7 +167,11 @@ func registerMeasurements(mux *http.ServeMux, source measurements.Source, dir st
 			fail(w, e)
 			return
 		}
-		out := item(d)
+		out, e := item(d, p.Revision)
+		if e != nil {
+			fail(w, e)
+			return
+		}
 		out["question"] = q
 		out["plan"] = p
 		send(w, 200, out)
@@ -173,8 +188,21 @@ func registerMeasurements(mux *http.ServeMux, source measurements.Source, dir st
 			fail(w, e)
 			return
 		}
-		b, _ := yaml.Marshal(d)
-		revision := measurements.Hash(d)
+		revision, e := d.Revision()
+		if e != nil {
+			fail(w, e)
+			return
+		}
+		entry, e := item(d, revision)
+		if e != nil {
+			fail(w, e)
+			return
+		}
+		b, e := yaml.Marshal(d)
+		if e != nil {
+			fail(w, e)
+			return
+		}
 		created, e := immutablefile.PublishFileOnly(packagesDir, revision+".yaml", ".package-", b)
 		if e != nil {
 			fail(w, e)
@@ -186,7 +214,7 @@ func registerMeasurements(mux *http.ServeMux, source measurements.Source, dir st
 				return
 			}
 		}
-		send(w, 201, item(d))
+		send(w, 201, entry)
 	})
 }
 
@@ -215,7 +243,11 @@ func verifyMeasurementPackageWinner(path, revision string) error {
 		return invalid()
 	}
 	d, e := measurements.Read(string(b))
-	if e != nil || measurements.Hash(d) != revision {
+	if e != nil {
+		return invalid()
+	}
+	actual, e := d.Revision()
+	if e != nil || actual != revision {
 		return invalid()
 	}
 	return nil

@@ -88,7 +88,11 @@ func (q CaptureQuestion) Scope() (QuestionScope, error) {
 		s.ToMS = v.ToMS
 		binding := detached(d.Source)
 		s.Binding = &binding
-		s.DefinitionRevision = measurements.Hash(d)
+		revision, err := d.Revision()
+		if err != nil {
+			return s, err
+		}
+		s.DefinitionRevision = revision
 		s.SchemaMetadata = "Exact declared scope schema URL (including empty); resource schema URL remains per-stream evidence"
 		if d.Kind == "lifecycle" {
 			s.Signal = "logs"

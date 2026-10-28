@@ -118,6 +118,9 @@ type Result struct {
 	Lifecycle     *lifecycle.Prepared          `json:"lifecycle,omitempty"`
 }
 
+// Hash is the legacy JSON digest used by question, candidate, source, seed and replay
+// identities. It does not validate its input. Use Definition.Revision for
+// authored definition references; other identity families remain separately audited.
 func Hash(v any) string {
 	b, _ := json.Marshal(v)
 	s := sha256.Sum256(b)

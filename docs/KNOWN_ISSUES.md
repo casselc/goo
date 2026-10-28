@@ -4,8 +4,9 @@ The bounded entry/scope/return review is accepted through 226/227. Native mobile
 secondary-action density and nested native/resource ancestry remain named UI
 follow-ups. The prepared-fact Go compiler is now `subjectfacts`; the former
 `measurement` import is removed. Native OTel binding stays `measurements`. Stored
-formats and compiler output are unchanged; unchecked revision/hash cleanup still
-requires a consumer audit.
+formats and compiler output are unchanged. Checked native definition revisions
+are delivered in 228; the [consumer audit](REVISION_API_AUDIT.md) separates remaining
+candidate, question, source and replay/custody hash contracts.
 
 
 The [native display graph](UI_COMPONENTS.md#native-module-entrypoints) now includes

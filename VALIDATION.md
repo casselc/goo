@@ -1,5 +1,21 @@
 # Validation record
 
+## Checked native definition revisions — 228 (2026-10-28 UTC)
+
+`measurements.Definition.Revision()` validates authored definitions and returns no
+identifier on error. Compile, replay, capture scope and package catalog/plan/save
+boundaries use it. Package YAML encoding failures are checked before publication.
+The consumer audit distinguishes remaining candidate seeds, question keys, source
+identities and replay/custody digests; the legacy generic hash is not removed.
+
+Validation: full root Go tests and vet pass; race checks pass for measurements,
+exploration and cmd/goo. Tests preserve every built-in definition's prior digest,
+the frozen native storage revision, selector/map representations and nonmutation;
+invalid definitions receive no revision. Existing HTTP storage and replay tests
+pass. Regenerated Go wire schemas are byte-identical. No payload, stored ID, UI or
+numeric semantics change; no store migration or live deployment was performed.
+
+
 ## Scope review gate and prepared-fact package boundary — 227 (2026-10-28 UTC)
 
 The bounded 220–226 entry/scope/return review is accepted in the whole-product

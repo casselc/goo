@@ -8,6 +8,15 @@ investigation notes. The UI exposes **Explore → Measurements**, Definitions an
 an Examples measurement library; there is no reservation-specific evaluator in
 this path.
 
+## Definition revisions
+
+Use `revision, err := definition.Revision()` when referencing an authored native
+measurement definition. It validates the definition and returns no identifier on
+failure. Valid definitions retain their existing JSON/SHA-256 identity; this call
+does not add defaults, normalize selectors, read telemetry or publish files.
+Evaluation callers do not need to calculate a revision themselves. See the
+[revision consumer audit](REVISION_API_AUDIT.md) for other identity families.
+
 ## Go evaluation and lifecycle observation
 
 Native numeric/state evaluation accepts only its question, supplied rows and fixed

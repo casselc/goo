@@ -38,7 +38,11 @@ func ValidateResult(r *Result) error {
 		return fmt.Errorf("missing measurement result")
 	}
 	e := r.Question.Validate()
-	if e != nil || r.Plan.Revision != Hash(r.Question.Definition) || r.Plan.SQL == "" || len(r.Plan.SQL) > 65536 || len(r.Plan.Parameters) > 128 || len(r.Rows) > RowLimit || r.Count != strconv.Itoa(len(r.Rows)) {
+	if e != nil {
+		return fmt.Errorf("invalid stored measurement scope/plan/count")
+	}
+	revision, e := r.Question.Definition.Revision()
+	if e != nil || r.Plan.Revision != revision || r.Plan.SQL == "" || len(r.Plan.SQL) > 65536 || len(r.Plan.Parameters) > 128 || len(r.Rows) > RowLimit || r.Count != strconv.Itoa(len(r.Rows)) {
 		return fmt.Errorf("invalid stored measurement scope/plan/count")
 	}
 	at, e := time.Parse(time.RFC3339Nano, r.ReadAt)

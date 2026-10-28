@@ -28,7 +28,11 @@ func Compile(q Question) (Plan, error) {
 		return Plan{}, e
 	}
 	d := q.Definition
-	p := Plan{Revision: Hash(d), Parameters: map[string]string{}}
+	revision, err := d.Revision()
+	if err != nil {
+		return Plan{}, err
+	}
+	p := Plan{Revision: revision, Parameters: map[string]string{}}
 	param := func(v, t string) string {
 		k := fmt.Sprintf("p%d", len(p.Parameters))
 		p.Parameters[k] = v
