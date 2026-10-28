@@ -1295,6 +1295,15 @@ td details {
 .stream-entry .compact-tail th[data-record-core=utc]{width:175px}
 .stream-entry .compact-tail th[data-record-core=service]{width:130px}
 .stream-entry .compact-tail td button{padding:2px 6px;font-size:11px;margin:3px 4px 0 0}
+.stream-entry .compact-tail td>.ui-actions{gap:4px;margin:3px 0 0}
+.stream-entry .compact-tail td>.ui-actions>button{margin:0}
+.stream-entry .compact-tail td[data-record-core=service] .ui-action-menu>summary{font-size:11px;padding:0;border:0;display:list-item;cursor:pointer}
+.stream-entry .compact-tail td[data-record-core=service] .ui-actions{margin:0;display:block}
+.stream-entry .compact-tail td[data-record-core=service] .ui-action-menu{margin-left:12px}
+.stream-entry .compact-tail td[data-record-core=service] .ui-actions-body{position:static;min-width:0}
+.stream-entry .attribute-actions>.ui-actions{gap:4px;align-items:center;margin:0}
+.stream-entry .attribute-actions .ui-action-menu>summary{font-size:11px;min-height:28px;display:flex;align-items:center;cursor:pointer}
+@media(pointer:coarse){.stream-entry .compact-tail td>.ui-actions>button,.stream-entry .compact-tail td[data-record-core=service] .ui-action-menu>summary{min-height:40px}}
 .stream-entry .tail-counts,.stream-entry goo-result-state{font-size:11px;margin:5px 0}
 .entry-advanced{margin:14px 0;border-top:1px solid var(--border);padding-top:10px}
 .entry-advanced>summary{font-size:12px;cursor:pointer;color:var(--muted)}
@@ -1485,3 +1494,4 @@ td details {
 .native-record-return>details{margin:6px 0 0;min-width:0}
 .native-record-return p{overflow-wrap:anywhere}
 .native-record-return pre{max-width:100%;overflow:auto}
+@media(min-width:701px){.stream-entry .compact-tail td[data-record-core=summary]>.ui-actions{display:inline-flex;margin:0 0 0 6px;vertical-align:baseline}}

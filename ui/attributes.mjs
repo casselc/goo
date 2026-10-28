@@ -87,7 +87,7 @@ const global=globalThis;
   if(!global.customElements.get('goo-field-value'))global.customElements.define('goo-field-value',GooFieldValue);
   if(!global.customElements.get('goo-attribute-list'))global.customElements.define('goo-attribute-list',GooAttributeList);
  }
- function mountModel(container,record,model,{onFilter,onBreakdown,onFacet,onPlot,onTraceSearch,canRefine=()=>true,canPlot=canRefine,canTraceSearch=canRefine,raw=true,facetHint,renderField}={}){
+ function mountModel(container,record,model,{onFilter,onBreakdown,onFacet,onPlot,onTraceSearch,canRefine=()=>true,canPlot=canRefine,canTraceSearch=canRefine,raw=true,compactActions=false,facetHint,renderField}={}){
   const total=model.reduce((n,g)=>n+g.entries.length,0),root=node('goo-attribute-list',undefined,'attribute-viewer');
   const tools=node('div',undefined,'attribute-tools'),label=node('label','Find an attribute'),search=node('input');search.type='search';search.placeholder='Search keys and values';search.setAttribute('aria-label','Search attribute keys and values');label.append(search);
   const scopeLabel=node('label','Scope'),scope=node('select');scope.setAttribute('aria-label','Attribute scope');
@@ -107,7 +107,7 @@ const global=globalThis;
      if(onPlot&&plottable(entry.field)){const plot=node('button','Plot values');plot.type='button';plot.disabled=!canPlot();plot.setAttribute('aria-label','Plot values of '+entry.field.kind+':'+entry.field.key);plot.title='Declare a numeric type and unit, then stage a full-population distribution. No source read until Run.';plot.onclick=()=>{if(canPlot())onPlot(structuredClone(entry.field),plot)};actions.append(plot)}
      if(entry.field&&typeof entry.value==='string'&&onFilter){const filter=node('button','Filter and run');filter.type='button';filter.disabled=!canRefine();filter.title=filter.disabled?'Choose All filters to narrow this question.':'Read a fresh result with this exact value in the fixed window';filter.setAttribute('aria-label','Filter and run by '+entry.field.kind+':'+entry.field.key);filter.onclick=()=>onFilter(entry.field,entry.value);actions.append(filter)}
      if(entry.field&&onBreakdown){const breakdown=node('button','Break down and run');breakdown.type='button';if(h)breakdown.title='Group by '+h.label+' · '+entry.field.kind+':'+entry.field.key;breakdown.setAttribute('aria-label','Break down and run by '+entry.field.kind+':'+entry.field.key);breakdown.onclick=()=>onBreakdown(entry.field);actions.append(breakdown)}
-     row.append(key,value,actions);section.append(row);
+     if(compactActions){const buttons=[...actions.children],primary=buttons.filter(b=>/^(Include |Exclude )/.test(b.getAttribute('aria-label')||''));actions.replaceChildren(UI.actions(primary,buttons.filter(b=>!primary.includes(b)),{label:'Field actions'}))}row.append(key,value,actions);section.append(row);
     }content.append(section);
    }count.textContent=`${found} of ${total} fields`;if(!found)content.append(node('p','No attributes match this search.','attribute-no-match'));
   }

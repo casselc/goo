@@ -1,5 +1,49 @@
 # Validation record
 
+## Compact Activity scoping and actions — 241 (2026-10-28 UTC)
+
+Service identities now disclose exact service/namespace filter shortcuts using
+existing qualified field semantics. Missing fields offer no shortcut; recorded
+strings remain literal. Revealing/staging pauses locally; Apply scope owns the
+replacement source read. Inspect is the first row action, distinct from exact
+selection and trace continuation. The existing shared action group keeps those
+controls inline on desktop and groups them on smaller viewports. Activity-only
+compact attribute actions retain Include/Exclude and disclose secondary tools.
+Escape closes that disclosure locally and restores its summary. Shared display
+components remain passive. Detached/hidden row callbacks cannot stage filters,
+select, inspect, pause or open a trace into a replacement scope. Draft edits always
+use Apply scope; no empty applied-status chip is appended for a staged saved view.
+
+Passed 606 frontend checks, focused component/entry checks, the real live-filter
+journey104 with Quint replay, saved-view journey146 and passive inspector84. The
+new real-OTLP journey241 checks keyboard record/attribute actions, scope request
+bodies/counts, literal qualified service/namespace predicates, stale log/span and
+hidden-document callbacks, local menu Escape and actual coarse-pointer taps at
+390px with a 40px service target. Its ledger uses the existing Quint Activity
+navigation checker (four rejecting controls; no resume mutation is claimed).
+Final inspection journey240 passes too (both final journeys: 2.1m). The updated
+20-second inspection Bombadil campaign passes with 250 trace records and seven
+deliberate start/inspect/
+return/filter actions with no second source request.
+
+Same-data presentation comparisons at 320/390/700/1440px assert no row-height or
+visible-count regression against 2776bea. Short/long rows are about 2.5px shorter on
+mobile viewports and 3px shorter on desktop; the held stream fits one extra row at
+390/700/1440px. These are pointer-view measurements, separate from coarse-pointer
+target checks. The baseline holds one real source window across all widths so a
+slow run cannot age the fixture out between baseline reloads. Early checks caught
+and corrected density and duplicate-Start regressions; an initial ledger checker
+selection incorrectly claimed a resume mutation absent from this journey and was
+replaced with the existing navigation checker. No test failure is counted as a pass.
+
+The final embedded Go image is deployed; its five changed served assets match
+checkout. UI docs, diagram, storyboard and actual frames are synchronized. No Go
+semantic code, API/storage format or immutable ID changes; no broad Go/native
+suite was needed. Cleanup removes only owned unused images and this cut's passing
+artifact bundles, keeping a small ledger useful for future model work. Data volumes
+are preserved. P2's bounded immutable capture metadata catalog is next.
+
+
 ## Explicit Activity inspection and return — 240 (2026-10-28 UTC)
 
 Activity's application-owned controller now links the row opener to a named detail

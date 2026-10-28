@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey241](../../journeys/241-activity-actions-storyboard.md) covers compact Activity
+service/namespace scoping and attribute actions, keyboard interaction, same-data
+geometry and explicit read ownership.
+
 This index preserves executable storyboards and their historical acceptance
 records. Current product entry is Explore's Activity stream, with explicit staged
 analysis and preservation; use the [roadmap](../ROADMAP_2026_10_28.md) for current

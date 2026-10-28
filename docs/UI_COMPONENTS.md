@@ -1326,3 +1326,11 @@ presenter's `restoreFocus` helper. It reveals a connected visible opener before
 focusing it, or uses the supplied fallback when that opener is withdrawn. Each
 owner still selects its own retained entity tab; source/query and publication
 ownership do not move into display elements.
+
+Activity's attribute adapter may opt into `compactActions: true` when mounting a
+supplied record: Include/Exclude remain primary, and other actions use existing
+`UI.actions` disclosure. Other owners retain their current layout by default.
+The shared disclosure consumes Escape, closes locally and restores summary focus;
+it does not close a containing inspector or read a source. Activity's service
+shortcuts and action validity checks belong to its row owner, not the display
+components.

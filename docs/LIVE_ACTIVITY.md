@@ -236,3 +236,26 @@ sequenceDiagram
 [Executable storyboard](../journeys/240-activity-inspect-storyboard.md) covers
 keyboard/pointer/mobile, withdrawn and stale controls, passive update focus, model
 replay and a bounded browser actor.
+
+## Common scoping beside the record — 241
+
+Activity service identities are **Filter service** disclosures, with literal service and reported
+namespace shortcuts. They stage the existing qualified field predicates and pause;
+**Apply scope** owns the replacement read. Missing identities never become empty
+values. Inspect, selection and trace continuation remain separate row actions.
+Activity detail attributes keep Include/Exclude visible and use the shared passive
+action disclosure for secondary tools. Escape closes that disclosure locally.
+
+```mermaid
+flowchart LR
+  Row[Held observation] --> Reveal[Filter service]
+  Reveal --> Draft[Stage exact qualified predicate]
+  Draft --> Apply[Apply scope]
+  Apply --> Read[One replacement Activity stream]
+  Row --> Inspect[Inspect details]
+  Inspect --> Attribute[Include / Exclude attribute]
+  Attribute --> Draft
+```
+
+[Storyboard241](../journeys/241-activity-actions-storyboard.md) covers source-free
+reveal/staging, keyboard actions, same-data geometry and stale row callbacks.

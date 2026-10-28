@@ -9,7 +9,8 @@ The Python proxy is removed in runtime consolidation 238; browser uploads now
 reach the same bounded Go path. The obsolete reservation query panel and API
 are retired; ordinary YAML examples and native/operation workflows remain.
 Activity signal-scope continuity is fixed in 239; explicit inspection reveal/focus
-and visible opener return follow in 240. The integrity findings remain open. Current order and
+and visible opener return follow in 240. Common Activity scoping and compact
+record/attribute actions follow in 241. The integrity findings remain open. Current order and
 acceptance live in the [roadmap](ROADMAP_2026_10_28.md) and
 [backlog](BACKLOG_2026_10_28.md); older statuses below retain their bounded history.
 
