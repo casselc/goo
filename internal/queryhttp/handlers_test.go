@@ -24,6 +24,21 @@ func (b *delayedJSON) Read(p []byte) (int, error) {
 
 type input struct{ Value int }
 
+func TestReadHandlerRejectsMixedPublicationPolicies(t *testing.T) {
+	for _, effect := range []Effect{ReadOrPromote, ReadOrFreeze} {
+		t.Run(string(effect), func(t *testing.T) {
+			defer func() {
+				if recover() == nil {
+					t.Fatal("generic read handler accepted a mixed publication lifetime")
+				}
+			}()
+			ReadHandler(Policy{Effect: effect, BodyLimit: 16384, Timeout: 55 * time.Second},
+				func(input) error { return nil },
+				func(context.Context, input) (input, error) { return input{}, nil })
+		})
+	}
+}
+
 func TestReadDeadlineStartsAfterDecodeAndValidation(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		var owned context.Context

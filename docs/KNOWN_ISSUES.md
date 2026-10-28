@@ -9,7 +9,8 @@ the Python proxy still buffers upstream JSON. Publications and SSE have separate
 lifetimes. Record and native measurement/discovery policy/handler extraction is
 implemented, including pure host/pod plans and explicit optional lifecycle custody.
 Result/explanation banks are now server-owned and explicitly shared by their
-routes. Explanation/capture policy adoption and shutdown/export work remain planned.
+routes. Explanation/capture handlers and policies are now extracted, preserving
+mixed publication lifetimes. Bounded executable shutdown/export work remains planned.
 Browser conformance is currently checked in Chromium; Firefox/Safari coverage
 is not established.
 

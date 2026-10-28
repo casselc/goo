@@ -29,8 +29,8 @@ capture/retention owners too; its lifetime is described below.
 
 `internal/queryhttp` owns shared admission, the cancellation registry, tombstones,
 60-second enclosing deadline and cleanup after the handler/body completes. The
-command composes record/native family policies; only population-explanation and
-capture routes remain in its explicit list. Publication, SSE and Python proxy
+command composes record, native, explanation and capture family lookups, without
+a duplicated controlled-path list. Publication, SSE and Python proxy
 policies retain their separate owners.
 No endpoint, wire response, source query, status policy or storage format changed.
 API source indexing now recognizes the family's explicit `registerRead` calls;
@@ -144,6 +144,54 @@ retention keeps its retry/recovery ordering, a replacement forgets live tokens,
 and shared saved captures still reopen without telemetry reads. The full command
 race suite also runs with independent registration fixtures. Live XTDB publication
 is separate from these configuration/error-path checks.
+
+## Explanation and capture family policies (2026-10-28)
+
+`internal/explanationhttp` owns the explanation read and its pure plan/filter
+routes. All retain 64 KiB strict JSON bodies; the read keeps its 55-second context
+after validation. It holds the observed result in the supplied server bank and
+preserves `X-Goo-Save-Status: unavailable` if holding fails. Pure plans retain their
+existing unbounded computation path and remain outside source admission.
+
+`internal/capturehttp` owns saved-capture GET routes, POST `/captures`, and POST
+`/captures/live`. The POST policies retain 16 KiB strict JSON bodies and explicit
+mixed effects:
+
+| Route | Source branch | Held branch |
+| --- | --- | --- |
+| `/captures` | Validate/refresh the fixed question, read and publish immutable evidence | Promote the exact observed explanation with the supplied result bank; no source reread |
+| `/captures/live` | Read a fresh record/native-counter comparison into an expiring registration-local draft | Freeze the displayed draft once; retries return its existing immutable receipt |
+
+Only source branches start the 55-second source context. Both branches retain the
+existing outer admission/cancellation ceiling, including held publication during
+source saturation. The classifier does not decode bodies or perform effects.
+Missing/expired tokens still refuse; they never cause an implicit fresh read.
+Status mapping, immutable publication, fixed-question refresh and acknowledgment
+retry semantics stay in these custom family handlers. `queryhttp.ReadHandler`
+rejects mixed publication policies rather than imposing generic source error or
+retry behavior on them. Captures' bodyless GET routes keep their existing exact
+query/ID/file validation and do not enter POST source admission.
+
+The command now composes all four adopted families' policy lookups. This covers
+the previously controlled routes; it does not silently extend the budget to legacy
+operation GETs, retention or SSE. Source indexing and OpenAPI point to extracted
+owners; request/response schemas and statuses are unchanged. Tests cover the four
+families' published byte/admission boundaries and pure/held/source separation.
+
+```mermaid
+flowchart LR
+    Cmd[cmd/goo: configured source, stores and server bank] --> Explain[explanationhttp]
+    Cmd --> Capture[capturehttp]
+    Families[Four family policy lookups] --> Budget[queryhttp admission and cancellation]
+    Budget --> Explain
+    Budget --> Capture
+    Explain -->|read and hold| Bank[This server's result bank]
+    Explain -->|pure plans| AST[Supplied questions and filters]
+    Capture -->|promote held explanation| Bank
+    Capture -->|fresh fixed-question read| Source[Configured source]
+    Capture -->|freeze displayed read| Drafts[Registration-local live drafts]
+    Capture --> Durable[Configured immutable capture store]
+```
 
 ## Endpoint effects
 
@@ -547,11 +595,12 @@ from these older readers. Any correctness change needs its own contract and cut.
 
 ### Remaining JSON owners
 
-Local request-body decoders remain in `measurements_http.go`,
-`telemetry_packages_http.go`, `exploration_http.go`, `tail_http.go`,
-`captures_http.go`, `live_comparison_http.go`, `investigations_http.go`,
+Record, native, explanation and capture owners now use shared typed JSON
+mechanics while retaining their family policies. Catalog/publication wrappers and
+remaining local decoders live in command files such as `measurements_http.go`,
+`telemetry_packages_http.go`, `tail_http.go`, `investigations_http.go`,
 `workbench_http.go` and `retention_http.go`. They mix pure planning, execution and
-publication. The helper can replace mechanics without moving effect ordering.
+publication. Further adoption must preserve effect ordering.
 Retain each route's body ceiling and exact trailing-input message (including
 retention's `expected one request`), malformed/unknown/null/second-value behavior,
 headers, method refusal, error mapping and availability-before-validation checks.

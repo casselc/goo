@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/internal/capturehttp"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -50,7 +51,7 @@ func TestPopulationExplanationHTTPObservedPromotionAndFilters(t *testing.T) {
 	source := exploration.Source{Endpoint: "http://explanation-source.invalid", Client: client}
 	mux := http.NewServeMux()
 	registerExploration(mux, source, resultSnapshots, nil)
-	registerCaptures(mux, source, t.TempDir(), resultSnapshots)
+	capturehttp.Register(mux, source, t.TempDir(), resultSnapshots)
 	q := exploration.Query{Signal: "spans", Environment: "test", FromMS: 1000, ToMS: 2000, Limit: 100, Where: &exploration.Predicate{Field: &exploration.Field{Kind: "column", Key: "service"}, Op: "eq", Value: "baseline"}}
 	selected := q
 	selected.Where = &exploration.Predicate{Field: &exploration.Field{Kind: "column", Key: "service"}, Op: "eq", Value: "selected"}

@@ -1,22 +1,25 @@
-package main
+// Package explanationhttp owns observed population explanations and pure side plans.
+package explanationhttp
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
+
 	"github.com/casselc/goo/exploration"
 	"github.com/casselc/goo/internal/httpjson"
-	"net/http"
-	"time"
 )
 
-func registerPopulationExplanations(mux *http.ServeMux, source exploration.Source, resultSnapshots *exploration.ResultSnapshots) {
+// Register shares the configured source and this server's result bank.
+func Register(mux *http.ServeMux, source exploration.Source, resultSnapshots *exploration.ResultSnapshots) {
 	fail := func(w http.ResponseWriter, code int, e error) {
 		httpjson.Write(w, code, map[string]string{"error": e.Error()})
 	}
 	mux.HandleFunc("POST /population/explain/plan", func(w http.ResponseWriter, r *http.Request) {
+		policy, _ := PolicyFor(r.Method, r.URL.Path)
 		var request exploration.ExplanationRequest
-		if e := httpjson.Decode(w, r, &request, 65536, "expected one JSON object"); e != nil {
+		if e := httpjson.Decode(w, r, &request, policy.BodyLimit, policy.TrailingMessage); e != nil {
 			fail(w, 400, e)
 			return
 		}
@@ -28,8 +31,9 @@ func registerPopulationExplanations(mux *http.ServeMux, source exploration.Sourc
 		httpjson.Write(w, 200, plan)
 	})
 	mux.HandleFunc("POST /population/explain", func(w http.ResponseWriter, r *http.Request) {
+		policy, _ := PolicyFor(r.Method, r.URL.Path)
 		var request exploration.ExplanationRequest
-		if e := httpjson.Decode(w, r, &request, 65536, "expected one JSON object"); e != nil {
+		if e := httpjson.Decode(w, r, &request, policy.BodyLimit, policy.TrailingMessage); e != nil {
 			fail(w, 400, e)
 			return
 		}
@@ -37,7 +41,7 @@ func registerPopulationExplanations(mux *http.ServeMux, source exploration.Sourc
 			fail(w, 400, e)
 			return
 		}
-		ctx, cancel := context.WithTimeout(r.Context(), 55*time.Second)
+		ctx, cancel := context.WithTimeout(r.Context(), policy.Timeout)
 		defer cancel()
 		result, e := source.Explain(ctx, request)
 		if e != nil {
@@ -52,6 +56,7 @@ func registerPopulationExplanations(mux *http.ServeMux, source exploration.Sourc
 		httpjson.Write(w, 200, result)
 	})
 	mux.HandleFunc("POST /population/explain/filter", func(w http.ResponseWriter, r *http.Request) {
+		policy, _ := PolicyFor(r.Method, r.URL.Path)
 		var in struct {
 			Request exploration.ExplanationRequest `json:"request"`
 			Field   exploration.Field              `json:"field"`
@@ -59,7 +64,7 @@ func registerPopulationExplanations(mux *http.ServeMux, source exploration.Sourc
 			Side    string                         `json:"side"`
 			Mode    string                         `json:"mode"`
 		}
-		if e := httpjson.Decode(w, r, &in, 65536, "expected one JSON object"); e != nil {
+		if e := httpjson.Decode(w, r, &in, policy.BodyLimit, policy.TrailingMessage); e != nil {
 			fail(w, 400, e)
 			return
 		}

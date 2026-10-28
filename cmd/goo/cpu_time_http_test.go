@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/internal/capturehttp"
 	"github.com/casselc/goo/measurements"
 	"github.com/casselc/goo/metrics"
 	"io"
@@ -84,7 +85,7 @@ func testHostIntervalCounterHTTP(t *testing.T, metric string) {
 	makeMux := func() *http.ServeMux {
 		mux := http.NewServeMux()
 		registerMeasurements(mux, measurements.Source{Endpoint: "http://source", Client: client}, dir)
-		registerCaptures(mux, exploration.Source{Endpoint: "http://source", Client: client}, dir, resultSnapshots)
+		capturehttp.Register(mux, exploration.Source{Endpoint: "http://source", Client: client}, dir, resultSnapshots)
 		return mux
 	}
 	mux := makeMux()

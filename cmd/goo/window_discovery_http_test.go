@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/internal/capturehttp"
 	"github.com/casselc/goo/measurements"
 	"net/http"
 	"net/http/httptest"
@@ -29,7 +30,7 @@ func TestWindowDiscoverySourceFreeAndStrictHTTP(t *testing.T) {
 	}))
 	defer source.Close()
 	mux := http.NewServeMux()
-	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, t.TempDir(), resultSnapshots)
+	capturehttp.Register(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, t.TempDir(), resultSnapshots)
 	payload, _ := json.Marshal(map[string]any{"title": "SDK support", "question": exploration.CaptureQuestion{Kind: "measurement", Measurement: &measurements.Question{Definition: d, FromMS: 100000, ToMS: 103000}}})
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, httptest.NewRequest("POST", "/captures", bytes.NewReader(payload)))

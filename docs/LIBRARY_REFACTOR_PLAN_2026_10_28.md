@@ -61,9 +61,11 @@ in `queryhttp`, including their distinct deadline ordering and optional lifecycl
 custody effect. Server startup now owns the result/explanation bank explicitly;
 tail membership and comparison drafts also remain within their server registrations.
 Cross-server/replacement tests distinguish live capabilities from durable captures
-and retention recovery. Explanation/capture policy adoption and executable
-shutdown/export flushing remain planned; the broader request/server cut below is
-not complete.
+and retention recovery. Explanation/capture handlers and POST policies are now
+extracted into their own internal packages, with explicit mixed publication
+lifetimes and source-only-handler guards. Command admission composes family
+lookups. Broader legacy-route admission and executable shutdown/export flushing
+remain planned; the overall request/server cut is not complete.
 
 ## Preferred cuts
 

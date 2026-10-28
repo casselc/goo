@@ -3,29 +3,23 @@ package main
 import (
 	"net/http"
 
+	"github.com/casselc/goo/internal/capturehttp"
+	"github.com/casselc/goo/internal/explanationhttp"
 	"github.com/casselc/goo/internal/nativehttp"
 	"github.com/casselc/goo/internal/queryhttp"
 	"github.com/casselc/goo/internal/recordhttp"
 )
 
-// Record and native families own their policies. Application composition still
-// classifies the remaining explanation/publication routes.
+// Composition names policy owners; each family declares its own effects, limits
+// and deadlines. The classifier never consumes a body or performs source work.
 func newQueryBudget(next http.Handler, limit int) http.Handler {
+	policies := [...]func(string, string) (queryhttp.Policy, bool){recordhttp.PolicyFor, nativehttp.PolicyFor, explanationhttp.PolicyFor, capturehttp.PolicyFor}
 	return queryhttp.NewBudget(next, limit, func(r *http.Request) bool {
-		if policy, ok := recordhttp.PolicyFor(r.Method, r.URL.Path); ok {
-			return policy.Effect != queryhttp.Pure
+		for _, lookup := range policies {
+			if policy, ok := lookup(r.Method, r.URL.Path); ok {
+				return policy.Effect != queryhttp.Pure
+			}
 		}
-		if policy, ok := nativehttp.PolicyFor(r.Method, r.URL.Path); ok {
-			return policy.Effect != queryhttp.Pure
-		}
-		if r.Method != "POST" {
-			return false
-		}
-		switch r.URL.Path {
-		case "/population/explain", "/captures", "/captures/live":
-			return true
-		default:
-			return false
-		}
+		return false
 	})
 }

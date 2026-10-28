@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/internal/explanationhttp"
 	"github.com/casselc/goo/internal/nativehttp"
 	"github.com/casselc/goo/internal/recordhttp"
 )
@@ -14,6 +15,6 @@ func registerExploration(mux *http.ServeMux, source exploration.Source, resultSn
 	registerRecipes(mux)
 	registerPoolSignals(mux)
 	registerPoolView(mux)
-	registerPopulationExplanations(mux, source, resultSnapshots)
+	explanationhttp.Register(mux, source, resultSnapshots)
 	registerTail(mux, source, tailMembership)
 }

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/casselc/goo/annotations"
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/internal/capturehttp"
 	"github.com/casselc/goo/prebuilt"
 	"net/http"
 	"os"
@@ -110,7 +111,7 @@ func configuredHTTPServer(args []string) (*http.Server, error) {
 	resultSnapshots := &exploration.ResultSnapshots{}
 	tailMembership := exploration.NewTailMembershipSnapshots(time.Now)
 	registerExploration(mux, recordSource, resultSnapshots, tailMembership)
-	registerCaptures(mux, recordSource, *captureDir, resultSnapshots)
+	capturehttp.Register(mux, recordSource, *captureDir, resultSnapshots)
 	registerWorkbench(mux, *captureDir, retentionConnectionFromEnvironment(), resultSnapshots, tailMembership)
 	registerTelemetryPackages(mux, filepath.Join(*captureDir, "telemetry-packages"))
 	server := &http.Server{Addr: *listen, Handler: newQueryBudget(mux, 4), ReadHeaderTimeout: 5 * time.Second, WriteTimeout: 90 * time.Second}

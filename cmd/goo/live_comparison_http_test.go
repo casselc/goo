@@ -14,6 +14,7 @@ import (
 	"testing"
 
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/internal/capturehttp"
 )
 
 func TestLiveComparisonHTTPExactFreezeAndBoundedCapabilities(t *testing.T) {
@@ -30,7 +31,7 @@ func TestLiveComparisonHTTPExactFreezeAndBoundedCapabilities(t *testing.T) {
 	}))
 	defer source.Close()
 	mux := http.NewServeMux()
-	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, t.TempDir(), resultSnapshots)
+	capturehttp.Register(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, t.TempDir(), resultSnapshots)
 	call := func(path string, body any) *httptest.ResponseRecorder {
 		b, _ := json.Marshal(body)
 		w := httptest.NewRecorder()
@@ -123,7 +124,7 @@ func TestLiveComparisonRetainedSeriesFreezeWithoutReread(t *testing.T) {
 	}))
 	defer source.Close()
 	mux := http.NewServeMux()
-	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, t.TempDir(), resultSnapshots)
+	capturehttp.Register(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, t.TempDir(), resultSnapshots)
 	call := func(body any) *httptest.ResponseRecorder {
 		b, _ := json.Marshal(body)
 		w := httptest.NewRecorder()

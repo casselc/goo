@@ -16,10 +16,14 @@ const (
 	Read                    Effect = "source-read"
 	ReadAndSnapshot         Effect = "source-read-and-snapshot"
 	ReadWithOptionalCustody Effect = "source-read-with-optional-custody"
+	ReadOrPromote           Effect = "source-read-and-publication-or-held-promotion"
+	ReadOrFreeze            Effect = "source-read-and-draft-or-held-freeze"
 )
 
 // Policy is returned by family-owned method/path declarations. Source timeouts
 // begin after validation; pure planner timeouts include decoding and computation.
+// Mixed publication policies apply Timeout only to their source branches and
+// retain family-owned publication lifetimes and error handling.
 type Policy struct {
 	Effect          Effect
 	BodyLimit       int64
@@ -30,7 +34,12 @@ type Policy struct {
 // ReadHandler shares typed wire mechanics, leaving validation and effects in the
 // supplied family functions. Type parameters are inferred at registration sites.
 func ReadHandler[Q, R any](policy Policy, validate func(Q) error, read func(context.Context, Q) (R, error)) http.HandlerFunc {
-	if policy.Effect == Pure || policy.Timeout <= 0 {
+	switch policy.Effect {
+	case Read, ReadAndSnapshot, ReadWithOptionalCustody:
+	default:
+		panic("queryhttp: source-read policy required; mixed publication routes own their handlers")
+	}
+	if policy.Timeout <= 0 {
 		panic("queryhttp: source-read policy required")
 	}
 	return func(w http.ResponseWriter, r *http.Request) {

@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/internal/capturehttp"
 	"github.com/casselc/goo/retention"
 	"github.com/casselc/goo/workbench"
 )
@@ -51,7 +52,7 @@ func TestAPISavedEvidenceObservedContracts(t *testing.T) {
 		return &http.Response{StatusCode: 200, Body: io.NopCloser(strings.NewReader(payload)), Header: make(http.Header)}, nil
 	})}
 	mux := http.NewServeMux()
-	registerCaptures(mux, exploration.Source{Endpoint: "http://source", Client: client}, root, resultSnapshots)
+	capturehttp.Register(mux, exploration.Source{Endpoint: "http://source", Client: client}, root, resultSnapshots)
 	registerWorkbench(mux, root, retentionConnection{}, resultSnapshots, nil)
 	var observed []apiObservation
 	call := func(method, path, pattern string, input any, want int) json.RawMessage {
@@ -107,7 +108,7 @@ func TestAPISavedEvidenceObservedContracts(t *testing.T) {
 	// Optional real native XTDB: selected records, exact reviews and read basis.
 	if address := os.Getenv("GOO_XTDB_TEST_URL"); address != "" {
 		mux = http.NewServeMux()
-		registerCaptures(mux, exploration.Source{Endpoint: "http://source", Client: client}, root, resultSnapshots)
+		capturehttp.Register(mux, exploration.Source{Endpoint: "http://source", Client: client}, root, resultSnapshots)
 		registerWorkbench(mux, root, retentionConnection{URL: address}, resultSnapshots, nil)
 		key := fmt.Sprintf("%064x", time.Now().UnixNano())
 		raw = call("POST", "/retained-evidence", "/retained-evidence", map[string]any{"requestID": key, "captureID": frozen.Receipt.ID, "indexes": []int{0}, "tags": []string{"api:contract"}, "note": "Observed API contract"}, 201)

@@ -9,7 +9,13 @@ import re
 def route_sources(root):
     sources = {}
     files = sorted((root / 'cmd/goo').glob('*http.go'))
-    files.extend(root / path for path in ('internal/recordhttp/routes.go', 'internal/nativehttp/routes.go'))
+    files.extend(root / path for path in (
+        'internal/recordhttp/routes.go',
+        'internal/nativehttp/routes.go',
+        'internal/explanationhttp/routes.go',
+        'internal/capturehttp/routes.go',
+        'internal/capturehttp/live.go',
+    ))
     pattern = re.compile(r'HandleFunc\("(GET|POST) ([^" ]+)"|register(?:Read|Plan)\(mux,\s*"([^"]+)"')
     for file in files:
         text = file.read_text()

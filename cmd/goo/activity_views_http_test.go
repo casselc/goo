@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/internal/capturehttp"
 	"github.com/casselc/goo/workbench"
 	"io"
 	"net/http"
@@ -89,7 +90,7 @@ func TestActivityBaselineHTTPStoredReferenceOnly(t *testing.T) {
 	defer source.Close()
 	root := t.TempDir()
 	mux := http.NewServeMux()
-	registerCaptures(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, root, resultSnapshots)
+	capturehttp.Register(mux, exploration.Source{Endpoint: source.URL, Client: source.Client()}, root, resultSnapshots)
 	registerActivityViews(mux, root)
 	call := func(method, path, body string) *httptest.ResponseRecorder {
 		w := httptest.NewRecorder()

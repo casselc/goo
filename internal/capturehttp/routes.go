@@ -1,20 +1,22 @@
-package main
+// Package capturehttp owns saved captures, observed promotion and live-comparison drafts.
+package capturehttp
 
 import (
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/casselc/goo/exploration"
-	"io"
 	"net/http"
 	"path/filepath"
 	"reflect"
 	"strconv"
-	"time"
+
+	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/internal/httpjson"
 )
 
-func registerCaptures(mux *http.ServeMux, source exploration.Source, dir string, resultSnapshots *exploration.ResultSnapshots) {
+// Register binds durable storage, a source and the owning server's result bank.
+func Register(mux *http.ServeMux, source exploration.Source, dir string, resultSnapshots *exploration.ResultSnapshots) {
 	store := exploration.CaptureStore{Dir: filepath.Join(dir, "exploration")}
 	registerLiveComparison(mux, source, store)
 	reply := func(w http.ResponseWriter, code int, value any) {
@@ -174,14 +176,9 @@ func registerCaptures(mux *http.ServeMux, source exploration.Source, dir string,
 			Question    exploration.CaptureQuestion `json:"question"`
 			Parent      string                      `json:"parent"`
 		}
-		d := json.NewDecoder(http.MaxBytesReader(w, r.Body, 16384))
-		d.DisallowUnknownFields()
-		if e := d.Decode(&in); e != nil {
+		policy, _ := PolicyFor(r.Method, r.URL.Path)
+		if e := httpjson.Decode(w, r, &in, policy.BodyLimit, policy.TrailingMessage); e != nil {
 			fail(w, 400, e)
-			return
-		}
-		if d.Decode(new(any)) != io.EOF {
-			fail(w, 400, fmt.Errorf("expected one JSON object"))
 			return
 		}
 		if in.ResultToken != "" {
@@ -267,7 +264,7 @@ func registerCaptures(mux *http.ServeMux, source exploration.Source, dir string,
 			fail(w, 400, fmt.Errorf("save an observed explanation with its result token; run again explicitly to refresh"))
 			return
 		}
-		ctx, cancel := context.WithTimeout(r.Context(), 55*time.Second)
+		ctx, cancel := context.WithTimeout(r.Context(), policy.Timeout)
 		defer cancel()
 		c, e := store.Create(ctx, source, in.Title, in.Question, in.Parent)
 		if e != nil {

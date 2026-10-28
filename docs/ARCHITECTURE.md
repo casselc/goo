@@ -71,6 +71,14 @@ a package global. Comparison drafts remain registration-local. New server instan
 forget live capabilities while durable captures and request recovery retain their
 configured storage semantics. See the [ownership diagram](HTTP_BOUNDARIES.md#server-owned-snapshot-capabilities-2026-10-28).
 
+Explanation plans/reads and general capture/promotion/live drafts now live in
+`internal/explanationhttp` and `internal/capturehttp`. Each family declares the
+POST effect/byte/deadline policy used by its handlers and command admission.
+Mixed capture handlers preserve source-versus-held branches, status mapping and
+publication retries; they cannot use the generic source-only `ReadHandler`.
+The command composes four family lookups instead of a separate path list. See
+[the publication flow](HTTP_BOUNDARIES.md#explanation-and-capture-family-policies-2026-10-28).
+
 [Immutable publication](IMMUTABLE_PUBLICATION.md) shares write/sync/link mechanics
 across reusable telemetry packages, workbench artifacts, capture stores, lifecycle
 custody and native YAML. The latter two retain explicit file-only sync.
@@ -89,11 +97,11 @@ The documented inventory keeps digest/custody/native YAML differences explicit.
 
 
 [Population explanations](POPULATION_EXPLANATIONS.md) extend the same contextual
-comparison/range workflow. `ui/explanation.js` owns explicit execution, staged
+comparison/range workflow. `ui/explanation.mjs` owns explicit execution, staged
 original-side filters and source-free request reuse; supplied result rendering
 does not infer causes or execute queries. `exploration/explanation.go` projects
 count-only questions, validates complete groups, preserves per-read bases and
-ranks exact descriptive share changes. `cmd/goo/population_explanation_http.go`
+ranks exact descriptive share changes. `internal/explanationhttp/routes.go`
 keeps pure plans/filter plans separate from the controlled aggregate read.
 Observed promotion uses the configured server's bounded `ResultSnapshots` pool and immutable
 capture publication: the server-held result is saved without a second source
@@ -146,7 +154,7 @@ from remaining work; [validation](../VALIDATION.md) records actual checks.
 | Ordinary draft recovery | ui/investigation-draft.js, ui/documents.js | Bounded same-tab authored checkpoints and explicit source-free Restore/Discard, separate from immutable publication and native retry journals |
 | Telemetry package authoring | exploration/package*.go, cmd/goo/telemetry_packages_http.go, ui/telemetry-packages.js | Manifest-free reusable selectors/counts, strict YAML, immutable definition revisions, preview plans and optional annotation handoff |
 | Observed service inventory | exploration/inventory.go, ui/inventory.js | Single-read captured service/span-name counts, Error statuses and duration buckets; fixed-window Explore/package navigation; no membership inference |
-| General capture custody | exploration/capture_store.go, cmd/goo/captures_http.go, ui/captures.js | Immutable manifest-free evidence, bounded stored row bank, receipt-bound paging, local catalog and fixed-question/plan successor refresh |
+| General capture custody | exploration/capture_store.go, internal/capturehttp/routes.go, ui/captures.mjs | Immutable manifest-free evidence, bounded stored row bank, receipt-bound paging, local catalog and fixed-question/plan successor refresh |
 | General exploration | exploration/, ui/exploration.js, ui/distributions.js | Arbitrary retained OTel attributes, population counts, distributions, fixed-window cohort comparison and cross-service trace/log context |
 | Prototype package data | definitions/reservations.json | Demo deadline, target, permitted views, grouping choices |
 | Annotation build/runtime | annotations/, instrumentation/, scripts/build_*_app.sh | Validate selected source contracts, weave opt-in Go builds, emit standard OTel spans/events/metrics |

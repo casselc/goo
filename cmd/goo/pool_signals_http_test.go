@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/internal/capturehttp"
 	"github.com/casselc/goo/measurements"
 	"github.com/casselc/goo/metrics"
 	"io"
@@ -239,7 +240,7 @@ func TestPoolSignalsHTTPExecuteCaptureOfflineReopen(t *testing.T) {
 		m := http.NewServeMux()
 		registerPoolSignals(m)
 		registerMeasurements(m, measurements.Source{Endpoint: "http://source", Client: client}, dir)
-		registerCaptures(m, exploration.Source{Endpoint: "http://source", Client: client}, dir, resultSnapshots)
+		capturehttp.Register(m, exploration.Source{Endpoint: "http://source", Client: client}, dir, resultSnapshots)
 		return m
 	}
 	mux := makeMux()

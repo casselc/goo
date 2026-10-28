@@ -5,6 +5,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/casselc/goo/internal/capturehttp"
+	"github.com/casselc/goo/internal/explanationhttp"
 	"github.com/casselc/goo/internal/nativehttp"
 	"github.com/casselc/goo/internal/queryhttp"
 	"github.com/casselc/goo/internal/recordhttp"
@@ -26,11 +28,20 @@ func TestFamilyPoliciesMatchPublishedAPIBoundaries(t *testing.T) {
 	if err := json.Unmarshal(data, &spec); err != nil {
 		t.Fatal(err)
 	}
-	for name, lookup := range map[string]func(string, string) (queryhttp.Policy, bool){"record": recordhttp.PolicyFor, "native": nativehttp.PolicyFor} {
+	families := map[string]struct {
+		lookup func(string, string) (queryhttp.Policy, bool)
+		count  int
+	}{
+		"record":      {recordhttp.PolicyFor, 7},
+		"native":      {nativehttp.PolicyFor, 7},
+		"explanation": {explanationhttp.PolicyFor, 3},
+		"capture":     {capturehttp.PolicyFor, 2},
+	}
+	for name, family := range families {
 		t.Run(name, func(t *testing.T) {
 			covered := 0
 			for path, operation := range spec.Paths {
-				policy, ok := lookup("POST", path)
+				policy, ok := family.lookup("POST", path)
 				if !ok {
 					continue
 				}
@@ -46,8 +57,8 @@ func TestFamilyPoliciesMatchPublishedAPIBoundaries(t *testing.T) {
 					t.Errorf("%s capability differs from effect policy", path)
 				}
 			}
-			if covered != 7 {
-				t.Fatalf("expected seven adopted family routes, covered %d", covered)
+			if covered != family.count {
+				t.Fatalf("expected %d adopted family routes, covered %d", family.count, covered)
 			}
 		})
 	}

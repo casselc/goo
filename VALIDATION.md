@@ -1,5 +1,32 @@
 # Validation record
 
+## Explanation and capture policy extraction (2026-10-28 UTC)
+
+`internal/explanationhttp` owns observed explanations and pure plan/filter routes;
+`internal/capturehttp` owns saved captures, promotion and live-comparison drafts.
+Their POST policies supply exact JSON limits, trailing errors and source timeouts
+to the custom family handlers and admission. Mixed read/promotion and read/freeze
+effects are explicit. Only source branches start their 55-second contexts; held
+publication keeps existing admission and retry semantics without a reread. The
+source-only generic handler rejects mixed publication effects. Command admission
+now composes four family lookups, with no duplicated controlled-path list.
+
+Validation: full root Go tests, focused vet and command/family race checks pass.
+Existing strict JSON, source/deadline, capture refresh, publication retry and
+server-isolation tests pass through the extracted owners. New checks cover held
+publication admission, pure plans during saturation, saved GET separation and
+rejection of generic read wrappers for mixed lifetimes. All four families' byte/
+admission declarations match OpenAPI. Route/schema/fixture validation passes;
+regeneration changes only owner metadata for 11 operations, with no wire difference.
+
+The rebuilt local server passes the exact live-comparison freeze/retry and observed
+population-explanation promotion journeys, including Quint trace/negative checks
+and both Bombadil campaigns. Architecture flow, boundary inventory, known limits
+and refactor status are updated. No intended UI layout, source computation or
+storage-format change. Disposable run outputs and incidental screenshot changes
+are excluded; durable saved app volumes remain intact. Broader legacy-route
+admission and bounded executable shutdown/export flushing remain planned.
+
 ## Server-owned snapshot banks (2026-10-28 UTC)
 
 `configuredHTTPServer` now creates one result/explanation bank per server and

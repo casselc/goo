@@ -425,8 +425,8 @@
         "tags": [
           "captures"
         ],
-        "description": "Current owner: cmd/goo/captures_http.go. Effect: source-read-and-capture-or-held-explanation-publication. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/captures_http.go",
+        "description": "Current owner: internal/capturehttp/routes.go. Effect: source-read-and-capture-or-held-explanation-publication. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/capturehttp/routes.go",
         "x-effects": "source-read-and-capture-or-held-explanation-publication",
         "parameters": [
           {
@@ -488,8 +488,8 @@
         "tags": [
           "captures"
         ],
-        "description": "Current owner: cmd/goo/captures_http.go. Effect: source-read-and-capture-or-held-explanation-publication. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/captures_http.go",
+        "description": "Current owner: internal/capturehttp/routes.go. Effect: source-read-and-capture-or-held-explanation-publication. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/capturehttp/routes.go",
         "x-effects": "source-read-and-capture-or-held-explanation-publication",
         "parameters": [
           {
@@ -662,8 +662,8 @@
         "tags": [
           "captures"
         ],
-        "description": "Current owner: cmd/goo/captures_http.go. Effect: saved-evidence-or-definition-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/captures_http.go",
+        "description": "Current owner: internal/capturehttp/routes.go. Effect: saved-evidence-or-definition-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/capturehttp/routes.go",
         "x-effects": "saved-evidence-or-definition-read",
         "parameters": [
           {
@@ -736,8 +736,8 @@
         "tags": [
           "captures"
         ],
-        "description": "Current owner: cmd/goo/captures_http.go. Effect: saved-evidence-or-definition-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/captures_http.go",
+        "description": "Current owner: internal/capturehttp/routes.go. Effect: saved-evidence-or-definition-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/capturehttp/routes.go",
         "x-effects": "saved-evidence-or-definition-read",
         "parameters": [
           {
@@ -818,8 +818,8 @@
         "tags": [
           "captures"
         ],
-        "description": "Current owner: cmd/goo/captures_http.go. Effect: saved-evidence-or-definition-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/captures_http.go",
+        "description": "Current owner: internal/capturehttp/routes.go. Effect: saved-evidence-or-definition-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/capturehttp/routes.go",
         "x-effects": "saved-evidence-or-definition-read",
         "parameters": [
           {
@@ -892,8 +892,8 @@
         "tags": [
           "captures"
         ],
-        "description": "Current owner: cmd/goo/captures_http.go. Effect: saved-evidence-or-definition-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/captures_http.go",
+        "description": "Current owner: internal/capturehttp/routes.go. Effect: saved-evidence-or-definition-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/capturehttp/routes.go",
         "x-effects": "saved-evidence-or-definition-read",
         "parameters": [
           {
@@ -958,8 +958,8 @@
         "tags": [
           "captures"
         ],
-        "description": "Current owner: cmd/goo/captures_http.go. Effect: saved-evidence-or-definition-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/captures_http.go",
+        "description": "Current owner: internal/capturehttp/routes.go. Effect: saved-evidence-or-definition-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/capturehttp/routes.go",
         "x-effects": "saved-evidence-or-definition-read",
         "parameters": [
           {
@@ -3236,8 +3236,8 @@
         "tags": [
           "captures"
         ],
-        "description": "Current owner: cmd/goo/live_comparison_http.go. Effect: source-read-or-held-draft-publication. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/live_comparison_http.go",
+        "description": "Current owner: internal/capturehttp/live.go. Effect: source-read-or-held-draft-publication. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/capturehttp/live.go",
         "x-effects": "source-read-or-held-draft-publication",
         "parameters": [
           {
@@ -4940,8 +4940,8 @@
         "tags": [
           "population"
         ],
-        "description": "Current owner: cmd/goo/population_explanation_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/population_explanation_http.go",
+        "description": "Current owner: internal/explanationhttp/routes.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/explanationhttp/routes.go",
         "x-effects": "source-read",
         "parameters": [
           {
@@ -5028,8 +5028,8 @@
         "tags": [
           "population"
         ],
-        "description": "Current owner: cmd/goo/population_explanation_http.go. Effect: pure-plan-or-supplied-summary. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/population_explanation_http.go",
+        "description": "Current owner: internal/explanationhttp/routes.go. Effect: pure-plan-or-supplied-summary. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/explanationhttp/routes.go",
         "x-effects": "pure-plan-or-supplied-summary",
         "parameters": [],
         "responses": {
@@ -5086,8 +5086,8 @@
         "tags": [
           "population"
         ],
-        "description": "Current owner: cmd/goo/population_explanation_http.go. Effect: pure-plan-or-supplied-summary. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/population_explanation_http.go",
+        "description": "Current owner: internal/explanationhttp/routes.go. Effect: pure-plan-or-supplied-summary. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/explanationhttp/routes.go",
         "x-effects": "pure-plan-or-supplied-summary",
         "parameters": [],
         "responses": {

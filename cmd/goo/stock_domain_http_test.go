@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/internal/capturehttp"
 	"github.com/casselc/goo/measurements"
 	"gopkg.in/yaml.v3"
 	"io"
@@ -51,7 +52,7 @@ func TestStockDomainHTTPExecuteCaptureAndOfflineReopen(t *testing.T) {
 	makeMux := func() *http.ServeMux {
 		mux := http.NewServeMux()
 		registerMeasurements(mux, measurements.Source{Endpoint: "http://source", Client: client}, dir)
-		registerCaptures(mux, exploration.Source{Endpoint: "http://source", Client: client}, dir, resultSnapshots)
+		capturehttp.Register(mux, exploration.Source{Endpoint: "http://source", Client: client}, dir, resultSnapshots)
 		return mux
 	}
 	mux := makeMux()

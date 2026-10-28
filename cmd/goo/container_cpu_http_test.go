@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/internal/capturehttp"
 	"github.com/casselc/goo/measurements"
 	"github.com/casselc/goo/metrics"
 )
@@ -159,7 +160,7 @@ func TestContainerCPUPureHTTPAndOfflineNativeCapture(t *testing.T) {
 	q := held.Usage.Question
 	request, _ := json.Marshal(map[string]any{"title": "Container CPU usage", "question": exploration.CaptureQuestion{Kind: "measurement", Measurement: &q}})
 	captures := http.NewServeMux()
-	registerCaptures(captures, exploration.Source{Endpoint: source.Endpoint, Client: source.Client}, dir, resultSnapshots)
+	capturehttp.Register(captures, exploration.Source{Endpoint: source.Endpoint, Client: source.Client}, dir, resultSnapshots)
 	w = httptest.NewRecorder()
 	captures.ServeHTTP(w, httptest.NewRequest("POST", "/captures", strings.NewReader(string(request))))
 	if w.Code != 201 || calls != 1 {
@@ -171,7 +172,7 @@ func TestContainerCPUPureHTTPAndOfflineNativeCapture(t *testing.T) {
 	}
 	original, _ := json.Marshal(page.Measurement)
 	offline := http.NewServeMux()
-	registerCaptures(offline, exploration.Source{Endpoint: "http://offline", Client: &http.Client{Transport: nativeDependencyTransport(func(r *http.Request) (*http.Response, error) {
+	capturehttp.Register(offline, exploration.Source{Endpoint: "http://offline", Client: &http.Client{Transport: nativeDependencyTransport(func(r *http.Request) (*http.Response, error) {
 		t.Fatal("offline reopen contacted source")
 		return nil, nil
 	})}}, dir, resultSnapshots)

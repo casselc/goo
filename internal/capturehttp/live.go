@@ -1,4 +1,4 @@
-package main
+package capturehttp
 
 import (
 	"context"
@@ -6,12 +6,12 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"sync"
 	"time"
 
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/internal/httpjson"
 )
 
 // Bounded, expiring, process-local snapshot capabilities. Restart loses drafts,
@@ -38,13 +38,12 @@ func registerLiveComparison(mux *http.ServeMux, source exploration.Source, store
 			Freeze   string `json:"freeze"`
 			Replace  string `json:"replace"`
 		}
-		decoder := json.NewDecoder(http.MaxBytesReader(w, r.Body, 16384))
-		decoder.DisallowUnknownFields()
-		if e := decoder.Decode(&in); e != nil {
+		policy, _ := PolicyFor(r.Method, r.URL.Path)
+		if e := httpjson.Decode(w, r, &in, policy.BodyLimit, policy.TrailingMessage); e != nil {
 			fail(w, 400, e)
 			return
 		}
-		if decoder.Decode(new(any)) != io.EOF || (in.Baseline == "") == (in.Freeze == "") {
+		if (in.Baseline == "") == (in.Freeze == "") {
 			fail(w, 400, fmt.Errorf("provide exactly one baseline or freeze capability"))
 			return
 		}
@@ -77,7 +76,7 @@ func registerLiveComparison(mux *http.ServeMux, source exploration.Source, store
 			fail(w, 404, e)
 			return
 		}
-		ctx, cancel := context.WithTimeout(r.Context(), 55*time.Second)
+		ctx, cancel := context.WithTimeout(r.Context(), policy.Timeout)
 		defer cancel()
 		var snapshot *exploration.SavedCapture
 		var comparison *exploration.EvidenceComparison

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/internal/capturehttp"
 	"github.com/casselc/goo/internal/nativehttp"
 	"github.com/casselc/goo/measurements"
 	"io"
@@ -247,7 +248,7 @@ func TestPodMetricHTTPNativeExecuteCaptureOfflineReopen(t *testing.T) {
 	makeMux := func() *http.ServeMux {
 		m := http.NewServeMux()
 		registerMeasurements(m, measurements.Source{Endpoint: "http://source", Client: client}, dir)
-		registerCaptures(m, exploration.Source{Endpoint: "http://source", Client: client}, dir, resultSnapshots)
+		capturehttp.Register(m, exploration.Source{Endpoint: "http://source", Client: client}, dir, resultSnapshots)
 		return m
 	}
 	mux := makeMux()
