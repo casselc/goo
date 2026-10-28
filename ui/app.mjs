@@ -120,7 +120,7 @@ el('runOperations').onclick=async()=>{
  }catch(error){if(current())el('operationStatus').textContent=error.message}finally{if(operationController===controller)operationController=null;if(generation===operationGeneration)button.disabled=false}
 };
 el('runHttpPackage').onclick=async()=>{
- appWorkspace.navigate('definitions',{writeHash:false});stopHTTPRead();const controller=httpController=new AbortController(),generation=++httpGeneration;const current=()=>generation===httpGeneration&&!controller.signal.aborted&&appWorkspace.current()==='definitions';
+ appWorkspace.navigate('definitions',{writeHash:false});definitionTabs.select('contracts');stopHTTPRead();const controller=httpController=new AbortController(),generation=++httpGeneration;const current=()=>generation===httpGeneration&&!controller.signal.aborted&&appWorkspace.current()==='definitions'&&definitionTabs.current()==='contracts';
  const button=el('runHttpPackage');button.disabled=true;el('httpPackageStatus').textContent='Evaluating Go package…';el('httpPackageView').replaceChildren();
  try{const response=await Queries.getJSON('/api/http-package?minutes='+encodeURIComponent(el('minutes').value),controller.signal);const data=response.data;if(!current())return;if(!response.ok)throw Error(data.error);
  el('httpPackageStatus').textContent=data.warnings.join(' ');
@@ -184,8 +184,12 @@ const stageResourceQuestion=q=>{appWorkspace.navigate('explore');exploreMode(fal
 const hostBrowser=HostBrowser.mount(el('hostEntityPanel'),{active:()=>entityKind==='hosts'&&appWorkspace.current()==='services',onReturn:()=>{appWorkspace.navigate('services');entityTabs.select('hosts')},onRecordQuestion:stageResourceQuestion});
 const kubernetesBrowser=KubernetesBrowser.mount(el('kubernetesEntityPanel'),{active:()=>entityKind==='kubernetes'&&appWorkspace.current()==='services',onReturn:()=>{appWorkspace.navigate('services');entityTabs.select('kubernetes')},onRecordQuestion:stageResourceQuestion});
 const entityTabs=ResourceTabs.mount([{key:'services',button:el('entitiesServices'),panel:el('serviceEntityPanel'),leave:()=>liveInventory.suspend()},{key:'hosts',button:el('entitiesHosts'),panel:el('hostEntityPanel'),leave:()=>hostBrowser.cancel()},{key:'kubernetes',button:el('entitiesKubernetes'),panel:el('kubernetesEntityPanel'),leave:()=>kubernetesBrowser.cancel()}],{onSelect:key=>entityKind=key});
-globalThis.addEventListener('goo:draft-telemetry-package',()=>appWorkspace.navigate('definitions'));
-globalThis.addEventListener('goo:preview-telemetry-package',()=>appWorkspace.navigate('definitions'));
+const definitionTabs=ResourceTabs.mount([
+ {key:'records',button:el('definitionsRecords'),panel:el('definitionRecordsPanel')},
+ {key:'measurements',button:el('definitionsMeasurements'),panel:el('definitionMeasurementsPanel')},
+ {key:'contracts',button:el('definitionsContracts'),panel:el('definitionContractsPanel'),leave:()=>stopHTTPRead()},
+],{initial:'records'});
+for(const event of ['goo:draft-telemetry-package','goo:preview-telemetry-package'])globalThis.addEventListener(event,()=>{appWorkspace.navigate('definitions');definitionTabs.select('records')});
 TelemetryPackages.mount(el('telemetryPackages'));
 globalThis.addEventListener('goo:navigate-explore',()=>appWorkspace.navigate('explore'));
 Captures.mount({openLive:page=>{if(page.measurement){globalThis.dispatchEvent(new CustomEvent('goo:open-measurement',{detail:{yaml:JSON.stringify(page.measurement.question.definition)}}))}else if(page.explore){appWorkspace.navigate('explore');liveExploration.openQuestion(page.receipt.question.explore,page.explore.fields,{stage:true})}else{appWorkspace.navigate('services');liveInventory.openQuestion(page.receipt.question.inventory)}}});

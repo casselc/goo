@@ -1,5 +1,22 @@
 # Validation record
 
+## Definition family discovery — 221 (2026-10-28 UTC)
+
+Definitions now separates Records, Measurements and App contracts through the
+existing application tab adapter. Tabs preserve mounted editors, filters, exact
+revision selections and annotation drafts. Record draft/preview handoffs select
+Records. Leaving App contracts cancels its pending HTTP preview; a late response
+cannot publish into the hidden pane. Browsing families adds no telemetry reads.
+
+Validation: all 583 frontend tests pass, including real loopback transport tests.
+Real Chromium 221 draft/filter/keyboard/workspace-return checks pass at 320/390/700
+widths; its delayed real HTTP response cancels by matching query ID and explicit
+retry succeeds. Existing 217 source phases/scope/visibility and 110 exact revision,
+annotation draft, stale refresh and failed refresh checks pass; 219 catalog and
+40 question handoff checks pass. Both updated Bombadil family and legacy-owner
+campaigns pass. Current 110/40 frames and the 221 mobile family frame are generated
+from the lab. Shared mobile chrome remains the next separate slice.
+
 ## Data-first Saved capture catalog — 220 (2026-10-28 UTC)
 
 Saved now places its capture catalog before secondary disclosures, with one

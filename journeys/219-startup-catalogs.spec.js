@@ -21,7 +21,7 @@ test('219 Activity defers workspace catalogs, first open loads once, explicit re
  for(const path of ['/api/prebuilts','/api/package','/api/operation-packages'])expect(observed.count(path),path).toBe(1);
  await page.locator('[data-workspace=services]').click();await page.locator('[data-workspace=definitions]').click();
  for(const path of ['/api/prebuilts','/api/package','/api/operation-packages'])expect(observed.count(path),path).toBe(1);
- await page.locator('[data-workspace=examples]').click();
+ await page.locator('#definitionsContracts').click();await page.locator('[data-workspace=examples]').click();
  await expect(page.locator('#exampleQuestionCards .definition-card')).not.toHaveCount(0);
  await expect(page.locator('#measurementCards .definition-card')).not.toHaveCount(0);
  await expect(page.locator('#guidedPackageWorkflow option')).not.toHaveCount(1);
@@ -32,10 +32,10 @@ test('219 Activity defers workspace catalogs, first open loads once, explicit re
  await expect(page.locator('#exampleQuestionCards .definition-card')).toHaveCount(cards);await expect(page.locator('#guidedPackageWorkflow')).toHaveValue('red');
  expect(observed.count('/api/example-questions')).toBe(1);expect(observed.count('/api/investigation-workflows')).toBe(1);
  const preview=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/telemetry-packages/plan');
- await page.locator('#guidedPackageSteps [data-workflow-package=checkout-spans]').click();expect((await preview).status()).toBe(200);
+ await page.locator('#guidedPackageSteps [data-workflow-package=checkout-spans]').click();expect((await preview).status()).toBe(200);await expect(page.locator('#definitionsRecords')).toHaveAttribute('aria-selected','true');await expect(page.locator('#definitionRecordsPanel')).toBeVisible();
  expect(observed.source()).toBe(sourceBefore);
  await page.locator('[data-workspace=definitions]').click();const before=observed.count('/api/measurement-packages');
- const refresh=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/measurement-packages');await page.locator('#measurementDefinitionRefresh').click();expect((await refresh).status()).toBe(200);
+ await page.locator('#definitionsMeasurements').click();const refresh=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/measurement-packages');await page.locator('#measurementDefinitionRefresh').click();expect((await refresh).status()).toBe(200);
  expect(observed.count('/api/measurement-packages')).toBe(before+1);expect(observed.source()).toBe(sourceBefore);expect(observed.errors).toEqual([]);
 });
 

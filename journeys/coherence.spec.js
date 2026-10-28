@@ -4,7 +4,7 @@ const base='http://127.0.0.1:8088';
 test('40 question evidence reuse: definitions, service handoff and abandoned reads',async({page,request})=>{
  test.setTimeout(150000);const errors=[];page.on('pageerror',e=>errors.push(e.message));let reads=0;page.on('request',r=>{if(r.method()==='POST'&&['/api/metric-discovery','/api/measurements','/api/explore'].some(p=>r.url().endsWith(p)))reads++});
  execFileSync('/workspace/.venvs/goo/bin/python',['scripts/independent_metrics.py']);await request.post('http://127.0.0.1:8081/reserve',{data:{scenario:'good'}});
- await page.goto(base+'/#definitions');await expect(page.locator('#measurementDefinitions article')).not.toHaveCount(0);const before=reads;
+ await page.goto(base+'/#definitions');await page.locator('#definitionsMeasurements').click();await expect(page.locator('#measurementDefinitions article')).not.toHaveCount(0);const before=reads;
  const catalog=await (await request.get(base+'/api/measurement-packages')).json();const builtin=catalog.find(p=>p.builtin&&p.definition.name==='worker-utilization');await page.locator('#measurementDefinitionSearch').fill(builtin.revision);await expect(page.locator('#measurementDefinitions article')).toHaveCount(1);
  await page.screenshot({path:'docs/journeys/screenshots/40a-shared-definitions.png',fullPage:true});
  await page.locator('#measurementDefinitions .definition-row button').click();await page.locator('#measurementDefinitions .ui-inspector').getByRole('button',{name:'Preview '+builtin.definition.title,exact:true}).click();await expect(page.locator('#measureStatus')).toContainText('Question validated');expect(reads).toBe(before);await expect(page.locator('#measureYAML')).toHaveValue(/^apiVersion:/);await expect(page.locator('.measurement-steps')).toBeVisible();

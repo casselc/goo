@@ -86,6 +86,10 @@ See [scope and clock boundaries](docs/ACTIVITY_EXPLANATIONS.md).
 
 ![Recent Activity entry](docs/journeys/screenshots/102a-live-entry.png)
 
+Definitions separates Records, Measurements and App contracts into keyboard-accessible
+family tabs. Switching families preserves drafts and selections and cancels a hidden
+HTTP preview; browsing families does not read telemetry.
+
 Services, Operations and Definitions enter the same investigation flow with a
 service, declared behavior or reusable definition already selected. Examples
 include HTTP, database, messaging and native-metric workflows alongside the

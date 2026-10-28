@@ -24,7 +24,7 @@ test('217 legacy owners stop every delayed source phase on leave and can explici
  await page.goto(base+'/#operations');await page.locator('#minutes').fill('5');
  for(const endpoint of ['/api/operations','/api/counter-rates','/api/histograms','/api/http-package']){
   const http=endpoint==='/api/http-package';
-  await page.locator('[data-workspace='+(http?'definitions':'operations')+']').click();
+  await page.locator('[data-workspace='+(http?'definitions':'operations')+']').click();if(http)await page.locator('#definitionsContracts').click();
   const hold=await holdSource(page,endpoint);
   try{
    await page.locator(http?'#runHttpPackage':'#runOperations').click();await hold.started;

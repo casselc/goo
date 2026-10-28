@@ -2512,3 +2512,7 @@ fall from 14 to 7; the live telemetry stream and module count are unchanged.
 exact UTC, typed rows, unchanged paging/order, source-free opening and manual
 recovery. Current 117 frames preserve the authored-draft/recovery flow. The new
 stored-page Bombadil actor covers list/recovery navigation without telemetry reads.
+
+221 adds [Definition families](../../journeys/221-definition-families-storyboard.md):
+keyboard discovery, retained drafts and filters, and source cancellation when an
+App contracts preview becomes hidden.

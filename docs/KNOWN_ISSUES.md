@@ -36,8 +36,9 @@ lab recording; 136 modules still load, and two retention-status requests remain.
 This is not a latency/load benchmark or complete startup-work optimization.
 Saved now presents a compact typed capture table before secondary tools, with
 exact capture-clock tooltips and existing stored order/paging. This is not a
-recent-first sort or cross-store search. Definitions family discovery and shared
-mobile chrome remain separate cohesion work.
+recent-first sort or cross-store search. Definitions now uses Records, Measurements and App contracts family tabs (221),
+preserving drafts/selections and cancelling HTTP reads when their pane hides.
+Shared mobile chrome remains separate cohesion work.
 Browser conformance is currently checked in Chromium; Firefox/Safari coverage
 is not established.
 
