@@ -6,7 +6,8 @@ with ordinary OpenTelemetry data; application manifests and Go annotations add
 shared definitions when available.
 
 [Reviewed roadmap](docs/ROADMAP_2026_10_25.md) · [Execution backlog](docs/BACKLOG_2026_10_25.md) ·
-[Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md)
+[Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md) ·
+[Go/frontend library review and proposal](docs/LIBRARY_REFACTOR_PLAN_2026_10_28.md)
 
 [Counted field values](docs/COUNTED_VALUES.md) reads complete scoped groups without
 loading record pages or unrelated field inventories. The controlled comparison

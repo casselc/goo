@@ -1,0 +1,121 @@
+# Frontend library review — 2026-10-28
+
+**Proposal only; source reviewed at `af107b7`.** No implementation, dependencies, runtime campaigns, commits or performance benchmarks were performed. This review covers the browser library and application broadly, including Python delivery and Go/API seams. Source line references identify the reviewed snapshot; many JavaScript lines contain whole functions.
+
+Goo already has the right foundation: framework-neutral supplied-data elements, typed presentation adapters, explicit application request owners and native semantic HTML. The useful next library work is to make those boundaries easier to maintain and verify. A new framework, universal query component or public subscription API would add obligations without a demonstrated benefit.
+
+## Coverage and reconciliation
+
+Read repository guidance, START_HERE, VALIDATION and KNOWN_ISSUES alongside UI_COMPONENTS, UI_COMPONENT_AUDIT, WHOLE_PRODUCT_COMPONENT_SWEEP, the October 22 refactoring reviews, and October 25 architecture/product reviews. Historical suggestions were checked against present source rather than copied as unfinished work.
+
+| Area inspected | Representative source and evidence | Assessment |
+| --- | --- | --- |
+| Core elements, SSR and SPA | `ui/components.js:22–62`, `ui/chart-frame.js:8–24`, `ui/components.html`, `docs/UI_COMPONENTS.md` | Attribute JSON, pre-definition properties, reconnection and child ownership are established contracts. |
+| Numeric/time/record displays | `ui/value-timeline.js`, `ui/time-bars.js`, `ui/comparison-series.js`, `ui/bucket-heatmap.js`, `ui/attributes.js`, `ui/record-presentation.js`, `ui/record-columns.js` | Preserve exact strings, bounded geometry and distinct missing/unknown states. |
+| Presentation and evidence | `ui/evidence-summary.js:5–15`, `ui/evidence-scope.js:8–22`, `ui/native-presentation.js:34–76`, `ui/resource-native-view.js:8` | Clock interpretation and telemetry semantics belong in adapters. |
+| App composition and navigation | `ui/workspace.js:6–18`, `ui/population-workspace.js`, `ui/distributions.js:78–80`, `ui/record-results.js`, `ui/definition-library.js:5–14`, `ui/saved-workspace.js` | Several old extraction recommendations are already implemented. |
+| Requests and ownership | `ui/queries.js:3–8`, `ui/resource-scope.js:5`, `ui/host-counter-pair.js:12–30`, `ui/numeric-distribution-comparison.js:3–12`, `ui/trace-search.js:25` | Shared mechanics exist; visibility, request identity and publication guards remain domain-specific. |
+| Streaming and comparisons | `ui/tail.js:36–85`, `ui/live-comparison.js:18–85`, `ui/comparison-series-owner.js:5–24`, `ui/fresh-comparison.js`, `ui/evidence-comparison.js` | Tail uses SSE today; rolling comparison owns polling today. Do not describe either as universally unimplemented. |
+| Discovery and resource families | `ui/service-browser.js`, `ui/service-dashboard.js`, `ui/kubernetes-browser.js`, `ui/container-resources.js`, `ui/container-resource-history.js`, `ui/host-browser.js`, `ui/host-filesystem.js` | Resource adapters retain exact identities, family budgets and cancellation. Host consolidation is the accepted baseline. |
+| Durable and authored work | `ui/documents.js`, `ui/captures.js`, `ui/retention-client.js:4–11`, `ui/pending-saves.js`, `ui/investigation-draft.js` | Recovery and read-basis authority differ; do not merge journals and draft stores by visual similarity. |
+| Styling and delivery | `ui/product.css:1041–1177`, feature CSS, `ui/index.html:38–50`, `server.py:91–185`, `package.json` | Page composition and dependency registration are the main maintenance seams. |
+| Verification and contracts | `tests/components.test.js`, component journeys, `journeys/209-container-history-ownership.spec.js:3–28`, `journeys/216-host-controls-storyboard.md`, `verification/bombadil`, API wire fixtures | Existing standalone, nested, real-source and adversarial checks should anchor extraction. Inspection is not a new passing test result. |
+
+Specifically, `GooDefinitionLibrary` already supplies compact typed-revision rows and selected detail; `GooDistributions.mountFacets` already separates a facet-only composition; `GooEvidenceScope.record` already exists; `workspace.js` no longer reparents Operations into Saved. Recommending their initial invention again would be stale. The host paired-read owner, compact host view and consolidated controls/Evidence from `af107b7` should remain intact.
+
+## Prioritized recommendations
+
+### 1. P1 — Give request cancellation an explicit response-consumption contract
+
+`GooQueries.post` returns a raw Response and removes its abort listener in `finally` (`ui/queries.js:7–8`). Fetch resolves at headers, whereas owners subsequently await JSON (`ui/host-counter-pair.js:22`, `ui/live-comparison.js:75`). Browser abort still affects the body, but the separate server cancellation POST no longer runs after headers. This is an identifiable lifecycle boundary, **not evidence of a demonstrated backend leak**.
+
+First document and test when Go execution/admission is released, including Python forwarding. If cancellation must cover body consumption, add an internal typed JSON-read helper that keeps registration through decode; retain raw Response support for compatibility and keep SSE separate. Before: `response = await GooQueries.post(...); data = await response.json()`. Possible internal after: `data = await queryJSON({url, body, signal})`, with explicit status/error handling. No change to routes, public element inputs or query IDs is proposed.
+
+Benefit: a single comprehensible cancellation/error boundary. Tradeoff: callers currently inspect different errors and statuses; migrate two actual owners first and preserve their messages. Validate abort before headers, delayed body, malformed JSON, non-2xx, obsolete completion, server admission release and absence of extra retry/read. Coordinate the normative lifecycle and fixtures with the Go review.
+
+### 2. P1 — Separate owner utilities from feature modules, then adopt narrowly
+
+`RequestOwner` already exists in `resource-scope.js:5`; `PendingScope` already exists in `numeric-distribution-comparison.js:3–8` and is reused by unrelated features. Their homes obscure their general mechanical purpose. `live-comparison.js:85` separately observes the entire document body for removal. Move proven generic utilities into a small internal owner module while retaining distinct contracts: generation/cancel, event cleanup, owner removal and domain publication eligibility.
+
+Before: unrelated modules reach into `GooNumericDistributionComparison.PendingScope`. After, internally: `GooRequestScope.PendingScope`, with a temporary compatibility alias only for named callers. Preserve host visibility, open-panel, selected-identity and active-route predicates (`host-counter-pair.js:15–16`); a generation alone is insufficient. Require explicit dispose from composition roots where available; retain removal detection as a fallback until callers reliably dispose.
+
+Benefit: clearer dependency direction and easier cleanup verification. Fewer observers might reduce work, but no CPU/memory improvement is measured. Avoid a global observer bus or generic effect runtime. Validate delayed completion after close/switch/dispose, listener removal, repeated mount/unmount and parent restoration, using the existing history owner campaign as a model.
+
+### 3. P1 — Make browser/server semantic mirrors a fixture-backed contract
+
+`question-session.js:4–6` normalizes record identities; `host-counter-pair.js:8–10` independently canonicalizes exact native questions and validates basis/window/stream results. These serve different domains. Do not replace them with one generic stable stringify. Likewise, browser geometry and native result projections are useful local computations, not reasons to call a server for every display update.
+
+Create a small contract inventory identifying each normative Go type/function, browser adapter and complete shared fixture. Extend the existing wire-fixture approach with missing versus present empty, absent optional defaults, large integers, exact nanosecond bounds, negative instants, unsupported fields, wrong stream/schema, temporality and unknown intervals. Keep query authorization/validation server-authoritative and immutable IDs unchanged.
+
+Benefit: safe extraction and independently usable presentation. Tradeoff: fixture maintenance; avoid a second handwritten schema system. Migrate one native paired-result validator and one record identity adapter first; require expected rejections as well as accepted fixtures. Any generated schema must preserve decimal strings and optional-field meaning.
+
+### 4. P2 — Extract private element mechanics without changing element semantics
+
+Property upgrading, bounded JSON parsing and reactive rendering repeat across `components.js:24–59`, `evidence-summary.js:11–15` and chart modules. However, they intentionally differ: chart frame preserves child nodes; evidence summary preserves its disclosure and focused summary; snapshot elements may replace content. Attribute budgets also differ (core 64 KiB, evidence summary 512 KiB).
+
+Inventory those differences, then share only private leaf helpers such as property replay and caller-parameterized JSON parsing. Keep per-element validation, snapshot-copy policy, state mapping and rendering explicit. Avoid a public base class or universal renderer. Before/after user code stays `element.data = suppliedFacts` or server JSON attributes; no lifecycle fetch or navigation is added.
+
+Benefit: fewer upgrade/parser mistakes while preserving SSR reuse. Tradeoff: another dependency must load before definitions; prove standalone classic-script and side-effect-import use before adoption. Pilot with two compatible snapshot elements, not child-preserving chart frame. Check pre-definition detached assignment, attribute/property precedence, malformed/oversize JSON, reconnect, input mutation isolation and zero API requests.
+
+### 5. P2 — Consolidate composition styling after confirming actual ownership
+
+`product.css` contains successive `.dashboard-grid` rules at 1041/1129/1135, `!important` application reductions at 1160, and population composition rules from 1166 onward. This indicates layered evolution, not by itself a visual defect. Feature styles already exist and should remain separate from reusable element styles.
+
+Move only stable owner rules into the existing feature CSS when touching that composition. Tighten selectors to owning children; delete superseded rules after computed-style/visual parity. Reuse the implemented `mountFacets` rather than hiding another full workspace with CSS. Do not introduce Shadow DOM, container-query variants or cascade layers across the entire product as a prerequisite.
+
+Benefit: predictable standalone/nested sizing and less accidental cross-owner influence. Tradeoff: ordering changes can expose previously masked dependencies. Validate keyboard table scrolling, mobile overflow and sticky overlap, nested inspector layouts, authored children and host family switching. Refresh affected storyboard frames from the running app when implementation occurs.
+
+### 6. P2 — Inventory delivery dependencies before optimizing startup
+
+`index.html:38–50` eagerly loads the feature catalog as ordered classic scripts; `server.py:126–132` separately allowlists assets. `components.html` has its own display-only dependency set. The risk is dependency drift and unnecessary startup work; current source alone does not quantify the user cost.
+
+First create a machine-readable internal asset/dependency inventory and a check that both entrypoints load their declared dependencies, static delivery is allowlisted and the gallery needs no query client. Keep the existing explicit serving policy; do not replace it with arbitrary filesystem serving. Measure transferred bytes, parse/evaluation time, requests and first usable Explore interaction under a documented cold/warm profile. Only if material, introduce one optional feature loader or build-time bundle with the existing APIs and fallback behavior preserved.
+
+Benefit: reliable composition today, evidence for optimization later. Tradeoff: manifest generation can become a build burden; a validation-only inventory may suffice. No mandatory bundler, ESM migration, import-map platform or dependency installation is recommended. Preserve Python lab startup and source-free navigation.
+
+### 7. P2 — Finish adoption through supplied facts, not a universal result API
+
+`evidence-scope.js` already transforms native, record and service-widget facts; `definition-library.js` already handles typed revisions and local catalog bounds. Complete adoption where a real duplicate remains, using these APIs rather than adding new evidence/catalog elements. `record-results.js:5` still constructs qualified field labels locally while `field-presentation.js` already provides family-aware labels. Inventory residual label/table/comparison duplication before extraction.
+
+Share a small application composition only after two compatible consumers prove it. Keep stored comparison, explicitly fresh reread and rolling baseline ownership distinct; independent clocks and incompatibility notices remain visible. Unsupported numeric domains retain exact table fallbacks. Benefit is consistent compactness and clearer actions; tradeoff is preserving meaningful family differences rather than maximizing reuse. Validate missing/empty fields, duplicate-title revisions, selected detail outside a filtered page, known-to-unknown transitions, exact scope and explicit Run behavior.
+
+### 8. P2 — Make conformance coverage discoverable and accessibility explicit
+
+The repository already tests important invariants: component journeys assert no API reads; `chart-frame-components.spec.js:5–21` checks SSR, detached updates and preserved caller focus; component tests check table keyboard scroll; history ownership tests delay real responses. Preserve this layered evidence rather than running every campaign for every extraction.
+
+Maintain a compact contract-to-test matrix next to UI_COMPONENTS: input/update/reconnect, child identity, selection intent, exact fallback, keyboard/focus, no effects and nested/mobile composition. Add only missing contract tests during adoption. Include heading outline, visible focus, result-state announcements without repeated chatter, disclosure return focus, brush keyboard alternatives and exact timestamp access beyond mouse hover. `evidence-summary.js:15` exposes exact times via title and focusable time nodes; inspect assistive-technology discoverability before claiming equivalence to visible exact text.
+
+Use pure Node tests for validation/geometry, standalone browser conformance for DOM semantics, representative real OTel journeys for wire/adoption, and Bombadil/observed traces for races and hidden effects. Existing storyboards remain product evidence, not synthetic gallery substitutes. No new suite was run for this document.
+
+## Modern browser, JavaScript and CSS platform assessment
+
+The platform is already modern: custom elements, structured cloning, BigInt, fetch/AbortController, streams, native dialog/disclosure/range controls, CSS grid and selected container queries/`:has()` are present. Modernization should improve internal reliability or a measured interaction, without introducing a new user-facing model. `playwright.config.js:12` selects Chromium. Existing browser checks establish their recorded Chromium behavior; they do **not** establish Firefox/Safari compatibility. The inspected component contracts describe embedding behavior but do not provide a supported browser/version matrix. Establish that policy before adopting additional required features; do not imply an unsupported numeric minimum from current tests.
+
+| Platform capability | Existing use / proposed internal adoption | Support and validation gate | Deferred or rejected scope |
+| --- | --- | --- | --- |
+| AbortController and event listener lifetime | Requests already use AbortController; PendingScope manually pairs add/remove listeners (`numeric-distribution-comparison.js:3–7`). A per-owner signal for listener cleanup could simplify an adopted owner. `AbortSignal.any()`/timeout could compose caller cancellation and a deadline where their meanings match. | Confirm targeted browser support and abort reasons. Feature-detect optional composition or retain the existing explicit cleanup path. Test close/route/dispose and timeout independently; a timeout must not silently change query policy or live SSE lifetime. | No blanket replacement of generation guards or visibility/identity predicates; no assumption that abort proves server termination. |
+| Scheduling and bounded rendering | Many snapshots render synchronously with replaceChildren; models already impose per-element limits. If a representative large supported view exhibits long tasks, build a detached fragment and consider bounded chunks with task yielding for the app-owned renderer. | Measure interaction latency/long tasks at actual supported bounds first. `scheduler.yield()` cannot become a baseline requirement without policy; use a tested fallback if adopted. Recheck owner generation after each yield, publish atomically where required and preserve focus/exact totals. | No speculative worker pipeline, per-point asynchronous renderer or enlarged source/display limits. requestAnimationFrame is not a guaranteed yield for every background state. |
+| Modules and loading | Current classic-script globals and CommonJS exports support standalone browser use and Node tests; feature scripts are eager (`index.html:38–50`). Dependency inventory and conditional loading are candidates after startup measurement. | Preserve classic-script examples, pre-definition properties and gallery isolation. Document module graph/load order and failure behavior. Establish supported module/browser versions before making ESM the only entrypoint. | No framework/bundler/import-map requirement or top-level-await migration simply for syntax modernization. |
+| CSS grid, container queries and relational selectors | Grid is established; `trace-page-breakdown.css:1`, `trace-comparison-view.css:1` and `kubernetes.css:10` already use container sizing/queries; pool and record CSS use `:has()`. Further owner-scoped container rules may avoid viewport-specific fixes. | Test nested/standalone desktop/mobile layout in the declared browser matrix, including semantic reading order. Verify useful fallback where a feature is optional; existing usage alone does not establish broad compatibility. | No wholesale cascade-layer, CSS nesting or Shadow DOM conversion. Layering changes stylesheet precedence and needs a concrete maintenance benefit. |
+| Native HTML interaction and accessibility | Keep details/summary, native table, buttons, range inputs and dialog (`index.html:38`, `time-range.js:10`). Prefer these when extracting internal compositions. | Keyboard, focus return, touch and assistive-technology checks remain necessary. Native defaults vary; verify dialog dismissal and disclosure state through actual adoption. | No popover, anchor positioning, custom ARIA widget or View Transitions requirement without a specific usability benefit and design confirmation. |
+| Precise numerics and time | BigInt duration/rational geometry and exact decimal/nanosecond strings already protect source values (`components.js:7–8`, `evidence-summary.js:5–6`). Date is used only for bounded human UTC formatting, with exact values retained. | Preserve JSON string transport; never round-trip exact values through Number. Test negative instants, large values, half-open windows and unavailable dates. Introduce Temporal only if a concrete timezone/calendar requirement and target support justify it; it does not replace monotonic elapsed-time ownership or exact custody contracts. | No blanket Temporal/polyfill dependency, locale-dependent identity or replacement of BigInt with floating-point display arithmetic. |
+| DOM observation and containment | MutationObserver detects detached owners today (`live-comparison.js:85`). Prefer explicit composition disposal when available. Optional rendering containment/content-visibility could be evaluated for a measured offscreen cost. | Measure retained DOM/observer costs before consolidation. Test find-in-page, keyboard access, scroll geometry, sticky regions and accessibility before containment adoption. | No global observer service or content-visibility default on evidence/inspection regions without evidence of benefit. |
+
+These are conditional internal techniques, not additional roadmap commitments. Support-policy work can start with the documented runtime APIs and a small representative cross-browser conformance set; it need not multiply every live-source campaign across engines. Any new public gesture, loading behavior or progressive fallback that changes what users see should receive design/usability confirmation before implementation.
+
+## Retain and reject
+
+Retain light DOM/native tables and disclosures; bounded supplied snapshots; pre-definition property upgrade and SSR fallback; standard OTel resource/schema/temporality interpretation; app-owned navigation, cancellation, source reads and publication; exact/unknown states; explicit fixed scales/rescale in live comparisons; source-free reopen and parent return. Keep the compact consolidated host controls and Evidence region rather than reintroducing per-widget workflow chrome.
+
+Reject a framework migration, public subscribing dashboard element, universal query/result blob, global mutable UI store, automatic mount/disclosure reads, generic numeric coercion, virtualized datagrid without measured need, automatic semantic compatibility inference and a package publishing effort before an external consumer exists. Native SSE comparison delivery may be useful later, but should replace a measured polling/reliability limitation through an app-owned protocol; it does not belong in element lifecycle. Public advanced APIs require a concrete performance, reliability or usability benefit and design/usability confirmation. None is required for these recommendations.
+
+## Ordered extraction and acceptance
+
+1. Record current contracts and dependency/fixture coverage. Pin `af107b7` host behavior and existing public examples.
+2. Resolve response-consumption/cancellation semantics with Go/Python owners; pilot the internal helper in two owners.
+3. Relocate existing owner mechanics and migrate representative consumers, deleting duplicate cleanup only after race parity.
+4. Extract private input/lifecycle leaves with standalone SSR/SPA tests; preserve intentional per-element differences.
+5. Consolidate touched feature CSS and adopt existing field/evidence/table compositions; update affected real storyboard frames.
+6. Measure startup; change loading only if the measurement warrants it. Expand reuse only after two consumers demonstrate a stable boundary.
+
+Each step should remove its superseded path, retain compatibility only for identified consumers, and state actual checks and remaining limitations. Success means fewer places to encode a contract, stable request counts and understandable compact UI—not merely fewer files or a more elaborate public API.
