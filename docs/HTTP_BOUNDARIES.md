@@ -8,6 +8,49 @@ application's `newQueryBudget(..., 4)` composition function. Server
 header timeout is five seconds; write timeout is 90 seconds. Pure planning, source
 execution, filesystem publication and XTDB transactions retain different owners.
 
+## Executable shutdown (2026-10-28)
+
+`goo serve-http` owns SIGINT/SIGTERM handling. On a signal it closes listeners
+and allows active handlers five seconds to finish, using a fresh shutdown context.
+If they do not finish, it cancels the server request root and closes remaining
+connections; source reads and SSE inherit this cancellation. A drain timeout is
+returned as an error. Normal drained shutdown returns success; listen failures
+remain errors. Configuration-only construction still does not listen or probe.
+
+A publication whose response was interrupted may already have committed. Shutdown
+does not roll back files or XTDB transactions, create a retry receipt, or change
+existing refresh/promotion/freeze retry contracts. Request cancellation is
+cooperative; arbitrary handler goroutines are not forcibly joined. SIGKILL and
+process crashes cannot drain or flush.
+
+The two Go sample executables own their SDK providers. They stop serving first,
+then invoke provider Shutdown (which flushes), each with an independent fresh
+five-second context. Checkout shuts down metrics then traces; reports shuts down
+traces. Cleanup also runs on a listen error or later initialization failure.
+Provider errors are logged. Intentional demo metric suppression remains in effect.
+Compose grants both checkout instances and reports 20 seconds before forced kill,
+covering the checkout's five-second drain plus two five-second provider budgets.
+These small executable-local helpers do not add SDK lifecycle ownership to goo's
+instrumentation library or to query adapters. Python processes are unchanged.
+
+```mermaid
+sequenceDiagram
+    participant OS as SIGINT / SIGTERM
+    participant App as Executable
+    participant HTTP as HTTP handlers / live tails
+    participant SDK as Sample-owned SDK providers
+    OS->>App: stop
+    App->>HTTP: close listener, drain up to 5s
+    opt Drain expires
+        App->>HTTP: cancel root + close connections
+    end
+    opt Go sample executable
+        App->>SDK: Shutdown with fresh 5s context per provider
+        SDK-->>App: final export or logged error
+    end
+    App-->>OS: exit (error on forced HTTP close)
+```
+
 ## Record-family policy and handler extraction (2026-10-28)
 
 Implemented: `internal/recordhttp` owns `/inventory`, `/discovery`, `/explore`,

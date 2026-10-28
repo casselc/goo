@@ -4,13 +4,16 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/json"
+	"fmt"
 	"github.com/casselc/goo/instrumentation"
 	"go.opentelemetry.io/otel/sdk/metric/metricdata"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
 	"regexp"
 	"sync/atomic"
+	"syscall"
 	"time"
 
 	"go.opentelemetry.io/otel"
@@ -36,27 +39,35 @@ func (e demoExporter) Export(ctx context.Context, data *metricdata.ResourceMetri
 	return e.Exporter.Export(ctx, data)
 }
 func main() {
+	if err := run(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func run() error {
 	instance := os.Getenv("GOO_INSTANCE_ID")
 	if instance == "" {
 		instance = "woven-demo"
 	}
 	if !regexp.MustCompile(`^[A-Za-z0-9_.-]{1,128}$`).MatchString(instance) {
-		log.Fatal("invalid GOO_INSTANCE_ID")
+		return fmt.Errorf("invalid GOO_INSTANCE_ID")
 	}
 	var metricsEnabled atomic.Bool
 	metricsEnabled.Store(true)
 	exporter, err := otlptracehttp.New(context.Background())
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	appResource := resource.NewSchemaless(
 		attribute.String("service.name", "lab-go-checkout"), attribute.String("deployment.environment.name", "local"), attribute.String("service.instance.id", instance))
 	tp := sdktrace.NewTracerProvider(sdktrace.WithBatcher(exporter), sdktrace.WithResource(appResource))
+	defer shutdownProvider(tp.Shutdown)
 	metricExporter, e := otlpmetrichttp.New(context.Background())
 	if e != nil {
-		log.Fatal(e)
+		return e
 	}
 	meter := sdkmetric.NewMeterProvider(sdkmetric.WithReader(sdkmetric.NewPeriodicReader(demoExporter{metricExporter, &metricsEnabled}, sdkmetric.WithInterval(2*time.Second))), sdkmetric.WithResource(appResource))
+	defer shutdownProvider(meter.Shutdown)
 	otel.SetMeterProvider(meter)
 	otel.SetTracerProvider(tp)
 	mux := http.NewServeMux()
@@ -111,5 +122,7 @@ func main() {
 		}
 		json.NewEncoder(w).Encode(map[string]string{"scenario": scenario, "id": id, "tenant": tenant})
 	})
-	log.Fatal((&http.Server{Addr: ":8090", Handler: mux, ReadHeaderTimeout: 5 * time.Second}).ListenAndServe())
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+	return serve(ctx, &http.Server{Addr: ":8090", Handler: mux, ReadHeaderTimeout: 5 * time.Second})
 }

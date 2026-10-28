@@ -25,6 +25,12 @@ their distinct adapter contracts. The [HTTP acceptance inventory](HTTP_BOUNDARIE
 records adopted transports and remaining endpoint/branch coverage; no common
 semantic evaluator or universal request owner is implied.
 
+Executables own [bounded shutdown](HTTP_BOUNDARIES.md#executable-shutdown-2026-10-28).
+The Go HTTP server drains for five seconds before cancelling its request root and
+closing remaining connections. Go sample apps then shut down their own SDK
+providers with independent five-second flush budgets; Compose allows 20 seconds.
+No exporter is owned by the goo query server or instrumentation library.
+
 Browser source reads use `ui/queries.mjs` → `postJSON(url, body, signal)`.
 It returns `{ok, status, data}` after decoding the body; owners keep their HTTP
 error messages and question/generation checks. The abort listener remains attached

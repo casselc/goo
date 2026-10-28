@@ -411,3 +411,7 @@ gauge read for the selected mount, with a separate fixed fraction scale.
 
 [Host resource controls](docs/HOST_CONTROL_COHERENCE.md) consolidate selection,
 explicit Refresh and direct local Evidence without changing telemetry reads.
+
+Go HTTP executables handle SIGINT/SIGTERM with a five-second request drain, then
+cancel and close remaining work. The Go samples also flush their SDK providers
+with separate five-second budgets. See [shutdown behavior and limits](docs/HTTP_BOUNDARIES.md#executable-shutdown-2026-10-28).

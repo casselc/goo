@@ -1,5 +1,32 @@
 # Validation record
 
+## Bounded Go executable shutdown (2026-10-28 UTC)
+
+Go `serve-http` now handles SIGINT/SIGTERM, closes its listener and drains active
+handlers for five seconds. A drain timeout cancels the server request root and
+closes remaining connections, returning an error. Normal drained shutdown returns
+success. Configuration-only construction still performs no listen or source probe.
+The two Go sample apps run deferred SDK Shutdown after serving, with independent
+five-second provider budgets (checkout metrics then traces; reports traces).
+Deferred cleanup also runs on later initialization/listen errors. Provider failures
+are logged. Compose gives the samples and checkout peer 20 seconds before kill.
+
+Validation: full root Go tests pass; focused shutdown tests pass under the race
+detector, covering listener failure, completed-request draining and cancellation/
+forced close of an outstanding request. Both sample modules pass race tests and
+vet, with actual SDK queued-span and final periodic-metric export tests. Root
+command vet passes. The built executable exits successfully on real SIGTERM and
+SIGINT after opening its listener. Compose configuration validates. No API, UI,
+measurement or stored-data format changes; no browser/Bombadil/Hegel/Quint rerun
+was needed for this executable lifecycle cut. Architecture and shutdown flow docs
+are updated. Saved volumes remain intact; temporary binaries/logs are removed.
+
+Forced close does not establish whether an interrupted publication committed;
+existing retry contracts remain essential. Cancellation is cooperative, not a join
+of arbitrary handler goroutines. SIGKILL/crashes cannot flush, and no live collector
+shutdown-delivery guarantee is claimed. Python lifecycle and broader legacy-route
+admission remain separate work.
+
 ## Explanation and capture policy extraction (2026-10-28 UTC)
 
 `internal/explanationhttp` owns observed explanations and pure plan/filter routes;

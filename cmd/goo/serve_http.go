@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -10,7 +11,9 @@ import (
 	"github.com/casselc/goo/prebuilt"
 	"net/http"
 	"os"
+	"os/signal"
 	"path/filepath"
+	"syscall"
 	"time"
 )
 
@@ -19,7 +22,9 @@ func serveHTTP(args []string) error {
 	if err != nil {
 		return err
 	}
-	return server.ListenAndServe()
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+	return runHTTPServer(ctx, server, 5*time.Second)
 }
 
 // configuredHTTPServer validates configuration and registers routes without

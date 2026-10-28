@@ -10,7 +10,10 @@ lifetimes. Record and native measurement/discovery policy/handler extraction is
 implemented, including pure host/pod plans and explicit optional lifecycle custody.
 Result/explanation banks are now server-owned and explicitly shared by their
 routes. Explanation/capture handlers and policies are now extracted, preserving
-mixed publication lifetimes. Bounded executable shutdown/export work remains planned.
+mixed publication lifetimes. Bounded Go executable shutdown and sample SDK flushing are implemented.
+Forced shutdown can interrupt a response after publication commits; existing retry
+contracts still apply. SDK flush failures are logged; SIGKILL/crashes cannot flush.
+Python process lifecycle and broader legacy-route admission remain separate work.
 Browser conformance is currently checked in Chromium; Firefox/Safari coverage
 is not established.
 

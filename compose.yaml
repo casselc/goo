@@ -83,6 +83,7 @@ services:
     command: ['goo', 'serve-http', '-operation-package', 'config/operations/checkout.yaml', '-operation-package', 'config/operations/reports.yaml', '-binding', 'config/http-package.yaml', '-inventory', 'config/http-inventory.json', '-scope-name', 'goo.http-sample', '-scope-version', '0.1.0', '-listen', ':8089']
     ports: ['127.0.0.1:8089:8089']
   operation-app:
+    stop_grace_period: 20s
     build:
       context: .
       dockerfile: examples/operation-app/Dockerfile
@@ -96,6 +97,7 @@ services:
     depends_on:
       collector: {condition: service_started}
   operation-peer:
+    stop_grace_period: 20s
     build:
       context: .
       dockerfile: examples/operation-app/Dockerfile
@@ -110,6 +112,7 @@ services:
     depends_on:
       collector: {condition: service_started}
   report-app:
+    stop_grace_period: 20s
     build:
       context: .
       dockerfile: examples/report-app/Dockerfile

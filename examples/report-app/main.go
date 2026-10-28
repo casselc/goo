@@ -6,6 +6,9 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/casselc/goo/instrumentation"
@@ -41,11 +44,18 @@ func emitLog(ctx context.Context, name, id, outcome string) {
 }
 
 func main() {
-	exporter, err := otlptracehttp.New(context.Background())
-	if err != nil {
+	if err := run(); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func run() error {
+	exporter, err := otlptracehttp.New(context.Background())
+	if err != nil {
+		return err
+	}
 	provider := sdktrace.NewTracerProvider(sdktrace.WithBatcher(exporter), sdktrace.WithResource(resource.NewSchemaless(attribute.String("service.name", "lab-go-reports"), attribute.String("deployment.environment.name", "local"), attribute.String("service.instance.id", "reports-demo"))))
+	defer shutdownProvider(provider.Shutdown)
 	otel.SetTracerProvider(provider)
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
@@ -62,5 +72,7 @@ func main() {
 		json.NewEncoder(w).Encode(report)
 	})
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("ok")) })
-	log.Fatal((&http.Server{Addr: ":8091", Handler: mux, ReadHeaderTimeout: 5 * time.Second}).ListenAndServe())
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+	return serve(ctx, &http.Server{Addr: ":8091", Handler: mux, ReadHeaderTimeout: 5 * time.Second})
 }

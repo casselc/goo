@@ -64,8 +64,10 @@ Cross-server/replacement tests distinguish live capabilities from durable captur
 and retention recovery. Explanation/capture handlers and POST policies are now
 extracted into their own internal packages, with explicit mixed publication
 lifetimes and source-only-handler guards. Command admission composes family
-lookups. Broader legacy-route admission and executable shutdown/export flushing
-remain planned; the overall request/server cut is not complete.
+lookups. Executable shutdown/export flushing is now implemented: five-second Go HTTP
+drain/cancel/close, followed by independently bounded sample-owned SDK shutdown.
+Broader legacy-route admission remains planned; the overall request/server cut
+is not complete.
 
 ## Preferred cuts
 
