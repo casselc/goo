@@ -1,5 +1,28 @@
 # Validation record
 
+## Checked fixed native question keys — 232 (2026-10-28 UTC)
+
+`measurements.Question.Key()` validates the authored definition and fixed window
+before returning the existing JSON/SHA-256 question digest. Host, pod and pool
+widget keys use it, retaining their prior skip-invalid admission rules. Exact
+native bounds, enclosing millisecond windows and literal selectors are not
+normalized into one representation. Invalid questions receive no key; definition
+revisions and result/custody bases remain separate.
+
+Validation: full root Go suite, focused measurement race checks and root vet pass.
+New tests compare keys with the prior digest across namespace/attribute/window
+representations, verify nonmutation and single-nanosecond sensitivity, and refuse
+invalid definitions, windows and unpaired/noncanonical/mismatched exact bounds.
+The existing generated pod key fixture and pool key assertions pass. Hegel host
+authority/raw identity, pod authority/replay and pool signal identity/scope checks
+pass. Regenerated Go wire schemas are byte-identical. No store migration occurs.
+
+No UI/source-query or numeric semantics changed; screenshots and browser/model
+campaigns were not repeated. This completes the bounded authored-reference cleanup;
+remaining source/deduplication and replay/custody digests stay explicit follow-ups,
+not a reason to introduce a universal identity or storage layer.
+
+
 ## Candidate authoring seeds and checked references — 231 (2026-10-28 UTC)
 
 Private name/title-independent definition seeds now own runtime/pod generated

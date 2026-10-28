@@ -161,10 +161,10 @@ func PlanHostDashboard(input HostDashboardRequest) (*HostDashboardPlan, error) {
 				d.StockDomain = "nonnegative-integer"
 			}
 			q := Question{Definition: d, FromMS: in.Question.FromMS, ToMS: in.Question.ToMS}
-			if q.Validate() != nil {
+			key, err := q.Key()
+			if err != nil {
 				continue
 			}
-			key := Hash(q)
 			if seen[key] {
 				continue
 			}

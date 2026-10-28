@@ -19,6 +19,13 @@ and service candidate references use checked revisions. Seeds are not public
 authored references. Evaluation callers do not need to calculate a revision themselves. See the
 [revision consumer audit](REVISION_API_AUDIT.md) for other identity families.
 
+For a fixed measurement question, use `key, err := question.Key()`. This validates
+both its definition and half-open window, including paired exact nanosecond bounds.
+It preserves the prior JSON digest without converting exact windows to enclosing
+milliseconds or collapsing literal namespace/attribute selectors. A question key
+identifies the requested scope; it is not a result basis or custody receipt. Host,
+pod and pool widget keys use this checked boundary.
+
 ## Go evaluation and lifecycle observation
 
 Native numeric/state evaluation accepts only its question, supplied rows and fixed

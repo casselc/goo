@@ -130,7 +130,8 @@ func PlanPoolSignals(in PoolSignalsRequest) (*PoolSignalsPlan, error) {
 			}
 			q := req.Parent
 			q.Definition = selected
-			if q.Validate() != nil {
+			key, err := q.Key()
+			if err != nil {
 				continue
 			}
 			// Identity dedup deliberately excludes user-facing package names/titles.
@@ -143,7 +144,7 @@ func PlanPoolSignals(in PoolSignalsRequest) (*PoolSignalsPlan, error) {
 			if kind == "wait" {
 				title = "Pool wait · independent duration histogram"
 			}
-			candidates = append(candidates, candidate{identity: identity, encoded: string(bytes), kind: kind, option: PoolSignalOption{Key: Hash(q), Title: title, Question: q}})
+			candidates = append(candidates, candidate{identity: identity, encoded: string(bytes), kind: kind, option: PoolSignalOption{Key: key, Title: title, Question: q}})
 		}
 	}
 	sort.Slice(candidates, func(i, j int) bool {

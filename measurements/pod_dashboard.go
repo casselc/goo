@@ -166,7 +166,8 @@ func PlanPodDashboard(input PodDashboardRequest) (*PodDashboardPlan, error) {
 				selected.Title = "Pod memory working set"
 			}
 			question := Question{Definition: selected, FromMS: q.FromMS, ToMS: q.ToMS}
-			if question.Validate() != nil {
+			key, err := question.Key()
+			if err != nil {
 				continue
 			}
 			// Names do not multiply equivalent exact stream/policy choices.
@@ -200,7 +201,7 @@ func PlanPodDashboard(input PodDashboardRequest) (*PodDashboardPlan, error) {
 			if resourceKind == "kubernetes-container" {
 				grain = "container-resource-stream"
 			}
-			all = append(all, candidate{widget: PodMetricWidget{Role: role, Key: Hash(question), Title: title, State: "candidate", Profile: profile, Grain: grain, Question: question}, family: family})
+			all = append(all, candidate{widget: PodMetricWidget{Role: role, Key: key, Title: title, State: "candidate", Profile: profile, Grain: grain, Question: question}, family: family})
 		}
 	}
 	rank := map[string]int{PodReceiverProfile: 0, PodSemconvProfile: 1, PodClusterProfile: 2, ContainerMemoryKubeletProfile: 3, ContainerMemoryClusterProfile: 4, ContainerCPUKubeletProfile: 5, ContainerCPUClusterProfile: 6}

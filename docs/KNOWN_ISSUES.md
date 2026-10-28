@@ -12,8 +12,8 @@ action density is improved in 229 using shared passive controls; nested
 native/resource ancestry remains an explicit UI follow-up. The prepared-fact Go compiler is now `subjectfacts`; the former
 `measurement` import is removed. Native OTel binding stays `measurements`. Stored
 formats and compiler output are unchanged. Checked native definition revisions
-are delivered in 228, with candidate seed/reference separation in 231. The
-[consumer audit](REVISION_API_AUDIT.md) tracks remaining question, source and
+are delivered in 228, with candidate seed/reference separation in 231. The fixed-question key boundary follows in 232. The
+[consumer audit](REVISION_API_AUDIT.md) tracks remaining source/deduplication and
 replay/custody hash contracts.
 
 

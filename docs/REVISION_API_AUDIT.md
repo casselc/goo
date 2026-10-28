@@ -1,4 +1,4 @@
-# Revision and hash consumers — 228, candidate follow-up 231
+# Revision and hash consumers — through 232
 
 Implemented: `measurements.Definition.Revision() (string, error)` validates an
 authored definition before returning its JSON/SHA-256 revision. Invalid definitions
@@ -25,14 +25,14 @@ encoding. Frozen stored IDs and built-in definition IDs remain unchanged.
 | Family | Consumers | Boundary and follow-up |
 | --- | --- | --- |
 | Candidate definitions and authoring seeds — separated in 231 | `measurements/go_runtime.go`, `pod_dashboard.go`, `exploration/dashboard.go` | Private checked-encoding seed construction is distinct from final checked revisions. Pod widget keys remain fixed-question identities; no generic hash calls remain in runtime candidates or service dashboard definition references. |
-| Fixed questions | Host, pool and pod dashboard helpers | Exact window, selectors and definition form the key. Define a checked question identity separately; preserve nanosecond bounds. |
+| Fixed questions — checked in 232 | Host, pool and pod dashboard helpers | `Question.Key()` validates the definition and fixed window, preserving the same JSON digest and exact nanosecond bounds. Invalid questions receive no key. |
 | Resources, instruments and capabilities | Host discovery, discovery, pod metrics, instrument capabilities | These identify source metadata, including unsupported instruments. Definition validation would reject useful discovery records. |
 | Replay result basis | `measurements/source.go`, `replay.go` | Hashes question, fixed evaluation time and rows. Replay intentionally accepts historical raw-row and canonical-row bases. No algorithm change here. |
 | Lifecycle custody | `measurements/lifecycle.go` | Business payload identity omits receipt time; immutable first-observed custody remains separate. |
 | Test snapshots | Nested verification helpers | Arbitrary structures used to detect mutation are not authored definitions. |
 
 `measurements.Hash(any)` remains a documented legacy unchecked JSON digest for
-the remaining question/source/replay families. It still ignores marshal errors; this delivery does not claim a
+the remaining source/dedup/replay families. It still ignores marshal errors; this delivery does not claim a
 universal checked-hash API. Do not remove or rename it until actual callers and
 stored identities have an explicit migration or preservation contract. Other
 packages' digests have separate canonical contracts as well.
@@ -52,3 +52,11 @@ service option order, keys and default/selected flags. They supplement existing
 permutation, duplicate, metadata-isolation and refusal tests. Seed tests distinguish
 label-insensitive authoring seeds from valid authored revisions and retain policy
 sensitivity without mutating input. Numeric/source semantics remain unchanged.
+
+Through 232, host, pool and pod widget keys use `Question.Key()`. It hashes the
+same complete question bytes after validation. Exact and enclosing-millisecond
+questions remain different representations; a single-nanosecond change changes
+the key. Definition revisions and result/custody bases remain distinct. Existing
+pod compatibility fixtures and pool key assertions compare against prior digests;
+new tests cover selectors, invalid scopes and nonmutation. Remaining source and
+custody hashes are deliberately outside this authored-reference boundary.
