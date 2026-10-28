@@ -38,16 +38,16 @@ const step = registerCustomAction('goo.runtimeStep', async (document, window) =>
   } else if (phase === 3) {
     if (root.dataset.runtimeSource !== root.dataset.runtimeBaseline) throw Error('Disclosure read telemetry');
     const link = document.querySelector<HTMLAnchorElement>('.runtime-observations[data-runtime-metric="go.memory.used"] a')!;
-    link.scrollIntoView({ block: 'center' }); link.click();
+    link.scrollIntoView({ block: 'center' }); (window as any).__runtimeReturnOpener=link; link.click();
   } else if (phase === 4) {
     if (root.dataset.runtimeSource !== root.dataset.runtimeBaseline) throw Error('Native preview read telemetry');
     document.querySelector<HTMLButtonElement>('#measureRun')!.click();
   } else if (phase === 5) {
     if (Number(root.dataset.runtimeSource) !== Number(root.dataset.runtimeBaseline) + 1) throw Error('Explicit native Run budget differs');
-    document.querySelector<HTMLButtonElement>('#serviceReturn button')!.click();
+    document.querySelector<HTMLButtonElement>('[data-workspace=services]')!.click();document.querySelector<HTMLButtonElement>('#entitiesKubernetes')!.click();document.querySelector<HTMLButtonElement>('[data-workspace=explore]')!.click();document.querySelector<HTMLButtonElement>('#serviceReturn button')!.click();
   } else if (phase === 6) {
     if (Number(root.dataset.runtimeSource) !== Number(root.dataset.runtimeBaseline) + 1 || document.querySelectorAll('.runtime-observations').length !== 2) throw Error('Retained runtime return reread or lost evidence');
-    root.dataset.runtimeTerminal = 'true';
+    if(document.querySelector('#entitiesServices')?.getAttribute('aria-selected')!=='true'||document.activeElement!==(window as any).__runtimeReturnOpener)throw Error('Service return lost tab or opener focus');root.dataset.runtimeTerminal = 'true';
   }
   root.dataset.runtimePhase = String(phase + 1);
 });

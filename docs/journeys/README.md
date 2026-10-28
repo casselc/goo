@@ -2557,3 +2557,14 @@ explicit reads and retained DOM/focus on both return levels. The CPU-time Bombad
 actor checks the same one-return rule and nested resource label.
 
 ![Compact nested ancestry](screenshots/233-nested-return-390.png)
+
+## 234. Service and Kubernetes continuations retain their opener
+
+[Storyboard](../../journeys/234-service-kubernetes-return-storyboard.md) and
+`journeys/234-service-kubernetes-return.spec.js` cover native service previews,
+service span continuations, container observation/original-question previews,
+entity-tab detours and retained selection/visible focus at 320/390/700px. Runtime
+Bombadil checks the service tab/focus outcome within the existing source budget.
+
+![Service return focus](screenshots/234-service-retained-opener.png)
+![Container history return focus](screenshots/234-kubernetes-retained-opener.png)

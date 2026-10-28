@@ -1,5 +1,36 @@
 # Validation record
 
+## Consistent retained service/Kubernetes returns — 234 (2026-10-28 UTC)
+
+Back to service now explicitly selects Services and restores the actual opening
+control for service record, basic native and exact widget continuations. Service,
+host and Kubernetes owners share application-level visible focus restoration:
+center the connected visible opener immediately, with a supplied fallback when it
+was detached or hidden. Existing retained data, scopes and source owners remain.
+
+Validation: all 588 frontend tests pass, including withdrawn-opener controls. New
+ordinary-OTLP service and Kubernetes journeys pass at 320/390/700px after entity-tab
+detours, checking original tab, focused control inside the viewport, retained DOM,
+selected observation and unchanged source counts on preview/return. Service span
+continuation preserves its existing explicit click-time read and fixed window;
+return adds no read. Basic native and exact runtime widget previews both restore
+their own controls. Kubernetes selects a held history observation before opening
+its original question. Mobile tests use the actual compact navigation menu.
+
+The updated runtime Bombadil campaign passes all phases, including a Kubernetes
+tab detour and service opener/tab restoration within its original source budget.
+The nested host return regression is checked against the shared helper too.
+Lightweight Kubernetes DOM fixtures now expose the visibility methods required by
+the real focus helper. An initial nearest-scroll policy failed viewport checks;
+centered instant scrolling passes the final service/Kubernetes geometry checks.
+
+Storyboard/diagram and both inspected mobile screenshots are updated. Four changed
+UI assets are synced into the existing Python lab. No Go/API/query/numeric/storage
+semantics changed; those suites and screenshots unrelated to this flow were not
+regenerated. This completes the bounded continuation review; the next gate is a
+whole-product task/backlog review before more history or identity machinery.
+
+
 ## One immediate parent in nested native investigations — 233 (2026-10-28 UTC)
 
 The ordinary host → native CPU-time measurement → interval records journey now

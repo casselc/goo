@@ -1314,3 +1314,9 @@ question matching and revision/token guards prevent inferred or stale ancestry.
 On return the retained resource presenter is restored. Source reads, navigation
 and this handoff remain in application adapters; passive display components have
 no ancestry store. See [journey 233](../journeys/233-nested-native-return-storyboard.md).
+
+Through 234, service, host and Kubernetes owners also share the application
+presenter's `restoreFocus` helper. It reveals a connected visible opener before
+focusing it, or uses the supplied fallback when that opener is withdrawn. Each
+owner still selects its own retained entity tab; source/query and publication
+ownership do not move into display elements.

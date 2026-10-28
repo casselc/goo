@@ -23,4 +23,8 @@ function mount(parent,{className='',id}={}){
  const owner={show,clear,hold,dispose(){clear();bar.remove()}};return owner;
 }
 function hold(parent,question){return active.get(parent)?.hold(question)??null}
-export {mount,hold};
+function restoreFocus(origin,fallback){
+ const target=origin?.isConnected&&UI.actionVisible(origin)?origin:fallback;
+ target?.scrollIntoView({block:'center',behavior:'instant'});target?.focus({preventScroll:true});
+}
+export {mount,hold,restoreFocus};

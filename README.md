@@ -453,3 +453,6 @@ shows fixed-scope preview, explicit Run, reuse actions and return from supportin
 
 The [nested resource/native return journey](journeys/233-nested-native-return-storyboard.md)
 keeps one immediate Back action while preserving original scopes and retained results.
+
+[Service and Kubernetes return journeys](journeys/234-service-kubernetes-return-storyboard.md)
+restore the retained tab and visible opening control, including mobile navigation.
