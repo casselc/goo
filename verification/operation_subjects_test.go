@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/casselc/goo/instrumentation"
-	"go.opentelemetry.io/otel"
+	metricnoop "go.opentelemetry.io/otel/metric/noop"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	"go.opentelemetry.io/otel/sdk/trace/tracetest"
 	"hegel.dev/go/hegel"
@@ -17,14 +17,15 @@ import (
 func TestRuntimeSubjectScope(t *testing.T) {
 	exporter := tracetest.NewInMemoryExporter()
 	provider := sdktrace.NewTracerProvider(sdktrace.WithSyncer(exporter))
-	previous := otel.GetTracerProvider()
-	otel.SetTracerProvider(provider)
-	defer otel.SetTracerProvider(previous)
+	rt, err := instrumentation.NewRuntime(instrumentation.Config{MeterProvider: metricnoop.NewMeterProvider(), TracerProvider: provider})
+	if err != nil {
+		t.Fatal(err)
+	}
 	defer provider.Shutdown(context.Background())
 	ctx, span := provider.Tracer("test").Start(context.Background(), "parent")
 	ctx = instrumentation.WithSubjectScope(ctx, "reservation", "tenant-a")
-	instrumentation.Event(ctx, "reservation.accepted", func() string { return "id" }, func() string { return "" })
-	instrumentation.Event(instrumentation.WithSubjectScope(ctx, "", "tenant-a"), "reservation.accepted", func() string { return "id" }, func() string { return "" })
+	rt.Event(ctx, "reservation.accepted", func() string { return "id" }, func() string { return "" })
+	rt.Event(instrumentation.WithSubjectScope(ctx, "", "tenant-a"), "reservation.accepted", func() string { return "id" }, func() string { return "" })
 	span.End()
 	events := exporter.GetSpans()[0].Events
 	if len(events) != 1 {

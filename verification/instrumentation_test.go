@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/casselc/goo/instrumentation"
-	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/sdk/metric/metricdata"
+	tracenoop "go.opentelemetry.io/otel/trace/noop"
 	"hegel.dev/go/hegel"
 	"testing"
 )
@@ -16,12 +16,13 @@ type invocation struct {
 	done bool
 }
 type operationMachine struct {
+	runtime     *instrumentation.Runtime
 	reader      *metric.ManualReader
 	invocations []invocation
 }
 
 func (m *operationMachine) RuleStart(tc hegel.TestCase) {
-	_, end := instrumentation.Operation(context.Background(), "property.balance", "internal")
+	_, end := m.runtime.Operation(context.Background(), "property.balance", "internal")
 	m.invocations = append(m.invocations, invocation{end: end})
 }
 func (m *operationMachine) finish(tc hegel.TestCase, mode string) {
@@ -56,6 +57,9 @@ func (m *operationMachine) InvariantActive(tc hegel.TestCase) {
 		}
 	}
 	observed := int64(0)
+	completed := int64(len(m.invocations)) - expected
+	calls := int64(0)
+	durations := uint64(0)
 	outcomes := map[string]bool{}
 	for _, scope := range snapshot.ScopeMetrics {
 		for _, signal := range scope.Metrics {
@@ -65,7 +69,13 @@ func (m *operationMachine) InvariantActive(tc hegel.TestCase) {
 					if v.AsString() == "property.balance" {
 						o, _ := point.Attributes.Value("goo.operation.outcome")
 						outcomes[o.AsString()] = true
+						calls += point.Value
 					}
+				}
+			}
+			if signal.Name == "goo.operation.duration" {
+				for _, point := range signal.Data.(metricdata.Histogram[float64]).DataPoints {
+					durations += point.Count
 				}
 			}
 			if signal.Name == "goo.operation.active" {
@@ -78,17 +88,23 @@ func (m *operationMachine) InvariantActive(tc hegel.TestCase) {
 	if len(m.invocations) > 0 && (!outcomes["ok"] || !outcomes["error"] || !outcomes["panic"]) {
 		panic("missing explicit outcome baselines")
 	}
+	if calls != completed || durations != uint64(completed) {
+		panic(fmt.Sprintf("completed=%d calls=%d durations=%d", completed, calls, durations))
+	}
 	if observed != expected {
 		panic(fmt.Sprintf("active: observed %d expected %d", observed, expected))
 	}
 }
 func TestHegelOperationAccountingStateSwarm(t *testing.T) {
-	reader := metric.NewManualReader()
-	provider := metric.NewMeterProvider(metric.WithReader(reader))
-	otel.SetMeterProvider(provider)
-	defer provider.Shutdown(context.Background())
 	hegel.Test(t, func(tc *hegel.T) {
-		m := &operationMachine{reader: reader}
+		reader := metric.NewManualReader()
+		provider := metric.NewMeterProvider(metric.WithReader(reader))
+		defer provider.Shutdown(context.Background())
+		rt, err := instrumentation.NewRuntime(instrumentation.Config{MeterProvider: provider, TracerProvider: tracenoop.NewTracerProvider()})
+		if err != nil {
+			tc.Fatal(err)
+		}
+		m := &operationMachine{reader: reader, runtime: rt}
 		defer func() {
 			for _, entry := range m.invocations {
 				entry.end(nil, false)

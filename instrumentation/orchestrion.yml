@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://datadoghq.dev/orchestrion/schema.json
 meta:
   name: github.com/casselc/goo/instrumentation
-  description: Opt-in goo operation and subject-event observations; run goo manifest before weaving.
+  description: Opt-in goo operation and subject-event observations; bind an owned runtime before serving and run goo manifest before weaving.
 aspects:
   - id: goo-operation
     join-point:

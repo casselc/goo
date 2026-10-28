@@ -54,6 +54,21 @@ can materialize its checksum-verified embedded library in a writable directory.
 Keep TLS and Go module checksum verification enabled. A browser binary is not
 needed for these checks.
 
+## Owned instrumentation runtime
+
+`TestHegelOperationAccountingStateSwarm` constructs fresh providers and a direct
+`instrumentation.Runtime` per generated case. It checks active invocations,
+completed-call and histogram counts, and explicit outcome baselines through start,
+success/error/panic and repeated-finalization schedules. `TestOwnedRuntimeSDKIsolation`
+checks parallel identical-name runtimes with separate real SDK providers, spans,
+events and metrics. These checks never reset the process default binding.
+
+The woven scenario suite binds one explicitly constructed runtime before invoking
+annotated functions. Run it through Orchestrion, once per test process; plain Go
+compilation does not weave annotations. Instrumentation module tests separately
+cover constructor failures, bounded initialization, concurrent finalizers and
+one-time default binding (in a subprocess). See [startup semantics](../docs/GOO_ANNOTATIONS.md#runtime-ownership-and-startup).
+
 ## Hegel
 
 - Exact deadline inclusion and duplicate delivery invariance: 300 requested cases.

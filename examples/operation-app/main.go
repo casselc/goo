@@ -70,6 +70,13 @@ func run() error {
 	defer shutdownProvider(meter.Shutdown)
 	otel.SetMeterProvider(meter)
 	otel.SetTracerProvider(tp)
+	rt, err := instrumentation.NewRuntime(instrumentation.Config{MeterProvider: meter, TracerProvider: tp})
+	if err != nil {
+		return err
+	}
+	if err := instrumentation.BindDefault(rt); err != nil {
+		return err
+	}
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /demo/metrics", func(w http.ResponseWriter, r *http.Request) {
 		mode := r.URL.Query().Get("mode")

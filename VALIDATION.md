@@ -1,5 +1,35 @@
 # Validation record
 
+## Owned instrumentation runtime (2026-10-28 UTC)
+
+`instrumentation.NewRuntime(Config)` now requires explicit meter/tracer providers,
+creates all instruments eagerly and returns wrapped construction errors. Direct
+Runtime methods own instruments and a bounded outcome-initialization table.
+`BindDefault` connects existing woven hooks once per process; nil/zero runtimes
+and rebinding are rejected. Pre-binding hooks are no-ops, without evaluating event
+selectors. SDK providers/exporter shutdown remain application-owned. Both sample
+apps and the Hegel/SDK/woven fixtures use explicit runtime ownership.
+
+Validation: full root Go tests pass. Instrumentation race tests and vet pass,
+covering all four constructor failures, nil providers, concurrent exactly-once
+completion, isolated direct runtimes, binding races and initialization overflow.
+Parallel real-SDK runtimes retain separate spans/events/counts and outcome zeros.
+The Hegel state/swarm accounting check passes with fresh providers per case and
+invariants for active, completed-call and duration totals. Subject-scope SDK checks
+pass. Both sample modules pass race tests and vet; manifests validate for both
+samples and the woven example. Actual Orchestrion scenario tests pass, including
+success/error/panic telemetry, selector drops and Quint faithful/negative checks.
+Both deployable sample binaries also build through their lint-before-weave scripts.
+
+Instrument names/units, scope/version/schema, annotation syntax and stored result
+formats are unchanged. Zero baselines are seeded for up to 1,024 distinct
+name/role pairs per runtime; later pairs keep actual observations but no synthetic
+zeros. This bounds bookkeeping, not SDK series cardinality. No provider copying,
+implicit global initialization, rebinding or automatic shutdown is added. Updated
+architecture/startup diagrams, developer storyboard and refactor status explain
+the prerelease startup change. Temporary build binaries/manifests/logs are removed;
+saved lab volumes remain intact. No UI-layout change or browser rerun is claimed.
+
 ## Legacy operation source policies (2026-10-28 UTC)
 
 The four legacy source GETs and their implicit HEAD handlers now use family-owned

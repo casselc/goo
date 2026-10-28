@@ -15,6 +15,7 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
+	metricnoop "go.opentelemetry.io/otel/metric/noop"
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 )
@@ -57,6 +58,13 @@ func run() error {
 	provider := sdktrace.NewTracerProvider(sdktrace.WithBatcher(exporter), sdktrace.WithResource(resource.NewSchemaless(attribute.String("service.name", "lab-go-reports"), attribute.String("deployment.environment.name", "local"), attribute.String("service.instance.id", "reports-demo"))))
 	defer shutdownProvider(provider.Shutdown)
 	otel.SetTracerProvider(provider)
+	rt, err := instrumentation.NewRuntime(instrumentation.Config{MeterProvider: metricnoop.NewMeterProvider(), TracerProvider: provider})
+	if err != nil {
+		return err
+	}
+	if err := instrumentation.BindDefault(rt); err != nil {
+		return err
+	}
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")

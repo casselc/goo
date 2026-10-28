@@ -415,3 +415,9 @@ explicit Refresh and direct local Evidence without changing telemetry reads.
 Go HTTP executables handle SIGINT/SIGTERM with a five-second request drain, then
 cancel and close remaining work. The Go samples also flush their SDK providers
 with separate five-second budgets. See [shutdown behavior and limits](docs/HTTP_BOUNDARIES.md#executable-shutdown-2026-10-28).
+
+Woven Go instrumentation requires explicit startup: construct
+`instrumentation.NewRuntime(Config{MeterProvider: ..., TracerProvider: ...})`,
+check its error, then call `instrumentation.BindDefault(rt)` once before serving.
+Manual integrations can use Runtime methods without a process binding. See
+[the runtime contract](docs/GOO_ANNOTATIONS.md#runtime-ownership-and-startup).

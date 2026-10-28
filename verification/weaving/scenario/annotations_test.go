@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/casselc/goo/annotations"
+	"github.com/casselc/goo/instrumentation"
 	"github.com/casselc/goo/verification/weaving/example"
-	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/sdk/metric/metricdata"
@@ -34,12 +34,17 @@ func TestGooAnnotationsEmitActualOTel(t *testing.T) {
 	}
 	exporter := tracetest.NewInMemoryExporter()
 	tp := sdktrace.NewTracerProvider(sdktrace.WithSyncer(exporter))
-	otel.SetTracerProvider(tp)
 	defer tp.Shutdown(context.Background())
 	reader := metric.NewManualReader()
 	mp := metric.NewMeterProvider(metric.WithReader(reader))
-	otel.SetMeterProvider(mp)
 	defer mp.Shutdown(context.Background())
+	rt, err := instrumentation.NewRuntime(instrumentation.Config{MeterProvider: mp, TracerProvider: tp})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := instrumentation.BindDefault(rt); err != nil {
+		t.Fatal(err)
+	}
 	result, err := example.Reserve(context.Background(), false)
 	if err != nil || result.ID != "reservation-1" {
 		t.Fatal("application result changed")

@@ -25,6 +25,11 @@ their distinct adapter contracts. The [HTTP acceptance inventory](HTTP_BOUNDARIE
 records adopted transports and remaining endpoint/branch coverage; no common
 semantic evaluator or universal request owner is implied.
 
+Instrumentation uses an explicit `NewRuntime(Config)` with application-selected
+providers and eagerly checked instrument creation. Direct runtimes own their
+initialization state; woven hooks use a one-time `BindDefault` process binding.
+Applications retain SDK/exporter shutdown. See [runtime ownership and flow](GOO_ANNOTATIONS.md#runtime-ownership-and-startup).
+
 Legacy operation source GETs (including implicit HEAD) now use the shared source
 budget and family-declared post-validation deadlines through `internal/operationhttp`.
 The operation-package declaration remains outside source admission. Mixed

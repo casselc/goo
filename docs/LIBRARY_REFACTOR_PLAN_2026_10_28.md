@@ -81,7 +81,7 @@ retain separate owners. This does not complete all broader library cuts.
 | **4 — Storage-independent evaluation** | Separate numeric/native evaluation and source reads from optional snapshots, custody/publication and retention experiments. Make lifecycle correction/storage effects explicit rather than hiding them in a broadly named Evaluate call. Minimize live result metadata and hashes to what actual consumers use. | A library consumer can calculate or query without learning an evidence subsystem. Keep exact numbers/time, units, reset/unknown semantics and honest population identity. Optional saves need only the data required by their workflow; they do not justify generalized cryptographic custody everywhere. |
 | **5 — Request and server ownership** | Establish cancellation through headers/body consumption across browser, Python and Go, then use one clear JSON-read helper for appropriate source owners. Consolidate endpoint effect/admission/deadline policy and move a coherent HTTP family out of cmd. Add bounded executable shutdown/export flushing. | Reliability and easier source-route maintenance. This is an identified seam, not a reproduced backend leak. Keep pure computations, source reads, publications/ambiguous commits and SSE lifetimes distinct; cleanly replace obsolete helper signatures when useful. |
 | **6 — Clear package and revision APIs** | Prefer renaming prepared aggregate compiler `measurement` to `subjectfacts`, distinguishing it from native/live `measurements`. Migrate imports/docs/tests directly. Delete unused hashes; replace unchecked Hash(any) only where a real definition/reference ID is needed, using checked concrete functions. | Import sites explain which library the user needs. No permanent alias package or unchecked legacy wrapper by default. Persisted development fixtures may be reseeded; a retained saved workflow gets an explicit migration/export decision. |
-| **7 — Owned instrumentation runtime** | Design NewRuntime(Config) (*Runtime,error), its default weaving binding and examples as one coordinated cutover. Own instruments and bounded initialization state per runtime, surface errors, and retire ambiguous global initialization paths. | Isolated manual integrations/tests and understandable startup. Applications own SDK providers/exporter shutdown. Generated annotations must use the chosen binding without per-operation plumbing or panic/recover boilerplate. Exact binding/rebinding semantics still need a concrete design. |
+| **7 — Owned instrumentation runtime** | **Implemented:** `NewRuntime(Config)` eagerly creates instruments with explicit providers and surfaced errors. Direct methods own bounded initialization state; one-time `BindDefault` connects woven hooks. Samples and SDK/Hegel/woven fixtures use the new path. | Manual integrations/tests can isolate providers; generated annotations need no per-operation plumbing. Applications own SDK shutdown. Unbound hooks are no-ops, rebinding is rejected, and overflow skips synthetic zero seeding while retaining actual observations. |
 | **8 — Measured/private optimizations** | Parse numeric times and prepare sort/group keys once; use narrow generic/stdlib helpers where they remove real repetition. Relocate existing request-owner mechanics and extract only compatible component-input leaves. Consolidate touched CSS. | Benchmark allocation-sensitive paths before claiming gains. Preserve meaningful semantic differences, not old serialization accidents. Each extraction needs a real consumer and should delete its superseded path. |
 
 Start with a small scope/ownership decision and the Go baseline, then pilot the
@@ -93,10 +93,9 @@ framework projects.
 
 ## Public API sketches and usability review
 
-Design/usability accepts these **directions**, not an implemented API:
+The reviewed Go runtime direction is now implemented (2026-10-28):
 
 ```go
-// PROPOSED: not an existing constructor.
 rt, err := instrumentation.NewRuntime(instrumentation.Config{
     MeterProvider:  meterProvider,
     TracerProvider: tracerProvider,
@@ -106,14 +105,15 @@ if err != nil {
 }
 ```
 
-A coordinated default binding should let woven annotations use the owned runtime
-without changing every function. Constructing an unbound runtime does not isolate
-today's woven calls, which still use package globals. Specify nil providers,
-initialization errors, cardinality, exactly-once finalization and whether rebinding
-is prohibited or safely scoped. An executable-level default is not a promise that
-parallel tests of that global binding are isolated; direct runtime tests can be.
-The reviewed change may remove obsolete APIs rather than maintain two permanent
-ways to initialize the same state.
+`BindDefault(rt)` is the one-time process binding for woven hooks. It rejects
+rebinding; unbound hooks record nothing. Direct Runtime methods isolate manual
+integrations/tests with caller-selected providers. Constructor errors are surfaced;
+provider shutdown remains application-owned. Outcome initialization is bounded to
+1,024 name/role pairs per runtime without dropping actual observations. See
+[the implemented contract](GOO_ANNOTATIONS.md#runtime-ownership-and-startup) for
+nil/noop providers, overflow, finalization and test-process semantics. Both samples
+and the woven/Hegel/SDK fixtures use the new ownership path. This completes the
+owned-runtime cut's implementation; it does not freeze the prerelease API.
 
 The proposed frontend embedding can be as simple as:
 

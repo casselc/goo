@@ -31,6 +31,73 @@ Go compilation verifies selector result types: subject/outcome must be strings.
 Use an explicit named builtin `error` result rather than custom error-return
 conventions; this first slice does not resolve error policies through aliases.
 
+## Runtime ownership and startup
+
+Construct a runtime from the application's actual providers and check errors before
+serving requests:
+
+```go
+rt, err := instrumentation.NewRuntime(instrumentation.Config{
+    MeterProvider: meterProvider,
+    TracerProvider: tracerProvider,
+})
+if err != nil {
+    return err
+}
+if err := instrumentation.BindDefault(rt); err != nil {
+    return err
+}
+```
+
+Both providers are required. Supply OTel's metric/trace `noop` provider explicitly
+when a signal is intentionally disabled (as in the reports example's metrics).
+The constructor creates all four instruments eagerly, returning the first error
+with its instrument name and wrapped cause. It does not install global providers,
+read global OTel handles, bind itself, or own exporter shutdown. The application
+owns provider shutdown, including cleanup after a constructor error. Existing
+instrument names, units, scope/version/schema and annotation syntax are unchanged.
+
+`BindDefault` succeeds exactly once per process and rejects nil/zero runtimes or
+any later binding, including the same runtime. Bind before starting application
+work; requests made earlier are not replayed. Package `Operation`/`Event` functions
+are the woven-hook bridge: before binding, operations return a no-op finalizer and
+events do not even evaluate selectors. There is no implicit global initialization
+or reset/rebind API. A one-time process binding is not test isolation.
+
+Manual callers can use `rt.Operation(ctx, name, role)` and `rt.Event(...)` directly,
+without binding. Independent runtimes can run in parallel with independent
+providers. Finalizers close over their owning runtime and remain exactly-once
+under concurrent/repeated completion. `WithSubjectScope` remains a pure context
+helper. Event spans come from the supplied context; passing another runtime's span
+intentionally attaches the event there, while diagnostic counters use the receiver's
+meter. Providers are not cloned or isolated if the caller deliberately shares them.
+
+Each runtime seeds explicit zero outcome baselines once for up to 1,024 distinct
+operation-name/role pairs. The bounded initialization table never evicts admitted
+pairs. Beyond that limit, actual calls/durations/active counts and spans continue,
+but new pairs receive no synthetic zero baselines. This bounds bookkeeping, not
+all SDK series cardinality. Keep names/roles finite declarations, not request IDs;
+missing series beyond the limit must not be interpreted as observed zero. No
+metric name/unit/schema change is introduced by this bound.
+
+```mermaid
+flowchart LR
+    App[Application startup] --> Providers[App-owned OTel providers]
+    Providers --> New[NewRuntime: eager instruments or error]
+    New --> Runtime[Owned runtime and bounded initialization table]
+    Runtime --> Manual[Direct Runtime methods]
+    Runtime --> Bind[BindDefault: one-time process binding]
+    Weave[Orchestrion annotation hooks] --> Bind
+    Bind --> Invoke[Invocation and exactly-once finalizer]
+    Manual --> Invoke
+    Invoke --> OTLP[App SDK exporters to collector]
+    App --> Shutdown[Drain HTTP, then provider shutdown and flush]
+```
+
+The examples demonstrate the binding alongside their own bounded provider
+shutdown. Woven verification uses one binding per test process; direct-runtime
+Hegel/SDK tests create fresh runtimes rather than resetting process globals.
+
 ## Emitted contract
 
 Scope: `github.com/casselc/goo/instrumentation`, version `0.1.0`, schema
@@ -59,7 +126,7 @@ ratio. A missing/oversized subject, invalid selector/outcome, or absent recordin
 parent yields a dropped-event counter observation rather than an invented event.
 Selector access is guarded, so a nil result field does not introduce a new
 application panic. The runtime does not install providers or exporters: configure
-standard OTel providers before first use. Sampling can remove span events even
+an owned runtime with explicit providers and bind woven hooks before serving. Sampling can remove span events even
 when operation metrics are emitted.
 
 `when:ok` means the function returned without an error. The application author
@@ -127,13 +194,16 @@ Plain Go builds ignore the annotation comments.
 | Step | Actual check |
 | --- | --- |
 | Describe source observations | `goo manifest` validates operation/event declarations and emits a versioned contract |
+| Construct and bind | Constructor-error tests, one-time binding races and pre-binding no-op checks establish startup behavior |
 | Weave the example | `goo weave` runs custom Orchestrion aspects on real Go functions |
 | Exercise success | The original decision returns unchanged; accepted and terminal events land on the recording operation span |
 | Exercise failure | The original error returns unchanged; no success event is emitted from a nil result |
 | Exercise panic | The original panic value propagates; metrics record panic and release the active operation |
 | Exercise missing event evidence | Nil/empty subject and no recording parent produce three diagnosed drops |
 | Compare emitted OTel with the manifest | Real OTel SDK in-memory export verifies scope/version, units, dimensions, metric counts and span events |
-| Explore operation lifecycles | Hegel state/swarm sequences start, finish, repeat finalization, error and panic outcomes; active count equals unfinished invocations after every step |
+| Isolate manual integrations | Parallel real-SDK runtimes with identical operation names retain their own spans, events, counts and zero baselines |
+| Bound initialization | More than 1,024 distinct pairs retain all actual observations while the seed table stays bounded |
+| Explore operation lifecycles | Hegel state/swarm sequences start, finish, repeat finalization, error and panic outcomes; active count equals unfinished invocations, and call/histogram totals equal completed invocations after every step |
 
 The SDK capture is genuine woven telemetry retained at
 `artifacts/annotations/otel.json` when requested. It is not a collector/ClickHouse

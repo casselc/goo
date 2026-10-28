@@ -17,6 +17,11 @@ Legacy operation source GET/HEAD reads now share source admission, cancellation
 and post-validation deadlines. Declarations remain outside admission; mixed
 publication/retention and SSE retain their own lifetimes. Python process lifecycle
 remains separate work.
+Instrumentation now requires explicit providers via `NewRuntime` and one-time
+`BindDefault` for woven calls. Pre-binding hooks are no-ops. Outcome seeding is
+limited to 1,024 operation/role pairs per runtime; later pairs retain actual
+observations but no synthetic zero baselines. This is not a full SDK cardinality
+limit. See [runtime ownership](GOO_ANNOTATIONS.md#runtime-ownership-and-startup).
 Browser conformance is currently checked in Chromium; Firefox/Safari coverage
 is not established.
 
