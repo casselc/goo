@@ -55,6 +55,15 @@ sequenceDiagram
     Note over Read: Finally removes abort listener; completed reads cannot cancel later
 ```
 
+`internal/nativehttp` composes native metric/host/pod discovery, measurement Run
+and supplied-data host/pod planning. Its policy table and `recordhttp` share the
+internal `queryhttp.Policy`, `ReadHandler` and `PlanHandler` mechanics. Source
+contexts start after typed validation; bounded pure-plan contexts begin before
+JSON decoding and are checked before/after computation. Lifecycle Run retains
+its configured custody-directory effect, while discovery/planning do not write.
+The [native boundary diagram](HTTP_BOUNDARIES.md#native-measurementdiscovery-policy-extraction-2026-10-28)
+shows the two configured source adapters and separate planner/custody paths.
+
 [Immutable publication](IMMUTABLE_PUBLICATION.md) shares write/sync/link mechanics
 across reusable telemetry packages, workbench artifacts, capture stores, lifecycle
 custody and native YAML. The latter two retain explicit file-only sync.

@@ -10,6 +10,13 @@ test('38 shared measurements: real gauges counters histograms lifecycles capture
  const jobs={};for(const scenario of ['good','retry','missing','reject','late'])jobs[scenario]=await json(await request.post('http://127.0.0.1:8081/reserve',{data:{scenario}}));
  const report=await json(await request.post('http://127.0.0.1:8091/generate'));
  await page.goto('http://127.0.0.1:8090');await page.getByRole('button',{name:'Successful checkout',exact:true}).click();await expect(page.locator('#result')).toContainText('HTTP 200');
+ // Cumulative histograms need a baseline before the measured operation. A first
+ // export can already contain the first checkout, leaving only zero deltas.
+ const histogramPopulation="FROM otel_metrics_histogram WHERE ServiceName='lab-go-checkout' AND MetricName='goo.operation.duration' AND ScopeName='github.com/casselc/goo/instrumentation' AND Attributes['goo.operation.name']='checkout.reserve' AND Attributes['goo.operation.outcome']='ok' AND TimeUnix>=fromUnixTimestamp64Milli({from:Int64})";
+ await expect.poll(async()=>Number((await source(request,"SELECT count() AS n "+histogramPopulation+" FORMAT JSONEachRow",{param_from:start}))[0].n),{timeout:45000,intervals:[1000]}).toBeGreaterThan(0);
+ await page.getByRole('button',{name:'Successful checkout',exact:true}).click();await expect(page.locator('#result')).toContainText('HTTP 200');
+ await expect.poll(async()=>Number((await source(request,"SELECT max(Count)>min(Count) AS progressed "+histogramPopulation+" FORMAT JSONEachRow",{param_from:start}))[0].progressed),{timeout:45000,intervals:[1000]}).toBe(1);
+
  // Independent readiness oracle over physical ClickHouse columns.
  let logs=[];await expect.poll(async()=>{logs=await source(request,"SELECT Body,TraceId,SpanId,LogAttributes FROM otel_logs WHERE ServiceName='lab-go-reports' AND LogAttributes['goo.subject.id']={id:String} ORDER BY Timestamp LIMIT 10 FORMAT JSONEachRow",{param_id:report.id});return logs.length},{timeout:45000,intervals:[1000]}).toBe(2);expect(logs.map(x=>x.Body).sort()).toEqual(['report.accepted','report.ready']);expect(logs.every(x=>/^[a-f0-9]{32}$/.test(x.TraceId)&&/^[a-f0-9]{16}$/.test(x.SpanId))).toBe(true);
  await expect.poll(async()=>Number((await source(request,"SELECT count() AS n FROM otel_metrics_gauge WHERE ScopeName='goo.worker-queue' AND TimeUnix>=fromUnixTimestamp64Milli({from:Int64}) FORMAT JSONEachRow",{param_from:start}))[0].n),{timeout:45000,intervals:[1000]}).toBeGreaterThan(0);

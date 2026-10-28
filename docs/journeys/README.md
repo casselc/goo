@@ -827,6 +827,10 @@ controls. `GOO_RECIPES_BOMBADIL=1` exercises source-free preview guards.
 `journeys/measurements.spec.js` generates ordinary good/retry/missing/rejected/late
 reservation work, a Go checkout and a Go report. Independent ClickHouse queries
 locate actual trace-correlated Go log records and check the gauge source count.
+For cumulative duration histograms, the fixture first observes an exported sample,
+then triggers another ordinary checkout and waits for an increased exported count.
+This establishes a measurable interval instead of assuming a first cumulative
+sample describes activity before that sample. No histogram result is synthesized.
 The user opens a declarative USE step without reading telemetry, then executes
 fixed questions across all four measurement families. Mature lifecycle subjects
 preserve missing→unknown; typed subject drilldown retains exact tenant/event scope.

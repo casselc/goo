@@ -55,9 +55,12 @@ Go's already-correct body-generation lifetime. The first endpoint-policy and
 server extraction is implemented: `internal/recordhttp` owns record-family limits,
 deadlines, effects and typed handlers; `internal/queryhttp` owns shared admission
 and cancellation mechanics. Command code composes their configured dependencies.
-Native/capture policy adoption, per-server snapshot ownership and executable
-shutdown/export flushing remain planned; the broader request/server cut below is
-not complete.
+Native measurement/discovery and host/pod planners now have family-owned policies
+and handlers in `internal/nativehttp`. Source and pure-plan mechanics are shared
+in `queryhttp`, including their distinct deadline ordering and optional lifecycle
+custody effect. Explanation/capture policy adoption, per-server snapshot ownership
+and executable shutdown/export flushing remain planned; the broader request/server
+cut below is not complete.
 
 ## Preferred cuts
 

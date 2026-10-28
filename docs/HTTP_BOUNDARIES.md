@@ -19,7 +19,7 @@ reads from pure comparison. Limits remain 16 KiB/15–55 seconds for record read
 64 KiB/55 seconds for trace search and 1 MiB for pure comparison. Deadline setup
 still follows typed decoding and semantic validation.
 
-An internal inferred generic shares the typed decode/validate/read/write boundary;
+The inferred `queryhttp.ReadHandler` shares the typed decode/validate/read/write boundary;
 validators and source methods keep their concrete types and existing 400/502
 mapping. Source/compiler behavior remains in `exploration`. Registration accepts
 the configured source and existing snapshot bank; only `/explore` holds an
@@ -29,9 +29,9 @@ owners; per-server snapshot-bank ownership has not been redesigned by this cut.
 
 `internal/queryhttp` owns shared admission, the cancellation registry, tombstones,
 60-second enclosing deadline and cleanup after the handler/body completes. The
-command supplies effect classification; it retains an explicit list for native,
-population-explanation and capture routes outside the extracted record family.
-Publication, SSE, native deadlines and Python proxy policies remain separate.
+command composes record/native family policies; only population-explanation and
+capture routes remain in its explicit list. Publication, SSE and Python proxy
+policies retain their separate owners.
 No endpoint, wire response, source query, status policy or storage format changed.
 API source indexing now recognizes the family's explicit `registerRead` calls;
 build/check tools share that index. Published source-owner metadata points to the
@@ -52,6 +52,51 @@ flowchart LR
     Records --> Semantics[exploration: validate, compile, execute]
     Records -->|Explore result only| Snapshots[Supplied ephemeral snapshot bank]
     Startup[cmd/goo: configured source and bank] --> Records
+```
+
+## Native measurement/discovery policy extraction (2026-10-28)
+
+`internal/nativehttp` owns `/metric-discovery`, `/measurements`, `/host-discovery`,
+`/pod-discovery`, `/pod-metric-discovery`, `/host-dashboard/plan` and
+`/pod-dashboard/plan`. Its family table supplies effect, byte ceiling, timeout and
+trailing-JSON error text to registration and admission. `queryhttp.Policy` is a
+shared internal value; method/path lookup remains with each family. No global
+route registry or user-facing generic parameters are required.
+
+The five source routes retain 15- or 30-second contexts after decoding and
+validation. Native byte limits remain 16/64 KiB; the pod planner still accepts
+8 MiB plus 1 KiB. Host/pod planners retain their two-second contexts beginning
+before decoding, with pre/post-computation deadline checks. They remain available
+when source admission is full and do not issue reads. `queryhttp.ReadHandler`
+and `PlanHandler` share typed HTTP mechanics without reflection; concrete source,
+validation and pure planning functions stay in their domain packages. The unbounded
+pure `/compare` route keeps its existing separate handling.
+
+`/measurements` is explicitly a read **with optional lifecycle custody**. Its
+configured `measurements.Source.CustodyDir` is preserved; discovery does not write
+custody. The record adapter still owns the physical pod-inventory read, passed
+separately to `RegisterPodDiscovery`. Definition catalogs/publication, container
+planners, capture/recovery and SSE retain their existing owners. Invalid input,
+source failure, strict JSON behavior and wire responses are unchanged. OpenAPI
+regeneration changes only the seven source-owner metadata entries.
+
+Deterministic `testing/synctest` checks cover deadline phase ordering and the parent
+context ceiling. Integration checks cover configured custody, no discovery writes,
+immutable first-observation bytes and pure/source admission. Shared policy tests
+compare both families' byte/admission declarations with OpenAPI.
+
+```mermaid
+flowchart LR
+    Cmd[cmd/goo: configured sources and custody directory] --> Native[nativehttp registration]
+    Policy[nativehttp family policy] -. admission .-> Budget[queryhttp budget]
+    Policy -. limits and timeout .-> Native
+    Budget --> Native
+    Native --> Read[ReadHandler: decode, validate, then source deadline]
+    Native --> Plan[PlanHandler: deadline before decode, pre/post checks]
+    Read --> Metrics[measurements: discover or Run]
+    Read --> Pods[exploration: pod inventory]
+    Metrics -->|Lifecycle Run only| Custody[Configured first-observation directory]
+    Plan --> Pure[Supplied-data host/pod planners]
 ```
 
 ## Endpoint effects

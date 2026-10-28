@@ -6,6 +6,7 @@ import (
 
 	"github.com/casselc/goo/exploration"
 	"github.com/casselc/goo/internal/httpjson"
+	"github.com/casselc/goo/internal/queryhttp"
 )
 
 // Register binds one configured source and the application's existing ephemeral
@@ -52,27 +53,8 @@ func Register(mux *http.ServeMux, source exploration.Source, snapshots *explorat
 // execution boundary. Family-specific validators and source methods remain typed.
 func registerRead[Q, R any](mux *http.ServeMux, path string, validate func(Q) error, read func(context.Context, Q) (R, error)) {
 	policy, ok := PolicyFor("POST", path)
-	if !ok || policy.Effect == Pure {
+	if !ok {
 		panic("recordhttp: missing source-read policy for " + path)
 	}
-	mux.HandleFunc("POST "+path, func(w http.ResponseWriter, r *http.Request) {
-		fail := func(code int, err error) { httpjson.Write(w, code, map[string]string{"error": err.Error()}) }
-		var question Q
-		if err := httpjson.Decode(w, r, &question, policy.BodyLimit, "expected one JSON object"); err != nil {
-			fail(400, err)
-			return
-		}
-		if err := validate(question); err != nil {
-			fail(400, err)
-			return
-		}
-		ctx, cancel := context.WithTimeout(r.Context(), policy.SourceTimeout)
-		defer cancel()
-		result, err := read(ctx, question)
-		if err != nil {
-			fail(502, err)
-			return
-		}
-		httpjson.Write(w, 200, result)
-	})
+	mux.HandleFunc("POST "+path, queryhttp.ReadHandler(policy, validate, read))
 }

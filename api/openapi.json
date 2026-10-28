@@ -3928,8 +3928,8 @@
         "tags": [
           "host-dashboard"
         ],
-        "description": "Current owner: cmd/goo/host_http.go. Effect: pure-plan-or-supplied-summary. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/host_http.go",
+        "description": "Current owner: internal/nativehttp/routes.go. Effect: pure-plan-or-supplied-summary. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/nativehttp/routes.go",
         "x-effects": "pure-plan-or-supplied-summary",
         "parameters": [],
         "responses": {
@@ -3986,8 +3986,8 @@
         "tags": [
           "host-discovery"
         ],
-        "description": "Current owner: cmd/goo/host_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/host_http.go",
+        "description": "Current owner: internal/nativehttp/routes.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/nativehttp/routes.go",
         "x-effects": "source-read",
         "parameters": [
           {
@@ -4298,8 +4298,8 @@
         "tags": [
           "measurements"
         ],
-        "description": "Current owner: cmd/goo/measurements_http.go. Effect: source-read-with-possible-custody-or-capture. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/measurements_http.go",
+        "description": "Current owner: internal/nativehttp/routes.go. Effect: source-read-with-possible-custody-or-capture. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/nativehttp/routes.go",
         "x-effects": "source-read-with-possible-custody-or-capture",
         "parameters": [
           {
@@ -4386,8 +4386,8 @@
         "tags": [
           "metric-discovery"
         ],
-        "description": "Current owner: cmd/goo/measurements_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/measurements_http.go",
+        "description": "Current owner: internal/nativehttp/routes.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/nativehttp/routes.go",
         "x-effects": "source-read",
         "parameters": [
           {
@@ -4590,8 +4590,8 @@
         "tags": [
           "pod-dashboard"
         ],
-        "description": "Current owner: cmd/goo/pod_metrics_http.go. Effect: pure-plan-or-supplied-summary. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/pod_metrics_http.go",
+        "description": "Current owner: internal/nativehttp/routes.go. Effect: pure-plan-or-supplied-summary. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/nativehttp/routes.go",
         "x-effects": "pure-plan-or-supplied-summary",
         "parameters": [],
         "responses": {
@@ -4648,8 +4648,8 @@
         "tags": [
           "pod-discovery"
         ],
-        "description": "Current owner: cmd/goo/pod_discovery_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/pod_discovery_http.go",
+        "description": "Current owner: internal/nativehttp/routes.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/nativehttp/routes.go",
         "x-effects": "source-read",
         "parameters": [
           {
@@ -4736,8 +4736,8 @@
         "tags": [
           "pod-metric-discovery"
         ],
-        "description": "Current owner: cmd/goo/pod_metrics_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
-        "x-go-source": "cmd/goo/pod_metrics_http.go",
+        "description": "Current owner: internal/nativehttp/routes.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/nativehttp/routes.go",
         "x-effects": "source-read",
         "parameters": [
           {

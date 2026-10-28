@@ -6,7 +6,6 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"strings"
 	"testing"
 
@@ -15,46 +14,12 @@ import (
 	"github.com/casselc/goo/internal/recordhttp"
 )
 
-func TestPoliciesMatchPublishedAPIBoundaries(t *testing.T) {
-	data, err := os.ReadFile("../../api/openapi.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	var spec struct {
-		Paths map[string]struct {
-			Post struct {
-				Limit      int64 `json:"x-go-body-limit-bytes"`
-				Parameters []struct{ Name string }
-			}
-		}
-	}
-	if err := json.Unmarshal(data, &spec); err != nil {
-		t.Fatal(err)
-	}
-	for path, operation := range spec.Paths {
-		policy, ok := recordhttp.PolicyFor("POST", path)
-		if !ok {
-			continue
-		}
-		if operation.Post.Limit != policy.BodyLimit {
-			t.Errorf("%s body bound differs from API: %d != %d", path, policy.BodyLimit, operation.Post.Limit)
-		}
-		controlled := false
-		for _, parameter := range operation.Post.Parameters {
-			controlled = controlled || parameter.Name == "X-Goo-Query-ID"
-		}
-		if controlled != (policy.Effect != recordhttp.Pure) {
-			t.Errorf("%s cancellation capability differs from effect policy", path)
-		}
-	}
-}
-
 func TestAdmissionDistinguishesPureComparisonFromRecordReads(t *testing.T) {
 	mux := http.NewServeMux()
 	recordhttp.Register(mux, exploration.Source{}, &exploration.ResultSnapshots{})
 	budget := queryhttp.NewBudget(mux, 0, func(r *http.Request) bool {
 		policy, ok := recordhttp.PolicyFor(r.Method, r.URL.Path)
-		return ok && policy.Effect != recordhttp.Pure
+		return ok && policy.Effect != queryhttp.Pure
 	})
 	for _, path := range []string{"/inventory", "/discovery", "/explore", "/record-aggregates", "/explore/counted-values", "/trace-search"} {
 		t.Run(path, func(t *testing.T) {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/internal/nativehttp"
 	"github.com/casselc/goo/measurements"
 	"io"
 	"net/http"
@@ -89,7 +90,7 @@ func TestHostHTTPWireContracts(t *testing.T) {
 				return &http.Response{StatusCode: 503, Body: io.NopCloser(strings.NewReader("fixture unavailable")), Header: make(http.Header)}, nil
 			})}
 		}
-		registerHostMeasurements(mux, source)
+		nativehttp.RegisterMeasurements(mux, source)
 		body := c.Body
 		if c.PadTo > len(body) {
 			body += strings.Repeat(" ", c.PadTo-len(body))
@@ -153,7 +154,7 @@ func TestHostHTTPSourceAdmissionAndPurePlanning(t *testing.T) {
 	}
 	reads := 0
 	mux := http.NewServeMux()
-	registerHostMeasurements(mux, hostHTTPSource(hostHTTPMetadata(), &reads))
+	nativehttp.RegisterMeasurements(mux, hostHTTPSource(hostHTTPMetadata(), &reads))
 	budget = newQueryBudget(mux, 0)
 	req = httptest.NewRequest("POST", "/host-dashboard/plan", strings.NewReader(hostHTTPPlanBody(t, nil)))
 	req.Header.Set("X-Goo-Query-ID", "not-a-source-capability")

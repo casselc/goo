@@ -1,5 +1,39 @@
 # Validation record
 
+## Native HTTP policies and shared typed handlers (2026-10-28 UTC)
+
+`internal/nativehttp` owns native metric/host/pod discovery, measurement execution
+and pure host/pod planning. Its seven route policies drive decoding, deadlines and
+admission. Record/native families share `queryhttp.Policy`, inferred `ReadHandler`
+and `PlanHandler` mechanics. Source deadlines still begin after validation; pure
+plan deadlines still begin before decoding and check pre/post computation. The
+native execution policy explicitly permits existing lifecycle custody; discovery
+and plans do not write it. Catalog/package publication, container planners,
+explanation/capture routes, SSE and application snapshot ownership remain separate.
+
+Validation: the full root Go suite, focused vet and race checks pass. Existing
+native/record JSON/status/deadline fixtures pass. Deterministic `testing/synctest`
+checks verify deadline ordering, parent deadline ceilings and child-context cleanup.
+Composition tests cover native admission, pure plans during source saturation,
+configured custody/no discovery writes and stable first-observation bytes. Shared
+contract checks cover both families' body/admission declarations. OpenAPI route,
+schema and fixture checks pass; regeneration changes only seven source-owner
+metadata entries, with no wire-contract difference.
+
+The rebuilt local server passes pod-memory and compact-host journeys and the full
+ordinary-app measurement/capture/reuse journey, including Quint validation and
+negative controls. The Hegel measurement state/swarm check passes, as does the 30-second pod-memory
+Bombadil campaign with its existing phase and terminal invariants. The histogram
+journey now observes a baseline, triggers another ordinary checkout, and verifies
+exported cumulative-count progress; its earlier first-sample assumption could
+correctly produce only zero intervals. Product histogram semantics are unchanged.
+
+Architecture diagrams, boundary/planning docs and the measurement storyboard are
+updated. No intended UI layout, source schema or storage-format change. Disposable
+run outputs and incidental historical screenshot updates are excluded; saved app
+volumes are preserved. Broader capture/explanation policy adoption, per-server
+snapshot ownership and executable shutdown/export flushing remain planned.
+
 ## Record HTTP policy and handler extraction (2026-10-28 UTC)
 
 `internal/recordhttp` now owns the seven record-family routes and their effect,

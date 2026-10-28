@@ -1,28 +1,28 @@
 package main
 
 import (
-	"context"
 	"fmt"
-	"github.com/casselc/goo/internal/httpjson"
-	"github.com/casselc/goo/internal/immutablefile"
-	"github.com/casselc/goo/measurements"
-	"gopkg.in/yaml.v3"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
 	"sort"
 	"time"
+
+	"github.com/casselc/goo/internal/httpjson"
+	"github.com/casselc/goo/internal/immutablefile"
+	"github.com/casselc/goo/internal/nativehttp"
+	"github.com/casselc/goo/measurements"
+	"gopkg.in/yaml.v3"
 )
 
 func registerMeasurements(mux *http.ServeMux, source measurements.Source, dir string) {
 	registerContainerMemoryView(mux)
 	registerContainerCPUView(mux)
 	registerContainerResourceHistory(mux)
-	registerHostMeasurements(mux, source)
-	registerPodMeasurements(mux, source)
 	packagesDir := filepath.Join(dir, "measurement-packages")
 	source.CustodyDir = filepath.Join(dir, "exploration", "custody")
+	nativehttp.RegisterMeasurements(mux, source)
 	send := httpjson.Write
 	fail := func(w http.ResponseWriter, e error) { send(w, 400, map[string]string{"error": e.Error()}) }
 	decode := func(w http.ResponseWriter, r *http.Request, v any) bool {
@@ -187,42 +187,6 @@ func registerMeasurements(mux *http.ServeMux, source measurements.Source, dir st
 			}
 		}
 		send(w, 201, item(d))
-	})
-	mux.HandleFunc("POST /metric-discovery", func(w http.ResponseWriter, r *http.Request) {
-		var q measurements.DiscoveryQuestion
-		if !decode(w, r, &q) {
-			return
-		}
-		if e := q.Validate(); e != nil {
-			fail(w, e)
-			return
-		}
-		ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
-		defer cancel()
-		result, e := source.Discover(ctx, q)
-		if e != nil {
-			send(w, 502, map[string]string{"error": e.Error()})
-			return
-		}
-		send(w, 200, result)
-	})
-	mux.HandleFunc("POST /measurements", func(w http.ResponseWriter, r *http.Request) {
-		var q measurements.Question
-		if !decode(w, r, &q) {
-			return
-		}
-		if e := q.Validate(); e != nil {
-			fail(w, e)
-			return
-		}
-		ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
-		defer cancel()
-		result, e := source.Run(ctx, q, nil)
-		if e != nil {
-			send(w, 502, map[string]string{"error": e.Error()})
-			return
-		}
-		send(w, 200, result)
 	})
 }
 

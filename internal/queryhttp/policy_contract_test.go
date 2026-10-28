@@ -1,0 +1,54 @@
+package queryhttp_test
+
+import (
+	"encoding/json"
+	"os"
+	"testing"
+
+	"github.com/casselc/goo/internal/nativehttp"
+	"github.com/casselc/goo/internal/queryhttp"
+	"github.com/casselc/goo/internal/recordhttp"
+)
+
+func TestFamilyPoliciesMatchPublishedAPIBoundaries(t *testing.T) {
+	data, err := os.ReadFile("../../api/openapi.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var spec struct {
+		Paths map[string]struct {
+			Post struct {
+				Limit      int64 `json:"x-go-body-limit-bytes"`
+				Parameters []struct{ Name string }
+			}
+		}
+	}
+	if err := json.Unmarshal(data, &spec); err != nil {
+		t.Fatal(err)
+	}
+	for name, lookup := range map[string]func(string, string) (queryhttp.Policy, bool){"record": recordhttp.PolicyFor, "native": nativehttp.PolicyFor} {
+		t.Run(name, func(t *testing.T) {
+			covered := 0
+			for path, operation := range spec.Paths {
+				policy, ok := lookup("POST", path)
+				if !ok {
+					continue
+				}
+				covered++
+				if operation.Post.Limit != policy.BodyLimit {
+					t.Errorf("%s body bound differs from API", path)
+				}
+				controlled := false
+				for _, parameter := range operation.Post.Parameters {
+					controlled = controlled || parameter.Name == "X-Goo-Query-ID"
+				}
+				if controlled != (policy.Effect != queryhttp.Pure) {
+					t.Errorf("%s capability differs from effect policy", path)
+				}
+			}
+			if covered != 7 {
+				t.Fatalf("expected seven adopted family routes, covered %d", covered)
+			}
+		})
+	}
+}

@@ -6,9 +6,10 @@ use native imports, with a single `app.mjs` bootstrap and no namespace adapter.
 Old `.js` UI paths and `app-display.mjs` are retired.
 Browser source-read cancellation now remains active through JSON body consumption;
 the Python proxy still buffers upstream JSON. Publications and SSE have separate
-lifetimes. Record-family policy/handler extraction and shared admission mechanics
-are implemented; other families, per-server snapshot ownership and shutdown/export
-work remain planned.
+lifetimes. Record and native measurement/discovery policy/handler extraction is
+implemented, including pure host/pod plans and explicit optional lifecycle custody.
+Explanation/capture policy adoption, per-server snapshot ownership and
+shutdown/export work remain planned.
 Browser conformance is currently checked in Chromium; Firefox/Safari coverage
 is not established.
 

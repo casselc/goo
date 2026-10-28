@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/internal/nativehttp"
 	"github.com/casselc/goo/measurements"
 	"io"
 	"net/http"
@@ -75,8 +76,8 @@ func TestPodMetricHTTPWireContracts(t *testing.T) {
 		{Name: "pod-metric-plan-bad-omissions", Path: "/pod-dashboard/plan", Body: podMetricHTTPPlanBody(t, func(in *measurements.PodDashboardRequest) {
 			in.Discovery.Instruments[0].CapabilityPlan.Coverage.OmittedStreams = -1
 		}), Status: 400},
-		{Name: "pod-metric-plan-exact-size", Path: "/pod-dashboard/plan", Body: plan, PadTo: podDashboardBodyLimit, Status: 200},
-		{Name: "pod-metric-plan-oversize", Path: "/pod-dashboard/plan", Body: plan, PadTo: podDashboardBodyLimit + 1, Status: 400},
+		{Name: "pod-metric-plan-exact-size", Path: "/pod-dashboard/plan", Body: plan, PadTo: nativehttp.PodDashboardBodyLimit, Status: 200},
+		{Name: "pod-metric-plan-oversize", Path: "/pod-dashboard/plan", Body: plan, PadTo: nativehttp.PodDashboardBodyLimit + 1, Status: 400},
 		{Name: "pod-metric-inventory-method", Method: "GET", Path: "/pod-metric-discovery", Status: 405},
 		{Name: "pod-metric-plan-method", Method: "GET", Path: "/pod-dashboard/plan", Status: 405},
 	}
@@ -126,7 +127,7 @@ func TestPodMetricHTTPWireContracts(t *testing.T) {
 				return &http.Response{StatusCode: 503, Body: io.NopCloser(strings.NewReader("fixture unavailable")), Header: make(http.Header)}, nil
 			})}
 		}
-		registerPodMeasurements(mux, source)
+		nativehttp.RegisterMeasurements(mux, source)
 		body := c.Body
 		if c.PadTo > len(body) {
 			body += strings.Repeat(" ", c.PadTo-len(body))
@@ -190,7 +191,7 @@ func TestPodMetricHTTPSourceAdmissionAndPurePlanning(t *testing.T) {
 	}
 	reads := 0
 	mux := http.NewServeMux()
-	registerPodMeasurements(mux, podMetricHTTPSource(podMetricHTTPMetadata(), &reads))
+	nativehttp.RegisterMeasurements(mux, podMetricHTTPSource(podMetricHTTPMetadata(), &reads))
 	budget = newQueryBudget(mux, 0)
 	req = httptest.NewRequest("POST", "/pod-dashboard/plan", strings.NewReader(podMetricHTTPPlanBody(t, nil)))
 	req.Header.Set("X-Goo-Query-ID", "not-a-source-capability")
@@ -339,7 +340,7 @@ func TestPodMetricSharedAdmissionAndInflightCancellation(t *testing.T) {
 		return nil, r.Context().Err()
 	})}}
 	mux := http.NewServeMux()
-	registerPodMeasurements(mux, source)
+	nativehttp.RegisterMeasurements(mux, source)
 	budget = newQueryBudget(mux, 1)
 	id = "ffffffff-ffff-ffff-ffff-ffffffffffff"
 	req = httptest.NewRequest("POST", "/pod-metric-discovery", strings.NewReader(podMetricHTTPBody))
@@ -390,12 +391,12 @@ func TestPodMetricHTTPPlanAcceptsLargeLegitimateDiscovery(t *testing.T) {
 		t.Fatal(err)
 	}
 	raw, err := json.Marshal(measurements.PodDashboardRequest{Discovery: *discovery})
-	if err != nil || len(raw) <= 65536 || len(raw) > podDashboardBodyLimit {
+	if err != nil || len(raw) <= 65536 || len(raw) > nativehttp.PodDashboardBodyLimit {
 		t.Fatal("invalid large metadata fixture", len(raw), err)
 	}
 	sourceReads := 0
 	mux := http.NewServeMux()
-	registerPodMeasurements(mux, podMetricHTTPSource("", &sourceReads))
+	nativehttp.RegisterMeasurements(mux, podMetricHTTPSource("", &sourceReads))
 	budget := newQueryBudget(mux, 0)
 	w := httptest.NewRecorder()
 	budget.ServeHTTP(w, httptest.NewRequest("POST", "/pod-dashboard/plan", strings.NewReader(string(raw))))
