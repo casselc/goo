@@ -9,6 +9,64 @@ import (
 	"time"
 )
 
+func TestQueryBudgetCancelAfterResponseHeaders(t *testing.T) {
+	cancelled := make(chan struct{})
+	budget := newQueryBudget(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte(`{"rows":`))
+		w.(http.Flusher).Flush()
+		<-r.Context().Done()
+		close(cancelled)
+		w.Write([]byte(`[]}`))
+	}), 1)
+	srv := httptest.NewServer(budget)
+	t.Cleanup(srv.Close)
+	t.Cleanup(srv.CloseClientConnections)
+	srv.Client().Timeout = 3 * time.Second
+	id := "12345678-1234-1234-1234-123456789abc"
+	req, err := http.NewRequestWithContext(t.Context(), "POST", srv.URL+"/explore", bytes.NewBufferString("{}"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("X-Goo-Query-ID", id)
+	response, err := srv.Client().Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer response.Body.Close()
+	if response.StatusCode != http.StatusOK {
+		t.Fatal(response.StatusCode)
+	}
+	// Headers are available, but the body and its handler are still in flight.
+	select {
+	case <-cancelled:
+		t.Fatal("source ended before explicit cancellation")
+	default:
+	}
+	ack, err := srv.Client().Post(srv.URL+"/queries/"+id+"/cancel", "application/json", bytes.NewBufferString("{}"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer ack.Body.Close()
+	if ack.StatusCode != http.StatusAccepted {
+		t.Fatal(ack.StatusCode)
+	}
+	select {
+	case <-cancelled:
+	case <-time.After(2 * time.Second):
+		t.Fatal("source context survived cancellation during body generation")
+	}
+	if _, err := io.Copy(io.Discard, response.Body); err != nil {
+		t.Fatal(err)
+	}
+	b := budget.(*queryBudget)
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	if b.active != 0 || b.entries[id].cancel != nil {
+		t.Fatal("completed body retained admission or cancellation ownership")
+	}
+}
+
 func TestQueryBudgetCancelAndAdmission(t *testing.T) {
 	entered := make(chan struct{}, 1)
 	cancelled := make(chan struct{}, 1)

@@ -18,10 +18,26 @@ class Upstream(BaseHTTPRequestHandler):
     calls = []
     mode = 'error'
     ended = threading.Event()
+    headers_sent = threading.Event()
+    cancelled = threading.Event()
 
     def handle_request(self):
         body = self.rfile.read(int(self.headers.get('Content-Length', 0)))
         type(self).calls.append((self.command, self.path, dict(self.headers), body))
+        if self.mode == 'pending-json':
+            if self.path.endswith('/cancel'):
+                type(self).cancelled.set()
+                self.send_response(202)
+                self.end_headers()
+                self.wfile.write(b'{"state":"cancellation-requested"}')
+                return
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b'{"cancelled":')
+            self.wfile.flush()
+            type(self).headers_sent.set()
+            self.wfile.write(b'true}' if type(self).cancelled.wait(3) else b'false}')
+            return
         if self.path == '/tail' and self.mode == 'stream':
             self.send_response(200)
             self.send_header('Content-Type', 'text/event-stream')
@@ -79,6 +95,8 @@ class ProxyContracts(unittest.TestCase):
         Upstream.calls = []
         Upstream.mode = 'error'
         Upstream.ended.clear()
+        Upstream.headers_sent.clear()
+        Upstream.cancelled.clear()
 
     def request(self, method, path, body=None, headers=None):
         conn = http.client.HTTPConnection('127.0.0.1', self.proxy.server_port, timeout=5)
@@ -133,6 +151,41 @@ class ProxyContracts(unittest.TestCase):
         self.assertEqual(status, 429)
         self.assertNotIn('Retry-After', headers)
         self.assertEqual(json.loads(body)['error'], 'backend refusal')
+
+    def test_cancellation_is_forwarded_while_upstream_json_body_is_pending(self):
+        Upstream.mode = 'pending-json'
+        query_id = '01234567-1234-1234-1234-012345678901'
+        result = []
+        failures = []
+
+        def read_source():
+            conn = http.client.HTTPConnection('127.0.0.1', self.proxy.server_port, timeout=5)
+            try:
+                conn.request('POST', '/api/explore', b'{}', {'X-Goo-Query-ID': query_id})
+                response = conn.getresponse()
+                result.append((response.status, json.loads(response.read())))
+            except Exception as exc:
+                failures.append(exc)
+            finally:
+                conn.close()
+
+        reader = threading.Thread(target=read_source)
+        reader.start()
+        try:
+            self.assertTrue(Upstream.headers_sent.wait(2), 'upstream did not start its JSON body')
+            self.assertTrue(reader.is_alive(), 'proxy returned before consuming upstream body')
+            status, _, body = self.request('POST', '/api/queries/'+query_id+'/cancel', b'{}')
+            self.assertEqual(status, 202)
+            self.assertEqual(json.loads(body), {'state': 'cancellation-requested'})
+            reader.join(3)
+            self.assertFalse(reader.is_alive(), 'pending upstream body survived cancellation')
+            self.assertEqual(failures, [])
+            self.assertEqual(result, [(200, {'cancelled': True})])
+            source = next(call for call in Upstream.calls if call[1] == '/explore')
+            self.assertEqual({k.lower(): v for k, v in source[2].items()}['x-goo-query-id'], query_id)
+        finally:
+            Upstream.cancelled.set()
+            reader.join(5)
 
     def test_counted_values_proxy_route_limits_and_cancellation_header(self):
         query_id = '01234567-1234-1234-1234-012345678901'

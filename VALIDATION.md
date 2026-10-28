@@ -1,5 +1,33 @@
 # Validation record
 
+## Cancellation through JSON consumption (2026-10-28 UTC)
+
+`queries.mjs` now returns decoded `{ok, status, data}` replies through `postJSON`.
+All existing query-helper consumers use it; no raw-response `post` export remains.
+The abort listener stays active until JSON completes and is removed on every exit.
+Late aborted replies are rejected even when a transport ignores its signal. Owners
+retain HTTP error messages and scope/generation guards. Pure planning uses the
+same decoder without query IDs. Saves, ambiguous-commit recovery and SSE are
+unchanged. Cancellation controls are best effort and do not imply rollback.
+
+Validation: 581 Node tests pass, including six transport regressions covering real
+streamed HTTP, pre-abort, late replies, malformed bodies, HTTP/transport failures,
+listener cleanup and cancellation-request failure. Eighteen actual HTTP Python
+proxy tests pass, including cancellation while upstream JSON remains incomplete.
+Go query-budget regressions pass, including cancellation after headers during
+body generation and admission cleanup. The question-session Hegel state/swarm
+check passes. Chromium passes real streamed-body cancellation, the live
+query/capture/discovery/cancel journey with observed Quint trace validation, and
+the closed-filesystem late-response journey. The bounded 30-second Bombadil host
+workflow passes all phases and invariants. The core journey's status locator
+now selects the intended chart caption among nested status regions.
+
+The Python proxy and Go body lifetimes were already correct; production changes
+are in the browser helper and its consumers. Broader endpoint policy, server
+extraction and shutdown/export work remain planned. Architecture flow and test
+instructions are updated. No layout change or performance claim; incidental
+historical screenshot updates and disposable run outputs are excluded.
+
 ## Native application modules (2026-10-28 UTC)
 
 All application owners now use explicit native imports/exports. The HTML has one

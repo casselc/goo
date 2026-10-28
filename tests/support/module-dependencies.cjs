@@ -18,7 +18,8 @@ function install(filename){
  for(const name of names){
   const url=mappings[name],actual=originals[name],exports={};
   for(const key of keys(fs.readFileSync(url,'utf8'))){let wrapper;
-   const resolve=()=>{const value=global[name]?.[key];return value===wrapper||value===undefined?actual[key]:value};
+   // Source fixtures supply raw transport replies; decode through the real helper.
+   const resolve=()=>{if(name==='GooQueries'&&key==='postJSON'&&!global[name]?.postJSON&&global[name]?.post)return (...args)=>actual.jsonResponse(global[name].post(...args));const value=global[name]?.[key];return value===wrapper||value===undefined?actual[key]:value};
    wrapper=new Proxy(function(...args){return Reflect.apply(resolve(),this,args)},{construct(_target,args){const ctor=resolve();return Reflect.construct(ctor,args)}});exports[key]=wrapper;
   }
   mock.module(url,{exports});registered.add(name);

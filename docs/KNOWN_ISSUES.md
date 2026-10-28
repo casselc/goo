@@ -4,6 +4,9 @@ The [native display graph](UI_COMPONENTS.md#native-module-entrypoints) now inclu
 all supplied-data widgets and the standalone gallery. Application owners also
 use native imports, with a single `app.mjs` bootstrap and no namespace adapter.
 Old `.js` UI paths and `app-display.mjs` are retired.
+Browser source-read cancellation now remains active through JSON body consumption;
+the Python proxy still buffers upstream JSON. Publications and SSE have separate
+lifetimes. Broader server policy/extraction/shutdown work remains planned.
 Browser conformance is currently checked in Chromium; Firefox/Safari coverage
 is not established.
 

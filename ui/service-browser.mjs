@@ -56,7 +56,7 @@ function mount(host,{catalog}={}){
    const sections=['Signals and operations','Suggested questions','Native instruments'].map(text=>{const section=node('details',undefined,'service-support');section.append(node('summary',text),state('loading','Reading…','service-loading'));detail.append(section);return section});
    detail.scrollIntoView({block:'start'});title.focus({preventScroll:true});notify('start');
    const requests=[['/api/discovery',activeScope],['/api/explore',scopeQuestion(activeScope,service)],['/api/metric-discovery',{...activeScope,service}],['/api/inventory',activeScope]];
-   const results=await Promise.allSettled(requests.map(async([url,q])=>{const r=await Queries.post(url,q,active.signal),data=await r.json();if(!r.ok)throw Error(data.error||'Source unavailable');return data}));
+   const results=await Promise.allSettled(requests.map(async([url,q])=>{const r=await Queries.postJSON(url,q,active.signal),data=r.data;if(!r.ok)throw Error(data.error||'Source unavailable');return data}));
    if(g!==generation)return;sections.forEach(s=>s.querySelector('.service-loading').remove());
    sections[1].classList.add('service-question-grid');sections[2].classList.add('service-instrument-grid');
    const [signals,spans,metrics,operationsRead]=results;inventory=operationsRead.status==='fulfilled'?operationsRead.value:null;const error=(section,result)=>section.append(state('unavailable','Unavailable · '+result.reason.message,'warning'));

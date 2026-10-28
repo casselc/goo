@@ -144,7 +144,9 @@ Core/chart, attribute/record, exception, field-picker, tag and aligned-numeric
 features support direct imports, supplied SSR attributes and SPA properties.
 The gallery loads only this public graph. The full application uses one native
 `/app.mjs` bootstrap; owners import their dependencies directly, with no global
-namespace bridge. [Test commands](tests/README.md) cover the supported Node setup.
+namespace bridge. Source-query cancellation now stays active through JSON body
+consumption; saves and live streams keep separate lifetimes. See the
+[request flow](docs/ARCHITECTURE.md) and [test commands](tests/README.md).
 
 The semantic core is Go, with a Python lab/proxy and framework-neutral display
 Web Components. Source adapters lower typed questions to parameterized ClickHouse

@@ -48,8 +48,12 @@ bridge and unused API assembly objects are removed. Predicate validation and
 request/listener ownership are independent internal modules. The retained client
 has isolated per-client state and keeps its existing default entrypoints.
 See [the embedding contract](UI_COMPONENTS.md#native-module-entrypoints).
-The other cuts below remain proposals; response-consumption cancellation is still
-a separate follow-up and was not changed by the module migration.
+The browser response-consumption cancellation cut is also implemented: source
+owners use `postJSON`, which retains cancellation through decoding and rejects
+late aborted results. Real HTTP regressions cover Chromium, the Python proxy and
+Go's already-correct body-generation lifetime. Endpoint policy consolidation,
+server extraction and executable shutdown/export flushing remain planned; the
+broader request/server cut below is not complete.
 
 ## Preferred cuts
 

@@ -25,6 +25,36 @@ their distinct adapter contracts. The [HTTP acceptance inventory](HTTP_BOUNDARIE
 records adopted transports and remaining endpoint/branch coverage; no common
 semantic evaluator or universal request owner is implied.
 
+Browser source reads use `ui/queries.mjs` → `postJSON(url, body, signal)`.
+It returns `{ok, status, data}` after decoding the body; owners keep their HTTP
+error messages and question/generation checks. The abort listener remains attached
+through both fetch and JSON consumption, then is removed on every exit. An abort
+also sends a best-effort, independent cancellation control with the same query ID.
+A late result from a transport that ignores abort is rejected before returning.
+Pure POST planners can use `jsonResponse(fetch(...))` without creating query IDs;
+publications and SSE retain their separate owners and retry/continuity semantics.
+
+```mermaid
+sequenceDiagram
+    participant Owner as Query owner
+    participant Read as postJSON
+    participant Proxy as Python proxy
+    participant Go as Go query budget/source
+    Owner->>Read: fixed question + AbortSignal
+    Read->>Proxy: POST + X-Goo-Query-ID
+    Proxy->>Go: forward question + ID
+    Go-->>Proxy: headers, then JSON body
+    Note over Read,Go: Cancellation remains active while bodies are consumed
+    opt owner cancels before JSON read completes
+        Owner->>Read: abort
+        Read->>Proxy: independent POST /queries/ID/cancel
+        Proxy->>Go: cancel matching context
+        Read-->>Owner: AbortError, no result
+    end
+    Note over Proxy: Proxy buffers upstream JSON before its response
+    Note over Read: Finally removes abort listener; completed reads cannot cancel later
+```
+
 [Immutable publication](IMMUTABLE_PUBLICATION.md) shares write/sync/link mechanics
 across reusable telemetry packages, workbench artifacts, capture stores, lifecycle
 custody and native YAML. The latter two retain explicit file-only sync.
