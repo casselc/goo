@@ -401,6 +401,18 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 	}
 	instruments = expandedInstruments
 	runtimeDefaults := measurements.GoRuntimeDefaults(instruments)
+	// Sorting reuses checked final revisions; authoring seeds stay private to
+	// generators. Unsupported discovery metadata remains available below.
+	runtimeRevisions := map[*measurements.Definition]string{}
+	for _, instrument := range instruments {
+		if measurements.GoRuntimeExactCandidate(instrument) {
+			revision, err := instrument.Definition.Revision()
+			if err != nil {
+				return nil, err
+			}
+			runtimeRevisions[instrument.Definition] = revision
+		}
+	}
 	modernNativeSort := in.Profile != ""
 	for _, instrument := range instruments {
 		if measurements.GoRuntimeExactCandidate(instrument) {
@@ -452,7 +464,7 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 				return aRuntime
 			}
 			if aRuntime && bRuntime {
-				aDefault, bDefault := runtimeDefaults[measurements.Hash(*instruments[i].Definition)], runtimeDefaults[measurements.Hash(*instruments[j].Definition)]
+				aDefault, bDefault := runtimeDefaults[runtimeRevisions[instruments[i].Definition]], runtimeDefaults[runtimeRevisions[instruments[j].Definition]]
 				if aDefault != bDefault {
 					return aDefault
 				}
@@ -507,7 +519,10 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			continue
 		}
 		seen[key] = true
-		optionKey := measurements.Hash(d)
+		optionKey, err := d.Revision()
+		if err != nil {
+			return nil, err
+		}
 		if len(p.NativeOptions) >= 128 {
 			p.NativeOptionsOmitted++
 			continue

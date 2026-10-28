@@ -1,5 +1,26 @@
 # Validation record
 
+## Candidate authoring seeds and checked references — 231 (2026-10-28 UTC)
+
+Private name/title-independent definition seeds now own runtime/pod generated
+names and pod deduplication. Final runtime candidate/default revisions and service
+option references use `Definition.Revision()`. Runtime sorting reuses computed
+revisions; unsupported discovery metadata and fixed-question keys keep their
+existing contracts. No public seed API, normalization or store migration is added.
+
+Validation: full root Go suite passes. Compatibility fixtures captured before the
+refactor retain runtime/pod generated names, definition revisions, pod question
+keys, runtime defaults and service option ordering/default/selection. Seed tests
+check label independence, policy sensitivity, input nonmutation and rejection of
+unnamed seeds as authored revisions. Existing Hegel checks for exact runtime
+population/defaults, pod native authority/replay and phase discovery/read budgets
+pass. Focused measurement/exploration race checks and root vet pass.
+
+No UI, SQL/source or numeric semantics changed, so browser screenshots and model
+campaigns were not repeated. The optional verification prerequisite check passes;
+fixed-question, source identity and replay/custody digests remain separate work.
+
+
 ## Reproducible opt-in verification entry points — 230 (2026-10-28 UTC)
 
 `scripts/verify_optional.py` checks the exact Go/Node/Quint versions and clean

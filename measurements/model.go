@@ -118,7 +118,7 @@ type Result struct {
 	Lifecycle     *lifecycle.Prepared          `json:"lifecycle,omitempty"`
 }
 
-// Hash is the legacy JSON digest used by question, candidate, source, seed and replay
+// Hash is the legacy JSON digest used by question, source and replay
 // identities. It does not validate its input. Use Definition.Revision for
 // authored definition references; other identity families remain separately audited.
 func Hash(v any) string {

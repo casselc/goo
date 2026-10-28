@@ -3,6 +3,8 @@ package measurements
 import (
 	"encoding/json"
 	"fmt"
+	"maps"
+	"slices"
 	"sort"
 
 	"github.com/casselc/goo/metrics"
@@ -67,7 +69,7 @@ func GoRuntimeCandidates(i Instrument) []Instrument {
 	if len(streams) > DiscoveryStreamLimit {
 		streams = streams[:DiscoveryStreamLimit]
 	}
-	seen := map[string]bool{}
+	byRevision := map[string]Instrument{}
 	for _, preview := range streams {
 		stream := preview.Stream
 		if stream.Attributes == nil {
@@ -81,18 +83,19 @@ func GoRuntimeCandidates(i Instrument) []Instrument {
 		candidate.StockDomain = "nonnegative-integer"
 		// Fresh planned definitions use a canonical generated authoring identity.
 		// Display names cannot multiply the same stream+evaluation policy option.
-		candidate.Name = ""
-		candidate.Title = ""
-		candidate.Name = "go-runtime-" + Hash(candidate)[:24]
+		seed, err := definitionSeed(candidate)
+		if err != nil {
+			continue
+		}
+		candidate.Name = "go-runtime-" + seed[:24]
 		candidate.Title = GoRuntimeMetricTitle(i.Metric)
-		if candidate.Validate() != nil {
+		key, err := candidate.Revision()
+		if err != nil {
 			continue
 		}
-		key := Hash(candidate)
-		if seen[key] {
+		if _, exists := byRevision[key]; exists {
 			continue
 		}
-		seen[key] = true
 		// Detach identity maps and source selectors from supplied metadata.
 		encoded, _ := json.Marshal(candidate)
 		var detached Definition
@@ -113,9 +116,11 @@ func GoRuntimeCandidates(i Instrument) []Instrument {
 		if len(exact.CapabilityPlan.Coverage.Streams) > 0 {
 			exact.CapabilityPlan.Coverage.Streams[0].Records = preview.Records
 		}
-		out = append(out, exact)
+		byRevision[key] = exact
 	}
-	sort.Slice(out, func(a, b int) bool { return Hash(*out[a].Definition) < Hash(*out[b].Definition) })
+	for _, key := range slices.Sorted(maps.Keys(byRevision)) {
+		out = append(out, byRevision[key])
+	}
 	return out
 }
 func GoRuntimeExactCandidate(i Instrument) bool {
@@ -176,7 +181,10 @@ func GoRuntimeDefaults(instruments []Instrument) map[string]bool {
 		if groups[process] == nil {
 			groups[process] = &group{}
 		}
-		key := Hash(*i.Definition)
+		key, err := i.Definition.Revision()
+		if err != nil {
+			continue
+		}
 		if i.Metric == "go.memory.used" {
 			groups[process].memory = append(groups[process].memory, key)
 			memoryOrder[key] = goRuntimeMemoryOrder(*i.Definition.Source.ExactStream)

@@ -137,9 +137,11 @@ func PlanPodDashboard(input PodDashboardRequest) (*PodDashboardPlan, error) {
 				stream.Attributes = map[string]string{}
 			}
 			selected.Source.ExactStream = &stream
-			selected.Name = ""
-			selected.Title = ""
-			selected.Name = "pod-observation-" + Hash(selected)[:24]
+			seed, err := definitionSeed(selected)
+			if err != nil {
+				continue
+			}
+			selected.Name = "pod-observation-" + seed[:24]
 			selected.Title = "Pod memory usage"
 			role := ContainerMemoryRole(i)
 			cpuRole := ContainerCPURole(i)
@@ -168,14 +170,10 @@ func PlanPodDashboard(input PodDashboardRequest) (*PodDashboardPlan, error) {
 				continue
 			}
 			// Names do not multiply equivalent exact stream/policy choices.
-			identity := selected
-			identity.Name = ""
-			identity.Title = ""
-			dedupKey := Hash(identity)
-			if seen[dedupKey] {
+			if seen[seed] {
 				continue
 			}
-			seen[dedupKey] = true
+			seen[seed] = true
 			family := "usage"
 			title := "Pod memory usage"
 			if profile == PodClusterProfile {
