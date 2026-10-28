@@ -13,6 +13,7 @@ import * as KubernetesBrowser from './kubernetes-browser.mjs';
 import * as Meaning from './meaning.mjs';
 import * as Measurements from './measurements.mjs';
 import * as NativeRecordNavigation from './native-record-navigation.mjs';
+import * as ResourceReturn from './resource-return.mjs';
 import * as Operations from './operations.mjs';
 import * as Ratios from './ratios.mjs';
 import * as Queries from './queries.mjs';
@@ -170,7 +171,7 @@ for(const event of ['input','change'])el('minutes').addEventListener(event,()=>{
 el('defineMeasurement').onclick=()=>{dispatchEvent(new CustomEvent('goo:navigate-explore'));dispatchEvent(new CustomEvent('goo:measurements-tab'));el('measureEditor').open=true;el('measureLibrary').focus()};
 const liveExploration=InvestigationTrail.mount(el('exploration'),{lazy:true});
 uiConfiguration.then(config=>{const lab=config?.profile==='lab';if(!lab)el('inventoryEnvironment').value='';StreamEntry.mount(el('exploration'),{environment:lab?'local':'',autoStart:lab,onLeaveFixed:()=>liveExploration.suspend(),onEnterFixed:()=>liveExploration.resume(),onOpenFixed:(q,recordLayout,options)=>liveExploration.openQuestion(q,[],{stage:true,activity:true,recordLayout,...options}),onOpenTrace:(q,row)=>{dispatchEvent(new CustomEvent('goo:navigate-explore'));liveExploration.openTrace(q,row.TraceId,row.SpanId)}})});
-const nativeRecordNavigation=NativeRecordNavigation.mount(el('nativeRecordReturn'),{nativeHost:el('measurementWorkbench'),active:()=>appWorkspace.current()==='explore'&&el('exploreMeasurementsMode').getAttribute('aria-selected')==='true',stageQuestion:q=>{appWorkspace.navigate('explore',{writeHash:false});exploreMode(false);liveExploration.openQuestion(q,[],{stage:true})},showNative:()=>{appWorkspace.navigate('explore',{writeHash:false});exploreMode(true)},suspendRecords:()=>liveExploration.suspend()});
+const nativeRecordNavigation=NativeRecordNavigation.mount(el('nativeRecordReturn'),{nativeHost:el('measurementWorkbench'),holdResourceOrigin:question=>ResourceReturn.hold(document.querySelector('[data-workspace-panel="explore"]'),question),active:()=>appWorkspace.current()==='explore'&&el('exploreMeasurementsMode').getAttribute('aria-selected')==='true',stageQuestion:q=>{appWorkspace.navigate('explore',{writeHash:false});exploreMode(false);liveExploration.openQuestion(q,[],{stage:true})},showNative:()=>{appWorkspace.navigate('explore',{writeHash:false});exploreMode(true)},suspendRecords:()=>liveExploration.suspend()});
 Measurements.mount(el('measurementWorkbench'),{onRecordContext:(detail,opener)=>nativeRecordNavigation.stage(detail,opener),onRestoreStep:hash=>nativeRecordNavigation.restore(hash)});
 function exploreMode(measures){el('exploration').hidden=measures;el('measurementWorkbench').hidden=!measures;el('exploreRecordsMode').setAttribute('aria-selected',String(!measures));el('exploreMeasurementsMode').setAttribute('aria-selected',String(measures));el('exploreRecordsMode').tabIndex=measures?-1:0;el('exploreMeasurementsMode').tabIndex=measures?0:-1;dispatchEvent(new CustomEvent('goo:explore-mode',{detail:{measurements:measures}}))}
 el('exploreRecordsMode').onclick=()=>exploreMode(false);

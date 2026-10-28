@@ -8,8 +8,9 @@ validates running API responses without provisioning or resetting the lab.
 
 
 The bounded entry/scope/return review is accepted through 226/227. Native mobile
-action density is improved in 229 using shared passive controls; nested
-native/resource ancestry remains an explicit UI follow-up. The prepared-fact Go compiler is now `subjectfacts`; the former
+action density is improved in 229 using shared passive controls. A bounded nested
+resource/native/records return is delivered in 233: exact-question ancestry and one
+immediate Back action, not universal or persisted history. The prepared-fact Go compiler is now `subjectfacts`; the former
 `measurement` import is removed. Native OTel binding stays `measurements`. Stored
 formats and compiler output are unchanged. Checked native definition revisions
 are delivered in 228, with candidate seed/reference separation in 231. The fixed-question key boundary follows in 232. The

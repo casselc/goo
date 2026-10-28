@@ -1,5 +1,34 @@
 # Validation record
 
+## One immediate parent in nested native investigations — 233 (2026-10-28 UTC)
+
+The ordinary host → native CPU-time measurement → interval records journey now
+shows one immediate Back action. A compact path names resource/measurement/signal;
+Context scope retains both original and interval UTC windows and the broader trace
+expansion warning. Matching resource returns are temporarily held and restored
+on Back to measurement or native-tab return. Exact opened definition/bounds are
+required; an unrelated question clears the old origin instead of borrowing it.
+Revision/token guards reject hidden actions and stale restores after replacement.
+
+Validation: all 587 frontend tests pass. Journey 233 passes at 320/390/700px with
+explicit source counts, both clocks, guarded hidden resource actions, retained
+result-node identity/selection/scope, opener focus and source-free two-level return.
+The HTML comparison ignores empty inline-style attributes introduced by viewport
+resize; retained DOM identity is checked independently. Existing standalone resource
+225 and native-action 229 journeys pass. The updated CPU-time Bombadil actor passes
+all phases, requiring one return strip and the exact resource origin while preserving
+its four-read/one-plan budget. New unit controls cover held callback refusal,
+replacement/clear, stale restore and exact-question matching despite key order.
+The existing delayed-response/hidden-action ownership journey also passes after
+returning from a held real response.
+
+Storyboards, diagram and 320/390/700px screenshots are updated; the 390px return
+strip was visually inspected. Five changed UI assets were synced into the existing
+Python lab, leaving volumes and source owners intact. No Go/API/storage/numeric
+semantics changed, so those suites were not repeated. This is tab-local bounded
+navigation ancestry, not durable evidence lineage or a universal history stack.
+
+
 ## Checked fixed native question keys — 232 (2026-10-28 UTC)
 
 `measurements.Question.Key()` validates the authored definition and fixed window

@@ -1305,3 +1305,12 @@ event to hide irrelevant global lookback/empty toolbar chrome; Activity initiali
 from the actual selected mode after delayed configuration. These are application
 layout transitions. Fixed re-preview preserves a validated exact window; edited
 UTC inputs and fresh package preview retain their explicit respective semantics.
+
+### Bounded nested resource return
+
+The application resource-return presenter can hold its current matching native
+origin while the native-record navigator shows the immediate parent. Exact
+question matching and revision/token guards prevent inferred or stale ancestry.
+On return the retained resource presenter is restored. Source reads, navigation
+and this handoff remain in application adapters; passive display components have
+no ancestry store. See [journey 233](../journeys/233-nested-native-return-storyboard.md).

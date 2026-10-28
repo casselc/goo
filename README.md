@@ -450,3 +450,6 @@ and its executable external-consumer example.
 
 The [compact native workbench journey](journeys/229-native-actions-storyboard.md)
 shows fixed-scope preview, explicit Run, reuse actions and return from supporting records.
+
+The [nested resource/native return journey](journeys/233-nested-native-return-storyboard.md)
+keeps one immediate Back action while preserving original scopes and retained results.

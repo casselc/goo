@@ -1499,3 +1499,12 @@ td details {
 #measureActions .ui-action-menu{max-width:100%}
 #measureActions .ui-actions-body{max-width:360px}
 #measureQuestionLink{width:100%;box-sizing:border-box}
+
+/* One immediate return while a native interval is being inspected. */
+.native-record-return{border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-bottom:12px;font-size:12px;min-width:0}
+.native-record-return[hidden]{display:none}
+.native-record-return>.controls{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px}
+.native-context-path{min-width:0;overflow-wrap:anywhere;flex:1 1 180px;color:var(--muted)}
+.native-record-return>details{margin:6px 0 0;min-width:0}
+.native-record-return p{overflow-wrap:anywhere}
+.native-record-return pre{max-width:100%;overflow:auto}

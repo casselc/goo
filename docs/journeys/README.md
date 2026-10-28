@@ -2547,3 +2547,13 @@ Package discovery and mixed-signal investigation journeys reveal the same contro
 
 ![Compact native actions](screenshots/229-native-actions-390.png)
 ![Native reuse disclosure](screenshots/229-native-reuse-open.png)
+
+## 233. One immediate return through resource, measurement and records
+
+[Storyboard](../../journeys/233-nested-native-return-storyboard.md) and
+`journeys/233-nested-native-return.spec.js` cover ordinary host OTLP discovery,
+native interval logs, 320/390/700px scope disclosures, guarded hidden Back actions,
+explicit reads and retained DOM/focus on both return levels. The CPU-time Bombadil
+actor checks the same one-return rule and nested resource label.
+
+![Compact nested ancestry](screenshots/233-nested-return-390.png)
