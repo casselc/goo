@@ -27,7 +27,7 @@ func (m *measurementMachine) RuleObserve(tc hegel.TestCase) {
 func fmtNS(n int64) string               { return fmtInt(n * 1000000) }
 func fmtInt[T ~int | ~int64](n T) string { b, _ := json.Marshal(n); return string(b) }
 func (m *measurementMachine) RuleEvaluate(tc hegel.TestCase) {
-	r, e := measurements.Evaluate(m.q, m.rows, time.UnixMilli(230000), "", nil)
+	r, e := measurements.Evaluate(m.q, m.rows, time.UnixMilli(230000))
 	if e != nil {
 		panic(e)
 	}
@@ -44,7 +44,7 @@ func (m *measurementMachine) RulePermutation(tc hegel.TestCase) {
 	for i, j := 0, len(rows)-1; i < j; i, j = i+1, j-1 {
 		rows[i], rows[j] = rows[j], rows[i]
 	}
-	r, e := measurements.Evaluate(m.q, rows, time.UnixMilli(230000), "", nil)
+	r, e := measurements.Evaluate(m.q, rows, time.UnixMilli(230000))
 	if e != nil || !reflect.DeepEqual(r.Gauges, m.result.Gauges) {
 		panic("delivery ordering changed gauge facts")
 	}

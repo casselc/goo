@@ -63,7 +63,7 @@ func ValidateResult(r *Result) error {
 		return fmt.Errorf("measurement basis mismatch")
 	}
 	if r.Question.Definition.Kind != "lifecycle" {
-		expected, e := Evaluate(r.Question, r.Rows, at, "", nil)
+		expected, e := Evaluate(r.Question, r.Rows, at)
 		if expected != nil {
 			expected.Plan = r.Plan
 			expected.Rows = r.Rows

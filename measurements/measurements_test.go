@@ -70,7 +70,7 @@ func TestGaugeReplayAndIsolation(t *testing.T) {
 	d := definition(t, "queue-lag")
 	q := Question{Definition: d, FromMS: 100000, ToMS: 220000}
 	row := gaugeRow(d, "worker-a", 210000, "7")
-	r, e := Evaluate(q, []json.RawMessage{raw(row)}, time.UnixMilli(230000), "", nil)
+	r, e := Evaluate(q, []json.RawMessage{raw(row)}, time.UnixMilli(230000))
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -86,7 +86,7 @@ func TestGaugeReplayAndIsolation(t *testing.T) {
 		t.Fatal("tampered result accepted")
 	}
 	row.Unit = "wrong"
-	if _, e = Evaluate(q, []json.RawMessage{raw(row)}, time.UnixMilli(230000), "", nil); e == nil {
+	if _, e = Evaluate(q, []json.RawMessage{raw(row)}, time.UnixMilli(230000)); e == nil {
 		t.Fatal("unit mismatch accepted")
 	}
 }
@@ -98,7 +98,7 @@ func TestLifecycleCustodyCorrectionAndReplay(t *testing.T) {
 		return raw(map[string]any{"body": body, "service": "lab-grpc", "resource": map[string]string{"deployment.environment.name": "local"}, "attributes": map[string]string{"goo.event.id": id, "goo.event.time_ns": at, "goo.subject.id": "s1", "goo.subject.tenant": "demo", "app.release": "r1", "app.outcome": outcome}})
 	}
 	rows := []json.RawMessage{event("e1", d.Lifecycle.Accepted, ns(150000), "")}
-	r, e := Evaluate(q, rows, time.UnixMilli(230000), dir, nil)
+	r, e := ObserveLifecycle(q, rows, time.UnixMilli(230000), dir, nil)
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -109,7 +109,7 @@ func TestLifecycleCustodyCorrectionAndReplay(t *testing.T) {
 		t.Fatal("missing delivery classified bad", r.Lifecycle.Receipt.Counts)
 	}
 	rows = append(rows, event("e2", d.Lifecycle.Terminal, ns(155000), "confirmed"))
-	next, e := Evaluate(q, rows, time.UnixMilli(240000), dir, r)
+	next, e := ObserveLifecycle(q, rows, time.UnixMilli(240000), dir, r)
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -138,10 +138,10 @@ func TestCounterPrecisionAndBoundedInputs(t *testing.T) {
 	row.StartNS = ns(90000)
 	row.Temporality = 2
 	row.Monotonic = true
-	if _, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Now(), "", nil); e == nil {
+	if _, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Now()); e == nil {
 		t.Fatal("unsafe Float64 integer accepted")
 	}
-	if _, e := Evaluate(q, make([]json.RawMessage, RowLimit+1), time.Now(), "", nil); e == nil {
+	if _, e := Evaluate(q, make([]json.RawMessage, RowLimit+1), time.Now()); e == nil {
 		t.Fatal("partial result accepted")
 	}
 }
@@ -153,7 +153,7 @@ func TestEvidenceSurvivesJSONTransportSpellings(t *testing.T) {
 	data, _ := json.Marshal(row)
 	// ClickHouse commonly escapes slashes; JSON transports are free to unescape.
 	escaped := strings.ReplaceAll(string(data), "/", `\/`)
-	r, e := Evaluate(q, []json.RawMessage{json.RawMessage(escaped)}, time.UnixMilli(230000), "", nil)
+	r, e := Evaluate(q, []json.RawMessage{json.RawMessage(escaped)}, time.UnixMilli(230000))
 	if e != nil {
 		t.Fatal(e)
 	}

@@ -24,7 +24,7 @@ func TestLiveCounterEndpointWindowCoverageAndFreeze(t *testing.T) {
 		return b
 	}
 	q := measurements.Question{Definition: def, FromMS: 100000, ToMS: 102000}
-	baselineResult, e := measurements.Evaluate(q, []json.RawMessage{row(100000000000, 102000000000, "6", "one")}, time.Unix(103, 0), "", nil)
+	baselineResult, e := measurements.Evaluate(q, []json.RawMessage{row(100000000000, 102000000000, "6", "one")}, time.Unix(103, 0))
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -87,7 +87,7 @@ func TestLiveCounterEndpointWindowCoverageAndFreeze(t *testing.T) {
 		return json.RawMessage(strings.Replace(string(row(a, b, value, "one")), `"temporality":1`, `"temporality":2`, 1))
 	}
 	cq := q
-	cr, err := measurements.Evaluate(cq, []json.RawMessage{cumulative(90000000000, 100000000000, "2"), cumulative(90000000000, 102000000000, "8")}, time.Unix(103, 0), "", nil)
+	cr, err := measurements.Evaluate(cq, []json.RawMessage{cumulative(90000000000, 100000000000, "2"), cumulative(90000000000, 102000000000, "8")}, time.Unix(103, 0))
 	if err != nil {
 		t.Fatal(err)
 	}

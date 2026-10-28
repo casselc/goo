@@ -56,7 +56,7 @@ func TestHegelPodStateNativeReplayRejectsLabelMutation(t *testing.T) {
 		s := metrics.Stream{Resource: map[string]string{"k8s.pod.uid": "p", "deployment.environment.name": "prod"}, Attributes: map[string]string{}, Scope: "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver", Version: "0.137.0", Name: "k8s.pod.phase"}
 		q := measurements.Question{FromMS: 100000, ToMS: 104000, Definition: measurements.Definition{APIVersion: measurements.Version, Name: "pod-phase", Title: "Pod phase", Kind: "state", StateProfile: metrics.PodPhaseProfile, Environment: "prod", LookbackMinutes: 1, MaxGapMS: 60000, Grain: "per-stream", Source: measurements.Binding{Services: []string{}, Resource: &measurements.ResourceBinding{Kind: "kubernetes-pod", ID: "p"}, ExactStream: &s, Scope: s.Scope, Version: s.Version, Metric: s.Name}}}
 		row, _ := json.Marshal(map[string]any{"resource": s.Resource, "resource_schema_url": "", "scope": s.Scope, "version": s.Version, "schema_url": "", "name": s.Name, "unit": "", "attributes": s.Attributes, "end_ns": "102000000000", "flags": 0, "value": fmt.Sprint(code)})
-		r, err := measurements.Evaluate(q, []json.RawMessage{row}, time.Unix(200, 0), "", nil)
+		r, err := measurements.Evaluate(q, []json.RawMessage{row}, time.Unix(200, 0))
 		if err != nil || measurements.ValidateResult(r) != nil {
 			tc.Errorf("native replay: %v", err)
 			return

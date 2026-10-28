@@ -32,24 +32,24 @@ func TestFilesystemStocksRetainDecreasesAndRequireOriginalAdmission(t *testing.T
 	for _, metric := range []string{"system.filesystem.usage", "system.filesystem.limit"} {
 		q := filesystemQuestion(metric)
 		rows := []json.RawMessage{filesystemRow(q, "1000000000", "4096"), filesystemRow(q, "2000000000", "2048")}
-		r, e := Evaluate(q, rows, time.Unix(3, 0), "", nil)
+		r, e := Evaluate(q, rows, time.Unix(3, 0))
 		if e != nil || len(r.Stocks.Series) != 1 || *r.Stocks.Series[0].Samples[1].Value != 2048 {
 			t.Fatal(r, e)
 		}
 		for _, bad := range []string{"-1", "1.00000000000000000001", "9007199254740992"} {
-			if _, e := Evaluate(q, []json.RawMessage{filesystemRow(q, "1000000000", bad)}, time.Unix(3, 0), "", nil); e == nil {
+			if _, e := Evaluate(q, []json.RawMessage{filesystemRow(q, "1000000000", bad)}, time.Unix(3, 0)); e == nil {
 				t.Fatal("accepted invalid bytes", bad)
 			}
 		}
 		for _, change := range [][2]string{{`"flags":0`, `"flags":null`}, {`"flags":0`, `"flags":0.000000000000001`}, {`"temporality":2`, `"temporality":1`}, {`"temporality":2`, `"temporality":2.0000000000000001`}, {`"monotonic":false`, `"monotonic":null`}, {`"monotonic":false`, `"monotonic":true`}, {`"attributes":{`, `"attributes":null,"ignored":{`}} {
 			raw := strings.Replace(string(rows[0]), change[0], change[1], 1)
-			if _, e := Evaluate(q, []json.RawMessage{json.RawMessage(raw)}, time.Unix(3, 0), "", nil); e == nil {
+			if _, e := Evaluate(q, []json.RawMessage{json.RawMessage(raw)}, time.Unix(3, 0)); e == nil {
 				t.Fatal("accepted malformed stock metadata", change)
 			}
 		}
 		missing := strings.Replace(string(rows[1]), `"flags":0`, `"flags":1`, 1)
 		missing = strings.Replace(missing, `"value":"2048"`, `"value":"-1"`, 1)
-		r, e = Evaluate(q, []json.RawMessage{rows[0], json.RawMessage(missing)}, time.Unix(3, 0), "", nil)
+		r, e = Evaluate(q, []json.RawMessage{rows[0], json.RawMessage(missing)}, time.Unix(3, 0))
 		if e != nil || r.Stocks.Series[0].Samples[1].Value != nil || r.Stocks.Series[0].Samples[1].State != "unknown" {
 			t.Fatal("missing value interpreted", r, e)
 		}
@@ -120,25 +120,25 @@ func filesystemUtilizationQuestion() Question {
 func TestFilesystemUtilizationCertifiesOriginalFractionAndFlags(t *testing.T) {
 	q := filesystemUtilizationQuestion()
 	for _, value := range []string{"0", "0.25", "1"} {
-		r, e := Evaluate(q, []json.RawMessage{cpuTimeRow(q, "1000000000", value)}, time.Unix(3, 0), "", nil)
+		r, e := Evaluate(q, []json.RawMessage{cpuTimeRow(q, "1000000000", value)}, time.Unix(3, 0))
 		if e != nil || r.Gauges == nil || r.Gauges.Series[0].Samples[0].Value == nil {
 			t.Fatal(r, e)
 		}
 	}
 	for _, value := range []string{"-0.0000000000000000000001", "1.0000000000000000000001", "1.1", "NaN"} {
-		if _, e := Evaluate(q, []json.RawMessage{cpuTimeRow(q, "1000000000", value)}, time.Unix(3, 0), "", nil); e == nil {
+		if _, e := Evaluate(q, []json.RawMessage{cpuTimeRow(q, "1000000000", value)}, time.Unix(3, 0)); e == nil {
 			t.Fatal("invalid reported fraction admitted", value)
 		}
 	}
 	raw := cpuTimeRow(q, "1000000000", "0.25")
 	for _, change := range [][2]string{{`"flags":0,`, ``}, {`"flags":0`, `"flags":null`}, {`"flags":0`, `"flags":0.000000000000000001`}, {`"attributes":{`, `"attributes":null,"ignored":{`}} {
 		bad := strings.Replace(string(raw), change[0], change[1], 1)
-		if _, e := Evaluate(q, []json.RawMessage{json.RawMessage(bad)}, time.Unix(3, 0), "", nil); e == nil {
+		if _, e := Evaluate(q, []json.RawMessage{json.RawMessage(bad)}, time.Unix(3, 0)); e == nil {
 			t.Fatal("fraction metadata coerced", change)
 		}
 	}
 	missing := strings.Replace(string(cpuTimeRow(q, "2000000000", "-1")), `"flags":0`, `"flags":1`, 1)
-	r, e := Evaluate(q, []json.RawMessage{raw, json.RawMessage(missing)}, time.Unix(3, 0), "", nil)
+	r, e := Evaluate(q, []json.RawMessage{raw, json.RawMessage(missing)}, time.Unix(3, 0))
 	if e != nil || r.Gauges.Series[0].Samples[1].Value != nil || r.Gauges.Series[0].Samples[1].State != "unknown" {
 		t.Fatal("missing fraction used numerically", r, e)
 	}

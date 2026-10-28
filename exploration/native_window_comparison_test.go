@@ -29,7 +29,7 @@ func TestNativeWindowPairWithholdsAllChangesForOneIncompleteStream(t *testing.T)
 			row, _ := json.Marshal(map[string]any{"resource": map[string]string{"service.name": d.Source.Services[0], "service.instance.id": instance, "deployment.environment.name": d.Environment}, "scope": d.Source.Scope, "version": d.Source.Version, "schema_url": d.Source.SchemaURL, "attributes": d.Source.Attributes, "name": d.Source.Metric, "unit": d.Source.Unit, "start_ns": start, "end_ns": "102000000000", "value": "10", "temporality": 1, "monotonic": true})
 			rows = append(rows, row)
 		}
-		result, e := measurements.Evaluate(q, rows, time.Unix(300, 0), "", nil)
+		result, e := measurements.Evaluate(q, rows, time.Unix(300, 0))
 		if e != nil {
 			t.Fatal(e)
 		}

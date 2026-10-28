@@ -26,7 +26,7 @@ func containerCPUTestResult(t *testing.T, parent PodMetricDiscoveryQuestion, rol
 	d := Definition{APIVersion: Version, Name: "cpu-" + role, Title: role, Kind: "gauge", Environment: parent.Environment, LookbackMinutes: 1, MaxGapMS: 60000, Grain: "per-stream", Source: Binding{Resource: &ResourceBinding{Kind: "kubernetes-container", ID: stream.Resource["container.id"]}, Services: []string{}, Scope: scope, Version: stream.Version, Metric: metric, Unit: "{cpu}", ExactStream: &stream}}
 	q := Question{Definition: d, FromMS: parent.FromMS, ToMS: parent.ToMS}
 	row := metricRow{Resource: stream.Resource, ResourceSchemaURL: stream.ResourceSchemaURL, Scope: scope, Version: stream.Version, Name: metric, Unit: "{cpu}", Attributes: stream.Attributes, EndNS: ns(120000), Value: value}
-	result, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0), "", nil)
+	result, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0))
 	if e != nil {
 		t.Fatal(e)
 	}

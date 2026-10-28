@@ -18,7 +18,7 @@ func poolViewFixture(t *testing.T) PoolViewRequest {
 		row := stockRow(q.Definition, 101000, value)
 		row.Attributes = attrs
 		row.Resource = req.Stream.Resource
-		r, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0), "", nil)
+		r, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0))
 		if e != nil {
 			t.Fatal(e)
 		}
@@ -28,7 +28,7 @@ func poolViewFixture(t *testing.T) PoolViewRequest {
 	capacity := makeStock(plan.Capacity[0].Question, plan.Capacity[0].Question.Definition.Source.ExactStream.Attributes, "10")
 	wq := plan.Wait[0].Question
 	wr := metricRow{Resource: req.Stream.Resource, Scope: wq.Definition.Source.Scope, Version: wq.Definition.Source.Version, SchemaURL: wq.Definition.Source.SchemaURL, Name: wq.Definition.Source.Metric, Unit: wq.Definition.Source.Unit, Attributes: wq.Definition.Source.ExactStream.Attributes, StartNS: wq.FromNS, EndNS: wq.ToNS, Temporality: 1, Bounds: []float64{0.01, 0.1}, BucketCounts: []string{"1", "1", "0"}, Count: "2"}
-	wait, e := Evaluate(wq, []json.RawMessage{raw(wr)}, time.Unix(201, 0), "", nil)
+	wait, e := Evaluate(wq, []json.RawMessage{raw(wr)}, time.Unix(201, 0))
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -49,7 +49,7 @@ func replacePoolRows(t *testing.T, r *Result, edit func([]metricRow) []metricRow
 	for _, row := range rows {
 		encoded = append(encoded, raw(row))
 	}
-	result, e := Evaluate(r.Question, encoded, time.Unix(202, 0), "", nil)
+	result, e := Evaluate(r.Question, encoded, time.Unix(202, 0))
 	if e != nil {
 		t.Fatal(e)
 	}

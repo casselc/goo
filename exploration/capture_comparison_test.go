@@ -75,7 +75,7 @@ func TestGaugeEvidencePreservesStreamIdentityUnitsAndUnknownEndpoints(t *testing
 		def.Source.Unit = unit
 		q := measurements.Question{Definition: def, FromMS: 100000, ToMS: 220000}
 		row, _ := json.Marshal(map[string]any{"resource": map[string]string{"service.name": def.Source.Services[0], "service.instance.id": instance, "deployment.environment.name": def.Environment}, "scope": def.Source.Scope, "version": def.Source.Version, "schema_url": def.Source.SchemaURL, "attributes": def.Source.Attributes, "name": def.Source.Metric, "unit": unit, "end_ns": "210000000000", "value": value, "flags": flags})
-		result, err := measurements.Evaluate(q, []json.RawMessage{row}, time.Unix(300, 0), "", nil)
+		result, err := measurements.Evaluate(q, []json.RawMessage{row}, time.Unix(300, 0))
 		if err != nil {
 			t.Fatal(err)
 		}

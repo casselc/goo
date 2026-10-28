@@ -29,7 +29,7 @@ func TestContainerReadinessCompileReplayAndAuthoring(t *testing.T) {
 		t.Fatal(plan, err)
 	}
 	for _, value := range []string{"0", "1", "0.5", "2"} {
-		r, err := Evaluate(q, []json.RawMessage{raw(hostResourceRow(q, value))}, time.Unix(200, 0), "", nil)
+		r, err := Evaluate(q, []json.RawMessage{raw(hostResourceRow(q, value))}, time.Unix(200, 0))
 		if err != nil || ValidateResult(r) != nil {
 			t.Fatal("readiness replay", value, err)
 		}
@@ -79,7 +79,7 @@ func TestContainerReadinessRefusesBroadeningAndPrecisionLoss(t *testing.T) {
 	}
 	q := containerReadyQuestion(t)
 	for _, value := range []string{"1e-400", "1e-10000", "0.9999999999999999999", "1.0000000000000000001"} {
-		if _, err := Evaluate(q, []json.RawMessage{raw(hostResourceRow(q, value))}, time.Unix(200, 0), "", nil); err == nil {
+		if _, err := Evaluate(q, []json.RawMessage{raw(hostResourceRow(q, value))}, time.Unix(200, 0)); err == nil {
 			t.Fatal("precision manufactured readiness", value)
 		}
 	}
@@ -87,7 +87,7 @@ func TestContainerReadinessRefusesBroadeningAndPrecisionLoss(t *testing.T) {
 		row := hostResourceRow(q, "1")
 		row.Resource = cloneLabels(row.Resource)
 		row.Resource[key] = "different"
-		if _, err := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0), "", nil); err == nil {
+		if _, err := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0)); err == nil {
 			t.Fatal("raw resource broadened", key)
 		}
 	}
@@ -98,7 +98,7 @@ func TestContainerReadinessUsesVerbatimReportedID(t *testing.T) {
 	const reported = "containerd://literal-reported-id"
 	q.Definition.Source.Resource.ID = reported
 	q.Definition.Source.ExactStream.Resource["container.id"] = reported
-	r, err := Evaluate(q, []json.RawMessage{raw(hostResourceRow(q, "1"))}, time.Unix(200, 0), "", nil)
+	r, err := Evaluate(q, []json.RawMessage{raw(hostResourceRow(q, "1"))}, time.Unix(200, 0))
 	if err != nil || r.States.Series[0].Stream.Resource["container.id"] != reported {
 		t.Fatal("reported ID was normalized", err)
 	}
@@ -125,7 +125,7 @@ func TestContainerReadinessRequiresReportedMapsAndFlags(t *testing.T) {
 			} else {
 				delete(row, key)
 			}
-			if _, err := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0), "", nil); err == nil {
+			if _, err := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0)); err == nil {
 				t.Fatal("unknown source field became reported false", key)
 			}
 		}
@@ -134,7 +134,7 @@ func TestContainerReadinessRequiresReportedMapsAndFlags(t *testing.T) {
 		var row map[string]json.RawMessage
 		_ = json.Unmarshal(raw(hostResourceRow(q, "0")), &row)
 		row["flags"] = flags
-		if _, err := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0), "", nil); err == nil {
+		if _, err := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0)); err == nil {
 			t.Fatal("noninteger flags rounded into known flags")
 		}
 	}
@@ -142,7 +142,7 @@ func TestContainerReadinessRequiresReportedMapsAndFlags(t *testing.T) {
 	var row map[string]json.RawMessage
 	_ = json.Unmarshal(raw(hostResourceRow(q, "0")), &row)
 	row["attributes"] = json.RawMessage(`{"dimension":null}`)
-	if _, err := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0), "", nil); err == nil {
+	if _, err := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0)); err == nil {
 		t.Fatal("null dimension became known empty")
 	}
 }

@@ -51,14 +51,14 @@ func TestContainerResourceHistoryHTTPFrozenContracts(t *testing.T) {
 			row["end_ns"] = "110000000000"
 			row["value"] = "0.5"
 			old, _ := json.Marshal(row)
-			result, e := measurements.Evaluate(r.Memory.WorkingSet.Question, []json.RawMessage{r.Memory.WorkingSet.Rows[0], old}, time.Unix(200, 0), "", nil)
+			result, e := measurements.Evaluate(r.Memory.WorkingSet.Question, []json.RawMessage{r.Memory.WorkingSet.Rows[0], old}, time.Unix(200, 0))
 			if e != nil {
 				t.Fatal(e)
 			}
 			r.Memory.WorkingSet = result
 		}), Status: 200},
 		{Name: "no-data", Body: containerHistoryHTTPBody(t, func(r *measurements.ContainerResourceHistoryRequest) {
-			result, e := measurements.Evaluate(r.Memory.WorkingSet.Question, nil, time.Unix(200, 0), "", nil)
+			result, e := measurements.Evaluate(r.Memory.WorkingSet.Question, nil, time.Unix(200, 0))
 			if e != nil {
 				t.Fatal(e)
 			}

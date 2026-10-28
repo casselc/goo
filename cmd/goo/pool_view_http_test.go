@@ -46,7 +46,7 @@ func poolViewHTTPResult(t *testing.T, q measurements.Question, stream metrics.St
 			break
 		}
 	}
-	result, err := measurements.Evaluate(q, rows, time.Date(2026, 10, 26, 0, 0, 0, 0, time.UTC), "", nil)
+	result, err := measurements.Evaluate(q, rows, time.Date(2026, 10, 26, 0, 0, 0, 0, time.UTC))
 	if err != nil {
 		t.Fatal(err)
 	}

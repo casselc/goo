@@ -29,7 +29,7 @@ func TestHistogramTimeDefinitionAndReplay(t *testing.T) {
 	next.EndNS = ns(102000)
 	next.Count = "3"
 	next.BucketCounts = []string{"0", "3"}
-	r, e := Evaluate(q, []json.RawMessage{raw(row), raw(next)}, time.Unix(200, 0), "", nil)
+	r, e := Evaluate(q, []json.RawMessage{raw(row), raw(next)}, time.Unix(200, 0))
 	if e != nil {
 		t.Fatal(e)
 	}

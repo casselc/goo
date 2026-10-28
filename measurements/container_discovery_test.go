@@ -44,7 +44,7 @@ func TestContainerReadinessDiscoveryAndPlan(t *testing.T) {
 		if def.Kind != "state" || def.StateProfile != metrics.ContainerReadyProfile || def.Source.Resource.Kind != "kubernetes-container" || def.Source.Resource.ID != q.Resource["container.id"] || w.Grain != "container-resource-stream" || !reflect.DeepEqual(def.Source.ExactStream.Resource, q.Resource) {
 			t.Fatal("container authority broadened", w)
 		}
-		result, err := Evaluate(w.Question, []json.RawMessage{raw(hostResourceRow(w.Question, "0"))}, time.Unix(200, 0), "", nil)
+		result, err := Evaluate(w.Question, []json.RawMessage{raw(hostResourceRow(w.Question, "0"))}, time.Unix(200, 0))
 		if err != nil || ValidateResult(result) != nil || result.State != "observed" || result.States.Series[0].Samples[0].Label != "Not ready" {
 			t.Fatal("zero state lost", result, err)
 		}

@@ -73,7 +73,7 @@ func TestPoolDomainRawRecordedValuesAndReplay(t *testing.T) {
 	}{{"0", 0, true}, {"9007199254740991", 0, true}, {"-1", 0, false}, {"0.5", 0, false}, {"9007199254740992", 0, false}, {"9007199254740991.1", 0, false}, {"1e1", 0, true}, {"0x1p0", 0, false}, {"-1", 1, true}} {
 		row := map[string]any{"resource": map[string]string{"service.name": "api", "service.instance.id": "one", "deployment.environment.name": "prod"}, "scope": i.Scope, "version": i.Version, "schema_url": i.SchemaURL, "name": i.Metric, "unit": i.Unit, "attributes": map[string]string{}, "start_ns": "90000000000", "end_ns": "120000000000", "value": c.value, "flags": c.flags, "temporality": 2, "monotonic": false}
 		raw, _ := json.Marshal(row)
-		r, e := measurements.Evaluate(q, []json.RawMessage{raw}, time.Unix(200, 0), "", nil)
+		r, e := measurements.Evaluate(q, []json.RawMessage{raw}, time.Unix(200, 0))
 		if (e == nil) != c.valid {
 			t.Fatal("recorded domain", c, e)
 		}

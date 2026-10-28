@@ -421,3 +421,7 @@ Woven Go instrumentation requires explicit startup: construct
 check its error, then call `instrumentation.BindDefault(rt)` once before serving.
 Manual integrations can use Runtime methods without a process binding. See
 [the runtime contract](docs/GOO_ANNOTATIONS.md#runtime-ownership-and-startup).
+
+For supplied native observations, `measurements.Evaluate(question, rows, at)` is
+storage-free. Lifecycle custody/correction uses `measurements.ObserveLifecycle`
+explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-evaluation-and-lifecycle-observation).

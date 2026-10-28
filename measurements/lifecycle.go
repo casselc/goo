@@ -11,6 +11,20 @@ import (
 	"time"
 )
 
+// ObserveLifecycle records first observations in custodyDir and evaluates the
+// lifecycle at a fixed time. It may publish custody files, including before a
+// later observation fails validation. Previous retains correction lineage.
+func ObserveLifecycle(q Question, rows []json.RawMessage, at time.Time, custodyDir string, previous *Result) (*Result, error) {
+	if q.Definition.Kind != "lifecycle" {
+		return nil, fmt.Errorf("ObserveLifecycle requires a lifecycle definition")
+	}
+	r, err := prepareResult(q, rows, at)
+	if err != nil {
+		return nil, err
+	}
+	return evaluateLifecycle(r, at, custodyDir, previous)
+}
+
 // observe freezes first Goo observation of each normalized business payload. It
 // is local custody, not warehouse ingestion, producer durability or completeness.
 func observe(dir string, event lifecycle.Event, at time.Time) (lifecycle.Event, error) {

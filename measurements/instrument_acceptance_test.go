@@ -29,7 +29,7 @@ func TestDiscoveryCandidatesDoNotVerifyEvaluation(t *testing.T) {
 				row := metricRow{Resource: resource, Scope: "ordinary", Name: metric, Unit: unit, Attributes: map[string]string{}, StartNS: ns(1000), EndNS: ns(3000), Temporality: 1, Count: "4", Bounds: []float64{1}, BucketCounts: []string{"1", "3"}}
 				check := func(q Question, rows []json.RawMessage, state, refusal string) {
 					t.Helper()
-					result, e := Evaluate(q, rows, time.UnixMilli(4000), "", nil)
+					result, e := Evaluate(q, rows, time.UnixMilli(4000))
 					if refusal != "" {
 						if e == nil || result != nil || !strings.Contains(e.Error(), refusal) {
 							t.Fatalf("expected %s refusal, got %+v %v", refusal, result, e)

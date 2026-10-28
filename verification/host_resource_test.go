@@ -53,7 +53,7 @@ func TestHegelHostAuthorityAndRawIdentity(t *testing.T) {
 				}
 				before, _ := json.Marshal(q)
 				raw, _ := json.Marshal(row)
-				r, e := measurements.Evaluate(q, []json.RawMessage{raw}, time.Unix(200, 0), "", nil)
+				r, e := measurements.Evaluate(q, []json.RawMessage{raw}, time.Unix(200, 0))
 				if e != nil || measurements.ValidateResult(r) != nil {
 					tc.Errorf("valid raw host %s/%s %v", kind, presence, e)
 					return
@@ -100,7 +100,7 @@ func TestHegelHostAuthorityAndRawIdentity(t *testing.T) {
 						wrong["end_ns"] = "160000000000"
 					}
 					bad, _ := json.Marshal(wrong)
-					if _, e := measurements.Evaluate(q, []json.RawMessage{bad}, time.Unix(200, 0), "", nil); e == nil {
+					if _, e := measurements.Evaluate(q, []json.RawMessage{bad}, time.Unix(200, 0)); e == nil {
 						tc.Errorf("raw host mismatch accepted %s", field)
 						return
 					}

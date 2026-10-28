@@ -33,7 +33,7 @@ func TestHegelNetworkByteAdmission(t *testing.T) {
 			b, _ := json.Marshal(map[string]any{"resource": s.Resource, "attributes": s.Attributes, "resource_schema_url": "", "scope": s.Scope, "version": "", "schema_url": s.SchemaURL, "name": s.Name, "unit": s.Unit, "flags": 0, "temporality": 2, "monotonic": true, "start_ns": "0", "end_ns": []string{"1000000000", "3000000000"}[i], "value": text})
 			rows = append(rows, b)
 		}
-		r, e := measurements.Evaluate(q, rows, time.Unix(3, 0), "", nil)
+		r, e := measurements.Evaluate(q, rows, time.Unix(3, 0))
 		valid := base < limit && base+delta < limit && !fraction
 		if valid {
 			if e != nil || r.Counters.Series[0].Intervals[0].Delta != fmt.Sprint(delta) || r.Counters.Series[0].Intervals[0].PerSecond == nil || *r.Counters.Series[0].Intervals[0].PerSecond != float64(delta)/2 {

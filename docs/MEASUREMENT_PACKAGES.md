@@ -8,6 +8,51 @@ investigation notes. The UI exposes **Explore → Measurements**, Definitions an
 an Examples measurement library; there is no reservation-specific evaluator in
 this path.
 
+## Go evaluation and lifecycle observation
+
+Native numeric/state evaluation accepts only its question, supplied rows and fixed
+time:
+
+```go
+result, err := measurements.Evaluate(question, rows, at)
+```
+
+It performs no source read or file write and rejects lifecycle definitions. Caller
+inputs are cloned/canonicalized as before; exact bounds, units, resets, missing
+values, result encoding and stored replay remain unchanged. There is no custody
+path or previous-result argument in this API.
+
+Lifecycle observation is explicitly separate:
+
+```go
+result, err := measurements.ObserveLifecycle(question, rows, at, custodyDir, previous)
+```
+
+This operation may publish first-observation files. The existing immutable custody,
+correction lineage, fixed business-evaluation time and replay rules still apply.
+It is not an atomic batch: earlier observations may have been published when a
+later row fails. Repeated observation keeps the original first-observed time.
+
+`Source.Run` remains the HTTP adapter's mixed operation: read the selected source,
+then dispatch numeric/state questions to `Evaluate` and lifecycle questions to
+`ObserveLifecycle` using its explicitly configured custody directory. Native HTTP
+policy already declares optional lifecycle custody. Saved replay performs no
+source/custody read. The prerelease five-argument `Evaluate` signature is removed;
+all supplied callers use the appropriate new operation. Result metadata/hashes
+used by existing save/replay flows are unchanged; this cut does not remove them.
+
+```mermaid
+flowchart LR
+    Rows[Supplied rows + question + fixed time] --> Pure[Evaluate: numeric and state only]
+    Rows --> Observe[ObserveLifecycle: explicit custody and previous result]
+    Pure --> Result[Existing result envelope]
+    Observe --> Custody[Immutable first-observation files]
+    Observe --> Result
+    Source[Source.Run: configured source read] --> Kind{Definition kind}
+    Kind -->|numeric / state| Pure
+    Kind -->|lifecycle| Observe
+```
+
 ## Author, preview, run, preserve
 
 Select an existing package or paste YAML into the package editor. Preview resolves

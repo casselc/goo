@@ -106,7 +106,7 @@ func TestHegelExactStreamFocusClearState(t *testing.T) {
 			raw, _ := json.Marshal(r)
 			rows = append(rows, raw)
 		}
-		broad, e := measurements.Evaluate(q, rows, time.Unix(103, 0), "", nil)
+		broad, e := measurements.Evaluate(q, rows, time.Unix(103, 0))
 		if e != nil {
 			tc.Fatal(e)
 		}
@@ -122,7 +122,7 @@ func TestHegelExactStreamFocusClearState(t *testing.T) {
 				input = []json.RawMessage{rows[action]}
 			}
 			q.Definition.Source.ExactStream = selected
-			result, e := measurements.Evaluate(q, input, time.Unix(103, 0), "", nil)
+			result, e := measurements.Evaluate(q, input, time.Unix(103, 0))
 			if e != nil {
 				tc.Fatal(e)
 			}
@@ -134,14 +134,14 @@ func TestHegelExactStreamFocusClearState(t *testing.T) {
 				if len(result.Counters.Series) != 1 || !reflect.DeepEqual(result.Counters.Series[0].Stream, *selected) {
 					tc.Fatal("focus changed identity")
 				}
-				if _, e := measurements.Evaluate(q, rows, time.Unix(103, 0), "", nil); e == nil {
+				if _, e := measurements.Evaluate(q, rows, time.Unix(103, 0)); e == nil {
 					tc.Fatal("mixed stream source bypassed selector")
 				}
 				var changed map[string]any
 				json.Unmarshal(input[0], &changed)
 				changed["attributes"].(map[string]any)["new.dimension"] = ""
 				offstream, _ := json.Marshal(changed)
-				if _, e := measurements.Evaluate(q, []json.RawMessage{offstream}, time.Unix(103, 0), "", nil); e == nil {
+				if _, e := measurements.Evaluate(q, []json.RawMessage{offstream}, time.Unix(103, 0)); e == nil {
 					tc.Fatal("extra empty dimension silently matched")
 				}
 			}

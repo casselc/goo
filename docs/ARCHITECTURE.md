@@ -25,6 +25,11 @@ their distinct adapter contracts. The [HTTP acceptance inventory](HTTP_BOUNDARIE
 records adopted transports and remaining endpoint/branch coverage; no common
 semantic evaluator or universal request owner is implied.
 
+Native `measurements.Evaluate(question, rows, at)` is now storage-free and rejects
+lifecycle definitions. `ObserveLifecycle` explicitly owns first-observation custody
+and correction; the HTTP `Source.Run` adapter dispatches by definition kind. Result
+encoding and saved replay remain unchanged. See [evaluation boundaries](MEASUREMENT_PACKAGES.md#go-evaluation-and-lifecycle-observation).
+
 Instrumentation uses an explicit `NewRuntime(Config)` with application-selected
 providers and eagerly checked instrument creation. Direct runtimes own their
 initialization state; woven hooks use a one-time `BindDefault` process binding.

@@ -18,7 +18,7 @@ func TestExactNativeBoundsPlanAndReplay(t *testing.T) {
 		t.Fatal(p)
 	}
 	row := metricRow{Resource: map[string]string{"service.name": d.Source.Services[0], "service.instance.id": "sdk-one", "deployment.environment.name": d.Environment}, Scope: d.Source.Scope, Version: d.Source.Version, SchemaURL: d.Source.SchemaURL, Name: d.Source.Metric, Unit: d.Source.Unit, Attributes: d.Source.Attributes, StartNS: q.FromNS, EndNS: q.ToNS, Value: "6", Temporality: 1, Monotonic: true}
-	r, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0), "", nil)
+	r, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0))
 	if e != nil {
 		t.Fatal(e)
 	}

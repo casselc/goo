@@ -20,7 +20,7 @@ func cpuTimeRow(q Question, end, value string) json.RawMessage {
 func TestDecimalCounterSourceExactAndOriginalEvidence(t *testing.T) {
 	q := cpuTimeQuestion()
 	rows := []json.RawMessage{cpuTimeRow(q, "1000000000", "1.25e+0"), cpuTimeRow(q, "3000000000", "1.75")}
-	r, e := Evaluate(q, rows, time.Unix(3, 0), "", nil)
+	r, e := Evaluate(q, rows, time.Unix(3, 0))
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -38,13 +38,13 @@ func TestDecimalCounterSourceExactAndOriginalEvidence(t *testing.T) {
 				row[key] = json.RawMessage("null")
 			}
 			bad, _ := json.Marshal(row)
-			if _, e := Evaluate(q, []json.RawMessage{bad, rows[1]}, time.Unix(3, 0), "", nil); e == nil {
+			if _, e := Evaluate(q, []json.RawMessage{bad, rows[1]}, time.Unix(3, 0)); e == nil {
 				t.Fatal("accepted", key, mode)
 			}
 		}
 	}
 	for _, bad := range []string{strings.Replace(string(rows[0]), `"flags":0`, `"flags":1e0`, 1), strings.Replace(string(rows[0]), `"flags":0`, `"flags":0.000000000000000001`, 1), strings.Replace(string(rows[0]), `"cpu.mode":"user"`, `"cpu.mode":null`, 1), strings.Replace(string(rows[0]), `"temporality":2`, `"temporality":2.0000000000000000001`, 1), strings.Replace(string(rows[0]), `"temporality":2`, `"temporality":2e0`, 1)} {
-		if _, e := Evaluate(q, []json.RawMessage{json.RawMessage(bad)}, time.Unix(3, 0), "", nil); e == nil {
+		if _, e := Evaluate(q, []json.RawMessage{json.RawMessage(bad)}, time.Unix(3, 0)); e == nil {
 			t.Fatal("accepted manufactured field", bad)
 		}
 	}

@@ -1,5 +1,33 @@
 # Validation record
 
+## Storage-free supplied measurement evaluation (2026-10-28 UTC)
+
+`measurements.Evaluate(question, rows, at)` now evaluates numeric/state observations
+without storage/correction arguments and rejects lifecycle definitions.
+`ObserveLifecycle(question, rows, at, custodyDir, previous)` explicitly names the
+first-observation publication/correction operation. Shared result preparation
+preserves canonical rows, question copies, fixed-time identity and result encoding.
+`Source.Run` remains the HTTP adapter's declared mixed read: lifecycle questions
+use the configured custody directory; numeric/state questions use pure Evaluate.
+The old five-argument Evaluate signature is removed, with all supplied callers
+migrated directly and numeric stored replay using the pure API.
+
+Validation: full root Go tests, measurement/native HTTP race suites and focused
+vet pass. Hegel measurement state/swarm, container readiness and host authority
+properties pass against the migrated API under race detection. The new boundary
+regression verifies deterministic fixed-input/time evaluation, stored replay,
+lifecycle rejection, wrong-kind observation rejection and no working-directory
+file publication. Existing lifecycle first-observation/correction/concurrent
+publication and native HTTP/storage contracts pass. OpenAPI regeneration is
+byte-identical. No new browser, Bombadil or Quint campaign was needed for this
+API-only extraction; UI/SQL/result formats and immutable saved files are unchanged.
+
+Architecture flow, measurement API docs, README, known limits and refactor status
+are updated. Lifecycle observation remains a potentially partial publication batch;
+existing retry/correction rules apply. Result metadata/hash simplification and
+broader source/publication relayering remain separate work. Temporary migration
+scripts/test logs are removed; saved lab volumes remain intact.
+
 ## Owned instrumentation runtime (2026-10-28 UTC)
 
 `instrumentation.NewRuntime(Config)` now requires explicit meter/tracer providers,

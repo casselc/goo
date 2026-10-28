@@ -32,7 +32,7 @@ func TestPodPhaseDiscoveryPlanningAndNativeExecution(t *testing.T) {
 	if !reflect.DeepEqual(native.Definition.Source.ExactStream.Resource, q.Resource) || native.Definition.Source.ExactStream.ResourceSchemaURL != *q.ResourceSchemaURL || native.FromMS != q.FromMS || native.ToMS != q.ToMS {
 		t.Fatal("phase authority broadened")
 	}
-	r, err := Evaluate(native, []json.RawMessage{raw(hostResourceRow(native, "5"))}, time.Unix(200, 0), "", nil)
+	r, err := Evaluate(native, []json.RawMessage{raw(hostResourceRow(native, "5"))}, time.Unix(200, 0))
 	if err != nil || ValidateResult(r) != nil || r.States == nil || r.States.Series[0].Samples[0].Label != "Unknown" || r.State != "observed" {
 		t.Fatal("discovered phase execution", r, err)
 	}

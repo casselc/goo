@@ -52,7 +52,7 @@ func TestHegelStockAdapterIdentityAndEpochs(t *testing.T) {
 				}
 			}
 		}
-		r, e := measurements.Evaluate(q, rows, time.Unix(200, 0), "", nil)
+		r, e := measurements.Evaluate(q, rows, time.Unix(200, 0))
 		if e != nil || r.Stocks == nil || r.Gauges != nil || r.Counters != nil || len(r.Stocks.Series) != 6 {
 			tc.Errorf("stock adapter identity %v", e)
 			return

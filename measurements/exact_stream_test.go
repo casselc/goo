@@ -48,7 +48,7 @@ func TestExactStreamBindingPlanReplayAndDrift(t *testing.T) {
 	if e != nil || !reflect.DeepEqual(d, restored) {
 		t.Fatal("YAML identity changed", e, string(encoded))
 	}
-	result, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(103, 0), "", nil)
+	result, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(103, 0))
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -67,7 +67,7 @@ func TestExactStreamBindingPlanReplayAndDrift(t *testing.T) {
 		var changed metricRow
 		json.Unmarshal(raw(row), &changed)
 		mutation(&changed)
-		if _, e = Evaluate(q, []json.RawMessage{raw(changed)}, time.Unix(103, 0), "", nil); e == nil {
+		if _, e = Evaluate(q, []json.RawMessage{raw(changed)}, time.Unix(103, 0)); e == nil {
 			t.Fatal("off-stream evidence accepted", changed)
 		}
 	}
@@ -102,7 +102,7 @@ func TestExactStreamBindingPlanReplayAndDrift(t *testing.T) {
 	if Hash(unselected) == Hash(d) {
 		t.Fatal("selector not part of revision")
 	}
-	empty, e := Evaluate(q, nil, time.Unix(103, 0), "", nil)
+	empty, e := Evaluate(q, nil, time.Unix(103, 0))
 	if e != nil || empty.State != "no_data" || len(empty.Counters.Series) != 0 {
 		t.Fatal("missing stream became zero", e, empty)
 	}
@@ -125,7 +125,7 @@ func TestExactStreamAcrossNativeKinds(t *testing.T) {
 			row.BucketCounts = []string{"1", "2"}
 			d.Source.ExactStream = &metrics.Stream{Resource: row.Resource, Scope: row.Scope, Version: row.Version, SchemaURL: row.SchemaURL, Name: row.Name, Unit: row.Unit, Attributes: row.Attributes}
 			q := Question{Definition: d, FromMS: 100000, ToMS: 102000}
-			result, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(103, 0), "", nil)
+			result, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(103, 0))
 			if e != nil {
 				t.Fatal(e)
 			}
@@ -133,7 +133,7 @@ func TestExactStreamAcrossNativeKinds(t *testing.T) {
 				t.Fatal(e)
 			}
 			row.ResourceSchemaURL = "other"
-			if _, e = Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(103, 0), "", nil); e == nil {
+			if _, e = Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(103, 0)); e == nil {
 				t.Fatal("resource schema changed selected identity")
 			}
 		})

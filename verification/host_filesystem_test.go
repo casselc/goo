@@ -36,7 +36,7 @@ func TestHegelFilesystemStockAdmission(t *testing.T) {
 		if reverse {
 			rows[0], rows[1] = rows[1], rows[0]
 		}
-		r, e := measurements.Evaluate(q, rows, time.Unix(3, 0), "", nil)
+		r, e := measurements.Evaluate(q, rows, time.Unix(3, 0))
 		if bad == 1 || bad == 2 {
 			if e == nil {
 				tc.Errorf("unsafe/fractional stock admitted")

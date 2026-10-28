@@ -133,7 +133,7 @@ func cpResult(q measurements.Question, value string, at int64, flags int, confli
 	} else if strings.HasSuffix(q.Definition.Source.Metric, "_limit") {
 		clock = 202
 	}
-	return measurements.Evaluate(q, rows, time.Unix(clock, 0), "", nil)
+	return measurements.Evaluate(q, rows, time.Unix(clock, 0))
 }
 func TestHegelContainerCPUExportedDecimals(t *testing.T) {
 	hegel.Test(t, func(tc *hegel.T) {

@@ -44,7 +44,7 @@ func TestHostResourceCompileEvaluateReplayWithoutService(t *testing.T) {
 		if kind == "stock" {
 			value = "4096"
 		}
-		r, e := Evaluate(q, []json.RawMessage{raw(hostResourceRow(q, value))}, time.Unix(200, 0), "", nil)
+		r, e := Evaluate(q, []json.RawMessage{raw(hostResourceRow(q, value))}, time.Unix(200, 0))
 		if e != nil {
 			t.Fatal(e)
 		}
@@ -64,7 +64,7 @@ func TestHostResourceCompileEvaluateReplayWithoutService(t *testing.T) {
 			t.Fatal("synthetic instance added")
 		}
 		q.Definition.Source.ExactStream.Resource["service.name"] = ""
-		r, e = Evaluate(q, []json.RawMessage{raw(hostResourceRow(q, value))}, time.Unix(200, 0), "", nil)
+		r, e = Evaluate(q, []json.RawMessage{raw(hostResourceRow(q, value))}, time.Unix(200, 0))
 		if e != nil {
 			t.Fatal(e)
 		}
@@ -90,14 +90,14 @@ func TestHostResourceRefusesIdentityBroadeningAndOtherKinds(t *testing.T) {
 		}
 		resource[key] = "other"
 		row.Resource = resource
-		if _, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0), "", nil); e == nil {
+		if _, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0)); e == nil {
 			t.Fatal("source identity mismatch", key)
 		}
 	}
 	q := hostResourceQuestion(t, "gauge")
 	row := hostResourceRow(q, "0.5")
 	row.ResourceSchemaURL = "other"
-	if _, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0), "", nil); e == nil {
+	if _, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0)); e == nil {
 		t.Fatal("resource schema broadened")
 	}
 }

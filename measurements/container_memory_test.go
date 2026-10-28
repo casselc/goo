@@ -27,7 +27,7 @@ func containerMemoryTestResult(t *testing.T, parent PodMetricDiscoveryQuestion, 
 	d := Definition{APIVersion: Version, Name: "memory-" + role, Title: role, Kind: "gauge", Environment: parent.Environment, LookbackMinutes: 1, MaxGapMS: 60000, Grain: "per-stream", Source: Binding{Resource: &ResourceBinding{Kind: "kubernetes-container", ID: stream.Resource["container.id"]}, Services: []string{}, Scope: scope, Version: stream.Version, Metric: metric, Unit: "By", ExactStream: &stream}}
 	q := Question{Definition: d, FromMS: parent.FromMS, ToMS: parent.ToMS}
 	row := metricRow{Resource: stream.Resource, ResourceSchemaURL: stream.ResourceSchemaURL, Scope: scope, Version: stream.Version, Name: metric, Unit: "By", Attributes: stream.Attributes, EndNS: ns(120000), Value: value}
-	result, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0), "", nil)
+	result, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0))
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -98,7 +98,7 @@ func TestContainerMemoryByteDomainAndMissingInputs(t *testing.T) {
 	}
 	input = containerMemoryFixture(t)
 	q := input.Limit.Question
-	r, e := Evaluate(q, nil, time.Unix(200, 0), "", nil)
+	r, e := Evaluate(q, nil, time.Unix(200, 0))
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -204,7 +204,7 @@ func TestContainerMemoryMetadataAndStrictSourceAuthority(t *testing.T) {
 	r := containerMemoryTestResult(t, q, "working-set", "1")
 	for _, badFlag := range []string{"null", "0.00000000000000001", "0.0"} {
 		bad := strings.Replace(string(r.Rows[0]), `"flags":0`, `"flags":`+badFlag, 1)
-		if _, e := Evaluate(r.Question, []json.RawMessage{json.RawMessage(bad)}, time.Unix(200, 0), "", nil); e == nil {
+		if _, e := Evaluate(r.Question, []json.RawMessage{json.RawMessage(bad)}, time.Unix(200, 0)); e == nil {
 			t.Fatal("bad rawflag accepted", badFlag)
 		}
 	}

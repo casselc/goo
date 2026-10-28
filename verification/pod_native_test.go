@@ -58,7 +58,7 @@ func TestHegelPodNativeAuthorityAndRawReplay(t *testing.T) {
 				row := hrRow(native, value)
 				row["temporality"] = 0
 				raw, _ := json.Marshal(row)
-				r, e := measurements.Evaluate(native, []json.RawMessage{raw}, time.Unix(200, 0), "", nil)
+				r, e := measurements.Evaluate(native, []json.RawMessage{raw}, time.Unix(200, 0))
 				if e != nil || measurements.ValidateResult(r) != nil || !reflect.DeepEqual(r.Gauges.Series[0].Stream, *s) {
 					tc.Errorf("raw gauge evidence filtered/fabricated %s %v", value, e)
 					return
@@ -91,7 +91,7 @@ func TestHegelPodNativeAuthorityAndRawReplay(t *testing.T) {
 					bad.Definition.Source.Services = []string{"fake"}
 				}
 				raw, _ = json.Marshal(row)
-				if _, e := measurements.Evaluate(bad, []json.RawMessage{raw}, time.Unix(200, 0), "", nil); e == nil {
+				if _, e := measurements.Evaluate(bad, []json.RawMessage{raw}, time.Unix(200, 0)); e == nil {
 					tc.Errorf("crossover/raw mismatch accepted %s", key)
 					return
 				}

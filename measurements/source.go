@@ -130,6 +130,10 @@ func Compile(q Question) (Plan, error) {
 	p.SQL = "SELECT " + fields + " FROM " + table + " WHERE " + where + " ORDER BY " + timeColumn + " LIMIT 10001 FORMAT JSONEachRow"
 	return p, nil
 }
+
+// Run executes a source question. Numeric/state questions use pure Evaluate;
+// lifecycle questions additionally publish first-observation custody in CustodyDir
+// and may apply previous correction lineage. HTTP composition declares this mixed effect.
 func (s Source) Run(ctx context.Context, q Question, previous *Result) (*Result, error) {
 	plan, e := Compile(q)
 	if e != nil {
@@ -139,7 +143,11 @@ func (s Source) Run(ctx context.Context, q Question, previous *Result) (*Result,
 	if e != nil {
 		return nil, e
 	}
-	return Evaluate(q, rows, time.Now().UTC(), s.CustodyDir, previous)
+	at := time.Now().UTC()
+	if q.Definition.Kind == "lifecycle" {
+		return ObserveLifecycle(q, rows, at, s.CustodyDir, previous)
+	}
+	return Evaluate(q, rows, at)
 }
 func (s Source) read(ctx context.Context, plan Plan) ([]json.RawMessage, error) {
 	u, e := url.Parse(s.Endpoint)
@@ -207,7 +215,7 @@ type metricRow struct {
 }
 
 func ns(ms int64) string { return strconv.FormatInt(ms*1000000, 10) }
-func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir string, previous *Result) (*Result, error) {
+func prepareResult(q Question, rows []json.RawMessage, at time.Time) (*Result, error) {
 	encodedQuestion, _ := json.Marshal(q)
 	var cloned Question
 	json.Unmarshal(encodedQuestion, &cloned)
@@ -239,9 +247,23 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time, custodyDir strin
 			}
 		}
 	}
+	return r, nil
+}
+
+// Evaluate evaluates supplied numeric/state observations at a fixed time. It
+// performs no source reads or filesystem writes. Lifecycle observation has its
+// own explicit storage operation, ObserveLifecycle.
+func Evaluate(q Question, rows []json.RawMessage, at time.Time) (*Result, error) {
 	if q.Definition.Kind == "lifecycle" {
-		return evaluateLifecycle(r, at, custodyDir, previous)
+		return nil, fmt.Errorf("lifecycle requires ObserveLifecycle with explicit custody")
 	}
+	r, e := prepareResult(q, rows, at)
+	if e != nil {
+		return nil, e
+	}
+	q = r.Question
+	copied := r.Rows
+
 	gs := []metrics.GaugePoint{}
 	cs := []metrics.CounterPoint{}
 	hs := []metrics.HistogramPoint{}

@@ -47,7 +47,7 @@ func TestPodMetricDiscoveryAndExactNativeReplay(t *testing.T) {
 			t.Fatal(compiled, e)
 		}
 		row := metricRow{Resource: stream.Resource, ResourceSchemaURL: stream.ResourceSchemaURL, Scope: stream.Scope, Version: stream.Version, SchemaURL: stream.SchemaURL, Name: stream.Name, Unit: stream.Unit, Attributes: stream.Attributes, EndNS: ns(120000), Value: "2048"}
-		r, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0), "", nil)
+		r, e := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0))
 		if e != nil || r.Gauges == nil {
 			t.Fatal(r, e)
 		}
@@ -67,7 +67,7 @@ func TestPodMetricDiscoveryAndExactNativeReplay(t *testing.T) {
 		}
 		row.Resource = cloneLabels(row.Resource)
 		row.Resource["k8s.pod.uid"] = "other"
-		if _, e = Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0), "", nil); e == nil {
+		if _, e = Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0)); e == nil {
 			t.Fatal("different pod accepted")
 		}
 		bad := q

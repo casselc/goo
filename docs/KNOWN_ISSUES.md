@@ -17,6 +17,10 @@ Legacy operation source GET/HEAD reads now share source admission, cancellation
 and post-validation deadlines. Declarations remain outside admission; mixed
 publication/retention and SSE retain their own lifetimes. Python process lifecycle
 remains separate work.
+Native numeric/state evaluation now has a storage-free three-argument Go API;
+lifecycle publication/correction uses explicit `ObserveLifecycle`. The HTTP source
+adapter remains a declared mixed operation. Existing result metadata and hashes
+remain for saves/replay; their broader simplification is not complete.
 Instrumentation now requires explicit providers via `NewRuntime` and one-time
 `BindDefault` for woven calls. Pre-binding hooks are no-ops. Outcome seeding is
 limited to 1,024 operation/role pairs per runtime; later pairs retain actual

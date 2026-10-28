@@ -17,7 +17,7 @@ import (
 func pvStock(q measurements.Question, s metrics.Stream, value int, start, end int64, flags int) (*measurements.Result, error) {
 	row := map[string]any{"resource": s.Resource, "resource_schema_url": s.ResourceSchemaURL, "scope": s.Scope, "version": s.Version, "schema_url": s.SchemaURL, "name": s.Name, "unit": s.Unit, "attributes": s.Attributes, "start_ns": strconv.FormatInt(start, 10), "end_ns": strconv.FormatInt(end, 10), "value": strconv.Itoa(value), "flags": flags, "temporality": 2, "monotonic": false}
 	b, _ := json.Marshal(row)
-	return measurements.Evaluate(q, []json.RawMessage{b}, time.Unix(200, 0), "", nil)
+	return measurements.Evaluate(q, []json.RawMessage{b}, time.Unix(200, 0))
 }
 func TestHegelPoolViewReportedAlignment(t *testing.T) {
 	hegel.Test(t, func(tc *hegel.T) {

@@ -81,7 +81,7 @@ func TestHegelInstrumentCandidateDoesNotPromoteEvidence(t *testing.T) {
 			row["count"] = fmtInt(count + 1)
 		}
 		encoded, _ := json.Marshal(row)
-		result, err := measurements.Evaluate(measurements.Question{Definition: d, FromMS: 1000, ToMS: 3000}, []json.RawMessage{encoded}, time.UnixMilli(4000), "", nil)
+		result, err := measurements.Evaluate(measurements.Question{Definition: d, FromMS: 1000, ToMS: 3000}, []json.RawMessage{encoded}, time.UnixMilli(4000))
 		if change >= 3 {
 			if err == nil || result != nil {
 				tc.Fatal("invalid evidence accepted", change)

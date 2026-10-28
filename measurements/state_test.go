@@ -36,7 +36,7 @@ func TestPodPhaseDefinitionSourceAndFrozenReplay(t *testing.T) {
 		t.Fatal(plan.SQL)
 	}
 	for _, code := range []string{"1", "2", "3", "4", "5", "0", "1.5", "6"} {
-		r, err := Evaluate(q, []json.RawMessage{raw(hostResourceRow(q, code))}, time.Unix(200, 0), "", nil)
+		r, err := Evaluate(q, []json.RawMessage{raw(hostResourceRow(q, code))}, time.Unix(200, 0))
 		if err != nil || ValidateResult(r) != nil {
 			t.Fatalf("code %s: %v", code, err)
 		}
@@ -92,24 +92,24 @@ func TestPodPhaseDefinitionAndRawRefusals(t *testing.T) {
 				row[key] = value
 			}
 			b, _ := json.Marshal(row)
-			if _, err := Evaluate(q, []json.RawMessage{b}, time.Unix(200, 0), "", nil); err == nil {
+			if _, err := Evaluate(q, []json.RawMessage{b}, time.Unix(200, 0)); err == nil {
 				t.Fatalf("unknown %s admitted", key)
 			}
 		}
 	}
 	for _, value := range []string{"1.0000000000000000001", "4.9999999999999999999", "0x1p0"} {
-		if _, err := Evaluate(q, []json.RawMessage{raw(hostResourceRow(q, value))}, time.Unix(200, 0), "", nil); err == nil {
+		if _, err := Evaluate(q, []json.RawMessage{raw(hostResourceRow(q, value))}, time.Unix(200, 0)); err == nil {
 			t.Fatal("raw value rounded into a phase", value)
 		}
 	}
 	row := hostResourceRow(q, "2")
 	row.ResourceSchemaURL = "other"
-	if _, err := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0), "", nil); err == nil {
+	if _, err := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0)); err == nil {
 		t.Fatal("resource schema broadened")
 	}
 	row = hostResourceRow(q, "2")
 	row.Flags = 1
-	r, err := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0), "", nil)
+	r, err := Evaluate(q, []json.RawMessage{raw(row)}, time.Unix(200, 0))
 	if err != nil || r.States.Series[0].Samples[0].Code != nil || r.State != "unknown" {
 		t.Fatal("missing became phase", err)
 	}

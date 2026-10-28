@@ -32,7 +32,7 @@ func containerMemoryHTTPResult(t *testing.T, parent measurements.PodMetricDiscov
 	def := measurements.Definition{APIVersion: measurements.Version, Name: "container-" + role, Title: role, Kind: "gauge", Environment: parent.Environment, LookbackMinutes: 1, MaxGapMS: 60000, Grain: "per-stream", Source: measurements.Binding{Resource: &measurements.ResourceBinding{Kind: "kubernetes-container", ID: parent.Resource["container.id"]}, Services: []string{}, Scope: scope, Version: "0.137.0", Metric: metric, Unit: "By", ExactStream: &stream}}
 	q := measurements.Question{Definition: def, FromMS: parent.FromMS, ToMS: parent.ToMS}
 	raw, _ := json.Marshal(map[string]any{"resource": stream.Resource, "resource_schema_url": stream.ResourceSchemaURL, "scope": scope, "version": "0.137.0", "schema_url": "", "name": metric, "unit": "By", "attributes": map[string]string{}, "end_ns": "120000000000", "flags": 0, "value": value})
-	r, e := measurements.Evaluate(q, []json.RawMessage{raw}, time.Unix(200, 0), "", nil)
+	r, e := measurements.Evaluate(q, []json.RawMessage{raw}, time.Unix(200, 0))
 	if e != nil {
 		t.Fatal(e)
 	}

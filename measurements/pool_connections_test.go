@@ -21,7 +21,7 @@ func TestStockDomainValidationValuesAndReplay(t *testing.T) {
 	d.StockDomain = "nonnegative-integer"
 	q := Question{Definition: d, FromMS: 100000, ToMS: 160000}
 	for _, v := range []string{"0", "3", "9007199254740991"} {
-		r, e := Evaluate(q, []json.RawMessage{raw(stockRow(d, 120000, v))}, time.Unix(200, 0), "", nil)
+		r, e := Evaluate(q, []json.RawMessage{raw(stockRow(d, 120000, v))}, time.Unix(200, 0))
 		if e != nil {
 			t.Fatal(v, e)
 		}
@@ -30,18 +30,18 @@ func TestStockDomainValidationValuesAndReplay(t *testing.T) {
 		}
 	}
 	for _, v := range []string{"-1", "1.5", "9007199254740992", "9007199254740991.1", "1.00000000000000001"} {
-		if _, e := Evaluate(q, []json.RawMessage{raw(stockRow(d, 120000, v))}, time.Unix(200, 0), "", nil); e == nil {
+		if _, e := Evaluate(q, []json.RawMessage{raw(stockRow(d, 120000, v))}, time.Unix(200, 0)); e == nil {
 			t.Fatal("invalid domain accepted", v)
 		}
 	}
 	missing := stockRow(d, 120000, "invalid")
 	missing.Flags = 1
-	if _, e := Evaluate(q, []json.RawMessage{raw(missing)}, time.Unix(200, 0), "", nil); e != nil {
+	if _, e := Evaluate(q, []json.RawMessage{raw(missing)}, time.Unix(200, 0)); e != nil {
 		t.Fatal("missing flag domain", e)
 	}
 	generic := d
 	generic.StockDomain = ""
-	if _, e := Evaluate(Question{Definition: generic, FromMS: q.FromMS, ToMS: q.ToMS}, []json.RawMessage{raw(stockRow(generic, 120000, "-1.5"))}, time.Unix(200, 0), "", nil); e != nil {
+	if _, e := Evaluate(Question{Definition: generic, FromMS: q.FromMS, ToMS: q.ToMS}, []json.RawMessage{raw(stockRow(generic, 120000, "-1.5"))}, time.Unix(200, 0)); e != nil {
 		t.Fatal("generic stock changed", e)
 	}
 	for _, kind := range []string{"gauge", "counter", "histogram", "lifecycle"} {

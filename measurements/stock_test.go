@@ -34,7 +34,7 @@ func TestStockPackageSourceAndReplay(t *testing.T) {
 	a := stockRow(d, 110000, "3.5")
 	b := stockRow(d, 120000, "-1.25")
 	b.StartNS = ns(115000)
-	result, e := Evaluate(q, []json.RawMessage{raw(a), raw(b)}, time.Unix(200, 0), "", nil)
+	result, e := Evaluate(q, []json.RawMessage{raw(a), raw(b)}, time.Unix(200, 0))
 	if e != nil || result.Stocks == nil || result.Gauges != nil || result.Counters != nil {
 		t.Fatal(result, e)
 	}
@@ -69,18 +69,18 @@ func TestStockSourceRefusalsAndFlags(t *testing.T) {
 			r.Resource[k] = v
 		}
 		edit(&r)
-		if _, e := Evaluate(q, []json.RawMessage{raw(r)}, time.Unix(200, 0), "", nil); e == nil {
+		if _, e := Evaluate(q, []json.RawMessage{raw(r)}, time.Unix(200, 0)); e == nil {
 			t.Fatal("invalid stock accepted", r)
 		}
 	}
 	missing := good
 	missing.Flags = 1
 	missing.Value = "not-a-value"
-	r, e := Evaluate(q, []json.RawMessage{raw(missing)}, time.Unix(200, 0), "", nil)
+	r, e := Evaluate(q, []json.RawMessage{raw(missing)}, time.Unix(200, 0))
 	if e != nil || r.State != "unknown" || r.Stocks.Series[0].Samples[0].Value != nil {
 		t.Fatal(r, e)
 	}
-	empty, e := Evaluate(q, nil, time.Unix(200, 0), "", nil)
+	empty, e := Evaluate(q, nil, time.Unix(200, 0))
 	if e != nil || empty.State != "no_data" || len(empty.Stocks.Series) != 0 {
 		t.Fatal(empty, e)
 	}
@@ -111,7 +111,7 @@ func TestStockDiscoveryClassificationAndCapabilities(t *testing.T) {
 func TestStockAdditionDoesNotChangeLegacyResultWire(t *testing.T) {
 	d := definition(t, "checkout-calls")
 	q := Question{Definition: d, FromMS: 100000, ToMS: 160000}
-	r, e := Evaluate(q, nil, time.Unix(200, 0), "", nil)
+	r, e := Evaluate(q, nil, time.Unix(200, 0))
 	if e != nil {
 		t.Fatal(e)
 	}

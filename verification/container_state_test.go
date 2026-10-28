@@ -24,7 +24,7 @@ func TestHegelContainerReadinessAuthorityAndZeroQuality(t *testing.T) {
 		q := measurements.Question{FromMS: 100000, ToMS: 104000, Definition: measurements.Definition{APIVersion: measurements.Version, Name: "ready", Title: "Reported readiness", Kind: "state", StateProfile: metrics.ContainerReadyProfile, Environment: "prod", LookbackMinutes: 1, MaxGapMS: 1000, Grain: "per-stream", Source: measurements.Binding{Services: []string{}, Resource: &measurements.ResourceBinding{Kind: "kubernetes-container", ID: id}, ExactStream: &stream, Scope: stream.Scope, Version: stream.Version, Metric: stream.Name}}}
 		row := map[string]any{"resource": stream.Resource, "resource_schema_url": "", "scope": stream.Scope, "version": stream.Version, "schema_url": "", "name": stream.Name, "unit": "", "attributes": stream.Attributes, "end_ns": at, "flags": 0, "value": fmt.Sprint(code)}
 		b, _ := json.Marshal(row)
-		r, err := measurements.Evaluate(q, []json.RawMessage{b}, time.Unix(200, 0), "", nil)
+		r, err := measurements.Evaluate(q, []json.RawMessage{b}, time.Unix(200, 0))
 		if err != nil || measurements.ValidateResult(r) != nil {
 			tc.Errorf("readiness replay: %v", err)
 			return
@@ -53,14 +53,14 @@ func TestHegelContainerReadinessAuthorityAndZeroQuality(t *testing.T) {
 		changed["container.id"] = id + "-restart"
 		row["resource"] = changed
 		b, _ = json.Marshal(row)
-		if _, err := measurements.Evaluate(q, []json.RawMessage{b}, time.Unix(200, 0), "", nil); err == nil {
+		if _, err := measurements.Evaluate(q, []json.RawMessage{b}, time.Unix(200, 0)); err == nil {
 			tc.Errorf("replacement container accepted")
 			return
 		}
 		row["resource"] = stream.Resource
 		row["value"] = "1e-400"
 		b, _ = json.Marshal(row)
-		if _, err := measurements.Evaluate(q, []json.RawMessage{b}, time.Unix(200, 0), "", nil); err == nil {
+		if _, err := measurements.Evaluate(q, []json.RawMessage{b}, time.Unix(200, 0)); err == nil {
 			tc.Errorf("rounding manufactured Not ready")
 			return
 		}

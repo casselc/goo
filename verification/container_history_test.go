@@ -183,7 +183,7 @@ func TestHegelContainerHistoryRawProjection(t *testing.T) {
 				b, _ := json.Marshal(r)
 				rows = append(rows, b)
 			}
-			result, e := measurements.Evaluate(q, rows, time.Unix(200, 0), "", nil)
+			result, e := measurements.Evaluate(q, rows, time.Unix(200, 0))
 			if e != nil {
 				tc.Errorf("held result: %v", e)
 				return

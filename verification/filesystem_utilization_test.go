@@ -26,7 +26,7 @@ func TestHegelFilesystemFractionAdmission(t *testing.T) {
 		s := metrics.Stream{Resource: map[string]string{"host.id": "host", "deployment.environment.name": "prod"}, Scope: "hostmetrics", SchemaURL: measurements.HostMetricsSchema, Name: "system.filesystem.utilization", Unit: "1", Attributes: map[string]string{"system.device": "/dev/sda", "system.filesystem.mountpoint": "/data", "system.filesystem.state": "used"}}
 		q := measurements.Question{Definition: measurements.Definition{APIVersion: measurements.Version, Name: "fraction", Title: "Reported fraction", Kind: "gauge", Environment: "prod", LookbackMinutes: 2, MaxGapMS: 60000, Grain: "per-stream", Source: measurements.Binding{Resource: &measurements.ResourceBinding{Kind: "host", ID: "host"}, Services: []string{}, Scope: s.Scope, SchemaURL: s.SchemaURL, Metric: s.Name, Unit: s.Unit, ExactStream: &s}}, FromMS: 1000, ToMS: 3000}
 		raw, _ := json.Marshal(map[string]any{"resource": s.Resource, "attributes": s.Attributes, "resource_schema_url": "", "scope": s.Scope, "version": "", "schema_url": s.SchemaURL, "name": s.Name, "unit": s.Unit, "flags": 0, "end_ns": "2000000000", "value": value})
-		r, e := measurements.Evaluate(q, []json.RawMessage{raw}, time.Unix(3, 0), "", nil)
+		r, e := measurements.Evaluate(q, []json.RawMessage{raw}, time.Unix(3, 0))
 		if bad > 0 {
 			if e == nil {
 				tc.Errorf("out-of-range original fraction admitted")

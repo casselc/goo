@@ -24,24 +24,24 @@ func diskQuestion() Question {
 func TestDiskByteProfileStrictValuesAndTemporalDrift(t *testing.T) {
 	q := diskQuestion()
 	rows := []json.RawMessage{cpuTimeRow(q, "1000000000", "100"), cpuTimeRow(q, "3000000000", "612")}
-	r, e := Evaluate(q, rows, time.Unix(3, 0), "", nil)
+	r, e := Evaluate(q, rows, time.Unix(3, 0))
 	if e != nil || r.Counters.Series[0].Intervals[0].Delta != "512" || r.Counters.Series[0].Intervals[0].ExactPerSecond != "256" {
 		t.Fatal(r, e)
 	}
 	for _, bad := range []string{"-1", "1.00000000000000000001", "9007199254740992", "NaN"} {
 		raw := cpuTimeRow(q, "1000000000", bad)
-		if _, e := Evaluate(q, []json.RawMessage{raw, rows[1]}, time.Unix(3, 0), "", nil); e == nil {
+		if _, e := Evaluate(q, []json.RawMessage{raw, rows[1]}, time.Unix(3, 0)); e == nil {
 			t.Fatal("accepted byte value", bad)
 		}
 	}
 	missing := strings.Replace(string(rows[0]), `"flags":0`, `"flags":1`, 1)
 	missing = strings.Replace(missing, `"value":"100"`, `"value":"-1"`, 1)
-	if _, e := Evaluate(q, []json.RawMessage{json.RawMessage(missing), rows[1]}, time.Unix(3, 0), "", nil); e != nil {
+	if _, e := Evaluate(q, []json.RawMessage{json.RawMessage(missing), rows[1]}, time.Unix(3, 0)); e != nil {
 		t.Fatal("missing became numerical evidence", e)
 	}
 	for _, replacement := range []string{`"temporality":1`, `"temporality":2.0000000000000000001`} {
 		raw := strings.Replace(string(rows[0]), `"temporality":2`, replacement, 1)
-		if _, e := Evaluate(q, []json.RawMessage{json.RawMessage(raw)}, time.Unix(3, 0), "", nil); e == nil {
+		if _, e := Evaluate(q, []json.RawMessage{json.RawMessage(raw)}, time.Unix(3, 0)); e == nil {
 			t.Fatal("accepted temporal drift", replacement)
 		}
 	}

@@ -21,11 +21,11 @@ func TestNamespaceBindingIsolation(t *testing.T) {
 		if selector.Mode == "value" {
 			row.Resource[identity.NamespaceKey] = selector.Value
 		}
-		if _, e = Evaluate(q, []json.RawMessage{raw(row)}, time.UnixMilli(230000), "", nil); e != nil {
+		if _, e = Evaluate(q, []json.RawMessage{raw(row)}, time.UnixMilli(230000)); e != nil {
 			t.Fatal(e)
 		}
 		row.Resource[identity.NamespaceKey] = "foreign"
-		if _, e = Evaluate(q, []json.RawMessage{raw(row)}, time.UnixMilli(230000), "", nil); e == nil {
+		if _, e = Evaluate(q, []json.RawMessage{raw(row)}, time.UnixMilli(230000)); e == nil {
 			t.Fatal("foreign namespace accepted")
 		}
 	}
