@@ -1,5 +1,6 @@
 /* Application-owned resource return presentation. No reads or persisted state. */
 import * as UI from './components.mjs';
+import {revealFocus} from './dom-visibility.mjs';
 import * as EvidenceSummary from './evidence-summary.mjs';
 const active=new WeakMap();
 function mount(parent,{className='',id}={}){
@@ -23,8 +24,5 @@ function mount(parent,{className='',id}={}){
  const owner={show,clear,hold,dispose(){clear();bar.remove()}};return owner;
 }
 function hold(parent,question){return active.get(parent)?.hold(question)??null}
-function restoreFocus(origin,fallback){
- const target=origin?.isConnected&&UI.actionVisible(origin)?origin:fallback;
- target?.scrollIntoView({block:'center',behavior:'instant'});target?.focus({preventScroll:true});
-}
+function restoreFocus(origin,fallback){revealFocus(origin,fallback)}
 export {mount,hold,restoreFocus};

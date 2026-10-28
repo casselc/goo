@@ -1,5 +1,46 @@
 # Validation record
 
+## Explicit Activity inspection and return — 240 (2026-10-28 UTC)
+
+Activity's application-owned controller now links the row opener to a named detail
+region, reveals/focuses its heading on explicit Inspect, and reveals/focuses the row
+on Close/Escape. Withdrawn/hidden/disabled openers use the live environment input.
+Native input/select/disclosure Escape handling is preserved; there is no focus
+trap. Passive inspector `show`/`clear` keep their previous focus behavior. An
+`onClose` callback can return false when the owner performs the return itself.
+The resource-return owner reuses the same small explicit reveal/focus helper.
+
+Resuming or replacing scope clears the old relationship/details; detached row
+Inspect buttons and stale detail facet/analysis actions cannot revive old content
+or stage work. The fixed-child analysis action returns to the actual action that
+opened it, with held record/body/scroll state retained and no source read.
+
+Passed 606 frontend checks and real-OTLP journey240 at desktop/320/390/700px, pointer
+and keyboard. It checks heading/region naming, opener ARIA state, heading and Close
+viewport geometry, Tab/Escape, visible row return, source-free fixed-child staging
+and return, an intentionally withdrawn DOM opener, stale detached actions after a
+signal replacement, and explicit Resume invalidation. A separate supplied-data
+passive-inspector control confirms updates do not steal focus. Native search/select
+Escape handling is also checked. The source/read-count ledger passed existing
+Quint stream replay and rejecting mutations. A 20-second Bombadil run passed with 320
+trace records and five deliberate start/inspect/close actions, checking focused
+visible details/return and only one initial stream request.
+
+The final embedded Go image was deployed; all six affected served ESM files match
+checkout bytes. Five deployed regression cases passed in 59.7s: compact mobile log/
+span inspection218, Service and Kubernetes return234 (two cases), passive cached
+inspector84 and real live filtering104 (with existing Quint validation). Earlier
+focused resource-return/entry unit checks passed too. Source queries, API/storage
+formats, immutable IDs and existing data volumes are unchanged. No new Go semantic
+code or broad Go/native suite was needed for this UI cut.
+
+Docs, diagram, storyboard and two actual viewport screenshots are updated. Passing
+browser bundles are removed after checks; one small replay ledger remains useful
+for future model work. Four prior unreferenced owned images and unused build cache
+older than one hour were cleaned; no telemetry/evidence volume was removed.
+P1c's common scoping and compact record/attribute actions is next.
+
+
 ## Activity signal-scope continuity — 239 (2026-10-28 UTC)
 
 Logs/Spans changes retain the complete predicate tree. Compatible applied filters

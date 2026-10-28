@@ -207,3 +207,32 @@ flowchart LR
   Draft -->|Explicit Apply| Read
   Read --> Guard[Abort old reader and reject its late frames]
 ```
+
+## Inspect and return — 240
+
+Inspect pauses the stream and explicitly reveals/focuses the selected record's
+named detail heading. Close or Escape outside native form/disclosure handling returns focus
+to the visible row button; an unavailable row falls back to the environment input.
+The row's `aria-controls` and `aria-expanded` describe that relationship. Opening,
+closing and returning from a staged fixed child do not read telemetry. The child
+returns to the detail action that opened it. Resume/scope replacement clears the
+old association and cached actions cannot revive old details.
+
+```mermaid
+sequenceDiagram
+  actor User
+  participant Activity as Activity owner
+  participant Inspector as Passive inspector shell
+  User->>Activity: Inspect observed row
+  Activity->>Activity: Pause; retain scope and original read window
+  Activity->>Inspector: Show supplied held record
+  Activity->>Activity: Link opener; reveal and focus detail heading
+  User->>Activity: Close details or Escape
+  Activity->>Inspector: Hide supplied details
+  Activity->>Activity: Collapse opener; reveal/focus row or live fallback
+  Note over Activity,Inspector: No source read or publication
+```
+
+[Executable storyboard](../journeys/240-activity-inspect-storyboard.md) covers
+keyboard/pointer/mobile, withdrawn and stale controls, passive update focus, model
+replay and a bounded browser actor.

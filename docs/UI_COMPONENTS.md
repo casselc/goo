@@ -520,6 +520,12 @@ See [comparison presentation](COMPARISON_PRESENTATION.md) for aligned scalar pai
 
 The shared selected-item shell is now adopted in waterfall spans, span/log record inspection and native timeline/bucket selections. See [selected-item inspectors](SELECTED_ITEM_INSPECTORS.md) for lifecycle, retention, focus and source-action boundaries.
 
+Activity's explicit Inspect handoff uses an application controller over the passive
+shell: named heading focus/reveal and visible opener return, with a withdrawn-row
+fallback. `onClose` may return `false` to own that handoff. Data updates in `show`
+and programmatic `clear` remain passive. [Journey240](../journeys/240-activity-inspect-storyboard.md)
+checks the real-data and supplied-data boundaries.
+
 ## Core experience refinements
 
 See [the implemented workflow](CORE_EXPERIENCE_REFINEMENTS.md) for retained

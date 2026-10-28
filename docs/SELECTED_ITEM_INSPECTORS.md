@@ -7,7 +7,7 @@ UTC timestamps and exact-value tooltips reuse the existing timestamp formatter;
 attributes reuse the typed attribute viewer. Selection itself stays in the owning
 waterfall, record table, timeline or heatmap adapter.
 
-`GooUI.inspector(host, {headingLevel, onClose})` is a framework-neutral DOM helper,
+`UI.inspector(host, {headingLevel, onClose})` is a framework-neutral DOM helper,
 not a subscribing custom element or a universal telemetry schema. The application
 supplies opaque selection keys and already-resolved DOM content through
 `show({key,title,description,content,actions,opener})`. Reopening a retained key
@@ -20,7 +20,9 @@ scroll position for the 32 most recently inspected keys within this rendered
 result. Older entries are evicted; new source results create a new inspector.
 Selecting another retained item does not rebuild chart/table controls or move
 focus. Close hides the details while retaining the controlled selection,
-and restores focus to a connected opener without scrolling the page. Native
+and by default restores focus to a connected opener without scrolling the page.
+An `onClose` callback may return `false` when the application performs its own
+focus/return handoff. `show` and `clear` do not automatically acquire focus. Native
 charts fall back to the corresponding retained plot mark if a heatmap layout
 change removed the original cell. The shell never calls `scrollIntoView`, chooses
 a record or invents a relationship. It does not introduce a cross-query history
@@ -67,3 +69,20 @@ new shell and explores record inspection/close actions.
 [Selected log](journeys/screenshots/84a-log-record-inspector.png) ·
 [Selected trace span](journeys/screenshots/84b-selected-trace-span.png) ·
 [Synthetic reference](journeys/screenshots/84-synthetic-shared-inspector.png)
+
+## Explicit Activity handoff — 240
+
+Activity composes the passive shell with `ui/inspection-focus.mjs`. A deliberate
+Inspect reveals/focuses its named heading, with `aria-controls`/`aria-expanded` on
+the row opener. Close and Escape outside native input/select/disclosure handling return to
+a visible opener; withdrawn, hidden or disabled openers use the environment input.
+The region remains nonmodal and Tab can leave it. Passive data updates never call
+this controller's `open` method.
+
+The existing resource-return owner and Activity share the explicit DOM
+`revealFocus` helper in `ui/dom-visibility.mjs`; no element lifecycle gains source
+work, navigation or automatic scrolling. Activity clears opener relationships on
+resume/scope replacement and rejects detached row/detail actions. A focused detail
+being invalidated gets a live fallback instead of a hidden focus target. Fixed
+child return uses the actual detail action that opened it. See
+[journey240](../journeys/240-activity-inspect-storyboard.md).

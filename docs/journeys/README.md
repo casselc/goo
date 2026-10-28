@@ -8,6 +8,12 @@ to reimplement its feature. Synthetic component conformance fixtures remain
 separate from real OTLP/application stories, as labeled below. Screenshots are
 generated evidence; no frames were fabricated for this documentation repair.
 
+## Inspect and return
+
+[Journey240](../../journeys/240-activity-inspect-storyboard.md) checks real held-record
+inspection, visible focus/return, fixed-child return, withdrawn openers and stale
+callbacks without hidden reads. Passive updates keep their existing focus policy.
+
 ## Signal scope continuity
 
 [Journey239](../../journeys/239-activity-signal-scope-storyboard.md) checks complete

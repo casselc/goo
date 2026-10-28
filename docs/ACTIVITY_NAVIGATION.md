@@ -20,7 +20,8 @@ applied stream. These windows are never inferred from row timestamps.
 **Return to paused activity** restores held rows, draft filters, inspector and
 scroll without resubscribing. Returning from the generic editor focuses
 Investigate; returning from scope analysis focuses its Analyze action; returning
-from a record continuation restores the record opener. Reopening the editor
+from a record detail analysis restores its detail action, while a trace continuation
+restores the record opener. Reopening the editor
 restores its same in-memory draft. Resume, Apply and Run remain explicit reads.
 Existing fixed/shared links retain their source-free staging behavior.
 
