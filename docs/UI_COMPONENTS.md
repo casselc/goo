@@ -1280,3 +1280,9 @@ Definition-family selection reports to the workspace shell for contextual global
 lookback visibility (223). This application adapter preserves the next-read default;
 passive tabs and display components do not reinterpret fixed query windows or read
 telemetry when a panel is selected.
+
+Service/host/pod application owners treat new-discovery lookback edits separately
+from completed fixed observations (224): cancel pending work, retain completed
+context, and read again only on explicit discovery. Environment changes and
+rediscovery still invalidate replaced host/pod return controls. Display components
+continue to receive supplied data without owning these transitions.

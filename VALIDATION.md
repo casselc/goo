@@ -1,5 +1,27 @@
 # Validation record
 
+## Retained resource discovery context — 224 (2026-10-28 UTC)
+
+The global new-discovery lookback no longer discards completed service, host or
+pod observations. Changing it cancels pending reads, retains completed fixed-window
+context and makes no replacement query. Explicit discovery uses the edited default;
+rediscovery/environment changes invalidate obsolete host/pod return controls.
+Service discovery still cancels pending catalog work and withdraws pending service
+reads, while a completed detail survives. Context remains tab-local, not saved evidence.
+
+Validation: all 583 frontend tests pass. Ten distinct real browser tasks pass:
+five new 224 journeys verify retained host/pod identity, windows, links, local
+filters and opener focus; retained service detail across workspace/default edits
+and supporting-span return; explicit six-minute rediscovery; and matching query-ID
+cancellation/late-response refusal for pending host/pod discovery. Existing 199/201
+ownership journeys pass. Both updated Bombadil campaigns edit lookback before
+return and retain their source budgets. Service journey 46 and its observed Quint
+validation pass, with record-aggregate source accounting repaired and final-read
+completion awaited. Current 224 and affected 46/48 screenshots are regenerated.
+
+No source adapters, OTel identity rules, numeric kernels or saved storage changed.
+Broader scope-summary and return-control consolidation remains R5 work.
+
 ## Contextual Definition lookback — 223 (2026-10-28 UTC)
 
 Definitions exposes the shared HTTP lookback only in App contracts. Workspace

@@ -42,9 +42,9 @@ const step = registerCustomAction('goo.podStep', async (document, window) => {
     link.scrollIntoView({ block: 'center' }); link.focus(); link.click();
   } else if (phase === 5) {
     if (root.dataset.podSource !== '1') throw Error('Context staging read source'); document.querySelector<HTMLButtonElement>('#exploreRun')!.click();
-  } else if (phase === 6) [...document.querySelectorAll<HTMLButtonElement>('button')].find(b => b.textContent === 'Back to Kubernetes')!.click();
+  } else if (phase === 6) {const minutes=document.querySelector<HTMLInputElement>('#minutes')!;minutes.value='5';minutes.dispatchEvent(new Event('input',{bubbles:true}));[...document.querySelectorAll<HTMLButtonElement>('button')].find(b => b.textContent === 'Back to Kubernetes')!.click();}
   else if (phase === 7) {
-    if (root.dataset.podSource !== '2' || document.querySelector<HTMLSelectElement>('[aria-label="Reported Kubernetes cluster"]')!.value !== clusterKey || document.querySelector<HTMLSelectElement>('[aria-label="Reported Kubernetes namespace"]')!.value !== namespaceKey || document.querySelector<HTMLInputElement>('[aria-label="Find reported pod resource"]')!.value !== 'uid-a') throw Error('Retained pod filters or read budget differs');
+    if (!document.querySelector('tr[data-pod-variant]') || root.dataset.podSource !== '2' || document.querySelector<HTMLSelectElement>('[aria-label="Reported Kubernetes cluster"]')!.value !== clusterKey || document.querySelector<HTMLSelectElement>('[aria-label="Reported Kubernetes namespace"]')!.value !== namespaceKey || document.querySelector<HTMLInputElement>('[aria-label="Find reported pod resource"]')!.value !== 'uid-a') throw Error('Retained pod filters or read budget differs');
     if ((document.activeElement as HTMLElement)?.dataset.podSignal !== 'logs') throw Error('Context opener focus not restored');
     root.dataset.podTerminal = 'true';
   }

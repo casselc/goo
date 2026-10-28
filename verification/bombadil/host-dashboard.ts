@@ -46,10 +46,11 @@ const step = registerCustomAction('goo.hostStep', async (document, window) => {
     if (root.dataset.hostSource !== '3') throw Error('Preview read source');
     document.querySelector<HTMLButtonElement>('#measureRun')!.click();
   } else if (phase === 5) {
+    const minutes=document.querySelector<HTMLInputElement>('#minutes')!;minutes.value='5';minutes.dispatchEvent(new Event('input',{bubbles:true}));
     if (root.dataset.hostSource !== '4') throw Error('Explicit native Run read budget differs');
     [...document.querySelectorAll<HTMLButtonElement>('button')].find(b => b.textContent === 'Back to host')!.click();
   } else if (phase === 6) {
-    if (root.dataset.hostSource !== '4' || document.querySelectorAll('.host-widget').length !== 2) throw Error('Retained host return reread or lost observations');
+    if (root.dataset.hostSource !== '4' || document.querySelectorAll('.host-widget').length !== 2 || document.querySelector<HTMLElement>('.host-detail')!.hidden) throw Error('Retained host return reread or lost observations');
     root.dataset.hostTerminal = 'true';
   }
   root.dataset.hostPhase = String(phase + 1);

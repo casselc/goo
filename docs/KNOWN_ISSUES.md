@@ -42,7 +42,10 @@ Mobile workspaces now share the compact shell/menu (222); deeper service/detail
 density and cross-surface scope/window clarity remain separate work. Definitions
 now limits the HTTP lookback to App contracts (223), preserving the chosen next-read
 default and fixed workflow questions. R5 still tracks broader scope/window and
-return presentation across service/resource investigations.
+return presentation across service/resource investigations. Completed service/host/pod
+observations now survive next-discovery lookback edits (224), with pending-read
+cancellation retained. Context is tab-local; explicit rediscovery/environment edits
+replace it, and it is not saved evidence.
 Browser conformance is currently checked in Chromium; Firefox/Safari coverage
 is not established.
 
