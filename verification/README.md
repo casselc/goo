@@ -1,5 +1,70 @@
 # Semantic properties and model conformance
 
+## Reproducible entry point
+
+From the repository root, use `python3 scripts/verify_optional.py`. This is a
+bounded required suite, not every historical browser ledger test. It checks the
+exact Go version in `.go-version`, Node in `verification/toolchain.json`, Quint
+in `package.json`/`package-lock.json`, and the clean sibling `quintgo` source at
+the commit recorded in `verification/toolchain.json`. Hegel and Orchestrion stay
+pinned by their separate modules' `go.mod`/`go.sum`; `-mod=readonly` refuses drift.
+
+A clean workspace needs sibling directories `goo/` and `observability/`, because
+both nested modules use relative replacements. Use your normal Git credentials:
+
+```sh
+# From the directory containing goo; only when this sibling does not exist:
+git clone https://github.com/casselc/observability.git observability
+git -C observability checkout --detach ca7ae8a6250f2af3623d0c0cad26c9710a6bbc4d
+cd goo
+# Install the Go version in .go-version and Node 24.19.0, then:
+npm ci
+python3 scripts/verify_optional.py --check
+python3 scripts/verify_optional.py
+python3 scripts/verify_optional.py --suite woven
+```
+
+For an existing sibling with other work, preserve it and create an isolated
+parent directory with checkouts/worktrees of both repositories in that layout.
+The runner never installs tools, switches commits, downloads a Go toolchain or
+modifies sibling files. Initial Go dependency downloads use normal module/checksum
+settings and credentials; subsequent cached runs work without downloads. Pin
+updates are explicit reviewed changes, not an automatic pull of the sibling.
+
+The offline suite requires four instrumentation initialization/concurrency/default
+binding tests and five SDK isolation/Hegel accounting/deadline/Quint replay tests.
+The woven suite uses the module-pinned Orchestrion CLI to compile and execute both
+real HTTP preparation and goo annotation/OTel scenarios. A plain Go build does not
+establish that weaving occurred. The runner selects the TypeScript Quint backend,
+uses the same local Quint for direct tests and quintgo, disables workspace overrides
+and toolchain auto-download, and refuses skipped tests (including subtests), empty
+matches and missing named passes. It keeps no extra evidence bundle. Hegel's
+writable native-library cache and existing failure database remain in use.
+
+The full `go test ./...` inside this module still includes optional ledger tests
+that skip without actual journey input. Those skips are appropriate there; they
+are not a substitute for a passing required suite. Root Go/display/API gates stay
+independent. XTDB and browser campaigns are separate opt-ins.
+
+### Thin lab check
+
+Against an already running lab, with `requirements-api.txt` installed in the
+selected Python environment:
+
+```sh
+python3 scripts/verify_optional.py --suite lab --check
+python3 scripts/verify_optional.py --suite lab
+```
+
+This calls the existing read-only deployed API checker: the served spec must match
+the checkout, and real catalog, discovery, records and trace-search/refusal
+responses must satisfy it. It performs bounded source queries; it starts no Docker
+services, publishes no records and resets no volumes. It is usable on a freshly
+started lab but does not claim collector-ingestion or sample-workload readiness.
+Use the existing Compose smoke/journey commands for that separate scope. Lab mode
+requires API Python dependencies and the running server, not the sibling toolchain.
+
+
 Journey 105 adds observed source-free parent returns and cancellation of a delayed real fixed response to the entry Quint protocol. Its ledger counts both tail and fixed requests; `fixedRead` permits an explicit child read while the parent remains paused, and local returns must keep that total unchanged. The shared Bombadil filter actor also opens a fixed child and returns to the same paused selection.
 
 Journey 104 and `verification/bombadil/live-filters.ts` cover live filter staging and explicit fixed-query continuation. `TestHegelLiveFilterStateSwarm` checks applied-selector isolation, exact namespace/value identity, deduplication and immutable snapshots against the actual JavaScript filter model.

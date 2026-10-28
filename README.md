@@ -32,7 +32,7 @@ pins the validated compiler (currently 1.27.2) used by CI and Docker builds.
 Keep that file and the three Docker build images aligned when updating it.
 Instrumentation, examples and verification retain separate dependency graphs;
 `go test ./...` at the root does not test nested modules. See
-[verification setup](verification/README.md) for the sibling checkout and native
+[verification setup](verification/README.md#reproducible-entry-point) for the pinned sibling checkout and native
 requirements, and [compiler commands](docs/PORTABLE_COMPILER.md) for local setup.
 
 ## Run the local lab
@@ -197,6 +197,8 @@ npm run test:journeys
 
 Use the Go version required by each module. The separate [verification module](verification/README.md)
 contains Hegel properties/state tests, Quint modeling and quint-go trace validation.
+`python3 scripts/verify_optional.py` runs a bounded required suite after checking
+pinned tools/sibling source; `--suite woven` and `--suite lab` are explicit opt-ins.
 [Executable storyboards](docs/journeys/README.md) distinguish real OTLP integration
 journeys from synthetic component checks; Bombadil explores bounded UI actions
 and invariants. See [VALIDATION.md](VALIDATION.md) for checks actually executed.

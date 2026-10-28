@@ -44,7 +44,13 @@ build adds recorder calls through the aspect. The pilot tests model observation;
 it does not yet send woven records to the running collector, weave HTTP library
 instrumentation into the sample, or implement build-manifest generation.
 
-Run from `verification/weaving` with the repository's Node/Quint and Go toolchains:
+Preferred bounded entry point from the repository root:
+`python3 scripts/verify_optional.py --suite woven`. It checks pinned tools/sibling
+source and requires both woven scenarios to pass without skips; see
+[setup](../verification/README.md#reproducible-entry-point).
+
+For direct diagnosis, run from `verification/weaving` with the repository's
+Node/Quint and Go toolchains:
 
 ```sh
 QUINTGO_BACKEND=typescript \

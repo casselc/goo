@@ -1,5 +1,12 @@
 # Known issues and gaps
 
+Optional nested verification has a [pinned bounded entry point](../verification/README.md#reproducible-entry-point)
+through 230. Root CI tests its refusal controls but does not execute native/model
+or woven suites. A clean sibling checkout and pinned Go/Node/Quint remain required;
+full ledger/browser campaigns and XTDB are separate opt-ins. The thin lab check
+validates running API responses without provisioning or resetting the lab.
+
+
 The bounded entry/scope/return review is accepted through 226/227. Native mobile
 action density is improved in 229 using shared passive controls; nested
 native/resource ancestry remains an explicit UI follow-up. The prepared-fact Go compiler is now `subjectfacts`; the former

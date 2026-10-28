@@ -27,6 +27,8 @@ jobs:
           for module_dir in instrumentation examples/operation-app examples/report-app; do
             (cd "$module_dir" && go test ./... -count=1)
           done
+      - name: Check optional-verification refusal controls
+        run: python -m unittest discover -s tests -p test_verification_runner.py -v
       - run: pip install -r requirements-api.txt
       - name: Regenerate wire shapes and API; refuse drift
         run: |

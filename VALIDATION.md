@@ -1,5 +1,32 @@
 # Validation record
 
+## Reproducible opt-in verification entry points — 230 (2026-10-28 UTC)
+
+`scripts/verify_optional.py` checks the exact Go/Node/Quint versions and clean
+pinned sibling quintgo commit. The offline suite requires four instrumentation
+startup/concurrency/default-binding tests and five SDK/Hegel/Quint tests; the
+woven suite uses the module-pinned Orchestrion CLI and requires both scenarios.
+JSON test verdicts reject skipped subtests, missing named passes and empty matches.
+Go runs use readonly modules, disabled workspace overrides, a local toolchain and
+the TypeScript model backend. No checkout, installation or store reset is implicit.
+
+Validation: prerequisite check passes; all nine required offline tests and both
+woven scenarios pass. This includes real runtime isolation/accounting and default
+binding, generated lifecycle preparation replay, observed trace validation and its
+rejecting mutation, woven HTTP preparation and annotation/OTel emission. Seven
+stdlib Python verdict/preflight tests pass, including controls for empty/misspelled selections, skips,
+failures, malformed events, missing Quint, sibling mismatch and version mismatch.
+Root CI now runs those lightweight controls; it does not claim the opt-in suites.
+
+The separate lab entry point passes against the existing local lab: matching
+served specification and nine real catalog/discovery/record/trace-search responses,
+including no-data/refusal checks. It publishes no records and leaves all volumes
+intact. This is a read-only contract check, not fresh environment provisioning or
+collector/sample-workload readiness. XTDB/browser-ledger suites remain separate.
+Docs and roadmap identify the bounded scope; no UI/numeric semantics changed,
+so screenshots and full frontend/Go root suites were not regenerated/repeated.
+
+
 ## Compact native workbench actions — 229 (2026-10-28 UTC)
 
 The workbench uses the shared passive `UI.actions` helper: Run/Capture remain
