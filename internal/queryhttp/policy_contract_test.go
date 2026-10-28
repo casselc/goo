@@ -8,6 +8,7 @@ import (
 	"github.com/casselc/goo/internal/capturehttp"
 	"github.com/casselc/goo/internal/explanationhttp"
 	"github.com/casselc/goo/internal/nativehttp"
+	"github.com/casselc/goo/internal/operationhttp"
 	"github.com/casselc/goo/internal/queryhttp"
 	"github.com/casselc/goo/internal/recordhttp"
 )
@@ -61,5 +62,40 @@ func TestFamilyPoliciesMatchPublishedAPIBoundaries(t *testing.T) {
 				t.Fatalf("expected %d adopted family routes, covered %d", family.count, covered)
 			}
 		})
+	}
+}
+
+func TestOperationGETPoliciesMatchPublishedAdmission(t *testing.T) {
+	data, err := os.ReadFile("../../api/openapi.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var spec struct {
+		Paths map[string]map[string]struct{ Parameters []struct{ Name string } }
+	}
+	if err := json.Unmarshal(data, &spec); err != nil {
+		t.Fatal(err)
+	}
+	count := 0
+	for path, methods := range spec.Paths {
+		policy, ok := operationhttp.PolicyFor("GET", path)
+		if !ok {
+			continue
+		}
+		count++
+		controlled := false
+		for _, p := range methods["get"].Parameters {
+			controlled = controlled || p.Name == "X-Goo-Query-ID"
+		}
+		if controlled != (policy.Effect != queryhttp.Pure) {
+			t.Errorf("%s admission differs", path)
+		}
+		head, ok := operationhttp.PolicyFor("HEAD", path)
+		if !ok || head != policy {
+			t.Errorf("%s implicit HEAD differs", path)
+		}
+	}
+	if count != 5 {
+		t.Fatalf("expected five GET declarations, got %d", count)
 	}
 }

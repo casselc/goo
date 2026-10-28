@@ -66,8 +66,10 @@ extracted into their own internal packages, with explicit mixed publication
 lifetimes and source-only-handler guards. Command admission composes family
 lookups. Executable shutdown/export flushing is now implemented: five-second Go HTTP
 drain/cancel/close, followed by independently bounded sample-owned SDK shutdown.
-Broader legacy-route admission remains planned; the overall request/server cut
-is not complete.
+Legacy operation source GET/HEAD admission and post-validation source deadlines
+are now implemented through `internal/operationhttp` policy declarations. The
+source-free declaration bypasses admission; mixed publication/retention and SSE
+retain separate owners. This does not complete all broader library cuts.
 
 ## Preferred cuts
 

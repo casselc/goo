@@ -291,6 +291,7 @@ for (method,path),(file,block) in sorted(route_source.items()):
  for p in {'/captures':['cursor'],'/captures/{id}':['cursor'],'/captures/{id}/followups':['row'],'/captures/{id}/compare':['selection','distribution']}.get(path,[]):
   if method=='get' and not any(v['name']==p and v['in']=='query' for v in op['parameters']):op['parameters'].append({'name':p,'in':'query','schema':{'type':'string'},'description':'Single canonical value; saved evidence is not reread from the telemetry source.'})
  controlled=method=='post' and path in ('/metric-discovery','/pod-metric-discovery','/host-discovery','/pod-discovery','/measurements','/explore','/explore/counted-values','/record-aggregates','/trace-search','/population/explain','/inventory','/discovery','/captures','/captures/live')
+ controlled = controlled or method=='get' and path in ('/http-package','/operations','/counter-rates','/histograms')
  if controlled:op['parameters'].append({'name':'X-Goo-Query-ID','in':'header','schema':{'type':'string','pattern':'^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$'},'description':'Optional short-lived cancellation capability; repeated/cancelled IDs are refused.'})
  if method=='post' and path in requests:
   op['requestBody']={'required':True,'content':{'application/json':{'schema':ref(requests[path])}}}

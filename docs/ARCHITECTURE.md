@@ -25,6 +25,11 @@ their distinct adapter contracts. The [HTTP acceptance inventory](HTTP_BOUNDARIE
 records adopted transports and remaining endpoint/branch coverage; no common
 semantic evaluator or universal request owner is implied.
 
+Legacy operation source GETs (including implicit HEAD) now use the shared source
+budget and family-declared post-validation deadlines through `internal/operationhttp`.
+The operation-package declaration remains outside source admission. Mixed
+publication/retention endpoints and SSE keep their distinct owners.
+
 Executables own [bounded shutdown](HTTP_BOUNDARIES.md#executable-shutdown-2026-10-28).
 The Go HTTP server drains for five seconds before cancelling its request root and
 closing remaining connections. Go sample apps then shut down their own SDK

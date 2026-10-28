@@ -1051,6 +1051,15 @@
               "type": "string"
             },
             "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          },
+          {
+            "name": "X-Goo-Query-ID",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+            },
+            "description": "Optional short-lived cancellation capability; repeated/cancelled IDs are refused."
           }
         ],
         "responses": {
@@ -1077,6 +1086,26 @@
                   "type": "string"
                 },
                 "example": "{\"error\":\"unsupported query parameter\"}\n"
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
               }
             }
           },
@@ -1675,6 +1704,15 @@
               "type": "string"
             },
             "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          },
+          {
+            "name": "X-Goo-Query-ID",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+            },
+            "description": "Optional short-lived cancellation capability; repeated/cancelled IDs are refused."
           }
         ],
         "responses": {
@@ -1701,6 +1739,26 @@
                   "type": "string"
                 },
                 "example": "{\"error\":\"unsupported query parameter\"}\n"
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
               }
             }
           },
@@ -1746,6 +1804,15 @@
               "type": "string"
             },
             "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          },
+          {
+            "name": "X-Goo-Query-ID",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+            },
+            "description": "Optional short-lived cancellation capability; repeated/cancelled IDs are refused."
           }
         ],
         "responses": {
@@ -1772,6 +1839,26 @@
                   "type": "string"
                 },
                 "example": "{\"error\":\"unsupported query parameter\"}\n"
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
               }
             }
           },
@@ -2071,6 +2158,15 @@
               "type": "string"
             },
             "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          },
+          {
+            "name": "X-Goo-Query-ID",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+            },
+            "description": "Optional short-lived cancellation capability; repeated/cancelled IDs are refused."
           }
         ],
         "responses": {
@@ -2097,6 +2193,26 @@
                   "type": "string"
                 },
                 "example": "{\"error\":\"unsupported query parameter\"}\n"
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Existing route or proxy refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
               }
             }
           },

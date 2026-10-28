@@ -13,7 +13,10 @@ routes. Explanation/capture handlers and policies are now extracted, preserving
 mixed publication lifetimes. Bounded Go executable shutdown and sample SDK flushing are implemented.
 Forced shutdown can interrupt a response after publication commits; existing retry
 contracts still apply. SDK flush failures are logged; SIGKILL/crashes cannot flush.
-Python process lifecycle and broader legacy-route admission remain separate work.
+Legacy operation source GET/HEAD reads now share source admission, cancellation
+and post-validation deadlines. Declarations remain outside admission; mixed
+publication/retention and SSE retain their own lifetimes. Python process lifecycle
+remains separate work.
 Browser conformance is currently checked in Chromium; Firefox/Safari coverage
 is not established.
 

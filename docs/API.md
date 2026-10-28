@@ -58,6 +58,18 @@ A structurally valid request may return 400. OpenAPI validation does not prove
 source-free reopen, custody ordering or absence of hidden reads; behavioral tests
 do. No generated handler/client or request-validation middleware was introduced.
 
+## Legacy source GET controls
+
+`/http-package`, `/operations`, `/counter-rates` and `/histograms` now share the
+four-slot source budget and optional `X-Goo-Query-ID` cancellation control. Their
+implicit HEAD requests use the same limits. Saturation returns 429 with
+`Retry-After: 1`; invalid/reused IDs return 400/409. The enclosing deadline is
+60 seconds, with a 55-second source deadline after validation. Admission precedes
+route validation and runtime capability checks. `/operation-packages` remains a
+source-free declaration read outside this admission. Existing success bodies,
+query validation and source-error mapping are unchanged. See the
+[boundary details](HTTP_BOUNDARIES.md#legacy-operation-source-admission-2026-10-28).
+
 ## Two boundaries, with existing differences
 
 Every Go POST operation documents `x-go-body-limit-bytes` and

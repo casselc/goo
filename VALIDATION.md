@@ -1,5 +1,30 @@
 # Validation record
 
+## Legacy operation source policies (2026-10-28 UTC)
+
+The four legacy source GETs and their implicit HEAD handlers now use family-owned
+`internal/operationhttp` declarations for shared source admission/cancellation and
+55-second source deadlines after existing validation. The enclosing budget is
+60 seconds; the configured client's 15-second per-request bound is unchanged.
+`/operation-packages` remains a pure declaration outside admission. Successful
+payloads and unsaturated validation/source-error behavior remain unchanged.
+OpenAPI now declares optional query IDs and 400/409/429 responses on these GETs.
+Admission precedes route validation and capability checks, as with modern reads.
+
+Validation: full root Go tests, command/query race suites, focused vet and OpenAPI
+route/schema/fixture checks pass. New tests cover all four GET/HEAD admission
+policies, declaration bypass, unrelated methods/paths, actual blocked-source
+cancellation, 55-second context propagation, query-ID tombstones, released capacity
+and capacity sharing with modern exploration. Policies are checked against the
+published GET API and implicit HEAD equivalence. Existing legacy wire-validation
+fixtures remain unchanged. API checks report 83 Go operations, 429 fixture
+responses, 159 admitted requests and 28 mux refusals, with negative/SSE checks.
+
+Docs and the boundary flow diagram are updated. No UI/semantic computation/storage
+format change; no browser, Bombadil, Hegel or Quint rerun for this HTTP policy cut.
+Disposable test logs are removed; saved lab volumes remain intact. Mixed
+publication/retention routes and SSE are not converted to ordinary source reads.
+
 ## Bounded Go executable shutdown (2026-10-28 UTC)
 
 Go `serve-http` now handles SIGINT/SIGTERM, closes its listener and drains active

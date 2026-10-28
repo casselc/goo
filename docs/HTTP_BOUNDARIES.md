@@ -8,6 +8,40 @@ application's `newQueryBudget(..., 4)` composition function. Server
 header timeout is five seconds; write timeout is 90 seconds. Pure planning, source
 execution, filesystem publication and XTDB transactions retain different owners.
 
+## Legacy operation source admission (2026-10-28)
+
+`internal/operationhttp.PolicyFor` declares the four source GETs: `/http-package`,
+`/operations`, `/counter-rates` and `/histograms`. Their implicit HEAD handlers
+execute the same work and use the same policy. They now share the four-slot
+`queryhttp` budget, 60-second enclosing context and optional `X-Goo-Query-ID`
+cancellation capability with modern source families. Each handler starts its
+55-second source context after existing query/package validation. The configured
+HTTP client's 15-second per-request bound is unchanged; compound reads also have
+the overall source deadline. Policies classify exact methods/paths only.
+
+`/operation-packages` is a pure declaration GET/HEAD and does not reserve source
+capacity. Unsupported methods/subpaths are still left to the mux. Admission runs
+before validation/runtime capability checks: saturation returns 429 with
+`Retry-After: 1`; invalid IDs return 400 and reused/cancelled IDs return 409.
+Unsaturated validation, successful payloads, unavailable-capability responses and
+source error mapping retain their previous behavior. Cancellation after starting
+a source request follows the existing 502 source-error path. GETs still have no
+JSON body decoder. API source owners remain in `cmd/goo/operation_reads_http.go`;
+this cut centralizes their policy without moving semantic execution.
+
+```mermaid
+flowchart LR
+    GET[Legacy GET or implicit HEAD] --> Budget[Shared queryhttp admission and cancellation]
+    Policy[operationhttp exact route policy] -. effect .-> Budget
+    Budget --> Validate[Existing query and package validation]
+    Policy -. 55s .-> Deadline[Source deadline]
+    Validate --> Deadline --> Source[Existing operation or prebuilt adapter]
+    Declaration[operation-packages declaration] --> Pure[No source slot]
+```
+
+Publication/mixed retention endpoints and SSE retain their separate lifetime
+owners. This does not put every route behind a universal read budget.
+
 ## Executable shutdown (2026-10-28)
 
 `goo serve-http` owns SIGINT/SIGTERM handling. On a signal it closes listeners
@@ -72,7 +106,7 @@ capture/retention owners too; its lifetime is described below.
 
 `internal/queryhttp` owns shared admission, the cancellation registry, tombstones,
 60-second enclosing deadline and cleanup after the handler/body completes. The
-command composes record, native, explanation and capture family lookups, without
+command composes record, native, explanation, capture and operation family lookups, without
 a duplicated controlled-path list. Publication, SSE and Python proxy
 policies retain their separate owners.
 No endpoint, wire response, source query, status policy or storage format changed.

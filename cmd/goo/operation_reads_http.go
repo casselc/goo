@@ -1,12 +1,14 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/casselc/goo/annotations"
+	"github.com/casselc/goo/internal/operationhttp"
 	"github.com/casselc/goo/prebuilt"
 )
 
@@ -30,7 +32,10 @@ func registerOperationReads(mux *http.ServeMux, plans map[string]*annotations.Op
 			}
 		}
 		to := time.Now().UnixMilli()
-		result, e := prebuilt.FetchHTTP(r.Context(), connection.Client, connection.Endpoint, connection.User, connection.Password, expanded, source, to-int64(minutes)*60000, to)
+		policy, _ := operationhttp.PolicyFor(r.Method, r.URL.Path)
+		ctx, cancel := context.WithTimeout(r.Context(), policy.Timeout)
+		defer cancel()
+		result, e := prebuilt.FetchHTTP(ctx, connection.Client, connection.Endpoint, connection.User, connection.Password, expanded, source, to-int64(minutes)*60000, to)
 		if e != nil {
 			w.WriteHeader(502)
 			json.NewEncoder(w).Encode(map[string]string{"error": e.Error()})
@@ -75,7 +80,10 @@ func registerOperationReads(mux *http.ServeMux, plans map[string]*annotations.Op
 			return
 		}
 		to := time.Now().UnixMilli()
-		result, e := plan.Fetch(r.Context(), connection.Client, connection.Endpoint, connection.User, connection.Password, to-int64(minutes)*60000, to)
+		policy, _ := operationhttp.PolicyFor(r.Method, r.URL.Path)
+		ctx, cancel := context.WithTimeout(r.Context(), policy.Timeout)
+		defer cancel()
+		result, e := plan.Fetch(ctx, connection.Client, connection.Endpoint, connection.User, connection.Password, to-int64(minutes)*60000, to)
 		if e != nil {
 			w.WriteHeader(502)
 			json.NewEncoder(w).Encode(map[string]string{"error": e.Error()})
@@ -99,7 +107,10 @@ func registerOperationReads(mux *http.ServeMux, plans map[string]*annotations.Op
 			http.Error(w, `{"error":"require package and bounded fromMs/toMs"}`, 400)
 			return
 		}
-		result, e := plan.FetchRates(r.Context(), connection.Client, connection.Endpoint, connection.User, connection.Password, from, to)
+		policy, _ := operationhttp.PolicyFor(r.Method, r.URL.Path)
+		ctx, cancel := context.WithTimeout(r.Context(), policy.Timeout)
+		defer cancel()
+		result, e := plan.FetchRates(ctx, connection.Client, connection.Endpoint, connection.User, connection.Password, from, to)
 		if e != nil {
 			w.WriteHeader(502)
 			json.NewEncoder(w).Encode(map[string]string{"error": e.Error()})
@@ -123,7 +134,10 @@ func registerOperationReads(mux *http.ServeMux, plans map[string]*annotations.Op
 			http.Error(w, `{"error":"require package and bounded fromMs/toMs"}`, 400)
 			return
 		}
-		result, e := plan.FetchHistograms(r.Context(), connection.Client, connection.Endpoint, connection.User, connection.Password, from, to)
+		policy, _ := operationhttp.PolicyFor(r.Method, r.URL.Path)
+		ctx, cancel := context.WithTimeout(r.Context(), policy.Timeout)
+		defer cancel()
+		result, e := plan.FetchHistograms(ctx, connection.Client, connection.Endpoint, connection.User, connection.Password, from, to)
 		if e != nil {
 			w.WriteHeader(502)
 			json.NewEncoder(w).Encode(map[string]string{"error": e.Error()})
