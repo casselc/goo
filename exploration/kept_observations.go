@@ -127,7 +127,33 @@ type KeptObservationStore struct {
 	afterPublish func() error
 }
 
+type keptResource interface {
+	Validate() error
+	keepIdentity() (string, string)
+}
+
+func (v *KeptObservations) keepIdentity() (string, string) { return v.ID, v.IntentDigest }
 func (s KeptObservationStore) Load(id string) (*KeptObservations, error) {
+	v, e := s.load(id)
+	if e != nil {
+		return nil, e
+	}
+	tail, ok := v.(*KeptObservations)
+	if !ok {
+		return nil, ErrKeepConflict
+	}
+	return tail, nil
+}
+
+// Open verifies either immutable resource version before returning its wire value.
+func (s KeptObservationStore) Open(id string) (json.RawMessage, error) {
+	v, e := s.load(id)
+	if e != nil {
+		return nil, e
+	}
+	return json.Marshal(v)
+}
+func (s KeptObservationStore) load(id string) (keptResource, error) {
 	if !validTailConnection(id) {
 		return nil, errors.New("invalid kept observation ID")
 	}
@@ -151,33 +177,81 @@ func (s KeptObservationStore) Load(id string) (*KeptObservations, error) {
 	if len(raw) > KeptObservationsMaxBytes {
 		return nil, errors.New("kept observations exceed byte bound")
 	}
-	var v KeptObservations
+	var header struct {
+		Version string `json:"version"`
+	}
+	if err = json.Unmarshal(raw, &header); err != nil {
+		return nil, err
+	}
+	var v keptResource
+	switch header.Version {
+	case KeptObservationsVersion:
+		v = &KeptObservations{}
+	case KeptRecordsVersion:
+		v = &KeptRecords{}
+	default:
+		return nil, errors.New("unsupported kept resource version")
+	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
-	if err = d.Decode(&v); err != nil {
+	if err = d.Decode(v); err != nil {
 		return nil, err
 	}
 	if d.Decode(new(any)) != io.EOF {
 		return nil, errors.New("require one kept observation envelope")
 	}
-	if v.ID != id {
+	if storedID, _ := v.keepIdentity(); storedID != id {
 		return nil, errors.New("kept observation ID mismatch")
 	}
 	if err = v.Validate(); err != nil {
 		return nil, err
 	}
-	return &v, nil
+	return v, nil
 }
 func (s KeptObservationStore) Keep(ctx context.Context, bank *TailMembershipSnapshots, input KeepTailIntent) (*KeptObservations, error) {
 	in, err := input.normalized()
 	if err != nil {
 		return nil, err
 	}
-	digest := tailMembershipHash(in)
-	winner := func() (*KeptObservations, error) {
-		v, e := s.Load(in.RequestID)
-		if e == nil && v.IntentDigest != digest {
-			return nil, ErrKeepConflict
+	result, err := s.publish(ctx, in.RequestID, tailMembershipHash(in), func() (keptResource, error) {
+		if bank == nil {
+			return nil, ErrTailMembershipUnavailable
+		}
+		draft, err := bank.Resolve(in.Connection, in.Selector, in.Refs)
+		if err != nil {
+			return nil, fmt.Errorf("%w: %v", ErrTailMembershipUnavailable, err)
+		}
+		now := time.Now()
+		if s.now != nil {
+			now = s.now()
+		}
+		v := &KeptObservations{Version: KeptObservationsVersion, ID: in.RequestID, IntentDigest: tailMembershipHash(in), KeptAt: now.UTC(), Connection: draft.Connection, Selector: draft.Selector, Members: make([]KeptObservation, 0, len(draft.Members))}
+		for _, m := range draft.Members {
+			v.Members = append(v.Members, KeptObservation{Key: m.Ref.Key, FromMS: m.FromMS, ToMS: m.ToMS, ObservedAt: m.ObservedAt, Basis: m.Basis, Limited: m.Limited, Late: m.Late, Record: append(json.RawMessage(nil), m.Record...)})
+		}
+		v.Digest = tailMembershipHash(v)
+		if err = v.Validate(); err != nil {
+			return nil, err
+		}
+		return v, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	v, ok := result.(*KeptObservations)
+	if !ok {
+		return nil, ErrKeepConflict
+	}
+	return v, nil
+}
+func (s KeptObservationStore) publish(ctx context.Context, id, digest string, resolve func() (keptResource, error)) (keptResource, error) {
+	winner := func() (keptResource, error) {
+		v, e := s.load(id)
+		if e == nil {
+			_, intent := v.keepIdentity()
+			if intent != digest {
+				return nil, ErrKeepConflict
+			}
 		}
 		return v, e
 	}
@@ -192,31 +266,23 @@ func (s KeptObservationStore) Keep(ctx context.Context, bank *TailMembershipSnap
 	case <-ctx.Done():
 		return nil, ctx.Err()
 	}
-	if err = ctx.Err(); err != nil {
+	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
-	// Resolve copies bounded bank data and releases its lock before any filesystem I/O.
-	if bank == nil {
-		return nil, ErrTailMembershipUnavailable
-	}
-	draft, err := bank.Resolve(in.Connection, in.Selector, in.Refs)
+	// No source/bank locks are held during filesystem publication.
+	v, err := resolve()
 	if err != nil {
-		if v, e := winner(); e == nil {
-			return v, nil
+		if old, e := winner(); e == nil {
+			return old, nil
 		} else if !errors.Is(e, os.ErrNotExist) {
 			return nil, e
 		}
-		return nil, fmt.Errorf("%w: %v", ErrTailMembershipUnavailable, err)
+		return nil, err
 	}
-	now := time.Now()
-	if s.now != nil {
-		now = s.now()
+	storedID, storedIntent := v.keepIdentity()
+	if storedID != id || storedIntent != digest {
+		return nil, errors.New("kept candidate identity mismatch")
 	}
-	v := &KeptObservations{Version: KeptObservationsVersion, ID: in.RequestID, IntentDigest: digest, KeptAt: now.UTC(), Connection: draft.Connection, Selector: draft.Selector, Members: make([]KeptObservation, 0, len(draft.Members))}
-	for _, m := range draft.Members {
-		v.Members = append(v.Members, KeptObservation{Key: m.Ref.Key, FromMS: m.FromMS, ToMS: m.ToMS, ObservedAt: m.ObservedAt, Basis: m.Basis, Limited: m.Limited, Late: m.Late, Record: append(json.RawMessage(nil), m.Record...)})
-	}
-	v.Digest = tailMembershipHash(v)
 	if err = v.Validate(); err != nil {
 		return nil, err
 	}
@@ -248,7 +314,7 @@ func (s KeptObservationStore) Keep(ctx context.Context, bank *TailMembershipSnap
 	if err = tmp.Close(); err != nil {
 		return nil, err
 	}
-	if err = os.Link(tmp.Name(), filepath.Join(s.Dir, in.RequestID+".json")); err != nil {
+	if err = os.Link(tmp.Name(), filepath.Join(s.Dir, id+".json")); err != nil {
 		if errors.Is(err, os.ErrExist) {
 			return winner()
 		}

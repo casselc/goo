@@ -89,3 +89,67 @@ func TestKeptObservationProperties(t *testing.T) {
 		}
 	}, options(50)...)
 }
+
+func TestKeptRecordPageProperties(t *testing.T) {
+	hegel.Test(t, func(tc *hegel.T) {
+		count := hegel.Draw(tc, hegel.Integers(1, 20))
+		offset := hegel.Draw(tc, hegel.Integers(0, 10)) * 100
+		mode := hegel.Draw(tc, hegel.Integers(0, 2))
+		signal, field := "logs", "Body"
+		if hegel.Draw(tc, hegel.Integers(0, 1)) == 1 {
+			signal, field = "spans", "SpanName"
+		}
+		scope := identity.EnvironmentScope{Mode: "unreported"}
+		resource := map[string]string{}
+		if mode == 1 {
+			scope.Mode = "empty"
+			resource["deployment.environment.name"] = ""
+			resource["deployment.environment"] = "ignored"
+		}
+		if mode == 2 {
+			scope.Mode = "named"
+			scope.Value = "prod"
+			resource["deployment.environment"] = "prod"
+		}
+		env, _ := identity.EffectiveEnvironment(scope)
+		dto, _ := env.Selector()
+		q := exploration.Query{Signal: signal, EnvironmentSelector: &dto, FromMS: 100000, ToMS: 160000, Limit: 100, Offset: offset}
+		raw, _ := json.Marshal(map[string]any{"timestamp_ns": "150000000000", field: "same", "ResourceAttributes": resource, "exact": json.Number("18446744073709551615")})
+		rows := make([]json.RawMessage, count)
+		for i := range rows {
+			rows[i] = raw
+		}
+		bank := new(exploration.ResultSnapshots)
+		r := &exploration.Result{Question: q, Rows: rows, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano), Basis: strings.Repeat("f", 64), State: "observed"}
+		token, e := bank.Freeze(r)
+		if e != nil {
+			t.Fatal(e)
+		}
+		in := exploration.KeepRecordsIntent{Version: exploration.KeepRecordsVersion, RequestID: fmt.Sprintf("%064x", count+1), ResultToken: token, Expected: &exploration.KeepRecordExpectation{Question: q, Basis: r.Basis}}
+		for i := count - 1; i >= 0; i-- {
+			in.Indexes = append(in.Indexes, i)
+		}
+		store := exploration.KeptObservationStore{Dir: t.TempDir()}
+		v, e := store.KeepRecords(context.Background(), bank, exploration.CaptureStore{}, in)
+		if e != nil {
+			t.Fatal(e)
+		}
+		if v.Question.Offset != offset || len(v.Members) != count {
+			t.Fatal("page identity drift")
+		}
+		for i, m := range v.Members {
+			if m.Index != i || !strings.Contains(string(m.Record), "18446744073709551615") {
+				t.Fatal("lost original occurrence")
+			}
+		}
+		before, _ := json.Marshal(v)
+		again, e := store.KeepRecords(context.Background(), nil, exploration.CaptureStore{}, in)
+		if e != nil {
+			t.Fatal(e)
+		}
+		after, _ := json.Marshal(again)
+		if string(before) != string(after) || strings.Contains(string(after), token) {
+			t.Fatal("retry changed content or leaked capability")
+		}
+	}, options(50)...)
+}

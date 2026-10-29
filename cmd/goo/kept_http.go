@@ -12,7 +12,7 @@ import (
 	"github.com/casselc/goo/internal/httpjson"
 )
 
-func registerKeptObservations(mux *http.ServeMux, dir string, bank *exploration.TailMembershipSnapshots) {
+func registerKeptObservations(mux *http.ServeMux, dir string, bank *exploration.TailMembershipSnapshots, results *exploration.ResultSnapshots) {
 	store := exploration.KeptObservationStore{Dir: filepath.Join(dir, "kept-observations")}
 	fail := func(w http.ResponseWriter, code int, err error) {
 		httpjson.Write(w, code, map[string]string{"error": err.Error()})
@@ -36,10 +36,40 @@ func registerKeptObservations(mux *http.ServeMux, dir string, bank *exploration.
 		v, err := store.Keep(ctx, bank, in)
 		if err != nil {
 			code := 503
-			if errors.Is(err, exploration.ErrKeepConflict) {
+			if errors.Is(err, exploration.ErrKeepConflict) || errors.Is(err, exploration.ErrKeepPrecondition) {
 				code = 409
 			}
 			if errors.Is(err, exploration.ErrTailMembershipUnavailable) {
+				code = 410
+			}
+			fail(w, code, err)
+			return
+		}
+		httpjson.Write(w, 201, v)
+	})
+	mux.HandleFunc("POST /kept-observations/records", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.RawQuery != "" {
+			fail(w, 400, errors.New("keep has no query parameters"))
+			return
+		}
+		var in exploration.KeepRecordsIntent
+		if err := httpjson.Decode(w, r, &in, 16384, "expected one reference-only keep request"); err != nil {
+			fail(w, 400, err)
+			return
+		}
+		if err := in.Validate(); err != nil {
+			fail(w, 400, err)
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
+		defer cancel()
+		v, err := store.KeepRecords(ctx, results, exploration.CaptureStore{Dir: filepath.Join(dir, "exploration")}, in)
+		if err != nil {
+			code := 503
+			if errors.Is(err, exploration.ErrKeepConflict) || errors.Is(err, exploration.ErrKeepPrecondition) {
+				code = 409
+			}
+			if errors.Is(err, exploration.ErrKeptRecordsUnavailable) {
 				code = 410
 			}
 			fail(w, code, err)
@@ -52,7 +82,7 @@ func registerKeptObservations(mux *http.ServeMux, dir string, bank *exploration.
 			fail(w, 400, errors.New("kept observations have no query parameters"))
 			return
 		}
-		v, err := store.Load(r.PathValue("id"))
+		v, err := store.Open(r.PathValue("id"))
 		if err != nil {
 			code := 400
 			if errors.Is(err, os.ErrNotExist) {

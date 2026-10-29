@@ -1,4 +1,8 @@
-# Keep exact Activity observations — 257
+# Keep exact observations
+
+258 supports Activity, fixed Explore results and Saved record selections. The
+[fixed/Saved extension](#fixed-results-and-saved-records--258) below specifies the
+current index and provenance contracts; the initial Activity slice is recorded first.
 
 Select one or more Activity rows, then **Keep selected**. Selection pauses the
 stream. Keeping requires neither a title, tags, an interpretation nor XTDB.
@@ -58,7 +62,7 @@ keeps (16) and pending requests (16) for this browser. **Forget pending request*
 removes only local retry state, never a committed server file; preserve the exact
 link before forgetting an uncertain request. Storage failure refuses publication.
 
-## Deliberate limits and next slice
+## Limits of the initial Activity slice (257; extended below)
 
 There is no server-side keep catalog, store quota/GC, cross-browser discovery,
 annotation attachment, fixed-result/Saved-record selection, or full trace graph
@@ -71,3 +75,59 @@ pretend a newly executed question was the earlier observation.
 
 See the [executable storyboard](../journeys/257-kept-observations-storyboard.md)
 and [validation](../VALIDATION.md).
+
+## Fixed results and Saved records — 258
+
+The same **Keep selected → Open saved** action now works in the existing record
+selection panel for fixed Explore results and Saved record captures. Checked
+environment selectors and ordinary named environments use the same path. No label
+or XTDB is required. Changing pages or screens invalidates the old selection owner;
+a late acknowledgement can update browser recovery but cannot replace the active
+view. Clear selection leaves an uncertain request in explicit recovery.
+
+`POST /api/kept-observations/records` accepts `goo/keep-records/v1`, a request ID,
+exactly one `resultToken` or `captureID`, and 1–20 distinct indexes. Result indexes
+are **local to the original held page**, preserving its nonzero question offset.
+Saved indexes are **absolute in the retained capture row bank**; the UI adds its
+Saved page offset. Duplicate identical rows retain distinct indexes, even though
+their content digests match. This is occurrence identity, not unique physical events.
+
+The optional `expected` question/basis is a precondition, never browser authority
+for record contents. The UI persists it in the same retry intent; both Go and the
+browser validate it before publication/acknowledgement. A different source scope
+returns 409, and a mismatched reply remains pending without being added to Recent.
+Browser retry recovery uses the identical precondition after reload.
+
+The new immutable `goo/kept-records/v1` receipt retains origin, exact original
+question, basis, read clock, original result state, retained-page/bank size and
+limitation flag, selected indexes and record hashes. Saved origin also retains
+capture ID and its separate custody clock. Counts/groups are not promoted to a
+population claim. The synthetic live snapshot receipt contains the capability
+itself and is deliberately not copied; live result tokens never appear in the
+public/durable receipt. `GET /api/kept-observations/{id}` strictly dispatches either
+receipt version; existing Activity v1 bytes and IDs are unchanged.
+
+Both origins share the existing four-admission, 3 MiB atomic file publisher and
+winner-before-resolution retry behavior. The result bank detaches bytes while
+locked, then releases its lock before decoding, validation and filesystem work.
+Saved origin resolves immutable storage without telemetry. An existing winner
+still reopens after process restart, proof expiry or original capture deletion.
+Cross-origin reuse of a request ID conflicts. Only record results are eligible;
+explanation, measurement and inventory tokens/captures are refused.
+
+```mermaid
+flowchart LR
+    A[Activity membership references] --> P[Shared atomic Keep publisher]
+    R[Fixed result token + local indexes] --> B[Detach original server page]
+    S[Saved capture ID + absolute indexes] --> C[Verify original stored capture]
+    B --> P
+    C --> P
+    P --> F[Immutable versioned keep file]
+    F --> UI[Shared Saved inspection and exact link]
+    J[Browser original intent journal] --> P
+```
+
+The [258 executable storyboard](../journeys/258-keep-records-storyboard.md) covers
+both origins. The earlier first-slice limits above are historical: fixed/Saved
+origins are now implemented. Server-wide discovery, quotas/GC, optional later
+annotation attachment and whole-trace keeps remain separate work.

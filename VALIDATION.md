@@ -1,5 +1,57 @@
 # Validation record
 
+## Keep fixed and Saved record selections — 258 (2026-10-29 UTC)
+
+Fixed Explore results and Saved record pages now offer the same label-free local
+Keep/Open action as Activity. Both use the shared atomic publisher, bounded retry
+journal and Saved inspection route. Distinct receipt versions preserve v1 Activity
+bytes. New provenance retains exact question, source-read time/basis/state and
+local page indexes or absolute stored indexes; Saved origin also retains original
+capture ID and custody time. Live result tokens are omitted from public receipts.
+[Contract/diagrams](docs/KEPT_OBSERVATIONS.md),
+[executable storyboard and frames](journeys/258-keep-records-storyboard.md).
+
+Full Go checks and 630 frontend checks pass. Targeted Go race checks pass for the
+shared store, both HTTP boundaries and result snapshot ownership. Tests exercise
+nonzero fixed/Saved pages, duplicate content at distinct indexes, exact numeric
+precision, expired/restarted/deleted-origin retry, cross-origin conflict and
+reference-only refusal. The result bank now detaches under its lock and decodes
+outside it; no source/bank lock is held across publication IO. Hegel adds 50 fixed
+page cases across signal, multiplicity, offset and environment scopes (the existing
+50 Activity cases pass too). Quint's Go checker accepts the actual result/Saved
+ledger and rejects five provenance/effect mutations; this reuses the existing
+source-free publication model rather than claiming a full browser state model.
+
+Actual real-SDK/source journeys 257 and 258 pass together in 26.0s after the final
+provenance-first detail layout. New journey: 102 identical unreported-environment
+logs; fixed page offset100 selects local indexes0/1; lost acknowledgement retries
+identical intent; a separately identified fresh capture then selects absolute
+Saved indexes100/101; exact reopen, attribute inspection and 390px keyboard/reveal
+work without telemetry POST. The 35s Bombadil campaign passes with 101 snapshots,
+every Saved paging/selection/keep/open/inspection/close phase, one publication and
+no source reread. All fixture keeps/captures use isolated temporary stores.
+
+Frontend review identified scope validation after browser acknowledgement. The
+corrected boundary journals an optional expected question/basis precondition;
+server publication and browser acknowledgement both validate it first. Negative
+controls show wrong-scope/basis replies stay pending and never enter Recent.
+Final frontend and architecture reviews find no remaining blocker.
+
+OpenAPI covers 94 Go operations. Existing 429 response fixtures, 159 admitted
+requests and 28 mux refusals pass; actual result/Saved requests and POST/GET
+receipts conform. The docs browser journey passes desktop/mobile with no page
+errors. Server-wide Keep discovery, quotas/GC, whole-trace keeps and optional
+later annotation attachment remain open; fixed/Saved record origins are delivered.
+
+Deployed Go image `028f7fb62804` passes health, exact served-module comparison,
+94-operation OpenAPI and old exact capture access. All 8,420 pre-existing stored
+file paths are unchanged (including all 1,812 capture IDs). Only packages was
+recreated; volumes and the existing XTDB orphan remain untouched. Previous image
+`d8c6a4b22f43` is retained for rollback. Temporary campaign screenshots/traces and
+browser reports from this round are removed; executable tests, documentation
+frames and compact local replay ledgers remain.
+
+
 ## Keep exact Activity observations — 257 (2026-10-29 UTC)
 
 Activity’s Select → Keep selected → Open saved flow now preserves 1–20 original

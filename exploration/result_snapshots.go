@@ -88,9 +88,10 @@ func (s *ResultSnapshots) freezeTyped(raw []byte, kind string) (string, error) {
 }
 func (s *ResultSnapshots) Load(id string) (*SavedCapture, error) {
 	s.mu.Lock()
-	defer s.mu.Unlock()
 	s.prune(s.clock())
 	v, ok := s.entries[id]
+	v.raw = append([]byte(nil), v.raw...)
+	s.mu.Unlock()
 	if !ok {
 		return nil, errors.New("result page expired or unavailable; run the question and select again")
 	}
