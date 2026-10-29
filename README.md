@@ -303,7 +303,9 @@ are described below.
 [Gotogether consumer pilot](docs/GOTOGETHER_PILOT.md) records onboarding and
 capture-workflow compatibility. The [follow-on pilot](docs/GOTOGETHER_FOLLOWUP.md)
 verifies the parser fix and shrinks a real lifecycle cutoff mutant; Goo's existing
-testing dependencies remain unchanged.
+testing dependencies remain unchanged. The [scoped lifecycle generation model](verification/lifecycle-generations/README.md)
+extends this to tenant isolation, immutable corrections and generation selection,
+with three independently killed source mutants.
 
 
 [Compact pool observations](docs/POOL_VIEW.md) put selected capacity and acquisition

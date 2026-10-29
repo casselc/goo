@@ -1,0 +1,40 @@
+spec: generations.qnt
+module: generations
+actors: [generations]
+invariants: [safety]
+eventually: [complete]
+actions:
+  accept:
+    expect: &projection 'view.a == {{.obs.a}} and view.b == {{.obs.b}} and state == {{.obs.state}} and totals.eligible == {{.obs.eligible}} and totals.good == {{.obs.good}} and totals.bad == {{.obs.bad}} and totals.unknown == {{.obs.unknown}} and s.phase == {{.obs.phase}} and s.selected == {{.obs.selected}} and s.aggregate.eligible == {{.obs.aggregateEligible}} and s.aggregate.good == {{.obs.aggregateGood}} and s.aggregate.bad == {{.obs.aggregateBad}} and s.aggregate.unknown == {{.obs.aggregateUnknown}} and s.mixedRejected == {{.obs.mixedRejected}} and s.scopeRejected == {{.obs.scopeRejected}} and s.original.a == {{.obs.originalA}} and s.original.b == {{.obs.originalB}} and quality(s.original) == {{.obs.originalState}} and s.corrected.a == {{.obs.correctedA}} and s.corrected.b == {{.obs.correctedB}} and quality(s.corrected) == {{.obs.correctedState}} and {{.obs.archived}} and {{.obs.replayStable}} and state == {{.obs.ratioState}} and ratioTicks == {{.obs.ratioTicks}} and (if (s.selected == 1) "g1" else "g0") == {{.obs.evaluationID}} and "100" == {{.obs.evaluationTime}} and (if (s.selected == 1) "100" else "96") == {{.obs.cutoff}} and (if (s.selected == 1) "g0" else "") == {{.obs.supersedes}} and "57" == {{.obs.cohortStart}} and "87" == {{.obs.cohortEnd}}'
+  terminal:
+    expect: *projection
+  duplicate:
+    expect: *projection
+  freeze:
+    expect: *projection
+  correct:
+    expect: *projection
+  selectGeneration:
+    expect: *projection
+  mixed:
+    expect: *projection
+  changedScope:
+    expect: *projection
+  finish:
+    expect: *projection
+  idle:
+    expect: *projection
+simulate:
+  holds: [safety]
+  terminal: complete
+  possible:
+    - name: isolated subjects
+      steps: ['accept(tenant = 0)', 'accept(tenant = 1)', freeze]
+    - name: missing becomes good
+      steps: ['accept(tenant = 0)', freeze, 'terminal(tenant = 0, successful = true)', correct]
+    - name: good becomes unknown
+      steps: ['accept(tenant = 0)', 'terminal(tenant = 0, successful = true)', freeze, 'terminal(tenant = 0, successful = false)', correct]
+    - name: selected generation
+      steps: ['accept(tenant = 0)', freeze, correct, 'selectGeneration(generation = 0)', 'selectGeneration(generation = 1)', mixed, changedScope, finish]
+  search: {depth: 9, states: 10000}
+  verifySteps: 9

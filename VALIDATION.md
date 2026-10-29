@@ -1,5 +1,22 @@
 # Validation record
 
+## Independent scoped lifecycle generations (2026-10-29 UTC)
+
+The [isolated model consumer](verification/lifecycle-generations/README.md) checks
+two tenants with shared IDs and two frozen evaluation generations against real
+lifecycle/subjectfacts APIs. Quint safety holds for every trace up to nine steps;
+all four required scenarios are reachable. The full module suite passes: five
+directed scenarios, 12 generated traces/300 steps (139 non-idle), prefix/settle
+controls, and three source mutants shrunk to 2/6/3 operations. Observation mutation
+checks kill eight valid corruptions and refuse four malformed logs before verdict;
+there are no survivors or undecided cases. Existing lifecycle and subjectfacts
+package tests and targeted faithful scenarios under race instrumentation pass. No production defect was found within these bounds.
+
+Tools, source baselines, smallest failing mutant traces and model outputs are
+recorded in the module evidence directory. Root and older verification dependencies
+are unchanged. This is a synchronous synthetic-ledger kernel check; no external
+telemetry, storage, browser or concurrent-runtime validation is claimed.
+
 ## Internal population/comparison selectors — 254 (2026-10-29 UTC)
 
 Internal population transforms, explanation and log-pattern comparisons use

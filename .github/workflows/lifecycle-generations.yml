@@ -1,0 +1,49 @@
+name: Lifecycle generation model
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'lifecycle/**'
+      - 'subjectfacts/**'
+      - 'verification/lifecycle-generations/**'
+      - '.github/workflows/lifecycle-generations.yml'
+jobs:
+  generations:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            lifecycle
+            subjectfacts
+            examples/lifecycle
+            examples/portable
+            verification/lifecycle-generations
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.2'
+          cache-dependency-path: verification/lifecycle-generations/go.sum
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Install pinned model tools
+        working-directory: verification/lifecycle-generations
+        run: |
+          go mod download
+          core_dir="$(go list -m -f '{{.Dir}}' github.com/chucklehead-dev/gotogether)"
+          QUINT_VERSION=0.33.0 bash "$core_dir/ci/install-quint.sh"
+      - name: Check model and real kernel
+        env:
+          GENERATIONS_OUT: ${{ runner.temp }}/lifecycle-generations
+        run: verification/lifecycle-generations/check.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lifecycle-generations
+          path: ${{ runner.temp }}/lifecycle-generations
+          if-no-files-found: ignore
