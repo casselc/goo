@@ -5,7 +5,8 @@
 > [checkpoint 243](reviews/INDEPENDENT_REVIEW_SUMMARY_243.md) is complete.
 > C0 is corrected in 244 with bounded catalog summaries and explicit v2 rebuild.
 > C1 is corrected in 245 with selected/authored UTF-8 validation.
-> Next: native package capacity (C2).
+> C2 is corrected in 246 with shared admission and exact revision recovery.
+> Next: A0, explicit unreported-environment adoption.
 > Earlier queues preserve delivery history; their Next labels are superseded.
 
 

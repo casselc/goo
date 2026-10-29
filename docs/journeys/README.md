@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey 246](../../journeys/246-native-catalog-capacity-storyboard.md) covers native
+capacity admission, duplicate retry, retained catalog failure and exact recovery.
+
+
 [Journey 244](../../journeys/244-capture-summary-storyboard.md) covers large accepted
 questions, bounded search summaries and explicit index migration preserving evidence.
 

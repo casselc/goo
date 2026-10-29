@@ -32,9 +32,9 @@ test('243 complete Activity isolate, trace context, fixed capture, leave and fin
   expect(errors).toEqual([]);expect(requests.filter(r=>r.path==='/api/captures')).toHaveLength(1);
   // Native catalog capacity probe: only this owned generic runtime/store is affected.
   let capacity=null;if(process.env.GOO_REVIEW243_CAPACITY==='1'){const template=(await fs.readFile('config/measurements/worker-active.yaml','utf8')).replaceAll('reservations','review-jobs'),statuses=[];let last;
-  for(let i=0;i<257;i++){const r=await request.post(runtime.base+'/api/measurement-packages',{data:{yaml:template.replace('name: worker-active','name: review-native-'+i)}});statuses.push(r.status());last=await r.json()}
-  const catalog=await request.get(runtime.base+'/api/measurement-packages'),retry=await request.post(runtime.base+'/api/measurement-packages',{data:{yaml:template.replace('name: worker-active','name: review-native-256')}});capacity={published:statuses.filter(s=>s===201).length,catalogStatus:catalog.status(),catalog:await catalog.json(),retryStatus:retry.status(),lastRevision:last.revision};
-  expect(capacity.published).toBe(257);expect(capacity.catalogStatus).toBe(400);expect(capacity.retryStatus).toBe(201);}
+  for(let i=0;i<257;i++){const r=await request.post(runtime.base+'/api/measurement-packages',{data:{yaml:template.replace('name: worker-active','name: review-native-'+i)}});statuses.push(r.status());const body=await r.json();if(r.status()===201)last=body}
+  const catalog=await request.get(runtime.base+'/api/measurement-packages'),retry=await request.post(runtime.base+'/api/measurement-packages',{data:{yaml:last.yaml}});capacity={published:statuses.filter(s=>s===201).length,catalogStatus:catalog.status(),catalog:await catalog.json(),retryStatus:retry.status(),lastRevision:last.revision};
+  expect(statuses.slice(0,256).every(s=>s===201)).toBe(true);expect(statuses[256]).toBe(400);expect(capacity.published).toBe(256);expect(capacity.catalogStatus).toBe(200);expect(capacity.retryStatus).toBe(201);}
   await fs.writeFile(path.join(dir,'review.json'),JSON.stringify({steps,requests,errors,capacity,captureID:capture.receipt.id,pointerReturn,closeFocus,surfaces,workaround:process.env.GOO_REVIEW243_WORKAROUND||null},null,2));
  }finally{await runtime?.stop();await fs.rm(owned,{recursive:true,force:true})}
 });

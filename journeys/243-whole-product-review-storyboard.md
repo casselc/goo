@@ -46,10 +46,11 @@ GOO_REVIEW243=1 GOO_REVIEW243_WORKAROUND=close-trace \
 ```
 
 Without the workaround flag the direct global return attempt reproduces mobile
-occlusion. Optional `GOO_REVIEW243_CAPACITY=1` publishes 257 owned native definitions
-to observe the known publisher/catalog mismatch; it is a diagnostic of a defect,
-not an acceptance contract or required CI. A later fix needs ordinary assertions
-for its chosen admission policy. `GOO_GENERIC_BINARY` can select a prebuilt binary.
+occlusion. The original `GOO_REVIEW243_CAPACITY=1` probe observed 257 accepted definitions
+and a failed catalog at checkpoint 243. After correction 246, this optional branch
+asserts the current 256 accepted / next refused / catalog readable policy. The
+[dedicated journey](246-native-catalog-capacity-storyboard.md) now owns capacity
+and exact revision recovery acceptance. `GOO_GENERIC_BINARY` can select a prebuilt binary.
 
 Final run passed in 17.0s (19.7s including runner setup). Core request totals were
 three tail requests, two supporting context requests, one fixed analysis request

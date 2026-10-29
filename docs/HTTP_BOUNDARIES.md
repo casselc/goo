@@ -1090,3 +1090,14 @@ it now changes lookback through Explore and returns to Saved, preserving frozen
 evidence. See VALIDATION.md for actual rerun outcomes and scope. Remaining C2
 endpoint/branch coverage and policy decisions remain open, rather than assuming
 that schema presence establishes full API acceptance.
+
+
+## Native catalog capacity correction — 246
+
+Native discovery and publication share `internal/nativecatalog`: 256 distinct
+revisions across roots, separate 256-entry physical scans, canonical size
+admission and cooperating local directory locks. Exact saved revision lookup at
+`GET /api/measurement-packages/revisions/{revision}` remains available when the
+full catalog is over limit. Workbench Package definition → Open revision previews
+without telemetry. See the [contract](NATIVE_CATALOG_CAPACITY.md) for duplicate/
+corrupt winner behavior, builtin aliases, platform limits and existing-store recovery.

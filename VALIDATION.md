@@ -1,5 +1,56 @@
 # Validation record
 
+## Native publication/catalog capacity — 246 (2026-10-29 UTC)
+
+`internal/nativecatalog` now shares logical/physical admission, bounded file reads,
+immutable winner verification and local directory locking across publication and
+discovery. The complete catalog is at most 256 distinct builtin/saved revisions;
+physical entries are separately bounded per root. Canonical YAML must fit 32 KiB
+before new publication. Valid duplicates work at/over capacity; corrupt winners
+are never repaired or hidden by builtin fallback. Exact saved revision lookup and
+workbench Package definition → Open revision support source-free recovery from an
+existing over-limit store. No format, definition-ID, successful publication response
+or evidence migration is introduced. See the [contract/diagram](docs/NATIVE_CATALOG_CAPACITY.md),
+[storyboard](journeys/246-native-catalog-capacity-storyboard.md) and
+[architecture/Go review](docs/reviews/NATIVE_CAPACITY_REVIEW_246.md).
+
+Passed root Go suite, native catalog/cmd race and vet checks; 606 frontend checks;
+20 Hegel state/swarm examples with publication, duplicate, lookup and catalog
+membership near capacity. Independent stores and subprocesses contend for one slot:
+one distinct save succeeds, the rest refuse; catalog remains readable. Tests cover
+builtin union and aliases, physical limits, read-only missing roots, lock-wait
+cancellation, canonical size, duplicate/corrupt winners and over-limit exact reads.
+The actual-handler regression accepts 256 definitions and refuses the next; an
+overlay of the previous handler fails that regression by accepting the 257th.
+
+Final real-browser journey passed in 42.9s / 45.3s total, including the updated
+20-second Bombadil actor and observed Quint checker. It checks full browse after
+refusal, retry, a deliberately over-limit owned store, retained catalog details,
+invalid revision input, stale lookup discarded after authoring edits, successful
+exact recovery, unchanged original bytes, zero telemetry reads and 390px overflow.
+Bombadil reached select/disclosure/exact revision/edit/complete and checked no
+uncaught errors, no evidence/capture and matching exact revision scope. The actual
+255 → 256 → refused/256 → duplicate/256 ledger conforms to the Quint model; three
+changed controls are rejected. This is bounded prefix safety, not a generic
+campaign-completion proof. Quint typecheck also passes.
+
+The maintained whole-product journey 243 now asserts the corrected capacity
+policy; it passed in 24.6s / 26.5s total with Activity/trace/capture/reopen and
+service surface checks. Its three frames and the new recovery frame are current.
+The first dedicated browser attempt preceded binary availability; the next was
+interrupted after its test incorrectly closed an already-open disclosure. These
+were harness setup errors, corrected before the successful runs. OpenAPI validates
+89 operations, 429 response fixtures, 159 admitted requests, 28 mux refusals and
+negative controls; API documentation browser checks also pass. The full discovery
+Quint model, production load and unsupported-platform execution were not run.
+The configured single-Go image `460dc5ac183d` is deployed. Served native JS/OpenAPI
+match checkout; all 55 previous native revisions are retained, exact revision
+lookup passes, and the 1,812-capture v2 catalog remains available. No live
+definitions, capture payloads, indexes or volumes were rewritten or deleted.
+The known XTDB orphan was left untouched.
+
+
+
 ## Prepared subject-fact UTF-8 integrity — 245 (2026-10-29 UTC)
 
 The public `subjectfacts` Go boundary rejects invalid execution/routing IDs,

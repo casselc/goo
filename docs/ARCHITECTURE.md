@@ -1267,3 +1267,14 @@ then selected declared strings before identity/filter/grouping. Valid foreign
 evaluations skip historical field inspection. See the
 [text integrity pipeline](PREPARED_TEXT_INTEGRITY.md); no source query or custody
 format changes are introduced in 245.
+
+
+## Native catalog capacity correction — 246
+
+Native discovery and publication share `internal/nativecatalog`: 256 distinct
+revisions across roots, separate 256-entry physical scans, canonical size
+admission and cooperating local directory locks. Exact saved revision lookup at
+`GET /api/measurement-packages/revisions/{revision}` remains available when the
+full catalog is over limit. Workbench Package definition → Open revision previews
+without telemetry. See the [contract](NATIVE_CATALOG_CAPACITY.md) for duplicate/
+corrupt winner behavior, builtin aliases, platform limits and existing-store recovery.

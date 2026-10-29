@@ -1,16 +1,16 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"path/filepath"
-	"sort"
+
 	"time"
 
 	"github.com/casselc/goo/internal/httpjson"
-	"github.com/casselc/goo/internal/immutablefile"
+	"github.com/casselc/goo/internal/nativecatalog"
 	"github.com/casselc/goo/internal/nativehttp"
 	"github.com/casselc/goo/measurements"
 	"gopkg.in/yaml.v3"
@@ -21,6 +21,7 @@ func registerMeasurements(mux *http.ServeMux, source measurements.Source, dir st
 	registerContainerCPUView(mux)
 	registerContainerResourceHistory(mux)
 	packagesDir := filepath.Join(dir, "measurement-packages")
+	catalogStore := nativecatalog.Store{BuiltinDir: "config/measurements", SavedDir: packagesDir}
 	source.CustodyDir = filepath.Join(dir, "exploration", "custody")
 	nativehttp.RegisterMeasurements(mux, source)
 	send := httpjson.Write
@@ -66,80 +67,45 @@ func registerMeasurements(mux *http.ServeMux, source measurements.Source, dir st
 		send(w, 200, workflows)
 	})
 	mux.HandleFunc("GET /measurement-packages", func(w http.ResponseWriter, r *http.Request) {
-		all := map[string]measurements.Definition{}
-		builtin := map[string]bool{}
-		count := 0
-		for _, directory := range []string{"config/measurements", packagesDir} {
-			catalog, e := os.Open(directory)
-			if os.IsNotExist(e) {
-				continue
-			}
-			if e != nil {
-				fail(w, e)
-				return
-			}
-			files, e := catalog.ReadDir(257)
-			catalog.Close()
-			if len(files) > 256 {
-				fail(w, fmt.Errorf("package catalog scan limit exceeded"))
-				return
-			}
-			if e != nil && e != io.EOF {
-				fail(w, e)
-				return
-			}
-			for _, f := range files {
-				if f.IsDir() || filepath.Ext(f.Name()) != ".yaml" {
-					continue
-				}
-				count++
-				if count > 256 {
-					fail(w, fmt.Errorf("package catalog limit exceeded"))
-					return
-				}
-				info, e := f.Info()
-				if e != nil || info.Size() > 32768 {
-					fail(w, fmt.Errorf("package file exceeds limit or unavailable"))
-					return
-				}
-				b, e := os.ReadFile(filepath.Join(directory, f.Name()))
-				if e != nil {
-					fail(w, e)
-					return
-				}
-				d, e := measurements.Read(string(b))
-				if e != nil {
-					fail(w, e)
-					return
-				}
-				revision, e := d.Revision()
-				if e != nil {
-					fail(w, e)
-					return
-				}
-				all[revision] = d
-				if directory == "config/measurements" {
-					builtin[revision] = true
-				}
-			}
+		entries, e := catalogStore.List(r.Context())
+		if e != nil {
+			fail(w, e)
+			return
 		}
-		ids := []string{}
-		for id := range all {
-			ids = append(ids, id)
-		}
-		sort.Strings(ids)
 		out := []any{}
-		for _, id := range ids {
-			entry, e := item(all[id], id)
+		for _, v := range entries {
+			entry, e := item(v.Definition, v.Revision)
 			if e != nil {
 				fail(w, e)
 				return
 			}
-			entry["builtin"] = builtin[id]
+			entry["builtin"] = v.Builtin
 			out = append(out, entry)
 		}
 		send(w, 200, out)
 	})
+	mux.HandleFunc("GET /measurement-packages/revisions/{revision}", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.RawQuery != "" {
+			fail(w, fmt.Errorf("exact revision lookup has no query parameters"))
+			return
+		}
+		value, e := catalogStore.Resolve(r.Context(), r.PathValue("revision"))
+		if errors.Is(e, os.ErrNotExist) {
+			send(w, 404, map[string]string{"error": "native package revision not found"})
+			return
+		}
+		if e != nil {
+			fail(w, e)
+			return
+		}
+		entry, e := item(value.Definition, value.Revision)
+		if e != nil {
+			fail(w, e)
+			return
+		}
+		send(w, 200, entry)
+	})
+
 	mux.HandleFunc("POST /measurement-packages/plan", func(w http.ResponseWriter, r *http.Request) {
 		var input struct {
 			YAML   string `json:"yaml"`
@@ -198,57 +164,11 @@ func registerMeasurements(mux *http.ServeMux, source measurements.Source, dir st
 			fail(w, e)
 			return
 		}
-		b, e := yaml.Marshal(d)
-		if e != nil {
+		if e := catalogStore.Publish(r.Context(), d); e != nil {
 			fail(w, e)
 			return
 		}
-		created, e := immutablefile.PublishFileOnly(packagesDir, revision+".yaml", ".package-", b)
-		if e != nil {
-			fail(w, e)
-			return
-		}
-		if !created {
-			if e := verifyMeasurementPackageWinner(filepath.Join(packagesDir, revision+".yaml"), revision); e != nil {
-				fail(w, e)
-				return
-			}
-		}
+
 		send(w, 201, entry)
 	})
-}
-
-// A duplicate publication is successful only when its immutable winner remains
-// a valid package with the requested identity. Never repair or replace it here.
-func verifyMeasurementPackageWinner(path, revision string) error {
-	const limit = 32768
-	invalid := func() error {
-		return fmt.Errorf("existing measurement package is unavailable, invalid, or has a different revision")
-	}
-	info, e := os.Lstat(path)
-	if e != nil || !info.Mode().IsRegular() || info.Size() > limit {
-		return invalid()
-	}
-	f, e := os.Open(path)
-	if e != nil {
-		return invalid()
-	}
-	defer f.Close()
-	info, e = f.Stat()
-	if e != nil || !info.Mode().IsRegular() || info.Size() > limit {
-		return invalid()
-	}
-	b, e := io.ReadAll(io.LimitReader(f, limit+1))
-	if e != nil || len(b) > limit {
-		return invalid()
-	}
-	d, e := measurements.Read(string(b))
-	if e != nil {
-		return invalid()
-	}
-	actual, e := d.Revision()
-	if e != nil || actual != revision {
-		return invalid()
-	}
-	return nil
 }

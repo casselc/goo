@@ -13,8 +13,10 @@ search; the 256 MiB whole-store repair limit remains open.
 Malformed selected/authored UTF-8 (C1) is corrected in 245 at the `subjectfacts`
 Go boundary; valid Unicode and foreign-evaluation isolation are preserved. See
 [the text contract](PREPARED_TEXT_INTEGRITY.md) for decoder/source limits.
-Native publisher/catalog capacity (C2) remains reproduced with actual endpoint
-evidence, not only source review.
+Native publisher/catalog capacity (C2) is corrected in 246 with shared bounded
+admission and exact saved-revision recovery. Existing over-limit catalogs still
+refuse full browse/new publication; nothing is deleted or silently truncated.
+See the [capacity contract](NATIVE_CATALOG_CAPACITY.md) for local locking and platform limits.
 The mobile trace sheet covers the global return control; visible Close trace then
 Return works. Parent-aware close/focus remains a usability gap.
 Current order and acceptance: [roadmap](ROADMAP_2026_10_29.md),
@@ -35,7 +37,7 @@ record/attribute actions follow in 241. Saved capture search follows in 242 usin
 derived metadata and explicit bounded rebuild; full contents are verified on
 reopen, not established by a metadata listing. See the [catalog contract](CAPTURE_CATALOG_SEARCH.md)
 for its 10,000-entry, metadata-byte and rebuild limits. The separate prepared-string
-and native package publication/capacity integrity findings remain open. Current order and
+and native package publication/capacity findings are corrected in 245/246. Current order and
 acceptance live in the [roadmap](ROADMAP_2026_10_29.md) and
 [backlog](BACKLOG_2026_10_29.md); older statuses below retain their bounded history.
 

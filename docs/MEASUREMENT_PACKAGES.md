@@ -240,3 +240,14 @@ Observed instruments now use a [compact native discovery catalog](NATIVE_INSTRUM
 with local paging, explicit generic fallback and HTTP duration metadata hints
 pinned to OTel semantic conventions v1.30.0. Hints never verify interval coverage
 or rewrite bindings; Preview, Run and Save remain separate.
+
+
+## Native catalog capacity correction — 246
+
+Native discovery and publication share `internal/nativecatalog`: 256 distinct
+revisions across roots, separate 256-entry physical scans, canonical size
+admission and cooperating local directory locks. Exact saved revision lookup at
+`GET /api/measurement-packages/revisions/{revision}` remains available when the
+full catalog is over limit. Workbench Package definition → Open revision previews
+without telemetry. See the [contract](NATIVE_CATALOG_CAPACITY.md) for duplicate/
+corrupt winner behavior, builtin aliases, platform limits and existing-store recovery.

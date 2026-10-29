@@ -1040,3 +1040,14 @@ full receipts and verification. Existing stores need an explicit `.catalog-v2`
 rebuild; `.catalog-v1` is left untouched. See the
 [catalog contract](CAPTURE_CATALOG_SEARCH.md) for migration, query-bound cursors,
 reserved-directory admission, byte limits and metadata integrity limits.
+
+
+## Native catalog capacity correction — 246
+
+Native discovery and publication share `internal/nativecatalog`: 256 distinct
+revisions across roots, separate 256-entry physical scans, canonical size
+admission and cooperating local directory locks. Exact saved revision lookup at
+`GET /api/measurement-packages/revisions/{revision}` remains available when the
+full catalog is over limit. Workbench Package definition → Open revision previews
+without telemetry. See the [contract](NATIVE_CATALOG_CAPACITY.md) for duplicate/
+corrupt winner behavior, builtin aliases, platform limits and existing-store recovery.

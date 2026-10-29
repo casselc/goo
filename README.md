@@ -453,3 +453,6 @@ restore the retained tab and visible opening control, including mobile navigatio
 
 Prepared subject-fact evaluation rejects malformed UTF-8 before identity/grouping;
 see the [text integrity contract](docs/PREPARED_TEXT_INTEGRITY.md).
+
+Native package publication and browsing share [bounded capacity and exact revision
+recovery](docs/NATIVE_CATALOG_CAPACITY.md); no stored definitions are deleted to enforce it.

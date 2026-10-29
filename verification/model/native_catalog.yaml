@@ -1,0 +1,11 @@
+spec: native_catalog.qnt
+module: native_catalog
+constants: {INITIAL: '254', LIMIT: '256'}
+invariants: [safety]
+actions:
+  publish:
+    expect: 'count == {{.obs.count}}'
+  refuse:
+    expect: 'count == {{.obs.count}}'
+  duplicate:
+    expect: 'count == {{.obs.count}}'

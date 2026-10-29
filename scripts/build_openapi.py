@@ -252,8 +252,9 @@ schemas['NativePackage'] = {'type':'object','required':['definition','revision',
 schemas['NativePlan'] = {'allOf':[ref('NativePackage'),{'type':'object','required':['question','plan'],'properties':{'question':ref('measurements.Question'),'plan':ref('measurements.Plan')}}]}
 responses['post','/measurement-packages'] = 'NativePackage'
 responses['post','/measurement-packages/plan'] = 'NativePlan'
-schemas['NativePackageList']={'type':'array','items':{'allOf':[ref('NativePackage'),{'type':'object','required':['builtin'],'properties':{'builtin':{'type':'boolean'}}}]}}
+schemas['NativePackageList']={'type':'array','maxItems':256,'items':{'allOf':[ref('NativePackage'),{'type':'object','required':['builtin'],'properties':{'builtin':{'type':'boolean'}}}]}}
 responses['get','/measurement-packages']='NativePackageList'
+responses['get','/measurement-packages/revisions/{revision}']='NativePackage'
 # These roots are reached by reflected response types; fail loudly if renamed.
 for name in ['measurements.Definition','measurements.Question','measurements.Plan']:
  if name not in schemas: raise ValueError(f'Missing reflected type: {name}')
@@ -318,8 +319,12 @@ for (method,path),(file,block) in sorted(route_source.items()):
  if method=='get' and path in ('/http-package','/operation-packages','/operations','/counter-rates','/histograms'): codes.add(503)
  if path=='/queries/{id}/cancel':codes.update((400,429))
  if path=='/captures/search':codes.update((400,500,503))
+ if path in ('/measurement-packages','/measurement-packages/revisions/{revision}'): codes.add(400)
+ if path=='/measurement-packages/revisions/{revision}':
+  op['description']='Source-free exact native revision lookup. Verifies the saved hash-named YAML directly, even when catalog capacity is exceeded. Corrupt saved winners are refused before bounded builtin fallback. No query parameters, telemetry read, publication or full saved-catalog scan.'
+  op['parameters'][0]['schema']={'type':'string','pattern':'^[a-f0-9]{64}$'}
  if path=='/captures/search':
-  op['description']='Derived metadata search over immutable captures, literal case-insensitive title containment, optional exact kind/signal/environment, capture-time order. No telemetry reads or payload bodies. 10,000 directory entries, 16 MiB aggregate metadata, 64 KiB per metadata entry and 8 MiB retained receipt JSON; missing index/budget refusal is 503. Metadata checksum and payload stat stamps do not establish payload content integrity; reopen and explicit rebuild verify full contents. Cursors bind query, admitted catalog IDs and metadata digests; changed scope/catalog is 400. Omitted environment matches any; present-empty matches exact empty. Direct ID reopen keeps its independent limits.'
+  op['description']='Derived metadata search over immutable captures, literal case-insensitive title containment, optional exact kind/signal/environment, capture-time order. No telemetry reads or payload bodies. 10,000 nonreserved directory entries (two known index directories separately reserved), 16 MiB aggregate metadata, 64 KiB per metadata entry and 8 MiB retained summary JSON; missing index/budget refusal is 503. Metadata checksum and payload stat stamps do not establish payload content integrity; reopen and explicit rebuild verify full contents. Cursors bind query, admitted catalog IDs and metadata digests; changed scope/catalog is 400. Omitted environment matches any; present-empty matches exact empty. Direct ID reopen keeps its independent limits.'
   for p in op['parameters']:
    if p.get('name')=='order':p['schema']={'type':'string','enum':['newest','oldest'],'default':'newest'}
    if p.get('name')=='signal':p['schema']={'type':'string','enum':['','logs','spans','metrics']}
