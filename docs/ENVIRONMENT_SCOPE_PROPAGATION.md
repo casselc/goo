@@ -11,20 +11,16 @@ matching and equality retain policy: current-only `prod` is not effective `prod`
 Zero values refuse validation, matching, equality and SQL lowering. Accessors
 return copies. JSON encoding/decoding is explicitly refused so private fields
 cannot silently become `{}` in a saved identity. This is not a new wire schema.
-No YAML owner uses this value; YAML encoding is not guarded in this cut. Before
-introducing it into any YAML owner, add fail-closed encoding/decoding or keep it
-entirely outside that owner with explicit versioned conversion.
+249 adds explicit [versioned DTO metadata and wire fixtures](ENVIRONMENT_SELECTOR_PROTOCOL.md).
+Semantic JSON/YAML serialization is refused; the DTO preserves policy explicitly.
 
 The record compiler's source boundary and adoption preview now share one SQL
 lowering function. Existing Query validation uses the same checked name constructor.
 Inventory, service signal/edge discovery and trace search propagate source errors.
-Trace search binds the environment in compiler parameters while its temporary Query
-contains only the signal; the source boundary validates that binding rather than
-assuming the temporary Query carries it. Existing SQL/parameters and saved formats
-retain their meaning. Native metric compilers remain independent. The current source boundary still
-reconstructs only the current-name policy from the existing parameter binding;
-future effective propagation must pass the checked selection directly and derive
-parameters from it, rather than interpreting a name as an effective policy.
+249 passes checked selection directly into the source compiler, which derives
+bindings and rejects collisions/stale unused named bindings. Existing callers
+explicitly construct current-only selectors; native metric compilers remain
+independent. Existing SQL/parameters and saved formats retain their meaning.
 
 ## Audited handoffs and remaining work
 
@@ -47,7 +43,8 @@ future caller is covered. A new Query field alone does not complete any row.
 
 ## Implementation order and acceptance
 
-1. Freeze existing Query/Tail/package/capture/route bytes and pin explicit wire
+1. Wire prerequisite delivered 249: freeze existing Query/Tail/package/capture
+   bytes/identities (existing route fixtures remain), and pin explicit wire
    fixtures for the new policy. Keep checked semantic values outside stored wire
    types; convert at boundaries with errors.
 2. Adopt the wire selector across record Query/Tail and all derived constructors,
@@ -55,6 +52,7 @@ future caller is covered. A new Query field alone does not complete any row.
    bridges fail before any source read or publication.
 3. Version capture/package/view summaries and browser protocols where needed,
    preserving old current-only identities and exact retained reopen.
+
 Steps 2–3 are one gated public rollout: internal plumbing may land first, but
 Query/Tail HTTP acceptance must not permit effective scopes to reach an old
 capture/package/view codec. Either complete those codecs and identities together

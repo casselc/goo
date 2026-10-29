@@ -55,10 +55,33 @@ func TestEnvironmentLoweringRefusesZeroAndPreservesPolicy(t *testing.T) {
 	if ap["environment"] != name || bp["environment"] != name {
 		t.Fatal("bound value changed")
 	}
-	// source callers such as trace search intentionally omit q.Environment;
-	// their checked shared parameter is authoritative. Missing bindings fail closed.
+	// Zero checked selections must fail even if an old binding exists.
 	c := compiler{signal: "logs", params: map[string]string{}}
-	if _, _, err := c.source(Query{Signal: "logs"}); err == nil {
+	if _, _, err := c.source(Query{Signal: "logs"}, identity.EnvironmentSelection{}); err == nil {
 		t.Fatal("unbound compiler source accepted")
+	}
+}
+
+func TestCheckedSourceBindings249(t *testing.T) {
+	current, _ := identity.CurrentEnvironment("prod")
+	missing, _ := identity.EffectiveEnvironment(identity.EnvironmentScope{Mode: "unreported"})
+	empty, _ := identity.EffectiveEnvironment(identity.EnvironmentScope{Mode: "empty"})
+	for _, tc := range []struct {
+		selection identity.EnvironmentSelection
+		bindings  map[string]string
+		ok        bool
+	}{
+		{current, nil, true}, {current, map[string]string{"environment": "prod"}, true}, {current, map[string]string{"environment": "other"}, false},
+		{missing, nil, true}, {empty, nil, true}, {missing, map[string]string{"environment": "prod"}, false}, {empty, map[string]string{"environment": ""}, false},
+		{identity.EnvironmentSelection{}, map[string]string{"environment": "prod"}, false},
+	} {
+		c := compiler{signal: "logs", params: tc.bindings}
+		_, _, err := c.source(Query{Signal: "logs"}, tc.selection)
+		if (err == nil) != tc.ok {
+			t.Fatal("checked binding admission changed", tc, err)
+		}
+		if err == nil && tc.selection.CurrentOnly() && c.params["environment"] != "prod" {
+			t.Fatal("binding not derived from checked selection")
+		}
 	}
 }

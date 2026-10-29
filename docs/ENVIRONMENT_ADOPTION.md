@@ -104,3 +104,7 @@ See the [journey](../journeys/247-environment-adoption-storyboard.md) and
 
 248 adds a [checked selection/lowering prerequisite and concrete propagation audit](ENVIRONMENT_SCOPE_PROPAGATION.md). It preserves the current-only/effective policy
 distinction without adding a general Query flag or enabling these continuations.
+
+249 adds [response-only versioned selector metadata](ENVIRONMENT_SELECTOR_PROTOCOL.md)
+to record previews. The UI verifies exact effective policy/scope before rendering;
+request shapes and unsupported continuations remain unchanged.

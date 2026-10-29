@@ -1,5 +1,62 @@
 # Validation record
 
+
+## Versioned environment selector wire — 249 (2026-10-29 UTC)
+
+Adds explicit `goo/environment-selector/v1` wire metadata with policy and scope,
+converting to/from checked semantic selection. Adoption record responses derive
+root `selector` from the exact selection used for SQL and membership. The UI
+checks effective policy and exact requested scope before rendering. Existing
+Query/Tail/package/capture/view request schemas remain unchanged; this is the
+wire prerequisite, not completed A0 continuation support. See the
+[contract/diagram](docs/ENVIRONMENT_SELECTOR_PROTOCOL.md) and updated
+[propagation plan](docs/ENVIRONMENT_SCOPE_PROPAGATION.md).
+
+Compiler source lowering now receives checked selection explicitly and derives
+bindings, refusing conflicting or unused inherited environment parameters.
+Semantic values refuse JSON and YAML; versioned DTO JSON/YAML round trips retain
+policy. Frozen compatibility pins old Query/Tail/package/capture-question bytes,
+package YAML/revision and Activity view ID/exact reopen. Existing full capture
+byte/ID and plan fixtures remain unchanged. Direct handler controls reject new
+response selectors on old Query, Tail, capture and Activity view inputs before
+source reads or publication.
+
+Passed root Go suite; identity/exploration/record/workbench race and vet checks;
+607 frontend checks; 200 Hegel cases including membership/policy/JSON roundtrip.
+The first sandbox frontend attempt failed the local-listener query test; the
+rerun with listener access passes all checks. OpenAPI validates 91 operations,
+533 schemas, 429 response fixtures, 159 admitted requests and 28 mux refusals,
+with controls/SSE checks. Deployed API-docs browser checks pass 91 operations,
+filter/disclosure, responsive layout and no page errors. Its first invocation
+targeted the app root; rerunning with the required full `/api-docs` URL passes.
+No request operation was added.
+
+Go/frontend reviews found cross-language field-casing and lossy Unicode decoding
+gaps; Go review also found repeated-object merging. Corrections enforce exact
+keys, reject invalid UTF-8/lone surrogate escapes, preserve valid pairs/U+FFFD,
+and decode final raw-map values with JSON.parse last-member semantics. Shared
+Go/browser raw-wire fixtures exercise rejecting and accepting controls. Final
+identity race and focused browser protocol checks pass after corrections; no
+exhaustive JSON/YAML parser equivalence claim is made.
+
+Actual OTLP/ClickHouse journey 247 passes in 1.6m (1.8m runner total), including
+25 presence/value combinations per signal, valid-but-wrong policy and scope
+response refusals with no rendered records, explicit retry recovery, local focus,
+mobile layout and stale completion controls. Bombadil reaches
+open/read/preview/inspect/close/complete (complete at 4.911s); no unexpected source
+or publication path is accepted. The two actual frames are regenerated. No new
+controls/continuations were added, and no new Quint campaign is claimed for this
+stateless wire boundary. Full live-to-fixed modeling remains with full adoption.
+
+
+
+Deployed image `ff7dda115419` passes health and live preview reads for unreported,
+empty and named scopes with exact response metadata. Served helper/adoption modules
+and OpenAPI match checkout. All 55 native revision identities and 1,812 captures
+remain unchanged; no volume/index migration ran. Temporary binary, fixture stores
+and test bundles are removed after retaining docs and selected generated frames.
+
+
 ## Checked environment selection/lowering prerequisite — 248 (2026-10-29 UTC)
 
 Immutable checked `identity.EnvironmentSelection` distinguishes current-only names

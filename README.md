@@ -463,3 +463,6 @@ tailing/capture adoption remains a separate continuation.
 
 The [scope propagation audit](docs/ENVIRONMENT_SCOPE_PROPAGATION.md) tracks the
 remaining main-flow work; shared checked backend selection/lowering is in place.
+
+Preview responses carry a [versioned environment selector](docs/ENVIRONMENT_SELECTOR_PROTOCOL.md)
+that is checked before displaying records; main-flow selector adoption remains open.

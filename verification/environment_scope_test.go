@@ -1,6 +1,7 @@
 package verification
 
 import (
+	"encoding/json"
 	"github.com/casselc/goo/exploration"
 	"github.com/casselc/goo/identity"
 	"hegel.dev/go/hegel"
@@ -61,6 +62,24 @@ func TestHegelEnvironmentSelection(t *testing.T) {
 		}
 		if currentSelection.Equal(effectiveSelection) || !currentSelection.Equal(currentSelection) || !effectiveSelection.Equal(effectiveSelection) {
 			tc.Fatal("selection policy identity lost")
+		}
+		for _, selected := range []identity.EnvironmentSelection{currentSelection, effectiveSelection} {
+			wire, err := selected.Selector()
+			if err != nil {
+				tc.Fatal(err)
+			}
+			encoded, err := json.Marshal(wire)
+			if err != nil {
+				tc.Fatal(err)
+			}
+			var decoded identity.EnvironmentSelector
+			if err = json.Unmarshal(encoded, &decoded); err != nil {
+				tc.Fatal(err)
+			}
+			restored, err := decoded.Selection()
+			if err != nil || !restored.Equal(selected) || restored.Matches(resource) != selected.Matches(resource) {
+				tc.Fatal("wire roundtrip lost policy", err)
+			}
 		}
 		if currentSelection.Matches(resource) != (current && cv == name) || effectiveSelection.Matches(resource) != (mode == "named" && value == name) {
 			tc.Fatal("selection policy membership changed")

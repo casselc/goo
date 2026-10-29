@@ -68,8 +68,12 @@ func CompileInventory(q InventoryQuestion) (Plan, error) {
 	if e := q.Validate(); e != nil {
 		return Plan{}, e
 	}
-	c := compiler{signal: "spans", params: map[string]string{"from": strconv.FormatInt(q.FromMS, 10), "to": strconv.FormatInt(q.ToMS, 10), "environment": q.Environment}}
-	base, _, sourceErr := c.source(q.Query())
+	selection, err := identity.CurrentEnvironment(q.Environment)
+	if err != nil {
+		return Plan{}, err
+	}
+	c := compiler{signal: "spans", params: map[string]string{"from": strconv.FormatInt(q.FromMS, 10), "to": strconv.FormatInt(q.ToMS, 10)}}
+	base, _, sourceErr := c.source(q.Query(), selection)
 	if sourceErr != nil {
 		return Plan{}, sourceErr
 	}

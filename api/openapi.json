@@ -8761,12 +8761,27 @@
             ],
             "maxItems": 100
           },
+          "selector": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelector"
+              },
+              {
+                "properties": {
+                  "policy": {
+                    "const": "effective"
+                  }
+                }
+              }
+            ]
+          },
           "version": {
             "type": "string",
             "const": "goo/adoption-records/v1"
           }
         },
         "required": [
+          "selector",
           "version",
           "question",
           "readAt",
@@ -16883,6 +16898,107 @@
               "properties": {
                 "value": {
                   "const": ""
+                }
+              }
+            }
+          }
+        ]
+      },
+      "identity.EnvironmentSelector": {
+        "properties": {
+          "policy": {
+            "type": "string",
+            "enum": [
+              "current-only",
+              "effective"
+            ]
+          },
+          "scope": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mode"
+            ],
+            "properties": {
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "named",
+                  "empty",
+                  "unreported"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "maxLength": 128,
+                "description": "At most 128 UTF-8 bytes; runtime enforces the byte limit."
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "mode": {
+                      "const": "named"
+                    }
+                  },
+                  "required": [
+                    "mode"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "minLength": 1
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "value": {
+                      "const": ""
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/environment-selector/v1"
+          }
+        },
+        "required": [
+          "version",
+          "policy",
+          "scope"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/identity.EnvironmentSelector",
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "policy": {
+                  "const": "current-only"
+                }
+              },
+              "required": [
+                "policy"
+              ]
+            },
+            "then": {
+              "properties": {
+                "scope": {
+                  "properties": {
+                    "mode": {
+                      "const": "named"
+                    }
+                  }
                 }
               }
             }

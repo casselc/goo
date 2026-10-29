@@ -71,3 +71,12 @@ func (EnvironmentSelection) MarshalJSON() ([]byte, error) {
 func (*EnvironmentSelection) UnmarshalJSON([]byte) error {
 	return fmt.Errorf("environment selection has no JSON format; use the owning versioned wire type")
 }
+
+// Semantic values have no YAML representation either. Use EnvironmentSelector
+// at an explicitly versioned wire boundary instead of losing private policy.
+func (EnvironmentSelection) MarshalYAML() (any, error) {
+	return nil, fmt.Errorf("environment selection has no YAML format; use the owning versioned wire type")
+}
+func (*EnvironmentSelection) UnmarshalYAML(func(any) error) error {
+	return fmt.Errorf("environment selection has no YAML format; use the owning versioned wire type")
+}

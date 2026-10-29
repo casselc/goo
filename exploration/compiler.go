@@ -95,18 +95,31 @@ func (c *compiler) predicate(p *Predicate) string {
 	}
 	return "(" + present + " AND " + expr + ")"
 }
-func (c *compiler) source(q Query) (string, string, error) {
+func (c *compiler) source(q Query, selection identity.EnvironmentSelection) (string, string, error) {
 	table, attrs := "otel_traces", "SpanAttributes"
 	if q.Signal == "logs" {
 		table, attrs = "otel_logs", "LogAttributes"
 	}
-	selection, err := identity.CurrentEnvironment(c.params["environment"])
+	environment, bindings, err := environmentSelectionPredicate(selection)
 	if err != nil {
 		return "", "", err
 	}
-	environment, _, err := environmentSelectionPredicate(selection)
-	if err != nil {
-		return "", "", err
+	for key, value := range bindings {
+		if previous, exists := c.params[key]; exists && previous != value {
+			return "", "", fmt.Errorf("environment parameter conflicts with checked selection")
+		}
+	}
+	// A nameless selector must not inherit a stale named binding either.
+	if _, exists := c.params["environment"]; exists {
+		if _, used := bindings["environment"]; !used {
+			return "", "", fmt.Errorf("unused environment binding")
+		}
+	}
+	if c.params == nil {
+		c.params = map[string]string{}
+	}
+	for key, value := range bindings {
+		c.params[key] = value
 	}
 	where := "Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND " + environment + " AND " + c.predicate(q.Where)
 	if q.ReportedEdge != nil {
@@ -120,8 +133,12 @@ func compile(q Query, rowLimit int) (Plan, error) {
 	if e := q.Validate(); e != nil {
 		return Plan{}, e
 	}
-	c := compiler{signal: q.Signal, params: map[string]string{"from": strconv.FormatInt(q.FromMS, 10), "to": strconv.FormatInt(q.ToMS, 10), "environment": q.Environment}}
-	base, attrs, err := c.source(q)
+	c := compiler{signal: q.Signal, params: map[string]string{"from": strconv.FormatInt(q.FromMS, 10), "to": strconv.FormatInt(q.ToMS, 10)}}
+	selection, err := identity.CurrentEnvironment(q.Environment)
+	if err != nil {
+		return Plan{}, err
+	}
+	base, attrs, err := c.source(q, selection)
 	if err != nil {
 		return Plan{}, err
 	}

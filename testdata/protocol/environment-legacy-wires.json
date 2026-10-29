@@ -1,0 +1,92 @@
+{
+  "activityView": {
+    "version": 1,
+    "id": "5070ebf021247373f0af8508a3e3532d4f23c73ffb50a68f732fd9bc2520b880",
+    "title": "SDK logs",
+    "selector": {
+      "signal": "logs",
+      "environment": "prod'雪",
+      "where": {
+        "field": {
+          "kind": "resource",
+          "key": "service.namespace"
+        },
+        "op": "eq"
+      }
+    },
+    "columns": [
+      "utc",
+      "service",
+      "summary"
+    ]
+  },
+  "captureQuestion": {
+    "kind": "explore",
+    "explore": {
+      "signal": "logs",
+      "environment": "prod'雪",
+      "fromMs": 60000,
+      "toMs": 120000,
+      "where": {
+        "field": {
+          "kind": "resource",
+          "key": "service.namespace"
+        },
+        "op": "eq"
+      },
+      "limit": 100,
+      "offset": 0
+    }
+  },
+  "package": {
+    "apiVersion": "goo/telemetry-package/v1alpha1",
+    "name": "sdk-logs",
+    "title": "SDK logs",
+    "source": {
+      "adapter": "clickhouse.otel/v1",
+      "signal": "logs",
+      "environment": "prod'雪"
+    },
+    "where": {
+      "field": {
+        "kind": "resource",
+        "key": "service.namespace"
+      },
+      "op": "eq"
+    },
+    "measure": "captured-record-count",
+    "lookbackMinutes": 1,
+    "views": [
+      "records",
+      "trace-context"
+    ]
+  },
+  "packageRevision": "71f68caf331a92ed32f39a7cd3c109b6adc913f1100d8a68052313c372e9d76e",
+  "packageYAML": "apiVersion: goo/telemetry-package/v1alpha1\nname: sdk-logs\ntitle: SDK logs\nsource:\n    adapter: clickhouse.otel/v1\n    signal: logs\n    environment: prod'雪\nwhere:\n    field:\n        kind: resource\n        key: service.namespace\n    op: eq\nmeasure: captured-record-count\nlookbackMinutes: 1\nviews:\n    - records\n    - trace-context\n",
+  "query": {
+    "signal": "logs",
+    "environment": "prod'雪",
+    "fromMs": 60000,
+    "toMs": 120000,
+    "where": {
+      "field": {
+        "kind": "resource",
+        "key": "service.namespace"
+      },
+      "op": "eq"
+    },
+    "limit": 100,
+    "offset": 0
+  },
+  "tail": {
+    "signal": "logs",
+    "environment": "prod'雪",
+    "where": {
+      "field": {
+        "kind": "resource",
+        "key": "service.namespace"
+      },
+      "op": "eq"
+    }
+  }
+}

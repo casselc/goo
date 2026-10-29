@@ -1,0 +1,524 @@
+{
+  "version": 1,
+  "resources": [
+    {},
+    {
+      "deployment.environment.name": ""
+    },
+    {
+      "deployment.environment": "prod"
+    },
+    {
+      "deployment.environment.name": "",
+      "deployment.environment": "prod"
+    },
+    {
+      "deployment.environment.name": "prod",
+      "deployment.environment": "other"
+    },
+    {
+      "deployment.environment.name": "other",
+      "deployment.environment": "prod"
+    },
+    {
+      "deployment.environment.name": "unreported"
+    },
+    {
+      "deployment.environment.name": "雪"
+    },
+    {
+      "deployment.environment.name": "prod' OR 1=1 --"
+    }
+  ],
+  "cases": [
+    {
+      "name": "current-only named prod",
+      "selector": {
+        "version": "goo/environment-selector/v1",
+        "policy": "current-only",
+        "scope": {
+          "mode": "named",
+          "value": "prod"
+        }
+      },
+      "canonical": {
+        "version": "goo/environment-selector/v1",
+        "policy": "current-only",
+        "scope": {
+          "mode": "named",
+          "value": "prod"
+        }
+      },
+      "matches": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "name": "effective named prod",
+      "selector": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "named",
+          "value": "prod"
+        }
+      },
+      "canonical": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "named",
+          "value": "prod"
+        }
+      },
+      "matches": [
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "name": "effective empty ",
+      "selector": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "empty"
+        }
+      },
+      "canonical": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "empty"
+        }
+      },
+      "matches": [
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "name": "effective unreported ",
+      "selector": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "unreported"
+        }
+      },
+      "canonical": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "unreported"
+        }
+      },
+      "matches": [
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "name": "effective named unreported",
+      "selector": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "named",
+          "value": "unreported"
+        }
+      },
+      "canonical": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "named",
+          "value": "unreported"
+        }
+      },
+      "matches": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false
+      ]
+    },
+    {
+      "name": "effective named 雪",
+      "selector": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "named",
+          "value": "雪"
+        }
+      },
+      "canonical": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "named",
+          "value": "雪"
+        }
+      },
+      "matches": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    {
+      "name": "effective named prod' OR 1=1 --",
+      "selector": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "named",
+          "value": "prod' OR 1=1 --"
+        }
+      },
+      "canonical": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "named",
+          "value": "prod' OR 1=1 --"
+        }
+      },
+      "matches": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ]
+    },
+    {
+      "name": "effective named xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "selector": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "named",
+          "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
+      },
+      "canonical": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "named",
+          "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
+      },
+      "matches": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "name": "effective named 雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪",
+      "selector": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "named",
+          "value": "雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪"
+        }
+      },
+      "canonical": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "named",
+          "value": "雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪"
+        }
+      },
+      "matches": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "name": "explicit empty canonicalized",
+      "selector": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "empty",
+          "value": ""
+        }
+      },
+      "canonical": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "empty"
+        }
+      },
+      "matches": [
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  ],
+  "invalid": [
+    null,
+    {},
+    [],
+    {
+      "policy": "effective",
+      "scope": {
+        "mode": "unreported"
+      }
+    },
+    {
+      "version": "goo/environment-selector/v2",
+      "policy": "effective",
+      "scope": {
+        "mode": "unreported"
+      }
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "all",
+      "scope": {
+        "mode": "unreported"
+      }
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "effective",
+      "scope": null
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "effective",
+      "scope": {}
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "effective",
+      "scope": {
+        "mode": "any"
+      }
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "current-only",
+      "scope": {
+        "mode": "unreported"
+      }
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "effective",
+      "scope": {
+        "mode": "named"
+      }
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "effective",
+      "scope": {
+        "mode": "empty",
+        "value": "prod"
+      }
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "effective",
+      "scope": {
+        "mode": "empty",
+        "value": null
+      }
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "effective",
+      "scope": {
+        "mode": "named",
+        "value": 5
+      }
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "effective",
+      "scope": {
+        "mode": "named",
+        "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      }
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "effective",
+      "scope": {
+        "mode": "named",
+        "value": "雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪雪"
+      }
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "effective",
+      "scope": {
+        "mode": "named",
+        "value": "bad\u0000name"
+      }
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "effective",
+      "scope": {
+        "mode": "unreported"
+      },
+      "extra": true
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "effective",
+      "scope": {
+        "mode": "unreported",
+        "extra": true
+      }
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "effective",
+      "scope": {
+        "mode": "unreported"
+      },
+      "environment": "prod"
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": null,
+      "scope": {
+        "mode": "unreported"
+      }
+    },
+    {
+      "policy": "effective",
+      "scope": {
+        "mode": "unreported"
+      },
+      "Version": "goo/environment-selector/v1"
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "scope": {
+        "mode": "unreported"
+      },
+      "Policy": "effective"
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "effective",
+      "Scope": {
+        "mode": "unreported"
+      }
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "effective",
+      "scope": {
+        "MODE": "unreported"
+      }
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "effective",
+      "scope": {
+        "Mode": "unreported"
+      }
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "effective",
+      "scope": {
+        "mode": "empty",
+        "VALUE": ""
+      }
+    }
+  ],
+  "invalidJSON": [
+    "{\"version\":\"goo/environment-selector/v1\",\"policy\":\"effective\",\"scope\":{\"mode\":\"named\",\"value\":\"\\ud800\"}}",
+    "{\"version\":\"goo/environment-selector/v1\",\"policy\":\"effective\",\"scope\":{\"mode\":\"named\",\"value\":\"\\udfff\"}}",
+    "{\"version\":\"goo/environment-selector/v1\",\"policy\":\"effective\",\"scope\":{\"mode\":\"named\",\"value\":\"a\\ud800b\"}}",
+    "{\"version\":\"goo/environment-selector/v1\",\"policy\":\"effective\",\"scope\":{\"mode\":\"named\",\"value\":\"\\ud800\\u0041\"}}",
+    "{\"version\":\"goo/environment-selector/v1\",\"policy\":\"effective\",\"scope\":{\"mode\":\"named\",\"value\":\"prod\"},\"scope\":{\"mode\":\"named\"}}",
+    "{\"version\":\"goo/environment-selector/v1\",\"version\":null,\"policy\":\"effective\",\"scope\":{\"mode\":\"unreported\"}}",
+    "{\"version\":\"goo/environment-selector/v1\",\"policy\":\"effective\",\"scope\":{\"mode\":\"named\",\"value\":\"prod\",\"value\":null}}"
+  ],
+  "validJSON": [
+    "{\"version\":\"goo/environment-selector/v1\",\"policy\":\"effective\",\"scope\":{\"mode\":\"named\",\"value\":\"\\ud83d\\ude00\"}}",
+    "{\"version\":\"goo/environment-selector/v1\",\"policy\":\"effective\",\"scope\":{\"mode\":\"named\",\"value\":\"\\ufffd\"}}",
+    "{\"version\":\"goo/environment-selector/v1\",\"policy\":\"effective\",\"scope\":{\"mode\":\"named\",\"value\":\"�\"}}",
+    "{\"version\":\"goo/environment-selector/v1\",\"policy\":\"effective\",\"scope\":{\"mode\":\"named\",\"value\":\"escaped \\\\ud800\"}}",
+    "{\"version\":\"bad\",\"version\":\"goo/environment-selector/v1\",\"policy\":\"effective\",\"scope\":{\"mode\":\"named\",\"value\":\"prod\"},\"scope\":{\"mode\":\"unreported\"}}"
+  ]
+}

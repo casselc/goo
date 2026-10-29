@@ -6,7 +6,8 @@ conflicts are distinct; old named query semantics are unchanged. Full tail/fixed
 service/native/capture adoption is still open and those continuations are disabled
 from adoption results. 248 unifies checked selection and SQL lowering without
 changing these public formats; [the propagation audit](ENVIRONMENT_SCOPE_PROPAGATION.md)
-records the required handoffs. See [the contract](ENVIRONMENT_ADOPTION.md).
+records the required handoffs. 249 adds versioned response-only selector metadata,
+not new Query/Tail/capture input support. See [the contract](ENVIRONMENT_ADOPTION.md).
 
 
 ## Current review — 243

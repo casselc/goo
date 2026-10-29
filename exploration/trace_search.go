@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/identity"
 	"math/big"
 	"sort"
 	"strconv"
@@ -90,8 +91,12 @@ func CompileTraceSearch(r TraceSearchRequest) (TraceSearchPlan, error) {
 	if e := r.Validate(); e != nil {
 		return TraceSearchPlan{}, e
 	}
-	c := compiler{signal: "spans", params: map[string]string{"from": strconv.FormatInt(r.FromMS, 10), "to": strconv.FormatInt(r.ToMS, 10), "environment": r.Environment}}
-	base, _, sourceErr := c.source(Query{Signal: "spans"})
+	selection, err := identity.CurrentEnvironment(r.Environment)
+	if err != nil {
+		return TraceSearchPlan{}, err
+	}
+	c := compiler{signal: "spans", params: map[string]string{"from": strconv.FormatInt(r.FromMS, 10), "to": strconv.FormatInt(r.ToMS, 10)}}
+	base, _, sourceErr := c.source(Query{Signal: "spans"}, selection)
 	if sourceErr != nil {
 		return TraceSearchPlan{}, sourceErr
 	}

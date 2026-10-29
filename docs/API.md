@@ -1061,3 +1061,11 @@ checked readonly record inspection. They share record admission/cancellation and
 4 KiB input / 15-second handler limits. General named Query/Tail/capture formats
 are unchanged. The app owner uses shared passive record/attribute/table widgets
 and disables unsupported continuations. See [the contract and flow](ENVIRONMENT_ADOPTION.md).
+
+### Environment preview selector metadata (249)
+
+Record preview responses add root `selector` with version
+`goo/environment-selector/v1`, effective policy and the exact requested scope.
+This is response-only metadata, not a custody/snapshot capability. Request schemas
+and all legacy record/tail/saved-input support remain unchanged. See the
+[wire contract](ENVIRONMENT_SELECTOR_PROTOCOL.md) for checked conversion and limits.

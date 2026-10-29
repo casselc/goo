@@ -43,3 +43,12 @@ annotation, immutable capture, index or data volume is rewritten. No new Quint
 model is introduced for this stateless selector cut; property checks and actual
 SQL equivalence complement the existing formal campaigns. Full Activity→fixed→
 capture scope propagation remains the next A0 slice.
+
+## 249 selector contract continuation
+
+The same journey now checks response-only selector metadata before rendering.
+Two injected responses retain the real result/question but substitute valid
+wrong-policy or wrong-scope metadata; both display refusal with no record rows.
+An unmodified retry recovers. Actual frames are refreshed from the app; no new
+controls, source actions or supported continuations are implied. The existing
+Bombadil campaign still requires open/read/preview/inspect/close/complete.

@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/identity"
 	"strconv"
 	"strings"
 	"time"
@@ -42,14 +43,18 @@ func CompileServiceDiscovery(q InventoryQuestion) (Plan, error) {
 	if e := q.Validate(); e != nil {
 		return Plan{}, e
 	}
-	c := compiler{signal: "spans", params: map[string]string{"environment": q.Environment, "from": strconv.FormatInt(q.FromMS, 10), "to": strconv.FormatInt(q.ToMS, 10)}}
-	spanBase, _, sourceErr := c.source(q.Query())
+	selection, err := identity.CurrentEnvironment(q.Environment)
+	if err != nil {
+		return Plan{}, err
+	}
+	c := compiler{signal: "spans", params: map[string]string{"from": strconv.FormatInt(q.FromMS, 10), "to": strconv.FormatInt(q.ToMS, 10)}}
+	spanBase, _, sourceErr := c.source(q.Query(), selection)
 	if sourceErr != nil {
 		return Plan{}, sourceErr
 	}
 	logs := q.Query()
 	logs.Signal = "logs"
-	logBase, _, logSourceErr := c.source(logs)
+	logBase, _, logSourceErr := c.source(logs, selection)
 	if logSourceErr != nil {
 		return Plan{}, logSourceErr
 	}

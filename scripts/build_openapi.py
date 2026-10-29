@@ -42,6 +42,15 @@ for name,version in [('exploration.EnvironmentScopesResult','goo/environment-sco
 schemas['exploration.EnvironmentScopesResult']['properties']['groups']['maxItems']=64
 schemas['exploration.EnvironmentScopeGroup']['properties']['count'].update(pattern='^[1-9][0-9]*$',maxLength=20)
 schemas['exploration.AdoptionRecordsResult']['properties']['rows']['maxItems']=100
+
+selector=schemas['identity.EnvironmentSelector']
+selector['additionalProperties']=False
+selector['properties']['version']['const']='goo/environment-selector/v1'
+selector['properties']['policy']['enum']=['current-only','effective']
+selector['properties']['scope']={'type':'object','additionalProperties':False,'required':['mode'],'properties':{'mode':{'type':'string','enum':['named','empty','unreported']},'value':{'type':'string','maxLength':128,'description':'At most 128 UTF-8 bytes; runtime enforces the byte limit.'}},'allOf':[{'if':{'properties':{'mode':{'const':'named'}},'required':['mode']},'then':{'required':['value'],'properties':{'value':{'minLength':1}}},'else':{'properties':{'value':{'const':''}}}}]}
+selector['allOf']=[{'if':{'properties':{'policy':{'const':'current-only'}},'required':['policy']},'then':{'properties':{'scope':{'properties':{'mode':{'const':'named'}}}}}}]
+schemas['exploration.AdoptionRecordsResult']['properties']['selector']={'allOf':[{'$ref':'#/components/schemas/identity.EnvironmentSelector'},{'properties':{'policy':{'const':'effective'}}}]}
+
 schemas['Error'] = {'type': 'object', 'required': ['error'], 'properties': {'error': {'type': 'string'}, 'hint': {'type': 'string'}}, 'additionalProperties': True}
 schemas['Cancellation'] = {'type': 'object', 'required': ['state'], 'properties': {'state': {'const': 'cancellation-requested'}}}
 # Counted values are two explicit observations, never a transactional snapshot.

@@ -10,8 +10,9 @@
 > read-only SDK record inspection. Full A0 flow propagation remains open.
 > 248 shares checked current-only/effective selection and record SQL lowering;
 > [the propagation audit](ENVIRONMENT_SCOPE_PROPAGATION.md) identifies remaining handoffs.
-> Next: version record selector wire contracts and adopt them through the main
-> flow together before enabling continuations.
+> 249 adds response-only versioned selector metadata and freezes old saved wires.
+> Next: propagate the selector through main-flow constructors, membership,
+> compatibility and saved codecs together before enabling continuations.
 > Earlier queues preserve delivery history; their Next labels are superseded.
 
 

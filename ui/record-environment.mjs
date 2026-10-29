@@ -1,0 +1,12 @@
+/* Pure wire/selection helpers. No reads, navigation, state, or publication. */
+const version='goo/environment-selector/v1',currentKey='deployment.environment.name',legacyKey='deployment.environment';
+const own=(object,key)=>Object.prototype.hasOwnProperty.call(object,key);
+function object(value,keys){if(!value||typeof value!=='object'||Array.isArray(value)||Object.keys(value).some(key=>!keys.includes(key)))throw Error('Invalid environment selector fields.');return value}
+function normalizeScope(value){object(value,['mode','value']);if(!['named','empty','unreported'].includes(value.mode)||own(value,'value')&&typeof value.value!=='string')throw Error('Invalid environment scope.');const name=value.value??'';if(value.mode==='named'){if(!name||name.includes('\0')||!name.isWellFormed()||new TextEncoder().encode(name).length>128)throw Error('Invalid environment name.');return {mode:'named',value:name}}if(name!=='')throw Error('Only named scope accepts a value.');return {mode:value.mode}}
+function normalize(value){object(value,['version','policy','scope']);if(value.version!==version||!['current-only','effective'].includes(value.policy))throw Error('Unsupported environment selector.');const scope=normalizeScope(value.scope);if(value.policy==='current-only'&&scope.mode!=='named')throw Error('Current-only selection requires a name.');return {version,policy:value.policy,scope}}
+function effective(scope){return normalize({version,policy:'effective',scope})}
+function current(name){return normalize({version,policy:'current-only',scope:{mode:'named',value:name}})}
+function equal(a,b){try{return JSON.stringify(normalize(a))===JSON.stringify(normalize(b))}catch{return false}}
+function matches(selector,resource){const value=normalize(selector);if(!resource||typeof resource!=='object'||Array.isArray(resource)||Object.values(resource).some(v=>typeof v!=='string'))return false;const c=own(resource,currentKey),l=own(resource,legacyKey);if(value.policy==='current-only')return c&&resource[currentKey]===value.scope.value;if(!c&&!l)return value.scope.mode==='unreported';const winning=c?resource[currentKey]:resource[legacyKey];return winning===''?value.scope.mode==='empty':value.scope.mode==='named'&&value.scope.value===winning}
+function assertPreview(selector,scope){const expected=effective(scope);if(!equal(selector,expected))throw Error('Returned environment selector differs from the requested preview.');return normalize(selector)}
+export {version,normalizeScope,normalize,effective,current,equal,matches,assertPreview};

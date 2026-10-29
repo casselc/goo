@@ -2,6 +2,7 @@ package identity
 
 import (
 	"encoding/json"
+	"gopkg.in/yaml.v3"
 	"strings"
 	"testing"
 )
@@ -81,5 +82,16 @@ func TestEnvironmentSelectionHasNoJSONIdentity(t *testing.T) {
 		if err := json.Unmarshal([]byte(data), &selection); err == nil || selection.Validate() == nil {
 			t.Fatal("unversioned selection accepted", data)
 		}
+	}
+}
+
+func TestEnvironmentSelectionHasNoYAMLIdentity(t *testing.T) {
+	selection, _ := CurrentEnvironment("prod")
+	if _, err := yaml.Marshal(selection); err == nil {
+		t.Fatal("semantic selection serialized without policy")
+	}
+	var decoded EnvironmentSelection
+	if err := yaml.Unmarshal([]byte("{}"), &decoded); err == nil {
+		t.Fatal("semantic selection accepted unversioned YAML")
 	}
 }

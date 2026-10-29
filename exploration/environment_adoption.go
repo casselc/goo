@@ -131,18 +131,27 @@ func (q AdoptionRecordsQuestion) Validate() error {
 }
 
 type AdoptionRecordsResult struct {
-	Version  string                  `json:"version"`
-	Question AdoptionRecordsQuestion `json:"question"`
-	ReadAt   string                  `json:"readAt"`
-	Rows     []json.RawMessage       `json:"rows"`
-	Limited  bool                    `json:"limited"`
+	Selector identity.EnvironmentSelector `json:"selector"`
+	Version  string                       `json:"version"`
+	Question AdoptionRecordsQuestion      `json:"question"`
+	ReadAt   string                       `json:"readAt"`
+	Rows     []json.RawMessage            `json:"rows"`
+	Limited  bool                         `json:"limited"`
 }
 
 func (s Source) PreviewAdoptionRecords(ctx context.Context, q AdoptionRecordsQuestion) (*AdoptionRecordsResult, error) {
 	if e := q.Validate(); e != nil {
 		return nil, e
 	}
-	predicate, params, e := EnvironmentPredicate(q.Scope)
+	selection, e := identity.EffectiveEnvironment(q.Scope)
+	if e != nil {
+		return nil, e
+	}
+	selector, e := selection.Selector()
+	if e != nil {
+		return nil, e
+	}
+	predicate, params, e := environmentSelectionPredicate(selection)
 	if e != nil {
 		return nil, e
 	}
@@ -157,7 +166,7 @@ func (s Source) PreviewAdoptionRecords(ctx context.Context, q AdoptionRecordsQue
 	if len(rows) > q.Limit+1 {
 		return nil, fmt.Errorf("adoption preview exceeded row bound")
 	}
-	out := &AdoptionRecordsResult{Version: "goo/adoption-records/v1", Question: q, ReadAt: time.Now().UTC().Format(time.RFC3339Nano), Rows: []json.RawMessage{}, Limited: len(rows) > q.Limit}
+	out := &AdoptionRecordsResult{Selector: selector, Version: "goo/adoption-records/v1", Question: q, ReadAt: time.Now().UTC().Format(time.RFC3339Nano), Rows: []json.RawMessage{}, Limited: len(rows) > q.Limit}
 	retained := 0
 	budgetLimited := false
 	for i, wire := range rows {
@@ -177,7 +186,7 @@ func (s Source) PreviewAdoptionRecords(ctx context.Context, q AdoptionRecordsQue
 			}
 			resource[key] = *value
 		}
-		if !q.Scope.Matches(resource) || q.Signal == "logs" && record.Body == nil || q.Signal == "spans" && record.SpanName == nil {
+		if !selection.Matches(resource) || q.Signal == "logs" && record.Body == nil || q.Signal == "spans" && record.SpanName == nil {
 			return nil, fmt.Errorf("adoption preview returned a different environment or signal")
 		}
 		ns, e := strconv.ParseInt(record.Timestamp, 10, 64)

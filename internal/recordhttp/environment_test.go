@@ -22,6 +22,16 @@ func TestAdoptionValidationBeforeSourceAndNoLegacyCoercion(t *testing.T) {
 			t.Fatal(w.Code, w.Body.String())
 		}
 	}
+	for _, body := range []string{
+		`{"signal":"logs","environment":"prod","fromMs":1000,"toMs":2000,"limit":100,"selector":{"version":"goo/environment-selector/v1","policy":"effective","scope":{"mode":"unreported"}}}`,
+		`{"signal":"logs","environment":"prod","fromMs":1000,"toMs":2000,"limit":100,"environmentScope":{"mode":"unreported"}}`,
+	} {
+		w := httptest.NewRecorder()
+		mux.ServeHTTP(w, httptest.NewRequest("POST", "/explore", strings.NewReader(body)))
+		if w.Code != 400 {
+			t.Fatal("unsupported selector accepted by old Query", w.Code, w.Body.String())
+		}
+	}
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, httptest.NewRequest("POST", "/explore", strings.NewReader(`{"signal":"logs","environment":"","fromMs":1000,"toMs":2000,"limit":100}`)))
 	if w.Code != 400 {

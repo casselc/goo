@@ -126,3 +126,33 @@ func TestAdoptionRejectsWrongOverflowAndBoundsRetainedBytes(t *testing.T) {
 		t.Fatal("retained byte limit bypassed", total)
 	}
 }
+
+func TestAdoptionSelectorMetadataMatchesSourcePolicy249(t *testing.T) {
+	for _, scope := range []identity.EnvironmentScope{{Mode: "unreported"}, {Mode: "empty"}, {Mode: "named", Value: "prod"}} {
+		resource := map[string]string{}
+		if scope.Mode == "empty" {
+			resource[identity.EnvironmentKey] = ""
+		}
+		if scope.Mode == "named" {
+			resource[identity.LegacyEnvironmentKey] = scope.Value
+		}
+		wire, _ := json.Marshal(map[string]any{"timestamp_ns": "1000000000", "ResourceAttributes": resource, "Body": "hello"})
+		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if scope.Mode == "named" && r.URL.Query().Get("param_environment") != scope.Value {
+				t.Error("selection binding changed")
+			}
+			w.Write(wire)
+		}))
+		q := AdoptionRecordsQuestion{AdoptionWindow: AdoptionWindow{Signal: "logs", FromMS: 1000, ToMS: 2000}, Scope: scope, Limit: 1}
+		result, err := (Source{Endpoint: server.URL, Client: server.Client()}).PreviewAdoptionRecords(t.Context(), q)
+		server.Close()
+		if err != nil {
+			t.Fatal(err)
+		}
+		selection, err := result.Selector.Selection()
+		expected, _ := identity.EffectiveEnvironment(scope)
+		if err != nil || !selection.Equal(expected) || !selection.Matches(resource) {
+			t.Fatal("selector metadata is not actual effective source policy", err, result.Selector)
+		}
+	}
+}

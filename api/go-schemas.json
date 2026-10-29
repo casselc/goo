@@ -2864,11 +2864,15 @@
           }
         ]
       },
+      "selector": {
+        "$ref": "#/components/schemas/identity.EnvironmentSelector"
+      },
       "version": {
         "type": "string"
       }
     },
     "required": [
+      "selector",
       "version",
       "question",
       "readAt",
@@ -10813,6 +10817,26 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/identity.EnvironmentScope"
+  },
+  "identity.EnvironmentSelector": {
+    "properties": {
+      "policy": {
+        "type": "string"
+      },
+      "scope": {
+        "$ref": "#/components/schemas/identity.EnvironmentScope"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "policy",
+      "scope"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/identity.EnvironmentSelector"
   },
   "identity.Namespace": {
     "properties": {
