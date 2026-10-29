@@ -69,7 +69,10 @@ func CompileInventory(q InventoryQuestion) (Plan, error) {
 		return Plan{}, e
 	}
 	c := compiler{signal: "spans", params: map[string]string{"from": strconv.FormatInt(q.FromMS, 10), "to": strconv.FormatInt(q.ToMS, 10), "environment": q.Environment}}
-	base, _ := c.source(q.Query())
+	base, _, sourceErr := c.source(q.Query())
+	if sourceErr != nil {
+		return Plan{}, sourceErr
+	}
 	// One aggregate read, disjoint duration buckets and a fail-closed group budget.
 	sql := "SELECT ServiceName AS service, SpanName AS name, toString(count()) AS count, toString(countIf(StatusCode = 'Error')) AS errors, ["
 	for i, label := range durationLabels {

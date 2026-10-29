@@ -48,6 +48,26 @@ func TestHegelEnvironmentSelection(t *testing.T) {
 				tc.Fatal("value not parameterized")
 			}
 		}
+		// A current-only name and an effective name must remain different
+		// populations; equality must retain their policy through copied values.
+		name := hegel.Draw(tc, hegel.SampledFrom(values[1:]))
+		currentSelection, e := identity.CurrentEnvironment(name)
+		if e != nil {
+			tc.Fatal(e)
+		}
+		effectiveSelection, e := identity.EffectiveEnvironment(identity.EnvironmentScope{Mode: "named", Value: name})
+		if e != nil {
+			tc.Fatal(e)
+		}
+		if currentSelection.Equal(effectiveSelection) || !currentSelection.Equal(currentSelection) || !effectiveSelection.Equal(effectiveSelection) {
+			tc.Fatal("selection policy identity lost")
+		}
+		if currentSelection.Matches(resource) != (current && cv == name) || effectiveSelection.Matches(resource) != (mode == "named" && value == name) {
+			tc.Fatal("selection policy membership changed")
+		}
+		if (identity.EnvironmentSelection{}).Matches(resource) {
+			tc.Fatal("zero selection wildcard")
+		}
 		if (identity.EnvironmentScope{}).Matches(resource) {
 			tc.Fatal("zero scope wildcard")
 		}

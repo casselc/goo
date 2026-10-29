@@ -8,7 +8,10 @@
 > C2 is corrected in 246 with shared admission and exact revision recovery.
 > A0 foundation is delivered in 247: checked scopes, bounded discovery and
 > read-only SDK record inspection. Full A0 flow propagation remains open.
-> Next: carry checked scopes through the main record flow before continuations.
+> 248 shares checked current-only/effective selection and record SQL lowering;
+> [the propagation audit](ENVIRONMENT_SCOPE_PROPAGATION.md) identifies remaining handoffs.
+> Next: version record selector wire contracts and adopt them through the main
+> flow together before enabling continuations.
 > Earlier queues preserve delivery history; their Next labels are superseded.
 
 

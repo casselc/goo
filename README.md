@@ -460,3 +460,6 @@ recovery](docs/NATIVE_CATALOG_CAPACITY.md); no stored definitions are deleted to
 Have OTel data without an environment label? Activity → Find environments offers
 [bounded discovery and readonly inspection](docs/ENVIRONMENT_ADOPTION.md). Main-flow
 tailing/capture adoption remains a separate continuation.
+
+The [scope propagation audit](docs/ENVIRONMENT_SCOPE_PROPAGATION.md) tracks the
+remaining main-flow work; shared checked backend selection/lowering is in place.

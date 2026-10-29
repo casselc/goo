@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"strings"
 	"unicode/utf8"
+
+	"github.com/casselc/goo/identity"
 )
 
 type Field struct {
@@ -96,7 +98,7 @@ func (q Query) Validate() error {
 	if q.Signal != "spans" && q.Signal != "logs" {
 		return fmt.Errorf("signal must be spans or logs")
 	}
-	if q.Environment == "" || len(q.Environment) > 128 || !utf8.ValidString(q.Environment) || strings.ContainsRune(q.Environment, 0) {
+	if _, err := identity.CurrentEnvironment(q.Environment); err != nil {
 		return fmt.Errorf("explicit environment required")
 	}
 	if q.FromMS < 0 || q.ToMS <= q.FromMS || q.ToMS-q.FromMS > 120*60000 || q.ToMS > 4102444800000 {

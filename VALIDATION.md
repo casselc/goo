@@ -1,5 +1,42 @@
 # Validation record
 
+## Checked environment selection/lowering prerequisite — 248 (2026-10-29 UTC)
+
+Immutable checked `identity.EnvironmentSelection` distinguishes current-only names
+from effective-label scopes in validation, matching and equality. Zero selectors
+fail closed, scope access returns a copy, and JSON encoding/decoding is refused
+rather than silently losing private policy fields. Shared record SQL lowering now
+serves Query, inventory/service/trace sources and the separate adoption preview;
+source compiler errors propagate. Query/Tail/package/capture wire formats remain
+unchanged. This is a prerequisite, not completed main-flow A0 support. The
+[propagation audit/diagram](docs/ENVIRONMENT_SCOPE_PROPAGATION.md) records concrete
+constructor, compatibility, membership, browser and retained identity handoffs.
+
+Root Go suite, identity/exploration race and vet checks pass. Initial sandbox
+attempts could not open httptest loopback listeners; reruns with local-listener
+access pass. Frozen full serialized logs/spans plans (rows/count/groups/fields/
+time SQL and bound parameters) retain their pre-extraction SHA-256 values.
+Tests cover policy inequality, presence/fallback, invalid and zero values,
+parameter binding, copy isolation, missing compiler binding and refused JSON.
+The expanded Hegel environment property passes 200 cases, including independent
+current-only versus effective membership/equality. Go review found no blockers;
+its JSON/hash guardrail is enforced, not left as an implicit convention.
+Architecture review found no blocker and requires a coordinated public wire/
+codec rollout or explicit server-side refusal of unsupported continuations.
+
+
+
+Actual OTLP/ClickHouse journey 247 passes against the new binary in 9.8s (12.7s
+runner total), rechecking both-signal presence matrices, old/effective population
+differences, no implicit reads, local inspection, mobile layout and stale-response
+rejection. Its two actual frames were regenerated. No UI behavior, frontend
+component or API schema changed; no new Bombadil/Quint campaign is claimed.
+Deployed image `28d99d84c90d` passes health and both adoption source routes;
+OpenAPI matches checkout. All 55 native revision IDs and 1,812 captures are
+retained, with no volume/index migration. Temporary bundles and binaries are
+removed after retaining these checks and selected frames.
+
+
 ## Environment adoption foundation — 247 (2026-10-29 UTC)
 
 A0's first slice adds explicit checked effective scopes (`named`, `empty`,

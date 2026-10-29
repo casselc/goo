@@ -101,3 +101,6 @@ actions. This step is still open; it is not a new universal selector engine.
 
 See the [journey](../journeys/247-environment-adoption-storyboard.md) and
 [review](reviews/ENVIRONMENT_ADOPTION_REVIEW_247.md) for executed checks and limits.
+
+248 adds a [checked selection/lowering prerequisite and concrete propagation audit](ENVIRONMENT_SCOPE_PROPAGATION.md). It preserves the current-only/effective policy
+distinction without adding a general Query flag or enabling these continuations.

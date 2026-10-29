@@ -42,21 +42,11 @@ func (q AdoptionWindow) windowSQL() string {
 // EnvironmentPredicate lowers only a checked logical selector. Named selection
 // is presence-aware current-first fallback, unlike legacy Query's current-only rule.
 func EnvironmentPredicate(scope identity.EnvironmentScope) (string, map[string]string, error) {
-	if e := scope.Validate(); e != nil {
-		return "", nil, e
+	selection, err := identity.EffectiveEnvironment(scope)
+	if err != nil {
+		return "", nil, err
 	}
-	current := "mapContains(ResourceAttributes,'" + identity.EnvironmentKey + "')"
-	legacy := "mapContains(ResourceAttributes,'" + identity.LegacyEnvironmentKey + "')"
-	params := map[string]string{}
-	if scope.Mode == "unreported" {
-		return "(NOT " + current + " AND NOT " + legacy + ")", params, nil
-	}
-	value := "''"
-	if scope.Mode == "named" {
-		value = "{environment:String}"
-		params["environment"] = scope.Value
-	}
-	return "((" + current + " AND ResourceAttributes['" + identity.EnvironmentKey + "']=" + value + ") OR (NOT " + current + " AND " + legacy + " AND ResourceAttributes['" + identity.LegacyEnvironmentKey + "']=" + value + "))", params, nil
+	return environmentSelectionPredicate(selection)
 }
 
 type EnvironmentScopeGroup struct {

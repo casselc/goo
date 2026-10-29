@@ -4,7 +4,9 @@
 under Activity → Find environments. Missing and empty labels, legacy fallback and
 conflicts are distinct; old named query semantics are unchanged. Full tail/fixed/
 service/native/capture adoption is still open and those continuations are disabled
-from adoption results. See [the contract](ENVIRONMENT_ADOPTION.md).
+from adoption results. 248 unifies checked selection and SQL lowering without
+changing these public formats; [the propagation audit](ENVIRONMENT_SCOPE_PROPAGATION.md)
+records the required handoffs. See [the contract](ENVIRONMENT_ADOPTION.md).
 
 
 ## Current review — 243

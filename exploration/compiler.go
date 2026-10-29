@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
+	"github.com/casselc/goo/identity"
 )
 
 type Plan struct {
@@ -93,16 +95,24 @@ func (c *compiler) predicate(p *Predicate) string {
 	}
 	return "(" + present + " AND " + expr + ")"
 }
-func (c *compiler) source(q Query) (string, string) {
+func (c *compiler) source(q Query) (string, string, error) {
 	table, attrs := "otel_traces", "SpanAttributes"
 	if q.Signal == "logs" {
 		table, attrs = "otel_logs", "LogAttributes"
 	}
-	where := "Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String} AND " + c.predicate(q.Where)
+	selection, err := identity.CurrentEnvironment(c.params["environment"])
+	if err != nil {
+		return "", "", err
+	}
+	environment, _, err := environmentSelectionPredicate(selection)
+	if err != nil {
+		return "", "", err
+	}
+	where := "Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND " + environment + " AND " + c.predicate(q.Where)
 	if q.ReportedEdge != nil {
 		where += " AND " + c.reportedEdge(q)
 	}
-	return " FROM " + table + " WHERE " + where, attrs
+	return " FROM " + table + " WHERE " + where, attrs, nil
 }
 func Compile(q Query) (Plan, error) { return compile(q, q.Limit) }
 
@@ -111,7 +121,10 @@ func compile(q Query, rowLimit int) (Plan, error) {
 		return Plan{}, e
 	}
 	c := compiler{signal: q.Signal, params: map[string]string{"from": strconv.FormatInt(q.FromMS, 10), "to": strconv.FormatInt(q.ToMS, 10), "environment": q.Environment}}
-	base, attrs := c.source(q)
+	base, attrs, err := c.source(q)
+	if err != nil {
+		return Plan{}, err
+	}
 	selectRows, order := recordProjection(q.Signal)
 	selectRows += c.requestedDerivedColumns(q)
 	p := Plan{Rows: "SELECT " + selectRows + base + " ORDER BY " + order + fmt.Sprintf(" LIMIT %d OFFSET %d FORMAT JSONEachRow", rowLimit+1, q.Offset), Count: "SELECT toString(count()) AS count" + base + " FORMAT JSONEachRow"}

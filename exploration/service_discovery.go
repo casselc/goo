@@ -43,10 +43,16 @@ func CompileServiceDiscovery(q InventoryQuestion) (Plan, error) {
 		return Plan{}, e
 	}
 	c := compiler{signal: "spans", params: map[string]string{"environment": q.Environment, "from": strconv.FormatInt(q.FromMS, 10), "to": strconv.FormatInt(q.ToMS, 10)}}
-	spanBase, _ := c.source(q.Query())
+	spanBase, _, sourceErr := c.source(q.Query())
+	if sourceErr != nil {
+		return Plan{}, sourceErr
+	}
 	logs := q.Query()
 	logs.Signal = "logs"
-	logBase, _ := c.source(logs)
+	logBase, _, logSourceErr := c.source(logs)
+	if logSourceErr != nil {
+		return Plan{}, logSourceErr
+	}
 	aggregate := func(signal, base string) string {
 		return "SELECT " + namespaceColumn("ResourceAttributes") + " AS namespace, ServiceName AS service, '" + signal + "' AS signal, toString(count()) AS count, toString(min(toUnixTimestamp64Milli(Timestamp))) AS first_ms, toString(max(toUnixTimestamp64Milli(Timestamp))) AS last_ms" + base + " GROUP BY namespace, service"
 	}

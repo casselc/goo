@@ -91,7 +91,10 @@ func CompileTraceSearch(r TraceSearchRequest) (TraceSearchPlan, error) {
 		return TraceSearchPlan{}, e
 	}
 	c := compiler{signal: "spans", params: map[string]string{"from": strconv.FormatInt(r.FromMS, 10), "to": strconv.FormatInt(r.ToMS, 10), "environment": r.Environment}}
-	base, _ := c.source(Query{Signal: "spans"})
+	base, _, sourceErr := c.source(Query{Signal: "spans"})
+	if sourceErr != nil {
+		return TraceSearchPlan{}, sourceErr
+	}
 	base += " AND length(TraceId) = 32 AND match(TraceId, '^[0-9a-f]{32}$') AND TraceId != '00000000000000000000000000000000'"
 	columns := []string{"TraceId AS trace_id", "toString(count() OVER ()) AS matched_traces"}
 	having := []string{}
