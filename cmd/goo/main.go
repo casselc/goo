@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/casselc/goo/exploration"
 	"io"
 	"os"
 	"strings"
@@ -15,9 +17,24 @@ import (
 
 func run(args []string, out io.Writer) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: goo validate|compile|evaluate|prepare|evaluate-prepared|discover|catalog|expand|prepare-http|manifest|weave|observe-operations|plan-operations|evaluate-counters|evaluate-histograms|merge-histograms [options]")
+		return fmt.Errorf("usage: goo validate|compile|evaluate|rebuild-capture-catalog|prepare|evaluate-prepared|discover|catalog|expand|prepare-http|manifest|weave|observe-operations|plan-operations|evaluate-counters|evaluate-histograms|merge-histograms [options]")
 	}
 	command := args[0]
+	if command == "rebuild-capture-catalog" {
+		fs := flag.NewFlagSet(command, flag.ContinueOnError)
+		dir := fs.String("dir", "", "immutable exploration capture directory")
+		if err := fs.Parse(args[1:]); err != nil {
+			return err
+		}
+		if *dir == "" || fs.NArg() != 0 {
+			return fmt.Errorf("rebuild-capture-catalog requires -dir and no positional arguments")
+		}
+		result, err := (exploration.CaptureStore{Dir: *dir}).RebuildCatalog(context.Background())
+		if writeErr := json.NewEncoder(out).Encode(result); writeErr != nil {
+			return writeErr
+		}
+		return err
+	}
 	if command == "plan-exploration" {
 		return planExploration(args[1:], out)
 	}

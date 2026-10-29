@@ -127,3 +127,31 @@ source plans are evidence: reopening does not require the current compiler to
 emit the same SQL; refresh does require an identical current plan. Canonical
 source JSON keeps evidence bases stable across browser transport spellings.
 See [measurement packages](MEASUREMENT_PACKAGES.md).
+
+## Search by task and recency — 242
+
+Saved → Browse evidence uses literal title search, receipt capture-time order,
+and optional kind/known signal/exact environment filters. Editing stages a search;
+**Find captures** applies it. Same-title captures keep separate IDs. Search covers
+the admitted catalog before paging; it never rereads telemetry or changes an open
+capture. The legacy ID-ordered list API and exact-ID reopen retain their contracts.
+
+`GET /api/captures/search` uses derived metadata; opening still fully verifies
+stored contents. Existing stores need the explicit rebuild command documented in
+[the catalog contract](CAPTURE_CATALOG_SEARCH.md). Missing metadata, bad stamps,
+corruption and scan limits are errors, distinct from no matches. The shared declared question scope supplies signal/environment, including native
+metrics and lifecycle captures; arbitrary service predicates are not inferred.
+
+```mermaid
+flowchart LR
+  Capture[Verified immutable capture] --> Publish[Atomic derived metadata entry]
+  Existing[Existing capture files] --> Rebuild[Explicit bounded rebuild]
+  Rebuild --> Publish
+  Publish --> Search[Metadata filter / capture-time order / page]
+  Search --> Open[Open exact immutable ID]
+  Open --> Verify[Full payload digest and semantic verification]
+```
+
+[Journey242](../journeys/242-capture-search-storyboard.md) exercises save → leave →
+find beyond page one → reopen with real OTLP/ClickHouse data and no search/reopen
+telemetry reads.

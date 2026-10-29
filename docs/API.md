@@ -8,7 +8,7 @@ The running server must include the current routes and assets; changing the
 checkout alone does not update an existing process. Rebuild an older image, or
 use the supported local code/asset installation and restart procedure.
 
-The spec inventories 87 supported Go operations. One Go process serves the UI,
+The spec inventories 88 supported Go operations. One Go process serves the UI,
 embedded assets, API documentation and observation/storage handlers. Browser
 `/api/*` requests and unprefixed API requests dispatch in process to the same mux,
 query budget, cancellation registry and stores. Compose publishes this one server

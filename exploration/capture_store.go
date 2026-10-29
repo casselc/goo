@@ -376,44 +376,58 @@ func (s CaptureStore) publish(c SavedCapture) (*SavedCapture, error) {
 	if _, e = immutablefile.Publish(s.Dir, id+".json", ".capture-", data); e != nil {
 		return nil, e
 	}
-	return s.Load(id)
+	verified, err := s.Load(id)
+	if err != nil {
+		return nil, err
+	}
+	// The immutable capture is already committed. Derived metadata failure must not
+	// turn that success into an apparent failed publication; search reports absence.
+	_ = s.indexCapture(verified)
+	return verified, nil
 }
 func (s CaptureStore) Load(id string) (*SavedCapture, error) {
+	c, _, err := s.loadBounded(id, CaptureMaxBytes)
+	return c, err
+}
+func (s CaptureStore) loadBounded(id string, budget int64) (*SavedCapture, int64, error) {
 	if !regexpRevision.MatchString(id) {
-		return nil, errors.New("invalid capture ID")
+		return nil, 0, errors.New("invalid capture ID")
 	}
 	f, e := os.Open(filepath.Join(s.Dir, id+".json"))
 	if e != nil {
-		return nil, e
+		return nil, 0, e
 	}
 	defer f.Close()
-	b, e := io.ReadAll(io.LimitReader(f, CaptureMaxBytes+1))
+	b, e := io.ReadAll(io.LimitReader(f, min(int64(CaptureMaxBytes), budget)+1))
 	if e != nil {
-		return nil, e
+		return nil, 0, e
 	}
 	if len(b) > CaptureMaxBytes {
-		return nil, errors.New("capture exceeds size limit")
+		return nil, 0, errors.New("capture exceeds size limit")
+	}
+	if int64(len(b)) > budget {
+		return nil, int64(len(b)), ErrCaptureSearchBudget
 	}
 	var c SavedCapture
 	d := json.NewDecoder(strings.NewReader(string(b)))
 	d.DisallowUnknownFields()
 	if e = d.Decode(&c); e != nil {
-		return nil, e
+		return nil, 0, e
 	}
 	if d.Decode(new(any)) != io.EOF {
-		return nil, errors.New("invalid capture document")
+		return nil, 0, errors.New("invalid capture document")
 	}
 	actual, _, e := captureDigest(c)
 	if e != nil {
-		return nil, e
+		return nil, 0, e
 	}
 	if c.ID != id || actual != id {
-		return nil, errors.New("capture integrity check failed")
+		return nil, 0, errors.New("capture integrity check failed")
 	}
 	if e = validateCapture(&c); e != nil {
-		return nil, e
+		return nil, 0, e
 	}
-	return &c, nil
+	return &c, int64(len(b)), nil
 }
 
 // Cursors bind a local position to an immutable receipt, not an authorization token.

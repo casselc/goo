@@ -105,6 +105,13 @@ publication retries; they cannot use the generic source-only `ReadHandler`.
 The command composes four family lookups instead of a separate path list. See
 [the publication flow](HTTP_BOUNDARIES.md#explanation-and-capture-family-policies-2026-10-28).
 
+General capture search uses a bounded, derived per-ID metadata catalog (242),
+with explicit rebuild for existing stores. Its checksum/stat checks do not verify
+payload bodies; exact-ID reopen retains full verification. Publication of derived
+metadata cannot turn an already committed capture into an apparent failed save.
+See [the metadata contract](CAPTURE_CATALOG_SEARCH.md) and
+[the flow diagram](GENERAL_CAPTURES.md#search-by-task-and-recency--242).
+
 [Immutable publication](IMMUTABLE_PUBLICATION.md) shares write/sync/link mechanics
 across reusable telemetry packages, workbench artifacts, capture stores, lifecycle
 custody and native YAML. The latter two retain explicit file-only sync.

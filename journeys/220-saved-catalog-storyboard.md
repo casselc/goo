@@ -1,5 +1,11 @@
 # 220 — Find stored evidence before opening tools
 
+Current behavior note (242): the browser uses the new metadata search endpoint,
+capture-time order and query-bound paging. The original ID-ordered API remains
+unchanged. [Journey242](242-capture-search-storyboard.md) owns the newer search and
+integrity contract; the executable 220 regression retains compact rows, UTC,
+source-free paging/reopen and responsive checks.
+
 Saved now puts its capture list before secondary notes/view/retention disclosures.
 One heading and a small refresh/status row lead into the existing `goo-table`
 primitive. Titles, kinds and capture times are comparable rows; manual ID recovery

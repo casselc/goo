@@ -4,11 +4,11 @@ const {startBombadil}=require('./support/cross-app');
 const fs=require('node:fs/promises'),path=require('node:path'),os=require('node:os');
 const base='http://127.0.0.1:8088';
 test.use({actionTimeout:15000,navigationTimeout:45000});
-test('220 Saved opens with compact stored rows, exact UTC, unchanged paging and source-free evidence',async({page,request})=>{
- let response=await request.get(base+'/api/captures');expect(response.ok()).toBe(true);let catalog=await response.json();
+test('220 Saved opens with compact stored rows, exact UTC, metadata paging and source-free evidence',async({page,request})=>{
+ let response=await request.get(base+'/api/captures/search?order=newest');expect(response.ok()).toBe(true);let catalog=await response.json();
  if(!catalog.items.length){
   const toMs=Date.now();const created=await request.post(base+'/api/captures',{data:{title:'Saved catalog fixture',question:{kind:'explore',explore:{signal:'logs',environment:'saved-catalog-'+randomBytes(4).toString('hex'),fromMs:toMs-60000,toMs,limit:10,offset:0}}}});expect(created.status()).toBe(201);
-  catalog=await(await request.get(base+'/api/captures')).json();
+  catalog=await(await request.get(base+'/api/captures/search?order=newest')).json();
  }
  let selected,original;
  for(const receipt of catalog.items){const r=await request.get(base+'/api/captures/'+receipt.id);if(r.ok()){selected=receipt;original=await r.json();break}}
@@ -27,10 +27,10 @@ test('220 Saved opens with compact stored rows, exact UTC, unchanged paging and 
  const receipt=await page.locator('#captureGeneralReceipt').textContent();
  await page.getByRole('button',{name:'Browse evidence',exact:true}).click();
  if(catalog.hasMore){
-  const next=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/captures'&&new URL(r.url()).searchParams.has('cursor'));
+  const next=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/captures/search'&&new URL(r.url()).searchParams.has('cursor'));
   await page.locator('#captureCatalogNext').click();const second=await(await next).json();
   await expect(rows).toHaveCount(second.items.length);expect(await rows.evaluateAll(nodes=>nodes.map(n=>n.dataset.captureId))).toEqual(second.items.map(r=>r.id));
-  const previous=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/captures'&&!new URL(r.url()).search);
+  const previous=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/captures/search'&&!new URL(r.url()).searchParams.has('cursor'));
   await page.locator('#captureCatalogPrevious').click();await previous;await expect(rows).toHaveCount(catalog.items.length);
   expect(await rows.evaluateAll(nodes=>nodes.map(n=>n.dataset.captureId))).toEqual(catalog.items.map(r=>r.id));
  }

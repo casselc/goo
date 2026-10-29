@@ -1,5 +1,8 @@
 # User journeys and storyboards
 
+[Journey242](../../journeys/242-capture-search-storyboard.md) covers saving, leaving,
+finding an earlier capture and reopening unchanged evidence without telemetry reads.
+
 [Journey241](../../journeys/241-activity-actions-storyboard.md) covers compact Activity
 service/namespace scoping and attribute actions, keyboard interaction, same-data
 geometry and explicit read ownership.

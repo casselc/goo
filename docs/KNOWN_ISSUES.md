@@ -10,7 +10,11 @@ reach the same bounded Go path. The obsolete reservation query panel and API
 are retired; ordinary YAML examples and native/operation workflows remain.
 Activity signal-scope continuity is fixed in 239; explicit inspection reveal/focus
 and visible opener return follow in 240. Common Activity scoping and compact
-record/attribute actions follow in 241. The integrity findings remain open. Current order and
+record/attribute actions follow in 241. Saved capture search follows in 242 using
+derived metadata and explicit bounded rebuild; full contents are verified on
+reopen, not established by a metadata listing. See the [catalog contract](CAPTURE_CATALOG_SEARCH.md)
+for its 10,000-entry, metadata-byte and rebuild limits. The separate prepared-string
+and native package publication/capacity integrity findings remain open. Current order and
 acceptance live in the [roadmap](ROADMAP_2026_10_28.md) and
 [backlog](BACKLOG_2026_10_28.md); older statuses below retain their bounded history.
 

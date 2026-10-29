@@ -1,5 +1,69 @@
 # Validation record
 
+## Bounded saved capture metadata search — 242 (2026-10-29 UTC)
+
+Saved captures now support literal case-insensitive title search, kind, declared
+signal/environment and receipt capture-time order, across the admitted catalog
+before paging. Shared `CaptureQuestion.Scope` supplies metrics/lifecycle and record
+scope; no service selector is inferred. Exact empty environment differs from any/
+unknown. Cursors bind query, admitted IDs, metadata digests and position; ties use
+ascending immutable IDs. Legacy ID-list cursors and capture bytes/IDs stay intact.
+The UI uses the existing catalog table and passive disclosure, explicit Find
+captures, local draft state, abort/generation guards and source-free reopen.
+
+Derived metadata is atomically replaced after verified capture publication. A
+failed metadata write cannot disguise a committed capture as a failed save.
+Missing/corrupt metadata, changed file stamps and limits refuse a search rather
+than omit captures. Search reads at most 16 MiB accepted metadata (+ overflow byte),
+64 KiB per entry, retaining at most 8 MiB receipt JSON, with 10,000 physical entry
+admission. It does not read payload bodies. Size/mtime and checksum checks are not
+payload authentication: a same-size edit with restored mtime can remain listed;
+full reopen and explicit rebuild reject it. This boundary is tested and visible.
+The initial verified-scan prototype was replaced because the existing lab exceeded
+its budget. Rebuild is explicit, fully verified and bounded to 256 MiB payloads;
+it never repairs/deletes authoritative files or silently runs from UI search.
+
+The deployed rebuild indexed 1,812 captures (109,108,338 payload bytes). Before/
+after SHA-256 manifests match for every original file. Final deployed searches
+return all 1,812 entries and 678 native metric captures; served JS/CSS/OpenAPI
+match checkout (final image `a3e5a2dd8661`). Volumes and immutable questions/evidence are preserved.
+
+Passed root Go tests, final changed-package tests, full capture/server race checks,
+focused final search/native race checks and vet; 606 frontend checks; 60 Hegel
+state/swarm examples interleaving search, arrivals, capture/refresh and immutable
+reopen. The property oracle tracks all saved IDs, not just four recent refresh
+candidates. New real-OTLP/ClickHouse journey242 performs a UI save, adds 27 real
+fixture captures, leaves, finds a result beyond page one, opens unchanged evidence,
+and tests same-title IDs, exact scope/empty matches, global order/paging, stale
+row GET/paging callback guards and a real delayed response with abort deliberately discarded.
+The test waits for that response/body and browser render turns before asserting
+it loses. Existing catalog220 and final journey242 pass together in 23.4s, including
+mobile overflow at 320/390/700px and the unchanged desktop first-row position gate.
+The compact integrity note passes that gate without hiding its content. Final UI
+controls also prove missing metadata yields 503 and corrupt metadata yields 500,
+never an empty-match claim; an isolated HTTP control confirms exact-ID reopen
+still returns 200 without metadata or a reachable telemetry source.
+
+The browser ledger passes the new Quint catalog read-ownership model and three
+rejecting mutations. This judges source-triggering browser actions, not sorting
+or filesystem correctness; Go tests cover those. Bombadil passes 20 seconds with
+251 trace records and five search/order/open actions, zero telemetry reads. One
+earlier actor failed in its screenshot driver; the later unchanged actor passed
+without a competing heavy build. The new model uses the binding tool’s existing
+INITIAL-constant pattern; its zero-argument generated import was invalid.
+OpenAPI validates 88 operations/517 schemas plus frozen fixtures and rejecting
+controls. The deployed thin API contract passes nine real handler responses;
+API docs browser validation passes for 88 operations, desktop/mobile and origin-aware
+content, with its screenshot refreshed.
+
+Docs, diagram, executable storyboard and actual frames are synchronized. Passing
+bundles are cleaned after inspection; one small ledger remains. Only unused owned
+images and build cache older than one hour were removed; no stored data volume
+was touched. Root disk free space improved from 461 MiB to about 7.2 GiB. The
+roadmap’s whole-product review checkpoint is next; catalog scale/rebuild limits
+remain explicit rather than a production-scale performance claim.
+
+
 ## Compact Activity scoping and actions — 241 (2026-10-28 UTC)
 
 Service identities now disclose exact service/namespace filter shortcuts using

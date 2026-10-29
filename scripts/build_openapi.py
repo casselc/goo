@@ -14,6 +14,10 @@ for name in ('workbench.ActivityView','workbench.ActivityViewInput'):
 
 schemas['annotations.OperationSpan']['properties']['reportedStatus']['description']='Optional exact exporter StatusCode, independent of declared outcome. Omission means not retained in this evidence; empty and future values remain explicit unknown values. Legacy saved bytes are unchanged.'
 
+search=schemas['exploration.CaptureSearchPage']['properties']
+search['items']={'type':'array','maxItems':20,'items':ref('exploration.CaptureReceipt')}
+for name in ('matched','total'):search[name].update({'minimum':0,'maximum':10000})
+search['order']['enum']=['newest','oldest']
 schemas['Error'] = {'type': 'object', 'required': ['error'], 'properties': {'error': {'type': 'string'}, 'hint': {'type': 'string'}}, 'additionalProperties': True}
 schemas['Cancellation'] = {'type': 'object', 'required': ['state'], 'properties': {'state': {'const': 'cancellation-requested'}}}
 # Counted values are two explicit observations, never a transactional snapshot.
@@ -162,7 +166,7 @@ responses = {('post','/pod-metric-discovery'):'PodMetricDiscovery',('post','/pod
  ('post','/measurements'):'NativeResult',('post','/metric-discovery'):'MetricDiscoveryResult',('post','/telemetry-packages/draft'):'PackagePlan',('post','/telemetry-packages/plan'):'PackagePlan',('post','/telemetry-packages/numeric-plan'):'NumericPlan',('post','/telemetry-packages'):'SavedPackage',('get','/telemetry-packages/{revision}'):'SavedPackage',
  ('post','/recipes'):'RecipePlan',('post','/dashboards/plan'):'DashboardPlan',('post','/population/plan'):'PopulationPlan',('post','/numeric-histograms/selection'):'NumericHistogramSelection',('post','/numeric-histograms/comparison-selection'):'NumericHistogramSelection',
  ('get','/http-package'):'LiveHTTPResult',('get','/operations'):'LiveOperations',('get','/counter-rates'):'LiveRates',('get','/histograms'):'LiveHistograms',
- ('get','/captures'):'CaptureList',('post','/captures'):'CapturePage',('get','/captures/{id}'):'CapturePage',('get','/investigations/{id}'):'InvestigationCapture',('post','/investigations'):'InvestigationCapture',
+ ('get','/captures'):'CaptureList',('get','/captures/search'):'CaptureSearchPage',('post','/captures'):'CapturePage',('get','/captures/{id}'):'CapturePage',('get','/investigations/{id}'):'InvestigationCapture',('post','/investigations'):'InvestigationCapture',
  ('post','/annotations'):'MeaningRevision',('get','/annotations/{id}'):'MeaningRevision',('post','/deployments'):'Deployment',('get','/deployments/{id}'):'Deployment',('post','/documents'):'Document',('get','/documents/{id}'):'Document',
  ('post','/retained-evidence'):'RetainedReceipt',('post','/retained-evidence/{id}/annotations'):'CorrectionReceipt',('get','/retained-evidence'):'RetainedCatalog',
 }
@@ -301,6 +305,15 @@ for (method,path),(file,block) in sorted(route_source.items()):
  if path.startswith('/retained-evidence') and not path.endswith('/status'): codes.add(503)
  if method=='get' and path in ('/http-package','/operation-packages','/operations','/counter-rates','/histograms'): codes.add(503)
  if path=='/queries/{id}/cancel':codes.update((400,429))
+ if path=='/captures/search':codes.update((400,500,503))
+ if path=='/captures/search':
+  op['description']='Derived metadata search over immutable captures, literal case-insensitive title containment, optional exact kind/signal/environment, capture-time order. No telemetry reads or payload bodies. 10,000 directory entries, 16 MiB aggregate metadata, 64 KiB per metadata entry and 8 MiB retained receipt JSON; missing index/budget refusal is 503. Metadata checksum and payload stat stamps do not establish payload content integrity; reopen and explicit rebuild verify full contents. Cursors bind query, admitted catalog IDs and metadata digests; changed scope/catalog is 400. Omitted environment matches any; present-empty matches exact empty. Direct ID reopen keeps its independent limits.'
+  for p in op['parameters']:
+   if p.get('name')=='order':p['schema']={'type':'string','enum':['newest','oldest'],'default':'newest'}
+   if p.get('name')=='signal':p['schema']={'type':'string','enum':['','logs','spans','metrics']}
+   if p.get('name')=='title':p['schema']={'type':'string','maxLength':120}
+   if p.get('name')=='environment':p['schema']={'type':'string','maxLength':256}
+   if p.get('name')=='kind':p['schema']={'type':'string','enum':['','explore','inventory','comparison','explanation','measurement']}
  for status in map(str,sorted(n for n in codes if n>=400)):
   op['responses'][status]={'description':'Existing route refusal. Semantic validation and effect ordering remain in the owner.','content':{'application/json':{'schema':ref('Error')}}}
  if method=='get' and path in ('/http-package','/operation-packages','/operations','/counter-rates','/histograms'):

@@ -1495,3 +1495,6 @@ td details {
 .native-record-return p{overflow-wrap:anywhere}
 .native-record-return pre{max-width:100%;overflow:auto}
 @media(min-width:701px){.stream-entry .compact-tail td[data-record-core=summary]>.ui-actions{display:inline-flex;margin:0 0 0 6px;vertical-align:baseline}}
+.capture-search{align-items:end;gap:8px;flex-wrap:wrap;margin:8px 0}.capture-search label{display:grid;gap:3px;font-size:12px;min-width:0}.capture-search input,.capture-search select{max-width:100%;box-sizing:border-box}.capture-search input{width:170px}@media(max-width:600px){.capture-search label{flex:1 1 130px}.capture-search input,.capture-search select{width:100%}}
+
+.saved-workspace .capture-catalog-note{border:0;background:none;padding:0;margin:4px 0;font-size:11px}

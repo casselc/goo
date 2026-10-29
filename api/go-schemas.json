@@ -114,6 +114,9 @@
       }
     ]
   },
+  "CaptureSearchPage": {
+    "$ref": "#/components/schemas/exploration.CaptureSearchPage"
+  },
   "CapturedWindowDiscovery": {
     "$ref": "#/components/schemas/exploration.CapturedWindowDiscovery"
   },
@@ -3121,6 +3124,47 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.CaptureReceipt"
+  },
+  "exploration.CaptureSearchPage": {
+    "properties": {
+      "hasMore": {
+        "type": "boolean"
+      },
+      "items": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.CaptureReceipt"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "matched": {
+        "type": "integer"
+      },
+      "nextCursor": {
+        "type": "string"
+      },
+      "order": {
+        "type": "string"
+      },
+      "total": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "items",
+      "hasMore",
+      "matched",
+      "total",
+      "order"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.CaptureSearchPage"
   },
   "exploration.CapturedWindowDiscovery": {
     "properties": {

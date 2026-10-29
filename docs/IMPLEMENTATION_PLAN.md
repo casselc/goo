@@ -1,6 +1,8 @@
 # Implementation plan
 
 > Current priority and bounded acceptance: [2026-10-28 roadmap](ROADMAP_2026_10_28.md).
+> Capture catalog search is delivered in 242; the roadmap’s whole-product review
+> checkpoint is next.
 > Earlier roadmaps/backlogs and the long milestone record below preserve delivery
 > history; their competing Next labels are superseded.
 

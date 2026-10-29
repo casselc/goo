@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 	"path/filepath"
 	"reflect"
 	"strconv"
@@ -35,6 +36,41 @@ func Register(mux *http.ServeMux, source exploration.Source, dir string, resultS
 		}
 		return v.Get("cursor"), nil
 	}
+	mux.HandleFunc("GET /captures/search", func(w http.ResponseWriter, r *http.Request) {
+		values, parseErr := url.ParseQuery(r.URL.RawQuery)
+		if parseErr != nil {
+			fail(w, 400, errors.New("invalid capture search query encoding"))
+			return
+		}
+		for key, v := range values {
+			if len(v) != 1 || (key != "title" && key != "kind" && key != "signal" && key != "environment" && key != "order" && key != "cursor") {
+				fail(w, 400, errors.New("one value per supported capture search parameter required"))
+				return
+			}
+		}
+		q := exploration.CaptureSearchQuery{Title: values.Get("title"), Kind: values.Get("kind"), Signal: values.Get("signal"), Order: values.Get("order")}
+		if values.Has("environment") {
+			env := values.Get("environment")
+			q.Environment = &env
+		}
+		if err := q.Validate(); err != nil {
+			fail(w, 400, err)
+			return
+		}
+		page, err := store.Search(r.Context(), q, values.Get("cursor"))
+		if err != nil {
+			code := 500
+			if errors.Is(err, exploration.ErrCaptureSearchCursor) {
+				code = 400
+			}
+			if errors.Is(err, exploration.ErrCaptureSearchBudget) || errors.Is(err, exploration.ErrCaptureCatalogUnavailable) {
+				code = 503
+			}
+			fail(w, code, err)
+			return
+		}
+		reply(w, 200, page)
+	})
 	mux.HandleFunc("GET /captures", func(w http.ResponseWriter, r *http.Request) {
 		after, e := cursor(r)
 		if e != nil {

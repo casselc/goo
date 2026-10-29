@@ -75,7 +75,9 @@ seconds for telemetry. Published lab ports bind to loopback. The `lab` /
    question. **Save observed explanation** preserves that exact run without rereading.
 6. Revisit evidence in **Saved investigations**, or save a reusable Activity
    view/definition. **Reuse explanation request** stages its fields and fixed
-   scopes before another explicit Run. Saved Activity views reopen paused before
+   scopes before another explicit Run. Saved captures support [title/scope search and
+   capture-time ordering](docs/CAPTURE_CATALOG_SEARCH.md); existing stores need the
+   documented metadata rebuild. Saved Activity views reopen paused before
    **Start**; same-tab draft recovery never retries a save automatically.
 
 Activity explanation staging (`cdd5a88`, retained-visit fix `a6533a6`) passes

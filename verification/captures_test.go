@@ -13,9 +13,11 @@ import (
 	"net/http/httptest"
 	"os"
 	"reflect"
+	"slices"
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 )
 
 type captureMachine struct {
@@ -91,6 +93,73 @@ func (m *captureMachine) InvariantStableEvidence(tc hegel.TestCase) {
 		}
 		if !reflect.DeepEqual(rows, old.Explore.Rows) {
 			panic("paging skipped, duplicated or changed records")
+		}
+	}
+}
+
+// Search interleaves with source arrivals, capture/refresh and immutable reopen.
+func (m *captureMachine) RuleSearch(tc hegel.TestCase) {
+	titles := []string{"", "investigation", "[.*", "not present"}
+	q := exploration.CaptureSearchQuery{Title: titles[hegel.Draw(tc, hegel.Integers(0, len(titles)-1))]}
+	if hegel.Draw(tc, hegel.Booleans()) {
+		q.Order = "oldest"
+	} else {
+		q.Order = "newest"
+	}
+	env := "other"
+	switch hegel.Draw(tc, hegel.Integers(0, 2)) {
+	case 1:
+		env = "prod"
+		q.Environment = &env
+	case 2:
+		q.Environment = &env
+	}
+	expected := []*exploration.SavedCapture{}
+	seen := map[string]bool{}
+	for _, wire := range m.first {
+		var page exploration.CapturePage
+		if err := json.Unmarshal([]byte(wire), &page); err != nil {
+			panic(err)
+		}
+		c := &exploration.SavedCapture{CaptureReceipt: page.Receipt}
+		if !seen[c.ID] && strings.Contains(strings.ToLower(c.Title), q.Title) && (q.Environment == nil || *q.Environment == "prod") {
+			expected = append(expected, c)
+			seen[c.ID] = true
+		}
+	}
+	slices.SortFunc(expected, func(a, b *exploration.SavedCapture) int {
+		x, _ := time.Parse(time.RFC3339Nano, a.CapturedAt)
+		y, _ := time.Parse(time.RFC3339Nano, b.CapturedAt)
+		n := x.Compare(y)
+		if q.Order == "newest" {
+			n = -n
+		}
+		if n == 0 {
+			return strings.Compare(a.ID, b.ID)
+		}
+		return n
+	})
+	actual := []string{}
+	cursor := ""
+	for {
+		p, e := m.store.Search(context.Background(), q, cursor)
+		if e != nil {
+			panic(e)
+		}
+		for _, r := range p.Items {
+			actual = append(actual, r.ID)
+		}
+		if !p.HasMore {
+			break
+		}
+		cursor = p.NextCursor
+	}
+	if len(actual) != len(expected) {
+		panic("search changed catalog membership")
+	}
+	for i, c := range expected {
+		if actual[i] != c.ID {
+			panic("search order or pagination diverged")
 		}
 	}
 }

@@ -30,6 +30,11 @@ func TestMeasurementCaptureSourceFreeReopenAndFixedRefresh(t *testing.T) {
 	if e != nil {
 		t.Fatal(e)
 	}
+	env := d.Environment
+	catalog, searchErr := s.Search(t.Context(), CaptureSearchQuery{Kind: "measurement", Signal: "metrics", Environment: &env}, "")
+	if searchErr != nil || catalog.Matched != 1 || catalog.Items[0].ID != c.ID {
+		t.Fatal("declared native scope lost in catalog", catalog, searchErr)
+	}
 	p, e := c.Page("")
 	if e != nil || p.RetainedRecords != 1 || p.Measurement == nil {
 		t.Fatal("measurement paging envelope", e)

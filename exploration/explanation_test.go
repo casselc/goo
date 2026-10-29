@@ -417,7 +417,7 @@ func TestExplanationPromotionReservesCustodyBeforeUncertainPublication(t *testin
 		t.Fatal("injected publication uncertainty not exposed")
 	}
 	entries, e := os.ReadDir(store.Dir)
-	if e != nil || len(entries) != 1 {
+	if e != nil || len(entries) != 2 || entries[0].Name() != ".catalog-v1" || !entries[0].IsDir() || entries[1].Name() != candidateID+".json" {
 		t.Fatal("first attempt did not actually publish one final file", e)
 	}
 	now = now.Add(30 * time.Second)
@@ -446,7 +446,7 @@ func TestExplanationPromotionReservesCustodyBeforeUncertainPublication(t *testin
 		t.Fatal("successful retries republished", attempts)
 	}
 	entries, e = os.ReadDir(store.Dir)
-	if e != nil || len(entries) != 1 {
+	if e != nil || len(entries) != 2 || entries[0].Name() != ".catalog-v1" || !entries[0].IsDir() || entries[1].Name() != candidateID+".json" {
 		t.Fatal("uncertain retry created another file or leaked scratch", e, len(entries))
 	}
 	saved, e := store.Load(candidateID)

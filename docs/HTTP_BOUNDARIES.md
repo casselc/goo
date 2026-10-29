@@ -329,6 +329,7 @@ family limits remain authoritative in code/tests; this table groups related rout
 | POST `/tail` | SSE polling reads; own four-slot budget, bounded stream lifetime and write deadlines | 16 KiB; 60s context, 2s polling, 5s per-write deadline |
 | GET `/investigations/{id}` | Reopen immutable operation capture; no telemetry | File bounds |
 | POST `/investigations` | Read operation/rate/histogram evidence and publish a capture; refresh checks parent question/package revision | 16 KiB; incoming context and shared HTTP client |
+| GET `/captures/search` | Derived metadata search; no payload body or telemetry reads; full contents verified on reopen | Entry/aggregate metadata budgets, stamps, query/catalog-bound cursors; missing index 503 |
 | GET `/captures`, `/captures/{id}` and suffixes `followups`, `compare`, `windows`, `receipt` | Read/page/recompute from saved evidence; no telemetry reread | File/catalog/cursor bounds |
 | POST `/captures` | Execute source family and publish immutable evidence; refresh retains original question | 16 KiB; 55s context |
 | POST `/captures/live` | Read fresh evidence against a saved baseline and hold expiring drafts, or freeze a held draft into immutable capture files without a reread | 16 KiB; read branch 55s context; draft budget separate |

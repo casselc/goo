@@ -94,7 +94,7 @@ func TestExplorationCaptureStorageContract(t *testing.T) {
 		})
 	}
 	entries, e := os.ReadDir(s.Dir)
-	if e != nil || len(entries) != 1 {
+	if e != nil || len(entries) != 2 || entries[0].Name() != ".catalog-v1" || !entries[0].IsDir() || entries[1].Name() != id+".json" {
 		t.Fatal("temporary leak", e)
 	}
 }

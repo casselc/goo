@@ -1,0 +1,9 @@
+spec: capture_catalog.qnt
+module: capture_catalog
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  save:
+    expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'
+  browse:
+    expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'

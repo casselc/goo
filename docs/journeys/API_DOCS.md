@@ -5,7 +5,7 @@ Run `node scripts/check_api_docs.cjs` after installing the project's npm tools a
 Chromium. It builds and starts the checkout's embedded Go runtime from an empty directory
 on an ephemeral loopback port, then closes it, leaving the running lab untouched.
 
-1. Open `/api-docs`: see 87 Go operations and choose browser-prefixed versus native paths.
+1. Open `/api-docs`: see 88 Go operations and choose browser-prefixed versus native paths.
 2. Search `/tail`: expand the operation and its contract, inspect SSE media type,
    effect, request limits and event schemas. No Execute button or network source read.
 3. Search `/measurements`: see the source/custody effect and 65,536-byte body limits.

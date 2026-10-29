@@ -572,6 +572,132 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/captures/search": {
+      "get": {
+        "operationId": "get_captures_search",
+        "summary": "GET /captures/search",
+        "tags": [
+          "captures"
+        ],
+        "description": "Derived metadata search over immutable captures, literal case-insensitive title containment, optional exact kind/signal/environment, capture-time order. No telemetry reads or payload bodies. 10,000 directory entries, 16 MiB aggregate metadata, 64 KiB per metadata entry and 8 MiB retained receipt JSON; missing index/budget refusal is 503. Metadata checksum and payload stat stamps do not establish payload content integrity; reopen and explicit rebuild verify full contents. Cursors bind query, admitted catalog IDs and metadata digests; changed scope/catalog is 400. Omitted environment matches any; present-empty matches exact empty. Direct ID reopen keeps its independent limits.",
+        "x-go-source": "internal/capturehttp/routes.go",
+        "x-effects": "saved-evidence-or-definition-read",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          },
+          {
+            "name": "environment",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 256
+            },
+            "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "",
+                "explore",
+                "inventory",
+                "comparison",
+                "explanation",
+                "measurement"
+              ]
+            },
+            "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "newest",
+                "oldest"
+              ],
+              "default": "newest"
+            },
+            "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          },
+          {
+            "name": "signal",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "",
+                "logs",
+                "spans",
+                "metrics"
+              ]
+            },
+            "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 120
+            },
+            "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureSearchPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-schema-coverage": "typed"
+      }
+    },
     "/captures/{id}": {
       "get": {
         "operationId": "get_captures_id",
@@ -5633,6 +5759,9 @@
           }
         ]
       },
+      "CaptureSearchPage": {
+        "$ref": "#/components/schemas/exploration.CaptureSearchPage"
+      },
       "CapturedWindowDiscovery": {
         "$ref": "#/components/schemas/exploration.CapturedWindowDiscovery"
       },
@@ -8641,6 +8770,49 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.CaptureReceipt"
+      },
+      "exploration.CaptureSearchPage": {
+        "properties": {
+          "hasMore": {
+            "type": "boolean"
+          },
+          "items": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "$ref": "#/components/schemas/exploration.CaptureReceipt"
+            }
+          },
+          "matched": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000
+          },
+          "nextCursor": {
+            "type": "string"
+          },
+          "order": {
+            "type": "string",
+            "enum": [
+              "newest",
+              "oldest"
+            ]
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000
+          }
+        },
+        "required": [
+          "items",
+          "hasMore",
+          "matched",
+          "total",
+          "order"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.CaptureSearchPage"
       },
       "exploration.CapturedWindowDiscovery": {
         "properties": {
