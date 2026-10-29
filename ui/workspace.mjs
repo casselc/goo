@@ -3,7 +3,7 @@ import * as QuestionProtocol from './question-protocol.mjs';
 const global=globalThis;
 const routes={explore:{title:'Explore',description:'Follow a question through captured telemetry.',measurementsDescription:'Inspect measurements in their selected time window.'},services:{title:'Services & resources',description:'Discover services or host resources and inspect their reported telemetry.'},operations:{title:'Operations',description:'Investigate application behavior through shared definitions.'},investigations:{title:'Saved investigations',description:'Reopen evidence, preserve context, and compare revisions.'},definitions:{title:'Definitions',description:'Inspect the contracts behind your investigations.'},examples:{title:'Examples',description:'Investigate independent sample applications using shared telemetry packages.'}};
 const protocol=QuestionProtocol;
-function routeFromHash(hash){if(hash==='#activity-views')return 'investigations';if(/^#(?:investigation|capture|document|annotation|evidence)=[a-f0-9]{64}$/.test(hash))return 'investigations';const key=hash.replace(/^#/,'');return Object.hasOwn(routes,key)?key:'explore';}
+function routeFromHash(hash){if(hash==='#activity-views')return 'investigations';if(/^#(?:investigation|capture|document|annotation|evidence|kept)=[a-f0-9]{64}$/.test(hash))return 'investigations';const key=hash.replace(/^#/,'');return Object.hasOwn(routes,key)?key:'explore';}
 function mount({onExamples}={}){
   let current='',definitionFamily='records',measurements=false;const buttons=[...document.querySelectorAll('[data-workspace]')],panels=[...document.querySelectorAll('[data-workspace-panel]')];
   const sidebar=document.querySelector('.app-sidebar'),menu=sidebar.querySelector('.entry-menu');

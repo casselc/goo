@@ -24,8 +24,10 @@
 > 255 enables checked Saved record/comparison/explanation open and explicit fixed
 > reuse, retaining unsupported authored/XTDB boundaries.
 > 256 enables checked preview staging and explicit Start, preserving filters and
-> scope through the complete record journey. Next: S0, keeping exact observations
-> without requiring interpretation. Service/native/package/retention adoption is separate.
+> scope through the complete record journey. 257 delivers S0’s Activity-first
+> exact Keep/Open path without required interpretation or XTDB. Next: extend this
+> contract to fixed-result/Saved origins and decide bounded server discovery.
+> Service/native/package/retention adoption is separate.
 > Earlier queues preserve delivery history; their Next labels are superseded.
 
 

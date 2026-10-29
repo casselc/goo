@@ -19,6 +19,7 @@ import (
 
 func registerWorkbench(mux *http.ServeMux, dir string, connection retentionConnection, resultSnapshots *exploration.ResultSnapshots, bank *exploration.TailMembershipSnapshots) {
 	registerRetention(mux, dir, connection, resultSnapshots, bank)
+	registerKeptObservations(mux, dir, bank)
 	registerActivityViews(mux, dir)
 	store := workbench.Store{Dir: filepath.Join(dir, "workbench")}
 	captures := exploration.CaptureStore{Dir: filepath.Join(dir, "exploration")}

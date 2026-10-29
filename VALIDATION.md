@@ -1,5 +1,53 @@
 # Validation record
 
+## Keep exact Activity observations — 257 (2026-10-29 UTC)
+
+Activity’s Select → Keep selected → Open saved flow now preserves 1–20 original
+server-observed log/span occurrences without a label, telemetry reread or XTDB.
+A separate local immutable resource retains occurrence identity, exact record JSON,
+original window/basis, observation clock and keep time. This is canonical observed
+content, not original OTLP bytes, unique-event custody, a population count or a
+reviewed classifier label. [Contract/diagram](docs/KEPT_OBSERVATIONS.md),
+[storyboard/actual frames](journeys/257-kept-observations-storyboard.md).
+
+Full Go checks and 627 frontend checks pass. Go race checks cover the store and
+HTTP boundary, including concurrent first publication, lost acknowledgement,
+identical recovery after proof expiry/process restart, changed-intent conflict,
+corrupt winner refusal, numeric precision and duplicate multiplicity. Hegel’s
+50-case property checks vary multiplicity, log/span signal and all three effective
+environment scopes. Quint validation through the observability repository’s Go
+checker accepts the actual browser keep ledger and rejects five mutations (reread,
+changed retry, forged content, duplicate publication and foreign connection).
+This reuses the existing source-free publication model; it is not a new liveness
+or durability model or a broad product campaign.
+
+The real SDK/source browser journey keeps two identical unreported-environment
+logs, loses the acknowledgement after commit, retries identical references,
+opens/inspects/reloads the immutable resource without telemetry POSTs, verifies
+keyboard return and 390px detail reveal, and checks a visible failed-ID open.
+256 and 257 pass together in 53.4s. A 40s Bombadil campaign passes with 417 observed
+snapshots and every discovery/selection/keep/open/inspection/close phase reached;
+no reread after selection and one publication. Frontend review findings around
+pending recovery, failure visibility and focus are corrected; final review finds
+no blocker. Architecture review finds no retry/concurrency/provenance blocker;
+its additional durable observation-clock validation is included.
+
+OpenAPI covers 93 Go operations. Existing 429 response fixtures, 159 admitted
+requests and 28 mux refusals pass, and the actual new Keep request plus POST/GET
+receipts conform. The server-wide Keep catalog, store quota/GC, fixed-result/Saved
+origins and optional later annotations remain planned. Browser recent/pending
+history is bounded to 16 each with explicit local-only forget.
+
+Deployed configured Go image `d8c6a4b22f43` responds to health. The complete existing
+stored-file list is unchanged; no volumes or XTDB container were removed. Only
+packages was recreated. Previous image `7cecfda8068c` remains available for rollback.
+Exact served module bytes, new OpenAPI routes and an old exact capture reopen pass.
+The final pending-recovery browser check passes in 12.7s, including a visible
+expired/unavailable rejection and local-only Forget. The 93-operation API docs
+browser check passes on desktop/mobile. One overlapping deployment rerun hit
+Chromium ERR_NETWORK_CHANGED; the stable post-deployment rerun passes.
+
+
 ## Bounded Activity selector activation — 256 (2026-10-29 UTC)
 
 Checked environment previews now stage Activity with the current predicate draft

@@ -43,7 +43,7 @@ const operations = Object.values(require('../api/openapi.json').paths).reduce((n
     await page.getByRole('status').filter({ hasText: operations+' operations' }).waitFor();
     assert.equal(await page.locator('#operations > details').count(), operations);
     await page.getByRole('searchbox').fill('/tail');
-    assert.equal(await page.locator('#operations > details').count(), 2); // stream and exact-retention tail routes
+    assert.equal(await page.locator('#operations > details').count(), 3); // stream, local keep and optional XTDB tail routes
     const tailOp=page.locator('#operations > details').filter({has:page.locator('summary > code').filter({hasText:/^\/tail$/})});
     await tailOp.locator(':scope > summary').click();
     await tailOp.getByText('Operation contract', { exact: true }).click();

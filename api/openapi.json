@@ -1940,6 +1940,62 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/kept-observations/{id}": {
+      "get": {
+        "operationId": "get_kept_observations_id",
+        "summary": "GET /kept-observations/{id}",
+        "tags": [
+          "kept-observations"
+        ],
+        "description": "Current owner: cmd/goo/kept_http.go. Effect: saved-evidence-or-definition-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/kept_http.go",
+        "x-effects": "saved-evidence-or-definition-read",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact revision, receipt ID or process-local capability; not an authorization credential."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeptObservations"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-schema-coverage": "typed"
+      }
+    },
     "/measurement-packages": {
       "get": {
         "operationId": "get_measurement_packages",
@@ -4455,6 +4511,83 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/kept-observations/tail": {
+      "post": {
+        "operationId": "post_kept_observations_tail",
+        "summary": "POST /kept-observations/tail",
+        "tags": [
+          "kept-observations"
+        ],
+        "description": "Current owner: cmd/goo/kept_http.go. Effect: file-publication-from-attested-selection. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/kept_http.go",
+        "x-effects": "file-publication-from-attested-selection",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeptObservations"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KeepTailIntent"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 16384,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/measurement-packages/plan": {
       "post": {
         "operationId": "post_measurement_packages_plan",
@@ -6534,6 +6667,19 @@
             "type": "null"
           }
         ]
+      },
+      "KeepTailIntent": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.KeepTailIntentInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "KeptObservations": {
+        "$ref": "#/components/schemas/exploration.KeptObservations"
       },
       "LiveComparisonDraft": {
         "properties": {
@@ -12131,6 +12277,163 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.InventoryRow"
+      },
+      "exploration.KeepTailIntentInput": {
+        "additionalProperties": false,
+        "properties": {
+          "connection": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "refs": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/exploration.TailMembershipRefInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20
+          },
+          "requestID": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "selector": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.TailSelectorInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "const": "goo/keep-tail/v1"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.KeepTailIntent",
+        "required": [
+          "version",
+          "requestID",
+          "connection",
+          "selector",
+          "refs"
+        ]
+      },
+      "exploration.KeptObservation": {
+        "properties": {
+          "basis": {
+            "type": "string"
+          },
+          "fromMs": {
+            "type": "integer"
+          },
+          "key": {
+            "type": "string"
+          },
+          "late": {
+            "type": "boolean"
+          },
+          "limited": {
+            "type": "boolean"
+          },
+          "observedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "record": {},
+          "toMs": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "key",
+          "fromMs",
+          "toMs",
+          "observedAt",
+          "basis",
+          "limited",
+          "late",
+          "record"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.KeptObservation"
+      },
+      "exploration.KeptObservations": {
+        "properties": {
+          "connection": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "digest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "intentDigest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "keptAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "members": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/exploration.KeptObservation"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20
+          },
+          "selector": {
+            "$ref": "#/components/schemas/exploration.TailSelector"
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/kept-observations/v1"
+          }
+        },
+        "required": [
+          "version",
+          "id",
+          "intentDigest",
+          "keptAt",
+          "connection",
+          "selector",
+          "members",
+          "digest"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.KeptObservations",
+        "description": "Exact selected server observations, not a population capture or classification. Atomic immutable local file; retries reuse the same intent-bound request ID, including after proof expiry. No telemetry reread or XTDB required."
       },
       "exploration.LiveCounterInfo": {
         "properties": {

@@ -472,3 +472,11 @@ Shared authored question/step links,
 reusable view/package intent, native/service families and XTDB selector retention
 remain unsupported. Preview responses carry a checked
 [versioned selector](docs/ENVIRONMENT_SELECTOR_PROTOCOL.md); absence is never a wildcard.
+
+Activity now supports **Select → Keep selected → Open saved** without a title,
+label, telemetry reread or XTDB. Original observed occurrences, duplicate keys
+and read/observation clocks remain separate from fresh population captures.
+See [Keep contract and diagram](docs/KEPT_OBSERVATIONS.md) and
+[executable journey/screenshots](journeys/257-kept-observations-storyboard.md).
+This first slice uses durable exact links and bounded browser recent/pending
+history; fixed-result origins and a server-wide keep catalog remain planned.

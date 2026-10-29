@@ -649,6 +649,19 @@
       }
     ]
   },
+  "KeepTailIntent": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/exploration.KeepTailIntentInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "KeptObservations": {
+    "$ref": "#/components/schemas/exploration.KeptObservations"
+  },
   "LiveComparisonDraft": {
     "properties": {
       "baselineBasis": {
@@ -6152,6 +6165,163 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.InventoryRow"
+  },
+  "exploration.KeepTailIntentInput": {
+    "additionalProperties": false,
+    "properties": {
+      "connection": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "refs": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/exploration.TailMembershipRefInput"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "requestID": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "selector": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.TailSelectorInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.KeepTailIntent"
+  },
+  "exploration.KeptObservation": {
+    "properties": {
+      "basis": {
+        "type": "string"
+      },
+      "fromMs": {
+        "type": "integer"
+      },
+      "key": {
+        "type": "string"
+      },
+      "late": {
+        "type": "boolean"
+      },
+      "limited": {
+        "type": "boolean"
+      },
+      "observedAt": {
+        "format": "date-time",
+        "type": "string"
+      },
+      "record": {},
+      "toMs": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "key",
+      "fromMs",
+      "toMs",
+      "observedAt",
+      "basis",
+      "limited",
+      "late",
+      "record"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.KeptObservation"
+  },
+  "exploration.KeptObservations": {
+    "properties": {
+      "connection": {
+        "type": "string"
+      },
+      "digest": {
+        "type": "string"
+      },
+      "id": {
+        "type": "string"
+      },
+      "intentDigest": {
+        "type": "string"
+      },
+      "keptAt": {
+        "format": "date-time",
+        "type": "string"
+      },
+      "members": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.KeptObservation"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "selector": {
+        "$ref": "#/components/schemas/exploration.TailSelector"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "id",
+      "intentDigest",
+      "keptAt",
+      "connection",
+      "selector",
+      "members",
+      "digest"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.KeptObservations"
   },
   "exploration.LiveCounterInfo": {
     "properties": {

@@ -62,6 +62,18 @@ summary['description']='Bounded discovery metadata, not a receipt. Legacy enviro
 summary['properties']['environmentSelector']['description']='Exact versioned policy/scope, separate from legacy current-only environment. Read with version 250 or newer.'
 
 
+# Immutable selected observations, independent of source and annotation storage.
+keep=schemas['exploration.KeepTailIntentInput']
+keep['required']=['version','requestID','connection','selector','refs']
+keep['properties']['version']={'const':'goo/keep-tail/v1'}
+for name in ('requestID','connection'):keep['properties'][name]={'type':'string','pattern':'^[a-f0-9]{64}$'}
+keep['properties']['refs'].update(type='array',minItems=1,maxItems=20)
+receipt=schemas['exploration.KeptObservations']
+receipt['description']='Exact selected server observations, not a population capture or classification. Atomic immutable local file; retries reuse the same intent-bound request ID, including after proof expiry. No telemetry reread or XTDB required.'
+receipt['properties']['version']['const']='goo/kept-observations/v1'
+for name in ('id','digest','intentDigest','connection'):receipt['properties'][name]['pattern']='^[a-f0-9]{64}$'
+receipt['properties']['members'].update(type='array',minItems=1,maxItems=20)
+
 schemas['Error'] = {'type': 'object', 'required': ['error'], 'properties': {'error': {'type': 'string'}, 'hint': {'type': 'string'}}, 'additionalProperties': True}
 schemas['Cancellation'] = {'type': 'object', 'required': ['state'], 'properties': {'state': {'const': 'cancellation-requested'}}}
 # Counted values are two explicit observations, never a transactional snapshot.
@@ -197,15 +209,15 @@ reads = {'/environment-scopes','/environment-scopes/records','/pod-metric-discov
 for profile,roles in [('container-memory-kubeletstats-v0.137.0',['working-set']),('container-memory-k8scluster-v0.137.0',['request','limit']),('container-cpu-kubeletstats-v0.137.0',['usage']),('container-cpu-k8scluster-v0.137.0',['request','limit'])]:
  podwidget_schema['allOf'].append({'if':{'properties':{'profile':{'const':profile}},'required':['profile']},'then':{'properties':{'role':{'enum':roles}}}})
 plans = {'/pod-dashboard/plan','/host-dashboard/plan','/pool-signals/plan','/pool-signals/view','/container-memory/view','/container-cpu/view','/container-resources/history','/measurement-packages/plan', '/telemetry-packages/draft', '/telemetry-packages/numeric-plan', '/telemetry-packages/plan', '/recipes', '/dashboards/plan', '/population/plan', '/population/explain/plan', '/population/explain/filter', '/numeric-histograms/selection', '/numeric-histograms/comparison-selection', '/compare', '/explain'}
-publications = {'/activity-views','/measurement-packages', '/telemetry-packages', '/annotations', '/exploration-views', '/deployments', '/documents', '/captures/comparisons'}
-requests = {'/pod-metric-discovery':'PodMetricDiscoveryQuestion','/pod-dashboard/plan':'PodDashboardRequest','/host-discovery':'HostDiscoveryQuestion','/pod-discovery':'PodDiscoveryQuestion','/host-dashboard/plan':'HostDashboardRequest','/pool-signals/plan':'PoolSignalsRequest','/pool-signals/view':'PoolViewRequest','/container-memory/view':'ContainerMemoryViewRequest','/container-cpu/view':'ContainerCPUViewRequest','/container-resources/history':'ContainerResourceHistoryRequest','/activity-views':'ActivityViewRequest',
+publications = {'/kept-observations/tail','/activity-views','/measurement-packages', '/telemetry-packages', '/annotations', '/exploration-views', '/deployments', '/documents', '/captures/comparisons'}
+requests = {'/kept-observations/tail':'KeepTailIntent','/pod-metric-discovery':'PodMetricDiscoveryQuestion','/pod-dashboard/plan':'PodDashboardRequest','/host-discovery':'HostDiscoveryQuestion','/pod-discovery':'PodDiscoveryQuestion','/host-dashboard/plan':'HostDashboardRequest','/pool-signals/plan':'PoolSignalsRequest','/pool-signals/view':'PoolViewRequest','/container-memory/view':'ContainerMemoryViewRequest','/container-cpu/view':'ContainerCPUViewRequest','/container-resources/history':'ContainerResourceHistoryRequest','/activity-views':'ActivityViewRequest',
  '/retained-evidence/tail':'TailIntent','/compare':'CompareRequest','/inventory':'InventoryRequest','/discovery':'InventoryRequest','/explore':'RecordQuery','/explore/counted-values':'RecordQuery','/record-aggregates':'RecordQuery','/trace-search':'TraceSearchRequest','/tail':'TailSelector',
  '/environment-scopes':'AdoptionWindow','/environment-scopes/records':'AdoptionRecordsQuestion','/measurements':'NativeQuestion','/metric-discovery':'MetricDiscoveryRequest','/measurement-packages/plan':'NativePlanRequest','/measurement-packages':'YAMLRequest',
  '/telemetry-packages':'YAMLRequest','/telemetry-packages/draft':'TelemetryDraftRequest','/telemetry-packages/numeric-plan':'NumericPlanRequest','/telemetry-packages/plan':'TelemetryPlanRequest',
  '/recipes':'RecipeRequest','/dashboards/plan':'DashboardRequest','/population/plan':'PopulationRequest','/numeric-histograms/selection':'NumericHistogramSelectionRequest','/numeric-histograms/comparison-selection':'DistributionSelectionRequest','/annotations':'MeaningInput','/exploration-views':'ExplorationView','/deployments':'DeploymentInput','/documents':'DocumentRequest',
  '/population/explain':'ExplanationRequest','/population/explain/plan':'ExplanationRequest','/population/explain/filter':'ExplanationFilterRequest','/captures':'CaptureRequest','/captures/live':'LiveComparisonRequest','/captures/comparisons':'SaveComparisonRequest','/investigations':'InvestigationRequest','/retained-evidence':'RetainRequest','/retained-evidence/{id}/annotations':'CorrectRequest',
 }
-responses = {('post','/pod-metric-discovery'):'PodMetricDiscovery',('post','/pod-dashboard/plan'):'PodDashboardPlan',('post','/host-discovery'):'HostDiscovery',('post','/pod-discovery'):'PodDiscovery',('post','/host-dashboard/plan'):'HostDashboardPlan',('post','/pool-signals/plan'):'PoolSignalsPlan',('post','/pool-signals/view'):'PoolView',('post','/container-memory/view'):'ContainerMemoryView',('post','/container-cpu/view'):'ContainerCPUView',('post','/container-resources/history'):'ContainerResourceHistory',('get','/capabilities'):'RuntimeCapabilities',('post','/population/explain'):'ExplanationResult',('post','/population/explain/plan'):'ExplanationPlan',('post','/population/explain/filter'):'ExplanationStagedQuestion',('post','/activity-views'):'ActivityView',('get','/activity-views/{id}'):'ActivityView',('get','/activity-views'):'ActivityViewList',
+responses = {('post','/kept-observations/tail'):'KeptObservations',('get','/kept-observations/{id}'):'KeptObservations',('post','/pod-metric-discovery'):'PodMetricDiscovery',('post','/pod-dashboard/plan'):'PodDashboardPlan',('post','/host-discovery'):'HostDiscovery',('post','/pod-discovery'):'PodDiscovery',('post','/host-dashboard/plan'):'HostDashboardPlan',('post','/pool-signals/plan'):'PoolSignalsPlan',('post','/pool-signals/view'):'PoolView',('post','/container-memory/view'):'ContainerMemoryView',('post','/container-cpu/view'):'ContainerCPUView',('post','/container-resources/history'):'ContainerResourceHistory',('get','/capabilities'):'RuntimeCapabilities',('post','/population/explain'):'ExplanationResult',('post','/population/explain/plan'):'ExplanationPlan',('post','/population/explain/filter'):'ExplanationStagedQuestion',('post','/activity-views'):'ActivityView',('get','/activity-views/{id}'):'ActivityView',('get','/activity-views'):'ActivityViewList',
  ('post','/compare'):'CompareResult',('post','/inventory'):'InventoryResult',('post','/discovery'):'ServiceDiscovery',('post','/explore'):'RecordResult',('post','/explore/counted-values'):'CountedValuesResult',('post','/record-aggregates'):'RecordAggregatesResult',('post','/trace-search'):'TraceSearchResult',
  ('post','/measurements'):'NativeResult',('post','/metric-discovery'):'MetricDiscoveryResult',('post','/telemetry-packages/draft'):'PackagePlan',('post','/telemetry-packages/plan'):'PackagePlan',('post','/telemetry-packages/numeric-plan'):'NumericPlan',('post','/telemetry-packages'):'SavedPackage',('get','/telemetry-packages/{revision}'):'SavedPackage',
  ('post','/recipes'):'RecipePlan',('post','/dashboards/plan'):'DashboardPlan',('post','/population/plan'):'PopulationPlan',('post','/numeric-histograms/selection'):'NumericHistogramSelection',('post','/numeric-histograms/comparison-selection'):'NumericHistogramSelection',
@@ -315,6 +327,7 @@ def effect(method,path):
  if method=='post' and path in plans: return 'pure-plan-or-supplied-summary'
  if path in reads and (method=='post' or path in ('/http-package','/operations','/counter-rates','/histograms')):
   return 'source-read-with-possible-custody-or-capture' if path in ('/measurements','/captures','/investigations') else 'source-read'
+ if method=='post' and path=='/kept-observations/tail': return 'file-publication-from-attested-selection'
  if method=='post' and path in publications: return 'file-publication-with-reference-validation'
  return 'saved-evidence-or-definition-read'
 

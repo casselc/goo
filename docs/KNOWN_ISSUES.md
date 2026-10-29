@@ -1,5 +1,11 @@
 # Known issues and gaps
 
+257 adds local Activity Keep/Open independent of XTDB. Exact IDs are durable;
+recent/pending discovery is limited to this browser (16 each), with explicit local
+forget. Fixed-result/Saved origins, a server-wide catalog, quota/GC and annotation
+attachment remain open. This keeps canonical server observations, not original
+OTLP bytes or a complete population. See [contract](KEPT_OBSERVATIONS.md).
+
 250 enables checked environment selectors in the record APIs, tails, context,
 comparisons, capabilities and filesystem captures. 251–254 supply checked browser constructors, retained Activity/fixed ownership
 and internal comparison/population scope validation. 255 enables checked Saved
