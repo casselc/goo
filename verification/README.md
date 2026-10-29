@@ -3063,3 +3063,18 @@ go test -C verification -run '^(TestHostControlsObserved|TestQuintHostControlsOb
 Accepted raw 0.18 s/Quint 2.19 s, package 2.379 s. The first browser check exposed
 a second inspection step inside Evidence; direct local lazy attribute mounting
 fixed it, and the revised journey passed. Root Go/API/backend behavior is unchanged.
+
+### Record environment propagation — 250
+
+`record_environment_flow_test.go` exercises real Query/Tail/normalization
+constructors: 200 Hegel cases and nine bounded observed Quint traces (three valid
+scopes and six dropped-selector/changed-policy controls). The model is
+`model/record_environment_flow.qnt`; this is constructor conformance, not live
+source validation or exhaustive model checking. Run from this module with the
+usual Go/cache setup and `QUINT_BIN` pointing to the root `node_modules/.bin/quint`:
+
+```sh
+go test -run '^(TestHegelRecordEnvironmentFlow250|TestQuintObservedRecordEnvironmentFlow250)$' -count=1 -v .
+```
+
+The real source, tail, capture/reopen and freeze checks are in journey 247.

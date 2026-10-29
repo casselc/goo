@@ -88,7 +88,7 @@ func (r ExplanationRequest) Validate() error {
 	if e := r.Selection.Validate(); e != nil {
 		return e
 	}
-	if r.Baseline.Signal != r.Selection.Signal || r.Baseline.Environment != r.Selection.Environment {
+	if r.Baseline.Signal != r.Selection.Signal || !r.Baseline.SameEnvironment(r.Selection) {
 		return fmt.Errorf("explanation requires identical signal and environment; selectors and windows remain independent")
 	}
 	seen := map[Field]bool{}

@@ -11,8 +11,10 @@
 > 248 shares checked current-only/effective selection and record SQL lowering;
 > [the propagation audit](ENVIRONMENT_SCOPE_PROPAGATION.md) identifies remaining handoffs.
 > 249 adds response-only versioned selector metadata and freezes old saved wires.
-> Next: propagate the selector through main-flow constructors, membership,
-> compatibility and saved codecs together before enabling continuations.
+> 250 enables [record selector APIs](RECORD_SELECTOR_API.md), capture/membership
+> propagation and explicit unsupported-family/persistence gates.
+> Next: coordinate browser Activity/fixed/context/Saved protocol adoption before
+> enabling selector handoffs; service/native/package/retention work remains separate.
 > Earlier queues preserve delivery history; their Next labels are superseded.
 
 

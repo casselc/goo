@@ -202,7 +202,7 @@ func compareAggregateDistributions(request ComparisonRequest) (*CohortComparison
 	if e := validateAggregateDistributionCohort(b); e != nil {
 		return nil, e
 	}
-	if a.Question.Signal != b.Question.Signal || a.Question.Environment != b.Question.Environment {
+	if a.Question.Signal != b.Question.Signal || !a.Question.SameEnvironment(b.Question) {
 		return nil, fmt.Errorf("distribution comparison requires identical signal and environment")
 	}
 	r := &CohortComparison{AggregateOnly: true, State: "ok", BaselineCount: a.Count, SelectionCount: b.Count, BaselineBasis: a.Basis, SelectionBasis: b.Basis, Rows: []ValueComparison{}, Warnings: []string{"Complete captured histogram aggregates, without a categorical breakdown. Bin shares use all records; missing, empty and invalid parse states remain excluded from valid-value bins.", "Separate source reads; populations may overlap. Differences are descriptive, not causal attribution or evidence of complete telemetry."}}

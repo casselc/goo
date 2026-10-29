@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/identity"
 	"strconv"
 	"strings"
 )
@@ -17,9 +18,10 @@ const TailReadLimit = 1000
 // TailSelector deliberately has no fixed window or aggregate settings.
 // Every poll reads a rolling event-time window; this is not an ingestion cursor.
 type TailSelector struct {
-	Signal      string     `json:"signal,omitempty"`
-	Environment string     `json:"environment"`
-	Where       *Predicate `json:"where,omitempty"`
+	EnvironmentSelector *identity.EnvironmentSelector `json:"environmentSelector,omitempty"`
+	Signal              string                        `json:"signal,omitempty"`
+	Environment         string                        `json:"environment"`
+	Where               *Predicate                    `json:"where,omitempty"`
 }
 
 func (s TailSelector) Query(now int64) Query {
@@ -27,7 +29,7 @@ func (s TailSelector) Query(now int64) Query {
 	if signal == "" {
 		signal = "logs"
 	}
-	return Query{Signal: signal, Environment: s.Environment, Where: s.Where, FromMS: now - TailWindowMS, ToMS: now, Limit: 100}
+	return Query{EnvironmentSelector: copyEnvironmentSelector(s.EnvironmentSelector), Signal: signal, Environment: s.Environment, Where: s.Where, FromMS: now - TailWindowMS, ToMS: now, Limit: 100}
 }
 func (s Source) PollTail(ctx context.Context, selector TailSelector, now int64) ([]json.RawMessage, bool, error) {
 	q := selector.Query(now)
@@ -40,6 +42,9 @@ func (s Source) PollTail(ctx context.Context, selector TailSelector, now int64) 
 	sql := strings.Replace(p.Rows, " ORDER BY Timestamp,", " ORDER BY Timestamp DESC,", 1)
 	rows, e := s.read(ctx, sql, p.Parameters)
 	if e != nil {
+		return nil, false, e
+	}
+	if e = validateSelectedRows(q, rows); e != nil {
 		return nil, false, e
 	}
 	limited := len(rows) > TailReadLimit

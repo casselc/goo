@@ -1,13 +1,14 @@
 # Known issues and gaps
 
-247 adds checked environment scope discovery and readonly logs/spans inspection
-under Activity → Find environments. Missing and empty labels, legacy fallback and
-conflicts are distinct; old named query semantics are unchanged. Full tail/fixed/
-service/native/capture adoption is still open and those continuations are disabled
-from adoption results. 248 unifies checked selection and SQL lowering without
-changing these public formats; [the propagation audit](ENVIRONMENT_SCOPE_PROPAGATION.md)
-records the required handoffs. 249 adds versioned response-only selector metadata,
-not new Query/Tail/capture input support. See [the contract](ENVIRONMENT_ADOPTION.md).
+250 enables checked environment selectors in the record APIs, tails, context,
+comparisons, capabilities and filesystem captures. Browser Activity/fixed/Saved
+adoption is still open: Find environments stays a local preview, and selector
+captures show an explicit browser-pending notice plus exact JSON read link.
+Native/service/inventory/parent-edge, reusable/saved intent and XTDB paths remain
+unsupported and refuse selectors server-side. Old named questions retain their
+meaning and IDs. See [the implemented API cut](RECORD_SELECTOR_API.md) and
+[propagation audit](ENVIRONMENT_SCOPE_PROPAGATION.md). Older readers may reject
+mixed catalogs after selector captures are added; the contract explains rollback.
 
 
 ## Current review — 243

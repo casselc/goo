@@ -79,6 +79,9 @@ func (c SavedCapture) Followups(row int) (*FollowupSet, error) {
 		}
 	} else if origin.Explore != nil && c.Explore != nil {
 		q := *origin.Explore
+		if q.EnvironmentSelector != nil {
+			out.Warnings = append(out.Warnings, "Native discovery, saved views and reusable packages do not support this explicit environment selector yet.")
+		}
 		if q.Signal == "spans" {
 			derived := q
 			derived.Summary = "span-duration"
@@ -121,6 +124,7 @@ func (c SavedCapture) Followups(row int) (*FollowupSet, error) {
 			}
 			if followupTrace.MatchString(r.Trace) && r.Trace != strings.Repeat("0", 32) {
 				trace := Query{Signal: "spans", Environment: q.Environment, FromMS: q.FromMS, ToMS: q.ToMS, Where: ptrPredicate(followupEqual("trace_id", r.Trace))}
+				trace = trace.WithEnvironmentFrom(q)
 				addQuery("trace", "Follow this trace across services", "Inspect spans reporting this exact trace ID within the original window. Sampling and out-of-window parents remain unknown.", "Exact reported trace ID", trace)
 				logs := trace
 				logs.Signal = "logs"
@@ -130,7 +134,7 @@ func (c SavedCapture) Followups(row int) (*FollowupSet, error) {
 					addQuery("span-logs", "Inspect logs for this span", "Narrow to logs reporting both selected IDs. This is exact ID correlation, not temporal proximity.", "Exact reported trace and span IDs", logs)
 				}
 			}
-			if r.Service != "" {
+			if r.Service != "" && q.EnvironmentSelector == nil {
 				addDiscovery(r.Service, q.FromMS, q.ToMS, q.Environment)
 			}
 		}

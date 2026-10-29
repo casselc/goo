@@ -1,6 +1,71 @@
 # Validation record
 
 
+## Main record selector APIs — 250 (2026-10-29 UTC)
+
+Query/Tail accept explicit `environmentSelector` with an empty/omitted legacy
+name, while old named question bytes/plans/IDs remain current-only and unchanged.
+Context/followups, semantic compatibility, scopes, capabilities and filesystem
+captures preserve policy. New-selector rows (including overflow) are checked for
+resource presence/nulls, scope, signal and fixed bounds; snapshot/tail issuance
+and immutable capture verification reuse that boundary. Same-current-policy
+legacy/explicit wires compare semantically while immutable identities retain
+actual representation. See [API support/diagram](docs/RECORD_SELECTOR_API.md).
+
+Unsupported view/package/step/XTDB intent and reported-parent-edge queries refuse
+selectors before publication/source work. Other family requests remain named-only.
+Browser authoring/inspection remains gated, with policy-explicit catalog/linked
+facts and an actionable exact JSON link before legacy owners can mount. This is
+not full UI A0 support. [Reviews](docs/reviews/RECORD_SELECTOR_API_REVIEW_250.md)
+and the updated plan record remaining work.
+
+Root Go suite passes (cmd/goo 51.913s). Race checks pass exploration, workbench,
+retention, record handlers and cmd/goo (198.159s); focused final guards and vet pass.
+607 frontend checks pass. Tests cover selector cloning, missing/ambiguous refusal,
+policy incompatibility, same-current-policy compatibility, no dummy bindings,
+wrong-source/snapshot scope, capability cross-policy rejection and stored capture
+membership. A correctly rehashed foreign-scope capture reaches membership
+verification and is rejected by exact Load and explicit rebuild. Old catalog entry
+bytes/digest are frozen from a pre-250 Go overlay with fixed file mtime; mixed
+legacy/selector catalog pagination, rebuild and filter isolation pass. No implicit
+migration or immutable payload rewrite is introduced.
+
+A subagent's 200 Hegel cases pass for actual tail-to-fixed-to-normalized selection
+and clone isolation. Nine observed Quint traces pass: three valid scope flows
+accepted, six controls dropping/changing selection rejected. Initial harness
+reserved-name/empty-constant issues were fixed before acceptance; the actual run
+uses installed Node/Quint and writable native cache. This is bounded constructor
+conformance, not unbounded checking or a model of live source concurrency.
+
+Actual OTLP/ClickHouse journey 247 passes in 1.6m (1.7m total) with the existing
+Bombadil completion campaign. For both signals and all historical matrix scopes,
+main reads match independent membership, capture/reopen preserves policy and
+catalog metadata stays distinct from legacy filters. Six current-time rolling
+tails return exactly the owned matching records and available membership.
+Unreported live comparison/freeze/retry preserves selector and exact receipt ID.
+The final browser-refusal/link/frame refresh passes in 34.2s (43.1s total); no
+source POST occurs on unsupported browser open.
+Test stores are temporary; SDK fixtures expire via existing exporter TTL.
+
+OpenAPI passes 91 operations / 534 schemas, 429 response fixtures, 159 admitted
+requests, 28 mux refusals and controls/SSE checks. New Query/Tail selector unions
+validate all shared valid DTO fixtures, both empty/omitted-name forms and rejecting
+missing/ambiguous/version controls. Runtime UTF-8 byte limits remain stricter than
+schema character lengths as documented. No new HTTP route is introduced.
+
+
+
+
+Deployed single-Go image `bacc3feca2d0` passes health, exact served module/OpenAPI
+checks, both-signal unreported/empty/named selector reads and old exact capture
+reopen. Deployed missing/empty windows returned zero records; no completeness or
+health claim follows. All 55 native revision IDs and 1,812 captures remain intact.
+No live capture was published, payload/index rewritten or volume migrated. API
+docs browser checks also pass 91 operations, disclosure/filtering, mobile overflow
+and no page errors. Temporary test bundles, fixture overlays and binaries are
+removed after retaining these checks, protocol fixtures and three actual frames.
+
+
 ## Versioned environment selector wire — 249 (2026-10-29 UTC)
 
 Adds explicit `goo/environment-selector/v1` wire metadata with policy and scope,

@@ -49,6 +49,9 @@ func (v ExplorationView) Validate() error {
 	signals := map[string]bool{}
 	first := v.Queries[0]
 	for _, q := range v.Queries {
+		if q.EnvironmentSelector != nil {
+			return errors.New("saved exploration views do not support environmentSelector yet")
+		}
 		if signals[q.Signal] || q.Offset != 0 || q.Environment != first.Environment || q.FromMS != first.FromMS || q.ToMS != first.ToMS {
 			return errors.New("view queries require distinct signals, page zero and identical environment/window")
 		}
@@ -84,6 +87,9 @@ func (v ExplorationView) Validate() error {
 		}
 	}
 	for signal, config := range v.Breakdowns {
+		if config.Baseline != nil && config.Baseline.EnvironmentSelector != nil {
+			return errors.New("saved exploration views do not support environmentSelector yet")
+		}
 		var current *exploration.Query
 		for i := range v.Queries {
 			if v.Queries[i].Signal == signal {

@@ -25,21 +25,22 @@ type Predicate struct {
 	Value   string          `json:"value,omitempty" yaml:"value,omitempty"`
 }
 type Query struct {
-	NumericHistogram *NumericHistogramSpec `json:"numericHistogram,omitempty" yaml:"numericHistogram,omitempty"`
-	ReportedEdge     *ReportedEdge         `json:"reportedEdge,omitempty" yaml:"reportedEdge,omitempty"`
-	Numeric          *NumericBinding       `json:"numeric,omitempty" yaml:"numeric,omitempty"`
-	GroupTimeSeries  bool                  `json:"groupTimeSeries,omitempty" yaml:"groupTimeSeries,omitempty"`
-	SpanStatus       bool                  `json:"spanStatus,omitempty" yaml:"spanStatus,omitempty"`
-	BucketMS         int64                 `json:"bucketMs,omitempty" yaml:"bucketMs,omitempty"`
-	Summary          string                `json:"summary,omitempty" yaml:"summary,omitempty"`
-	Signal           string                `json:"signal" yaml:"signal"`
-	Environment      string                `json:"environment" yaml:"environment"`
-	FromMS           int64                 `json:"fromMs" yaml:"fromMs"`
-	ToMS             int64                 `json:"toMs" yaml:"toMs"`
-	Where            *Predicate            `json:"where,omitempty" yaml:"where,omitempty"`
-	GroupBy          []Field               `json:"groupBy,omitempty" yaml:"groupBy,omitempty"`
-	Limit            int                   `json:"limit" yaml:"limit"`
-	Offset           int                   `json:"offset" yaml:"offset"`
+	EnvironmentSelector *identity.EnvironmentSelector `json:"environmentSelector,omitempty" yaml:"environmentSelector,omitempty"`
+	NumericHistogram    *NumericHistogramSpec         `json:"numericHistogram,omitempty" yaml:"numericHistogram,omitempty"`
+	ReportedEdge        *ReportedEdge                 `json:"reportedEdge,omitempty" yaml:"reportedEdge,omitempty"`
+	Numeric             *NumericBinding               `json:"numeric,omitempty" yaml:"numeric,omitempty"`
+	GroupTimeSeries     bool                          `json:"groupTimeSeries,omitempty" yaml:"groupTimeSeries,omitempty"`
+	SpanStatus          bool                          `json:"spanStatus,omitempty" yaml:"spanStatus,omitempty"`
+	BucketMS            int64                         `json:"bucketMs,omitempty" yaml:"bucketMs,omitempty"`
+	Summary             string                        `json:"summary,omitempty" yaml:"summary,omitempty"`
+	Signal              string                        `json:"signal" yaml:"signal"`
+	Environment         string                        `json:"environment" yaml:"environment"`
+	FromMS              int64                         `json:"fromMs" yaml:"fromMs"`
+	ToMS                int64                         `json:"toMs" yaml:"toMs"`
+	Where               *Predicate                    `json:"where,omitempty" yaml:"where,omitempty"`
+	GroupBy             []Field                       `json:"groupBy,omitempty" yaml:"groupBy,omitempty"`
+	Limit               int                           `json:"limit" yaml:"limit"`
+	Offset              int                           `json:"offset" yaml:"offset"`
 }
 
 var columns = map[string]string{"service": "string", "trace_id": "string", "span_id": "string", "scope": "string", "scope_version": "string", "name": "string", "kind": "string", "status": "string", "duration_ns": "uint64", "timestamp_ns": "uint64", "duration_bucket": "string", "status_class": "string", "body": "string", "severity": "string", "severity_number": "uint64", "body_pattern_v1": "string", "exception_event": "string", "exception_type": "string", "exception_type_state": "string"}
@@ -64,6 +65,9 @@ func (q Query) Validate() error {
 		}
 	}
 	if q.ReportedEdge != nil {
+		if q.EnvironmentSelector != nil {
+			return fmt.Errorf("reported parent-edge queries do not support environmentSelector yet")
+		}
 		if q.Signal != "spans" {
 			return fmt.Errorf("reported edges require spans")
 		}
@@ -98,8 +102,8 @@ func (q Query) Validate() error {
 	if q.Signal != "spans" && q.Signal != "logs" {
 		return fmt.Errorf("signal must be spans or logs")
 	}
-	if _, err := identity.CurrentEnvironment(q.Environment); err != nil {
-		return fmt.Errorf("explicit environment required")
+	if _, err := q.EnvironmentSelection(); err != nil {
+		return err
 	}
 	if q.FromMS < 0 || q.ToMS <= q.FromMS || q.ToMS-q.FromMS > 120*60000 || q.ToMS > 4102444800000 {
 		return fmt.Errorf("require half-open window of at most 120 minutes before 2100")

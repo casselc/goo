@@ -459,10 +459,15 @@ recovery](docs/NATIVE_CATALOG_CAPACITY.md); no stored definitions are deleted to
 
 Have OTel data without an environment label? Activity → Find environments offers
 [bounded discovery and readonly inspection](docs/ENVIRONMENT_ADOPTION.md). Main-flow
-tailing/capture adoption remains a separate continuation.
+tailing/capture adoption remains open. The [record APIs](docs/RECORD_SELECTOR_API.md)
+now support checked selectors through tails, context and filesystem captures.
 
 The [scope propagation audit](docs/ENVIRONMENT_SCOPE_PROPAGATION.md) tracks the
 remaining main-flow work; shared checked backend selection/lowering is in place.
 
 Preview responses carry a [versioned environment selector](docs/ENVIRONMENT_SELECTOR_PROTOCOL.md)
 that is checked before displaying records; main-flow selector adoption remains open.
+
+Selector captures retain their policy in storage and catalog metadata. Browser
+inspection is explicitly gated until its owners adopt the protocol; exact JSON
+reads remain available. See [API support and limits](docs/RECORD_SELECTOR_API.md).

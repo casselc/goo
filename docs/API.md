@@ -1069,3 +1069,11 @@ Record preview responses add root `selector` with version
 This is response-only metadata, not a custody/snapshot capability. Request schemas
 and all legacy record/tail/saved-input support remain unchanged. See the
 [wire contract](ENVIRONMENT_SELECTOR_PROTOCOL.md) for checked conversion and limits.
+
+### Checked record selector inputs (250)
+
+Query and Tail now accept `environmentSelector` (versioned policy/scope) with an
+empty or omitted legacy environment name; nonempty legacy names retain their old
+semantics. Filesystem captures preserve the field. Saved definitions/views,
+parent-edge/native/service families and XTDB remain unsupported. See
+[request examples, capabilities and rollback limits](RECORD_SELECTOR_API.md).

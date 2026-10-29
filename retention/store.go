@@ -60,6 +60,9 @@ func Select(c *exploration.SavedCapture, indexes []int) (Manifest, error) {
 	if c == nil || c.Explore == nil || len(indexes) < 1 || len(indexes) > 20 {
 		return m, errors.New("select 1..20 rows from a saved record capture")
 	}
+	if c.Question.Explore != nil && c.Question.Explore.EnvironmentSelector != nil {
+		return m, errors.New("XTDB retention does not support environmentSelector yet")
+	}
 	indexes = append([]int{}, indexes...)
 	sort.Ints(indexes)
 	receipt, _ := json.Marshal(c.CaptureReceipt)
@@ -106,6 +109,9 @@ func SelectResult(c *exploration.SavedCapture, indexes []int) (Manifest, error) 
 	return m, nil
 }
 func (m Manifest) Validate() error {
+	if m.Capture.Question.Explore != nil && m.Capture.Question.Explore.EnvironmentSelector != nil {
+		return errors.New("XTDB retention does not support environmentSelector yet")
+	}
 	id := m.ID
 	m.ID = ""
 	raw, e := json.Marshal(m)

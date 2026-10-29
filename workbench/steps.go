@@ -33,6 +33,9 @@ func (s Step) Validate() error {
 			return errors.New("record step requires one record question and supported view")
 		}
 		q := s.Record
+		if q.EnvironmentSelector != nil {
+			return errors.New("authored steps do not support environmentSelector yet")
+		}
 		if q.Environment != s.Scope.Environment || q.FromMS != s.Scope.FromMS || q.ToMS != s.Scope.ToMS {
 			return errors.New("record question differs from step scope")
 		}

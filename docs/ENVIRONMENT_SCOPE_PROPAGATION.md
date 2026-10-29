@@ -1,4 +1,7 @@
-# Record environment propagation — 248 prerequisite
+# Record environment propagation — 248 audit, current through 250
+
+> 250 implements the [server record API cut](RECORD_SELECTOR_API.md). Browser
+> handoffs remain gated; the historical table below is not the current support list.
 
 The shipped 247 tool deliberately stops at local inspection. This audit prepares
 main-flow adoption; it does not enable missing/empty environment selectors in
@@ -22,7 +25,7 @@ bindings and rejects collisions/stale unused named bindings. Existing callers
 explicitly construct current-only selectors; native metric compilers remain
 independent. Existing SQL/parameters and saved formats retain their meaning.
 
-## Audited handoffs and remaining work
+## Historical 248 audit (before propagation)
 
 | Boundary | Current representation / risk | Required coordinated change before exposing effective scope |
 |---|---|---|
@@ -47,10 +50,11 @@ future caller is covered. A new Query field alone does not complete any row.
    bytes/identities (existing route fixtures remain), and pin explicit wire
    fixtures for the new policy. Keep checked semantic values outside stored wire
    types; convert at boundaries with errors.
-2. Adopt the wire selector across record Query/Tail and all derived constructors,
+2. Server record portion delivered 250: adopt the wire selector across record Query/Tail and derived constructors,
    compatibility checks and snapshot/membership owners together. Make unsupported
    bridges fail before any source read or publication.
-3. Version capture/package/view summaries and browser protocols where needed,
+3. Capture metadata delivered 250; packages/views explicitly refuse selectors.
+   Browser adoption remains open. Version further summaries/protocols where needed,
    preserving old current-only identities and exact retained reopen.
 
 Steps 2–3 are one gated public rollout: internal plumbing may land first, but
@@ -78,3 +82,10 @@ flowchart LR
   Wire --> Gate[Coordinated propagation still required]
   Gate -. planned .-> Flow[Live / fixed / capture continuations]
 ```
+
+## 250 current status
+
+The [record API cut](RECORD_SELECTOR_API.md) supersedes the pre-propagation table:
+Query/Tail, record context/followups, compatibility, capabilities, filesystem
+captures and mixed catalog metadata preserve the selector. Unsupported families,
+saved intent and XTDB refuse it. Browser handoffs remain gated; they are next.

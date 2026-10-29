@@ -22,6 +22,22 @@ def validator(spec, schema):
 
 def check(spec):
     validate_spec(spec)
+    bank = json.loads((ROOT/'testdata/protocol/environment-selectors.json').read_text())
+    for path in ('/explore','/tail'):
+        body_schema = spec['paths'][path]['post']['requestBody']['content']['application/json']['schema']
+        check_body = validator(spec,body_schema)
+        base = {'signal':'logs'}
+        if path == '/explore':
+            base.update(fromMs=100000,toMs=160000,limit=100,offset=0)
+        check_body.validate({**base,'environment':'prod'})
+        check_body.validate({**base,'environment':'prod','environmentSelector':None})
+        for case in bank['cases']:
+            check_body.validate({**base,'environmentSelector':case['selector']})
+            check_body.validate({**base,'environment':'','environmentSelector':case['selector']})
+        good = bank['cases'][0]['selector']
+        for invalid in (base,{**base,'environment':''},{**base,'environment':'prod','environmentSelector':good},{**base,'environmentSelector':None},{**base,'environmentSelector':{**good,'version':'unsupported'}}):
+            assert not check_body.is_valid(invalid), f'{path}: invalid selector union accepted: {invalid}'
+
     routes = set(route_sources(ROOT))
     documented = {(m, p) for p, item in spec['paths'].items() for m in item if m in ('get', 'post') and 'x-go-source' in item[m]}
     assert routes == documented, f'Go route coverage changed: missing={routes-documented}, stale={documented-routes}'

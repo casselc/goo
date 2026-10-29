@@ -12,7 +12,7 @@ func (s Source) LiveRecordComparison(ctx context.Context, baseline *SavedCapture
 	if baseline == nil || baseline.Question.Kind != "explore" || baseline.Question.Explore == nil {
 		return nil, nil, fmt.Errorf("live comparison requires a record capture")
 	}
-	q := *baseline.Question.Explore
+	q := (*baseline.Question.Explore).WithEnvironmentFrom(*baseline.Question.Explore)
 	duration := q.ToMS - q.FromMS
 	if duration <= 0 || duration > 7200000 {
 		return nil, nil, fmt.Errorf("live window must be at most two hours")

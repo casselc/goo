@@ -7,9 +7,10 @@ alone reads nothing. Discovery and preview cover all services in the chosen
 signal/window; Activity predicates are not applied. Reads pause live Activity but do not replace its named
 selector. Named, empty and unreported labels remain distinct.
 
-This is A0's scope/adoption foundation, not full environment support throughout
-the product. General Query, TailSelector, inventory, native definitions, reusable
-packages and immutable capture formats remain unchanged. Adoption results offer
+This tool is A0's scope/adoption foundation, not full environment support throughout
+the product. 250 adds separate [main record API support](RECORD_SELECTOR_API.md), including
+Query/Tail and filesystem captures. Browser handoffs and inventory/native/reusable
+intent adoption remain open. Adoption results offer
 local inspection and copying of reported IDs/attributes; live tail, trace/context
 expansion, service/native dashboards, comparisons, package generation, fixed
 question conversion and capture publication are visibly unavailable. No result
@@ -108,3 +109,6 @@ distinction without adding a general Query flag or enabling these continuations.
 249 adds [response-only versioned selector metadata](ENVIRONMENT_SELECTOR_PROTOCOL.md)
 to record previews. The UI verifies exact effective policy/scope before rendering;
 request shapes and unsupported continuations remain unchanged.
+
+250 ships [record selector APIs](RECORD_SELECTOR_API.md) behind explicit unsupported
+family/persistence gates. The discovery UI still has no main-flow handoff.

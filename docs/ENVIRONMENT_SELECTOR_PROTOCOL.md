@@ -1,4 +1,4 @@
-# Record environment selector protocol — 249
+# Record environment selector protocol — 249, API adoption 250
 
 The checked record-selection value now has an explicit wire counterpart:
 
@@ -32,6 +32,8 @@ clears the receiver rather than retaining a previous selection. Duplicate JSON
 members use last-value semantics, matching `JSON.parse`; repeated objects cannot
 merge an earlier scope/name into the final object.
 
+250 now accepts this DTO as `environmentSelector` on the [record Query/Tail APIs](RECORD_SELECTOR_API.md), with mutually exclusive legacy name selection.
+
 ## Shipped use and rollout boundary
 
 `POST /api/environment-scopes/records` adds root **response-only** `selector`
@@ -41,11 +43,10 @@ The UI requires effective policy and the exact requested scope before constructi
 record rows. Valid metadata for a different policy or scope is still refused.
 Metadata is not a source snapshot, membership capability or custody receipt.
 
-Existing request schemas remain unchanged: the preview still takes `scope`;
-Query, Tail, packages, captures and Activity views do not accept this DTO or an
-`environmentScope` field. Tests prove selected unsupported requests fail before
-source access or publication. No live/fixed/capture continuation is enabled here.
-This metadata is not an invitation to replay it into a legacy input.
+The preview still takes `scope`; root `selector` and `environmentScope` are not
+Query/Tail input aliases. In 250 only the explicit `environmentSelector` field
+is accepted by record APIs. Saved intent and other unsupported families still
+refuse the DTO. Browser handoffs remain disabled.
 
 The private record compiler now receives a checked selection directly and derives
 its environment parameter bindings from that selection. Conflicting prefilled

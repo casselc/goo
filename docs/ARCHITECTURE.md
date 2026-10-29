@@ -1288,3 +1288,9 @@ checked readonly record inspection. They share record admission/cancellation and
 4 KiB input / 15-second handler limits. General named Query/Tail/capture formats
 are unchanged. The app owner uses shared passive record/attribute/table widgets
 and disables unsupported continuations. See [the contract and flow](ENVIRONMENT_ADOPTION.md).
+
+The [250 record selector boundary](RECORD_SELECTOR_API.md) carries a checked,
+policy-aware environment through record sources, context, capabilities and
+filesystem captures. Shared selected-row verification protects new-selector
+reads and immutable reopen. Other family/persistence owners refuse unsupported
+selectors; browser authoring is still gated.

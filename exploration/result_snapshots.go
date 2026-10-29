@@ -53,6 +53,9 @@ func (s *ResultSnapshots) Freeze(result *Result) (string, error) {
 	if result == nil || result.Question.Validate() != nil {
 		return "", errors.New("invalid result page")
 	}
+	if err := validateSelectedRows(result.Question, result.Rows); err != nil {
+		return "", err
+	}
 	// Serialize before publishing a token: later caller mutations cannot change it.
 	copy := *result
 	copy.ResultToken = ""

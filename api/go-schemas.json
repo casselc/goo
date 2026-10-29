@@ -3393,6 +3393,16 @@
           }
         ]
       },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/identity.EnvironmentSelector"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "id": {
         "type": "string"
       },
@@ -8105,6 +8115,16 @@
       "environment": {
         "type": "string"
       },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/identity.EnvironmentSelector"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "fromMs": {
         "type": "integer"
       },
@@ -8211,6 +8231,23 @@
         "anyOf": [
           {
             "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           {
             "type": "null"
@@ -8409,6 +8446,16 @@
       },
       "environment": {
         "type": "string"
+      },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/identity.EnvironmentSelector"
+          },
+          {
+            "type": "null"
+          }
+        ]
       },
       "explanationFields": {
         "anyOf": [
@@ -9562,6 +9609,16 @@
       "environment": {
         "type": "string"
       },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/identity.EnvironmentSelector"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "signal": {
         "type": "string"
       },
@@ -9589,6 +9646,23 @@
         "anyOf": [
           {
             "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           {
             "type": "null"
@@ -10835,6 +10909,43 @@
       "policy",
       "scope"
     ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/identity.EnvironmentSelector"
+  },
+  "identity.EnvironmentSelectorInput": {
+    "additionalProperties": false,
+    "properties": {
+      "policy": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "scope": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/identity.EnvironmentScopeInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/identity.EnvironmentSelector"
   },

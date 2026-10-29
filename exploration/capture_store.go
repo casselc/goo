@@ -88,7 +88,7 @@ func (q CaptureQuestion) Validate() error {
 		}
 		aggregateOnly := q.Comparison.Distribution && len(a.GroupBy) == 0 && len(b.GroupBy) == 0
 		grouped := len(a.GroupBy) == 1 && len(b.GroupBy) == 1 && a.GroupBy[0] == b.GroupBy[0]
-		if a.Validate() != nil || b.Validate() != nil || (!grouped && !aggregateOnly) || a.Signal != b.Signal || a.Environment != b.Environment {
+		if a.Validate() != nil || b.Validate() != nil || (!grouped && !aggregateOnly) || a.Signal != b.Signal || !a.SameEnvironment(b) {
 			return errors.New("comparison requires valid questions with identical signal, environment and one breakdown; explicit distributions also support aggregate-only questions")
 		}
 		return nil
@@ -115,6 +115,7 @@ func (q CaptureQuestion) Normalized() CaptureQuestion {
 	}
 	if q.Explore != nil {
 		v := *q.Explore
+		v.EnvironmentSelector = copyEnvironmentSelector(v.EnvironmentSelector)
 		v.ReportedEdge = detached(v.ReportedEdge)
 		v.Offset = 0
 		v.Limit = CapturePageSize
@@ -351,6 +352,9 @@ func validateCapture(c *SavedCapture) error {
 		}
 		if c.Explore == nil || c.Inventory != nil || !reflect.DeepEqual(c.Explore.Question, *c.Question.Explore) || len(c.Explore.Rows) > CaptureRowLimit || !regexpRevision.MatchString(c.Explore.Basis) {
 			return errors.New("invalid saved exploration")
+		}
+		if err := validateSelectedRows(*c.Question.Explore, c.Explore.Rows); err != nil {
+			return err
 		}
 	} else if c.Inventory == nil || c.Explore != nil || !reflect.DeepEqual(c.Inventory.Question, *c.Question.Inventory) || len(c.Inventory.Rows) > 1000 || !regexpRevision.MatchString(c.Inventory.Basis) {
 		return errors.New("invalid saved inventory")

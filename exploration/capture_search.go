@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/casselc/goo/identity"
 	"os"
 	"path/filepath"
 	"slices"
@@ -34,14 +35,15 @@ type CaptureSearchQuery struct {
 // CaptureSummary is bounded discovery metadata, not a partial evidence receipt.
 // Full questions and verified evidence are available only through exact-ID reads.
 type CaptureSummary struct {
-	ID              string  `json:"id"`
-	Parent          string  `json:"parent,omitempty"`
-	Title           string  `json:"title"`
-	CapturedAt      string  `json:"capturedAt"`
-	Kind            string  `json:"kind"`
-	MeasurementKind string  `json:"measurementKind,omitempty"`
-	Signal          string  `json:"signal"`
-	Environment     *string `json:"environment"`
+	EnvironmentSelector *identity.EnvironmentSelector `json:"environmentSelector,omitempty"`
+	ID                  string                        `json:"id"`
+	Parent              string                        `json:"parent,omitempty"`
+	Title               string                        `json:"title"`
+	CapturedAt          string                        `json:"capturedAt"`
+	Kind                string                        `json:"kind"`
+	MeasurementKind     string                        `json:"measurementKind,omitempty"`
+	Signal              string                        `json:"signal"`
+	Environment         *string                       `json:"environment"`
 }
 
 // canonicalCaptureTime bounds even legacy timestamps with long fractional tails.
@@ -60,6 +62,17 @@ func summarizeCapture(r CaptureReceipt) CaptureSummary {
 	summary := CaptureSummary{ID: r.ID, Parent: r.Parent, Title: r.Title, CapturedAt: canonicalCaptureTime(r.CapturedAt), Kind: r.Question.Kind, Signal: signal}
 	if known {
 		summary.Environment = &environment
+	}
+	if scope, err := r.Question.Scope(); err == nil && scope.EnvironmentSelector != nil {
+		same := true
+		for _, member := range scope.Members {
+			if !scope.sameEnvironment(member) {
+				same = false
+			}
+		}
+		if same {
+			summary.EnvironmentSelector = copyEnvironmentSelector(scope.EnvironmentSelector)
+		}
 	}
 	if r.Question.Measurement != nil {
 		summary.MeasurementKind = r.Question.Measurement.Definition.Kind
@@ -99,12 +112,12 @@ func captureScope(q CaptureQuestion) (signal, environment string, knownEnvironme
 	if err != nil {
 		return "", "", false
 	}
-	signal, environment, knownEnvironment = scope.Signal, scope.Environment, true
+	signal, environment, knownEnvironment = scope.Signal, scope.Environment, scope.EnvironmentSelector == nil
 	for _, member := range scope.Members {
 		if member.Signal != scope.Signal {
 			signal = ""
 		}
-		if member.Environment != scope.Environment {
+		if !member.sameEnvironment(scope) {
 			knownEnvironment = false
 		}
 	}

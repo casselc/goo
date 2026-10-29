@@ -170,28 +170,8 @@ func (s Source) PreviewAdoptionRecords(ctx context.Context, q AdoptionRecordsQue
 	retained := 0
 	budgetLimited := false
 	for i, wire := range rows {
-		var record struct {
-			Resource  map[string]*string `json:"ResourceAttributes"`
-			Body      *string            `json:"Body"`
-			SpanName  *string            `json:"SpanName"`
-			Timestamp string             `json:"timestamp_ns"`
-		}
-		if e = json.Unmarshal(wire, &record); e != nil || record.Resource == nil {
-			return nil, fmt.Errorf("adoption preview returned a different environment scope")
-		}
-		resource := map[string]string{}
-		for key, value := range record.Resource {
-			if value == nil {
-				return nil, fmt.Errorf("adoption preview has null resource attribute")
-			}
-			resource[key] = *value
-		}
-		if !selection.Matches(resource) || q.Signal == "logs" && record.Body == nil || q.Signal == "spans" && record.SpanName == nil {
-			return nil, fmt.Errorf("adoption preview returned a different environment or signal")
-		}
-		ns, e := strconv.ParseInt(record.Timestamp, 10, 64)
-		if e != nil || ns < 0 || strconv.FormatInt(ns, 10) != record.Timestamp || ns/1000000 < q.FromMS || ns/1000000 >= q.ToMS {
-			return nil, fmt.Errorf("adoption preview returned a record outside its window")
+		if e = validateSelectedRecord(selection, q.Signal, q.FromMS, q.ToMS, wire); e != nil {
+			return nil, e
 		}
 		if i >= q.Limit || budgetLimited {
 			continue

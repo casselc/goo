@@ -81,7 +81,15 @@ func CompareEvidence(a, b *SavedCapture) (*EvidenceComparison, error) {
 	var fa, ta, fb, tb int64
 	if qa.Explore != nil {
 		x, y := *qa.Explore, *qb.Explore
-		ea, eb = x.Environment, y.Environment
+		if !x.SameEnvironment(y) {
+			r.State = "incompatible"
+			r.Differences = append(r.Differences, "Environment selector differs")
+			return r, nil
+		}
+		x.EnvironmentSelector = nil
+		y.EnvironmentSelector = nil
+		// Checked equality above is authoritative, including equivalent legacy
+		// and explicit current-only policies with different wire representations.
 		fa, ta, fb, tb = x.FromMS, x.ToMS, y.FromMS, y.ToMS
 		if x.Signal != y.Signal {
 			r.Differences = append(r.Differences, "Signal family differs")

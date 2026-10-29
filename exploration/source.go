@@ -126,6 +126,7 @@ func (s Source) captureRows(ctx context.Context, q Query) (*Result, error) {
 }
 
 func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, error) {
+	q = q.WithEnvironmentFrom(q)
 	plan, e := compile(q, rowLimit)
 	if e != nil {
 		return nil, e
@@ -180,6 +181,9 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 	}
 	if len(rows) > rowLimit+1 {
 		return nil, fmt.Errorf("source exceeded page budget")
+	}
+	if e = validateSelectedRows(q, rows); e != nil {
+		return nil, e
 	}
 	r.HasMore = len(rows) > rowLimit
 	if r.HasMore {

@@ -2,6 +2,7 @@
 Run after go run ./scripts/openapi-schema api/go-schemas.json.
 """
 import json
+import copy
 import re
 from pathlib import Path
 from go_http_routes import route_sources
@@ -50,6 +51,16 @@ selector['properties']['policy']['enum']=['current-only','effective']
 selector['properties']['scope']={'type':'object','additionalProperties':False,'required':['mode'],'properties':{'mode':{'type':'string','enum':['named','empty','unreported']},'value':{'type':'string','maxLength':128,'description':'At most 128 UTF-8 bytes; runtime enforces the byte limit.'}},'allOf':[{'if':{'properties':{'mode':{'const':'named'}},'required':['mode']},'then':{'required':['value'],'properties':{'value':{'minLength':1}}},'else':{'properties':{'value':{'const':''}}}}]}
 selector['allOf']=[{'if':{'properties':{'policy':{'const':'current-only'}},'required':['policy']},'then':{'properties':{'scope':{'properties':{'mode':{'const':'named'}}}}}}]
 schemas['exploration.AdoptionRecordsResult']['properties']['selector']={'allOf':[{'$ref':'#/components/schemas/identity.EnvironmentSelector'},{'properties':{'policy':{'const':'effective'}}}]}
+
+schemas['identity.EnvironmentSelectorInput']=copy.deepcopy(selector)
+for wire in ('exploration.Query','exploration.QueryInput','exploration.TailSelector','exploration.TailSelectorInput'):
+ shape=schemas[wire];input_wire=wire.endswith('Input');target='identity.EnvironmentSelectorInput' if input_wire else 'identity.EnvironmentSelector'
+ if input_wire:shape['required']=[key for key in shape.get('required',[]) if key!='environment']
+ shape['oneOf']=[{'required':['environment'],'properties':{'environment':{'type':'string','minLength':1},'environmentSelector':{'type':'null'}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''},'environmentSelector':{'$ref':'#/components/schemas/'+target}}}]
+ shape['description']='Choose the historical current-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge record questions do not support the selector yet.'
+summary['description']='Bounded discovery metadata, not a receipt. Legacy environment null means unknown or an explicitly versioned selector. environmentSelector preserves policy/scope; legacy name filters do not match selector captures.'
+summary['properties']['environmentSelector']['description']='Exact versioned policy/scope, separate from legacy current-only environment. Read with version 250 or newer.'
+
 
 schemas['Error'] = {'type': 'object', 'required': ['error'], 'properties': {'error': {'type': 'string'}, 'hint': {'type': 'string'}}, 'additionalProperties': True}
 schemas['Cancellation'] = {'type': 'object', 'required': ['state'], 'properties': {'state': {'const': 'cancellation-requested'}}}

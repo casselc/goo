@@ -25,5 +25,6 @@ func SurroundingQuestion(origin Query, anchorNS, service string, radiusMS int64,
 	from, to := max(origin.FromMS, center-radiusMS), min(origin.ToMS, center+radiusMS+1)
 	f := Field{Kind: "column", Key: "service"}
 	q := Query{Signal: "logs", Environment: origin.Environment, FromMS: from, ToMS: to, Where: &Predicate{Field: &f, Op: "eq", Value: service}, Limit: 100, Offset: offset}
+	q = q.WithEnvironmentFrom(origin)
 	return q, q.Validate()
 }

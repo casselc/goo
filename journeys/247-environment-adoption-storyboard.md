@@ -52,3 +52,22 @@ wrong-policy or wrong-scope metadata; both display refusal with no record rows.
 An unmodified retry recovers. Actual frames are refreshed from the app; no new
 controls, source actions or supported continuations are implied. The existing
 Bombadil campaign still requires open/read/preview/inspect/close/complete.
+
+## 250 main record API journey
+
+For each real historical presence-matrix scope and signal, the same test reads
+`/api/explore`, creates a filesystem capture, reopens it and verifies explicit
+catalog policy with legacy environment null. Owned current-time SDK logs/spans
+then exercise rolling tails for missing, empty and named scope; each returns one
+independently selected record and an available membership capability. A captured
+unreported baseline supports live comparison/freeze and exact retry identity.
+These stores are temporary; no lab capture is published by the journey.
+
+Opening a selector capture in the browser makes no source POST, refuses before
+mounting legacy owners and supplies the exact captured JSON link. This gate is
+implemented, not a claim of complete browser adoption.
+
+![Browser boundary for selector captures](../docs/journeys/screenshots/250-selector-browser-gate.png)
+
+The existing discovery/local-inspection frames and Bombadil completion campaign
+remain in this same executable journey. See VALIDATION for actual results.

@@ -148,7 +148,7 @@ func CompareCohorts(request ComparisonRequest) (*CohortComparison, error) {
 		return nil, e
 	}
 	qa, qb := request.Baseline.Question, request.Selection.Question
-	if qa.Signal != qb.Signal || qa.Environment != qb.Environment || qa.GroupBy[0] != qb.GroupBy[0] {
+	if qa.Signal != qb.Signal || !qa.SameEnvironment(qb) || qa.GroupBy[0] != qb.GroupBy[0] {
 		return nil, fmt.Errorf("comparison requires identical signal, environment and distribution field")
 	}
 	result := &CohortComparison{State: "ok", Field: qa.GroupBy[0], BaselineCount: request.Baseline.Count, SelectionCount: request.Selection.Count, BaselineBasis: request.Baseline.Basis, SelectionBasis: request.Selection.Basis, Rows: []ValueComparison{}, Warnings: []string{"Captures were read separately; late data, sampling and source changes may affect differences.", "Populations may overlap. Percentage-point differences are descriptive leads, not causal attribution or statistical significance.", "These are captured record counts, not unique requests or business outcomes. Source bases are caller-supplied metadata, not authenticated provenance."}}

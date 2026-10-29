@@ -19,6 +19,9 @@ type ActivityView struct {
 }
 
 func (v ActivityView) Validate() error {
+	if v.Selector.EnvironmentSelector != nil {
+		return errors.New("saved Activity views do not support environmentSelector yet")
+	}
 	if v.Version != 1 || !text(v.Title, 120, true, false) {
 		return errors.New("require version 1 and bounded Activity view title")
 	}

@@ -35,7 +35,7 @@ func registerActivityViews(mux *http.ServeMux, dir string) {
 				return
 			}
 			q := c.Question.Explore
-			if c.Question.Kind != "explore" || q == nil || q.Environment != in.Selector.Environment {
+			if c.Question.Kind != "explore" || q == nil || q.EnvironmentSelector != nil || !q.SameEnvironment(in.Selector.Query(60000)) {
 				fail(w, errors.New("baseline capture must use this environment"))
 				return
 			}

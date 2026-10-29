@@ -100,6 +100,9 @@ func (c *compiler) source(q Query, selection identity.EnvironmentSelection) (str
 	if q.Signal == "logs" {
 		table, attrs = "otel_logs", "LogAttributes"
 	}
+	if q.ReportedEdge != nil && !selection.CurrentOnly() {
+		return "", "", fmt.Errorf("reported edges require the historical current-only environment")
+	}
 	environment, bindings, err := environmentSelectionPredicate(selection)
 	if err != nil {
 		return "", "", err
@@ -134,7 +137,7 @@ func compile(q Query, rowLimit int) (Plan, error) {
 		return Plan{}, e
 	}
 	c := compiler{signal: q.Signal, params: map[string]string{"from": strconv.FormatInt(q.FromMS, 10), "to": strconv.FormatInt(q.ToMS, 10)}}
-	selection, err := identity.CurrentEnvironment(q.Environment)
+	selection, err := q.EnvironmentSelection()
 	if err != nil {
 		return Plan{}, err
 	}

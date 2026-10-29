@@ -3,6 +3,7 @@ package exploration
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/identity"
 	"reflect"
 	"strings"
 
@@ -13,22 +14,23 @@ import (
 // Selector and Binding retain exact typed constraints, including OTel namespaces.
 // Unknown schema/convention metadata is not guessed from names or library versions.
 type QuestionScope struct {
-	ExplanationFields  []Field               `json:"explanationFields,omitempty"`
-	ReportedEdge       *ReportedEdge         `json:"reportedEdge,omitempty"`
-	Family             string                `json:"family"`
-	Signal             string                `json:"signal"`
-	MeasurementKind    string                `json:"measurementKind,omitempty"`
-	SourceBinding      string                `json:"sourceBinding"`
-	Grain              string                `json:"grain"`
-	Environment        string                `json:"environment"`
-	FromMS             int64                 `json:"fromMs"`
-	ToMS               int64                 `json:"toMs"`
-	Selector           *Predicate            `json:"selector,omitempty"`
-	Binding            *measurements.Binding `json:"binding,omitempty"`
-	DefinitionRevision string                `json:"definitionRevision,omitempty"`
-	Convention         string                `json:"convention"`
-	SchemaMetadata     string                `json:"schemaMetadata"`
-	Members            []QuestionScope       `json:"members,omitempty"`
+	EnvironmentSelector *identity.EnvironmentSelector `json:"environmentSelector,omitempty"`
+	ExplanationFields   []Field                       `json:"explanationFields,omitempty"`
+	ReportedEdge        *ReportedEdge                 `json:"reportedEdge,omitempty"`
+	Family              string                        `json:"family"`
+	Signal              string                        `json:"signal"`
+	MeasurementKind     string                        `json:"measurementKind,omitempty"`
+	SourceBinding       string                        `json:"sourceBinding"`
+	Grain               string                        `json:"grain"`
+	Environment         string                        `json:"environment"`
+	FromMS              int64                         `json:"fromMs"`
+	ToMS                int64                         `json:"toMs"`
+	Selector            *Predicate                    `json:"selector,omitempty"`
+	Binding             *measurements.Binding         `json:"binding,omitempty"`
+	DefinitionRevision  string                        `json:"definitionRevision,omitempty"`
+	Convention          string                        `json:"convention"`
+	SchemaMetadata      string                        `json:"schemaMetadata"`
+	Members             []QuestionScope               `json:"members,omitempty"`
 }
 
 func detached[T any](value T) T {
@@ -59,6 +61,7 @@ func (q CaptureQuestion) Scope() (QuestionScope, error) {
 		s.SourceBinding = a.SourceBinding
 		s.Grain = "explanation-pair"
 		s.Environment = a.Environment
+		s.EnvironmentSelector = copyEnvironmentSelector(a.EnvironmentSelector)
 		s.Members = []QuestionScope{a, b}
 		s.ExplanationFields = append([]Field{}, q.Explanation.Fields...)
 	case "explore", "inventory":
@@ -72,6 +75,7 @@ func (q CaptureQuestion) Scope() (QuestionScope, error) {
 		s.SourceBinding = "clickhouse.otel-records/v1"
 		s.Grain = map[string]string{"spans": "span-record", "logs": "log-record"}[v.Signal]
 		s.Environment = v.Environment
+		s.EnvironmentSelector = copyEnvironmentSelector(v.EnvironmentSelector)
 		s.FromMS = v.FromMS
 		s.ToMS = v.ToMS
 		s.Selector = detached(v.Where)
@@ -112,6 +116,7 @@ func (q CaptureQuestion) Scope() (QuestionScope, error) {
 		s.SourceBinding = a.SourceBinding
 		s.Grain = "comparison-pair"
 		s.Environment = a.Environment
+		s.EnvironmentSelector = copyEnvironmentSelector(a.EnvironmentSelector)
 		s.Members = []QuestionScope{a, b}
 	}
 	return s, nil
@@ -146,7 +151,7 @@ func DescribeTransform(origin, target CaptureQuestion, relation string) (*Questi
 	if a.Family == "comparison" || b.Family == "comparison" {
 		return nil, fmt.Errorf("comparison requires explicit member transforms")
 	}
-	if a.Environment != b.Environment || a.FromMS != b.FromMS || a.ToMS != b.ToMS {
+	if !a.sameEnvironment(b) || a.FromMS != b.FromMS || a.ToMS != b.ToMS {
 		return nil, fmt.Errorf("relationship requires original environment and fixed window")
 	}
 	switch relation {
@@ -197,7 +202,7 @@ func describeScopeChanges(origin, target CaptureQuestion, a, b QuestionScope, re
 		}
 		out.Changes = append(out.Changes, ScopeChange{field, effect})
 	}
-	add("environment", "Original environment", a.Environment == b.Environment)
+	add("environment", "Original environment", a.sameEnvironment(b))
 	add("window", "Original fixed question window", a.FromMS == b.FromMS && a.ToMS == b.ToMS)
 	add("sourceBinding", "Source binding", a.SourceBinding == b.SourceBinding)
 	add("signal", "Signal", a.Signal == b.Signal)
@@ -257,9 +262,13 @@ func DescribeDiscoveryTransform(origin CaptureQuestion, d measurements.Discovery
 	if e = d.Validate(); e != nil {
 		return nil, e
 	}
-	if a.Family == "comparison" || a.Environment != d.Environment || a.FromMS != d.FromMS || a.ToMS != d.ToMS {
+	if a.Family == "comparison" || a.EnvironmentSelector != nil || a.Environment != d.Environment || a.FromMS != d.FromMS || a.ToMS != d.ToMS {
 		return nil, fmt.Errorf("discovery must retain original environment/window")
 	}
 	b := QuestionScope{Family: "discovery", Signal: "metrics", SourceBinding: "clickhouse.otel-metric-discovery/v1", Grain: "observed-instrument-metadata", Environment: d.Environment, FromMS: d.FromMS, ToMS: d.ToMS, Binding: &measurements.Binding{Services: []string{d.Service}}, Convention: "Unbound; no semantic-convention profile inferred", SchemaMetadata: "Observed catalog metadata only; no completeness guarantee"}
 	return describeScopeChanges(origin, CaptureQuestion{}, a, b, "service-time"), nil
+}
+
+func (s QuestionScope) sameEnvironment(other QuestionScope) bool {
+	return (Query{Environment: s.Environment, EnvironmentSelector: s.EnvironmentSelector}).SameEnvironment(Query{Environment: other.Environment, EnvironmentSelector: other.EnvironmentSelector})
 }

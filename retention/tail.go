@@ -42,6 +42,9 @@ type TailReceipt struct {
 }
 
 func (m TailManifest) Validate() error {
+	if m.Selection.Selector.EnvironmentSelector != nil {
+		return errors.New("XTDB tail retention does not support environmentSelector yet")
+	}
 	var err error
 	m.Selection, err = m.Selection.CanonicalRecords()
 	if err != nil {
@@ -58,6 +61,9 @@ func (m TailManifest) Validate() error {
 func (in TailIntent) Validate() error { _, _, err := normalizeTailIntent(in); return err }
 
 func normalizeTailIntent(in TailIntent) (TailIntent, string, error) {
+	if in.Selector.EnvironmentSelector != nil {
+		return in, "", errors.New("XTDB tail retention does not support environmentSelector yet")
+	}
 	raw, e := json.Marshal(in)
 	if e != nil || len(raw) > 16384 {
 		return in, "", errors.New("tail intent exceeds bound")

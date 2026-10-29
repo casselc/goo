@@ -25,6 +25,7 @@ func PlanPopulation(in PopulationRequest) (*PopulationPlan, error) {
 	json.Unmarshal(raw, &detached)
 	in = detached
 	prepare := func(q Query) Query {
+		q = q.WithEnvironmentFrom(q)
 		q.Offset = 0
 		if q.BucketMS == 0 {
 			for _, b := range []int64{1000, 10000, 60000, 300000} {
@@ -58,7 +59,7 @@ func PlanPopulation(in PopulationRequest) (*PopulationPlan, error) {
 	other.NumericHistogram = nil
 	if in.Companion != nil {
 		other = *in.Companion
-		if other.Signal == q.Signal || other.Environment != q.Environment || other.FromMS != q.FromMS || other.ToMS != q.ToMS {
+		if other.Signal == q.Signal || !other.SameEnvironment(q) || other.FromMS != q.FromMS || other.ToMS != q.ToMS {
 			return nil, fmt.Errorf("companion requires the other signal and identical environment/window")
 		}
 		out.Notices = append(out.Notices, "Companion uses an explicitly independent selector; inspect each question before interpreting matching records.")

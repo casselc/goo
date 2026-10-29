@@ -175,6 +175,16 @@ func (s *TailMembershipSnapshots) Freeze(batch TailMembershipBatch) (TailMembers
 			return TailMembershipCapability{}, errors.New("tail membership batch exceeds byte budget")
 		}
 	}
+	if batch.Selector.EnvironmentSelector != nil {
+		q := batch.Selector.Query(batch.ToMS)
+		q.FromMS = batch.FromMS
+		q.ToMS = batch.ToMS
+		for _, row := range batch.Rows {
+			if err := validateSelectedRows(q, []json.RawMessage{row.Record}); err != nil {
+				return TailMembershipCapability{}, err
+			}
+		}
+	}
 	rows := make([]TailRow, len(batch.Rows))
 	seen := map[string]bool{}
 	for i, row := range batch.Rows {

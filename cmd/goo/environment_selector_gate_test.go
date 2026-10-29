@@ -24,6 +24,7 @@ func TestResponseSelectorDoesNotExtendLegacyInputs249(t *testing.T) {
 	registerActivityViews(mux, dir)
 	const selector = `{"version":"goo/environment-selector/v1","policy":"effective","scope":{"mode":"unreported"}}`
 	cases := []struct{ path, body string }{
+		{"/activity-views", `{"version":1,"title":"Must refuse selector","selector":{"signal":"logs","environment":"","environmentSelector":` + selector + `},"columns":["utc","service","summary"]}`},
 		{"/tail", `{"signal":"logs","environment":"prod","selector":` + selector + `}`},
 		{"/captures", `{"title":"Must refuse","question":{"kind":"explore","explore":{"signal":"logs","environment":"prod","fromMs":1000,"toMs":2000,"limit":100,"selector":` + selector + `}}}`},
 		{"/activity-views", `{"version":1,"title":"Must refuse","selector":{"signal":"logs","environment":"prod","selector":` + selector + `},"columns":["utc","service","summary"]}`},

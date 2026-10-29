@@ -125,6 +125,9 @@ func (s CaptureStore) catalogEntry(id string, budget int64) (CaptureSummary, int
 	_, atError := time.Parse(time.RFC3339Nano, entry.Summary.CapturedAt)
 	r := entry.Summary
 	validEnvironment := r.Environment == nil || len(*r.Environment) <= 128 && utf8.ValidString(*r.Environment) && !strings.ContainsRune(*r.Environment, 0)
+	if r.EnvironmentSelector != nil {
+		validEnvironment = validEnvironment && r.Environment == nil && r.EnvironmentSelector.Validate() == nil
+	}
 	validKind := slices.Contains([]string{"explore", "inventory", "comparison", "explanation", "measurement"}, r.Kind)
 	validSignal := slices.Contains([]string{"", "logs", "spans", "metrics"}, r.Signal)
 	validMeasurement := r.Kind != "measurement" && r.MeasurementKind == "" || r.Kind == "measurement" && slices.Contains([]string{"gauge", "counter", "histogram", "lifecycle", "stock", "state"}, r.MeasurementKind)

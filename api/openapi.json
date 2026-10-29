@@ -9313,6 +9313,17 @@
               }
             ]
           },
+          "environmentSelector": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelector"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Exact versioned policy/scope, separate from legacy current-only environment. Read with version 250 or newer."
+          },
           "id": {
             "type": "string",
             "pattern": "^[a-f0-9]{64}$"
@@ -9366,7 +9377,7 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.CaptureSummary",
-        "description": "Bounded derived discovery metadata, not a partial receipt. No full question or evidence. Exact-ID reads verify authoritative contents. Environment null means unknown, distinct from exact empty.",
+        "description": "Bounded discovery metadata, not a receipt. Legacy environment null means unknown or an explicitly versioned selector. environmentSelector preserves policy/scope; legacy name filters do not match selector captures.",
         "additionalProperties": false
       },
       "exploration.CapturedWindowDiscovery": {
@@ -14143,6 +14154,16 @@
           "environment": {
             "type": "string"
           },
+          "environmentSelector": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelector"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "fromMs": {
             "type": "integer"
           },
@@ -14230,7 +14251,37 @@
           "offset"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.Query"
+        "x-go-type": "github.com/casselc/goo/exploration.Query",
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "properties": {
+              "environment": {
+                "type": "string",
+                "minLength": 1
+              },
+              "environmentSelector": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "properties": {
+              "environment": {
+                "const": ""
+              },
+              "environmentSelector": {
+                "$ref": "#/components/schemas/identity.EnvironmentSelector"
+              }
+            }
+          }
+        ],
+        "description": "Choose the historical current-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge record questions do not support the selector yet."
       },
       "exploration.QueryInput": {
         "additionalProperties": false,
@@ -14249,6 +14300,23 @@
             "anyOf": [
               {
                 "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "environmentSelector": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               {
                 "type": "null"
@@ -14425,7 +14493,38 @@
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.Query"
+        "x-go-type": "github.com/casselc/goo/exploration.Query",
+        "required": [],
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "properties": {
+              "environment": {
+                "type": "string",
+                "minLength": 1
+              },
+              "environmentSelector": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "properties": {
+              "environment": {
+                "const": ""
+              },
+              "environmentSelector": {
+                "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+              }
+            }
+          }
+        ],
+        "description": "Choose the historical current-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge record questions do not support the selector yet."
       },
       "exploration.QuestionScope": {
         "properties": {
@@ -14447,6 +14546,16 @@
           },
           "environment": {
             "type": "string"
+          },
+          "environmentSelector": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelector"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "explanationFields": {
             "anyOf": [
@@ -15606,6 +15715,16 @@
           "environment": {
             "type": "string"
           },
+          "environmentSelector": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelector"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "signal": {
             "type": "string"
           },
@@ -15624,7 +15743,37 @@
           "environment"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.TailSelector"
+        "x-go-type": "github.com/casselc/goo/exploration.TailSelector",
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "properties": {
+              "environment": {
+                "type": "string",
+                "minLength": 1
+              },
+              "environmentSelector": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "properties": {
+              "environment": {
+                "const": ""
+              },
+              "environmentSelector": {
+                "$ref": "#/components/schemas/identity.EnvironmentSelector"
+              }
+            }
+          }
+        ],
+        "description": "Choose the historical current-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge record questions do not support the selector yet."
       },
       "exploration.TailSelectorInput": {
         "additionalProperties": false,
@@ -15633,6 +15782,23 @@
             "anyOf": [
               {
                 "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "environmentSelector": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               {
                 "type": "null"
@@ -15668,7 +15834,38 @@
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.TailSelector"
+        "x-go-type": "github.com/casselc/goo/exploration.TailSelector",
+        "required": [],
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "properties": {
+              "environment": {
+                "type": "string",
+                "minLength": 1
+              },
+              "environmentSelector": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "properties": {
+              "environment": {
+                "const": ""
+              },
+              "environmentSelector": {
+                "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+              }
+            }
+          }
+        ],
+        "description": "Choose the historical current-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge record questions do not support the selector yet."
       },
       "exploration.TelemetryPackage": {
         "properties": {
@@ -16905,6 +17102,107 @@
         ]
       },
       "identity.EnvironmentSelector": {
+        "properties": {
+          "policy": {
+            "type": "string",
+            "enum": [
+              "current-only",
+              "effective"
+            ]
+          },
+          "scope": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mode"
+            ],
+            "properties": {
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "named",
+                  "empty",
+                  "unreported"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "maxLength": 128,
+                "description": "At most 128 UTF-8 bytes; runtime enforces the byte limit."
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "mode": {
+                      "const": "named"
+                    }
+                  },
+                  "required": [
+                    "mode"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "minLength": 1
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "value": {
+                      "const": ""
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/environment-selector/v1"
+          }
+        },
+        "required": [
+          "version",
+          "policy",
+          "scope"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/identity.EnvironmentSelector",
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "policy": {
+                  "const": "current-only"
+                }
+              },
+              "required": [
+                "policy"
+              ]
+            },
+            "then": {
+              "properties": {
+                "scope": {
+                  "properties": {
+                    "mode": {
+                      "const": "named"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "identity.EnvironmentSelectorInput": {
         "properties": {
           "policy": {
             "type": "string",

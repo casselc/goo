@@ -12,4 +12,9 @@ test('Go/browser environment selector bank preserves policy, canonical scopes an
  assert.throws(()=>E.assertPreview(E.effective({mode:'empty'}),{mode:'unreported'}));
  assert.throws(()=>E.effective({mode:'named',value:'\ud800'}));
  assert.equal(E.matches(E.effective({mode:'unreported'}),null),false);
+ assert.equal(E.label(E.effective({mode:'unreported'})),'Unreported environment');
+ assert.equal(E.label(E.effective({mode:'empty'})),'Empty environment label');
+ assert.notEqual(E.label(E.current('prod')),E.label(E.effective({mode:'named',value:'prod'})));
+ assert.equal(E.hasQuestionSelector({kind:'comparison',comparison:{baseline:{environmentSelector:E.effective({mode:'unreported'})}}}),true);
+ assert.equal(E.hasQuestionSelector({kind:'explore',explore:{environment:'prod'}}),false);
 });

@@ -151,6 +151,12 @@ func registerWorkbench(mux *http.ServeMux, dir string, connection retentionConne
 			fail(w, 400, e)
 			return
 		}
+		if in.Tail != nil && in.Tail.Baseline != "" {
+			if captured, err := captures.Load(in.Tail.Baseline); err == nil && captured.Question.Explore != nil && captured.Question.Explore.EnvironmentSelector != nil {
+				fail(w, 400, errors.New("saved exploration baselines do not support environmentSelector yet"))
+				return
+			}
+		}
 		v, e := store.CreateExplorationView(in)
 		if e != nil {
 			fail(w, 400, e)

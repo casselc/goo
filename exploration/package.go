@@ -139,6 +139,9 @@ func (p TelemetryPackage) Revision() (string, error) {
 	return hex.EncodeToString(sum[:]), nil
 }
 func DraftTelemetryPackage(q Query, name, title string, minutes int) (TelemetryPackage, error) {
+	if q.EnvironmentSelector != nil {
+		return TelemetryPackage{}, fmt.Errorf("reusable packages do not support environmentSelector yet")
+	}
 	if e := q.Validate(); e != nil {
 		return TelemetryPackage{}, e
 	}
