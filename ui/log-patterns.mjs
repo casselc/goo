@@ -1,3 +1,4 @@
+import * as RecordEnvironment from './record-environment.mjs';
 /* Versioned supplied log shapes. Existing fixed-question owners execute every read. */
 import * as FilterEditor from './filter-editor.mjs';
 import * as LogPatternComparisonView from './log-pattern-comparison-view.mjs';
@@ -9,7 +10,7 @@ const global=globalThis;
 const field={kind:'column',key:'body_pattern_v1'},copy=x=>structuredClone(x),dep=name=>({'question-protocol':QuestionProtocol,'filter-editor':FilterEditor,'population-workspace':PopulationWorkspace}[name]);
 const {decode}=LogPatternIdentity;
 function isQuestion(q){return q?.signal==='logs'&&q.groupBy?.length===1&&q.groupBy[0].kind==='column'&&q.groupBy[0].key===field.key}
-function validate(q){dep('question-protocol').validateLink({version:1,question:q,view:'Records'});dep('filter-editor').validate(q.where,q.signal);return q}
+function validate(q){dep('question-protocol').validateRecordQuestion(q);dep('filter-editor').validate(q.where,q.signal);return q}
 function question(parent){if(parent?.signal!=='logs')throw Error('Log patterns require an applied log scope.');const q=copy(parent);for(const key of ['numeric','numericHistogram','summary','spanStatus','groupTimeSeries'])delete q[key];q.groupBy=[copy(field)];q.offset=0;q.limit=100;q.bucketMs=[1000,10000,60000,300000].find(ms=>Math.ceil((q.toMs-q.fromMs)/ms)<=240);return validate(q)}
 function partition(parent,id){decode(id);if(parent?.signal!=='logs')throw Error('Choose a fixed log population.');return dep('population-workspace').partitionQueries([parent],[{signal:'logs',field:copy(field),value:id,mode:'include'}])}
 function selectedQuestion(parent,id){const q=partition(parent,id).selected[0];delete q.groupBy;delete q.groupTimeSeries;return validate(q)}

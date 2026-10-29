@@ -1,5 +1,37 @@
 # Validation record
 
+## Internal population/comparison selectors — 254 (2026-10-29 UTC)
+
+Internal population transforms, explanation and log-pattern comparisons use
+checked policy-aware scope. Planner replies are validated before automatic source
+reads; live reset identity includes full environment fields. Baseline restoration
+now reads `postJSON().data` rather than calling an absent `.json()` method, and
+checks compatibility before rereading the baseline. Named-only view publication
+and unsupported Saved/navigation paths remain gated.
+See [contract/diagram](docs/RECORD_SELECTOR_API.md#internal-population-and-comparison-adoption--254).
+
+620 frontend checks pass, no skips. Embedded/source-free configured-UI Go tests
+also pass. New shared-bank/cross-policy properties cover
+range/widen/rest/region/recent/pattern/explanation scope retention, wrong-policy
+plan refusal and guarded view definitions. Numeric continuations preserve parent
+scope/measures and retained predicate branches; malformed policy/window/binding/
+parent-filter controls reject. Frontend review identified that continuation guard
+and it is fixed. Architecture review found no blocker; exact generated numeric
+bin-predicate verification remains a separate hardening opportunity, not a claim
+of this scope-propagation check.
+
+The real-source production population journey254 passes in8.5s (10.6s total):
+no source read on staging, two independent current/baseline reads, restored
+baseline and supplied-cohort comparison, no view publication even when invoking
+the disabled handler, changed-policy planner response with zero follow-on reads,
+and accepted original plan with two independent signal reads. The populations
+use a unique no-match filter; this does not establish health or completeness.
+Initial harness issues (closed disclosure and sidebar covering its fixture host)
+were corrected; the interrupted run is not counted as passing.
+No public entry/Saved activation, optional Bombadil/model campaign or deployment
+is claimed. Isolated runtime/capture stores are removed; lab data stays intact.
+
+
 ## Retained Activity/fixed record scope — 253 (2026-10-29 UTC)
 
 An application-owned detached scope now survives Activity draft/resume checks

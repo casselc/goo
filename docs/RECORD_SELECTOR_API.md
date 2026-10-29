@@ -201,3 +201,52 @@ production fixed owner through its internal API and checks real source requests.
 This does not enable selector entry or Saved mounting, and does not establish a
 complete live selector workflow. Comparison/explanation/log-pattern/population
 owners and Saved mounting still require coordinated adoption before activation.
+
+## Internal population and comparison adoption — 254
+
+Population narrowing/widening, categorical selection/rest, duration regions,
+recent question construction, explanation inputs and pattern comparisons retain
+checked environment policy. Multi-query time changes require aligned windows and
+semantically equal environment selections. Legacy and explicit current-only named
+scopes can be semantically compatible; effective policy remains distinct.
+
+Before automatic record reads, planner responses must preserve source predicates,
+reported-edge selectors, exact environment representation/policy, windows and
+expected signal identities. Record reply matching uses the shared omission-aware
+question identity. Live reset keys include full selectors, so a policy-only change
+cancels old live work. Baseline restoration uses decoded `postJSON().data` (fixing
+an existing attempted `.json()` call), and rejects an incompatible baseline before
+its source read. Baseline and current source reads remain independent.
+
+Numeric side drill plans must preserve parent scope/measures and the original
+parent-predicate branch. Explanation filtering checks returned side scope before
+staging. Unsupported selector-bearing question links remain gated, including
+explanation side navigation and timeline links. Timeline selection and local
+population owners retain their internal callbacks.
+
+Exploration views remain unsupported for selector questions or selector baselines:
+settings/definition validation and all save-button re-enable paths refuse before
+publication. Saved pattern-baseline loading remains explicitly gated. Observed
+explanation result-token capture is supported by the existing filesystem API and
+makes no telemetry reread; opening it through Saved still uses the existing
+browser-pending gate. This is separate from unsupported reusable view intent.
+
+```mermaid
+flowchart LR
+  Draft[Staged population / comparison] --> Check[Checked policy and aligned scope]
+  Check --> Plan[Explicit planner request]
+  Plan --> Guard[Validate returned source scope]
+  Guard --> Current[Independent current read]
+  Guard --> Baseline[Independent baseline read]
+  Current --> Compare[Supplied-cohort comparison]
+  Baseline --> Compare
+  Bad[Changed policy / bounds / predicates] --> Refuse[Refuse before follow-on reads]
+  Plan --> Bad
+```
+
+[Journey 254](../journeys/254-population-environment-storyboard.md) verifies the
+production population owner with real ClickHouse and negative transport controls.
+Public entry, fixed-to-population activation and Saved mounting are still gated;
+these are internal task prerequisites, not full A0 delivery. Next integrate exact
+Saved record/comparison owners and their remaining navigation boundaries before
+opening selector handoffs.

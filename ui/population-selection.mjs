@@ -8,12 +8,12 @@ import * as Workspace from './workspace.mjs';
 const global=globalThis;
 const api=name=>({"GooWorkspace":Workspace,"GooDiscovery":Discovery})[name]||(null);
 function question(base,{fromMs=base.fromMs,toMs=base.toMs,minMS='',maxMS='',values=[]}={}){
-  api('GooWorkspace').validateLink({version:1,question:base,view:'Records'});
+  api('GooWorkspace').validateRecordQuestion(base);
   if(!Number.isSafeInteger(fromMs)||!Number.isSafeInteger(toMs)||fromMs<base.fromMs||toMs>base.toMs||fromMs>=toMs)throw Error('Selection must stay inside the applied half-open window.');
   if((minMS!==''||maxMS!=='')&&base.signal!=='spans')throw Error('Duration selection requires span records.');
   const leaves=[];let low=null,high=null;if(minMS!==''){low=BigInt(api('GooDiscovery').millisecondsToNS(minMS));leaves.push({field:{kind:'column',key:'duration_ns'},op:'gte',value:String(low)})}if(maxMS!==''){high=BigInt(api('GooDiscovery').millisecondsToNS(maxMS));if(high===0n||low!==null&&high<=low)throw Error('Duration upper bound must exceed the lower bound.');leaves.push({field:{kind:'column',key:'duration_ns'},op:'lte',value:String(high-1n)})}
   for(const {field,value}of values)leaves.push({field:structuredClone(field),op:value===null?'missing':'eq',...(value===null?{}:{value})});
-  const q={...structuredClone(base),fromMs,toMs,offset:0};if(leaves.length)q.where={all:[...(base.where?[structuredClone(base.where)]:[]),...leaves]};api('GooWorkspace').validateLink({version:1,question:q,view:'Records'});return q;
+  const q={...structuredClone(base),fromMs,toMs,offset:0};if(leaves.length)q.where={all:[...(base.where?[structuredClone(base.where)]:[]),...leaves]};api('GooWorkspace').validateRecordQuestion(q);return q;
  }
 // Only a generated time/duration region is complemented, never arbitrary parent predicates.
 function partition(base,selection={}){
@@ -25,7 +25,7 @@ function partition(base,selection={}){
   const intent=[leaf('timestamp_ns','gte',BigInt(narrowed.fromMs)*1000000n),leaf('timestamp_ns','lte',BigInt(narrowed.toMs)*1000000n-1n),...duration];
   const outside=[];
   for(const p of intent){const v=BigInt(p.value);if(p.op==='gte'&&v>0n)outside.push(leaf(p.field.key,'lte',v-1n));else if(p.op==='lte'&&v<18446744073709551615n)outside.push(leaf(p.field.key,'gte',v+1n));}
-  function make(predicate){const q={...structuredClone(base),offset:0,where:base.where?{all:[structuredClone(base.where),predicate]}:predicate};let count=0;function check(p,d=0){if(++count>32||d>4)throw Error('Region comparison exceeds the predicate budget. Simplify the parent filters.');for(const c of p.all||p.any||[])check(c,d+1)}check(q.where);api('GooWorkspace').validateLink({version:1,question:q,view:'Records'});return q}
+  function make(predicate){const q={...structuredClone(base),offset:0,where:base.where?{all:[structuredClone(base.where),predicate]}:predicate};let count=0;function check(p,d=0){if(++count>32||d>4)throw Error('Region comparison exceeds the predicate budget. Simplify the parent filters.');for(const c of p.all||p.any||[])check(c,d+1)}check(q.where);api('GooWorkspace').validateRecordQuestion(q);return q}
   return {selected:make({all:intent}),rest:make({any:outside})};
  }
 function rectangle(data,range){

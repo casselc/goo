@@ -1,9 +1,9 @@
 # Known issues and gaps
 
 250 enables checked environment selectors in the record APIs, tails, context,
-comparisons, capabilities and filesystem captures. 251–253 supply checked browser context/Activity constructors, internal
-validation/response matching and retained Activity/fixed scope ownership.
-Downstream comparison/population and Saved adoption remain open: Find environments stays a local preview, and selector
+comparisons, capabilities and filesystem captures. 251–254 supply checked browser constructors, retained Activity/fixed ownership
+and internal comparison/population scope validation. Public handoffs and Saved
+adoption remain open: Find environments stays a local preview, and selector
 captures show an explicit browser-pending notice plus exact JSON read link.
 Native/service/inventory/parent-edge, reusable/saved intent and XTDB paths remain
 unsupported and refuse selectors server-side. Old named questions retain their
@@ -11,6 +11,11 @@ meaning and IDs. See [the implemented API cut](RECORD_SELECTOR_API.md) and
 [propagation audit](ENVIRONMENT_SCOPE_PROPAGATION.md). Older readers may reject
 mixed catalogs after selector captures are added; the contract explains rollback.
 
+
+254 adds numeric continuation scope/measures/parent-filter guards; it does not
+yet independently reconstruct and verify the generated bin predicate against
+echoed boundaries when the parent has no filter. Go remains the planner; no
+backend misplan was reproduced. This is a future contract-hardening check.
 
 ## Current review — 243
 
