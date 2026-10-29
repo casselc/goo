@@ -3809,6 +3809,180 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/environment-scopes": {
+      "post": {
+        "operationId": "post_environment_scopes",
+        "summary": "POST /environment-scopes",
+        "tags": [
+          "environment-scopes"
+        ],
+        "description": "Current owner: internal/recordhttp/routes.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/recordhttp/routes.go",
+        "x-effects": "source-read",
+        "parameters": [
+          {
+            "name": "X-Goo-Query-ID",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+            },
+            "description": "Optional short-lived cancellation capability; repeated/cancelled IDs are refused."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvironmentScopesResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdoptionWindow"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 4096,
+        "x-schema-coverage": "typed"
+      }
+    },
+    "/environment-scopes/records": {
+      "post": {
+        "operationId": "post_environment_scopes_records",
+        "summary": "POST /environment-scopes/records",
+        "tags": [
+          "environment-scopes"
+        ],
+        "description": "Current owner: internal/recordhttp/routes.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/recordhttp/routes.go",
+        "x-effects": "source-read",
+        "parameters": [
+          {
+            "name": "X-Goo-Query-ID",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+            },
+            "description": "Optional short-lived cancellation capability; repeated/cancelled IDs are refused."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdoptionRecordsResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdoptionRecordsQuestion"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 4096,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/explore": {
       "post": {
         "operationId": "post_explore",
@@ -5727,6 +5901,29 @@
           }
         ]
       },
+      "AdoptionRecordsQuestion": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.AdoptionRecordsQuestionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "AdoptionRecordsResult": {
+        "$ref": "#/components/schemas/exploration.AdoptionRecordsResult"
+      },
+      "AdoptionWindow": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.AdoptionWindowInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "CaptureList": {
         "$ref": "#/components/schemas/exploration.CaptureList"
       },
@@ -6133,6 +6330,9 @@
             "type": "null"
           }
         ]
+      },
+      "EnvironmentScopesResult": {
+        "$ref": "#/components/schemas/exploration.EnvironmentScopesResult"
       },
       "EvidenceCatalog": {
         "$ref": "#/components/schemas/retention.EvidenceCatalogPage"
@@ -8444,6 +8644,201 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/annotations.SubjectEvent"
       },
+      "exploration.AdoptionRecordsQuestion": {
+        "properties": {
+          "fromMs": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/identity.EnvironmentScope"
+          },
+          "signal": {
+            "type": "string"
+          },
+          "toMs": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "signal",
+          "fromMs",
+          "toMs",
+          "scope",
+          "limit"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.AdoptionRecordsQuestion"
+      },
+      "exploration.AdoptionRecordsQuestionInput": {
+        "additionalProperties": false,
+        "properties": {
+          "fromMs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "minimum": 0
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "minimum": 1,
+            "maximum": 100
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentScopeInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "signal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "enum": [
+              "logs",
+              "spans"
+            ]
+          },
+          "toMs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maximum": 4102444800000
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.AdoptionRecordsQuestion"
+      },
+      "exploration.AdoptionRecordsResult": {
+        "properties": {
+          "limited": {
+            "type": "boolean"
+          },
+          "question": {
+            "$ref": "#/components/schemas/exploration.AdoptionRecordsQuestion"
+          },
+          "readAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "rows": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxItems": 100
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/adoption-records/v1"
+          }
+        },
+        "required": [
+          "version",
+          "question",
+          "readAt",
+          "rows",
+          "limited"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.AdoptionRecordsResult"
+      },
+      "exploration.AdoptionWindow": {
+        "properties": {
+          "fromMs": {
+            "type": "integer"
+          },
+          "signal": {
+            "type": "string"
+          },
+          "toMs": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "signal",
+          "fromMs",
+          "toMs"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.AdoptionWindow"
+      },
+      "exploration.AdoptionWindowInput": {
+        "additionalProperties": false,
+        "properties": {
+          "fromMs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "minimum": 0
+          },
+          "signal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "enum": [
+              "logs",
+              "spans"
+            ]
+          },
+          "toMs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maximum": 4102444800000
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.AdoptionWindow"
+      },
       "exploration.AnnotationTargetInput": {
         "additionalProperties": false,
         "properties": {
@@ -10375,6 +10770,69 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.EdgeService"
+      },
+      "exploration.EnvironmentScopeGroup": {
+        "properties": {
+          "count": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$",
+            "maxLength": 20
+          },
+          "observation": {
+            "$ref": "#/components/schemas/identity.EnvironmentObservation"
+          },
+          "selectable": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "observation",
+          "count",
+          "selectable"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.EnvironmentScopeGroup"
+      },
+      "exploration.EnvironmentScopesResult": {
+        "properties": {
+          "groups": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/exploration.EnvironmentScopeGroup"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxItems": 64
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "question": {
+            "$ref": "#/components/schemas/exploration.AdoptionWindow"
+          },
+          "readAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/environment-scopes/v1"
+          }
+        },
+        "required": [
+          "version",
+          "question",
+          "readAt",
+          "groups",
+          "hasMore"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.EnvironmentScopesResult"
       },
       "exploration.EvidenceComparison": {
         "properties": {
@@ -16304,6 +16762,132 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ValueCount"
+      },
+      "identity.EnvironmentObservation": {
+        "properties": {
+          "conflict": {
+            "type": "boolean"
+          },
+          "current": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "legacy": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scope": {
+            "$ref": "#/components/schemas/identity.EnvironmentScope"
+          },
+          "winningKey": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "scope",
+          "current",
+          "legacy",
+          "winningKey",
+          "conflict"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/identity.EnvironmentObservation"
+      },
+      "identity.EnvironmentScope": {
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "named",
+              "empty",
+              "unreported"
+            ]
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "mode"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/identity.EnvironmentScope"
+      },
+      "identity.EnvironmentScopeInput": {
+        "additionalProperties": false,
+        "properties": {
+          "mode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "enum": [
+              "named",
+              "empty",
+              "unreported"
+            ]
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxLength": 128
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/identity.EnvironmentScope",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "mode": {
+                  "const": "named"
+                }
+              },
+              "required": [
+                "mode"
+              ]
+            },
+            "then": {
+              "required": [
+                "value"
+              ],
+              "properties": {
+                "value": {
+                  "minLength": 1
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "value": {
+                  "const": ""
+                }
+              }
+            }
+          }
+        ]
       },
       "identity.Namespace": {
         "properties": {

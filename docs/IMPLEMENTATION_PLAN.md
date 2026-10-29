@@ -6,7 +6,9 @@
 > C0 is corrected in 244 with bounded catalog summaries and explicit v2 rebuild.
 > C1 is corrected in 245 with selected/authored UTF-8 validation.
 > C2 is corrected in 246 with shared admission and exact revision recovery.
-> Next: A0, explicit unreported-environment adoption.
+> A0 foundation is delivered in 247: checked scopes, bounded discovery and
+> read-only SDK record inspection. Full A0 flow propagation remains open.
+> Next: carry checked scopes through the main record flow before continuations.
 > Earlier queues preserve delivery history; their Next labels are superseded.
 
 

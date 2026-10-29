@@ -112,13 +112,7 @@ func compile(q Query, rowLimit int) (Plan, error) {
 	}
 	c := compiler{signal: q.Signal, params: map[string]string{"from": strconv.FormatInt(q.FromMS, 10), "to": strconv.FormatInt(q.ToMS, 10), "environment": q.Environment}}
 	base, attrs := c.source(q)
-	common := "toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, " + attrs + " AS Attributes"
-	selectRows := common + ", SpanName, SpanKind, ParentSpanId, " + durationBucketSQL() + " AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans"
-	order := "Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration"
-	if q.Signal == "logs" {
-		selectRows = common + ", Body, SeverityText"
-		order = "Timestamp, TraceId, SpanId, ServiceName, Body, SeverityText, toString(ResourceAttributes), toString(LogAttributes)"
-	}
+	selectRows, order := recordProjection(q.Signal)
 	selectRows += c.requestedDerivedColumns(q)
 	p := Plan{Rows: "SELECT " + selectRows + base + " ORDER BY " + order + fmt.Sprintf(" LIMIT %d OFFSET %d FORMAT JSONEachRow", rowLimit+1, q.Offset), Count: "SELECT toString(count()) AS count" + base + " FORMAT JSONEachRow"}
 	aggregate, e := recordAggregateSQL(q)
@@ -157,4 +151,20 @@ func compile(q Query, rowLimit int) (Plan, error) {
 	p.Fields = "SELECT DISTINCT arrayJoin(arrayConcat(arrayMap(k -> concat('resource:', k), mapKeys(ResourceAttributes)), arrayMap(k -> concat('attribute:', k), mapKeys(" + attrs + ")))) AS field" + base + " ORDER BY field LIMIT 129 FORMAT JSONEachRow"
 	p.Parameters = c.params
 	return p, nil
+}
+
+// recordProjection shares supplied row columns/order, never query scope.
+func recordProjection(signal string) (string, string) {
+	attrs := "SpanAttributes"
+	if signal == "logs" {
+		attrs = "LogAttributes"
+	}
+	common := "toString(toUnixTimestamp64Nano(Timestamp)) AS timestamp_ns, ServiceName, TraceId, SpanId, ResourceAttributes, ScopeName, ScopeVersion, " + attrs + " AS Attributes"
+	selectRows := common + ", SpanName, SpanKind, ParentSpanId, " + durationBucketSQL() + " AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans"
+	order := "Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration"
+	if signal == "logs" {
+		selectRows = common + ", Body, SeverityText"
+		order = "Timestamp, TraceId, SpanId, ServiceName, Body, SeverityText, toString(ResourceAttributes), toString(LogAttributes)"
+	}
+	return selectRows, order
 }

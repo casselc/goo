@@ -15,6 +15,29 @@
       }
     ]
   },
+  "AdoptionRecordsQuestion": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/exploration.AdoptionRecordsQuestionInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "AdoptionRecordsResult": {
+    "$ref": "#/components/schemas/exploration.AdoptionRecordsResult"
+  },
+  "AdoptionWindow": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/exploration.AdoptionWindowInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
   "CaptureList": {
     "$ref": "#/components/schemas/exploration.CaptureList"
   },
@@ -421,6 +444,9 @@
         "type": "null"
       }
     ]
+  },
+  "EnvironmentScopesResult": {
+    "$ref": "#/components/schemas/exploration.EnvironmentScopesResult"
   },
   "EvidenceCatalog": {
     "$ref": "#/components/schemas/retention.EvidenceCatalogPage"
@@ -2731,6 +2757,184 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/annotations.SubjectEvent"
   },
+  "exploration.AdoptionRecordsQuestion": {
+    "properties": {
+      "fromMs": {
+        "type": "integer"
+      },
+      "limit": {
+        "type": "integer"
+      },
+      "scope": {
+        "$ref": "#/components/schemas/identity.EnvironmentScope"
+      },
+      "signal": {
+        "type": "string"
+      },
+      "toMs": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "signal",
+      "fromMs",
+      "toMs",
+      "scope",
+      "limit"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.AdoptionRecordsQuestion"
+  },
+  "exploration.AdoptionRecordsQuestionInput": {
+    "additionalProperties": false,
+    "properties": {
+      "fromMs": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "limit": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "scope": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/identity.EnvironmentScopeInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "signal": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "toMs": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.AdoptionRecordsQuestion"
+  },
+  "exploration.AdoptionRecordsResult": {
+    "properties": {
+      "limited": {
+        "type": "boolean"
+      },
+      "question": {
+        "$ref": "#/components/schemas/exploration.AdoptionRecordsQuestion"
+      },
+      "readAt": {
+        "type": "string"
+      },
+      "rows": {
+        "anyOf": [
+          {
+            "items": {},
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "question",
+      "readAt",
+      "rows",
+      "limited"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.AdoptionRecordsResult"
+  },
+  "exploration.AdoptionWindow": {
+    "properties": {
+      "fromMs": {
+        "type": "integer"
+      },
+      "signal": {
+        "type": "string"
+      },
+      "toMs": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "signal",
+      "fromMs",
+      "toMs"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.AdoptionWindow"
+  },
+  "exploration.AdoptionWindowInput": {
+    "additionalProperties": false,
+    "properties": {
+      "fromMs": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "signal": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "toMs": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.AdoptionWindow"
+  },
   "exploration.AnnotationTargetInput": {
     "additionalProperties": false,
     "properties": {
@@ -4604,6 +4808,64 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.EdgeService"
+  },
+  "exploration.EnvironmentScopeGroup": {
+    "properties": {
+      "count": {
+        "type": "string"
+      },
+      "observation": {
+        "$ref": "#/components/schemas/identity.EnvironmentObservation"
+      },
+      "selectable": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "observation",
+      "count",
+      "selectable"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.EnvironmentScopeGroup"
+  },
+  "exploration.EnvironmentScopesResult": {
+    "properties": {
+      "groups": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.EnvironmentScopeGroup"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "hasMore": {
+        "type": "boolean"
+      },
+      "question": {
+        "$ref": "#/components/schemas/exploration.AdoptionWindow"
+      },
+      "readAt": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "question",
+      "readAt",
+      "groups",
+      "hasMore"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.EnvironmentScopesResult"
   },
   "exploration.EvidenceComparison": {
     "properties": {
@@ -10467,6 +10729,90 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.ValueCount"
+  },
+  "identity.EnvironmentObservation": {
+    "properties": {
+      "conflict": {
+        "type": "boolean"
+      },
+      "current": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "legacy": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "scope": {
+        "$ref": "#/components/schemas/identity.EnvironmentScope"
+      },
+      "winningKey": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "scope",
+      "current",
+      "legacy",
+      "winningKey",
+      "conflict"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/identity.EnvironmentObservation"
+  },
+  "identity.EnvironmentScope": {
+    "properties": {
+      "mode": {
+        "type": "string"
+      },
+      "value": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "mode"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/identity.EnvironmentScope"
+  },
+  "identity.EnvironmentScopeInput": {
+    "additionalProperties": false,
+    "properties": {
+      "mode": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "value": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/identity.EnvironmentScope"
   },
   "identity.Namespace": {
     "properties": {

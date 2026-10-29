@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey 247](../../journeys/247-environment-adoption-storyboard.md) covers readonly
+inspection of ordinary SDK logs/spans with explicit environment presence semantics.
+
+
 [Journey 246](../../journeys/246-native-catalog-capacity-storyboard.md) covers native
 capacity admission, duplicate retry, retained catalog failure and exact recovery.
 

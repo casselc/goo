@@ -1,5 +1,12 @@
 # Known issues and gaps
 
+247 adds checked environment scope discovery and readonly logs/spans inspection
+under Activity → Find environments. Missing and empty labels, legacy fallback and
+conflicts are distinct; old named query semantics are unchanged. Full tail/fixed/
+service/native/capture adoption is still open and those continuations are disabled
+from adoption results. See [the contract](ENVIRONMENT_ADOPTION.md).
+
+
 ## Current review — 243
 
 Six reviewers completed the [whole-product review](reviews/INDEPENDENT_REVIEW_SUMMARY_243.md).

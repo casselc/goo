@@ -456,3 +456,7 @@ see the [text integrity contract](docs/PREPARED_TEXT_INTEGRITY.md).
 
 Native package publication and browsing share [bounded capacity and exact revision
 recovery](docs/NATIVE_CATALOG_CAPACITY.md); no stored definitions are deleted to enforce it.
+
+Have OTel data without an environment label? Activity → Find environments offers
+[bounded discovery and readonly inspection](docs/ENVIRONMENT_ADOPTION.md). Main-flow
+tailing/capture adoption remains a separate continuation.

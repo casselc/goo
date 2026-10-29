@@ -1,5 +1,64 @@
 # Validation record
 
+## Environment adoption foundation — 247 (2026-10-29 UTC)
+
+A0's first slice adds explicit checked effective scopes (`named`, `empty`,
+`unreported`), bounded label-combination discovery and separate readonly logs/spans
+inspection under Activity → Find environments. Current-key presence takes
+precedence, including empty/conflicting values; legacy is fallback only when
+current is absent. No zero/nil/magic-string wildcard is introduced. General named
+queries, tail, native and capture formats remain unchanged. Unsupported deeper
+continuations are visible; no snapshot token, custody receipt or publication is
+issued from adoption results. [Contract/diagram](docs/ENVIRONMENT_ADOPTION.md),
+[storyboard](journeys/247-environment-adoption-storyboard.md), [reviews](docs/reviews/ENVIRONMENT_ADOPTION_REVIEW_247.md),
+API docs, known issues and roadmap distinguish this foundation from open full-flow
+A0 work.
+
+Passed root Go suite, identity/exploration/record-handler race checks and vet;
+606 frontend checks; 200 Hegel presence/precedence/literal binding/no-wildcard cases.
+Tests reject malformed presence/count data, missing/null resources, wrong signal/
+scope/time, invalid/combined legacy request shapes, wrong-scope overflow and byte
+budget excess. New routes share source admission, cancellation, 4 KiB bodies and
+15-second deadlines; policy/API contract checks cover all nine record routes.
+The existing compiled logs/spans plan JSON is byte-identical to an old-compiler
+Go overlay; the only compiler refactor shares row projection, not environment
+selection or rewritten SQL.
+
+Real OTLP/ClickHouse journey 247 emits 25 presence/value combinations for each
+signal in an independently empty 1ms historical window inside the exporter TTL.
+SQL results match independent scope matching for absent, empty, named, conflict,
+quote/backslash and Unicode cases. Old current-key-only named reads count five;
+the new effective named population counts six. Raw decoded resource maps are
+unchanged. The UI checks no reads on open, explicit bounded reads, unchanged main
+named input, label-pair count versus effective-preview explanation, local keyboard
+inspection/focus return, 390px layout, late responses after minute edits and a
+measurement-mode round trip. The final journey plus actor passed in 1.2m / 1.3m
+runner total.
+
+Bombadil uses an additional owned current-time unlabelled SDK log. It reached
+open/read/preview/inspect/close/complete (completion action observed at 0.504s in
+its action trace), with no unexpected source/publication paths or uncaught errors.
+An earlier 20-second run ended before app mount without completing; its tool exit
+alone was not accepted. The explicit completion assertion rejected that run; the
+final run uses a 60-second budget and requires the completion action. No new Quint
+model was added for the stateless selector; property checks and actual SQL
+comparison complement existing formal campaigns. No production-load or complete
+accessibility claim is made.
+
+OpenAPI validates 91 operations, 429 response fixtures, 159 admitted requests,
+28 mux refusals and negative controls. API browser documentation checks also pass.
+The two selected frames are generated from the app, not hand-edited. Test fixtures
+are namespaced and expire through the existing 24-hour collector TTL; temporary
+stores are removed. No existing evidence, definitions, annotations or indexes are
+rewritten or deleted. Full Activity/fixed/context/capture adoption is still open.
+
+
+Final copy/screenshot refresh passes the actual browser journey in 22.6s (25.8s
+runner total). Deployed single-Go image `835071b4eff2` passes health; served UI
+modules, stylesheet and OpenAPI match checkout. All 55 native revision identities
+and 1,812 captures remain unchanged. No volume or catalog migration ran.
+
+
 ## Native publication/catalog capacity — 246 (2026-10-29 UTC)
 
 `internal/nativecatalog` now shares logical/physical admission, bounded file reads,

@@ -30,6 +30,18 @@ sp['signal']['enum']=['','logs','spans','metrics']
 sp['environment']['anyOf'][0]['maxLength']=128
 for name in ('matched','total'):search[name].update({'minimum':0,'maximum':10000})
 search['order']['enum']=['newest','oldest']
+# Effective-environment adoption is a distinct readonly contract, not Query.
+for name in ('exploration.AdoptionWindowInput','exploration.AdoptionRecordsQuestionInput'):
+ props=schemas[name]['properties'];props['signal']['enum']=['logs','spans'];props['fromMs']['minimum']=0;props['toMs']['maximum']=4102444800000
+schemas['exploration.AdoptionRecordsQuestionInput']['properties']['limit'].update(minimum=1,maximum=100)
+scope=schemas['identity.EnvironmentScopeInput'];scope['properties']['mode']['enum']=['named','empty','unreported'];scope['properties']['value'].update(maxLength=128)
+scope['allOf']=[{'if':{'properties':{'mode':{'const':'named'}},'required':['mode']},'then':{'required':['value'],'properties':{'value':{'minLength':1}}},'else':{'properties':{'value':{'const':''}}}}]
+schemas['identity.EnvironmentScope']['properties']['mode']['enum']=['named','empty','unreported']
+for name,version in [('exploration.EnvironmentScopesResult','goo/environment-scopes/v1'),('exploration.AdoptionRecordsResult','goo/adoption-records/v1')]:
+ schemas[name]['properties']['version']['const']=version;schemas[name]['properties']['readAt']['format']='date-time'
+schemas['exploration.EnvironmentScopesResult']['properties']['groups']['maxItems']=64
+schemas['exploration.EnvironmentScopeGroup']['properties']['count'].update(pattern='^[1-9][0-9]*$',maxLength=20)
+schemas['exploration.AdoptionRecordsResult']['properties']['rows']['maxItems']=100
 schemas['Error'] = {'type': 'object', 'required': ['error'], 'properties': {'error': {'type': 'string'}, 'hint': {'type': 'string'}}, 'additionalProperties': True}
 schemas['Cancellation'] = {'type': 'object', 'required': ['state'], 'properties': {'state': {'const': 'cancellation-requested'}}}
 # Counted values are two explicit observations, never a transactional snapshot.
@@ -161,14 +173,14 @@ poddiscovery=schemas['measurements.PodMetricDiscovery']['properties'];poddiscove
 for name in ('records','instrumentsOmitted'):poddiscovery[name].update({'minimum':0,'maximum':10000})
 
 
-reads = {'/pod-metric-discovery','/host-discovery','/pod-discovery','/http-package', '/operations', '/counter-rates', '/histograms', '/inventory', '/discovery', '/explore', '/explore/counted-values', '/record-aggregates', '/trace-search', '/population/explain', '/metric-discovery', '/measurements', '/investigations', '/captures', '/tail', '/query'}
+reads = {'/environment-scopes','/environment-scopes/records','/pod-metric-discovery','/host-discovery','/pod-discovery','/http-package', '/operations', '/counter-rates', '/histograms', '/inventory', '/discovery', '/explore', '/explore/counted-values', '/record-aggregates', '/trace-search', '/population/explain', '/metric-discovery', '/measurements', '/investigations', '/captures', '/tail', '/query'}
 for profile,roles in [('container-memory-kubeletstats-v0.137.0',['working-set']),('container-memory-k8scluster-v0.137.0',['request','limit']),('container-cpu-kubeletstats-v0.137.0',['usage']),('container-cpu-k8scluster-v0.137.0',['request','limit'])]:
  podwidget_schema['allOf'].append({'if':{'properties':{'profile':{'const':profile}},'required':['profile']},'then':{'properties':{'role':{'enum':roles}}}})
 plans = {'/pod-dashboard/plan','/host-dashboard/plan','/pool-signals/plan','/pool-signals/view','/container-memory/view','/container-cpu/view','/container-resources/history','/measurement-packages/plan', '/telemetry-packages/draft', '/telemetry-packages/numeric-plan', '/telemetry-packages/plan', '/recipes', '/dashboards/plan', '/population/plan', '/population/explain/plan', '/population/explain/filter', '/numeric-histograms/selection', '/numeric-histograms/comparison-selection', '/compare', '/explain'}
 publications = {'/activity-views','/measurement-packages', '/telemetry-packages', '/annotations', '/exploration-views', '/deployments', '/documents', '/captures/comparisons'}
 requests = {'/pod-metric-discovery':'PodMetricDiscoveryQuestion','/pod-dashboard/plan':'PodDashboardRequest','/host-discovery':'HostDiscoveryQuestion','/pod-discovery':'PodDiscoveryQuestion','/host-dashboard/plan':'HostDashboardRequest','/pool-signals/plan':'PoolSignalsRequest','/pool-signals/view':'PoolViewRequest','/container-memory/view':'ContainerMemoryViewRequest','/container-cpu/view':'ContainerCPUViewRequest','/container-resources/history':'ContainerResourceHistoryRequest','/activity-views':'ActivityViewRequest',
  '/retained-evidence/tail':'TailIntent','/compare':'CompareRequest','/inventory':'InventoryRequest','/discovery':'InventoryRequest','/explore':'RecordQuery','/explore/counted-values':'RecordQuery','/record-aggregates':'RecordQuery','/trace-search':'TraceSearchRequest','/tail':'TailSelector',
- '/measurements':'NativeQuestion','/metric-discovery':'MetricDiscoveryRequest','/measurement-packages/plan':'NativePlanRequest','/measurement-packages':'YAMLRequest',
+ '/environment-scopes':'AdoptionWindow','/environment-scopes/records':'AdoptionRecordsQuestion','/measurements':'NativeQuestion','/metric-discovery':'MetricDiscoveryRequest','/measurement-packages/plan':'NativePlanRequest','/measurement-packages':'YAMLRequest',
  '/telemetry-packages':'YAMLRequest','/telemetry-packages/draft':'TelemetryDraftRequest','/telemetry-packages/numeric-plan':'NumericPlanRequest','/telemetry-packages/plan':'TelemetryPlanRequest',
  '/recipes':'RecipeRequest','/dashboards/plan':'DashboardRequest','/population/plan':'PopulationRequest','/numeric-histograms/selection':'NumericHistogramSelectionRequest','/numeric-histograms/comparison-selection':'DistributionSelectionRequest','/annotations':'MeaningInput','/exploration-views':'ExplorationView','/deployments':'DeploymentInput','/documents':'DocumentRequest',
  '/population/explain':'ExplanationRequest','/population/explain/plan':'ExplanationRequest','/population/explain/filter':'ExplanationFilterRequest','/captures':'CaptureRequest','/captures/live':'LiveComparisonRequest','/captures/comparisons':'SaveComparisonRequest','/investigations':'InvestigationRequest','/retained-evidence':'RetainRequest','/retained-evidence/{id}/annotations':'CorrectRequest',
@@ -250,6 +262,8 @@ hp['allOf']=[{'if':{'properties':{'state':{'enum':['unknown','invalid']}},'requi
 # Native registry responses are envelopes rather than Definition directly.
 schemas['NativePackage'] = {'type':'object','required':['definition','revision','yaml'],'properties':{'definition':ref('measurements.Definition'),'revision':{'type':'string'},'yaml':{'type':'string'}}}
 schemas['NativePlan'] = {'allOf':[ref('NativePackage'),{'type':'object','required':['question','plan'],'properties':{'question':ref('measurements.Question'),'plan':ref('measurements.Plan')}}]}
+responses['post','/environment-scopes']='EnvironmentScopesResult'
+responses['post','/environment-scopes/records']='AdoptionRecordsResult'
 responses['post','/measurement-packages'] = 'NativePackage'
 responses['post','/measurement-packages/plan'] = 'NativePlan'
 schemas['NativePackageList']={'type':'array','maxItems':256,'items':{'allOf':[ref('NativePackage'),{'type':'object','required':['builtin'],'properties':{'builtin':{'type':'boolean'}}}]}}
@@ -260,6 +274,7 @@ for name in ['measurements.Definition','measurements.Question','measurements.Pla
  if name not in schemas: raise ValueError(f'Missing reflected type: {name}')
 
 def go_limit(path):
+ if path in ('/environment-scopes','/environment-scopes/records'): return 4096
  if path in ('/container-memory/view','/container-cpu/view','/container-resources/history'): return 8388608
  if path == '/pool-signals/view': return 2097152
  if path in ('/compare','/numeric-histograms/comparison-selection'): return 1048576
@@ -300,7 +315,7 @@ for (method,path),(file,block) in sorted(route_source.items()):
   op['parameters'].append({'name':p,'in':'query','schema':{'type':'string'},'description':'Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported.'})
  for p in {'/captures':['cursor'],'/captures/{id}':['cursor'],'/captures/{id}/followups':['row'],'/captures/{id}/compare':['selection','distribution']}.get(path,[]):
   if method=='get' and not any(v['name']==p and v['in']=='query' for v in op['parameters']):op['parameters'].append({'name':p,'in':'query','schema':{'type':'string'},'description':'Single canonical value; saved evidence is not reread from the telemetry source.'})
- controlled=method=='post' and path in ('/metric-discovery','/pod-metric-discovery','/host-discovery','/pod-discovery','/measurements','/explore','/explore/counted-values','/record-aggregates','/trace-search','/population/explain','/inventory','/discovery','/captures','/captures/live')
+ controlled=method=='post' and path in ('/environment-scopes','/environment-scopes/records','/metric-discovery','/pod-metric-discovery','/host-discovery','/pod-discovery','/measurements','/explore','/explore/counted-values','/record-aggregates','/trace-search','/population/explain','/inventory','/discovery','/captures','/captures/live')
  controlled = controlled or method=='get' and path in ('/http-package','/operations','/counter-rates','/histograms')
  if controlled:op['parameters'].append({'name':'X-Goo-Query-ID','in':'header','schema':{'type':'string','pattern':'^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$'},'description':'Optional short-lived cancellation capability; repeated/cancelled IDs are refused.'})
  if method=='post' and path in requests:
@@ -315,6 +330,7 @@ for (method,path),(file,block) in sorted(route_source.items()):
  if 'source-read' in e or e.startswith('xtdb-'): codes.add(502)
  if method=='post': codes.add(400)
  if controlled: codes.update((400,409,429))
+ if path in ('/environment-scopes','/environment-scopes/records'): codes.update((400,409,429,502))
  if path.startswith('/retained-evidence') and not path.endswith('/status'): codes.add(503)
  if method=='get' and path in ('/http-package','/operation-packages','/operations','/counter-rates','/histograms'): codes.add(503)
  if path=='/queries/{id}/cancel':codes.update((400,429))

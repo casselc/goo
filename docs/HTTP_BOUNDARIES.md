@@ -1101,3 +1101,13 @@ admission and cooperating local directory locks. Exact saved revision lookup at
 full catalog is over limit. Workbench Package definition → Open revision previews
 without telemetry. See the [contract](NATIVE_CATALOG_CAPACITY.md) for duplicate/
 corrupt winner behavior, builtin aliases, platform limits and existing-store recovery.
+
+
+## Environment adoption foundation — 247
+
+Two source-read routes, `POST /api/environment-scopes` and
+`POST /api/environment-scopes/records`, expose bounded label-pair diagnostics and
+checked readonly record inspection. They share record admission/cancellation and
+4 KiB input / 15-second handler limits. General named Query/Tail/capture formats
+are unchanged. The app owner uses shared passive record/attribute/table widgets
+and disables unsupported continuations. See [the contract and flow](ENVIRONMENT_ADOPTION.md).
