@@ -516,15 +516,15 @@ func (s CaptureStore) List(after string) (*CaptureList, error) {
 		return nil, e
 	}
 	defer directory.Close()
-	entries, e := directory.ReadDir(CaptureCatalogLimit + 1)
+	entries, e := captureDirectoryEntries(directory)
+	if errors.Is(e, ErrCaptureSearchBudget) {
+		return nil, errors.New("capture catalog scan limit exceeded; direct capture IDs remain reopenable")
+	}
 	if errors.Is(e, os.ErrNotExist) {
 		return list, nil
 	}
 	if e != nil && e != io.EOF {
 		return nil, e
-	}
-	if len(entries) > CaptureCatalogLimit {
-		return nil, errors.New("capture catalog scan limit exceeded; direct capture IDs remain reopenable")
 	}
 	ids := []string{}
 	for _, entry := range entries {

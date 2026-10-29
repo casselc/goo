@@ -1028,3 +1028,15 @@ operations. Its pinned Gauge/1 binding validates original known identity/maps/fl
 and exact exported decimal bounds 0..1; malformed or out-of-range source data
 refuses the whole read. Missing-value flags stay unknown. Generic wire schemas
 and versions remain unchanged; profile admission remains semantic Go validation.
+
+
+## Capture catalog summary correction — 244
+
+`GET /captures/search` returns `goo/capture-search/v2` with bounded
+`CaptureSummary` items, not receipts or full questions. ID/parent, title, canonical
+capture time, kind, optional measurement subtype, signal and nullable declared
+environment support discovery. Exact-ID/receipt and legacy list routes retain
+full receipts and verification. Existing stores need an explicit `.catalog-v2`
+rebuild; `.catalog-v1` is left untouched. See the
+[catalog contract](CAPTURE_CATALOG_SEARCH.md) for migration, query-bound cursors,
+reserved-directory admission, byte limits and metadata integrity limits.

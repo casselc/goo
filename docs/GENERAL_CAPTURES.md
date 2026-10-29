@@ -128,7 +128,7 @@ emit the same SQL; refresh does require an identical current plan. Canonical
 source JSON keeps evidence bases stable across browser transport spellings.
 See [measurement packages](MEASUREMENT_PACKAGES.md).
 
-## Search by task and recency — 242
+## Search by task and recency — 242, bounded summary correction 244
 
 Saved → Browse evidence uses literal title search, receipt capture-time order,
 and optional kind/known signal/exact environment filters. Editing stages a search;
@@ -136,7 +136,7 @@ and optional kind/known signal/exact environment filters. Editing stages a searc
 the admitted catalog before paging; it never rereads telemetry or changes an open
 capture. The legacy ID-ordered list API and exact-ID reopen retain their contracts.
 
-`GET /api/captures/search` uses derived metadata; opening still fully verifies
+`GET /api/captures/search` returns versioned bounded summaries (not receipts/full questions); opening still fully verifies
 stored contents. Existing stores need the explicit rebuild command documented in
 [the catalog contract](CAPTURE_CATALOG_SEARCH.md). Missing metadata, bad stamps,
 corruption and scan limits are errors, distinct from no matches. The shared declared question scope supplies signal/environment, including native
@@ -144,7 +144,7 @@ metrics and lifecycle captures; arbitrary service predicates are not inferred.
 
 ```mermaid
 flowchart LR
-  Capture[Verified immutable capture] --> Publish[Atomic derived metadata entry]
+  Capture[Verified immutable capture] --> Publish[Atomic bounded summary / .catalog-v2]
   Existing[Existing capture files] --> Rebuild[Explicit bounded rebuild]
   Rebuild --> Publish
   Publish --> Search[Metadata filter / capture-time order / page]
@@ -155,3 +155,6 @@ flowchart LR
 [Journey242](../journeys/242-capture-search-storyboard.md) exercises save → leave →
 find beyond page one → reopen with real OTLP/ClickHouse data and no search/reopen
 telemetry reads.
+
+[Journey 244](../journeys/244-capture-summary-storyboard.md) covers a large accepted
+question, summary browsing and explicit derived-index migration without payload changes.

@@ -15,7 +15,19 @@ for name in ('workbench.ActivityView','workbench.ActivityViewInput'):
 schemas['annotations.OperationSpan']['properties']['reportedStatus']['description']='Optional exact exporter StatusCode, independent of declared outcome. Omission means not retained in this evidence; empty and future values remain explicit unknown values. Legacy saved bytes are unchanged.'
 
 search=schemas['exploration.CaptureSearchPage']['properties']
-search['items']={'type':'array','maxItems':20,'items':ref('exploration.CaptureReceipt')}
+search['items']={'type':'array','maxItems':20,'items':ref('exploration.CaptureSummary')}
+search['version']['const']='goo/capture-search/v2'
+summary=schemas['exploration.CaptureSummary']
+summary['description']='Bounded derived discovery metadata, not a partial receipt. No full question or evidence. Exact-ID reads verify authoritative contents. Environment null means unknown, distinct from exact empty.'
+summary['additionalProperties']=False
+sp=summary['properties']
+for name in ('id','parent'):sp[name]['pattern']='^[a-f0-9]{64}$'
+sp['title']['maxLength']=120
+sp['capturedAt']['format']='date-time'
+sp['kind']['enum']=['explore','inventory','comparison','explanation','measurement']
+sp['measurementKind']['enum']=['gauge','counter','histogram','lifecycle','stock','state']
+sp['signal']['enum']=['','logs','spans','metrics']
+sp['environment']['anyOf'][0]['maxLength']=128
 for name in ('matched','total'):search[name].update({'minimum':0,'maximum':10000})
 search['order']['enum']=['newest','oldest']
 schemas['Error'] = {'type': 'object', 'required': ['error'], 'properties': {'error': {'type': 'string'}, 'hint': {'type': 'string'}}, 'additionalProperties': True}

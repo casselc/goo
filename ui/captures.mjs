@@ -11,18 +11,18 @@ import * as Workspace from './workspace.mjs';
 const global=globalThis;
 const node=UI.node;
 function summary(page){const r=(page.explanation?{count:page.explanation.selection.count,basis:page.explanation.basis,state:page.explanation.state}:null)||page.measurement||page.explore||page.inventory||{count:page.comparison.request.selection.count,basis:page.comparison.result.basis,state:page.comparison.result.state};return {count:r.count,basis:r.basis,state:r.state,retainedRecords:page.retainedRecords,recordsLimited:page.recordsLimited};}
-// A supplied receipt page only: store paging/opening stays in the capture owner.
-function catalogTable(receipts,onOpen){
+// Supplied catalog summaries only: store paging/opening stays in the capture owner.
+function catalogTable(summaries,onOpen){
  const viewport=node('goo-table'),table=node('table'),head=node('thead'),header=node('tr'),body=node('tbody');
  viewport.setAttribute('density','compact');viewport.setAttribute('sticky-header','');viewport.setAttribute('aria-label','Saved captures on this page');
  table.setAttribute('aria-label','Saved captures on this page');
  for(const [key,label]of [['title','Capture'],['kind','Kind'],['at','Captured · UTC']]){const th=node('th',label);th.scope='col';th.dataset.captureCol=key;header.append(th)}
  head.append(header);table.append(head,body);viewport.append(table);
- for(const receipt of receipts){
+ for(const receipt of summaries){
   const row=node('tr'),title=node('td'),kind=node('td'),at=node('td'),open=node('button',receipt.title);
   row.dataset.captureId=receipt.id;title.dataset.captureCol='title';kind.dataset.captureCol='kind';at.dataset.captureCol='at';
   open.title='Open saved capture '+receipt.id;open.onclick=()=>onOpen(receipt.id);title.append(open);
-  kind.textContent=receipt.question.kind==='explanation'?'Population explanation':receipt.question.kind==='inventory'?'Service inventory':receipt.question.kind==='comparison'?'Population comparison':receipt.question.kind==='measurement'?receipt.question.measurement.definition.kind:receipt.question.explore.signal;
+  kind.textContent=receipt.kind==='explanation'?'Population explanation':receipt.kind==='inventory'?'Service inventory':receipt.kind==='comparison'?'Population comparison':receipt.kind==='measurement'?receipt.measurementKind:receipt.signal;
   const date=new Date(receipt.capturedAt),valid=Number.isFinite(date.getTime()),time=node(valid?'time':'span',valid?date.toISOString().replace('T',' ').replace(/\.\d{3}Z$/,' UTC'):'Unavailable');
   if(valid){time.dateTime=receipt.capturedAt;time.title='Captured at '+receipt.capturedAt;time.tabIndex=0}at.append(time);row.append(title,kind,at);body.append(row);
  }

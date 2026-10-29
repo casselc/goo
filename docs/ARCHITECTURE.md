@@ -2,7 +2,7 @@
 
 This describes implemented module and lifetime boundaries. The explicitly labeled
 target diagram is design context, not another execution queue; current priorities
-are in the [reviewed roadmap](ROADMAP_2026_10_28.md). See
+are in the [reviewed roadmap](ROADMAP_2026_10_29.md). See
 [known limits](KNOWN_ISSUES.md) and [executed validation](../VALIDATION.md) for
 capability/acceptance boundaries. HTTP paths and native/browser entry points are
 indexed in [the API contract](API.md).
@@ -105,8 +105,9 @@ publication retries; they cannot use the generic source-only `ReadHandler`.
 The command composes four family lookups instead of a separate path list. See
 [the publication flow](HTTP_BOUNDARIES.md#explanation-and-capture-family-policies-2026-10-28).
 
-General capture search uses a bounded, derived per-ID metadata catalog (242),
-with explicit rebuild for existing stores. Its checksum/stat checks do not verify
+General capture search uses a bounded, derived per-ID summary catalog (244),
+with explicit v1 → v2 rebuild for existing stores. Search does not retain full
+questions or pretend summaries are receipts. Its checksum/stat checks do not verify
 payload bodies; exact-ID reopen retains full verification. Publication of derived
 metadata cannot turn an already committed capture into an apparent failed save.
 See [the metadata contract](CAPTURE_CATALOG_SEARCH.md) and

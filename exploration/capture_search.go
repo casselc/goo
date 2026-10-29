@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"slices"
@@ -19,7 +18,7 @@ import (
 )
 
 const CaptureSearchMaxBytes int64 = 16 << 20
-const CaptureSearchReceiptBytes = 8 << 20
+const CaptureSearchSummaryBytes = 8 << 20
 
 var ErrCaptureSearchBudget = errors.New("capture search scan budget exceeded; open a capture by ID instead")
 var ErrCaptureSearchCursor = errors.New("capture search cursor does not match the query or catalog; restart search")
@@ -31,8 +30,46 @@ type CaptureSearchQuery struct {
 	Environment *string `json:"environment"`
 	Order       string  `json:"order"`
 }
+
+// CaptureSummary is bounded discovery metadata, not a partial evidence receipt.
+// Full questions and verified evidence are available only through exact-ID reads.
+type CaptureSummary struct {
+	ID              string  `json:"id"`
+	Parent          string  `json:"parent,omitempty"`
+	Title           string  `json:"title"`
+	CapturedAt      string  `json:"capturedAt"`
+	Kind            string  `json:"kind"`
+	MeasurementKind string  `json:"measurementKind,omitempty"`
+	Signal          string  `json:"signal"`
+	Environment     *string `json:"environment"`
+}
+
+// canonicalCaptureTime bounds even legacy timestamps with long fractional tails.
+// Preserve a boundary-year offset when converting it to UTC would leave RFC3339.
+func canonicalCaptureTime(value string) string {
+	at, _ := time.Parse(time.RFC3339Nano, value)
+	utc := at.UTC()
+	if utc.Year() >= 0 && utc.Year() <= 9999 {
+		return utc.Format(time.RFC3339Nano)
+	}
+	return at.Format(time.RFC3339Nano)
+}
+
+func summarizeCapture(r CaptureReceipt) CaptureSummary {
+	signal, environment, known := captureScope(r.Question)
+	summary := CaptureSummary{ID: r.ID, Parent: r.Parent, Title: r.Title, CapturedAt: canonicalCaptureTime(r.CapturedAt), Kind: r.Question.Kind, Signal: signal}
+	if known {
+		summary.Environment = &environment
+	}
+	if r.Question.Measurement != nil {
+		summary.MeasurementKind = r.Question.Measurement.Definition.Kind
+	}
+	return summary
+}
+
 type CaptureSearchPage struct {
-	Items      []CaptureReceipt `json:"items"`
+	Version    string           `json:"version"`
+	Items      []CaptureSummary `json:"items"`
 	HasMore    bool             `json:"hasMore"`
 	NextCursor string           `json:"nextCursor,omitempty"`
 	Matched    int              `json:"matched"`
@@ -73,15 +110,14 @@ func captureScope(q CaptureQuestion) (signal, environment string, knownEnvironme
 	}
 	return signal, environment, knownEnvironment
 }
-func (q CaptureSearchQuery) matches(r CaptureReceipt) bool {
-	if q.Kind != "" && r.Question.Kind != q.Kind || !strings.Contains(strings.ToLower(r.Title), strings.ToLower(q.Title)) {
+func (q CaptureSearchQuery) matches(r CaptureSummary) bool {
+	if q.Kind != "" && r.Kind != q.Kind || !strings.Contains(strings.ToLower(r.Title), strings.ToLower(q.Title)) {
 		return false
 	}
 	if q.Signal == "" && q.Environment == nil {
 		return true
 	}
-	signal, env, known := captureScope(r.Question)
-	return (q.Signal == "" || q.Signal == signal) && (q.Environment == nil || known && *q.Environment == env)
+	return (q.Signal == "" || q.Signal == r.Signal) && (q.Environment == nil || r.Environment != nil && *q.Environment == *r.Environment)
 }
 
 type captureSearchCursor struct {
@@ -116,7 +152,7 @@ func (s CaptureStore) Search(ctx context.Context, q CaptureSearchQuery, cursor s
 			return nil, ErrCaptureSearchCursor
 		}
 	}
-	result := &CaptureSearchPage{Items: []CaptureReceipt{}, Order: q.Order}
+	result := &CaptureSearchPage{Version: "goo/capture-search/v2", Items: []CaptureSummary{}, Order: q.Order}
 	if err = ctx.Err(); err != nil {
 		return nil, err
 	}
@@ -131,12 +167,9 @@ func (s CaptureStore) Search(ctx context.Context, q CaptureSearchQuery, cursor s
 		return nil, err
 	}
 	defer directory.Close()
-	entries, err := directory.ReadDir(CaptureCatalogLimit + 1)
-	if err != nil && err != io.EOF {
+	entries, err := captureDirectoryEntries(directory)
+	if err != nil {
 		return nil, err
-	}
-	if len(entries) > CaptureCatalogLimit {
-		return nil, ErrCaptureSearchBudget
 	}
 	ids := []string{}
 	var size int64
@@ -175,7 +208,7 @@ func (s CaptureStore) Search(ctx context.Context, q CaptureSearchQuery, cursor s
 	remaining := CaptureSearchMaxBytes
 	metadata := 0
 	type item struct {
-		receipt CaptureReceipt
+		receipt CaptureSummary
 		at      time.Time
 	}
 	matches := []item{}
@@ -200,7 +233,7 @@ func (s CaptureStore) Search(ctx context.Context, q CaptureSearchQuery, cursor s
 		if q.matches(receipt) {
 			b, _ := json.Marshal(receipt)
 			metadata += len(b)
-			if metadata > CaptureSearchReceiptBytes {
+			if metadata > CaptureSearchSummaryBytes {
 				return nil, ErrCaptureSearchBudget
 			}
 			at, _ := time.Parse(time.RFC3339Nano, receipt.CapturedAt)

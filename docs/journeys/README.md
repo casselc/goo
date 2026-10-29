@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey 244](../../journeys/244-capture-summary-storyboard.md) covers large accepted
+questions, bounded search summaries and explicit index migration preserving evidence.
+
+
 [Review journey 243](../../journeys/243-whole-product-review-storyboard.md) exercises
 the combined Activity → supporting trace → fixed capture → find/reopen task and
 records current usability gaps; it is an opt-in diagnostic, not a shipped fix.

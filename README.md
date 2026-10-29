@@ -6,7 +6,7 @@ with ordinary OpenTelemetry data; application manifests and Go annotations add
 shared definitions when available. Logs/Spans switching preserves shared filters;
 incompatible fields stay as explicit drafts ([scope continuity](journeys/239-activity-signal-scope-storyboard.md)).
 
-[Reviewed roadmap](docs/ROADMAP_2026_10_29.md) · [Execution backlog](docs/BACKLOG_2026_10_29.md) ·
+[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Reviewed roadmap](docs/ROADMAP_2026_10_29.md) · [Execution backlog](docs/BACKLOG_2026_10_29.md) ·
 [Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md) ·
 [Go/frontend library review and proposal](docs/LIBRARY_REFACTOR_PLAN_2026_10_28.md)
 

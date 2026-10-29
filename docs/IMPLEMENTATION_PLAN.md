@@ -3,8 +3,8 @@
 > Current priority: [2026-10-29 roadmap](ROADMAP_2026_10_29.md) and
 > [acceptance backlog](BACKLOG_2026_10_29.md). The six-reviewer
 > [checkpoint 243](reviews/INDEPENDENT_REVIEW_SUMMARY_243.md) is complete.
-> Next: fix accepted captures that cannot be indexed or repaired (C0), then
-> malformed text (C1) and native package capacity (C2).
+> C0 is corrected in 244 with bounded catalog summaries and explicit v2 rebuild.
+> Next: malformed text (C1), then native package capacity (C2).
 > Earlier queues preserve delivery history; their Next labels are superseded.
 
 

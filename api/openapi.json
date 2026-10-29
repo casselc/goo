@@ -8780,7 +8780,7 @@
             "type": "array",
             "maxItems": 20,
             "items": {
-              "$ref": "#/components/schemas/exploration.CaptureReceipt"
+              "$ref": "#/components/schemas/exploration.CaptureSummary"
             }
           },
           "matched": {
@@ -8802,9 +8802,14 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 10000
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/capture-search/v2"
           }
         },
         "required": [
+          "version",
           "items",
           "hasMore",
           "matched",
@@ -8813,6 +8818,79 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.CaptureSearchPage"
+      },
+      "exploration.CaptureSummary": {
+        "properties": {
+          "capturedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "environment": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "explore",
+              "inventory",
+              "comparison",
+              "explanation",
+              "measurement"
+            ]
+          },
+          "measurementKind": {
+            "type": "string",
+            "enum": [
+              "gauge",
+              "counter",
+              "histogram",
+              "lifecycle",
+              "stock",
+              "state"
+            ]
+          },
+          "parent": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "signal": {
+            "type": "string",
+            "enum": [
+              "",
+              "logs",
+              "spans",
+              "metrics"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 120
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "capturedAt",
+          "kind",
+          "signal",
+          "environment"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.CaptureSummary",
+        "description": "Bounded derived discovery metadata, not a partial receipt. No full question or evidence. Exact-ID reads verify authoritative contents. Environment null means unknown, distinct from exact empty.",
+        "additionalProperties": false
       },
       "exploration.CapturedWindowDiscovery": {
         "properties": {

@@ -3,10 +3,13 @@
 ## Current review — 243
 
 Six reviewers completed the [whole-product review](reviews/INDEPENDENT_REVIEW_SUMMARY_243.md).
-**C0, confirmed:** an accepted capture can exceed the derived metadata entry limit,
+**C0, corrected in 244:** the v1 index allowed an accepted capture to exceed its metadata entry limit,
 commit successfully, then make catalog search fail. Exact-ID reopen works, but
-current rebuild cannot index that capture. This is distinct from the intentional
-metadata-only integrity boundary. No runtime fix is included in checkpoint 243.
+the v1 rebuild could not index that capture. This is distinct from the intentional
+metadata-only integrity boundary. Checkpoint 243 was review-only. Checkpoint 244 replaces full-receipt metadata
+with bounded summaries and an explicit `.catalog-v2` rebuild; immutable capture
+bytes and exact-ID receipts remain unchanged. Existing stores must rebuild before
+search; the 256 MiB whole-store repair limit remains open.
 Malformed selected/authored UTF-8 (C1) and native publisher/catalog capacity (C2)
 are also reproduced; C2 now has actual endpoint evidence, not only source review.
 The mobile trace sheet covers the global return control; visible Close trace then

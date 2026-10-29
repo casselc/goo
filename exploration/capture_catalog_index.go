@@ -1,6 +1,7 @@
 package exploration
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -8,9 +9,10 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"reflect"
+	"slices"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 const CaptureCatalogEntryBytes int64 = 64 << 10
@@ -18,21 +20,42 @@ const CaptureCatalogRebuildBytes int64 = 256 << 20
 
 var ErrCaptureCatalogUnavailable = errors.New("capture metadata catalog unavailable; run goo rebuild-capture-catalog with the capture directory, or open by ID")
 
+// Reserve the two known derived directories separately so a v1 -> v2 rebuild
+// cannot make an admitted store exceed its own enumeration budget. All other
+// physical entries count, including unrelated directories and temporary files.
+func captureDirectoryEntries(dir *os.File) ([]os.DirEntry, error) {
+	entries, err := dir.ReadDir(CaptureCatalogLimit + 3)
+	if err != nil && err != io.EOF {
+		return nil, err
+	}
+	counted := 0
+	for _, entry := range entries {
+		if entry.IsDir() && (entry.Name() == ".catalog-v1" || entry.Name() == ".catalog-v2") {
+			continue
+		}
+		counted++
+	}
+	if counted > CaptureCatalogLimit {
+		return nil, ErrCaptureSearchBudget
+	}
+	return entries, nil
+}
+
 type captureCatalogEntry struct {
 	Version    int            `json:"version"`
-	Receipt    CaptureReceipt `json:"receipt"`
+	Summary    CaptureSummary `json:"summary"`
 	Size       int64          `json:"size"`
 	ModifiedNS int64          `json:"modifiedNS"`
 	Digest     string         `json:"digest"`
 }
 
-func (s CaptureStore) catalogDir() string { return filepath.Join(s.Dir, ".catalog-v1") }
+func (s CaptureStore) catalogDir() string { return filepath.Join(s.Dir, ".catalog-v2") }
 func (s CaptureStore) indexCapture(c *SavedCapture) error {
 	info, e := os.Stat(filepath.Join(s.Dir, c.ID+".json"))
 	if e != nil {
 		return e
 	}
-	entry := captureCatalogEntry{Version: 1, Receipt: c.CaptureReceipt, Size: info.Size(), ModifiedNS: info.ModTime().UnixNano()}
+	entry := captureCatalogEntry{Version: 2, Summary: summarizeCapture(c.CaptureReceipt), Size: info.Size(), ModifiedNS: info.ModTime().UnixNano()}
 	entry.Digest = searchHash(entry)
 	b, e := json.Marshal(entry)
 	if e != nil {
@@ -71,46 +94,52 @@ func (s CaptureStore) indexCapture(c *SavedCapture) error {
 	defer d.Close()
 	return d.Sync()
 }
-func (s CaptureStore) catalogEntry(id string, budget int64) (CaptureReceipt, int64, string, error) {
+func (s CaptureStore) catalogEntry(id string, budget int64) (CaptureSummary, int64, string, error) {
 	var entry captureCatalogEntry
 	indexInfo, indexErr := os.Lstat(filepath.Join(s.catalogDir(), id+".json"))
 	if indexErr != nil {
-		return entry.Receipt, 0, "", ErrCaptureCatalogUnavailable
+		return entry.Summary, 0, "", ErrCaptureCatalogUnavailable
 	}
 	if !indexInfo.Mode().IsRegular() {
-		return entry.Receipt, 0, "", fmt.Errorf("capture metadata unsupported file for %s", id)
+		return entry.Summary, 0, "", fmt.Errorf("capture metadata unsupported file for %s", id)
 	}
 	f, e := os.Open(filepath.Join(s.catalogDir(), id+".json"))
 	if e != nil {
-		return entry.Receipt, 0, "", ErrCaptureCatalogUnavailable
+		return entry.Summary, 0, "", ErrCaptureCatalogUnavailable
 	}
 	defer f.Close()
 	b, e := io.ReadAll(io.LimitReader(f, min(CaptureCatalogEntryBytes, budget)+1))
 	if e != nil {
-		return entry.Receipt, 0, "", e
+		return entry.Summary, 0, "", e
 	}
 	if int64(len(b)) > min(CaptureCatalogEntryBytes, budget) {
-		return entry.Receipt, 0, "", ErrCaptureSearchBudget
+		return entry.Summary, 0, "", ErrCaptureSearchBudget
 	}
-	d := json.NewDecoder(strings.NewReader(string(b)))
+	d := json.NewDecoder(bytes.NewReader(b))
 	d.DisallowUnknownFields()
 	if e = d.Decode(&entry); e != nil || d.Decode(new(any)) != io.EOF {
-		return entry.Receipt, 0, "", fmt.Errorf("capture metadata integrity failure for %s", id)
+		return entry.Summary, 0, "", fmt.Errorf("capture metadata integrity failure for %s", id)
 	}
 	digest := entry.Digest
 	entry.Digest = ""
-	_, atError := time.Parse(time.RFC3339Nano, entry.Receipt.CapturedAt)
-	if entry.Version != 1 || entry.Receipt.Version != 1 || (entry.Receipt.Parent != "" && !regexpRevision.MatchString(entry.Receipt.Parent)) || entry.Receipt.ID != id || digest != searchHash(entry) || !validCaptureTitle(entry.Receipt.Title) || atError != nil || entry.Receipt.Question.Validate() != nil || !reflect.DeepEqual(entry.Receipt.Question, entry.Receipt.Question.Normalized()) {
-		return entry.Receipt, 0, "", fmt.Errorf("capture metadata integrity failure for %s", id)
+	_, atError := time.Parse(time.RFC3339Nano, entry.Summary.CapturedAt)
+	r := entry.Summary
+	validEnvironment := r.Environment == nil || len(*r.Environment) <= 128 && utf8.ValidString(*r.Environment) && !strings.ContainsRune(*r.Environment, 0)
+	validKind := slices.Contains([]string{"explore", "inventory", "comparison", "explanation", "measurement"}, r.Kind)
+	validSignal := slices.Contains([]string{"", "logs", "spans", "metrics"}, r.Signal)
+	validMeasurement := r.Kind != "measurement" && r.MeasurementKind == "" || r.Kind == "measurement" && slices.Contains([]string{"gauge", "counter", "histogram", "lifecycle", "stock", "state"}, r.MeasurementKind)
+	if entry.Version != 2 || (r.Parent != "" && !regexpRevision.MatchString(r.Parent)) || r.ID != id || digest != searchHash(entry) || !validCaptureTitle(r.Title) || atError != nil || r.CapturedAt != canonicalCaptureTime(r.CapturedAt) || !validEnvironment || !validKind || !validSignal || !validMeasurement {
+		return r, 0, "", fmt.Errorf("capture metadata integrity failure for %s", id)
 	}
+
 	info, e := os.Lstat(filepath.Join(s.Dir, id+".json"))
 	if e != nil {
-		return entry.Receipt, 0, "", e
+		return entry.Summary, 0, "", e
 	}
 	if !info.Mode().IsRegular() || info.Size() != entry.Size || info.ModTime().UnixNano() != entry.ModifiedNS {
-		return entry.Receipt, 0, "", fmt.Errorf("capture file changed since metadata verification for %s; rebuild catalog", id)
+		return entry.Summary, 0, "", fmt.Errorf("capture file changed since metadata verification for %s; rebuild catalog", id)
 	}
-	return entry.Receipt, int64(len(b)), digest, nil
+	return entry.Summary, int64(len(b)), digest, nil
 }
 
 type CaptureCatalogRebuild struct {
@@ -129,12 +158,9 @@ func (s CaptureStore) RebuildCatalog(ctx context.Context) (CaptureCatalogRebuild
 		return result, e
 	}
 	defer dir.Close()
-	entries, e := dir.ReadDir(CaptureCatalogLimit + 1)
-	if e != nil && e != io.EOF {
+	entries, e := captureDirectoryEntries(dir)
+	if e != nil {
 		return result, e
-	}
-	if len(entries) > CaptureCatalogLimit {
-		return result, ErrCaptureSearchBudget
 	}
 	var ids []string
 	var total int64

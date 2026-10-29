@@ -1,5 +1,44 @@
 # Validation record
 
+## Accepted capture indexability correction — 244 (2026-10-29 UTC)
+
+Search now returns `goo/capture-search/v2` bounded summaries from `.catalog-v2`,
+not full questions or partial receipts. Canonical declared scope supplies signal/
+environment; all six measurement subtypes remain distinct. Exact-ID responses,
+immutable payloads/IDs, source-free reopen and legacy ID paging are preserved.
+The [contract](docs/CAPTURE_CATALOG_SEARCH.md), diagram, OpenAPI, current roadmap,
+issue list and [storyboard](journeys/244-capture-summary-storyboard.md) are updated.
+
+Passed root Go suite, final capture/server race checks and vet; 606 frontend checks;
+60 Hegel accepted-input create/search/rebuild properties and 60 capture state/swarm
+examples. Actual-handler regression accepts a <16 KiB browser-style request whose
+escaped receipt exceeds 64 KiB, finds it alongside earlier evidence and rebuilds
+without byte changes. Public-Go regressions cover oversized native definitions and
+paired questions. Projection/read-back covers all current families/subtypes;
+legacy long-fraction and boundary-year capture timestamps retain their instants.
+Operational metadata failure, corrupt reopen, cursor/paging and byte limits remain
+covered. The Go reviewer found no remaining blocker after the directory-budget
+follow-up ([review](docs/reviews/GO_C0_REVIEW_244.md)).
+
+Both real-lab browser journeys 242/244 passed (36.2s total); final 244 rerun with
+the shared directory rule passed in 3.1s / 5.5s total. It verifies a large accepted
+question, literal title/Unicode rendering, summary browse, full exact reopen,
+explicit CLI migration, unchanged payload hash and preserved old derived data.
+Browsing/reopening adds zero POSTs. Journey 242 also executed its existing Quint
+ledger checker and negative controls. No new Bombadil campaign was run; existing
+catalog actions/invariants remain applicable. OpenAPI checks passed 88 operations,
+429 response fixtures, 159 admitted requests, 28 mux refusals and negative controls;
+the API documentation browser check passed.
+
+The single-Go lab image `225596989a8f` is deployed. Explicit rebuild indexed all
+1,812 existing captures / 109,108,338 payload bytes. Before/after SHA-256 manifests
+match every original capture; old v1 metadata and all data volumes were retained.
+Served capture JS/OpenAPI match checkout. Deployed search returns all 1,812 captures
+and 678 native metric captures, with full receipt available only on exact open.
+The known XTDB orphan was left untouched. The whole-store 256 MiB rebuild ceiling
+remains; C1 malformed text is next, followed by C2 native catalog capacity.
+
+
 ## Independent whole-product review — 243 (2026-10-29 UTC)
 
 Five domain reviewers (product/usability, frontend, architecture, Go semantics,
