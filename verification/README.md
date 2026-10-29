@@ -3078,3 +3078,13 @@ go test -run '^(TestHegelRecordEnvironmentFlow250|TestQuintObservedRecordEnviron
 ```
 
 The real source, tail, capture/reopen and freeze checks are in journey 247.
+
+
+## Independent scoped lifecycle generation model (2026-10-29)
+
+[`lifecycle-generations/`](lifecycle-generations/README.md) is a standalone consumer
+module extending the lifecycle model to two tenants and two immutable generations.
+It uses pinned gotogether/qhegel without changing this module's existing sibling
+replacements. Its dedicated check script and CI verify model possibilities, bounded
+safety, real-kernel traces, refused mixed artifacts and three shrinking source
+mutants. See its README for evidence, reproduction and scope limits.

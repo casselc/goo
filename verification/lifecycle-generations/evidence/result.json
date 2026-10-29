@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-29",
+  "gooBaseline": "d102aade4dec645740d5000e1d2cb35eef3b1fa3",
+  "gotogether": "1cb37c49240167cc826fe35f5f1e29f1e1cfe885",
+  "tools": {
+    "go": "1.27.2",
+    "quint": "0.33.0",
+    "rustEvaluator": "0.7.0",
+    "apalache": "0.62.1",
+    "java": "21",
+    "hegel": "0.9.27"
+  },
+  "boundedSafetySteps": 9,
+  "possibilitiesReached": 4,
+  "directedScenarios": 5,
+  "generated": {
+    "generatedSteps": 300,
+    "maxSteps": 25,
+    "nonIdleSteps": 139,
+    "seed": 42,
+    "traces": 12
+  },
+  "observationMutations": {
+    "total": 12,
+    "killed": 8,
+    "malformed": 4,
+    "survived": 0,
+    "undecided": 0
+  },
+  "sourceMutants": [
+    {
+      "name": "dropTenant",
+      "steps": 2,
+      "failingAction": "accept",
+      "quintRuns": 7,
+      "cacheHits": 8
+    },
+    {
+      "name": "allowMixed",
+      "steps": 6,
+      "failingAction": "mixed",
+      "quintRuns": 8,
+      "cacheHits": 7
+    },
+    {
+      "name": "changedScope",
+      "steps": 3,
+      "failingAction": "changedScope",
+      "quintRuns": 7,
+      "cacheHits": 8
+    }
+  ]
+}

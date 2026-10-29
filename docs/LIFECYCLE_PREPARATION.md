@@ -152,3 +152,13 @@ IDs exclude historical fields; malformed selected rows cannot hide behind a
 population filter. Authored literals and enums use the same UTF-8 requirement.
 See [the text contract and pipeline](PREPARED_TEXT_INTEGRITY.md). Valid Unicode
 and permitted empty values retain exact bytes; no evidence migration is needed.
+
+
+### Scoped generation verification
+
+The independent [two-tenant/two-generation model](../verification/lifecycle-generations/README.md)
+checks real preparation/correction and aggregation APIs, including late evidence
+improving or degrading classification, immutable old snapshots, explicit generation
+selection, mixed prepared-artifact refusal and changed-scope refusal. This bounded
+pure-kernel trial uses synthetic complete coverage; it does not establish real
+telemetry completeness or storage/concurrency isolation.

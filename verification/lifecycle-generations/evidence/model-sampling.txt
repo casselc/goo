@@ -1,0 +1,6 @@
+simulate model/generations.binding.yaml: generations(), 1000 traces of 30 steps, seed 1
+  holds   safety: none of 1000 sampled traces of up to 30 steps violates it (a sample, no proof: a violation that 1 trace in 334 shows is missed at most 5% of the time by 1000 traces, a rarer one more often; -graph searches every state)
+  possible isolated subjects: reached by accept(tenant = 0), accept(tenant = 1), freeze (the Go evaluator's search)
+  possible missing becomes good: reached by accept(tenant = 0), freeze, terminal(tenant = 0, successful = true), correct (the Go evaluator's search)
+  possible good becomes unknown: reached by accept(tenant = 0), terminal(tenant = 0, successful = true), freeze, terminal(tenant = 0, successful = false), correct (the Go evaluator's search)
+  possible selected generation: reached by accept(tenant = 0), freeze, correct, selectGeneration(generation = 0), selectGeneration(generation = 1), mixed, changedScope, finish (the Go evaluator's search)

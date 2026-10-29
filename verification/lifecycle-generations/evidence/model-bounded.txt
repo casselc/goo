@@ -1,0 +1,6 @@
+simulate model/generations.binding.yaml: generations(), every trace of up to 9 steps (quint verify, the binding's verifySteps)
+  holds   safety: no trace of up to 9 steps violates it
+  possible isolated subjects: reached by accept(tenant = 0), accept(tenant = 1), freeze (the Go evaluator's search)
+  possible missing becomes good: reached by accept(tenant = 0), freeze, terminal(tenant = 0, successful = true), correct (the Go evaluator's search)
+  possible good becomes unknown: reached by accept(tenant = 0), terminal(tenant = 0, successful = true), freeze, terminal(tenant = 0, successful = false), correct (the Go evaluator's search)
+  possible selected generation: reached by accept(tenant = 0), freeze, correct, selectGeneration(generation = 0), selectGeneration(generation = 1), mixed, changedScope, finish (the Go evaluator's search)
