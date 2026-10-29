@@ -112,3 +112,9 @@ Exact-ID/receipt validation, source-free stored pages, explicit scoped context,
 fixed reuse and checked refresh lineage are delivered. Activity preview-to-selector
 handoff remains open; authored/share links and unsupported families stay gated.
 See [current Saved support](RECORD_SELECTOR_API.md#saved-selector-captures--255).
+
+256 completes the bounded A0 record loop: checked environment preview → staged
+Activity → explicit Start → fixed investigation → capture/Saved. Preserved filters,
+stale preview guards and unsupported selector XTDB actions are tested. Next: S0,
+keeping exact observations without requiring interpretation. Unsupported families
+remain separate, rather than being implicitly enabled by record adoption.

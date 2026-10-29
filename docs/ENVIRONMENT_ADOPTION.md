@@ -1,5 +1,10 @@
 # Environment adoption — first slice, 247
 
+> Current: 256 completes the bounded record adoption loop. Checked preview can
+> stage Activity before explicit Start, then fixed investigation/capture/Saved.
+> The foundation below records 247; see [current activation](RECORD_SELECTOR_API.md#bounded-activity-activation--256).
+
+
 Existing OTel logs and spans can be inspected without adding a manifest or
 inventing an environment label. Activity → **Find environments** offers an explicit
 bounded discovery read and a separate read-only record preview. Opening the tool

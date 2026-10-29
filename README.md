@@ -458,7 +458,8 @@ Native package publication and browsing share [bounded capacity and exact revisi
 recovery](docs/NATIVE_CATALOG_CAPACITY.md); no stored definitions are deleted to enforce it.
 
 Have OTel data without an environment label? Activity → Find environments offers
-[bounded discovery and readonly inspection](docs/ENVIRONMENT_ADOPTION.md). The
+[bounded discovery and preview](docs/ENVIRONMENT_ADOPTION.md). Stage the checked
+environment in Activity, keep your filters, then Start stream explicitly. The
 [record APIs](docs/RECORD_SELECTOR_API.md) support explicit selectors through tails,
 context and filesystem captures. Saved can now reopen selector-bearing records,
 comparisons and explanations, page/inspect stored records without telemetry reads,
@@ -466,7 +467,8 @@ and stage their fixed questions for an explicit Run. See the
 [executable Saved journey](journeys/255-saved-environment-storyboard.md).
 
 The [scope propagation audit](docs/ENVIRONMENT_SCOPE_PROPAGATION.md) tracks the
-remaining Activity selector-entry handoff. Shared authored question/step links,
+delivered bounded record loop. See the [Activity journey](journeys/256-activity-environment-storyboard.md).
+Shared authored question/step links,
 reusable view/package intent, native/service families and XTDB selector retention
 remain unsupported. Preview responses carry a checked
 [versioned selector](docs/ENVIRONMENT_SELECTOR_PROTOCOL.md); absence is never a wildcard.

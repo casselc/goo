@@ -6,8 +6,9 @@
 > C0 is corrected in 244 with bounded catalog summaries and explicit v2 rebuild.
 > C1 is corrected in 245 with selected/authored UTF-8 validation.
 > C2 is corrected in 246 with shared admission and exact revision recovery.
-> A0 foundation is delivered in 247: checked scopes, bounded discovery and
-> read-only SDK record inspection. Full A0 flow propagation remains open.
+> A0 foundation is delivered in 247; 256 completes the bounded record adoption
+> loop through Activity, fixed investigation, capture and Saved. Unsupported
+> families remain explicit; this is not universal selector adoption.
 > 248 shares checked current-only/effective selection and record SQL lowering;
 > [the propagation audit](ENVIRONMENT_SCOPE_PROPAGATION.md) identifies remaining handoffs.
 > 249 adds response-only versioned selector metadata and freezes old saved wires.
@@ -22,7 +23,9 @@
 > guarded automatic reads, baseline restoration and unsupported view intent.
 > 255 enables checked Saved record/comparison/explanation open and explicit fixed
 > reuse, retaining unsupported authored/XTDB boundaries.
-> Next: enable and verify the Activity preview-to-selector handoff; service/native/package/retention work remains separate.
+> 256 enables checked preview staging and explicit Start, preserving filters and
+> scope through the complete record journey. Next: S0, keeping exact observations
+> without requiring interpretation. Service/native/package/retention adoption is separate.
 > Earlier queues preserve delivery history; their Next labels are superseded.
 
 

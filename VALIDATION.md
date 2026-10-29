@@ -1,5 +1,47 @@
 # Validation record
 
+## Bounded Activity selector activation — 256 (2026-10-29 UTC)
+
+Checked environment previews now stage Activity with the current predicate draft
+and no source read. Old rows/selection, context, return, aggregate/plot owners,
+saved baseline and view identity clear; the previous saved-view URL is removed.
+The single existing Start action commits the scope explicitly. Opening a saved
+view while this scope is pending uses the existing Keep/Discard draft guard. Staged signal
+changes do not subscribe; incompatible filters stay visible and refuse execution.
+A compact scope tag and explicit name replacement preserve policy semantics.
+Tail row/refresh/save guards block selector XTDB preservation despite available
+membership capabilities. See [contract/diagram](docs/RECORD_SELECTOR_API.md#bounded-activity-activation--256)
+and [actual journey/frames](journeys/256-activity-environment-storyboard.md).
+
+624 frontend checks pass, including handoff validation against the shared selector
+bank, signal refusal and clone/policy isolation. Embedded/source-free configured
+UI Go checks pass. Frontend and architecture reviews found no blocker; architecture
+accepts this as delivery of the bounded A0 record loop, with unsupported families
+remaining explicit. S0 (keeping exact observations without requiring interpretation)
+is next; this is not universal selector adoption or a production-readiness claim.
+
+Actual SDK/source journeys 239, 247 and 256 pass together in 2.2min. The new journey
+includes all three scopes and both signals, preserved portable filters, zero-read
+staging, staged signal changes, fixed Analyze/Run, return to held observations,
+real capture dialog/Saved reopen, stale preview and incompatible-filter controls.
+Its 55s Bombadil campaign completes discovery→preview→stage→Start→pause with 981
+observed snapshots, full phase coverage, no implicit subscription/publication and
+no selector retention controls. Initial disclosure-toggle harness assumptions were
+corrected. Final header-action placement and desktop/mobile frames pass with the
+SDK journey in 1.9min, with no horizontal overflow at 390px. These are actual SDK
+fixtures and isolated temporary stores; no lab capture was published. No new
+Hegel/Quint/model campaign is claimed in this UI activation cut.
+
+Deployed Go image `7cecfda8068c` passes health, exact served-module checks
+and old exact capture access. All 1,812 capture IDs and 55 native revision IDs
+remain unchanged. Only the packages service was recreated; all volumes and the
+existing XTDB orphan remain intact. The unused intermediate image and temporary
+test artifacts are removed; the previous deployed image is retained for rollback.
+Root disk has about 4.9 GB free. The final staged-scope Saved-view Keep/Discard
+guard passes the production journey in 24.7s (28.0s total), and the final frontend
+gate remains 624 passing checks.
+
+
 ## Saved environment-selector captures — 255 (2026-10-29 UTC)
 
 Saved record, comparison and observed-explanation captures now reopen through

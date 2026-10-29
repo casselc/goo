@@ -81,7 +81,7 @@ No index migration runs automatically.
 
 | Surface | Current behavior |
 |---|---|
-| Browser Activity/fixed-question authoring | Find environments remains local preview. No selector handoff, live selector control or question link is enabled. |
+| Browser Activity/fixed-question authoring | 256 enables checked preview → staged Activity → explicit Start, then fixed investigation/capture/Saved. Shared question/step links remain unsupported. |
 | Browser selector-capture inspection | Enabled in255 for records, comparisons and explanations. Stored paging/inspection makes no telemetry read; context, refresh and reruns remain explicit. |
 | Saved Activity/exploration views, authored steps and reusable package generation | Server validation refuses selector-bearing intent before publication. Known selector-capture baselines are refused by view HTTP owners. |
 | Native/metric discovery, service/inventory/dashboard/pod/trace-search request families | Existing named-only schemas remain; passing the new field is unsupported, and an empty name is not accepted. |
@@ -295,3 +295,46 @@ flowchart LR
 fixtures, 102-record paging, both named policies, comparison/explanation reopening,
 wrong-scope/refresh controls and late replies. The existing Bombadil Saved actor
 also exercises selector captures and asserts unsupported authoring remains blocked.
+
+## Bounded Activity activation — 256
+
+Find environments now offers **Stage in Activity** beside a successfully checked
+preview. The callback carries only its signal and detached effective selector.
+Generation, visibility and window guards prevent stale previews from staging.
+Discovery still ignores Activity predicates; staging explicitly keeps them.
+
+Staging clears old tail rows/selection, context, return anchor, plots, aggregate
+owners, saved baseline and view identity. The old saved-view URL is replaced with
+Explore. Opening another saved view while the scope is pending retains the existing
+Keep/Discard guard. It never fetches or subscribes. The existing Start action receives focus;
+there is no duplicate startup control. Staged signal changes and route/visibility
+updates cannot auto-start. Start commits through the same validated owner as an
+ordinary explicit scope change. Incompatible filters remain visible and refuse
+execution. A compact tag distinguishes unreported, empty and current/legacy scope;
+typing a name explicitly replaces it with current-key-only named selection.
+
+Fixed analysis, original-window context, capture and Saved reuse retain that scope.
+Tail membership capabilities are not permission to publish selector observations
+into XTDB: row selection, refresh and save handlers all guard explicit DTOs,
+including explicit current-only names. Existing legacy retention remains unchanged.
+
+```mermaid
+flowchart LR
+  Read[Bounded environment discovery] --> Preview[Checked scope preview]
+  Preview --> Stage[Stage environment + keep current filters]
+  Stage --> Start[Explicit Start: rolling record read]
+  Start --> Pause[Pause / inspect observations]
+  Pause --> Fixed[Stage completed fixed window]
+  Fixed --> Run[Explicit fixed Run]
+  Run --> Capture[Explicit fresh capture]
+  Capture --> Saved[Stored receipt / records / comparisons]
+  Fixed --> Return[Return to paused observations]
+```
+
+[Journey256](../journeys/256-activity-environment-storyboard.md) covers all three
+scope modes, both signals, preserved predicates, zero-read staging, fixed analysis,
+return, capture/Saved, stale preview controls and incompatible predicates. Its
+Bombadil campaign also checks subscription/publication boundaries. Architecture
+review accepts this as the bounded A0 record loop; unsupported families remain
+explicit. The next roadmap task is S0, keeping exact observations without requiring
+interpretation, rather than extending selectors into every family automatically.
