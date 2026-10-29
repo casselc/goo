@@ -140,3 +140,28 @@ owner identity/invalidation and fixed/Saved handling together. In particular,
 SSE reset checks must reconcile server omission defaults (`null` selector and
 explicit empty scope values) without changing immutable question identity.
 Unsupported saved intent, native/service and XTDB paths stay gated.
+
+## Activity internal protocol foundation — 252
+
+`validateRecordQuestion` checks executable record questions using explicit checked
+environment selection. Shared-link/step validation remains legacy-only. Activity
+latency, explanation scope, baseline distributions, numeric plotting and error
+triage use the internal check rather than granting link support. Counted-value
+queries and Analyze handoffs copy complete detached environment fields.
+Baseline compatibility compares selection policy rather than empty name strings.
+
+Session starts validate environment before mutation. Response matching accepts
+only environment wire omission defaults: null/absent selector on legacy questions,
+empty/omitted old name on explicit questions and normalized selector scope values.
+It does not equate explicit current-only representation with a legacy name, or
+current-only policy with effective policy. Stored questions and IDs are untouched.
+Tail reset matching also handles omitted log signal and null/absent predicates;
+it retains all other selector fields in the comparison.
+
+This remains internal preparation. Activity entry controls, full draft/resume/
+return ownership, fixed/Saved mounting, explanation execution and log-pattern
+owners need coordinated migration. Browser saved-baseline loaders explicitly
+refuse selector captures before assigning a baseline, even when an explicit
+current-only capture is semantically compatible with legacy Activity. This avoids
+an incomplete workflow into server-refused view persistence. Existing Saved,
+share-link, native/service/package and XTDB gates stay in place.

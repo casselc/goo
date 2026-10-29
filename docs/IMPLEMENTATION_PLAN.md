@@ -14,7 +14,9 @@
 > 250 enables [record selector APIs](RECORD_SELECTOR_API.md), capture/membership
 > propagation and explicit unsupported-family/persistence gates.
 > 251 adds checked browser environment copying/equality and context/tail constructors,
-> behind existing gates. Next: coordinate browser Activity/fixed/Saved protocol adoption before
+> behind existing gates. 252 separates internal record validation from shared links,
+> and migrates Activity query builders, session matching and tail reset defaults.
+> Next: coordinate browser Activity scope ownership and fixed/Saved adoption before
 > enabling selector handoffs; service/native/package/retention work remains separate.
 > Earlier queues preserve delivery history; their Next labels are superseded.
 

@@ -71,3 +71,7 @@ implemented, not a claim of complete browser adoption.
 
 The existing discovery/local-inspection frames and Bombadil completion campaign
 remain in this same executable journey. See VALIDATION for actual results.
+
+252 reruns the actual source/API/browser gate journey against the updated internal
+validation and response matching. Selector entry remains gated; this does not
+exercise a newly enabled Activity selector workflow.

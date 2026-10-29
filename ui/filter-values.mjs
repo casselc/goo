@@ -1,3 +1,4 @@
+import * as RecordEnvironment from './record-environment.mjs';
 /* App-owned explicit breakdown reads. The editor remains a supplied-data renderer. */
 import * as FilterEditor from './filter-editor.mjs';
 import * as Queries from './queries.mjs';
@@ -5,7 +6,7 @@ import * as QuestionSession from './question-session.mjs';
 const global=globalThis;
 const protocol=()=>QuestionSession||(null);
 const editorAPI=()=>FilterEditor||(null);
-function query(scope,field){if(!scope)throw Error('Apply or Run this scope before loading counted values.');editorAPI().validate({field,op:'exists'},scope.signal);const q={signal:scope.signal,environment:scope.environment,fromMs:scope.fromMs,toMs:scope.toMs,limit:1,offset:0,groupBy:[structuredClone(field)]};if(scope.where)q.where=editorAPI().normalize(scope.where);if(scope.reportedEdge)q.reportedEdge=structuredClone(scope.reportedEdge);if(!q.environment||!Number.isSafeInteger(q.fromMs)||!Number.isSafeInteger(q.toMs)||q.fromMs<0||q.toMs<=q.fromMs||q.toMs-q.fromMs>7200000)throw Error('Require an applied fixed window of at most 120 minutes.');return q}
+function query(scope,field){if(!scope)throw Error('Apply or Run this scope before loading counted values.');editorAPI().validate({field,op:'exists'},scope.signal);const q={signal:scope.signal,...RecordEnvironment.questionFields(scope),fromMs:scope.fromMs,toMs:scope.toMs,limit:1,offset:0,groupBy:[structuredClone(field)]};if(scope.where)q.where=editorAPI().normalize(scope.where);if(scope.reportedEdge)q.reportedEdge=structuredClone(scope.reportedEdge);if(!Number.isSafeInteger(q.fromMs)||!Number.isSafeInteger(q.toMs)||q.fromMs<0||q.toMs<=q.fromMs||q.toMs-q.fromMs>7200000)throw Error('Require an applied fixed window of at most 120 minutes.');if(q.environmentSelector!=null&&q.reportedEdge)throw Error('Reported parent edges do not support environment selectors.');return q}
 function result(request,data){
   if(data?.version!=='goo/counted-values/v1')throw Error('Unsupported counted value response.');
   for(const kind of ['count','groups']){const receipt=data.reads?.[kind];if(!receipt||typeof receipt.basis!=='string'||receipt.basis.length!==64||!/^[0-9a-f]{64}$/.test(receipt.basis)||!Number.isFinite(Date.parse(receipt.readAt)))throw Error('Invalid counted value read receipt.');}
@@ -16,7 +17,7 @@ function result(request,data){
   const seen=new Set();let sum=0n;const items=data.groups.map(g=>{if(!Object.hasOwn(g,'g0')||!(g.g0===null||typeof g.g0==='string')||!decimal(g.count)||BigInt(g.count)===0n||seen.has(g.g0))throw Error('Invalid counted group.');seen.add(g.g0);sum+=BigInt(g.count);return {value:g.g0,count:g.count}});
   if(sum!==BigInt(data.count)||data.state==='no_data'&&data.count!=='0')throw Error('Counted groups disagree with the independent count read.');
   items.sort((a,b)=>BigInt(a.count)===BigInt(b.count)?String(a.value).localeCompare(String(b.value)):BigInt(a.count)>BigInt(b.count)?-1:1);
-  return {state:'ready',field:structuredClone(request.groupBy[0]),items,total:data.count,readAt:data.capturedAt,basis:data.basis,reads:structuredClone(data.reads),label:request.signal+' · '+request.environment+' · '+new Date(request.fromMs).toISOString()+' → '+new Date(request.toMs).toISOString()};
+  return {state:'ready',field:structuredClone(request.groupBy[0]),items,total:data.count,readAt:data.capturedAt,basis:data.basis,reads:structuredClone(data.reads),label:request.signal+' · '+(request.environmentSelector!=null?RecordEnvironment.label(request.environmentSelector):request.environment)+' · '+new Date(request.fromMs).toISOString()+' → '+new Date(request.toMs).toISOString()};
  }
 function mount(editor,{current,pause=()=>{}}){let generation=0,controller=null,bound=null,disposed=false;
   const identity=()=>{try{const q=current();return q?protocol().identity(query(q,bound?.field||{kind:'column',key:'service'})):null}catch{return null}};

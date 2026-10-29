@@ -1,3 +1,4 @@
+import * as RecordEnvironment from './record-environment.mjs';
 /* App-owned optional aggregate reads. The span stream and display components stay independent. */
 import * as ActivityBaseline from './activity-baseline.mjs';
 import * as LatencyHistogram from './latency-histogram.mjs';
@@ -8,7 +9,7 @@ import * as UI from './components.mjs';
 import * as Workspace from './workspace.mjs';
 const global=globalThis;
 const session=()=>QuestionSession||(null);
-function query(context){const s=context?.selector,w=context?.readWindow;if(!s||s.signal!=='spans'||!w||!Number.isSafeInteger(w.fromMs)||!Number.isSafeInteger(w.toMs)||w.fromMs<0||w.toMs-w.fromMs!==60000)throw Error('Wait for an applied span scope and completed 60-second window.');const q={signal:'spans',environment:s.environment,...w,limit:1,offset:0,groupBy:[{kind:'column',key:'duration_bucket'}]};if(s.where)q.where=structuredClone(s.where);const api=Workspace||(null);api.validateLink({version:1,question:q,view:'Distribution'});return q}
+function query(context){const s=context?.selector,w=context?.readWindow;if(!s||s.signal!=='spans'||!w||!Number.isSafeInteger(w.fromMs)||!Number.isSafeInteger(w.toMs)||w.fromMs<0||w.toMs-w.fromMs!==60000)throw Error('Wait for an applied span scope and completed 60-second window.');const q={signal:'spans',...RecordEnvironment.questionFields(s),...w,limit:1,offset:0,groupBy:[{kind:'column',key:'duration_bucket'}]};if(s.where)q.where=structuredClone(s.where);const api=Workspace||(null);api.validateRecordQuestion(q,'Distribution');return q}
 function scopeKey(context){try{const q=query(context);delete q.fromMs;delete q.toMs;return session().identity(q)}catch{return null}}
 class ReadGate{
   constructor(){this.scope=null;this.generation=0;this.loading=false;this.frozen=false}

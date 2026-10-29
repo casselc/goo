@@ -1,4 +1,5 @@
 /* Pure question/step/link protocol. No navigation, DOM, source reads or publication. */
+import * as RecordEnvironment from './record-environment.mjs';
 import * as LogPatternIdentity from './log-pattern-identity.mjs';
 import * as QuestionSession from './question-session.mjs';
 const global=globalThis;
@@ -64,9 +65,12 @@ function validateNumericPredicate(p){
   const n=BigInt(v),low=b.type==='int64'?-9223372036854775808n:0n,high=b.type==='int64'?9223372036854775807n:18446744073709551615n;
   if(n<low||n>high)throw Error('Threshold is outside the declared '+b.type+' range.');return p;
  }
-function validateLink(value){
-  const q=value?.question;if(value?.version!==1||!['Records','Distribution'].includes(value.view)||!q||!['spans','logs'].includes(q.signal)||typeof q.environment!=='string'||!q.environment.length||q.environment.length>256||!Number.isSafeInteger(q.fromMs)||!Number.isSafeInteger(q.toMs)||q.fromMs<0||q.toMs<=q.fromMs||q.toMs-q.fromMs>7200000||q.toMs>8640000000000000)throw Error('Invalid shared question or fixed window.');
-  const allowed=['signal','environment','fromMs','toMs','limit','offset','where','groupBy','numeric','numericHistogram','summary','spanStatus','bucketMs','groupTimeSeries','reportedEdge'];if(Object.keys(q).some(k=>!allowed.includes(k)))throw Error('Unsupported shared question field.');
+function validateLink(value){return validateRecord(value,false)}
+function validateRecordQuestion(question,view='Records'){validateRecord({version:1,question,view},true);return question}
+function validateRecord(value,selectors){
+  const q=value?.question;if(value?.version!==1||!['Records','Distribution'].includes(value.view)||!q||!['spans','logs'].includes(q.signal)||(!selectors&&(typeof q.environment!=='string'||!q.environment.length||q.environment.length>256))||!Number.isSafeInteger(q.fromMs)||!Number.isSafeInteger(q.toMs)||q.fromMs<0||q.toMs<=q.fromMs||q.toMs-q.fromMs>7200000||q.toMs>8640000000000000)throw Error('Invalid shared question or fixed window.');
+  if(selectors){RecordEnvironment.selection(q);if(q.environmentSelector!=null&&q.reportedEdge)throw Error('Reported parent edges do not support environment selectors.');}
+  const allowed=[...(selectors?['environmentSelector']:[]),'signal','environment','fromMs','toMs','limit','offset','where','groupBy','numeric','numericHistogram','summary','spanStatus','bucketMs','groupTimeSeries','reportedEdge'];if(Object.keys(q).some(k=>!allowed.includes(k)))throw Error('Unsupported shared question field.');
   function field(f){if(!f||!['column','attribute','resource'].includes(f.kind)||typeof f.key!=='string'||!f.key.length||f.key.length>512)throw Error('Invalid shared field.');}
   let count=0;function predicate(p,depth=0){if(++count>64||depth>8||!p||typeof p!=='object')throw Error('Invalid shared selectors.');if(p.all||p.any){const a=p.all||p.any;if(!Array.isArray(a)||!a.length||p.all&&p.any||p.numeric)throw Error('Invalid shared selectors.');a.forEach(x=>predicate(x,depth+1));}else if(p.numeric){validateNumericPredicate(p)}else{field(p.field);if(!['eq','ne','contains','exists','missing','gte','lte'].includes(p.op)||p.value!==undefined&&typeof p.value!=='string')throw Error('Invalid shared predicate.');}}
   if(q.reportedEdge){const e=q.reportedEdge,ns=n=>n&&['missing','value'].includes(n.mode)&&(!n.value||typeof n.value==='string'&&n.value.length<=128)&&!(n.mode==='missing'&&n.value);if(q.signal!=='spans'||!e.parent||!e.child||[e.parent,e.child].some(s=>typeof s.service!=='string'||s.service.length>128||!ns(s.namespace))||e.discoveryNamespace&&!ns(e.discoveryNamespace))throw Error('Invalid reported edge identity.');}
@@ -82,4 +86,4 @@ function validateLink(value){
  }
 function readQuestionLink(hash){if(hash.startsWith('#step=')){const s=readStepLink(hash);return s.kind==='record'?{version:1,question:s.record,view:s.view}:null}if(!hash.startsWith('#question='))return null;if(hash.length>16000)throw Error('Question link is too large.');return validateLink(JSON.parse(decodeURIComponent(hash.slice(10))));}
 
-export {questionFromEvidence,captureQuestion,evidenceDifference,recordStep,measurementStep,validateStep,stepLink,readStepLink,sameWindow,questionLink,readQuestionLink,validateLink,validateNumericPredicate};
+export {questionFromEvidence,captureQuestion,evidenceDifference,recordStep,measurementStep,validateStep,stepLink,readStepLink,sameWindow,questionLink,readQuestionLink,validateLink,validateNumericPredicate,validateRecordQuestion};

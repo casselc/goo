@@ -1,5 +1,26 @@
 # Validation record
 
+## Activity internal environment protocol — 252 (2026-10-29 UTC)
+
+Internal record validation accepts checked selectors without enabling shared links
+or authored steps. Activity query builders retain detached environment fields;
+baseline compatibility checks policy. Session and tail reset matching reconcile
+specific Go omission defaults while keeping explicit/current/effective identities
+distinct. Invalid Session starts preserve the retained state. Browser saved
+baseline loaders remain explicitly gated before assigning selector captures.
+See [bounded contract and remaining owners](docs/RECORD_SELECTOR_API.md#activity-internal-protocol-foundation--252).
+
+614 frontend checks pass, no skips. New shared-fixture tests cover Activity
+latency/window/previous/narrow constructors, link refusal, policy-only read and
+baseline mismatches, response/default matching and invalid-start isolation. The
+real OTLP/ClickHouse/browser gate journey 247 passes (21.6s; 25.6s total), building
+the current Go runtime in a temporary store and refreshing existing documentation
+frames. This run does not enable or test a complete Activity selector workflow,
+and does not rerun the optional Bombadil campaign. Reviewer accepted the bounded
+implementation and identified the saved-baseline boundary now guarded above.
+No storage migration or lab deployment is performed in this prerequisite cut.
+
+
 ## Browser record scope foundation — 251 (2026-10-29 UTC)
 
 Shared checked environment copying and semantic equality now preserve explicit

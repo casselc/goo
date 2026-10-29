@@ -33,5 +33,6 @@ const sameWindow=api.sameWindow;
 const questionLink=api.questionLink;
 const readQuestionLink=api.readQuestionLink;
 const validateLink=api.validateLink;
+const validateRecordQuestion=api.validateRecordQuestion;
 const validateNumericPredicate=api.validateNumericPredicate;
-export {questionFromEvidence,captureQuestion,evidenceDifference,recordStep,measurementStep,validateStep,stepLink,readStepLink,sameWindow,questionLink,readQuestionLink,validateLink,validateNumericPredicate,routes,routeFromHash,mount};
+export {questionFromEvidence,captureQuestion,evidenceDifference,recordStep,measurementStep,validateStep,stepLink,readStepLink,sameWindow,questionLink,readQuestionLink,validateLink,validateNumericPredicate,validateRecordQuestion,routes,routeFromHash,mount};
