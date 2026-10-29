@@ -89,3 +89,18 @@ The [record API cut](RECORD_SELECTOR_API.md) supersedes the pre-propagation tabl
 Query/Tail, record context/followups, compatibility, capabilities, filesystem
 captures and mixed catalog metadata preserve the selector. Unsupported families,
 saved intent and XTDB refuse it. Browser handoffs remain gated; they are next.
+
+## Owner update — 253
+
+The audit above is historical. Browser context constructors were migrated in251;
+Activity internal validation/query builders and response defaults in252; and
+retained Activity/fixed environment ownership in253. Fixed editor edits now retain
+selector fields independently of cleared result state, and explicit name editing
+clears both the old selector and pinned-baseline precedence. Activity resume/draft
+checks use full retained environment identity. See the current
+[ownership contract](RECORD_SELECTOR_API.md#record-scope-ownership--253).
+
+These prerequisites do not enable environment-preview handoffs or Saved mounting.
+Downstream comparison/population, explanation/log-pattern owners and Saved flows
+remain outstanding. Named-only deployment/package/trace-search/recent-population
+controls refuse selector work rather than forwarding an empty legacy name.

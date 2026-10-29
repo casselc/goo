@@ -1,5 +1,35 @@
 # Validation record
 
+## Retained Activity/fixed record scope — 253 (2026-10-29 UTC)
+
+An application-owned detached scope now survives Activity draft/resume checks
+and fixed-editor filter/measure/signal/window edits independently of the
+current result. Explicit environment editing replaces the selector and clears
+pinned baseline precedence. All fixed-input branches copy full environment
+fields. Incoming fixed questions validate before visit mutation; named-only
+package, deployment, trace-search, sharing and recent-population boundaries
+remain guarded. See [contract/diagram](docs/RECORD_SELECTOR_API.md#record-scope-ownership--253)
+and [executable storyboard](journeys/253-record-scope-ownership-storyboard.md).
+
+616 frontend checks pass, no skips; focused final owner/Activity checks pass.
+Embedded-UI and source-free configured-UI Go tests also pass.
+Shared-bank tests cover detached ownership, invalid-restore isolation, policy and
+representation changes and replacement with a legacy name. New Playwright journey
+253 mounts the production fixed owner via its internal API against real ClickHouse:
+missing/empty/named staging sends no exploration request, edits and explicit
+Run preserve exact scope, signal/fresh-window changes preserve selector, invalid
+open preserves the visit, and pinned-baseline environment replacement is honored.
+Final run passes in14.1s (16.6s total). Ordinary Activity journey239 also passes
+in50.7s (55.1s total), retaining complete signal predicates/drafts and rejecting
+late old-signal publication; its existing documentation frame is refreshed.
+These are not claims of newly enabled selector entry or Saved mounting. No
+optional Bombadil or native-model campaign is claimed for this cut. Reviewer
+found no blocker and identified the pinned-baseline edge now covered above.
+Architecture review also found no blocker; live selector staging/return remains
+a future activation acceptance check. No lab deployment is claimed for this cut.
+Temporary runtime stores are isolated; no lab evidence is published or migrated.
+
+
 ## Activity internal environment protocol — 252 (2026-10-29 UTC)
 
 Internal record validation accepts checked selectors without enabling shared links

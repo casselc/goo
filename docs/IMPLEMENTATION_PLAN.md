@@ -16,7 +16,9 @@
 > 251 adds checked browser environment copying/equality and context/tail constructors,
 > behind existing gates. 252 separates internal record validation from shared links,
 > and migrates Activity query builders, session matching and tail reset defaults.
-> Next: coordinate browser Activity scope ownership and fixed/Saved adoption before
+> 253 retains scope independently in Activity/fixed owners, preserves editor changes,
+> and clears pinned baseline on explicit environment replacement.
+> Next: complete downstream comparison/population and Saved adoption before
 > enabling selector handoffs; service/native/package/retention work remains separate.
 > Earlier queues preserve delivery history; their Next labels are superseded.
 

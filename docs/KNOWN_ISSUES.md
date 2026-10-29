@@ -1,9 +1,9 @@
 # Known issues and gaps
 
 250 enables checked environment selectors in the record APIs, tails, context,
-comparisons, capabilities and filesystem captures. 251–252 supply checked browser context/Activity constructors and internal
-validation/response matching, but Activity ownership/fixed/Saved
-adoption is still open: Find environments stays a local preview, and selector
+comparisons, capabilities and filesystem captures. 251–253 supply checked browser context/Activity constructors, internal
+validation/response matching and retained Activity/fixed scope ownership.
+Downstream comparison/population and Saved adoption remain open: Find environments stays a local preview, and selector
 captures show an explicit browser-pending notice plus exact JSON read link.
 Native/service/inventory/parent-edge, reusable/saved intent and XTDB paths remain
 unsupported and refuse selectors server-side. Old named questions retain their

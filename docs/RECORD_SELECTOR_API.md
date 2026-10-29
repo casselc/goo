@@ -165,3 +165,39 @@ refuse selector captures before assigning a baseline, even when an explicit
 current-only capture is semantically compatible with legacy Activity. This avoids
 an incomplete workflow into server-refused view persistence. Existing Saved,
 share-link, native/service/package and XTDB gates stay in place.
+
+## Record scope ownership — 253
+
+The application-owned `RecordScopeDraft` retains detached environment fields
+independently of displayed result/question objects. Activity uses it for applied
+versus draft checks, signal changes and resume eligibility. Returning to paused
+Activity retains its owner rather than rebuilding scope from the name input.
+Saved Activity view writing/browsing stays disabled for selector-bearing scopes.
+
+The fixed editor uses the same owner through pinned-baseline, fixed-bound and
+fresh-lookback input construction. Filter/measure/signal/window edits preserve
+scope. An explicit environment input edit replaces it with a legacy name and
+clears the pinned baseline so baseline precedence cannot undo that edit.
+Incoming questions validate before mutating the visit. Scope text labels policy
+instead of using an empty name or a sentinel. Named-only deployment, package,
+trace-search and recent-population paths are guarded. Unsupported shared-question
+links remain gated; numeric selector staging uses the internal owner directly.
+
+```mermaid
+flowchart LR
+  Incoming[Checked incoming environment fields] --> Draft[Detached scope owner]
+  Name[Explicit environment text edit] --> Replace[Replace with legacy name]
+  Replace --> Draft
+  Replace --> Clear[Clear pinned baseline]
+  Draft --> Activity[Draft / resume checks]
+  Draft --> Fixed[Fixed / fresh / pinned input builders]
+  Edits[Filter / measure / signal / window edits] --> Fixed
+  Fixed --> Stage[Stage with no source read]
+  Stage --> Run[Explicit Run]
+```
+
+[Journey 253](../journeys/253-record-scope-ownership-storyboard.md) mounts the
+production fixed owner through its internal API and checks real source requests.
+This does not enable selector entry or Saved mounting, and does not establish a
+complete live selector workflow. Comparison/explanation/log-pattern/population
+owners and Saved mounting still require coordinated adoption before activation.

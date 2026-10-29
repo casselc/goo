@@ -21,5 +21,6 @@ function questionFields(question){
   return {...(own(question,'environment')?{environment:question.environment}:{}),...(own(question,'environmentSelector')?{environmentSelector:structuredClone(question.environmentSelector)}:{})};
 }
 function sameQuestionEnvironment(a,b){try{return equal(selection(a),selection(b))}catch{return false}}
+function questionLabel(question){return question.environmentSelector!=null?label(question.environmentSelector):question.environment}
 function hasQuestionSelector(question){return !!question&&typeof question==='object'&&(question.environmentSelector!=null||['explore','comparison','explanation','baseline','selection'].some(key=>hasQuestionSelector(question[key])))}
-export {version,normalizeScope,normalize,effective,current,equal,matches,assertPreview,label,selection,questionFields,sameQuestionEnvironment,hasQuestionSelector};
+export {version,normalizeScope,normalize,effective,current,equal,matches,assertPreview,label,selection,questionFields,sameQuestionEnvironment,questionLabel,hasQuestionSelector};
