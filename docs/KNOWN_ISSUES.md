@@ -1,7 +1,7 @@
 # Known issues and gaps
 
 250 enables checked environment selectors in the record APIs, tails, context,
-comparisons, capabilities and filesystem captures. Browser Activity/fixed/Saved
+comparisons, capabilities and filesystem captures. 251 supplies checked browser context/tail constructors, but Activity/fixed/Saved
 adoption is still open: Find environments stays a local preview, and selector
 captures show an explicit browser-pending notice plus exact JSON read link.
 Native/service/inventory/parent-edge, reusable/saved intent and XTDB paths remain

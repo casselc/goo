@@ -10,5 +10,16 @@ function equal(a,b){try{return JSON.stringify(normalize(a))===JSON.stringify(nor
 function matches(selector,resource){const value=normalize(selector);if(!resource||typeof resource!=='object'||Array.isArray(resource)||Object.values(resource).some(v=>typeof v!=='string'))return false;const c=own(resource,currentKey),l=own(resource,legacyKey);if(value.policy==='current-only')return c&&resource[currentKey]===value.scope.value;if(!c&&!l)return value.scope.mode==='unreported';const winning=c?resource[currentKey]:resource[legacyKey];return winning===''?value.scope.mode==='empty':value.scope.mode==='named'&&value.scope.value===winning}
 function assertPreview(selector,scope){const expected=effective(scope);if(!equal(selector,expected))throw Error('Returned environment selector differs from the requested preview.');return normalize(selector)}
 function label(selector){const value=normalize(selector),scope=value.scope;return scope.mode==='unreported'?'Unreported environment':scope.mode==='empty'?'Empty environment label':'Environment '+JSON.stringify(scope.value)+(value.policy==='current-only'?' · current key only':' · current/legacy precedence')}
+// Preserve representation for immutable question identity; normalize only for checks.
+function selection(question){
+  if(!question||typeof question!=='object'||Array.isArray(question))throw Error('An explicit record environment is required.');
+  if(question.environmentSelector!=null){if(question.environment!==undefined&&question.environment!=='')throw Error('Choose an environment name or selector, not both.');return normalize(question.environmentSelector)}
+  return current(question.environment);
+}
+function questionFields(question){
+  selection(question);
+  return {...(own(question,'environment')?{environment:question.environment}:{}),...(own(question,'environmentSelector')?{environmentSelector:structuredClone(question.environmentSelector)}:{})};
+}
+function sameQuestionEnvironment(a,b){try{return equal(selection(a),selection(b))}catch{return false}}
 function hasQuestionSelector(question){return !!question&&typeof question==='object'&&(question.environmentSelector!=null||['explore','comparison','explanation','baseline','selection'].some(key=>hasQuestionSelector(question[key])))}
-export {version,normalizeScope,normalize,effective,current,equal,matches,assertPreview,label,hasQuestionSelector};
+export {version,normalizeScope,normalize,effective,current,equal,matches,assertPreview,label,selection,questionFields,sameQuestionEnvironment,hasQuestionSelector};

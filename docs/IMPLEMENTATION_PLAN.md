@@ -13,7 +13,8 @@
 > 249 adds response-only versioned selector metadata and freezes old saved wires.
 > 250 enables [record selector APIs](RECORD_SELECTOR_API.md), capture/membership
 > propagation and explicit unsupported-family/persistence gates.
-> Next: coordinate browser Activity/fixed/context/Saved protocol adoption before
+> 251 adds checked browser environment copying/equality and context/tail constructors,
+> behind existing gates. Next: coordinate browser Activity/fixed/Saved protocol adoption before
 > enabling selector handoffs; service/native/package/retention work remains separate.
 > Earlier queues preserve delivery history; their Next labels are superseded.
 

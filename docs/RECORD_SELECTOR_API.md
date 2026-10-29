@@ -112,3 +112,31 @@ retention scope adoption remains separate capability work.
 The expanded [journey 247](../journeys/247-environment-adoption-storyboard.md),
 Go properties and bounded observed Quint traces exercise the implemented cut.
 [VALIDATION](../VALIDATION.md) records actual runs and limits.
+
+## Browser constructor foundation — 251
+
+The pure record-environment module now provides `selection(question)` for checked
+semantic scope, `questionFields(question)` for detached representation-preserving
+copying, and `sameQuestionEnvironment(a, b)` for compatibility. Legacy names map
+to current-only policy for comparison; this never rewrites stored wire identity.
+Missing/empty names without a selector and ambiguous combinations refuse.
+Trace/span-log, surrounding-log, retained-tail inspection and tail preparation
+use the shared copy boundary. Tail preparation validates before changing owner
+state or clearing a retained buffer.
+
+```mermaid
+flowchart LR
+  Q[Legacy name or explicit selector] --> Check[Checked browser selection]
+  Check --> Copy[Detached original environment fields]
+  Copy --> Trace[Trace and span logs]
+  Copy --> Context[Surrounding logs]
+  Copy --> Tail[Tail and original-window inspection]
+  Check --> Equal[Policy-aware semantic equality]
+```
+
+This is a constructor foundation, not enabled browser selector support. Existing
+Activity/session/link and Saved gates remain. Next migrate Activity builders,
+owner identity/invalidation and fixed/Saved handling together. In particular,
+SSE reset checks must reconcile server omission defaults (`null` selector and
+explicit empty scope values) without changing immutable question identity.
+Unsupported saved intent, native/service and XTDB paths stay gated.

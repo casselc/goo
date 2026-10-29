@@ -1,5 +1,22 @@
 # Validation record
 
+## Browser record scope foundation — 251 (2026-10-29 UTC)
+
+Shared checked environment copying and semantic equality now preserve explicit
+selectors through trace/span-log, surrounding-log, retained-tail inspection and
+tail preparation. Legacy representation stays unchanged; mutable selector objects
+are detached. Tail preparation validates before changing owner state. Browser
+entry/session/link/Saved gates remain: this does not enable a complete selector
+workflow. See [contract and next seams](docs/RECORD_SELECTOR_API.md#browser-constructor-foundation--251).
+
+610 frontend checks pass, including the shared Go/browser selector bank, context
+constructor matrix, alias isolation, policy distinctions and ambiguous-scope
+refusals. The sandboxed run could not open the local test listener; the full run
+with listener access passes without skips. Frontend review accepted the bounded
+contract and identified the prevalidation fix above. No Go/API or visible entry
+behavior changed; no new screenshots or deployment are claimed for this cut.
+
+
 
 ## Main record selector APIs — 250 (2026-10-29 UTC)
 

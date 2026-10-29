@@ -1,3 +1,4 @@
+import * as RecordEnvironment from './record-environment.mjs';
 /* Pure context and search contracts. Time proximity never implies identity. */
 
 const global=globalThis;
@@ -12,7 +13,7 @@ function surroundingQuestion(origin,row,radiusMS=30000,offset=0){
   const center=BigInt(row.timestamp_ns)/1000000n;if(center<BigInt(origin.fromMs)||center>=BigInt(origin.toMs))throw Error('Anchor is outside the captured question window.');
   const fromMS=Math.max(origin.fromMs,Number(center)-radiusMS),toMS=Math.min(origin.toMs,Number(center)+radiusMS+1);
   if(!Number.isSafeInteger(fromMS)||!Number.isSafeInteger(toMS)||fromMS>=toMS)throw Error('Anchor is outside the captured question window.');
-  return {signal:'logs',environment:origin.environment,fromMs:fromMS,toMs:toMS,where:{field:{kind:'column',key:'service'},op:'eq',value:row.ServiceName},limit:100,offset};
+  return {signal:'logs',...RecordEnvironment.questionFields(origin),fromMs:fromMS,toMs:toMS,where:{field:{kind:'column',key:'service'},op:'eq',value:row.ServiceName},limit:100,offset};
  }
 function severity(value){const s=String(value||'').toUpperCase();return /^(FATAL|CRITICAL|EMERG|ALERT)/.test(s)?'fatal':/^(ERROR|ERR)/.test(s)?'error':/^WARN/.test(s)?'warn':/^INFO/.test(s)?'info':/^(DEBUG|TRACE)/.test(s)?'debug':'unset'}
 function searchPredicates(signal,{service='',message='',level='',minimum='',errors=false}={}){
