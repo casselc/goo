@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"unicode/utf8"
 
 	"gopkg.in/yaml.v3"
 )
@@ -100,8 +101,8 @@ func (d *Definition) checkPredicate(p *Predicate) error {
 	switch typ {
 	case "string":
 		v, ok := p.Eq.(string)
-		if !ok {
-			return fmt.Errorf("%s requires a string literal", p.Field)
+		if !ok || !utf8.ValidString(v) {
+			return fmt.Errorf("%s requires a UTF-8 string literal", p.Field)
 		}
 		if values, exists := d.Source.Enums[p.Field]; exists && !contains(values, v) {
 			return fmt.Errorf("%s requires a declared enum value", p.Field)
@@ -132,6 +133,9 @@ func (d *Definition) Validate() error {
 		}
 		seenValues := map[string]bool{}
 		for _, v := range values {
+			if !utf8.ValidString(v) {
+				return fmt.Errorf("enum %s requires UTF-8 values", field)
+			}
 			if seenValues[v] {
 				return fmt.Errorf("duplicate enum value in %s", field)
 			}

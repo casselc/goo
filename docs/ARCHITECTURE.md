@@ -1261,3 +1261,9 @@ the host facade. Inspect remains an app-owned action; Evidence builds once from 
 cloned supplied stream with the existing attribute viewer and no source callbacks.
 Selection/defaults/withdrawal/refresh budgets stay in the paired application owner.
 The unchanged backend binary and numerical/query/wire contracts are retained.
+
+Prepared subject-fact evaluation validates authored text and evaluation routing,
+then selected declared strings before identity/filter/grouping. Valid foreign
+evaluations skip historical field inspection. See the
+[text integrity pipeline](PREPARED_TEXT_INTEGRITY.md); no source query or custody
+format changes are introduced in 245.

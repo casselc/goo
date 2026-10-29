@@ -1,5 +1,33 @@
 # Validation record
 
+## Prepared subject-fact UTF-8 integrity — 245 (2026-10-29 UTC)
+
+The public `subjectfacts` Go boundary rejects invalid execution/routing IDs,
+selected declared string values and authored predicate/enum strings before JSON
+identity/grouping or SQL compilation. Validation precedes population filtering;
+a selected invalid row cannot disappear behind a false predicate. A valid foreign
+evaluation ID still excludes historical field validation. Valid U+FFFD, non-ASCII,
+composed/decomposed Unicode and permitted empty strings retain exact values.
+No normalization, source query, storage format or digest migration is added.
+The [contract/diagram](docs/PREPARED_TEXT_INTEGRITY.md), preparation docs, current
+roadmap and issue list reflect the change. The [Go review](docs/reviews/GO_TEXT_REVIEW_245.md)
+found no blocker.
+
+Passed root Go suite, subjectfacts race/vet checks and 200 Hegel arbitrary-byte/
+valid-text cases over selected subject/dimension/routing values, included/excluded
+population rows, foreign evaluations, enum/predicate validation and both compilers.
+A Go overlay restoring the previous implementation fails both the two-invalid-
+labels merge regression and authored-text rejection control. The valid portable
+example's complete compiled JSON is byte-identical before/after for ClickHouse
+and Databricks. Existing lifecycle/CLI and semantic fixtures pass. Hegel's initial
+sandbox attempt could not chmod its native user-cache directory; the authorized
+rerun executed and passed all cases. No browser/Bombadil campaign or new Quint
+model was run for this stateless library change; no UI frames changed.
+The configured single-Go image `7be975dd9cfa` is deployed; process health,
+the existing 1,812-capture v2 catalog and exact reopen pass. Existing volumes,
+capture payloads and indexes were retained; no index/evidence migration ran.
+
+
 ## Accepted capture indexability correction — 244 (2026-10-29 UTC)
 
 Search now returns `goo/capture-search/v2` bounded summaries from `.catalog-v2`,

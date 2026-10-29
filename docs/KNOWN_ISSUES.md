@@ -10,8 +10,11 @@ metadata-only integrity boundary. Checkpoint 243 was review-only. Checkpoint 244
 with bounded summaries and an explicit `.catalog-v2` rebuild; immutable capture
 bytes and exact-ID receipts remain unchanged. Existing stores must rebuild before
 search; the 256 MiB whole-store repair limit remains open.
-Malformed selected/authored UTF-8 (C1) and native publisher/catalog capacity (C2)
-are also reproduced; C2 now has actual endpoint evidence, not only source review.
+Malformed selected/authored UTF-8 (C1) is corrected in 245 at the `subjectfacts`
+Go boundary; valid Unicode and foreign-evaluation isolation are preserved. See
+[the text contract](PREPARED_TEXT_INTEGRITY.md) for decoder/source limits.
+Native publisher/catalog capacity (C2) remains reproduced with actual endpoint
+evidence, not only source review.
 The mobile trace sheet covers the global return control; visible Close trace then
 Return works. Parent-aware close/focus remains a usability gap.
 Current order and acceptance: [roadmap](ROADMAP_2026_10_29.md),

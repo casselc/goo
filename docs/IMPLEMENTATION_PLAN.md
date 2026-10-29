@@ -4,7 +4,8 @@
 > [acceptance backlog](BACKLOG_2026_10_29.md). The six-reviewer
 > [checkpoint 243](reviews/INDEPENDENT_REVIEW_SUMMARY_243.md) is complete.
 > C0 is corrected in 244 with bounded catalog summaries and explicit v2 rebuild.
-> Next: malformed text (C1), then native package capacity (C2).
+> C1 is corrected in 245 with selected/authored UTF-8 validation.
+> Next: native package capacity (C2).
 > Earlier queues preserve delivery history; their Next labels are superseded.
 
 

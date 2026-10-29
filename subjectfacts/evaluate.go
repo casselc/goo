@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"sort"
+	"unicode/utf8"
 )
 
 type Fact map[string]any
@@ -30,8 +31,8 @@ func (d *Definition) Evaluate(facts []Fact, evaluationID string, groups []string
 	if err := d.Validate(); err != nil {
 		return nil, err
 	}
-	if evaluationID == "" {
-		return nil, fmt.Errorf("one nonempty evaluation ID is required")
+	if evaluationID == "" || !utf8.ValidString(evaluationID) {
+		return nil, fmt.Errorf("one nonempty UTF-8 evaluation ID is required")
 	}
 	if err := d.validateGroups(groups); err != nil {
 		return nil, err
@@ -47,8 +48,8 @@ func (d *Definition) Evaluate(facts []Fact, evaluationID string, groups []string
 	seen := map[string]bool{}
 	for i, f := range facts {
 		id, ok := f["evaluation_id"].(string)
-		if !ok || id == "" {
-			return nil, fmt.Errorf("fact %d has no usable evaluation_id", i)
+		if !ok || id == "" || !utf8.ValidString(id) {
+			return nil, fmt.Errorf("fact %d has no usable UTF-8 evaluation_id", i)
 		}
 		if id != evaluationID {
 			continue
@@ -61,8 +62,8 @@ func (d *Definition) Evaluate(facts []Fact, evaluationID string, groups []string
 			switch typ {
 			case "string":
 				s, ok := v.(string)
-				if !ok {
-					return nil, fmt.Errorf("fact %d field %s must be string", i, field)
+				if !ok || !utf8.ValidString(s) {
+					return nil, fmt.Errorf("fact %d field %s must be UTF-8 string", i, field)
 				}
 				if values, exists := d.Source.Enums[field]; exists && !contains(values, s) {
 					return nil, fmt.Errorf("fact %d field %s has undeclared enum value", i, field)

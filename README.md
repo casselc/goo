@@ -450,3 +450,6 @@ keeps one immediate Back action while preserving original scopes and retained re
 
 [Service and Kubernetes return journeys](journeys/234-service-kubernetes-return-storyboard.md)
 restore the retained tab and visible opening control, including mobile navigation.
+
+Prepared subject-fact evaluation rejects malformed UTF-8 before identity/grouping;
+see the [text integrity contract](docs/PREPARED_TEXT_INTEGRITY.md).

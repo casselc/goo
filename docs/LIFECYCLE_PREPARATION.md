@@ -142,3 +142,13 @@ Coverage stays unverified, so missing completion is unknown in the live adapter.
 Remaining integrations: generated ClickHouse/Spark preparation plans, production
 custody/completeness contracts and a coordinated selected-generation publication
 protocol. Databricks artifacts remain unexecuted on a warehouse.
+
+
+## Prepared text boundary — 245
+
+The `subjectfacts` Go evaluator validates execution/routing IDs and selected
+string fields before identity, filtering and grouping. Valid foreign evaluation
+IDs exclude historical fields; malformed selected rows cannot hide behind a
+population filter. Authored literals and enums use the same UTF-8 requirement.
+See [the text contract and pipeline](PREPARED_TEXT_INTEGRITY.md). Valid Unicode
+and permitted empty values retain exact bytes; no evidence migration is needed.
