@@ -2,9 +2,9 @@
 
 250 enables checked environment selectors in the record APIs, tails, context,
 comparisons, capabilities and filesystem captures. 251–254 supply checked browser constructors, retained Activity/fixed ownership
-and internal comparison/population scope validation. Public handoffs and Saved
-adoption remain open: Find environments stays a local preview, and selector
-captures show an explicit browser-pending notice plus exact JSON read link.
+and internal comparison/population scope validation. 255 enables checked Saved
+record/comparison/explanation captures, paging and explicit context/fixed reuse.
+Find environments still has no Activity selector handoff.
 Native/service/inventory/parent-edge, reusable/saved intent and XTDB paths remain
 unsupported and refuse selectors server-side. Old named questions retain their
 meaning and IDs. See [the implemented API cut](RECORD_SELECTOR_API.md) and

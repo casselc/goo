@@ -458,16 +458,15 @@ Native package publication and browsing share [bounded capacity and exact revisi
 recovery](docs/NATIVE_CATALOG_CAPACITY.md); no stored definitions are deleted to enforce it.
 
 Have OTel data without an environment label? Activity → Find environments offers
-[bounded discovery and readonly inspection](docs/ENVIRONMENT_ADOPTION.md). Main-flow
-tailing/capture adoption remains open. The [record APIs](docs/RECORD_SELECTOR_API.md)
-now support checked selectors through tails, context and filesystem captures.
+[bounded discovery and readonly inspection](docs/ENVIRONMENT_ADOPTION.md). The
+[record APIs](docs/RECORD_SELECTOR_API.md) support explicit selectors through tails,
+context and filesystem captures. Saved can now reopen selector-bearing records,
+comparisons and explanations, page/inspect stored records without telemetry reads,
+and stage their fixed questions for an explicit Run. See the
+[executable Saved journey](journeys/255-saved-environment-storyboard.md).
 
 The [scope propagation audit](docs/ENVIRONMENT_SCOPE_PROPAGATION.md) tracks the
-remaining main-flow work; shared checked backend selection/lowering is in place.
-
-Preview responses carry a [versioned environment selector](docs/ENVIRONMENT_SELECTOR_PROTOCOL.md)
-that is checked before displaying records; main-flow selector adoption remains open.
-
-Selector captures retain their policy in storage and catalog metadata. Browser
-inspection is explicitly gated until its owners adopt the protocol; exact JSON
-reads remain available. See [API support and limits](docs/RECORD_SELECTOR_API.md).
+remaining Activity selector-entry handoff. Shared authored question/step links,
+reusable view/package intent, native/service families and XTDB selector retention
+remain unsupported. Preview responses carry a checked
+[versioned selector](docs/ENVIRONMENT_SELECTOR_PROTOCOL.md); absence is never a wildcard.

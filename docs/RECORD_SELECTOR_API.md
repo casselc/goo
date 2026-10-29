@@ -82,7 +82,7 @@ No index migration runs automatically.
 | Surface | Current behavior |
 |---|---|
 | Browser Activity/fixed-question authoring | Find environments remains local preview. No selector handoff, live selector control or question link is enabled. |
-| Browser selector-capture inspection | Catalog/linked facts label policy/scope. Opening refuses before mounting legacy investigation owners and offers the exact captured JSON read link. Existing legacy capture UI continues working. |
+| Browser selector-capture inspection | Enabled in255 for records, comparisons and explanations. Stored paging/inspection makes no telemetry read; context, refresh and reruns remain explicit. |
 | Saved Activity/exploration views, authored steps and reusable package generation | Server validation refuses selector-bearing intent before publication. Known selector-capture baselines are refused by view HTTP owners. |
 | Native/metric discovery, service/inventory/dashboard/pod/trace-search request families | Existing named-only schemas remain; passing the new field is unsupported, and an empty name is not accepted. |
 | Reported parent-edge queries | New-selector queries refuse before compilation/source access; parent ownership SQL has not been migrated. Exact trace/span record followups retain the selector and remain supported through ordinary record queries. |
@@ -250,3 +250,48 @@ Public entry, fixed-to-population activation and Saved mounting are still gated;
 these are internal task prerequisites, not full A0 delivery. Next integrate exact
 Saved record/comparison owners and their remaining navigation boundaries before
 opening selector handoffs.
+
+## Saved selector captures — 255
+
+Saved now opens record, comparison and observed-explanation captures carrying
+checked selectors. Before mounting, it binds the returned receipt to the requested
+capture ID and compares payload scope to the immutable receipt. Record paging
+offset/limit are checked separately from immutable question identity; the displayed
+offset is the actual server-returned page. Cursor resolution remains authoritative
+on the server. Metadata listings are not payload verification.
+
+Stored page changes reset residual comparison baselines before rendering, avoiding
+an automatic comparison calculation on reopen. Navigation/replacement suspends old
+context and comparison owners; late replies cannot replace newer evidence. Catalog
+responses cannot overwrite a capture-open error. Refresh must retain the requested
+parent and exact immutable question before the new revision is shown.
+
+Inspection and stored paging are source-free. Trace/log/surrounding context checks
+its returned question against the exact requested scope before publishing. Open
+fixed question and numeric plotting stage through explicit application callbacks;
+Run reads telemetry. Selector labels remain visible in summaries and explanation
+scope details; the environment input explains that typing a name replaces policy.
+The duplicate explanation-reuse control is consolidated into the existing header.
+
+Deployment/package actions and selector XTDB selection remain guarded. Authored
+finding steps and shareable question/step links do not gain selector support.
+Exact capture references can still be added to investigation notes. Activity
+preview-to-selector handoff remains the next activation task.
+
+```mermaid
+flowchart LR
+  ID[Exact capture ID / cursor] --> GET[Stored custody read]
+  GET --> Verify[Requested ID + immutable receipt scope]
+  Verify --> Saved[Saved records / comparison / explanation]
+  Saved --> Local[Inspect / page / display]
+  Saved --> Stage[Stage fixed question]
+  Stage --> Run[Explicit source Run]
+  Saved --> Context[Explicit scoped context read]
+  Context --> Check[Verify returned question]
+  Saved --> Refresh[Explicit refresh: same parent + question]
+```
+
+[Journey255](../journeys/255-saved-environment-storyboard.md) includes real SDK
+fixtures, 102-record paging, both named policies, comparison/explanation reopening,
+wrong-scope/refresh controls and late replies. The existing Bombadil Saved actor
+also exercises selector captures and asserts unsupported authoring remains blocked.

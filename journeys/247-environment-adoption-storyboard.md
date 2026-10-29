@@ -63,11 +63,11 @@ independently selected record and an available membership capability. A captured
 unreported baseline supports live comparison/freeze and exact retry identity.
 These stores are temporary; no lab capture is published by the journey.
 
-Opening a selector capture in the browser makes no source POST, refuses before
-mounting legacy owners and supplies the exact captured JSON link. This gate is
-implemented, not a claim of complete browser adoption.
+255 replaces the earlier browser gate for record captures: opening now mounts
+the checked Saved owner with no telemetry POST, and fixed-question reuse stages
+before an explicit Run. Activity preview handoff remains separate.
 
-![Browser boundary for selector captures](../docs/journeys/screenshots/250-selector-browser-gate.png)
+![Saved ordinary SDK capture](../docs/journeys/screenshots/255-saved-sdk-capture.png)
 
 The existing discovery/local-inspection frames and Bombadil completion campaign
 remain in this same executable journey. See VALIDATION for actual results.

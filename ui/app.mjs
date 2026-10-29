@@ -155,7 +155,7 @@ const definitionTabs=ResourceTabs.mount([
 for(const event of ['goo:draft-telemetry-package','goo:preview-telemetry-package'])globalThis.addEventListener(event,()=>{appWorkspace.navigate('definitions');definitionTabs.select('records')});
 TelemetryPackages.mount(el('telemetryPackages'));
 globalThis.addEventListener('goo:navigate-explore',()=>appWorkspace.navigate('explore'));
-Captures.mount({openLive:page=>{if(page.measurement){globalThis.dispatchEvent(new CustomEvent('goo:open-measurement',{detail:{yaml:JSON.stringify(page.measurement.question.definition)}}))}else if(page.explore){appWorkspace.navigate('explore');liveExploration.openQuestion(page.receipt.question.explore,page.explore.fields,{stage:true})}else{appWorkspace.navigate('services');liveInventory.openQuestion(page.receipt.question.inventory)}}});
+Captures.mount({openRecordQuestion:q=>{appWorkspace.navigate('explore');liveExploration.openQuestion(q,[],{stage:true})},openLive:page=>{if(page.measurement){globalThis.dispatchEvent(new CustomEvent('goo:open-measurement',{detail:{yaml:JSON.stringify(page.measurement.question.definition)}}))}else if(page.explore){appWorkspace.navigate('explore');liveExploration.openQuestion(page.receipt.question.explore,page.explore.fields,{stage:true})}else{appWorkspace.navigate('services');liveInventory.openQuestion(page.receipt.question.inventory)}}});
 globalThis.addEventListener('goo:show-general-capture',()=>{el('savedOperationEvidence').hidden=true});
 globalThis.addEventListener('goo:navigate-investigations',()=>appWorkspace.navigate('investigations',{writeHash:false}));
 Documents.mount(el('investigationDocuments'));

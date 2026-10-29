@@ -12,13 +12,15 @@ const capture=extract(({document})=>{
  }
  const display=(el('captureEvidenceSummary')?.querySelector('goo-evidence-summary')as any)?.data;const summaryCoherent=!evidence||display?.mode==='frozen'&&display.facts.find((x:any)=>x.label==='Source records')?.value===receipt.count&&display.details.find((x:any)=>x.label==='Capture ID')?.value===evidence.receipt.id&&display.details.find((x:any)=>x.label==='Stored custody time')?.value===evidence.receipt.capturedAt&&display.details.find((x:any)=>x.label==='Displayed page')?.value===rowCount+' records · offset '+evidence.question.offset;
  const ids=[...document.querySelectorAll('[id]')].map(e=>e.id);
- return {summaryCoherent,version:'goo.captures.v1',stage:document.documentElement.dataset.gooCaptureStage||'initial',ready:!!receipt&&!!evidence,loading,scope,accounting,stable,uniqueIDs:new Set(ids).size===ids.length,readonly:!el('savedexploreBuilder')&&!el('savedexploreRun')&&!el('savedexploreSaveCapture')&&!document.querySelector('#captureExploreEvidence .query-workbench'),offset:evidence?.question?.offset||0,
+ const selectorActions=!evidence?.question?.environmentSelector||!!(el('savedexploreCreatePackage') as HTMLButtonElement)?.disabled&&!!(el('saveddeploymentLoad') as HTMLButtonElement)?.disabled;
+ return {selectorActions,summaryCoherent,version:'goo.captures.v1',stage:document.documentElement.dataset.gooCaptureStage||'initial',ready:!!receipt&&!!evidence,loading,scope,accounting,stable,uniqueIDs:new Set(ids).size===ids.length,readonly:!el('savedexploreBuilder')&&!el('savedexploreRun')&&!el('savedexploreSaveCapture')&&!document.querySelector('#captureExploreEvidence .query-workbench'),offset:evidence?.question?.offset||0,
  next:!(el('savedexploreNext') as HTMLButtonElement)?.disabled,previous:!(el('savedexplorePrevious') as HTMLButtonElement)?.disabled,viewer:!!document.querySelector('#savedexploreRows .ui-inspector:not([hidden]) .attribute-viewer'),receipt,evidence,rowCount};
 });
 const recordDetails=extract(({document})=>{const root=document.getElementById('savedexploreRows');return !root||root.querySelectorAll('.record-attributes').length===0&&root.querySelectorAll('.ui-inspector:not([hidden])').length<=1&&[...root.querySelectorAll<HTMLElement>('.record-detail-row:not([hidden])')].every(row=>!!row.querySelector('.ui-inspector:not([hidden])'));});
 export const singleRecordDetail=always(()=>recordDetails.current);
 export const ready=eventually(()=>capture.current.ready).within(10,'seconds');
 export const complete=eventually(()=>capture.current.stage==='complete').within(25,'seconds');
+export const selectorAuthoringGates=always(()=>capture.current.selectorActions);
 export const frozenSummaryMatchesReceipt=always(()=>capture.current.loading||capture.current.summaryCoherent);
 export const fixedQuestionAndBasis=always(()=>capture.current.scope);
 export const retainedRecordsAndPaging=always(()=>capture.current.accounting);

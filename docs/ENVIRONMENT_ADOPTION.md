@@ -112,3 +112,7 @@ request shapes and unsupported continuations remain unchanged.
 
 250 ships [record selector APIs](RECORD_SELECTOR_API.md) behind explicit unsupported
 family/persistence gates. The discovery UI still has no main-flow handoff.
+
+255 enables selector-bearing filesystem captures in Saved, including stored
+paging and explicit scoped context/fixed reuse. The local preview described above
+still has no Activity selector handoff. See [current support](RECORD_SELECTOR_API.md#saved-selector-captures--255).

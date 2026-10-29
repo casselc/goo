@@ -20,8 +20,9 @@
 > and clears pinned baseline on explicit environment replacement.
 > 254 migrates internal population/comparison planning and policy checks, with
 > guarded automatic reads, baseline restoration and unsupported view intent.
-> Next: integrate Saved record/comparison owners and remaining navigation before
-> enabling selector handoffs; service/native/package/retention work remains separate.
+> 255 enables checked Saved record/comparison/explanation open and explicit fixed
+> reuse, retaining unsupported authored/XTDB boundaries.
+> Next: enable and verify the Activity preview-to-selector handoff; service/native/package/retention work remains separate.
 > Earlier queues preserve delivery history; their Next labels are superseded.
 
 

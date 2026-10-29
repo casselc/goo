@@ -104,3 +104,11 @@ These prerequisites do not enable environment-preview handoffs or Saved mounting
 Downstream comparison/population, explanation/log-pattern owners and Saved flows
 remain outstanding. Named-only deployment/package/trace-search/recent-population
 controls refuse selector work rather than forwarding an empty legacy name.
+
+## Saved update — 255
+
+The prior Saved gate is superseded for record/comparison/explanation captures.
+Exact-ID/receipt validation, source-free stored pages, explicit scoped context,
+fixed reuse and checked refresh lineage are delivered. Activity preview-to-selector
+handoff remains open; authored/share links and unsupported families stay gated.
+See [current Saved support](RECORD_SELECTOR_API.md#saved-selector-captures--255).

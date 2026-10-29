@@ -1,5 +1,49 @@
 # Validation record
 
+## Saved environment-selector captures — 255 (2026-10-29 UTC)
+
+Saved record, comparison and observed-explanation captures now reopen through
+checked owners instead of the blanket browser gate. The response binds requested
+capture ID and immutable receipt scope, with record offset/limit handled as page
+state. Refresh binds both predecessor ID and the unchanged immutable question.
+Stored paging/inspection makes no telemetry read; context and fixed/explanation
+reruns remain explicit and check returned scope. New navigation/replacement
+suspends old owners, catalog replies retain capture errors, and unsupported
+authored/package/deployment/XTDB actions remain guarded. See [contract/diagram](docs/RECORD_SELECTOR_API.md#saved-selector-captures--255),
+[storyboard](journeys/255-saved-environment-storyboard.md) and updated README.
+
+623 frontend checks and embedded/source-free configured-UI Go checks pass. The
+shared selector bank covers record/comparison/explanation receipt matching, paging
+shape, mixed representations, wrong scope, unsupported families and changed
+refresh lineage. Frontend review identified refresh intent validation and it is
+fixed. Architecture review found no blocker; cursor resolution remains server-
+authoritative and the UI labels the actual returned offset, independently of
+immutable receipt scope.
+
+Real SDK/ClickHouse journey 247 passes in 15.7s; Saved journey 255 passes in 38.1s
+(56.2s together). Seven record captures cover logs/spans, missing/empty/named
+labels, conflicting legacy labels and both named policies. 102-record paging,
+local inspection, explicit surrounding logs, fixed reuse, comparison/explanation
+reopen and explicit explanation rerun pass. Wrong context/stored scope, changed
+refresh question and late stored replies are refused or ignored before replacing
+the current evidence. Initial failures found blank explanation labels and a
+catalog race masking the capture error; both are fixed. Duplicate explanation
+reuse controls are consolidated into the existing header; legacy journey selectors
+are updated. The final Saved run with the actual 35s Bombadil actor passes in 55.1s
+(58.4s total), requiring campaign completion and checking selector authoring gates.
+This adds no native-model/Quint campaign claim. Screenshots are actual runtime
+frames; isolated capture stores are removed and SDK fixtures use the existing TTL.
+
+Deployed Go image `c2a0d77d3ff2` passes health and exact changed-module checks.
+Old exact capture access works; all 1,812 capture IDs and 55 native revision IDs are
+unchanged before/after deployment and cleanup. No lab evidence was published or
+migrated. Only the Go packages service was recreated; the existing XTDB orphan
+and all volumes were left intact. Unused build cache older than one hour reclaimed
+493.3 MB as Docker reports it (about 5.6 GiB of VFS disk blocks); root free space is
+about 5.8 GB. Runtime/rollback images are retained. Activity selector entry remains
+the next activation task.
+
+
 ## Internal population/comparison selectors — 254 (2026-10-29 UTC)
 
 Internal population transforms, explanation and log-pattern comparisons use
