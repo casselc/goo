@@ -1,5 +1,20 @@
 # Known issues and gaps
 
+## Current review — 243
+
+Six reviewers completed the [whole-product review](reviews/INDEPENDENT_REVIEW_SUMMARY_243.md).
+**C0, confirmed:** an accepted capture can exceed the derived metadata entry limit,
+commit successfully, then make catalog search fail. Exact-ID reopen works, but
+current rebuild cannot index that capture. This is distinct from the intentional
+metadata-only integrity boundary. No runtime fix is included in checkpoint 243.
+Malformed selected/authored UTF-8 (C1) and native publisher/catalog capacity (C2)
+are also reproduced; C2 now has actual endpoint evidence, not only source review.
+The mobile trace sheet covers the global return control; visible Close trace then
+Return works. Parent-aware close/focus remains a usability gap.
+Current order and acceptance: [roadmap](ROADMAP_2026_10_29.md),
+[backlog](BACKLOG_2026_10_29.md). Historical entries below retain their original scope.
+
+
 The [independent review reconciliation](reviews/INDEPENDENT_REVIEW_SUMMARY_236.md)
 adds verified ingress/admission, Activity signal-scope/inspection and required-test
 verdict gaps ahead of cosmetic work. A malformed prepared-string grouping defect
@@ -15,8 +30,8 @@ derived metadata and explicit bounded rebuild; full contents are verified on
 reopen, not established by a metadata listing. See the [catalog contract](CAPTURE_CATALOG_SEARCH.md)
 for its 10,000-entry, metadata-byte and rebuild limits. The separate prepared-string
 and native package publication/capacity integrity findings remain open. Current order and
-acceptance live in the [roadmap](ROADMAP_2026_10_28.md) and
-[backlog](BACKLOG_2026_10_28.md); older statuses below retain their bounded history.
+acceptance live in the [roadmap](ROADMAP_2026_10_29.md) and
+[backlog](BACKLOG_2026_10_29.md); older statuses below retain their bounded history.
 
 Optional nested verification has a [pinned bounded entry point](../verification/README.md#reproducible-entry-point)
 through 230. Root CI tests its refusal controls but does not execute native/model

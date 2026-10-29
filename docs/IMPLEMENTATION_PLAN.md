@@ -1,10 +1,11 @@
 # Implementation plan
 
-> Current priority and bounded acceptance: [2026-10-28 roadmap](ROADMAP_2026_10_28.md).
-> Capture catalog search is delivered in 242; the roadmap’s whole-product review
-> checkpoint is next.
-> Earlier roadmaps/backlogs and the long milestone record below preserve delivery
-> history; their competing Next labels are superseded.
+> Current priority: [2026-10-29 roadmap](ROADMAP_2026_10_29.md) and
+> [acceptance backlog](BACKLOG_2026_10_29.md). The six-reviewer
+> [checkpoint 243](reviews/INDEPENDENT_REVIEW_SUMMARY_243.md) is complete.
+> Next: fix accepted captures that cannot be indexed or repaired (C0), then
+> malformed text (C1) and native package capacity (C2).
+> Earlier queues preserve delivery history; their Next labels are superseded.
 
 
 Updated 2026-10-23 after the user authorized incorporating the product, architecture
@@ -18,7 +19,7 @@ additional current commitments.
 
 The queue through TS3 was shipped at this historical checkpoint. The linked
 [Oct 25 roadmap](ROADMAP_2026_10_25.md) and [backlog](BACKLOG_2026_10_25.md)
-preserve that proposal; the Oct 28 roadmap/backlog above own current priorities. G1's
+preserve that proposal; the Oct 29 roadmap/backlog above own current priorities. G1's
 fast root Go/Node gate is delivered. The [dashboard initiative](AUTOMATIC_DASHBOARDS.md)
 has delivered HTTP server-span views ([journey 187](../journeys/187-http-server-dashboard-storyboard.md)),
 explicit legacy RPC views ([journey 188](../journeys/188-rpc-server-dashboard-storyboard.md)),

@@ -1,5 +1,38 @@
 # Validation record
 
+## Independent whole-product review — 243 (2026-10-29 UTC)
+
+Five domain reviewers (product/usability, frontend, architecture, Go semantics,
+verification) and a planning reviewer completed independent reports, reconciled
+in the [summary](docs/reviews/INDEPENDENT_REVIEW_SUMMARY_243.md). The
+[roadmap](docs/ROADMAP_2026_10_29.md) and [backlog](docs/BACKLOG_2026_10_29.md)
+replace older competing queues. No runtime fixes or deployment are included.
+
+The opt-in [real-lab task](journeys/243-whole-product-review-storyboard.md) passed
+with visible Close trace → Return: 17.0s test / 19.7s total. It covers Activity
+scope/signal continuity, inspection, cross-service trace/linked logs, held return,
+explicit fixed analysis, capture, leave, search and unchanged source-free reopen;
+then service discovery, Definitions and Operations smoke walkthroughs. Direct
+header return is occluded by the mobile sheet. This workaround is explicit and
+not promoted to required CI or a completed accessibility contract.
+
+The Go reviewer reproduced C0 through actual handlers and public Go: a 12,728-byte
+accepted request produces a 65,557-byte receipt, exceeds metadata admission,
+returns capture 201 but search 503 and rebuild error; exact-ID open remains 200.
+Architecture independently confirmed the mechanism. Root rechecked malformed
+UTF-8 grouping with a pure Go probe and reproduced native capacity through owned
+endpoints: 257 distinct publications return 201, catalog then returns 400.
+Missing-environment adoption and large-store valid-payload repair remain source/
+product findings, not fresh complete integration reproductions.
+
+Three documentation frames were generated from the running test; supplied-data
+frontend probes found focus/disclosure replacement and excessive timeline tab
+stops without API reads. Namespaced telemetry was appended, temporary stores
+were used, and existing evidence/definitions/volumes were preserved. Passing
+bundles and binaries are disposable; reports, task and selected frames retain
+useful findings. No broad regression suite was rerun for this review-only cut.
+
+
 ## Bounded saved capture metadata search — 242 (2026-10-29 UTC)
 
 Saved captures now support literal case-insensitive title search, kind, declared

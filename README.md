@@ -6,7 +6,7 @@ with ordinary OpenTelemetry data; application manifests and Go annotations add
 shared definitions when available. Logs/Spans switching preserves shared filters;
 incompatible fields stay as explicit drafts ([scope continuity](journeys/239-activity-signal-scope-storyboard.md)).
 
-[Reviewed roadmap](docs/ROADMAP_2026_10_28.md) · [Execution backlog](docs/BACKLOG_2026_10_28.md) ·
+[Reviewed roadmap](docs/ROADMAP_2026_10_29.md) · [Execution backlog](docs/BACKLOG_2026_10_29.md) ·
 [Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md) ·
 [Go/frontend library review and proposal](docs/LIBRARY_REFACTOR_PLAN_2026_10_28.md)
 
@@ -434,7 +434,7 @@ For supplied native observations, `measurements.Evaluate(question, rows, at)` is
 storage-free. Lifecycle custody/correction uses `measurements.ObserveLifecycle`
 explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-evaluation-and-lifecycle-observation).
 
-Current priorities and acceptance are in the [2026-10-28 roadmap](docs/ROADMAP_2026_10_28.md),
+Current priorities and acceptance are in the [2026-10-29 roadmap](docs/ROADMAP_2026_10_29.md),
 reconciled against [six delegated reviews](docs/reviews/INDEPENDENT_REVIEW_SUMMARY_236.md).
 
 Go library entry points: `subjectfacts` provides portable prepared-fact aggregation

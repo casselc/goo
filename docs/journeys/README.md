@@ -1,5 +1,10 @@
 # User journeys and storyboards
 
+[Review journey 243](../../journeys/243-whole-product-review-storyboard.md) exercises
+the combined Activity → supporting trace → fixed capture → find/reopen task and
+records current usability gaps; it is an opt-in diagnostic, not a shipped fix.
+
+
 [Journey242](../../journeys/242-capture-search-storyboard.md) covers saving, leaving,
 finding an earlier capture and reopening unchanged evidence without telemetry reads.
 
@@ -9,7 +14,7 @@ geometry and explicit read ownership.
 
 This index preserves executable storyboards and their historical acceptance
 records. Current product entry is Explore's Activity stream, with explicit staged
-analysis and preservation; use the [roadmap](../ROADMAP_2026_10_28.md) for current
+analysis and preservation; use the [roadmap](../ROADMAP_2026_10_29.md) for current
 status and [README](../../README.md) for startup. A dated journey is not a request
 to reimplement its feature. Synthetic component conformance fixtures remain
 separate from real OTLP/application stories, as labeled below. Screenshots are
