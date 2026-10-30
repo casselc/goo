@@ -70,6 +70,7 @@ export function createActionContext(configuration){
   if(!['current','baseline'].includes(c.role)||typeof c.slot!=='string'||!own(slots,c.slot)||typeof c.coherent!=='boolean')fail('invalid-binding','Bind an explicit role, slot and coherence state');
   if(!isSnapshot(c.snapshot))fail('snapshot-required','Actions require an admitted snapshot handle');
   if(c.snapshot.shape!==slots[c.slot])fail('slot-shape','Snapshot shape does not match its action slot');
+  if(c.snapshot.scope.signal==='metrics')fail('scope-family','Instrument observations cannot stage record-population actions');
   if(!epochValue(c.epoch)||c.epoch!==epoch())fail('stale-epoch','Cannot bind an old execution epoch');
   checkedQuestion(c.question);
   if(questionIdentity(c.question)!==questionIdentity(c.snapshot.scope.selector))fail('question-mismatch','Binding question does not match the snapshot question');

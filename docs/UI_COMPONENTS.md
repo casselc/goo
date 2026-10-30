@@ -1457,3 +1457,17 @@ parse support is fabricated. `clearRange()` clears the inner passive range witho
 source reads; manual bounds use it to withdraw the previous brush. Hosts own
 captured-execution guards for both manual controls and supplied-key intents.
 See [contract and diagram](SCOPED_DURATION_HISTOGRAMS.md).
+
+## Native interval histogram projections272
+
+`goo-chart` also accepts `histogram.kind: 'otel-explicit'` with an explicit metrics
+measurement-interval scope. Exact binary64 rational bounds, infinite tails and
+observation totals remain distinct from numeric parsing and span durations.
+Small layouts show concise bucket labels; larger layouts scroll internally and
+retain the exact table. Approximate labels are marked and exact data is disclosed.
+Native bars are passive and do not emit record-population range intents. The
+component supports all 257 evaluator buckets. A live request owner may admit its
+matching selected-interval projection; default/Saved render callers remain held.
+Shared Go DTOs live in `scopedview`; `measurements.HistogramView` and the pure JS
+constructor project only the selected retained interval, without new reads or
+eagerly multiplying every result interval. See [contract/diagram](SCOPED_NATIVE_HISTOGRAMS.md).

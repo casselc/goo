@@ -1,5 +1,9 @@
 # Scoped action ownership — 266
 
+272 explicitly refuses `scope.signal: metrics` in record action bindings.
+Instrument observation buckets cannot stage numeric or raw-span populations.
+Native contextual record links remain separate interval-context actions.
+
 271 adds `context.duration(binding, intent)` for exact supplied duration ranges
 and `context.canAct(binding)` for app-owned manual bounds. Both check the same
 captured source/role/epoch; arbitrary manual bounds do not claim bin membership.

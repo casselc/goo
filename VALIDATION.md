@@ -1,5 +1,68 @@
 # Validation record
 
+## Native histogram interval projections — 272
+
+Selected evaluated native histogram intervals now use the same passive
+histogram/table contract as record distributions. Explicit measurement scope
+retains the full checked question, exact stream and nanosecond interval. Counts
+mean instrument observations; buckets are right-closed, with explicit infinite
+tails and exact binary64 rational finite bounds. Concise approximate labels are
+marked, while exact disclosure retains source geometry. Unknown/reset/gap intervals
+never manufacture zeros or fall back to another interval.
+
+Shared Go DTOs now live in `scopedview`; record constructors keep their existing
+wire geometry and semantic ownership. `measurements.HistogramView` and the pure
+browser constructor project one chosen retained interval without source reads or
+eagerly expanding every interval. Live request owners explicitly admit their
+matching projection; Saved/default rendering remains held without private bins
+coverage. Native datasets cannot bind record-population actions. Fixed-time
+buckets, heatmaps, merging and comparisons retain specialized owners.
+See [contract/diagram](docs/SCOPED_NATIVE_HISTOGRAMS.md) and
+[real storyboard](journeys/272-native-histogram-storyboard.md).
+
+Validation passes:
+
+- Full root Go suite, including measurement and record regressions after the shared
+  DTO extraction. Focused producer tests cover known intervals in unknown series,
+  empty/extreme bounds, unchanged input, export-count independence and malformed
+  scope/membership/count/layout policy. Final frontend suite: 794 passed, no skips.
+  Twelve native core tests, four adapter tests and explicit action-family refusal
+  cover source/held limits, exact stream/window/namespace identity, empty versus
+  missing namespaces, invalid calendar clocks and mismatched gap policy.
+- Generated 573 Go types and 595 OpenAPI schemas pass 96 operations, 429 response
+  fixtures, 159 admitted requests and 28 mux refusals. Actual observed/empty native
+  DTOs pass; ten malformed family/scope/boundary controls are rejected. Schema
+  names now reflect the neutral DTO package; record wire values remain unchanged.
+- Hegel runs 100 actual Go-evaluator cases through Go/JS constructors: 70 parity
+  cases and 30 malformed cases. Exact subnormal/maximum finite bounds, empty bounds,
+  known zero, uint64 extremes and observation/export-record distinctions pass.
+  Six actual evaluator controls withhold distributions for no-recorded-value,
+  excessive gap, decrease, layout change, epoch change and clipped boundaries.
+- Standalone Chromium checks pass all 257 passive native bins, local display kinds,
+  SSR/import held guarantees, known zero, no source calls and readable text bounds
+  inside 260px layouts. The public 39-module display graph remains free of fetch,
+  application owners and global namespace publication.
+- Existing real native timeline77 and fixed-time bucket81 journeys pass with
+  the updated histogram implementation, including their observed Quint ledgers. Timeline77 also passes
+  its 30-second Bombadil campaign with all required actions. Updated old/native
+  frames retain unknown gaps, selected exact bounds and mobile layout.
+- The new real OTLP delta/cumulative journey passes: native totals 4/5 remain
+  independent of export-record counts, local histogram/table/zero/unknown changes
+  read nothing, and Saved 390px inspection is held with no private bins witness.
+  The observed seven-step browser Quint trace passes; seven mutants and an
+  unfinished prefix fail. The Saved 30-second Bombadil campaign passes 612 snapshots
+  across six phases with zero POSTs and no invariant violation. Explicit capture
+  remains a separate source operation; the ledger does not claim only two total
+  backend reads including captures. Three compact documentation frames are kept.
+- Compose configuration and CA-aware Go build pass. Final deployed image:
+  `sha256:c4d09556a4e2baee76cb7b712acd39381ccb93aab6bbc6f3ed893fe73c00a911`.
+  All 12 changed/new embedded UI/API assets match final source bytes, including
+  the empty-namespace and inspector corrections. Saved 390px checks confirm full
+  chart containment and natural page scrolling; unknown inspectors retain 24rem.
+  Telemetry/XTDB volumes remain intact. Raw campaigns and disposable stores were
+  removed after review; compact ledgers/trace/summaries and documentation frames
+  remain. Unused build cache and intermediate images were cleaned.
+
 ## Canonical captured span-duration histograms — 271
 
 Raw-span duration counts now share the immutable histogram/table contract with

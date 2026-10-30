@@ -1,28 +1,13 @@
 package exploration
 
-import "math/big"
+import (
+	"github.com/casselc/goo/scopedview"
+	"math/big"
+)
 
-// ViewAggregation describes the exact operation behind a supplied measure. It
-// is not a client-side reducer; quantiles cannot be combined by averaging.
-type ViewAggregation struct {
-	Family      string `json:"family"`
-	Kind        string `json:"kind"`
-	Method      string `json:"method"`
-	Quantile    string `json:"quantile,omitempty"`
-	Numerator   string `json:"numerator,omitempty"`
-	Denominator string `json:"denominator,omitempty"`
-}
-type ViewCell struct {
-	State   string       `json:"state"`
-	Support *ViewSupport `json:"support,omitempty"`
-}
-type ViewSupport struct {
-	Total   string `json:"total"`
-	Valid   string `json:"valid"`
-	Missing string `json:"missing"`
-	Empty   string `json:"empty"`
-	Invalid string `json:"invalid"`
-}
+type ViewAggregation = scopedview.Aggregation
+type ViewCell = scopedview.Cell
+type ViewSupport = scopedview.Support
 
 func viewMeasureFields(q Query) []ViewField {
 	fields := []ViewField{}

@@ -3,7 +3,7 @@ const global = globalThis;
  const uint=value=>typeof value==='string'&&/^(0|[1-9][0-9]*)$/.test(value)&&value.length<=128;
  function rational(value){if(typeof value!=='string'||value.length>256||!/^(0|[1-9]\d*)(?:\/([1-9]\d*))?$/.test(value))return null;const [n,d='1']=value.split('/');return {n:BigInt(n),d:BigInt(d)}}
  function model(data){
-  if(!data||!(data.valueFormat==='rational'?rational(data.ceiling):uint(data.ceiling))||!Array.isArray(data.points)||data.points.length>256)return {state:'unavailable',points:[]};
+  if(!data||!(data.valueFormat==='rational'?rational(data.ceiling):uint(data.ceiling))||!Array.isArray(data.points)||data.points.length>257)return {state:'unavailable',points:[]};
   const parse=data.valueFormat==='rational'?rational:v=>uint(v)?{n:BigInt(v),d:1n}:null,ceiling=parse(data.ceiling),keys=new Set(),points=[];
   for(const p of data.points){
    if(!p||typeof p.key!=='string'||!p.key||p.key.length>512||keys.has(p.key)||typeof p.label!=='string')return {state:'unavailable',points:[]};keys.add(p.key);

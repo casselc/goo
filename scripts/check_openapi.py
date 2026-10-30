@@ -22,7 +22,7 @@ def validator(spec, schema):
 
 def check_view_dataset(spec):
     """The current server adapter, including refusals the generic Go reflection cannot express."""
-    check_view = validator(spec, {'$ref': '#/components/schemas/exploration.ViewDataset'})
+    check_view = validator(spec, {'$ref': '#/components/schemas/scopedview.Dataset'})
     revision = 'a' * 64
     snapshot = {
         'version': 'goo.dataset/1', 'id': revision + ':groups', 'revision': revision,
@@ -140,7 +140,7 @@ def check_view_dataset(spec):
 def check_view_status(spec, ranked, intervals):
     """Status cells are exact count quantities and an operand-bound fraction,
     not another numeric-validity support partition or a comparison delta."""
-    check_view = validator(spec, {'$ref': '#/components/schemas/exploration.ViewDataset'})
+    check_view = validator(spec, {'$ref': '#/components/schemas/scopedview.Dataset'})
     keys = ['status.error', 'status.ok', 'status.unset', 'status.unknown']
     ratio = 'status.error_fraction'
     fields = [{'key': key, 'label': key, 'type': 'number', 'unit': 'records', 'nullable': True,
@@ -211,7 +211,7 @@ def check_view_status(spec, ranked, intervals):
 def check_status_observed(spec, path):
     fixtures = json.loads(Path(path).read_text())
     assert set(fixtures) == {'ranked', 'intervals', 'summary', 'empty-ranked', 'empty-summary', 'unknown-intervals'}, 'Expected all six Go status-view DTOs'
-    check_view = validator(spec, {'$ref': '#/components/schemas/exploration.ViewDataset'})
+    check_view = validator(spec, {'$ref': '#/components/schemas/scopedview.Dataset'})
     for name, snapshot in fixtures.items():
         check_view.validate(snapshot)
     for change in [
@@ -225,10 +225,32 @@ def check_status_observed(spec, path):
     print('Actual Go status views valid: six ranked/interval/summary/empty/unknown DTOs; metadata/support negative controls pass')
 
 
+def check_native_histogram_views(spec,path):
+    fixtures=json.loads(Path(path).read_text())
+    assert set(fixtures)=={'observed','empty'}
+    check=validator(spec,{'$ref':'#/components/schemas/scopedview.Dataset'})
+    for value in fixtures.values(): check.validate(value)
+    for mutate in [
+        lambda x:x['histogram'].update(closure='left-closed-right-open'),
+        lambda x:x['histogram'].update(unit='ns'),
+        lambda x:x['histogram'].update(grain='records'),
+        lambda x:x['histogram'].update(temporality='unknown'),
+        lambda x:x['histogram'].update(binding={'field':{'kind':'attribute','key':'n'},'type':'uint64','unit':'s','parse':'canonical-decimal'}),
+        lambda x:x['scope'].update(signal='spans'),
+        lambda x:x['scope']['selector'].update(kind='records'),
+        lambda x:x['fields'][2].update(unit='records'),
+        lambda x:x['rows'][0]['values'].update(**{'from':None}),
+        lambda x:x.update(dimensions=['from']),
+    ]:
+        mutant=copy.deepcopy(fixtures['observed']);mutate(mutant)
+        assert not check.is_valid(mutant),'Malformed native histogram metadata accepted'
+    print('Actual Go native histogram views valid: observed/empty; ten family/scope/boundary negatives rejected')
+
+
 def check_histogram_observed(spec, path):
     fixtures=json.loads(Path(path).read_text())
     assert set(fixtures)=={'uint64','uint64-empty','int64','int64-empty','decimal64','decimal64-empty'}
-    check=validator(spec,{'$ref':'#/components/schemas/exploration.ViewDataset'})
+    check=validator(spec,{'$ref':'#/components/schemas/scopedview.Dataset'})
     for snapshot in fixtures.values(): check.validate(snapshot)
     for change in [
         lambda x:x['histogram'].update(closure='right-closed'),
@@ -265,7 +287,7 @@ def check_histogram_comparisons(spec,path):
 
 def check_duration_histograms(spec,path):
     fixtures=json.loads(Path(path).read_text());assert set(fixtures)=={'observed','empty'}
-    check=validator(spec,{'$ref':'#/components/schemas/exploration.ViewDataset'})
+    check=validator(spec,{'$ref':'#/components/schemas/scopedview.Dataset'})
     for value in fixtures.values():check.validate(value)
     for change in [
         lambda x:x['histogram'].pop('kind'),
@@ -283,7 +305,7 @@ def check_duration_histograms(spec,path):
 
 
 def check_view_measures(spec, ranked, intervals):
-    check_view = validator(spec, {'$ref': '#/components/schemas/exploration.ViewDataset'})
+    check_view = validator(spec, {'$ref': '#/components/schemas/scopedview.Dataset'})
     supplied = copy.deepcopy(ranked)
     supplied['rows'] = [supplied['rows'][0]]
     row = supplied['rows'][0]
@@ -370,7 +392,7 @@ def check_view_measures(spec, ranked, intervals):
 
 
 def check_view_summary_comparison(spec, ranked):
-    check_snapshot = validator(spec, {'$ref': '#/components/schemas/exploration.ViewDataset'})
+    check_snapshot = validator(spec, {'$ref': '#/components/schemas/scopedview.Dataset'})
     check_comparison = validator(spec, {'$ref': '#/components/schemas/exploration.ViewComparison'})
     summary = copy.deepcopy(ranked)
     summary['shape'] = 'summary'
@@ -939,9 +961,12 @@ if __name__ == '__main__':
     parser.add_argument('--container-state-observations')
     parser.add_argument('--pod-phase-discovery-observations')
     parser.add_argument('--container-discovery-observations')
+    parser.add_argument('--native-histogram-view-observations')
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    if args.native_histogram_view_observations:
+        check_native_histogram_views(spec,args.native_histogram_view_observations)
     if args.duration_histogram_observations:
         check_duration_histograms(spec,args.duration_histogram_observations)
 

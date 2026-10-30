@@ -548,5 +548,8 @@ support and domain edges. [Aligned histogram comparisons](docs/SCOPED_HISTOGRAM_
 retain independent operands and offer count, captured-record share and valid-value
 share scales. [Captured span-duration histograms](docs/SCOPED_DURATION_HISTOGRAMS.md)
 now share histogram/table displays with exact open-tail bounds and guarded
-selected/rest actions. Native OTel histograms and remaining specialized families
-still need adoption before renderer or contributed-view expansion.
+selected/rest actions. [Native interval histograms](docs/SCOPED_NATIVE_HISTOGRAMS.md)
+now project one selected instrument interval into the same display, preserving
+observation counts, right-closed buckets and exact bounds. Remaining native time
+buckets, comparisons and specialized families still need adoption before
+renderer or contributed-view expansion.

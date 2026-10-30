@@ -1,3 +1,4 @@
+import {validateMeasurementIntervalSelector,canonicalNativeJSON} from './measurement-scope.mjs';
 /* Immutable data admission. Source adapters are trusted host extension points,
    not authentication or proof that an arbitrary HTTP response is authoritative. */
 import {validateSnapshot} from './view-schema.mjs';
@@ -116,6 +117,7 @@ function checkedQuestion(question){
  try{validateRecordQuestion(question);validatePredicate(question.where,question.signal)}catch(error){fail('source-question','Invalid source question: '+error.message)}
 }
 function sourceQuestion(raw,question){
+ if(raw.scope.signal==='metrics'){try{validateMeasurementIntervalSelector(question);validateMeasurementIntervalSelector(raw.scope.selector)}catch(error){fail('source-question',error.message)}if(canonicalNativeJSON(question)!==canonicalNativeJSON(raw.scope.selector)||raw.shape!=='histogram'||raw.histogram.kind!=='otel-explicit'||raw.quality.extent!=='complete')fail('source-question','Native source histogram requires its exact evaluated interval');return}
  checkedQuestion(question);checkedQuestion(raw.scope.selector);
  if(questionIdentity(raw.scope.selector)!==questionIdentity(question))fail('source-question','Source snapshot does not match the checked requested question');
  if(raw.scope.signal!==question.signal)fail('source-question','Source snapshot signal does not match its question');

@@ -26,8 +26,9 @@ test('display entry imports a closed passive graph without publishing namespaces
   }
   await visit(new URL('../ui/display.mjs', import.meta.url));
   // Canonical comparisons share H0 snapshot/view contracts and pure question
-  // validators. The graph still excludes application adapters and all IO.
-  assert.equal(visited.size, 38);
+  // validators, including checked measurement-interval scope. The graph still
+  // excludes application adapters and all IO.
+  assert.equal(visited.size, 39);
 });
 
 test('feature imports expose the existing exact-data helpers through ESM', async () => {

@@ -584,7 +584,7 @@ func dcLiveHistogramOperand(d *exploration.ViewDataset, c exploration.Cohort, lo
 	}
 	h := d.Histogram
 	n := c.Numeric
-	if h.Kind != "numeric" || h.Binning != "powers-of-two" || h.Closure != "left-closed-right-open" || h.Binding != *c.Question.Numeric || h.Support != (exploration.ViewSupport{Total: n.Count, Valid: n.Valid, Missing: n.Missing, Empty: n.Empty, Invalid: n.Invalid}) || len(d.Rows) != len(c.NumericHistogram.Bins) || len(d.Fields) != 3 {
+	if h.Kind != "numeric" || h.Binning != "powers-of-two" || h.Closure != "left-closed-right-open" || !dcLiveSameNumericBinding(h.Binding, *c.Question.Numeric) || h.Support != (exploration.ViewSupport{Total: n.Count, Valid: n.Valid, Missing: n.Missing, Empty: n.Empty, Invalid: n.Invalid}) || len(d.Rows) != len(c.NumericHistogram.Bins) || len(d.Fields) != 3 {
 		return false
 	}
 	for i, key := range []string{"from", "to", "count"} {
@@ -1094,4 +1094,10 @@ func TestQuintDistributionComparisonLateLedger(t *testing.T) {
 			t.Fatalf("late distribution control accepted: %d", i)
 		}
 	}
+}
+
+func dcLiveSameNumericBinding(a, b any) bool {
+	left, e := json.Marshal(a)
+	right, f := json.Marshal(b)
+	return e == nil && f == nil && string(left) == string(right)
 }

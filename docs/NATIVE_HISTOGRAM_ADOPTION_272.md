@@ -1,6 +1,9 @@
-# Native histogram adoption — proposed next cut272
+# Native histogram adoption — original proposal272
 
-This is a proposal, not implemented behavior. Milestone271 adopts raw-span duration
+The bounded implementation is now documented in
+[Native interval histograms](SCOPED_NATIVE_HISTOGRAMS.md), with actual checks in
+[VALIDATION.md](../VALIDATION.md). The original proposal below is retained as
+design context, not a second implementation plan. Milestone271 adopts raw-span duration
 partitions. A native OTel histogram counts instrument observations and requires
 measurement scope, interval and bucket semantics before shared display adoption.
 

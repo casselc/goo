@@ -1,3 +1,4 @@
+import {validateMeasurementIntervalSelector,binary64Rational,nativeRationalCoordinate} from './measurement-scope.mjs';
 import {categoryText} from './view-values.mjs';
 import {validateNumericPredicate} from './question-protocol.mjs';
 export {categoryText};
@@ -32,7 +33,7 @@ export function rationalCoordinate(value){
  const mantissa=Number('0.'+n.slice(0,16))/Number('0.'+d.slice(0,16)),coordinate=Number(`${numerator<0n?'-':''}${mantissa}e${n.length-d.length}`);
  return Number.isFinite(coordinate)&&coordinate!==0?coordinate:null;
 }
-function typed(value,field){return field.type==='number'?numeric(value):field.type==='rational'?rationalParts(value)!==null:field.type==='timestamp'?timestamp(value):field.type==='histogram-bound'?value==='+inf'||rationalParts(value)!==null:typeof value==='string'&&value.length<=1024}
+function typed(value,field){return field.type==='number'?numeric(value):field.type==='rational'?rationalParts(value)!==null:field.type==='timestamp'?timestamp(value):field.type==='histogram-bound'?value==='+inf'||value==='-inf'||rationalParts(value)!==null:typeof value==='string'&&value.length<=1024}
 function aggregationValid(field){
  const a=field.aggregation;if(!record(a)||!numericType(field)||!text(field.unit))return false;
  if(a.family==='span-status')return Object.keys(a).length===3&&a.kind==='count'&&a.method==='exact'&&field.type==='number'&&field.unit==='records';
@@ -56,11 +57,12 @@ export function validateSnapshot(s){
  for(const key of ['sourceBasis','capturedAt'])if(s[key]!==undefined&&!text(s[key]))reasons.push('Invalid optional dataset provenance '+key);
  for(const k of ['id','revision'])if(!text(s[k]))reasons.push(`Missing dataset ${k}`);
  if(!member(s.shape,['ranked','time-series','summary','histogram']))reasons.push('Unsupported dataset shape');
- if(!record(s.scope)||!text(s.scope.id)||!(text(s.scope.generation)||Number.isSafeInteger(s.scope.generation)&&s.scope.generation>=0)||!member(s.scope.signal,['spans','logs'])||!record(s.scope.selector))reasons.push('A checked scope identity, generation, signal and selector are required');
+ if(!record(s.scope)||!text(s.scope.id)||!(text(s.scope.generation)||Number.isSafeInteger(s.scope.generation)&&s.scope.generation>=0)||!member(s.scope.signal,['spans','logs','metrics'])||!record(s.scope.selector))reasons.push('A checked scope identity, generation, signal and selector are required');
+ if(s.scope?.signal==='metrics'){try{validateMeasurementIntervalSelector(s.scope.selector)}catch(error){reasons.push(error.message)}if(s.shape!=='histogram'||s.histogram?.kind!=='otel-explicit')reasons.push('Measurement scopes require explicit native observation histograms')}
  const fields=new Map();
  if(!Array.isArray(s.fields)||!s.fields.length||s.fields.length>64)reasons.push('Dataset requires 1–64 fields');
  else for(const f of s.fields){if(!record(f)||!text(f.key)||!text(f.label)||!member(f.type,['string','number','timestamp','rational','histogram-bound'])||fields.has(f.key)||f.unit!==undefined&&!text(f.unit)||f.type==='timestamp'&&f.unit!=='ms'||f.nullable!==undefined&&typeof f.nullable!=='boolean')reasons.push('Invalid or duplicate field');else {fields.set(f.key,f);if(f.aggregation!==undefined&&!aggregationValid(f))reasons.push('Invalid aggregation method, family, type or unit')}}
- if([...fields.values()].some(field=>field.type==='histogram-bound'&&(s.shape!=='histogram'||s.histogram?.kind!=='span-duration'||!['from','to'].includes(field.key))))reasons.push('Histogram bounds require declared span-duration bin endpoints');
+ if([...fields.values()].some(field=>field.type==='histogram-bound'&&(s.shape!=='histogram'||!['span-duration','otel-explicit'].includes(s.histogram?.kind)||!['from','to'].includes(field.key))))reasons.push('Histogram bounds require declared native or span-duration bin endpoints');
  if(s.dimensions!==undefined&&(!Array.isArray(s.dimensions)||!s.dimensions.length||s.shape!=='ranked'||new Set(s.dimensions).size!==s.dimensions.length||s.dimensions.some(key=>typeof key!=='string'||!fields.has(key)||fields.get(key)?.aggregation!==undefined)))reasons.push('Ranked dimensions must be distinct declared field keys');
  if(!Array.isArray(s.rows)||s.rows.length>10000)reasons.push('Dataset requires at most 10000 supplied rows');
  else {const keys=new Set();for(const row of s.rows){if(!record(row)||!text(row.key)||keys.has(row.key)||!record(row.values)){reasons.push('Invalid or duplicate stable row key');continue}keys.add(row.key);for(const [key,value] of Object.entries(row.values)){const field=fields.get(key);if(!field){reasons.push(`Undeclared field ${key}`);continue}if(value===null){if(field.nullable!==true)reasons.push('Null values require an explicitly nullable field');continue}if(!typed(value,field))reasons.push(`Invalid ${field.type} value for ${key}`)}}}
@@ -312,7 +314,9 @@ export const durationHistogramEdges=Object.freeze(['0','1000000','5000000','1000
 function validateHistogram(s,fields,reasons){
  const h=s.histogram;
  if(s.dimensions!==undefined||s.interval!==undefined||s.partition!==undefined)reasons.push('Histogram datasets cannot declare group or time geometry');
- if(!record(h)||!member(h.kind,['numeric','span-duration'])||h.closure!=='left-closed-right-open'){reasons.push('A supported tagged half-open histogram is required');return}
+ if(!record(h)||!member(h.kind,['numeric','span-duration','otel-explicit'])){reasons.push('A supported tagged histogram is required');return}
+ if(h.kind==='otel-explicit'){validateNativeHistogram(s,fields,reasons);return}
+ if(h.closure!=='left-closed-right-open'){reasons.push('A fixed half-open histogram is required');return}
  let edges,unit,endpointType,target;
  if(h.kind==='numeric'){
   if(Object.keys(h).length!==5||h.binning!=='powers-of-two'||!record(h.support)){reasons.push('A fixed half-open numeric histogram and parse support are required');return}
@@ -340,8 +344,26 @@ function validateHistogram(s,fields,reasons){
 }
 
 export function histogramIntent(snapshot,fromKey,toKey=fromKey){
- const c=context(snapshot);if(snapshot.shape!=='histogram')throw TypeError('Histogram range requires a fixed histogram');
+ const c=context(snapshot);if(snapshot.shape!=='histogram'||snapshot.histogram?.kind==='otel-explicit')throw TypeError('Histogram range requires a captured-record histogram');
  const from=snapshot.rows.findIndex(row=>row.key===fromKey),to=snapshot.rows.findIndex(row=>row.key===toKey);
  if(from<0||to<from)throw TypeError('Histogram range requires ordered supplied bin keys');
  return {type:'scope-histogram',...c,fromKey,toKey};
+}
+
+function validateNativeHistogram(s,fields,reasons){
+ const h=s.histogram;
+ if(Object.keys(h).length!==7||h.binning!=='explicit'||h.grain!=='observations'||!member(h.unit,['s','ms'])||!uint64(h.total)||!member(h.temporality,['delta','cumulative'])||h.closure!=='left-open-right-closed'||s.scope?.signal!=='metrics'){reasons.push('An explicit native observation histogram and measurement interval are required');return}
+ if(s.scope.selector?.stream?.unit!==h.unit)reasons.push('Native histogram unit differs from its exact stream');
+ if(fields.size!==3||['from','to'].some(key=>fields.get(key)?.type!=='histogram-bound'||fields.get(key)?.unit!==h.unit||fields.get(key)?.aggregation||fields.get(key)?.nullable)||fields.get('count')?.type!=='number'||fields.get('count')?.unit!=='observations'||fields.get('count')?.aggregation||fields.get('count')?.nullable)reasons.push('Native bins require instrument-unit bounds and observation counts');
+ if(!Array.isArray(s.rows)||s.rows.length<1||s.rows.length>257){reasons.push('Native histogram requires every explicit bin, up to257 buckets');return}
+ let sum=0n,previous='-inf',lastFinite=null;
+ for(const [index,row] of s.rows.entries()){
+  const values=row?.values,count=values?.count,to=values?.to;
+  if(row?.key!=='bin:'+index||row.cells!==undefined||!record(values)||Object.keys(values).length!==3||values.from!==previous||!uint64(count)){reasons.push('Native bucket layout or observation count is invalid');continue}
+  if(index===s.rows.length-1){if(to!=='+inf')reasons.push('Native histogram requires an explicit unbounded final bucket')}
+  else {const part=rationalParts(to),coordinate=nativeRationalCoordinate(to);if(!part||part.numerator<0n||coordinate===null||binary64Rational(coordinate)!==to||lastFinite&&part.numerator*lastFinite.denominator<=lastFinite.numerator*part.denominator)reasons.push('Native finite bounds must be exact ordered nonnegative binary64 rationals');lastFinite=part}
+  const n=BigInt(count);sum+=n;if(row.state!==(n===0n?'no_data':'observed'))reasons.push('Native bucket state must distinguish known zero from positive observations');previous=to;
+ }
+ if(sum!==BigInt(h.total))reasons.push('Native bucket counts must conserve instrument observations');
+ if(!member(s.quality?.value,['recorded','derived']))reasons.push('Native histogram requires known evaluated counts');
 }

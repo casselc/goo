@@ -3254,3 +3254,30 @@ go test -run '^(TestHegelRecordEnvironmentFlow250|TestQuintObservedRecordEnviron
 ```
 
 The real source, tail, capture/reopen and freeze checks are in journey 247.
+
+## Native interval histograms272
+
+`TestHegelCanonicalNativeHistogramParity` and
+`TestHegelCanonicalNativeHistogramMalformed` generate 100 actual measurement
+results, project one evaluated interval through the Go and JS constructors and
+compare the complete canonical DTO. They cover s/ms, exact binary64 bounds
+(including subnormal/maximum finite values), empty layouts, known-zero and
+uint64-maximum counts, cumulative increments and malformed descriptor/scope data.
+`TestCanonicalNativeHistogramEvaluatedRefusals` runs six actual evaluator
+unknown cases: missing values, gap, decrease, changed layout, changed epoch and a
+clipped boundary. A known interval remains usable despite another interval's gap.
+
+```sh
+cd verification
+go test -run 'TestHegelCanonicalNativeHistogram|TestCanonicalNativeHistogramEvaluatedRefusals' -count=1
+```
+
+`journeys/272-native-histogram.spec.js` uses real OTLP delta/cumulative exports,
+local shared-chart/table inspection and Saved reopening. It writes the observed
+seven-step trace under `artifacts/scoped-272/model-trace.json`; the matching Quint
+check rejects seven altered traces and an unfinished prefix. `ModelSmoke` is a
+separate generated smoke case, not a substitute for that observed trace.
+Set `GOO_NATIVE_HISTOGRAM_BOMBADIL=1` to exercise Saved known/table/zero/unknown
+transitions with zero POST requests. Documentation frames show the selected chart
+or diagnostic directly. Retain compact trace/ledger/summary; successful raw
+campaign screenshots and disposable isolated capture stores can be removed.

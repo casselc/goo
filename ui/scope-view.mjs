@@ -2,7 +2,7 @@
 import {validateSnapshot, validateDisplay, selectionIntent, scopeIntent, measureValue, supportsSelection, capabilities,displayRows,populationShare,fractionFacts,histogramIntent} from './view-model.mjs';
 import {formatCell,supportText,exactText,categoryText,isFraction,fractionContextText} from './view-values.mjs';
 import {asSnapshot,parseSnapshotJSON} from './snapshots.mjs';
-import {histogramFacts,histogramBoundText,histogramRangeText,histogramCompactRangeText} from './histogram-values.mjs';
+import {histogramFacts,histogramBoundText,histogramRangeText,histogramCompactRangeText,nativeHistogramCompactRangeText} from './histogram-values.mjs';
 import './chart-frame.mjs';
 import './time-bars.mjs';
 
@@ -109,23 +109,27 @@ function timeBars(host,snapshot,display){
 
 
 function histogram(host,snapshot){
- const figure=n('section',undefined,'scope-histogram'),facts=histogramFacts(snapshot),support=facts.support,h=snapshot.histogram;
- const context=n('p',support?support.valid+'/'+support.total+' captured records have valid numeric values · '+support.missing+' missing · '+support.empty+' empty · '+support.invalid+' invalid':facts.total+' captured spans · fixed duration buckets','scope-time-legend');
+ const figure=n('section',undefined,'scope-histogram'),facts=histogramFacts(snapshot),support=facts.support,h=snapshot.histogram,native=h.kind==='otel-explicit';
+ const context=n('p',support?support.valid+'/'+support.total+' captured records have valid numeric values · '+support.missing+' missing · '+support.empty+' empty · '+support.invalid+' invalid':native?facts.total+' instrument observations · '+h.temporality+' exports · one evaluated interval':facts.total+' captured spans · fixed duration buckets','scope-time-legend');
  figure.append(context);
- if(facts.represented==='0'){figure.append(n('p',facts.total==='0'?'No captured records. The fixed bins are known empty.':'No valid numeric values. Empty bins do not imply an empty captured population.','scope-view-empty'));return figure}
+ if(facts.represented==='0'){figure.append(n('p',facts.total==='0'?(native?'No instrument observations. The evaluated buckets are known empty.':'No captured records. The fixed bins are known empty.'):'No valid numeric values. Empty bins do not imply an empty captured population.','scope-view-empty'));return figure}
  const all=snapshot.rows,first=all.findIndex(row=>row.values.count!=='0');let last=all.length-1;while(last>first&&all[last].values.count==='0')last--;
- const rows=h.kind==='span-duration'?all:all.slice(first,last+1),ceiling=all.reduce((n,row)=>BigInt(row.values.count)>n?BigInt(row.values.count):n,0n).toString();
- const scroll=n('div',undefined,'scope-histogram-scroll'),bars=n('goo-time-bars');bars.style.minWidth=(h.kind==='span-duration'?rows.length*8:Math.max(440,rows.length*8))+'px';bars.setAttribute('range-select','');scroll.append(bars);
- bars.data={title:h.kind==='span-duration'?'Captured span duration distribution':'Captured numeric distribution',unit:h.kind==='span-duration'?'spans':'records',ceiling,interactive:true,fromLabel:histogramBoundText(h,rows[0].values.from),toLabel:histogramBoundText(h,rows.at(-1).values.to),points:rows.map(row=>({key:row.key,label:histogramRangeText(h,row.values.from,row.values.to)+' · '+row.values.count+(h.kind==='span-duration'?' captured spans':' captured records'),value:row.values.count,state:row.state}))};
+ const rows=h.kind==='span-duration'||native?all:all.slice(first,last+1),ceiling=all.reduce((n,row)=>BigInt(row.values.count)>n?BigInt(row.values.count):n,0n).toString();
+ const scroll=n('div',undefined,'scope-histogram-scroll'),bars=n('goo-time-bars');bars.style.minWidth=(h.kind==='span-duration'||native?Math.max(native?Math.min(440,rows.length*32):0,rows.length*8):Math.max(440,rows.length*8))+'px';if(!native)bars.setAttribute('range-select','');scroll.append(bars);
+ bars.data={title:native?'Instrument observation distribution':h.kind==='span-duration'?'Captured span duration distribution':'Captured numeric distribution',unit:native?'observations':h.kind==='span-duration'?'spans':'records',ceiling,interactive:!native,fromLabel:histogramBoundText(h,rows[0].values.from),toLabel:histogramBoundText(h,rows.at(-1).values.to),points:rows.map(row=>({key:row.key,label:histogramRangeText(h,row.values.from,row.values.to)+' · '+row.values.count+(native?' instrument observations':h.kind==='span-duration'?' captured spans':' captured records'),value:row.values.count,state:row.state}))};
  const range=(fromKey,toKey)=>emit(host,'goo-histogram-range',histogramIntent(snapshot,fromKey,toKey));
- bars.addEventListener('goo-time-range',event=>{event.stopPropagation();range(event.detail.fromKey,event.detail.toKey)});
- bars.addEventListener('goo-time-select',event=>{event.stopPropagation();range(event.detail.key,event.detail.key)});
+ if(!native){bars.addEventListener('goo-time-range',event=>{event.stopPropagation();range(event.detail.fromKey,event.detail.toKey)});
+ bars.addEventListener('goo-time-select',event=>{event.stopPropagation();range(event.detail.key,event.detail.key)});}
  if(h.kind==='span-duration'){
   const labels=n('div',undefined,'scope-histogram-bin-labels');labels.setAttribute('aria-hidden','true');
   for(const row of rows){const text=histogramCompactRangeText(h,row.values.from,row.values.to),label=n('span');if(text.includes('–')){const [lower,upper]=text.split('–');label.append(n('span',lower+'–'),n('wbr'),n('span',upper))}else label.append(n('span',text));label.title=histogramRangeText(h,row.values.from,row.values.to);labels.append(label)}
   scroll.append(labels,n('small','Duration buckets · ms','scope-histogram-bin-unit'));
+ }else if(native&&rows.length<=8){
+  const labels=n('div',undefined,'scope-histogram-bin-labels scope-native-bin-labels');labels.style.gridTemplateColumns='repeat('+rows.length+',minmax(0,1fr))';labels.setAttribute('aria-hidden','true');
+  for(const row of rows){const text=nativeHistogramCompactRangeText(h,row.values.from,row.values.to),label=n('span');if(text.includes('–')){const [lower,upper]=text.split('–');label.append(n('span',lower+'–'),n('wbr'),n('span',upper))}else label.append(n('span',text));label.title=histogramRangeText(h,row.values.from,row.values.to);labels.append(label)}
+  scroll.append(labels,n('small','Instrument buckets · '+h.unit+' · finite upper bounds included','scope-histogram-bin-unit'));
  }
- figure.append(scroll,n('small','Equal-width bars · unequal numeric ranges · counts, not density · '+(h.kind==='span-duration'?'all fixed duration bins shown.':'outer empty bins hidden; all bins remain in Exact values.'),'scope-view-coordinate-note'));
+ figure.append(scroll,n('small',native?'Equal-width bars · unequal bucket ranges · observation counts, not density · right-closed finite bounds; all buckets shown. Approximate labels retain exact rational bounds in Exact values.':'Equal-width bars · unequal numeric ranges · counts, not density · '+(h.kind==='span-duration'?'all fixed duration bins shown.':'outer empty bins hidden; all bins remain in Exact values.'),'scope-view-coordinate-note'));
  return figure;
 }
 
@@ -202,7 +206,7 @@ class Chart extends SuppliedElement {
         this.refuse(checked.reasons);return;
       }
       const rows=snapshot.shape==='ranked'?displayRows(snapshot,display):snapshot.rows;
-      const root=n('goo-chart-frame',undefined,'scope-view');root.data={title:display.title||(snapshot.shape==='histogram'?(snapshot.histogram.kind==='span-duration'?'Captured span duration distribution':'Captured numeric distribution'):snapshot.shape==='time-series'?'Captured records over time':snapshot.shape==='summary'?'Population summary':'Scoped breakdown'),window:capturedClock(snapshot.capturedAt),state:snapshot.quality.extent==='unknown'||snapshot.quality.value==='unknown'?'unknown':snapshot.quality.extent==='partial'?'partial':!snapshot.rows.length||snapshot.shape==='histogram'&&histogramFacts(snapshot).total==='0'||snapshot.shape==='summary'&&snapshot.rows[0].values.count==='0'?'no_data':'observed'};root.dataset.valueKnowledge=snapshot.quality.value;root.append(quality(snapshot));
+      const root=n('goo-chart-frame',undefined,'scope-view');root.data={title:display.title||(snapshot.shape==='histogram'?(snapshot.histogram.kind==='otel-explicit'?'Instrument observation distribution':snapshot.histogram.kind==='span-duration'?'Captured span duration distribution':'Captured numeric distribution'):snapshot.shape==='time-series'?'Captured records over time':snapshot.shape==='summary'?'Population summary':'Scoped breakdown'),window:capturedClock(snapshot.capturedAt),state:snapshot.quality.extent==='unknown'||snapshot.quality.value==='unknown'?'unknown':snapshot.quality.extent==='partial'?'partial':!snapshot.rows.length||snapshot.shape==='histogram'&&histogramFacts(snapshot).total==='0'||snapshot.shape==='summary'&&snapshot.rows[0].values.count==='0'?'no_data':'observed'};root.dataset.valueKnowledge=snapshot.quality.value;root.append(quality(snapshot));
       if(!snapshot.rows.length&&display.kind!=='time-bar')root.append(n('p',snapshot.shape==='time-series'?'No supplied intervals. Coverage is unknown.':'No supplied groups.','scope-view-empty'));
       else if(!rows.length&&snapshot.shape==='ranked')root.append(n('p','No matching groups. '+snapshot.rows.length+' groups remain in this result.','scope-view-empty'));
       else if(display.kind==='table')root.append(table(this,snapshot,display,rows));

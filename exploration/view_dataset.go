@@ -5,83 +5,20 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/scopedview"
 	"math/bits"
 	"strconv"
 )
 
-// ViewDataset is a supplied immutable display snapshot, not a source request.
-// Completeness concerns its named result aspect, never upstream collection,
-// pagination or a transactional count/page pair.
-type ViewDataset struct {
-	Version      string            `json:"version"`
-	ID           string            `json:"id"`
-	Revision     string            `json:"revision"`
-	Scope        ViewScope         `json:"scope"`
-	Shape        string            `json:"shape"`
-	Fields       []ViewField       `json:"fields"`
-	Rows         []ViewRow         `json:"rows"`
-	Quality      ViewQuality       `json:"quality"`
-	Completeness *ViewCompleteness `json:"completeness,omitempty"`
-	CapturedAt   string            `json:"capturedAt,omitempty"`
-	Origin       string            `json:"origin"`
-	SourceBasis  string            `json:"sourceBasis,omitempty"`
-	Interval     *ViewInterval     `json:"interval,omitempty"`
-	Dimensions   []string          `json:"dimensions,omitempty"`
-	Partition    *ViewPartition    `json:"partition,omitempty"`
-	Histogram    *ViewHistogram    `json:"histogram,omitempty"`
-}
-
-// ViewPartition describes the disjoint captured-record groups in the same
-// exhaustive GROUP BY read. It is independent of the separately read count and
-// row page. Consumers still need source-admission authority to claim full shares.
-type ViewPartition struct {
-	Kind    string `json:"kind"`
-	Measure string `json:"measure"`
-	Total   string `json:"total"`
-}
-
-type ViewInterval struct {
-	FromMS   string `json:"fromMs"`
-	ToMS     string `json:"toMs"`
-	BucketMS string `json:"bucketMs"`
-}
-type ViewScope struct {
-	ID         string          `json:"id"`
-	Generation string          `json:"generation"`
-	Signal     string          `json:"signal"`
-	Selector   json.RawMessage `json:"selector"`
-}
-type ViewField struct {
-	Key         string           `json:"key"`
-	Label       string           `json:"label"`
-	Type        string           `json:"type"`
-	Unit        string           `json:"unit,omitempty"`
-	Nullable    bool             `json:"nullable,omitempty"`
-	Aggregation *ViewAggregation `json:"aggregation,omitempty"`
-}
-type ViewRow struct {
-	Key    string              `json:"key"`
-	Values ViewValues          `json:"values"`
-	State  string              `json:"state,omitempty"`
-	Cells  map[string]ViewCell `json:"cells,omitempty"`
-}
-
-// ViewValues retains exact source-derived text and explicit missing values.
-// The declared fields define meaning; there is no renderer-specific payload.
-type ViewValues map[string]*string
-type ViewQuality struct {
-	Extent    string `json:"extent"`
-	Basis     string `json:"basis"`
-	Value     string `json:"value"`
-	Sampling  string `json:"sampling"`
-	Freshness string `json:"freshness"`
-}
-type ViewCompleteness struct {
-	Basis    string   `json:"basis"`
-	Revision string   `json:"revision"`
-	ScopeID  string   `json:"scopeId"`
-	Aspects  []string `json:"aspects"`
-}
+type ViewDataset = scopedview.Dataset
+type ViewPartition = scopedview.Partition
+type ViewInterval = scopedview.Interval
+type ViewScope = scopedview.Scope
+type ViewField = scopedview.Field
+type ViewRow = scopedview.Row
+type ViewValues = scopedview.Values
+type ViewQuality = scopedview.Quality
+type ViewCompleteness = scopedview.Completeness
 
 func viewText(v string) *string { return &v }
 func supportedViewMeasures(q Query) bool {

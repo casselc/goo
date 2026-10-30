@@ -1,5 +1,13 @@
 # Architecture
 
+Canonical display DTOs now live in the source-neutral `scopedview` package.
+Record exploration and native measurements both depend on it; measurement
+kernels do not import the record-query application layer. Existing record
+constructors retain their own semantic validation. Native `HistogramView`
+projects one selected evaluated interval on demand, and the browser performs
+the same bounded projection from retained data. Neither projection reads a
+source or materializes every interval. See [native scope and geometry](SCOPED_NATIVE_HISTOGRAMS.md).
+
 This describes implemented module and lifetime boundaries. The explicitly labeled
 target diagram is design context, not another execution queue; current priorities
 are in the [reviewed roadmap](ROADMAP_2026_10_29.md). See

@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey272](../../journeys/272-native-histogram-storyboard.md) follows delta and
+cumulative instrument observations through selected-interval histogram/table
+inspection, known zero/reset/missing states and held Saved reopening.
+
 [Journey271](../../journeys/271-duration-histogram-storyboard.md) covers exact
 raw-span duration bins, local manual/brush selection, revoked old controls,
 disjoint selected/rest populations and read-only Saved display.

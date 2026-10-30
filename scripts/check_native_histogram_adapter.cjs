@@ -1,0 +1,25 @@
+// Selected native intervals project locally; component and display changes do not read sources.
+const {chromium}=require('playwright'),fs=require('node:fs/promises'),path=require('node:path'),assert=require('node:assert/strict');
+const {fixture}=require('../tests/fixtures/native-histogram-app.cjs');
+(async()=>{let browser;try{
+ browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',args:['--no-sandbox']});
+ const page=await browser.newPage({viewport:{width:390,height:844}}),errors=[],requests=[];
+ page.on('pageerror',error=>errors.push(error.message));page.on('request',request=>requests.push(new URL(request.url()).pathname));
+ await page.route('http://native.invalid/**',async route=>{const name=new URL(route.request().url()).pathname;
+  if(name==='/')return route.fulfill({contentType:'text/html',body:'<!doctype html><html lang="en"><meta name="viewport" content="width=device-width"><title>Native interval projection</title><link rel="stylesheet" href="/components.css"><link rel="stylesheet" href="/chart-frame.css"><link rel="stylesheet" href="/scope-view.css"><link rel="stylesheet" href="/time-bars.css"><link rel="stylesheet" href="/value-timeline.css"><link rel="stylesheet" href="/numeric-distribution.css"><section id="live"></section><section id="held"></section>'});
+  const file=path.resolve(__dirname,'../ui'+name);assert(file.startsWith(path.resolve(__dirname,'../ui')+path.sep));return route.fulfill({contentType:name.endsWith('.css')?'text/css':'text/javascript',body:await fs.readFile(file)});
+ });await page.goto('http://native.invalid/');
+ const initial=await page.evaluate(async r=>{const M=await import('/measurements.mjs'),S=await import('/snapshots.mjs');window.fixture=r;window.snapshots=S;window.M=M;let fetches=0;window.fetch=()=>{fetches++;throw Error('Unexpected source read')};window.fetches=()=>fetches;const sourceAdapter=S.createSourceAdapter({id:'native.app.browser'});M.renderTimeline(document.querySelector('#live'),r.histograms.series[0],r,{sourceAdapter,sourceQuestion:r.question});return {charts:document.querySelectorAll('goo-chart').length,selected:document.querySelector('.native-timeline-selection').dataset.key}},fixture());
+ assert.equal(initial.charts,0);assert.equal(initial.selected,'2');
+ const live=page.locator('#live'),selection=live.locator('.native-timeline-selection');
+ await live.locator('goo-value-timeline [data-key="0"]').click();await selection.getByText('Selected native bucket counts',{exact:true}).click();
+ const chart=selection.locator('goo-chart');await chart.waitFor({state:'visible'});assert.deepEqual(await chart.evaluate(e=>({kind:e.snapshot.histogram.kind,total:e.snapshot.histogram.total,proof:window.snapshots.hasGuarantee(e.snapshot,'bins'),signal:e.snapshot.scope.signal,lower:e.snapshot.rows[0].values.from,upper:e.snapshot.rows.at(-1).values.to})),{kind:'otel-explicit',total:'4',proof:true,signal:'metrics',lower:'-inf',upper:'+inf'});
+ assert.equal(await chart.locator('goo-time-bars button').count(),0);assert.equal(await chart.locator('.time-bar').count(),3);
+ await selection.getByLabel('Native histogram display',{exact:true}).selectOption('table');assert.equal(await chart.locator('tbody tr').count(),3);assert.equal(await chart.evaluate(e=>e.display.kind),'table');
+ await live.locator('goo-value-timeline [data-key="1"]').click();assert.equal(await selection.locator('goo-chart,table').count(),0);assert.match(await selection.textContent(),/Unavailable/);
+ await live.locator('goo-value-timeline [data-key="2"]').click();await selection.getByText('Selected native bucket counts',{exact:true}).click();const empty=selection.locator('goo-chart');await empty.waitFor({state:'visible'});assert.equal(await empty.evaluate(e=>e.snapshot.histogram.total),'0');assert.equal(await empty.locator('.time-bar').count(),0);assert.match(await selection.textContent(),/P95: no observations/);
+ await live.locator('goo-value-timeline [data-key="0"]').click();assert.equal(await selection.locator('goo-chart').evaluate(e=>e.display.kind),'table');
+ await page.evaluate(()=>M.renderTimeline(document.querySelector('#held'),fixture.histograms.series[0],fixture));const held=page.locator('#held');await held.locator('goo-value-timeline [data-key="0"]').click();await held.getByText('Selected native bucket counts',{exact:true}).click();const heldChart=held.locator('goo-chart');await heldChart.waitFor({state:'visible'});assert.deepEqual(await heldChart.evaluate(e=>({origin:e.snapshot.origin,proof:window.snapshots.hasGuarantee(e.snapshot,'bins')})),{origin:'browser-held',proof:false});
+ assert.equal(await page.evaluate(()=>fetches()),0);assert.equal(requests.some(p=>p.startsWith('/api/')),false);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);assert.deepEqual(errors,[]);
+ console.log('native histogram adapter: PASS (lazy selected interval, source/held authority, unknown/zero distinction, local histogram/table, no reads,390px)');
+ }finally{await browser?.close()}})().catch(error=>{console.error(error);process.exitCode=1});

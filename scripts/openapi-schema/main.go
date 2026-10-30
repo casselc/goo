@@ -139,6 +139,7 @@ func main() {
 		root(name, v, false)
 	}
 
+	root("NativeHistogramSelector", measurements.HistogramViewSelector{}, false)
 	root("TailIntent", retention.TailIntent{}, true)
 	root("TailReceipt", retention.TailReceipt{}, false)
 	root("TailMembershipCapability", exploration.TailMembershipCapability{}, false)

@@ -1,5 +1,12 @@
 # Known issues and gaps
 
+272 adds [native selected-interval histograms](SCOPED_NATIVE_HISTOGRAMS.md):
+explicit measurement scope, exact right-closed instrument buckets and lazy
+projection from retained evaluated data. Current support follows the evaluator’s
+duration instruments in s/ms. Fixed-time buckets, heatmaps, explicit merges and
+window comparisons retain specialized owners; no fleet merge, interpolated
+percentile, exact contributor trace selection or whole-view editor is claimed.
+
 271 adopts [raw-span duration histograms](SCOPED_DURATION_HISTOGRAMS.md) in
 count Distribution and Activity latency. The same exhaustive group read supplies
 exact bins and total; manual and brush actions retain captured ownership.
