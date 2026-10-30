@@ -44,9 +44,10 @@ Native publisher/catalog capacity (C2) is corrected in 246 with shared bounded
 admission and exact saved-revision recovery. Existing over-limit catalogs still
 refuse full browse/new publication; nothing is deleted or silently truncated.
 See the [capacity contract](NATIVE_CATALOG_CAPACITY.md) for local locking and platform limits.
-The mobile trace sheet covers the global return control; visible Close trace then
-Return works. Parent-aware close/focus remains a usability gap.
-Current order and acceptance: [roadmap](ROADMAP_2026_10_29.md),
+Parent-aware trace close/focus is delivered in260: Activity returns to its held
+parent without a new source read. Fixed/Saved close ownership and nested keyboard
+controls are covered by the [trace-return contract](TRACE_PARENT_RETURN.md).
+Current order and acceptance: [roadmap](ROADMAP_2026_10_30.md),
 [backlog](BACKLOG_2026_10_29.md). Historical entries below retain their original scope.
 
 

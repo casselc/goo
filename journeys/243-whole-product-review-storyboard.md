@@ -19,7 +19,7 @@ the scoped fixed result, not every supporting trace or log visited along the way
 ![Mobile supporting trace](../docs/journeys/screenshots/243-supporting-trace-mobile.png)
 
 At 390×844 the full-screen trace sheet covers the global Return control. Normal
-Close trace → Return succeeds. Closing currently focuses `exploreRun`, and reverse
+Close trace → Return succeeds. At that checkpoint, closing focused `exploreRun`, and reverse
 Tab from Close reaches outside the sheet. Parent-aware return/focus and keyboard
 ownership need refinement; this is not a claim that all return is blocked.
 
@@ -36,21 +36,11 @@ complete coverage of those surfaces or evidence of service health.
 
 ## Execution and limits
 
-[Playwright probe](243-whole-product-loop.spec.js) runs only with `GOO_REVIEW243=1`.
-It builds/starts a temporary Go runtime, uses a temporary capture store and emits
-namespaced real OTLP fixtures to the existing collector/ClickHouse lab.
-
-```sh
-GOO_REVIEW243=1 GOO_REVIEW243_WORKAROUND=close-trace \
-  npx playwright test journeys/243-whole-product-loop.spec.js
-```
-
-Without the workaround flag the direct global return attempt reproduces mobile
-occlusion. The original `GOO_REVIEW243_CAPACITY=1` probe observed 257 accepted definitions
-and a failed catalog at checkpoint 243. After correction 246, this optional branch
-asserts the current 256 accepted / next refused / catalog readable policy. The
-[dedicated journey](246-native-catalog-capacity-storyboard.md) now owns capacity
-and exact revision recovery acceptance. `GOO_GENERIC_BINARY` can select a prebuilt binary.
+The checkpoint243 reproduction harness has been removed. Current ordinary
+trace/parent interaction coverage is the [260 journey](260-trace-parent-return-storyboard.md);
+capacity and exact recovery use the [246 journey](246-native-catalog-capacity-storyboard.md).
+The screenshots and observations below record the original review, not a maintained
+workaround or compatibility contract.
 
 Final run passed in 17.0s (19.7s including runner setup). Core request totals were
 three tail requests, two supporting context requests, one fixed analysis request

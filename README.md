@@ -485,3 +485,19 @@ and bounded browser recent/pending history are implemented. Saved’s **Find kep
 observations** now discovers keeps across browsers, with origin/signal filters,
 paging and explicit resumable metadata repair. Open verifies original records;
 discovery never reads telemetry. See the [cross-browser journey](journeys/259-kept-discovery-storyboard.md).
+
+Trace inspection now closes directly to its opening context: **← Activity**
+returns to held rows/selection, while fixed and Saved traces return to their own
+rows. The native modal contains keyboard focus and respects nested editor Escape.
+See [trace return](docs/TRACE_PARENT_RETURN.md). Shared controls also have clearer
+focus, reduced motion, improved contrast and safe form embedding.
+
+The [view grammar proposal](docs/VIEW_GRAMMAR_PROPOSAL_260.md) unifies the shared
+UI/product/chart reviews with oscope, Kindly, Plotje and Portal research. It proposes
+one public UI composition grammar for built-in and contributed views: typed
+scope/data/quality, charts/tables/lists/waterfalls and scope-bound controls, a base
+chart with a restricted Plotly adapter, and shared declarative/visual authoring.
+Complete-only widgets and explicit uncertainty semantics are core requirements;
+all current widgets/screens must be expressible. The app is prerelease, with no
+legacy-format or API compatibility floor. [The next sequence](docs/ROADMAP_2026_10_30.md) separates proposed work from
+implemented capabilities; the supporting reports include pinned research sources.

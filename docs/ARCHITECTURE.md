@@ -1294,3 +1294,19 @@ policy-aware environment through record sources, context, capabilities and
 filesystem captures. Shared selected-row verification protects new-selector
 reads and immutable reopen. Other family/persistence owners refuse unsupported
 selectors; browser authoring is still gated.
+
+## Proposed scoped-view grammar — 260
+
+[The reviewed proposal](VIEW_GRAMMAR_PROPOSAL_260.md) adds a composition layer over
+existing source/measurement/evidence ownership: app-owned typed context/scope → checked data
+recipe → typed dataset snapshot → public display/control/layout kinds. Tables,
+lists, waterfalls, filters/facets, forms and whole screens use the same composition
+contract as charts. Host runtime owns typed scope operations and effects; shared
+quality/completeness semantics determine eligibility and representation.
+A base chart uses the existing frame and an injected native/Plotly renderer rather
+than a new query engine. Source/visual editors share an AST; contributed templates
+cannot hide app-owned coverage/provenance or grant source execution. Current
+package authoring scope gates remain prerequisites, not renderer features.
+This is proposed architecture; the new chart contract, vendor adapter and WYSIWYG
+editor are not implemented by this document. See the
+[2026-10-30 sequence](ROADMAP_2026_10_30.md) and source-linked review reports.

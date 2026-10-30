@@ -1,6 +1,8 @@
 # Implementation plan
 
-> Current priority: [2026-10-29 roadmap](ROADMAP_2026_10_29.md) and
+> Current continuation proposal: [view grammar260](VIEW_GRAMMAR_PROPOSAL_260.md)
+> and [2026-10-30 sequence](ROADMAP_2026_10_30.md), requested after259.
+> Earlier ordered work: [2026-10-29 roadmap](ROADMAP_2026_10_29.md) and
 > [acceptance backlog](BACKLOG_2026_10_29.md). The six-reviewer
 > [checkpoint 243](reviews/INDEPENDENT_REVIEW_SUMMARY_243.md) is complete.
 > C0 is corrected in 244 with bounded catalog summaries and explicit v2 rebuild.
@@ -28,8 +30,10 @@
 > exact Keep/Open path without required interpretation or XTDB. 258 extends it to
 > fixed-result/Saved record selection with distinct provenance/index semantics and
 > one shared publisher/recovery/view. 259 adds bounded cross-browser discovery,
-> shared admission and resumable repair. Next: U0 parent-aware trace close/keyboard
-> ownership, followed by compact Saved evidence consolidation.
+> shared admission and resumable repair. 260 addresses U0 trace close/keyboard
+> ownership plus bounded shared-control cleanup. The continuation proposal puts
+> typed scoped data and a compatible-kind/base-chart pilot before view/editor
+> expansion, with compact evidence/common styling consolidated during adoption.
 > Service/native/package/retention adoption is separate.
 > Earlier queues preserve delivery history; their Next labels are superseded.
 

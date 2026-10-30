@@ -74,12 +74,10 @@ visited supporting context is **not** implicitly archived with it. A separate
 finding/document action is needed for that understanding. No selected row is
 misrepresented as the fresh capture.
 
-The [review probe](../../journeys/243-whole-product-loop.spec.js) is opt-in. It can
-reproduce direct occlusion or continue through the visible close action. It is
-not promoted to required CI or a completed pointer-return contract. Its capacity
-mode intentionally observes the current defect in an owned store; it is not a
-product contract endorsing257 publications. Future fixes need normal regression
-assertions for their chosen policy.
+The checkpoint243 reproduction harness was removed after the ordinary
+[260 trace-parent interaction](../../journeys/260-trace-parent-return-storyboard.md)
+replaced its blocked-return workaround. These review observations remain historical;
+current capacity and return acceptance live in their dedicated journeys.
 
 Root appended only namespaced test telemetry and temporary captures/definitions;
 existing live evidence, definitions, annotations, volumes and payloads were not

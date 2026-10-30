@@ -1,5 +1,32 @@
 # Validation record
 
+## Trace return, shared controls and UI composition proposal — 260
+
+Activity trace close now restores its held parent, selection, scroll and focus
+without resuming or reading the source. Fixed/Saved inspectors retain their own
+close behavior. Native modal keyboard ownership and stale-response withdrawal
+are covered by the [executable storyboard](journeys/260-trace-parent-return-storyboard.md).
+Shared controls improve focus, reduced motion, attribute contrast and form safety.
+
+Full Go checks and all636 frontend tests pass. Independent Playwright259/260
+regressions pass together (2 tests,26 seconds). The260 journey covers1440/700/390/320
+widths, keyboard/pointer/touch, nested Escape ownership and late responses. The
+40-second Bombadil campaign completed834 snapshots across all six phases, with
+one tail and two explicit inspection reads; return caused no additional source read.
+Standalone component conformance checks pass for focus, reduced motion, contrast,
+form embedding and390px layout. No new Hegel/Quint campaign is claimed for this UI cut.
+
+The configured CA-trusted image build and packages-only lab deployment succeeded.
+Deployed image: `5985d482a77c6125797fe610ed73a301c5e258aabdbe51c70966d16ee6577f11`.
+HTTP root returns200; nine changed UI modules/styles match local source bytes.
+Other services and data volumes were preserved.
+
+Four supporting reviews inform the [whole-UI grammar proposal](docs/VIEW_GRAMMAR_PROPOSAL_260.md)
+and [next roadmap](docs/ROADMAP_2026_10_30.md). Typed scope/data/quality, complete-only
+eligibility, public component composition and exhaustive screen/widget parity are
+proposed requirements. Plotly, the new grammar runtime and WYSIWYG editor are not
+implemented in this round. Prerelease APIs/formats have no legacy compatibility floor.
+
 ## Cross-browser kept observation discovery — 259 (2026-10-30 UTC)
 
 Saved can now Find kept observations from server storage with origin/signal

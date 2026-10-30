@@ -64,7 +64,7 @@ goo-field-value .attribute-type{display:inline-block;margin:4px 0 0;padding:1px 
 .attribute-tools input,.attribute-tools select {width:100%;min-height:33px;padding:5px 8px}
 .attribute-count {font-size:11px;color:var(--muted,#98a8bf);padding-bottom:7px;white-space:nowrap}
 .attribute-group h4 {font-size:11px;color:var(--muted,#98a8bf);font-weight:600;margin:18px 0 5px;padding-bottom:7px;border-bottom:1px solid var(--border,#2b3545);display:flex;gap:10px}
-.attribute-group-count {color:#6c8299;font-weight:400}
+.attribute-group-count {color:var(--muted,#98a8bf);font-weight:400}
 .attribute-row {display:grid;grid-template-columns:minmax(130px,29%) minmax(0,1fr) auto;gap:12px;padding:9px 0;border-bottom:1px solid #233041;align-items:start;font-size:12px;min-width:0}
 .attribute-row:last-child {border:0}
 .attribute-key {font-family:ui-monospace,monospace;color:#b8ccd9;overflow-wrap:anywhere;white-space:pre-wrap;min-width:0}
@@ -259,4 +259,15 @@ goo-attribute-list .field-hint-label{display:block}
  goo-table[mobile-layout=stacked]>table>tbody>tr>td{display:block;min-width:0;max-width:100%;padding:0;border:0;white-space:normal;overflow-wrap:anywhere;font-size:12px}
  goo-table[mobile-layout=stacked]>table>tbody>tr>td[data-label]::before{content:attr(data-label);display:block;color:var(--muted,#98a8bf);font-size:10px;margin-bottom:2px}
  goo-table[mobile-layout=stacked]>table>tbody>tr>td:last-child{grid-column:1/-1}
+}
+
+/* Shared keyboard focus also works when components are embedded without product.css. */
+:where(goo-latency,goo-stat-list,goo-table,goo-facet-list,goo-result-state,goo-record-columns,goo-grouping-control,goo-time-range,goo-tag-list,goo-chart-frame,goo-time-bars,goo-value-timeline,goo-bucket-heatmap,goo-trace-waterfall,goo-aligned-histogram,goo-metric-comparison,goo-trace-page-breakdown,goo-trace-comparison,goo-comparison-series,.ui-actions,.ui-inspector,.ui-disclosure,.attribute-viewer) :is(button,a,input,select,textarea,summary):focus-visible{
+ outline:2px solid var(--focus-ring,var(--accent,#79ddc6));outline-offset:3px
+}
+@media(prefers-reduced-motion:reduce){
+ :where(goo-latency,goo-stat-list,goo-table,goo-facet-list,goo-result-state,goo-record-columns,goo-grouping-control,goo-time-range,goo-tag-list,goo-chart-frame,goo-time-bars,goo-value-timeline,goo-bucket-heatmap,goo-trace-waterfall,goo-aligned-histogram,goo-metric-comparison,goo-trace-page-breakdown,goo-trace-comparison,goo-comparison-series,.ui-actions,.ui-inspector,.ui-disclosure,.attribute-viewer),
+ :where(goo-latency,goo-stat-list,goo-table,goo-facet-list,goo-result-state,goo-record-columns,goo-grouping-control,goo-time-range,goo-tag-list,goo-chart-frame,goo-time-bars,goo-value-timeline,goo-bucket-heatmap,goo-trace-waterfall,goo-aligned-histogram,goo-metric-comparison,goo-trace-page-breakdown,goo-trace-comparison,goo-comparison-series,.ui-actions,.ui-inspector,.ui-disclosure,.attribute-viewer) *{
+  transition-duration:0s!important;animation-duration:0s!important;animation-iteration-count:1!important;scroll-behavior:auto!important
+ }
 }

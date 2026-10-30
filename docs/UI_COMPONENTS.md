@@ -11,7 +11,7 @@ modules rather than the application/query client; these conformance examples are
 separate from real OTLP-backed [user journeys](journeys/README.md).
 
 This is the current component contract index. [Known issues](KNOWN_ISSUES.md)
-records product/backend limits; the [reviewed roadmap](ROADMAP_2026_10_24.md) owns
+records product/backend limits; the [current continuation proposal](ROADMAP_2026_10_30.md) owns
 future priority. Earlier audits are dated design inputs, not another execution queue.
 
 ## Public elements
@@ -1343,3 +1343,13 @@ supply all labels, rows and actions; there is no query, pagination or lifecycle 
 The same attribute works in server HTML and SPA composition. Kept discovery uses
 it so scope and Open remain visible at390px without horizontal table scrolling;
 record-specific compact layout remains separate.
+
+260 improves shared standalone keyboard focus (including textareas), reduced
+motion, attribute-count contrast and parent-form isolation for column controls.
+The [common UI review](reviews/UI_SYSTEM_REVIEW_260.md) records executed checks
+and remaining family-level standardization. The
+[view grammar proposal](VIEW_GRAMMAR_PROPOSAL_260.md) defines the planned whole-UI composition grammar,
+including shared scope/control/action models, typed uncertainty, hard complete-data
+requirements and exhaustive current widget/screen expressiveness; those new elements are proposed,
+not entries in the implemented registry above. Goo is prerelease, so consolidating
+component APIs does not require old-property or old-format compatibility shims.
