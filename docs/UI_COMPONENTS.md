@@ -1447,3 +1447,13 @@ Support, capture clocks and scopes stay distinct. Empty or diagnostic data canno
 silently acquire a zero percentage. Hard complete-only displays require both
 private bins witnesses. Typed range intents stay passive; explicit side planners
 belong to host adapters. See [contract and limits](SCOPED_HISTOGRAM_COMPARISONS.md).
+
+## Captured duration histograms271
+
+`goo-chart` consumes numeric and span-duration histogram descriptors. Duration
+uses exact `histogram-bound` nanoseconds with a final `+inf`, human duration labels
+and all eight fixed count bins. The same snapshot renders as a table. No numeric
+parse support is fabricated. `clearRange()` clears the inner passive range without
+source reads; manual bounds use it to withdraw the previous brush. Hosts own
+captured-execution guards for both manual controls and supplied-key intents.
+See [contract and diagram](SCOPED_DURATION_HISTOGRAMS.md).

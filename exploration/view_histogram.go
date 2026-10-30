@@ -5,12 +5,16 @@ import (
 	"strconv"
 )
 
-// ViewHistogram retains the checked population coverage and exact fixed-bin
-// geometry. Support describes the whole distribution, never an individual bin.
+// ViewHistogram discriminates fixed numeric bins from raw-span duration bins.
+// Numeric Support retains whole-population parse coverage; duration Total is
+// the sum of the same exhaustive group read, without numeric parsing metadata.
 type ViewHistogram struct {
+	Kind    string         `json:"kind"`
+	Unit    string         `json:"unit,omitempty"`
+	Total   string         `json:"total,omitempty"`
 	Binning string         `json:"binning"`
-	Binding NumericBinding `json:"binding"`
-	Support ViewSupport    `json:"support"`
+	Binding NumericBinding `json:"binding,omitzero"`
+	Support ViewSupport    `json:"support,omitzero"`
 	Closure string         `json:"closure"`
 }
 
@@ -35,7 +39,7 @@ func buildHistogramViewDataset(r *Result, source bool) *ViewDataset {
 	}
 	b := *q.Numeric
 	n := r.Numeric
-	d.Histogram = &ViewHistogram{Binning: r.NumericHistogram.Binning, Binding: b, Support: ViewSupport{Total: n.Count, Valid: n.Valid, Missing: n.Missing, Empty: n.Empty, Invalid: n.Invalid}, Closure: "left-closed-right-open"}
+	d.Histogram = &ViewHistogram{Kind: "numeric", Binning: r.NumericHistogram.Binning, Binding: b, Support: ViewSupport{Total: n.Count, Valid: n.Valid, Missing: n.Missing, Empty: n.Empty, Invalid: n.Invalid}, Closure: "left-closed-right-open"}
 	d.Fields = []ViewField{{Key: "from", Label: "Bin start (inclusive)", Type: "rational", Unit: b.Unit}, {Key: "to", Label: "Bin end (exclusive)", Type: "rational", Unit: b.Unit}, {Key: "count", Label: "Valid captured records", Type: "number", Unit: "records"}}
 	scale := big.NewInt(1)
 	if b.Type == "decimal64" {

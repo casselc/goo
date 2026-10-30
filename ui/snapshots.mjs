@@ -122,6 +122,10 @@ function sourceQuestion(raw,question){
  if(raw.shape==='time-series'&&(raw.interval.fromMs!==String(question.fromMs)||raw.interval.toMs!==String(question.toMs)||raw.interval.bucketMs!==String(question.bucketMs)))fail('source-question','Source interval geometry does not match its question');
  if(raw.shape==='ranked'&&(raw.dimensions?.length??0)!==(question.groupBy?.length??0))fail('source-question','Source group dimensions do not match its question');
  if(raw.shape==='histogram'){
+  if(raw.histogram.kind==='span-duration'){
+   if(raw.quality.extent!=='complete'||question.signal!=='spans'||question.numeric||question.numericHistogram||question.groupTimeSeries||question.groupBy?.length!==1||question.groupBy[0].kind!=='column'||question.groupBy[0].key!=='duration_bucket')fail('source-question','Source duration histogram requires its sole captured-span duration breakdown');
+   return;
+  }
   const b=raw.histogram.binding,q=question.numeric;
   if(question.numericHistogram?.binning!=='powers-of-two'||!q||JSON.stringify([b.field.kind,b.field.key,b.type,b.unit,b.parse,b.scale??0])!==JSON.stringify([q.field.kind,q.field.key,q.type,q.unit,q.parse,q.scale??0]))fail('source-question','Source histogram does not match its requested numeric binding');
   return;

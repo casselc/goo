@@ -546,5 +546,7 @@ empty/unknown states. Status comparisons retain their percentage-point presenter
 histogram/table displays and execution-bound range planning, retaining exact
 support and domain edges. [Aligned histogram comparisons](docs/SCOPED_HISTOGRAM_COMPARISONS.md)
 retain independent operands and offer count, captured-record share and valid-value
-share scales. Native/duration histogram and other family semantics still need
-adoption before renderer or contributed-view expansion.
+share scales. [Captured span-duration histograms](docs/SCOPED_DURATION_HISTOGRAMS.md)
+now share histogram/table displays with exact open-tail bounds and guarded
+selected/rest actions. Native OTel histograms and remaining specialized families
+still need adoption before renderer or contributed-view expansion.

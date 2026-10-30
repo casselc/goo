@@ -22068,6 +22068,13 @@
                     ]
                   }
                 }
+              },
+              "histogram": {
+                "properties": {
+                  "kind": {
+                    "const": "numeric"
+                  }
+                }
               }
             },
             "allOf": [
@@ -22105,6 +22112,836 @@
                 }
               }
             ]
+          },
+          {
+            "required": [
+              "histogram"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "dimensions"
+                  ]
+                },
+                {
+                  "required": [
+                    "interval"
+                  ]
+                },
+                {
+                  "required": [
+                    "partition"
+                  ]
+                }
+              ]
+            },
+            "properties": {
+              "shape": {
+                "const": "histogram"
+              },
+              "id": {
+                "pattern": "^[a-f0-9]{64}:bins$"
+              },
+              "fields": {
+                "minItems": 3,
+                "maxItems": 3,
+                "prefixItems": [
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/exploration.ViewField"
+                      },
+                      {
+                        "required": [
+                          "unit"
+                        ],
+                        "properties": {
+                          "key": {
+                            "const": "from"
+                          },
+                          "type": {
+                            "const": "histogram-bound"
+                          },
+                          "unit": {
+                            "const": "ns"
+                          }
+                        },
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "aggregation"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "nullable"
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/exploration.ViewField"
+                      },
+                      {
+                        "required": [
+                          "unit"
+                        ],
+                        "properties": {
+                          "key": {
+                            "const": "to"
+                          },
+                          "type": {
+                            "const": "histogram-bound"
+                          },
+                          "unit": {
+                            "const": "ns"
+                          }
+                        },
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "aggregation"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "nullable"
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/exploration.ViewField"
+                      },
+                      {
+                        "required": [
+                          "unit"
+                        ],
+                        "properties": {
+                          "key": {
+                            "const": "count"
+                          },
+                          "type": {
+                            "const": "number"
+                          },
+                          "unit": {
+                            "const": "records"
+                          }
+                        },
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "aggregation"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "nullable"
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "rows": {
+                "minItems": 8,
+                "maxItems": 8,
+                "prefixItems": [
+                  {
+                    "properties": {
+                      "key": {
+                        "const": "bin:0"
+                      },
+                      "state": {
+                        "enum": [
+                          "observed",
+                          "no_data"
+                        ]
+                      },
+                      "values": {
+                        "type": "object",
+                        "required": [
+                          "from",
+                          "to",
+                          "count"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "from": {
+                            "const": "0"
+                          },
+                          "to": {
+                            "const": "1000000"
+                          },
+                          "count": {
+                            "type": "string",
+                            "pattern": "^(0|[1-9][0-9]*)$",
+                            "maxLength": 20,
+                            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "state"
+                    ],
+                    "not": {
+                      "required": [
+                        "cells"
+                      ]
+                    },
+                    "allOf": [
+                      {
+                        "if": {
+                          "properties": {
+                            "state": {
+                              "const": "no_data"
+                            }
+                          }
+                        },
+                        "then": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "const": "0"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "else": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "pattern": "^[1-9][0-9]*$"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "key": {
+                        "const": "bin:1"
+                      },
+                      "state": {
+                        "enum": [
+                          "observed",
+                          "no_data"
+                        ]
+                      },
+                      "values": {
+                        "type": "object",
+                        "required": [
+                          "from",
+                          "to",
+                          "count"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "from": {
+                            "const": "1000000"
+                          },
+                          "to": {
+                            "const": "5000000"
+                          },
+                          "count": {
+                            "type": "string",
+                            "pattern": "^(0|[1-9][0-9]*)$",
+                            "maxLength": 20,
+                            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "state"
+                    ],
+                    "not": {
+                      "required": [
+                        "cells"
+                      ]
+                    },
+                    "allOf": [
+                      {
+                        "if": {
+                          "properties": {
+                            "state": {
+                              "const": "no_data"
+                            }
+                          }
+                        },
+                        "then": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "const": "0"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "else": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "pattern": "^[1-9][0-9]*$"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "key": {
+                        "const": "bin:2"
+                      },
+                      "state": {
+                        "enum": [
+                          "observed",
+                          "no_data"
+                        ]
+                      },
+                      "values": {
+                        "type": "object",
+                        "required": [
+                          "from",
+                          "to",
+                          "count"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "from": {
+                            "const": "5000000"
+                          },
+                          "to": {
+                            "const": "10000000"
+                          },
+                          "count": {
+                            "type": "string",
+                            "pattern": "^(0|[1-9][0-9]*)$",
+                            "maxLength": 20,
+                            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "state"
+                    ],
+                    "not": {
+                      "required": [
+                        "cells"
+                      ]
+                    },
+                    "allOf": [
+                      {
+                        "if": {
+                          "properties": {
+                            "state": {
+                              "const": "no_data"
+                            }
+                          }
+                        },
+                        "then": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "const": "0"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "else": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "pattern": "^[1-9][0-9]*$"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "key": {
+                        "const": "bin:3"
+                      },
+                      "state": {
+                        "enum": [
+                          "observed",
+                          "no_data"
+                        ]
+                      },
+                      "values": {
+                        "type": "object",
+                        "required": [
+                          "from",
+                          "to",
+                          "count"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "from": {
+                            "const": "10000000"
+                          },
+                          "to": {
+                            "const": "50000000"
+                          },
+                          "count": {
+                            "type": "string",
+                            "pattern": "^(0|[1-9][0-9]*)$",
+                            "maxLength": 20,
+                            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "state"
+                    ],
+                    "not": {
+                      "required": [
+                        "cells"
+                      ]
+                    },
+                    "allOf": [
+                      {
+                        "if": {
+                          "properties": {
+                            "state": {
+                              "const": "no_data"
+                            }
+                          }
+                        },
+                        "then": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "const": "0"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "else": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "pattern": "^[1-9][0-9]*$"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "key": {
+                        "const": "bin:4"
+                      },
+                      "state": {
+                        "enum": [
+                          "observed",
+                          "no_data"
+                        ]
+                      },
+                      "values": {
+                        "type": "object",
+                        "required": [
+                          "from",
+                          "to",
+                          "count"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "from": {
+                            "const": "50000000"
+                          },
+                          "to": {
+                            "const": "100000000"
+                          },
+                          "count": {
+                            "type": "string",
+                            "pattern": "^(0|[1-9][0-9]*)$",
+                            "maxLength": 20,
+                            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "state"
+                    ],
+                    "not": {
+                      "required": [
+                        "cells"
+                      ]
+                    },
+                    "allOf": [
+                      {
+                        "if": {
+                          "properties": {
+                            "state": {
+                              "const": "no_data"
+                            }
+                          }
+                        },
+                        "then": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "const": "0"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "else": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "pattern": "^[1-9][0-9]*$"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "key": {
+                        "const": "bin:5"
+                      },
+                      "state": {
+                        "enum": [
+                          "observed",
+                          "no_data"
+                        ]
+                      },
+                      "values": {
+                        "type": "object",
+                        "required": [
+                          "from",
+                          "to",
+                          "count"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "from": {
+                            "const": "100000000"
+                          },
+                          "to": {
+                            "const": "500000000"
+                          },
+                          "count": {
+                            "type": "string",
+                            "pattern": "^(0|[1-9][0-9]*)$",
+                            "maxLength": 20,
+                            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "state"
+                    ],
+                    "not": {
+                      "required": [
+                        "cells"
+                      ]
+                    },
+                    "allOf": [
+                      {
+                        "if": {
+                          "properties": {
+                            "state": {
+                              "const": "no_data"
+                            }
+                          }
+                        },
+                        "then": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "const": "0"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "else": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "pattern": "^[1-9][0-9]*$"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "key": {
+                        "const": "bin:6"
+                      },
+                      "state": {
+                        "enum": [
+                          "observed",
+                          "no_data"
+                        ]
+                      },
+                      "values": {
+                        "type": "object",
+                        "required": [
+                          "from",
+                          "to",
+                          "count"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "from": {
+                            "const": "500000000"
+                          },
+                          "to": {
+                            "const": "1000000000"
+                          },
+                          "count": {
+                            "type": "string",
+                            "pattern": "^(0|[1-9][0-9]*)$",
+                            "maxLength": 20,
+                            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "state"
+                    ],
+                    "not": {
+                      "required": [
+                        "cells"
+                      ]
+                    },
+                    "allOf": [
+                      {
+                        "if": {
+                          "properties": {
+                            "state": {
+                              "const": "no_data"
+                            }
+                          }
+                        },
+                        "then": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "const": "0"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "else": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "pattern": "^[1-9][0-9]*$"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "key": {
+                        "const": "bin:7"
+                      },
+                      "state": {
+                        "enum": [
+                          "observed",
+                          "no_data"
+                        ]
+                      },
+                      "values": {
+                        "type": "object",
+                        "required": [
+                          "from",
+                          "to",
+                          "count"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "from": {
+                            "const": "1000000000"
+                          },
+                          "to": {
+                            "const": "+inf"
+                          },
+                          "count": {
+                            "type": "string",
+                            "pattern": "^(0|[1-9][0-9]*)$",
+                            "maxLength": 20,
+                            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "state"
+                    ],
+                    "not": {
+                      "required": [
+                        "cells"
+                      ]
+                    },
+                    "allOf": [
+                      {
+                        "if": {
+                          "properties": {
+                            "state": {
+                              "const": "no_data"
+                            }
+                          }
+                        },
+                        "then": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "const": "0"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "else": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "pattern": "^[1-9][0-9]*$"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "scope": {
+                "properties": {
+                  "signal": {
+                    "const": "spans"
+                  },
+                  "selector": {
+                    "required": [
+                      "groupBy"
+                    ],
+                    "properties": {
+                      "signal": {
+                        "const": "spans"
+                      },
+                      "groupBy": {
+                        "const": [
+                          {
+                            "kind": "column",
+                            "key": "duration_bucket"
+                          }
+                        ]
+                      },
+                      "groupTimeSeries": {
+                        "const": false
+                      }
+                    },
+                    "not": {
+                      "anyOf": [
+                        {
+                          "required": [
+                            "numeric"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "numericHistogram"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "completeness": {
+                "properties": {
+                  "aspects": {
+                    "const": [
+                      "bins"
+                    ]
+                  }
+                }
+              },
+              "histogram": {
+                "properties": {
+                  "kind": {
+                    "const": "span-duration"
+                  }
+                }
+              }
+            },
+            "allOf": []
           }
         ],
         "allOf": [
@@ -22844,7 +23681,8 @@
               "string",
               "number",
               "timestamp",
-              "rational"
+              "rational",
+              "histogram-bound"
             ]
           },
           "unit": {
@@ -23646,25 +24484,100 @@
             "$ref": "#/components/schemas/exploration.NumericBinding"
           },
           "binning": {
-            "const": "powers-of-two"
+            "enum": [
+              "powers-of-two",
+              "goo-duration-v1"
+            ]
           },
           "closure": {
             "const": "left-closed-right-open"
           },
+          "kind": {
+            "enum": [
+              "numeric",
+              "span-duration"
+            ]
+          },
           "support": {
             "$ref": "#/components/schemas/exploration.ViewSupport"
+          },
+          "total": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+          },
+          "unit": {
+            "const": "ns"
           }
         },
         "required": [
+          "kind",
           "binning",
-          "binding",
-          "support",
           "closure"
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ViewHistogram",
         "additionalProperties": false,
-        "description": "Exact fixed numeric bins; binding scale converts coefficient edges into human-unit rationals. Runtime checks all boundaries, support sums, scope binding equality and sum(bin counts)==support.valid. Exclusive max+1 is geometry, never an accepted predicate value."
+        "oneOf": [
+          {
+            "required": [
+              "binding",
+              "support"
+            ],
+            "properties": {
+              "kind": {
+                "const": "numeric"
+              },
+              "binning": {
+                "const": "powers-of-two"
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "unit"
+                  ]
+                },
+                {
+                  "required": [
+                    "total"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "unit",
+              "total"
+            ],
+            "properties": {
+              "kind": {
+                "const": "span-duration"
+              },
+              "binning": {
+                "const": "goo-duration-v1"
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "binding"
+                  ]
+                },
+                {
+                  "required": [
+                    "support"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "description": "Tagged fixed-bin distribution. Numeric kind uses binding scale for human-unit rational edges and valid-value support. Span-duration kind uses exact nanosecond bounds, final +inf geometry and a total from the same exhaustive GROUP BY read, with no numeric parsing support. Runtime checks fixed geometry, scope, sums and result-aspect authority. Infinite or max+1 geometry is never an accepted predicate value."
       },
       "exploration.ViewHistogramComparison": {
         "properties": {
@@ -23677,6 +24590,13 @@
                 "properties": {
                   "shape": {
                     "const": "histogram"
+                  },
+                  "histogram": {
+                    "properties": {
+                      "kind": {
+                        "const": "numeric"
+                      }
+                    }
                   },
                   "origin": {
                     "const": "browser-held"
@@ -23709,6 +24629,13 @@
                 "properties": {
                   "shape": {
                     "const": "histogram"
+                  },
+                  "histogram": {
+                    "properties": {
+                      "kind": {
+                        "const": "numeric"
+                      }
+                    }
                   },
                   "origin": {
                     "const": "browser-held"
@@ -23878,10 +24805,40 @@
               }
             ]
           },
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "support": {
             "anyOf": [
               {
                 "$ref": "#/components/schemas/exploration.ViewSupportInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "total": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
               },
               {
                 "type": "null"

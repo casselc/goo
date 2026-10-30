@@ -5,6 +5,7 @@ import {identity as questionIdentity} from './question-session.mjs';
 import {validateRecordQuestion} from './question-protocol.mjs';
 import {validate as validatePredicate} from './predicate-validation.mjs';
 import {edges as coefficientEdges} from './numeric-bins.mjs';
+import {durationRangeFacts} from './histogram-values.mjs';
 
 const bindings=new WeakMap(),own=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
 const record=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
@@ -161,6 +162,7 @@ export function createActionContext(configuration){
    const {entry,rootInfo}=guarded;plain(intent);
    if(entry.slot!=='histogram'||intent.type!=='scope-histogram'||!exactKeys(intent,[...baseKeys,'fromKey','toKey']))return refusal('intent-type','Choose a supplied histogram range');
    const snapshot=entry.snapshot;
+   if(snapshot.histogram?.kind!=='numeric')return refusal('histogram-kind','Numeric planning requires a numeric histogram');
    if(!sameIdentity(intent,snapshot))return refusal('identity-mismatch','Selection belongs to a different snapshot');
    const rows=snapshot.rows,a=rows.findIndex(row=>row.key===intent.fromKey),b=rows.findIndex(row=>row.key===intent.toKey);
    if(a<0||b<0||a>b)return refusal('invalid-membership','Range endpoints must identify ordered supplied histogram bins');
@@ -171,5 +173,21 @@ export function createActionContext(configuration){
    return {ok:true,question,fromBin,toBin,from:edges[fromBin],to:edges[toBin],role:entry.role,slot:entry.slot,epoch:entry.epoch,sourceId:rootInfo.sourceId,sourceInstance:rootInfo.sourceInstance};
   }catch(error){return refusal(error instanceof ScopeActionError?error.code:'invalid-intent',error.message||'Unable to plan this histogram range')}
  }
- return Object.freeze({bind,project,resolve,inspect,histogram,revoke(){roots.clear();sourceEpoch=null;currentSource=null}});
+ function duration(binding,intent){
+  try{
+   const guarded=actionGuard(binding);if(!guarded.ok)return guarded;
+   const {entry}=guarded;plain(intent);
+   if(entry.slot!=='histogram'||intent.type!=='scope-histogram'||!exactKeys(intent,[...baseKeys,'fromKey','toKey']))return refusal('intent-type','Choose a supplied duration range');
+   const snapshot=entry.snapshot;
+   if(snapshot.histogram?.kind!=='span-duration')return refusal('histogram-kind','Duration selection requires captured span-duration bins');
+   if(!sameIdentity(intent,snapshot))return refusal('identity-mismatch','Selection belongs to a different snapshot');
+   const range=durationRangeFacts(snapshot,intent.fromKey,intent.toKey);
+   return Object.freeze({ok:true,question:entry.question,...range});
+  }catch(error){return refusal(error instanceof ScopeActionError?error.code:'invalid-intent',error.message||'Unable to resolve this duration range')}
+ }
+ // Manual exact controls already validate their candidate question. This checks
+ // the captured execution before every effect without inventing bin membership
+ // for arbitrary user-entered duration bounds.
+ function canAct(binding){try{return actionGuard(binding).ok}catch{return false}}
+ return Object.freeze({bind,project,resolve,inspect,histogram,duration,canAct,revoke(){roots.clear();sourceEpoch=null;currentSource=null}});
 }

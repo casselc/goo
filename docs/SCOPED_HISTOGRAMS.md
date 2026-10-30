@@ -2,13 +2,15 @@
 
 270 extends this foundation to [independent aligned comparisons](SCOPED_HISTOGRAM_COMPARISONS.md),
 with explicitly different captured-record and valid-value share denominators.
+271 adds a separate [span-duration descriptor](SCOPED_DURATION_HISTOGRAMS.md);
+numeric descriptors now explicitly require `kind: 'numeric'`.
 
 Fixed numeric histograms now use the same immutable dataset and passive
 `goo-chart` contract as other scoped displays. The existing Go numeric selection
 planner still owns selected/rest questions and comparisons. This cut covers
 `numericHistogram: {binning: 'powers-of-two'}` over checked integer/decimal
-bindings. Native OTel histogram streams and categorical span-duration buckets
-retain their distinct presenters and semantics.
+bindings. Native OTel histogram streams retain distinct semantics; duration count displays
+now use the separate canonical span-duration descriptor.
 
 ## Geometry and support travel together
 

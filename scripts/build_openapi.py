@@ -176,7 +176,7 @@ view_props['dimensions']={'type':'array','minItems':1,'maxItems':2,'uniqueItems'
 view_scope=schemas['exploration.ViewScope']['properties']
 for name in ('id','generation'):view_scope[name]['pattern']='^[a-f0-9]{64}$'
 view_scope['signal']['enum']=['logs','spans'];view_scope['selector']={**ref('exploration.Query'),'description':'Exact applied checked question including environment policy, window, predicates and grouping.'}
-view_field=schemas['exploration.ViewField']['properties'];view_field['key']['enum']=['category','category1','count','fromMs','toMs','from','to']+list(measure_specs);view_field['type']['enum']=['string','number','timestamp','rational']
+view_field=schemas['exploration.ViewField']['properties'];view_field['key']['enum']=['category','category1','count','fromMs','toMs','from','to']+list(measure_specs);view_field['type']['enum']=['string','number','timestamp','rational','histogram-bound']
 schemas['exploration.ViewField']['allOf']=[]
 for key,spec in measure_specs.items():
  unit={'const':'ns'} if spec['family']=='duration' else {'const':'records'} if spec['family']=='span-status' else {'const':'1'} if spec['family']=='ratio' else {'type':'string','minLength':1}
@@ -249,15 +249,33 @@ summary_shape={'not':{'anyOf':[{'required':['dimensions']},{'required':['interva
 view_props['fields']['minItems']=1
 # Fixed numeric distribution geometry uses the same aggregate as validity coverage.
 hist=schemas['exploration.ViewHistogram'];hist['additionalProperties']=False
-hist['properties']['binning']={'const':'powers-of-two'}
+hist['properties']['kind']={'enum':['numeric','span-duration']}
+hist['properties']['binning']={'enum':['powers-of-two','goo-duration-v1']}
+hist['properties']['unit']={'const':'ns'}
+hist['properties']['total']=copy.deepcopy(exact_count)
+hist['oneOf']=[{'required':['binding','support'],'properties':{'kind':{'const':'numeric'},'binning':{'const':'powers-of-two'}},'not':{'anyOf':[{'required':['unit']},{'required':['total']}]}},{'required':['unit','total'],'properties':{'kind':{'const':'span-duration'},'binning':{'const':'goo-duration-v1'}},'not':{'anyOf':[{'required':['binding']},{'required':['support']}]}}]
 hist['properties']['closure']={'const':'left-closed-right-open'}
-hist['description']='Exact fixed numeric bins; binding scale converts coefficient edges into human-unit rationals. Runtime checks all boundaries, support sums, scope binding equality and sum(bin counts)==support.valid. Exclusive max+1 is geometry, never an accepted predicate value.'
+hist['description']='Tagged fixed-bin distribution. Numeric kind uses binding scale for human-unit rational edges and valid-value support. Span-duration kind uses exact nanosecond bounds, final +inf geometry and a total from the same exhaustive GROUP BY read, with no numeric parsing support. Runtime checks fixed geometry, scope, sums and result-aspect authority. Infinite or max+1 geometry is never an accepted predicate value.'
 hist_fields=[{'allOf':[ref('exploration.ViewField'),{'required':['unit'],'properties':{'key':{'const':key},'type':{'const':typ},**({'unit':{'const':'records'}} if key=='count' else {})},'not':{'anyOf':[{'required':['aggregation']},{'required':['nullable']}]}}]} for key,typ in [('from','rational'),('to','rational'),('count','number')]]
 hist_row={'properties':{'key':{'pattern':'^bin:(0|[1-9][0-9]*)$'},'state':{'enum':['observed','no_data']},'values':{'type':'object','required':['from','to','count'],'additionalProperties':False,'properties':{'from':rational_value,'to':rational_value,'count':exact_count}}},'required':['state'],'not':{'required':['cells']},'allOf':[{'if':{'properties':{'state':{'const':'no_data'}}},'then':{'properties':{'values':{'properties':{'count':{'const':'0'}}}}},'else':{'properties':{'values':{'properties':{'count':{'pattern':'^[1-9][0-9]*$'}}}}}}]}
 hist_shape={'required':['histogram'],'not':{'anyOf':[{'required':[k]} for k in ['dimensions','interval','partition']]},'properties':{'shape':{'const':'histogram'},'id':{'pattern':'^[a-f0-9]{64}:bins$'},'fields':{'minItems':3,'maxItems':3,'prefixItems':hist_fields},'rows':{'minItems':65,'maxItems':128,'items':hist_row},'scope':{'properties':{'selector':{'required':['numeric','numericHistogram']}}},'completeness':{'properties':{'aspects':{'const':['bins']}}}},'allOf':[{'if':{'properties':{'histogram':{'properties':{'binding':{'properties':{'type':{'const':'uint64'}}}}}}},'then':{'properties':{'rows':{'minItems':65,'maxItems':65}}},'else':{'properties':{'rows':{'minItems':128,'maxItems':128}}}}]}
 for old_shape in (ranked_shape,time_shape,summary_shape):
  old_shape.setdefault('allOf',[]).append({'not':{'required':['histogram']}})
-view['oneOf']=[ranked_shape,time_shape,summary_shape,hist_shape]
+hist_shape['properties']['histogram']={'properties':{'kind':{'const':'numeric'}}}
+duration_shape=copy.deepcopy(hist_shape)
+duration_shape['properties']['histogram']={'properties':{'kind':{'const':'span-duration'}}}
+duration_shape['properties']['fields']['prefixItems']=[{'allOf':[ref('exploration.ViewField'),{'required':['unit'],'properties':{'key':{'const':key},'type':{'const':'number' if key=='count' else 'histogram-bound'},'unit':{'const':'records' if key=='count' else 'ns'}},'not':{'anyOf':[{'required':['aggregation']},{'required':['nullable']}]}}]} for key in ['from','to','count']]
+duration_edges=['0','1000000','5000000','10000000','50000000','100000000','500000000','1000000000','+inf']
+duration_rows=[]
+for i in range(8):
+ row=copy.deepcopy(hist_row);row['properties']['key']={'const':'bin:'+str(i)}
+ row['properties']['values']['properties']['from']={'const':duration_edges[i]}
+ row['properties']['values']['properties']['to']={'const':duration_edges[i+1]}
+ duration_rows.append(row)
+duration_shape['properties']['rows']={'minItems':8,'maxItems':8,'prefixItems':duration_rows}
+duration_shape['properties']['scope']={'properties':{'signal':{'const':'spans'},'selector':{'required':['groupBy'],'properties':{'signal':{'const':'spans'},'groupBy':{'const':[{'kind':'column','key':'duration_bucket'}]},'groupTimeSeries':{'const':False}},'not':{'anyOf':[{'required':['numeric']},{'required':['numericHistogram']}]}}}}
+duration_shape['allOf']=[]
+view['oneOf']=[ranked_shape,time_shape,summary_shape,hist_shape,duration_shape]
 
 view['allOf']=[{'if':{'properties':{'quality':{'properties':{'extent':{'const':'complete'}},'required':['extent']}},'required':['quality']},'then':{'required':['completeness'],'properties':{'completeness':{'type':'object'},'rows':{'items':{'properties':{'state':{'enum':['observed','no_data']}}}}}},'else':{'properties':{'completeness':{'type':'null'}}}}]
 
@@ -281,7 +299,7 @@ hist_compare['properties']['version']={'const':'goo.histogram-comparison/1'}
 hist_compare['properties']['state']={'enum':['observed','no_data','diagnostic']}
 hist_compare['properties']['reason']={'const':'source-reads-disagree'}
 for side in ('baseline','selection'):
- hist_compare['properties'][side]={'allOf':[ref('exploration.ViewDataset'),{'properties':{'shape':{'const':'histogram'},'origin':{'const':'browser-held'},'quality':{'properties':{'extent':{'const':'unknown'}}}},'not':{'required':['completeness']}}]}
+ hist_compare['properties'][side]={'allOf':[ref('exploration.ViewDataset'),{'properties':{'shape':{'const':'histogram'},'histogram':{'properties':{'kind':{'const':'numeric'}}},'origin':{'const':'browser-held'},'quality':{'properties':{'extent':{'const':'unknown'}}}},'not':{'required':['completeness']}}]}
 hist_compare['allOf']=[{'if':{'properties':{'state':{'const':'diagnostic'}}},'then':{'required':['reason']},'else':{'not':{'required':['reason']}}}]
 hist_compare['description']='Two independent validated held numeric histogram operands. No merged rows, pooled statistic, source proof or shared capture clock. Count, population-share (per-side support.total) and valid-share (per-side support.valid) are separate display choices. Zero denominators are unavailable; no_data is informational and preserves known zero counts and the other side. Diagnostic withholds cross-population share/delta claims. Runtime validates identical binding, signal, environment, geometry and state.'
 for name in ('exploration.Cohort','exploration.CohortInput'):

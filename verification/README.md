@@ -1,5 +1,17 @@
 # Semantic properties and model conformance
 
+## Shared raw-span duration histograms (271)
+
+The [real journey and storyboard](../journeys/271-duration-histogram-storyboard.md) cover exact eight-bin duration geometry, one-record inspection pages versus full group totals, source-bound gestures, manual bounds, explicit selected/rest reads, retired callbacks and Saved display. The 100 generated actual Go DTO → JavaScript cases include duration boundaries/zeroes/extreme counts, malformed tagged families and numeric histogram nonregression. Four producer controls reject unknown/null/duplicate/overflow groups.
+
+```sh
+go test -C verification -run '^(TestHegel(CanonicalDurationHistogram|TaggedNumericHistogram)|TestCanonicalDurationHistogramRefuses)' -count=1 -v .
+./node_modules/.bin/playwright test journeys/271-duration-histogram.spec.js
+GOO_DURATION_HISTOGRAM_LEDGER="$PWD/artifacts/scoped-271/model-trace.json" go test -C verification -run '^TestQuintDurationHistogramObservedBrowserLedger$' -count=1 -v .
+```
+
+Optional `GOO_DURATION_HISTOGRAM_BOMBADIL=1` runs the maintained 35-second external-driver campaign. The final run passed with 491 snapshots across eight phases, three explicit Explore reads and one comparison. The eight-step observed model checks read conservation and explicit selected/rest effects with seven negative controls and a prefix rejection. It does not prove private source or action authority. Keep compact ledgers and maintained frames; remove successful raw campaign directories.
+
 ## Independent histogram comparisons (270)
 
 The [real journey and storyboard](../journeys/270-histogram-comparison-storyboard.md) compare independent captured and valid-value denominators, exact signed endpoints, local scale changes, explicit side-range planning/execution and immutable Saved views. The Hegel lane runs 100 actual Go canonical comparison DTOs through the real JavaScript constructor, validator and model, including empty/no-valid/diagnostic operands and malformed bindings, geometry and accounting.

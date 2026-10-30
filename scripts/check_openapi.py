@@ -263,6 +263,25 @@ def check_histogram_comparisons(spec,path):
     print('Actual Go histogram comparisons valid: observed/no-valid/empty/diagnostic; custody/state negatives pass')
 
 
+def check_duration_histograms(spec,path):
+    fixtures=json.loads(Path(path).read_text());assert set(fixtures)=={'observed','empty'}
+    check=validator(spec,{'$ref':'#/components/schemas/exploration.ViewDataset'})
+    for value in fixtures.values():check.validate(value)
+    for change in [
+        lambda x:x['histogram'].pop('kind'),
+        lambda x:x['histogram'].update(support={'total':'5','valid':'5','missing':'0','empty':'0','invalid':'0'}),
+        lambda x:x['histogram'].update(kind='numeric'),
+        lambda x:x['rows'][0]['values'].update({'from':'+inf'}),
+        lambda x:x['rows'][-1]['values'].update(to=None),
+        lambda x:x['rows'][-1]['values'].update(to='18446744073709551616'),
+        lambda x:x['fields'][0].update(type='rational'),
+        lambda x:x['rows'].pop(),
+    ]:
+        mutant=copy.deepcopy(fixtures['observed']);change(mutant)
+        assert not check.is_valid(mutant),'Malformed actual-Go duration histogram accepted'
+    print('Actual Go duration histograms valid: observed/empty DTOs; tagged-union/open-bound negatives pass')
+
+
 def check_view_measures(spec, ranked, intervals):
     check_view = validator(spec, {'$ref': '#/components/schemas/exploration.ViewDataset'})
     supplied = copy.deepcopy(ranked)
@@ -906,6 +925,7 @@ if __name__ == '__main__':
     parser.add_argument('--histogram-view-observations')
     parser.add_argument('--histogram-comparison-observations')
     parser.add_argument('--evidence-histogram-observations')
+    parser.add_argument('--duration-histogram-observations')
     parser.add_argument('--stock-observations')
     parser.add_argument('--stock-domain-observations')
     parser.add_argument('--pool-signals-observations')
@@ -922,6 +942,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    if args.duration_histogram_observations:
+        check_duration_histograms(spec,args.duration_histogram_observations)
+
     if args.evidence_histogram_observations:
         observed=json.loads(Path(args.evidence_histogram_observations).read_text())
         validator(spec,{'$ref':'#/components/schemas/exploration.EvidenceComparison'}).validate(observed)

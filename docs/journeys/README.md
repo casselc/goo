@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey271](../../journeys/271-duration-histogram-storyboard.md) covers exact
+raw-span duration bins, local manual/brush selection, revoked old controls,
+disjoint selected/rest populations and read-only Saved display.
+
 [Journey270](../../journeys/270-histogram-comparison-storyboard.md) compares exact
 counts, captured-record shares and valid-value shares while retaining independent
 questions and clocks. Local views are source-free; explicit side Open runs its

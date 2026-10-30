@@ -117,7 +117,7 @@ func object(t reflect.Type, input bool) schema {
 			name = f.Name
 		}
 		props[name] = shape(f.Type, input)
-		if !input && !strings.Contains(tag, ",omitempty") {
+		if !input && !strings.Contains(tag, ",omitempty") && !strings.Contains(tag, ",omitzero") {
 			required = append(required, name)
 		}
 	}

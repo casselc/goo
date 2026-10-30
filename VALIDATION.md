@@ -1,5 +1,68 @@
 # Validation record
 
+## Canonical captured span-duration histograms — 271
+
+Raw-span duration counts now share the immutable histogram/table contract with
+numeric histograms. The tagged duration descriptor uses exact nanosecond bounds,
+an explicit `+inf` tail and a checked total from the same exhaustive group read.
+No numeric parsing support or extra source read is introduced. Unknown/incoherent
+groups withhold the DTO; only exhaustive absence supplies known zeros. Current
+numeric fixtures and API contracts require `kind: numeric` directly.
+
+Duration-count Distribution removes duplicate bucket facets. Visible compact
+labels identify all eight unequal ranges at 390px; titles/table disclosure retain
+exact bounds. Captured source/role/epoch guards protect both brush actions and
+manual exact bounds. Activity scheduling pause preserves the captured selection;
+replacement, hidden/disposed owners and superseded reads revoke it. Saved duration
+baselines preserve per-bin latency/status aggregates and remain read-only.
+See [contract/diagram](docs/SCOPED_DURATION_HISTOGRAMS.md),
+[storyboard](journeys/271-duration-histogram-storyboard.md) and
+[next native proposal](docs/NATIVE_HISTOGRAM_ADOPTION_272.md).
+
+Validation:
+
+- Full root Go suite passes. Final frontend suite passes 777 tests with no skips;
+  focused duration action tests cover open tail, full/known-zero ranges, forged
+  identity, held/baseline/incoherent inputs and stale/revoked manual action gates.
+  Eleven duration contract/format tests and five baseline tests cover exact data,
+  family refusal, no invented parse support and retained summary/status metadata.
+- Generated 567 Go types and 589 OpenAPI schemas pass 96 operations, 429 response
+  fixtures, 159 admitted requests and 28 mux refusals. Actual Go observed/empty
+  duration DTOs, tagged numeric DTOs/comparisons and malformed union/open-bound
+  controls pass schema validation. A physical-source regression confirms one group
+  read among the existing four reads; no extra fetch is added.
+- Hegel runs 100 cases through actual Go source DTOs and the real JS contract:
+  60 duration, 20 malformed and 20 tagged numeric regressions. Cases cover exact
+  edges, 1ns, sparse and empty groups, all contiguous ranges and uint64 extremes.
+  Four source controls reject null/unknown/duplicate/overflowing groups. Four
+  existing canonical histogram property contracts also pass.
+- Chromium component/adapter checks pass canonical duration labels/units/tail,
+  private completeness versus held/SSR data, 390px containment, manual brush
+  withdrawal and old owner refusal. Existing numeric histogram and comparison
+  control checks pass, including async replacement and independent denominators.
+- The real twelve-span OTLP → ClickHouse → isolated Go journey passes: eleven
+  parent spans versus one displayed row, exact eight-bin conservation, a manual
+  seven-millisecond child of one span and disjoint selected/rest populations of
+  two and nine. Local changes/staging read nothing; explicit execution reads.
+  Same-basis rerun refuses retained old chart/tray callbacks. Saved 390px text-ink
+  checks and three refreshed documentation frames pass.
+- The actual eight-step browser Quint trace passes; seven altered traces and an
+  unfinished prefix fail. The 35-second Bombadil campaign passes 491 snapshots
+  across all eight phases, with three Explore reads, one comparison and no
+  invariant violation. These model facts do not claim private source authority
+  or atomic upstream reads. Compact trace/ledger/summary retained; raw campaign
+  data and disposable capture store removed.
+- Existing real Activity155 and latency-selection153 journeys pass against the
+  final image, including their 25-second Bombadil campaigns and observed Quint
+  ledgers. Returning from the child keeps source actions disabled and focuses
+  Run; explicit rerun restores current selection ownership. Heatmap121 and its
+  passive reverse-drag/keyboard companion also pass. Updated frames are retained.
+- Compose configuration and the CA-aware single-Go build pass. Deployed image:
+  `sha256:f32c09f1ca20fb39a114940f122e6555b02ded25033aaf717006b2c75102837e`.
+  All 16 changed/new embedded UI/API assets match source bytes, including the
+  public component route and new shared histogram helpers. Telemetry/XTDB volumes
+  remain intact. Old unused build cache was pruned.
+
 ## Independent canonical histogram comparisons — 270
 
 Aligned histograms now consume `goo.histogram-comparison/1`: two immutable

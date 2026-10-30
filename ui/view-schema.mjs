@@ -32,7 +32,7 @@ export function rationalCoordinate(value){
  const mantissa=Number('0.'+n.slice(0,16))/Number('0.'+d.slice(0,16)),coordinate=Number(`${numerator<0n?'-':''}${mantissa}e${n.length-d.length}`);
  return Number.isFinite(coordinate)&&coordinate!==0?coordinate:null;
 }
-function typed(value,field){return field.type==='number'?numeric(value):field.type==='rational'?rationalParts(value)!==null:field.type==='timestamp'?timestamp(value):typeof value==='string'&&value.length<=1024}
+function typed(value,field){return field.type==='number'?numeric(value):field.type==='rational'?rationalParts(value)!==null:field.type==='timestamp'?timestamp(value):field.type==='histogram-bound'?value==='+inf'||rationalParts(value)!==null:typeof value==='string'&&value.length<=1024}
 function aggregationValid(field){
  const a=field.aggregation;if(!record(a)||!numericType(field)||!text(field.unit))return false;
  if(a.family==='span-status')return Object.keys(a).length===3&&a.kind==='count'&&a.method==='exact'&&field.type==='number'&&field.unit==='records';
@@ -59,7 +59,8 @@ export function validateSnapshot(s){
  if(!record(s.scope)||!text(s.scope.id)||!(text(s.scope.generation)||Number.isSafeInteger(s.scope.generation)&&s.scope.generation>=0)||!member(s.scope.signal,['spans','logs'])||!record(s.scope.selector))reasons.push('A checked scope identity, generation, signal and selector are required');
  const fields=new Map();
  if(!Array.isArray(s.fields)||!s.fields.length||s.fields.length>64)reasons.push('Dataset requires 1–64 fields');
- else for(const f of s.fields){if(!record(f)||!text(f.key)||!text(f.label)||!member(f.type,['string','number','timestamp','rational'])||fields.has(f.key)||f.unit!==undefined&&!text(f.unit)||f.type==='timestamp'&&f.unit!=='ms'||f.nullable!==undefined&&typeof f.nullable!=='boolean')reasons.push('Invalid or duplicate field');else {fields.set(f.key,f);if(f.aggregation!==undefined&&!aggregationValid(f))reasons.push('Invalid aggregation method, family, type or unit')}}
+ else for(const f of s.fields){if(!record(f)||!text(f.key)||!text(f.label)||!member(f.type,['string','number','timestamp','rational','histogram-bound'])||fields.has(f.key)||f.unit!==undefined&&!text(f.unit)||f.type==='timestamp'&&f.unit!=='ms'||f.nullable!==undefined&&typeof f.nullable!=='boolean')reasons.push('Invalid or duplicate field');else {fields.set(f.key,f);if(f.aggregation!==undefined&&!aggregationValid(f))reasons.push('Invalid aggregation method, family, type or unit')}}
+ if([...fields.values()].some(field=>field.type==='histogram-bound'&&(s.shape!=='histogram'||s.histogram?.kind!=='span-duration'||!['from','to'].includes(field.key))))reasons.push('Histogram bounds require declared span-duration bin endpoints');
  if(s.dimensions!==undefined&&(!Array.isArray(s.dimensions)||!s.dimensions.length||s.shape!=='ranked'||new Set(s.dimensions).size!==s.dimensions.length||s.dimensions.some(key=>typeof key!=='string'||!fields.has(key)||fields.get(key)?.aggregation!==undefined)))reasons.push('Ranked dimensions must be distinct declared field keys');
  if(!Array.isArray(s.rows)||s.rows.length>10000)reasons.push('Dataset requires at most 10000 supplied rows');
  else {const keys=new Set();for(const row of s.rows){if(!record(row)||!text(row.key)||keys.has(row.key)||!record(row.values)){reasons.push('Invalid or duplicate stable row key');continue}keys.add(row.key);for(const [key,value] of Object.entries(row.values)){const field=fields.get(key);if(!field){reasons.push(`Undeclared field ${key}`);continue}if(value===null){if(field.nullable!==true)reasons.push('Null values require an explicitly nullable field');continue}if(!typed(value,field))reasons.push(`Invalid ${field.type} value for ${key}`)}}}
@@ -307,16 +308,26 @@ export function histogramEdges(binding){
  const denominator=10n**BigInt(scale);
  return edges.map(n=>{const divisor=gcd(n,denominator),a=n/divisor,b=denominator/divisor;return b===1n?a.toString():a+'/'+b});
 }
+export const durationHistogramEdges=Object.freeze(['0','1000000','5000000','10000000','50000000','100000000','500000000','1000000000','+inf']);
 function validateHistogram(s,fields,reasons){
  const h=s.histogram;
  if(s.dimensions!==undefined||s.interval!==undefined||s.partition!==undefined)reasons.push('Histogram datasets cannot declare group or time geometry');
- if(!record(h)||Object.keys(h).length!==4||h.binning!=='powers-of-two'||h.closure!=='left-closed-right-open'||!record(h.support)){reasons.push('A fixed half-open numeric histogram and parse support are required');return}
- let edges;try{edges=histogramEdges(h.binding)}catch(error){reasons.push(error.message);return}
- if(fields.size!==3||['from','to'].some(key=>fields.get(key)?.type!=='rational'||fields.get(key)?.unit!==h.binding.unit||fields.get(key)?.aggregation||fields.get(key)?.nullable)||fields.get('count')?.type!=='number'||fields.get('count')?.unit!=='records'||fields.get('count')?.aggregation||fields.get('count')?.nullable)reasons.push('Histogram fields require exact bin edges and captured record counts');
- const keys=['total','valid','missing','empty','invalid'];
- if(Object.keys(h.support).length!==5||keys.some(k=>!uint64(h.support[k]))){reasons.push('Histogram support requires exact captured counts');return}
- const support=Object.fromEntries(keys.map(k=>[k,BigInt(h.support[k])]));
- if(support.total!==support.valid+support.missing+support.empty+support.invalid)reasons.push('Histogram support must partition captured records');
+ if(!record(h)||!member(h.kind,['numeric','span-duration'])||h.closure!=='left-closed-right-open'){reasons.push('A supported tagged half-open histogram is required');return}
+ let edges,unit,endpointType,target;
+ if(h.kind==='numeric'){
+  if(Object.keys(h).length!==5||h.binning!=='powers-of-two'||!record(h.support)){reasons.push('A fixed half-open numeric histogram and parse support are required');return}
+  try{edges=histogramEdges(h.binding)}catch(error){reasons.push(error.message);return}
+  unit=h.binding.unit;endpointType='rational';
+  const keys=['total','valid','missing','empty','invalid'];
+  if(Object.keys(h.support).length!==5||keys.some(k=>!uint64(h.support[k]))){reasons.push('Histogram support requires exact captured counts');return}
+  const support=Object.fromEntries(keys.map(k=>[k,BigInt(h.support[k])]));
+  if(support.total!==support.valid+support.missing+support.empty+support.invalid)reasons.push('Histogram support must partition captured records');
+  target=support.valid;
+ }else{
+  if(Object.keys(h).length!==5||h.binning!=='goo-duration-v1'||h.unit!=='ns'||!uint64(h.total)||s.scope?.signal!=='spans'){reasons.push('A fixed captured-span duration histogram and exact total are required');return}
+  edges=durationHistogramEdges;unit='ns';endpointType='histogram-bound';target=BigInt(h.total);
+ }
+ if(fields.size!==3||['from','to'].some(key=>fields.get(key)?.type!==endpointType||fields.get(key)?.unit!==unit||fields.get(key)?.aggregation||fields.get(key)?.nullable)||fields.get('count')?.type!=='number'||fields.get('count')?.unit!=='records'||fields.get('count')?.aggregation||fields.get('count')?.nullable)reasons.push('Histogram fields require exact bin edges and captured record counts');
  if(!Array.isArray(s.rows)||s.rows.length!==edges.length-1){reasons.push('Histogram requires every fixed bin including known empty bins');return}
  let sum=0n;
  for(const [i,row] of s.rows.entries()){
@@ -324,11 +335,12 @@ function validateHistogram(s,fields,reasons){
   const count=BigInt(row.values.count);sum+=count;
   if(row.state!==(count===0n?'no_data':'observed'))reasons.push('Histogram bin state must distinguish known zero from positive captured counts');
  }
- if(sum!==support.valid)reasons.push('Histogram bin counts must equal valid parsed records');
+ if(sum!==target)reasons.push(h.kind==='numeric'?'Histogram bin counts must equal valid parsed records':'Duration histogram counts must partition captured spans');
  if(!member(s.quality?.value,['recorded','derived']))reasons.push('Histogram counts require known captured values');
 }
+
 export function histogramIntent(snapshot,fromKey,toKey=fromKey){
- const c=context(snapshot);if(snapshot.shape!=='histogram')throw TypeError('Histogram range requires a fixed numeric histogram');
+ const c=context(snapshot);if(snapshot.shape!=='histogram')throw TypeError('Histogram range requires a fixed histogram');
  const from=snapshot.rows.findIndex(row=>row.key===fromKey),to=snapshot.rows.findIndex(row=>row.key===toKey);
  if(from<0||to<from)throw TypeError('Histogram range requires ordered supplied bin keys');
  return {type:'scope-histogram',...c,fromKey,toKey};

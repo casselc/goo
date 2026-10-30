@@ -1,10 +1,18 @@
 # Known issues and gaps
 
+271 adopts [raw-span duration histograms](SCOPED_DURATION_HISTOGRAMS.md) in
+count Distribution and Activity latency. The same exhaustive group read supplies
+exact bins and total; manual and brush actions retain captured ownership.
+Native OTel histograms still require observation-grain, right-closed bucket and
+reset/gap/temporality contracts. Duration comparisons and non-count specialized
+presenters remain explicit owners. No native-histogram or editor expansion is
+claimed.
+
 270 adopts [aligned numeric histogram comparisons](SCOPED_HISTOGRAM_COMPARISONS.md)
 using independent held operands and explicit count/captured-share/valid-share
 scales. Empty denominators and diagnostic comparisons retain their limits;
 captured metadata does not grant source completeness. Explicit side continuation
-checks the captured pair around async loading/planning. Native OTel/duration
+checks the captured pair around async loading/planning. Native OTel
 histogram families and other histogram-query group/time/summary adoption remain.
 
 269 adopts [fixed numeric histograms](SCOPED_HISTOGRAMS.md) through canonical

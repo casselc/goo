@@ -12479,14 +12479,22 @@
       "closure": {
         "type": "string"
       },
+      "kind": {
+        "type": "string"
+      },
       "support": {
         "$ref": "#/components/schemas/exploration.ViewSupport"
+      },
+      "total": {
+        "type": "string"
+      },
+      "unit": {
+        "type": "string"
       }
     },
     "required": [
+      "kind",
       "binning",
-      "binding",
-      "support",
       "closure"
     ],
     "type": "object",
@@ -12637,10 +12645,40 @@
           }
         ]
       },
+      "kind": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "support": {
         "anyOf": [
           {
             "$ref": "#/components/schemas/exploration.ViewSupportInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "total": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "unit": {
+        "anyOf": [
+          {
+            "type": "string"
           },
           {
             "type": "null"

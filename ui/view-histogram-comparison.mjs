@@ -9,7 +9,7 @@ export function validateHistogramComparison(value){
  if(!record(value)||value.version!=='goo.histogram-comparison/1'||!['observed','no_data','diagnostic'].includes(value.state))return {ok:false,reasons:['A supported histogram comparison and state are required']};
  if(Object.keys(value).some(key=>!['version','state','reason','baseline','selection'].includes(key)))reasons.push('Unknown histogram comparison option');
  if(value.state==='diagnostic'?value.reason!=='source-reads-disagree':value.reason!==undefined)reasons.push('Diagnostic comparisons require the source-reads-disagree reason');
- for(const side of ['baseline','selection']){const checked=validateSnapshot(value[side]);if(!checked.ok)reasons.push(...checked.reasons.map(reason=>side+': '+reason));if(value[side]?.shape!=='histogram')reasons.push(side+': a full fixed numeric histogram is required')}
+ for(const side of ['baseline','selection']){const checked=validateSnapshot(value[side]);if(!checked.ok)reasons.push(...checked.reasons.map(reason=>side+': '+reason));if(value[side]?.shape!=='histogram'||value[side]?.histogram?.kind!=='numeric')reasons.push(side+': a full fixed numeric histogram is required')}
  if(reasons.length)return {ok:false,reasons};
  const a=value.baseline,b=value.selection,aq=a.scope.selector,bq=b.scope.selector;
  for(const side of [a,b]){try{const q=side.scope.selector;validateRecordQuestion(q);if(q.signal!==side.scope.signal||q.numericHistogram?.binning!=='powers-of-two'||!q.numeric||binding(q.numeric)!==binding(side.histogram.binding))reasons.push('Histogram operand scope must match its numeric binding and requested bins')}catch{reasons.push('Histogram operand requires a checked numeric histogram question')}}

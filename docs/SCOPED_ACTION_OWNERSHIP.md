@@ -1,5 +1,10 @@
 # Scoped action ownership — 266
 
+271 adds `context.duration(binding, intent)` for exact supplied duration ranges
+and `context.canAct(binding)` for app-owned manual bounds. Both check the same
+captured source/role/epoch; arbitrary manual bounds do not claim bin membership.
+See [duration contract](SCOPED_DURATION_HISTOGRAMS.md).
+
 269 extends this ownership model to [fixed numeric histogram ranges](SCOPED_HISTOGRAMS.md).
 `context.histogram(binding, intent)` resolves ordered supplied keys to captured
 coefficient geometry for the Go planner. It does not construct threshold

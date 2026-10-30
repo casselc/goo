@@ -331,6 +331,9 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 	r.TimeDataset = timeViewDataset(r, plan.TimeSeries != "")
 	r.SummaryDataset = summaryViewDataset(r, true)
 	r.HistogramDataset = histogramViewDataset(r)
+	if r.HistogramDataset == nil {
+		r.HistogramDataset = durationHistogramViewDataset(r, plan.Groups != "")
+	}
 	return r, nil
 }
 

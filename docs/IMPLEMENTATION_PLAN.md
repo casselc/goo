@@ -8,7 +8,8 @@
 > breakdown, interval and summary views; status comparisons retain percentage points.
 > 269 adds [fixed numeric histogram adoption](SCOPED_HISTOGRAMS.md), shared
 > displays and H1 range planning. 270 delivers [aligned comparison operands](SCOPED_HISTOGRAM_COMPARISONS.md)
-> and captured side continuation. Next: remaining native/duration histogram and
+> and captured side continuation. 271 delivers [raw-span duration histograms](SCOPED_DURATION_HISTOGRAMS.md)
+> with exact open-tail geometry and captured action guards. Next: native OTel histograms and
 > specialized V0 families before renderer/editor expansion.
 > [Pit-of-success review](MODEL_PIT_OF_SUCCESS_264.md) gates further renderer/editor expansion.
 
