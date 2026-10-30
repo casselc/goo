@@ -3593,6 +3593,16 @@
       "field": {
         "$ref": "#/components/schemas/exploration.Field"
       },
+      "histogramComparison": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ViewHistogramComparison"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "measures": {
         "anyOf": [
           {
@@ -3713,6 +3723,23 @@
         "anyOf": [
           {
             "$ref": "#/components/schemas/exploration.FieldInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "histogramComparison": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewHistogramComparisonInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           {
             "type": "null"
@@ -5010,6 +5037,16 @@
           }
         ]
       },
+      "histogramComparison": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ViewHistogramComparison"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "measures": {
         "anyOf": [
           {
@@ -5147,6 +5184,23 @@
               ]
             },
             "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "histogramComparison": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewHistogramComparisonInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           {
             "type": "null"
@@ -12437,6 +12491,118 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.ViewHistogram"
+  },
+  "exploration.ViewHistogramComparison": {
+    "properties": {
+      "baseline": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ViewDataset"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "reason": {
+        "type": "string"
+      },
+      "selection": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ViewDataset"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "state": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "baseline",
+      "selection",
+      "state"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ViewHistogramComparison"
+  },
+  "exploration.ViewHistogramComparisonInput": {
+    "additionalProperties": false,
+    "properties": {
+      "baseline": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewDatasetInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "reason": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "selection": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewDatasetInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "state": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ViewHistogramComparison"
   },
   "exploration.ViewHistogramInput": {
     "additionalProperties": false,

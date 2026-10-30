@@ -5,54 +5,12 @@ const {
   expect
 } = require('@playwright/test');
 const base = process.env.GOO_QUERY_URL || 'http://127.0.0.1:8088';
-function ratio(n, d) {
-  let a = BigInt(n) * 100n,
-    b = BigInt(d),
-    x = a,
-    y = b;
-  while (y) [x, y] = [y, x % y];
-  return b / x === 1n ? String(a / x) : a / x + '/' + b / x;
-}
-function aligned(mode = 'count') {
-  const edges = [];
-  for (let i = 63; i >= 0; i--) edges.push(-(1n << BigInt(i)));
-  edges.push(0n);
-  for (let i = 0; i <= 63; i++) edges.push(1n << BigInt(i));
-  return {
-    type: 'decimal64',
-    scale: 2,
-    unit: 'USD',
-    valid: ['4', '4'],
-    mode,
-    interactive: true,
-    distribution: {
-      state: 'comparable',
-      binning: 'powers-of-two',
-      denominator: 'population-count',
-      baselineCount: '8',
-      selectionCount: '10',
-      bins: edges.slice(0, -1).map((from, i) => {
-        const a = {
-            64: 1,
-            65: 1,
-            72: 2
-          }[i] || 0,
-          b = {
-            64: 1,
-            65: 2,
-            73: 1
-          }[i] || 0;
-        return {
-          from: String(from),
-          to: String(edges[i + 1]),
-          baselineCount: String(a),
-          selectionCount: String(b),
-          baselinePercent: ratio(a, 8),
-          selectionPercent: ratio(b, 10)
-        };
-      })
-    }
-  };
+function aligned(){
+ const binding={field:{kind:'attribute',key:'charge.amount'},type:'decimal64',scale:2,unit:'USD',parse:'canonical-decimal'},edges=[];
+ for(let i=63;i>=0;i--)edges.push(-(1n<<BigInt(i)));edges.push(0n);for(let i=0;i<=63;i++)edges.push(1n<<BigInt(i));
+ const human=n=>{let a=n<0n?-n:n,b=100n;while(b)[a,b]=[b,a%b];return 100n/a===1n?String(n/a):n/a+'/'+(100n/a)};
+ const side=(id,total,occupied)=>({version:'goo.dataset/1',id,revision:id,origin:'browser-held',shape:'histogram',scope:{id,generation:id,signal:'logs',selector:{signal:'logs',environment:'synthetic',fromMs:1,toMs:1000,numeric:binding,numericHistogram:{binning:'powers-of-two'}}},quality:{extent:'unknown',basis:'captured-query',value:'recorded',sampling:'unknown',freshness:'fixed'},fields:[{key:'from',label:'From',type:'rational',unit:'USD'},{key:'to',label:'To',type:'rational',unit:'USD'},{key:'count',label:'Captured records',type:'number',unit:'records'}],histogram:{binning:'powers-of-two',binding,closure:'left-closed-right-open',support:{total,valid:'4',missing:String(BigInt(total)-4n),empty:'0',invalid:'0'}},rows:edges.slice(0,-1).map((from,i)=>({key:'bin:'+i,values:{from:human(from),to:human(edges[i+1]),count:String(occupied[i]||0)},state:occupied[i]?'observed':'no_data'}))});
+ return {version:'goo.histogram-comparison/1',state:'observed',baseline:side('baseline','8',{64:1,65:1,72:2}),selection:side('selection','10',{64:1,65:2,73:1})};
 }
 function tiny() {
   const summary = n => ({
@@ -101,21 +59,21 @@ test('180 passive decimal components preserve scaled SSR and detached SPA labels
   page.on('pageerror', e => errors.push(e.message));
   const metric = require('../ui/numeric-comparison.mjs').model(tiny());
   expect(metric).not.toBeNull();
-  const html = '<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/components.css"><link rel="stylesheet" href="/product.css"><link rel="stylesheet" href="/time-bars.css"><link rel="stylesheet" href="/numeric-distribution.css"><style>body{margin:16px;background:#10141c;color:#dce7f5;font:14px/1.5 system-ui;max-width:900px}goo-aligned-histogram,goo-metric-comparison{display:block}</style><h1>Supplied decimal displays</h1><p>Synthetic SSR/SPA fixture. No application runtime or telemetry source.</p><goo-aligned-histogram id="ssr" data="' + escape(JSON.stringify(aligned())) + '"></goo-aligned-histogram><goo-aligned-histogram id="spa"></goo-aligned-histogram><goo-metric-comparison id="metric" data="' + escape(JSON.stringify(metric)) + '"></goo-metric-comparison><div id="detached"></div>';
+  const html = '<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/components.css"><link rel="stylesheet" href="/product.css"><link rel="stylesheet" href="/time-bars.css"><link rel="stylesheet" href="/numeric-distribution.css"><style>body{margin:16px;background:#10141c;color:#dce7f5;font:14px/1.5 system-ui;max-width:900px}goo-aligned-histogram,goo-metric-comparison{display:block}</style><h1>Supplied decimal displays</h1><p>Synthetic SSR/SPA fixture. No application runtime or telemetry source.</p><goo-aligned-histogram id="ssr" comparison="' + escape(JSON.stringify(aligned())) + '"></goo-aligned-histogram><goo-aligned-histogram id="spa"></goo-aligned-histogram><goo-metric-comparison id="metric" data="' + escape(JSON.stringify(metric)) + '"></goo-metric-comparison><div id="detached"></div>';
   await page.route(base + '/decimal-components-standalone', r => r.fulfill({
     contentType: 'text/html; charset=utf-8',
     body: html
   }));
   await page.goto(base + '/decimal-components-standalone');
-  await page.locator('#spa').evaluate((e, data) => e.data = data, aligned('share'));
+  await page.locator('#spa').evaluate((e, data) => {e.comparison=data;e.display={scale:'population-share'}}, aligned());
   for (const script of ['numeric-measures.mjs', 'time-bars.mjs', 'numeric-distribution.mjs', 'aligned-histogram.mjs', 'comparison-visual.mjs', 'numeric-comparison.mjs']) await page.addScriptTag({type:'module',url: base + '/' + script
   });
   for (const id of ['ssr', 'spa']) {
     await expect(page.locator('#' + id + ' goo-time-bars')).toHaveCount(2);
     const labels = await page.locator('#' + id + ' goo-time-bars').evaluateAll(plots => plots.map(e => e.data));
-    expect(labels[0].points[0].key).toBe('64');
-    expect(labels[0].points[0].label).toContain('[0.00, 0.01) USD');
-    expect(labels[1].points[0].label).toContain('[0.00, 0.01) USD');
+    expect(labels[0].points[0].key).toBe('bin:64');
+    expect(labels[0].points[0].label).toContain('[0, 0.01) USD');
+    expect(labels[1].points[0].label).toContain('[0, 0.01) USD');
     expect(labels[0].points.map(p => p.key)).toEqual(labels[1].points.map(p => p.key));
     if (id === 'spa') {
       expect(labels[0].ceiling).toBe('100');
@@ -144,16 +102,13 @@ test('180 passive decimal components preserve scaled SSR and detached SPA labels
     e.remove();
     document.body.append(e);
   });
-  const bar = page.locator('#spa [data-side=selection] button[data-key="64"]');
+  const bar = page.locator('#spa [data-side=selection] button[data-key="bin:64"]');
   await bar.focus();
   await page.keyboard.press('Space');
   await page.keyboard.press('Shift+ArrowRight');
   await page.keyboard.press('Enter');
-  expect(await page.evaluate(() => window.decimalRanges)).toEqual([{
-    side: 'selection',
-    fromBin: 64,
-    toBin: 66
-  }]);
+  const range=await page.evaluate(()=>window.decimalRanges);
+  expect(range).toHaveLength(1);expect(range[0].side).toBe('selection');expect(range[0].intent).toMatchObject({type:'scope-histogram',fromKey:'bin:64',toKey:'bin:65'});
   await page.setViewportSize({
     width: 390,
     height: 1800

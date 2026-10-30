@@ -89,17 +89,13 @@ type dcLiveDOMBin struct {
 	Counts, Shares []string
 }
 type dcLiveDOM struct {
-	Data struct {
-		Distribution     exploration.NumericDistributionComparison
-		Type, Unit, Mode string
-		Valid            []string
-		Interactive      bool
-	}
-	Model struct {
-		State, Mode, Ceiling string
-		All, Points          []dcLiveDOMBin
-		Totals               []string
-		Empty, Interactive   bool
+	Comparison exploration.ViewHistogramComparison
+	Display    struct{ Scale string }
+	Model      struct {
+		State, Scale, Ceiling string
+		All, Points           []dcLiveDOMBin
+		Denominators          []string
+		Empty, Diagnostic     bool
 	}
 	Sides []struct {
 		Ceiling, ValueFormat string
@@ -247,6 +243,17 @@ func dcLiveCohortOf(r exploration.Result) exploration.Cohort {
 	c := ncLiveCohortOf(r)
 	c.NumericHistogram = r.NumericHistogram
 	return c
+}
+
+// A held operand may omit its descriptive clock. If carried, it must be the
+// actual source result clock; receipt timestamps cannot replace it.
+func dcLiveSameCapturedCohort(got, want exploration.Cohort, sourceClock string) bool {
+	if got.CapturedAt != "" && got.CapturedAt != sourceClock {
+		return false
+	}
+	got.CapturedAt = ""
+	want.CapturedAt = ""
+	return reflect.DeepEqual(got, want)
 }
 func dcLiveCohort(c exploration.Cohort, l dcLiveLedger) bool {
 	rows, e := dcLiveRows(c.Question, l)
@@ -405,7 +412,7 @@ func dcLivePairCheck(request exploration.ComparisonRequest, response exploration
 	want := ncLiveMeasure(*a.Question.Numeric, a.Numeric, z.Numeric, unknown)
 	d := dcLiveDistribution(a, z)
 	want.Distribution = &d
-	if !reflect.DeepEqual(*response.Measures.Numeric, want) {
+	if !reflect.DeepEqual(*response.Measures.Numeric, want) || !dcLiveHistogramComparison(response.HistogramComparison, request) {
 		return false
 	}
 	if state != "ok" || aggregate {
@@ -459,7 +466,7 @@ func dcLiveActualPair(p dcLivePair, l dcLiveLedger) bool {
 	if p.Kind == "unknown" {
 		a.State = "changed_between_reads"
 	}
-	return dcLiveResult(p.Baseline, l) && dcLiveResult(p.Selection, l) && reflect.DeepEqual(p.Request.Baseline, a) && reflect.DeepEqual(p.Request.Selection, dcLiveCohortOf(p.Selection)) && dcLivePairCheck(p.Request, p.Response, l)
+	return dcLiveResult(p.Baseline, l) && dcLiveResult(p.Selection, l) && dcLiveSameCapturedCohort(p.Request.Baseline, a, p.Baseline.CapturedAt) && dcLiveSameCapturedCohort(p.Request.Selection, dcLiveCohortOf(p.Selection), p.Selection.CapturedAt) && dcLivePairCheck(p.Request, p.Response, l)
 }
 func dcLivePlanScope(p dcLivePlan, l dcLiveLedger) bool {
 	in, s := p.Request, p.Response
@@ -566,18 +573,89 @@ func dcLivePlanCheck(p dcLivePlan, l dcLiveLedger) bool {
 	return dcLivePlanScope(p, l) && dcLiveResult(p.Result, l) && nhLiveSameQuery(p.Result.Question, p.Response.Selected)
 }
 
+func dcLiveHistogramOperand(d *exploration.ViewDataset, c exploration.Cohort, local ...bool) bool {
+	identity := d != nil && len(d.Revision) == 64
+	if len(local) > 0 && local[0] && d != nil {
+		ordinal, e := strconv.ParseUint(strings.TrimPrefix(d.Revision, "goo.local/"), 10, 64)
+		identity = e == nil && ordinal > 0 && d.ID == d.Revision && d.Revision == "goo.local/"+strconv.FormatUint(ordinal, 10)
+	}
+	if d == nil || d.Histogram == nil || d.Version != "goo.dataset/1" || d.Shape != "histogram" || d.Origin != "browser-held" || d.Quality.Extent != "unknown" || d.Completeness != nil || d.Partition != nil || d.CapturedAt != c.CapturedAt || d.SourceBasis != c.Basis || !identity || !nhLiveSameQuery(c.Question, func() exploration.Query { var q exploration.Query; _ = json.Unmarshal(d.Scope.Selector, &q); return q }()) {
+		return false
+	}
+	h := d.Histogram
+	n := c.Numeric
+	if h.Binning != "powers-of-two" || h.Closure != "left-closed-right-open" || h.Binding != *c.Question.Numeric || h.Support != (exploration.ViewSupport{Total: n.Count, Valid: n.Valid, Missing: n.Missing, Empty: n.Empty, Invalid: n.Invalid}) || len(d.Rows) != len(c.NumericHistogram.Bins) || len(d.Fields) != 3 {
+		return false
+	}
+	for i, key := range []string{"from", "to", "count"} {
+		f := d.Fields[i]
+		typ, unit := "rational", c.Question.Numeric.Unit
+		if key == "count" {
+			typ, unit = "number", "records"
+		}
+		if f.Key != key || f.Type != typ || f.Unit != unit || f.Nullable || f.Aggregation != nil {
+			return false
+		}
+	}
+	for i, bin := range c.NumericHistogram.Bins {
+		row := d.Rows[i]
+		state := "observed"
+		if bin.Count == "0" {
+			state = "no_data"
+		}
+		if row.Key != "bin:"+strconv.Itoa(i) || row.State != state || len(row.Values) != 3 || len(row.Cells) != 0 {
+			return false
+		}
+		for key, want := range map[string]string{"from": bin.From, "to": bin.To, "count": bin.Count} {
+			if row.Values[key] == nil || *row.Values[key] != want {
+				return false
+			}
+		}
+	}
+	return true
+}
+func dcLiveHistogramComparison(c *exploration.ViewHistogramComparison, q exploration.ComparisonRequest, local ...bool) bool {
+	if c == nil || c.Version != "goo.histogram-comparison/1" || !dcLiveHistogramOperand(c.Baseline, q.Baseline, local...) || !dcLiveHistogramOperand(c.Selection, q.Selection, local...) {
+		return false
+	}
+	state, reason := "observed", ""
+	if q.Baseline.State == "changed_between_reads" || q.Selection.State == "changed_between_reads" {
+		state, reason = "diagnostic", "source-reads-disagree"
+	} else if q.Baseline.Count == "0" || q.Selection.Count == "0" {
+		state = "no_data"
+	}
+	return c.State == state && c.Reason == reason
+}
 func dcLiveDOMCheck(view dcLiveDOM, request exploration.ComparisonRequest, mode string, interactive bool) bool {
 	a, z := request.Baseline, request.Selection
 	want := dcLiveDistribution(a, z)
-	data, model := view.Data, view.Model
-	if !reflect.DeepEqual(data.Distribution, want) || data.Type != a.Question.Numeric.Type || data.Unit != a.Question.Numeric.Unit || data.Mode != mode || data.Interactive != interactive || !reflect.DeepEqual(data.Valid, []string{a.Numeric.Valid, z.Numeric.Valid}) || model.State != want.State || model.Mode != mode || !reflect.DeepEqual(model.Totals, []string{a.Count, z.Count}) || model.Interactive != (interactive && want.State != "unknown") {
+	model := view.Model
+	state := "observed"
+	if want.State == "unknown" {
+		state = "diagnostic"
+	} else if a.Count == "0" || z.Count == "0" {
+		state = "no_data"
+	}
+	denoms := []string{a.Count, z.Count}
+	if mode == "valid-share" {
+		denoms = []string{a.Numeric.Valid, z.Numeric.Valid}
+	}
+	if !dcLiveHistogramComparison(&view.Comparison, request, true) || view.Display.Scale != mode || model.State != state || model.Scale != mode || !reflect.DeepEqual(model.Denominators, denoms) || model.Diagnostic != (state == "diagnostic") {
 		return false
 	}
 	all := make([]dcLiveDOMBin, len(want.Bins))
 	first, last := -1, -1
 	max := new(big.Int)
 	for i, b := range want.Bins {
-		all[i] = dcLiveDOMBin{Key: strconv.Itoa(i), From: b.From, To: b.To, Counts: []string{b.BaselineCount, b.SelectionCount}, Shares: []string{b.BaselinePercent, b.SelectionPercent}}
+		shares := []string{b.BaselinePercent, b.SelectionPercent}
+		if mode == "valid-share" {
+			for side, n := range []string{b.BaselineCount, b.SelectionCount} {
+				if denoms[side] != "0" {
+					shares[side] = new(big.Rat).Mul(new(big.Rat).SetFrac(ncLiveInt(n), ncLiveInt(denoms[side])), big.NewRat(100, 1)).RatString()
+				}
+			}
+		}
+		all[i] = dcLiveDOMBin{Key: "bin:" + strconv.Itoa(i), From: b.From, To: b.To, Counts: []string{b.BaselineCount, b.SelectionCount}, Shares: shares}
 		if b.BaselineCount != "0" || b.SelectionCount != "0" {
 			if first < 0 {
 				first = i
@@ -596,22 +674,26 @@ func dcLiveDOMCheck(view dcLiveDOM, request exploration.ComparisonRequest, mode 
 		points = all[first : last+1]
 	}
 	ceiling := max.String()
-	if mode == "share" {
+	if mode != "count" {
 		ceiling = "100"
 	}
 	if !reflect.DeepEqual(model.All, all) || !reflect.DeepEqual(model.Points, points) || model.Ceiling != ceiling || model.Empty != (first < 0) || len(view.Sides) != 2 {
 		return false
 	}
 	for side, chart := range view.Sides {
-		if chart.Ceiling != ceiling || chart.Interactive != model.Interactive || len(chart.Points) != len(points) || mode == "share" && chart.ValueFormat != "rational" {
+		if chart.Ceiling != ceiling || chart.Interactive != (interactive && state != "diagnostic") || len(chart.Points) != len(points) || mode != "count" && chart.ValueFormat != "rational" {
 			return false
 		}
 		for i, p := range chart.Points {
 			v := points[i].Counts[side]
-			if mode == "share" {
+			if mode != "count" {
 				v = points[i].Shares[side]
 			}
-			if p.Key != points[i].Key || p.Value == nil || *p.Value != v || p.State != "observed" {
+			st := "observed"
+			if points[i].Counts[side] == "0" {
+				st = "no_data"
+			}
+			if p.Key != points[i].Key || p.Value == nil || *p.Value != v || p.State != st {
 				return false
 			}
 		}
@@ -630,12 +712,12 @@ func dcLiveViewRunCheck(v dcLiveViewRun, definition dcLiveView, l dcLiveLedger) 
 		}
 		switch {
 		case nhLiveSameQuery(r.Question, v.Request.Baseline.Question):
-			if found["baseline"] || !reflect.DeepEqual(dcLiveCohortOf(r), v.Request.Baseline) {
+			if found["baseline"] || !dcLiveSameCapturedCohort(v.Request.Baseline, dcLiveCohortOf(r), r.CapturedAt) {
 				return false
 			}
 			found["baseline"] = true
 		case nhLiveSameQuery(r.Question, v.Request.Selection.Question):
-			if found["selection"] || !reflect.DeepEqual(dcLiveCohortOf(r), v.Request.Selection) {
+			if found["selection"] || !dcLiveSameCapturedCohort(v.Request.Selection, dcLiveCohortOf(r), r.CapturedAt) {
 				return false
 			}
 			found["selection"] = true
@@ -668,6 +750,17 @@ func dcLiveReceiptHash(r workbench.ComparisonReceipt) bool {
 	hash := sha256.Sum256(raw)
 	return id == hex.EncodeToString(hash[:])
 }
+
+// Compact JSON equality preserves exact values while normalizing whitespace in
+// nested RawMessage selectors emitted at different ledger indentation depths.
+func dcLiveJSONEqual(a, b any) bool {
+	x, e := json.Marshal(a)
+	if e != nil {
+		return false
+	}
+	y, e := json.Marshal(b)
+	return e == nil && string(x) == string(y)
+}
 func dcLiveStoredEvidence(l dcLiveLedger) bool {
 	saved := l.Saved
 	if saved.Comparison == nil || saved.Comparison.Result == nil || saved.Receipt.Question.Comparison == nil || !saved.Receipt.Question.Comparison.Distribution || !saved.Comparison.Request.Distribution || !dcLivePairCheck(saved.Comparison.Request, *saved.Comparison.Result, l) || !nhLiveSameQuery(saved.Receipt.Question.Comparison.Baseline, saved.Comparison.Request.Baseline.Question) || !nhLiveSameQuery(saved.Receipt.Question.Comparison.Selection, saved.Comparison.Request.Selection.Question) || !nhLiveSameQuery(saved.Comparison.Request.Baseline.Question, l.Baseline.Question) || !nhLiveSameQuery(saved.Comparison.Request.Selection.Question, l.Selection.Question) {
@@ -682,7 +775,7 @@ func dcLiveStoredEvidence(l dcLiveLedger) bool {
 		return false
 	}
 	r := l.Receipt
-	if r.Version != 1 || r.Algorithm != "goo/evidence-comparison/v5" || r.RecordedAt == "" || !dcLiveReceiptHash(r) || r.Result == nil || !reflect.DeepEqual(*r.Result, decision) || !reflect.DeepEqual(r, l.ReopenedReceipt) {
+	if r.Version != 1 || r.Algorithm != "goo/evidence-comparison/v5" || r.RecordedAt == "" || !dcLiveReceiptHash(r) || r.Result == nil || !dcLiveJSONEqual(*r.Result, decision) || !reflect.DeepEqual(r, l.ReopenedReceipt) {
 		return false
 	}
 	old := l.OldDecision
@@ -793,6 +886,16 @@ func TestQuintDistributionComparisonLiveLedger(t *testing.T) {
 			l.Aggregate.Response.AggregateOnly = false
 		case 24:
 			l.Aggregate.Plans[0].Response.Rest.Where = l.Aggregate.Plans[0].Response.Selected.Where
+		case 25:
+			l.Compare.Response.HistogramComparison.Baseline.Origin = "source-read"
+		case 26:
+			l.Compare.Response.HistogramComparison.Baseline.Histogram.Support.Valid = "999"
+		case 27:
+			l.DomModel.Share.Display.Scale = "valid-share"
+		case 28:
+			l.DomModel.Share.Model.All[0].Shares[0] = "1"
+		case 29:
+			l.DomModel.Count.Comparison.Selection.Rows[0].Values["to"] = func() *string { v := "rounded"; return &v }()
 		}
 		after, _ := json.Marshal(l)
 		if mutation >= 0 && string(before) == string(after) {
@@ -807,7 +910,7 @@ func TestQuintDistributionComparisonLiveLedger(t *testing.T) {
 			rec.Record(context.Background(), action, nil, "obs.coherent", ok)
 		}
 		record("plan", l.Version == 1 && len(l.Records) > 100 && l.Binding == (exploration.NumericBinding{Field: exploration.Field{Kind: "attribute", Key: "work.items"}, Type: "int64", Unit: "items", Parse: "canonical-decimal"}))
-		main := dcLiveResult(l.Baseline, l) && dcLiveResult(l.Selection, l) && reflect.DeepEqual(l.Compare.Request.Baseline, dcLiveCohortOf(l.Baseline)) && reflect.DeepEqual(l.Compare.Request.Selection, dcLiveCohortOf(l.Selection)) && dcLivePairCheck(l.Compare.Request, l.Compare.Response, l)
+		main := dcLiveResult(l.Baseline, l) && dcLiveResult(l.Selection, l) && dcLiveSameCapturedCohort(l.Compare.Request.Baseline, dcLiveCohortOf(l.Baseline), l.Baseline.CapturedAt) && dcLiveSameCapturedCohort(l.Compare.Request.Selection, dcLiveCohortOf(l.Selection), l.Selection.CapturedAt) && dcLivePairCheck(l.Compare.Request, l.Compare.Response, l)
 		extras := dcLiveActualPair(l.Logs, l) && l.Logs.Request.Baseline.Question.Signal == "logs" && len(l.Extremes) == 2
 		types := map[string]bool{}
 		for _, pair := range l.Extremes {
@@ -852,7 +955,7 @@ func TestQuintDistributionComparisonLiveLedger(t *testing.T) {
 		for _, k := range []string{"missing-histogram", "bin-count", "binding", "missing-optin", "numeric-false", "legacy-zero-groups", "empty-range", "unknown-range"} {
 			refusals = refusals && refused[k]
 		}
-		record("inspect", dcLiveEvents(l) && refusals && dcLiveDOMCheck(l.DomModel.Count, l.Compare.Request, "count", true) && dcLiveDOMCheck(l.DomModel.Share, l.Compare.Request, "share", true))
+		record("inspect", dcLiveEvents(l) && refusals && dcLiveDOMCheck(l.DomModel.Count, l.Compare.Request, "count", true) && dcLiveDOMCheck(l.DomModel.Share, l.Compare.Request, "population-share", true))
 		record("capture", dcLiveStoredEvidence(l))
 		seed := l.SeedView
 		base := seed.Breakdowns["spans"].Baseline
@@ -867,7 +970,7 @@ func TestQuintDistributionComparisonLiveLedger(t *testing.T) {
 			validScope = validScope && nhLiveSameQuery(a, l.Baseline.Question) && nhLiveSameQuery(z, l.Selection.Question) && len(l.View.Queries) == 1 && nhLiveSameQuery(seed.Queries[0], l.View.Queries[0]) && l.View.Breakdowns["spans"].Baseline != nil && nhLiveSameQuery(*base, *l.View.Breakdowns["spans"].Baseline)
 		}
 		record("reuse", validScope && dcLiveViewRunCheck(l.InitialView, seed, l) && dcLiveViewRunCheck(l.Reused, l.View, l))
-		record("reopen", reflect.DeepEqual(l.Saved, l.Reopened) && dcLiveDOMCheck(l.DomModel.Saved, l.Saved.Comparison.Request, "share", true))
+		record("reopen", reflect.DeepEqual(l.Saved, l.Reopened) && dcLiveDOMCheck(l.DomModel.Saved, l.Saved.Comparison.Request, "population-share", true))
 		checker, e := validate.NewChecker("model/grouped_series.yaml", validate.Options{Quint: quintPath(t), Backend: "typescript", Dir: t.TempDir()})
 		if e != nil {
 			t.Fatal(e)
@@ -881,7 +984,7 @@ func TestQuintDistributionComparisonLiveLedger(t *testing.T) {
 	if !check(-1) {
 		t.Fatal("actual distribution ledger rejected")
 	}
-	for i := 0; i < 25; i++ {
+	for i := 0; i < 30; i++ {
 		if check(i) {
 			t.Fatalf("distribution corruption accepted: %d", i)
 		}

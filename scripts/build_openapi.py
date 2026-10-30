@@ -273,9 +273,17 @@ status_row={'properties':{'values':{'required':['count']+status_keys},'cells':st
 ]}
 view['allOf'].append({'if':status_present,'then':{'properties':{'fields':status_fields,'rows':{'items':status_row},'scope':{'properties':{'signal':{'const':'spans'},'selector':{'required':['spanStatus'],'properties':{'spanStatus':{'const':True}}}}}}}})
 view['allOf'].extend([
- {'if':{'properties':{'origin':{'const':'browser-held'}},'required':['origin']},'then':{'not':{'required':['completeness']},'properties':{'shape':{'const':'summary'},'quality':{'properties':{'extent':{'const':'unknown'}}}}}},
+ {'if':{'properties':{'origin':{'const':'browser-held'}},'required':['origin']},'then':{'not':{'required':['completeness']},'properties':{'shape':{'enum':['summary','histogram']},'quality':{'properties':{'extent':{'const':'unknown'}}}}}},
  {'if':{'properties':{'origin':{'const':'source-read'}},'required':['origin']},'then':{'required':['capturedAt']}}
 ])
+hist_compare=schemas['exploration.ViewHistogramComparison'];hist_compare['additionalProperties']=False
+hist_compare['properties']['version']={'const':'goo.histogram-comparison/1'}
+hist_compare['properties']['state']={'enum':['observed','no_data','diagnostic']}
+hist_compare['properties']['reason']={'const':'source-reads-disagree'}
+for side in ('baseline','selection'):
+ hist_compare['properties'][side]={'allOf':[ref('exploration.ViewDataset'),{'properties':{'shape':{'const':'histogram'},'origin':{'const':'browser-held'},'quality':{'properties':{'extent':{'const':'unknown'}}}},'not':{'required':['completeness']}}]}
+hist_compare['allOf']=[{'if':{'properties':{'state':{'const':'diagnostic'}}},'then':{'required':['reason']},'else':{'not':{'required':['reason']}}}]
+hist_compare['description']='Two independent validated held numeric histogram operands. No merged rows, pooled statistic, source proof or shared capture clock. Count, population-share (per-side support.total) and valid-share (per-side support.valid) are separate display choices. Zero denominators are unavailable; no_data is informational and preserves known zero counts and the other side. Diagnostic withholds cross-population share/delta claims. Runtime validates identical binding, signal, environment, geometry and state.'
 for name in ('exploration.Cohort','exploration.CohortInput'):
  if name in schemas and 'capturedAt' in schemas[name]['properties']:
   schemas[name]['properties']['capturedAt']={'type':'string','description':'Optional unverified caller-held capture clock. Omission/empty means unknown; never replaced with current time. Nonempty RFC3339 is runtime checked.'}

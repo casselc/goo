@@ -2,13 +2,14 @@
    not authentication or proof that an arbitrary HTTP response is authoritative. */
 import {validateSnapshot} from './view-schema.mjs';
 import {validateComparison} from './view-comparison.mjs';
+import {validateHistogramComparison} from './view-histogram-comparison.mjs';
 import {identity as questionIdentity} from './question-session.mjs';
 import {validateRecordQuestion} from './question-protocol.mjs';
 import {validate as validatePredicate} from './predicate-validation.mjs';
 
 export const SNAPSHOT_LIMITS=Object.freeze({maxBytes:8*1024*1024,maxNodes:250000,maxDepth:32});
 export const COMPARISON_LIMITS=Object.freeze({maxBytes:16*1024*1024+65536,maxNodes:500000,maxDepth:34});
-const witnesses=new WeakMap(),comparisons=new WeakSet(),encoder=new TextEncoder();
+const witnesses=new WeakMap(),comparisons=new WeakSet(),histogramComparisons=new WeakSet(),encoder=new TextEncoder();
 let nextSource=0,nextLocal=0;
 const record=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
 const own=(value,key)=>Object.prototype.hasOwnProperty.call(value,key);
@@ -189,3 +190,15 @@ function parse(text,limits,admit){
 }
 export const parseSnapshotJSON=text=>parse(text,SNAPSHOT_LIMITS,asSnapshot);
 export const parseComparisonJSON=text=>parse(text,COMPARISON_LIMITS,asComparison);
+
+export const isHistogramComparison=value=>value!==null&&typeof value==='object'&&histogramComparisons.has(value);
+export function asHistogramComparison(raw){
+ if(isHistogramComparison(raw))return raw;
+ preflight(raw,COMPARISON_LIMITS);
+ if(!record(raw))fail('shape','A histogram comparison envelope is required');
+ const baseline=asSnapshot(raw.baseline),selection=asSnapshot(raw.selection),metadata={...raw};delete metadata.baseline;delete metadata.selection;
+ const copy={...structuredClone(metadata),baseline,selection},result=validateHistogramComparison(copy);
+ if(!result.ok)fail('shape',result.reasons.join('; '));
+ freeze(copy);histogramComparisons.add(copy);return copy;
+}
+export const parseHistogramComparisonJSON=text=>parse(text,COMPARISON_LIMITS,asHistogramComparison);

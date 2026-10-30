@@ -13,3 +13,4 @@ goo-aligned-histogram :is(th,td){padding:4px 8px;white-space:nowrap;text-align:l
 goo-aligned-histogram p{font-size:11px;overflow-wrap:anywhere}
 .aligned-numeric-coverage p{margin:3px 0;font-size:11px}
 .numeric-summary-disclosure{margin-block:8px}
+.aligned-histogram-side .time-bars-figure>figcaption,.aligned-histogram-side .time-bars-scale{position:sticky;left:0;width:max-content;max-width:100%;box-sizing:border-box}

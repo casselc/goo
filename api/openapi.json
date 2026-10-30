@@ -9908,6 +9908,16 @@
           "field": {
             "$ref": "#/components/schemas/exploration.Field"
           },
+          "histogramComparison": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewHistogramComparison"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "measures": {
             "anyOf": [
               {
@@ -10028,6 +10038,23 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/exploration.FieldInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "histogramComparison": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.ViewHistogramComparisonInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               {
                 "type": "null"
@@ -11351,6 +11378,16 @@
               }
             ]
           },
+          "histogramComparison": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewHistogramComparison"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "measures": {
             "anyOf": [
               {
@@ -11488,6 +11525,23 @@
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "histogramComparison": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.ViewHistogramComparisonInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               {
                 "type": "null"
@@ -22480,7 +22534,10 @@
               },
               "properties": {
                 "shape": {
-                  "const": "summary"
+                  "enum": [
+                    "summary",
+                    "histogram"
+                  ]
                 },
                 "quality": {
                   "properties": {
@@ -23608,6 +23665,185 @@
         "x-go-type": "github.com/casselc/goo/exploration.ViewHistogram",
         "additionalProperties": false,
         "description": "Exact fixed numeric bins; binding scale converts coefficient edges into human-unit rationals. Runtime checks all boundaries, support sums, scope binding equality and sum(bin counts)==support.valid. Exclusive max+1 is geometry, never an accepted predicate value."
+      },
+      "exploration.ViewHistogramComparison": {
+        "properties": {
+          "baseline": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewDataset"
+              },
+              {
+                "properties": {
+                  "shape": {
+                    "const": "histogram"
+                  },
+                  "origin": {
+                    "const": "browser-held"
+                  },
+                  "quality": {
+                    "properties": {
+                      "extent": {
+                        "const": "unknown"
+                      }
+                    }
+                  }
+                },
+                "not": {
+                  "required": [
+                    "completeness"
+                  ]
+                }
+              }
+            ]
+          },
+          "reason": {
+            "const": "source-reads-disagree"
+          },
+          "selection": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewDataset"
+              },
+              {
+                "properties": {
+                  "shape": {
+                    "const": "histogram"
+                  },
+                  "origin": {
+                    "const": "browser-held"
+                  },
+                  "quality": {
+                    "properties": {
+                      "extent": {
+                        "const": "unknown"
+                      }
+                    }
+                  }
+                },
+                "not": {
+                  "required": [
+                    "completeness"
+                  ]
+                }
+              }
+            ]
+          },
+          "state": {
+            "enum": [
+              "observed",
+              "no_data",
+              "diagnostic"
+            ]
+          },
+          "version": {
+            "const": "goo.histogram-comparison/1"
+          }
+        },
+        "required": [
+          "version",
+          "baseline",
+          "selection",
+          "state"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewHistogramComparison",
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "diagnostic"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "reason"
+              ]
+            },
+            "else": {
+              "not": {
+                "required": [
+                  "reason"
+                ]
+              }
+            }
+          }
+        ],
+        "description": "Two independent validated held numeric histogram operands. No merged rows, pooled statistic, source proof or shared capture clock. Count, population-share (per-side support.total) and valid-share (per-side support.valid) are separate display choices. Zero denominators are unavailable; no_data is informational and preserves known zero counts and the other side. Diagnostic withholds cross-population share/delta claims. Runtime validates identical binding, signal, environment, geometry and state."
+      },
+      "exploration.ViewHistogramComparisonInput": {
+        "additionalProperties": false,
+        "properties": {
+          "baseline": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.ViewDatasetInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "selection": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.ViewDatasetInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewHistogramComparison"
       },
       "exploration.ViewHistogramInput": {
         "additionalProperties": false,

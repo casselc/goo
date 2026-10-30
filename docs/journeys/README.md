@@ -1,5 +1,10 @@
 # User journeys and storyboards
 
+[Journey270](../../journeys/270-histogram-comparison-storyboard.md) compares exact
+counts, captured-record shares and valid-value shares while retaining independent
+questions and clocks. Local views are source-free; explicit side Open runs its
+checked fixed scope. Saved operands remain unchanged.
+
 [Journey269](../../journeys/269-scoped-histogram-storyboard.md) covers shared fixed
 numeric histograms, exact support and extreme boundaries, passive range gestures,
 stale planning refusal and selected/rest scope. The older numeric-distribution

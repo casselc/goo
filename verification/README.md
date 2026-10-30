@@ -1,5 +1,17 @@
 # Semantic properties and model conformance
 
+## Independent histogram comparisons (270)
+
+The [real journey and storyboard](../journeys/270-histogram-comparison-storyboard.md) compare independent captured and valid-value denominators, exact signed endpoints, local scale changes, explicit side-range planning/execution and immutable Saved views. The Hegel lane runs 100 actual Go canonical comparison DTOs through the real JavaScript constructor, validator and model, including empty/no-valid/diagnostic operands and malformed bindings, geometry and accounting.
+
+```sh
+go test -C verification -run '^TestHegelCanonicalHistogramComparison' -count=1 -v .
+./node_modules/.bin/playwright test journeys/270-histogram-comparison.spec.js
+GOO_HISTOGRAM_COMPARISON_LEDGER="$PWD/artifacts/scoped-270/model-trace.json" go test -C verification -run '^TestQuintHistogramComparisonObservedBrowserLedger$' -count=1 -v .
+```
+
+The six-step observed Quint model checks independent exact percentages and read/planner conservation, rejects seven altered traces and an unfinished prefix, and does not claim private action-authority verification. Optional `GOO_HISTOGRAM_COMPARISON_BOMBADIL=1` runs the maintained external-driver campaign. The final 35-second run passed with 492 snapshots across 11 phases, three explicit Explore reads and one side planner call. Keep its compact summary/ledger/model trace; remove successful raw campaign artifacts after review.
+
 ## Reproducible entry point
 
 From the repository root, use `python3 scripts/verify_optional.py`. This is a

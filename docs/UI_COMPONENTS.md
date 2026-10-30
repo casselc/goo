@@ -28,7 +28,7 @@ future priority. Earlier audits are dated design inputs, not another execution q
 | `goo-trace-page-breakdown` | Supplied rows/truncation / `.data`; row-selection intent | Observed page intervals and diagnostics; [source](../ui/trace-page-breakdown-view.mjs). |
 | `goo-trace-comparison` | Supplied baseline/current trace pages / `.data` | Page comparison and exact attribute differences; [source](../ui/trace-comparison-view.mjs). |
 | `goo-trace-waterfall` | `data` / `.data`, controlled `selected-index` / `.selectedIndex` | [Waterfall](UI_WATERFALL.md); supplied spans, not complete-trace inference. |
-| `goo-aligned-histogram` | `data` JSON / `.data`, count/share mode, optional range intent | [Aligned distributions](DISTRIBUTION_COMPARISONS.md); supplied exact paired bins, no source ownership. |
+| `goo-aligned-histogram` | `comparison` / `.comparison`, `display` / `.display`; typed side/range intent | [Canonical aligned histograms](SCOPED_HISTOGRAM_COMPARISONS.md); independent immutable operands and exact denominator choices, no source ownership. |
 | `goo-time-bars` | `data` / `.data`, controlled key and optional range intent | [Time bars](UI_TIME_BARS.md); exact supplied count domain. |
 | `goo-chart-frame` | Heading/unit/window/state attributes or `.data`; caller-owned children | [Chart frame](UI_CHART_FRAME.md). |
 | `goo-value-timeline` | `data` / `.data`, controlled key, optional brush intent | [Native timelines](NATIVE_TIMELINES.md). |
@@ -846,13 +846,14 @@ parsing, compatibility, source reads and custody stay in their existing owners;
 the display converts only bounded layout ratios to pixels.
 
 `goo-aligned-histogram` composes two passive count-bar elements with the same
-global bin keys, union-cropped extent and count ceiling (or 0–100% population-share
-scale). It accepts explicit integer type/unit, valid-count pair and the supplied
-Go distribution output; its optional interactive mode emits `goo-aligned-range`
-with `{side,fromBin,toBin}` using half-open global indices. It neither constructs
-queries nor fetches. Missing/unknown shares remain unavailable. `goo-time-bars`
-adds an opt-in exact nonnegative rational value format; old uint defaults remain
-unchanged. See the synthetic SSR reference at `/ui-components` and executable
+global bin keys, common outer-zero trimming and count ceiling, or a fixed 0–100%
+scale. Its canonical `.comparison` operands retain independent scope, support
+and clocks; `.display.scale` chooses count, population-share or valid-share.
+It emits `goo-aligned-range` with `{side,intent}`, where `intent` is the supplied
+side's typed histogram range. It neither constructs queries nor fetches.
+Unavailable percentages remain unavailable. `goo-time-bars` supports exact
+nonnegative rational display values as well as uint counts.
+See the synthetic SSR reference at `/ui-components` and executable
 `journeys/aligned-histogram-components.spec.js` for attribute, detached-property,
 retained-child, mobile and zero-source-effect contracts.
 
@@ -1435,3 +1436,14 @@ is required for complete-only displays. Histogram row projections are refused.
 The typed `goo-histogram-range` event remains passive; the host captures and
 rechecks H1 ownership around the existing Go planner. See
 [contracts, source states and adoption limits](SCOPED_HISTOGRAMS.md).
+
+## Independent histogram comparisons270
+
+`goo-aligned-histogram` takes an immutable `.comparison` envelope and closed
+`.display` options, also available as SSR JSON attributes. Exact independent
+histogram operands support `count`, `population-share` and `valid-share` scales.
+The count axis spans both full operands; percentage axes remain fixed at0–100%.
+Support, capture clocks and scopes stay distinct. Empty or diagnostic data cannot
+silently acquire a zero percentage. Hard complete-only displays require both
+private bins witnesses. Typed range intents stay passive; explicit side planners
+belong to host adapters. See [contract and limits](SCOPED_HISTOGRAM_COMPARISONS.md).

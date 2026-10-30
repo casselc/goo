@@ -1,5 +1,12 @@
 # Known issues and gaps
 
+270 adopts [aligned numeric histogram comparisons](SCOPED_HISTOGRAM_COMPARISONS.md)
+using independent held operands and explicit count/captured-share/valid-share
+scales. Empty denominators and diagnostic comparisons retain their limits;
+captured metadata does not grant source completeness. Explicit side continuation
+checks the captured pair around async loading/planning. Native OTel/duration
+histogram families and other histogram-query group/time/summary adoption remain.
+
 269 adopts [fixed numeric histograms](SCOPED_HISTOGRAMS.md) through canonical
 snapshots, shared histogram/table displays and H1 range planning. Equal-width
 bars show counts for unequal ranges, not density. Captured support remains

@@ -1,5 +1,8 @@
 # Exact numeric histograms in scoped views — 269
 
+270 extends this foundation to [independent aligned comparisons](SCOPED_HISTOGRAM_COMPARISONS.md),
+with explicitly different captured-record and valid-value share denominators.
+
 Fixed numeric histograms now use the same immutable dataset and passive
 `goo-chart` contract as other scoped displays. The existing Go numeric selection
 planner still owns selected/rest questions and comparisons. This cut covers

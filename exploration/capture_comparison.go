@@ -28,17 +28,18 @@ type GaugeChange struct {
 	State      string               `json:"state"`
 }
 type EvidenceComparison struct {
-	Distribution    bool                       `json:"distribution,omitempty"`
-	Breakdown       *CohortComparison          `json:"breakdown,omitempty"`
-	NativeWindows   []metrics.WindowComparison `json:"nativeWindows,omitempty"`
-	Baseline        EvidenceSide               `json:"baseline"`
-	Selection       EvidenceSide               `json:"selection"`
-	State           string                     `json:"state"`
-	Differences     []string                   `json:"differences"`
-	Warnings        []string                   `json:"warnings"`
-	CountDifference string                     `json:"countDifference,omitempty"`
-	Measures        *MeasureComparison         `json:"measures,omitempty"`
-	Gauges          []GaugeChange              `json:"gauges,omitempty"`
+	HistogramComparison *ViewHistogramComparison   `json:"histogramComparison,omitempty"`
+	Distribution        bool                       `json:"distribution,omitempty"`
+	Breakdown           *CohortComparison          `json:"breakdown,omitempty"`
+	NativeWindows       []metrics.WindowComparison `json:"nativeWindows,omitempty"`
+	Baseline            EvidenceSide               `json:"baseline"`
+	Selection           EvidenceSide               `json:"selection"`
+	State               string                     `json:"state"`
+	Differences         []string                   `json:"differences"`
+	Warnings            []string                   `json:"warnings"`
+	CountDifference     string                     `json:"countDifference,omitempty"`
+	Measures            *MeasureComparison         `json:"measures,omitempty"`
+	Gauges              []GaugeChange              `json:"gauges,omitempty"`
 }
 
 func evidenceSide(c *SavedCapture) EvidenceSide {

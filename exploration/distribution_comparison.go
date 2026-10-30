@@ -145,12 +145,13 @@ func CompareDistributionEvidence(a, b *SavedCapture) (*EvidenceComparison, error
 	if r.State == "incompatible" || r.State == "unsupported" {
 		return r, nil
 	}
-	ac := Cohort{CapturedAt: a.Explore.CapturedAt, Question: a.Explore.Question, Count: a.Explore.Count, Numeric: a.Explore.Numeric, NumericHistogram: a.Explore.NumericHistogram}
-	bc := Cohort{CapturedAt: b.Explore.CapturedAt, Question: b.Explore.Question, Count: b.Explore.Count, Numeric: b.Explore.Numeric, NumericHistogram: b.Explore.NumericHistogram}
+	ac := Cohort{Basis: a.Explore.Basis, State: a.Explore.State, CapturedAt: a.Explore.CapturedAt, Question: a.Explore.Question, Count: a.Explore.Count, Numeric: a.Explore.Numeric, NumericHistogram: a.Explore.NumericHistogram}
+	bc := Cohort{Basis: b.Explore.Basis, State: b.Explore.State, CapturedAt: b.Explore.CapturedAt, Question: b.Explore.Question, Count: b.Explore.Count, Numeric: b.Explore.Numeric, NumericHistogram: b.Explore.NumericHistogram}
 	if r.Measures == nil || r.Measures.Numeric == nil {
 		return nil, fmt.Errorf("numeric distribution measures unavailable")
 	}
 	r.Measures.Numeric.Distribution = compareNumericDistributions(ac, bc, r.State == "unknown")
+	r.HistogramComparison = cohortHistogramComparison(ComparisonRequest{Distribution: true, Numeric: true, Baseline: ac, Selection: bc})
 	return r, nil
 }
 

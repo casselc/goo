@@ -7,7 +7,8 @@
 > 268 adds [recorded span status counts/fractions](STATUS_FRACTIONS.md) in shared
 > breakdown, interval and summary views; status comparisons retain percentage points.
 > 269 adds [fixed numeric histogram adoption](SCOPED_HISTOGRAMS.md), shared
-> displays and H1 range planning. Next: aligned histogram comparisons and remaining
+> displays and H1 range planning. 270 delivers [aligned comparison operands](SCOPED_HISTOGRAM_COMPARISONS.md)
+> and captured side continuation. Next: remaining native/duration histogram and
 > specialized V0 families before renderer/editor expansion.
 > [Pit-of-success review](MODEL_PIT_OF_SUCCESS_264.md) gates further renderer/editor expansion.
 

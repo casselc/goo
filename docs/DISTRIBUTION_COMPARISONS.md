@@ -1,5 +1,11 @@
 # Aligned numeric distribution comparisons
 
+270 adopts [canonical independent histogram operands](SCOPED_HISTOGRAM_COMPARISONS.md)
+for the shared display and side planners. Captured-record shares retain the
+denominator described below; valid-value share is a separate explicit scale.
+The component now accepts `.comparison` and `.display`, with immutable scope,
+support and clock facts. Deferred side loads must match the displayed content.
+
 Implemented and independently reviewed. This extends the existing numeric baseline flow with
 exact aligned numeric histograms. No new binning policy, numeric type inference,
 query language or automatic source subscription is introduced.

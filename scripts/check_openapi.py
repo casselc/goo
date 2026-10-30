@@ -244,6 +244,25 @@ def check_histogram_observed(spec, path):
     print('Actual Go histogram views valid: six integer/decimal/empty DTOs; metadata/bin/support negatives pass')
 
 
+def check_histogram_comparisons(spec,path):
+    fixtures=json.loads(Path(path).read_text())
+    assert set(fixtures)=={'observed','no-valid','empty','diagnostic'}
+    check=validator(spec,{'$ref':'#/components/schemas/exploration.ViewHistogramComparison'})
+    for value in fixtures.values(): check.validate(value)
+    for change in [
+        lambda x:x.update(state='incompatible'),
+        lambda x:x.update(reason='source-reads-disagree'),
+        lambda x:x['baseline'].update(origin='source-read'),
+        lambda x:x['baseline'].update(completeness={'basis':'captured-query','revision':x['baseline']['revision'],'scopeId':x['baseline']['scope']['id'],'aspects':['bins']}),
+        lambda x:x.update(changes={}),
+    ]:
+        mutant=copy.deepcopy(fixtures['observed']);change(mutant)
+        assert not check.is_valid(mutant),'Malformed held histogram comparison accepted'
+    diagnostic=copy.deepcopy(fixtures['diagnostic']);diagnostic.pop('reason')
+    assert not check.is_valid(diagnostic),'Diagnostic reason missing'
+    print('Actual Go histogram comparisons valid: observed/no-valid/empty/diagnostic; custody/state negatives pass')
+
+
 def check_view_measures(spec, ranked, intervals):
     check_view = validator(spec, {'$ref': '#/components/schemas/exploration.ViewDataset'})
     supplied = copy.deepcopy(ranked)
@@ -885,6 +904,8 @@ if __name__ == '__main__':
     parser.add_argument('--observations')
     parser.add_argument('--status-view-observations')
     parser.add_argument('--histogram-view-observations')
+    parser.add_argument('--histogram-comparison-observations')
+    parser.add_argument('--evidence-histogram-observations')
     parser.add_argument('--stock-observations')
     parser.add_argument('--stock-domain-observations')
     parser.add_argument('--pool-signals-observations')
@@ -901,6 +922,16 @@ if __name__ == '__main__':
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    if args.evidence_histogram_observations:
+        observed=json.loads(Path(args.evidence_histogram_observations).read_text())
+        validator(spec,{'$ref':'#/components/schemas/exploration.EvidenceComparison'}).validate(observed)
+        assert observed['histogramComparison']['baseline']['shape']=='histogram'
+        assert len(observed['histogramComparison']['baseline']['scope']['selector']['groupBy'])==2
+        print('Actual Go two-group EvidenceComparison histogram operands valid')
+
+    if args.histogram_comparison_observations:
+        check_histogram_comparisons(spec,args.histogram_comparison_observations)
+
     if args.histogram_view_observations:
         check_histogram_observed(spec,args.histogram_view_observations)
 

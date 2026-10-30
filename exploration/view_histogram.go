@@ -18,11 +18,15 @@ type ViewHistogram struct {
 // Fixed bins include zeroes and exclusive max+1 boundaries; no record page,
 // separately read groups or additional source query establishes its population.
 func histogramViewDataset(r *Result) *ViewDataset {
+	return buildHistogramViewDataset(r, true)
+}
+
+func buildHistogramViewDataset(r *Result, source bool) *ViewDataset {
 	q := r.Question
 	if q.NumericHistogram == nil || q.Numeric == nil || validateOptionalNumeric(q.Numeric, r.Numeric, r.Count) != nil || validateOptionalNumericHistogram(q, r.NumericHistogram, r.Numeric) != nil {
 		return nil
 	}
-	if r.State != "observed" && r.State != "no_data" && r.State != "changed_between_reads" || r.State == "observed" && r.Count == "0" || r.State == "no_data" && r.Count != "0" || r.CapturedAt == "" || !validCohortClock(Cohort{CapturedAt: r.CapturedAt}) {
+	if r.State != "observed" && r.State != "no_data" && r.State != "changed_between_reads" || r.State == "observed" && r.Count == "0" || r.State == "no_data" && r.Count != "0" || source && r.CapturedAt == "" || !validCohortClock(Cohort{CapturedAt: r.CapturedAt}) {
 		return nil
 	}
 	d := baseViewDataset(r, "histogram", "bins")
@@ -46,7 +50,7 @@ func histogramViewDataset(r *Result) *ViewDataset {
 	}
 	// The histogram and coverage came from one aggregate even when another
 	// result aspect disagreed. Conservatively retain the overall disagreement.
-	if r.State != "changed_between_reads" {
+	if source && r.State != "changed_between_reads" {
 		attestView(d, "bins")
 	}
 	return d

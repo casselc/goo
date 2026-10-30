@@ -1,6 +1,6 @@
 /* Trusted application admission for known Go exploration response slots.
    Generic components/imports never promote JSON claims into source guarantees. */
-import {createSourceAdapter,asComparison,importSnapshot,getSnapshotInfo} from './snapshots.mjs';
+import {createSourceAdapter,asComparison,importSnapshot,getSnapshotInfo,asHistogramComparison} from './snapshots.mjs';
 import {identity} from './question-session.mjs';
 import {validateRecordQuestion} from './question-protocol.mjs';
 import {validate as validatePredicate} from './predicate-validation.mjs';
@@ -47,10 +47,16 @@ export function adoptStoredExplore(page){
 
 export function importComparisonResult(data,requested){
   if(!record(data))throw Error('A comparison response is required.');
-  if(data.viewComparison===undefined||data.viewComparison===null)return data;
+  const held=value=>getSnapshotInfo(value)?.entry==='held'?value:importSnapshot(value);
+ let normalized=data;
+ if(data.histogramComparison!==undefined&&data.histogramComparison!==null){
+  for(const side of ['baseline','selection'])sameQuestion(requested?.[side]?.question,data.histogramComparison?.[side]?.scope?.selector);
+  normalized={...data,histogramComparison:asHistogramComparison({...data.histogramComparison,baseline:held(data.histogramComparison.baseline),selection:held(data.histogramComparison.selection)})};
+ }
+ if(data.viewComparison===undefined||data.viewComparison===null)return normalized;
   for(const side of ['baseline','selection'])sameQuestion(requested?.[side]?.question,data.viewComparison?.[side]?.scope?.selector);
   // /compare computes over browser-supplied cohorts. The HTTP response is not a
   // fresh authoritative source read; both operands remain conservative imports.
-  const held=value=>getSnapshotInfo(value)?.entry==='held'?value:importSnapshot(value);
-  return {...data,viewComparison:asComparison({...data.viewComparison,baseline:held(data.viewComparison.baseline),selection:held(data.viewComparison.selection)})};
+
+  return {...normalized,viewComparison:asComparison({...data.viewComparison,baseline:held(data.viewComparison.baseline),selection:held(data.viewComparison.selection)})};
 }

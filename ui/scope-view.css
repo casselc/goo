@@ -42,3 +42,4 @@ goo-chart :is(button,summary):focus-visible,goo-scope-facet button:focus-visible
 @media(prefers-reduced-motion:reduce){goo-chart *,goo-scope-facet *{scroll-behavior:auto;animation-duration:0s!important;transition-duration:0s!important}}
 
 .scope-histogram,.scope-histogram-scroll{min-width:0;max-width:100%}.scope-histogram-scroll{overflow-x:auto}.scope-histogram-scroll>goo-time-bars{width:100%;box-sizing:border-box}
+goo-aligned-histogram{display:block;min-width:0;max-width:100%}goo-aligned-histogram details{max-width:100%;overflow:auto}goo-aligned-histogram pre{white-space:pre-wrap;overflow-wrap:anywhere}

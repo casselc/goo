@@ -1,5 +1,9 @@
 # Exact numeric distributions
 
+270 adds [canonical aligned comparisons](SCOPED_HISTOGRAM_COMPARISONS.md),
+preserving captured-record percentages and adding a separate valid-value share
+scale. Each side retains its own immutable scope, support and capture time.
+
 269 brings the display onto the [shared histogram dataset](SCOPED_HISTOGRAMS.md).
 Raw source/API boundaries below remain coefficient strings; shared snapshots use
 exact rational human-unit edges. The passive `goo-chart` histogram kind owns

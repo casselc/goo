@@ -1,5 +1,76 @@
 # Validation record
 
+## Independent canonical histogram comparisons — 270
+
+Aligned histograms now consume `goo.histogram-comparison/1`: two immutable
+histogram operands with independent scope, support, revision and optional capture
+time. The count axis spans both full operands. Captured-record share retains
+the existing total denominator; valid-value share is a separate explicit choice.
+Percentage axes stay fixed at 0–100%. Empty denominators remain unavailable;
+no-valid populations, known zero counts and diagnostic comparisons remain distinct.
+Raw HTTP/SSR operands become held data without private completeness guarantees.
+
+The shared component replaces the raw paired-bin model. Typed side/range intents
+feed a captured pair guard, separate from current-role H1 staging. Deferred loads
+must match both displayed questions, basis/clock metadata, exact support and bins;
+the same guard is checked after awaits. Explicit Open plans and reads its chosen
+fixed side; local scale/table/brush gestures perform no source reads. Saved
+operands remain immutable while explicit continuation can start fresh work.
+Retained-capture comparisons, including two-group captures, now expose the same
+canonical envelope. Sparse plots fit mobile; wide domains scroll internally with
+side captions and scale labels remaining visible.
+See [contract/diagram](docs/SCOPED_HISTOGRAM_COMPARISONS.md) and
+[storyboard](journeys/270-histogram-comparison-storyboard.md).
+
+Validation passes:
+
+- Full root Go suite and all 761 frontend tests, no frontend skips. Focused
+  comparisons validate independent clocks/support, clock-independent revisions,
+  empty/no-valid/diagnostic states, incompatible bindings and no source proof.
+  Eleven aligned-model tests and six pair-action tests cover exact denominators,
+  private completeness, immutable construction, side membership and async revoke.
+- Generated 567 Go types and 589 OpenAPI schemas pass: 96 operations, 429 response
+  fixtures, 159 admitted requests and 28 mux refusals. Four actual Go comparison
+  DTOs and an actual two-group retained EvidenceComparison validate; custody,
+  state, metadata and geometry controls are rejected. Stored comparison projection
+  reads nothing and does not mutate either capture.
+- Chromium component/adapter checks pass for SSR/pre-upgrade/detached SPA,
+  exact count and percentage geometry, independent source clocks/scope disclosures,
+  empty/no-valid/diagnostic behavior, keyboard ranges and full-only refusal.
+  Same-question replacement data with changed support/bins is rejected before
+  planning. Compact and 128-bin 390px layouts stay contained; last-bin focus and
+  sticky side captions remain reachable/readable. Existing standalone aligned and
+  fixed-decimal component journeys pass with no source I/O.
+- Hegel runs 100 actual Go-produced comparison cases through the real JS
+  constructor/validator/model. Signed/unsigned/decimal, both/one empty sides,
+  no-valid, diagnostic, malformed and custody cases pass. The observed six-step
+  browser Quint trace passes; seven altered traces and an unfinished prefix fail.
+- The actual eight-span OTLP → ClickHouse → isolated Go journey passes: baseline
+  total/valid 4/2 versus comparison 4/3; maximum-bin counts 1/2; captured shares
+  25%/50%; valid shares 50%/exact 200/3 percent; all 128 exact bins; captured-side
+  Open with one plan and one child read; unchanged Saved operands and mobile fit.
+  Three final-CSS frames are regenerated. The frozen 35-second Bombadil campaign
+  passes 492 snapshots across 11 phases, three Explore reads and one planner call.
+- Both older live distribution workflows pass, including reusable views,
+  captures/receipts, side scope preservation and late-response ownership. Their
+  migrated 45-second Bombadil campaign passes 647 snapshots across 11 phases.
+  Independent actual-ledger replays pass all 30 main and 11 late corruption
+  controls. Oracle migration distinguishes wire hashes from local imported IDs,
+  validates carried source clocks and compares nested JSON semantically while
+  retaining strict receipt hashes. The longer main replay has a bounded 120-second
+  per-call budget; other verifier defaults are preserved.
+
+Compose configuration and CA-backed build pass. The lab runs
+`sha256:0d844d8223a405d7eb4303b5aa9fafc99722fb3f713562a0d3bfbc6c8e23cf25`.
+Root returns HTTP 200; all 11 changed/new UI assets, including the component
+reference at `/ui-components`, match the final workspace. Served OpenAPI and nine
+deployed response checks pass. Only the Go service is recreated; telemetry and
+XTDB volumes remain untouched. Raw campaigns/disposable stores are removed;
+compact traces, summaries and documentation frames remain. These checks do not
+prove source authentication, transactional reads or upstream completeness.
+Native/duration histogram and other remaining V0 family adoption stays ahead of
+editor/renderer expansion; no pooled percentile or causal claim is introduced.
+
 ## Shared fixed numeric histograms and checked ranges — 269
 
 `histogramDataset` now carries the existing same-count-read fixed numeric bins

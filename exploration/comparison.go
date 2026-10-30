@@ -46,19 +46,20 @@ type ValueComparison struct {
 	DifferencePP     string             `json:"differencePP"`
 }
 type CohortComparison struct {
-	ViewComparison *ViewComparison    `json:"viewComparison,omitempty"`
-	AggregateOnly  bool               `json:"aggregateOnly,omitempty"`
-	Measures       *MeasureComparison `json:"measures,omitempty"`
-	State          string             `json:"state"`
-	Reason         string             `json:"reason,omitempty"`
-	Field          Field              `json:"field"`
-	BaselineCount  string             `json:"baselineCount"`
-	SelectionCount string             `json:"selectionCount"`
-	BaselineBasis  string             `json:"baselineBasis"`
-	SelectionBasis string             `json:"selectionBasis"`
-	Basis          string             `json:"basis"`
-	Rows           []ValueComparison  `json:"rows"`
-	Warnings       []string           `json:"warnings"`
+	HistogramComparison *ViewHistogramComparison `json:"histogramComparison,omitempty"`
+	ViewComparison      *ViewComparison          `json:"viewComparison,omitempty"`
+	AggregateOnly       bool                     `json:"aggregateOnly,omitempty"`
+	Measures            *MeasureComparison       `json:"measures,omitempty"`
+	State               string                   `json:"state"`
+	Reason              string                   `json:"reason,omitempty"`
+	Field               Field                    `json:"field"`
+	BaselineCount       string                   `json:"baselineCount"`
+	SelectionCount      string                   `json:"selectionCount"`
+	BaselineBasis       string                   `json:"baselineBasis"`
+	SelectionBasis      string                   `json:"selectionBasis"`
+	Basis               string                   `json:"basis"`
+	Rows                []ValueComparison        `json:"rows"`
+	Warnings            []string                 `json:"warnings"`
 }
 
 func decimal(value string) (*big.Int, error) {

@@ -1388,3 +1388,13 @@ ordered supplied keys to coefficient geometry for the Go planner; adapters check
 the same binding again after awaits. No generic threshold predicate is invented
 from a max+1 edge. The duplicate raw display model is removed. Existing comparison,
 native OTel and categorical duration histogram owners remain explicit.
+
+270 adds [canonical histogram comparison operands](SCOPED_HISTOGRAM_COMPARISONS.md)
+without merging scope, support, content identity or clocks. The Go comparison
+validator produces two held histogram snapshots; H0 admission shares frozen
+handles and the HTTP adapter conservatively imports both sides. The passive
+aligned element derives exact total/valid percentages and display scales.
+`histogram-comparison-actions.mjs` captures an explicit pair/side and coefficient
+range for the existing Go planner, separate from current-role H1 staging. The
+application checks loaded retained content and rechecks the captured guard after
+awaits. No source read belongs to component lifecycle or mode switching.

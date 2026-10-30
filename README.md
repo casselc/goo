@@ -544,5 +544,7 @@ Unknown counts and Error/count fractions, with fixed percentage axes and explici
 empty/unknown states. Status comparisons retain their percentage-point presenter.
 [Fixed numeric histograms](docs/SCOPED_HISTOGRAMS.md) now share the same dataset,
 histogram/table displays and execution-bound range planning, retaining exact
-support and domain edges. Aligned comparisons, native/duration histogram and other
-family semantics still need adoption before renderer or contributed-view expansion.
+support and domain edges. [Aligned histogram comparisons](docs/SCOPED_HISTOGRAM_COMPARISONS.md)
+retain independent operands and offer count, captured-record share and valid-value
+share scales. Native/duration histogram and other family semantics still need
+adoption before renderer or contributed-view expansion.
