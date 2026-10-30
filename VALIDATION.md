@@ -1,5 +1,52 @@
 # Validation record
 
+## Count intervals and multi-field scoped displays — 262
+
+The shared canonical snapshot now covers count intervals and ordinary one/two-field
+count breakdowns. Native time bars preserve exact half-open UTC bounds, clipped
+final widths and observed/no-data/unknown/gap distinctions; table switching is local.
+Window and whole-tuple intents stage through the existing fixed-question owner
+before Run. Checked effective-environment policy survives Saved/fixed/interval reuse.
+Complete intervals require scoped/revision attestation and continuous known coverage.
+Dedicated triage actions and numeric/latency/native/grouped-time presenters remain
+outside this bounded adoption; no Plotly or editor is claimed. See
+[contract and flow](docs/SCOPED_INTERVALS.md),
+[executable storyboard/frames](journeys/262-scoped-intervals-storyboard.md).
+
+Full Go checks and all655 frontend tests pass, with no frontend skips. Fourteen
+focused adapter tests include100 generated interval partitions, null/empty tuple
+identity, exact uint64 counts, clipped/no-data/unknown/gap cases,1000/1001 groups,
+checked policy and source-read count controls. Pure JS includes19 contract tests.
+Standalone Chromium conformance passes native interval/table/line/bar, true widths,
+exact UTC/tooltips, gap/zero/unknown refusal, complete-only rechecks, all-field tables,
+SSR/pre-upgrade/detached updates,390px and no application IO. API schema checks pass
+96 operations,429 response fixtures,159 requests,28 mux refusals and22 dataset
+negative controls; actual Go ranked/time serialization also validates.
+
+Final actual-OTLP/ClickHouse/generic-runtime journeys261/262 pass together in55.3s;
+262 is44.4s including a35-second Bombadil campaign. It records638 snapshots through
+all10 phases, three explicit Runs, zero unexpected reads and observed completion.
+The Playwright path additionally checks both grouping dimensions, keyboard/mobile,
+retired controls and two explicit Runs through checked-selector Saved reuse.
+Source effects remain unchanged during compatible switching, selection and staging.
+
+Hegel passes30 public-contract sequences and30 generated interval cases against
+actual JS, including exact keys/bounds, unknown/gap, false completeness and stale
+selection. The observed effect ledger uses the existing bounded Quint model via
+observability/quintgo, with12 illicit read/generation controls. The generation is
+an ordinal of observed successful applied Runs, not an opaque dataset token; this
+checks ownership, not whole-product liveness or source truth. Final five-Run
+replay passes in21.48s and rejects all12 altered controls. Independent review
+caught and fixed a missing interval key; no remaining blocker was found for this slice.
+
+CA-trusted configured build and packages-only lab deployment succeeded:
+`25fd825a58e0810fbc2e7ad0e942b781cf4f867a7b6e147c9f2cb7cfd3fb7286`.
+HTTP root returns200; seven changed UI assets match source bytes. Other services
+and data volumes were preserved. Obsolete build cache older than24h was pruned;
+compact summaries and documentation frames are kept, disposable campaign output
+is removed after verification.
+
+
 ## Scoped display contract and linked breakdown — 261
 
 Delivered the first bounded V0 slice: Go supplies a typed single-group count

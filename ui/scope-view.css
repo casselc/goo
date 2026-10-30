@@ -20,6 +20,17 @@ goo-chart,goo-scope-facet{display:block;min-width:0;max-width:100%}
 .scope-view-facet-label{font-weight:600;margin-right:4px}.scope-view-facet button{font:inherit;color:var(--ink,#e3e9f3);background:var(--panel,#151d28);border:1px solid var(--border,#2b3545);border-radius:4px;padding:4px 7px;cursor:pointer;overflow-wrap:anywhere;max-width:100%}
 .scope-view-facet-note{color:var(--muted,#98a8bf);font-size:11px}
 .scope-view-coordinate-note{display:block;color:var(--muted,#98a8bf);font-size:11px;margin-top:6px}
+.scope-time{margin:0;min-width:0}.scope-time-track{position:relative;height:144px;border-bottom:1px solid var(--muted,#98a8bf);margin:8px 0 5px}
+.scope-time-interval{position:absolute;bottom:0;height:100%;padding:0;border:0;border-inline:1px solid transparent;border-radius:0;background:transparent;color:var(--ink,#e3e9f3);font:inherit;cursor:pointer;min-width:0;overflow:visible;box-sizing:border-box}
+.scope-time-fill{position:absolute;bottom:0;left:1px;right:1px;background:var(--accent,#79ddc6);min-width:0}
+.scope-time-count{position:absolute;bottom:4px;left:0;right:0;font-size:10px;overflow:hidden;text-overflow:ellipsis;color:#10141c;text-align:center}
+.scope-time-interval[data-state=no_data]{border-bottom:3px solid var(--accent,#79ddc6);height:12px}
+.scope-time-gap,.scope-time-interval[data-state=unknown]{position:absolute;bottom:0;height:100%;border:1px dashed var(--muted,#98a8bf);background:repeating-linear-gradient(135deg,transparent,transparent 5px,var(--border,#2b3545) 5px,var(--border,#2b3545) 6px);box-sizing:border-box}
+.scope-time-axis{display:flex;justify-content:space-between;gap:8px;color:var(--muted,#98a8bf);font-size:10px;overflow-wrap:anywhere}.scope-time-axis>span:last-child{text-align:right}
+.scope-time-legend{display:flex;gap:6px 12px;flex-wrap:wrap;margin:8px 0 0;font-size:11px;color:var(--muted,#98a8bf)}
+.scope-time-legend>span:before{content:'';display:inline-block;width:9px;height:9px;margin-right:4px;vertical-align:middle;background:var(--accent,#79ddc6)}
+.scope-time-legend>.scope-time-empty-key:before{height:2px}.scope-time-legend>.scope-time-unknown-key:before{background:transparent;border:1px dashed currentColor}
+.scope-view[data-value-knowledge=estimated] .scope-time-fill{background:repeating-linear-gradient(135deg,var(--accent,#79ddc6),var(--accent,#79ddc6) 3px,var(--panel,#151d28) 3px,var(--panel,#151d28) 5px)}
 goo-chart :is(button,summary):focus-visible,goo-scope-facet button:focus-visible{outline:2px solid var(--accent,#79ddc6);outline-offset:2px}
 @media(max-width:400px){.scope-view-bar{padding-inline:3px}.scope-view-quality{gap:3px 8px}}
 @media(prefers-reduced-motion:reduce){goo-chart *,goo-scope-facet *{scroll-behavior:auto;animation-duration:0s!important;transition-duration:0s!important}}

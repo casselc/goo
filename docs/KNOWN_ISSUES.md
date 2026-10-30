@@ -1,9 +1,13 @@
 # Known issues and gaps
 
+262 adds [count intervals and ordinary two-field count tables](SCOPED_INTERVALS.md),
+including known-zero/unknown/gap semantics and explicit checked-scope narrowing.
+Dedicated service/type actions, numeric/latency/native families, grouped time
+series and broader per-cell uncertainty remain unmigrated.
+
 261 adds [scoped displays](SCOPED_VIEW_PILOT.md) for single-group count breakdowns.
 Native table/bar and shared facets use one supplied dataset; complete-only uses
-Go-attested groups. Richer/native/time-series families and per-cell uncertainty
-remain unmigrated. No Plotly, persisted view grammar or WYSIWYG editor is shipped.
+Go-attested groups. Richer/native families and broader per-cell uncertainty remain unmigrated. No Plotly, persisted view grammar or WYSIWYG editor is shipped.
 
 257–259 add local Activity/fixed/Saved record Keep/Open and server-wide discovery
 independent of XTDB. Find pages derived metadata; exact Open verifies records.

@@ -158,3 +158,36 @@ let snapshot=make();for(const action of actions){const before=JSON.stringify(sna
 		}
 	}, options(30)...)
 }
+
+// Vary the window, interval width and clipped final bucket against the actual JS
+// interval contract. A known aggregate interval is a window, never record refs.
+func TestHegelScopedTimeIntervalContracts(t *testing.T) {
+	hegel.Test(t, func(tc *hegel.T) {
+		input := struct{ From, Count, Bucket, Clip, Missing int }{
+			From:   hegel.Draw(tc, hegel.Integers(0, 2000000)),
+			Count:  hegel.Draw(tc, hegel.Integers(1, 24)),
+			Bucket: hegel.Draw(tc, hegel.SampledFrom([]int{1000, 10000, 60000, 300000})),
+		}
+		input.Clip = hegel.Draw(tc, hegel.Integers(0, input.Bucket-1))
+		input.Missing = hegel.Draw(tc, hegel.Integers(0, input.Count-1))
+		wire, e := json.Marshal(input)
+		if e != nil {
+			t.Fatal(e)
+		}
+		script := `const fs=require('node:fs'),assert=require('node:assert/strict'),v=require('../ui/view-model.mjs');
+const input=JSON.parse(fs.readFileSync(0,'utf8')),from=BigInt(input.From),bucket=BigInt(input.Bucket),to=from+BigInt(input.Count)*bucket-BigInt(input.Clip);
+const s={version:'goo.dataset/1',id:'intervals',revision:'r1',scope:{id:'q1',generation:1,signal:'logs',selector:{}},shape:'time-series',fields:[{key:'fromMs',label:'From UTC',type:'timestamp',unit:'ms'},{key:'toMs',label:'To UTC',type:'timestamp',unit:'ms'},{key:'count',label:'Captured records',type:'number',unit:'records'}],interval:{fromMs:String(from),toMs:String(to),bucketMs:String(bucket)},rows:[],quality:{extent:'complete',basis:'captured-query',value:'derived',sampling:'unknown',freshness:'fixed'},completeness:{basis:'captured-query',revision:'r1',scopeId:'q1',aspects:['intervals']}};
+for(let i=0;i<input.Count;i++){const start=from+BigInt(i)*bucket,end=start+bucket<to?start+bucket:to;s.rows.push({key:'interval-'+i,values:{fromMs:String(start),toMs:String(end),count:i%2?'0':'9007199254740993'},state:i%2?'no_data':'observed'})}
+assert.equal(v.validateSnapshot(s).ok,true);assert.equal(v.validateDisplay(s,{kind:'time-bar',requiresComplete:true}).ok,true);assert.deepEqual(v.eligibleKinds(s),['table','time-bar']);
+const original=JSON.stringify(s);for(const row of s.rows){const intent=v.intervalIntent(s,row.key);assert.deepEqual(intent,{type:'scope-window',datasetId:s.id,revision:s.revision,scopeId:s.scope.id,generation:s.scope.generation,key:row.key,fromMs:row.values.fromMs,toMs:row.values.toMs});assert.equal(Object.hasOwn(intent,'members'),false)}assert.equal(JSON.stringify(s),original);
+const missing=structuredClone(s),removed=missing.rows.splice(input.Missing,1)[0];assert.equal(v.validateSnapshot(missing).ok,false);missing.quality.extent='partial';delete missing.completeness;assert.equal(v.validateSnapshot(missing).ok,true);assert.throws(()=>v.intervalIntent(missing,removed.key));assert.equal(v.validateDisplay(missing,{kind:'time-bar',requiresComplete:true}).ok,false);
+const unknown=structuredClone(s),row=unknown.rows[input.Missing];row.state='unknown';row.values.count=null;assert.equal(v.validateSnapshot(unknown).ok,false);unknown.quality.extent='unknown';delete unknown.completeness;assert.equal(v.validateSnapshot(unknown).ok,true);assert.throws(()=>v.intervalIntent(unknown,row.key));row.values.count='0';assert.equal(v.validateSnapshot(unknown).ok,false);
+const stale=structuredClone(s);stale.revision='r2';stale.scope.generation=2;stale.completeness.revision='r2';stale.rows=stale.rows.map(row=>({...row,key:'next-'+row.key}));assert.throws(()=>v.intervalIntent(stale,s.rows[0].key));assert.equal(v.intervalIntent(stale,stale.rows[0].key).generation,2);process.stdout.write('ok');`
+		cmd := exec.Command("node", "-e", script)
+		cmd.Stdin = bytes.NewReader(wire)
+		out, e := cmd.CombinedOutput()
+		if e != nil || string(out) != "ok" {
+			t.Fatalf("public time interval contracts: %v: %s", e, out)
+		}
+	}, options(30)...)
+}

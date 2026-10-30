@@ -108,34 +108,70 @@ schemas['exploration.KeptRepairRequestInput']['properties']['cursor'].update(max
 schemas['KeptSearchError']={'type':'object','required':['error','repairAvailable'],'properties':{'error':{'type':'string'},'repairAvailable':{'type':'boolean','description':'True only when explicit index repair may address discovery failure; false for capacity and cursor refusals.'}},'additionalProperties':False}
 schemas['Error'] = {'type': 'object', 'required': ['error'], 'properties': {'error': {'type': 'string'}, 'hint': {'type': 'string'}}, 'additionalProperties': True}
 schemas['Cancellation'] = {'type': 'object', 'required': ['state'], 'properties': {'state': {'const': 'cancellation-requested'}}}
-# Canonical supplied display snapshot: this server adapter is deliberately narrower
-# than the extensible UI contract. It certifies only one exhaustive GROUP BY read.
-for name in ('ViewDataset','ViewScope','ViewField','ViewRow','ViewValues','ViewQuality','ViewCompleteness'):
+# Canonical supplied display snapshots: exact field maps, with exhaustive
+# ranked-group and interval projections owned by the Go source data path.
+for name in ('ViewDataset','ViewScope','ViewField','ViewRow','ViewQuality','ViewCompleteness','ViewInterval'):
  schemas['exploration.'+name]['additionalProperties']=False
+exact_count={'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':20,'description':'Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value.'}
+epoch_ms={'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':16,'description':'Exact nonnegative epoch milliseconds, Date-safe; Go checked queries are bounded before2100.'}
+category={'type':['string','null'],'maxLength':1024,'description':'Null is missing; empty string is present empty. Runtime enforces1024 UTF-8 bytes; Schema maxLength counts characters.'}
+schemas['exploration.ViewValues']={'type':'object','additionalProperties':{'type':['string','null'],'maxLength':1024},'description':'Exact strings or explicit missing values. Dataset fields and shape constrain every cell; no vendor-specific opaque payload.'}
 view=schemas['exploration.ViewDataset'];view_props=view['properties']
-view['description']='Supplied immutable ranked count snapshot for a supported single grouping. Complete groups means the bounded GROUP BY read succeeded exhaustively; it does not certify raw-record pagination, upstream ingestion/sampling, count/page coherence, or a transactional snapshot. Scope/revision-bound attestations and exact counts are server-derived; the UI may not manufacture completeness.'
-view_props['version']['const']='goo.dataset/1';view_props['shape']['const']='ranked'
-view_props['id']['pattern']='^[a-f0-9]{64}:groups$';view_props['revision']['pattern']='^[a-f0-9]{64}$'
-view_props['capturedAt']['format']='date-time'
-view_props['fields']={'type':'array','minItems':2,'maxItems':2,'prefixItems':[{'allOf':[ref('exploration.ViewField'),{'properties':{'key':{'const':'category'},'type':{'const':'string'},'nullable':{'const':True}},'required':['nullable']}]},{'allOf':[ref('exploration.ViewField'),{'properties':{'key':{'const':'count'},'type':{'const':'number'},'unit':{'const':'records'}},'required':['unit']}]}],'items':False}
+view['description']='Supplied immutable count snapshot: exhaustive captured-query groups or explicit count intervals. Result-aspect completeness never certifies raw-record paging, upstream ingestion/sampling or a transactional count/page pair. Scope/revision equality and interval coverage are runtime checked.'
+view_props['version']['const']='goo.dataset/1';view_props['shape']['enum']=['ranked','time-series']
+view_props['id']['pattern']='^[a-f0-9]{64}:(groups|intervals)$';view_props['revision']['pattern']='^[a-f0-9]{64}$';view_props['capturedAt']['format']='date-time'
+view_props['fields']={'type':'array','minItems':2,'maxItems':3,'items':ref('exploration.ViewField')}
 view_props['rows']={'type':'array','maxItems':1000,'items':ref('exploration.ViewRow')}
-view['allOf']=[{'if':{'properties':{'quality':{'properties':{'extent':{'const':'complete'}},'required':['extent']}},'required':['quality']},'then':{'required':['completeness'],'properties':{'completeness':{'type':'object'}}},'else':{'properties':{'completeness':{'type':'null'}}}}]
+view_props['dimensions']={'type':'array','minItems':1,'maxItems':2,'uniqueItems':True,'items':{'enum':['category','category1']}}
 view_scope=schemas['exploration.ViewScope']['properties']
 for name in ('id','generation'):view_scope[name]['pattern']='^[a-f0-9]{64}$'
-view_scope['signal']['enum']=['logs','spans'];view_scope['selector']=ref('exploration.Query')
-view_scope['selector']['description']='Exact checked applied question, including environment policy, time bounds, predicates and grouping; serialized independently from mutable caller state.'
-view_field=schemas['exploration.ViewField']['properties'];view_field['key']['enum']=['category','count'];view_field['type']['enum']=['string','number']
-view_quality=schemas['exploration.ViewQuality']['properties']
-view_quality['extent']['enum']=['complete','unknown']
+view_scope['signal']['enum']=['logs','spans'];view_scope['selector']={**ref('exploration.Query'),'description':'Exact applied checked question including environment policy, window, predicates and grouping.'}
+view_field=schemas['exploration.ViewField']['properties'];view_field['key']['enum']=['category','category1','count','fromMs','toMs'];view_field['type']['enum']=['string','number','timestamp']
+view_quality=schemas['exploration.ViewQuality']['properties'];view_quality['extent']['enum']=['complete','unknown']
 for name,value in [('basis','captured-query'),('value','derived'),('sampling','unknown'),('freshness','fixed')]:view_quality[name]['const']=value
-view_quality['sampling']['description']='Upstream sampling/collection completeness is unverified even when all captured-query groups are present.'
-view_quality['extent']['description']='Completeness concerns supplied groups only. Changed-between-reads observations conservatively remain unknown.'
-view_complete=schemas['exploration.ViewCompleteness']['properties'];view_complete['basis']['const']='captured-query';view_complete['aspects']={'const':['groups']}
+view_quality['sampling']['description']='Upstream sampling and collection completeness remain unverified even for complete result aspects.'
+view_quality['extent']['description']='Only groups/intervals as named by shape; disagreement or unproved coverage remains unknown.'
+view_complete=schemas['exploration.ViewCompleteness']['properties'];view_complete['basis']['const']='captured-query';view_complete['aspects']={'type':'array','minItems':1,'maxItems':1,'items':{'enum':['groups','intervals']}}
 for name in ('revision','scopeId'):view_complete[name]['pattern']='^[a-f0-9]{64}$'
-schemas['exploration.ViewCompleteness']['description']='Data-path attestation bound to the enclosing dataset revision and scope ID; cross-field equality is enforced by the runtime, not JSON Schema. Never inferred from a page length or separately read count.'
-schemas['exploration.ViewRow']['properties']['key'].update(pattern='^category:[a-f0-9]{64}$',description='Fixed SHA256 identity of the canonical nullable category. Null/missing and present empty string remain distinct; this is not a source-record member reference.')
-schemas['exploration.ViewValues']['properties']['count'].update(pattern='^(0|[1-9][0-9]*)$',maxLength=20,description='Exact canonical uint64 decimal; Go enforces the maximum18446744073709551615. Floating-point plotting coordinates do not replace this value.')
-schemas['exploration.ViewValues']['properties']['category']={'type':['string','null'],'maxLength':1024,'description':'Null is a missing key; the empty string is a present empty value. Preserve both without coercion. Runtime enforces1024 UTF-8 bytes; JSON Schema maxLength counts characters.'}
+schemas['exploration.ViewCompleteness']['description']='Bound to enclosing revision/scope ID; runtime enforces equality. Intervals require exhaustive contiguous known-state coverage. Never inferred from page length or a separate count.'
+interval_props=schemas['exploration.ViewInterval']['properties']
+for name in ('fromMs','toMs'):interval_props[name]=copy.deepcopy(epoch_ms)
+interval_props['bucketMs']={'type':'string','enum':['1000','10000','60000','300000']}
+row=schemas['exploration.ViewRow'];row['properties']['state']['enum']=['observed','no_data','unknown']
+row['properties']['key'].update(minLength=1,maxLength=128,description='Stable snapshot row identity; never a source-record member reference.')
+
+def view_field_spec(key,kind,unit=None,nullable=False):
+ props={'key':{'const':key},'type':{'const':kind}}
+ required=[]
+ if unit:props['unit']={'const':unit};required.append('unit')
+ if nullable:props['nullable']={'const':True};required.append('nullable')
+ return {'allOf':[ref('exploration.ViewField'),{'properties':props,'required':required}]}
+ranked=[]
+for dims in (['category'],['category','category1']):
+ fields=[view_field_spec(key,'string',nullable=True) for key in dims]+[view_field_spec('count','number','records')]
+ values={'type':'object','required':dims+['count'],'properties':{**{key:category for key in dims},'count':exact_count},'additionalProperties':False}
+ ranked_row={'allOf':[ref('exploration.ViewRow'),{
+  'not':{'required':['state']},
+  'properties':{'key':{'pattern':'^category:[a-f0-9]{64}$'},'values':values}}]}
+ ranked.append({'required':['dimensions'],'properties':{
+  'dimensions':{'const':dims},
+  'fields':{'minItems':len(fields),'maxItems':len(fields),'prefixItems':fields,'items':False},
+  'rows':{'items':ranked_row}}})
+time_values={'type':'object','required':['fromMs','toMs'],'properties':{'fromMs':epoch_ms,'toMs':epoch_ms,'count':{'type':['string','null']}},'additionalProperties':False}
+time_states=[{'properties':{'state':{'const':'observed'},'values':{'required':['count'],'properties':{'count':{**exact_count,'pattern':'^[1-9][0-9]*$'}}}}},{'properties':{'state':{'const':'no_data'},'values':{'required':['count'],'properties':{'count':{'const':'0'}}}}},{'properties':{'state':{'const':'unknown'},'values':{'properties':{'count':{'type':'null'}}}}}]
+time_fields=[view_field_spec('fromMs','timestamp','ms'),view_field_spec('toMs','timestamp','ms'),view_field_spec('count','number','records')]
+ranked_shape={'properties':{'shape':{'const':'ranked'},'id':{'pattern':'^[a-f0-9]{64}:groups$'},'completeness':{'properties':{'aspects':{'const':['groups']}}}},'not':{'required':['interval']},'oneOf':ranked}
+time_row={'allOf':[ref('exploration.ViewRow'),{
+ 'required':['state'],
+ 'properties':{'key':{'pattern':'^interval:[0-9]+:[0-9]+$'},'values':time_values},
+ 'oneOf':time_states}]}
+time_shape={'required':['interval'],'not':{'required':['dimensions']},'properties':{
+ 'shape':{'const':'time-series'},'id':{'pattern':'^[a-f0-9]{64}:intervals$'},'interval':{'type':'object'},
+ 'fields':{'minItems':3,'maxItems':3,'prefixItems':time_fields,'items':False},
+ 'rows':{'maxItems':240,'items':time_row},
+ 'completeness':{'properties':{'aspects':{'const':['intervals']}}}}}
+view['oneOf']=[ranked_shape,time_shape]
+view['allOf']=[{'if':{'properties':{'quality':{'properties':{'extent':{'const':'complete'}},'required':['extent']}},'required':['quality']},'then':{'required':['completeness'],'properties':{'completeness':{'type':'object'},'rows':{'items':{'properties':{'state':{'enum':['observed','no_data']}}}}}},'else':{'properties':{'completeness':{'type':'null'}}}}]
 
 # Counted values are two explicit observations, never a transactional snapshot.
 counted=schemas['exploration.CountedValuesResult']['properties']

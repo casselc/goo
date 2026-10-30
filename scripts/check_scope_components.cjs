@@ -64,7 +64,37 @@ const snapshot={
       return {points,frame,unknown,signed};
     });
     assert(line.points&&!/NaN|Infinity/.test(line.points));assert(line.frame);assert(line.unknown);assert(line.signed);
+    const temporal=await page.evaluate(()=>{
+      const snapshot=structuredClone(window.supplied);snapshot.shape='time-series';
+      snapshot.interval={fromMs:'0',toMs:'45000',bucketMs:'10000'};
+      snapshot.fields=[{key:'fromMs',label:'From UTC',type:'timestamp',unit:'ms'},{key:'toMs',label:'To UTC',type:'timestamp',unit:'ms'},{key:'count',label:'Captured records',type:'number',unit:'records'},{key:'extra',label:'Additional field',type:'string'}];
+      snapshot.rows=[
+        {key:'first',state:'observed',values:{fromMs:'0',toMs:'10000',count:'5',extra:'Kept'}},
+        {key:'empty',state:'no_data',values:{fromMs:'10000',toMs:'20000',count:'0'}},
+        {key:'unknown',state:'unknown',values:{fromMs:'20000',toMs:'30000',count:null}},
+        {key:'last',state:'observed',values:{fromMs:'40000',toMs:'45000',count:'18446744073709551615'}}
+      ];
+      const chart=document.createElement('goo-chart');chart.snapshot=snapshot;chart.display={kind:'time-bar'};document.body.append(chart);
+      const buttons=[...chart.querySelectorAll('.scope-time-interval')],gaps=chart.querySelectorAll('.scope-time-gap').length;
+      let selection;chart.addEventListener('goo-select',event=>selection=event.detail);buttons[0].click();
+      const last=buttons.at(-1),first=buttons[0],positions=Number.parseFloat(last.style.left)>88&&Number.parseFloat(last.style.width)<12&&Number.parseFloat(first.style.width)>22;
+      const states=chart.querySelectorAll('[data-state=no_data]').length===1&&chart.querySelectorAll('.scope-time-interval[data-state=unknown]').length===1;
+      const title=last.title.includes('1970-01-01T00:00:40.000Z')&&last.title.includes('18446744073709551615')&&last.title.includes('[40000, 45000) ms');
+      const noLine=!chart.querySelector('polyline'),quality=chart.textContent.includes('partial intervals')&&chart.textContent.includes('unknown upstream sampling');
+      chart.display={kind:'table'};
+      const table=chart.textContent.includes('Additional field')&&chart.textContent.includes('Kept')&&chart.textContent.includes('Unknown coverage')&&chart.querySelector('td').textContent==='1970-01-01T00:00:00.000Z'&&chart.querySelector('td').title==='0 ms since Unix epoch';
+      chart.display={kind:'time-bar',requiresComplete:true};const refuses=chart.textContent.includes('Complete captured-query intervals');
+      snapshot.rows[2].state='no_data';snapshot.rows[2].values.count='0';snapshot.rows.splice(3,0,{key:'gap-filled',state:'no_data',values:{fromMs:'30000',toMs:'40000',count:'0'}});
+      snapshot.quality.extent='complete';snapshot.completeness={basis:'captured-query',revision:snapshot.revision,scopeId:snapshot.scope.id,aspects:['intervals']};chart.snapshot=snapshot;
+      const complete=chart.querySelectorAll('.scope-time-interval').length===5&&!chart.querySelector('.scope-time-gap');
+      snapshot.revision='new';chart.snapshot=snapshot;const revisionRefuses=!chart.querySelector('.scope-time-track');
+      snapshot.quality.extent='unknown';delete snapshot.completeness;snapshot.rows=[];chart.display={kind:'time-bar'};chart.snapshot=snapshot;
+      const emptyUnknown=chart.querySelectorAll('.scope-time-gap').length===1&&chart.textContent.includes('Unknown, not zero');
+      return {buttons:buttons.length,gaps,positions,states,title,noLine,quality,table,refuses,complete,revisionRefuses,emptyUnknown,selection};
+    });
+    assert.equal(temporal.buttons,4);assert.equal(temporal.gaps,1);assert.equal(temporal.selection.key,'first');
+    for(const key of ['positions','states','title','noLine','quality','table','refuses','complete','revisionRefuses','emptyUnknown'])assert(temporal[key],key);
     assert(!requests.some(name=>name.startsWith('/api/')||name==='/app.mjs'));
-    console.log('Scoped components: exact values, missing cells, quality, complete-only refusal, table/bar/line, signed/unknown fallback, typed intents, SSR/pre-upgrade,390px layout and no application IO pass');
+    console.log('Scoped components: exact values, missing cells, quality, complete-only refusal, table/bar/line/time-bar, interval gaps/no-data/unknown/UTC/clipped widths, typed intents, SSR/pre-upgrade,390px layout and no application IO pass');
   }finally{await browser?.close()}
 })().catch(error=>{console.error(error);process.exitCode=1});

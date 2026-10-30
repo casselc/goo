@@ -506,3 +506,8 @@ Single-group count breakdowns now share a [scoped display contract](docs/SCOPED_
 switch bars/table without querying, inspect exact values and stage a facet filter
 before Run. Complete-only rendering uses Go-attested group extent while upstream
 sampling stays unknown. [Storyboard](journeys/261-scoped-breakdown-storyboard.md).
+
+[Count intervals and multi-field breakdowns](docs/SCOPED_INTERVALS.md) now use the
+same display contract: exact UTC windows, known-zero versus unknown coverage,
+true clipped bucket widths, all-dimension tables and explicit staged narrowing.
+[Current storyboard](journeys/262-scoped-intervals-storyboard.md).

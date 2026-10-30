@@ -698,6 +698,10 @@ under multiple charts and live data before broad migration.
 
 ## Implementation order
 
+262 extends the delivered slice to [count intervals and grouped tuples](SCOPED_INTERVALS.md),
+with exact window/state/quality contracts and staged effects. Richer measure
+support and full-family/whole-screen parity remain target work.
+
 261 delivers the [first bounded step1 slice](SCOPED_VIEW_PILOT.md): typed ranked
 snapshots, native table/bar/numeric-line, scope facets and Go-attested group extent.
 Only single-group count exploration is adopted. Fuller quality/time-series/native

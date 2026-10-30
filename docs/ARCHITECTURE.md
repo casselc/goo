@@ -1315,3 +1315,8 @@ The [261 scoped-display pilot](SCOPED_VIEW_PILOT.md) now implements a bounded
 part of that boundary: Go grouped source reads supply the typed snapshot, passive
 chart/facet components share it, and exploration validates intents before staging.
 Only explicit Run executes; existing richer presenters remain outside this pilot.
+
+262 adds count interval snapshots alongside ranked tuples, with exact string/null
+field maps, explicit dimensions and named group/interval completeness aspects.
+[The scoped interval flow](SCOPED_INTERVALS.md) keeps rendering passive and stages
+checked time/tuple intents through the existing fixed-question owner.

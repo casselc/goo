@@ -16272,6 +16272,16 @@
           "state": {
             "type": "string"
           },
+          "timeDataset": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewDataset"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "timeSeries": {
             "anyOf": [
               {
@@ -18018,9 +18028,15 @@
       "exploration.ViewCompleteness": {
         "properties": {
           "aspects": {
-            "const": [
-              "groups"
-            ]
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "items": {
+              "enum": [
+                "groups",
+                "intervals"
+              ]
+            }
           },
           "basis": {
             "type": "string",
@@ -18044,7 +18060,7 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ViewCompleteness",
         "additionalProperties": false,
-        "description": "Data-path attestation bound to the enclosing dataset revision and scope ID; cross-field equality is enforced by the runtime, not JSON Schema. Never inferred from a page length or separately read count."
+        "description": "Bound to enclosing revision/scope ID; runtime enforces equality. Intervals require exhaustive contiguous known-state coverage. Never inferred from page length or a separate count."
       },
       "exploration.ViewDataset": {
         "properties": {
@@ -18062,63 +18078,39 @@
               }
             ]
           },
+          "dimensions": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 2,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "category",
+                "category1"
+              ]
+            }
+          },
           "fields": {
             "type": "array",
             "minItems": 2,
-            "maxItems": 2,
-            "prefixItems": [
-              {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/exploration.ViewField"
-                  },
-                  {
-                    "properties": {
-                      "key": {
-                        "const": "category"
-                      },
-                      "type": {
-                        "const": "string"
-                      },
-                      "nullable": {
-                        "const": true
-                      }
-                    },
-                    "required": [
-                      "nullable"
-                    ]
-                  }
-                ]
-              },
-              {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/exploration.ViewField"
-                  },
-                  {
-                    "properties": {
-                      "key": {
-                        "const": "count"
-                      },
-                      "type": {
-                        "const": "number"
-                      },
-                      "unit": {
-                        "const": "records"
-                      }
-                    },
-                    "required": [
-                      "unit"
-                    ]
-                  }
-                ]
-              }
-            ],
-            "items": false
+            "maxItems": 3,
+            "items": {
+              "$ref": "#/components/schemas/exploration.ViewField"
+            }
           },
           "id": {
             "type": "string",
-            "pattern": "^[a-f0-9]{64}:groups$"
+            "pattern": "^[a-f0-9]{64}:(groups|intervals)$"
+          },
+          "interval": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewInterval"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "quality": {
             "$ref": "#/components/schemas/exploration.ViewQuality"
@@ -18139,7 +18131,10 @@
           },
           "shape": {
             "type": "string",
-            "const": "ranked"
+            "enum": [
+              "ranked",
+              "time-series"
+            ]
           },
           "version": {
             "type": "string",
@@ -18160,7 +18155,495 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ViewDataset",
         "additionalProperties": false,
-        "description": "Supplied immutable ranked count snapshot for a supported single grouping. Complete groups means the bounded GROUP BY read succeeded exhaustively; it does not certify raw-record pagination, upstream ingestion/sampling, count/page coherence, or a transactional snapshot. Scope/revision-bound attestations and exact counts are server-derived; the UI may not manufacture completeness.",
+        "description": "Supplied immutable count snapshot: exhaustive captured-query groups or explicit count intervals. Result-aspect completeness never certifies raw-record paging, upstream ingestion/sampling or a transactional count/page pair. Scope/revision equality and interval coverage are runtime checked.",
+        "oneOf": [
+          {
+            "properties": {
+              "shape": {
+                "const": "ranked"
+              },
+              "id": {
+                "pattern": "^[a-f0-9]{64}:groups$"
+              },
+              "completeness": {
+                "properties": {
+                  "aspects": {
+                    "const": [
+                      "groups"
+                    ]
+                  }
+                }
+              }
+            },
+            "not": {
+              "required": [
+                "interval"
+              ]
+            },
+            "oneOf": [
+              {
+                "required": [
+                  "dimensions"
+                ],
+                "properties": {
+                  "dimensions": {
+                    "const": [
+                      "category"
+                    ]
+                  },
+                  "fields": {
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "prefixItems": [
+                      {
+                        "allOf": [
+                          {
+                            "$ref": "#/components/schemas/exploration.ViewField"
+                          },
+                          {
+                            "properties": {
+                              "key": {
+                                "const": "category"
+                              },
+                              "type": {
+                                "const": "string"
+                              },
+                              "nullable": {
+                                "const": true
+                              }
+                            },
+                            "required": [
+                              "nullable"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "allOf": [
+                          {
+                            "$ref": "#/components/schemas/exploration.ViewField"
+                          },
+                          {
+                            "properties": {
+                              "key": {
+                                "const": "count"
+                              },
+                              "type": {
+                                "const": "number"
+                              },
+                              "unit": {
+                                "const": "records"
+                              }
+                            },
+                            "required": [
+                              "unit"
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "items": false
+                  },
+                  "rows": {
+                    "items": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/exploration.ViewRow"
+                        },
+                        {
+                          "not": {
+                            "required": [
+                              "state"
+                            ]
+                          },
+                          "properties": {
+                            "key": {
+                              "pattern": "^category:[a-f0-9]{64}$"
+                            },
+                            "values": {
+                              "type": "object",
+                              "required": [
+                                "category",
+                                "count"
+                              ],
+                              "properties": {
+                                "category": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "maxLength": 1024,
+                                  "description": "Null is missing; empty string is present empty. Runtime enforces1024 UTF-8 bytes; Schema maxLength counts characters."
+                                },
+                                "count": {
+                                  "type": "string",
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "required": [
+                  "dimensions"
+                ],
+                "properties": {
+                  "dimensions": {
+                    "const": [
+                      "category",
+                      "category1"
+                    ]
+                  },
+                  "fields": {
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "prefixItems": [
+                      {
+                        "allOf": [
+                          {
+                            "$ref": "#/components/schemas/exploration.ViewField"
+                          },
+                          {
+                            "properties": {
+                              "key": {
+                                "const": "category"
+                              },
+                              "type": {
+                                "const": "string"
+                              },
+                              "nullable": {
+                                "const": true
+                              }
+                            },
+                            "required": [
+                              "nullable"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "allOf": [
+                          {
+                            "$ref": "#/components/schemas/exploration.ViewField"
+                          },
+                          {
+                            "properties": {
+                              "key": {
+                                "const": "category1"
+                              },
+                              "type": {
+                                "const": "string"
+                              },
+                              "nullable": {
+                                "const": true
+                              }
+                            },
+                            "required": [
+                              "nullable"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "allOf": [
+                          {
+                            "$ref": "#/components/schemas/exploration.ViewField"
+                          },
+                          {
+                            "properties": {
+                              "key": {
+                                "const": "count"
+                              },
+                              "type": {
+                                "const": "number"
+                              },
+                              "unit": {
+                                "const": "records"
+                              }
+                            },
+                            "required": [
+                              "unit"
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "items": false
+                  },
+                  "rows": {
+                    "items": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/exploration.ViewRow"
+                        },
+                        {
+                          "not": {
+                            "required": [
+                              "state"
+                            ]
+                          },
+                          "properties": {
+                            "key": {
+                              "pattern": "^category:[a-f0-9]{64}$"
+                            },
+                            "values": {
+                              "type": "object",
+                              "required": [
+                                "category",
+                                "category1",
+                                "count"
+                              ],
+                              "properties": {
+                                "category": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "maxLength": 1024,
+                                  "description": "Null is missing; empty string is present empty. Runtime enforces1024 UTF-8 bytes; Schema maxLength counts characters."
+                                },
+                                "category1": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "maxLength": 1024,
+                                  "description": "Null is missing; empty string is present empty. Runtime enforces1024 UTF-8 bytes; Schema maxLength counts characters."
+                                },
+                                "count": {
+                                  "type": "string",
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "required": [
+              "interval"
+            ],
+            "not": {
+              "required": [
+                "dimensions"
+              ]
+            },
+            "properties": {
+              "shape": {
+                "const": "time-series"
+              },
+              "id": {
+                "pattern": "^[a-f0-9]{64}:intervals$"
+              },
+              "interval": {
+                "type": "object"
+              },
+              "fields": {
+                "minItems": 3,
+                "maxItems": 3,
+                "prefixItems": [
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/exploration.ViewField"
+                      },
+                      {
+                        "properties": {
+                          "key": {
+                            "const": "fromMs"
+                          },
+                          "type": {
+                            "const": "timestamp"
+                          },
+                          "unit": {
+                            "const": "ms"
+                          }
+                        },
+                        "required": [
+                          "unit"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/exploration.ViewField"
+                      },
+                      {
+                        "properties": {
+                          "key": {
+                            "const": "toMs"
+                          },
+                          "type": {
+                            "const": "timestamp"
+                          },
+                          "unit": {
+                            "const": "ms"
+                          }
+                        },
+                        "required": [
+                          "unit"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/exploration.ViewField"
+                      },
+                      {
+                        "properties": {
+                          "key": {
+                            "const": "count"
+                          },
+                          "type": {
+                            "const": "number"
+                          },
+                          "unit": {
+                            "const": "records"
+                          }
+                        },
+                        "required": [
+                          "unit"
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "items": false
+              },
+              "rows": {
+                "maxItems": 240,
+                "items": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/exploration.ViewRow"
+                    },
+                    {
+                      "required": [
+                        "state"
+                      ],
+                      "properties": {
+                        "key": {
+                          "pattern": "^interval:[0-9]+:[0-9]+$"
+                        },
+                        "values": {
+                          "type": "object",
+                          "required": [
+                            "fromMs",
+                            "toMs"
+                          ],
+                          "properties": {
+                            "fromMs": {
+                              "type": "string",
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 16,
+                              "description": "Exact nonnegative epoch milliseconds, Date-safe; Go checked queries are bounded before2100."
+                            },
+                            "toMs": {
+                              "type": "string",
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 16,
+                              "description": "Exact nonnegative epoch milliseconds, Date-safe; Go checked queries are bounded before2100."
+                            },
+                            "count": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "oneOf": [
+                        {
+                          "properties": {
+                            "state": {
+                              "const": "observed"
+                            },
+                            "values": {
+                              "required": [
+                                "count"
+                              ],
+                              "properties": {
+                                "count": {
+                                  "type": "string",
+                                  "pattern": "^[1-9][0-9]*$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "properties": {
+                            "state": {
+                              "const": "no_data"
+                            },
+                            "values": {
+                              "required": [
+                                "count"
+                              ],
+                              "properties": {
+                                "count": {
+                                  "const": "0"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "properties": {
+                            "state": {
+                              "const": "unknown"
+                            },
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "type": "null"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "completeness": {
+                "properties": {
+                  "aspects": {
+                    "const": [
+                      "intervals"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        ],
         "allOf": [
           {
             "if": {
@@ -18187,6 +18670,18 @@
               "properties": {
                 "completeness": {
                   "type": "object"
+                },
+                "rows": {
+                  "items": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "observed",
+                          "no_data"
+                        ]
+                      }
+                    }
+                  }
                 }
               }
             },
@@ -18206,7 +18701,10 @@
             "type": "string",
             "enum": [
               "category",
-              "count"
+              "category1",
+              "count",
+              "fromMs",
+              "toMs"
             ]
           },
           "label": {
@@ -18219,7 +18717,8 @@
             "type": "string",
             "enum": [
               "string",
-              "number"
+              "number",
+              "timestamp"
             ]
           },
           "unit": {
@@ -18235,6 +18734,39 @@
         "x-go-type": "github.com/casselc/goo/exploration.ViewField",
         "additionalProperties": false
       },
+      "exploration.ViewInterval": {
+        "properties": {
+          "bucketMs": {
+            "type": "string",
+            "enum": [
+              "1000",
+              "10000",
+              "60000",
+              "300000"
+            ]
+          },
+          "fromMs": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 16,
+            "description": "Exact nonnegative epoch milliseconds, Date-safe; Go checked queries are bounded before2100."
+          },
+          "toMs": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 16,
+            "description": "Exact nonnegative epoch milliseconds, Date-safe; Go checked queries are bounded before2100."
+          }
+        },
+        "required": [
+          "fromMs",
+          "toMs",
+          "bucketMs"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewInterval",
+        "additionalProperties": false
+      },
       "exploration.ViewQuality": {
         "properties": {
           "basis": {
@@ -18247,7 +18779,7 @@
               "complete",
               "unknown"
             ],
-            "description": "Completeness concerns supplied groups only. Changed-between-reads observations conservatively remain unknown."
+            "description": "Only groups/intervals as named by shape; disagreement or unproved coverage remains unknown."
           },
           "freshness": {
             "type": "string",
@@ -18256,7 +18788,7 @@
           "sampling": {
             "type": "string",
             "const": "unknown",
-            "description": "Upstream sampling/collection completeness is unverified even when all captured-query groups are present."
+            "description": "Upstream sampling and collection completeness remain unverified even for complete result aspects."
           },
           "value": {
             "type": "string",
@@ -18278,11 +18810,37 @@
         "properties": {
           "key": {
             "type": "string",
-            "pattern": "^category:[a-f0-9]{64}$",
-            "description": "Fixed SHA256 identity of the canonical nullable category. Null/missing and present empty string remain distinct; this is not a source-record member reference."
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Stable snapshot row identity; never a source-record member reference."
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "no_data",
+              "unknown"
+            ]
           },
           "values": {
-            "$ref": "#/components/schemas/exploration.ViewValues"
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": [
@@ -18305,7 +18863,7 @@
           },
           "selector": {
             "$ref": "#/components/schemas/exploration.Query",
-            "description": "Exact checked applied question, including environment policy, time bounds, predicates and grouping; serialized independently from mutable caller state."
+            "description": "Exact applied checked question including environment policy, window, predicates and grouping."
           },
           "signal": {
             "type": "string",
@@ -18323,31 +18881,6 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ViewScope",
-        "additionalProperties": false
-      },
-      "exploration.ViewValues": {
-        "properties": {
-          "category": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "maxLength": 1024,
-            "description": "Null is a missing key; the empty string is a present empty value. Preserve both without coercion. Runtime enforces1024 UTF-8 bytes; JSON Schema maxLength counts characters."
-          },
-          "count": {
-            "type": "string",
-            "pattern": "^(0|[1-9][0-9]*)$",
-            "maxLength": 20,
-            "description": "Exact canonical uint64 decimal; Go enforces the maximum18446744073709551615. Floating-point plotting coordinates do not replace this value."
-          }
-        },
-        "required": [
-          "category",
-          "count"
-        ],
-        "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.ViewValues",
         "additionalProperties": false
       },
       "identity.EnvironmentObservation": {
@@ -31693,6 +32226,17 @@
             "const": "cancellation-requested"
           }
         }
+      },
+      "exploration.ViewValues": {
+        "type": "object",
+        "additionalProperties": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 1024
+        },
+        "description": "Exact strings or explicit missing values. Dataset fields and shape constrain every cell; no vendor-specific opaque payload."
       },
       "RecordAggregateGroup": {
         "type": "object",

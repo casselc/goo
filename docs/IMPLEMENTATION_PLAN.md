@@ -1586,3 +1586,7 @@ extra-inspection UX fix, geometry and proof limits.
 261 delivers the [first V0 scoped-display slice](SCOPED_VIEW_PILOT.md), with
 synchronized tests/storyboards. Continue richer time-series/grouped quality and
 public-contract adoption before Plotly/editor expansion; V0 is not complete.
+
+262 delivers [count interval and grouped tuple adoption](SCOPED_INTERVALS.md).
+Continue numeric/latency support and richer quality/interaction parity before
+expanding Plotly or the editor; this remains a bounded V0 implementation.

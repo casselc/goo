@@ -9704,6 +9704,16 @@
       "state": {
         "type": "string"
       },
+      "timeDataset": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ViewDataset"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "timeSeries": {
         "anyOf": [
           {
@@ -11435,6 +11445,19 @@
           }
         ]
       },
+      "dimensions": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "fields": {
         "anyOf": [
           {
@@ -11450,6 +11473,16 @@
       },
       "id": {
         "type": "string"
+      },
+      "interval": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ViewInterval"
+          },
+          {
+            "type": "null"
+          }
+        ]
       },
       "quality": {
         "$ref": "#/components/schemas/exploration.ViewQuality"
@@ -11520,6 +11553,26 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.ViewField"
   },
+  "exploration.ViewInterval": {
+    "properties": {
+      "bucketMs": {
+        "type": "string"
+      },
+      "fromMs": {
+        "type": "string"
+      },
+      "toMs": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "fromMs",
+      "toMs",
+      "bucketMs"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ViewInterval"
+  },
   "exploration.ViewQuality": {
     "properties": {
       "basis": {
@@ -11553,8 +11606,28 @@
       "key": {
         "type": "string"
       },
+      "state": {
+        "type": "string"
+      },
       "values": {
-        "$ref": "#/components/schemas/exploration.ViewValues"
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
       }
     },
     "required": [
@@ -11585,29 +11658,6 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.ViewScope"
-  },
-  "exploration.ViewValues": {
-    "properties": {
-      "category": {
-        "anyOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "count": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "category",
-      "count"
-    ],
-    "type": "object",
-    "x-go-type": "github.com/casselc/goo/exploration.ViewValues"
   },
   "identity.EnvironmentObservation": {
     "properties": {

@@ -29,7 +29,7 @@ def check_view_dataset(spec):
         'scope': {'id': revision, 'generation': revision, 'signal': 'spans', 'selector': {
             'signal': 'spans', 'environment': 'prod', 'fromMs': 1000, 'toMs': 61000,
             'limit': 100, 'offset': 0, 'groupBy': [{'kind': 'column', 'key': 'service'}]}},
-        'shape': 'ranked', 'capturedAt': '2026-10-30T00:00:00Z',
+        'shape': 'ranked', 'dimensions': ['category'], 'capturedAt': '2026-10-30T00:00:00Z',
         'fields': [{'key': 'category', 'label': 'column:service', 'type': 'string', 'nullable': True},
                    {'key': 'count', 'label': 'Captured records', 'type': 'number', 'unit': 'records'}],
         'rows': [{'key': 'category:' + 'b' * 64, 'values': {'category': None, 'count': '18446744073709551615'}},
@@ -48,6 +48,62 @@ def check_view_dataset(spec):
     escaped = copy.deepcopy(snapshot)
     escaped['rows'][0]['values']['category'] = '"' * 1024
     check_view.validate(escaped)
+
+    multi = copy.deepcopy(snapshot)
+    multi['dimensions'].append('category1')
+    multi['fields'].insert(1, {'key': 'category1', 'label': 'column:name', 'type': 'string', 'nullable': True})
+    for row in multi['rows']:
+        row['values']['category1'] = None
+    check_view.validate(multi)
+    time_series = copy.deepcopy(snapshot)
+    time_series['shape'] = 'time-series'
+    time_series['id'] = revision + ':intervals'
+    del time_series['dimensions']
+    time_series['scope']['selector']['bucketMs'] = 1000
+    time_series['interval'] = {'fromMs': '1000', 'toMs': '3500', 'bucketMs': '1000'}
+    time_series['fields'] = [
+        {'key': 'fromMs', 'label': 'Interval start', 'type': 'timestamp', 'unit': 'ms'},
+        {'key': 'toMs', 'label': 'Interval end', 'type': 'timestamp', 'unit': 'ms'},
+        {'key': 'count', 'label': 'Captured records', 'type': 'number', 'unit': 'records'}]
+    time_series['rows'] = [
+        {'key': 'interval:1000:2000', 'state': 'observed', 'values': {'fromMs': '1000', 'toMs': '2000', 'count': '18446744073709551615'}},
+        {'key': 'interval:2000:3000', 'state': 'no_data', 'values': {'fromMs': '2000', 'toMs': '3000', 'count': '0'}},
+        {'key': 'interval:3000:3500', 'state': 'no_data', 'values': {'fromMs': '3000', 'toMs': '3500', 'count': '0'}}]
+    time_series['completeness']['aspects'] = ['intervals']
+    check_view.validate(time_series)
+    uncertain = copy.deepcopy(time_series)
+    uncertain['quality']['extent'] = 'unknown'
+    del uncertain['completeness']
+    uncertain['rows'][1]['state'] = 'unknown'
+    uncertain['rows'][1]['values']['count'] = None
+    check_view.validate(uncertain)
+    del uncertain['rows'][1]['values']['count']
+    check_view.validate(uncertain)
+    time_mutants = []
+    for path, value in [
+        (('rows', 0, 'values', 'count'), '0'),
+        (('rows', 1, 'values', 'count'), '1'),
+        (('rows', 0, 'values', 'fromMs'), 1000),
+        (('completeness', 'aspects'), ['groups']),
+        (('interval', 'bucketMs'), '0'),
+        (('interval',), None),
+        (('fields', 0, 'type'), 'number'),
+    ]:
+        mutant = copy.deepcopy(time_series)
+        parent = mutant
+        for key in path[:-1]:
+            parent = parent[key]
+        parent[path[-1]] = value
+        time_mutants.append(mutant)
+    unknown_zero = copy.deepcopy(uncertain)
+    unknown_zero['rows'][1]['values']['count'] = '0'
+    time_mutants.append(unknown_zero)
+    complete_unknown = copy.deepcopy(time_series)
+    complete_unknown['rows'][1]['state'] = 'unknown'
+    complete_unknown['rows'][1]['values']['count'] = None
+    time_mutants.append(complete_unknown)
+    for mutant in time_mutants:
+        assert not check_view.is_valid(mutant), 'Invalid explicit interval state accepted'
 
     missing = object()
     cases = [

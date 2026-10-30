@@ -4,12 +4,13 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"strconv"
 )
 
-// ViewDataset is a supplied, immutable display snapshot, not a source request.
-// Its completeness claim concerns this bounded GROUP BY result, never collection
-// coverage, raw records, a transactional count/page pair, or upstream sampling.
+// ViewDataset is a supplied immutable display snapshot, not a source request.
+// Completeness concerns its named result aspect, never upstream collection,
+// pagination or a transactional count/page pair.
 type ViewDataset struct {
 	Version      string            `json:"version"`
 	ID           string            `json:"id"`
@@ -21,6 +22,13 @@ type ViewDataset struct {
 	Quality      ViewQuality       `json:"quality"`
 	Completeness *ViewCompleteness `json:"completeness,omitempty"`
 	CapturedAt   string            `json:"capturedAt"`
+	Interval     *ViewInterval     `json:"interval,omitempty"`
+	Dimensions   []string          `json:"dimensions,omitempty"`
+}
+type ViewInterval struct {
+	FromMS   string `json:"fromMs"`
+	ToMS     string `json:"toMs"`
+	BucketMS string `json:"bucketMs"`
 }
 type ViewScope struct {
 	ID         string          `json:"id"`
@@ -38,11 +46,12 @@ type ViewField struct {
 type ViewRow struct {
 	Key    string     `json:"key"`
 	Values ViewValues `json:"values"`
+	State  string     `json:"state,omitempty"`
 }
-type ViewValues struct {
-	Category *string `json:"category"`
-	Count    string  `json:"count"`
-}
+
+// ViewValues retains exact source-derived text and explicit missing values.
+// The declared fields define meaning; there is no renderer-specific payload.
+type ViewValues map[string]*string
 type ViewQuality struct {
 	Extent    string `json:"extent"`
 	Basis     string `json:"basis"`
@@ -57,52 +66,134 @@ type ViewCompleteness struct {
 	Aspects  []string `json:"aspects"`
 }
 
-// groupViewDataset is called only after the source read has completed and its
-// LIMIT1001 sentinel has rejected more than1000 groups. Matching a separate count
-// or a page's row count never establishes this attestation.
-func groupViewDataset(r *Result, exhaustiveGroups bool) *ViewDataset {
-	q := r.Question
-	if len(q.GroupBy) != 1 || q.Numeric != nil || q.NumericHistogram != nil || q.Summary != "" || q.SpanStatus || q.GroupTimeSeries || q.BucketMS != 0 || len(r.Groups) > 1000 || !regexpRevision.MatchString(r.Basis) {
+func viewText(v string) *string { return &v }
+func countOnlyView(q Query) bool {
+	return q.Numeric == nil && q.NumericHistogram == nil && q.Summary == "" && !q.SpanStatus && !q.GroupTimeSeries
+}
+func baseViewDataset(r *Result, shape, aspect string) *ViewDataset {
+	if !regexpRevision.MatchString(r.Basis) || r.Question.Validate() != nil {
 		return nil
 	}
-	selector, err := json.Marshal(q)
+	selector, err := json.Marshal(r.Question)
 	if err != nil {
 		return nil
 	}
-	scopeHash := sha256.Sum256(selector)
-	scopeID := hex.EncodeToString(scopeHash[:])
-	d := &ViewDataset{Version: "goo.dataset/1", ID: scopeID + ":groups", Revision: r.Basis, Scope: ViewScope{ID: scopeID, Generation: r.Basis, Signal: q.Signal, Selector: selector}, Shape: "ranked", Fields: []ViewField{{Key: "category", Label: q.GroupBy[0].Kind + ":" + q.GroupBy[0].Key, Type: "string", Nullable: true}, {Key: "count", Label: "Captured records", Type: "number", Unit: "records"}}, Rows: []ViewRow{}, Quality: ViewQuality{Extent: "unknown", Basis: "captured-query", Value: "derived", Sampling: "unknown", Freshness: "fixed"}, CapturedAt: r.CapturedAt}
+	h := sha256.Sum256(selector)
+	id := hex.EncodeToString(h[:])
+	return &ViewDataset{Version: "goo.dataset/1", ID: id + ":" + aspect, Revision: r.Basis, Scope: ViewScope{ID: id, Generation: r.Basis, Signal: r.Question.Signal, Selector: selector}, Shape: shape, Fields: []ViewField{}, Rows: []ViewRow{}, Quality: ViewQuality{Extent: "unknown", Basis: "captured-query", Value: "derived", Sampling: "unknown", Freshness: "fixed"}, CapturedAt: r.CapturedAt}
+}
+func attestView(d *ViewDataset, aspect string) {
+	d.Quality.Extent = "complete"
+	d.Completeness = &ViewCompleteness{Basis: "captured-query", Revision: d.Revision, ScopeID: d.Scope.ID, Aspects: []string{aspect}}
+}
+func categoryField(i int) string {
+	if i == 0 {
+		return "category"
+	}
+	return fmt.Sprintf("category%d", i)
+}
+
+// The source's LIMIT1001 sentinel rejects more than1000 groups. Matching a
+// separately read count or page length never establishes this attestation.
+func groupViewDataset(r *Result, exhaustiveGroups bool) *ViewDataset {
+	q := r.Question
+	if len(q.GroupBy) < 1 || len(q.GroupBy) > 2 || !countOnlyView(q) || len(r.Groups) > 1000 {
+		return nil
+	}
+	d := baseViewDataset(r, "ranked", "groups")
+	if d == nil {
+		return nil
+	}
+	for i, f := range q.GroupBy {
+		d.Fields = append(d.Fields, ViewField{Key: categoryField(i), Label: f.Kind + ":" + f.Key, Type: "string", Nullable: true})
+		d.Dimensions = append(d.Dimensions, categoryField(i))
+	}
+	d.Fields = append(d.Fields, ViewField{Key: "count", Label: "Captured records", Type: "number", Unit: "records"})
 	seen := map[string]bool{}
 	for _, raw := range r.Groups {
 		var g map[string]json.RawMessage
 		if json.Unmarshal(raw, &g) != nil {
 			return nil
 		}
-		value, ok := g["g0"]
-		if !ok {
-			return nil
+		values := ViewValues{}
+		tuple := []*string{}
+		for i := range q.GroupBy {
+			raw, ok := g[fmt.Sprintf("g%d", i)]
+			if !ok {
+				return nil
+			}
+			var v *string
+			if json.Unmarshal(raw, &v) != nil || v != nil && len(*v) > 1024 {
+				return nil
+			}
+			values[categoryField(i)] = v
+			tuple = append(tuple, v)
 		}
-		var category *string
 		var count string
-		if json.Unmarshal(value, &category) != nil || json.Unmarshal(g["count"], &count) != nil || category != nil && len(*category) > 1024 {
+		if json.Unmarshal(g["count"], &count) != nil {
 			return nil
 		}
 		n, err := strconv.ParseUint(count, 10, 64)
 		if err != nil || strconv.FormatUint(n, 10) != count {
 			return nil
 		}
-		canonical, _ := json.Marshal(category)
-		categoryHash := sha256.Sum256(canonical)
-		key := "category:" + hex.EncodeToString(categoryHash[:])
+		values["count"] = viewText(count)
+		canonical, _ := json.Marshal(tuple)
+		h := sha256.Sum256(canonical)
+		key := "category:" + hex.EncodeToString(h[:])
 		if seen[key] {
 			return nil
 		}
 		seen[key] = true
-		d.Rows = append(d.Rows, ViewRow{Key: key, Values: ViewValues{Category: category, Count: count}})
+		d.Rows = append(d.Rows, ViewRow{Key: key, Values: values})
 	}
 	if exhaustiveGroups && r.State != "changed_between_reads" {
-		d.Quality.Extent = "complete"
-		d.Completeness = &ViewCompleteness{Basis: "captured-query", Revision: r.Basis, ScopeID: scopeID, Aspects: []string{"groups"}}
+		attestView(d, "groups")
+	}
+	return d
+}
+
+// timeViewDataset exposes the checked count intervals without deriving bins from
+// record pages. DecodeTimeSeries alone may fill absent source buckets with zero:
+// its exhaustive bounded source read establishes those no_data intervals.
+func timeViewDataset(r *Result, exhaustiveIntervals bool) *ViewDataset {
+	q := r.Question
+	if q.BucketMS <= 0 || !countOnlyView(q) || q.Validate() != nil || len(r.TimeSeries) > 240 {
+		return nil
+	}
+	d := baseViewDataset(r, "time-series", "intervals")
+	if d == nil {
+		return nil
+	}
+	d.Interval = &ViewInterval{FromMS: strconv.FormatInt(q.FromMS, 10), ToMS: strconv.FormatInt(q.ToMS, 10), BucketMS: strconv.FormatInt(q.BucketMS, 10)}
+	d.Fields = []ViewField{{Key: "fromMs", Label: "Interval start", Type: "timestamp", Unit: "ms"}, {Key: "toMs", Label: "Interval end", Type: "timestamp", Unit: "ms"}, {Key: "count", Label: "Captured records", Type: "number", Unit: "records"}}
+	previousEnd := q.FromMS
+	for _, p := range r.TimeSeries {
+		if p.FromMS < previousEnd || p.FromMS < q.FromMS || p.FromMS >= q.ToMS || (p.FromMS-q.FromMS)%q.BucketMS != 0 || p.ToMS != min(p.FromMS+q.BucketMS, q.ToMS) {
+			return nil
+		}
+		values := ViewValues{"fromMs": viewText(strconv.FormatInt(p.FromMS, 10)), "toMs": viewText(strconv.FormatInt(p.ToMS, 10))}
+		switch p.State {
+		case "observed", "no_data":
+			n, e := strconv.ParseUint(p.Count, 10, 64)
+			if e != nil || strconv.FormatUint(n, 10) != p.Count || (p.State == "observed") != (n > 0) {
+				return nil
+			}
+			values["count"] = viewText(p.Count)
+		case "unknown":
+			if p.Count != "" {
+				return nil
+			}
+			values["count"] = nil
+		default:
+			return nil
+		}
+		from, to := *values["fromMs"], *values["toMs"]
+		d.Rows = append(d.Rows, ViewRow{Key: "interval:" + from + ":" + to, State: p.State, Values: values})
+		previousEnd = p.ToMS
+	}
+	if exhaustiveIntervals && r.State != "changed_between_reads" && ValidateTimeSeries(q, r.TimeSeries) == nil {
+		attestView(d, "intervals")
 	}
 	return d
 }

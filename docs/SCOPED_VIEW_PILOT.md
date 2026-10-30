@@ -1,5 +1,9 @@
 # Scoped displays — delivered pilot261
 
+262 extends this pilot with [count intervals and multi-field tuples](SCOPED_INTERVALS.md).
+The original261 delivery below describes the starting slice; current262 contracts
+support both shapes and explicit ranked dimensions.
+
 One single-group captured-record breakdown now supplies the same public dataset to
 native bars, an exact-value table and a scope facet. This is the first V0 slice of
 [the UI composition proposal](VIEW_GRAMMAR_PROPOSAL_260.md), not the whole grammar,

@@ -1361,3 +1361,8 @@ component APIs does not require old-property or old-format compatibility shims.
 See [public API, quality and adoption limits](SCOPED_VIEW_PILOT.md). SSR/pre-upgrade
 properties and detached SPA use are checked by `scripts/check_scope_components.cjs`.
 Only single-group count exploration is adopted; this is not whole-UI grammar parity.
+
+262 extends `goo-chart` with `time-bar` and typed interval tables; ranked
+`dimensions` and `groupIntent` preserve full grouped tuples. See
+[contracts and adoption limits](SCOPED_INTERVALS.md). Unknown intervals remain
+distinct from known zero; complete-only requires attested gap-free coverage.
