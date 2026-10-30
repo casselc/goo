@@ -1,5 +1,69 @@
 # Validation record
 
+## Shared fixed numeric histograms and checked ranges — 269
+
+`histogramDataset` now carries the existing same-count-read fixed numeric bins
+through the immutable shared display model. Exact rational human-unit boundaries,
+uint64 counts and separate captured parse support preserve all 65 unsigned or 128
+signed/decimal bins. Counts sum to valid values, not the whole captured count.
+Known empty and positive-population/no-valid states remain distinct. Equal-width
+bars show counts for unequal ranges, not density; only outer zero bins are hidden.
+Exact decimal labels and the full table retain domain edges and max+1 geometry.
+Complete-only displays require the private `bins` witness; row projections refuse.
+
+The common histogram kind replaces the raw renderer/model. Captured H1 bindings
+validate ordered range intents before the Go planner and again after awaits.
+Existing selected/rest, comparison, explanation, capture and package workflows
+remain. Saved highlights are passive; withdrawn visits require an explicit parent
+Run before effects resume. Live testing caught obsolete page CSS forcing the new
+chart wider than mobile. The shared component now owns internal scrolling and
+readable bin widths; obsolete descendant/table styles are removed.
+See [contract and diagram](docs/SCOPED_HISTOGRAMS.md) and
+[storyboard](journeys/269-scoped-histogram-storyboard.md).
+
+Validation passes:
+
+- Full root Go suite and all 752 frontend tests, no frontend skips. Nine new
+  histogram contract tests and four H1 range tests cover geometry, support,
+  exact decimal/sentinel distinctions, malformed inputs, held data, execution/
+  role/source guards and generic-inspection/projection refusal.
+- Go producer and source tests cover integer/decimal/empty/no-valid populations,
+  unknown/missing/unrequested refusal, conservative disagreement handling and
+  unchanged three physical reads/one count read. Generated 565 Go types and 587
+  OpenAPI schemas pass the 96-operation/429-response/159-request/28-refusal gate.
+  Six actual Go histogram DTOs additionally validate cross-language; malformed
+  binding, geometry and support controls fail.
+- Chromium component/adapter checks pass for raw SSR and immutable handles,
+  exact scale 2/9 labels, interior zero bins, typed click/keyboard ranges, full-only
+  refusal, no-data versus no-valid, and stale async completions. Nested full 128-bin
+  extremes and the real app CSS pass at 390px with internal scrolling and keyboard
+  access to the final bin; the document does not overflow.
+- Hegel runs 100 generated cases over actual Go source DTOs and real JS contracts.
+  The observed seven-step Quint trace passes; seven mutated traces and an
+  unfinished prefix fail. These projected facts do not prove private authority
+  or complete upstream telemetry.
+- The real 18-record OTLP → ClickHouse → isolated Go journey passes: 13 valid,
+  one missing, one empty, three invalid; exact maximum-bin selection; unchanged
+  revision/new clock fencing; one source-free plan and one explicit child read;
+  Saved/mobile display; invalid-only total 3 versus empty total 0. Three current
+  documentation frames are regenerated. The frozen 35-second Bombadil campaign
+  passes 241 snapshots across eight phases, with three Explore reads and one plan.
+- Both older numeric journeys pass on the deployed app: 200 records versus a
+  100-row page, exact keyboard ranges, captures/reopen, reusable YAML, selected/
+  rest comparisons, explicit Back reactivation and late-plan rejection after
+  navigation. The independent live ledger replay passes and rejects 17 mutated
+  ledgers. Its three documentation frames are regenerated.
+
+Compose configuration and CA-backed build pass. The lab runs
+`sha256:37cf779a383eb02089b6e242af692e273ca018429ebdf52f3c3e01dd75a522e7`;
+root returns HTTP 200, all 11 changed UI assets match the final files, and served
+OpenAPI and nine deployed response checks pass. Only the Go service is recreated;
+telemetry services and XTDB volumes are preserved. Raw campaigns/disposable test
+stores are removed; compact traces, ledgers and documentation frames remain.
+Aligned comparisons, native OTel/duration histogram families and histogram-query
+group/time/summary adoption retain explicit owners. No density estimator, pooled
+percentile, new editor or Plotly adapter is claimed.
+
 ## Recorded status counts and exact fractions — 268
 
 Ordinary fixed/Saved status breakdowns, intervals and population summaries now

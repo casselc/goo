@@ -1377,3 +1377,14 @@ through admission, passive charts and summaries. Fraction plotting uses a fixed
 cannot alter the denominator. Canonical status comparisons remain withheld:
 their existing independent-cohort presenter expresses signed percentage-point
 changes. Histogram and dedicated triage/native families still have explicit owners.
+
+269 adds [fixed numeric histogram snapshots](SCOPED_HISTOGRAMS.md) from the same
+count aggregate as numeric parse support. `histogramDataset` preserves all fixed
+half-open edges as human-unit rationals and counts in captured records; source
+admission verifies exact geometry and support, with a separate private `bins`
+coverage witness. The shared histogram kind reuses passive range gestures and
+exact tables. `context.histogram` checks captured source/role/execution and maps
+ordered supplied keys to coefficient geometry for the Go planner; adapters check
+the same binding again after awaits. No generic threshold predicate is invented
+from a max+1 edge. The duplicate raw display model is removed. Existing comparison,
+native OTel and categorical duration histogram owners remain explicit.

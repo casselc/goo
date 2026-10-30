@@ -12,7 +12,7 @@ const witnesses=new WeakMap(),comparisons=new WeakSet(),encoder=new TextEncoder(
 let nextSource=0,nextLocal=0;
 const record=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
 const own=(value,key)=>Object.prototype.hasOwnProperty.call(value,key);
-const aspect=snapshot=>snapshot.shape==='time-series'?'intervals':snapshot.shape==='summary'?'summary':'groups';
+const aspect=snapshot=>snapshot.shape==='histogram'?'bins':snapshot.shape==='time-series'?'intervals':snapshot.shape==='summary'?'summary':'groups';
 export class SnapshotError extends TypeError {
  constructor(code,message){super(message);this.name='SnapshotError';this.code=code}
 }
@@ -120,6 +120,11 @@ function sourceQuestion(raw,question){
  if(raw.scope.signal!==question.signal)fail('source-question','Source snapshot signal does not match its question');
  if(raw.shape==='time-series'&&(raw.interval.fromMs!==String(question.fromMs)||raw.interval.toMs!==String(question.toMs)||raw.interval.bucketMs!==String(question.bucketMs)))fail('source-question','Source interval geometry does not match its question');
  if(raw.shape==='ranked'&&(raw.dimensions?.length??0)!==(question.groupBy?.length??0))fail('source-question','Source group dimensions do not match its question');
+ if(raw.shape==='histogram'){
+  const b=raw.histogram.binding,q=question.numeric;
+  if(question.numericHistogram?.binning!=='powers-of-two'||!q||JSON.stringify([b.field.kind,b.field.key,b.type,b.unit,b.parse,b.scale??0])!==JSON.stringify([q.field.kind,q.field.key,q.type,q.unit,q.parse,q.scale??0]))fail('source-question','Source histogram does not match its requested numeric binding');
+  return;
+ }
  const statusKeys=['status.error','status.ok','status.unset','status.unknown'];
  const statuses=raw.fields.filter(field=>field.aggregation?.family==='span-status'),fraction=raw.fields.find(field=>field.key==='status.error_fraction');
  if(question.spanStatus===true&&(question.signal!=='spans'||statuses.length!==4||!statusKeys.every(key=>statuses.some(field=>field.key===key))||fraction?.aggregation?.family!=='ratio'||fraction.aggregation.kind!=='fraction'||fraction.aggregation.numerator!=='status.error'||fraction.aggregation.denominator!=='count'))fail('source-question','Source span-status profile requires all classes and the recorded error fraction');

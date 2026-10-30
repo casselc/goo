@@ -1,8 +1,10 @@
 /* Public passive scoped displays. The host owns scope, requests and selection. */
-import {validateSnapshot, validateDisplay, selectionIntent, scopeIntent, measureValue, supportsSelection, capabilities,displayRows,populationShare,fractionFacts} from './view-model.mjs';
+import {validateSnapshot, validateDisplay, selectionIntent, scopeIntent, measureValue, supportsSelection, capabilities,displayRows,populationShare,fractionFacts,histogramIntent} from './view-model.mjs';
 import {formatCell,supportText,exactText,categoryText,isFraction,fractionContextText} from './view-values.mjs';
 import {asSnapshot,parseSnapshotJSON} from './snapshots.mjs';
+import {rationalDisplay} from './numeric-values.mjs';
 import './chart-frame.mjs';
+import './time-bars.mjs';
 
 const n=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=String(text);if(cls)node.className=cls;return node};
 const exact=categoryText;
@@ -23,7 +25,7 @@ function frozenConfig(value){
 function quality(snapshot){
   const box=n('div',undefined,'scope-view-quality');
   const q=snapshot.quality;
-  for(const text of [snapshot.origin,`${q.extent} ${snapshot.shape==='time-series'?'intervals':snapshot.shape==='summary'?'summary':'groups'}`,`${q.value} values`,`${q.sampling} upstream sampling`,`${q.freshness} snapshot`])if(text)box.append(n('span',text));
+  for(const text of [snapshot.origin,`${q.extent} ${snapshot.shape==='time-series'?'intervals':snapshot.shape==='histogram'?'bins':snapshot.shape==='summary'?'summary':'groups'}`,`${q.value} values`,`${q.sampling} upstream sampling`,`${q.freshness} snapshot`])if(text)box.append(n('span',text));
   box.title='Extent describes the captured query, not complete upstream telemetry.';
   return box;
 }
@@ -39,8 +41,8 @@ function utc(value){
   return Number.isSafeInteger(time)&&Number.isFinite(new Date(time).getTime())?new Date(time).toISOString():exact(value);
 }
 
-function cellValue(field,value,knowledge,facts){
-  const cell=n('td'),text=n('span',formatCell(field,value,knowledge));cell.append(text);cell.title=exactText(field,value,knowledge,facts);
+function cellValue(field,value,knowledge,facts,exactBoundary=false){
+  const cell=n('td'),text=n('span',exactBoundary?rationalDisplay(value)+(field.unit?' '+field.unit:''):formatCell(field,value,knowledge));cell.append(text);cell.title=exactText(field,value,knowledge,facts);
   if(field.type==='timestamp'&&value!==null&&value!==undefined)cell.title=String(value)+' ms since Unix epoch';
   const needsExact=field.type==='timestamp'||field.type==='rational'||field.type==='number'&&value!==null&&value!==undefined&&(typeof value==='number'||/[./eE]/.test(String(value)));
   if(knowledge||needsExact){
@@ -64,7 +66,7 @@ function table(host,snapshot,display,rows=displayRows(snapshot,display)){
   if(selectable){const th=n('th','Selection');th.scope='col';row.append(th)}head.append(row);
   for(const entry of rows){
     const tr=n('tr');tr.dataset.key=entry.key;
-    for(const field of fields)tr.append(cellValue(field,entry.values[field.key],entry.cells?.[field.key],fractionFacts(snapshot,entry,field.key)));
+    for(const field of fields)tr.append(cellValue(field,entry.values[field.key],entry.cells?.[field.key],fractionFacts(snapshot,entry,field.key),snapshot.shape==='histogram'&&['from','to'].includes(field.key)));
     if(display.scale==='population'){const share=populationShare(snapshot,entry.key),cell=n('td',share.ok?share.percent:'Unavailable');if(share.ok){cell.title=share.fraction+' captured records (exact)';cell.dataset.share=share.fraction}tr.append(cell)}
     if(snapshot.shape==='time-series')tr.append(n('td',entry.state==='no_data'?'No data · zero captured records':entry.state==='unknown'?'Unknown coverage':'Observed'));
     if(selectable){const firstField=fields.find(field=>field.key===display.category)||fields[0];
@@ -103,6 +105,23 @@ function timeBars(host,snapshot,display){
   figure.append(measureLabel(field),track,axis,legend);
   if(gaps.length){const details=n('details',undefined,'scope-view-values');details.append(n('summary',gaps.length+' unreported interval'+(gaps.length===1?'':'s')));const list=n('ul');for(const [start,end] of gaps)list.append(n('li',utc(start.toString())+' → '+utc(end.toString())+' · Unknown, not zero'));details.append(list);figure.append(details)}
   return figure;
+}
+
+
+function histogram(host,snapshot){
+ const figure=n('section',undefined,'scope-histogram'),support=snapshot.histogram.support,unit=snapshot.histogram.binding.unit;
+ const context=n('p',support.valid+'/'+support.total+' captured records have valid numeric values · '+support.missing+' missing · '+support.empty+' empty · '+support.invalid+' invalid','scope-time-legend');
+ figure.append(context);
+ if(support.valid==='0'){figure.append(n('p',support.total==='0'?'No captured records. The fixed bins are known empty.':'No valid numeric values. Empty bins do not imply an empty captured population.','scope-view-empty'));return figure}
+ const all=snapshot.rows,first=all.findIndex(row=>row.values.count!=='0');let last=all.length-1;while(last>first&&all[last].values.count==='0')last--;
+ const rows=all.slice(first,last+1),ceiling=all.reduce((n,row)=>BigInt(row.values.count)>n?BigInt(row.values.count):n,0n).toString();
+ const scroll=n('div',undefined,'scope-histogram-scroll'),bars=n('goo-time-bars');bars.style.minWidth=Math.max(440,rows.length*8)+'px';bars.setAttribute('range-select','');scroll.append(bars);
+ bars.data={title:'Captured numeric distribution',unit:'records',ceiling,interactive:true,fromLabel:rationalDisplay(rows[0].values.from)+' '+unit,toLabel:rationalDisplay(rows.at(-1).values.to)+' '+unit,points:rows.map(row=>({key:row.key,label:'['+rationalDisplay(row.values.from)+', '+rationalDisplay(row.values.to)+') '+unit+' · '+row.values.count+' captured records',value:row.values.count,state:row.state}))};
+ const range=(fromKey,toKey)=>emit(host,'goo-histogram-range',histogramIntent(snapshot,fromKey,toKey));
+ bars.addEventListener('goo-time-range',event=>{event.stopPropagation();range(event.detail.fromKey,event.detail.toKey)});
+ bars.addEventListener('goo-time-select',event=>{event.stopPropagation();range(event.detail.key,event.detail.key)});
+ figure.append(scroll,n('small','Equal-width bars · unequal numeric ranges · counts, not density · outer empty bins hidden; all bins remain in Exact values.','scope-view-coordinate-note'));
+ return figure;
 }
 
 function bars(host,snapshot,display,rows=displayRows(snapshot,display)){
@@ -162,6 +181,9 @@ class SuppliedElement extends (globalThis.HTMLElement||class {}) {
 class Chart extends SuppliedElement {
   set display(value){this.setInput('display',value)}
   get display(){return this.read('display')}
+  clearRange(){this.querySelector('goo-time-bars')?.clearRange()}
+  set selectedKey(value){const bars=this.querySelector('goo-time-bars');if(bars)bars.selectedKey=value}
+  get selectedKey(){return this.querySelector('goo-time-bars')?.selectedKey??null}
   render(){
     try{
       const snapshot=this.read('snapshot'),display=this.read('display');
@@ -175,7 +197,7 @@ class Chart extends SuppliedElement {
         this.refuse(checked.reasons);return;
       }
       const rows=snapshot.shape==='ranked'?displayRows(snapshot,display):snapshot.rows;
-      const root=n('goo-chart-frame',undefined,'scope-view');root.data={title:display.title||(snapshot.shape==='time-series'?'Captured records over time':snapshot.shape==='summary'?'Population summary':'Scoped breakdown'),window:capturedClock(snapshot.capturedAt),state:snapshot.quality.extent==='unknown'||snapshot.quality.value==='unknown'?'unknown':snapshot.quality.extent==='partial'?'partial':!snapshot.rows.length||snapshot.shape==='summary'&&snapshot.rows[0].values.count==='0'?'no_data':'observed'};root.dataset.valueKnowledge=snapshot.quality.value;root.append(quality(snapshot));
+      const root=n('goo-chart-frame',undefined,'scope-view');root.data={title:display.title||(snapshot.shape==='histogram'?'Captured numeric distribution':snapshot.shape==='time-series'?'Captured records over time':snapshot.shape==='summary'?'Population summary':'Scoped breakdown'),window:capturedClock(snapshot.capturedAt),state:snapshot.quality.extent==='unknown'||snapshot.quality.value==='unknown'?'unknown':snapshot.quality.extent==='partial'?'partial':!snapshot.rows.length||snapshot.shape==='histogram'&&snapshot.histogram.support.total==='0'||snapshot.shape==='summary'&&snapshot.rows[0].values.count==='0'?'no_data':'observed'};root.dataset.valueKnowledge=snapshot.quality.value;root.append(quality(snapshot));
       if(!snapshot.rows.length&&display.kind!=='time-bar')root.append(n('p',snapshot.shape==='time-series'?'No supplied intervals. Coverage is unknown.':'No supplied groups.','scope-view-empty'));
       else if(!rows.length&&snapshot.shape==='ranked')root.append(n('p','No matching groups. '+snapshot.rows.length+' groups remain in this result.','scope-view-empty'));
       else if(display.kind==='table')root.append(table(this,snapshot,display,rows));
@@ -183,7 +205,7 @@ class Chart extends SuppliedElement {
       else if(['bar','time-bar'].includes(display.kind)&&snapshot.rows.some(row=>(measureValue(snapshot,row,display.value||'count').coordinate??0)<0)){root.append(n('p','This bar kind requires nonnegative values. Use the exact table for signed values.','scope-view-unavailable'),table(this,snapshot,display))}
       else if(display.kind==='line'&&snapshot.rows.some(row=>row.values[display.category]===null||row.values[display.category]===undefined||measureValue(snapshot,row,display.value).coordinate===null)){root.append(n('p','Line unavailable: a coordinate is missing. Exact values remain available.','scope-view-unavailable'),table(this,snapshot,display))}
       else{
-        root.append(display.kind==='time-bar'?timeBars(this,snapshot,display):display.kind==='bar'?bars(this,snapshot,display,rows):line(snapshot,display));
+        root.append(display.kind==='histogram'?histogram(this,snapshot):display.kind==='time-bar'?timeBars(this,snapshot,display):display.kind==='bar'?bars(this,snapshot,display,rows):line(snapshot,display));
         const fallback=n('details',undefined,'scope-view-values');fallback.append(n('summary','Exact values'),table(this,snapshot,display,rows));root.append(fallback);
         const note=n('small','Approximate geometry','scope-view-coordinate-note');note.title='Plot coordinates are approximate; exact source values and methods remain in cell tooltips.';root.append(note);
       }

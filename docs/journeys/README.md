@@ -1,5 +1,10 @@
 # User journeys and storyboards
 
+[Journey269](../../journeys/269-scoped-histogram-storyboard.md) covers shared fixed
+numeric histograms, exact support and extreme boundaries, passive range gestures,
+stale planning refusal and selected/rest scope. The older numeric-distribution
+journey also covers reusable packages, captures and explicit reactivation on return.
+
 [Journey268](../../journeys/268-status-fractions-storyboard.md) covers exact
 recorded-error fractions, fixed percentage scales, empty intervals, current
 staging, retained percentage-point comparisons and status-only Saved summaries.

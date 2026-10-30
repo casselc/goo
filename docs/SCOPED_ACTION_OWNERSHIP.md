@@ -1,5 +1,11 @@
 # Scoped action ownership — 266
 
+269 extends this ownership model to [fixed numeric histogram ranges](SCOPED_HISTOGRAMS.md).
+`context.histogram(binding, intent)` resolves ordered supplied keys to captured
+coefficient geometry for the Go planner. It does not construct threshold
+predicates. Hosts recheck the same binding after asynchronous planning; generic
+group/window staging, inspection and row projections refuse this shape.
+
 A data revision describes immutable contents. It is not permission for an old
 view to change the current question. Two executions can return the same revision,
 and a baseline can contain the same data as the current selection.

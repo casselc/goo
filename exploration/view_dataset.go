@@ -28,6 +28,7 @@ type ViewDataset struct {
 	Interval     *ViewInterval     `json:"interval,omitempty"`
 	Dimensions   []string          `json:"dimensions,omitempty"`
 	Partition    *ViewPartition    `json:"partition,omitempty"`
+	Histogram    *ViewHistogram    `json:"histogram,omitempty"`
 }
 
 // ViewPartition describes the disjoint captured-record groups in the same

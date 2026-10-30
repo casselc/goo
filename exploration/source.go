@@ -20,6 +20,7 @@ import (
 )
 
 type Result struct {
+	HistogramDataset  *ViewDataset       `json:"histogramDataset,omitempty"`
 	ViewDataset       *ViewDataset       `json:"viewDataset,omitempty"`
 	TimeDataset       *ViewDataset       `json:"timeDataset,omitempty"`
 	SummaryDataset    *ViewDataset       `json:"summaryDataset,omitempty"`
@@ -329,6 +330,7 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 	r.ViewDataset = groupViewDataset(r, plan.Groups != "")
 	r.TimeDataset = timeViewDataset(r, plan.TimeSeries != "")
 	r.SummaryDataset = summaryViewDataset(r, true)
+	r.HistogramDataset = histogramViewDataset(r)
 	return r, nil
 }
 

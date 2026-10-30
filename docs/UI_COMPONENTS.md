@@ -1422,3 +1422,16 @@ exact disclosures retain counts and Unset/Unknown qualifications. See
 component refuses these new families until signed-difference semantics are
 declared; application status comparisons retain the existing percentage-point
 presenter. No component acquires reads, execution state or navigation.
+
+## Fixed numeric histograms269
+
+`goo-chart` accepts `shape: 'histogram'` snapshots with `histogram` and `table`
+kinds. Exact rational human-unit boundaries, uint64 counts and separate captured
+parse support describe every fixed bin. Equal-width bars represent unequal
+numeric ranges; heights show counts, not density. Exact decimal labels preserve
+small and large edges without floating-point coercion. Only outer zero bins are
+hidden locally; the full schema remains in Exact values. A private `bins` witness
+is required for complete-only displays. Histogram row projections are refused.
+The typed `goo-histogram-range` event remains passive; the host captures and
+rechecks H1 ownership around the existing Go planner. See
+[contracts, source states and adoption limits](SCOPED_HISTOGRAMS.md).

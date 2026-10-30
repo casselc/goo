@@ -499,11 +499,12 @@ func TestQuintNumericHistogramLiveLedger(t *testing.T) {
 			}
 		}
 		record("execute", executed)
-		eventsOK := len(l.Events) == 4 &&
+		eventsOK := len(l.Events) == 5 &&
 			l.Events[0].Action == "brush" && l.Events[0].Reads == l.Before && l.Events[0].Plans == 0 && l.Events[0].FromBin == l.Selection.FromBin && l.Events[0].ToBin == l.Selection.ToBin &&
 			l.Events[1].Action == "run-selected" && l.Events[1].Reads > l.Events[0].Reads && l.Events[1].Plans == 1 &&
-			l.Events[2].Action == "back-and-brush" && l.Events[2].Reads == l.Events[1].Reads && l.Events[2].Plans == l.Events[1].Plans &&
-			l.Events[3].Action == "run-comparison" && l.Events[3].Reads == l.Events[1].Reads+2 && l.Events[3].Plans == 2
+			l.Events[2].Action == "back" && l.Events[2].Reads == l.Events[1].Reads && l.Events[2].Plans == l.Events[1].Plans &&
+			l.Events[3].Action == "back-and-brush" && l.Events[3].Reads == l.Events[2].Reads+1 && l.Events[3].Plans == l.Events[2].Plans &&
+			l.Events[4].Action == "run-comparison" && l.Events[4].Reads == l.Events[3].Reads+2 && l.Events[4].Plans == 2
 		record("inspect", eventsOK && l.Before == l.AfterStage && l.Before == l.AfterBrush && l.Before >= 0 && reflect.DeepEqual(l.View.Binding, l.Binding) && l.Result.NumericHistogram != nil && reflect.DeepEqual(l.View.Bins, l.Result.NumericHistogram.Bins))
 		capture := l.Saved.Explore != nil && l.Saved.Receipt.Question.Explore != nil && nhLiveSameQuery(*l.Saved.Receipt.Question.Explore, l.Original) && nhLiveResult(l.Saved.Explore, l.Original, l) && reflect.DeepEqual(l.Saved.Explore.NumericHistogram, l.Result.NumericHistogram) && reflect.DeepEqual(l.Saved.Explore.Numeric, l.Result.Numeric) && len(l.Saved.Receipt.ID) == 64
 		record("capture", capture)

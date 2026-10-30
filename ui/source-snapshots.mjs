@@ -7,7 +7,7 @@ import {validate as validatePredicate} from './predicate-validation.mjs';
 import {validate as validateSaved} from './saved-capture-protocol.mjs';
 
 const source=createSourceAdapter({id:'goo.explore'}),stored=createSourceAdapter({id:'goo.verified-saved-explore'});
-const slots=Object.freeze({viewDataset:'ranked',timeDataset:'time-series',summaryDataset:'summary'});
+const slots=Object.freeze({viewDataset:'ranked',timeDataset:'time-series',summaryDataset:'summary',histogramDataset:'histogram'});
 const record=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
 function questionKey(question,paging=false){
   validateRecordQuestion(question);validatePredicate(question.where,question.signal);

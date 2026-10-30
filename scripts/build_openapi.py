@@ -110,7 +110,7 @@ schemas['Error'] = {'type': 'object', 'required': ['error'], 'properties': {'err
 schemas['Cancellation'] = {'type': 'object', 'required': ['state'], 'properties': {'state': {'const': 'cancellation-requested'}}}
 # Canonical supplied display snapshots: exact field maps, with exhaustive
 # ranked-group and interval projections owned by the Go source data path.
-for name in ('ViewDataset','ViewScope','ViewField','ViewRow','ViewQuality','ViewCompleteness','ViewInterval','ViewPartition'):
+for name in ('ViewDataset','ViewScope','ViewField','ViewRow','ViewQuality','ViewCompleteness','ViewInterval','ViewPartition','ViewHistogram'):
  schemas['exploration.'+name]['additionalProperties']=False
 exact_count={'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':20,'description':'Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value.'}
 partition=schemas['exploration.ViewPartition']
@@ -166,8 +166,8 @@ schemas['exploration.ViewValues']={'type':'object','additionalProperties':{'type
 view=schemas['exploration.ViewDataset'];view_props=view['properties']
 view_props['partition']=ref('exploration.ViewPartition')
 view['description']='Supplied immutable captured-record snapshot: ranked groups, explicit intervals or population summaries with optional exact numeric/duration measures. An optional ranked partition derives its denominator from the same exhaustive group read. Result-aspect completeness never certifies raw-record paging, upstream ingestion/sampling or a transactional count/page pair. Scope/revision equality, partition sums and interval coverage are runtime checked.'
-view_props['version']['const']='goo.dataset/1';view_props['shape']['enum']=['ranked','time-series','summary']
-view_props['id']['pattern']='^[a-f0-9]{64}:(groups|intervals|summary)$';view_props['revision']['pattern']='^[a-f0-9]{64}$';view_props['capturedAt']['format']='date-time'
+view_props['version']['const']='goo.dataset/1';view_props['shape']['enum']=['ranked','time-series','summary','histogram']
+view_props['id']['pattern']='^[a-f0-9]{64}:(groups|intervals|summary|bins)$';view_props['revision']['pattern']='^[a-f0-9]{64}$';view_props['capturedAt']['format']='date-time'
 view_props['origin']['enum']=['source-read','browser-held']
 view_props['sourceBasis'].update(minLength=1,maxLength=128,description='Unverified caller-claimed source basis, separate from the content-hashed held revision. Not a signed receipt.')
 view_props['fields']={'type':'array','minItems':2,'maxItems':18,'items':ref('exploration.ViewField')}
@@ -176,7 +176,7 @@ view_props['dimensions']={'type':'array','minItems':1,'maxItems':2,'uniqueItems'
 view_scope=schemas['exploration.ViewScope']['properties']
 for name in ('id','generation'):view_scope[name]['pattern']='^[a-f0-9]{64}$'
 view_scope['signal']['enum']=['logs','spans'];view_scope['selector']={**ref('exploration.Query'),'description':'Exact applied checked question including environment policy, window, predicates and grouping.'}
-view_field=schemas['exploration.ViewField']['properties'];view_field['key']['enum']=['category','category1','count','fromMs','toMs']+list(measure_specs);view_field['type']['enum']=['string','number','timestamp','rational']
+view_field=schemas['exploration.ViewField']['properties'];view_field['key']['enum']=['category','category1','count','fromMs','toMs','from','to']+list(measure_specs);view_field['type']['enum']=['string','number','timestamp','rational']
 schemas['exploration.ViewField']['allOf']=[]
 for key,spec in measure_specs.items():
  unit={'const':'ns'} if spec['family']=='duration' else {'const':'records'} if spec['family']=='span-status' else {'const':'1'} if spec['family']=='ratio' else {'type':'string','minLength':1}
@@ -186,7 +186,7 @@ view_quality=schemas['exploration.ViewQuality']['properties'];view_quality['exte
 for name,value in [('basis','captured-query'),('value','derived'),('sampling','unknown'),('freshness','fixed')]:view_quality[name]['const']=value
 view_quality['sampling']['description']='Upstream sampling and collection completeness remain unverified even for complete result aspects.'
 view_quality['extent']['description']='Only groups/intervals as named by shape; disagreement or unproved coverage remains unknown.'
-view_complete=schemas['exploration.ViewCompleteness']['properties'];view_complete['basis']['const']='captured-query';view_complete['aspects']={'type':'array','minItems':1,'maxItems':1,'items':{'enum':['groups','intervals','summary']}}
+view_complete=schemas['exploration.ViewCompleteness']['properties'];view_complete['basis']['const']='captured-query';view_complete['aspects']={'type':'array','minItems':1,'maxItems':1,'items':{'enum':['groups','intervals','summary','bins']}}
 for name in ('revision','scopeId'):view_complete[name]['pattern']='^[a-f0-9]{64}$'
 schemas['exploration.ViewCompleteness']['description']='Bound to enclosing revision/scope ID; runtime enforces equality. Intervals require exhaustive contiguous known-state coverage. Never inferred from page length or a separate count.'
 interval_props=schemas['exploration.ViewInterval']['properties']
@@ -247,7 +247,18 @@ summary_shape={'not':{'anyOf':[{'required':['dimensions']},{'required':['interva
  'rows':{'minItems':1,'maxItems':1,'items':summary_row},
  'completeness':{'properties':{'aspects':{'const':['summary']}}}}}
 view_props['fields']['minItems']=1
-view['oneOf']=[ranked_shape,time_shape,summary_shape]
+# Fixed numeric distribution geometry uses the same aggregate as validity coverage.
+hist=schemas['exploration.ViewHistogram'];hist['additionalProperties']=False
+hist['properties']['binning']={'const':'powers-of-two'}
+hist['properties']['closure']={'const':'left-closed-right-open'}
+hist['description']='Exact fixed numeric bins; binding scale converts coefficient edges into human-unit rationals. Runtime checks all boundaries, support sums, scope binding equality and sum(bin counts)==support.valid. Exclusive max+1 is geometry, never an accepted predicate value.'
+hist_fields=[{'allOf':[ref('exploration.ViewField'),{'required':['unit'],'properties':{'key':{'const':key},'type':{'const':typ},**({'unit':{'const':'records'}} if key=='count' else {})},'not':{'anyOf':[{'required':['aggregation']},{'required':['nullable']}]}}]} for key,typ in [('from','rational'),('to','rational'),('count','number')]]
+hist_row={'properties':{'key':{'pattern':'^bin:(0|[1-9][0-9]*)$'},'state':{'enum':['observed','no_data']},'values':{'type':'object','required':['from','to','count'],'additionalProperties':False,'properties':{'from':rational_value,'to':rational_value,'count':exact_count}}},'required':['state'],'not':{'required':['cells']},'allOf':[{'if':{'properties':{'state':{'const':'no_data'}}},'then':{'properties':{'values':{'properties':{'count':{'const':'0'}}}}},'else':{'properties':{'values':{'properties':{'count':{'pattern':'^[1-9][0-9]*$'}}}}}}]}
+hist_shape={'required':['histogram'],'not':{'anyOf':[{'required':[k]} for k in ['dimensions','interval','partition']]},'properties':{'shape':{'const':'histogram'},'id':{'pattern':'^[a-f0-9]{64}:bins$'},'fields':{'minItems':3,'maxItems':3,'prefixItems':hist_fields},'rows':{'minItems':65,'maxItems':128,'items':hist_row},'scope':{'properties':{'selector':{'required':['numeric','numericHistogram']}}},'completeness':{'properties':{'aspects':{'const':['bins']}}}},'allOf':[{'if':{'properties':{'histogram':{'properties':{'binding':{'properties':{'type':{'const':'uint64'}}}}}}},'then':{'properties':{'rows':{'minItems':65,'maxItems':65}}},'else':{'properties':{'rows':{'minItems':128,'maxItems':128}}}}]}
+for old_shape in (ranked_shape,time_shape,summary_shape):
+ old_shape.setdefault('allOf',[]).append({'not':{'required':['histogram']}})
+view['oneOf']=[ranked_shape,time_shape,summary_shape,hist_shape]
+
 view['allOf']=[{'if':{'properties':{'quality':{'properties':{'extent':{'const':'complete'}},'required':['extent']}},'required':['quality']},'then':{'required':['completeness'],'properties':{'completeness':{'type':'object'},'rows':{'items':{'properties':{'state':{'enum':['observed','no_data']}}}}}},'else':{'properties':{'completeness':{'type':'null'}}}}]
 
 status_keys=[key for key in measure_specs if key.startswith('status.')]

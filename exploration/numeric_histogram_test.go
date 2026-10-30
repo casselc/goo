@@ -316,7 +316,7 @@ func TestNumericHistogramSourceCaptureSameRead(t *testing.T) {
 	defer server.Close()
 	source := Source{Endpoint: server.URL}
 	r, e := source.Fetch(context.Background(), q)
-	if e != nil || reads != 3 || countReads != 1 || !reflect.DeepEqual(r.NumericHistogram, &hist) {
+	if e != nil || reads != 3 || countReads != 1 || !reflect.DeepEqual(r.NumericHistogram, &hist) || r.HistogramDataset == nil || r.HistogramDataset.Completeness == nil {
 		t.Fatal("histogram not from main aggregate", reads, countReads, e)
 	}
 	store := CaptureStore{Dir: t.TempDir()}

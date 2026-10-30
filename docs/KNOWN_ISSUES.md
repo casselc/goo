@@ -1,5 +1,12 @@
 # Known issues and gaps
 
+269 adopts [fixed numeric histograms](SCOPED_HISTOGRAMS.md) through canonical
+snapshots, shared histogram/table displays and H1 range planning. Equal-width
+bars show counts for unequal ranges, not density. Captured support remains
+separate from valid-bin totals, and withdrawn actions require a fresh Run.
+Aligned comparisons, native OTel histograms, categorical duration buckets and
+other histogram-query group/time/summary displays retain explicit owners.
+
 268 adds [recorded span status counts/fractions](STATUS_FRACTIONS.md) to canonical
 ordinary breakdown, interval and summary views. Empty denominators remain
 unavailable; Unset and Unknown are retained and do not establish success. Status

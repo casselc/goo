@@ -1,4 +1,5 @@
 import {categoryText} from './view-values.mjs';
+import {validateNumericPredicate} from './question-protocol.mjs';
 export {categoryText};
 /* Structural, IO-free dataset schema. Metadata consistency is not authority. Exact values are never replaced by plotting coordinates. */
 const own=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
@@ -43,7 +44,7 @@ function aggregationValid(field){
  return a.method==='exact'&&a.quantile===undefined;
 }
 // This is the public pilot registry, not a vendor-renderer registry.
-export const kinds=Object.freeze({table:Object.freeze({category:'any',numericValue:false}),bar:Object.freeze({shape:'ranked',category:'any',numericValue:true}),line:Object.freeze({shape:'ranked',category:'number',numericValue:true}),'time-bar':Object.freeze({shape:'time-series',category:'timestamp',numericValue:true})});
+export const kinds=Object.freeze({table:Object.freeze({category:'any',numericValue:false}),bar:Object.freeze({shape:'ranked',category:'any',numericValue:true}),line:Object.freeze({shape:'ranked',category:'number',numericValue:true}),'time-bar':Object.freeze({shape:'time-series',category:'timestamp',numericValue:true}),histogram:Object.freeze({shape:'histogram',category:'rational',numericValue:true})});
 const result=reasons=>({ok:reasons.length===0,reasons});
 const enumField=(o,k,a,r)=>{if(!member(o?.[k],a))r.push(`Invalid ${k}`)};
 export function validateSnapshot(s){
@@ -54,7 +55,7 @@ export function validateSnapshot(s){
  if(s.origin==='browser-held'&&(s.completeness!==undefined||s.quality?.extent==='complete'))reasons.push('Browser-held snapshots cannot attest complete source coverage');
  for(const key of ['sourceBasis','capturedAt'])if(s[key]!==undefined&&!text(s[key]))reasons.push('Invalid optional dataset provenance '+key);
  for(const k of ['id','revision'])if(!text(s[k]))reasons.push(`Missing dataset ${k}`);
- if(!member(s.shape,['ranked','time-series','summary']))reasons.push('Unsupported dataset shape');
+ if(!member(s.shape,['ranked','time-series','summary','histogram']))reasons.push('Unsupported dataset shape');
  if(!record(s.scope)||!text(s.scope.id)||!(text(s.scope.generation)||Number.isSafeInteger(s.scope.generation)&&s.scope.generation>=0)||!member(s.scope.signal,['spans','logs'])||!record(s.scope.selector))reasons.push('A checked scope identity, generation, signal and selector are required');
  const fields=new Map();
  if(!Array.isArray(s.fields)||!s.fields.length||s.fields.length>64)reasons.push('Dataset requires 1–64 fields');
@@ -67,17 +68,20 @@ export function validateSnapshot(s){
  if(Array.isArray(s.rows)){validateCells(s,fields,reasons);validateCountRelationships(s,fields,reasons)}
  if(!record(s.quality))reasons.push('Dataset quality is required');
  else {enumField(s.quality,'extent',['complete','partial','unknown'],reasons);enumField(s.quality,'basis',['captured-query'],reasons);enumField(s.quality,'value',['recorded','derived','estimated','unknown'],reasons);enumField(s.quality,'sampling',['unknown','none','sampled'],reasons);enumField(s.quality,'freshness',['fixed','live'],reasons)}
- if(s.completeness!==undefined){const c=s.completeness;if(!record(c)||c.basis!=='captured-query'||!text(c.revision)||!text(c.scopeId)||!Array.isArray(c.aspects)||c.aspects.some(a=>!member(a,['groups','intervals','summary']))||new Set(c.aspects).size!==c.aspects.length)reasons.push('Invalid completeness attestation')}
+ if(s.completeness!==undefined){const c=s.completeness;if(!record(c)||c.basis!=='captured-query'||!text(c.revision)||!text(c.scopeId)||!Array.isArray(c.aspects)||c.aspects.some(a=>!member(a,['groups','intervals','summary','bins']))||new Set(c.aspects).size!==c.aspects.length)reasons.push('Invalid completeness attestation')}
  if(s.shape==='time-series')validateIntervals(s,fields,reasons);
  if(s.shape==='summary')validateSummary(s,fields,reasons);
+ if(s.shape==='histogram')validateHistogram(s,fields,reasons);
+ else if(s.histogram!==undefined)reasons.push('Histogram geometry requires a histogram dataset');
  if(s.quality?.extent==='complete'&&!attested(s))reasons.push(`Complete extent requires matching captured-query ${aspect(s)} attestation`);
  return result([...new Set(reasons)]);
 }
-function aspect(s){return s.shape==='time-series'?'intervals':s.shape==='summary'?'summary':'groups'}
+function aspect(s){return s.shape==='histogram'?'bins':s.shape==='time-series'?'intervals':s.shape==='summary'?'summary':'groups'}
 function attested(s){const c=s.completeness;return c?.basis===s.quality?.basis&&c?.revision===s.revision&&c?.scopeId===s.scope?.id&&Array.isArray(c?.aspects)&&c.aspects.includes(aspect(s))}
 export function eligibleKinds(snapshot){
  if(!validateSnapshot(snapshot).ok)return [];
  if(snapshot.dimensions?.length>1)return ['table'];
+ if(snapshot.shape==='histogram')return ['table','histogram'];
  const fields=snapshot.fields,numericFields=fields.filter(numericType);
  return Object.entries(kinds).filter(([,kind])=>(!kind.shape||kind.shape===snapshot.shape)&&(!kind.numericValue||kind.shape==='time-series'||numericFields.length>0&&(kind.category==='number'?numericFields.length>=2&&fields.some(field=>field.type==='number'&&(!snapshot.dimensions||snapshot.dimensions.includes(field.key))):fields.length>=2))).map(([name])=>name);
 }
@@ -100,7 +104,9 @@ export function validateDisplay(snapshot,display){
  if(snapshot.dimensions?.length>1&&display.kind!=='table')reasons.push('Multiple group dimensions require the exact table until a series mapping is declared');
  const kind=kinds[display.kind];
  if(kind.shape&&kind.shape!==snapshot.shape)reasons.push('Display kind does not support this dataset shape');
- if(display.kind==='time-bar'){
+ if(display.kind==='histogram'){
+  if(display.category!==undefined||display.value!==undefined||display.start!==undefined||display.end!==undefined)reasons.push('Histograms use their declared bin bounds and captured counts');
+ }else if(display.kind==='time-bar'){
   const value=snapshot.fields.find(field=>field.key===(display.value??'count'));
   if((display.start??'fromMs')!=='fromMs'||(display.end??'toMs')!=='toMs'||!value||!numericType(value)||value.key!=='count'&&!value.aggregation)reasons.push('Time bars require supplied interval bounds and a declared captured measure');
  }else if(kind.numericValue){
@@ -108,18 +114,18 @@ export function validateDisplay(snapshot,display){
   if(!category||!value||!numericType(value)||category.key===value.key)reasons.push('Display requires distinct declared category and numeric value fields');
   if(kind.category==='number'&&(category?.type!=='number'||snapshot.dimensions&&!snapshot.dimensions.includes(category?.key)))reasons.push('Line requires an ordered numeric category dimension');
  }
- if(kind.numericValue){const valueKey=display.value??(display.kind==='time-bar'?'count':undefined);if(valueKey)for(const row of snapshot.rows){const value=measureValue(snapshot,row,valueKey);if(member(value.state,['recorded','derived','estimated'])&&value.coordinate===null)reasons.push('A known measure is outside the finite plotting range; use exact values')}}
+ if(kind.numericValue){const valueKey=display.value??(['time-bar','histogram'].includes(display.kind)?'count':undefined);if(valueKey)for(const row of snapshot.rows){const value=measureValue(snapshot,row,valueKey);if(member(value.state,['recorded','derived','estimated'])&&value.coordinate===null)reasons.push('A known measure is outside the finite plotting range; use exact values')}}
  if(display.requiresComplete){if(snapshot.quality.extent!=='complete'||!attested(snapshot))reasons.push(`Complete captured-query ${aspect(snapshot)} are required for this scope and revision`)}
  return result(reasons);
 }
 function context(snapshot){const v=validateSnapshot(snapshot);if(!v.ok)throw TypeError(v.reasons.join('; '));return {datasetId:snapshot.id,revision:snapshot.revision,scopeId:snapshot.scope.id,generation:snapshot.scope.generation}}
 export function scopeIntent(snapshot,field,value){
  const c=context(snapshot),definition=snapshot.fields.find(f=>f.key===field);
- if(snapshot.shape==='summary'||!definition||definition.aggregation||snapshot.dimensions&&!snapshot.dimensions.includes(field)||value===undefined||value!==null&&!typed(value,definition))throw TypeError('Scope filter requires a declared field and typed value');
+ if(['summary','histogram'].includes(snapshot.shape)||!definition||definition.aggregation||snapshot.dimensions&&!snapshot.dimensions.includes(field)||value===undefined||value!==null&&!typed(value,definition))throw TypeError('Scope filter requires a declared field and typed value');
  if(!snapshot.rows.some(row=>own(row.values,field)&&row.values[field]===value))throw TypeError('Scope filter value is not in the supplied dataset');
  return {type:'scope-filter',...c,field,value,op:value===null?'missing':'eq'};
 }
-export function selectionIntent(snapshot,key){const c=context(snapshot);if(snapshot.shape==='summary')throw TypeError('Population summaries do not identify record or subgroup membership');if(!snapshot.rows.some(row=>row.key===key))throw TypeError('Selection key is not in this dataset revision');return {type:'select',...c,key}}
+export function selectionIntent(snapshot,key){const c=context(snapshot);if(['summary','histogram'].includes(snapshot.shape))throw TypeError('Population summaries and histograms do not identify record or subgroup membership');if(!snapshot.rows.some(row=>row.key===key))throw TypeError('Selection key is not in this dataset revision');return {type:'select',...c,key}}
 
 // Complete means exhaustive captured aggregate intervals, never full collection.
 function validateIntervals(s,fields,reasons){
@@ -208,7 +214,7 @@ function validateSummary(snapshot,fields,reasons){
  for(const field of fields.values())if(field.key!=='count'&&(!field.aggregation||field.type!=='rational'&&field.aggregation.family!=='span-status'))reasons.push('Population summaries contain only captured count and declared exact rational aggregate measures');
 }
 
-const shapeCapabilities=Object.freeze({ranked:Object.freeze({selectRows:true,filterDimensions:true,selectWindows:false}), 'time-series':Object.freeze({selectRows:true,filterDimensions:false,selectWindows:true}), summary:Object.freeze({selectRows:false,filterDimensions:false,selectWindows:false})});
+const shapeCapabilities=Object.freeze({ranked:Object.freeze({selectRows:true,filterDimensions:true,selectWindows:false}), 'time-series':Object.freeze({selectRows:true,filterDimensions:false,selectWindows:true}), summary:Object.freeze({selectRows:false,filterDimensions:false,selectWindows:false}),histogram:Object.freeze({selectRows:false,filterDimensions:false,selectWindows:false})});
 const none=Object.freeze({selectRows:false,filterDimensions:false,selectWindows:false,completeAspects:Object.freeze([])});
 export function capabilities(snapshot){
  if(!validateSnapshot(snapshot).ok)return none;
@@ -288,4 +294,42 @@ export function fractionFacts(snapshot,row,fieldKey){
  const fact=key=>{const f=snapshot.fields.find(field=>field.key===key);return {field:key,label:f?.label??key,value:row.values[key]??null,state:row.cells?.[key]?.state??(row.values[key]===null||row.values[key]===undefined?'unknown':'recorded')}};
  const numerator=fact(a.numerator),denominator=fact(a.denominator),family=snapshot.fields.find(field=>field.key===a.numerator)?.aggregation?.family;
  return {numerator,denominator,partition:family==='span-status'?snapshot.fields.filter(field=>field.aggregation?.family==='span-status').map(field=>fact(field.key)):[]};
+}
+
+// Fixed numeric histograms describe parsed values of captured records, not native
+// OTLP histogram instruments, duration_bucket groups, or a continuous density.
+export function histogramEdges(binding){
+ try{validateNumericPredicate({numeric:binding,op:'valid'})}catch{throw TypeError('Invalid numeric histogram binding')}
+ const scale=binding.scale??0;if(!Number.isInteger(scale)||(binding.type==='decimal64'?scale<1||scale>9:scale!==0))throw TypeError('Invalid numeric histogram scale');
+ const edges=[];
+ if(binding.type==='uint64'){edges.push(0n);for(let n=0n;n<=64n;n++)edges.push(1n<<n)}
+ else {for(let n=63n;n>=0n;n--)edges.push(-(1n<<n));edges.push(0n);for(let n=0n;n<=63n;n++)edges.push(1n<<n)}
+ const denominator=10n**BigInt(scale);
+ return edges.map(n=>{const divisor=gcd(n,denominator),a=n/divisor,b=denominator/divisor;return b===1n?a.toString():a+'/'+b});
+}
+function validateHistogram(s,fields,reasons){
+ const h=s.histogram;
+ if(s.dimensions!==undefined||s.interval!==undefined||s.partition!==undefined)reasons.push('Histogram datasets cannot declare group or time geometry');
+ if(!record(h)||Object.keys(h).length!==4||h.binning!=='powers-of-two'||h.closure!=='left-closed-right-open'||!record(h.support)){reasons.push('A fixed half-open numeric histogram and parse support are required');return}
+ let edges;try{edges=histogramEdges(h.binding)}catch(error){reasons.push(error.message);return}
+ if(fields.size!==3||['from','to'].some(key=>fields.get(key)?.type!=='rational'||fields.get(key)?.unit!==h.binding.unit||fields.get(key)?.aggregation||fields.get(key)?.nullable)||fields.get('count')?.type!=='number'||fields.get('count')?.unit!=='records'||fields.get('count')?.aggregation||fields.get('count')?.nullable)reasons.push('Histogram fields require exact bin edges and captured record counts');
+ const keys=['total','valid','missing','empty','invalid'];
+ if(Object.keys(h.support).length!==5||keys.some(k=>!uint64(h.support[k]))){reasons.push('Histogram support requires exact captured counts');return}
+ const support=Object.fromEntries(keys.map(k=>[k,BigInt(h.support[k])]));
+ if(support.total!==support.valid+support.missing+support.empty+support.invalid)reasons.push('Histogram support must partition captured records');
+ if(!Array.isArray(s.rows)||s.rows.length!==edges.length-1){reasons.push('Histogram requires every fixed bin including known empty bins');return}
+ let sum=0n;
+ for(const [i,row] of s.rows.entries()){
+  if(row?.key!=='bin:'+i||row?.values?.from!==edges[i]||row?.values?.to!==edges[i+1]||!uint64(row?.values?.count)||row.cells!==undefined){reasons.push('Histogram bin geometry or captured count differs from the fixed schema');continue}
+  const count=BigInt(row.values.count);sum+=count;
+  if(row.state!==(count===0n?'no_data':'observed'))reasons.push('Histogram bin state must distinguish known zero from positive captured counts');
+ }
+ if(sum!==support.valid)reasons.push('Histogram bin counts must equal valid parsed records');
+ if(!member(s.quality?.value,['recorded','derived']))reasons.push('Histogram counts require known captured values');
+}
+export function histogramIntent(snapshot,fromKey,toKey=fromKey){
+ const c=context(snapshot);if(snapshot.shape!=='histogram')throw TypeError('Histogram range requires a fixed numeric histogram');
+ const from=snapshot.rows.findIndex(row=>row.key===fromKey),to=snapshot.rows.findIndex(row=>row.key===toKey);
+ if(from<0||to<from)throw TypeError('Histogram range requires ordered supplied bin keys');
+ return {type:'scope-histogram',...c,fromKey,toKey};
 }

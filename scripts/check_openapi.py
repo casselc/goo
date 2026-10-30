@@ -225,6 +225,25 @@ def check_status_observed(spec, path):
     print('Actual Go status views valid: six ranked/interval/summary/empty/unknown DTOs; metadata/support negative controls pass')
 
 
+def check_histogram_observed(spec, path):
+    fixtures=json.loads(Path(path).read_text())
+    assert set(fixtures)=={'uint64','uint64-empty','int64','int64-empty','decimal64','decimal64-empty'}
+    check=validator(spec,{'$ref':'#/components/schemas/exploration.ViewDataset'})
+    for snapshot in fixtures.values(): check.validate(snapshot)
+    for change in [
+        lambda x:x['histogram'].update(closure='right-closed'),
+        lambda x:x['histogram'].update(binning='auto'),
+        lambda x:x['rows'].pop(),
+        lambda x:x['rows'][0]['values'].update(count=None),
+        lambda x:x['rows'][0].update(cells={'count':{'state':'derived'}}),
+        lambda x:x['fields'][0].update(type='number'),
+        lambda x:x.update(partition={'kind':'disjoint-record-groups','measure':'count','total':'1'}),
+    ]:
+        mutant=copy.deepcopy(fixtures['uint64']);change(mutant)
+        assert not check.is_valid(mutant),'Malformed actual-Go histogram DTO accepted'
+    print('Actual Go histogram views valid: six integer/decimal/empty DTOs; metadata/bin/support negatives pass')
+
+
 def check_view_measures(spec, ranked, intervals):
     check_view = validator(spec, {'$ref': '#/components/schemas/exploration.ViewDataset'})
     supplied = copy.deepcopy(ranked)
@@ -865,6 +884,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--observations')
     parser.add_argument('--status-view-observations')
+    parser.add_argument('--histogram-view-observations')
     parser.add_argument('--stock-observations')
     parser.add_argument('--stock-domain-observations')
     parser.add_argument('--pool-signals-observations')
@@ -881,6 +901,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    if args.histogram_view_observations:
+        check_histogram_observed(spec,args.histogram_view_observations)
+
     if args.status_view_observations:
         check_status_observed(spec, args.status_view_observations)
     if args.filesystem_utilization_observations:

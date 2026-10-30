@@ -46,6 +46,33 @@ that skip without actual journey input. Those skips are appropriate there; they
 are not a substitute for a passing required suite. Root Go/display/API gates stay
 independent. XTDB and browser campaigns are separate opt-ins.
 
+### Canonical fixed histograms — 269
+
+```sh
+go test -C verification -run '^TestHegelCanonicalHistogram' -count=1 -v .
+./node_modules/.bin/playwright test journeys/269-scoped-histogram.spec.js
+GOO_SCOPED_HISTOGRAM_LEDGER="$PWD/artifacts/scoped-269/model-trace.json" go test -C verification -run '^TestQuintScopedHistogramObservedBrowserLedger$' -count=1 -v .
+```
+
+The 100 generated cases pass actual Go source DTOs through actual JS contracts.
+Independent integer/decimal oracles predict fixed bins, exact human-unit bounds,
+exclusive max+1 sentinels and support partitions for int64/uint64/decimal64.
+Malformed geometry/counts/support fails; imports preserve all bins without proof;
+row subsets refuse rather than retaining a misleading full-population denominator.
+Empty captures and nonempty populations with no valid values remain distinct.
+
+The real journey selects a maximum signed bin without converting its sentinel
+into a predicate value. Keyboard selection and exact-table inspection read
+nothing; retired same-revision callbacks cannot plan; the current explicit Run
+invokes the source-free Go planner and one child read. Saved bins remain read-only.
+The observed seven-step model checks exact support/bin facts and request effects,
+rejecting seven faults and an unfinished prefix, without claiming private proof.
+Set `GOO_SCOPED_HISTOGRAM_BOMBADIL=1` for the optional 35-second UI campaign; it
+passed with 241 snapshots across all eight phases, three Explore requests and one
+source-free planner request. See the
+[storyboard](../journeys/269-scoped-histogram-storyboard.md). Keep compact summaries,
+model traces and current frames, not raw successful campaigns or capture stores.
+
 ### Exact status fractions — 268
 
 ```sh

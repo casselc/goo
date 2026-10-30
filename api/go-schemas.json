@@ -9691,6 +9691,16 @@
       "hasMore": {
         "type": "boolean"
       },
+      "histogramDataset": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ViewDataset"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "numeric": {
         "anyOf": [
           {
@@ -11987,6 +11997,16 @@
           }
         ]
       },
+      "histogram": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ViewHistogram"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "id": {
         "type": "string"
       },
@@ -12123,6 +12143,23 @@
               ]
             },
             "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "histogram": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewHistogramInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           {
             "type": "null"
@@ -12376,6 +12413,77 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.ViewField"
+  },
+  "exploration.ViewHistogram": {
+    "properties": {
+      "binding": {
+        "$ref": "#/components/schemas/exploration.NumericBinding"
+      },
+      "binning": {
+        "type": "string"
+      },
+      "closure": {
+        "type": "string"
+      },
+      "support": {
+        "$ref": "#/components/schemas/exploration.ViewSupport"
+      }
+    },
+    "required": [
+      "binning",
+      "binding",
+      "support",
+      "closure"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ViewHistogram"
+  },
+  "exploration.ViewHistogramInput": {
+    "additionalProperties": false,
+    "properties": {
+      "binding": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.NumericBindingInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "binning": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "closure": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "support": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ViewSupportInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ViewHistogram"
   },
   "exploration.ViewInterval": {
     "properties": {

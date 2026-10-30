@@ -542,5 +542,7 @@ trace opening retain their scope. [Recorded span status](docs/STATUS_FRACTIONS.m
 also uses shared breakdown, interval and summary components: exact Error/OK/Unset/
 Unknown counts and Error/count fractions, with fixed percentage axes and explicit
 empty/unknown states. Status comparisons retain their percentage-point presenter.
-Histogram and other family semantics still need adoption before renderer or
-contributed-view expansion.
+[Fixed numeric histograms](docs/SCOPED_HISTOGRAMS.md) now share the same dataset,
+histogram/table displays and execution-bound range planning, retaining exact
+support and domain edges. Aligned comparisons, native/duration histogram and other
+family semantics still need adoption before renderer or contributed-view expansion.

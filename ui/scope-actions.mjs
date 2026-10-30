@@ -4,10 +4,11 @@ import {isSnapshot,getSnapshotInfo} from './snapshots.mjs';
 import {identity as questionIdentity} from './question-session.mjs';
 import {validateRecordQuestion} from './question-protocol.mjs';
 import {validate as validatePredicate} from './predicate-validation.mjs';
+import {edges as coefficientEdges} from './numeric-bins.mjs';
 
 const bindings=new WeakMap(),own=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
 const record=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
-const slots=Object.freeze({groups:'ranked',intervals:'time-series',summary:'summary'});
+const slots=Object.freeze({groups:'ranked',intervals:'time-series',summary:'summary',histogram:'histogram'});
 const baseKeys=['type','datasetId','revision','scopeId','generation'];
 export class ScopeActionError extends TypeError {constructor(code,message){super(message);this.name='ScopeActionError';this.code=code}}
 const fail=(code,message)=>{throw new ScopeActionError(code,message)};
@@ -82,6 +83,7 @@ export function createActionContext(configuration){
   const parent=current.entry;
   if(parent.root!==parentBinding)fail('projection-parent','Only direct projections of a root binding are supported');
   if(parent.slot==='summary')fail('projection-shape','Population summaries cannot be projected into rows');
+  if(parent.slot==='histogram')fail('projection-shape','Histogram geometry requires the full fixed bin schema');
   if(subset===parent.snapshot)return parentBinding;
   if(!isSnapshot(subset)||!['ranked','time-series'].includes(subset.shape))fail('projection-lineage','Use a direct admitted row projection');
   const info=getSnapshotInfo(subset),original=parent.snapshot;
@@ -106,6 +108,7 @@ export function createActionContext(configuration){
   try{
    const guarded=actionGuard(binding);if(!guarded.ok)return guarded;
    const {entry,rootInfo}=guarded;
+   if(entry.slot==='histogram')return refusal('intent-type','Histogram ranges require checked source planning');
    plain(intent);
    const snapshot=entry.snapshot;
    if(!sameIdentity(intent,snapshot))return refusal('identity-mismatch','Selection belongs to a different snapshot');
@@ -138,6 +141,7 @@ export function createActionContext(configuration){
  function inspect(binding,intent){
   try{
    const guarded=actionGuard(binding);if(!guarded.ok)return guarded;
+   if(guarded.entry.slot==='histogram')return refusal('intent-type','Histogram ranges require checked source planning');
    const {entry,rootInfo}=guarded;plain(intent);
    if(!exactKeys(intent,[...baseKeys,'key'])||intent.type!=='select')return refusal('intent-type','Inspect a supplied selected datum');
    if(!sameIdentity(intent,entry.snapshot))return refusal('identity-mismatch','Selection belongs to a different snapshot');
@@ -148,5 +152,24 @@ export function createActionContext(configuration){
    return {ok:true,question:entry.question,row,role:entry.role,slot:entry.slot,epoch:entry.epoch,sourceId:rootInfo.sourceId,sourceInstance:rootInfo.sourceInstance};
   }catch(error){return refusal(error instanceof ScopeActionError?error.code:'invalid-intent',error.message||'Unable to inspect this selection')}
  }
- return Object.freeze({bind,project,resolve,inspect,revoke(){roots.clear();sourceEpoch=null;currentSource=null}});
+ // Resolve geometry for the existing Go planner, never construct a numeric
+ // predicate here. Its final max+1 edge is not a representable threshold.
+ // Async owners must check this same binding/intent again after awaiting a plan.
+ function histogram(binding,intent){
+  try{
+   const guarded=actionGuard(binding);if(!guarded.ok)return guarded;
+   const {entry,rootInfo}=guarded;plain(intent);
+   if(entry.slot!=='histogram'||intent.type!=='scope-histogram'||!exactKeys(intent,[...baseKeys,'fromKey','toKey']))return refusal('intent-type','Choose a supplied histogram range');
+   const snapshot=entry.snapshot;
+   if(!sameIdentity(intent,snapshot))return refusal('identity-mismatch','Selection belongs to a different snapshot');
+   const rows=snapshot.rows,a=rows.findIndex(row=>row.key===intent.fromKey),b=rows.findIndex(row=>row.key===intent.toKey);
+   if(a<0||b<0||a>b)return refusal('invalid-membership','Range endpoints must identify ordered supplied histogram bins');
+   const fromBin=a,toBin=b+1,question=entry.question;
+   if(!question.numeric||question.numericHistogram?.binning!==snapshot.histogram?.binning||rows.slice(fromBin,toBin).some(row=>!['observed','no_data'].includes(row.state)))return refusal('invalid-membership','Range does not match known numeric histogram geometry');
+   const edges=coefficientEdges(question.numeric.type);
+   if(rows.length!==edges.length-1)return refusal('invalid-membership','Histogram requires the complete fixed bin geometry');
+   return {ok:true,question,fromBin,toBin,from:edges[fromBin],to:edges[toBin],role:entry.role,slot:entry.slot,epoch:entry.epoch,sourceId:rootInfo.sourceId,sourceInstance:rootInfo.sourceInstance};
+  }catch(error){return refusal(error instanceof ScopeActionError?error.code:'invalid-intent',error.message||'Unable to plan this histogram range')}
+ }
+ return Object.freeze({bind,project,resolve,inspect,histogram,revoke(){roots.clear();sourceEpoch=null;currentSource=null}});
 }

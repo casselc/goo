@@ -2,11 +2,11 @@
 export * from './view-schema.mjs';
 import {validateDisplay as validateStructure,capabilities as describeCapabilities} from './view-schema.mjs';
 import {hasGuarantee} from './snapshots.mjs';
-const aspect=snapshot=>snapshot?.shape==='time-series'?'intervals':snapshot?.shape==='summary'?'summary':'groups';
+const aspect=snapshot=>snapshot?.shape==='histogram'?'bins':snapshot?.shape==='time-series'?'intervals':snapshot?.shape==='summary'?'summary':'groups';
 export function validateDisplay(snapshot,display){
  const result=validateStructure(snapshot,display);
  if(display?.requiresComplete&&!hasGuarantee(snapshot,aspect(snapshot))){
-  const completeReason=reason=>/^Complete captured-query (groups|intervals|summary) are required for this scope and revision$/.test(reason)||/^Complete extent requires matching captured-query (groups|intervals|summary) attestation$/.test(reason);
+  const completeReason=reason=>/^Complete captured-query (groups|intervals|summary|bins) are required for this scope and revision$/.test(reason)||/^Complete extent requires matching captured-query (groups|intervals|summary|bins) attestation$/.test(reason);
   return {ok:false,reasons:[...result.reasons.filter(reason=>!completeReason(reason)),'Complete-only display requires verified coverage of the full query.']};
  }
  if(display?.scale==='population'){const unavailable=populationUnavailable(snapshot);if(unavailable)return {ok:false,reasons:[...new Set([...result.reasons,unavailable])]}}

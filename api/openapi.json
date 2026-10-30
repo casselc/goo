@@ -16254,6 +16254,16 @@
           "hasMore": {
             "type": "boolean"
           },
+          "histogramDataset": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewDataset"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "numeric": {
             "anyOf": [
               {
@@ -20246,7 +20256,8 @@
               "enum": [
                 "groups",
                 "intervals",
-                "summary"
+                "summary",
+                "bins"
               ]
             }
           },
@@ -20367,9 +20378,19 @@
               "$ref": "#/components/schemas/exploration.ViewField"
             }
           },
+          "histogram": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewHistogram"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "id": {
             "type": "string",
-            "pattern": "^[a-f0-9]{64}:(groups|intervals|summary)$"
+            "pattern": "^[a-f0-9]{64}:(groups|intervals|summary|bins)$"
           },
           "interval": {
             "anyOf": [
@@ -20413,7 +20434,8 @@
             "enum": [
               "ranked",
               "time-series",
-              "summary"
+              "summary",
+              "histogram"
             ]
           },
           "sourceBasis": {
@@ -21054,6 +21076,15 @@
                   }
                 }
               }
+            ],
+            "allOf": [
+              {
+                "not": {
+                  "required": [
+                    "histogram"
+                  ]
+                }
+              }
             ]
           },
           {
@@ -21444,7 +21475,16 @@
                   }
                 }
               }
-            }
+            },
+            "allOf": [
+              {
+                "not": {
+                  "required": [
+                    "histogram"
+                  ]
+                }
+              }
+            ]
           },
           {
             "not": {
@@ -21717,7 +21757,300 @@
                   }
                 }
               }
-            }
+            },
+            "allOf": [
+              {
+                "not": {
+                  "required": [
+                    "histogram"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "required": [
+              "histogram"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "dimensions"
+                  ]
+                },
+                {
+                  "required": [
+                    "interval"
+                  ]
+                },
+                {
+                  "required": [
+                    "partition"
+                  ]
+                }
+              ]
+            },
+            "properties": {
+              "shape": {
+                "const": "histogram"
+              },
+              "id": {
+                "pattern": "^[a-f0-9]{64}:bins$"
+              },
+              "fields": {
+                "minItems": 3,
+                "maxItems": 3,
+                "prefixItems": [
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/exploration.ViewField"
+                      },
+                      {
+                        "required": [
+                          "unit"
+                        ],
+                        "properties": {
+                          "key": {
+                            "const": "from"
+                          },
+                          "type": {
+                            "const": "rational"
+                          }
+                        },
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "aggregation"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "nullable"
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/exploration.ViewField"
+                      },
+                      {
+                        "required": [
+                          "unit"
+                        ],
+                        "properties": {
+                          "key": {
+                            "const": "to"
+                          },
+                          "type": {
+                            "const": "rational"
+                          }
+                        },
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "aggregation"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "nullable"
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/exploration.ViewField"
+                      },
+                      {
+                        "required": [
+                          "unit"
+                        ],
+                        "properties": {
+                          "key": {
+                            "const": "count"
+                          },
+                          "type": {
+                            "const": "number"
+                          },
+                          "unit": {
+                            "const": "records"
+                          }
+                        },
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "aggregation"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "nullable"
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "rows": {
+                "minItems": 65,
+                "maxItems": 128,
+                "items": {
+                  "properties": {
+                    "key": {
+                      "pattern": "^bin:(0|[1-9][0-9]*)$"
+                    },
+                    "state": {
+                      "enum": [
+                        "observed",
+                        "no_data"
+                      ]
+                    },
+                    "values": {
+                      "type": "object",
+                      "required": [
+                        "from",
+                        "to",
+                        "count"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "from": {
+                          "type": "string",
+                          "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                          "maxLength": 1024,
+                          "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                        },
+                        "to": {
+                          "type": "string",
+                          "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                          "maxLength": 1024,
+                          "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                        },
+                        "count": {
+                          "type": "string",
+                          "pattern": "^(0|[1-9][0-9]*)$",
+                          "maxLength": 20,
+                          "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "state"
+                  ],
+                  "not": {
+                    "required": [
+                      "cells"
+                    ]
+                  },
+                  "allOf": [
+                    {
+                      "if": {
+                        "properties": {
+                          "state": {
+                            "const": "no_data"
+                          }
+                        }
+                      },
+                      "then": {
+                        "properties": {
+                          "values": {
+                            "properties": {
+                              "count": {
+                                "const": "0"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "else": {
+                        "properties": {
+                          "values": {
+                            "properties": {
+                              "count": {
+                                "pattern": "^[1-9][0-9]*$"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "scope": {
+                "properties": {
+                  "selector": {
+                    "required": [
+                      "numeric",
+                      "numericHistogram"
+                    ]
+                  }
+                }
+              },
+              "completeness": {
+                "properties": {
+                  "aspects": {
+                    "const": [
+                      "bins"
+                    ]
+                  }
+                }
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "histogram": {
+                      "properties": {
+                        "binding": {
+                          "properties": {
+                            "type": {
+                              "const": "uint64"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "rows": {
+                      "minItems": 65,
+                      "maxItems": 65
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "rows": {
+                      "minItems": 128,
+                      "maxItems": 128
+                    }
+                  }
+                }
+              }
+            ]
           }
         ],
         "allOf": [
@@ -22248,6 +22581,23 @@
               }
             ]
           },
+          "histogram": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.ViewHistogramInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "id": {
             "anyOf": [
               {
@@ -22406,6 +22756,8 @@
               "count",
               "fromMs",
               "toMs",
+              "from",
+              "to",
               "numeric.mean",
               "numeric.sum",
               "numeric.min",
@@ -23230,6 +23582,79 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ViewField"
+      },
+      "exploration.ViewHistogram": {
+        "properties": {
+          "binding": {
+            "$ref": "#/components/schemas/exploration.NumericBinding"
+          },
+          "binning": {
+            "const": "powers-of-two"
+          },
+          "closure": {
+            "const": "left-closed-right-open"
+          },
+          "support": {
+            "$ref": "#/components/schemas/exploration.ViewSupport"
+          }
+        },
+        "required": [
+          "binning",
+          "binding",
+          "support",
+          "closure"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewHistogram",
+        "additionalProperties": false,
+        "description": "Exact fixed numeric bins; binding scale converts coefficient edges into human-unit rationals. Runtime checks all boundaries, support sums, scope binding equality and sum(bin counts)==support.valid. Exclusive max+1 is geometry, never an accepted predicate value."
+      },
+      "exploration.ViewHistogramInput": {
+        "additionalProperties": false,
+        "properties": {
+          "binding": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.NumericBindingInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "binning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "closure": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "support": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewSupportInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewHistogram"
       },
       "exploration.ViewInterval": {
         "properties": {

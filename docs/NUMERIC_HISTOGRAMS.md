@@ -1,5 +1,12 @@
 # Exact numeric distributions
 
+269 brings the display onto the [shared histogram dataset](SCOPED_HISTOGRAMS.md).
+Raw source/API boundaries below remain coefficient strings; shared snapshots use
+exact rational human-unit edges. The passive `goo-chart` histogram kind owns
+presentation, reusing `goo-time-bars` gestures internally. H1 captured bindings
+guard range planning before and after awaits. Retained views require a fresh Run
+after withdrawal before source actions resume; local Saved highlighting stays passive.
+
 Implemented in the Go adapter and fixed/saved question UI. This extends the explicit numeric attribute binding;
 it does not infer types or units from OTel attribute names. The existing record
 question remains the unit of scope and reuse.
@@ -90,13 +97,15 @@ Executable journey: [numeric-histogram.spec.js](../journeys/numeric-histogram.sp
    selected population. Stage count comparison with rest instead stages the
    existing population workspace. Run there reads selected and rest independently;
    their counts partition the parent, including nonvalid values in the rest.
+   Back retains the captured display without reads; Run the parent explicitly
+   before planning another range after its execution binding was withdrawn.
 5. Save a capture and build reusable YAML. A fresh use preserves the optional
    histogram request; reopening saved evidence uses stored bins and does not read
    telemetry. The mobile chart scrolls within its panel rather than expanding
    the page. Invalid-only and no-data populations show coverage without fake bars.
 6. A separate lifecycle case delays an actual planner response, leaves the
    question and returns. The old response must not open a population. A new
-   gesture can plan again without re-reading the parent.
+   explicit parent Run creates a current binding before a new gesture can plan.
 
 Backend and live-browser acceptance, native property/model replay and the
 Bombadil campaign pass. Executed evidence and limitations are recorded in
