@@ -1356,3 +1356,15 @@ baseline, held, diagnostic and retired bindings cannot stage current scope.
 The group/timeline adapters withdraw actions on suspension but retain passive
 local display. Other action families retain their existing owners until migrated;
 this is not a whole-product request/effect engine.
+
+267 consolidates [ordinary breakdowns](ORDINARY_BREAKDOWNS.md). Go adds a typed
+partition denominator from the same exhaustive grouped aggregate, never the
+separate total or record page. Structural validation checks grain/count units,
+sums and range; private source admission remains necessary for full shares.
+`scope-view.mjs` applies local Find/order to immutable row references while
+computing scales over the original data. `scoped-breakdown.mjs` owns one compact
+application toolbar/controller; fixed/Saved owners suppress duplicate ordinary
+Records charts before minting any bindings. Population workspaces and specialized
+presenters retain their existing owners. `scope-actions.mjs` also exposes pure
+current-source inspection of a supplied aggregate row, separate from refinement;
+no inspection datum becomes a verified record reference or Keep capability.

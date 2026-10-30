@@ -148,3 +148,11 @@ families and whole-screen composition remain to be migrated before contributed
 view execution, broader live subscriptions or renderer/editor expansion. See the
 [pit-of-success review](MODEL_PIT_OF_SUCCESS_264.md) and
 [current roadmap](ROADMAP_2026_10_30.md).
+
+## Partition descriptors267
+
+A ranked disjoint-record-group partition has declared dimensions, a captured-record
+count field and an exact same-read total. Imports/direct row projections retain
+that descriptor as advisory data and cannot use it to recover private groups
+coverage. A complete snapshot must sum exactly to the total; partial/held visible
+counts cannot exceed it. See [share display and authority](ORDINARY_BREAKDOWNS.md).

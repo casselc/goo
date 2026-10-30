@@ -532,5 +532,11 @@ proof. This adds no local-filter UI or source authentication.
 bindings from content revisions. Old group/facet/interval actions cannot stage
 against a rerun, another role or a suspended visit, even with identical data.
 Suspension withdraws action controls while retaining local display. This is the
-bounded H1 cut for canonical fixed Explore controls; broader family migration and
-quality/interaction parity remain before renderer or contributed-view expansion.
+bounded H1 cut for canonical fixed Explore controls.
+
+[Ordinary breakdowns](docs/ORDINARY_BREAKDOWNS.md) now share one Distribution
+surface; Records no longer repeats that group chart. Population shares use the
+same exhaustive group read, and local Find/sort keeps the full denominator and
+scale. Group selection stages a question; Run reads it. Saved inspection and
+trace opening retain their scope. Specialized status, histogram and other family
+semantics still need adoption before renderer or contributed-view expansion.

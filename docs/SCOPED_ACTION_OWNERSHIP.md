@@ -129,6 +129,14 @@ legacy distribution/error-triage and other noncanonical action families retain
 their existing owners and need deliberate migration before claiming whole-product
 centralization. No new controls, renderer or editor are introduced here.
 
-The next V0 cut is [ordinary Distribution consolidation](ROADMAP_2026_10_30.md#next-bounded-v0-cut-one-ordinary-breakdown-surface),
-including typed partition/denominator semantics before replacing full-population
-shares. The current bounded resolver does not silently change those older views.
+267 delivers [ordinary Distribution consolidation](ORDINARY_BREAKDOWNS.md) with
+typed partition/denominator semantics before replacing full-population shares.
+The specialized families retain explicit owners until deliberately migrated.
+
+`inspect(binding, selectionIntent)` shares the current-role/source/epoch/coherence
+and known-member guards, but returns the captured immutable parent question and
+supplied aggregate row without adding a predicate. This permits a trace-context
+read even when refining the parent would exceed its filter budget. It performs no
+read itself and grants no verified record membership or Keep authority. The host
+still validates a trace-ID dimension/identifier and builds the explicit trace
+question. Staging remains a separate `resolve` operation with its original limits.

@@ -20205,6 +20205,9 @@
               "browser-held"
             ]
           },
+          "partition": {
+            "$ref": "#/components/schemas/exploration.ViewPartition"
+          },
           "quality": {
             "$ref": "#/components/schemas/exploration.ViewQuality"
           },
@@ -20255,7 +20258,7 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ViewDataset",
         "additionalProperties": false,
-        "description": "Supplied immutable count snapshot: exhaustive captured-query groups or explicit count intervals. Result-aspect completeness never certifies raw-record paging, upstream ingestion/sampling or a transactional count/page pair. Scope/revision equality and interval coverage are runtime checked.",
+        "description": "Supplied immutable captured-record snapshot: ranked groups, explicit intervals or population summaries with optional exact numeric/duration measures. An optional ranked partition derives its denominator from the same exhaustive group read. Result-aspect completeness never certifies raw-record paging, upstream ingestion/sampling or a transactional count/page pair. Scope/revision equality, partition sums and interval coverage are runtime checked.",
         "oneOf": [
           {
             "properties": {
@@ -20775,8 +20778,17 @@
               "interval"
             ],
             "not": {
-              "required": [
-                "dimensions"
+              "anyOf": [
+                {
+                  "required": [
+                    "dimensions"
+                  ]
+                },
+                {
+                  "required": [
+                    "partition"
+                  ]
+                }
               ]
             },
             "properties": {
@@ -21112,6 +21124,11 @@
                 {
                   "required": [
                     "interval"
+                  ]
+                },
+                {
+                  "required": [
+                    "partition"
                   ]
                 }
               ]
@@ -21520,6 +21537,23 @@
             "anyOf": [
               {
                 "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "partition": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.ViewPartitionInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               {
                 "type": "null"
@@ -22293,6 +22327,68 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ViewInterval"
+      },
+      "exploration.ViewPartition": {
+        "properties": {
+          "kind": {
+            "const": "disjoint-record-groups"
+          },
+          "measure": {
+            "const": "count"
+          },
+          "total": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+          }
+        },
+        "required": [
+          "kind",
+          "measure",
+          "total"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewPartition",
+        "additionalProperties": false,
+        "description": "Exact disjoint captured-record partition from the same exhaustive GROUP BY read, including missing and empty groups; never the separately read count or record page. Runtime verifies the row-count sum and source-adoption authority before full-population shares. Zero total makes shares unavailable. The descriptor does not prove complete upstream collection."
+      },
+      "exploration.ViewPartitionInput": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "measure": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "total": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewPartition"
       },
       "exploration.ViewQuality": {
         "properties": {

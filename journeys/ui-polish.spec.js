@@ -43,10 +43,10 @@ test('29 inspect structured attributes, refine facets and navigate with keyboard
   await search.fill('same.key');await page.screenshot({path:path.join(frames,'29a-structured-attribute-inspection.png'),fullPage:true});
 
   await search.fill('geo.region');await viewer.getByRole('button',{name:'Break down and run by attribute:geo.region',exact:true}).click();
-  await expect(page.locator('#distributionContent goo-facet-list > [data-facet-item]')).toHaveCount(3);
-  const facetReads=reads;await page.locator('#facetSearch').fill('no matching facet');await expect(page.locator('#distributionContent goo-result-state[state=empty]')).toContainText('totals and scale are unchanged');expect(reads).toBe(facetReads);await page.locator('#facetSearch').fill('empty');await expect(page.locator('#distributionContent .distribution-row:visible')).toHaveCount(1);await expect(page.locator('#facetStatus')).toContainText('1 of 3');await expect(page.locator('#exploreCount')).toContainText('6');
+  await expect(page.locator('#distributionContent .scope-view-bar')).toHaveCount(3);
+  const facetReads=reads;await page.locator('#facetSearch').fill('no matching facet');await expect(page.locator('#facetStatus')).toContainText('0 of 3');expect(reads).toBe(facetReads);await page.locator('#facetSearch').fill('empty');await expect(page.locator('#distributionContent .scope-view-bar')).toHaveCount(1);await expect(page.locator('#facetStatus')).toContainText('1 of 3');await expect(page.locator('#exploreCount')).toContainText('6');
   const facetResponse=page.waitForResponse(r=>r.url().endsWith('/api/explore')&&r.request().method()==='POST');
-  await page.getByRole('button',{name:'Filter and run attribute:geo.region equals Present empty string',exact:true}).click();const empty=await(await facetResponse).json();expect(empty.count).toBe('2');
+  await page.locator('#distributionContent .scope-view-bar').click();await page.locator('#distributionContent').getByRole('button',{name:'Stage selected group',exact:true}).click();expect(reads).toBe(facetReads);await page.locator('#exploreRun').click();const empty=await(await facetResponse).json();expect(empty.count).toBe('2');
   await expect(page.locator('#exploreFilters')).toContainText('= ""');
   await require('./support/explore').removeFilter(page,field('attribute','geo.region'),'eq');await run('#exploreRun');await page.locator('#facetSearch').fill('');
   await page.screenshot({path:path.join(frames,'29b-facets-and-explicit-empty-values.png'),fullPage:true});
@@ -63,7 +63,7 @@ test('29 inspect structured attributes, refine facets and navigate with keyboard
   await expect(page.locator('#exploreLogStatus')).toContainText('exact trace and span ID');await expect(page.locator('#exploreLogs [data-inspect-record]')).toHaveCount(1);await page.locator('#exploreLogs [data-inspect-record]').click();const linked=page.locator('#exploreLogs .ui-inspector');await expect(linked.getByRole('button',{name:/^(Filter by|Break down by)/})).toHaveCount(0);
   await linked.getByRole('button',{name:'Close selected item details',exact:true}).click();await page.locator('#exploreSpanDetails').getByRole('searchbox',{name:'Search attribute keys and values'}).fill('SpanName');await page.locator('#exploreContext').evaluate(e=>e.scrollTop=0);
   await page.screenshot({path:path.join(frames,'29c-selected-trace-and-structured-context.png'),fullPage:true});
-  await page.keyboard.press('Escape');await expect(page.locator('#exploreContext')).toBeHidden();await expect(opener).toBeFocused();
+  await page.keyboard.press('Escape');await expect(page.locator('#exploreContext')).toBeVisible();await page.locator('#exploreContextClose').focus();await page.keyboard.press('Escape');await expect(page.locator('#exploreContext')).toBeHidden();await expect(opener).toBeFocused();
 
   await page.setViewportSize({width:390,height:844});await require('./support/explore').clearFilters(page);await require('./support/explore').chooseGrouping(page,null);await run();
   await page.locator('#exploreRows [data-inspect-record]').first().click();const mobile=page.locator('#exploreRows .ui-inspector');await mobile.getByRole('searchbox',{name:'Search attribute keys and values'}).fill('test.multiline');

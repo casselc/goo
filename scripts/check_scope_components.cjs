@@ -162,9 +162,28 @@ const snapshot={
     await decimalDetails.locator('summary').tap();
     assert(await decimalDetails.locator('.scope-view-exact').isVisible());
     assert((await decimalDetails.locator('.scope-view-exact').textContent()).includes('9007199254740993.123456789 USD'));
+    const shares=await page.evaluate(()=>{
+      const raw=structuredClone(window.supplied);raw.fields=raw.fields.filter(field=>['category','count'].includes(field.key));raw.fields.find(field=>field.key==='count').unit='records';raw.fields[0].nullable=true;
+      raw.rows=[{key:'large',values:{category:'api',count:'80'}},{key:'small',values:{category:'worker',count:'20'}}];raw.quality.extent='complete';raw.completeness={basis:'captured-query',revision:raw.revision,scopeId:raw.scope.id,aspects:['groups']};raw.partition={kind:'disjoint-record-groups',measure:'count',total:'100'};
+      const source=window.adopt(raw),chart=document.createElement('goo-chart');chart.snapshot=source;chart.display={kind:'bar',category:'category',value:'count',scale:'population',query:'WORKER',order:'value-desc'};document.body.append(chart);
+      let selected;chart.addEventListener('goo-select',event=>selected=event.detail);chart.querySelector('.scope-view-bar').click();
+      const populationWidth=chart.querySelector('.scope-view-fill').style.width,shareTitle=chart.querySelector('.scope-view-bar').title;
+      chart.display={...chart.display,scale:'max'};const maxWidth=chart.querySelector('.scope-view-fill').style.width;
+      chart.display={...chart.display,kind:'table',scale:'population'};const shareCell=chart.querySelector('td[data-share]'),tableShare=shareCell?.textContent==='20%'&&shareCell.dataset.share==='20/100'&&shareCell.title.includes('20/100');
+      chart.display={...chart.display,query:'absent'};const emptyFind=chart.textContent.includes('No matching groups')&&chart.querySelector('.chart-frame-state').dataset.state==='observed';
+      chart.display={...chart.display,query:'worker'};const unchanged=chart.snapshot===source&&source.rows.length===2&&source.partition.total==='100';
+      chart.snapshot=JSON.parse(JSON.stringify(source));const heldFallback=chart.display.scale==='population'&&!!chart.querySelector('table')&&!chart.querySelector('[data-share]')&&!chart.querySelector('.scope-view-fill')&&chart.textContent.includes('Population shares require verified coverage');
+      chart.display={...chart.display,requiresComplete:true};const compactRefusal=chart.textContent.includes('Complete-only display requires verified coverage')&&!chart.textContent.includes('Complete captured-query')&&!chart.textContent.includes('Population shares require')&&!chart.querySelector('table')&&!chart.querySelector('.scope-view-fill');
+      const empty=structuredClone(raw);empty.rows=[];empty.partition.total='0';chart.snapshot=window.adopt(empty);chart.display={kind:'bar',category:'category',value:'count',scale:'population'};const zeroRefusal=chart.textContent.includes('No captured population')&&!chart.textContent.includes('0%')&&!!chart.querySelector('table');
+      const labels=structuredClone(raw);labels.rows=[null,'','Missing','Present empty string','"Missing"'].map((category,i)=>({key:'label-'+i,values:{category,count:'20'}}));chart.snapshot=window.adopt(labels);chart.display={kind:'table'};const texts=[...chart.querySelectorAll('tbody>tr>td:first-child>span')].map(cell=>cell.textContent),aria=[...chart.querySelectorAll('tbody button')].map(button=>button.getAttribute('aria-label'));
+      const facet=document.createElement('goo-scope-facet');facet.snapshot=chart.snapshot;facet.field='category';document.body.append(facet);let rawValue;facet.addEventListener('goo-scope',event=>rawValue=event.detail.value);[...facet.querySelectorAll('button')].find(button=>button.textContent==='"Missing"').click();
+      return {populationWidth,maxWidth,shareTitle,tableShare,emptyFind,unchanged,heldFallback,compactRefusal,zeroRefusal,distinctLabels:new Set(texts).size===5&&new Set(aria).size===5,typedValue:rawValue==='Missing',originalIntent:selected.datasetId===source.id&&selected.revision===source.revision&&selected.key==='small'};
+    });
+    assert.equal(shares.populationWidth,'20%');assert.equal(shares.maxWidth,'25%');assert(shares.shareTitle.includes('20/100'));
+    for(const key of ['tableShare','emptyFind','unchanged','heldFallback','compactRefusal','zeroRefusal','distinctLabels','typedValue','originalIntent'])assert(shares[key],key);
     const clearing=await page.evaluate(()=>{const chart=document.createElement('goo-chart');chart.snapshot=window.supplied;chart.display={kind:'table'};document.body.append(chart);const before=!!chart.querySelector('table');chart.snapshot={};return before&&!chart.querySelector('table')&&chart.snapshot===null});assert(clearing);
     assert.equal(errors.length,0,errors.join('; '));
     assert(!requests.some(name=>name.startsWith('/api/')||name==='/app.mjs'));
-    console.log('Scoped components: exact values/rationals, human units/support/exact quantiles, per-cell gaps/estimates/signed fallback, complete-only refusal, table/bar/line/time-bar, interval gaps/UTC, typed intents, SSR/pre-upgrade,390px layout and no application IO pass');
+    console.log('Scoped components: full-population count shares, unchanged Find/sort geometry/identity, typed state labels/refusals, exact values/rationals, human units/support/exact quantiles, per-cell gaps/estimates/signed fallback, complete-only refusal, table/bar/line/time-bar, interval gaps/UTC, typed intents, SSR/pre-upgrade,390px layout and no application IO pass');
   }finally{await browser?.close()}
 })().catch(error=>{console.error(error);process.exitCode=1});

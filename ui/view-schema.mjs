@@ -1,3 +1,5 @@
+import {categoryText} from './view-values.mjs';
+export {categoryText};
 /* Structural, IO-free dataset schema. Metadata consistency is not authority. Exact values are never replaced by plotting coordinates. */
 const own=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
 const record=o=>o!==null&&typeof o==='object'&&!Array.isArray(o);
@@ -58,6 +60,7 @@ export function validateSnapshot(s){
  if(!Array.isArray(s.rows)||s.rows.length>10000)reasons.push('Dataset requires at most 10000 supplied rows');
  else {const keys=new Set();for(const row of s.rows){if(!record(row)||!text(row.key)||keys.has(row.key)||!record(row.values)){reasons.push('Invalid or duplicate stable row key');continue}keys.add(row.key);for(const [key,value] of Object.entries(row.values)){const field=fields.get(key);if(!field){reasons.push(`Undeclared field ${key}`);continue}if(value===null){if(field.nullable!==true)reasons.push('Null values require an explicitly nullable field');continue}if(!typed(value,field))reasons.push(`Invalid ${field.type} value for ${key}`)}}}
  if(s.shape==='ranked'&&Array.isArray(s.rows))for(const row of s.rows){if(fields.has('count')&&!uint64(row?.values?.count))reasons.push('Every ranked row requires its declared exact captured count');if(Array.isArray(s.dimensions)&&s.dimensions.some(key=>!record(row?.values)||!own(row.values,key)))reasons.push('Every declared group dimension requires a supplied cell value')}
+ if(s.partition!==undefined)validatePartition(s,fields,reasons);
  if(Array.isArray(s.rows))validateCells(s,fields,reasons);
  if(!record(s.quality))reasons.push('Dataset quality is required');
  else {enumField(s.quality,'extent',['complete','partial','unknown'],reasons);enumField(s.quality,'basis',['captured-query'],reasons);enumField(s.quality,'value',['recorded','derived','estimated','unknown'],reasons);enumField(s.quality,'sampling',['unknown','none','sampled'],reasons);enumField(s.quality,'freshness',['fixed','live'],reasons)}
@@ -79,8 +82,17 @@ export function validateDisplay(snapshot,display){
  const base=validateSnapshot(snapshot);if(!base.ok)return base;
  const reasons=[];
  if(!record(display)||typeof display.kind!=='string'||!own(kinds,display.kind))return result(['Unsupported display kind']);
- if(Object.keys(display).some(key=>!['kind','title','category','value','start','end','requiresComplete'].includes(key)))reasons.push('Unknown display option');
+ if(Object.keys(display).some(key=>!['kind','title','category','value','start','end','requiresComplete','scale','query','order'].includes(key)))reasons.push('Unknown display option');
  for(const key of ['title','category','value','start','end'])if(display[key]!==undefined&&!text(display[key]))reasons.push('Display options require bounded strings');
+ if(display.scale!==undefined&&!member(display.scale,['max','population']))reasons.push('Choose max or population scale');
+ if(display.query!==undefined&&(typeof display.query!=='string'||display.query.length>256))reasons.push('Find text must contain at most 256 characters');
+ if(display.order!==undefined&&!member(display.order,['source','label','value-desc','value-asc']))reasons.push('Choose a supported display order');
+ if((display.scale!==undefined||display.query!==undefined||display.order!==undefined)&&(snapshot.shape!=='ranked'||!member(display.kind,['bar','table'])))reasons.push('Find, ordering and scale options require a ranked table or bar view');
+ if(display.scale==='population'){
+  if(display.value!=='count')reasons.push('Population shares are available only for captured record counts');
+  if(!snapshot.partition)reasons.push('Captured-population shares are unavailable for this result');
+  else if(snapshot.partition.total==='0')reasons.push('No captured population is available for shares');
+ }
  if(display.requiresComplete!==undefined&&typeof display.requiresComplete!=='boolean')reasons.push('requiresComplete must be boolean');
  if(snapshot.dimensions?.length>1&&display.kind!=='table')reasons.push('Multiple group dimensions require the exact table until a series mapping is declared');
  const kind=kinds[display.kind];
@@ -197,3 +209,38 @@ export function capabilities(snapshot){
  return Object.freeze({...shape,filterDimensions:shape.filterDimensions&&!!snapshot.dimensions?.length,completeAspects:Object.freeze(snapshot.quality.extent==='complete'&&attested(snapshot)?[aspect(snapshot)]:[])});
 }
 export const supportsSelection=snapshot=>capabilities(snapshot).selectRows;
+
+function validatePartition(snapshot,fields,reasons){
+ const p=snapshot.partition,count=fields.get('count');
+ if(snapshot.shape!=='ranked'||!Array.isArray(snapshot.dimensions)||!snapshot.dimensions.length||!record(p)||Object.keys(p).length!==3||!['kind','measure','total'].every(key=>own(p,key))||p.kind!=='disjoint-record-groups'||p.measure!=='count'||!uint64(p.total)||count?.type!=='number'||count.unit!=='records'||count.aggregation){reasons.push('Invalid disjoint captured-record partition');return}
+ if(!Array.isArray(snapshot.rows)||snapshot.rows.some(row=>!uint64(row?.values?.count))){reasons.push('Partition rows require exact captured counts');return}
+ const sum=snapshot.rows.reduce((total,row)=>total+BigInt(row.values.count),0n),total=BigInt(p.total);
+ if(sum>18446744073709551615n)reasons.push('Partition sum exceeds the captured-count range');
+ if(sum>total||snapshot.quality?.extent==='complete'&&sum!==total)reasons.push('Partition total does not match its captured group extent');
+}
+function comparable(value){
+ if(value===null||value===undefined)return null;
+ const text=String(value),fraction=rationalParts(text);if(fraction)return fraction;
+ const match=/^(-?)(\d+)(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/.exec(text);if(!match)return null;
+ const shift=Number(match[4]??0)-(match[3]?.length??0);if(!Number.isSafeInteger(shift)||Math.abs(shift)>2048)return null;
+ const n=BigInt(match[2]+(match[3]??''))*(match[1]?-1n:1n);
+ return shift<0?{numerator:n,denominator:10n**BigInt(-shift)}:{numerator:n*10n**BigInt(shift),denominator:1n};
+}
+// Display-only Find/order. These rows still belong to the original snapshot:
+// no scope, denominator, guarantee, dataset identity or source totals change.
+export function displayRows(snapshot,display){
+ const dimensions=snapshot.dimensions?.length?snapshot.dimensions:display.category?[display.category]:[],query=(display.query??'').toLowerCase(),order=display.order??'source',valueKey=display.value??'count';
+ const labels=row=>dimensions.map(key=>categoryText(row.values[key])).join(' / ').toLowerCase();
+ const byValue=order==='value-asc'||order==='value-desc';
+ const rows=snapshot.rows.map((row,index)=>{const value=byValue?measureValue(snapshot,row,valueKey):null,known=value&&member(value.state,['recorded','derived','estimated','no_data'])&&value.exact!==null;return {row,index,label:labels(row),number:known?comparable(value.exact):null}}).filter(item=>!query||item.label.includes(query));
+ if(order!=='source')rows.sort((a,b)=>{
+  let compared=0;
+  if(order==='label')compared=a.label<b.label?-1:a.label>b.label?1:0;
+  else {const x=a.number,y=b.number;
+   if(!x||!y)return x?-1:y?1:a.index-b.index;
+   const delta=x.numerator*y.denominator-y.numerator*x.denominator;compared=delta<0n?-1:delta>0n?1:0;if(order==='value-desc')compared=-compared;
+  }
+  return compared||a.index-b.index;
+ });
+ return Object.freeze(rows.map(item=>item.row));
+}

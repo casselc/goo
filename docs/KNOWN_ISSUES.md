@@ -1,5 +1,14 @@
 # Known issues and gaps
 
+267 consolidates [ordinary single-field Distribution](ORDINARY_BREAKDOWNS.md)
+on canonical snapshots and scoped actions, with verified same-group-read shares.
+Records no longer repeats those charts. Local Find/order/kind/scale are display
+preferences, not a newly persisted authored-view AST. Special pattern, histogram,
+status/error-rate, multidimensional/error-triage, population-workspace and native
+paths retain explicit existing owners until their semantics migrate. Imported or
+projected data cannot claim verified population shares; hard complete-only views
+refuse fallback data. No Plotly adapter or view editor is added by this cut.
+
 266 adds [bounded scoped action ownership](SCOPED_ACTION_OWNERSHIP.md) for canonical
 fixed Explore group/facet and timeline staging. Execution/role bindings and direct
 projection checks are centralized; suspended controls require a new Run. Other

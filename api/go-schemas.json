@@ -11977,6 +11977,16 @@
       "origin": {
         "type": "string"
       },
+      "partition": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ViewPartition"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "quality": {
         "$ref": "#/components/schemas/exploration.ViewQuality"
       },
@@ -12124,6 +12134,23 @@
         "anyOf": [
           {
             "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "partition": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewPartitionInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           {
             "type": "null"
@@ -12380,6 +12407,63 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.ViewInterval"
+  },
+  "exploration.ViewPartition": {
+    "properties": {
+      "kind": {
+        "type": "string"
+      },
+      "measure": {
+        "type": "string"
+      },
+      "total": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "kind",
+      "measure",
+      "total"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ViewPartition"
+  },
+  "exploration.ViewPartitionInput": {
+    "additionalProperties": false,
+    "properties": {
+      "kind": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "measure": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "total": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ViewPartition"
   },
   "exploration.ViewQuality": {
     "properties": {

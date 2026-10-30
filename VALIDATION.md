@@ -1,5 +1,70 @@
 # Validation record
 
+## One ordinary Distribution surface and verified shares — 267
+
+Ordinary canonical single-field fixed/Saved breakdowns now share one Distribution
+surface. Records no longer repeats that chart. Count shares use a typed exact
+partition from the same exhaustive GROUP BY read, including missing and empty
+groups, rather than the independent count or record page. Runtime source coverage
+and known counts remain required. Local Find/exact sort/kind/measure switches
+retain the frozen snapshot, full denominator and full scale. Imported/subset data
+cannot recover full-share proof. Hard complete-only views refuse fallback data;
+other unavailable-share views offer an explicit supplied-count table.
+
+Group selection stages a checked question without reading. Pinned baselines now
+survive group staging through a fresh child comparison; interval/new-question
+ownership remains distinct. Separate pure inspection checks preserve trace opening
+at a legal parent condition budget without treating aggregate rows as record refs.
+A native trace-dialog height defect found during regression is corrected so lower
+linked-log controls remain reachable by ordinary pointer/keyboard interaction.
+See [contract/diagram](docs/ORDINARY_BREAKDOWNS.md),
+[share storyboard](journeys/267-distribution-shares-storyboard.md) and
+[trace-budget journey](journeys/267-trace-inspection.spec.js).
+
+Validation passes:
+
+- Full root Go suite and all 732 frontend tests, no frontend skips. Eleven new
+  partition tests and 21 action/inspection tests cover exact sums, grain, known
+  counts, source/role/epoch guards, direct projections and condition budgets.
+- Five focused Go partition tests verify same-read totals, null/empty groups,
+  uint64 extremes/overflow omission, empty totals, unchanged numeric/duration
+  support and no additional reads. Existing 68 HTTP fixtures pass unchanged.
+  Generated Go/OpenAPI schemas and API checks pass: 96 operations, 429 response
+  fixtures, 159 admitted requests and 28 mux refusals.
+- Chromium scoped-component conformance plus focused Distribution, action-control
+  and trace-dialog checks pass. Find preserves population and max scales, exact
+  fractions/support remain visible, label states stay distinct, paused/readonly
+  controls stay passive, and desktop/mobile dialog bounds permit real scrolling.
+- Actual OTLP → ClickHouse → isolated Go journeys 261–267 pass, including the
+  additional trace-budget case. The strengthened share journey requires a new
+  post-child comparison response with the original baseline and child selection;
+  a stale earlier request cannot satisfy that check. Trace opening performs the
+  existing scoped span and linked-log reads, independent of refinement budget.
+- The older grouped-measure/Saved-paging journey passes on the deployed app,
+  retaining exact 124-record aggregates through record-page changes, local ranking,
+  package preview and mobile display. Its updated Saved-only Bombadil campaign
+  passes 30 seconds, 248 trace records and nine phases. The attribute/keyboard/
+  mobile inspection journey passes, including ordinary linked-log pointer access
+  and native-input versus inspector Escape ownership.
+- Hegel runs 100 generated cases over actual Go-produced snapshots and the real JS
+  share/Find/sort helpers. The actual eight-step browser Quint trace passes,
+  rejects seven mutated traces and an incomplete prefix. These projected effect
+  checks do not prove source truth, transactional reads or upstream completeness.
+- The frozen share Bombadil spec passes 35 seconds, 537 snapshots and 12 phases,
+  with three explicit Explore reads, stable full denominator under Find/order,
+  identical-revision rerun fencing, and a new scoped denominator after explicit
+  child Run. Compact ledgers/summaries and documentation frames are retained;
+  raw campaign output and copied disposable test stores are removed.
+
+Compose configuration and CA-backed image build pass. The lab runs
+`sha256:338f57923203dd8114276b0e05c840a717736c85a8a063bd62934753348d2878`;
+root returns HTTP 200 and all 11 changed UI assets match the frozen workspace
+bytes. Only the Go service is recreated; telemetry services and XTDB volumes are
+preserved. Specialized status/error-rate, histogram, multidimensional/error-triage,
+population and native paths retain explicit owners until their semantics migrate.
+No persisted view editor, Plotly adapter or whole-product migration is claimed.
+
+
 ## Execution-owned scoped actions — 266
 
 Canonical fixed Explore group/facet and interval actions now resolve through one
@@ -18,7 +83,7 @@ This is bounded H1 adoption, not whole-product action centralization or click
 authentication. Existing request/cancellation/publication ownership is unchanged.
 See [contract/API and diagram](docs/SCOPED_ACTION_OWNERSHIP.md),
 [executable storyboard](journeys/266-scope-actions-storyboard.md), and the
-[next ordinary Distribution consolidation](docs/ROADMAP_2026_10_30.md#next-bounded-v0-cut-one-ordinary-breakdown-surface).
+[next ordinary Distribution consolidation](docs/ROADMAP_2026_10_30.md#delivered-bounded-v0-cut-one-ordinary-breakdown-surface).
 
 Validation passes:
 

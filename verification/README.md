@@ -46,6 +46,33 @@ that skip without actual journey input. Those skips are appropriate there; they
 are not a substitute for a passing required suite. Root Go/display/API gates stay
 independent. XTDB and browser campaigns are separate opt-ins.
 
+### Ordinary Distribution shares — 267
+
+```sh
+go test -C verification -run '^(TestHegelDistributionPartitionShares|TestHegelDistributionMeasureConservation)$' -count=1 -v .
+./node_modules/.bin/playwright test journeys/267-distribution-shares.spec.js
+GOO_DISTRIBUTION_SHARE_LEDGER="$PWD/artifacts/scoped-267/model-trace.json" go test -C verification -run '^TestQuintDistributionSharesObservedBrowserLedger$' -count=1 -v .
+```
+
+The 100 generated cases use actual Go-produced dataset DTOs and the actual JS
+share/Find/order helpers. They preserve null vs empty categories, exact uint64
+counts and support; test zero populations, separate-read disagreement and partial
+coverage; and refuse full-population shares for advisory imports or row subsets.
+Find and ordering return original frozen row references, preserve denominators,
+and do not change the measured scope. Numeric measures keep exact values/support.
+
+The real browser journey uses four OTLP spans split 3/1 across two services. Find
+must leave the worker at 25% including bar width; local view/measure/order changes
+read nothing. It also checks signed-measure table fallback, baseline scope,
+same-revision retired callbacks, explicit Stage → Run, and read-only Saved shares.
+The observed eight-step Quint model checks display/effect conservation, not
+private proof or ownership state; seven fault controls and a prefix must fail.
+Set `GOO_DISTRIBUTION_SHARE_BOMBADIL=1` for the optional 35-second campaign, which
+passed with 537 snapshots across all 12 phases and three explicit Explore requests.
+See the
+[storyboard](../journeys/267-distribution-shares-storyboard.md). Keep compact
+summaries/model traces and current frames; raw successful campaigns are disposable.
+
 ### Execution-owned scoped actions — 266
 
 Run from the repository root:

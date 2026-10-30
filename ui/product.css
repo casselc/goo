@@ -515,6 +515,8 @@ td details {
   right:0;
   top:62px;
   bottom:0;
+  height:calc(100dvh - 62px);
+  min-height:0;
   width:min(790px,calc(100vw - 230px));
   max-width:100%;
   z-index:30;
@@ -691,6 +693,7 @@ td details {
   }
   :is(#exploreContext,#savedexploreContext) {
     inset:0;
+    height:100dvh;
     width:100vw;
     border-width:0;
     padding:20px;

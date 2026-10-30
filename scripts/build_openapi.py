@@ -110,9 +110,14 @@ schemas['Error'] = {'type': 'object', 'required': ['error'], 'properties': {'err
 schemas['Cancellation'] = {'type': 'object', 'required': ['state'], 'properties': {'state': {'const': 'cancellation-requested'}}}
 # Canonical supplied display snapshots: exact field maps, with exhaustive
 # ranked-group and interval projections owned by the Go source data path.
-for name in ('ViewDataset','ViewScope','ViewField','ViewRow','ViewQuality','ViewCompleteness','ViewInterval'):
+for name in ('ViewDataset','ViewScope','ViewField','ViewRow','ViewQuality','ViewCompleteness','ViewInterval','ViewPartition'):
  schemas['exploration.'+name]['additionalProperties']=False
 exact_count={'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':20,'description':'Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value.'}
+partition=schemas['exploration.ViewPartition']
+partition['properties']['kind']={'const':'disjoint-record-groups'}
+partition['properties']['measure']={'const':'count'}
+partition['properties']['total']=copy.deepcopy(exact_count)
+partition['description']='Exact disjoint captured-record partition from the same exhaustive GROUP BY read, including missing and empty groups; never the separately read count or record page. Runtime verifies the row-count sum and source-adoption authority before full-population shares. Zero total makes shares unavailable. The descriptor does not prove complete upstream collection.'
 epoch_ms={'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':16,'description':'Exact nonnegative epoch milliseconds, Date-safe; Go checked queries are bounded before2100.'}
 category={'type':['string','null'],'maxLength':1024,'description':'Null is missing; empty string is present empty. Runtime enforces1024 UTF-8 bytes; Schema maxLength counts characters.'}
 rational_value={'type':'string','pattern':'^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$','maxLength':1024,'description':'Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value.'}
@@ -145,7 +150,8 @@ cell['allOf']=[
 ]
 schemas['exploration.ViewValues']={'type':'object','additionalProperties':{'type':['string','null'],'maxLength':1024},'description':'Exact strings or explicit missing values. Dataset fields and shape constrain every cell; no vendor-specific opaque payload.'}
 view=schemas['exploration.ViewDataset'];view_props=view['properties']
-view['description']='Supplied immutable count snapshot: exhaustive captured-query groups or explicit count intervals. Result-aspect completeness never certifies raw-record paging, upstream ingestion/sampling or a transactional count/page pair. Scope/revision equality and interval coverage are runtime checked.'
+view_props['partition']=ref('exploration.ViewPartition')
+view['description']='Supplied immutable captured-record snapshot: ranked groups, explicit intervals or population summaries with optional exact numeric/duration measures. An optional ranked partition derives its denominator from the same exhaustive group read. Result-aspect completeness never certifies raw-record paging, upstream ingestion/sampling or a transactional count/page pair. Scope/revision equality, partition sums and interval coverage are runtime checked.'
 view_props['version']['const']='goo.dataset/1';view_props['shape']['enum']=['ranked','time-series','summary']
 view_props['id']['pattern']='^[a-f0-9]{64}:(groups|intervals|summary)$';view_props['revision']['pattern']='^[a-f0-9]{64}$';view_props['capturedAt']['format']='date-time'
 view_props['origin']['enum']=['source-read','browser-held']
@@ -208,7 +214,7 @@ time_row={'allOf':[ref('exploration.ViewRow'),{
  'required':['state'],
  'properties':{'key':{'pattern':'^interval:[0-9]+:[0-9]+$'},'values':time_values},
  'oneOf':time_states}]}
-time_shape={'required':['interval'],'not':{'required':['dimensions']},'properties':{
+time_shape={'required':['interval'],'not':{'anyOf':[{'required':['dimensions']},{'required':['partition']}]},'properties':{
  'shape':{'const':'time-series'},'id':{'pattern':'^[a-f0-9]{64}:intervals$'},'interval':{'type':'object'},
  'fields':{'minItems':3,'maxItems':13,'prefixItems':time_fields,'items':{'allOf':[ref('exploration.ViewField'),{'properties':{'key':{'enum':list(measure_specs)}}}]}},
  'rows':{'maxItems':240,'items':time_row},
@@ -216,7 +222,7 @@ time_shape={'required':['interval'],'not':{'required':['dimensions']},'propertie
 summary_values={'type':'object','required':['count'],'properties':{'count':exact_count,**measure_values},'additionalProperties':False}
 summary_row={'allOf':[ref('exploration.ViewRow'),{'not':{'required':['state']},'properties':{'key':{'const':'population'},'values':summary_values}}]}
 summary_fields=[view_field_spec('count','number','records')]
-summary_shape={'not':{'anyOf':[{'required':['dimensions']},{'required':['interval']}]},'properties':{
+summary_shape={'not':{'anyOf':[{'required':['dimensions']},{'required':['interval']},{'required':['partition']}]},'properties':{
  'shape':{'const':'summary'},'id':{'pattern':'^[a-f0-9]{64}:summary$'},
  'fields':{'minItems':1,'maxItems':11,'prefixItems':summary_fields,'items':{'allOf':[ref('exploration.ViewField'),{'properties':{'key':{'enum':list(measure_specs)}}}]}},
  'rows':{'minItems':1,'maxItems':1,'items':summary_row},

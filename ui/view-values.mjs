@@ -1,4 +1,8 @@
 /* IO-free cell presentation. Exact source values stay separate from rounded display. */
+export function categoryText(value){
+  return value===undefined?'Not supplied':value===null?'Missing':value===''?'Present empty string':typeof value==='string'?JSON.stringify(value):String(value);
+}
+
 function fraction(value){
   if(typeof value!=='string'&&typeof value!=='number')return null;
   const text=String(value),r=/^(-?\d+)(?:\/(\d+))?$/.exec(text);
@@ -30,7 +34,7 @@ export function formatCell(field,value,cell){
   if(cell?.state==='unknown')return 'Unknown';
   if(value===null)return 'Missing';if(value===undefined)return 'Not supplied';if(value==='')return 'Present empty string';
   if(field?.type==='timestamp'){const time=new Date(Number(value));return Number.isFinite(time.getTime())?time.toISOString():'Unavailable time'}
-  if(field?.type!=='number'&&field?.type!=='rational')return String(value);
+  if(field?.type!=='number'&&field?.type!=='rational')return field?.type==='string'?categoryText(value):String(value);
   const rational=fraction(value);if(!rational)return 'Unavailable';
   let {n,d}=rational,unit=field.unit||'';
   if(unit==='ns'){

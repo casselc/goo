@@ -1396,3 +1396,15 @@ Explore adapters. Passive element events remain data-only. The host captures a
 binding per mount and resolves before staging; no element gains execution state,
 source reads, subscriptions or publication. Suspended application adapters disable
 stage/facet actions while retaining kind/measure switches and local inspection.
+
+## Ordinary partition display267
+
+The [ordinary breakdown contract](ORDINARY_BREAKDOWNS.md) adds ranked bar/table
+`scale`, `query` and `order` mappings. Population mode requires an admitted groups
+witness, known captured counts and a same-group-read partition. Exact counts and
+fractions remain authoritative; local Find/order preserves denominator and full
+scale. Missing proof permits an explicit supplied-count table alternative only
+when hard `requiresComplete` is false. Category strings are JSON-quoted, keeping
+missing, present-empty and literal state labels distinct without changing filters.
+Application controls reuse one controller and the existing Find input; no passive
+element acquires query ownership. Display preferences are not a new saved view AST.

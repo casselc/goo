@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"math/bits"
 	"strconv"
 )
 
@@ -26,7 +27,18 @@ type ViewDataset struct {
 	SourceBasis  string            `json:"sourceBasis,omitempty"`
 	Interval     *ViewInterval     `json:"interval,omitempty"`
 	Dimensions   []string          `json:"dimensions,omitempty"`
+	Partition    *ViewPartition    `json:"partition,omitempty"`
 }
+
+// ViewPartition describes the disjoint captured-record groups in the same
+// exhaustive GROUP BY read. It is independent of the separately read count and
+// row page. Consumers still need source-admission authority to claim full shares.
+type ViewPartition struct {
+	Kind    string `json:"kind"`
+	Measure string `json:"measure"`
+	Total   string `json:"total"`
+}
+
 type ViewInterval struct {
 	FromMS   string `json:"fromMs"`
 	ToMS     string `json:"toMs"`
@@ -115,6 +127,8 @@ func groupViewDataset(r *Result, exhaustiveGroups bool) *ViewDataset {
 	d.Fields = append(d.Fields, ViewField{Key: "count", Label: "Captured records", Type: "number", Unit: "records"})
 	d.Fields = append(d.Fields, viewMeasureFields(q)...)
 	seen := map[string]bool{}
+	var partitionTotal uint64
+	partitionOverflow := false
 	for _, raw := range r.Groups {
 		var g map[string]json.RawMessage
 		if json.Unmarshal(raw, &g) != nil {
@@ -143,6 +157,9 @@ func groupViewDataset(r *Result, exhaustiveGroups bool) *ViewDataset {
 			return nil
 		}
 		values["count"] = viewText(count)
+		var carry uint64
+		partitionTotal, carry = bits.Add64(partitionTotal, n, 0)
+		partitionOverflow = partitionOverflow || carry != 0
 		canonical, _ := json.Marshal(tuple)
 		h := sha256.Sum256(canonical)
 		key := "category:" + hex.EncodeToString(h[:])
@@ -165,6 +182,11 @@ func groupViewDataset(r *Result, exhaustiveGroups bool) *ViewDataset {
 	}
 	if exhaustiveGroups && r.State != "changed_between_reads" {
 		attestView(d, "groups")
+		// No wrapped or separately read denominator can authorize population
+		// shares. Exact individual rows remain usable if the sum is too large.
+		if !partitionOverflow {
+			d.Partition = &ViewPartition{Kind: "disjoint-record-groups", Measure: "count", Total: strconv.FormatUint(partitionTotal, 10)}
+		}
 	}
 	return d
 }

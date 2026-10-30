@@ -88,11 +88,10 @@ export function createActionContext(configuration){
   if(info.entry!=='projection'||info.parent?.id!==original.id||info.parent?.revision!==original.revision||info.sourceInstance!==parent.sourceInstance||subset.scope!==original.scope||subset.fields!==original.fields||subset.dimensions!==original.dimensions||subset.interval!==original.interval||subset.rows.length>=original.rows.length||subset.rows.some(row=>!original.rows.includes(row)))fail('projection-lineage','Projection does not belong to this bound parent');
   return make({...parent,snapshot:subset,entry:'projection',root:parent.root,parentSnapshot:original});
  }
- function resolve(binding,intent){
-  try{
+ function actionGuard(binding){
    const current=status(binding);if(!current.ok)return current;
    const entry=current.entry,root=bindings.get(entry.root);
-   if(entry.role!=='current')return refusal('read-only-role','Baseline data cannot stage the current question');
+   if(entry.role!=='current')return refusal('read-only-role','Baseline data is read-only');
    if(entry.slot==='summary')return refusal('read-only-slot','Population summaries do not identify groups or intervals');
    const active=config.active(),canStage=config.canStage();
    if(typeof active!=='boolean'||typeof canStage!=='boolean')return refusal('owner-state','Action owner callbacks must return synchronous booleans');
@@ -101,6 +100,12 @@ export function createActionContext(configuration){
    if(!entry.coherent||!root.coherent)return refusal('incoherent','Source reads disagree; run the question again');
    const rootInfo=getSnapshotInfo(root.snapshot);
    if(root.entry!=='source'||rootInfo.entry!=='source'||!entry.sourceInstance||entry.sourceInstance!==rootInfo.sourceInstance)return refusal('source-required','Held data cannot stage a source question');
+   return {ok:true,entry,rootInfo};
+ }
+ function resolve(binding,intent){
+  try{
+   const guarded=actionGuard(binding);if(!guarded.ok)return guarded;
+   const {entry,rootInfo}=guarded;
    plain(intent);
    const snapshot=entry.snapshot;
    if(!sameIdentity(intent,snapshot))return refusal('identity-mismatch','Selection belongs to a different snapshot');
@@ -130,5 +135,18 @@ export function createActionContext(configuration){
    return {ok:true,question:freeze(question),label,role:entry.role,slot:entry.slot,epoch:entry.epoch,sourceId:rootInfo.sourceId,sourceInstance:rootInfo.sourceInstance};
   }catch(error){return refusal(error instanceof ScopeActionError?error.code:'invalid-intent',error.message||'Unable to resolve this selection')}
  }
- return Object.freeze({bind,project,resolve,revoke(){roots.clear();sourceEpoch=null;currentSource=null}});
+ function inspect(binding,intent){
+  try{
+   const guarded=actionGuard(binding);if(!guarded.ok)return guarded;
+   const {entry,rootInfo}=guarded;plain(intent);
+   if(!exactKeys(intent,[...baseKeys,'key'])||intent.type!=='select')return refusal('intent-type','Inspect a supplied selected datum');
+   if(!sameIdentity(intent,entry.snapshot))return refusal('identity-mismatch','Selection belongs to a different snapshot');
+   const row=entry.snapshot.rows.find(row=>row.key===intent.key);
+   if(!row||row.state==='unknown')return refusal('invalid-membership','Selection does not match a known supplied datum');
+   // This is an aggregate datum, not verified member-record identity. Inspection
+   // retains the captured question; a narrower read has its own checked owner.
+   return {ok:true,question:entry.question,row,role:entry.role,slot:entry.slot,epoch:entry.epoch,sourceId:rootInfo.sourceId,sourceInstance:rootInfo.sourceInstance};
+  }catch(error){return refusal(error instanceof ScopeActionError?error.code:'invalid-intent',error.message||'Unable to inspect this selection')}
+ }
+ return Object.freeze({bind,project,resolve,inspect,revoke(){roots.clear();sourceEpoch=null;currentSource=null}});
 }

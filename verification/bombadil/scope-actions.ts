@@ -26,23 +26,23 @@ const act=registerCustomAction('goo.scope266',async(document,window,phase:string
  const run=()=>{const button=document.querySelector<HTMLButtonElement>('#exploreRun');check(!!button&&!button.disabled&&!!button.getClientRects().length,'The visible fixed question must be run explicitly');button!.click()};
  const navigate=(workspace:string)=>{const control=document.querySelector<HTMLElement>('[data-workspace="'+workspace+'"]');check(!!control,'Workspace control is required: '+workspace);control!.click()};
  const applied=()=>document.querySelector('#exploration')?.getAttribute('data-question-phase')==='applied';
- const showRecords=()=>{const tab=document.querySelector<HTMLButtonElement>('#resultRecords');check(!!tab,'The Records result tab is required');if(tab!.getAttribute('aria-selected')!=='true')tab!.click()};
+ const showDistribution=()=>{const tab=document.querySelector<HTMLButtonElement>('#resultDistribution');check(!!tab,'The Distribution result tab is required');if(tab!.getAttribute('aria-selected')!=='true')tab!.click()};
  const replay=(saved:any)=>{
-  check(!!saved?.facet&&!!saved.groupStage&&!!saved.windowStage,'Retained facet, group and interval callbacks are required');
-  saved.facet.dispatchEvent(new CustomEvent('goo-scope',{detail:structuredClone(saved.intent)}));
+  check(!!saved?.retiredChart&&!!saved.groupStage&&!!saved.windowStage,'Retained chart, group and interval callbacks are required');
+  saved.retiredChart.dispatchEvent(new CustomEvent('goo-select',{detail:structuredClone(saved.intent)}));
   // Invoke retired listeners independently of their disabled-button affordance.
   saved.groupStage.dispatchEvent(new MouseEvent('click',{bubbles:true}));saved.windowStage.dispatchEvent(new MouseEvent('click',{bubbles:true}));
  };
  const retain=async()=>{
-  showRecords();
+  showDistribution();
   const group=document.querySelector('[aria-label="Scoped breakdown"]')!,timeline=document.querySelector('[aria-label="Scoped timeline"]')!;
   check(!!group&&!!timeline,'Applied group and interval views are required');
   const bar=group.querySelector<HTMLButtonElement>('.scope-view-bar'),interval=timeline.querySelector<HTMLButtonElement>('.scope-time-interval[data-state="observed"]');
   check(!!bar&&!!interval,'Known source group and interval selections are required');bar!.click();interval!.click();
-  const snapshot=(group.querySelector('goo-chart') as any).snapshot,modulePath='/view-model.mjs',{scopeIntent}=await import(modulePath);
+  const retiredChart=group.querySelector('goo-chart') as any,snapshot=retiredChart.snapshot,modulePath='/view-model.mjs',{selectionIntent}=await import(modulePath);
   const groupStage=[...group.querySelectorAll<HTMLButtonElement>('button')].find(button=>button.textContent==='Stage selected group'),windowStage=[...timeline.querySelectorAll<HTMLButtonElement>('button')].find(button=>button.textContent==='Stage selected interval');
   check(!!groupStage&&!groupStage.disabled&&!!windowStage&&!windowStage.disabled,'Current source selections must enable their own staging actions');
-  return {facet:group.querySelector('goo-scope-facet'),intent:scopeIntent(snapshot,'category',snapshot.rows[0].values.category),groupStage,windowStage,snapshot};
+  return {retiredChart,intent:selectionIntent(snapshot,snapshot.rows[0].key),groupStage,windowStage,snapshot};
  };
  if(phase==='source'){
   attrs.scope266='source';store.__gooScope266={};const native=window.fetch.bind(window);
@@ -64,7 +64,7 @@ const act=registerCustomAction('goo.scope266',async(document,window,phase:string
   saved.old=await retain();attrs.scope266='rerun';run();return;
  }
  if(phase==='stale'){
-  showRecords();
+  showDistribution();
   const current=(document.querySelector('[aria-label="Scoped breakdown"] goo-chart') as any)?.snapshot;
   check(!!current&&current.revision===saved.old.snapshot.revision,'The explicit rerun must return the same immutable source revision');
   check(current.capturedAt!==saved.old.snapshot.capturedAt,'The identical-content rerun must have a distinct actual read clock');
@@ -75,11 +75,11 @@ const act=registerCustomAction('goo.scope266',async(document,window,phase:string
  if(phase==='suspend'){attrs.scope266='suspend';navigate('services');return}
  if(phase==='suspended'){attrs.scope266='suspended';navigate('explore');return}
  if(phase==='resume'){
-  showRecords();
+  showDistribution();
   replay(saved.suspended);
   check(applied()&&Number(attrs.scope266Reads)===2,'Returning to held contents must not revive retired callbacks or read telemetry');
   const groups=document.querySelector('[aria-label="Scoped breakdown"]')!,facets=[...groups.querySelectorAll<HTMLButtonElement>('goo-scope-facet button')];
-  check(!!groups.querySelector('.scope-view-bar')&&facets.length>0&&facets.every(button=>button.disabled),'Held charts may remain readable but their scope facets must stay withdrawn');
+  check(!!groups.querySelector('.scope-view-bar')&&facets.every(button=>button.disabled),'Held charts may remain readable but their scope actions must stay withdrawn');
   check(saved.suspended.groupStage.disabled&&saved.suspended.windowStage.disabled,'Returning must require an explicit Run before staging');
   attrs.scope266='resume';run();return;
  }

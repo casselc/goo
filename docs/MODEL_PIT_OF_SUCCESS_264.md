@@ -134,3 +134,9 @@ canonical fixed Explore group/facet and timeline staging. Same-content reruns an
 suspended visits revoke old mounts. Other families still need explicit migration.
 Neither a source label, source adapter nor action context authenticates producers
 or proves a human click.
+
+267 delivers ordinary Distribution consolidation on these contracts, including
+same-aggregate partition shares and frozen local Find/order. Pure inspection is
+separate from refinement so predicate budgets do not accidentally prevent bounded
+trace opening. Specialized-family and whole-view adoption remain incomplete; no
+new authoring/editor or multi-source execution guarantee is implied.
