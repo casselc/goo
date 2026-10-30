@@ -481,5 +481,7 @@ See [Keep contract and diagram](docs/KEPT_OBSERVATIONS.md) and
 Fixed results preserve page-local positions and Saved selections preserve absolute
 stored indexes, with separate source/capture/keep clocks. See the
 [fixed/Saved journey](journeys/258-keep-records-storyboard.md). Durable exact links
-and bounded browser recent/pending history are implemented; a server-wide keep
-catalog remains planned.
+and bounded browser recent/pending history are implemented. Saved’s **Find kept
+observations** now discovers keeps across browsers, with origin/signal filters,
+paging and explicit resumable metadata repair. Open verifies original records;
+discovery never reads telemetry. See the [cross-browser journey](journeys/259-kept-discovery-storyboard.md).

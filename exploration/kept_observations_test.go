@@ -92,7 +92,7 @@ func TestKeepLostAcknowledgmentAndConcurrentWinners(t *testing.T) {
 		}
 	}
 	files, _ := os.ReadDir(store.Dir)
-	if len(files) != 1 {
+	if len(files) != 2 {
 		t.Fatal(files)
 	}
 	// Also race first publication, not only already committed retries.

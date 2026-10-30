@@ -1940,6 +1940,96 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/kept-observations/search": {
+      "get": {
+        "operationId": "get_kept_observations_search",
+        "summary": "GET /kept-observations/search",
+        "tags": [
+          "kept-observations"
+        ],
+        "description": "Current owner: cmd/goo/kept_http.go. Effect: saved-evidence-or-definition-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/kept_http.go",
+        "x-effects": "saved-evidence-or-definition-read",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "",
+                "tail-selection",
+                "result-page",
+                "saved-capture"
+              ]
+            }
+          },
+          {
+            "name": "signal",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "",
+                "logs",
+                "spans"
+              ]
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 1024
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeptSearchPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeptSearchError"
+                }
+              }
+            }
+          }
+        },
+        "x-schema-coverage": "typed"
+      }
+    },
     "/kept-observations/{id}": {
       "get": {
         "operationId": "get_kept_observations_id",
@@ -4588,6 +4678,73 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/kept-observations/repair": {
+      "post": {
+        "operationId": "post_kept_observations_repair",
+        "summary": "POST /kept-observations/repair",
+        "tags": [
+          "kept-observations"
+        ],
+        "description": "Current owner: cmd/goo/kept_http.go. Effect: bounded-derived-index-repair. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/kept_http.go",
+        "x-effects": "bounded-derived-index-repair",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeptRepairPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KeptRepairRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 16384,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/kept-observations/tail": {
       "post": {
         "operationId": "post_kept_observations_tail",
@@ -6770,6 +6927,22 @@
       },
       "KeptRecords": {
         "$ref": "#/components/schemas/exploration.KeptRecords"
+      },
+      "KeptRepairPage": {
+        "$ref": "#/components/schemas/exploration.KeptRepairPage"
+      },
+      "KeptRepairRequest": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.KeptRepairRequestInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "KeptSearchPage": {
+        "$ref": "#/components/schemas/exploration.KeptSearchPage"
       },
       "LiveComparisonDraft": {
         "properties": {
@@ -12768,6 +12941,222 @@
                     "captureAt"
                   ]
                 }
+              ]
+            }
+          }
+        ]
+      },
+      "exploration.KeptRepairPage": {
+        "properties": {
+          "bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 33554432
+          },
+          "completed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "indexed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 64
+          },
+          "nextCursor": {
+            "type": "string"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000
+          }
+        },
+        "required": [
+          "indexed",
+          "bytes",
+          "completed",
+          "total",
+          "hasMore"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.KeptRepairPage"
+      },
+      "exploration.KeptRepairRequestInput": {
+        "additionalProperties": false,
+        "properties": {
+          "cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxLength": 1024
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.KeptRepairRequest"
+      },
+      "exploration.KeptSearchPage": {
+        "properties": {
+          "hasMore": {
+            "type": "boolean"
+          },
+          "items": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/exploration.KeptSummary"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "array",
+            "maxItems": 20
+          },
+          "matched": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000
+          },
+          "nextCursor": {
+            "type": "string"
+          },
+          "query": {
+            "$ref": "#/components/schemas/exploration.KeptSearchQuery"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/kept-search/v1"
+          }
+        },
+        "required": [
+          "version",
+          "query",
+          "items",
+          "total",
+          "matched",
+          "hasMore"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.KeptSearchPage",
+        "description": "Bounded derived metadata only. Exact reopen independently verifies records. Twenty selections per page,1000 physical root entries; cursor binds filters and metadata state. Missing/corrupt metadata refuses rather than truncating. Repair is explicit bounded source-free maintenance."
+      },
+      "exploration.KeptSearchQuery": {
+        "properties": {
+          "origin": {
+            "type": "string"
+          },
+          "signal": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.KeptSearchQuery"
+      },
+      "exploration.KeptSummary": {
+        "properties": {
+          "digest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "environment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "environmentSelector": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelector"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "keptAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "observations": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "tail-selection",
+              "result-page",
+              "saved-capture"
+            ]
+          },
+          "signal": {
+            "type": "string",
+            "enum": [
+              "logs",
+              "spans"
+            ]
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "version",
+          "origin",
+          "signal",
+          "observations",
+          "keptAt",
+          "digest"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.KeptSummary",
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "not": {
+              "required": [
+                "environmentSelector"
+              ]
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "not": {
+              "required": [
+                "environment"
               ]
             }
           }
@@ -30916,6 +31305,23 @@
             "$ref": "#/components/schemas/exploration.KeptRecords"
           }
         ]
+      },
+      "KeptSearchError": {
+        "type": "object",
+        "required": [
+          "error",
+          "repairAvailable"
+        ],
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "repairAvailable": {
+            "type": "boolean",
+            "description": "True only when explicit index repair may address discovery failure; false for capacity and cursor refusals."
+          }
+        },
+        "additionalProperties": false
       },
       "Error": {
         "type": "object",

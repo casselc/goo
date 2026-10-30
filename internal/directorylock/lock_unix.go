@@ -1,6 +1,6 @@
 //go:build linux || darwin || freebsd || openbsd || netbsd || dragonfly
 
-package nativecatalog
+package directorylock
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 
 // Directory locks coordinate independent Goo processes without lock files or GET
 // writes. The configured local saved directory must not be replaced while serving.
-func lockDirectory(ctx context.Context, path string, exclusive bool) (func(), error) {
+func Acquire(ctx context.Context, path string, exclusive bool) (func(), error) {
 	if e := ctx.Err(); e != nil {
 		return nil, e
 	}

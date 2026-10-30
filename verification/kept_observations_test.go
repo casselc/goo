@@ -153,3 +153,50 @@ func TestKeptRecordPageProperties(t *testing.T) {
 		}
 	}, options(50)...)
 }
+
+func TestKeptDiscoveryProperties(t *testing.T) {
+	hegel.Test(t, func(tc *hegel.T) {
+		count := hegel.Draw(tc, hegel.Integers(0, 45))
+		scope := identity.EnvironmentScope{Mode: "unreported"}
+		env, _ := identity.EffectiveEnvironment(scope)
+		dto, _ := env.Selector()
+		q := exploration.Query{Signal: "logs", EnvironmentSelector: &dto, FromMS: 100000, ToMS: 160000, Limit: 100}
+		bank := new(exploration.ResultSnapshots)
+		token, e := bank.Freeze(&exploration.Result{Question: q, Rows: []json.RawMessage{json.RawMessage(`{"timestamp_ns":"150000000000","Body":"kept","ResourceAttributes":{}}`)}, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano), Basis: strings.Repeat("a", 64), State: "observed"})
+		if e != nil {
+			t.Fatal(e)
+		}
+		store := exploration.KeptObservationStore{Dir: t.TempDir()}
+		for i := 0; i < count; i++ {
+			_, e = store.KeepRecords(context.Background(), bank, exploration.CaptureStore{}, exploration.KeepRecordsIntent{Version: exploration.KeepRecordsVersion, RequestID: fmt.Sprintf("%064x", i+1), ResultToken: token, Indexes: []int{0}})
+			if e != nil {
+				t.Fatal(e)
+			}
+		}
+		ids := map[string]bool{}
+		cursor := ""
+		for {
+			page, e := store.Search(context.Background(), exploration.KeptSearchQuery{}, cursor)
+			if e != nil || page.Total != count || page.Matched != count {
+				t.Fatal("catalog cardinality", e)
+			}
+			for _, item := range page.Items {
+				if ids[item.ID] || item.Environment != nil || item.EnvironmentSelector.Scope.Mode != "unreported" || item.Observations != 1 {
+					t.Fatal("lost discovery identity")
+				}
+				ids[item.ID] = true
+			}
+			if !page.HasMore {
+				break
+			}
+			cursor = page.NextCursor
+		}
+		if len(ids) != count {
+			t.Fatal("paging duplicated or omitted keeps")
+		}
+		spans, e := store.Search(context.Background(), exploration.KeptSearchQuery{Signal: "spans"}, "")
+		if e != nil || len(spans.Items) != 0 || spans.Total != count {
+			t.Fatal("filter changed whole-store total", e)
+		}
+	}, options(30)...)
+}

@@ -675,6 +675,22 @@
   "KeptRecords": {
     "$ref": "#/components/schemas/exploration.KeptRecords"
   },
+  "KeptRepairPage": {
+    "$ref": "#/components/schemas/exploration.KeptRepairPage"
+  },
+  "KeptRepairRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/exploration.KeptRepairRequestInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "KeptSearchPage": {
+    "$ref": "#/components/schemas/exploration.KeptSearchPage"
+  },
   "LiveComparisonDraft": {
     "properties": {
       "baselineBasis": {
@@ -6541,6 +6557,169 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.KeptRecords"
+  },
+  "exploration.KeptRepairPage": {
+    "properties": {
+      "bytes": {
+        "type": "integer"
+      },
+      "completed": {
+        "type": "integer"
+      },
+      "hasMore": {
+        "type": "boolean"
+      },
+      "indexed": {
+        "type": "integer"
+      },
+      "nextCursor": {
+        "type": "string"
+      },
+      "total": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "indexed",
+      "bytes",
+      "completed",
+      "total",
+      "hasMore"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.KeptRepairPage"
+  },
+  "exploration.KeptRepairRequestInput": {
+    "additionalProperties": false,
+    "properties": {
+      "cursor": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.KeptRepairRequest"
+  },
+  "exploration.KeptSearchPage": {
+    "properties": {
+      "hasMore": {
+        "type": "boolean"
+      },
+      "items": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.KeptSummary"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "matched": {
+        "type": "integer"
+      },
+      "nextCursor": {
+        "type": "string"
+      },
+      "query": {
+        "$ref": "#/components/schemas/exploration.KeptSearchQuery"
+      },
+      "total": {
+        "type": "integer"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "query",
+      "items",
+      "total",
+      "matched",
+      "hasMore"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.KeptSearchPage"
+  },
+  "exploration.KeptSearchQuery": {
+    "properties": {
+      "origin": {
+        "type": "string"
+      },
+      "signal": {
+        "type": "string"
+      }
+    },
+    "required": [],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.KeptSearchQuery"
+  },
+  "exploration.KeptSummary": {
+    "properties": {
+      "digest": {
+        "type": "string"
+      },
+      "environment": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/identity.EnvironmentSelector"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "id": {
+        "type": "string"
+      },
+      "keptAt": {
+        "format": "date-time",
+        "type": "string"
+      },
+      "observations": {
+        "type": "integer"
+      },
+      "origin": {
+        "type": "string"
+      },
+      "signal": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "version",
+      "origin",
+      "signal",
+      "observations",
+      "keptAt",
+      "digest"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.KeptSummary"
   },
   "exploration.LiveCounterInfo": {
     "properties": {

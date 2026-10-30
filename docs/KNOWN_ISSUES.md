@@ -1,10 +1,13 @@
 # Known issues and gaps
 
-257–258 add local Activity/fixed/Saved record Keep/Open independent of XTDB. Exact IDs are durable;
-recent/pending discovery is limited to this browser (16 each), with explicit local
-forget. A server-wide catalog, quota/GC, whole-trace keeps and annotation attachment
-remain open. This keeps canonical server observations, not original
-OTLP bytes or a complete population. See [contract](KEPT_OBSERVATIONS.md).
+257–259 add local Activity/fixed/Saved record Keep/Open and server-wide discovery
+independent of XTDB. Find pages derived metadata; exact Open verifies records.
+Publication/discovery share1000 physical-entry admission; repair resumes in bounded
+batches without modifying keep bytes. Missing metadata requires explicit repair.
+Existing over-limit stores retain exact-ID access but refuse full browsing/new
+keeps; count admission is not a disk-byte quota or GC. Browser pending recovery
+remains local (16 requests), with explicit forget. Whole-trace keeps and annotation
+attachment remain open. See [contract](KEPT_OBSERVATIONS.md).
 
 250 enables checked environment selectors in the record APIs, tails, context,
 comparisons, capabilities and filesystem captures. 251–254 supply checked browser constructors, retained Activity/fixed ownership

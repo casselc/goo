@@ -1,5 +1,69 @@
 # Validation record
 
+## Cross-browser kept observation discovery — 259 (2026-10-30 UTC)
+
+Saved can now Find kept observations from server storage with origin/signal
+filters,20-item paging, UTC clocks and exact verified Open links. No browser-local
+history is required. Metadata and record verification remain separate; missing
+metadata refuses visibly with explicit resumable repair. Existing Activity/fixed/
+Saved keep formats and exact IDs are unchanged. [Contract/diagram](docs/KEPT_OBSERVATIONS.md#server-discovery-and-bounded-repair--259),
+[executable storyboard/frames](journeys/259-kept-discovery-storyboard.md).
+
+Full Go and633 frontend checks pass. Go race checks cover publication/search/
+repair and shared directory admission, including independent-process contention
+for the last slot. Publication and discovery share1000 physical-entry accounting;
+junk counts, scratch cleanup precedes unlock, and existing winners/exact Open
+remain independent of over-capacity browsing. Every candidate summary fits4KiB
+before publication; metadata failure after commit does not invent a failed Keep.
+Exact GET remains read-only. Native catalog reuses the extracted internal
+filesystem-lock helper; its existing tests pass.
+
+Tests cover deterministic paging, changed-filter/catalog cursor refusal, missing/
+corrupt/oversized/symlink metadata, cancellation, and same-size/stamp payload
+corruption: metadata may list it but exact Open rejects it. Repair does not modify
+payloads. Twelve valid near3MiB keeps repair across two batches beyond the32MiB
+whole-store size; each batch is limited to64 resources/32MiB of actual bounded
+reads. A remaining-budget read test verifies the limit independently of stat sizes.
+Thirty Hegel cases vary catalog cardinality and prove exact-once paged discovery,
+selector preservation and filtered totals. The observed cross-browser effect
+ledger passes the observability repository’s Go Quint checker; five altered
+source/publication/metadata/repair/context controls are rejected. This is a bounded
+effect/metadata replay model, not a whole-product liveness model.
+
+Real SDK/source journeys257/258/259 pass together in1.6min. The new journey uses
+65 isolated keeps across three origins/two signals, a clean browser without
+Recent history, explicit metadata reads, paging/filtering/exact inspection, and
+missing-index repair. Holding the actual first repair response then collapsing
+the disclosure prevents its next batch; explicit restart completes safely. Repair
+availability is withheld for non-index failures. The final mobile refinement uses
+passive `goo-table[mobile-layout=stacked]`;390px checks confirm visible Open actions,
+no internal horizontal table scrolling and no page overflow. Final259 rerun passes
+in12.7s. The40s Bombadil campaign completes every discovery/paging/filter/open/
+inspect/close phase across559 snapshots with four explicit metadata reads and
+zero POSTs. Frontend lifecycle/history findings are corrected; final frontend
+and architecture reviews find no blocker. Table presentation is checked in Chromium.
+
+OpenAPI covers96 Go operations;429 existing response fixtures,159 admitted
+requests and28 mux refusals plus the actual cross-browser page conform. The docs
+browser journey passes desktop/mobile. The generated duplicate query-parameter
+entry was corrected; final spec validation passes. Malformed query encoding is
+explicitly refused rather than becoming an empty/broader filter. Index repair requires explicit
+POST, stops on withdrawal/hidden tab, and never automatically resumes. Browser
+recent/pending recovery remains separate. Whole-trace keeps, optional annotations
+and disk-byte quota/GC remain open. The core S0 keep/open/discover loop is delivered;
+U0 parent-aware trace close/keyboard ownership is next.
+
+Final Go image `c78d2691ea5d` is deployed. Health, exact served modules/CSS,
+96-operation OpenAPI, metadata GET and malformed-query refusal pass. All8,420
+pre-existing stored-file paths remain unchanged, including1,812 capture IDs;
+old exact capture access passes. Only packages was recreated; all volumes and the
+XTDB orphan remain. Previous milestone image `028f7fb62804` is retained for
+rollback; this round’s two intermediate images and bulky campaign/browser
+artifacts are removed. Documentation frames, executable tests and compact local
+replay ledgers remain.
+
+
+
 ## Keep fixed and Saved record selections — 258 (2026-10-29 UTC)
 
 Fixed Explore results and Saved record pages now offer the same label-free local

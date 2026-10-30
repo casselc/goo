@@ -27,7 +27,9 @@
 > scope through the complete record journey. 257 delivers S0’s Activity-first
 > exact Keep/Open path without required interpretation or XTDB. 258 extends it to
 > fixed-result/Saved record selection with distinct provenance/index semantics and
-> one shared publisher/recovery/view. Next: bounded server discovery for keeps.
+> one shared publisher/recovery/view. 259 adds bounded cross-browser discovery,
+> shared admission and resumable repair. Next: U0 parent-aware trace close/keyboard
+> ownership, followed by compact Saved evidence consolidation.
 > Service/native/package/retention adoption is separate.
 > Earlier queues preserve delivery history; their Next labels are superseded.
 

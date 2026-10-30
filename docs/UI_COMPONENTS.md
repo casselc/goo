@@ -1334,3 +1334,12 @@ The shared disclosure consumes Escape, closes locally and restores summary focus
 it does not close a containing inspector or read a source. Activity's service
 shortcuts and action validity checks belong to its row owner, not the display
 components.
+
+`goo-table[mobile-layout="stacked"]` (259) is an opt-in display layout for supplied
+metadata tables: below700px each native row uses a two-column grid, cell
+`data-label` text labels its value, and the last cell spans both columns. Native
+headings remain visually hidden and available to assistive technology. Callers
+supply all labels, rows and actions; there is no query, pagination or lifecycle IO.
+The same attribute works in server HTML and SPA composition. Kept discovery uses
+it so scope and Open remain visible at390px without horizontal table scrolling;
+record-specific compact layout remains separate.

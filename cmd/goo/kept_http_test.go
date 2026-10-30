@@ -5,6 +5,8 @@ import (
 	"github.com/casselc/goo/exploration"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -102,4 +104,46 @@ func TestKeptRecordHTTPReferenceOnlyAndRestart(t *testing.T) {
 	in.CaptureID = strings.Repeat("a", 64)
 	raw, _ = json.Marshal(in)
 	call("POST", "/kept-observations/records", string(raw), 400)
+}
+
+func TestKeptDiscoveryHTTPAndExplicitRepair(t *testing.T) {
+	bank := new(exploration.ResultSnapshots)
+	q := exploration.Query{Signal: "logs", Environment: "prod", FromMS: 100000, ToMS: 160000, Limit: 100}
+	token, e := bank.Freeze(&exploration.Result{Question: q, Rows: []json.RawMessage{json.RawMessage(`{"timestamp_ns":"150000000000","Body":"original","ResourceAttributes":{"deployment.environment.name":"prod"}}`)}, CapturedAt: time.UnixMilli(200000).UTC().Format(time.RFC3339Nano), Basis: strings.Repeat("a", 64), State: "observed"})
+	if e != nil {
+		t.Fatal(e)
+	}
+	root := t.TempDir()
+	mux := http.NewServeMux()
+	registerKeptObservations(mux, root, nil, bank)
+	call := func(method, path, body string, want int) []byte {
+		t.Helper()
+		w := httptest.NewRecorder()
+		mux.ServeHTTP(w, httptest.NewRequest(method, path, strings.NewReader(body)))
+		if w.Code != want {
+			t.Fatalf("%d %s", w.Code, w.Body.String())
+		}
+		if !strings.Contains(w.Header().Get("Cache-Control"), "no-store") {
+			t.Fatal("missing no-store")
+		}
+		return w.Body.Bytes()
+	}
+	in := exploration.KeepRecordsIntent{Version: exploration.KeepRecordsVersion, RequestID: strings.Repeat("b", 64), ResultToken: token, Indexes: []int{0}}
+	raw, _ := json.Marshal(in)
+	call("POST", "/kept-observations/records", string(raw), 201)
+	var page exploration.KeptSearchPage
+	json.Unmarshal(call("GET", "/kept-observations/search?signal=logs", "", 200), &page)
+	if len(page.Items) != 1 || page.Items[0].ID != in.RequestID {
+		t.Fatal(page)
+	}
+	call("GET", "/kept-observations/search?signal=metrics", "", 400)
+	call("GET", "/kept-observations/search?signal=%ZZ", "", 400)
+	call("GET", "/kept-observations/search?signal=logs&signal=spans", "", 400)
+	call("GET", "/kept-observations/search?cursor=invalid", "", 409)
+	os.RemoveAll(filepath.Join(root, "kept-observations", ".catalog-v1"))
+	call("GET", "/kept-observations/search", "", 503)
+	call("GET", "/kept-observations/"+in.RequestID, "", 200)
+	call("POST", "/kept-observations/repair", `{}`, 200)
+	call("GET", "/kept-observations/search", "", 200)
+	call("POST", "/kept-observations/repair", `{"rows":[]}`, 400)
 }

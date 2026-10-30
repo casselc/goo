@@ -3,6 +3,7 @@ import * as UI from './components.mjs';
 import * as Records from './record-presentation.mjs';
 import * as Environment from './record-environment.mjs';
 import * as InspectionFocus from './inspection-focus.mjs';
+import * as Catalog from './kept-catalog.mjs';
 import * as Protocol from './kept-protocol.mjs';
 import {client} from './kept-client.mjs';
 const n=UI.node;
@@ -12,7 +13,7 @@ function mount(host,{active=()=>true}={}){let generation=0,focus;
 }
 function library(host){
  const box=n('details'),body=n('div'),statuses=new Map();
- box.append(n('summary','Kept observations and pending keeps'),n('p','Recent keeps in this browser; exact ID links reopen server storage. Labels and XTDB are not required.'),body);host.append(box);
+ box.append(n('summary','Kept observations and pending keeps'));Catalog.mount(box);box.append(n('p','Local browser recent links and pending recovery below. Find kept observations above discovers server storage.'),body);host.append(box);
  function render(){
   const focused=body.contains(document.activeElement)?document.activeElement:null,focusID=focused?.dataset.keepID,focusAction=focused?.dataset.keepAction;
   body.replaceChildren();

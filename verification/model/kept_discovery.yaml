@@ -1,0 +1,11 @@
+spec: kept_discovery.qnt
+module: kept_discovery
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  discover:
+    expect: 'sourceReads == {{.obs.source}} and payloadWrites == {{.obs.payload}} and discoveryReads == {{.obs.discovery}} and exactReads == {{.obs.exact}} and indexBatches == {{.obs.repair}} and coherent == {{.obs.coherent}}'
+  open:
+    expect: 'sourceReads == {{.obs.source}} and payloadWrites == {{.obs.payload}} and discoveryReads == {{.obs.discovery}} and exactReads == {{.obs.exact}} and indexBatches == {{.obs.repair}} and coherent == {{.obs.coherent}}'
+  repair:
+    expect: 'sourceReads == {{.obs.source}} and payloadWrites == {{.obs.payload}} and discoveryReads == {{.obs.discovery}} and exactReads == {{.obs.exact}} and indexBatches == {{.obs.repair}} and coherent == {{.obs.coherent}}'

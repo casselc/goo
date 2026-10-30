@@ -249,3 +249,14 @@ goo-attribute-list .field-hint-label{display:block}
 
 /* Decimal captions retain every exact endpoint instead of mobile ellipsis. */
 .signed-comparison .comparison-row-axis.decimal-range-axis{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}
+/* Opt-in supplied metadata rows: retain native headings and show every cell/action. */
+@media(max-width:700px){
+ goo-table[mobile-layout=stacked]>table{display:block;min-width:0;width:100%}
+ goo-table[mobile-layout=stacked]>table>caption{display:block;max-width:100%;box-sizing:border-box;white-space:normal}
+ goo-table[mobile-layout=stacked]>table>thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+ goo-table[mobile-layout=stacked]>table>tbody{display:block}
+ goo-table[mobile-layout=stacked]>table>tbody>tr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 12px;padding:8px 10px;border-bottom:1px solid var(--border,#2b3545)}
+ goo-table[mobile-layout=stacked]>table>tbody>tr>td{display:block;min-width:0;max-width:100%;padding:0;border:0;white-space:normal;overflow-wrap:anywhere;font-size:12px}
+ goo-table[mobile-layout=stacked]>table>tbody>tr>td[data-label]::before{content:attr(data-label);display:block;color:var(--muted,#98a8bf);font-size:10px;margin-bottom:2px}
+ goo-table[mobile-layout=stacked]>table>tbody>tr>td:last-child{grid-column:1/-1}
+}

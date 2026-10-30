@@ -131,3 +131,90 @@ The [258 executable storyboard](../journeys/258-keep-records-storyboard.md) cove
 both origins. The earlier first-slice limits above are historical: fixed/Saved
 origins are now implemented. Server-wide discovery, quotas/GC, optional later
 annotation attachment and whole-trace keeps remain separate work.
+
+## Server discovery and bounded repair — 259
+
+In Saved → Browse evidence → **Kept observations and pending keeps**, choose
+**Find kept observations** to discover keeps from every browser using this server
+storage. Filter by origin (Activity, fixed result, Saved capture) and signal. Each
+page shows up to 20 selections, newest keep time first with ID as a stable tie
+breaker. Scope displays its original environment policy; unreported, empty and
+named scopes are never merged. Selection counts are not telemetry population counts.
+Local browser recent links and unresolved requests remain separate below.
+
+`GET /api/kept-observations/search` reads derived metadata only, never telemetry
+or full record payloads. Metadata retains receipt version, exact ID/content digest,
+origin, signal, versioned environment policy/scope, selected occurrence count and
+keep time. It contains no original question, source capability, record contents or
+labels. **Open kept observations** uses the existing exact-ID verifier. Summary
+checksums and file size/mtime stamps detect common staleness; they do **not**
+establish record integrity or authenticity. Exact reopen checks authoritative
+contents even if same-size corruption escaped discovery stamps.
+
+Origin/signal changes only stage filters. Find applies them; More/Previous continue
+the applied query. Cursors bind filters and the full metadata snapshot, so changed
+catalogs refuse continuation rather than silently duplicating/skipping selections.
+History advances only after successful reads. Collapsing either containing
+disclosure, leaving Saved or hiding the tab aborts/invalidate work; no background
+repair or automatic subscription resumes. A local Keep marks loaded metadata stale; a change from another browser
+invalidates the next cursor read. Find is explicit.
+
+### One admission contract
+
+Publication and discovery share a **1,000 physical root-entry** limit; the real
+`.catalog-v1` derived directory is reserved separately. Junk and unrelated entries
+consume capacity. Every accepted resource must produce a valid summary fitting
+**4 KiB** before its payload is published. Search reads at most 1,000 such metadata
+entries (under 4 MiB) and returns at most 20. Two shared admission slots bound
+concurrent discovery/repair requests. Existing four-slot Keep admission and 3 MiB
+per-resource limits remain in force.
+
+The shared `internal/directorylock` helper was extracted from native catalog
+locking. Supported Unix platforms use shared directory locks for discovery and
+exclusive locks across Keep admission, scratch publication/cleanup and metadata
+indexing. Independent processes cannot both take the last slot. Unsupported
+platforms fail closed for coordinated admission. This assumes a stable local
+filesystem root and cooperating writers; it does not extend locks to external
+editors or unsupported network filesystems.
+
+Index publication is best effort **after** the authoritative keep commits; an
+index failure does not turn a successful Keep into a failed save. Exact original
+retries still succeed at/above capacity and do not rewrite metadata. Existing
+unindexed keeps and interrupted metadata updates use explicit repair. GET never
+creates directories or repairs anything. An existing over-limit store refuses
+full discovery and new keeps without deleting resources; known-ID open/retry still
+works. Repair cannot remove excess files or fix corrupt authoritative payloads.
+
+### Repair across large stores
+
+Missing/corrupt metadata refuses discovery visibly. When applicable, **Repair kept
+index** performs explicit source-free `POST /api/kept-observations/repair` requests.
+Each request verifies and indexes at most **64 resources / 32 MiB of payload**;
+continuation binds payload IDs, sizes and mtimes, not the derived files it changes.
+A 36 MiB store therefore repairs across batches instead of becoming irreparable
+at a whole-store byte ceiling. Payload corruption or a changed continuation refuses
+honestly. Completed metadata remains; original keep bytes are never rewritten.
+
+The app continues bounded batches only while the task remains visible. **Stop index
+repair**, disclosure collapse, navigation and tab hiding stop it. Restart is explicit
+and safe; a batch may have completed before its acknowledgement was cancelled.
+Capacity refusals do not offer repair as a false solution. Find explicitly reads the
+repaired index. Disk-byte quotas, garbage collection, annotation attachment and
+whole-trace graph keeps remain separate work.
+
+```mermaid
+flowchart TD
+    Keep[Verified Keep candidate] --> Bound[Summary size + shared physical admission]
+    Bound --> Commit[Atomic authoritative keep file]
+    Commit --> Index[Best-effort bounded metadata]
+    Find[Explicit Find / filters / page] --> Index
+    Index --> Links[Discovery summaries and exact links]
+    Links --> Open[Exact payload verification and shared inspector]
+    Missing[Missing or corrupt metadata] --> Repair[Explicit resumable repair]
+    Repair --> Batch[Verify at most64 resources /32 MiB per request]
+    Batch --> Index
+```
+
+[259 storyboard and actual frames](../journeys/259-kept-discovery-storyboard.md).
+Earlier sections preserve their initial-slice limits; server discovery and count
+admission are now implemented.

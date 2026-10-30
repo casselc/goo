@@ -13,6 +13,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/casselc/goo/internal/directorylock"
 )
 
 const KeepTailVersion = "goo/keep-tail/v1"
@@ -154,34 +156,42 @@ func (s KeptObservationStore) Open(id string) (json.RawMessage, error) {
 	return json.Marshal(v)
 }
 func (s KeptObservationStore) load(id string) (keptResource, error) {
+	v, _, e := s.loadBounded(id, KeptObservationsMaxBytes)
+	return v, e
+}
+func (s KeptObservationStore) loadBounded(id string, budget int64) (keptResource, int64, error) {
+	bound := min(int64(KeptObservationsMaxBytes), budget)
+	if bound < 1 {
+		return nil, 0, errors.New("kept observation read budget exhausted")
+	}
 	if !validTailConnection(id) {
-		return nil, errors.New("invalid kept observation ID")
+		return nil, 0, errors.New("invalid kept observation ID")
 	}
 	path := filepath.Join(s.Dir, id+".json")
 	info, err := os.Lstat(path)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
-	if !info.Mode().IsRegular() || info.Size() > KeptObservationsMaxBytes {
-		return nil, errors.New("invalid kept observation file")
+	if !info.Mode().IsRegular() || info.Size() > bound {
+		return nil, 0, errors.New("invalid kept observation file")
 	}
 	f, err := os.Open(path)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	defer f.Close()
-	raw, err := io.ReadAll(io.LimitReader(f, KeptObservationsMaxBytes+1))
+	raw, err := io.ReadAll(io.LimitReader(f, bound+1))
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
-	if len(raw) > KeptObservationsMaxBytes {
-		return nil, errors.New("kept observations exceed byte bound")
+	if int64(len(raw)) > bound {
+		return nil, 0, errors.New("kept observations exceed byte bound")
 	}
 	var header struct {
 		Version string `json:"version"`
 	}
 	if err = json.Unmarshal(raw, &header); err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	var v keptResource
 	switch header.Version {
@@ -190,23 +200,23 @@ func (s KeptObservationStore) load(id string) (keptResource, error) {
 	case KeptRecordsVersion:
 		v = &KeptRecords{}
 	default:
-		return nil, errors.New("unsupported kept resource version")
+		return nil, 0, errors.New("unsupported kept resource version")
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
 	if err = d.Decode(v); err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	if d.Decode(new(any)) != io.EOF {
-		return nil, errors.New("require one kept observation envelope")
+		return nil, 0, errors.New("require one kept observation envelope")
 	}
 	if storedID, _ := v.keepIdentity(); storedID != id {
-		return nil, errors.New("kept observation ID mismatch")
+		return nil, 0, errors.New("kept observation ID mismatch")
 	}
 	if err = v.Validate(); err != nil {
-		return nil, err
+		return nil, 0, err
 	}
-	return v, nil
+	return v, int64(len(raw)), nil
 }
 func (s KeptObservationStore) Keep(ctx context.Context, bank *TailMembershipSnapshots, input KeepTailIntent) (*KeptObservations, error) {
 	in, err := input.normalized()
@@ -286,6 +296,15 @@ func (s KeptObservationStore) publish(ctx context.Context, id, digest string, re
 	if err = v.Validate(); err != nil {
 		return nil, err
 	}
+	summary, summaryErr := keptSummary(v)
+	if summaryErr != nil {
+		return nil, summaryErr
+	}
+	// Reserve enough metadata room before committing an otherwise unindexable keep.
+	check, _ := json.Marshal(keptIndexEntry{Version: 1, Summary: summary, Size: KeptObservationsMaxBytes, ModifiedNS: 9223372036854775807, Checksum: strings.Repeat("f", 64)})
+	if len(check) > KeptCatalogEntryBytes {
+		return nil, ErrKeptCatalog
+	}
 	raw, err := json.Marshal(v)
 	if err != nil {
 		return nil, err
@@ -298,6 +317,24 @@ func (s KeptObservationStore) publish(ctx context.Context, id, digest string, re
 	}
 	if err = os.MkdirAll(s.Dir, 0700); err != nil {
 		return nil, err
+	}
+	unlock, err := directorylock.Acquire(ctx, s.Dir, true)
+	if err != nil {
+		return nil, err
+	}
+	defer unlock()
+	// The first winner may have committed while this writer was resolving/locking.
+	if old, e := winner(); e == nil {
+		return old, nil
+	} else if !errors.Is(e, os.ErrNotExist) {
+		return nil, e
+	}
+	_, physical, err := s.keepFiles()
+	if err != nil {
+		return nil, err
+	}
+	if physical >= KeptCatalogLimit {
+		return nil, ErrKeepCapacity
 	}
 	tmp, err := os.CreateTemp(s.Dir, ".keep-*")
 	if err != nil {
@@ -329,6 +366,8 @@ func (s KeptObservationStore) publish(ctx context.Context, id, digest string, re
 	if err != nil {
 		return nil, fmt.Errorf("keep may have committed: %w", err)
 	}
+	// Metadata failure cannot turn an already committed resource into a failed keep.
+	_ = s.indexKeep(v)
 	if s.afterPublish != nil {
 		if err = s.afterPublish(); err != nil {
 			return nil, err
