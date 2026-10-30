@@ -33,7 +33,10 @@ export function rationalCoordinate(value){
 }
 function typed(value,field){return field.type==='number'?numeric(value):field.type==='rational'?rationalParts(value)!==null:field.type==='timestamp'?timestamp(value):typeof value==='string'&&value.length<=1024}
 function aggregationValid(field){
- const a=field.aggregation;if(!record(a)||Object.keys(a).some(key=>!['family','kind','method','quantile'].includes(key))||!numericType(field)||!text(field.unit)||!member(a.family,['numeric','duration'])||!member(a.kind,['mean','sum','min','max','quantile']))return false;
+ const a=field.aggregation;if(!record(a)||!numericType(field)||!text(field.unit))return false;
+ if(a.family==='span-status')return Object.keys(a).length===3&&a.kind==='count'&&a.method==='exact'&&field.type==='number'&&field.unit==='records';
+ if(a.family==='ratio')return Object.keys(a).length===5&&a.kind==='fraction'&&a.method==='exact-rational'&&field.type==='rational'&&field.unit==='1'&&text(a.numerator)&&text(a.denominator)&&a.numerator!==a.denominator;
+ if(Object.keys(a).some(key=>!['family','kind','method','quantile'].includes(key))||!member(a.family,['numeric','duration'])||!member(a.kind,['mean','sum','min','max','quantile']))return false;
  if(a.family==='duration'&&field.unit!=='ns')return false;
  if(a.kind==='mean')return a.method==='exact-rational'&&field.type==='rational'&&a.quantile===undefined;
  if(a.kind==='quantile')return a.family==='duration'&&a.method==='quantilesExactHigh'&&member(a.quantile,['0.5','0.95','0.99']);
@@ -61,7 +64,7 @@ export function validateSnapshot(s){
  else {const keys=new Set();for(const row of s.rows){if(!record(row)||!text(row.key)||keys.has(row.key)||!record(row.values)){reasons.push('Invalid or duplicate stable row key');continue}keys.add(row.key);for(const [key,value] of Object.entries(row.values)){const field=fields.get(key);if(!field){reasons.push(`Undeclared field ${key}`);continue}if(value===null){if(field.nullable!==true)reasons.push('Null values require an explicitly nullable field');continue}if(!typed(value,field))reasons.push(`Invalid ${field.type} value for ${key}`)}}}
  if(s.shape==='ranked'&&Array.isArray(s.rows))for(const row of s.rows){if(fields.has('count')&&!uint64(row?.values?.count))reasons.push('Every ranked row requires its declared exact captured count');if(Array.isArray(s.dimensions)&&s.dimensions.some(key=>!record(row?.values)||!own(row.values,key)))reasons.push('Every declared group dimension requires a supplied cell value')}
  if(s.partition!==undefined)validatePartition(s,fields,reasons);
- if(Array.isArray(s.rows))validateCells(s,fields,reasons);
+ if(Array.isArray(s.rows)){validateCells(s,fields,reasons);validateCountRelationships(s,fields,reasons)}
  if(!record(s.quality))reasons.push('Dataset quality is required');
  else {enumField(s.quality,'extent',['complete','partial','unknown'],reasons);enumField(s.quality,'basis',['captured-query'],reasons);enumField(s.quality,'value',['recorded','derived','estimated','unknown'],reasons);enumField(s.quality,'sampling',['unknown','none','sampled'],reasons);enumField(s.quality,'freshness',['fixed','live'],reasons)}
  if(s.completeness!==undefined){const c=s.completeness;if(!record(c)||c.basis!=='captured-query'||!text(c.revision)||!text(c.scopeId)||!Array.isArray(c.aspects)||c.aspects.some(a=>!member(a,['groups','intervals','summary']))||new Set(c.aspects).size!==c.aspects.length)reasons.push('Invalid completeness attestation')}
@@ -165,6 +168,10 @@ function validateCells(snapshot,fields,reasons){
    const cell=row.cells?.[field.key],value=row.values[field.key];
    if(!record(cell)||!member(cell.state,['derived','estimated','no_data','no_valid_values','unknown'])){reasons.push('Every aggregation requires an explicit measure cell state');continue}
    if(!own(row.values,field.key)){reasons.push('Every aggregation requires a supplied exact value or explicit null');continue}
+   if(field.aggregation.family==='span-status'||field.aggregation.family==='ratio'){
+    if(cell.support!==undefined)reasons.push('Count relationships do not use numeric parse support');
+    continue;
+   }
    const known=cell.state==='derived'||cell.state==='estimated';
    if(known?value===null||!typed(value,field):value!==null)reasons.push('Measure value and state disagree; unavailable measures require null');
    if(field.aggregation.family==='duration'&&value!==null){
@@ -198,7 +205,7 @@ function validateSummary(snapshot,fields,reasons){
  if(snapshot.dimensions!==undefined||snapshot.interval!==undefined)reasons.push('Population summaries cannot declare subgroup dimensions or interval geometry');
  if(!Array.isArray(snapshot.rows)||snapshot.rows.length!==1||snapshot.rows[0]?.key!=='population'||!uint64(snapshot.rows[0]?.values?.count))reasons.push('Population summaries require exactly one population row with an exact captured count');
  if(fields.get('count')?.type!=='number'||fields.get('count')?.unit!=='records'||fields.get('count')?.aggregation)reasons.push('Population summaries require a count field in captured records');
- for(const field of fields.values())if(field.key!=='count'&&(!field.aggregation||field.type!=='rational'))reasons.push('Population summaries contain only captured count and declared exact rational aggregate measures');
+ for(const field of fields.values())if(field.key!=='count'&&(!field.aggregation||field.type!=='rational'&&field.aggregation.family!=='span-status'))reasons.push('Population summaries contain only captured count and declared exact rational aggregate measures');
 }
 
 const shapeCapabilities=Object.freeze({ranked:Object.freeze({selectRows:true,filterDimensions:true,selectWindows:false}), 'time-series':Object.freeze({selectRows:true,filterDimensions:false,selectWindows:true}), summary:Object.freeze({selectRows:false,filterDimensions:false,selectWindows:false})});
@@ -243,4 +250,42 @@ export function displayRows(snapshot,display){
   return compared||a.index-b.index;
  });
  return Object.freeze(rows.map(item=>item.row));
+}
+
+const statusKeys=['status.error','status.ok','status.unset','status.unknown'];
+function countField(field){return field?.type==='number'&&field.unit==='records'&&(!field.aggregation||field.aggregation.family==='span-status'&&field.aggregation.kind==='count'&&field.aggregation.method==='exact')}
+function validateCountRelationships(snapshot,fields,reasons){
+ const statuses=[...fields.values()].filter(field=>field.aggregation?.family==='span-status'),fractions=[...fields.values()].filter(field=>field.aggregation?.family==='ratio');
+ if(statuses.length&&(fields.get('count')?.type!=='number'||fields.get('count')?.unit!=='records'||fields.get('count')?.aggregation||snapshot.scope?.signal!=='spans'||statuses.length!==statusKeys.length||!statusKeys.every(key=>fields.get(key)?.aggregation?.family==='span-status')))reasons.push('Span-status counts require all four exact span classes');
+ for(const field of fractions)if(!countField(fields.get(field.aggregation.numerator))||!countField(fields.get(field.aggregation.denominator)))reasons.push('Fractions must reference declared exact captured-count fields');
+ for(const row of snapshot.rows){
+  if(!record(row?.values))continue;
+  if(statuses.length){
+   const count=row.values.count,known=uint64(count);let sum=0n,valid=true;
+   for(const field of statuses){const value=row.values[field.key],cell=row.cells?.[field.key];
+    if(!known){if(value!==null||cell?.state!=='unknown')reasons.push('Unknown captured counts require unknown null span classes')}
+    else if(!uint64(value)||cell?.state!=='derived'){reasons.push('Known span classes require exact derived captured counts');valid=false}
+    else sum+=BigInt(value);
+   }
+   if(known&&valid&&sum!==BigInt(count))reasons.push('Span-status classes must partition the captured record count');
+  }
+  for(const field of fractions){
+   const a=field.aggregation,n=row.values[a.numerator],d=row.values[a.denominator],value=row.values[field.key],cell=row.cells?.[field.key];
+   if(n===null||n===undefined||d===null||d===undefined){if(value!==null||cell?.state!=='unknown')reasons.push('Unknown fraction operands require a null unknown value');continue}
+   if(!uint64(n)||!uint64(d)){reasons.push('Fraction operands must be exact captured counts');continue}
+   const numerator=BigInt(n),denominator=BigInt(d);
+   if(numerator>denominator){reasons.push('Subset fractions require numerator at most denominator');continue}
+   if(denominator===0n){if(value!==null||cell?.state!=='no_data')reasons.push('A zero denominator requires a null no-data fraction');continue}
+   const parts=rationalParts(value);
+   if(cell?.state!=='derived'||!parts||parts.numerator<0n||parts.numerator>parts.denominator||parts.numerator*denominator!==numerator*parts.denominator)reasons.push('Fraction must equal its exact same-row numerator divided by denominator');
+  }
+ }
+}
+// Reference facts for percent displays; no synthetic valid/missing/invalid support.
+export function fractionFacts(snapshot,row,fieldKey){
+ const field=snapshot.fields.find(field=>field.key===fieldKey),a=field?.aggregation;
+ if(a?.family!=='ratio'||a.kind!=='fraction')return null;
+ const fact=key=>{const f=snapshot.fields.find(field=>field.key===key);return {field:key,label:f?.label??key,value:row.values[key]??null,state:row.cells?.[key]?.state??(row.values[key]===null||row.values[key]===undefined?'unknown':'recorded')}};
+ const numerator=fact(a.numerator),denominator=fact(a.denominator),family=snapshot.fields.find(field=>field.key===a.numerator)?.aggregation?.family;
+ return {numerator,denominator,partition:family==='span-status'?snapshot.fields.filter(field=>field.aggregation?.family==='span-status').map(field=>fact(field.key)):[]};
 }

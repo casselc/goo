@@ -84,7 +84,7 @@ type ViewCompleteness struct {
 
 func viewText(v string) *string { return &v }
 func supportedViewMeasures(q Query) bool {
-	return q.NumericHistogram == nil && !q.SpanStatus && !q.GroupTimeSeries
+	return q.NumericHistogram == nil && !q.GroupTimeSeries
 }
 func baseViewDataset(r *Result, shape, aspect string) *ViewDataset {
 	if !regexpRevision.MatchString(r.Basis) || r.Question.Validate() != nil {
@@ -168,13 +168,14 @@ func groupViewDataset(r *Result, exhaustiveGroups bool) *ViewDataset {
 		}
 		seen[key] = true
 		var summaries struct {
-			Numeric  *NumericSummary  `json:"numeric"`
-			Duration *DurationSummary `json:"duration"`
+			Numeric    *NumericSummary    `json:"numeric"`
+			Duration   *DurationSummary   `json:"duration"`
+			SpanStatus *SpanStatusSummary `json:"spanStatus"`
 		}
 		if json.Unmarshal(raw, &summaries) != nil {
 			return nil
 		}
-		cells, ok := viewMeasureCells(q, count, summaries.Numeric, summaries.Duration, false, values)
+		cells, ok := viewMeasureCells(q, count, summaries.Numeric, summaries.Duration, summaries.SpanStatus, false, values)
 		if !ok {
 			return nil
 		}
@@ -228,7 +229,7 @@ func timeViewDataset(r *Result, exhaustiveIntervals bool) *ViewDataset {
 			return nil
 		}
 		from, to := *values["fromMs"], *values["toMs"]
-		cells, ok := viewMeasureCells(q, p.Count, p.Numeric, p.Duration, p.State == "unknown", values)
+		cells, ok := viewMeasureCells(q, p.Count, p.Numeric, p.Duration, p.SpanStatus, p.State == "unknown", values)
 		if !ok {
 			return nil
 		}

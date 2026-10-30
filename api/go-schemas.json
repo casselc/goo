@@ -11448,6 +11448,9 @@
   },
   "exploration.ViewAggregation": {
     "properties": {
+      "denominator": {
+        "type": "string"
+      },
       "family": {
         "type": "string"
       },
@@ -11455,6 +11458,9 @@
         "type": "string"
       },
       "method": {
+        "type": "string"
+      },
+      "numerator": {
         "type": "string"
       },
       "quantile": {
@@ -11472,6 +11478,16 @@
   "exploration.ViewAggregationInput": {
     "additionalProperties": false,
     "properties": {
+      "denominator": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "family": {
         "anyOf": [
           {
@@ -11493,6 +11509,16 @@
         ]
       },
       "method": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "numerator": {
         "anyOf": [
           {
             "type": "string"

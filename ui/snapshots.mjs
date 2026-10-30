@@ -120,8 +120,13 @@ function sourceQuestion(raw,question){
  if(raw.scope.signal!==question.signal)fail('source-question','Source snapshot signal does not match its question');
  if(raw.shape==='time-series'&&(raw.interval.fromMs!==String(question.fromMs)||raw.interval.toMs!==String(question.toMs)||raw.interval.bucketMs!==String(question.bucketMs)))fail('source-question','Source interval geometry does not match its question');
  if(raw.shape==='ranked'&&(raw.dimensions?.length??0)!==(question.groupBy?.length??0))fail('source-question','Source group dimensions do not match its question');
+ const statusKeys=['status.error','status.ok','status.unset','status.unknown'];
+ const statuses=raw.fields.filter(field=>field.aggregation?.family==='span-status'),fraction=raw.fields.find(field=>field.key==='status.error_fraction');
+ if(question.spanStatus===true&&(question.signal!=='spans'||statuses.length!==4||!statusKeys.every(key=>statuses.some(field=>field.key===key))||fraction?.aggregation?.family!=='ratio'||fraction.aggregation.kind!=='fraction'||fraction.aggregation.numerator!=='status.error'||fraction.aggregation.denominator!=='count'))fail('source-question','Source span-status profile requires all classes and the recorded error fraction');
  for(const field of raw.fields){
   if(field.aggregation?.family==='numeric'&&(!question.numeric||field.unit!==question.numeric.unit))fail('source-question','Source numeric measure unit does not match its binding');
+  if(field.aggregation?.family==='ratio'&&(question.spanStatus!==true||field.key!=='status.error_fraction'||field.aggregation.numerator!=='status.error'||field.aggregation.denominator!=='count'))fail('source-question','Source fraction does not match the requested span-status profile');
+  if(field.aggregation?.family==='span-status'&&(question.signal!=='spans'||question.spanStatus!==true))fail('source-question','Source span-status counts require the checked span-status profile');
   if(field.aggregation?.family==='duration'&&(question.signal!=='spans'||question.summary!=='span-duration'))fail('source-question','Source duration measures require the checked duration profile');
  }
 }

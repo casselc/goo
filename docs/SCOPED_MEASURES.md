@@ -1,6 +1,8 @@
 # Exact measures in scoped views — 263
 
 264 extends this foundation to [population summaries and comparisons](POPULATION_MEASURE_VIEWS.md).
+268 adds [status counts and same-row recorded-error fractions](STATUS_FRACTIONS.md),
+whose class accounting is separate from numeric parse support.
 The263 delivery below describes its original grouped/interval scope.
 
 Numeric and span-duration group/interval results now use the same public snapshot

@@ -538,5 +538,9 @@ bounded H1 cut for canonical fixed Explore controls.
 surface; Records no longer repeats that group chart. Population shares use the
 same exhaustive group read, and local Find/sort keeps the full denominator and
 scale. Group selection stages a question; Run reads it. Saved inspection and
-trace opening retain their scope. Specialized status, histogram and other family
-semantics still need adoption before renderer or contributed-view expansion.
+trace opening retain their scope. [Recorded span status](docs/STATUS_FRACTIONS.md)
+also uses shared breakdown, interval and summary components: exact Error/OK/Unset/
+Unknown counts and Error/count fractions, with fixed percentage axes and explicit
+empty/unknown states. Status comparisons retain their percentage-point presenter.
+Histogram and other family semantics still need adoption before renderer or
+contributed-view expansion.

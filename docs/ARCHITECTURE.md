@@ -1368,3 +1368,12 @@ Records charts before minting any bindings. Population workspaces and specialize
 presenters retain their existing owners. `scope-actions.mjs` also exposes pure
 current-source inspection of a supplied aggregate row, separate from refinement;
 no inspection datum becomes a verified record reference or Keep capability.
+
+268 adds [status counts and recorded-error fractions](STATUS_FRACTIONS.md) to
+the existing Go grouped/interval/summary producers without extra reads. Exact
+same-row operand references and a separate class partition carry their meaning
+through admission, passive charts and summaries. Fraction plotting uses a fixed
+0–100% scale in compatible bar, time-bar and numeric-line kinds; local display
+cannot alter the denominator. Canonical status comparisons remain withheld:
+their existing independent-cohort presenter expresses signed percentage-point
+changes. Histogram and dedicated triage/native families still have explicit owners.

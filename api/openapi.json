@@ -18072,11 +18072,17 @@
       },
       "exploration.ViewAggregation": {
         "properties": {
+          "denominator": {
+            "type": "string",
+            "const": "count"
+          },
           "family": {
             "type": "string",
             "enum": [
               "numeric",
-              "duration"
+              "duration",
+              "span-status",
+              "ratio"
             ]
           },
           "kind": {
@@ -18086,7 +18092,9 @@
               "sum",
               "min",
               "max",
-              "quantile"
+              "quantile",
+              "count",
+              "fraction"
             ]
           },
           "method": {
@@ -18096,6 +18104,10 @@
               "exact",
               "quantilesExactHigh"
             ]
+          },
+          "numerator": {
+            "type": "string",
+            "const": "status.error"
           },
           "quantile": {
             "type": "string",
@@ -18128,8 +18140,22 @@
               }
             },
             "not": {
-              "required": [
-                "quantile"
+              "anyOf": [
+                {
+                  "required": [
+                    "quantile"
+                  ]
+                },
+                {
+                  "required": [
+                    "numerator"
+                  ]
+                },
+                {
+                  "required": [
+                    "denominator"
+                  ]
+                }
               ]
             }
           },
@@ -18146,8 +18172,22 @@
               }
             },
             "not": {
-              "required": [
-                "quantile"
+              "anyOf": [
+                {
+                  "required": [
+                    "quantile"
+                  ]
+                },
+                {
+                  "required": [
+                    "numerator"
+                  ]
+                },
+                {
+                  "required": [
+                    "denominator"
+                  ]
+                }
               ]
             }
           },
@@ -18164,8 +18204,22 @@
               }
             },
             "not": {
-              "required": [
-                "quantile"
+              "anyOf": [
+                {
+                  "required": [
+                    "quantile"
+                  ]
+                },
+                {
+                  "required": [
+                    "numerator"
+                  ]
+                },
+                {
+                  "required": [
+                    "denominator"
+                  ]
+                }
               ]
             }
           },
@@ -18182,8 +18236,22 @@
               }
             },
             "not": {
-              "required": [
-                "quantile"
+              "anyOf": [
+                {
+                  "required": [
+                    "quantile"
+                  ]
+                },
+                {
+                  "required": [
+                    "numerator"
+                  ]
+                },
+                {
+                  "required": [
+                    "denominator"
+                  ]
+                }
               ]
             }
           },
@@ -18200,8 +18268,22 @@
               }
             },
             "not": {
-              "required": [
-                "quantile"
+              "anyOf": [
+                {
+                  "required": [
+                    "quantile"
+                  ]
+                },
+                {
+                  "required": [
+                    "numerator"
+                  ]
+                },
+                {
+                  "required": [
+                    "denominator"
+                  ]
+                }
               ]
             }
           },
@@ -18218,8 +18300,22 @@
               }
             },
             "not": {
-              "required": [
-                "quantile"
+              "anyOf": [
+                {
+                  "required": [
+                    "quantile"
+                  ]
+                },
+                {
+                  "required": [
+                    "numerator"
+                  ]
+                },
+                {
+                  "required": [
+                    "denominator"
+                  ]
+                }
               ]
             }
           },
@@ -18236,8 +18332,22 @@
               }
             },
             "not": {
-              "required": [
-                "quantile"
+              "anyOf": [
+                {
+                  "required": [
+                    "quantile"
+                  ]
+                },
+                {
+                  "required": [
+                    "numerator"
+                  ]
+                },
+                {
+                  "required": [
+                    "denominator"
+                  ]
+                }
               ]
             }
           },
@@ -18258,7 +18368,21 @@
             },
             "required": [
               "quantile"
-            ]
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "numerator"
+                  ]
+                },
+                {
+                  "required": [
+                    "denominator"
+                  ]
+                }
+              ]
+            }
           },
           {
             "properties": {
@@ -18277,7 +18401,21 @@
             },
             "required": [
               "quantile"
-            ]
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "numerator"
+                  ]
+                },
+                {
+                  "required": [
+                    "denominator"
+                  ]
+                }
+              ]
+            }
           },
           {
             "properties": {
@@ -18296,13 +18434,101 @@
             },
             "required": [
               "quantile"
-            ]
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "numerator"
+                  ]
+                },
+                {
+                  "required": [
+                    "denominator"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "properties": {
+              "family": {
+                "const": "span-status"
+              },
+              "kind": {
+                "const": "count"
+              },
+              "method": {
+                "const": "exact"
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "quantile"
+                  ]
+                },
+                {
+                  "required": [
+                    "numerator"
+                  ]
+                },
+                {
+                  "required": [
+                    "denominator"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "properties": {
+              "family": {
+                "const": "ratio"
+              },
+              "kind": {
+                "const": "fraction"
+              },
+              "method": {
+                "const": "exact-rational"
+              },
+              "numerator": {
+                "const": "status.error"
+              },
+              "denominator": {
+                "const": "count"
+              }
+            },
+            "required": [
+              "numerator",
+              "denominator"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "quantile"
+                  ]
+                }
+              ]
+            }
           }
         ]
       },
       "exploration.ViewAggregationInput": {
         "additionalProperties": false,
         "properties": {
+          "denominator": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "family": {
             "anyOf": [
               {
@@ -18324,6 +18550,16 @@
             ]
           },
           "method": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "numerator": {
             "anyOf": [
               {
                 "type": "string"
@@ -18393,109 +18629,6 @@
                 "required": [
                   "support"
                 ]
-              }
-            },
-            "else": {
-              "required": [
-                "support"
-              ],
-              "properties": {
-                "support": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "state": {
-                  "enum": [
-                    "derived",
-                    "estimated"
-                  ]
-                }
-              },
-              "required": [
-                "state"
-              ]
-            },
-            "then": {
-              "properties": {
-                "support": {
-                  "properties": {
-                    "valid": {
-                      "type": "string",
-                      "pattern": "^[1-9][0-9]*$",
-                      "maxLength": 20,
-                      "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
-                    }
-                  }
-                }
-              }
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "state": {
-                  "const": "no_data"
-                }
-              },
-              "required": [
-                "state"
-              ]
-            },
-            "then": {
-              "properties": {
-                "support": {
-                  "properties": {
-                    "total": {
-                      "const": "0"
-                    },
-                    "valid": {
-                      "const": "0"
-                    },
-                    "missing": {
-                      "const": "0"
-                    },
-                    "empty": {
-                      "const": "0"
-                    },
-                    "invalid": {
-                      "const": "0"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "state": {
-                  "const": "no_valid_values"
-                }
-              },
-              "required": [
-                "state"
-              ]
-            },
-            "then": {
-              "properties": {
-                "support": {
-                  "properties": {
-                    "valid": {
-                      "const": "0"
-                    },
-                    "total": {
-                      "type": "string",
-                      "pattern": "^[1-9][0-9]*$",
-                      "maxLength": 20,
-                      "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
-                    }
-                  }
-                }
               }
             }
           }
@@ -18707,7 +18840,32 @@
                 },
                 "required": [
                   "origin"
-                ]
+                ],
+                "not": {
+                  "properties": {
+                    "fields": {
+                      "contains": {
+                        "properties": {
+                          "key": {
+                            "enum": [
+                              "status.error",
+                              "status.ok",
+                              "status.unset",
+                              "status.unknown",
+                              "status.error_fraction"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "key"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "fields"
+                  ]
+                }
               }
             ]
           },
@@ -18755,7 +18913,32 @@
                 },
                 "required": [
                   "origin"
-                ]
+                ],
+                "not": {
+                  "properties": {
+                    "fields": {
+                      "contains": {
+                        "properties": {
+                          "key": {
+                            "enum": [
+                              "status.error",
+                              "status.ok",
+                              "status.unset",
+                              "status.unknown",
+                              "status.error_fraction"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "key"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "fields"
+                  ]
+                }
               }
             ]
           },
@@ -18783,7 +18966,7 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ViewComparison",
         "additionalProperties": false,
-        "description": "Independent browser-held summary snapshots with exact selection-minus-baseline differences. No combined population, normalized rate, signed source authority, pooled percentile or invented shared capture clock.",
+        "description": "Independent browser-held summary snapshots with exact selection-minus-baseline differences. No combined population, normalized rate, signed source authority, pooled percentile or invented shared capture clock. Requested span-status comparisons use the separate existing percentage-point response; this canonical envelope is withheld for that profile.",
         "allOf": [
           {
             "if": {
@@ -20179,7 +20362,7 @@
           "fields": {
             "type": "array",
             "minItems": 1,
-            "maxItems": 13,
+            "maxItems": 18,
             "items": {
               "$ref": "#/components/schemas/exploration.ViewField"
             }
@@ -20296,7 +20479,7 @@
                   },
                   "fields": {
                     "minItems": 2,
-                    "maxItems": 12,
+                    "maxItems": 17,
                     "prefixItems": [
                       {
                         "allOf": [
@@ -20366,7 +20549,12 @@
                                 "duration.max",
                                 "duration.p50",
                                 "duration.p95",
-                                "duration.p99"
+                                "duration.p99",
+                                "status.error",
+                                "status.ok",
+                                "status.unset",
+                                "status.unknown",
+                                "status.error_fraction"
                               ]
                             }
                           }
@@ -20500,6 +20688,51 @@
                                   "pattern": "^(0|[1-9][0-9]*)$",
                                   "maxLength": 20,
                                   "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "status.error": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                                },
+                                "status.ok": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                                },
+                                "status.unset": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                                },
+                                "status.unknown": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                                },
+                                "status.error_fraction": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                                  "maxLength": 1024,
+                                  "description": "Exact Error/count subset fraction in [0,1], not a percentage or ratio of averages. Runtime checks named operands. A zero denominator is unavailable, never a healthy zero."
                                 }
                               },
                               "additionalProperties": false
@@ -20524,7 +20757,7 @@
                   },
                   "fields": {
                     "minItems": 3,
-                    "maxItems": 13,
+                    "maxItems": 18,
                     "prefixItems": [
                       {
                         "allOf": [
@@ -20617,7 +20850,12 @@
                                 "duration.max",
                                 "duration.p50",
                                 "duration.p95",
-                                "duration.p99"
+                                "duration.p99",
+                                "status.error",
+                                "status.ok",
+                                "status.unset",
+                                "status.unknown",
+                                "status.error_fraction"
                               ]
                             }
                           }
@@ -20760,6 +20998,51 @@
                                   "pattern": "^(0|[1-9][0-9]*)$",
                                   "maxLength": 20,
                                   "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "status.error": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                                },
+                                "status.ok": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                                },
+                                "status.unset": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                                },
+                                "status.unknown": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                                },
+                                "status.error_fraction": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                                  "maxLength": 1024,
+                                  "description": "Exact Error/count subset fraction in [0,1], not a percentage or ratio of averages. Runtime checks named operands. A zero denominator is unavailable, never a healthy zero."
                                 }
                               },
                               "additionalProperties": false
@@ -20803,7 +21086,7 @@
               },
               "fields": {
                 "minItems": 3,
-                "maxItems": 13,
+                "maxItems": 18,
                 "prefixItems": [
                   {
                     "allOf": [
@@ -20903,7 +21186,12 @@
                             "duration.max",
                             "duration.p50",
                             "duration.p95",
-                            "duration.p99"
+                            "duration.p99",
+                            "status.error",
+                            "status.ok",
+                            "status.unset",
+                            "status.unknown",
+                            "status.error_fraction"
                           ]
                         }
                       }
@@ -21040,6 +21328,51 @@
                               "pattern": "^(0|[1-9][0-9]*)$",
                               "maxLength": 20,
                               "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "status.error": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                            },
+                            "status.ok": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                            },
+                            "status.unset": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                            },
+                            "status.unknown": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                            },
+                            "status.error_fraction": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                              "maxLength": 1024,
+                              "description": "Exact Error/count subset fraction in [0,1], not a percentage or ratio of averages. Runtime checks named operands. A zero denominator is unavailable, never a healthy zero."
                             }
                           },
                           "additionalProperties": false
@@ -21142,7 +21475,7 @@
               },
               "fields": {
                 "minItems": 1,
-                "maxItems": 11,
+                "maxItems": 16,
                 "prefixItems": [
                   {
                     "allOf": [
@@ -21189,7 +21522,12 @@
                             "duration.max",
                             "duration.p50",
                             "duration.p95",
-                            "duration.p99"
+                            "duration.p99",
+                            "status.error",
+                            "status.ok",
+                            "status.unset",
+                            "status.unknown",
+                            "status.error_fraction"
                           ]
                         }
                       }
@@ -21316,6 +21654,51 @@
                               "pattern": "^(0|[1-9][0-9]*)$",
                               "maxLength": 20,
                               "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "status.error": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                            },
+                            "status.ok": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                            },
+                            "status.unset": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                            },
+                            "status.unknown": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                            },
+                            "status.error_fraction": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                              "maxLength": 1024,
+                              "description": "Exact Error/count subset fraction in [0,1], not a percentage or ratio of averages. Runtime checks named operands. A zero denominator is unavailable, never a healthy zero."
                             }
                           },
                           "additionalProperties": false
@@ -21382,6 +21765,365 @@
               "properties": {
                 "completeness": {
                   "type": "null"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "fields": {
+                  "contains": {
+                    "properties": {
+                      "key": {
+                        "enum": [
+                          "status.error",
+                          "status.ok",
+                          "status.unset",
+                          "status.unknown",
+                          "status.error_fraction"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "key"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "fields"
+              ]
+            },
+            "then": {
+              "properties": {
+                "fields": {
+                  "allOf": [
+                    {
+                      "contains": {
+                        "properties": {
+                          "key": {
+                            "const": "status.error"
+                          }
+                        },
+                        "required": [
+                          "key"
+                        ]
+                      }
+                    },
+                    {
+                      "contains": {
+                        "properties": {
+                          "key": {
+                            "const": "status.ok"
+                          }
+                        },
+                        "required": [
+                          "key"
+                        ]
+                      }
+                    },
+                    {
+                      "contains": {
+                        "properties": {
+                          "key": {
+                            "const": "status.unset"
+                          }
+                        },
+                        "required": [
+                          "key"
+                        ]
+                      }
+                    },
+                    {
+                      "contains": {
+                        "properties": {
+                          "key": {
+                            "const": "status.unknown"
+                          }
+                        },
+                        "required": [
+                          "key"
+                        ]
+                      }
+                    },
+                    {
+                      "contains": {
+                        "properties": {
+                          "key": {
+                            "const": "status.error_fraction"
+                          }
+                        },
+                        "required": [
+                          "key"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "rows": {
+                  "items": {
+                    "properties": {
+                      "values": {
+                        "required": [
+                          "count",
+                          "status.error",
+                          "status.ok",
+                          "status.unset",
+                          "status.unknown",
+                          "status.error_fraction"
+                        ]
+                      },
+                      "cells": {
+                        "required": [
+                          "status.error",
+                          "status.ok",
+                          "status.unset",
+                          "status.unknown",
+                          "status.error_fraction"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "values",
+                      "cells"
+                    ],
+                    "allOf": [
+                      {
+                        "if": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "type": "null"
+                                }
+                              },
+                              "required": [
+                                "count"
+                              ]
+                            }
+                          }
+                        },
+                        "then": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "status.error": {
+                                  "type": "null"
+                                },
+                                "status.ok": {
+                                  "type": "null"
+                                },
+                                "status.unset": {
+                                  "type": "null"
+                                },
+                                "status.unknown": {
+                                  "type": "null"
+                                },
+                                "status.error_fraction": {
+                                  "type": "null"
+                                }
+                              }
+                            },
+                            "cells": {
+                              "properties": {
+                                "status.error": {
+                                  "properties": {
+                                    "state": {
+                                      "const": "unknown"
+                                    }
+                                  }
+                                },
+                                "status.ok": {
+                                  "properties": {
+                                    "state": {
+                                      "const": "unknown"
+                                    }
+                                  }
+                                },
+                                "status.unset": {
+                                  "properties": {
+                                    "state": {
+                                      "const": "unknown"
+                                    }
+                                  }
+                                },
+                                "status.unknown": {
+                                  "properties": {
+                                    "state": {
+                                      "const": "unknown"
+                                    }
+                                  }
+                                },
+                                "status.error_fraction": {
+                                  "properties": {
+                                    "state": {
+                                      "const": "unknown"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "if": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "const": "0"
+                                }
+                              },
+                              "required": [
+                                "count"
+                              ]
+                            }
+                          }
+                        },
+                        "then": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "status.error": {
+                                  "const": "0"
+                                },
+                                "status.ok": {
+                                  "const": "0"
+                                },
+                                "status.unset": {
+                                  "const": "0"
+                                },
+                                "status.unknown": {
+                                  "const": "0"
+                                },
+                                "status.error_fraction": {
+                                  "type": "null"
+                                }
+                              }
+                            },
+                            "cells": {
+                              "properties": {
+                                "status.error": {
+                                  "properties": {
+                                    "state": {
+                                      "const": "derived"
+                                    }
+                                  }
+                                },
+                                "status.ok": {
+                                  "properties": {
+                                    "state": {
+                                      "const": "derived"
+                                    }
+                                  }
+                                },
+                                "status.unset": {
+                                  "properties": {
+                                    "state": {
+                                      "const": "derived"
+                                    }
+                                  }
+                                },
+                                "status.unknown": {
+                                  "properties": {
+                                    "state": {
+                                      "const": "derived"
+                                    }
+                                  }
+                                },
+                                "status.error_fraction": {
+                                  "properties": {
+                                    "state": {
+                                      "const": "no_data"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "if": {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "type": "string",
+                                  "pattern": "^[1-9][0-9]*$"
+                                }
+                              },
+                              "required": [
+                                "count"
+                              ]
+                            }
+                          }
+                        },
+                        "then": {
+                          "properties": {
+                            "cells": {
+                              "properties": {
+                                "status.error": {
+                                  "properties": {
+                                    "state": {
+                                      "const": "derived"
+                                    }
+                                  }
+                                },
+                                "status.ok": {
+                                  "properties": {
+                                    "state": {
+                                      "const": "derived"
+                                    }
+                                  }
+                                },
+                                "status.unset": {
+                                  "properties": {
+                                    "state": {
+                                      "const": "derived"
+                                    }
+                                  }
+                                },
+                                "status.unknown": {
+                                  "properties": {
+                                    "state": {
+                                      "const": "derived"
+                                    }
+                                  }
+                                },
+                                "status.error_fraction": {
+                                  "properties": {
+                                    "state": {
+                                      "const": "derived"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                "scope": {
+                  "properties": {
+                    "signal": {
+                      "const": "spans"
+                    },
+                    "selector": {
+                      "required": [
+                        "spanStatus"
+                      ],
+                      "properties": {
+                        "spanStatus": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -21673,7 +22415,12 @@
               "duration.max",
               "duration.p50",
               "duration.p95",
-              "duration.p99"
+              "duration.p99",
+              "status.error",
+              "status.ok",
+              "status.unset",
+              "status.unknown",
+              "status.error_fraction"
             ]
           },
           "label": {
@@ -22161,6 +22908,232 @@
             "if": {
               "properties": {
                 "key": {
+                  "const": "status.error"
+                }
+              },
+              "required": [
+                "key"
+              ]
+            },
+            "then": {
+              "required": [
+                "aggregation",
+                "unit",
+                "nullable"
+              ],
+              "properties": {
+                "nullable": {
+                  "const": true
+                },
+                "type": {
+                  "const": "number"
+                },
+                "unit": {
+                  "const": "records"
+                },
+                "aggregation": {
+                  "type": "object",
+                  "properties": {
+                    "family": {
+                      "const": "span-status"
+                    },
+                    "kind": {
+                      "const": "count"
+                    },
+                    "method": {
+                      "const": "exact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "key": {
+                  "const": "status.ok"
+                }
+              },
+              "required": [
+                "key"
+              ]
+            },
+            "then": {
+              "required": [
+                "aggregation",
+                "unit",
+                "nullable"
+              ],
+              "properties": {
+                "nullable": {
+                  "const": true
+                },
+                "type": {
+                  "const": "number"
+                },
+                "unit": {
+                  "const": "records"
+                },
+                "aggregation": {
+                  "type": "object",
+                  "properties": {
+                    "family": {
+                      "const": "span-status"
+                    },
+                    "kind": {
+                      "const": "count"
+                    },
+                    "method": {
+                      "const": "exact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "key": {
+                  "const": "status.unset"
+                }
+              },
+              "required": [
+                "key"
+              ]
+            },
+            "then": {
+              "required": [
+                "aggregation",
+                "unit",
+                "nullable"
+              ],
+              "properties": {
+                "nullable": {
+                  "const": true
+                },
+                "type": {
+                  "const": "number"
+                },
+                "unit": {
+                  "const": "records"
+                },
+                "aggregation": {
+                  "type": "object",
+                  "properties": {
+                    "family": {
+                      "const": "span-status"
+                    },
+                    "kind": {
+                      "const": "count"
+                    },
+                    "method": {
+                      "const": "exact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "key": {
+                  "const": "status.unknown"
+                }
+              },
+              "required": [
+                "key"
+              ]
+            },
+            "then": {
+              "required": [
+                "aggregation",
+                "unit",
+                "nullable"
+              ],
+              "properties": {
+                "nullable": {
+                  "const": true
+                },
+                "type": {
+                  "const": "number"
+                },
+                "unit": {
+                  "const": "records"
+                },
+                "aggregation": {
+                  "type": "object",
+                  "properties": {
+                    "family": {
+                      "const": "span-status"
+                    },
+                    "kind": {
+                      "const": "count"
+                    },
+                    "method": {
+                      "const": "exact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "key": {
+                  "const": "status.error_fraction"
+                }
+              },
+              "required": [
+                "key"
+              ]
+            },
+            "then": {
+              "required": [
+                "aggregation",
+                "unit",
+                "nullable"
+              ],
+              "properties": {
+                "nullable": {
+                  "const": true
+                },
+                "type": {
+                  "const": "rational"
+                },
+                "unit": {
+                  "const": "1"
+                },
+                "aggregation": {
+                  "type": "object",
+                  "properties": {
+                    "family": {
+                      "const": "ratio"
+                    },
+                    "kind": {
+                      "const": "fraction"
+                    },
+                    "method": {
+                      "const": "exact-rational"
+                    },
+                    "numerator": {
+                      "const": "status.error"
+                    },
+                    "denominator": {
+                      "const": "count"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "key": {
                   "enum": [
                     "category",
                     "category1",
@@ -22490,7 +23463,7 @@
         "properties": {
           "cells": {
             "type": "object",
-            "maxProperties": 10,
+            "maxProperties": 15,
             "propertyNames": {
               "enum": [
                 "numeric.mean",
@@ -22502,7 +23475,12 @@
                 "duration.max",
                 "duration.p50",
                 "duration.p95",
-                "duration.p99"
+                "duration.p99",
+                "status.error",
+                "status.ok",
+                "status.unset",
+                "status.unknown",
+                "status.error_fraction"
               ]
             },
             "additionalProperties": {
@@ -22573,7 +23551,12 @@
                 "cells": {
                   "required": [
                     "numeric.mean"
-                  ]
+                  ],
+                  "properties": {
+                    "numeric.mean": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               }
             }
@@ -22597,6 +23580,13 @@
                   "required": [
                     "numeric.mean"
                   ]
+                },
+                "cells": {
+                  "properties": {
+                    "numeric.mean": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               },
               "allOf": [
@@ -22669,7 +23659,12 @@
                 "cells": {
                   "required": [
                     "numeric.sum"
-                  ]
+                  ],
+                  "properties": {
+                    "numeric.sum": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               }
             }
@@ -22693,6 +23688,13 @@
                   "required": [
                     "numeric.sum"
                   ]
+                },
+                "cells": {
+                  "properties": {
+                    "numeric.sum": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               },
               "allOf": [
@@ -22765,7 +23767,12 @@
                 "cells": {
                   "required": [
                     "numeric.min"
-                  ]
+                  ],
+                  "properties": {
+                    "numeric.min": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               }
             }
@@ -22789,6 +23796,13 @@
                   "required": [
                     "numeric.min"
                   ]
+                },
+                "cells": {
+                  "properties": {
+                    "numeric.min": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               },
               "allOf": [
@@ -22861,7 +23875,12 @@
                 "cells": {
                   "required": [
                     "numeric.max"
-                  ]
+                  ],
+                  "properties": {
+                    "numeric.max": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               }
             }
@@ -22885,6 +23904,13 @@
                   "required": [
                     "numeric.max"
                   ]
+                },
+                "cells": {
+                  "properties": {
+                    "numeric.max": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               },
               "allOf": [
@@ -22957,7 +23983,12 @@
                 "cells": {
                   "required": [
                     "duration.mean"
-                  ]
+                  ],
+                  "properties": {
+                    "duration.mean": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               }
             }
@@ -22981,6 +24012,13 @@
                   "required": [
                     "duration.mean"
                   ]
+                },
+                "cells": {
+                  "properties": {
+                    "duration.mean": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               },
               "allOf": [
@@ -23009,7 +24047,7 @@
                         "properties": {
                           "duration.mean": {
                             "type": "string",
-                            "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                            "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
                             "maxLength": 1024,
                             "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
                           }
@@ -23053,7 +24091,12 @@
                 "cells": {
                   "required": [
                     "duration.min"
-                  ]
+                  ],
+                  "properties": {
+                    "duration.min": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               }
             }
@@ -23077,6 +24120,13 @@
                   "required": [
                     "duration.min"
                   ]
+                },
+                "cells": {
+                  "properties": {
+                    "duration.min": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               },
               "allOf": [
@@ -23105,8 +24155,8 @@
                         "properties": {
                           "duration.min": {
                             "type": "string",
-                            "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
-                            "maxLength": 1024,
+                            "pattern": "^(0|[1-9][0-9]*)$",
+                            "maxLength": 20,
                             "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
                           }
                         }
@@ -23149,7 +24199,12 @@
                 "cells": {
                   "required": [
                     "duration.max"
-                  ]
+                  ],
+                  "properties": {
+                    "duration.max": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               }
             }
@@ -23173,6 +24228,13 @@
                   "required": [
                     "duration.max"
                   ]
+                },
+                "cells": {
+                  "properties": {
+                    "duration.max": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               },
               "allOf": [
@@ -23201,8 +24263,8 @@
                         "properties": {
                           "duration.max": {
                             "type": "string",
-                            "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
-                            "maxLength": 1024,
+                            "pattern": "^(0|[1-9][0-9]*)$",
+                            "maxLength": 20,
                             "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
                           }
                         }
@@ -23245,7 +24307,12 @@
                 "cells": {
                   "required": [
                     "duration.p50"
-                  ]
+                  ],
+                  "properties": {
+                    "duration.p50": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               }
             }
@@ -23269,6 +24336,13 @@
                   "required": [
                     "duration.p50"
                   ]
+                },
+                "cells": {
+                  "properties": {
+                    "duration.p50": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               },
               "allOf": [
@@ -23297,8 +24371,8 @@
                         "properties": {
                           "duration.p50": {
                             "type": "string",
-                            "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
-                            "maxLength": 1024,
+                            "pattern": "^(0|[1-9][0-9]*)$",
+                            "maxLength": 20,
                             "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
                           }
                         }
@@ -23341,7 +24415,12 @@
                 "cells": {
                   "required": [
                     "duration.p95"
-                  ]
+                  ],
+                  "properties": {
+                    "duration.p95": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               }
             }
@@ -23365,6 +24444,13 @@
                   "required": [
                     "duration.p95"
                   ]
+                },
+                "cells": {
+                  "properties": {
+                    "duration.p95": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               },
               "allOf": [
@@ -23393,8 +24479,8 @@
                         "properties": {
                           "duration.p95": {
                             "type": "string",
-                            "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
-                            "maxLength": 1024,
+                            "pattern": "^(0|[1-9][0-9]*)$",
+                            "maxLength": 20,
                             "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
                           }
                         }
@@ -23437,7 +24523,12 @@
                 "cells": {
                   "required": [
                     "duration.p99"
-                  ]
+                  ],
+                  "properties": {
+                    "duration.p99": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               }
             }
@@ -23461,6 +24552,13 @@
                   "required": [
                     "duration.p99"
                   ]
+                },
+                "cells": {
+                  "properties": {
+                    "duration.p99": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
                 }
               },
               "allOf": [
@@ -23489,8 +24587,8 @@
                         "properties": {
                           "duration.p99": {
                             "type": "string",
-                            "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
-                            "maxLength": 1024,
+                            "pattern": "^(0|[1-9][0-9]*)$",
+                            "maxLength": 20,
                             "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
                           }
                         }
@@ -23502,6 +24600,546 @@
                       "values": {
                         "properties": {
                           "duration.p99": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "status.error"
+                  ]
+                }
+              },
+              "required": [
+                "values"
+              ]
+            },
+            "then": {
+              "required": [
+                "cells"
+              ],
+              "properties": {
+                "cells": {
+                  "required": [
+                    "status.error"
+                  ],
+                  "properties": {
+                    "status.error": {
+                      "$ref": "#/components/schemas/exploration.StatusCountViewCell"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "cells": {
+                  "required": [
+                    "status.error"
+                  ]
+                }
+              },
+              "required": [
+                "cells"
+              ]
+            },
+            "then": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "status.error"
+                  ]
+                },
+                "cells": {
+                  "properties": {
+                    "status.error": {
+                      "$ref": "#/components/schemas/exploration.StatusCountViewCell"
+                    }
+                  }
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "cells": {
+                        "properties": {
+                          "status.error": {
+                            "properties": {
+                              "state": {
+                                "enum": [
+                                  "derived",
+                                  "estimated"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "status.error": {
+                            "type": "string",
+                            "pattern": "^(0|[1-9][0-9]*)$",
+                            "maxLength": 20,
+                            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "status.error": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "status.ok"
+                  ]
+                }
+              },
+              "required": [
+                "values"
+              ]
+            },
+            "then": {
+              "required": [
+                "cells"
+              ],
+              "properties": {
+                "cells": {
+                  "required": [
+                    "status.ok"
+                  ],
+                  "properties": {
+                    "status.ok": {
+                      "$ref": "#/components/schemas/exploration.StatusCountViewCell"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "cells": {
+                  "required": [
+                    "status.ok"
+                  ]
+                }
+              },
+              "required": [
+                "cells"
+              ]
+            },
+            "then": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "status.ok"
+                  ]
+                },
+                "cells": {
+                  "properties": {
+                    "status.ok": {
+                      "$ref": "#/components/schemas/exploration.StatusCountViewCell"
+                    }
+                  }
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "cells": {
+                        "properties": {
+                          "status.ok": {
+                            "properties": {
+                              "state": {
+                                "enum": [
+                                  "derived",
+                                  "estimated"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "status.ok": {
+                            "type": "string",
+                            "pattern": "^(0|[1-9][0-9]*)$",
+                            "maxLength": 20,
+                            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "status.ok": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "status.unset"
+                  ]
+                }
+              },
+              "required": [
+                "values"
+              ]
+            },
+            "then": {
+              "required": [
+                "cells"
+              ],
+              "properties": {
+                "cells": {
+                  "required": [
+                    "status.unset"
+                  ],
+                  "properties": {
+                    "status.unset": {
+                      "$ref": "#/components/schemas/exploration.StatusCountViewCell"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "cells": {
+                  "required": [
+                    "status.unset"
+                  ]
+                }
+              },
+              "required": [
+                "cells"
+              ]
+            },
+            "then": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "status.unset"
+                  ]
+                },
+                "cells": {
+                  "properties": {
+                    "status.unset": {
+                      "$ref": "#/components/schemas/exploration.StatusCountViewCell"
+                    }
+                  }
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "cells": {
+                        "properties": {
+                          "status.unset": {
+                            "properties": {
+                              "state": {
+                                "enum": [
+                                  "derived",
+                                  "estimated"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "status.unset": {
+                            "type": "string",
+                            "pattern": "^(0|[1-9][0-9]*)$",
+                            "maxLength": 20,
+                            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "status.unset": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "status.unknown"
+                  ]
+                }
+              },
+              "required": [
+                "values"
+              ]
+            },
+            "then": {
+              "required": [
+                "cells"
+              ],
+              "properties": {
+                "cells": {
+                  "required": [
+                    "status.unknown"
+                  ],
+                  "properties": {
+                    "status.unknown": {
+                      "$ref": "#/components/schemas/exploration.StatusCountViewCell"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "cells": {
+                  "required": [
+                    "status.unknown"
+                  ]
+                }
+              },
+              "required": [
+                "cells"
+              ]
+            },
+            "then": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "status.unknown"
+                  ]
+                },
+                "cells": {
+                  "properties": {
+                    "status.unknown": {
+                      "$ref": "#/components/schemas/exploration.StatusCountViewCell"
+                    }
+                  }
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "cells": {
+                        "properties": {
+                          "status.unknown": {
+                            "properties": {
+                              "state": {
+                                "enum": [
+                                  "derived",
+                                  "estimated"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "status.unknown": {
+                            "type": "string",
+                            "pattern": "^(0|[1-9][0-9]*)$",
+                            "maxLength": 20,
+                            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "status.unknown": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "status.error_fraction"
+                  ]
+                }
+              },
+              "required": [
+                "values"
+              ]
+            },
+            "then": {
+              "required": [
+                "cells"
+              ],
+              "properties": {
+                "cells": {
+                  "required": [
+                    "status.error_fraction"
+                  ],
+                  "properties": {
+                    "status.error_fraction": {
+                      "$ref": "#/components/schemas/exploration.FractionViewCell"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "cells": {
+                  "required": [
+                    "status.error_fraction"
+                  ]
+                }
+              },
+              "required": [
+                "cells"
+              ]
+            },
+            "then": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "status.error_fraction"
+                  ]
+                },
+                "cells": {
+                  "properties": {
+                    "status.error_fraction": {
+                      "$ref": "#/components/schemas/exploration.FractionViewCell"
+                    }
+                  }
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "cells": {
+                        "properties": {
+                          "status.error_fraction": {
+                            "properties": {
+                              "state": {
+                                "enum": [
+                                  "derived",
+                                  "estimated"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "status.error_fraction": {
+                            "type": "string",
+                            "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                            "maxLength": 1024,
+                            "description": "Exact Error/count subset fraction in [0,1], not a percentage or ratio of averages. Runtime checks named operands. A zero denominator is unavailable, never a healthy zero."
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "status.error_fraction": {
                             "type": "null"
                           }
                         }
@@ -37103,6 +38741,187 @@
             "const": "cancellation-requested"
           }
         }
+      },
+      "exploration.SupportedViewCell": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ViewCell"
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "unknown"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "not": {
+                "required": [
+                  "support"
+                ]
+              }
+            },
+            "else": {
+              "required": [
+                "support"
+              ],
+              "properties": {
+                "support": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "enum": [
+                    "derived",
+                    "estimated"
+                  ]
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "properties": {
+                "support": {
+                  "properties": {
+                    "valid": {
+                      "type": "string",
+                      "pattern": "^[1-9][0-9]*$",
+                      "maxLength": 20,
+                      "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "no_data"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "properties": {
+                "support": {
+                  "properties": {
+                    "total": {
+                      "const": "0"
+                    },
+                    "valid": {
+                      "const": "0"
+                    },
+                    "missing": {
+                      "const": "0"
+                    },
+                    "empty": {
+                      "const": "0"
+                    },
+                    "invalid": {
+                      "const": "0"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "no_valid_values"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "properties": {
+                "support": {
+                  "properties": {
+                    "valid": {
+                      "const": "0"
+                    },
+                    "total": {
+                      "type": "string",
+                      "pattern": "^[1-9][0-9]*$",
+                      "maxLength": 20,
+                      "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "description": "Numeric/duration availability retains its exact supporting-record validity partition."
+      },
+      "exploration.StatusCountViewCell": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ViewCell"
+          },
+          {
+            "not": {
+              "required": [
+                "support"
+              ]
+            }
+          },
+          {
+            "properties": {
+              "state": {
+                "enum": [
+                  "derived",
+                  "unknown"
+                ]
+              }
+            }
+          }
+        ],
+        "description": "Exact captured span-status count, including known zero, or an explicitly unknown interval. No numeric-validity support partition is fabricated."
+      },
+      "exploration.FractionViewCell": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ViewCell"
+          },
+          {
+            "not": {
+              "required": [
+                "support"
+              ]
+            }
+          },
+          {
+            "properties": {
+              "state": {
+                "enum": [
+                  "derived",
+                  "no_data",
+                  "unknown"
+                ]
+              }
+            }
+          }
+        ],
+        "description": "Exact operand-bound subset fraction, unavailable for an empty denominator, or unknown. Its named count operands replace numeric-validity support."
       },
       "exploration.ViewValues": {
         "type": "object",

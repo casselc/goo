@@ -1,5 +1,10 @@
 # Population summary and comparison views — 264
 
+268 extends summaries with [recorded status counts/fractions](STATUS_FRACTIONS.md).
+Status comparisons deliberately retain their independent percentage-point
+presenter and do not emit this canonical comparison envelope. The original
+numeric/duration comparison contract below remains unchanged.
+
 Whole-population numeric/duration summaries now use the same exact typed measures
 as grouped/interval views. Comparisons keep two independent summary snapshots and
 Go-supplied exact signed changes. This is bounded native adoption; the

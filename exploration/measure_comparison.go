@@ -54,6 +54,9 @@ func compareMeasures(a, b *DurationSummary, x, y *SpanStatusSummary) *MeasureCom
 	return r
 }
 func (c Cohort) validateMeasures() error {
+	if c.Question.SpanStatus && c.SpanStatus == nil {
+		return fmt.Errorf("captured span status required for the requested profile")
+	}
 	if e := validateNumericCohort(c); e != nil {
 		return e
 	}

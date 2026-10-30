@@ -1408,3 +1408,17 @@ when hard `requiresComplete` is false. Category strings are JSON-quoted, keeping
 missing, present-empty and literal state labels distinct without changing filters.
 Application controls reuse one controller and the existing Find input; no passive
 element acquires query ownership. Display preferences are not a new saved view AST.
+
+## Status counts and fractions268
+
+The same chart/table and summary elements consume declared `span-status` counts
+and `ratio`/`fraction` fields with same-row numerator/denominator references.
+Fractions use a fixed 0–100% bar scale and common exact percent formatting;
+dimensionless numeric measures keep their own formatting. Four status classes
+partition each known captured count without borrowing numeric parse support.
+Empty denominators render unavailable, unknown operands remain unknown, and
+exact disclosures retain counts and Unset/Unknown qualifications. See
+[the data contract and boundaries](STATUS_FRACTIONS.md). The passive comparison
+component refuses these new families until signed-difference semantics are
+declared; application status comparisons retain the existing percentage-point
+presenter. No component acquires reads, execution state or navigation.

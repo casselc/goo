@@ -46,6 +46,34 @@ that skip without actual journey input. Those skips are appropriate there; they
 are not a substitute for a passing required suite. Root Go/display/API gates stay
 independent. XTDB and browser campaigns are separate opt-ins.
 
+### Exact status fractions — 268
+
+```sh
+go test -C verification -run '^TestHegelStatusFraction' -count=1 -v .
+./node_modules/.bin/playwright test journeys/268-status-fractions.spec.js
+GOO_STATUS_FRACTION_LEDGER="$PWD/artifacts/scoped-268/model-trace.json" go test -C verification -run '^TestQuintStatusFractionsObservedBrowserLedger$' -count=1 -v .
+```
+
+The 100 generated cases use actual Go source DTOs for grouped/time/summary status
+counts and exact fractions, including uint64 extremes, all four classes, empty
+denominators, generic ratio fields and held/projection operands. A held Go DTO
+derivative tests unknown intervals without claiming an observed source state.
+Malformed class partitions, fraction references, unsafe numeric literals and
+incompatible cells must fail. Unit `1` alone does not make a value a percentage.
+
+The real 103-span journey checks independent 1/100 frontend operands and fixed 1%
+geometry after Find and after an explicit frontend-only Run; the query total
+changes while this row's denominator does not. It verifies exporter Unset behavior,
+known-empty timeline fractions, mixed numeric/duration support, retained baseline
+percentage-point comparison, status-only Saved summary and read-only staging.
+The small observed model rejects seven faulty traces and an unfinished prefix;
+it is a projected UI/data-effect check, not private authority or source proof.
+Use `GOO_STATUS_FRACTION_BOMBADIL=1` for the optional 35-second real UI campaign;
+it passed with 206 snapshots across all 11 phases and three explicit Explore
+requests, ending at the unchanged 1/100 row fraction.
+See the [storyboard](../journeys/268-status-fractions-storyboard.md); keep compact
+summaries/model traces and actual documentation frames, not raw successful runs.
+
 ### Ordinary Distribution shares — 267
 
 ```sh

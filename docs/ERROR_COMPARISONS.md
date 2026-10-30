@@ -34,8 +34,10 @@ transaction or establish completeness.
 ## Comparison workflow
 
 1. Apply an explicit span question with duration summary, span status/errors and
-   one breakdown. Select **Recorded error percentage** in Distribution to rank
-   the complete groups. Search only hides rows; it preserves the captured scale.
+   one breakdown. Select **Recorded error fraction · %** in Distribution.
+   Ordinary breakdowns use the [shared typed status view](STATUS_FRACTIONS.md)
+   with a fixed 0–100% scale. Find only hides supplied rows; it preserves the
+   captured operands. Group order controls local ranking.
 2. **Pin as baseline** retains a browser-held population while filters change
    within its fixed window. **Compare previous window** reads an adjacent earlier
    window of the same width with the current selectors, grouping and measures.
@@ -66,6 +68,9 @@ Missing groups are absent populations: their measures and differences are
 unavailable, never substituted with zero. Old count-only captures remain count
 comparisons. No-data or source disagreement suppress normalized differences.
 Comparisons are descriptive leads, with no causal or statistical significance claim.
+Status comparisons retain this percentage-point presenter/API;268 does not emit
+the canonical `ViewComparison` envelope for them. A signed difference is distinct
+from a bounded fraction level.
 
 ## Persistence and compatibility
 

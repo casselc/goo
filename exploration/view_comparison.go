@@ -54,7 +54,7 @@ func summaryViewDataset(r *Result, exhaustiveSummary bool) *ViewDataset {
 	d.Fields = []ViewField{{Key: "count", Label: "Captured records", Type: "number", Unit: "records"}}
 	d.Fields = append(d.Fields, viewMeasureFields(r.Question)...)
 	values := ViewValues{"count": viewText(r.Count)}
-	cells, ok := viewMeasureCells(r.Question, r.Count, r.Numeric, r.Duration, false, values)
+	cells, ok := viewMeasureCells(r.Question, r.Count, r.Numeric, r.Duration, r.SpanStatus, false, values)
 	if !ok {
 		return nil
 	}
@@ -102,7 +102,7 @@ func heldSummaryView(c Cohort) *ViewDataset {
 		return nil
 	}
 	h := sha256.Sum256(raw)
-	r := &Result{Question: canonical.Question, Basis: hex.EncodeToString(h[:]), CapturedAt: canonical.CapturedAt, Count: canonical.Count, State: canonical.State, Numeric: canonical.Numeric, Duration: canonical.Duration}
+	r := &Result{Question: canonical.Question, Basis: hex.EncodeToString(h[:]), CapturedAt: canonical.CapturedAt, Count: canonical.Count, State: canonical.State, Numeric: canonical.Numeric, Duration: canonical.Duration, SpanStatus: canonical.SpanStatus}
 	d := summaryViewDataset(r, false)
 	if d == nil {
 		return nil
@@ -117,6 +117,12 @@ func heldSummaryView(c Cohort) *ViewDataset {
 }
 
 func cohortViewComparison(request ComparisonRequest) *ViewComparison {
+	// Status comparison retains the existing percentage-point presenter/API.
+	// A signed difference of fractions is not itself a bounded fraction, so do
+	// not label it with the current snapshot's ratio operation metadata.
+	if request.Baseline.Question.SpanStatus || request.Selection.Question.SpanStatus {
+		return nil
+	}
 	a, b := heldSummaryView(request.Baseline), heldSummaryView(request.Selection)
 	if a == nil || b == nil {
 		return nil

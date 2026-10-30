@@ -1,5 +1,16 @@
 # User journeys and storyboards
 
+[Journey268](../../journeys/268-status-fractions-storyboard.md) covers exact
+recorded-error fractions, fixed percentage scales, empty intervals, current
+staging, retained percentage-point comparisons and status-only Saved summaries.
+Four frames come from real OTLP data; generated fixtures separately cover unknown
+classes/intervals and invalid contracts.
+
+[Journey267](../../journeys/267-distribution-shares-storyboard.md) covers ordinary
+Distribution consolidation and verified count shares through Find, sorting,
+baseline comparison and explicit child Run. These whole-population shares differ
+from268's row-local fractions.
+
 [Journey 247](../../journeys/247-environment-adoption-storyboard.md) covers readonly
 inspection of ordinary SDK logs/spans with explicit environment presence semantics.
 
@@ -26,7 +37,7 @@ geometry and explicit read ownership.
 
 This index preserves executable storyboards and their historical acceptance
 records. Current product entry is Explore's Activity stream, with explicit staged
-analysis and preservation; use the [roadmap](../ROADMAP_2026_10_29.md) for current
+analysis and preservation; use the [roadmap](../ROADMAP_2026_10_30.md) for current
 status and [README](../../README.md) for startup. A dated journey is not a request
 to reimplement its feature. Synthetic component conformance fixtures remain
 separate from real OTLP/application stories, as labeled below. Screenshots are

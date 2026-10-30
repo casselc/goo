@@ -1,5 +1,5 @@
 /* Passive population summaries. Go owns aggregates, comparison changes and their basis. */
-import {validateSnapshot,measureValue} from './view-model.mjs';
+import {validateSnapshot,measureValue,fractionFacts} from './view-model.mjs';
 import {validateComparison} from './view-comparison.mjs';
 import {signedScale} from './comparison-visual.mjs';
 import {formatCell,exactText} from './view-values.mjs';
@@ -60,29 +60,29 @@ function provenance(snapshot,label){
   root.append(details);return root;
 }
 
-function valueCell(field,row,{delta}={}){
+function valueCell(field,row,{delta,snapshot}={}){
   const cell=delta?undefined:row?.cells?.[field?.key],raw=delta?delta.value:row?.values?.[field?.key];
   const body=n('div',undefined,'measure-cell');body.dataset.state=delta?.state||cell?.state||'recorded';
   const text=delta&&delta.state!=='derived'?'Unavailable':field?formatCell(field,raw,cell):'Unavailable';
   body.append(n('span',text,'measure-value'));
   const details=n('details',undefined,'measure-exact'),status=delta?delta.state:cell?.state;
   details.append(n('summary',status?(cell?.support?`${status} · ${cell.support.valid}/${cell.support.total} valid`:status):'Exact value'));
-  details.append(n('p',delta?(delta.state==='derived'?exactText({...field,aggregation:undefined},raw):delta.reason||'Change is unavailable.'):field?exactText(field,raw,cell):'Measure not supplied.'));
+  details.append(n('p',delta?(delta.state==='derived'?exactText({...field,aggregation:undefined},raw):delta.reason||'Change is unavailable.'):field?exactText(field,raw,cell,snapshot?fractionFacts(snapshot,row,field.key):null):'Measure not supplied.'));
   if(delta?.state==='derived')details.append(n('p','Selection − baseline · exact supplied change'));
   body.append(details);return body;
 }
 
 function measureList(snapshot,fields){
   const dl=n('dl',undefined,'measure-stats'),row=snapshot.rows[0];
-  for(const field of fields){const item=n('div'),dd=n('dd');item.dataset.field=field.key;dd.append(valueCell(field,row));item.append(n('dt',field.label),dd);dl.append(item)}
+  for(const field of fields){const item=n('div'),dd=n('dd');item.dataset.field=field.key;dd.append(valueCell(field,row,{snapshot}));item.append(n('dt',field.label),dd);dl.append(item)}
   return dl;
 }
 
 function summaryBody(snapshot,display){
   const root=n('div',undefined,'measure-summary'),fields=display.fields.map(key=>snapshot.fields.find(field=>field.key===key));
-  const groups=[['Captured records',fields.filter(field=>!field.aggregation)],['Numeric values',fields.filter(field=>field.aggregation?.family==='numeric')],['Duration',fields.filter(field=>field.aggregation?.family==='duration')]];
+  const groups=[['Captured records',fields.filter(field=>!field.aggregation)],['Numeric values',fields.filter(field=>field.aggregation?.family==='numeric')],['Duration',fields.filter(field=>field.aggregation?.family==='duration')],['Span status',fields.filter(field=>field.aggregation?.family==='span-status'||field.aggregation?.family==='ratio'&&snapshot.fields.find(ref=>ref.key===field.aggregation.numerator)?.aggregation?.family==='span-status')],['Fractions',fields.filter(field=>field.aggregation?.family==='ratio'&&snapshot.fields.find(ref=>ref.key===field.aggregation.numerator)?.aggregation?.family!=='span-status')]];
   for(const [title,items] of groups){if(!items.length)continue;const section=n('section',undefined,'measure-group');section.append(n('h4',title));
-    const primary=display.compact&&!display.configured?items.filter(field=>!field.aggregation||['mean','quantile'].includes(field.aggregation.kind)):items;
+    const primary=display.compact&&!display.configured&&!['Span status','Fractions'].includes(title)?items.filter(field=>!field.aggregation||['mean','quantile'].includes(field.aggregation.kind)):items;
     const more=items.filter(field=>!primary.includes(field));if(primary.length)section.append(measureList(snapshot,primary));
     if(more.length){const details=n('details',undefined,'measure-more');details.append(n('summary','More measures · '+more.length),measureList(snapshot,more));section.append(details)}
     root.append(section);

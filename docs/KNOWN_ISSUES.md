@@ -1,10 +1,17 @@
 # Known issues and gaps
 
+268 adds [recorded span status counts/fractions](STATUS_FRACTIONS.md) to canonical
+ordinary breakdown, interval and summary views. Empty denominators remain
+unavailable; Unset and Unknown are retained and do not establish success. Status
+comparisons keep the existing percentage-point presenter. Dedicated error triage,
+histograms, grouped/native time series and population-workspace paths remain
+explicit specializations; renderer/editor expansion remains gated by adoption.
+
 267 consolidates [ordinary single-field Distribution](ORDINARY_BREAKDOWNS.md)
 on canonical snapshots and scoped actions, with verified same-group-read shares.
 Records no longer repeats those charts. Local Find/order/kind/scale are display
 preferences, not a newly persisted authored-view AST. Special pattern, histogram,
-status/error-rate, multidimensional/error-triage, population-workspace and native
+multidimensional/error-triage, population-workspace and native
 paths retain explicit existing owners until their semantics migrate. Imported or
 projected data cannot claim verified population shares; hard complete-only views
 refuse fallback data. No Plotly adapter or view editor is added by this cut.

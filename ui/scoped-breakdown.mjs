@@ -1,8 +1,8 @@
 /* Application adapter: supplied data and local display/selection; host owns effects. */
 import './scope-view.mjs';
-import {eligibleKinds,validateSnapshot,groupIntent,intervalIntent,displayRows} from './view-model.mjs';
+import {eligibleKinds,validateSnapshot,groupIntent,intervalIntent,displayRows,fractionFacts} from './view-model.mjs';
 import {node} from './components.mjs';
-import {formatCell,supportText,exactText,categoryText} from './view-values.mjs';
+import {formatCell,supportText,exactText,categoryText,isFraction,fractionContextText} from './view-values.mjs';
 const preferences=new WeakMap();
 const utc=value=>new Date(Number(value)).toISOString();
 
@@ -20,7 +20,7 @@ export function mount(target,snapshot,{onScope,onWindow,onSelect,onInspectTrace,
  const preference={...preferences.get(target),...initialPresentation},preferred=temporal?'time-bar':multi?'table':'bar';let query=preference.query||'';
  const measures=snapshot.fields.filter(field=>field.key==='count'||field.aggregation);
  measure.setAttribute('aria-label',temporal?'Timeline measure':'Breakdown measure');
- for(const field of measures){const option=node('option',field.label+(field.unit&&field.aggregation?.family!=='duration'?' · '+field.unit:''));option.value=field.key;measure.append(option)}
+ for(const field of measures){const option=node('option',field.label+(isFraction(field)?' · %':field.unit&&field.aggregation?.family!=='duration'?' · '+field.unit:''));option.value=field.key;measure.append(option)}
  const chooseMeasure=value=>{if(!measures.some(field=>field.key===value)&&!Array.from(measure.options).some(option=>option.value===value)){const option=node('option','Unavailable: '+value);option.value=value;option.disabled=true;measure.append(option)}measure.value=value;measureLabel.hidden=measure.options.length<2||multi};
  chooseMeasure(preference.value||'count');measureLabel.append(measure);measureLabel.hidden=measure.options.length<2||multi;
  pick.value=choices.includes(preference?.kind)?preference.kind:choices.includes(preferred)?preferred:'table';label.append(pick);
@@ -43,7 +43,8 @@ export function mount(target,snapshot,{onScope,onWindow,onSelect,onInspectTrace,
   if(!selected){status.textContent=actionsPaused&&hasActions?pauseNotice:'';return}
   const field=snapshot.fields.find(field=>field.key===measure.value),cell=selected.cells?.[measure.value];
   const location=temporal?`${utc(selected.values.fromMs)} → ${utc(selected.values.toMs)}`:(dimensions.length?dimensions:['category']).map(key=>categoryText(selected.values[key])).join(' / ');
-  status.textContent=`${location} · ${field?.aggregation?formatCell(field,selected.values[field.key],cell):selected.values.count+' captured records'}${cell?' · '+supportText(cell):temporal&&selected.state==='no_data'?' · no captured data; health unknown':''}${actionsPaused&&hasActions?' · '+pauseNotice:''}`;
+  const context=fractionContextText(fractionFacts(snapshot,selected,measure.value))||supportText(cell);
+  status.textContent=`${location} · ${field?.aggregation?formatCell(field,selected.values[field.key],cell):selected.values.count+' captured records'}${context?' · '+context:temporal&&selected.state==='no_data'?' · no captured data; health unknown':''}${actionsPaused&&hasActions?' · '+pauseNotice:''}`;
   status.title=field?exactText(field,selected.values[field.key],cell):'';
  };
  chart.snapshot=snapshot;display();pick.addEventListener('change',display);complete.addEventListener('change',display);scale.addEventListener('change',display);order.addEventListener('change',display);measure.addEventListener('change',()=>{display();selectionSummary()});

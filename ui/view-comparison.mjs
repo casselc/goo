@@ -26,6 +26,7 @@ export function validateComparison(comparison){
  for(const key of ['scope','basis','capturedAt','quality'])if(own(comparison,key))reasons.push('Comparison provenance belongs to each independent snapshot');
  for(const role of ['baseline','selection']){const result=validateSnapshot(comparison[role]);if(!result.ok)reasons.push(...result.reasons.map(reason=>role+': '+reason));if(comparison[role]?.shape!=='summary')reasons.push(role+': comparison requires a population summary')}
  if(reasons.length)return {ok:false,reasons};
+ if([comparison.baseline,comparison.selection].some(snapshot=>snapshot.fields.some(field=>['span-status','ratio'].includes(field.aggregation?.family))))return {ok:false,reasons:['This comparison view does not support status-count or fraction measures.']};
  const a=comparison.baseline,b=comparison.selection,ar=a.rows[0],br=b.rows[0],fields=new Map([...a.fields,...b.fields].map(field=>[field.key,field]));
  if(!record(comparison.changes))return {ok:false,reasons:['Comparison changes must cover the declared field union']};
  const changeKeys=Object.keys(comparison.changes);

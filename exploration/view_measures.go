@@ -5,10 +5,12 @@ import "math/big"
 // ViewAggregation describes the exact operation behind a supplied measure. It
 // is not a client-side reducer; quantiles cannot be combined by averaging.
 type ViewAggregation struct {
-	Family   string `json:"family"`
-	Kind     string `json:"kind"`
-	Method   string `json:"method"`
-	Quantile string `json:"quantile,omitempty"`
+	Family      string `json:"family"`
+	Kind        string `json:"kind"`
+	Method      string `json:"method"`
+	Quantile    string `json:"quantile,omitempty"`
+	Numerator   string `json:"numerator,omitempty"`
+	Denominator string `json:"denominator,omitempty"`
 }
 type ViewCell struct {
 	State   string       `json:"state"`
@@ -41,6 +43,12 @@ func viewMeasureFields(q Query) []ViewField {
 			add("duration", p.key, p.key+" duration", "quantile", "quantilesExactHigh", "ns", p.value)
 		}
 	}
+	if q.SpanStatus {
+		for _, status := range []struct{ key, label string }{{"error", "Recorded errors"}, {"ok", "Explicit OK"}, {"unset", "Unset status"}, {"unknown", "Unknown status"}} {
+			fields = append(fields, ViewField{Key: "status." + status.key, Label: status.label, Type: "number", Unit: "records", Nullable: true, Aggregation: &ViewAggregation{Family: "span-status", Kind: "count", Method: "exact"}})
+		}
+		fields = append(fields, ViewField{Key: "status.error_fraction", Label: "Recorded error fraction", Type: "rational", Unit: "1", Nullable: true, Aggregation: &ViewAggregation{Family: "ratio", Kind: "fraction", Method: "exact-rational", Numerator: "status.error", Denominator: "count"}})
+	}
 	return fields
 }
 func viewRational(coefficient string, denominator *big.Int) *string {
@@ -51,14 +59,14 @@ func viewRational(coefficient string, denominator *big.Int) *string {
 // Summaries are validated against their binding and row count before converting
 // coefficients into exact human units. Unavailable sums stay null rather than
 // inheriting the arithmetic identity zero from an empty source aggregate.
-func viewMeasureCells(q Query, count string, numeric *NumericSummary, duration *DurationSummary, unknown bool, values ViewValues) (map[string]ViewCell, bool) {
+func viewMeasureCells(q Query, count string, numeric *NumericSummary, duration *DurationSummary, status *SpanStatusSummary, unknown bool, values ViewValues) (map[string]ViewCell, bool) {
 	fields := viewMeasureFields(q)
 	if len(fields) == 0 {
-		return nil, numeric == nil && duration == nil
+		return nil, numeric == nil && duration == nil && status == nil
 	}
 	cells := map[string]ViewCell{}
 	if unknown {
-		if count != "" || numeric != nil || duration != nil {
+		if count != "" || numeric != nil || duration != nil || status != nil {
 			return nil, false
 		}
 		for _, f := range fields {
@@ -75,6 +83,13 @@ func viewMeasureCells(q Query, count string, numeric *NumericSummary, duration *
 			return nil, false
 		}
 	} else if duration != nil {
+		return nil, false
+	}
+	if q.SpanStatus {
+		if status == nil || status.Count != count || status.Validate() != nil {
+			return nil, false
+		}
+	} else if status != nil {
 		return nil, false
 	}
 	if numeric != nil {
@@ -115,6 +130,19 @@ func viewMeasureCells(q Query, count string, numeric *NumericSummary, duration *
 				}
 				values[key] = viewRational(value, denominator)
 			}
+		}
+	}
+	if status != nil {
+		for key, value := range map[string]string{"error": status.Error, "ok": status.OK, "unset": status.Unset, "unknown": status.Unknown} {
+			values["status."+key] = viewText(value)
+			cells["status."+key] = ViewCell{State: "derived"}
+		}
+		values["status.error_fraction"] = nil
+		cells["status.error_fraction"] = ViewCell{State: "no_data"}
+		if count != "0" {
+			denominator, _ := new(big.Int).SetString(count, 10)
+			values["status.error_fraction"] = viewRational(status.Error, denominator)
+			cells["status.error_fraction"] = ViewCell{State: "derived"}
 		}
 	}
 	return cells, true

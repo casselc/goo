@@ -1,5 +1,65 @@
 # Validation record
 
+## Recorded status counts and exact fractions — 268
+
+Ordinary fixed/Saved status breakdowns, intervals and population summaries now
+use the common immutable dataset and passive components. Four exact status
+classes partition each captured count; `status.error_fraction` references the
+same row's Error/count operands. Empty denominators are null/no-data, unknown
+operands remain unknown, and Unset/Unknown never imply success. Fraction bars,
+intervals and numeric lines use fixed 0–100% axes. Local Find/order/measure/kind
+changes do not read or change denominators. The shared summary replaces the
+duplicate status card, including status-only questions.
+
+Status comparisons keep independent denominators and percentage-point changes;
+canonical status `ViewComparison` is deliberately withheld. The older comparison
+journey exposed an async navigation override: the new ordinary default hid
+Records after **Inspect current**. A per-run Records intent now applies only
+after successful Session publication; stale reads cannot change tabs. Ordinary
+Run/H1 staging retains the Distribution default. Screenshot review also caught
+low-contrast labels above tiny timeline fills; compact contrasting labels fix it.
+See [contract/diagram](docs/STATUS_FRACTIONS.md) and
+[executable storyboard](journeys/268-status-fractions-storyboard.md).
+
+Validation passes:
+
+- Full Go suite and all 742 frontend tests, no frontend skips. Seven focused Go
+  status tests cover exact accounting, zero/unknown, requested-profile refusal,
+  mixed numeric/duration data, existing PP comparisons and no extra reads.
+- Generated Go/OpenAPI schemas pass: 563 reflected types, 585 OpenAPI schemas,
+  96 operations, 429 response fixtures, 159 admitted requests and 28 mux refusals.
+  Six actual Go-produced group/time/summary DTOs, including empty/unknown cases,
+  validate cross-language; malformed references, metadata and support are rejected.
+- Chromium scoped/summary/Distribution/status/action conformance passes. Raw SSR
+  and detached held inputs retain their limits; exact operands/classes, generic
+  dimensionless measures, fixed bar/time/line axes, keyboard/touch disclosures,
+  mobile layout, complete-only gates and final label contrast are checked.
+- Hegel runs 100 generated cases over actual Go DTOs and the JS validators.
+  The observed eight-step browser Quint trace passes; seven faulty traces and
+  an unfinished prefix fail. The unknown-interval fixture is explicitly a held
+  DTO derivative, not a claimed observed source state.
+- The real 103-span OTLP → ClickHouse → isolated Go journey passes: frontend
+  1/100 remains 1% after Find and explicit child Run, two empty timeline bins
+  retain null fractions, all classes remain visible, mixed measures coexist,
+  baseline comparison retains −0.94 pp, and status-only Saved data is read-only.
+  Exporter observation is Error 2, OK 99, Unset 2, Unknown 0; missing OTLP status
+  becomes Unset. Four final-CSS documentation frames are regenerated.
+- The frozen 35-second status Bombadil campaign passes with 206 snapshots,
+  11 phases and three explicit Explore reads. The older deployed status/latency
+  comparison, Saved, trace and linked-log journey passes, including its
+  30-second Saved-only Bombadil campaign (244 trace records, six phases).
+  The ordinary267 share/baseline journey also passes after the navigation fix.
+
+Compose configuration and CA-backed build pass. The lab runs
+`sha256:503ea0fc79127ba5bd90ecccfed664eba9aaa67be8fd27ba13ae4f8b89492226`.
+Root returns HTTP 200; all ten changed UI assets and the served OpenAPI match
+the frozen workspace. Nine deployed API response checks pass. Only the Go service
+is recreated; telemetry and XTDB volumes remain untouched. Raw successful browser
+campaigns and disposable stores are removed; compact ledgers/model traces and
+documentation frames remain. These tests do not prove upstream completeness,
+transactional source reads or source authentication. Histogram and dedicated
+triage/native migrations remain next; no renderer/editor expansion is claimed.
+
 ## One ordinary Distribution surface and verified shares — 267
 
 Ordinary canonical single-field fixed/Saved breakdowns now share one Distribution

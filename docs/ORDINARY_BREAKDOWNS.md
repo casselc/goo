@@ -79,7 +79,8 @@ is a separate action that stages a new question; it is never the local Find inpu
 
 This cut adopts the ordinary canonical single-field fixed/Saved breakdown path.
 Saved results retain read-only source/custody semantics; baseline capture retains
-the original question. Existing special pattern, histogram, status/error-rate,
+the original question. [268](STATUS_FRACTIONS.md) adds ordinary status counts and
+recorded-error fractions. Existing special pattern, histogram,
 multidimensional/error-triage and population-workspace presenters remain explicit
 where their typed semantics have not migrated. They are not quietly replaced by
 count-only charts. Trace IDs still identify matching captured spans; opening a

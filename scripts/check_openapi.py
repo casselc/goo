@@ -107,6 +107,7 @@ def check_view_dataset(spec):
 
     measure_snapshot = check_view_measures(spec, snapshot, time_series)
     check_view_summary_comparison(spec, measure_snapshot)
+    check_view_status(spec, snapshot, time_series)
 
     missing = object()
     cases = [
@@ -134,6 +135,94 @@ def check_view_dataset(spec):
         else:
             parent[path[-1]] = value
         assert not check_view.is_valid(mutant), f'Invalid supplied view dataset accepted: {path}'
+
+
+def check_view_status(spec, ranked, intervals):
+    """Status cells are exact count quantities and an operand-bound fraction,
+    not another numeric-validity support partition or a comparison delta."""
+    check_view = validator(spec, {'$ref': '#/components/schemas/exploration.ViewDataset'})
+    keys = ['status.error', 'status.ok', 'status.unset', 'status.unknown']
+    ratio = 'status.error_fraction'
+    fields = [{'key': key, 'label': key, 'type': 'number', 'unit': 'records', 'nullable': True,
+               'aggregation': {'family': 'span-status', 'kind': 'count', 'method': 'exact'}} for key in keys]
+    fields.append({'key': ratio, 'label': 'Recorded error fraction', 'type': 'rational', 'unit': '1', 'nullable': True,
+                   'aggregation': {'family': 'ratio', 'kind': 'fraction', 'method': 'exact-rational',
+                                   'numerator': 'status.error', 'denominator': 'count'}})
+    supplied = copy.deepcopy(ranked)
+    supplied['scope']['selector']['spanStatus'] = True
+    supplied['fields'].extend(fields)
+    supplied['rows'] = [supplied['rows'][0]]
+    row = supplied['rows'][0]
+    row['values'].update(count='4', **{key: '1' for key in keys}, **{ratio: '1/4'})
+    row['cells'] = {key: {'state': 'derived'} for key in keys + [ratio]}
+    check_view.validate(supplied)
+    summary = copy.deepcopy(supplied)
+    summary.update(shape='summary', id=summary['id'].split(':')[0]+':summary')
+    summary.pop('dimensions')
+    summary['fields'] = summary['fields'][1:]
+    summary['rows'][0]['key'] = 'population'
+    summary['rows'][0]['values'].pop('category')
+    summary['completeness']['aspects'] = ['summary']
+    check_view.validate(summary)
+    empty = copy.deepcopy(summary)
+    empty['rows'][0]['values'].update(count='0', **{key: '0' for key in keys}, **{ratio: None})
+    empty['rows'][0]['cells'][ratio] = {'state': 'no_data'}
+    check_view.validate(empty)
+    timed = copy.deepcopy(intervals)
+    timed['scope']['selector']['spanStatus'] = True
+    timed['fields'].extend(fields)
+    for item in timed['rows']:
+        count = item['values']['count']
+        item['values'].update({key: count if key == 'status.error' else '0' for key in keys})
+        item['values'][ratio] = None if count == '0' else '1'
+        item['cells'] = {key: {'state': 'derived'} for key in keys}
+        item['cells'][ratio] = {'state': 'no_data' if count == '0' else 'derived'}
+    check_view.validate(timed)
+    unknown = copy.deepcopy(timed)
+    unknown['quality']['extent'] = 'unknown'
+    unknown.pop('completeness')
+    item = unknown['rows'][0]
+    item['state'] = 'unknown'
+    item['values'].update(count=None, **{key: None for key in keys+[ratio]})
+    item['cells'] = {key: {'state': 'unknown'} for key in keys+[ratio]}
+    check_view.validate(unknown)
+    for change in [
+        lambda x: x['fields'][-1].update(unit='%'),
+        lambda x: x['fields'][-1]['aggregation'].update(numerator='status.ok'),
+        lambda x: x['fields'][-1]['aggregation'].update(denominator='numeric.mean'),
+        lambda x: x['scope']['selector'].pop('spanStatus'),
+        lambda x: x['rows'][0]['cells']['status.error'].update(support={'total':'4','valid':'4','missing':'0','empty':'0','invalid':'0'}),
+        lambda x: x['rows'][0]['cells'][ratio].update(support={'total':'4','valid':'4','missing':'0','empty':'0','invalid':'0'}),
+        lambda x: x['rows'][0]['values'].pop('status.unknown'),
+        lambda x: x['fields'].pop(-2),
+    ]:
+        mutant = copy.deepcopy(supplied)
+        change(mutant)
+        assert not check_view.is_valid(mutant), 'Invalid status quantity contract accepted'
+    zero_fraction = copy.deepcopy(empty)
+    zero_fraction['rows'][0]['values'][ratio] = '0'
+    zero_fraction['rows'][0]['cells'][ratio] = {'state':'derived'}
+    assert not check_view.is_valid(zero_fraction), 'Empty denominator became a healthy zero fraction'
+    unknown_zero = copy.deepcopy(unknown)
+    unknown_zero['rows'][0]['values']['status.error'] = '0'
+    assert not check_view.is_valid(unknown_zero), 'Unknown interval manufactured a status count'
+
+
+def check_status_observed(spec, path):
+    fixtures = json.loads(Path(path).read_text())
+    assert set(fixtures) == {'ranked', 'intervals', 'summary', 'empty-ranked', 'empty-summary', 'unknown-intervals'}, 'Expected all six Go status-view DTOs'
+    check_view = validator(spec, {'$ref': '#/components/schemas/exploration.ViewDataset'})
+    for name, snapshot in fixtures.items():
+        check_view.validate(snapshot)
+    for change in [
+        lambda x: x['fields'][-1].update(unit='%'),
+        lambda x: x['fields'][-1]['aggregation'].update(denominator='numeric.mean'),
+        lambda x: x['rows'][0]['cells']['status.error'].update(support={'total':'4','valid':'4','missing':'0','empty':'0','invalid':'0'}),
+    ]:
+        mutant = copy.deepcopy(fixtures['ranked'])
+        change(mutant)
+        assert not check_view.is_valid(mutant), 'Malformed actual-Go status DTO accepted'
+    print('Actual Go status views valid: six ranked/interval/summary/empty/unknown DTOs; metadata/support negative controls pass')
 
 
 def check_view_measures(spec, ranked, intervals):
@@ -775,6 +864,7 @@ def check_container_discovery_observed(spec, path):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--observations')
+    parser.add_argument('--status-view-observations')
     parser.add_argument('--stock-observations')
     parser.add_argument('--stock-domain-observations')
     parser.add_argument('--pool-signals-observations')
@@ -791,6 +881,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    if args.status_view_observations:
+        check_status_observed(spec, args.status_view_observations)
     if args.filesystem_utilization_observations:
         check_filesystem_observed(spec,args.filesystem_utilization_observations,True)
     if args.filesystem_observations:

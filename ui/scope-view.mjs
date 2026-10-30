@@ -1,6 +1,6 @@
 /* Public passive scoped displays. The host owns scope, requests and selection. */
-import {validateSnapshot, validateDisplay, selectionIntent, scopeIntent, measureValue, supportsSelection, capabilities,displayRows,populationShare} from './view-model.mjs';
-import {formatCell,supportText,exactText,categoryText} from './view-values.mjs';
+import {validateSnapshot, validateDisplay, selectionIntent, scopeIntent, measureValue, supportsSelection, capabilities,displayRows,populationShare,fractionFacts} from './view-model.mjs';
+import {formatCell,supportText,exactText,categoryText,isFraction,fractionContextText} from './view-values.mjs';
 import {asSnapshot,parseSnapshotJSON} from './snapshots.mjs';
 import './chart-frame.mjs';
 
@@ -39,14 +39,14 @@ function utc(value){
   return Number.isSafeInteger(time)&&Number.isFinite(new Date(time).getTime())?new Date(time).toISOString():exact(value);
 }
 
-function cellValue(field,value,knowledge){
-  const cell=n('td'),text=n('span',formatCell(field,value,knowledge));cell.append(text);cell.title=exactText(field,value,knowledge);
+function cellValue(field,value,knowledge,facts){
+  const cell=n('td'),text=n('span',formatCell(field,value,knowledge));cell.append(text);cell.title=exactText(field,value,knowledge,facts);
   if(field.type==='timestamp'&&value!==null&&value!==undefined)cell.title=String(value)+' ms since Unix epoch';
   const needsExact=field.type==='timestamp'||field.type==='rational'||field.type==='number'&&value!==null&&value!==undefined&&(typeof value==='number'||/[./eE]/.test(String(value)));
   if(knowledge||needsExact){
     if(knowledge)cell.dataset.cellState=knowledge.state;
     const details=n('details',undefined,'scope-view-cell-support'),summary=n('summary',knowledge?knowledge.state+(knowledge.support?' · '+knowledge.support.valid+'/'+knowledge.support.total+' valid':''):'Exact value');
-    details.append(summary,n('p',exactText(field,value,knowledge),'scope-view-exact'));cell.append(details);
+    details.append(summary,n('p',exactText(field,value,knowledge,facts),'scope-view-exact'));cell.append(details);
   }
   return cell;
 }
@@ -57,14 +57,14 @@ function table(host,snapshot,display,rows=displayRows(snapshot,display)){
   table.append(n('caption',display.scale==='population'?'Supplied values · shares of '+snapshot.partition.total+' captured records':'Supplied values'));
   const mapped=[display.category,display.value].map(key=>snapshot.fields.find(field=>field.key===key));
   const fields=display.kind==='table'?snapshot.fields:mapped.every(Boolean)?mapped:snapshot.fields;
-  for(const field of fields){const th=n('th',field.label+(field.unit&&field.unit!=='ns'?' · '+field.unit:''));th.scope='col';row.append(th)}
+  for(const field of fields){const th=n('th',field.label+(isFraction(field)?' · 0–100%':field.unit&&field.unit!=='ns'?' · '+field.unit:''));th.scope='col';row.append(th)}
   if(display.scale==='population'){const th=n('th','Share');th.scope='col';th.title='Share of the full captured query population';row.append(th)}
   if(snapshot.shape==='time-series'){const th=n('th','Interval state');th.scope='col';row.append(th)}
   const selectable=supportsSelection(snapshot);
   if(selectable){const th=n('th','Selection');th.scope='col';row.append(th)}head.append(row);
   for(const entry of rows){
     const tr=n('tr');tr.dataset.key=entry.key;
-    for(const field of fields)tr.append(cellValue(field,entry.values[field.key],entry.cells?.[field.key]));
+    for(const field of fields)tr.append(cellValue(field,entry.values[field.key],entry.cells?.[field.key],fractionFacts(snapshot,entry,field.key)));
     if(display.scale==='population'){const share=populationShare(snapshot,entry.key),cell=n('td',share.ok?share.percent:'Unavailable');if(share.ok){cell.title=share.fraction+' captured records (exact)';cell.dataset.share=share.fraction}tr.append(cell)}
     if(snapshot.shape==='time-series')tr.append(n('td',entry.state==='no_data'?'No data · zero captured records':entry.state==='unknown'?'Unknown coverage':'Observed'));
     if(selectable){const firstField=fields.find(field=>field.key===display.category)||fields[0];
@@ -79,7 +79,7 @@ function timeBars(host,snapshot,display){
   const from=BigInt(snapshot.interval.fromMs),to=BigInt(snapshot.interval.toMs),span=to-from;
   const percent=value=>Number(value*100000000n/span)/1000000;
   const rows=[...snapshot.rows].sort((a,b)=>BigInt(a.values.fromMs)<BigInt(b.values.fromMs)?-1:1);
-  const values=rows.map(row=>measureValue(snapshot,row,valueKey)),max=Math.max(0,...values.map(value=>value.coordinate??0));
+  const values=rows.map(row=>measureValue(snapshot,row,valueKey)),max=isFraction(field)?1:Math.max(0,...values.map(value=>value.coordinate??0));
   const gaps=[];let cursor=from;
   const addGap=(start,end)=>{
     const gap=n('span',undefined,'scope-time-gap');gap.style.left=percent(start-from)+'%';gap.style.width=percent(end-start)+'%';
@@ -92,14 +92,14 @@ function timeBars(host,snapshot,display){
     const value=values[index],cell=row.cells?.[valueKey],state=valueKey==='count'?row.state:value.coordinate===null?'unknown':value.coordinate===0?'no_data':'observed',button=n('button',undefined,'scope-time-interval');button.type='button';button.dataset.key=row.key;button.dataset.state=state;button.dataset.cellState=value.state;
     button.style.left=percent(start-from)+'%';button.style.width=percent(end-start)+'%';
     const range=utc(row.values.fromMs)+' → '+utc(row.values.toMs),meaning=valueKey==='count'&&row.state==='unknown'?'Unknown coverage':formatCell(field,row.values[valueKey],cell);
-    button.title=range+' · '+meaning+' · '+exactText(field,row.values[valueKey],cell)+(value.reason?' · '+value.reason:'')+' · ['+row.values.fromMs+', '+row.values.toMs+') ms';button.setAttribute('aria-label','Select '+range+' · '+field.label+': '+meaning+(cell?' · '+supportText(cell):''));
+    button.title=range+' · '+meaning+' · '+exactText(field,row.values[valueKey],cell,fractionFacts(snapshot,row,valueKey))+(value.reason?' · '+value.reason:'')+' · ['+row.values.fromMs+', '+row.values.toMs+') ms';button.setAttribute('aria-label','Select '+range+' · '+field.label+': '+meaning+(isFraction(field)?' · '+fractionContextText(fractionFacts(snapshot,row,valueKey)):'')+(supportText(cell)?' · '+supportText(cell):''));
     const fill=n('span',undefined,'scope-time-fill');fill.setAttribute('aria-hidden','true');fill.style.height=(value.coordinate!==null&&max?value.coordinate/max*100:0)+'%';button.append(fill);
     if(state==='observed'){const count=n('span',formatCell(field,row.values[valueKey],cell),'scope-time-count');count.setAttribute('aria-hidden','true');button.append(count)}
     button.onclick=()=>emit(host,'goo-select',selectionIntent(snapshot,row.key));track.append(button);
   }
   if(cursor<to)addGap(cursor,to);
   const axis=n('figcaption',undefined,'scope-time-axis');axis.append(n('span',utc(snapshot.interval.fromMs)),n('span',utc(snapshot.interval.toMs)));
-  const legend=n('p',undefined,'scope-time-legend');legend.append(n('span',valueKey==='count'?'Captured records':field.label,'scope-time-observed-key'),n('span',valueKey==='count'?'No data · zero':'Known zero','scope-time-empty-key'),n('span',valueKey==='count'?'Unknown / unreported':'Unavailable / unreported','scope-time-unknown-key'));
+  const legend=n('p',undefined,'scope-time-legend');legend.append(n('span',valueKey==='count'?'Captured records':field.label+(isFraction(field)?' · 0–100%':''),'scope-time-observed-key'),n('span',valueKey==='count'?'No data · zero':'Known zero','scope-time-empty-key'),n('span',valueKey==='count'?'Unknown / unreported':'Unavailable / unreported','scope-time-unknown-key'));
   figure.append(measureLabel(field),track,axis,legend);
   if(gaps.length){const details=n('details',undefined,'scope-view-values');details.append(n('summary',gaps.length+' unreported interval'+(gaps.length===1?'':'s')));const list=n('ul');for(const [start,end] of gaps)list.append(n('li',utc(start.toString())+' → '+utc(end.toString())+' · Unknown, not zero'));details.append(list);figure.append(details)}
   return figure;
@@ -107,20 +107,20 @@ function timeBars(host,snapshot,display){
 
 function bars(host,snapshot,display,rows=displayRows(snapshot,display)){
   const list=n('div',undefined,'scope-view-bars'),field=snapshot.fields.find(item=>item.key===display.value),values=snapshot.rows.map(row=>measureValue(snapshot,row,display.value));
-  const max=Math.max(0,...values.map(value=>value.coordinate??0)),byKey=new Map(snapshot.rows.map((row,i)=>[row.key,values[i]]));list.append(measureLabel(field));
+  const max=isFraction(field)?1:Math.max(0,...values.map(value=>value.coordinate??0)),byKey=new Map(snapshot.rows.map((row,i)=>[row.key,values[i]]));list.append(measureLabel(field));
   if(display.scale==='population')list.append(n('small',snapshot.partition.total+' captured records · full query population','scope-view-coordinate-note'));
   for(const row of rows){
     const value=byKey.get(row.key),share=display.scale==='population'?populationShare(snapshot,row.key):null,cell=row.cells?.[display.value],button=n('button',undefined,'scope-view-bar');button.type='button';button.dataset.key=row.key;button.dataset.cellState=value.state;
     button.append(n('span',exact(row.values[display.category]),'scope-view-label'),n('span',formatCell(field,row.values[display.value],cell)+(share?.ok?' · '+share.percent:''),'scope-view-value'));
     if(value.coordinate!==null){const track=n('span',undefined,'scope-view-track'),fill=n('span',undefined,'scope-view-fill');track.setAttribute('aria-hidden','true');fill.style.width=(share?.ok?share.coordinate:max?value.coordinate/max*100:0)+'%';track.append(fill);button.append(track)}
-    button.title=exactText(field,row.values[display.value],cell)+(share?.ok?' · '+share.fraction+' captured records (exact share)':'')+(value.reason?' · '+value.reason:'');
-    button.setAttribute('aria-label','Select '+exact(row.values[display.category])+': '+formatCell(field,row.values[display.value],cell)+(share?.ok?' · '+share.percent+' of captured population':'')+(cell?' · '+supportText(cell):''));button.onclick=()=>emit(host,'goo-select',selectionIntent(snapshot,row.key));list.append(button);
+    button.title=exactText(field,row.values[display.value],cell,fractionFacts(snapshot,row,display.value))+(share?.ok?' · '+share.fraction+' captured records (exact share)':'')+(value.reason?' · '+value.reason:'');
+    button.setAttribute('aria-label','Select '+exact(row.values[display.category])+': '+formatCell(field,row.values[display.value],cell)+(share?.ok?' · '+share.percent+' of captured population':'')+(isFraction(field)?' · '+fractionContextText(fractionFacts(snapshot,row,display.value)):'')+(supportText(cell)?' · '+supportText(cell):''));button.onclick=()=>emit(host,'goo-select',selectionIntent(snapshot,row.key));list.append(button);
   }
   return list;
 }
 
 function measureLabel(field){
-  const label=n('p',field.label+(field.unit&&field.unit!=='ns'?' · '+field.unit:''),'scope-view-measure');
+  const label=n('p',field.label+(isFraction(field)?' · 0–100%':field.unit&&field.unit!=='ns'?' · '+field.unit:''),'scope-view-measure');
   label.title=field.aggregation?field.aggregation.method+(field.aggregation.quantile?' · q='+field.aggregation.quantile:''):field.unit||'';return label;
 }
 
@@ -129,15 +129,16 @@ function line(snapshot,display){
   // Numeric coordinates are disposable projections. Exact supplied values remain in the table.
   const points=snapshot.rows.map(row=>[Number(row.values[display.category]),measureValue(snapshot,row,display.value).coordinate]).sort((a,b)=>a[0]-b[0]);
   // Scale before subtracting so finite extreme coordinates cannot overflow their span.
-  const scaleX=Math.max(1,...points.map(point=>Math.abs(point[0]))),scaleY=Math.max(1,...points.map(point=>Math.abs(point[1])));
-  const xs=points.map(point=>point[0]/scaleX),ys=points.map(point=>point[1]/scaleY),minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(0,...ys),maxY=Math.max(0,...ys);
+  const valueField=snapshot.fields.find(field=>field.key===display.value),fractionAxis=isFraction(valueField);
+  const scaleX=Math.max(1,...points.map(point=>Math.abs(point[0]))),scaleY=fractionAxis?1:Math.max(1,...points.map(point=>Math.abs(point[1])));
+  const xs=points.map(point=>point[0]/scaleX),ys=points.map(point=>point[1]/scaleY),minX=Math.min(...xs),maxX=Math.max(...xs),minY=fractionAxis?0:Math.min(0,...ys),maxY=fractionAxis?1:Math.max(0,...ys);
   const project=([x,y])=>[24+(maxX===minX?.5:(x/scaleX-minX)/(maxX-minX))*592,156-(maxY===minY?.5:(y/scaleY-minY)/(maxY-minY))*132];
   svg.append(svgNode('path',{d:'M24 24 V156 H616',class:'scope-view-axis'}));
   // Unknown/estimated values may be points; a connecting line would invent continuity.
   if((snapshot.quality.value==='recorded'||snapshot.quality.value==='derived')&&!snapshot.rows.some(row=>measureValue(snapshot,row,display.value).state==='estimated'))svg.append(svgNode('polyline',{points:points.map(point=>project(point).join(',')).join(' '),class:'scope-view-path'}));
   for(const point of points){const [cx,cy]=project(point);svg.append(svgNode('circle',{cx,cy,r:3,class:'scope-view-point'}))}
   const x=snapshot.fields.find(field=>field.key===display.category),y=snapshot.fields.find(field=>field.key===display.value);
-  figure.append(svg,n('figcaption',`${x.label} → ${y.label}${y.unit&&y.unit!=='ns'?' · '+y.unit:''}`));return figure;
+  figure.append(svg,n('figcaption',`${x.label} → ${y.label}${fractionAxis?' · 0–100%':y.unit&&y.unit!=='ns'?' · '+y.unit:''}`));return figure;
 }
 
 class SuppliedElement extends (globalThis.HTMLElement||class {}) {

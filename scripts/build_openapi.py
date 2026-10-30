@@ -126,15 +126,25 @@ for family,kinds in [('numeric',['mean','sum','min','max']),('duration',['mean',
  for kind in kinds:
   quantile={'p50':'0.5','p95':'0.95','p99':'0.99'}.get(kind)
   measure_specs[family+'.'+kind]={'family':family,'kind':'quantile' if quantile else kind,'method':'quantilesExactHigh' if quantile else 'exact-rational' if kind=='mean' else 'exact',**({'quantile':quantile} if quantile else {})}
-measure_values={key:{**rational_value,'type':['string','null']} for key in measure_specs}
+for key in ('error','ok','unset','unknown'):
+ measure_specs['status.'+key]={'family':'span-status','kind':'count','method':'exact'}
+measure_specs['status.error_fraction']={'family':'ratio','kind':'fraction','method':'exact-rational','numerator':'status.error','denominator':'count'}
+measure_values={key:{**(exact_count if spec['family']=='span-status' else rational_value),'type':['string','null']} for key,spec in measure_specs.items()}
+measure_values['status.error_fraction']['pattern']='^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$'
+measure_values['status.error_fraction']['description']='Exact Error/count subset fraction in [0,1], not a percentage or ratio of averages. Runtime checks named operands. A zero denominator is unavailable, never a healthy zero.'
 for key in measure_values:
  if key.startswith('duration.'):
   measure_values[key]['pattern']='^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$' if key=='duration.mean' else '^(0|[1-9][0-9]*)$'
   if key!='duration.mean':measure_values[key]['maxLength']=20
 for name in ('ViewAggregation','ViewCell','ViewSupport'):schemas['exploration.'+name]['additionalProperties']=False
 aggregation=schemas['exploration.ViewAggregation'];agg_props=aggregation['properties']
-agg_props['family']['enum']=['numeric','duration'];agg_props['kind']['enum']=['mean','sum','min','max','quantile'];agg_props['method']['enum']=['exact-rational','exact','quantilesExactHigh'];agg_props['quantile']['enum']=['0.5','0.95','0.99']
-aggregation['oneOf']=[{'properties':{key:{'const':value} for key,value in spec.items()},**({'not':{'required':['quantile']}} if 'quantile' not in spec else {'required':['quantile']})} for spec in measure_specs.values()]
+agg_props['family']['enum']=['numeric','duration','span-status','ratio'];agg_props['kind']['enum']=['mean','sum','min','max','quantile','count','fraction'];agg_props['method']['enum']=['exact-rational','exact','quantilesExactHigh'];agg_props['quantile']['enum']=['0.5','0.95','0.99']
+agg_props['numerator']={'type':'string','const':'status.error'};agg_props['denominator']={'type':'string','const':'count'}
+aggregation['oneOf']=[]
+for spec in measure_specs.values():
+ optional=('quantile','numerator','denominator')
+ present=[key for key in optional if key in spec];absent=[key for key in optional if key not in spec]
+ aggregation['oneOf'].append({'properties':{key:{'const':value} for key,value in spec.items()},**({'required':present} if present else {}),**({'not':{'anyOf':[{'required':[key]} for key in absent]}} if absent else {})})
 # Different keys may share identical aggregation descriptions; de-duplicate the
 # candidates so oneOf expresses semantic alternatives rather than field names.
 aggregation['oneOf']=list({json.dumps(x,sort_keys=True):x for x in aggregation['oneOf']}.values())
@@ -142,12 +152,16 @@ support=schemas['exploration.ViewSupport']
 for key in ('total','valid','missing','empty','invalid'):support['properties'][key]=copy.deepcopy(exact_count)
 support['description']='Exact supporting-record partition. Runtime verifies total=valid+missing+empty+invalid and total equals the row record count.'
 cell=schemas['exploration.ViewCell'];cell['properties']['state']['enum']=['derived','estimated','no_data','no_valid_values','unknown']
-cell['allOf']=[
+supported_cell_rules=[
  {'if':{'properties':{'state':{'const':'unknown'}},'required':['state']},'then':{'not':{'required':['support']}},'else':{'required':['support'],'properties':{'support':{'type':'object'}}}},
  {'if':{'properties':{'state':{'enum':['derived','estimated']}},'required':['state']},'then':{'properties':{'support':{'properties':{'valid':{**exact_count,'pattern':'^[1-9][0-9]*$'}}}}}},
  {'if':{'properties':{'state':{'const':'no_data'}},'required':['state']},'then':{'properties':{'support':{'properties':{key:{'const':'0'} for key in ('total','valid','missing','empty','invalid')}}}}},
  {'if':{'properties':{'state':{'const':'no_valid_values'}},'required':['state']},'then':{'properties':{'support':{'properties':{'valid':{'const':'0'},'total':{**exact_count,'pattern':'^[1-9][0-9]*$'}}}}}}
 ]
+cell['allOf']=[{'if':{'properties':{'state':{'const':'unknown'}},'required':['state']},'then':{'not':{'required':['support']}}}]
+schemas['exploration.SupportedViewCell']={'allOf':[ref('exploration.ViewCell'),*supported_cell_rules],'description':'Numeric/duration availability retains its exact supporting-record validity partition.'}
+schemas['exploration.StatusCountViewCell']={'allOf':[ref('exploration.ViewCell'),{'not':{'required':['support']}},{'properties':{'state':{'enum':['derived','unknown']}}}],'description':'Exact captured span-status count, including known zero, or an explicitly unknown interval. No numeric-validity support partition is fabricated.'}
+schemas['exploration.FractionViewCell']={'allOf':[ref('exploration.ViewCell'),{'not':{'required':['support']}},{'properties':{'state':{'enum':['derived','no_data','unknown']}}}],'description':'Exact operand-bound subset fraction, unavailable for an empty denominator, or unknown. Its named count operands replace numeric-validity support.'}
 schemas['exploration.ViewValues']={'type':'object','additionalProperties':{'type':['string','null'],'maxLength':1024},'description':'Exact strings or explicit missing values. Dataset fields and shape constrain every cell; no vendor-specific opaque payload.'}
 view=schemas['exploration.ViewDataset'];view_props=view['properties']
 view_props['partition']=ref('exploration.ViewPartition')
@@ -156,14 +170,17 @@ view_props['version']['const']='goo.dataset/1';view_props['shape']['enum']=['ran
 view_props['id']['pattern']='^[a-f0-9]{64}:(groups|intervals|summary)$';view_props['revision']['pattern']='^[a-f0-9]{64}$';view_props['capturedAt']['format']='date-time'
 view_props['origin']['enum']=['source-read','browser-held']
 view_props['sourceBasis'].update(minLength=1,maxLength=128,description='Unverified caller-claimed source basis, separate from the content-hashed held revision. Not a signed receipt.')
-view_props['fields']={'type':'array','minItems':2,'maxItems':13,'items':ref('exploration.ViewField')}
+view_props['fields']={'type':'array','minItems':2,'maxItems':18,'items':ref('exploration.ViewField')}
 view_props['rows']={'type':'array','maxItems':1000,'items':ref('exploration.ViewRow')}
 view_props['dimensions']={'type':'array','minItems':1,'maxItems':2,'uniqueItems':True,'items':{'enum':['category','category1']}}
 view_scope=schemas['exploration.ViewScope']['properties']
 for name in ('id','generation'):view_scope[name]['pattern']='^[a-f0-9]{64}$'
 view_scope['signal']['enum']=['logs','spans'];view_scope['selector']={**ref('exploration.Query'),'description':'Exact applied checked question including environment policy, window, predicates and grouping.'}
 view_field=schemas['exploration.ViewField']['properties'];view_field['key']['enum']=['category','category1','count','fromMs','toMs']+list(measure_specs);view_field['type']['enum']=['string','number','timestamp','rational']
-schemas['exploration.ViewField']['allOf']=[{'if':{'properties':{'key':{'const':key}},'required':['key']},'then':{'required':['aggregation','unit','nullable'],'properties':{'nullable':{'const':True},'type':{'const':'rational'},'unit':{'const':'ns'} if spec['family']=='duration' else {'type':'string','minLength':1},'aggregation':{'type':'object','properties':{k:{'const':v} for k,v in spec.items()}}}}} for key,spec in measure_specs.items()]
+schemas['exploration.ViewField']['allOf']=[]
+for key,spec in measure_specs.items():
+ unit={'const':'ns'} if spec['family']=='duration' else {'const':'records'} if spec['family']=='span-status' else {'const':'1'} if spec['family']=='ratio' else {'type':'string','minLength':1}
+ schemas['exploration.ViewField']['allOf'].append({'if':{'properties':{'key':{'const':key}},'required':['key']},'then':{'required':['aggregation','unit','nullable'],'properties':{'nullable':{'const':True},'type':{'const':'number' if spec['family']=='span-status' else 'rational'},'unit':unit,'aggregation':{'type':'object','properties':{k:{'const':v} for k,v in spec.items()}}}}})
 schemas['exploration.ViewField']['allOf'].append({'if':{'properties':{'key':{'enum':['category','category1','count','fromMs','toMs']}},'required':['key']},'then':{'not':{'required':['aggregation']}}})
 view_quality=schemas['exploration.ViewQuality']['properties'];view_quality['extent']['enum']=['complete','unknown']
 for name,value in [('basis','captured-query'),('value','derived'),('sampling','unknown'),('freshness','fixed')]:view_quality[name]['const']=value
@@ -177,14 +194,16 @@ for name in ('fromMs','toMs'):interval_props[name]=copy.deepcopy(epoch_ms)
 interval_props['bucketMs']={'type':'string','enum':['1000','10000','60000','300000']}
 row=schemas['exploration.ViewRow'];row['properties']['state']['enum']=['observed','no_data','unknown']
 row['properties']['key'].update(minLength=1,maxLength=128,description='Stable snapshot row identity; never a source-record member reference.')
-row['properties']['cells']={'type':'object','maxProperties':10,'propertyNames':{'enum':list(measure_specs)},'additionalProperties':ref('exploration.ViewCell')}
+row['properties']['cells']={'type':'object','maxProperties':15,'propertyNames':{'enum':list(measure_specs)},'additionalProperties':ref('exploration.ViewCell')}
 row['allOf']=[]
-for key in measure_specs:
- row['allOf'].append({'if':{'properties':{'values':{'required':[key]}},'required':['values']},'then':{'required':['cells'],'properties':{'cells':{'required':[key]}}}})
+for key,spec in measure_specs.items():
+ cell_schema=ref('exploration.StatusCountViewCell' if spec['family']=='span-status' else 'exploration.FractionViewCell' if spec['family']=='ratio' else 'exploration.SupportedViewCell')
+ known=copy.deepcopy(measure_values[key]);known['type']='string'
+ row['allOf'].append({'if':{'properties':{'values':{'required':[key]}},'required':['values']},'then':{'required':['cells'],'properties':{'cells':{'required':[key],'properties':{key:cell_schema}}}}})
  row['allOf'].append({'if':{'properties':{'cells':{'required':[key]}},'required':['cells']},'then':{
-  'properties':{'values':{'required':[key]}},
+  'properties':{'values':{'required':[key]},'cells':{'properties':{key:cell_schema}}},
   'allOf':[{'if':{'properties':{'cells':{'properties':{key:{'properties':{'state':{'enum':['derived','estimated']}}}}}}},
-   'then':{'properties':{'values':{'properties':{key:rational_value}}}},
+   'then':{'properties':{'values':{'properties':{key:known}}}},
    'else':{'properties':{'values':{'properties':{key:{'type':'null'}}}}}}]}})
 
 
@@ -204,7 +223,7 @@ for dims in (['category'],['category','category1']):
   'properties':{'key':{'pattern':'^category:[a-f0-9]{64}$'},'values':values}}]}
  ranked.append({'required':['dimensions'],'properties':{
   'dimensions':{'const':dims},
-  'fields':{'minItems':len(fields),'maxItems':len(fields)+10,'prefixItems':fields,'items':{'allOf':[ref('exploration.ViewField'),{'properties':{'key':{'enum':list(measure_specs)}}}]}},
+  'fields':{'minItems':len(fields),'maxItems':len(fields)+15,'prefixItems':fields,'items':{'allOf':[ref('exploration.ViewField'),{'properties':{'key':{'enum':list(measure_specs)}}}]}},
   'rows':{'items':ranked_row}}})
 time_values={'type':'object','required':['fromMs','toMs'],'properties':{'fromMs':epoch_ms,'toMs':epoch_ms,'count':{'type':['string','null']},**measure_values},'additionalProperties':False}
 time_states=[{'properties':{'state':{'const':'observed'},'values':{'required':['count'],'properties':{'count':{**exact_count,'pattern':'^[1-9][0-9]*$'}}}}},{'properties':{'state':{'const':'no_data'},'values':{'required':['count'],'properties':{'count':{'const':'0'}}}}},{'properties':{'state':{'const':'unknown'},'values':{'properties':{'count':{'type':'null'}}}}}]
@@ -216,7 +235,7 @@ time_row={'allOf':[ref('exploration.ViewRow'),{
  'oneOf':time_states}]}
 time_shape={'required':['interval'],'not':{'anyOf':[{'required':['dimensions']},{'required':['partition']}]},'properties':{
  'shape':{'const':'time-series'},'id':{'pattern':'^[a-f0-9]{64}:intervals$'},'interval':{'type':'object'},
- 'fields':{'minItems':3,'maxItems':13,'prefixItems':time_fields,'items':{'allOf':[ref('exploration.ViewField'),{'properties':{'key':{'enum':list(measure_specs)}}}]}},
+ 'fields':{'minItems':3,'maxItems':18,'prefixItems':time_fields,'items':{'allOf':[ref('exploration.ViewField'),{'properties':{'key':{'enum':list(measure_specs)}}}]}},
  'rows':{'maxItems':240,'items':time_row},
  'completeness':{'properties':{'aspects':{'const':['intervals']}}}}}
 summary_values={'type':'object','required':['count'],'properties':{'count':exact_count,**measure_values},'additionalProperties':False}
@@ -224,13 +243,24 @@ summary_row={'allOf':[ref('exploration.ViewRow'),{'not':{'required':['state']},'
 summary_fields=[view_field_spec('count','number','records')]
 summary_shape={'not':{'anyOf':[{'required':['dimensions']},{'required':['interval']},{'required':['partition']}]},'properties':{
  'shape':{'const':'summary'},'id':{'pattern':'^[a-f0-9]{64}:summary$'},
- 'fields':{'minItems':1,'maxItems':11,'prefixItems':summary_fields,'items':{'allOf':[ref('exploration.ViewField'),{'properties':{'key':{'enum':list(measure_specs)}}}]}},
+ 'fields':{'minItems':1,'maxItems':16,'prefixItems':summary_fields,'items':{'allOf':[ref('exploration.ViewField'),{'properties':{'key':{'enum':list(measure_specs)}}}]}},
  'rows':{'minItems':1,'maxItems':1,'items':summary_row},
  'completeness':{'properties':{'aspects':{'const':['summary']}}}}}
 view_props['fields']['minItems']=1
 view['oneOf']=[ranked_shape,time_shape,summary_shape]
 view['allOf']=[{'if':{'properties':{'quality':{'properties':{'extent':{'const':'complete'}},'required':['extent']}},'required':['quality']},'then':{'required':['completeness'],'properties':{'completeness':{'type':'object'},'rows':{'items':{'properties':{'state':{'enum':['observed','no_data']}}}}}},'else':{'properties':{'completeness':{'type':'null'}}}}]
 
+status_keys=[key for key in measure_specs if key.startswith('status.')]
+status_counts=[key for key in status_keys if key!='status.error_fraction']
+status_present={'properties':{'fields':{'contains':{'properties':{'key':{'enum':status_keys}},'required':['key']}}},'required':['fields']}
+status_cells={'required':status_keys}
+status_fields={'allOf':[{'contains':{'properties':{'key':{'const':key}},'required':['key']}} for key in status_keys]}
+status_row={'properties':{'values':{'required':['count']+status_keys},'cells':status_cells},'required':['values','cells'],'allOf':[
+ {'if':{'properties':{'values':{'properties':{'count':{'type':'null'}},'required':['count']}}},'then':{'properties':{'values':{'properties':{key:{'type':'null'} for key in status_keys}},'cells':{'properties':{key:{'properties':{'state':{'const':'unknown'}}} for key in status_keys}}}}},
+ {'if':{'properties':{'values':{'properties':{'count':{'const':'0'}},'required':['count']}}},'then':{'properties':{'values':{'properties':{**{key:{'const':'0'} for key in status_counts},'status.error_fraction':{'type':'null'}}},'cells':{'properties':{**{key:{'properties':{'state':{'const':'derived'}}} for key in status_counts},'status.error_fraction':{'properties':{'state':{'const':'no_data'}}}}}}}},
+ {'if':{'properties':{'values':{'properties':{'count':{'type':'string','pattern':'^[1-9][0-9]*$'}},'required':['count']}}},'then':{'properties':{'cells':{'properties':{key:{'properties':{'state':{'const':'derived'}}} for key in status_keys}}}}}
+]}
+view['allOf'].append({'if':status_present,'then':{'properties':{'fields':status_fields,'rows':{'items':status_row},'scope':{'properties':{'signal':{'const':'spans'},'selector':{'required':['spanStatus'],'properties':{'spanStatus':{'const':True}}}}}}}})
 view['allOf'].extend([
  {'if':{'properties':{'origin':{'const':'browser-held'}},'required':['origin']},'then':{'not':{'required':['completeness']},'properties':{'shape':{'const':'summary'},'quality':{'properties':{'extent':{'const':'unknown'}}}}}},
  {'if':{'properties':{'origin':{'const':'source-read'}},'required':['origin']},'then':{'required':['capturedAt']}}
@@ -244,13 +274,14 @@ change['properties']['unit'].update(minLength=1,maxLength=128)
 change['allOf']=[{'if':{'properties':{'state':{'const':'derived'}},'required':['state']},'then':{'properties':{'value':rational_value}},'else':{'required':['reason'],'properties':{'reason':{'minLength':1},'value':{'type':'null'}}}}]
 comparison=schemas['exploration.ViewComparison'];comparison['additionalProperties']=False
 comparison['description']='Independent browser-held summary snapshots with exact selection-minus-baseline differences. No combined population, normalized rate, signed source authority, pooled percentile or invented shared capture clock.'
+comparison['description']+=' Requested span-status comparisons use the separate existing percentage-point response; this canonical envelope is withheld for that profile.'
 cmp_props=comparison['properties'];cmp_props['version']['const']='goo.comparison/1';cmp_props['state']['enum']=['observed','no_data','diagnostic','incompatible']
 for side in ('baseline','selection'):
- cmp_props[side]={'allOf':[ref('exploration.ViewDataset'),{'properties':{'shape':{'const':'summary'},'origin':{'const':'browser-held'}},'required':['origin']}]}
+ cmp_props[side]={'allOf':[ref('exploration.ViewDataset'),{'properties':{'shape':{'const':'summary'},'origin':{'const':'browser-held'}},'required':['origin'],'not':status_present}]}
 cmp_props['reason'].update(minLength=1,maxLength=128)
-cmp_props['changes']={'type':'object','minProperties':1,'maxProperties':11,'propertyNames':{'enum':['count']+list(measure_specs)},'additionalProperties':ref('exploration.ViewChange')}
+cmp_props['changes']={'type':'object','minProperties':1,'maxProperties':11,'propertyNames':{'enum':['count']+[key for key in measure_specs if not key.startswith('status.')]},'additionalProperties':ref('exploration.ViewChange')}
 comparison['allOf']=[{'if':{'properties':{'state':{'enum':['diagnostic','incompatible']}},'required':['state']},'then':{'properties':{'changes':{'additionalProperties':{'properties':{'state':{'const':'unavailable'}}}}}},'else':{'properties':{'changes':{'properties':{'count':{'properties':{'state':{'const':'derived'}}}},'required':['count']}}}}]
-for key in ['count']+list(measure_specs):
+for key in ['count']+[key for key in measure_specs if not key.startswith('status.')]:
  has_field={'anyOf':[{'properties':{side:{'properties':{'fields':{'contains':{'properties':{'key':{'const':key}},'required':['key']}}}}},'required':[side]} for side in ('baseline','selection')]}
  comparison['allOf'].append({'if':has_field,'then':{'properties':{'changes':{'required':[key]}}},'else':{'properties':{'changes':{'not':{'required':[key]}}}}})
  if key=='count':

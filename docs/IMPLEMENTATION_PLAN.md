@@ -4,7 +4,9 @@
 > including safe supplied-row projection and runtime guarantee lineage.
 > 266 delivers bounded H1 role/execution bindings and scoped group/interval action resolution.
 > 267 consolidates ordinary Distribution with typed full-population denominators.
-> Next: remaining specialized V0 family/quality/interaction adoption.
+> 268 adds [recorded span status counts/fractions](STATUS_FRACTIONS.md) in shared
+> breakdown, interval and summary views; status comparisons retain percentage points.
+> Next: histogram semantics/adoption, then remaining specialized V0 families.
 > [Pit-of-success review](MODEL_PIT_OF_SUCCESS_264.md) gates further renderer/editor expansion.
 
 > Current continuation proposal: [view grammar260](VIEW_GRAMMAR_PROPOSAL_260.md)
