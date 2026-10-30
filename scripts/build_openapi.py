@@ -108,6 +108,35 @@ schemas['exploration.KeptRepairRequestInput']['properties']['cursor'].update(max
 schemas['KeptSearchError']={'type':'object','required':['error','repairAvailable'],'properties':{'error':{'type':'string'},'repairAvailable':{'type':'boolean','description':'True only when explicit index repair may address discovery failure; false for capacity and cursor refusals.'}},'additionalProperties':False}
 schemas['Error'] = {'type': 'object', 'required': ['error'], 'properties': {'error': {'type': 'string'}, 'hint': {'type': 'string'}}, 'additionalProperties': True}
 schemas['Cancellation'] = {'type': 'object', 'required': ['state'], 'properties': {'state': {'const': 'cancellation-requested'}}}
+# Canonical supplied display snapshot: this server adapter is deliberately narrower
+# than the extensible UI contract. It certifies only one exhaustive GROUP BY read.
+for name in ('ViewDataset','ViewScope','ViewField','ViewRow','ViewValues','ViewQuality','ViewCompleteness'):
+ schemas['exploration.'+name]['additionalProperties']=False
+view=schemas['exploration.ViewDataset'];view_props=view['properties']
+view['description']='Supplied immutable ranked count snapshot for a supported single grouping. Complete groups means the bounded GROUP BY read succeeded exhaustively; it does not certify raw-record pagination, upstream ingestion/sampling, count/page coherence, or a transactional snapshot. Scope/revision-bound attestations and exact counts are server-derived; the UI may not manufacture completeness.'
+view_props['version']['const']='goo.dataset/1';view_props['shape']['const']='ranked'
+view_props['id']['pattern']='^[a-f0-9]{64}:groups$';view_props['revision']['pattern']='^[a-f0-9]{64}$'
+view_props['capturedAt']['format']='date-time'
+view_props['fields']={'type':'array','minItems':2,'maxItems':2,'prefixItems':[{'allOf':[ref('exploration.ViewField'),{'properties':{'key':{'const':'category'},'type':{'const':'string'},'nullable':{'const':True}},'required':['nullable']}]},{'allOf':[ref('exploration.ViewField'),{'properties':{'key':{'const':'count'},'type':{'const':'number'},'unit':{'const':'records'}},'required':['unit']}]}],'items':False}
+view_props['rows']={'type':'array','maxItems':1000,'items':ref('exploration.ViewRow')}
+view['allOf']=[{'if':{'properties':{'quality':{'properties':{'extent':{'const':'complete'}},'required':['extent']}},'required':['quality']},'then':{'required':['completeness'],'properties':{'completeness':{'type':'object'}}},'else':{'properties':{'completeness':{'type':'null'}}}}]
+view_scope=schemas['exploration.ViewScope']['properties']
+for name in ('id','generation'):view_scope[name]['pattern']='^[a-f0-9]{64}$'
+view_scope['signal']['enum']=['logs','spans'];view_scope['selector']=ref('exploration.Query')
+view_scope['selector']['description']='Exact checked applied question, including environment policy, time bounds, predicates and grouping; serialized independently from mutable caller state.'
+view_field=schemas['exploration.ViewField']['properties'];view_field['key']['enum']=['category','count'];view_field['type']['enum']=['string','number']
+view_quality=schemas['exploration.ViewQuality']['properties']
+view_quality['extent']['enum']=['complete','unknown']
+for name,value in [('basis','captured-query'),('value','derived'),('sampling','unknown'),('freshness','fixed')]:view_quality[name]['const']=value
+view_quality['sampling']['description']='Upstream sampling/collection completeness is unverified even when all captured-query groups are present.'
+view_quality['extent']['description']='Completeness concerns supplied groups only. Changed-between-reads observations conservatively remain unknown.'
+view_complete=schemas['exploration.ViewCompleteness']['properties'];view_complete['basis']['const']='captured-query';view_complete['aspects']={'const':['groups']}
+for name in ('revision','scopeId'):view_complete[name]['pattern']='^[a-f0-9]{64}$'
+schemas['exploration.ViewCompleteness']['description']='Data-path attestation bound to the enclosing dataset revision and scope ID; cross-field equality is enforced by the runtime, not JSON Schema. Never inferred from a page length or separately read count.'
+schemas['exploration.ViewRow']['properties']['key'].update(pattern='^category:[a-f0-9]{64}$',description='Fixed SHA256 identity of the canonical nullable category. Null/missing and present empty string remain distinct; this is not a source-record member reference.')
+schemas['exploration.ViewValues']['properties']['count'].update(pattern='^(0|[1-9][0-9]*)$',maxLength=20,description='Exact canonical uint64 decimal; Go enforces the maximum18446744073709551615. Floating-point plotting coordinates do not replace this value.')
+schemas['exploration.ViewValues']['properties']['category']={'type':['string','null'],'maxLength':1024,'description':'Null is a missing key; the empty string is a present empty value. Preserve both without coercion. Runtime enforces1024 UTF-8 bytes; JSON Schema maxLength counts characters.'}
+
 # Counted values are two explicit observations, never a transactional snapshot.
 counted=schemas['exploration.CountedValuesResult']['properties']
 counted['version']['const']='goo/counted-values/v1'

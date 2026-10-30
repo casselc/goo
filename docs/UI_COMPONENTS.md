@@ -1353,3 +1353,11 @@ including shared scope/control/action models, typed uncertainty, hard complete-d
 requirements and exhaustive current widget/screen expressiveness; those new elements are proposed,
 not entries in the implemented registry above. Goo is prerelease, so consolidating
 component APIs does not require old-property or old-format compatibility shims.
+
+## Scoped display pilot261
+
+`goo-chart` (native table/bar/numeric-line) and `goo-scope-facet` accept the same
+`goo.dataset/1` snapshot; typed revision-bound intents leave effects to the host.
+See [public API, quality and adoption limits](SCOPED_VIEW_PILOT.md). SSR/pre-upgrade
+properties and detached SPA use are checked by `scripts/check_scope_components.cjs`.
+Only single-group count exploration is adopted; this is not whole-UI grammar parity.

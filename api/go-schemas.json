@@ -9727,6 +9727,16 @@
           }
         ]
       },
+      "viewDataset": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ViewDataset"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "warnings": {
         "anyOf": [
           {
@@ -11375,6 +11385,229 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.ValueCount"
+  },
+  "exploration.ViewCompleteness": {
+    "properties": {
+      "aspects": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "basis": {
+        "type": "string"
+      },
+      "revision": {
+        "type": "string"
+      },
+      "scopeId": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "basis",
+      "revision",
+      "scopeId",
+      "aspects"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ViewCompleteness"
+  },
+  "exploration.ViewDataset": {
+    "properties": {
+      "capturedAt": {
+        "type": "string"
+      },
+      "completeness": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ViewCompleteness"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "fields": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.ViewField"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "id": {
+        "type": "string"
+      },
+      "quality": {
+        "$ref": "#/components/schemas/exploration.ViewQuality"
+      },
+      "revision": {
+        "type": "string"
+      },
+      "rows": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.ViewRow"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "scope": {
+        "$ref": "#/components/schemas/exploration.ViewScope"
+      },
+      "shape": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "id",
+      "revision",
+      "scope",
+      "shape",
+      "fields",
+      "rows",
+      "quality",
+      "capturedAt"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ViewDataset"
+  },
+  "exploration.ViewField": {
+    "properties": {
+      "key": {
+        "type": "string"
+      },
+      "label": {
+        "type": "string"
+      },
+      "nullable": {
+        "type": "boolean"
+      },
+      "type": {
+        "type": "string"
+      },
+      "unit": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "key",
+      "label",
+      "type"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ViewField"
+  },
+  "exploration.ViewQuality": {
+    "properties": {
+      "basis": {
+        "type": "string"
+      },
+      "extent": {
+        "type": "string"
+      },
+      "freshness": {
+        "type": "string"
+      },
+      "sampling": {
+        "type": "string"
+      },
+      "value": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "extent",
+      "basis",
+      "value",
+      "sampling",
+      "freshness"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ViewQuality"
+  },
+  "exploration.ViewRow": {
+    "properties": {
+      "key": {
+        "type": "string"
+      },
+      "values": {
+        "$ref": "#/components/schemas/exploration.ViewValues"
+      }
+    },
+    "required": [
+      "key",
+      "values"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ViewRow"
+  },
+  "exploration.ViewScope": {
+    "properties": {
+      "generation": {
+        "type": "string"
+      },
+      "id": {
+        "type": "string"
+      },
+      "selector": {},
+      "signal": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "generation",
+      "signal",
+      "selector"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ViewScope"
+  },
+  "exploration.ViewValues": {
+    "properties": {
+      "category": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "count": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "category",
+      "count"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ViewValues"
   },
   "identity.EnvironmentObservation": {
     "properties": {

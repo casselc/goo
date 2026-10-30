@@ -1582,3 +1582,7 @@ parity and finite Quint checks pass. Four actual frames and source/proof reviews
 are approved. [Journey 216](../journeys/216-host-controls-storyboard.md) and
 [evidence](evidence/host-controls-216.json) record costs, custody, the initial
 extra-inspection UX fix, geometry and proof limits.
+
+261 delivers the [first V0 scoped-display slice](SCOPED_VIEW_PILOT.md), with
+synchronized tests/storyboards. Continue richer time-series/grouped quality and
+public-contract adoption before Plotly/editor expansion; V0 is not complete.

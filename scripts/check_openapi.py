@@ -20,8 +20,66 @@ def validator(spec, schema):
     return Draft202012Validator({'allOf': [schema], 'components': spec['components']})
 
 
+def check_view_dataset(spec):
+    """The current server adapter, including refusals the generic Go reflection cannot express."""
+    check_view = validator(spec, {'$ref': '#/components/schemas/exploration.ViewDataset'})
+    revision = 'a' * 64
+    snapshot = {
+        'version': 'goo.dataset/1', 'id': revision + ':groups', 'revision': revision,
+        'scope': {'id': revision, 'generation': revision, 'signal': 'spans', 'selector': {
+            'signal': 'spans', 'environment': 'prod', 'fromMs': 1000, 'toMs': 61000,
+            'limit': 100, 'offset': 0, 'groupBy': [{'kind': 'column', 'key': 'service'}]}},
+        'shape': 'ranked', 'capturedAt': '2026-10-30T00:00:00Z',
+        'fields': [{'key': 'category', 'label': 'column:service', 'type': 'string', 'nullable': True},
+                   {'key': 'count', 'label': 'Captured records', 'type': 'number', 'unit': 'records'}],
+        'rows': [{'key': 'category:' + 'b' * 64, 'values': {'category': None, 'count': '18446744073709551615'}},
+                 {'key': 'category:' + 'c' * 64, 'values': {'category': '', 'count': '0'}}],
+        'quality': {'extent': 'complete', 'basis': 'captured-query', 'value': 'derived',
+                    'sampling': 'unknown', 'freshness': 'fixed'},
+        'completeness': {'basis': 'captured-query', 'revision': revision, 'scopeId': revision, 'aspects': ['groups']}}
+    check_view.validate(snapshot)
+    unknown = copy.deepcopy(snapshot)
+    unknown['quality']['extent'] = 'unknown'
+    del unknown['completeness']
+    check_view.validate(unknown)
+    empty = copy.deepcopy(snapshot)
+    empty['rows'] = []
+    check_view.validate(empty)
+    escaped = copy.deepcopy(snapshot)
+    escaped['rows'][0]['values']['category'] = '"' * 1024
+    check_view.validate(escaped)
+
+    missing = object()
+    cases = [
+        (('completeness',), missing),
+        (('quality', 'extent'), 'unknown'),
+        (('completeness', 'aspects'), ['records']),
+        (('rows', 0, 'values', 'count'), 18446744073709551615),
+        (('rows', 0, 'values', 'count'), '01'),
+        (('rows', 0, 'values', 'count'), '1' * 21),
+        (('scope', 'selector'), {}),
+        (('quality', 'sampling'), 'none'),
+        (('fields', 0, 'nullable'), False),
+        (('fields', 1, 'unit'), 'seconds'),
+        (('rows',), None),
+        (('rows', 0, 'key'), 'category:unbounded-raw-text'),
+        (('rows', 0, 'values', 'category'), 'x' * 1025),
+    ]
+    for path, value in cases:
+        mutant = copy.deepcopy(snapshot)
+        parent = mutant
+        for key in path[:-1]:
+            parent = parent[key]
+        if value is missing:
+            del parent[path[-1]]
+        else:
+            parent[path[-1]] = value
+        assert not check_view.is_valid(mutant), f'Invalid supplied view dataset accepted: {path}'
+
+
 def check(spec):
     validate_spec(spec)
+    check_view_dataset(spec)
     bank = json.loads((ROOT/'testdata/protocol/environment-selectors.json').read_text())
     for path in ('/explore','/tail'):
         body_schema = spec['paths'][path]['post']['requestBody']['content']['application/json']['schema']

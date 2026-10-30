@@ -16295,6 +16295,16 @@
               }
             ]
           },
+          "viewDataset": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewDataset"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "warnings": {
             "anyOf": [
               {
@@ -18004,6 +18014,341 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ValueCount"
+      },
+      "exploration.ViewCompleteness": {
+        "properties": {
+          "aspects": {
+            "const": [
+              "groups"
+            ]
+          },
+          "basis": {
+            "type": "string",
+            "const": "captured-query"
+          },
+          "revision": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "scopeId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "basis",
+          "revision",
+          "scopeId",
+          "aspects"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewCompleteness",
+        "additionalProperties": false,
+        "description": "Data-path attestation bound to the enclosing dataset revision and scope ID; cross-field equality is enforced by the runtime, not JSON Schema. Never inferred from a page length or separately read count."
+      },
+      "exploration.ViewDataset": {
+        "properties": {
+          "capturedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completeness": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewCompleteness"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fields": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "prefixItems": [
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.ViewField"
+                  },
+                  {
+                    "properties": {
+                      "key": {
+                        "const": "category"
+                      },
+                      "type": {
+                        "const": "string"
+                      },
+                      "nullable": {
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "nullable"
+                    ]
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.ViewField"
+                  },
+                  {
+                    "properties": {
+                      "key": {
+                        "const": "count"
+                      },
+                      "type": {
+                        "const": "number"
+                      },
+                      "unit": {
+                        "const": "records"
+                      }
+                    },
+                    "required": [
+                      "unit"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "items": false
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}:groups$"
+          },
+          "quality": {
+            "$ref": "#/components/schemas/exploration.ViewQuality"
+          },
+          "revision": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "rows": {
+            "type": "array",
+            "maxItems": 1000,
+            "items": {
+              "$ref": "#/components/schemas/exploration.ViewRow"
+            }
+          },
+          "scope": {
+            "$ref": "#/components/schemas/exploration.ViewScope"
+          },
+          "shape": {
+            "type": "string",
+            "const": "ranked"
+          },
+          "version": {
+            "type": "string",
+            "const": "goo.dataset/1"
+          }
+        },
+        "required": [
+          "version",
+          "id",
+          "revision",
+          "scope",
+          "shape",
+          "fields",
+          "rows",
+          "quality",
+          "capturedAt"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewDataset",
+        "additionalProperties": false,
+        "description": "Supplied immutable ranked count snapshot for a supported single grouping. Complete groups means the bounded GROUP BY read succeeded exhaustively; it does not certify raw-record pagination, upstream ingestion/sampling, count/page coherence, or a transactional snapshot. Scope/revision-bound attestations and exact counts are server-derived; the UI may not manufacture completeness.",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "quality": {
+                  "properties": {
+                    "extent": {
+                      "const": "complete"
+                    }
+                  },
+                  "required": [
+                    "extent"
+                  ]
+                }
+              },
+              "required": [
+                "quality"
+              ]
+            },
+            "then": {
+              "required": [
+                "completeness"
+              ],
+              "properties": {
+                "completeness": {
+                  "type": "object"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "completeness": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "exploration.ViewField": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "category",
+              "count"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "nullable": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "string",
+              "number"
+            ]
+          },
+          "unit": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "type"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewField",
+        "additionalProperties": false
+      },
+      "exploration.ViewQuality": {
+        "properties": {
+          "basis": {
+            "type": "string",
+            "const": "captured-query"
+          },
+          "extent": {
+            "type": "string",
+            "enum": [
+              "complete",
+              "unknown"
+            ],
+            "description": "Completeness concerns supplied groups only. Changed-between-reads observations conservatively remain unknown."
+          },
+          "freshness": {
+            "type": "string",
+            "const": "fixed"
+          },
+          "sampling": {
+            "type": "string",
+            "const": "unknown",
+            "description": "Upstream sampling/collection completeness is unverified even when all captured-query groups are present."
+          },
+          "value": {
+            "type": "string",
+            "const": "derived"
+          }
+        },
+        "required": [
+          "extent",
+          "basis",
+          "value",
+          "sampling",
+          "freshness"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewQuality",
+        "additionalProperties": false
+      },
+      "exploration.ViewRow": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^category:[a-f0-9]{64}$",
+            "description": "Fixed SHA256 identity of the canonical nullable category. Null/missing and present empty string remain distinct; this is not a source-record member reference."
+          },
+          "values": {
+            "$ref": "#/components/schemas/exploration.ViewValues"
+          }
+        },
+        "required": [
+          "key",
+          "values"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewRow",
+        "additionalProperties": false
+      },
+      "exploration.ViewScope": {
+        "properties": {
+          "generation": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "selector": {
+            "$ref": "#/components/schemas/exploration.Query",
+            "description": "Exact checked applied question, including environment policy, time bounds, predicates and grouping; serialized independently from mutable caller state."
+          },
+          "signal": {
+            "type": "string",
+            "enum": [
+              "logs",
+              "spans"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "generation",
+          "signal",
+          "selector"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewScope",
+        "additionalProperties": false
+      },
+      "exploration.ViewValues": {
+        "properties": {
+          "category": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 1024,
+            "description": "Null is a missing key; the empty string is a present empty value. Preserve both without coercion. Runtime enforces1024 UTF-8 bytes; JSON Schema maxLength counts characters."
+          },
+          "count": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Exact canonical uint64 decimal; Go enforces the maximum18446744073709551615. Floating-point plotting coordinates do not replace this value."
+          }
+        },
+        "required": [
+          "category",
+          "count"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewValues",
+        "additionalProperties": false
       },
       "identity.EnvironmentObservation": {
         "properties": {

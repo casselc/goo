@@ -1,5 +1,10 @@
 # Known issues and gaps
 
+261 adds [scoped displays](SCOPED_VIEW_PILOT.md) for single-group count breakdowns.
+Native table/bar and shared facets use one supplied dataset; complete-only uses
+Go-attested groups. Richer/native/time-series families and per-cell uncertainty
+remain unmigrated. No Plotly, persisted view grammar or WYSIWYG editor is shipped.
+
 257–259 add local Activity/fixed/Saved record Keep/Open and server-wide discovery
 independent of XTDB. Find pages derived metadata; exact Open verifies records.
 Publication/discovery share1000 physical-entry admission; repair resumes in bounded

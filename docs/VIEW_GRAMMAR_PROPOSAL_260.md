@@ -698,6 +698,11 @@ under multiple charts and live data before broad migration.
 
 ## Implementation order
 
+261 delivers the [first bounded step1 slice](SCOPED_VIEW_PILOT.md): typed ranked
+snapshots, native table/bar/numeric-line, scope facets and Go-attested group extent.
+Only single-group count exploration is adopted. Fuller quality/time-series/native
+contracts, all-family mapping and whole-screen composition remain target work.
+
 | Step | Deliverable | Completion gate |
 | --- | --- | --- |
 | 0 — current round | Trace parent return/keyboard corrections and common control cleanup; review/proposal | Actual trace journey, common-component embedding checks, updated docs and frames |

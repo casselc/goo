@@ -501,3 +501,8 @@ Complete-only widgets and explicit uncertainty semantics are core requirements;
 all current widgets/screens must be expressible. The app is prerelease, with no
 legacy-format or API compatibility floor. [The next sequence](docs/ROADMAP_2026_10_30.md) separates proposed work from
 implemented capabilities; the supporting reports include pinned research sources.
+
+Single-group count breakdowns now share a [scoped display contract](docs/SCOPED_VIEW_PILOT.md):
+switch bars/table without querying, inspect exact values and stage a facet filter
+before Run. Complete-only rendering uses Go-attested group extent while upstream
+sampling stays unknown. [Storyboard](journeys/261-scoped-breakdown-storyboard.md).

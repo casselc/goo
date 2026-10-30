@@ -20,6 +20,7 @@ import (
 )
 
 type Result struct {
+	ViewDataset       *ViewDataset       `json:"viewDataset,omitempty"`
 	NumericHistogram  *NumericHistogram  `json:"numericHistogram,omitempty"`
 	ResultToken       string             `json:"resultToken,omitempty"`
 	TraceExamples     *TraceExampleSet   `json:"traceExamples,omitempty"`
@@ -323,6 +324,7 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 	}
 	h := sha256.Sum256(b)
 	r.Basis = hex.EncodeToString(h[:])
+	r.ViewDataset = groupViewDataset(r, plan.Groups != "")
 	return r, nil
 }
 

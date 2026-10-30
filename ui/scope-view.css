@@ -1,0 +1,25 @@
+/* Shared passive scope components. No page sizing, source ownership or vendor CSS. */
+goo-chart,goo-scope-facet{display:block;min-width:0;max-width:100%}
+.scope-view{min-width:0;font-variant-numeric:tabular-nums}
+.scope-view-quality{display:flex;flex-wrap:wrap;gap:4px 12px;margin:0 0 8px;color:var(--muted,#98a8bf);font-size:11px}
+.scope-view-unavailable,.scope-view-empty{margin:8px 0;color:var(--muted,#98a8bf);font-size:12px;overflow-wrap:anywhere}
+.scope-view-bars{display:grid;gap:4px}
+.scope-view-bar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;width:100%;padding:6px 8px;color:var(--ink,#e3e9f3);background:transparent;border:1px solid transparent;border-radius:4px;text-align:left;cursor:pointer;font:inherit;font-size:12px}
+.scope-view-bar:hover{background:var(--panel,#151d28);border-color:var(--border,#2b3545)}
+.scope-view-label{overflow-wrap:anywhere}.scope-view-value{font-variant-numeric:tabular-nums;overflow-wrap:anywhere;max-width:100%}
+.scope-view-track{grid-column:1/-1;display:block;height:5px;background:var(--border,#2b3545);border-radius:2px;overflow:hidden}
+.scope-view-fill{display:block;height:100%;background:var(--accent,#79ddc6)}
+.scope-view[data-value-knowledge=estimated] .scope-view-fill{background:repeating-linear-gradient(135deg,var(--accent,#79ddc6),var(--accent,#79ddc6) 3px,var(--panel,#151d28) 3px,var(--panel,#151d28) 5px)}
+.scope-view-fill[data-sign=negative]{background:#f5b85d}
+.scope-view-values{margin:8px 0 0;padding:0;border:0;background:transparent}
+.scope-view-values>summary{font-size:12px;color:var(--muted,#98a8bf);cursor:pointer;margin:0 0 6px}
+.scope-view-line{margin:0}.scope-view-line>svg{display:block;width:100%;height:auto;max-height:220px}
+.scope-view-line>figcaption{font-size:11px;color:var(--muted,#98a8bf)}
+.scope-view-axis{fill:none;stroke:var(--border,#2b3545);stroke-width:1}.scope-view-path{fill:none;stroke:var(--accent,#79ddc6);stroke-width:2}.scope-view-point{fill:var(--accent,#79ddc6)}
+.scope-view-facet{display:flex;gap:5px;align-items:center;flex-wrap:wrap;font-size:12px}
+.scope-view-facet-label{font-weight:600;margin-right:4px}.scope-view-facet button{font:inherit;color:var(--ink,#e3e9f3);background:var(--panel,#151d28);border:1px solid var(--border,#2b3545);border-radius:4px;padding:4px 7px;cursor:pointer;overflow-wrap:anywhere;max-width:100%}
+.scope-view-facet-note{color:var(--muted,#98a8bf);font-size:11px}
+.scope-view-coordinate-note{display:block;color:var(--muted,#98a8bf);font-size:11px;margin-top:6px}
+goo-chart :is(button,summary):focus-visible,goo-scope-facet button:focus-visible{outline:2px solid var(--accent,#79ddc6);outline-offset:2px}
+@media(max-width:400px){.scope-view-bar{padding-inline:3px}.scope-view-quality{gap:3px 8px}}
+@media(prefers-reduced-motion:reduce){goo-chart *,goo-scope-facet *{scroll-behavior:auto;animation-duration:0s!important;transition-duration:0s!important}}

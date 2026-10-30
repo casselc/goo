@@ -1,5 +1,50 @@
 # Validation record
 
+## Scoped display contract and linked breakdown — 261
+
+Delivered the first bounded V0 slice: Go supplies a typed single-group count
+snapshot to passive native bars/table and a facet. View switching/selection are
+local; narrowing stages before explicit Run. Complete-groups eligibility is
+scope/revision/aspect-bound, distinct from unknown upstream sampling. Richer
+families, Plotly, persisted composition and the visual editor remain unimplemented.
+See [contract/diagram](docs/SCOPED_VIEW_PILOT.md) and
+[executable storyboard/current frames](journeys/261-scoped-breakdown-storyboard.md).
+
+Full final Go checks and all646 frontend tests pass, with no frontend skips.
+Standalone Chromium conformance passes SSR attributes/pre-upgrade/detached updates,
+exact decimal counts beyond2^53, typed intents, native numeric line, missing/unknown/
+negative geometry refusal, UTC clock/tooltips and390px layout without application IO.
+The final real-OTLP/ClickHouse/generic-Go journey passes in47.2seconds including a
+35-second Bombadil campaign:541 snapshots, all seven phases, two explicit Runs,
+zero unexpected reads and observed completion. The Playwright path also rejects
+forged/retired intents, preserves the fixed window/environment/filter, and injects
+one diagnostic response after a third real read to prove complete-only geometry
+and narrowing controls withdraw. Trace-return source regression and the existing
+lab duration/grouped-evidence journey also pass.
+
+Quint replay of the final observed effect ledger passes via observability/quintgo,
+rejecting12 independent illicit read/generation controls. The generation projection
+is the harness ordinal of observed successful applied Runs, not the dataset's
+opaque scope-generation token. This is bounded effect ownership, not a proof of
+whole-product liveness or query truth. Hegel passes30 generated action sequences
+against the actual JS contracts. Run in verification with GOO_SCOPED_LEDGER set to
+the journey's model-trace.json and XDG_CACHE_HOME=/workspace/.cache. Go adapter tests
+include100 generated cardinalities, exact uint64 values, null/empty distinctions,
+immutable selectors, exhaustive-read eligibility, category budgets and four reads
+only. OpenAPI regeneration/check passes429 response fixtures,159 request fixtures,
+28 mux refusals and13 new dataset-schema negative controls.
+
+Independent review's four findings were fixed: diagnostic-state scope gating,
+Go/JS category budgets with fixed hash keys, malformed selection guards and SSR
+property parity. Final review found no blocker for this bounded slice.
+The CA-trusted configured build and packages-only lab deployment succeeded:
+`23d66d9703e68911a58310a5e9a6b2604af4d9fa82c49eb9db25779deb39d965`.
+HTTP root returns200 and eight changed UI assets match source bytes. Volumes and
+other services were preserved. Obsolete untagged application images were removed;
+recent rollback images were retained. Compact summaries and documentation frames
+are retained; disposable campaign screenshots/traces are not project deliverables.
+
+
 ## Trace return, shared controls and UI composition proposal — 260
 
 Activity trace close now restores its held parent, selection, scroll and focus

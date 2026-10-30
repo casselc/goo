@@ -1310,3 +1310,8 @@ package authoring scope gates remain prerequisites, not renderer features.
 This is proposed architecture; the new chart contract, vendor adapter and WYSIWYG
 editor are not implemented by this document. See the
 [2026-10-30 sequence](ROADMAP_2026_10_30.md) and source-linked review reports.
+
+The [261 scoped-display pilot](SCOPED_VIEW_PILOT.md) now implements a bounded
+part of that boundary: Go grouped source reads supply the typed snapshot, passive
+chart/facet components share it, and exploration validates intents before staging.
+Only explicit Run executes; existing richer presenters remain outside this pilot.
