@@ -4,9 +4,11 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"math/big"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"testing"
 
 	"github.com/casselc/observability/quintgo/qobs"
@@ -188,6 +190,49 @@ const stale=structuredClone(s);stale.revision='r2';stale.scope.generation=2;stal
 		out, e := cmd.CombinedOutput()
 		if e != nil || string(out) != "ok" {
 			t.Fatalf("public time interval contracts: %v: %s", e, out)
+		}
+	}, options(30)...)
+}
+
+// Compute the expected signed decimal mean with Go's exact rational arithmetic,
+// then exercise the actual JS canonical contract and projections. Coverage and
+// support remain separate from whether any valid numeric values were captured.
+func TestHegelScopedRationalMeasureContracts(t *testing.T) {
+	hegel.Test(t, func(tc *hegel.T) {
+		valid := hegel.Draw(tc, hegel.Integers(0, 20))
+		missing := hegel.Draw(tc, hegel.Integers(0, 5))
+		empty := hegel.Draw(tc, hegel.Integers(0, 5))
+		invalid := hegel.Draw(tc, hegel.Integers(0, 5))
+		sum := hegel.Draw(tc, hegel.Integers(-1000000, 1000000))
+		scale := hegel.Draw(tc, hegel.Integers(0, 9))
+		divisor := new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(scale)), nil)
+		var mean, sumExact *string
+		if valid > 0 {
+			meanValue := new(big.Rat).SetFrac(big.NewInt(int64(sum)), new(big.Int).Mul(big.NewInt(int64(valid)), divisor)).RatString()
+			sumValue := new(big.Rat).SetFrac(big.NewInt(int64(sum)), divisor).RatString()
+			mean, sumExact = &meanValue, &sumValue
+		}
+		input := struct {
+			Valid, Missing, Empty, Invalid, Total string
+			Mean, Sum                             *string
+			Unit                                  string
+		}{Valid: strconv.Itoa(valid), Missing: strconv.Itoa(missing), Empty: strconv.Itoa(empty), Invalid: strconv.Itoa(invalid), Total: strconv.Itoa(valid + missing + empty + invalid), Mean: mean, Sum: sumExact, Unit: hegel.Draw(tc, hegel.SampledFrom([]string{"1", "bytes", "{requests}"}))}
+		wire, e := json.Marshal(input)
+		if e != nil {
+			t.Fatal(e)
+		}
+		script := `const fs=require('node:fs'),assert=require('node:assert/strict'),v=require('../ui/view-model.mjs');
+const input=JSON.parse(fs.readFileSync(0,'utf8')),known=input.Valid!=='0',state=known?'derived':input.Total==='0'?'no_data':'no_valid_values',support={total:input.Total,valid:input.Valid,missing:input.Missing,empty:input.Empty,invalid:input.Invalid};
+const s={version:'goo.dataset/1',id:'measures',revision:'r1',scope:{id:'q1',generation:1,signal:'spans',selector:{}},shape:'ranked',dimensions:['service'],fields:[{key:'service',label:'Service',type:'string'},{key:'count',label:'Captured count',type:'number',unit:'records'},{key:'numeric.mean',label:'Mean',type:'rational',unit:input.Unit,aggregation:{family:'numeric',kind:'mean',method:'exact-rational'}},{key:'numeric.sum',label:'Sum',type:'rational',unit:input.Unit,aggregation:{family:'numeric',kind:'sum',method:'exact'}},{key:'duration.p95',label:'p95',type:'rational',unit:'ns',aggregation:{family:'duration',kind:'quantile',method:'quantilesExactHigh',quantile:'0.95'}}],rows:[{key:'api',values:{service:'api',count:input.Total,'numeric.mean':input.Mean,'numeric.sum':input.Sum,'duration.p95':input.Total==='0'?null:'9007199254740993'},cells:{'numeric.mean':{state,support},'numeric.sum':{state,support},'duration.p95':{state:input.Total==='0'?'no_data':'derived',support:{total:input.Total,valid:input.Total,missing:'0',empty:'0',invalid:'0'}}}}],quality:{extent:'complete',basis:'captured-query',value:'derived',sampling:'unknown',freshness:'fixed'},completeness:{basis:'captured-query',revision:'r1',scopeId:'q1',aspects:['groups']}};
+assert.equal(v.validateSnapshot(s).ok,true);const original=JSON.stringify(s),mean=v.measureValue(s,s.rows[0],'numeric.mean'),sum=v.measureValue(s,s.rows[0],'numeric.sum'),p95=v.measureValue(s,s.rows[0],'duration.p95');assert.equal(mean.exact,input.Mean);assert.equal(sum.exact,input.Sum);assert.equal(mean.state,state);assert.deepEqual(mean.support,support);assert.equal(mean.unit,input.Unit);assert.equal(p95.aggregation.method,'quantilesExactHigh');assert.equal(p95.aggregation.quantile,'0.95');assert.equal(p95.state,input.Total==='0'?'no_data':'derived');assert.equal(v.validateDisplay(s,{kind:'bar',category:'service',value:'numeric.mean',requiresComplete:true}).ok,true);assert.equal(JSON.stringify(s),original);
+if(!known){assert.equal(mean.coordinate,null);assert.equal(sum.coordinate,null);const fakeZero=structuredClone(s);fakeZero.rows[0].values['numeric.sum']='0';assert.equal(v.validateSnapshot(fakeZero).ok,false)}else{assert.equal(typeof mean.coordinate,'number');assert.equal(typeof sum.coordinate,'number')}
+const unitChanged=structuredClone(s);unitChanged.fields.find(f=>f.key==='numeric.mean').unit='other-unit';unitChanged.fields.push({key:'unmapped',label:'Unmapped diagnostic',type:'string'});unitChanged.rows[0].values.unmapped='outside mapped measure';assert.equal(v.validateSnapshot(unitChanged).ok,true);const after=v.measureValue(unitChanged,unitChanged.rows[0],'numeric.mean');assert.equal(after.exact,mean.exact);assert.equal(after.coordinate,mean.coordinate);assert.deepEqual(after.support,mean.support);assert.equal(after.unit,'other-unit');assert.throws(()=>v.scopeIntent(s,'numeric.mean',input.Mean));
+const changed=structuredClone(s);changed.rows[0].cells['numeric.mean'].support.total=String(BigInt(input.Total)+1n);assert.equal(v.validateSnapshot(changed).ok,false);const badMethod=structuredClone(s);badMethod.fields.find(f=>f.key==='duration.p95').aggregation.method='exact-rational';assert.equal(v.validateSnapshot(badMethod).ok,false);process.stdout.write('ok');`
+		cmd := exec.Command("node", "-e", script)
+		cmd.Stdin = bytes.NewReader(wire)
+		out, e := cmd.CombinedOutput()
+		if e != nil || string(out) != "ok" {
+			t.Fatalf("public rational measure contracts: %v: %s", e, out)
 		}
 	}, options(30)...)
 }

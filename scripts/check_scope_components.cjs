@@ -16,7 +16,7 @@ const snapshot={
   let browser;
   try{
     browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',args:['--no-sandbox']});
-    const page=await browser.newPage({viewport:{width:390,height:844}}),requests=[];
+    const page=await browser.newPage({viewport:{width:390,height:844},hasTouch:true}),requests=[];
     page.on('request',request=>requests.push(new URL(request.url()).pathname));
     await page.route('http://scope.invalid/**',async route=>{
       const name=new URL(route.request().url()).pathname;
@@ -82,7 +82,7 @@ const snapshot={
       const title=last.title.includes('1970-01-01T00:00:40.000Z')&&last.title.includes('18446744073709551615')&&last.title.includes('[40000, 45000) ms');
       const noLine=!chart.querySelector('polyline'),quality=chart.textContent.includes('partial intervals')&&chart.textContent.includes('unknown upstream sampling');
       chart.display={kind:'table'};
-      const table=chart.textContent.includes('Additional field')&&chart.textContent.includes('Kept')&&chart.textContent.includes('Unknown coverage')&&chart.querySelector('td').textContent==='1970-01-01T00:00:00.000Z'&&chart.querySelector('td').title==='0 ms since Unix epoch';
+      const table=chart.textContent.includes('Additional field')&&chart.textContent.includes('Kept')&&chart.textContent.includes('Unknown coverage')&&chart.querySelector('td>span').textContent==='1970-01-01T00:00:00.000Z'&&chart.querySelector('td').title==='0 ms since Unix epoch';
       chart.display={kind:'time-bar',requiresComplete:true};const refuses=chart.textContent.includes('Complete captured-query intervals');
       snapshot.rows[2].state='no_data';snapshot.rows[2].values.count='0';snapshot.rows.splice(3,0,{key:'gap-filled',state:'no_data',values:{fromMs:'30000',toMs:'40000',count:'0'}});
       snapshot.quality.extent='complete';snapshot.completeness={basis:'captured-query',revision:snapshot.revision,scopeId:snapshot.scope.id,aspects:['intervals']};chart.snapshot=snapshot;
@@ -94,7 +94,60 @@ const snapshot={
     });
     assert.equal(temporal.buttons,4);assert.equal(temporal.gaps,1);assert.equal(temporal.selection.key,'first');
     for(const key of ['positions','states','title','noLine','quality','table','refuses','complete','revisionRefuses','emptyUnknown'])assert(temporal[key],key);
+    const measures=await page.evaluate(()=>{
+      const snapshot=structuredClone(window.supplied);snapshot.rows=[];
+      const numeric={key:'numeric.mean',label:'Numeric mean',type:'rational',unit:'USD',aggregation:{family:'numeric',kind:'mean',method:'exact-rational'}};
+      const duration={key:'duration.p95',label:'p95 duration',type:'rational',unit:'ns',aggregation:{family:'duration',kind:'quantile',method:'quantilesExactHigh',quantile:'0.95'}};
+      snapshot.fields.push(numeric,duration);
+      const support=(total,valid,missing='0',empty='0',invalid='0')=>({total,valid,missing,empty,invalid});
+      const row=(key,count,mean,latency,numericCell,durationCell)=>({key,values:{category:key,count,'numeric.mean':mean,'duration.p95':latency},cells:{'numeric.mean':numericCell,'duration.p95':durationCell}});
+      snapshot.rows=[
+        row('a','5','7/6','4000000',{state:'estimated',support:support('5','3','1','0','1')},{state:'derived',support:support('5','5')}),
+        row('b','2','-2','1500',{state:'derived',support:support('2','2')},{state:'derived',support:support('2','2')}),
+        row('c','3',null,null,{state:'no_valid_values',support:support('3','0','1','1','1')},{state:'no_valid_values',support:support('3','0','1','1','1')}),
+        row('d','0',null,null,{state:'no_data',support:support('0','0')},{state:'no_data',support:support('0','0')})
+      ];
+      const chart=document.createElement('goo-chart');chart.snapshot=snapshot;chart.display={kind:'bar',category:'category',value:'numeric.mean'};document.body.append(chart);
+      const signed=!chart.querySelector('.scope-view-bars')&&chart.textContent.includes('requires nonnegative');
+      const rational=chart.querySelector('td[title*="7/6 USD"]')?.textContent.includes('≈ 1.167 USD');
+      const supportVisible=chart.querySelector('td[title*="7/6 USD"]')?.textContent.includes('3/5 valid');
+      chart.display={kind:'table'};
+      const durationTable=chart.querySelector('td[title*="4000000 ns"]')?.textContent.includes('4 ms');
+      const headers=[...chart.querySelectorAll('th')].every(th=>!th.textContent.includes('ns'));
+      chart.display={kind:'bar',category:'category',value:'duration.p95'};
+      const exactQuantiles=chart.querySelectorAll('.scope-view-fill').length===2&&chart.querySelector('.scope-view-bar').title.includes('quantilesExactHigh')&&!chart.querySelector('.scope-view-bar[data-cell-state=estimated]');
+      const unavailable=chart.querySelectorAll('.scope-view-bar[data-cell-state=no_valid_values] .scope-view-fill').length===0&&chart.textContent.includes('No valid values');
+      snapshot.rows.splice(1,1);chart.snapshot=snapshot;chart.display={kind:'bar',category:'category',value:'numeric.mean'};
+      const estimated=chart.querySelector('.scope-view-bar[data-cell-state=estimated] .scope-view-fill')!==null;
+      snapshot.shape='time-series';snapshot.interval={fromMs:'0',toMs:'20000',bucketMs:'10000'};
+      snapshot.fields=[{key:'fromMs',label:'From',type:'timestamp',unit:'ms'},{key:'toMs',label:'To',type:'timestamp',unit:'ms'},{key:'count',label:'Count',type:'number',unit:'records'},numeric,duration];
+      snapshot.rows=snapshot.rows.slice(0,2).map((item,index)=>({...item,state:'observed',values:{fromMs:String(index*10000),toMs:String((index+1)*10000),count:item.values.count,'numeric.mean':index===0?'-2':null,'duration.p95':item.values['duration.p95']}}));
+      chart.snapshot=snapshot;chart.display={kind:'time-bar',value:'numeric.mean'};
+      const signedTime=!chart.querySelector('.scope-time-track')&&chart.textContent.includes('requires nonnegative');
+      chart.display={kind:'time-bar',value:'duration.p95'};
+      const timeMeasure=chart.querySelectorAll('.scope-time-interval[data-state=observed]').length===1&&chart.querySelectorAll('.scope-time-interval[data-cell-state=no_valid_values]').length===1&&chart.querySelector('.scope-time-interval').title.includes('quantilesExactHigh');
+      const invalidGap=chart.querySelector('.scope-time-interval[data-cell-state=no_valid_values]').dataset.state==='unknown';
+      return {signed,rational,supportVisible,durationTable,headers,exactQuantiles,unavailable,estimated,signedTime,timeMeasure,invalidGap};
+    });
+    for(const [key,value] of Object.entries(measures))assert(value,key);
+    const exactAccess=await page.evaluate(()=>{
+      const snapshot=structuredClone(window.supplied);snapshot.rows=[{key:'precise',values:{category:'Precise',count:'1',mean:'1/3',amount:'9007199254740993.123456789'},cells:{mean:{state:'derived',support:{total:'1',valid:'1',missing:'0',empty:'0',invalid:'0'}}}}];
+      snapshot.fields.push({key:'mean',label:'Mean',type:'rational',unit:'USD',aggregation:{family:'numeric',kind:'mean',method:'exact-rational'}},{key:'amount',label:'Amount',type:'number',unit:'USD'});
+      const chart=document.createElement('goo-chart');chart.id='exactConformance';chart.snapshot=snapshot;chart.display={kind:'table'};document.body.append(chart);
+      const facet=document.createElement('goo-scope-facet');facet.snapshot=snapshot;facet.field='mean';document.body.append(facet);
+      let scopeEvents=0;facet.addEventListener('goo-scope',()=>scopeEvents++);
+      return {refusal:facet.textContent.includes('Choose a group dimension')&&!facet.querySelector('button'),scopeEvents};
+    });
+    assert(exactAccess.refusal);assert.equal(exactAccess.scopeEvents,0);
+    const rationalDetails=page.locator('#exactConformance td[title^="1/3 USD"] details');
+    await rationalDetails.locator('summary').focus();await page.keyboard.press('Enter');
+    assert(await rationalDetails.locator('.scope-view-exact').isVisible());
+    assert((await rationalDetails.locator('.scope-view-exact').textContent()).includes('1/3 USD'));
+    const decimalDetails=page.locator('#exactConformance td[title^="9007199254740993.123456789 USD"] details');
+    await decimalDetails.locator('summary').tap();
+    assert(await decimalDetails.locator('.scope-view-exact').isVisible());
+    assert((await decimalDetails.locator('.scope-view-exact').textContent()).includes('9007199254740993.123456789 USD'));
     assert(!requests.some(name=>name.startsWith('/api/')||name==='/app.mjs'));
-    console.log('Scoped components: exact values, missing cells, quality, complete-only refusal, table/bar/line/time-bar, interval gaps/no-data/unknown/UTC/clipped widths, typed intents, SSR/pre-upgrade,390px layout and no application IO pass');
+    console.log('Scoped components: exact values/rationals, human units/support/exact quantiles, per-cell gaps/estimates/signed fallback, complete-only refusal, table/bar/line/time-bar, interval gaps/UTC, typed intents, SSR/pre-upgrade,390px layout and no application IO pass');
   }finally{await browser?.close()}
 })().catch(error=>{console.error(error);process.exitCode=1});

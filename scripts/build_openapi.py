@@ -115,18 +115,48 @@ for name in ('ViewDataset','ViewScope','ViewField','ViewRow','ViewQuality','View
 exact_count={'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':20,'description':'Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value.'}
 epoch_ms={'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':16,'description':'Exact nonnegative epoch milliseconds, Date-safe; Go checked queries are bounded before2100.'}
 category={'type':['string','null'],'maxLength':1024,'description':'Null is missing; empty string is present empty. Runtime enforces1024 UTF-8 bytes; Schema maxLength counts characters.'}
+rational_value={'type':'string','pattern':'^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$','maxLength':1024,'description':'Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value.'}
+measure_specs={}
+for family,kinds in [('numeric',['mean','sum','min','max']),('duration',['mean','min','max','p50','p95','p99'])]:
+ for kind in kinds:
+  quantile={'p50':'0.5','p95':'0.95','p99':'0.99'}.get(kind)
+  measure_specs[family+'.'+kind]={'family':family,'kind':'quantile' if quantile else kind,'method':'quantilesExactHigh' if quantile else 'exact-rational' if kind=='mean' else 'exact',**({'quantile':quantile} if quantile else {})}
+measure_values={key:{**rational_value,'type':['string','null']} for key in measure_specs}
+for key in measure_values:
+ if key.startswith('duration.'):
+  measure_values[key]['pattern']='^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$' if key=='duration.mean' else '^(0|[1-9][0-9]*)$'
+  if key!='duration.mean':measure_values[key]['maxLength']=20
+for name in ('ViewAggregation','ViewCell','ViewSupport'):schemas['exploration.'+name]['additionalProperties']=False
+aggregation=schemas['exploration.ViewAggregation'];agg_props=aggregation['properties']
+agg_props['family']['enum']=['numeric','duration'];agg_props['kind']['enum']=['mean','sum','min','max','quantile'];agg_props['method']['enum']=['exact-rational','exact','quantilesExactHigh'];agg_props['quantile']['enum']=['0.5','0.95','0.99']
+aggregation['oneOf']=[{'properties':{key:{'const':value} for key,value in spec.items()},**({'not':{'required':['quantile']}} if 'quantile' not in spec else {'required':['quantile']})} for spec in measure_specs.values()]
+# Different keys may share identical aggregation descriptions; de-duplicate the
+# candidates so oneOf expresses semantic alternatives rather than field names.
+aggregation['oneOf']=list({json.dumps(x,sort_keys=True):x for x in aggregation['oneOf']}.values())
+support=schemas['exploration.ViewSupport']
+for key in ('total','valid','missing','empty','invalid'):support['properties'][key]=copy.deepcopy(exact_count)
+support['description']='Exact supporting-record partition. Runtime verifies total=valid+missing+empty+invalid and total equals the row record count.'
+cell=schemas['exploration.ViewCell'];cell['properties']['state']['enum']=['derived','estimated','no_data','no_valid_values','unknown']
+cell['allOf']=[
+ {'if':{'properties':{'state':{'const':'unknown'}},'required':['state']},'then':{'not':{'required':['support']}},'else':{'required':['support'],'properties':{'support':{'type':'object'}}}},
+ {'if':{'properties':{'state':{'enum':['derived','estimated']}},'required':['state']},'then':{'properties':{'support':{'properties':{'valid':{**exact_count,'pattern':'^[1-9][0-9]*$'}}}}}},
+ {'if':{'properties':{'state':{'const':'no_data'}},'required':['state']},'then':{'properties':{'support':{'properties':{key:{'const':'0'} for key in ('total','valid','missing','empty','invalid')}}}}},
+ {'if':{'properties':{'state':{'const':'no_valid_values'}},'required':['state']},'then':{'properties':{'support':{'properties':{'valid':{'const':'0'},'total':{**exact_count,'pattern':'^[1-9][0-9]*$'}}}}}}
+]
 schemas['exploration.ViewValues']={'type':'object','additionalProperties':{'type':['string','null'],'maxLength':1024},'description':'Exact strings or explicit missing values. Dataset fields and shape constrain every cell; no vendor-specific opaque payload.'}
 view=schemas['exploration.ViewDataset'];view_props=view['properties']
 view['description']='Supplied immutable count snapshot: exhaustive captured-query groups or explicit count intervals. Result-aspect completeness never certifies raw-record paging, upstream ingestion/sampling or a transactional count/page pair. Scope/revision equality and interval coverage are runtime checked.'
 view_props['version']['const']='goo.dataset/1';view_props['shape']['enum']=['ranked','time-series']
 view_props['id']['pattern']='^[a-f0-9]{64}:(groups|intervals)$';view_props['revision']['pattern']='^[a-f0-9]{64}$';view_props['capturedAt']['format']='date-time'
-view_props['fields']={'type':'array','minItems':2,'maxItems':3,'items':ref('exploration.ViewField')}
+view_props['fields']={'type':'array','minItems':2,'maxItems':13,'items':ref('exploration.ViewField')}
 view_props['rows']={'type':'array','maxItems':1000,'items':ref('exploration.ViewRow')}
 view_props['dimensions']={'type':'array','minItems':1,'maxItems':2,'uniqueItems':True,'items':{'enum':['category','category1']}}
 view_scope=schemas['exploration.ViewScope']['properties']
 for name in ('id','generation'):view_scope[name]['pattern']='^[a-f0-9]{64}$'
 view_scope['signal']['enum']=['logs','spans'];view_scope['selector']={**ref('exploration.Query'),'description':'Exact applied checked question including environment policy, window, predicates and grouping.'}
-view_field=schemas['exploration.ViewField']['properties'];view_field['key']['enum']=['category','category1','count','fromMs','toMs'];view_field['type']['enum']=['string','number','timestamp']
+view_field=schemas['exploration.ViewField']['properties'];view_field['key']['enum']=['category','category1','count','fromMs','toMs']+list(measure_specs);view_field['type']['enum']=['string','number','timestamp','rational']
+schemas['exploration.ViewField']['allOf']=[{'if':{'properties':{'key':{'const':key}},'required':['key']},'then':{'required':['aggregation','unit'],'properties':{'type':{'const':'rational'},'unit':{'const':'ns'} if spec['family']=='duration' else {'type':'string','minLength':1},'aggregation':{'type':'object','properties':{k:{'const':v} for k,v in spec.items()}}}}} for key,spec in measure_specs.items()]
+schemas['exploration.ViewField']['allOf'].append({'if':{'properties':{'key':{'enum':['category','category1','count','fromMs','toMs']}},'required':['key']},'then':{'not':{'required':['aggregation']}}})
 view_quality=schemas['exploration.ViewQuality']['properties'];view_quality['extent']['enum']=['complete','unknown']
 for name,value in [('basis','captured-query'),('value','derived'),('sampling','unknown'),('freshness','fixed')]:view_quality[name]['const']=value
 view_quality['sampling']['description']='Upstream sampling and collection completeness remain unverified even for complete result aspects.'
@@ -139,6 +169,16 @@ for name in ('fromMs','toMs'):interval_props[name]=copy.deepcopy(epoch_ms)
 interval_props['bucketMs']={'type':'string','enum':['1000','10000','60000','300000']}
 row=schemas['exploration.ViewRow'];row['properties']['state']['enum']=['observed','no_data','unknown']
 row['properties']['key'].update(minLength=1,maxLength=128,description='Stable snapshot row identity; never a source-record member reference.')
+row['properties']['cells']={'type':'object','maxProperties':10,'propertyNames':{'enum':list(measure_specs)},'additionalProperties':ref('exploration.ViewCell')}
+row['allOf']=[]
+for key in measure_specs:
+ row['allOf'].append({'if':{'properties':{'values':{'required':[key]}},'required':['values']},'then':{'required':['cells'],'properties':{'cells':{'required':[key]}}}})
+ row['allOf'].append({'if':{'properties':{'cells':{'required':[key]}},'required':['cells']},'then':{
+  'properties':{'values':{'required':[key]}},
+  'allOf':[{'if':{'properties':{'cells':{'properties':{key:{'properties':{'state':{'enum':['derived','estimated']}}}}}}},
+   'then':{'properties':{'values':{'properties':{key:rational_value}}}},
+   'else':{'properties':{'values':{'properties':{key:{'type':'null'}}}}}}]}})
+
 
 def view_field_spec(key,kind,unit=None,nullable=False):
  props={'key':{'const':key},'type':{'const':kind}}
@@ -149,15 +189,15 @@ def view_field_spec(key,kind,unit=None,nullable=False):
 ranked=[]
 for dims in (['category'],['category','category1']):
  fields=[view_field_spec(key,'string',nullable=True) for key in dims]+[view_field_spec('count','number','records')]
- values={'type':'object','required':dims+['count'],'properties':{**{key:category for key in dims},'count':exact_count},'additionalProperties':False}
+ values={'type':'object','required':dims+['count'],'properties':{**{key:category for key in dims},'count':exact_count,**measure_values},'additionalProperties':False}
  ranked_row={'allOf':[ref('exploration.ViewRow'),{
   'not':{'required':['state']},
   'properties':{'key':{'pattern':'^category:[a-f0-9]{64}$'},'values':values}}]}
  ranked.append({'required':['dimensions'],'properties':{
   'dimensions':{'const':dims},
-  'fields':{'minItems':len(fields),'maxItems':len(fields),'prefixItems':fields,'items':False},
+  'fields':{'minItems':len(fields),'maxItems':len(fields)+10,'prefixItems':fields,'items':{'allOf':[ref('exploration.ViewField'),{'properties':{'key':{'enum':list(measure_specs)}}}]}},
   'rows':{'items':ranked_row}}})
-time_values={'type':'object','required':['fromMs','toMs'],'properties':{'fromMs':epoch_ms,'toMs':epoch_ms,'count':{'type':['string','null']}},'additionalProperties':False}
+time_values={'type':'object','required':['fromMs','toMs'],'properties':{'fromMs':epoch_ms,'toMs':epoch_ms,'count':{'type':['string','null']},**measure_values},'additionalProperties':False}
 time_states=[{'properties':{'state':{'const':'observed'},'values':{'required':['count'],'properties':{'count':{**exact_count,'pattern':'^[1-9][0-9]*$'}}}}},{'properties':{'state':{'const':'no_data'},'values':{'required':['count'],'properties':{'count':{'const':'0'}}}}},{'properties':{'state':{'const':'unknown'},'values':{'properties':{'count':{'type':'null'}}}}}]
 time_fields=[view_field_spec('fromMs','timestamp','ms'),view_field_spec('toMs','timestamp','ms'),view_field_spec('count','number','records')]
 ranked_shape={'properties':{'shape':{'const':'ranked'},'id':{'pattern':'^[a-f0-9]{64}:groups$'},'completeness':{'properties':{'aspects':{'const':['groups']}}}},'not':{'required':['interval']},'oneOf':ranked}
@@ -167,7 +207,7 @@ time_row={'allOf':[ref('exploration.ViewRow'),{
  'oneOf':time_states}]}
 time_shape={'required':['interval'],'not':{'required':['dimensions']},'properties':{
  'shape':{'const':'time-series'},'id':{'pattern':'^[a-f0-9]{64}:intervals$'},'interval':{'type':'object'},
- 'fields':{'minItems':3,'maxItems':3,'prefixItems':time_fields,'items':False},
+ 'fields':{'minItems':3,'maxItems':13,'prefixItems':time_fields,'items':{'allOf':[ref('exploration.ViewField'),{'properties':{'key':{'enum':list(measure_specs)}}}]}},
  'rows':{'maxItems':240,'items':time_row},
  'completeness':{'properties':{'aspects':{'const':['intervals']}}}}}
 view['oneOf']=[ranked_shape,time_shape]

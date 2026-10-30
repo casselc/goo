@@ -1590,3 +1590,7 @@ public-contract adoption before Plotly/editor expansion; V0 is not complete.
 262 delivers [count interval and grouped tuple adoption](SCOPED_INTERVALS.md).
 Continue numeric/latency support and richer quality/interaction parity before
 expanding Plotly or the editor; this remains a bounded V0 implementation.
+
+263 delivers [numeric/latency scoped measures](SCOPED_MEASURES.md) with typed units,
+exact rational arithmetic, per-cell support and local measure switching. Continue
+summary/comparison and richer-family parity before renderer/editor expansion.

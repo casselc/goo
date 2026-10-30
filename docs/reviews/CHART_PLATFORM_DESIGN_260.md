@@ -556,3 +556,11 @@ Local code paths above were inspected directly. Official public sources read:
 Plotly/ECharts/Vega hosted documentation pages were unavailable under this
 session's network policy; official GitHub sources were used instead. No browser
 benchmark, accessibility certification or new renderer execution was performed.
+
+## Delivery updates through263
+
+The [scoped view](../SCOPED_VIEW_PILOT.md), [interval](../SCOPED_INTERVALS.md) and
+[measure](../SCOPED_MEASURES.md) cuts now implement the bounded native ranked/time
+contract, rational values, units, support/availability and passive chart/table/facet
+components. The family mapping above remains the migration target; native metrics,
+full summary/comparison adoption and whole-screen composition are not yet complete.

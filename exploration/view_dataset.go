@@ -37,16 +37,18 @@ type ViewScope struct {
 	Selector   json.RawMessage `json:"selector"`
 }
 type ViewField struct {
-	Key      string `json:"key"`
-	Label    string `json:"label"`
-	Type     string `json:"type"`
-	Unit     string `json:"unit,omitempty"`
-	Nullable bool   `json:"nullable,omitempty"`
+	Key         string           `json:"key"`
+	Label       string           `json:"label"`
+	Type        string           `json:"type"`
+	Unit        string           `json:"unit,omitempty"`
+	Nullable    bool             `json:"nullable,omitempty"`
+	Aggregation *ViewAggregation `json:"aggregation,omitempty"`
 }
 type ViewRow struct {
-	Key    string     `json:"key"`
-	Values ViewValues `json:"values"`
-	State  string     `json:"state,omitempty"`
+	Key    string              `json:"key"`
+	Values ViewValues          `json:"values"`
+	State  string              `json:"state,omitempty"`
+	Cells  map[string]ViewCell `json:"cells,omitempty"`
 }
 
 // ViewValues retains exact source-derived text and explicit missing values.
@@ -67,8 +69,8 @@ type ViewCompleteness struct {
 }
 
 func viewText(v string) *string { return &v }
-func countOnlyView(q Query) bool {
-	return q.Numeric == nil && q.NumericHistogram == nil && q.Summary == "" && !q.SpanStatus && !q.GroupTimeSeries
+func supportedViewMeasures(q Query) bool {
+	return q.NumericHistogram == nil && !q.SpanStatus && !q.GroupTimeSeries
 }
 func baseViewDataset(r *Result, shape, aspect string) *ViewDataset {
 	if !regexpRevision.MatchString(r.Basis) || r.Question.Validate() != nil {
@@ -97,7 +99,7 @@ func categoryField(i int) string {
 // separately read count or page length never establishes this attestation.
 func groupViewDataset(r *Result, exhaustiveGroups bool) *ViewDataset {
 	q := r.Question
-	if len(q.GroupBy) < 1 || len(q.GroupBy) > 2 || !countOnlyView(q) || len(r.Groups) > 1000 {
+	if len(q.GroupBy) < 1 || len(q.GroupBy) > 2 || !supportedViewMeasures(q) || len(r.Groups) > 1000 {
 		return nil
 	}
 	d := baseViewDataset(r, "ranked", "groups")
@@ -109,6 +111,7 @@ func groupViewDataset(r *Result, exhaustiveGroups bool) *ViewDataset {
 		d.Dimensions = append(d.Dimensions, categoryField(i))
 	}
 	d.Fields = append(d.Fields, ViewField{Key: "count", Label: "Captured records", Type: "number", Unit: "records"})
+	d.Fields = append(d.Fields, viewMeasureFields(q)...)
 	seen := map[string]bool{}
 	for _, raw := range r.Groups {
 		var g map[string]json.RawMessage
@@ -145,7 +148,18 @@ func groupViewDataset(r *Result, exhaustiveGroups bool) *ViewDataset {
 			return nil
 		}
 		seen[key] = true
-		d.Rows = append(d.Rows, ViewRow{Key: key, Values: values})
+		var summaries struct {
+			Numeric  *NumericSummary  `json:"numeric"`
+			Duration *DurationSummary `json:"duration"`
+		}
+		if json.Unmarshal(raw, &summaries) != nil {
+			return nil
+		}
+		cells, ok := viewMeasureCells(q, count, summaries.Numeric, summaries.Duration, false, values)
+		if !ok {
+			return nil
+		}
+		d.Rows = append(d.Rows, ViewRow{Key: key, Values: values, Cells: cells})
 	}
 	if exhaustiveGroups && r.State != "changed_between_reads" {
 		attestView(d, "groups")
@@ -158,7 +172,7 @@ func groupViewDataset(r *Result, exhaustiveGroups bool) *ViewDataset {
 // its exhaustive bounded source read establishes those no_data intervals.
 func timeViewDataset(r *Result, exhaustiveIntervals bool) *ViewDataset {
 	q := r.Question
-	if q.BucketMS <= 0 || !countOnlyView(q) || q.Validate() != nil || len(r.TimeSeries) > 240 {
+	if q.BucketMS <= 0 || !supportedViewMeasures(q) || q.Validate() != nil || len(r.TimeSeries) > 240 {
 		return nil
 	}
 	d := baseViewDataset(r, "time-series", "intervals")
@@ -167,6 +181,7 @@ func timeViewDataset(r *Result, exhaustiveIntervals bool) *ViewDataset {
 	}
 	d.Interval = &ViewInterval{FromMS: strconv.FormatInt(q.FromMS, 10), ToMS: strconv.FormatInt(q.ToMS, 10), BucketMS: strconv.FormatInt(q.BucketMS, 10)}
 	d.Fields = []ViewField{{Key: "fromMs", Label: "Interval start", Type: "timestamp", Unit: "ms"}, {Key: "toMs", Label: "Interval end", Type: "timestamp", Unit: "ms"}, {Key: "count", Label: "Captured records", Type: "number", Unit: "records"}}
+	d.Fields = append(d.Fields, viewMeasureFields(q)...)
 	previousEnd := q.FromMS
 	for _, p := range r.TimeSeries {
 		if p.FromMS < previousEnd || p.FromMS < q.FromMS || p.FromMS >= q.ToMS || (p.FromMS-q.FromMS)%q.BucketMS != 0 || p.ToMS != min(p.FromMS+q.BucketMS, q.ToMS) {
@@ -189,7 +204,11 @@ func timeViewDataset(r *Result, exhaustiveIntervals bool) *ViewDataset {
 			return nil
 		}
 		from, to := *values["fromMs"], *values["toMs"]
-		d.Rows = append(d.Rows, ViewRow{Key: "interval:" + from + ":" + to, State: p.State, Values: values})
+		cells, ok := viewMeasureCells(q, p.Count, p.Numeric, p.Duration, p.State == "unknown", values)
+		if !ok {
+			return nil
+		}
+		d.Rows = append(d.Rows, ViewRow{Key: "interval:" + from + ":" + to, State: p.State, Values: values, Cells: cells})
 		previousEnd = p.ToMS
 	}
 	if exhaustiveIntervals && r.State != "changed_between_reads" && ValidateTimeSeries(q, r.TimeSeries) == nil {

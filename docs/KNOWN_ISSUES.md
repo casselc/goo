@@ -1,13 +1,18 @@
 # Known issues and gaps
 
+263 adds [exact numeric/latency measures](SCOPED_MEASURES.md) to ordinary grouped
+and interval views, with per-cell support and unavailable gaps. Signed bar kinds
+fall back visibly to tables. Whole-population summaries/comparisons, histograms,
+status/grouped-time/native families and dedicated triage actions remain unmigrated.
+
 262 adds [count intervals and ordinary two-field count tables](SCOPED_INTERVALS.md),
 including known-zero/unknown/gap semantics and explicit checked-scope narrowing.
-Dedicated service/type actions, numeric/latency/native families, grouped time
-series and broader per-cell uncertainty remain unmigrated.
+Count interval adoption is extended by263 above. Native/status/histogram/grouped-
+time families, dedicated triage actions and broader uncertainty remain open.
 
 261 adds [scoped displays](SCOPED_VIEW_PILOT.md) for single-group count breakdowns.
 Native table/bar and shared facets use one supplied dataset; complete-only uses
-Go-attested groups. Richer/native families and broader per-cell uncertainty remain unmigrated. No Plotly, persisted view grammar or WYSIWYG editor is shipped.
+Go-attested groups. Broader statistical/measurement uncertainty and native families remain open. No Plotly, persisted view grammar or WYSIWYG editor is shipped.
 
 257–259 add local Activity/fixed/Saved record Keep/Open and server-wide discovery
 independent of XTDB. Find pages derived metadata; exact Open verifies records.

@@ -105,6 +105,8 @@ def check_view_dataset(spec):
     for mutant in time_mutants:
         assert not check_view.is_valid(mutant), 'Invalid explicit interval state accepted'
 
+    check_view_measures(spec, snapshot, time_series)
+
     missing = object()
     cases = [
         (('completeness',), missing),
@@ -131,6 +133,92 @@ def check_view_dataset(spec):
         else:
             parent[path[-1]] = value
         assert not check_view.is_valid(mutant), f'Invalid supplied view dataset accepted: {path}'
+
+
+def check_view_measures(spec, ranked, intervals):
+    check_view = validator(spec, {'$ref': '#/components/schemas/exploration.ViewDataset'})
+    supplied = copy.deepcopy(ranked)
+    supplied['rows'] = [supplied['rows'][0]]
+    row = supplied['rows'][0]
+    row['values']['count'] = '5'
+    row['cells'] = {}
+    definitions = {
+        'numeric.mean': ('7/6', 'USD', 'numeric', 'mean', 'exact-rational', None),
+        'numeric.sum': ('7/2', 'USD', 'numeric', 'sum', 'exact', None),
+        'numeric.min': ('1/2', 'USD', 'numeric', 'min', 'exact', None),
+        'numeric.max': ('2', 'USD', 'numeric', 'max', 'exact', None),
+        'duration.mean': ('3', 'ns', 'duration', 'mean', 'exact-rational', None),
+        'duration.min': ('1', 'ns', 'duration', 'min', 'exact', None),
+        'duration.max': ('5', 'ns', 'duration', 'max', 'exact', None),
+        'duration.p50': ('3', 'ns', 'duration', 'quantile', 'quantilesExactHigh', '0.5'),
+        'duration.p95': ('5', 'ns', 'duration', 'quantile', 'quantilesExactHigh', '0.95'),
+        'duration.p99': ('5', 'ns', 'duration', 'quantile', 'quantilesExactHigh', '0.99')}
+    for key, (value, unit, family, kind, method, quantile) in definitions.items():
+        agg = {'family': family, 'kind': kind, 'method': method}
+        if quantile:
+            agg['quantile'] = quantile
+        supplied['fields'].append({'key': key, 'label': key, 'type': 'rational', 'unit': unit, 'aggregation': agg})
+        row['values'][key] = value
+        row['cells'][key] = {'state': 'derived', 'support': {
+            'total': '5', 'valid': '3' if family == 'numeric' else '5',
+            'missing': '1' if family == 'numeric' else '0', 'empty': '0',
+            'invalid': '1' if family == 'numeric' else '0'}}
+    supplied['scope']['selector']['numeric'] = {'field': {'kind': 'attribute', 'key': 'cost'}, 'type': 'decimal64', 'scale': 2, 'unit': 'USD', 'parse': 'canonical-decimal'}
+    supplied['scope']['selector']['summary'] = 'span-duration'
+    check_view.validate(supplied)
+    unavailable = copy.deepcopy(supplied)
+    for key in definitions:
+        if key.startswith('numeric.'):
+            unavailable['rows'][0]['values'][key] = None
+            unavailable['rows'][0]['cells'][key] = {'state': 'no_valid_values', 'support': {'total': '5', 'valid': '0', 'missing': '2', 'empty': '1', 'invalid': '2'}}
+    check_view.validate(unavailable)
+    no_data = copy.deepcopy(supplied)
+    no_data['rows'][0]['values']['count'] = '0'
+    for key in definitions:
+        no_data['rows'][0]['values'][key] = None
+        no_data['rows'][0]['cells'][key] = {'state': 'no_data', 'support': {part: '0' for part in ('total', 'valid', 'missing', 'empty', 'invalid')}}
+    check_view.validate(no_data)
+    unknown = copy.deepcopy(intervals)
+    unknown['quality']['extent'] = 'unknown'
+    del unknown['completeness']
+    unknown['fields'].extend(copy.deepcopy(supplied['fields'][2:]))
+    unknown['rows'] = [unknown['rows'][0]]
+    unknown['rows'][0]['state'] = 'unknown'
+    unknown['rows'][0]['values']['count'] = None
+    unknown['rows'][0]['cells'] = {}
+    for key in definitions:
+        unknown['rows'][0]['values'][key] = None
+        unknown['rows'][0]['cells'][key] = {'state': 'unknown'}
+    check_view.validate(unknown)
+    mutants = []
+    for path, value in [
+        (('rows', 0, 'values', 'numeric.mean'), 7/6),
+        (('rows', 0, 'values', 'numeric.mean'), None),
+        (('rows', 0, 'cells', 'numeric.mean', 'support', 'valid'), '0'),
+        (('rows', 0, 'values', 'duration.p95'), '-1'),
+        (('rows', 0, 'values', 'duration.p95'), '1/2'),
+        (('fields', 10, 'unit'), 'ms'),
+        (('fields', 10, 'aggregation', 'method'), 'estimated'),
+        (('fields', 2, 'aggregation', 'method'), 'exact'),
+        (('rows', 0, 'cells', 'numeric.mean'), None),
+    ]:
+        mutant = copy.deepcopy(supplied)
+        parent = mutant
+        for key in path[:-1]:
+            parent = parent[key]
+        parent[path[-1]] = value
+        mutants.append(mutant)
+    zero_sum = copy.deepcopy(unavailable)
+    zero_sum['rows'][0]['values']['numeric.sum'] = '0'
+    mutants.append(zero_sum)
+    missing_cell = copy.deepcopy(supplied)
+    del missing_cell['rows'][0]['cells']['numeric.mean']
+    mutants.append(missing_cell)
+    unknown_support = copy.deepcopy(unknown)
+    unknown_support['rows'][0]['cells']['numeric.mean']['support'] = {part: '0' for part in ('total', 'valid', 'missing', 'empty', 'invalid')}
+    mutants.append(unknown_support)
+    for mutant in mutants:
+        assert not check_view.is_valid(mutant), 'Invalid exact measure/support/method accepted'
 
 
 def check(spec):

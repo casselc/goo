@@ -11396,6 +11396,51 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.ValueCount"
   },
+  "exploration.ViewAggregation": {
+    "properties": {
+      "family": {
+        "type": "string"
+      },
+      "kind": {
+        "type": "string"
+      },
+      "method": {
+        "type": "string"
+      },
+      "quantile": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "family",
+      "kind",
+      "method"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ViewAggregation"
+  },
+  "exploration.ViewCell": {
+    "properties": {
+      "state": {
+        "type": "string"
+      },
+      "support": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ViewSupport"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "state"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ViewCell"
+  },
   "exploration.ViewCompleteness": {
     "properties": {
       "aspects": {
@@ -11529,6 +11574,16 @@
   },
   "exploration.ViewField": {
     "properties": {
+      "aggregation": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ViewAggregation"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "key": {
         "type": "string"
       },
@@ -11603,6 +11658,19 @@
   },
   "exploration.ViewRow": {
     "properties": {
+      "cells": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/exploration.ViewCell"
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "key": {
         "type": "string"
       },
@@ -11658,6 +11726,34 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.ViewScope"
+  },
+  "exploration.ViewSupport": {
+    "properties": {
+      "empty": {
+        "type": "string"
+      },
+      "invalid": {
+        "type": "string"
+      },
+      "missing": {
+        "type": "string"
+      },
+      "total": {
+        "type": "string"
+      },
+      "valid": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "total",
+      "valid",
+      "missing",
+      "empty",
+      "invalid"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ViewSupport"
   },
   "identity.EnvironmentObservation": {
     "properties": {

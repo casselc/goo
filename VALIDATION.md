@@ -1,5 +1,57 @@
 # Validation record
 
+## Exact numeric and latency scoped measures — 263
+
+Delivered numeric and span-duration fields in shared ranked/interval snapshots,
+with typed units/methods, exact rational arithmetic and per-cell support/availability.
+Measure/view switches stay local; group/window children preserve bindings and wait
+for Run. Empirical quantiles retain quantilesExactHigh; no percentile averaging.
+Unavailable sums remain null, signed bar values explicitly use table fallback,
+and precision is keyboard/touch-accessible. See [contract/diagram](docs/SCOPED_MEASURES.md)
+and [executable storyboard/frames](journeys/263-scoped-measures-storyboard.md).
+Whole-population summaries/comparisons, native/status/histogram/grouped-time families,
+signed geometry and saved composition/editor remain outside this cut.
+
+Full Go tests and all667 frontend tests pass, with no frontend skips. Six new Go
+measure tests include180 generated scaled-rational cases, support partitions,
+no-valid sum versus valid cancellation zero, exactHigh quantiles, malformed
+summaries, clipped/no-data/unknown cells, immutable scope/support and exactly five
+source reads for both families (no added read). Actual serialized Go ranked/time
+snapshots also validate against OpenAPI and the JS contract. API checks pass96
+operations,429 response fixtures,159 requests,28 mux refusals and12 new measure
+schema negative controls alongside prior dataset controls.
+
+Standalone Chromium conformance passes human units/exact rationals and quantiles,
+per-cell support/states, missing versus zero, signed fallback, estimated hatching,
+complete-only eligibility, SSR/pre-upgrade/detached rendering,390px and no app IO.
+It opens exact1/3 USD with keyboard and a large precise decimal with touch; exact
+values are selectable, not confined to hover. Aggregate/non-dimension facets refuse
+before emitting actions. Pure formatting/contract tests cover rounding separately
+from estimation and preserve exact strings beyond JavaScript's integer precision.
+
+Actual OTLP→ClickHouse→generic Go journeys261/262/263 pass together in1.2min;
+263 takes43.4s including a35-second Bombadil campaign. The campaign observes626
+snapshots through12 phases and three explicit Runs with no unexpected reads.
+The real journey verifies exact9/5 USD from2/5 valid records (one each missing,
+empty, invalid), unavailable invalid-only sums, signed fallback, empirical p95,
+keyboard precision inspection, zero-query measure/view changes, retained measure
+selection, source-free staging and numeric/summary preservation on child Runs.
+Final documentation frames are regenerated after the caption cleanup.
+
+Observed effect replay via observability/quintgo passes in28.16s and rejects all12
+illicit read/generation controls. The model checks projected ownership, not source
+truth or whole-product liveness. Hegel runs90 cases (30 action sequences,30 interval
+cases,30 rational/support cases) against actual JS; the rational oracle uses Go
+math/big. Independent review's precision accessibility issue is corrected; final
+review found no remaining blocker for this slice.
+
+Configured CA-trusted build and packages-only lab deployment succeeded:
+`0a57dbb5505765cce964cb5687d9216a576b273d05cb44cab134720f39c06703`.
+Root HTTP returns200; five display assets match source bytes. Other services and
+volumes are preserved. Obsolete unused build cache was pruned; compact ledgers and
+documentation frames are retained, disposable raw campaign output removed.
+
+
 ## Count intervals and multi-field scoped displays — 262
 
 The shared canonical snapshot now covers count intervals and ordinary one/two-field

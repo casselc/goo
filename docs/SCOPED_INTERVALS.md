@@ -1,5 +1,8 @@
 # Scoped intervals and grouped tuples — 262
 
+263 extends this contract to [numeric and latency measures](SCOPED_MEASURES.md).
+The262 delivery below describes the interval/count foundation.
+
 The shared display contract now covers count time series and one/two-field count
 breakdowns. This extends [the first scoped-view pilot](SCOPED_VIEW_PILOT.md), not
 a new query engine, Plotly integration or complete visual-authoring system.

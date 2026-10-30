@@ -511,3 +511,8 @@ sampling stays unknown. [Storyboard](journeys/261-scoped-breakdown-storyboard.md
 same display contract: exact UTC windows, known-zero versus unknown coverage,
 true clipped bucket widths, all-dimension tables and explicit staged narrowing.
 [Current storyboard](journeys/262-scoped-intervals-storyboard.md).
+
+[Numeric and latency measures](docs/SCOPED_MEASURES.md) now share those views: switch
+measures locally, inspect exact fractions and contributing counts, and narrow with
+the binding and units intact. Unavailable values remain gaps; duration quantiles
+retain their exact empirical method. [Storyboard](journeys/263-scoped-measures-storyboard.md).

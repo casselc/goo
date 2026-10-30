@@ -1366,3 +1366,8 @@ Only single-group count exploration is adopted; this is not whole-UI grammar par
 `dimensions` and `groupIntent` preserve full grouped tuples. See
 [contracts and adoption limits](SCOPED_INTERVALS.md). Unknown intervals remain
 distinct from known zero; complete-only requires attested gap-free coverage.
+
+263 adds exact rational aggregate fields and per-cell support/state to the shared
+chart/table contract. `view-values.mjs` supplies common formatting and accessible
+exact-cell disclosures; selected measure switches remain IO-free. See
+[measure semantics and adoption limits](SCOPED_MEASURES.md).

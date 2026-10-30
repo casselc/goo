@@ -1320,3 +1320,9 @@ Only explicit Run executes; existing richer presenters remain outside this pilot
 field maps, explicit dimensions and named group/interval completeness aspects.
 [The scoped interval flow](SCOPED_INTERVALS.md) keeps rendering passive and stages
 checked time/tuple intents through the existing fixed-question owner.
+
+263 adds [typed rational measures and per-cell support](SCOPED_MEASURES.md),
+projected from existing validated Go aggregates without extra reads. Common
+formatters preserve exact values separately from human labels and geometry.
+Measure/view selection remains presentation state; only scoped group/window
+intents reach the fixed-question staging owner.

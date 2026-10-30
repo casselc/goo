@@ -698,6 +698,10 @@ under multiple charts and live data before broad migration.
 
 ## Implementation order
 
+263 extends the native foundation with [numeric/latency measures](SCOPED_MEASURES.md)
+and per-cell support/availability. This is delivered bounded adoption, not a
+claim of whole-family or whole-screen composition parity.
+
 262 extends the delivered slice to [count intervals and grouped tuples](SCOPED_INTERVALS.md),
 with exact window/state/quality contracts and staged effects. Richer measure
 support and full-family/whole-screen parity remain target work.

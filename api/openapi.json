@@ -18025,6 +18025,390 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ValueCount"
       },
+      "exploration.ViewAggregation": {
+        "properties": {
+          "family": {
+            "type": "string",
+            "enum": [
+              "numeric",
+              "duration"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "mean",
+              "sum",
+              "min",
+              "max",
+              "quantile"
+            ]
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "exact-rational",
+              "exact",
+              "quantilesExactHigh"
+            ]
+          },
+          "quantile": {
+            "type": "string",
+            "enum": [
+              "0.5",
+              "0.95",
+              "0.99"
+            ]
+          }
+        },
+        "required": [
+          "family",
+          "kind",
+          "method"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewAggregation",
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "properties": {
+              "family": {
+                "const": "numeric"
+              },
+              "kind": {
+                "const": "mean"
+              },
+              "method": {
+                "const": "exact-rational"
+              }
+            },
+            "not": {
+              "required": [
+                "quantile"
+              ]
+            }
+          },
+          {
+            "properties": {
+              "family": {
+                "const": "numeric"
+              },
+              "kind": {
+                "const": "sum"
+              },
+              "method": {
+                "const": "exact"
+              }
+            },
+            "not": {
+              "required": [
+                "quantile"
+              ]
+            }
+          },
+          {
+            "properties": {
+              "family": {
+                "const": "numeric"
+              },
+              "kind": {
+                "const": "min"
+              },
+              "method": {
+                "const": "exact"
+              }
+            },
+            "not": {
+              "required": [
+                "quantile"
+              ]
+            }
+          },
+          {
+            "properties": {
+              "family": {
+                "const": "numeric"
+              },
+              "kind": {
+                "const": "max"
+              },
+              "method": {
+                "const": "exact"
+              }
+            },
+            "not": {
+              "required": [
+                "quantile"
+              ]
+            }
+          },
+          {
+            "properties": {
+              "family": {
+                "const": "duration"
+              },
+              "kind": {
+                "const": "mean"
+              },
+              "method": {
+                "const": "exact-rational"
+              }
+            },
+            "not": {
+              "required": [
+                "quantile"
+              ]
+            }
+          },
+          {
+            "properties": {
+              "family": {
+                "const": "duration"
+              },
+              "kind": {
+                "const": "min"
+              },
+              "method": {
+                "const": "exact"
+              }
+            },
+            "not": {
+              "required": [
+                "quantile"
+              ]
+            }
+          },
+          {
+            "properties": {
+              "family": {
+                "const": "duration"
+              },
+              "kind": {
+                "const": "max"
+              },
+              "method": {
+                "const": "exact"
+              }
+            },
+            "not": {
+              "required": [
+                "quantile"
+              ]
+            }
+          },
+          {
+            "properties": {
+              "family": {
+                "const": "duration"
+              },
+              "kind": {
+                "const": "quantile"
+              },
+              "method": {
+                "const": "quantilesExactHigh"
+              },
+              "quantile": {
+                "const": "0.5"
+              }
+            },
+            "required": [
+              "quantile"
+            ]
+          },
+          {
+            "properties": {
+              "family": {
+                "const": "duration"
+              },
+              "kind": {
+                "const": "quantile"
+              },
+              "method": {
+                "const": "quantilesExactHigh"
+              },
+              "quantile": {
+                "const": "0.95"
+              }
+            },
+            "required": [
+              "quantile"
+            ]
+          },
+          {
+            "properties": {
+              "family": {
+                "const": "duration"
+              },
+              "kind": {
+                "const": "quantile"
+              },
+              "method": {
+                "const": "quantilesExactHigh"
+              },
+              "quantile": {
+                "const": "0.99"
+              }
+            },
+            "required": [
+              "quantile"
+            ]
+          }
+        ]
+      },
+      "exploration.ViewCell": {
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "derived",
+              "estimated",
+              "no_data",
+              "no_valid_values",
+              "unknown"
+            ]
+          },
+          "support": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewSupport"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewCell",
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "unknown"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "not": {
+                "required": [
+                  "support"
+                ]
+              }
+            },
+            "else": {
+              "required": [
+                "support"
+              ],
+              "properties": {
+                "support": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "enum": [
+                    "derived",
+                    "estimated"
+                  ]
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "properties": {
+                "support": {
+                  "properties": {
+                    "valid": {
+                      "type": "string",
+                      "pattern": "^[1-9][0-9]*$",
+                      "maxLength": 20,
+                      "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "no_data"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "properties": {
+                "support": {
+                  "properties": {
+                    "total": {
+                      "const": "0"
+                    },
+                    "valid": {
+                      "const": "0"
+                    },
+                    "missing": {
+                      "const": "0"
+                    },
+                    "empty": {
+                      "const": "0"
+                    },
+                    "invalid": {
+                      "const": "0"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "no_valid_values"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "properties": {
+                "support": {
+                  "properties": {
+                    "valid": {
+                      "const": "0"
+                    },
+                    "total": {
+                      "type": "string",
+                      "pattern": "^[1-9][0-9]*$",
+                      "maxLength": 20,
+                      "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
       "exploration.ViewCompleteness": {
         "properties": {
           "aspects": {
@@ -18093,7 +18477,7 @@
           "fields": {
             "type": "array",
             "minItems": 2,
-            "maxItems": 3,
+            "maxItems": 13,
             "items": {
               "$ref": "#/components/schemas/exploration.ViewField"
             }
@@ -18193,7 +18577,7 @@
                   },
                   "fields": {
                     "minItems": 2,
-                    "maxItems": 2,
+                    "maxItems": 12,
                     "prefixItems": [
                       {
                         "allOf": [
@@ -18242,7 +18626,31 @@
                         ]
                       }
                     ],
-                    "items": false
+                    "items": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/exploration.ViewField"
+                        },
+                        {
+                          "properties": {
+                            "key": {
+                              "enum": [
+                                "numeric.mean",
+                                "numeric.sum",
+                                "numeric.min",
+                                "numeric.max",
+                                "duration.mean",
+                                "duration.min",
+                                "duration.max",
+                                "duration.p50",
+                                "duration.p95",
+                                "duration.p99"
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
                   },
                   "rows": {
                     "items": {
@@ -18280,6 +18688,96 @@
                                   "pattern": "^(0|[1-9][0-9]*)$",
                                   "maxLength": 20,
                                   "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                                },
+                                "numeric.mean": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                                  "maxLength": 1024,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "numeric.sum": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                                  "maxLength": 1024,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "numeric.min": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                                  "maxLength": 1024,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "numeric.max": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                                  "maxLength": 1024,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "duration.mean": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                                  "maxLength": 1024,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "duration.min": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "duration.max": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "duration.p50": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "duration.p95": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "duration.p99": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
                                 }
                               },
                               "additionalProperties": false
@@ -18304,7 +18802,7 @@
                   },
                   "fields": {
                     "minItems": 3,
-                    "maxItems": 3,
+                    "maxItems": 13,
                     "prefixItems": [
                       {
                         "allOf": [
@@ -18376,7 +18874,31 @@
                         ]
                       }
                     ],
-                    "items": false
+                    "items": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/exploration.ViewField"
+                        },
+                        {
+                          "properties": {
+                            "key": {
+                              "enum": [
+                                "numeric.mean",
+                                "numeric.sum",
+                                "numeric.min",
+                                "numeric.max",
+                                "duration.mean",
+                                "duration.min",
+                                "duration.max",
+                                "duration.p50",
+                                "duration.p95",
+                                "duration.p99"
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
                   },
                   "rows": {
                     "items": {
@@ -18423,6 +18945,96 @@
                                   "pattern": "^(0|[1-9][0-9]*)$",
                                   "maxLength": 20,
                                   "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                                },
+                                "numeric.mean": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                                  "maxLength": 1024,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "numeric.sum": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                                  "maxLength": 1024,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "numeric.min": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                                  "maxLength": 1024,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "numeric.max": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                                  "maxLength": 1024,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "duration.mean": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                                  "maxLength": 1024,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "duration.min": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "duration.max": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "duration.p50": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "duration.p95": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "duration.p99": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
                                 }
                               },
                               "additionalProperties": false
@@ -18457,7 +19069,7 @@
               },
               "fields": {
                 "minItems": 3,
-                "maxItems": 3,
+                "maxItems": 13,
                 "prefixItems": [
                   {
                     "allOf": [
@@ -18529,7 +19141,31 @@
                     ]
                   }
                 ],
-                "items": false
+                "items": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/exploration.ViewField"
+                    },
+                    {
+                      "properties": {
+                        "key": {
+                          "enum": [
+                            "numeric.mean",
+                            "numeric.sum",
+                            "numeric.min",
+                            "numeric.max",
+                            "duration.mean",
+                            "duration.min",
+                            "duration.max",
+                            "duration.p50",
+                            "duration.p95",
+                            "duration.p99"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
               },
               "rows": {
                 "maxItems": 240,
@@ -18570,6 +19206,96 @@
                                 "string",
                                 "null"
                               ]
+                            },
+                            "numeric.mean": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                              "maxLength": 1024,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "numeric.sum": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                              "maxLength": 1024,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "numeric.min": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                              "maxLength": 1024,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "numeric.max": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                              "maxLength": 1024,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "duration.mean": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                              "maxLength": 1024,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "duration.min": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "duration.max": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "duration.p50": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "duration.p95": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "duration.p99": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
                             }
                           },
                           "additionalProperties": false
@@ -18697,6 +19423,16 @@
       },
       "exploration.ViewField": {
         "properties": {
+          "aggregation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewAggregation"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "key": {
             "type": "string",
             "enum": [
@@ -18704,7 +19440,17 @@
               "category1",
               "count",
               "fromMs",
-              "toMs"
+              "toMs",
+              "numeric.mean",
+              "numeric.sum",
+              "numeric.min",
+              "numeric.max",
+              "duration.mean",
+              "duration.min",
+              "duration.max",
+              "duration.p50",
+              "duration.p95",
+              "duration.p99"
             ]
           },
           "label": {
@@ -18718,7 +19464,8 @@
             "enum": [
               "string",
               "number",
-              "timestamp"
+              "timestamp",
+              "rational"
             ]
           },
           "unit": {
@@ -18732,7 +19479,447 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ViewField",
-        "additionalProperties": false
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "key": {
+                  "const": "numeric.mean"
+                }
+              },
+              "required": [
+                "key"
+              ]
+            },
+            "then": {
+              "required": [
+                "aggregation",
+                "unit"
+              ],
+              "properties": {
+                "type": {
+                  "const": "rational"
+                },
+                "unit": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "aggregation": {
+                  "type": "object",
+                  "properties": {
+                    "family": {
+                      "const": "numeric"
+                    },
+                    "kind": {
+                      "const": "mean"
+                    },
+                    "method": {
+                      "const": "exact-rational"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "key": {
+                  "const": "numeric.sum"
+                }
+              },
+              "required": [
+                "key"
+              ]
+            },
+            "then": {
+              "required": [
+                "aggregation",
+                "unit"
+              ],
+              "properties": {
+                "type": {
+                  "const": "rational"
+                },
+                "unit": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "aggregation": {
+                  "type": "object",
+                  "properties": {
+                    "family": {
+                      "const": "numeric"
+                    },
+                    "kind": {
+                      "const": "sum"
+                    },
+                    "method": {
+                      "const": "exact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "key": {
+                  "const": "numeric.min"
+                }
+              },
+              "required": [
+                "key"
+              ]
+            },
+            "then": {
+              "required": [
+                "aggregation",
+                "unit"
+              ],
+              "properties": {
+                "type": {
+                  "const": "rational"
+                },
+                "unit": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "aggregation": {
+                  "type": "object",
+                  "properties": {
+                    "family": {
+                      "const": "numeric"
+                    },
+                    "kind": {
+                      "const": "min"
+                    },
+                    "method": {
+                      "const": "exact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "key": {
+                  "const": "numeric.max"
+                }
+              },
+              "required": [
+                "key"
+              ]
+            },
+            "then": {
+              "required": [
+                "aggregation",
+                "unit"
+              ],
+              "properties": {
+                "type": {
+                  "const": "rational"
+                },
+                "unit": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "aggregation": {
+                  "type": "object",
+                  "properties": {
+                    "family": {
+                      "const": "numeric"
+                    },
+                    "kind": {
+                      "const": "max"
+                    },
+                    "method": {
+                      "const": "exact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "key": {
+                  "const": "duration.mean"
+                }
+              },
+              "required": [
+                "key"
+              ]
+            },
+            "then": {
+              "required": [
+                "aggregation",
+                "unit"
+              ],
+              "properties": {
+                "type": {
+                  "const": "rational"
+                },
+                "unit": {
+                  "const": "ns"
+                },
+                "aggregation": {
+                  "type": "object",
+                  "properties": {
+                    "family": {
+                      "const": "duration"
+                    },
+                    "kind": {
+                      "const": "mean"
+                    },
+                    "method": {
+                      "const": "exact-rational"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "key": {
+                  "const": "duration.min"
+                }
+              },
+              "required": [
+                "key"
+              ]
+            },
+            "then": {
+              "required": [
+                "aggregation",
+                "unit"
+              ],
+              "properties": {
+                "type": {
+                  "const": "rational"
+                },
+                "unit": {
+                  "const": "ns"
+                },
+                "aggregation": {
+                  "type": "object",
+                  "properties": {
+                    "family": {
+                      "const": "duration"
+                    },
+                    "kind": {
+                      "const": "min"
+                    },
+                    "method": {
+                      "const": "exact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "key": {
+                  "const": "duration.max"
+                }
+              },
+              "required": [
+                "key"
+              ]
+            },
+            "then": {
+              "required": [
+                "aggregation",
+                "unit"
+              ],
+              "properties": {
+                "type": {
+                  "const": "rational"
+                },
+                "unit": {
+                  "const": "ns"
+                },
+                "aggregation": {
+                  "type": "object",
+                  "properties": {
+                    "family": {
+                      "const": "duration"
+                    },
+                    "kind": {
+                      "const": "max"
+                    },
+                    "method": {
+                      "const": "exact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "key": {
+                  "const": "duration.p50"
+                }
+              },
+              "required": [
+                "key"
+              ]
+            },
+            "then": {
+              "required": [
+                "aggregation",
+                "unit"
+              ],
+              "properties": {
+                "type": {
+                  "const": "rational"
+                },
+                "unit": {
+                  "const": "ns"
+                },
+                "aggregation": {
+                  "type": "object",
+                  "properties": {
+                    "family": {
+                      "const": "duration"
+                    },
+                    "kind": {
+                      "const": "quantile"
+                    },
+                    "method": {
+                      "const": "quantilesExactHigh"
+                    },
+                    "quantile": {
+                      "const": "0.5"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "key": {
+                  "const": "duration.p95"
+                }
+              },
+              "required": [
+                "key"
+              ]
+            },
+            "then": {
+              "required": [
+                "aggregation",
+                "unit"
+              ],
+              "properties": {
+                "type": {
+                  "const": "rational"
+                },
+                "unit": {
+                  "const": "ns"
+                },
+                "aggregation": {
+                  "type": "object",
+                  "properties": {
+                    "family": {
+                      "const": "duration"
+                    },
+                    "kind": {
+                      "const": "quantile"
+                    },
+                    "method": {
+                      "const": "quantilesExactHigh"
+                    },
+                    "quantile": {
+                      "const": "0.95"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "key": {
+                  "const": "duration.p99"
+                }
+              },
+              "required": [
+                "key"
+              ]
+            },
+            "then": {
+              "required": [
+                "aggregation",
+                "unit"
+              ],
+              "properties": {
+                "type": {
+                  "const": "rational"
+                },
+                "unit": {
+                  "const": "ns"
+                },
+                "aggregation": {
+                  "type": "object",
+                  "properties": {
+                    "family": {
+                      "const": "duration"
+                    },
+                    "kind": {
+                      "const": "quantile"
+                    },
+                    "method": {
+                      "const": "quantilesExactHigh"
+                    },
+                    "quantile": {
+                      "const": "0.99"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "key": {
+                  "enum": [
+                    "category",
+                    "category1",
+                    "count",
+                    "fromMs",
+                    "toMs"
+                  ]
+                }
+              },
+              "required": [
+                "key"
+              ]
+            },
+            "then": {
+              "not": {
+                "required": [
+                  "aggregation"
+                ]
+              }
+            }
+          }
+        ]
       },
       "exploration.ViewInterval": {
         "properties": {
@@ -18808,6 +19995,27 @@
       },
       "exploration.ViewRow": {
         "properties": {
+          "cells": {
+            "type": "object",
+            "maxProperties": 10,
+            "propertyNames": {
+              "enum": [
+                "numeric.mean",
+                "numeric.sum",
+                "numeric.min",
+                "numeric.max",
+                "duration.mean",
+                "duration.min",
+                "duration.max",
+                "duration.p50",
+                "duration.p95",
+                "duration.p99"
+              ]
+            },
+            "additionalProperties": {
+              "$ref": "#/components/schemas/exploration.ViewCell"
+            }
+          },
           "key": {
             "type": "string",
             "minLength": 1,
@@ -18849,7 +20057,969 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ViewRow",
-        "additionalProperties": false
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "numeric.mean"
+                  ]
+                }
+              },
+              "required": [
+                "values"
+              ]
+            },
+            "then": {
+              "required": [
+                "cells"
+              ],
+              "properties": {
+                "cells": {
+                  "required": [
+                    "numeric.mean"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "cells": {
+                  "required": [
+                    "numeric.mean"
+                  ]
+                }
+              },
+              "required": [
+                "cells"
+              ]
+            },
+            "then": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "numeric.mean"
+                  ]
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "cells": {
+                        "properties": {
+                          "numeric.mean": {
+                            "properties": {
+                              "state": {
+                                "enum": [
+                                  "derived",
+                                  "estimated"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "numeric.mean": {
+                            "type": "string",
+                            "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                            "maxLength": 1024,
+                            "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "numeric.mean": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "numeric.sum"
+                  ]
+                }
+              },
+              "required": [
+                "values"
+              ]
+            },
+            "then": {
+              "required": [
+                "cells"
+              ],
+              "properties": {
+                "cells": {
+                  "required": [
+                    "numeric.sum"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "cells": {
+                  "required": [
+                    "numeric.sum"
+                  ]
+                }
+              },
+              "required": [
+                "cells"
+              ]
+            },
+            "then": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "numeric.sum"
+                  ]
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "cells": {
+                        "properties": {
+                          "numeric.sum": {
+                            "properties": {
+                              "state": {
+                                "enum": [
+                                  "derived",
+                                  "estimated"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "numeric.sum": {
+                            "type": "string",
+                            "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                            "maxLength": 1024,
+                            "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "numeric.sum": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "numeric.min"
+                  ]
+                }
+              },
+              "required": [
+                "values"
+              ]
+            },
+            "then": {
+              "required": [
+                "cells"
+              ],
+              "properties": {
+                "cells": {
+                  "required": [
+                    "numeric.min"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "cells": {
+                  "required": [
+                    "numeric.min"
+                  ]
+                }
+              },
+              "required": [
+                "cells"
+              ]
+            },
+            "then": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "numeric.min"
+                  ]
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "cells": {
+                        "properties": {
+                          "numeric.min": {
+                            "properties": {
+                              "state": {
+                                "enum": [
+                                  "derived",
+                                  "estimated"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "numeric.min": {
+                            "type": "string",
+                            "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                            "maxLength": 1024,
+                            "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "numeric.min": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "numeric.max"
+                  ]
+                }
+              },
+              "required": [
+                "values"
+              ]
+            },
+            "then": {
+              "required": [
+                "cells"
+              ],
+              "properties": {
+                "cells": {
+                  "required": [
+                    "numeric.max"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "cells": {
+                  "required": [
+                    "numeric.max"
+                  ]
+                }
+              },
+              "required": [
+                "cells"
+              ]
+            },
+            "then": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "numeric.max"
+                  ]
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "cells": {
+                        "properties": {
+                          "numeric.max": {
+                            "properties": {
+                              "state": {
+                                "enum": [
+                                  "derived",
+                                  "estimated"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "numeric.max": {
+                            "type": "string",
+                            "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                            "maxLength": 1024,
+                            "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "numeric.max": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "duration.mean"
+                  ]
+                }
+              },
+              "required": [
+                "values"
+              ]
+            },
+            "then": {
+              "required": [
+                "cells"
+              ],
+              "properties": {
+                "cells": {
+                  "required": [
+                    "duration.mean"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "cells": {
+                  "required": [
+                    "duration.mean"
+                  ]
+                }
+              },
+              "required": [
+                "cells"
+              ]
+            },
+            "then": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "duration.mean"
+                  ]
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "cells": {
+                        "properties": {
+                          "duration.mean": {
+                            "properties": {
+                              "state": {
+                                "enum": [
+                                  "derived",
+                                  "estimated"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "duration.mean": {
+                            "type": "string",
+                            "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                            "maxLength": 1024,
+                            "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "duration.mean": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "duration.min"
+                  ]
+                }
+              },
+              "required": [
+                "values"
+              ]
+            },
+            "then": {
+              "required": [
+                "cells"
+              ],
+              "properties": {
+                "cells": {
+                  "required": [
+                    "duration.min"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "cells": {
+                  "required": [
+                    "duration.min"
+                  ]
+                }
+              },
+              "required": [
+                "cells"
+              ]
+            },
+            "then": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "duration.min"
+                  ]
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "cells": {
+                        "properties": {
+                          "duration.min": {
+                            "properties": {
+                              "state": {
+                                "enum": [
+                                  "derived",
+                                  "estimated"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "duration.min": {
+                            "type": "string",
+                            "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                            "maxLength": 1024,
+                            "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "duration.min": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "duration.max"
+                  ]
+                }
+              },
+              "required": [
+                "values"
+              ]
+            },
+            "then": {
+              "required": [
+                "cells"
+              ],
+              "properties": {
+                "cells": {
+                  "required": [
+                    "duration.max"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "cells": {
+                  "required": [
+                    "duration.max"
+                  ]
+                }
+              },
+              "required": [
+                "cells"
+              ]
+            },
+            "then": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "duration.max"
+                  ]
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "cells": {
+                        "properties": {
+                          "duration.max": {
+                            "properties": {
+                              "state": {
+                                "enum": [
+                                  "derived",
+                                  "estimated"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "duration.max": {
+                            "type": "string",
+                            "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                            "maxLength": 1024,
+                            "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "duration.max": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "duration.p50"
+                  ]
+                }
+              },
+              "required": [
+                "values"
+              ]
+            },
+            "then": {
+              "required": [
+                "cells"
+              ],
+              "properties": {
+                "cells": {
+                  "required": [
+                    "duration.p50"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "cells": {
+                  "required": [
+                    "duration.p50"
+                  ]
+                }
+              },
+              "required": [
+                "cells"
+              ]
+            },
+            "then": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "duration.p50"
+                  ]
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "cells": {
+                        "properties": {
+                          "duration.p50": {
+                            "properties": {
+                              "state": {
+                                "enum": [
+                                  "derived",
+                                  "estimated"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "duration.p50": {
+                            "type": "string",
+                            "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                            "maxLength": 1024,
+                            "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "duration.p50": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "duration.p95"
+                  ]
+                }
+              },
+              "required": [
+                "values"
+              ]
+            },
+            "then": {
+              "required": [
+                "cells"
+              ],
+              "properties": {
+                "cells": {
+                  "required": [
+                    "duration.p95"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "cells": {
+                  "required": [
+                    "duration.p95"
+                  ]
+                }
+              },
+              "required": [
+                "cells"
+              ]
+            },
+            "then": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "duration.p95"
+                  ]
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "cells": {
+                        "properties": {
+                          "duration.p95": {
+                            "properties": {
+                              "state": {
+                                "enum": [
+                                  "derived",
+                                  "estimated"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "duration.p95": {
+                            "type": "string",
+                            "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                            "maxLength": 1024,
+                            "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "duration.p95": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "duration.p99"
+                  ]
+                }
+              },
+              "required": [
+                "values"
+              ]
+            },
+            "then": {
+              "required": [
+                "cells"
+              ],
+              "properties": {
+                "cells": {
+                  "required": [
+                    "duration.p99"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "cells": {
+                  "required": [
+                    "duration.p99"
+                  ]
+                }
+              },
+              "required": [
+                "cells"
+              ]
+            },
+            "then": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "duration.p99"
+                  ]
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "cells": {
+                        "properties": {
+                          "duration.p99": {
+                            "properties": {
+                              "state": {
+                                "enum": [
+                                  "derived",
+                                  "estimated"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "duration.p99": {
+                            "type": "string",
+                            "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                            "maxLength": 1024,
+                            "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "duration.p99": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
       },
       "exploration.ViewScope": {
         "properties": {
@@ -18882,6 +21052,51 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ViewScope",
         "additionalProperties": false
+      },
+      "exploration.ViewSupport": {
+        "properties": {
+          "empty": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+          },
+          "invalid": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+          },
+          "missing": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+          },
+          "total": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+          },
+          "valid": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+          }
+        },
+        "required": [
+          "total",
+          "valid",
+          "missing",
+          "empty",
+          "invalid"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewSupport",
+        "additionalProperties": false,
+        "description": "Exact supporting-record partition. Runtime verifies total=valid+missing+empty+invalid and total equals the row record count."
       },
       "identity.EnvironmentObservation": {
         "properties": {
