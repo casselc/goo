@@ -137,13 +137,14 @@ message. Examples include `shape`, `source-question`, `source-origin`,
 `budget-bytes` / `budget-nodes` / `budget-depth`. A failed component setter clears
 its previous successful value rather than leaving old data visible as current.
 
-## Next: H1 ownership
+## Execution ownership after H0
 
 H0 does not make a data revision an active execution epoch. Existing owners still
-control requests, cancellation, visibility and action guards. H1 will introduce
-host-owned role/execution handles and one resolver that checks current versus
-baseline ownership, epoch, revision, stable keys and projection lineage before an
-effect. This remains a gate before contributed view execution, broader live
-subscriptions or renderer/editor expansion. See the
+control requests, cancellation, visibility and action guards.266 adds
+[bounded H1 role/execution handles and a resolver](SCOPED_ACTION_OWNERSHIP.md) for
+canonical fixed Explore group/interval actions, checking role, epoch, revision,
+stable membership and direct projection lineage before staging. Other action
+families and whole-screen composition remain to be migrated before contributed
+view execution, broader live subscriptions or renderer/editor expansion. See the
 [pit-of-success review](MODEL_PIT_OF_SUCCESS_264.md) and
 [current roadmap](ROADMAP_2026_10_30.md).

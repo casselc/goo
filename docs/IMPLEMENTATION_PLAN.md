@@ -2,7 +2,9 @@
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),
 > including safe supplied-row projection and runtime guarantee lineage.
-> Active next milestone: H1 host execution epochs, named roles and action resolution.
+> 266 delivers bounded H1 role/execution bindings and scoped group/interval action resolution.
+> Next: consolidate ordinary Distribution on the canonical model/action path,
+> preserving typed full-population denominators; broader family adoption follows.
 > [Pit-of-success review](MODEL_PIT_OF_SUCCESS_264.md) gates further renderer/editor expansion.
 
 > Current continuation proposal: [view grammar260](VIEW_GRAMMAR_PROPOSAL_260.md)
@@ -1612,3 +1614,11 @@ complete-only witnesses and supplied-row projection that loses whole-query proof
 This is not a new local-filter UI or source-authentication mechanism. Continue H1
 host-owned execution/role handles and centralized intent resolution before broader
 renderer or contributed-view authoring work.
+
+266 delivers [bounded H1 scoped action ownership](SCOPED_ACTION_OWNERSHIP.md):
+private named-role bindings, execution fencing, direct-projection lineage and one
+checked group/tuple/interval resolver. Same-content reruns retire old mount
+bindings. Explicit visit/population/recent withdrawal also retires controls while
+preserving local display. Existing Question Session remains the request owner.
+Continue remaining V0 family/quality/interaction parity and deliberate adoption of
+legacy action families; this is not whole-product action centralization.

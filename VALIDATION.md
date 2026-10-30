@@ -1,5 +1,60 @@
 # Validation record
 
+## Execution-owned scoped actions — 266
+
+Canonical fixed Explore group/facet and interval actions now resolve through one
+pure host-owned context. Each mount captures an opaque named-role binding, the
+Session execution generation and its checked question. Rebinding the same frozen
+snapshot still retires old bindings; source content revisions are not execution
+identities. Current slots share one source instance per execution. Baseline,
+held, foreign, incoherent and retired contexts cannot stage current scope.
+Direct projection bindings retain their parent's execution and private lineage.
+
+Leaving/suspending, recent/population takeover and Session transitions revoke
+bindings and disable stage/facet actions. Passive table/kind/measure inspection
+remains usable; returning requires Run before using selections. Current predicate
+budget failures retain visible feedback rather than silently truncating filters.
+This is bounded H1 adoption, not whole-product action centralization or click
+authentication. Existing request/cancellation/publication ownership is unchanged.
+See [contract/API and diagram](docs/SCOPED_ACTION_OWNERSHIP.md),
+[executable storyboard](journeys/266-scope-actions-storyboard.md), and the
+[next ordinary Distribution consolidation](docs/ROADMAP_2026_10_30.md#next-bounded-v0-cut-one-ordinary-breakdown-surface).
+
+Validation passes:
+
+- All 717 frontend tests, no skips, including 17 new ownership/resolver tests;
+  full root Go tests pass.
+- Focused Chromium adapter checks at 390px verify same-content binding replacement,
+  disabled/inert withdrawn controls, retained local inspection, current staging
+  without source IO and passive read-only widgets.
+- The actual OTLP → ClickHouse → isolated Go journey verifies identical content
+  revisions with distinct read clocks, retired facet/group/window callback refusal
+  after rerun, suspension/return, draft, edit and cancellation, and valid current
+  staging without a read. The predicate-budget branch preserves all parent
+  conditions and the applied view on refusal. Frames are captured from this app.
+- Hegel runs 100 generated state/membership/projection cases against the actual
+  JavaScript resolver over Go-produced snapshots. Private binding identity,
+  source/role/epoch separation, shared exact rows, inherited questions and no IO
+  are checked independently of the browser affordance guards.
+- Quint validates the actual seven-step browser effect trace, rejecting seven
+  mutated traces and an unfinished prefix. Its `fence` is a projected lifecycle
+  event counter, not an observation of private Session generation; the model does
+  not prove source authenticity, upstream completeness or every application owner.
+- The final frozen Bombadil spec passes 35 seconds, 457 snapshots and nine phases,
+  with three explicit Explore requests, identical-revision rerun and current
+  staging. The additional cancelled request and filter-budget read in Playwright
+  are outside that campaign/model. Compact traces/summaries remain; raw campaign
+  output is removed.
+
+
+All six real scoped-view browser regressions (261–266) pass. Compose configuration
+and the CA-backed image build pass. The lab runs
+`sha256:5f78f660180cd55b238845566f3d4ce3fe8f1727e7c414579334269c005005d2`;
+root returns HTTP 200 and all five changed/new served ownership modules match the
+final workspace bytes. Only the Go application service is recreated; telemetry
+services and XTDB volumes are preserved. Documentation frames and the roadmap are
+updated; remaining action-family adoption is explicit.
+
 ## Immutable snapshot admission and safe projections — 265
 
 Known Explore response slots now enter through an application-owned source adapter

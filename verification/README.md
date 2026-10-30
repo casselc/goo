@@ -46,6 +46,41 @@ that skip without actual journey input. Those skips are appropriate there; they
 are not a substitute for a passing required suite. Root Go/display/API gates stay
 independent. XTDB and browser campaigns are separate opt-ins.
 
+### Execution-owned scoped actions — 266
+
+Run from the repository root:
+
+```sh
+go test -C verification -run '^TestHegelScopeAction' -count=1 -v .
+./node_modules/.bin/playwright test journeys/266-scope-actions.spec.js
+GOO_SCOPE_ACTION_LEDGER="$PWD/artifacts/scoped-266/model-trace.json" go test -C verification -run '^TestQuintScopeActionsObservedBrowserLedger$' -count=1 -v .
+```
+
+Two Hegel suites run 100 generated cases against the actual JavaScript action
+context and Go-produced snapshot DTOs: epoch changes, identical-handle rebinding,
+revocation, inactive/draft owners, named baseline roles, cross-owner or cloned
+bindings, exact member claims, and direct projection lineage. Root replacement
+invalidates children while sibling projections coexist. Resolver calls perform
+no source IO. A cloned valid data intent is deliberately allowed under its
+current host binding; data events are not authentication nonces.
+
+The real browser journey proves an unchanged query/population can return the
+same content revision at a different read clock while old facet/group/window
+callbacks remain retired. It forces event dispatch on retained disabled buttons
+to exercise the host action pipeline beyond disabled-DOM behavior; Hegel calls
+the resolver directly to isolate its fencing. Leaving
+and returning keeps charts inspectable but requires Run before staging again.
+Draft edits and cancellation also refuse old callbacks. The small observed Quint
+trace uses `fence` only as a projected lifecycle counter, never as the internal
+Session generation. Seven fault controls and an unfinished prefix must fail.
+
+Set `GOO_SCOPE_ACTION_BOMBADIL=1` on the browser command for the optional campaign.
+The 35-second campaign passed with 457 snapshots across all nine phases and three
+explicit Explore requests; the real journey additionally checks edit/cancel.
+Retain its compact summary, model trace and current documentation frames; raw
+successful campaign screenshots/logs are disposable. See the
+[storyboard](../journeys/266-scope-actions-storyboard.md) for limits and frames.
+
 ### Immutable snapshot admission and projections — 265
 
 Run these additional view-contract checks from the repository root:

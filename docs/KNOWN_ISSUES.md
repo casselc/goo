@@ -1,10 +1,17 @@
 # Known issues and gaps
 
+266 adds [bounded scoped action ownership](SCOPED_ACTION_OWNERSHIP.md) for canonical
+fixed Explore group/facet and timeline staging. Execution/role bindings and direct
+projection checks are centralized; suspended controls require a new Run. Other
+population, legacy distribution/error-triage and noncanonical action families
+retain their existing guards and still need migration. No general multi-source
+execution, click authentication or whole-product action engine is claimed.
+
 265 adds [immutable snapshot admission and safe row projections](SNAPSHOT_CONSTRUCTION.md).
 Complete-only displays require a private runtime source witness; serialized data
 and proper row subsets cannot retain whole-query guarantees. Components share
-frozen handles. H1 execution epochs, named role handles and centralized action
-resolution remain next; additional renderer/authoring work stays gated. This is
+frozen handles.266 delivers the bounded H1 adoption above; remaining family and
+interaction parity still gates additional renderer/authoring work. This is
 an application trust boundary, not producer authentication or proof that all
 telemetry was collected. Row projection is a component API, not a new UI filter.
 

@@ -1,0 +1,50 @@
+// Focused application-adapter conformance, not a live source integration journey.
+const {chromium}=require('playwright');
+const fs=require('node:fs/promises'),path=require('node:path'),assert=require('node:assert/strict');
+(async()=>{let browser;try{
+ browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',args:['--no-sandbox']});
+ const page=await browser.newPage({viewport:{width:390,height:844}}),requests=[],errors=[];
+ page.on('request',request=>requests.push(new URL(request.url()).pathname));page.on('pageerror',error=>errors.push(error.message));
+ await page.route('http://scope-actions.invalid/**',async route=>{const name=new URL(route.request().url()).pathname;
+  if(name==='/'){await route.fulfill({contentType:'text/html',body:'<!doctype html><html lang="en"><meta name="viewport" content="width=device-width"><title>Scope action controls</title><link rel="stylesheet" href="/components.css"><link rel="stylesheet" href="/chart-frame.css"><link rel="stylesheet" href="/scope-view.css"><div id="groups"></div><div id="timeline"></div><div id="passive"></div>'});return}
+  const local=path.resolve(__dirname,'../ui'+name);assert(local.startsWith(path.resolve(__dirname,'../ui')+path.sep));await route.fulfill({contentType:name.endsWith('.css')?'text/css':'text/javascript',body:await fs.readFile(local)});
+ });
+ await page.goto('http://scope-actions.invalid/');
+ const result=await page.evaluate(async()=>{
+  const {mount}=await import('/scoped-breakdown.mjs'),{createSourceAdapter}=await import('/snapshots.mjs'),{createActionContext}=await import('/scope-actions.mjs'),{Session}=await import('/question-session.mjs'),{scopeIntent,intervalIntent}=await import('/view-model.mjs');
+  const q={signal:'spans',environment:'test',fromMs:0,toMs:20000,bucketMs:10000,groupBy:[{kind:'column',key:'service'}],limit:100,offset:0};
+  const source=createSourceAdapter({id:'controls-conformance'}),basis='stable-content',scope={id:'q',generation:basis,signal:'spans',selector:q};
+  const base=(shape,aspect)=>({version:'goo.dataset/1',id:'data-'+aspect,revision:basis,origin:'source-read',shape,scope,quality:{extent:'complete',basis:'captured-query',value:'derived',sampling:'unknown',freshness:'fixed'},completeness:{basis:'captured-query',revision:basis,scopeId:scope.id,aspects:[aspect]}});
+  const rawGroups={...base('ranked','groups'),dimensions:['category'],fields:[{key:'category',label:'Service',type:'string'},{key:'count',label:'Captured records',type:'number',unit:'records'}],rows:[{key:'api',values:{category:'api',count:'4'}}]};
+  const rawTime={...base('time-series','intervals'),interval:{fromMs:'0',toMs:'20000',bucketMs:'10000'},fields:[{key:'fromMs',label:'From',type:'timestamp',unit:'ms'},{key:'toMs',label:'To',type:'timestamp',unit:'ms'},{key:'count',label:'Captured records',type:'number',unit:'records'}],rows:[{key:'first',state:'observed',values:{fromMs:'0',toMs:'10000',count:'2'}},{key:'last',state:'observed',values:{fromMs:'10000',toMs:'20000',count:'2'}}]};
+  const groups=source.adoptSnapshot(rawGroups,{question:q}),time=source.adoptSnapshot(rawTime,{question:q});
+  let context,live=true,staged=0;const session=new Session(event=>{if(event.phase!=='applied')context?.revoke()});
+  context=createActionContext({epoch:()=>session.snapshot().generation,active:()=>live,canStage:()=>session.snapshot().phase==='applied'});
+  const publish=()=>{const token=session.start(q);session.publish(token,{question:q,basis,count:'4',state:'observed'})};publish();
+  const bind=(slot,snapshot)=>context.bind({role:'current',slot,epoch:session.snapshot().generation,snapshot,question:q,coherent:true});
+  const callback=binding=>intent=>{const resolved=context.resolve(binding,intent);if(resolved.ok){staged++;session.stage(resolved.question)}};
+  const oldGroupBinding=bind('groups',groups),oldTimeBinding=bind('intervals',time);
+  const groupHost=document.querySelector('#groups'),timeHost=document.querySelector('#timeline');
+  let groupView=mount(groupHost,groups,{onScope:callback(oldGroupBinding)}),timeView=mount(timeHost,time,{onWindow:callback(oldTimeBinding)});
+  groupView.chart.querySelector('.scope-view-bar').click();timeView.chart.querySelector('.scope-time-interval').click();
+  const oldFacet=groupHost.querySelector('goo-scope-facet'),oldGroupStage=groupHost.querySelector('.ui-actions button'),oldTimeStage=timeHost.querySelector('.ui-actions button');
+  const initiallyEnabled=!oldGroupStage.disabled&&!oldTimeStage.disabled;
+  groupView.suspendActions();timeView.suspendActions();context.revoke();publish();
+  groupView=mount(groupHost,groups,{onScope:callback(bind('groups',groups))});timeView=mount(timeHost,time,{onWindow:callback(bind('intervals',time))});
+  oldFacet.dispatchEvent(new CustomEvent('goo-scope',{detail:scopeIntent(groups,'category','api')}));oldGroupStage.dispatchEvent(new Event('click'));oldTimeStage.dispatchEvent(new Event('click'));
+  const stale=staged===0&&session.snapshot().phase==='applied'&&!context.resolve(oldGroupBinding,scopeIntent(groups,'category','api')).ok&&!context.resolve(oldTimeBinding,intervalIntent(time,'first')).ok;
+  live=false;context.revoke();groupView.suspendActions();timeView.suspendActions();live=true;
+  groupView.chart.querySelector('.scope-view-bar').click();timeView.chart.querySelector('.scope-time-interval').click();
+  const paused=groupHost.querySelector('.ui-actions button').disabled&&timeHost.querySelector('.ui-actions button').disabled&&[...groupHost.querySelectorAll('goo-scope-facet button')].every(button=>button.disabled)&&groupHost.textContent.includes('Run again to use these selections.');
+  const picker=groupHost.querySelector('select[aria-label="Breakdown view"]');picker.value='table';picker.dispatchEvent(new Event('change'));groupView.chart.querySelector('table button').click();
+  const passiveStillWorks=!!groupView.chart.querySelector('table')&&groupHost.querySelector('.ui-actions button').disabled;
+  publish();groupView=mount(groupHost,groups,{onScope:callback(bind('groups',groups))});groupView.chart.querySelector('.scope-view-bar')?.click();
+  if(!groupView.chart.querySelector('.scope-view-bar'))groupView.chart.querySelector('table button').click();
+  groupHost.querySelector('.ui-actions button').click();const current=staged===1&&session.snapshot().phase==='draft';
+  const passive=mount(document.querySelector('#passive'),groups);const readonly=passive.chart.snapshot===groups&&document.querySelector('#passive .ui-actions button').hidden&&!document.querySelector('#passive goo-scope-facet');
+  return {initiallyEnabled,stale,paused,passiveStillWorks,current,readonly};
+ });
+ for(const [key,value] of Object.entries(result))assert(value,key);
+ assert.equal(errors.length,0,errors.join('; '));assert(!requests.some(name=>name.startsWith('/api/')));
+ console.log('Scope action controls: per-mount captured bindings, same-content rerun refusal, paused visible controls, passive view switching/inspection, explicit current staging and no source IO pass');
+}finally{await browser?.close()}})().catch(error=>{console.error(error);process.exitCode=1});

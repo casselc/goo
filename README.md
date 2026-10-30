@@ -526,5 +526,11 @@ safe projections and host action ownership before expanding authoring/renderers.
 [Immutable snapshot construction](docs/SNAPSHOT_CONSTRUCTION.md) now normalizes
 scoped data once and shares frozen handles. JSON copies lose runtime completeness;
 safe supplied-row projections preserve exact cells while dropping whole-query
-proof. This adds no local-filter UI or source authentication. Host role/execution
-ownership (H1) is next, before more renderers or contributed-view authoring.
+proof. This adds no local-filter UI or source authentication.
+
+[Scoped action ownership](docs/SCOPED_ACTION_OWNERSHIP.md) now separates execution
+bindings from content revisions. Old group/facet/interval actions cannot stage
+against a rerun, another role or a suspended visit, even with identical data.
+Suspension withdraws action controls while retaining local display. This is the
+bounded H1 cut for canonical fixed Explore controls; broader family migration and
+quality/interaction parity remain before renderer or contributed-view expansion.

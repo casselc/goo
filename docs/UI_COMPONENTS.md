@@ -1390,5 +1390,9 @@ normalization preserves independent sides. Bounded plain-data admission and sett
 failure cleanup apply before rendering; see [actual APIs and limits](SNAPSHOT_CONSTRUCTION.md).
 
 `selectRows` is a supplied-data helper with exact-value and guarantee rules, not a
-new product filter or source action. H1 host role/epoch/action resolution remains
-next; components continue to own no source reads, subscriptions or publication.
+new product filter or source action.266 adds host-owned
+[role/epoch/action resolution](SCOPED_ACTION_OWNERSHIP.md) for the canonical scoped
+Explore adapters. Passive element events remain data-only. The host captures a
+binding per mount and resolves before staging; no element gains execution state,
+source reads, subscriptions or publication. Suspended application adapters disable
+stage/facet actions while retaining kind/measure switches and local inspection.

@@ -1343,5 +1343,16 @@ an import cycle. Components normalize once and share admitted data without copie
 on each boundary. Trusted source adoption checks the requested question/profile;
 raw imports and held comparisons cannot manufacture a witness. This is not source
 authentication. Safe row projection removes whole-query proof without changing
-captured values, support or logical scope. H1 will separately centralize active
-execution epochs, roles and effect resolution; a source revision is not that epoch.
+captured values, support or logical scope.
+
+266 adds [scoped action ownership](SCOPED_ACTION_OWNERSHIP.md).
+`scope-actions.mjs` owns private per-context role/slot bindings and a pure checked
+resolver. Question Session remains the execution/cancellation/publication owner;
+its generation is distinct from the source content basis. Application mount
+closures capture bindings and fields, then resolve immediately before staging.
+Rebind, epoch change or explicit revoke retires old roots and direct projections.
+Current-source group and interval claims are checked against supplied members;
+baseline, held, diagnostic and retired bindings cannot stage current scope.
+The group/timeline adapters withdraw actions on suspension but retain passive
+local display. Other action families retain their existing owners until migrated;
+this is not a whole-product request/effect engine.

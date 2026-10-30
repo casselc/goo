@@ -129,6 +129,8 @@ bounded admission and shared frozen handles. Source-adoption witnesses are priva
 runtime facts; imported JSON and supplied-row subsets cannot recreate whole-query
 proof. Typed source-question/profile matching uses the existing question protocol.
 This replaces the temporary per-widget snapshot-copy approach for the scoped pilot.
-H1 active execution epochs, named data roles and centralized action resolution
-remain next. Neither an origin string nor a runtime source-adapter factory is an
-authentication mechanism.
+266 adds [bounded H1 execution/role ownership](SCOPED_ACTION_OWNERSHIP.md) for
+canonical fixed Explore group/facet and timeline staging. Same-content reruns and
+suspended visits revoke old mounts. Other families still need explicit migration.
+Neither a source label, source adapter nor action context authenticates producers
+or proves a human click.
