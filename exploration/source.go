@@ -22,6 +22,7 @@ import (
 type Result struct {
 	ViewDataset       *ViewDataset       `json:"viewDataset,omitempty"`
 	TimeDataset       *ViewDataset       `json:"timeDataset,omitempty"`
+	SummaryDataset    *ViewDataset       `json:"summaryDataset,omitempty"`
 	NumericHistogram  *NumericHistogram  `json:"numericHistogram,omitempty"`
 	ResultToken       string             `json:"resultToken,omitempty"`
 	TraceExamples     *TraceExampleSet   `json:"traceExamples,omitempty"`
@@ -327,6 +328,7 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 	r.Basis = hex.EncodeToString(h[:])
 	r.ViewDataset = groupViewDataset(r, plan.Groups != "")
 	r.TimeDataset = timeViewDataset(r, plan.TimeSeries != "")
+	r.SummaryDataset = summaryViewDataset(r, true)
 	return r, nil
 }
 

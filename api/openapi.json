@@ -9814,6 +9814,10 @@
           "basis": {
             "type": "string"
           },
+          "capturedAt": {
+            "type": "string",
+            "description": "Optional unverified caller-held capture clock. Omission/empty means unknown; never replaced with current time. Nonempty RFC3339 is runtime checked."
+          },
           "count": {
             "type": "string"
           },
@@ -9938,6 +9942,16 @@
           },
           "state": {
             "type": "string"
+          },
+          "viewComparison": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewComparison"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "warnings": {
             "anyOf": [
@@ -10097,6 +10111,23 @@
               }
             ]
           },
+          "viewComparison": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.ViewComparisonInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "warnings": {
             "anyOf": [
               {
@@ -10133,6 +10164,10 @@
                 "type": "null"
               }
             ]
+          },
+          "capturedAt": {
+            "type": "string",
+            "description": "Optional unverified caller-held capture clock. Omission/empty means unknown; never replaced with current time. Nonempty RFC3339 is runtime checked."
           },
           "count": {
             "anyOf": [
@@ -16272,6 +16307,16 @@
           "state": {
             "type": "string"
           },
+          "summaryDataset": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewDataset"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "timeDataset": {
             "anyOf": [
               {
@@ -18255,6 +18300,53 @@
           }
         ]
       },
+      "exploration.ViewAggregationInput": {
+        "additionalProperties": false,
+        "properties": {
+          "family": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "method": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "quantile": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewAggregation"
+      },
       "exploration.ViewCell": {
         "properties": {
           "state": {
@@ -18409,6 +18501,1558 @@
           }
         ]
       },
+      "exploration.ViewCellInput": {
+        "additionalProperties": false,
+        "properties": {
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "support": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.ViewSupportInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewCell"
+      },
+      "exploration.ViewChange": {
+        "properties": {
+          "aggregation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewAggregation"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "derived",
+              "unavailable"
+            ]
+          },
+          "unit": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "value": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+            "maxLength": 1024,
+            "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+          }
+        },
+        "required": [
+          "state",
+          "value",
+          "unit"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewChange",
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "derived"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                  "maxLength": 1024,
+                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                }
+              }
+            },
+            "else": {
+              "required": [
+                "reason"
+              ],
+              "properties": {
+                "reason": {
+                  "minLength": 1
+                },
+                "value": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "exploration.ViewChangeInput": {
+        "additionalProperties": false,
+        "properties": {
+          "aggregation": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.ViewAggregationInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "value": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewChange"
+      },
+      "exploration.ViewComparison": {
+        "properties": {
+          "baseline": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewDataset"
+              },
+              {
+                "properties": {
+                  "shape": {
+                    "const": "summary"
+                  },
+                  "origin": {
+                    "const": "browser-held"
+                  }
+                },
+                "required": [
+                  "origin"
+                ]
+              }
+            ]
+          },
+          "changes": {
+            "type": "object",
+            "minProperties": 1,
+            "maxProperties": 11,
+            "propertyNames": {
+              "enum": [
+                "count",
+                "numeric.mean",
+                "numeric.sum",
+                "numeric.min",
+                "numeric.max",
+                "duration.mean",
+                "duration.min",
+                "duration.max",
+                "duration.p50",
+                "duration.p95",
+                "duration.p99"
+              ]
+            },
+            "additionalProperties": {
+              "$ref": "#/components/schemas/exploration.ViewChange"
+            }
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "selection": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewDataset"
+              },
+              {
+                "properties": {
+                  "shape": {
+                    "const": "summary"
+                  },
+                  "origin": {
+                    "const": "browser-held"
+                  }
+                },
+                "required": [
+                  "origin"
+                ]
+              }
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "no_data",
+              "diagnostic",
+              "incompatible"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "const": "goo.comparison/1"
+          }
+        },
+        "required": [
+          "version",
+          "baseline",
+          "selection",
+          "state",
+          "changes"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewComparison",
+        "additionalProperties": false,
+        "description": "Independent browser-held summary snapshots with exact selection-minus-baseline differences. No combined population, normalized rate, signed source authority, pooled percentile or invented shared capture clock.",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "enum": [
+                    "diagnostic",
+                    "incompatible"
+                  ]
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "additionalProperties": {
+                    "properties": {
+                      "state": {
+                        "const": "unavailable"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "changes": {
+                  "properties": {
+                    "count": {
+                      "properties": {
+                        "state": {
+                          "const": "derived"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "count"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "baseline": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "count"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "baseline"
+                  ]
+                },
+                {
+                  "properties": {
+                    "selection": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "count"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "selection"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "required": [
+                    "count"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "changes": {
+                  "not": {
+                    "required": [
+                      "count"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "changes": {
+                "properties": {
+                  "count": {
+                    "properties": {
+                      "unit": {
+                        "const": "records"
+                      }
+                    },
+                    "not": {
+                      "required": [
+                        "aggregation"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "baseline": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "numeric.mean"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "baseline"
+                  ]
+                },
+                {
+                  "properties": {
+                    "selection": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "numeric.mean"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "selection"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "required": [
+                    "numeric.mean"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "changes": {
+                  "not": {
+                    "required": [
+                      "numeric.mean"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "changes": {
+                "properties": {
+                  "numeric.mean": {
+                    "required": [
+                      "aggregation"
+                    ],
+                    "properties": {
+                      "aggregation": {
+                        "type": "object",
+                        "properties": {
+                          "family": {
+                            "const": "numeric"
+                          },
+                          "kind": {
+                            "const": "mean"
+                          },
+                          "method": {
+                            "const": "exact-rational"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "baseline": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "numeric.sum"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "baseline"
+                  ]
+                },
+                {
+                  "properties": {
+                    "selection": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "numeric.sum"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "selection"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "required": [
+                    "numeric.sum"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "changes": {
+                  "not": {
+                    "required": [
+                      "numeric.sum"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "changes": {
+                "properties": {
+                  "numeric.sum": {
+                    "required": [
+                      "aggregation"
+                    ],
+                    "properties": {
+                      "aggregation": {
+                        "type": "object",
+                        "properties": {
+                          "family": {
+                            "const": "numeric"
+                          },
+                          "kind": {
+                            "const": "sum"
+                          },
+                          "method": {
+                            "const": "exact"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "baseline": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "numeric.min"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "baseline"
+                  ]
+                },
+                {
+                  "properties": {
+                    "selection": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "numeric.min"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "selection"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "required": [
+                    "numeric.min"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "changes": {
+                  "not": {
+                    "required": [
+                      "numeric.min"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "changes": {
+                "properties": {
+                  "numeric.min": {
+                    "required": [
+                      "aggregation"
+                    ],
+                    "properties": {
+                      "aggregation": {
+                        "type": "object",
+                        "properties": {
+                          "family": {
+                            "const": "numeric"
+                          },
+                          "kind": {
+                            "const": "min"
+                          },
+                          "method": {
+                            "const": "exact"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "baseline": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "numeric.max"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "baseline"
+                  ]
+                },
+                {
+                  "properties": {
+                    "selection": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "numeric.max"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "selection"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "required": [
+                    "numeric.max"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "changes": {
+                  "not": {
+                    "required": [
+                      "numeric.max"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "changes": {
+                "properties": {
+                  "numeric.max": {
+                    "required": [
+                      "aggregation"
+                    ],
+                    "properties": {
+                      "aggregation": {
+                        "type": "object",
+                        "properties": {
+                          "family": {
+                            "const": "numeric"
+                          },
+                          "kind": {
+                            "const": "max"
+                          },
+                          "method": {
+                            "const": "exact"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "baseline": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "duration.mean"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "baseline"
+                  ]
+                },
+                {
+                  "properties": {
+                    "selection": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "duration.mean"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "selection"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "required": [
+                    "duration.mean"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "changes": {
+                  "not": {
+                    "required": [
+                      "duration.mean"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "changes": {
+                "properties": {
+                  "duration.mean": {
+                    "required": [
+                      "aggregation"
+                    ],
+                    "properties": {
+                      "aggregation": {
+                        "type": "object",
+                        "properties": {
+                          "family": {
+                            "const": "duration"
+                          },
+                          "kind": {
+                            "const": "mean"
+                          },
+                          "method": {
+                            "const": "exact-rational"
+                          }
+                        }
+                      },
+                      "unit": {
+                        "const": "ns"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "baseline": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "duration.min"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "baseline"
+                  ]
+                },
+                {
+                  "properties": {
+                    "selection": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "duration.min"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "selection"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "required": [
+                    "duration.min"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "changes": {
+                  "not": {
+                    "required": [
+                      "duration.min"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "changes": {
+                "properties": {
+                  "duration.min": {
+                    "required": [
+                      "aggregation"
+                    ],
+                    "properties": {
+                      "aggregation": {
+                        "type": "object",
+                        "properties": {
+                          "family": {
+                            "const": "duration"
+                          },
+                          "kind": {
+                            "const": "min"
+                          },
+                          "method": {
+                            "const": "exact"
+                          }
+                        }
+                      },
+                      "unit": {
+                        "const": "ns"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "baseline": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "duration.max"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "baseline"
+                  ]
+                },
+                {
+                  "properties": {
+                    "selection": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "duration.max"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "selection"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "required": [
+                    "duration.max"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "changes": {
+                  "not": {
+                    "required": [
+                      "duration.max"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "changes": {
+                "properties": {
+                  "duration.max": {
+                    "required": [
+                      "aggregation"
+                    ],
+                    "properties": {
+                      "aggregation": {
+                        "type": "object",
+                        "properties": {
+                          "family": {
+                            "const": "duration"
+                          },
+                          "kind": {
+                            "const": "max"
+                          },
+                          "method": {
+                            "const": "exact"
+                          }
+                        }
+                      },
+                      "unit": {
+                        "const": "ns"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "baseline": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "duration.p50"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "baseline"
+                  ]
+                },
+                {
+                  "properties": {
+                    "selection": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "duration.p50"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "selection"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "required": [
+                    "duration.p50"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "changes": {
+                  "not": {
+                    "required": [
+                      "duration.p50"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "changes": {
+                "properties": {
+                  "duration.p50": {
+                    "required": [
+                      "aggregation"
+                    ],
+                    "properties": {
+                      "aggregation": {
+                        "type": "object",
+                        "properties": {
+                          "family": {
+                            "const": "duration"
+                          },
+                          "kind": {
+                            "const": "quantile"
+                          },
+                          "method": {
+                            "const": "quantilesExactHigh"
+                          },
+                          "quantile": {
+                            "const": "0.5"
+                          }
+                        }
+                      },
+                      "unit": {
+                        "const": "ns"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "baseline": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "duration.p95"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "baseline"
+                  ]
+                },
+                {
+                  "properties": {
+                    "selection": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "duration.p95"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "selection"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "required": [
+                    "duration.p95"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "changes": {
+                  "not": {
+                    "required": [
+                      "duration.p95"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "changes": {
+                "properties": {
+                  "duration.p95": {
+                    "required": [
+                      "aggregation"
+                    ],
+                    "properties": {
+                      "aggregation": {
+                        "type": "object",
+                        "properties": {
+                          "family": {
+                            "const": "duration"
+                          },
+                          "kind": {
+                            "const": "quantile"
+                          },
+                          "method": {
+                            "const": "quantilesExactHigh"
+                          },
+                          "quantile": {
+                            "const": "0.95"
+                          }
+                        }
+                      },
+                      "unit": {
+                        "const": "ns"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "baseline": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "duration.p99"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "baseline"
+                  ]
+                },
+                {
+                  "properties": {
+                    "selection": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "duration.p99"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "selection"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "required": [
+                    "duration.p99"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "changes": {
+                  "not": {
+                    "required": [
+                      "duration.p99"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "changes": {
+                "properties": {
+                  "duration.p99": {
+                    "required": [
+                      "aggregation"
+                    ],
+                    "properties": {
+                      "aggregation": {
+                        "type": "object",
+                        "properties": {
+                          "family": {
+                            "const": "duration"
+                          },
+                          "kind": {
+                            "const": "quantile"
+                          },
+                          "method": {
+                            "const": "quantilesExactHigh"
+                          },
+                          "quantile": {
+                            "const": "0.99"
+                          }
+                        }
+                      },
+                      "unit": {
+                        "const": "ns"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "exploration.ViewComparisonInput": {
+        "additionalProperties": false,
+        "properties": {
+          "baseline": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.ViewDatasetInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "changes": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/exploration.ViewChangeInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "selection": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.ViewDatasetInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewComparison"
+      },
       "exploration.ViewCompleteness": {
         "properties": {
           "aspects": {
@@ -18418,7 +20062,8 @@
             "items": {
               "enum": [
                 "groups",
-                "intervals"
+                "intervals",
+                "summary"
               ]
             }
           },
@@ -18445,6 +20090,63 @@
         "x-go-type": "github.com/casselc/goo/exploration.ViewCompleteness",
         "additionalProperties": false,
         "description": "Bound to enclosing revision/scope ID; runtime enforces equality. Intervals require exhaustive contiguous known-state coverage. Never inferred from page length or a separate count."
+      },
+      "exploration.ViewCompletenessInput": {
+        "additionalProperties": false,
+        "properties": {
+          "aspects": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "revision": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scopeId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewCompleteness"
       },
       "exploration.ViewDataset": {
         "properties": {
@@ -18476,7 +20178,7 @@
           },
           "fields": {
             "type": "array",
-            "minItems": 2,
+            "minItems": 1,
             "maxItems": 13,
             "items": {
               "$ref": "#/components/schemas/exploration.ViewField"
@@ -18484,7 +20186,7 @@
           },
           "id": {
             "type": "string",
-            "pattern": "^[a-f0-9]{64}:(groups|intervals)$"
+            "pattern": "^[a-f0-9]{64}:(groups|intervals|summary)$"
           },
           "interval": {
             "anyOf": [
@@ -18494,6 +20196,13 @@
               {
                 "type": "null"
               }
+            ]
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "source-read",
+              "browser-held"
             ]
           },
           "quality": {
@@ -18517,8 +20226,15 @@
             "type": "string",
             "enum": [
               "ranked",
-              "time-series"
+              "time-series",
+              "summary"
             ]
+          },
+          "sourceBasis": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unverified caller-claimed source basis, separate from the content-hashed held revision. Not a signed receipt."
           },
           "version": {
             "type": "string",
@@ -18534,7 +20250,7 @@
           "fields",
           "rows",
           "quality",
-          "capturedAt"
+          "origin"
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ViewDataset",
@@ -18617,6 +20333,9 @@
                               },
                               "unit": {
                                 "const": "records"
+                              },
+                              "nullable": {
+                                "const": false
                               }
                             },
                             "required": [
@@ -18865,6 +20584,9 @@
                               },
                               "unit": {
                                 "const": "records"
+                              },
+                              "nullable": {
+                                "const": false
                               }
                             },
                             "required": [
@@ -19086,6 +20808,9 @@
                           },
                           "unit": {
                             "const": "ms"
+                          },
+                          "nullable": {
+                            "const": false
                           }
                         },
                         "required": [
@@ -19109,6 +20834,9 @@
                           },
                           "unit": {
                             "const": "ms"
+                          },
+                          "nullable": {
+                            "const": false
                           }
                         },
                         "required": [
@@ -19132,10 +20860,14 @@
                           },
                           "unit": {
                             "const": "records"
+                          },
+                          "nullable": {
+                            "const": true
                           }
                         },
                         "required": [
-                          "unit"
+                          "unit",
+                          "nullable"
                         ]
                       }
                     ]
@@ -19368,6 +21100,224 @@
                 }
               }
             }
+          },
+          {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "dimensions"
+                  ]
+                },
+                {
+                  "required": [
+                    "interval"
+                  ]
+                }
+              ]
+            },
+            "properties": {
+              "shape": {
+                "const": "summary"
+              },
+              "id": {
+                "pattern": "^[a-f0-9]{64}:summary$"
+              },
+              "fields": {
+                "minItems": 1,
+                "maxItems": 11,
+                "prefixItems": [
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/exploration.ViewField"
+                      },
+                      {
+                        "properties": {
+                          "key": {
+                            "const": "count"
+                          },
+                          "type": {
+                            "const": "number"
+                          },
+                          "unit": {
+                            "const": "records"
+                          },
+                          "nullable": {
+                            "const": false
+                          }
+                        },
+                        "required": [
+                          "unit"
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "items": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/exploration.ViewField"
+                    },
+                    {
+                      "properties": {
+                        "key": {
+                          "enum": [
+                            "numeric.mean",
+                            "numeric.sum",
+                            "numeric.min",
+                            "numeric.max",
+                            "duration.mean",
+                            "duration.min",
+                            "duration.max",
+                            "duration.p50",
+                            "duration.p95",
+                            "duration.p99"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "rows": {
+                "minItems": 1,
+                "maxItems": 1,
+                "items": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/exploration.ViewRow"
+                    },
+                    {
+                      "not": {
+                        "required": [
+                          "state"
+                        ]
+                      },
+                      "properties": {
+                        "key": {
+                          "const": "population"
+                        },
+                        "values": {
+                          "type": "object",
+                          "required": [
+                            "count"
+                          ],
+                          "properties": {
+                            "count": {
+                              "type": "string",
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                            },
+                            "numeric.mean": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                              "maxLength": 1024,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "numeric.sum": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                              "maxLength": 1024,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "numeric.min": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                              "maxLength": 1024,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "numeric.max": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                              "maxLength": 1024,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "duration.mean": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                              "maxLength": 1024,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "duration.min": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "duration.max": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "duration.p50": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "duration.p95": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "duration.p99": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "completeness": {
+                "properties": {
+                  "aspects": {
+                    "const": [
+                      "summary"
+                    ]
+                  }
+                }
+              }
+            }
           }
         ],
         "allOf": [
@@ -19418,8 +21368,247 @@
                 }
               }
             }
+          },
+          {
+            "if": {
+              "properties": {
+                "origin": {
+                  "const": "browser-held"
+                }
+              },
+              "required": [
+                "origin"
+              ]
+            },
+            "then": {
+              "not": {
+                "required": [
+                  "completeness"
+                ]
+              },
+              "properties": {
+                "shape": {
+                  "const": "summary"
+                },
+                "quality": {
+                  "properties": {
+                    "extent": {
+                      "const": "unknown"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "origin": {
+                  "const": "source-read"
+                }
+              },
+              "required": [
+                "origin"
+              ]
+            },
+            "then": {
+              "required": [
+                "capturedAt"
+              ]
+            }
           }
         ]
+      },
+      "exploration.ViewDatasetInput": {
+        "additionalProperties": false,
+        "properties": {
+          "capturedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "completeness": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.ViewCompletenessInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "dimensions": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fields": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/exploration.ViewFieldInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "interval": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.ViewIntervalInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "origin": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "quality": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewQualityInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "revision": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "rows": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/exploration.ViewRowInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewScopeInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "shape": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sourceBasis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewDataset"
       },
       "exploration.ViewField": {
         "properties": {
@@ -19495,9 +21684,13 @@
             "then": {
               "required": [
                 "aggregation",
-                "unit"
+                "unit",
+                "nullable"
               ],
               "properties": {
+                "nullable": {
+                  "const": true
+                },
                 "type": {
                   "const": "rational"
                 },
@@ -19536,9 +21729,13 @@
             "then": {
               "required": [
                 "aggregation",
-                "unit"
+                "unit",
+                "nullable"
               ],
               "properties": {
+                "nullable": {
+                  "const": true
+                },
                 "type": {
                   "const": "rational"
                 },
@@ -19577,9 +21774,13 @@
             "then": {
               "required": [
                 "aggregation",
-                "unit"
+                "unit",
+                "nullable"
               ],
               "properties": {
+                "nullable": {
+                  "const": true
+                },
                 "type": {
                   "const": "rational"
                 },
@@ -19618,9 +21819,13 @@
             "then": {
               "required": [
                 "aggregation",
-                "unit"
+                "unit",
+                "nullable"
               ],
               "properties": {
+                "nullable": {
+                  "const": true
+                },
                 "type": {
                   "const": "rational"
                 },
@@ -19659,9 +21864,13 @@
             "then": {
               "required": [
                 "aggregation",
-                "unit"
+                "unit",
+                "nullable"
               ],
               "properties": {
+                "nullable": {
+                  "const": true
+                },
                 "type": {
                   "const": "rational"
                 },
@@ -19699,9 +21908,13 @@
             "then": {
               "required": [
                 "aggregation",
-                "unit"
+                "unit",
+                "nullable"
               ],
               "properties": {
+                "nullable": {
+                  "const": true
+                },
                 "type": {
                   "const": "rational"
                 },
@@ -19739,9 +21952,13 @@
             "then": {
               "required": [
                 "aggregation",
-                "unit"
+                "unit",
+                "nullable"
               ],
               "properties": {
+                "nullable": {
+                  "const": true
+                },
                 "type": {
                   "const": "rational"
                 },
@@ -19779,9 +21996,13 @@
             "then": {
               "required": [
                 "aggregation",
-                "unit"
+                "unit",
+                "nullable"
               ],
               "properties": {
+                "nullable": {
+                  "const": true
+                },
                 "type": {
                   "const": "rational"
                 },
@@ -19822,9 +22043,13 @@
             "then": {
               "required": [
                 "aggregation",
-                "unit"
+                "unit",
+                "nullable"
               ],
               "properties": {
+                "nullable": {
+                  "const": true
+                },
                 "type": {
                   "const": "rational"
                 },
@@ -19865,9 +22090,13 @@
             "then": {
               "required": [
                 "aggregation",
-                "unit"
+                "unit",
+                "nullable"
               ],
               "properties": {
+                "nullable": {
+                  "const": true
+                },
                 "type": {
                   "const": "rational"
                 },
@@ -19921,6 +22150,80 @@
           }
         ]
       },
+      "exploration.ViewFieldInput": {
+        "additionalProperties": false,
+        "properties": {
+          "aggregation": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.ViewAggregationInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "nullable": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewField"
+      },
       "exploration.ViewInterval": {
         "properties": {
           "bucketMs": {
@@ -19953,6 +22256,43 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ViewInterval",
         "additionalProperties": false
+      },
+      "exploration.ViewIntervalInput": {
+        "additionalProperties": false,
+        "properties": {
+          "bucketMs": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fromMs": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "toMs": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewInterval"
       },
       "exploration.ViewQuality": {
         "properties": {
@@ -19992,6 +22332,63 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ViewQuality",
         "additionalProperties": false
+      },
+      "exploration.ViewQualityInput": {
+        "additionalProperties": false,
+        "properties": {
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "extent": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "freshness": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sampling": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewQuality"
       },
       "exploration.ViewRow": {
         "properties": {
@@ -21021,6 +23418,80 @@
           }
         ]
       },
+      "exploration.ViewRowInput": {
+        "additionalProperties": false,
+        "properties": {
+          "cells": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/exploration.ViewCellInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "values": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewRow"
+      },
       "exploration.ViewScope": {
         "properties": {
           "generation": {
@@ -21052,6 +23523,44 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ViewScope",
         "additionalProperties": false
+      },
+      "exploration.ViewScopeInput": {
+        "additionalProperties": false,
+        "properties": {
+          "generation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "selector": {},
+          "signal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewScope"
       },
       "exploration.ViewSupport": {
         "properties": {
@@ -21097,6 +23606,63 @@
         "x-go-type": "github.com/casselc/goo/exploration.ViewSupport",
         "additionalProperties": false,
         "description": "Exact supporting-record partition. Runtime verifies total=valid+missing+empty+invalid and total equals the row record count."
+      },
+      "exploration.ViewSupportInput": {
+        "additionalProperties": false,
+        "properties": {
+          "empty": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "invalid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "missing": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "total": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "valid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ViewSupport"
       },
       "identity.EnvironmentObservation": {
         "properties": {

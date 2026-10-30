@@ -107,28 +107,20 @@ func TestNumericComparisonRequiresIntentBindingAndConservation(t *testing.T) {
 			t.Fatal("invalid numeric comparison accepted", b)
 		}
 	}
-	// Legacy API count requests could contain numeric questions but no summaries.
-	old := stripNumericCohort(a)
-	legacy, e := CompareCohorts(ComparisonRequest{Baseline: old, Selection: old})
-	if e != nil || legacy.Measures != nil {
-		t.Fatal("legacy numeric-question count comparison changed", e)
+	// A declared family must not silently disappear because evidence or opt-in
+	// was omitted. Count-only callers need an explicit count-only question.
+	missing := stripNumericCohort(a)
+	if _, err := CompareCohorts(ComparisonRequest{Baseline: missing, Selection: missing}); err == nil || !strings.Contains(err.Error(), "explicit numeric comparison") {
+		t.Fatal("declared numeric profile silently dropped", err)
 	}
-	withoutBinding := detached(old)
-	withoutBinding.Question.Numeric = nil
-	other, e := CompareCohorts(ComparisonRequest{Baseline: withoutBinding, Selection: withoutBinding})
-	if e != nil {
-		t.Fatal(e)
+	if _, err := CompareCohorts(ComparisonRequest{Numeric: true, Baseline: missing, Selection: missing}); err == nil || !strings.Contains(err.Error(), "validated numeric summaries") {
+		t.Fatal("missing numeric evidence accepted", err)
 	}
-	legacy.Basis = ""
-	other.Basis = ""
-	x, _ := json.Marshal(legacy)
-	y, _ := json.Marshal(other)
-	if string(x) != string(y) || strings.Contains(string(x), `"numeric":`) {
-		t.Fatal("legacy output acquired numeric fields")
-	}
-	wire, _ := json.Marshal(ComparisonRequest{Baseline: old, Selection: old})
-	if strings.HasPrefix(string(wire), `{"numeric"`) {
-		t.Fatal("false opt-in changed old request bytes")
+	countOnly := detached(missing)
+	countOnly.Question.Numeric = nil
+	result, err := CompareCohorts(ComparisonRequest{Baseline: countOnly, Selection: countOnly})
+	if err != nil || result.Measures != nil || result.ViewComparison == nil || len(result.ViewComparison.Baseline.Fields) != 1 {
+		t.Fatal("explicit count-only recipe refused or acquired numeric fields", result, err)
 	}
 }
 
@@ -256,27 +248,11 @@ func TestNumericComparisonCapturesAndHistogramPlans(t *testing.T) {
 	if e != nil || requests != before || !reflect.DeepEqual(saved.Comparison, reopened.Comparison) {
 		t.Fatal("reopen recomputed source or lost numeric payload", e)
 	}
-	// Old comparison receipts continue count mode, including subsequent refreshes.
-	legacy := detached(*saved)
-	legacy.ID = ""
-	legacy.Comparison.Request.Numeric = false
-	legacy.Comparison.Request.Baseline = stripNumericCohort(legacy.Comparison.Request.Baseline)
-	legacy.Comparison.Request.Selection = stripNumericCohort(legacy.Comparison.Request.Selection)
-	legacy.Comparison.Result, e = CompareCohorts(legacy.Comparison.Request)
-	if e != nil {
-		t.Fatal(e)
-	}
-	old, e := store.publish(legacy)
-	if e != nil {
-		t.Fatal(e)
-	}
-	oldAgain, e := store.Load(old.ID)
-	if e != nil || oldAgain.Comparison.Result.Measures != nil {
-		t.Fatal("legacy receipt no longer reopens", e)
-	}
-	fresh, e := store.Create(context.Background(), source, "Legacy refreshed", old.Question, old.ID)
-	if e != nil || fresh.Comparison.Request.Numeric || fresh.Comparison.Result.Measures != nil {
-		t.Fatal("legacy refresh silently upgraded count intent", e)
+	// Refresh follows the current typed question; it never strips a declared
+	// family to imitate a previous result's missing numeric opt-in.
+	fresh, e := store.Create(context.Background(), source, "Refreshed numeric comparison", saved.Question, saved.ID)
+	if e != nil || !fresh.Comparison.Request.Numeric || fresh.Comparison.Result.Measures.Numeric == nil || fresh.Comparison.Result.ViewComparison == nil {
+		t.Fatal("numeric refresh dropped the active measurement family", fresh, e)
 	}
 	children := []*SavedCapture{}
 	for _, id := range []string{saved.Comparison.BaselineID, saved.Comparison.SelectionID} {

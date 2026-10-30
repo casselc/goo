@@ -1,5 +1,5 @@
 /* Public passive scoped displays. The host owns scope, requests and selection. */
-import {validateSnapshot, validateDisplay, selectionIntent, scopeIntent, measureValue} from './view-model.mjs';
+import {validateSnapshot, validateDisplay, selectionIntent, scopeIntent, measureValue, supportsSelection, capabilities} from './view-model.mjs';
 import {formatCell,supportText,exactText} from './view-values.mjs';
 import './chart-frame.mjs';
 
@@ -11,7 +11,7 @@ const svgNode=(tag,attrs)=>{const node=document.createElementNS('http://www.w3.o
 function quality(snapshot){
   const box=n('div',undefined,'scope-view-quality');
   const q=snapshot.quality;
-  for(const text of [`${q.extent} ${snapshot.shape==='time-series'?'intervals':'groups'}`,`${q.value} values`,`${q.sampling} upstream sampling`,`${q.freshness} snapshot`])box.append(n('span',text));
+  for(const text of [snapshot.origin,`${q.extent} ${snapshot.shape==='time-series'?'intervals':snapshot.shape==='summary'?'summary':'groups'}`,`${q.value} values`,`${q.sampling} upstream sampling`,`${q.freshness} snapshot`])if(text)box.append(n('span',text));
   box.title='Extent describes the captured query, not complete upstream telemetry.';
   return box;
 }
@@ -47,13 +47,14 @@ function table(host,snapshot,display){
   const fields=display.kind==='table'?snapshot.fields:mapped.every(Boolean)?mapped:snapshot.fields;
   for(const field of fields){const th=n('th',field.label+(field.unit&&field.unit!=='ns'?' · '+field.unit:''));th.scope='col';row.append(th)}
   if(snapshot.shape==='time-series'){const th=n('th','Interval state');th.scope='col';row.append(th)}
-  const th=n('th','Selection');th.scope='col';row.append(th);head.append(row);
+  const selectable=supportsSelection(snapshot);
+  if(selectable){const th=n('th','Selection');th.scope='col';row.append(th)}head.append(row);
   for(const entry of snapshot.rows){
     const tr=n('tr');tr.dataset.key=entry.key;
     for(const field of fields)tr.append(cellValue(field,entry.values[field.key],entry.cells?.[field.key]));
     if(snapshot.shape==='time-series')tr.append(n('td',entry.state==='no_data'?'No data · zero captured records':entry.state==='unknown'?'Unknown coverage':'Observed'));
-    const firstField=fields.find(field=>field.key===display.category)||fields[0];
-    const cell=n('td'),button=n('button','Select');button.type='button';button.setAttribute('aria-label','Select '+(firstField.type==='timestamp'?utc(entry.values[firstField.key]):exact(entry.values[firstField.key])));button.onclick=()=>emit(host,'goo-select',selectionIntent(snapshot,entry.key));cell.append(button);tr.append(cell);body.append(tr);
+    if(selectable){const firstField=fields.find(field=>field.key===display.category)||fields[0];
+      const cell=n('td'),button=n('button','Select');button.type='button';button.setAttribute('aria-label','Select '+(firstField.type==='timestamp'?utc(entry.values[firstField.key]):exact(entry.values[firstField.key])));button.onclick=()=>emit(host,'goo-select',selectionIntent(snapshot,entry.key));cell.append(button);tr.append(cell)}body.append(tr);
   }
   table.append(head,body);frame.append(table);return frame;
 }
@@ -128,21 +129,21 @@ class SuppliedElement extends (globalThis.HTMLElement||class {}) {
   static get observedAttributes(){return ['snapshot','display','field']}
   connectedCallback(){for(const key of ['snapshot','display','field'])if(Object.hasOwn(this,key)){const value=this[key];delete this[key];this[key]=value}this.render()}
   attributeChangedCallback(){this.render()}
-  set snapshot(value){this._snapshot=value;this.render()}
+  set snapshot(value){try{this._snapshot=structuredClone(value)}catch{this._snapshot=null}this.render()}
   get snapshot(){return this.read('snapshot')}
-  read(name){if(Object.hasOwn(this,'_'+name))return this['_'+name];const text=this.getAttribute(name);return text===null?undefined:JSON.parse(text)}
+  read(name){if(Object.hasOwn(this,'_'+name))return structuredClone(this['_'+name]);const text=this.getAttribute(name);return text===null?undefined:JSON.parse(text)}
   refuse(reasons){const status=n('p',reasons.join('; '),'scope-view-unavailable');status.setAttribute('role','status');this.replaceChildren(status)}
 }
 
 class Chart extends SuppliedElement {
-  set display(value){this._display=value;this.render()}
+  set display(value){try{this._display=structuredClone(value)}catch{this._display=null}this.render()}
   get display(){return this.read('display')}
   render(){
     try{
       const snapshot=this.read('snapshot'),display=this.read('display');
       if(!snapshot||!display){this.refuse(['Supply a dataset snapshot and display mapping.']);return}
       const checked=validateDisplay(snapshot,display);if(!checked.ok){this.refuse(checked.reasons);return}
-      const root=n('goo-chart-frame',undefined,'scope-view');root.data={title:display.title||(snapshot.shape==='time-series'?'Captured records over time':'Scoped breakdown'),window:capturedClock(snapshot.capturedAt),state:!snapshot.rows.length&&snapshot.shape!=='time-series'?'no_data':snapshot.quality.extent==='partial'?'partial':snapshot.quality.extent==='unknown'||snapshot.quality.value==='unknown'?'unknown':'observed'};root.dataset.valueKnowledge=snapshot.quality.value;root.append(quality(snapshot));
+      const root=n('goo-chart-frame',undefined,'scope-view');root.data={title:display.title||(snapshot.shape==='time-series'?'Captured records over time':snapshot.shape==='summary'?'Population summary':'Scoped breakdown'),window:capturedClock(snapshot.capturedAt),state:snapshot.quality.extent==='unknown'||snapshot.quality.value==='unknown'?'unknown':snapshot.quality.extent==='partial'?'partial':!snapshot.rows.length||snapshot.shape==='summary'&&snapshot.rows[0].values.count==='0'?'no_data':'observed'};root.dataset.valueKnowledge=snapshot.quality.value;root.append(quality(snapshot));
       if(!snapshot.rows.length&&display.kind!=='time-bar')root.append(n('p',snapshot.shape==='time-series'?'No supplied intervals. Coverage is unknown.':'No supplied groups.','scope-view-empty'));
       else if(display.kind==='table')root.append(table(this,snapshot,display));
       else if(snapshot.quality.value==='unknown'){root.append(n('p','Geometry unavailable: value knowledge is unknown. Supplied values remain inspectable.','scope-view-unavailable'),table(this,snapshot,display))}
@@ -166,6 +167,7 @@ class Facet extends SuppliedElement {
     try{
       const snapshot=this.read('snapshot');if(!snapshot){this.refuse(['Supply a dataset snapshot.']);return}
       const checked=validateSnapshot(snapshot);if(!checked.ok){this.refuse(checked.reasons);return}
+      if(!capabilities(snapshot).filterDimensions){this.refuse(['This dataset has no filterable group dimensions.']);return}
       const field=snapshot.fields.find(item=>item.key===this.field);if(!field){this.refuse(['Choose a supplied facet field.']);return}
       if(field.aggregation||snapshot.dimensions&&!snapshot.dimensions.includes(field.key)){this.refuse(['Choose a group dimension. Aggregate measures are not record filters.']);return}
       const root=n('div',undefined,'scope-view-facet');root.setAttribute('role','group');root.setAttribute('aria-label','Filter '+field.label);root.append(n('span',field.label,'scope-view-facet-label'));

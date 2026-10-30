@@ -6,7 +6,8 @@ const member=(v,a)=>a.includes(v);
 const timestamp=v=>typeof v==='string'&&/^(?:0|[1-9]\d{0,15})$/.test(v)&&Number(v)<=8640000000000000;
 const positiveMS=v=>timestamp(v)&&v!=='0';
 const uint64=v=>typeof v==='string'&&/^(?:0|[1-9]\d{0,19})$/.test(v)&&BigInt(v)<=18446744073709551615n;
-const numeric=v=>typeof v==='number'?Number.isFinite(v)&&(!Number.isInteger(v)||Number.isSafeInteger(v)):typeof v==='string'&&v.length<=1024&&/^-?(?:0|[1-9]\d*)(?:\.\d+)?$/.test(v)&&Number.isFinite(Number(v))&&(Number(v)!==0||!/[1-9]/.test(v));
+const numeric=v=>typeof v==='number'?Number.isFinite(v)&&(!Number.isInteger(v)||Number.isSafeInteger(v)):typeof v==='string'&&v.length<=1024&&/^-?(?:0|[1-9]\d*)(?:\.\d+)?$/.test(v);
+const numericCoordinate=value=>{if(!numeric(value))return null;const n=Number(value);return Number.isFinite(n)&&(n!==0||typeof value==='number'||!/[1-9]/.test(value))?n:null};
 const numericType=f=>f?.type==='number'||f?.type==='rational';
 const gcd=(a,b)=>{a=a<0n?-a:a;while(b){const next=a%b;a=b;b=next}return a};
 function rationalParts(value){
@@ -17,6 +18,7 @@ function rationalParts(value){
  if(match[2]&&(denominator===1n||gcd(numerator,denominator)!==1n))return null;
  return {numerator,denominator};
 }
+export const isCanonicalRational=value=>rationalParts(value)!==null;
 // Disposable coordinates are approximate. Exact strings remain authoritative.
 export function rationalCoordinate(value){
  const parts=rationalParts(value);if(!parts)return null;
@@ -29,7 +31,7 @@ export function rationalCoordinate(value){
 }
 function typed(value,field){return field.type==='number'?numeric(value):field.type==='rational'?rationalParts(value)!==null:field.type==='timestamp'?timestamp(value):typeof value==='string'&&value.length<=1024}
 function aggregationValid(field){
- const a=field.aggregation;if(!record(a)||!numericType(field)||!text(field.unit)||!member(a.family,['numeric','duration'])||!member(a.kind,['mean','sum','min','max','quantile']))return false;
+ const a=field.aggregation;if(!record(a)||Object.keys(a).some(key=>!['family','kind','method','quantile'].includes(key))||!numericType(field)||!text(field.unit)||!member(a.family,['numeric','duration'])||!member(a.kind,['mean','sum','min','max','quantile']))return false;
  if(a.family==='duration'&&field.unit!=='ns')return false;
  if(a.kind==='mean')return a.method==='exact-rational'&&field.type==='rational'&&a.quantile===undefined;
  if(a.kind==='quantile')return a.family==='duration'&&a.method==='quantilesExactHigh'&&member(a.quantile,['0.5','0.95','0.99']);
@@ -43,24 +45,28 @@ export function validateSnapshot(s){
  const reasons=[];
  if(!record(s))return result(['A dataset snapshot is required']);
  if(s.version!=='goo.dataset/1')reasons.push('Unsupported dataset version');
+ if(s.origin!==undefined&&!member(s.origin,['source-read','browser-held']))reasons.push('Invalid dataset origin');
+ if(s.origin==='browser-held'&&(s.completeness!==undefined||s.quality?.extent==='complete'))reasons.push('Browser-held snapshots cannot attest complete source coverage');
  for(const k of ['id','revision'])if(!text(s[k]))reasons.push(`Missing dataset ${k}`);
- if(!member(s.shape,['ranked','time-series']))reasons.push('Unsupported dataset shape');
+ if(!member(s.shape,['ranked','time-series','summary']))reasons.push('Unsupported dataset shape');
  if(!record(s.scope)||!text(s.scope.id)||!(text(s.scope.generation)||Number.isSafeInteger(s.scope.generation)&&s.scope.generation>=0)||!member(s.scope.signal,['spans','logs'])||!record(s.scope.selector))reasons.push('A checked scope identity, generation, signal and selector are required');
  const fields=new Map();
  if(!Array.isArray(s.fields)||!s.fields.length||s.fields.length>64)reasons.push('Dataset requires 1–64 fields');
- else for(const f of s.fields){if(!record(f)||!text(f.key)||!text(f.label)||!member(f.type,['string','number','timestamp','rational'])||fields.has(f.key)||f.unit!==undefined&&!text(f.unit)||f.type==='timestamp'&&f.unit!=='ms')reasons.push('Invalid or duplicate field');else {fields.set(f.key,f);if(f.aggregation!==undefined&&!aggregationValid(f))reasons.push('Invalid aggregation method, family, type or unit')}}
+ else for(const f of s.fields){if(!record(f)||!text(f.key)||!text(f.label)||!member(f.type,['string','number','timestamp','rational'])||fields.has(f.key)||f.unit!==undefined&&!text(f.unit)||f.type==='timestamp'&&f.unit!=='ms'||f.nullable!==undefined&&typeof f.nullable!=='boolean')reasons.push('Invalid or duplicate field');else {fields.set(f.key,f);if(f.aggregation!==undefined&&!aggregationValid(f))reasons.push('Invalid aggregation method, family, type or unit')}}
  if(s.dimensions!==undefined&&(!Array.isArray(s.dimensions)||!s.dimensions.length||s.shape!=='ranked'||new Set(s.dimensions).size!==s.dimensions.length||s.dimensions.some(key=>typeof key!=='string'||!fields.has(key)||fields.get(key)?.aggregation!==undefined)))reasons.push('Ranked dimensions must be distinct declared field keys');
  if(!Array.isArray(s.rows)||s.rows.length>10000)reasons.push('Dataset requires at most 10000 supplied rows');
- else {const keys=new Set();for(const row of s.rows){if(!record(row)||!text(row.key)||keys.has(row.key)||!record(row.values)){reasons.push('Invalid or duplicate stable row key');continue}keys.add(row.key);for(const [key,value] of Object.entries(row.values)){const field=fields.get(key);if(!field){reasons.push(`Undeclared field ${key}`);continue}if(value===null)continue;if(!typed(value,field))reasons.push(`Invalid ${field.type} value for ${key}`)}}}
+ else {const keys=new Set();for(const row of s.rows){if(!record(row)||!text(row.key)||keys.has(row.key)||!record(row.values)){reasons.push('Invalid or duplicate stable row key');continue}keys.add(row.key);for(const [key,value] of Object.entries(row.values)){const field=fields.get(key);if(!field){reasons.push(`Undeclared field ${key}`);continue}if(value===null){if(field.nullable!==true)reasons.push('Null values require an explicitly nullable field');continue}if(!typed(value,field))reasons.push(`Invalid ${field.type} value for ${key}`)}}}
+ if(s.shape==='ranked'&&Array.isArray(s.rows))for(const row of s.rows){if(fields.has('count')&&!uint64(row?.values?.count))reasons.push('Every ranked row requires its declared exact captured count');if(Array.isArray(s.dimensions)&&s.dimensions.some(key=>!record(row?.values)||!own(row.values,key)))reasons.push('Every declared group dimension requires a supplied cell value')}
  if(Array.isArray(s.rows))validateCells(s,fields,reasons);
  if(!record(s.quality))reasons.push('Dataset quality is required');
  else {enumField(s.quality,'extent',['complete','partial','unknown'],reasons);enumField(s.quality,'basis',['captured-query'],reasons);enumField(s.quality,'value',['recorded','derived','estimated','unknown'],reasons);enumField(s.quality,'sampling',['unknown','none','sampled'],reasons);enumField(s.quality,'freshness',['fixed','live'],reasons)}
- if(s.completeness!==undefined){const c=s.completeness;if(!record(c)||c.basis!=='captured-query'||!text(c.revision)||!text(c.scopeId)||!Array.isArray(c.aspects)||c.aspects.some(a=>!member(a,['groups','intervals']))||new Set(c.aspects).size!==c.aspects.length)reasons.push('Invalid completeness attestation')}
+ if(s.completeness!==undefined){const c=s.completeness;if(!record(c)||c.basis!=='captured-query'||!text(c.revision)||!text(c.scopeId)||!Array.isArray(c.aspects)||c.aspects.some(a=>!member(a,['groups','intervals','summary']))||new Set(c.aspects).size!==c.aspects.length)reasons.push('Invalid completeness attestation')}
  if(s.shape==='time-series')validateIntervals(s,fields,reasons);
+ if(s.shape==='summary')validateSummary(s,fields,reasons);
  if(s.quality?.extent==='complete'&&!attested(s))reasons.push(`Complete extent requires matching captured-query ${aspect(s)} attestation`);
  return result([...new Set(reasons)]);
 }
-function aspect(s){return s.shape==='time-series'?'intervals':'groups'}
+function aspect(s){return s.shape==='time-series'?'intervals':s.shape==='summary'?'summary':'groups'}
 function attested(s){const c=s.completeness;return c?.basis===s.quality?.basis&&c?.revision===s.revision&&c?.scopeId===s.scope?.id&&Array.isArray(c?.aspects)&&c.aspects.includes(aspect(s))}
 export function eligibleKinds(snapshot){
  if(!validateSnapshot(snapshot).ok)return [];
@@ -71,7 +77,9 @@ export function eligibleKinds(snapshot){
 export function validateDisplay(snapshot,display){
  const base=validateSnapshot(snapshot);if(!base.ok)return base;
  const reasons=[];
- if(!record(display)||!own(kinds,display.kind))return result(['Unsupported display kind']);
+ if(!record(display)||typeof display.kind!=='string'||!own(kinds,display.kind))return result(['Unsupported display kind']);
+ if(Object.keys(display).some(key=>!['kind','title','category','value','start','end','requiresComplete'].includes(key)))reasons.push('Unknown display option');
+ for(const key of ['title','category','value','start','end'])if(display[key]!==undefined&&!text(display[key]))reasons.push('Display options require bounded strings');
  if(display.requiresComplete!==undefined&&typeof display.requiresComplete!=='boolean')reasons.push('requiresComplete must be boolean');
  if(snapshot.dimensions?.length>1&&display.kind!=='table')reasons.push('Multiple group dimensions require the exact table until a series mapping is declared');
  const kind=kinds[display.kind];
@@ -91,11 +99,11 @@ export function validateDisplay(snapshot,display){
 function context(snapshot){const v=validateSnapshot(snapshot);if(!v.ok)throw TypeError(v.reasons.join('; '));return {datasetId:snapshot.id,revision:snapshot.revision,scopeId:snapshot.scope.id,generation:snapshot.scope.generation}}
 export function scopeIntent(snapshot,field,value){
  const c=context(snapshot),definition=snapshot.fields.find(f=>f.key===field);
- if(!definition||definition.aggregation||snapshot.dimensions&&!snapshot.dimensions.includes(field)||value===undefined||value!==null&&!typed(value,definition))throw TypeError('Scope filter requires a declared field and typed value');
+ if(snapshot.shape==='summary'||!definition||definition.aggregation||snapshot.dimensions&&!snapshot.dimensions.includes(field)||value===undefined||value!==null&&!typed(value,definition))throw TypeError('Scope filter requires a declared field and typed value');
  if(!snapshot.rows.some(row=>own(row.values,field)&&row.values[field]===value))throw TypeError('Scope filter value is not in the supplied dataset');
  return {type:'scope-filter',...c,field,value,op:value===null?'missing':'eq'};
 }
-export function selectionIntent(snapshot,key){const c=context(snapshot);if(!snapshot.rows.some(row=>row.key===key))throw TypeError('Selection key is not in this dataset revision');return {type:'select',...c,key}}
+export function selectionIntent(snapshot,key){const c=context(snapshot);if(snapshot.shape==='summary')throw TypeError('Population summaries do not identify record or subgroup membership');if(!snapshot.rows.some(row=>row.key===key))throw TypeError('Selection key is not in this dataset revision');return {type:'select',...c,key}}
 
 // Complete means exhaustive captured aggregate intervals, never full collection.
 function validateIntervals(s,fields,reasons){
@@ -168,6 +176,23 @@ export function measureValue(snapshot,row,fieldKey){
  if(!field||!numericType(field))return {state:'unknown',exact:null,coordinate:null,unit:field?.unit??'',aggregation:field?.aggregation??null,support:null,reason:'No numeric measure is declared'};
  const state=field.aggregation?(cell?.state??'unknown'):row.state==='unknown'||raw===null||raw===undefined?'unknown':row.state==='no_data'?'no_data':snapshot.quality?.value??'unknown';
  const exact=raw===undefined?null:raw,known=member(state,['recorded','derived','estimated'])||!field.aggregation&&state==='no_data';
- const coordinate=!known||raw===null||raw===undefined?null:field.type==='rational'?rationalCoordinate(raw):numeric(raw)?Number(raw):null;
+ const coordinate=!known||raw===null||raw===undefined?null:field.type==='rational'?rationalCoordinate(raw):numericCoordinate(raw);
  return {state,exact,coordinate,unit:field.unit??'',aggregation:field.aggregation??null,support:cell?.support??null,...(known&&coordinate===null?{reason:'Exact value is outside the finite plotting range'}:{})};
 }
+
+function validateSummary(snapshot,fields,reasons){
+ if(!member(snapshot.origin,['source-read','browser-held']))reasons.push('Population summaries require an explicit source-read or browser-held origin');
+ if(snapshot.dimensions!==undefined||snapshot.interval!==undefined)reasons.push('Population summaries cannot declare subgroup dimensions or interval geometry');
+ if(!Array.isArray(snapshot.rows)||snapshot.rows.length!==1||snapshot.rows[0]?.key!=='population'||!uint64(snapshot.rows[0]?.values?.count))reasons.push('Population summaries require exactly one population row with an exact captured count');
+ if(fields.get('count')?.type!=='number'||fields.get('count')?.unit!=='records'||fields.get('count')?.aggregation)reasons.push('Population summaries require a count field in captured records');
+ for(const field of fields.values())if(field.key!=='count'&&(!field.aggregation||field.type!=='rational'))reasons.push('Population summaries contain only captured count and declared exact rational aggregate measures');
+}
+
+const shapeCapabilities=Object.freeze({ranked:Object.freeze({selectRows:true,filterDimensions:true,selectWindows:false}), 'time-series':Object.freeze({selectRows:true,filterDimensions:false,selectWindows:true}), summary:Object.freeze({selectRows:false,filterDimensions:false,selectWindows:false})});
+const none=Object.freeze({selectRows:false,filterDimensions:false,selectWindows:false,completeAspects:Object.freeze([])});
+export function capabilities(snapshot){
+ if(!validateSnapshot(snapshot).ok)return none;
+ const shape=shapeCapabilities[snapshot.shape];
+ return Object.freeze({...shape,filterDimensions:shape.filterDimensions&&!!snapshot.dimensions?.length,completeAspects:Object.freeze(snapshot.quality.extent==='complete'&&attested(snapshot)?[aspect(snapshot)]:[])});
+}
+export const supportsSelection=snapshot=>capabilities(snapshot).selectRows;

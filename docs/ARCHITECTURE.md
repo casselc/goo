@@ -1326,3 +1326,10 @@ projected from existing validated Go aggregates without extra reads. Common
 formatters preserve exact values separately from human labels and geometry.
 Measure/view selection remains presentation state; only scoped group/window
 intents reach the fixed-question staging owner.
+
+264 uses [independent population summaries](POPULATION_MEASURE_VIEWS.md) for
+canonical comparisons: Go supplies exact signed changes; each side retains its
+question, support, source-basis claim and clock without a merged attestation.
+[The model audit](MODEL_PIT_OF_SUCCESS_264.md) puts normalized immutable construction,
+guarantee-aware projections and host-owned role/epoch action resolution before
+further extension-authoring or renderer expansion.

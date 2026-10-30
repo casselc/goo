@@ -1,9 +1,16 @@
 # Known issues and gaps
 
+264 adds [population summary/comparison views](POPULATION_MEASURE_VIEWS.md) and
+fixes nullable/count/option/capability validation and numeric refresh intent.
+The [model audit](MODEL_PIT_OF_SUCCESS_264.md) identifies remaining construction,
+projection-guarantee and execution-epoch gaps; these gate authored views and more
+renderers. Existing source adapters remain conservative; JSON metadata is not authority.
+
 263 adds [exact numeric/latency measures](SCOPED_MEASURES.md) to ordinary grouped
 and interval views, with per-cell support and unavailable gaps. Signed bar kinds
-fall back visibly to tables. Whole-population summaries/comparisons, histograms,
-status/grouped-time/native families and dedicated triage actions remain unmigrated.
+fall back visibly to tables. Population summaries/comparisons are extended by264
+above; histograms, status/grouped-time/native families and dedicated triage actions
+remain unmigrated.
 
 262 adds [count intervals and ordinary two-field count tables](SCOPED_INTERVALS.md),
 including known-zero/unknown/gap semantics and explicit checked-scope narrowing.

@@ -111,7 +111,7 @@ func CohortFromResult(r *Result) (Cohort, error) {
 	if r == nil {
 		return Cohort{}, fmt.Errorf("result required")
 	}
-	c := Cohort{Numeric: detached(r.Numeric), Question: detached(r.Question), Basis: r.Basis, Count: r.Count, State: r.State, Duration: r.Duration, SpanStatus: r.SpanStatus, Groups: []ValueCount{}}
+	c := Cohort{CapturedAt: r.CapturedAt, Numeric: detached(r.Numeric), Question: detached(r.Question), Basis: r.Basis, Count: r.Count, State: r.State, Duration: detached(r.Duration), SpanStatus: detached(r.SpanStatus), Groups: []ValueCount{}}
 	for _, raw := range r.Groups {
 		var g ValueCount
 		if json.Unmarshal(raw, &g) != nil {

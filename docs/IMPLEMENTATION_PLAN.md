@@ -1,5 +1,9 @@
 # Implementation plan
 
+> Active next milestone after264: H0 normalized immutable snapshot construction,
+> then H1 host execution epochs/role action resolution and guarantee-aware projections.
+> [Pit-of-success review](MODEL_PIT_OF_SUCCESS_264.md) gates further renderer/editor expansion.
+
 > Current continuation proposal: [view grammar260](VIEW_GRAMMAR_PROPOSAL_260.md)
 > and [2026-10-30 sequence](ROADMAP_2026_10_30.md), requested after259.
 > Earlier ordered work: [2026-10-29 roadmap](ROADMAP_2026_10_29.md) and
@@ -1594,3 +1598,8 @@ expanding Plotly or the editor; this remains a bounded V0 implementation.
 263 delivers [numeric/latency scoped measures](SCOPED_MEASURES.md) with typed units,
 exact rational arithmetic, per-cell support and local measure switching. Continue
 summary/comparison and richer-family parity before renderer/editor expansion.
+
+After the bounded264 summary/comparison cut, prioritize
+[model construction/ownership hardening](MODEL_PIT_OF_SUCCESS_264.md): H0 normalized
+immutable shapes/closed options; H1 execution epochs, role handles and guarantee-
+aware projections. This gate precedes additional renderers or authored views.

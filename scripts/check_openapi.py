@@ -29,7 +29,7 @@ def check_view_dataset(spec):
         'scope': {'id': revision, 'generation': revision, 'signal': 'spans', 'selector': {
             'signal': 'spans', 'environment': 'prod', 'fromMs': 1000, 'toMs': 61000,
             'limit': 100, 'offset': 0, 'groupBy': [{'kind': 'column', 'key': 'service'}]}},
-        'shape': 'ranked', 'dimensions': ['category'], 'capturedAt': '2026-10-30T00:00:00Z',
+        'shape': 'ranked', 'origin': 'source-read', 'dimensions': ['category'], 'capturedAt': '2026-10-30T00:00:00Z',
         'fields': [{'key': 'category', 'label': 'column:service', 'type': 'string', 'nullable': True},
                    {'key': 'count', 'label': 'Captured records', 'type': 'number', 'unit': 'records'}],
         'rows': [{'key': 'category:' + 'b' * 64, 'values': {'category': None, 'count': '18446744073709551615'}},
@@ -64,7 +64,7 @@ def check_view_dataset(spec):
     time_series['fields'] = [
         {'key': 'fromMs', 'label': 'Interval start', 'type': 'timestamp', 'unit': 'ms'},
         {'key': 'toMs', 'label': 'Interval end', 'type': 'timestamp', 'unit': 'ms'},
-        {'key': 'count', 'label': 'Captured records', 'type': 'number', 'unit': 'records'}]
+        {'key': 'count', 'label': 'Captured records', 'type': 'number', 'unit': 'records', 'nullable': True}]
     time_series['rows'] = [
         {'key': 'interval:1000:2000', 'state': 'observed', 'values': {'fromMs': '1000', 'toMs': '2000', 'count': '18446744073709551615'}},
         {'key': 'interval:2000:3000', 'state': 'no_data', 'values': {'fromMs': '2000', 'toMs': '3000', 'count': '0'}},
@@ -105,7 +105,8 @@ def check_view_dataset(spec):
     for mutant in time_mutants:
         assert not check_view.is_valid(mutant), 'Invalid explicit interval state accepted'
 
-    check_view_measures(spec, snapshot, time_series)
+    measure_snapshot = check_view_measures(spec, snapshot, time_series)
+    check_view_summary_comparison(spec, measure_snapshot)
 
     missing = object()
     cases = [
@@ -157,7 +158,7 @@ def check_view_measures(spec, ranked, intervals):
         agg = {'family': family, 'kind': kind, 'method': method}
         if quantile:
             agg['quantile'] = quantile
-        supplied['fields'].append({'key': key, 'label': key, 'type': 'rational', 'unit': unit, 'aggregation': agg})
+        supplied['fields'].append({'key': key, 'label': key, 'type': 'rational', 'unit': unit, 'nullable': True, 'aggregation': agg})
         row['values'][key] = value
         row['cells'][key] = {'state': 'derived', 'support': {
             'total': '5', 'valid': '3' if family == 'numeric' else '5',
@@ -219,6 +220,108 @@ def check_view_measures(spec, ranked, intervals):
     mutants.append(unknown_support)
     for mutant in mutants:
         assert not check_view.is_valid(mutant), 'Invalid exact measure/support/method accepted'
+    return supplied
+
+
+def check_view_summary_comparison(spec, ranked):
+    check_snapshot = validator(spec, {'$ref': '#/components/schemas/exploration.ViewDataset'})
+    check_comparison = validator(spec, {'$ref': '#/components/schemas/exploration.ViewComparison'})
+    summary = copy.deepcopy(ranked)
+    summary['shape'] = 'summary'
+    summary['id'] = summary['scope']['id'] + ':summary'
+    del summary['dimensions']
+    summary['fields'] = summary['fields'][1:]
+    summary['rows'][0]['key'] = 'population'
+    del summary['rows'][0]['values']['category']
+    summary['completeness']['aspects'] = ['summary']
+    check_snapshot.validate(summary)
+    held = copy.deepcopy(summary)
+    held['origin'] = 'browser-held'
+    held['quality']['extent'] = 'unknown'
+    held['sourceBasis'] = 'unverified-caller-claim'
+    del held['capturedAt']
+    del held['completeness']
+    check_snapshot.validate(held)
+    comparison = {'version': 'goo.comparison/1', 'state': 'observed',
+                  'baseline': copy.deepcopy(held), 'selection': copy.deepcopy(held), 'changes': {}}
+    comparison['selection']['revision'] = 'd' * 64
+    comparison['selection']['scope']['generation'] = 'd' * 64
+    comparison['selection']['capturedAt'] = '2026-10-30T01:00:00Z'
+    for field in held['fields']:
+        change = {'state': 'derived', 'value': '0', 'unit': field['unit']}
+        if 'aggregation' in field:
+            change['aggregation'] = copy.deepcopy(field['aggregation'])
+        comparison['changes'][field['key']] = change
+    comparison['changes']['count']['reason'] = 'absolute-count-difference-not-normalized-rate'
+    check_comparison.validate(comparison)
+    no_data = copy.deepcopy(comparison)
+    no_data['state'] = 'no_data'
+    no_data['baseline']['rows'][0]['values']['count'] = '0'
+    no_data['changes']['count']['value'] = '5'
+    for key in no_data['baseline']['rows'][0]['cells']:
+        no_data['baseline']['rows'][0]['values'][key] = None
+        no_data['baseline']['rows'][0]['cells'][key] = {'state': 'no_data', 'support': {part: '0' for part in ('total', 'valid', 'missing', 'empty', 'invalid')}}
+        no_data['changes'][key].update(state='unavailable', value=None, reason='empty-population')
+    check_comparison.validate(no_data)
+    diagnostic = copy.deepcopy(comparison)
+    diagnostic['state'] = 'diagnostic'
+    diagnostic['reason'] = 'baseline-source-reads-disagree'
+    for change in diagnostic['changes'].values():
+        change.update(state='unavailable', value=None, reason='source-reads-disagree')
+    check_comparison.validate(diagnostic)
+    incompatible = copy.deepcopy(diagnostic)
+    incompatible.update(state='incompatible', reason='incompatible-fields')
+    check_comparison.validate(incompatible)
+    signed = copy.deepcopy(comparison)
+    signed['changes']['duration.p95']['value'] = '-3'
+    signed['changes']['duration.mean']['value'] = '-11/3'
+    # Schema checks signed exact representation; runtime validates subtraction.
+    check_comparison.validate(signed)
+
+    source_mutants = []
+    for path, value in [(('rows',), []), (('dimensions',), ['category']), (('fields', 1, 'nullable'), False)]:
+        mutant = copy.deepcopy(summary)
+        parent = mutant
+        for key in path[:-1]:
+            parent = parent[key]
+        parent[path[-1]] = value
+        source_mutants.append(mutant)
+    missing_clock = copy.deepcopy(summary)
+    del missing_clock['capturedAt']
+    source_mutants.append(missing_clock)
+    forged = copy.deepcopy(held)
+    forged['completeness'] = copy.deepcopy(summary['completeness'])
+    source_mutants.append(forged)
+    forged_complete = copy.deepcopy(held)
+    forged_complete['quality']['extent'] = 'complete'
+    source_mutants.append(forged_complete)
+    for mutant in source_mutants:
+        assert not check_snapshot.is_valid(mutant), 'Invalid/forged population-summary claim accepted'
+
+    changes = [
+        (('capturedAt',), '2026-10-30T00:00:00Z'),
+        (('scope',), {}),
+        (('baseline', 'origin'), 'source-read'),
+        (('changes', 'duration.p95', 'unit'), 'ms'),
+        (('changes', 'duration.p95', 'aggregation', 'method'), 'exact'),
+        (('changes', 'numeric.mean', 'value'), 0.5),
+    ]
+    for path, value in changes:
+        mutant = copy.deepcopy(comparison)
+        parent = mutant
+        for key in path[:-1]:
+            parent = parent[key]
+        parent[path[-1]] = value
+        assert not check_comparison.is_valid(mutant), f'Invalid descriptive comparison accepted: {path}'
+    missing_change = copy.deepcopy(comparison)
+    del missing_change['changes']['numeric.mean']
+    assert not check_comparison.is_valid(missing_change), 'Incomplete declared comparison union accepted'
+    bad_diagnostic = copy.deepcopy(diagnostic)
+    bad_diagnostic['changes']['count'].update(state='derived', value='0')
+    assert not check_comparison.is_valid(bad_diagnostic), 'Diagnostic count difference admitted'
+    bad_empty = copy.deepcopy(no_data)
+    bad_empty['changes']['count'].update(state='unavailable', value=None, reason='empty-population')
+    assert not check_comparison.is_valid(bad_empty), 'Known empty absolute count difference withheld'
 
 
 def check(spec):

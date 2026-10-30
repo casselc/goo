@@ -229,7 +229,7 @@ func TestSourceSuppliesMeasureDatasetsWithoutAdditionalReads(t *testing.T) {
 		return &http.Response{StatusCode: 200, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(text))}, nil
 	})}}
 	result, err := source.Fetch(context.Background(), q)
-	if err != nil || reads != 5 || result.ViewDataset == nil || result.TimeDataset == nil || result.State != "observed" {
+	if err != nil || reads != 5 || result.ViewDataset == nil || result.TimeDataset == nil || result.SummaryDataset == nil || result.State != "observed" {
 		t.Fatal(result, err, reads)
 	}
 	if *result.ViewDataset.Rows[0].Values["numeric.mean"] != "1/50" || *result.TimeDataset.Rows[0].Values["duration.p95"] != "3" {

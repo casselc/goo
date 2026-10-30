@@ -1371,3 +1371,8 @@ distinct from known zero; complete-only requires attested gap-free coverage.
 chart/table contract. `view-values.mjs` supplies common formatting and accessible
 exact-cell disclosures; selected measure switches remain IO-free. See
 [measure semantics and adoption limits](SCOPED_MEASURES.md).
+
+264 adds passive `goo-measure-summary` and `goo-measure-comparison`, using the same
+exact fields/support and independent side facts. See [API and adoption limits](POPULATION_MEASURE_VIEWS.md).
+Central capabilities now prevent summary selection controls; property copies and
+closed options address immediate pitfalls. [Construction/ownership hardening](MODEL_PIT_OF_SUCCESS_264.md) remains required.

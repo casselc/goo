@@ -45,7 +45,7 @@ func TestNumericComparisonIntentHTTP(t *testing.T) {
 	if e := json.Unmarshal(w.Body.Bytes(), &result); e != nil {
 		t.Fatal(e)
 	}
-	if result.Measures == nil || result.Measures.Numeric == nil || result.Measures.Numeric.MeanDifference != "1/3" {
+	if result.Measures == nil || result.Measures.Numeric == nil || result.Measures.Numeric.MeanDifference != "1/3" || result.ViewComparison == nil || result.ViewComparison.Changes["numeric.mean"].Value == nil || *result.ViewComparison.Changes["numeric.mean"].Value != "1/3" {
 		t.Fatal("exact rational transport lost", w.Body.String())
 	}
 	request.Numeric = false
@@ -61,10 +61,18 @@ func TestNumericComparisonIntentHTTP(t *testing.T) {
 	request.Baseline.Numeric = nil
 	request.Baseline.Groups[0].Numeric = nil
 	request.Selection.Groups[0].Numeric = nil
-	if w = call(request); w.Code != 200 {
-		t.Fatal("historical numeric-question count mode changed", w.Code, w.Body.String())
+	if w = call(request); w.Code != 400 || !bytes.Contains(w.Body.Bytes(), []byte("explicit numeric comparison")) {
+		t.Fatal("declared numeric profile silently dropped", w.Code, w.Body.String())
 	}
-	if bytes.Contains(w.Body.Bytes(), []byte(`"numeric"`)) {
-		t.Fatal("legacy result gained numeric payload")
+	// A count-only question is explicit; it cannot retain a numeric definition
+	// while omitting the evidence needed to evaluate that family.
+	request.Baseline.Question.Numeric = nil
+	request.Selection.Question.Numeric = nil
+	if w = call(request); w.Code != 200 {
+		t.Fatal("explicit count-only question refused", w.Code, w.Body.String())
+	}
+	var counts exploration.CohortComparison
+	if err := json.Unmarshal(w.Body.Bytes(), &counts); err != nil || counts.Measures != nil || counts.ViewComparison == nil || len(counts.ViewComparison.Baseline.Fields) != 1 || counts.ViewComparison.Baseline.Fields[0].Key != "count" {
+		t.Fatal("count-only recipe acquired a numeric family", w.Body.String(), err)
 	}
 }

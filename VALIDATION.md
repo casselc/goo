@@ -1,5 +1,61 @@
 # Validation record
 
+## Population summaries, independent comparisons and model audit — 264
+
+Canonical summary snapshots now support compact whole-population numeric/duration
+views; comparison envelopes retain two independent held snapshots plus exact signed
+Go changes. Scope, support, source-basis claims and read clocks remain separate;
+held data never gains source completeness. Missing clocks stay absent. Source
+summary completeness concerns only the existing aggregate read. See
+[contracts/diagram](docs/POPULATION_MEASURE_VIEWS.md),
+[executable storyboard](journeys/264-summary-comparison-storyboard.md).
+
+The [pit-of-success audit](docs/MODEL_PIT_OF_SUCCESS_264.md) identifies unresolved
+construction, safe-projection/authority and execution-epoch gaps. H0 immutable
+normalization and H1 role/action ownership now gate further renderer/authoring
+expansion. Immediate fixes include explicit nullability/count/dimension presence,
+closed display options, exact decimal values independent of plot range, central
+capability-driven controls, defensive properties and unknown-empty presentation.
+An actual refresh path silently stripping numeric measures for an older profile
+is removed: current typed question intent is authoritative.
+
+Full Go tests pass after intentional protocol updates. Seven new summary/comparison
+tests include108 generated exact rational-difference cases, independent support/
+clock/basis, no-data, diagnostic and incompatible cases; source-read counts remain
+unchanged. All68 HTTP goldens retain their requests/statuses/headers; four success
+responses now include the canonical comparison. Missing numeric evidence refuses
+with400; explicit count-only questions still pass. Actual Go ranked/time/summary/
+comparison outputs validate against JS and OpenAPI. API checks pass96 operations,
+429 response fixtures,159 admitted requests and28 mux refusals.
+
+All681 frontend tests pass with no skips. Both Chromium component suites pass
+SSR/pre-upgrade/detached updates, exact/rational human units, property isolation,
+capability refusal, stale-output withdrawal, independent clocks and no IO.
+Responsive comparison checks require baseline/selection/change together in a300px
+embed/390px viewport, equal shared signed scale widths and accessible headers,
+including with exact details open. Final real-source frames verify those bounds.
+
+Actual OTLP→ClickHouse→generic Go journeys263/264 pass together in56.8s.264 takes
+42.8s including a35-second Bombadil campaign:663 snapshots, all seven phases,
+two explicit source Runs and two pure comparison requests with no unexpected
+reads. It verifies exact3/2→7/2 USD (difference2), distinct missing/invalid support,
+p95 differences, independent clocks/bases, keyboard precision access, baseline
+retention, mobile comparability and forged-delta refusal clearing stale success.
+
+The dedicated observed Quint replay passes in23.91s with11 negative controls,
+including baseline retargeting, illicit local reads and context advances. Four
+Hegel suites pass120 cases against actual JS, with Go math/big exact arithmetic
+oracles. These checks cover bounded projected ownership/accounting, not source
+authentication or whole-product liveness. The DTO's generation remains content-
+based; a centralized host execution epoch is still explicit H1 work.
+
+Configured CA-trusted build and packages-only deployment succeeded:
+`1643f7ef85b81ea3cd70e258c614f998b9d244aa15f9a8eb06ee0ff5009bafb0`.
+Root HTTP returns200; seven changed UI assets match source bytes. Other services
+and data volumes are preserved. Compact ledgers and current documentation frames
+are retained; disposable campaign output is removed after verification.
+
+
 ## Exact numeric and latency scoped measures — 263
 
 Delivered numeric and span-duration fields in shared ranked/interval snapshots,

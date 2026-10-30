@@ -12,6 +12,7 @@ import (
 // Cohort is a browser-held capture of complete group/count results, not a signed
 // source receipt. Comparison validates its internal accounting, not provenance.
 type Cohort struct {
+	CapturedAt       string             `json:"capturedAt,omitempty"`
 	NumericHistogram *NumericHistogram  `json:"numericHistogram,omitempty"`
 	Numeric          *NumericSummary    `json:"numeric,omitempty"`
 	Duration         *DurationSummary   `json:"duration,omitempty"`
@@ -45,6 +46,7 @@ type ValueComparison struct {
 	DifferencePP     string             `json:"differencePP"`
 }
 type CohortComparison struct {
+	ViewComparison *ViewComparison    `json:"viewComparison,omitempty"`
 	AggregateOnly  bool               `json:"aggregateOnly,omitempty"`
 	Measures       *MeasureComparison `json:"measures,omitempty"`
 	State          string             `json:"state"`
@@ -120,7 +122,7 @@ func (c Cohort) validate() (map[string]ValueCount, *big.Int, error) {
 	}
 	return m, total, nil
 }
-func CompareCohorts(request ComparisonRequest) (*CohortComparison, error) {
+func compareCohorts(request ComparisonRequest) (*CohortComparison, error) {
 	if request.Distribution && !request.Numeric {
 		return nil, fmt.Errorf("distribution comparison requires explicit numeric mode")
 	}
@@ -130,11 +132,11 @@ func CompareCohorts(request ComparisonRequest) (*CohortComparison, error) {
 	if request.Distribution && (request.Baseline.NumericHistogram == nil || request.Selection.NumericHistogram == nil) {
 		return nil, fmt.Errorf("distribution comparison requires complete histograms on both sides")
 	}
-	if !request.Numeric && (numericPayload(request.Baseline) || numericPayload(request.Selection)) {
-		return nil, fmt.Errorf("numeric payload requires explicit numeric comparison")
+	if !request.Numeric && (request.Baseline.Question.Numeric != nil || request.Selection.Question.Numeric != nil || numericPayload(request.Baseline) || numericPayload(request.Selection)) {
+		return nil, fmt.Errorf("numeric definition requires explicit numeric comparison and validated numeric summaries on both sides")
 	}
 	if request.Numeric && (!compatibleNumericBindings(request.Baseline.Question.Numeric, request.Selection.Question.Numeric) || request.Baseline.Numeric == nil || request.Selection.Numeric == nil) {
-		return nil, fmt.Errorf("numeric comparison requires identical declared bindings and complete numeric coverage")
+		return nil, fmt.Errorf("numeric comparison requires matching declared bindings and validated numeric summaries on both sides; rerun each numeric question")
 	}
 	if request.Distribution && len(request.Baseline.Question.GroupBy) == 0 && len(request.Selection.Question.GroupBy) == 0 {
 		return compareAggregateDistributions(request)

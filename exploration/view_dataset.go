@@ -21,7 +21,9 @@ type ViewDataset struct {
 	Rows         []ViewRow         `json:"rows"`
 	Quality      ViewQuality       `json:"quality"`
 	Completeness *ViewCompleteness `json:"completeness,omitempty"`
-	CapturedAt   string            `json:"capturedAt"`
+	CapturedAt   string            `json:"capturedAt,omitempty"`
+	Origin       string            `json:"origin"`
+	SourceBasis  string            `json:"sourceBasis,omitempty"`
 	Interval     *ViewInterval     `json:"interval,omitempty"`
 	Dimensions   []string          `json:"dimensions,omitempty"`
 }
@@ -82,7 +84,7 @@ func baseViewDataset(r *Result, shape, aspect string) *ViewDataset {
 	}
 	h := sha256.Sum256(selector)
 	id := hex.EncodeToString(h[:])
-	return &ViewDataset{Version: "goo.dataset/1", ID: id + ":" + aspect, Revision: r.Basis, Scope: ViewScope{ID: id, Generation: r.Basis, Signal: r.Question.Signal, Selector: selector}, Shape: shape, Fields: []ViewField{}, Rows: []ViewRow{}, Quality: ViewQuality{Extent: "unknown", Basis: "captured-query", Value: "derived", Sampling: "unknown", Freshness: "fixed"}, CapturedAt: r.CapturedAt}
+	return &ViewDataset{Version: "goo.dataset/1", ID: id + ":" + aspect, Revision: r.Basis, Scope: ViewScope{ID: id, Generation: r.Basis, Signal: r.Question.Signal, Selector: selector}, Shape: shape, Fields: []ViewField{}, Rows: []ViewRow{}, Quality: ViewQuality{Extent: "unknown", Basis: "captured-query", Value: "derived", Sampling: "unknown", Freshness: "fixed"}, CapturedAt: r.CapturedAt, Origin: "source-read"}
 }
 func attestView(d *ViewDataset, aspect string) {
 	d.Quality.Extent = "complete"
@@ -180,7 +182,7 @@ func timeViewDataset(r *Result, exhaustiveIntervals bool) *ViewDataset {
 		return nil
 	}
 	d.Interval = &ViewInterval{FromMS: strconv.FormatInt(q.FromMS, 10), ToMS: strconv.FormatInt(q.ToMS, 10), BucketMS: strconv.FormatInt(q.BucketMS, 10)}
-	d.Fields = []ViewField{{Key: "fromMs", Label: "Interval start", Type: "timestamp", Unit: "ms"}, {Key: "toMs", Label: "Interval end", Type: "timestamp", Unit: "ms"}, {Key: "count", Label: "Captured records", Type: "number", Unit: "records"}}
+	d.Fields = []ViewField{{Key: "fromMs", Label: "Interval start", Type: "timestamp", Unit: "ms"}, {Key: "toMs", Label: "Interval end", Type: "timestamp", Unit: "ms"}, {Key: "count", Label: "Captured records", Type: "number", Unit: "records", Nullable: true}}
 	d.Fields = append(d.Fields, viewMeasureFields(q)...)
 	previousEnd := q.FromMS
 	for _, p := range r.TimeSeries {

@@ -65,11 +65,11 @@ func compareNumericDistributions(a, b Cohort, unknown bool) *NumericDistribution
 	return r
 }
 
-// CohortFromResultDistribution is explicit: the older numeric snapshot operation
-// deliberately continues to omit histograms and preserve its hashes and wire form.
+// CohortFromResultDistribution explicitly retains validated histogram evidence;
+// numeric-only cohort projections do not acquire a histogram implicitly.
 func CohortFromResultDistribution(r *Result) (Cohort, error) {
 	if r != nil && len(r.Question.GroupBy) == 0 {
-		c := Cohort{Question: detached(r.Question), Basis: r.Basis, Count: r.Count, State: r.State, Numeric: detached(r.Numeric), NumericHistogram: detached(r.NumericHistogram), Duration: detached(r.Duration), SpanStatus: detached(r.SpanStatus), Groups: []ValueCount{}}
+		c := Cohort{CapturedAt: r.CapturedAt, Question: detached(r.Question), Basis: r.Basis, Count: r.Count, State: r.State, Numeric: detached(r.Numeric), NumericHistogram: detached(r.NumericHistogram), Duration: detached(r.Duration), SpanStatus: detached(r.SpanStatus), Groups: []ValueCount{}}
 		if len(r.Groups) != 0 {
 			return c, fmt.Errorf("aggregate-only distribution cannot contain categorical groups")
 		}
@@ -145,8 +145,8 @@ func CompareDistributionEvidence(a, b *SavedCapture) (*EvidenceComparison, error
 	if r.State == "incompatible" || r.State == "unsupported" {
 		return r, nil
 	}
-	ac := Cohort{Question: a.Explore.Question, Count: a.Explore.Count, Numeric: a.Explore.Numeric, NumericHistogram: a.Explore.NumericHistogram}
-	bc := Cohort{Question: b.Explore.Question, Count: b.Explore.Count, Numeric: b.Explore.Numeric, NumericHistogram: b.Explore.NumericHistogram}
+	ac := Cohort{CapturedAt: a.Explore.CapturedAt, Question: a.Explore.Question, Count: a.Explore.Count, Numeric: a.Explore.Numeric, NumericHistogram: a.Explore.NumericHistogram}
+	bc := Cohort{CapturedAt: b.Explore.CapturedAt, Question: b.Explore.Question, Count: b.Explore.Count, Numeric: b.Explore.Numeric, NumericHistogram: b.Explore.NumericHistogram}
 	if r.Measures == nil || r.Measures.Numeric == nil {
 		return nil, fmt.Errorf("numeric distribution measures unavailable")
 	}

@@ -13,12 +13,13 @@ changing numeric meaning. No type inference, unit conversion or duration/rate
 normalization is implied. Sums over different population sizes or window lengths
 must be read with their corresponding counts and coverage.
 
-The new `POST /compare` request explicitly opts into numeric semantics with
-`numeric: true`. Legacy
-count-only requests, including old numeric questions whose comparison payloads
-omitted numeric summaries, retain their bytes and count-only behavior. New
-numeric requests require complete totals and group summaries: inspection rows
-cannot supply missing aggregates. Immutable captures are never rewritten.
+`POST /compare` explicitly opts into a declared numeric family with
+`numeric: true` and validated population/group summaries on both sides. Missing
+evidence is rejected with an actionable error; inspection rows cannot supply it.
+A count-only request uses a count-only question. It cannot silently discard a
+numeric definition to imitate an older result. Refresh follows the current typed
+question; the previous capture supplies lineage, not a flag that strips measures.
+Immutable stored bytes are not rewritten. This prerelease has no old-wire fallback.
 
 ## Exact arithmetic and state
 
@@ -29,6 +30,9 @@ denominator. Rational values are strings rather than JSON numbers. No decimal
 rounding becomes arithmetic authority. For [decimal64](FIXED_SCALE_DECIMALS.md),
 wire differences remain coefficient integers/rationals and display applies the
 binding scale. Mean in input units divides by the additional factor `10^scale`.
+The canonical `viewComparison` supplied summaries/differences instead carry exact
+reduced rationals already converted to their declared human units. Those values
+must not be scaled a second time. [Current component contract](SCOPED_VIEW_PILOT.md).
 
 Missing, present-empty and invalid values remain visible in coverage. An absent
 group or a side without valid values has unavailable numeric arithmetic; it does
@@ -74,7 +78,7 @@ flowchart LR
 
 ## Delivered review gates
 
-NC1: Go validation, exact comparison, legacy compatibility and saved evidence;
+Original NC1: Go validation, exact comparison and saved evidence;
 independent semantic review plus property/source parity checks.
 
 NC2: Existing live/stored comparison owners, signed passive display, baseline and
@@ -119,9 +123,9 @@ annotations are needed.
 ![Numeric range compared with the whole remainder](journeys/screenshots/175c-numeric-range-versus-rest.png)
 
 Validation: NC1 `8c67196`, NC2 `dcb62e4`; real journey/model/Bombadil and final
-mobile evidence are recorded in [VALIDATION.md](../VALIDATION.md). Legacy frozen
-comparisons keep their original count-only result rather than acquiring numeric
-arithmetic on reopen.
+mobile evidence are recorded in [VALIDATION.md](../VALIDATION.md). Checkpoint264
+removes the old count-only compatibility path for numeric definitions. Invalid
+missing-family requests now refuse; refresh preserves the current declared family.
 
 [Aligned distribution comparison](DISTRIBUTION_COMPARISONS.md) adds explicit
 paired histograms over the same bindings, with all-record population shares and

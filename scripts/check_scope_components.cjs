@@ -6,9 +6,9 @@ const assert=require('node:assert/strict');
 
 const snapshot={
   version:'goo.dataset/1',id:'d',revision:'r',capturedAt:'2026-10-30T02:32:14.794538004Z',
-  scope:{id:'s',generation:0,signal:'spans',selector:{}},shape:'ranked',
-  fields:[{key:'category',label:'Service',type:'string'},{key:'count',label:'Count',type:'number'}],
-  rows:[{key:'a',values:{category:'api',count:'9007199254740993'}},{key:'b',values:{category:'',count:null}}],
+  scope:{id:'s',generation:0,signal:'spans',selector:{}},shape:'ranked',dimensions:['category'],
+  fields:[{key:'category',label:'Service',type:'string'},{key:'count',label:'Count',type:'number'},{key:'value',label:'Value',type:'number',nullable:true}],
+  rows:[{key:'a',values:{category:'api',count:'9007199254740993',value:'9007199254740993'}},{key:'b',values:{category:'',count:'0',value:null}}],
   quality:{extent:'partial',basis:'captured-query',value:'derived',sampling:'unknown',freshness:'fixed'}
 };
 
@@ -32,7 +32,7 @@ const snapshot={
     await page.waitForFunction(()=>customElements.get('goo-chart'));
     const result=await page.evaluate(()=>{
       const snapshot=structuredClone(window.supplied),chart=document.createElement('goo-chart');
-      chart.snapshot=snapshot;chart.display={kind:'bar',category:'category',value:'count'};
+      chart.snapshot=snapshot;chart.display={kind:'bar',category:'category',value:'value'};
       document.querySelector('#root').append(chart);
       let select;chart.addEventListener('goo-select',event=>select=event.detail);chart.querySelector('button').click();
       const bars=chart.querySelectorAll('.scope-view-fill').length,exact=chart.textContent.includes('9007199254740993'),quality=chart.textContent.includes('partial groups');
@@ -51,8 +51,18 @@ const snapshot={
     assert.equal(result.bars,1);
     for(const key of ['exact','quality','table','refusal','ssr','getters','precedence','utc','pre'])assert(result[key],key);
     assert.equal(result.select.key,'a');assert.equal(result.scope.value,'');assert.equal(result.overflow,false);
+    const ownership=await page.evaluate(()=>{
+      const original=structuredClone(window.supplied),chart=document.createElement('goo-chart');chart.snapshot=original;chart.display={kind:'table'};document.body.append(chart);
+      original.rows[0].values.count='123';const assigned=chart.snapshot.rows[0].values.count==='9007199254740993';
+      const detached=chart.snapshot;detached.rows[0].values.count='456';const getter=chart.snapshot.rows[0].values.count==='9007199254740993';
+      const empty=structuredClone(window.supplied);empty.rows=[];empty.quality.extent='unknown';chart.snapshot=empty;const unknown=chart.querySelector('.chart-frame-state').dataset.state==='unknown';
+      empty.quality.extent='partial';chart.snapshot=empty;const partial=chart.querySelector('.chart-frame-state').dataset.state==='partial';
+      empty.quality.extent='complete';empty.completeness={basis:'captured-query',revision:empty.revision,scopeId:empty.scope.id,aspects:['groups']};chart.snapshot=empty;const knownEmpty=chart.querySelector('.chart-frame-state').dataset.state==='no_data';
+      return {assigned,getter,unknown,partial,knownEmpty};
+    });
+    for(const [key,value] of Object.entries(ownership))assert(value,key);
     const line=await page.evaluate(()=>{
-      const snapshot=structuredClone(window.supplied);
+      const snapshot=structuredClone(window.supplied);delete snapshot.dimensions;
       snapshot.fields=[{key:'x',label:'Numeric x',type:'number'},{key:'y',label:'Value',type:'number'}];
       snapshot.rows=[{key:'left',values:{x:'-1000000000000000000000000000000',y:'1'}},{key:'right',values:{x:'1000000000000000000000000000000',y:'2'}}];
       const chart=document.createElement('goo-chart');chart.snapshot=snapshot;chart.display={kind:'line',category:'x',value:'y'};document.body.append(chart);
@@ -65,9 +75,9 @@ const snapshot={
     });
     assert(line.points&&!/NaN|Infinity/.test(line.points));assert(line.frame);assert(line.unknown);assert(line.signed);
     const temporal=await page.evaluate(()=>{
-      const snapshot=structuredClone(window.supplied);snapshot.shape='time-series';
+      const snapshot=structuredClone(window.supplied);snapshot.shape='time-series';delete snapshot.dimensions;
       snapshot.interval={fromMs:'0',toMs:'45000',bucketMs:'10000'};
-      snapshot.fields=[{key:'fromMs',label:'From UTC',type:'timestamp',unit:'ms'},{key:'toMs',label:'To UTC',type:'timestamp',unit:'ms'},{key:'count',label:'Captured records',type:'number',unit:'records'},{key:'extra',label:'Additional field',type:'string'}];
+      snapshot.fields=[{key:'fromMs',label:'From UTC',type:'timestamp',unit:'ms'},{key:'toMs',label:'To UTC',type:'timestamp',unit:'ms'},{key:'count',label:'Captured records',type:'number',nullable:true,unit:'records'},{key:'extra',label:'Additional field',type:'string'}];
       snapshot.rows=[
         {key:'first',state:'observed',values:{fromMs:'0',toMs:'10000',count:'5',extra:'Kept'}},
         {key:'empty',state:'no_data',values:{fromMs:'10000',toMs:'20000',count:'0'}},
@@ -96,8 +106,8 @@ const snapshot={
     for(const key of ['positions','states','title','noLine','quality','table','refuses','complete','revisionRefuses','emptyUnknown'])assert(temporal[key],key);
     const measures=await page.evaluate(()=>{
       const snapshot=structuredClone(window.supplied);snapshot.rows=[];
-      const numeric={key:'numeric.mean',label:'Numeric mean',type:'rational',unit:'USD',aggregation:{family:'numeric',kind:'mean',method:'exact-rational'}};
-      const duration={key:'duration.p95',label:'p95 duration',type:'rational',unit:'ns',aggregation:{family:'duration',kind:'quantile',method:'quantilesExactHigh',quantile:'0.95'}};
+      const numeric={key:'numeric.mean',label:'Numeric mean',type:'rational',nullable:true,unit:'USD',aggregation:{family:'numeric',kind:'mean',method:'exact-rational'}};
+      const duration={key:'duration.p95',label:'p95 duration',type:'rational',nullable:true,unit:'ns',aggregation:{family:'duration',kind:'quantile',method:'quantilesExactHigh',quantile:'0.95'}};
       snapshot.fields.push(numeric,duration);
       const support=(total,valid,missing='0',empty='0',invalid='0')=>({total,valid,missing,empty,invalid});
       const row=(key,count,mean,latency,numericCell,durationCell)=>({key,values:{category:key,count,'numeric.mean':mean,'duration.p95':latency},cells:{'numeric.mean':numericCell,'duration.p95':durationCell}});
@@ -119,8 +129,8 @@ const snapshot={
       const unavailable=chart.querySelectorAll('.scope-view-bar[data-cell-state=no_valid_values] .scope-view-fill').length===0&&chart.textContent.includes('No valid values');
       snapshot.rows.splice(1,1);chart.snapshot=snapshot;chart.display={kind:'bar',category:'category',value:'numeric.mean'};
       const estimated=chart.querySelector('.scope-view-bar[data-cell-state=estimated] .scope-view-fill')!==null;
-      snapshot.shape='time-series';snapshot.interval={fromMs:'0',toMs:'20000',bucketMs:'10000'};
-      snapshot.fields=[{key:'fromMs',label:'From',type:'timestamp',unit:'ms'},{key:'toMs',label:'To',type:'timestamp',unit:'ms'},{key:'count',label:'Count',type:'number',unit:'records'},numeric,duration];
+      snapshot.shape='time-series';delete snapshot.dimensions;snapshot.interval={fromMs:'0',toMs:'20000',bucketMs:'10000'};
+      snapshot.fields=[{key:'fromMs',label:'From',type:'timestamp',unit:'ms'},{key:'toMs',label:'To',type:'timestamp',unit:'ms'},{key:'count',label:'Count',type:'number',nullable:true,unit:'records'},numeric,duration];
       snapshot.rows=snapshot.rows.slice(0,2).map((item,index)=>({...item,state:'observed',values:{fromMs:String(index*10000),toMs:String((index+1)*10000),count:item.values.count,'numeric.mean':index===0?'-2':null,'duration.p95':item.values['duration.p95']}}));
       chart.snapshot=snapshot;chart.display={kind:'time-bar',value:'numeric.mean'};
       const signedTime=!chart.querySelector('.scope-time-track')&&chart.textContent.includes('requires nonnegative');
@@ -132,7 +142,7 @@ const snapshot={
     for(const [key,value] of Object.entries(measures))assert(value,key);
     const exactAccess=await page.evaluate(()=>{
       const snapshot=structuredClone(window.supplied);snapshot.rows=[{key:'precise',values:{category:'Precise',count:'1',mean:'1/3',amount:'9007199254740993.123456789'},cells:{mean:{state:'derived',support:{total:'1',valid:'1',missing:'0',empty:'0',invalid:'0'}}}}];
-      snapshot.fields.push({key:'mean',label:'Mean',type:'rational',unit:'USD',aggregation:{family:'numeric',kind:'mean',method:'exact-rational'}},{key:'amount',label:'Amount',type:'number',unit:'USD'});
+      snapshot.fields.push({key:'mean',label:'Mean',type:'rational',nullable:true,unit:'USD',aggregation:{family:'numeric',kind:'mean',method:'exact-rational'}},{key:'amount',label:'Amount',type:'number',unit:'USD'});
       const chart=document.createElement('goo-chart');chart.id='exactConformance';chart.snapshot=snapshot;chart.display={kind:'table'};document.body.append(chart);
       const facet=document.createElement('goo-scope-facet');facet.snapshot=snapshot;facet.field='mean';document.body.append(facet);
       let scopeEvents=0;facet.addEventListener('goo-scope',()=>scopeEvents++);

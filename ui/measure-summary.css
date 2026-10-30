@@ -1,0 +1,44 @@
+/* Public passive summary/comparison layout. No source or product-page ownership. */
+goo-measure-summary,goo-measure-comparison{display:block;min-width:0;max-width:100%}
+goo-measure-comparison{container-type:inline-size}
+.measure-frame{padding:12px}.measure-frame>.chart-frame-header{margin-bottom:8px}
+.measure-scope{min-width:0;font-size:11px;color:var(--muted,#98a8bf)}
+.measure-scope>strong{display:block;font-size:12px;color:var(--ink,#e3e9f3);margin-bottom:4px}
+.measure-scope-facts{display:flex;flex-wrap:wrap;gap:3px 10px}.measure-scope>time,.measure-clock-missing{display:block;margin-top:4px;overflow-wrap:anywhere}
+.measure-window{margin:4px 0;overflow-wrap:anywhere}.measure-provenance{margin:5px 0;padding:0;border:0;background:transparent}.measure-provenance>summary{cursor:pointer;font-size:11px}
+.measure-provenance dl{margin:6px 0}.measure-provenance dl>div{display:grid;grid-template-columns:80px minmax(0,1fr);gap:8px;margin:3px 0}.measure-provenance dt{font-weight:600}.measure-provenance dd{margin:0;overflow-wrap:anywhere}
+.measure-provenance pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:10px;max-height:180px;overflow:auto}.measure-provenance>p{font-size:11px}
+.measure-summary{display:grid;gap:8px;margin-top:10px}.measure-group{padding:0;margin:0;border:0;background:transparent;border-radius:0;box-shadow:none}
+.measure-group>h4{font-size:11px;color:var(--muted,#98a8bf);margin:0 0 5px;font-weight:600}
+.measure-stats{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0}.measure-stats>div{min-width:0;max-width:100%}.measure-stats dt{font-size:11px;color:var(--muted,#98a8bf)}.measure-stats dd{margin:2px 0 0}
+.measure-value{font-size:14px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;color:var(--ink,#e3e9f3)}
+.measure-exact,.measure-more{margin:3px 0 0;padding:0;border:0;background:transparent}.measure-exact>summary{font-size:10px;color:var(--muted,#98a8bf);cursor:pointer;list-style-position:inside}.measure-exact>p{font-size:11px;overflow-wrap:anywhere;user-select:text;margin:6px 0;max-width:300px}
+.measure-more>summary{font-size:11px;color:var(--muted,#98a8bf);cursor:pointer}.measure-more[open]>.measure-stats{margin-top:6px}
+.measure-cell[data-state=estimated]>.measure-value{text-decoration:underline dotted;text-underline-offset:3px}
+.measure-comparison-provenance{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0 0 10px}
+.measure-comparison{table-layout:fixed;min-width:540px}.measure-comparison>thead>tr>th:first-child{width:20%}.measure-comparison>thead>tr>th:nth-child(2),.measure-comparison>thead>tr>th:nth-child(3){width:28%}.measure-comparison>thead>tr>th:last-child{width:24%}
+.measure-comparison>tbody>tr>th{font-size:12px;font-weight:500}.measure-comparison .measure-value{font-size:12px}.measure-axis-label{display:block;font-size:10px;color:var(--muted,#98a8bf);font-weight:400;margin-top:3px}
+.measure-side-label{display:none}
+.measure-comparison-track{position:relative;height:7px;margin-top:6px;background:var(--border,#2b3545);min-width:0}.measure-comparison-track:after{content:'';position:absolute;left:var(--measure-zero);top:-2px;bottom:-2px;width:1px;background:var(--muted,#98a8bf)}
+.measure-comparison-fill{position:absolute;height:100%;background:#79aafa}.measure-comparison-fill[data-side=selection]{background:var(--accent,#79ddc6)}.measure-comparison-track[data-unavailable=true]{background:repeating-linear-gradient(135deg,transparent,transparent 3px,var(--border,#2b3545) 3px,var(--border,#2b3545) 5px)}
+.measure-comparison td:has(.measure-cell[data-state=estimated]) .measure-comparison-fill{background:repeating-linear-gradient(135deg,var(--accent,#79ddc6),var(--accent,#79ddc6) 3px,var(--panel,#151d28) 3px,var(--panel,#151d28) 5px)}
+.measure-unavailable{font-size:12px;color:var(--muted,#98a8bf);overflow-wrap:anywhere}
+:is(goo-measure-summary,goo-measure-comparison) summary:focus-visible{outline:2px solid var(--accent,#79ddc6);outline-offset:2px}
+@media(max-width:500px){.measure-comparison-provenance{grid-template-columns:1fr;gap:8px}.measure-stats{gap:6px 14px}.measure-frame{padding:10px}}
+/* Keep the paired values together in narrow embeds, not only narrow viewports.
+   Explicit native table roles/headers retain row/column associations in this layout. */
+@container(max-width:520px){
+ .measure-comparison{display:block;min-width:0;width:100%;table-layout:auto}
+ .measure-comparison>caption{display:block;width:auto}
+ .measure-comparison>thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+ .measure-comparison>tbody{display:block}
+ .measure-comparison>tbody>tr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;border-bottom:1px solid var(--border,#2b3545)}
+ .measure-comparison>tbody>tr>th,.measure-comparison>tbody>tr>td{display:block;width:auto;min-width:0;max-width:100%;box-sizing:border-box;overflow-wrap:anywhere}
+ .measure-comparison>tbody>tr>th{grid-column:1/-1;text-transform:none;letter-spacing:normal;font-weight:600}
+ .measure-comparison .measure-axis-label{display:inline-block;margin:0 0 0 8px}
+ .measure-comparison>tbody>tr>td[data-side=change]{grid-column:1/-1;display:flex;align-items:baseline;gap:8px;border-bottom:0}
+ .measure-comparison .measure-side-label{display:block;color:var(--muted,#98a8bf);font-size:10px;margin-bottom:4px}
+ .measure-comparison .measure-exact>p{max-width:100%}
+ .measure-comparison-provenance{grid-template-columns:1fr;gap:8px}
+}
+@media(prefers-reduced-motion:reduce){:is(goo-measure-summary,goo-measure-comparison) *{scroll-behavior:auto;animation-duration:0s!important;transition-duration:0s!important}}

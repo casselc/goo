@@ -516,3 +516,8 @@ true clipped bucket widths, all-dimension tables and explicit staged narrowing.
 measures locally, inspect exact fractions and contributing counts, and narrow with
 the binding and units intact. Unavailable values remain gaps; duration quantiles
 retain their exact empirical method. [Storyboard](journeys/263-scoped-measures-storyboard.md).
+
+[Population summary/comparison views](docs/POPULATION_MEASURE_VIEWS.md) now share
+exact measures, independent provenance and common signed comparison scales. The
+[model review](docs/MODEL_PIT_OF_SUCCESS_264.md) prioritizes immutable constructors,
+safe projections and host action ownership before expanding authoring/renderers.

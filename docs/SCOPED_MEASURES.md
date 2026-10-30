@@ -1,5 +1,8 @@
 # Exact measures in scoped views — 263
 
+264 extends this foundation to [population summaries and comparisons](POPULATION_MEASURE_VIEWS.md).
+The263 delivery below describes its original grouped/interval scope.
+
 Numeric and span-duration group/interval results now use the same public snapshot
 and display contract as counts. **Measure** switches between record count, numeric
 mean/sum/min/max, and span mean/min/max/p50/p95/p99 without querying. **View as**

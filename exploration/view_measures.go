@@ -25,7 +25,7 @@ type ViewSupport struct {
 func viewMeasureFields(q Query) []ViewField {
 	fields := []ViewField{}
 	add := func(family, key, label, kind, method, unit, quantile string) {
-		fields = append(fields, ViewField{Key: family + "." + key, Label: label, Type: "rational", Unit: unit, Aggregation: &ViewAggregation{Family: family, Kind: kind, Method: method, Quantile: quantile}})
+		fields = append(fields, ViewField{Key: family + "." + key, Label: label, Type: "rational", Unit: unit, Nullable: true, Aggregation: &ViewAggregation{Family: family, Kind: kind, Method: method, Quantile: quantile}})
 	}
 	if q.Numeric != nil {
 		add("numeric", "mean", "Numeric mean", "mean", "exact-rational", q.Numeric.Unit, "")

@@ -64,6 +64,29 @@ func TestExplorationJSONHTTPWireFixtures(t *testing.T) {
 	if f.Version != 1 || len(f.Cases) != 68 {
 		t.Fatal("coverage changed", len(f.Cases))
 	}
+	// Explicit regeneration records the current actual handler responses without
+	// changing requests, statuses, headers under test, or the68-case coverage gate.
+	if os.Getenv("GOO_UPDATE_EXPLORATION_JSON_HTTP_FIXTURES") == "1" {
+		for i := range f.Cases {
+			w := explorationJSONWireResponse(t, f.Cases[i])
+			if w.Code != f.Cases[i].Status {
+				t.Fatalf("%s: status changed during regeneration: %d", f.Cases[i].Name, w.Code)
+			}
+			f.Cases[i].Response = w.Body.String()
+			for _, key := range []string{"Content-Type", "Cache-Control", "Allow", "X-Content-Type-Options"} {
+				if w.Header().Get(key) != f.Cases[i].Headers[key] {
+					t.Fatalf("%s: header %s changed during regeneration", f.Cases[i].Name, key)
+				}
+			}
+		}
+		out, err := json.MarshalIndent(f, "", "  ")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile("../../testdata/http/exploration-json.json", append(out, '\n'), 0644); err != nil {
+			t.Fatal(err)
+		}
+	}
 	for _, c := range f.Cases {
 		t.Run(c.Name, func(t *testing.T) {
 			w := explorationJSONWireResponse(t, c)
