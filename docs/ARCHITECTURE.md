@@ -1333,3 +1333,15 @@ question, support, source-basis claim and clock without a merged attestation.
 [The model audit](MODEL_PIT_OF_SUCCESS_264.md) puts normalized immutable construction,
 guarantee-aware projections and host-owned role/epoch action resolution before
 further extension-authoring or renderer expansion.
+
+
+265 implements H0 [immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md).
+`view-schema.mjs` validates structural data; `snapshots.mjs` admits bounded plain
+JSON into frozen handles and owns private source/projection lineage. The public
+`view-model.mjs` combines those contracts with runtime guarantee checks, avoiding
+an import cycle. Components normalize once and share admitted data without copies
+on each boundary. Trusted source adoption checks the requested question/profile;
+raw imports and held comparisons cannot manufacture a witness. This is not source
+authentication. Safe row projection removes whole-query proof without changing
+captured values, support or logical scope. H1 will separately centralize active
+execution epochs, roles and effect resolution; a source revision is not that epoch.

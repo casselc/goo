@@ -1374,5 +1374,21 @@ exact-cell disclosures; selected measure switches remain IO-free. See
 
 264 adds passive `goo-measure-summary` and `goo-measure-comparison`, using the same
 exact fields/support and independent side facts. See [API and adoption limits](POPULATION_MEASURE_VIEWS.md).
-Central capabilities now prevent summary selection controls; property copies and
-closed options address immediate pitfalls. [Construction/ownership hardening](MODEL_PIT_OF_SUCCESS_264.md) remains required.
+Central capabilities prevent summary selection controls and closed options reject
+misspelled intent.265 replaces per-component snapshot copies with the shared
+[immutable admission boundary](SNAPSHOT_CONSTRUCTION.md).
+
+
+## Snapshot admission265
+
+Scoped chart/facet and measure-summary/comparison components accept admitted,
+frozen snapshot handles. `asSnapshot` shares a handle unchanged; raw properties or
+SSR JSON are conservatively imported with unknown extent and no runtime guarantee.
+Getters return the immutable handle. Complete-only eligibility uses the private
+source-adoption witness, never a caller's origin/completeness label. Comparison
+normalization preserves independent sides. Bounded plain-data admission and setter
+failure cleanup apply before rendering; see [actual APIs and limits](SNAPSHOT_CONSTRUCTION.md).
+
+`selectRows` is a supplied-data helper with exact-value and guarantee rules, not a
+new product filter or source action. H1 host role/epoch/action resolution remains
+next; components continue to own no source reads, subscriptions or publication.

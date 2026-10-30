@@ -6,7 +6,7 @@ const assert=require('node:assert/strict');
 
 const snapshot={
   version:'goo.dataset/1',id:'d',revision:'r',capturedAt:'2026-10-30T02:32:14.794538004Z',
-  scope:{id:'s',generation:0,signal:'spans',selector:{}},shape:'ranked',dimensions:['category'],
+  origin:'source-read',scope:{id:'s',generation:0,signal:'spans',selector:{signal:'spans',environment:'test',fromMs:0,toMs:45000,groupBy:[{kind:'column',key:'service'}]}},shape:'ranked',dimensions:['category'],
   fields:[{key:'category',label:'Service',type:'string'},{key:'count',label:'Count',type:'number'},{key:'value',label:'Value',type:'number',nullable:true}],
   rows:[{key:'a',values:{category:'api',count:'9007199254740993',value:'9007199254740993'}},{key:'b',values:{category:'',count:'0',value:null}}],
   quality:{extent:'partial',basis:'captured-query',value:'derived',sampling:'unknown',freshness:'fixed'}
@@ -16,8 +16,9 @@ const snapshot={
   let browser;
   try{
     browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',args:['--no-sandbox']});
-    const page=await browser.newPage({viewport:{width:390,height:844},hasTouch:true}),requests=[];
+    const page=await browser.newPage({viewport:{width:390,height:844},hasTouch:true}),requests=[],errors=[];
     page.on('request',request=>requests.push(new URL(request.url()).pathname));
+    page.on('pageerror',error=>errors.push(error.message));
     await page.route('http://scope.invalid/**',async route=>{
       const name=new URL(route.request().url()).pathname;
       if(name==='/'){
@@ -30,35 +31,39 @@ const snapshot={
     });
     await page.goto('http://scope.invalid/');
     await page.waitForFunction(()=>customElements.get('goo-chart'));
+    await page.evaluate(async()=>{const {createSourceAdapter,asSnapshot,hasGuarantee}=await import('/snapshots.mjs');const source=createSourceAdapter({id:'component-conformance'});window.adopt=value=>source.adoptSnapshot(value,{question:value.scope.selector});window.asSnapshot=asSnapshot;window.hasGuarantee=hasGuarantee});
     const result=await page.evaluate(()=>{
       const snapshot=structuredClone(window.supplied),chart=document.createElement('goo-chart');
-      chart.snapshot=snapshot;chart.display={kind:'bar',category:'category',value:'value'};
+      const source=window.adopt(snapshot);chart.snapshot=source;chart.display={kind:'bar',category:'category',value:'value'};
       document.querySelector('#root').append(chart);
       let select;chart.addEventListener('goo-select',event=>select=event.detail);chart.querySelector('button').click();
       const bars=chart.querySelectorAll('.scope-view-fill').length,exact=chart.textContent.includes('9007199254740993'),quality=chart.textContent.includes('partial groups');
       chart.display={kind:'table'};const table=!!chart.querySelector('table');
       chart.display={kind:'bar',category:'category',value:'count',requiresComplete:true};
-      const refusal=chart.textContent.includes('Complete captured-query');
-      const facet=document.createElement('goo-scope-facet');facet.snapshot=snapshot;facet.field='category';document.body.append(facet);
+      const refusal=chart.textContent.includes('Complete-only display');
+      const facet=document.createElement('goo-scope-facet');facet.snapshot=source;facet.field='category';document.body.append(facet);
       let scope;facet.addEventListener('goo-scope',event=>scope=event.detail);facet.querySelectorAll('button')[1].click();
       const ssr=document.createElement('goo-chart');ssr.setAttribute('snapshot',JSON.stringify(snapshot));ssr.setAttribute('display',JSON.stringify({kind:'table'}));document.body.append(ssr);
-      const getters=ssr.snapshot.id===snapshot.id&&ssr.display.kind==='table';
+      const getters=ssr.snapshot.id.startsWith('goo.local/')&&ssr.display.kind==='table'&&ssr.snapshot===ssr.snapshot&&ssr.snapshot.origin==='browser-held'&&!window.hasGuarantee(ssr.snapshot,'groups');
+      const cached=ssr.snapshot;ssr.setAttribute('display',JSON.stringify({kind:'table',title:'Imported data'}));const cachedAttribute=ssr.snapshot===cached;
+      const shared=chart.snapshot===source&&facet.snapshot===source&&Object.isFrozen(source.rows[0].values);
       const clock=ssr.querySelector('.chart-frame-window'),utc=clock.textContent==='Captured 2026-10-30T02:32:14.794Z'&&clock.title===snapshot.capturedAt;
       const override=structuredClone(snapshot);override.id='property';ssr.snapshot=override;ssr.setAttribute('snapshot',JSON.stringify(snapshot));
-      const precedence=ssr.snapshot.id==='property';
-      return {bars,exact,quality,table,refusal,select,scope,ssr:!!ssr.querySelector('table'),getters,precedence,utc,pre:!!document.querySelector('#pre table'),overflow:document.documentElement.scrollWidth>innerWidth};
+      const precedence=ssr.snapshot.origin==='browser-held'&&ssr.snapshot.id.startsWith('goo.local/');
+      return {bars,exact,quality,table,refusal,select,scope,ssr:!!ssr.querySelector('table'),getters,shared,cachedAttribute,precedence,utc,pre:!!document.querySelector('#pre table'),overflow:document.documentElement.scrollWidth>innerWidth};
     });
     assert.equal(result.bars,1);
-    for(const key of ['exact','quality','table','refusal','ssr','getters','precedence','utc','pre'])assert(result[key],key);
+    for(const key of ['exact','quality','table','refusal','ssr','getters','shared','cachedAttribute','precedence','utc','pre'])assert(result[key],key);
     assert.equal(result.select.key,'a');assert.equal(result.scope.value,'');assert.equal(result.overflow,false);
     const ownership=await page.evaluate(()=>{
       const original=structuredClone(window.supplied),chart=document.createElement('goo-chart');chart.snapshot=original;chart.display={kind:'table'};document.body.append(chart);
       original.rows[0].values.count='123';const assigned=chart.snapshot.rows[0].values.count==='9007199254740993';
-      const detached=chart.snapshot;detached.rows[0].values.count='456';const getter=chart.snapshot.rows[0].values.count==='9007199254740993';
+      const detached=chart.snapshot;try{detached.rows[0].values.count='456'}catch{}const getter=chart.snapshot===detached&&chart.snapshot.rows[0].values.count==='9007199254740993'&&Object.isFrozen(detached.rows[0].values);
       const empty=structuredClone(window.supplied);empty.rows=[];empty.quality.extent='unknown';chart.snapshot=empty;const unknown=chart.querySelector('.chart-frame-state').dataset.state==='unknown';
-      empty.quality.extent='partial';chart.snapshot=empty;const partial=chart.querySelector('.chart-frame-state').dataset.state==='partial';
-      empty.quality.extent='complete';empty.completeness={basis:'captured-query',revision:empty.revision,scopeId:empty.scope.id,aspects:['groups']};chart.snapshot=empty;const knownEmpty=chart.querySelector('.chart-frame-state').dataset.state==='no_data';
-      return {assigned,getter,unknown,partial,knownEmpty};
+      empty.quality.extent='partial';chart.snapshot=window.adopt(empty);const partial=chart.querySelector('.chart-frame-state').dataset.state==='partial';
+      empty.quality.extent='complete';empty.completeness={basis:'captured-query',revision:empty.revision,scopeId:empty.scope.id,aspects:['groups']};chart.snapshot=window.adopt(empty);const knownEmpty=chart.querySelector('.chart-frame-state').dataset.state==='no_data';
+      const imported=window.asSnapshot(JSON.parse(JSON.stringify(chart.snapshot)));chart.snapshot=imported;chart.display={kind:'table',requiresComplete:true};const noRestoredProof=!chart.querySelector('table')&&!window.hasGuarantee(imported,'groups');chart.display={kind:'table'};const importedValues=!!chart.querySelector('goo-chart-frame');
+      return {assigned,getter,unknown,partial,knownEmpty,noRestoredProof,importedValues};
     });
     for(const [key,value] of Object.entries(ownership))assert(value,key);
     const line=await page.evaluate(()=>{
@@ -75,7 +80,7 @@ const snapshot={
     });
     assert(line.points&&!/NaN|Infinity/.test(line.points));assert(line.frame);assert(line.unknown);assert(line.signed);
     const temporal=await page.evaluate(()=>{
-      const snapshot=structuredClone(window.supplied);snapshot.shape='time-series';delete snapshot.dimensions;
+      const snapshot=structuredClone(window.supplied);snapshot.shape='time-series';delete snapshot.dimensions;snapshot.scope.selector.bucketMs=10000;
       snapshot.interval={fromMs:'0',toMs:'45000',bucketMs:'10000'};
       snapshot.fields=[{key:'fromMs',label:'From UTC',type:'timestamp',unit:'ms'},{key:'toMs',label:'To UTC',type:'timestamp',unit:'ms'},{key:'count',label:'Captured records',type:'number',nullable:true,unit:'records'},{key:'extra',label:'Additional field',type:'string'}];
       snapshot.rows=[
@@ -84,7 +89,7 @@ const snapshot={
         {key:'unknown',state:'unknown',values:{fromMs:'20000',toMs:'30000',count:null}},
         {key:'last',state:'observed',values:{fromMs:'40000',toMs:'45000',count:'18446744073709551615'}}
       ];
-      const chart=document.createElement('goo-chart');chart.snapshot=snapshot;chart.display={kind:'time-bar'};document.body.append(chart);
+      const chart=document.createElement('goo-chart');chart.snapshot=window.adopt(snapshot);chart.display={kind:'time-bar'};document.body.append(chart);
       const buttons=[...chart.querySelectorAll('.scope-time-interval')],gaps=chart.querySelectorAll('.scope-time-gap').length;
       let selection;chart.addEventListener('goo-select',event=>selection=event.detail);buttons[0].click();
       const last=buttons.at(-1),first=buttons[0],positions=Number.parseFloat(last.style.left)>88&&Number.parseFloat(last.style.width)<12&&Number.parseFloat(first.style.width)>22;
@@ -93,9 +98,9 @@ const snapshot={
       const noLine=!chart.querySelector('polyline'),quality=chart.textContent.includes('partial intervals')&&chart.textContent.includes('unknown upstream sampling');
       chart.display={kind:'table'};
       const table=chart.textContent.includes('Additional field')&&chart.textContent.includes('Kept')&&chart.textContent.includes('Unknown coverage')&&chart.querySelector('td>span').textContent==='1970-01-01T00:00:00.000Z'&&chart.querySelector('td').title==='0 ms since Unix epoch';
-      chart.display={kind:'time-bar',requiresComplete:true};const refuses=chart.textContent.includes('Complete captured-query intervals');
+      chart.display={kind:'time-bar',requiresComplete:true};const refuses=chart.textContent.includes('Complete-only display');
       snapshot.rows[2].state='no_data';snapshot.rows[2].values.count='0';snapshot.rows.splice(3,0,{key:'gap-filled',state:'no_data',values:{fromMs:'30000',toMs:'40000',count:'0'}});
-      snapshot.quality.extent='complete';snapshot.completeness={basis:'captured-query',revision:snapshot.revision,scopeId:snapshot.scope.id,aspects:['intervals']};chart.snapshot=snapshot;
+      snapshot.quality.extent='complete';snapshot.completeness={basis:'captured-query',revision:snapshot.revision,scopeId:snapshot.scope.id,aspects:['intervals']};chart.snapshot=window.adopt(snapshot);
       const complete=chart.querySelectorAll('.scope-time-interval').length===5&&!chart.querySelector('.scope-time-gap');
       snapshot.revision='new';chart.snapshot=snapshot;const revisionRefuses=!chart.querySelector('.scope-time-track');
       snapshot.quality.extent='unknown';delete snapshot.completeness;snapshot.rows=[];chart.display={kind:'time-bar'};chart.snapshot=snapshot;
@@ -157,6 +162,8 @@ const snapshot={
     await decimalDetails.locator('summary').tap();
     assert(await decimalDetails.locator('.scope-view-exact').isVisible());
     assert((await decimalDetails.locator('.scope-view-exact').textContent()).includes('9007199254740993.123456789 USD'));
+    const clearing=await page.evaluate(()=>{const chart=document.createElement('goo-chart');chart.snapshot=window.supplied;chart.display={kind:'table'};document.body.append(chart);const before=!!chart.querySelector('table');chart.snapshot={};return before&&!chart.querySelector('table')&&chart.snapshot===null});assert(clearing);
+    assert.equal(errors.length,0,errors.join('; '));
     assert(!requests.some(name=>name.startsWith('/api/')||name==='/app.mjs'));
     console.log('Scoped components: exact values/rationals, human units/support/exact quantiles, per-cell gaps/estimates/signed fallback, complete-only refusal, table/bar/line/time-bar, interval gaps/UTC, typed intents, SSR/pre-upgrade,390px layout and no application IO pass');
   }finally{await browser?.close()}

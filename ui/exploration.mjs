@@ -26,6 +26,7 @@ import * as Tail from './tail.mjs';
 import * as TraceJourney from './trace-journey.mjs';
 import * as TraceSearch from './trace-search.mjs';
 import * as UI from './components.mjs';
+import * as SourceSnapshots from './source-snapshots.mjs';
 import * as Workspace from './workspace.mjs';
 const global=globalThis;
 const ui=UI,node=ui.node;
@@ -84,7 +85,7 @@ function mount(container,{prefix='',readOnly=false,summaryProvided=false,onPage,
   populate(['service','name','trace_id','span_id','scope','scope_version','duration_ns','status','kind'].map(key=>({kind:'column',key})));
   function inputs(){const pinned=distributions.baselineQuestion();if(pinned)return{signal:pinned.signal,...RecordEnvironment.questionFields(pinned),fromMs:pinned.fromMs,toMs:pinned.toMs,limit:100,offset:0};const fixed=session.snapshot().bounds;if(fixed)return{signal:el('exploreSignal').value,...RecordEnvironment.questionFields(environmentDraft.snapshot()),...fixed,limit:question?.limit||100,offset:question?.offset||0};const to=Date.now(),minutes=Number(el('minutes').value);if(!Number.isInteger(minutes)||minutes<1||minutes>120)throw Error('Choose 1–120 minutes.');return {signal:el('exploreSignal').value,...RecordEnvironment.questionFields(environmentDraft.snapshot()),fromMs:to-minutes*60000,toMs:to,limit:100,offset:0};}
   function withFilters(q){const error=filterError||numericControls.error();if(error)throw Error(error);const where=draftWhere();FilterEditor.validate(where,q.signal);return {...q,reportedEdge:edgeScope?structuredClone(edgeScope):undefined,numeric:numericControls.get(),numericHistogram:numericControls.getHistogram(),groupTimeSeries:splitInput.checked||undefined,bucketMs:Number(bucketInput.value)||undefined,spanStatus:el('exploreSignal').value==='spans'&&statusInput.checked||undefined,summary:el('exploreSignal').value==='spans'&&summaryInput.checked?'span-duration':undefined,where:FilterEditor.normalize(where),groupBy:filterEditor.grouping()};}
-  async function fetchQuery(q,signal){const response=await Queries.postJSON('/api/explore',q,signal);const data=response.data;if(!response.ok)throw Error(data.error);return data;}
+  async function fetchQuery(q,signal){const requested=structuredClone(q),response=await Queries.postJSON('/api/explore',requested,signal);const data=response.data;if(!response.ok)throw Error(data.error);return SourceSnapshots.adoptExploration(data,requested);}
   function currentDataset(intent,snapshot,slot){
    return active()&&lastResult&&lastResult.state!=='changed_between_reads'&&lastResult[slot]===snapshot&&canRefine()&&session.snapshot().phase==='applied'&&intent?.datasetId===snapshot.id&&intent.revision===snapshot.revision&&intent.scopeId===snapshot.scope.id&&intent.generation===snapshot.scope.generation;
   }

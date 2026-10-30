@@ -1,12 +1,24 @@
 /* Public passive scoped displays. The host owns scope, requests and selection. */
 import {validateSnapshot, validateDisplay, selectionIntent, scopeIntent, measureValue, supportsSelection, capabilities} from './view-model.mjs';
 import {formatCell,supportText,exactText} from './view-values.mjs';
+import {asSnapshot,parseSnapshotJSON} from './snapshots.mjs';
 import './chart-frame.mjs';
 
 const n=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=String(text);if(cls)node.className=cls;return node};
 const exact=value=>value===undefined?'Not supplied':value===null?'Missing':value===''?'Present empty string':String(value);
 const emit=(host,name,detail)=>host.dispatchEvent(new CustomEvent(name,{detail,bubbles:true,composed:true}));
 const svgNode=(tag,attrs)=>{const node=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [key,value] of Object.entries(attrs))node.setAttribute(key,String(value));return node};
+function frozenConfig(value){
+  if(value===undefined)return undefined;
+  if(!value||typeof value!=='object'||Array.isArray(value)||![Object.prototype,null].includes(Object.getPrototypeOf(value)))throw TypeError('Supply display options.');
+  const keys=Reflect.ownKeys(value);if(keys.length>7)throw TypeError('Too many display options.');
+  const result={};for(const key of keys){
+    if(typeof key!=='string'||!['kind','title','category','value','start','end','requiresComplete'].includes(key))throw TypeError('Unsupported display option.');
+    const descriptor=Object.getOwnPropertyDescriptor(value,key);if(!Object.hasOwn(descriptor,'value')||!descriptor.enumerable)throw TypeError('Display options must contain plain values.');
+    const item=descriptor.value;if(key==='requiresComplete'?typeof item!=='boolean':typeof item!=='string'||item.length>1024)throw TypeError('Display options require bounded strings and a boolean completeness flag.');result[key]=item;
+  }
+  return Object.freeze(result);
+}
 
 function quality(snapshot){
   const box=n('div',undefined,'scope-view-quality');
@@ -129,19 +141,27 @@ class SuppliedElement extends (globalThis.HTMLElement||class {}) {
   static get observedAttributes(){return ['snapshot','display','field']}
   connectedCallback(){for(const key of ['snapshot','display','field'])if(Object.hasOwn(this,key)){const value=this[key];delete this[key];this[key]=value}this.render()}
   attributeChangedCallback(){this.render()}
-  set snapshot(value){try{this._snapshot=structuredClone(value)}catch{this._snapshot=null}this.render()}
+  set snapshot(value){this.setInput('snapshot',value)}
   get snapshot(){return this.read('snapshot')}
-  read(name){if(Object.hasOwn(this,'_'+name))return structuredClone(this['_'+name]);const text=this.getAttribute(name);return text===null?undefined:JSON.parse(text)}
+  normalize(name,value){return name==='snapshot'?asSnapshot(value):frozenConfig(value)}
+  setInput(name,value){this._attributeCache?.delete(name);try{this['_'+name]=this.normalize(name,value);if(this._inputErrors)delete this._inputErrors[name]}catch(error){this['_'+name]=null;(this._inputErrors??={})[name]=error.message||'Invalid supplied value.'}this.render()}
+  read(name){
+    if(Object.hasOwn(this,'_'+name))return this['_'+name];
+    const text=this.getAttribute(name);if(text===null)return undefined;
+    const cache=(this._attributeCache??=new Map()).get(name);if(cache?.text===text)return cache.value;
+    let value;try{if(name==='display'&&text.length>16384)throw TypeError('Display options are too large.');value=name==='snapshot'?parseSnapshotJSON(text):this.normalize(name,JSON.parse(text));if(this._inputErrors)delete this._inputErrors[name]}catch(error){value=null;(this._inputErrors??={})[name]=error instanceof SyntaxError?'Invalid '+name+' JSON.':error.message||'Invalid supplied value.'}
+    this._attributeCache.set(name,{text,value});return value;
+  }
   refuse(reasons){const status=n('p',reasons.join('; '),'scope-view-unavailable');status.setAttribute('role','status');this.replaceChildren(status)}
 }
 
 class Chart extends SuppliedElement {
-  set display(value){try{this._display=structuredClone(value)}catch{this._display=null}this.render()}
+  set display(value){this.setInput('display',value)}
   get display(){return this.read('display')}
   render(){
     try{
       const snapshot=this.read('snapshot'),display=this.read('display');
-      if(!snapshot||!display){this.refuse(['Supply a dataset snapshot and display mapping.']);return}
+      if(!snapshot||!display){this.refuse([this._inputErrors?.snapshot||this._inputErrors?.display||'Supply a dataset snapshot and display mapping.']);return}
       const checked=validateDisplay(snapshot,display);if(!checked.ok){this.refuse(checked.reasons);return}
       const root=n('goo-chart-frame',undefined,'scope-view');root.data={title:display.title||(snapshot.shape==='time-series'?'Captured records over time':snapshot.shape==='summary'?'Population summary':'Scoped breakdown'),window:capturedClock(snapshot.capturedAt),state:snapshot.quality.extent==='unknown'||snapshot.quality.value==='unknown'?'unknown':snapshot.quality.extent==='partial'?'partial':!snapshot.rows.length||snapshot.shape==='summary'&&snapshot.rows[0].values.count==='0'?'no_data':'observed'};root.dataset.valueKnowledge=snapshot.quality.value;root.append(quality(snapshot));
       if(!snapshot.rows.length&&display.kind!=='time-bar')root.append(n('p',snapshot.shape==='time-series'?'No supplied intervals. Coverage is unknown.':'No supplied groups.','scope-view-empty'));

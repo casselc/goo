@@ -504,8 +504,8 @@ implemented capabilities; the supporting reports include pinned research sources
 
 Single-group count breakdowns now share a [scoped display contract](docs/SCOPED_VIEW_PILOT.md):
 switch bars/table without querying, inspect exact values and stage a facet filter
-before Run. Complete-only rendering uses Go-attested group extent while upstream
-sampling stays unknown. [Storyboard](journeys/261-scoped-breakdown-storyboard.md).
+before Run. Complete-only rendering requires a runtime witness from the checked source-adoption
+boundary; upstream sampling stays unknown. Raw JSON imports remain held with unknown extent. [Storyboard](journeys/261-scoped-breakdown-storyboard.md).
 
 [Count intervals and multi-field breakdowns](docs/SCOPED_INTERVALS.md) now use the
 same display contract: exact UTC windows, known-zero versus unknown coverage,
@@ -521,3 +521,10 @@ retain their exact empirical method. [Storyboard](journeys/263-scoped-measures-s
 exact measures, independent provenance and common signed comparison scales. The
 [model review](docs/MODEL_PIT_OF_SUCCESS_264.md) prioritizes immutable constructors,
 safe projections and host action ownership before expanding authoring/renderers.
+
+
+[Immutable snapshot construction](docs/SNAPSHOT_CONSTRUCTION.md) now normalizes
+scoped data once and shares frozen handles. JSON copies lose runtime completeness;
+safe supplied-row projections preserve exact cells while dropping whole-query
+proof. This adds no local-filter UI or source authentication. Host role/execution
+ownership (H1) is next, before more renderers or contributed-view authoring.

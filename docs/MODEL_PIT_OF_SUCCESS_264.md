@@ -120,3 +120,15 @@ not another gallery of widgets, a Plotly shortcut or an editor over raw snapshot
   durable action. Different sources cannot alias through an identical query hash.
 - Units, parse/scale, method and support changes require explicit compatibility;
   count differences do not masquerade as normalized rates or causal effects.
+
+
+## H0 delivery265
+
+[Immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md) implements normalized,
+bounded admission and shared frozen handles. Source-adoption witnesses are private
+runtime facts; imported JSON and supplied-row subsets cannot recreate whole-query
+proof. Typed source-question/profile matching uses the existing question protocol.
+This replaces the temporary per-widget snapshot-copy approach for the scoped pilot.
+H1 active execution epochs, named data roles and centralized action resolution
+remain next. Neither an origin string nor a runtime source-adapter factory is an
+authentication mechanism.

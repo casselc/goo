@@ -1,10 +1,18 @@
 # Known issues and gaps
 
+265 adds [immutable snapshot admission and safe row projections](SNAPSHOT_CONSTRUCTION.md).
+Complete-only displays require a private runtime source witness; serialized data
+and proper row subsets cannot retain whole-query guarantees. Components share
+frozen handles. H1 execution epochs, named role handles and centralized action
+resolution remain next; additional renderer/authoring work stays gated. This is
+an application trust boundary, not producer authentication or proof that all
+telemetry was collected. Row projection is a component API, not a new UI filter.
+
 264 adds [population summary/comparison views](POPULATION_MEASURE_VIEWS.md) and
 fixes nullable/count/option/capability validation and numeric refresh intent.
-The [model audit](MODEL_PIT_OF_SUCCESS_264.md) identifies remaining construction,
-projection-guarantee and execution-epoch gaps; these gate authored views and more
-renderers. Existing source adapters remain conservative; JSON metadata is not authority.
+The [model audit](MODEL_PIT_OF_SUCCESS_264.md) identified construction,
+projection-guarantee and execution-epoch gaps;265 addresses the first two and H1
+continues to gate authored views and more renderers. Existing source adapters remain conservative; JSON metadata is not authority.
 
 263 adds [exact numeric/latency measures](SCOPED_MEASURES.md) to ordinary grouped
 and interval views, with per-cell support and unavailable gaps. Signed bar kinds

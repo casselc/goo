@@ -1,7 +1,8 @@
 # Implementation plan
 
-> Active next milestone after264: H0 normalized immutable snapshot construction,
-> then H1 host execution epochs/role action resolution and guarantee-aware projections.
+> 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),
+> including safe supplied-row projection and runtime guarantee lineage.
+> Active next milestone: H1 host execution epochs, named roles and action resolution.
 > [Pit-of-success review](MODEL_PIT_OF_SUCCESS_264.md) gates further renderer/editor expansion.
 
 > Current continuation proposal: [view grammar260](VIEW_GRAMMAR_PROPOSAL_260.md)
@@ -1603,3 +1604,11 @@ After the bounded264 summary/comparison cut, prioritize
 [model construction/ownership hardening](MODEL_PIT_OF_SUCCESS_264.md): H0 normalized
 immutable shapes/closed options; H1 execution epochs, role handles and guarantee-
 aware projections. This gate precedes additional renderers or authored views.
+
+
+265 delivers [H0 snapshot admission](SNAPSHOT_CONSTRUCTION.md): bounded plain-data
+constructors, shared immutable handles, source-question/profile checks, runtime
+complete-only witnesses and supplied-row projection that loses whole-query proof.
+This is not a new local-filter UI or source-authentication mechanism. Continue H1
+host-owned execution/role handles and centralized intent resolution before broader
+renderer or contributed-view authoring work.

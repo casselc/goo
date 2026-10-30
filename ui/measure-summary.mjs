@@ -3,10 +3,29 @@ import {validateSnapshot,measureValue} from './view-model.mjs';
 import {validateComparison} from './view-comparison.mjs';
 import {signedScale} from './comparison-visual.mjs';
 import {formatCell,exactText} from './view-values.mjs';
+import {asSnapshot,asComparison,parseSnapshotJSON,parseComparisonJSON} from './snapshots.mjs';
 import './chart-frame.mjs';
 
 const n=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=String(text);if(cls)e.className=cls;return e};
-const copy=value=>structuredClone(value);
+function frozenConfig(value){
+  if(value===undefined)return undefined;
+  if(!value||typeof value!=='object'||Array.isArray(value)||![Object.prototype,null].includes(Object.getPrototypeOf(value)))throw TypeError('Supply display options.');
+  const keys=Reflect.ownKeys(value);if(keys.length>3)throw TypeError('Too many display options.');
+  const result={};for(const key of keys){
+    if(typeof key!=='string'||!['title','fields','compact'].includes(key))throw TypeError('Unsupported display option.');
+    const descriptor=Object.getOwnPropertyDescriptor(value,key);if(!Object.hasOwn(descriptor,'value')||!descriptor.enumerable)throw TypeError('Display options must contain plain values.');
+    const item=descriptor.value;
+    if(key==='fields'){
+      if(!Array.isArray(item)||Object.getPrototypeOf(item)!==Array.prototype||item.length>64)throw TypeError('Choose at most64 bounded field keys.');
+      if(Reflect.ownKeys(item).length!==item.length+1)throw TypeError('Fields must be an ordinary dense array.');
+      const descriptors=Object.getOwnPropertyDescriptors(item),fields=[];
+      for(let index=0;index<item.length;index++){const d=descriptors[index];if(!d||!Object.hasOwn(d,'value')||!d.enumerable||typeof d.value!=='string'||!d.value.length||d.value.length>1024)throw TypeError('Fields must contain plain bounded keys.');fields.push(d.value)}
+      result.fields=Object.freeze(fields);
+    }
+    else {if(key==='compact'?typeof item!=='boolean':typeof item!=='string'||item.length>512)throw TypeError('Use a short title and boolean compact option.');result[key]=item}
+  }
+  return Object.freeze(result);
+}
 const numeric=field=>field?.type==='number'||field?.type==='rational';
 let tableSequence=0;
 const clock=value=>{if(value===null||value===undefined)return null;const d=new Date(typeof value==='string'&&/^-?\d+$/.test(value)?Number(value):value);return Number.isFinite(d.getTime())?d.toISOString().replace('T',' ').replace('Z',' UTC'):null};
@@ -105,8 +124,15 @@ class Supplied extends (globalThis.HTMLElement||class {}){
   static get observedAttributes(){return ['snapshot','comparison','display']}
   connectedCallback(){for(const key of ['snapshot','comparison','display'])if(Object.hasOwn(this,key)){const value=this[key];delete this[key];this[key]=value}this.render()}
   attributeChangedCallback(){this.render()}
-  read(key){return Object.hasOwn(this,'_'+key)?copy(this['_'+key]):this.hasAttribute(key)?JSON.parse(this.getAttribute(key)):undefined}
-  setValue(key,value){try{this['_'+key]=copy(value)}catch{this['_'+key]=null}this.render()}
+  normalize(key,value){return key==='snapshot'?asSnapshot(value):key==='comparison'?asComparison(value):frozenConfig(value)}
+  read(key){
+    if(Object.hasOwn(this,'_'+key))return this['_'+key];
+    const text=this.getAttribute(key);if(text===null)return undefined;
+    const cached=(this._attributeCache??=new Map()).get(key);if(cached?.text===text)return cached.value;
+    let value;try{if(key==='display'&&text.length>16384)throw TypeError('Display options are too large.');value=key==='snapshot'?parseSnapshotJSON(text):key==='comparison'?parseComparisonJSON(text):this.normalize(key,JSON.parse(text));if(this._inputErrors)delete this._inputErrors[key]}catch(error){value=null;(this._inputErrors??={})[key]=error instanceof SyntaxError?'Invalid '+key+' JSON.':error.message||'Invalid supplied value.'}
+    this._attributeCache.set(key,{text,value});return value;
+  }
+  setValue(key,value){this._attributeCache?.delete(key);try{this['_'+key]=this.normalize(key,value);if(this._inputErrors)delete this._inputErrors[key]}catch(error){this['_'+key]=null;(this._inputErrors??={})[key]=error.message||'Invalid supplied value.'}this.render()}
   set snapshot(value){this.setValue('snapshot',value)}get snapshot(){return this.read('snapshot')}
   set comparison(value){this.setValue('comparison',value)}get comparison(){return this.read('comparison')}
   set display(value){this.setValue('display',value)}get display(){return this.read('display')}
@@ -115,7 +141,7 @@ class Supplied extends (globalThis.HTMLElement||class {}){
 
 class Summary extends Supplied{
   render(){try{
-    const snapshot=this.snapshot,valid=validateSnapshot(snapshot);if(!valid.ok){this.refuse(valid.reasons);return}if(snapshot.shape!=='summary'){this.refuse(['A population summary snapshot is required.']);return}
+    const snapshot=this.snapshot,valid=validateSnapshot(snapshot);if(!valid.ok){this.refuse(this._inputErrors?.snapshot?[this._inputErrors.snapshot]:valid.reasons);return}if(snapshot.shape!=='summary'){this.refuse(['A population summary snapshot is required.']);return}
     const display=options(this.display,snapshot.fields),root=n('goo-chart-frame',undefined,'measure-frame');root.data={title:display.title||'Population summary',state:snapshot.quality.extent==='unknown'||snapshot.quality.value==='unknown'?'unknown':snapshot.quality.extent==='partial'?'partial':snapshot.rows[0].values.count==='0'?'no_data':'observed'};
     root.append(provenance(snapshot),summaryBody(snapshot,display));this.replaceChildren(root);
   }catch(error){this.refuse([error instanceof SyntaxError?'Invalid summary JSON.':error.message||'Summary unavailable.'])}}
@@ -123,7 +149,7 @@ class Summary extends Supplied{
 
 class Comparison extends Supplied{
   render(){try{
-    const comparison=this.comparison,valid=validateComparison(comparison);if(!valid.ok){this.refuse(valid.reasons);return}
+    const comparison=this.comparison,valid=validateComparison(comparison);if(!valid.ok){this.refuse(this._inputErrors?.comparison?[this._inputErrors.comparison]:valid.reasons);return}
     const fields=[...new Map([...comparison.baseline.fields,...comparison.selection.fields].map(field=>[field.key,field])).values()],display=options(this.display,fields,{comparison:true});
     const root=n('goo-chart-frame',undefined,'measure-frame'),provenances=n('div',undefined,'measure-comparison-provenance');root.data={title:display.title||'Population comparison',state:comparison.state==='diagnostic'?'unknown':comparison.state};
     provenances.append(provenance(comparison.baseline,'Baseline'),provenance(comparison.selection,'Selection'));root.append(provenances,comparisonBody(comparison,display));this.replaceChildren(root);

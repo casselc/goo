@@ -46,6 +46,41 @@ that skip without actual journey input. Those skips are appropriate there; they
 are not a substitute for a passing required suite. Root Go/display/API gates stay
 independent. XTDB and browser campaigns are separate opt-ins.
 
+### Immutable snapshot admission and projections — 265
+
+Run these additional view-contract checks from the repository root:
+
+```sh
+go test -C verification -run '^(TestHegelSnapshotConstructionProjection|TestHegelSnapshotDefensiveBoundary|TestQuintSnapshotConstructionLedger)$' -count=1 -v .
+./node_modules/.bin/playwright test journeys/265-snapshot-boundary.spec.js
+GOO_SNAPSHOT_AUTHORITY_LEDGER="$PWD/artifacts/scoped-265/model-trace.json" go test -C verification -run '^TestQuintSnapshotAuthorityObservedBrowserLedger$' -count=1 -v .
+```
+
+The two Hegel suites run80 generated cases against the actual JavaScript
+constructors, using the Go `Source.Fetch` DTO producer with a bounded fake physical
+source. Exact large counts, numeric support and rational values survive admission,
+import and local projection. Checks cover all-keys identity, fresh imported
+identities, private source instances, deep freezing, zero local source IO,
+accessor/cycle/prototype refusal and byte/node/depth budgets. Complete-only display
+requires the admitted source witness; copying public flags cannot retain it.
+In a cloud workspace with a read-only default cache, select a writable native
+cache with `XDG_CACHE_HOME=/workspace/.cache` when running Hegel.
+
+The browser journey uses real OTLP ingestion and independently checked ClickHouse
+records. It records one exploration request across source → copied row → projected
+row → restored original; its model trace has four completed steps. The same Go
+Quint checker validates both constructor and observed browser traces and rejects
+seven proof/read/row/origin faults plus an unfinished prefix. The model projects
+local ownership and issued exploration requests; it proves neither source
+truth/authentication nor upstream telemetry completeness. SQL reads within one
+exploration request remain separate source observations.
+
+`GOO_SNAPSHOT_BOMBADIL=1` enables the35-second source-backed campaign. The accepted
+run reached all eight phases in706 snapshots, including invalid-replacement
+withdrawal. Keep the compact campaign summary, ownership trace and storyboard
+frames; successful raw campaign output can be removed. See the
+[executable storyboard](../journeys/265-snapshot-boundary-storyboard.md).
+
 ### Thin lab check
 
 Against an already running lab, with `requirements-api.txt` installed in the

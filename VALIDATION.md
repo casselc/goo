@@ -1,5 +1,50 @@
 # Validation record
 
+## Immutable snapshot admission and safe projections — 265
+
+Known Explore response slots now enter through an application-owned source adapter
+bound to the checked request, response basis and read clock. Verified Saved pages
+retain their original aggregate selector/clock and match the receipt independently
+of delivery paging. Comparison operands always enter as held data. Components
+share recursively frozen handles; serialized copies receive fresh local identities
+and cannot recreate private completeness guarantees. Proper row subsets preserve
+exact frozen cells/support but remove whole-query guarantees. This is a trusted
+host boundary, not source authentication or proof of complete telemetry collection.
+H0 is implemented; H1 execution epochs/role ownership/action resolution remains next.
+See [contract and diagram](docs/SNAPSHOT_CONSTRUCTION.md),
+[executable storyboard and frames](journeys/265-snapshot-boundary-storyboard.md).
+
+Validation passes:
+
+- All700 frontend tests, no skips, including15 constructor/projection tests and
+  four application-admission tests. Full root Go suite passes.
+- Both Chromium component suites: shared frozen identity, SSR/pre-upgrade/detached
+  updates, conservative serialized imports, source-only completeness, bounded plain
+  display options and successful-output withdrawal on invalid replacement.
+- Real OTLP → ClickHouse → isolated Go browser journey265: one Explore request;
+  source/copy/subset/restore plus invalid replacement perform no additional reads.
+  Copied/projected data refuses complete-only; restoring the original handle works.
+- Existing261–264 real browser journeys pass grouped selection, interval geometry,
+  Saved → fixed checked-scope reuse, exact numeric support, changed-read refusal
+  and independent population comparison.264 also passes after the final comparison
+  owner hardening. Screenshots are regenerated from the running Go application.
+- Hegel:80 new generated constructor/projection/defensive cases over actual Go
+  source DTOs (including exact large counts and numeric support), plus120 existing
+  scoped/interval/numeric/summary cases. Quint validates both the actual constructor
+  and browser four-step traces, each rejecting seven mutants and an incomplete
+  journey prefix. These projected models do not prove source truth or authentication.
+- Bombadil:35 seconds,706 snapshots, all eight source/copy/subset/restore/invalid
+  phases through completion; one Explore request, no violations. Compact summaries
+  and model traces remain; owned raw campaign output is removed.
+
+
+Compose configuration/build passes with the configured CA. The lab is deployed as
+`sha256:4ef9e6ff500217a764e62ab5066843ee5ac940583d1db6d2784ae8e704c1e384`;
+root returns HTTP200 and all nine changed/new served modules match workspace
+bytes. Only the Go application service is recreated; telemetry and XTDB volumes
+are preserved. Runtime trust remains in the application source owner, and no
+Plotly/editor/new local-filter controls are introduced by this milestone.
+
 ## Population summaries, independent comparisons and model audit — 264
 
 Canonical summary snapshots now support compact whole-population numeric/duration

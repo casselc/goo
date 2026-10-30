@@ -1,6 +1,6 @@
 /* Validate supplied descriptive differences. This module never executes queries,
    chooses populations, merges provenance or manufactures relative changes. */
-import {validateSnapshot,isCanonicalRational} from './view-model.mjs';
+import {validateSnapshot,isCanonicalRational} from './view-schema.mjs';
 const record=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
 const own=(value,key)=>Object.prototype.hasOwnProperty.call(value,key);
 const text=value=>typeof value==='string'&&value.length>0&&value.length<=1024;

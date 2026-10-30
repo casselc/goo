@@ -5,7 +5,7 @@ const mean={key:'numeric.mean',label:'Numeric mean',type:'rational',nullable:tru
 const latency={key:'duration.p95',label:'p95 duration',type:'rational',nullable:true,unit:'ns',aggregation:{family:'duration',kind:'quantile',method:'quantilesExactHigh',quantile:'0.95'}};
 function snapshot(id,value,duration,capturedAt){return {
  version:'goo.dataset/1',id,revision:'r-'+id,origin:'source-read',capturedAt,
- shape:'summary',scope:{id:'scope-'+id,generation:1,signal:'spans',selector:{fromMs:id==='baseline'?0:10000,toMs:id==='baseline'?10000:20000,numeric:{field:{kind:'attribute',key:'price'},type:'int64',parse:'canonical-decimal',unit:'USD'}}},
+ shape:'summary',scope:{id:'scope-'+id,generation:1,signal:'spans',selector:{signal:'spans',environment:'test',summary:'span-duration',fromMs:id==='baseline'?0:10000,toMs:id==='baseline'?10000:20000,numeric:{field:{kind:'attribute',key:'price'},type:'int64',parse:'canonical-decimal',unit:'USD'}}},
  fields:[{key:'count',label:'Captured records',type:'number',nullable:true,unit:'records'},mean,latency],
  rows:[{key:'population',values:{count:'3','numeric.mean':value,'duration.p95':duration},cells:{'numeric.mean':{state:'derived',support:{total:'3',valid:'3',missing:'0',empty:'0',invalid:'0'}},'duration.p95':{state:'derived',support:{total:'3',valid:'3',missing:'0',empty:'0',invalid:'0'}}}}],
  quality:{extent:'complete',basis:'captured-query',value:'derived',sampling:'unknown',freshness:'fixed'},completeness:{basis:'captured-query',revision:'r-'+id,scopeId:'scope-'+id,aspects:['summary']}
@@ -21,19 +21,22 @@ const comparison={version:'goo.comparison/1',state:'observed',baseline,selection
   const local=path.resolve(__dirname,'../ui'+name);assert(local.startsWith(path.resolve(__dirname,'../ui')+path.sep));await route.fulfill({contentType:name.endsWith('.css')?'text/css':'text/javascript',body:await fs.readFile(local)});
  });
  await page.goto('http://summary.invalid/');await page.waitForFunction(()=>customElements.get('goo-measure-comparison')&&customElements.get('goo-chart'));
+ await page.evaluate(async()=>{const {createSourceAdapter,asSnapshot,asComparison,hasGuarantee}=await import('/snapshots.mjs');const source=createSourceAdapter({id:'summary-conformance'});window.adopt=value=>source.adoptSnapshot(value,{question:value.scope.selector});window.asSnapshot=asSnapshot;window.asComparison=asComparison;window.hasGuarantee=hasGuarantee});
  const result=await page.evaluate(()=>{
-  const root=document.querySelector('#root'),summary=document.createElement('goo-measure-summary');summary.id='summary';summary.snapshot=window.supplied;root.append(summary);
+  const root=document.querySelector('#root'),summary=document.createElement('goo-measure-summary');summary.id='summary';const source=window.adopt(window.supplied);summary.snapshot=source;root.append(summary);const shared=summary.snapshot===source&&summary.snapshot===summary.snapshot&&Object.isFrozen(source.rows[0].values);
   const pre=!!document.querySelector('#pre .measure-stats'),duration=summary.textContent.includes('4 ms'),rational=summary.textContent.includes('≈ −0.333 USD');
-  const isolated=structuredClone(window.supplied);summary.snapshot=isolated;isolated.rows[0].values.count='999';const assigned=summary.snapshot.rows[0].values.count==='3';const read=summary.snapshot;read.rows[0].values.count='123';const getter=summary.snapshot.rows[0].values.count==='3';
-  const ssr=document.createElement('goo-measure-summary');ssr.setAttribute('snapshot',JSON.stringify(window.supplied));root.append(ssr);const attrs=!!ssr.querySelector('.measure-stats')&&ssr.snapshot.id===window.supplied.id;
-  const compare=document.createElement('goo-measure-comparison');compare.id='compare';compare.comparison=window.comparison;root.append(compare);
+  const isolated=structuredClone(window.supplied);summary.snapshot=isolated;isolated.rows[0].values.count='999';const assigned=summary.snapshot.rows[0].values.count==='3';const read=summary.snapshot;try{read.rows[0].values.count='123'}catch{}const getter=summary.snapshot===read&&summary.snapshot.rows[0].values.count==='3'&&Object.isFrozen(read.rows[0].values);
+  const ssr=document.createElement('goo-measure-summary');ssr.setAttribute('snapshot',JSON.stringify(window.supplied));root.append(ssr);const attrs=!!ssr.querySelector('.measure-stats')&&ssr.snapshot.id.startsWith('goo.local/')&&ssr.snapshot===ssr.snapshot&&ssr.snapshot.origin==='browser-held'&&!window.hasGuarantee(ssr.snapshot,'summary');
+  const cached=ssr.snapshot;ssr.setAttribute('display',JSON.stringify({title:'Imported summary'}));const cachedAttribute=ssr.snapshot===cached;
+  const compare=document.createElement('goo-measure-comparison');compare.id='compare';const selection=window.adopt(window.comparison.selection),envelope=window.asComparison({...window.comparison,baseline:source,selection});compare.comparison=envelope;root.append(compare);const comparisonShared=compare.comparison===envelope&&compare.comparison.baseline===source&&compare.comparison.selection===selection;
+  const importedComparison=document.createElement('goo-measure-comparison');importedComparison.setAttribute('comparison',JSON.stringify(envelope));root.append(importedComparison);const heldComparison=importedComparison.comparison===importedComparison.comparison&&importedComparison.comparison.baseline.origin==='browser-held'&&!window.hasGuarantee(importedComparison.comparison.baseline,'summary')&&!window.hasGuarantee(importedComparison.comparison.selection,'summary');
   const tracks=[...compare.querySelectorAll('tr[data-field="numeric.mean"] .measure-comparison-track')];
   const common=tracks.length===2&&tracks[0].dataset.min===tracks[1].dataset.min&&tracks[0].dataset.max===tracks[1].dataset.max&&tracks[0].style.getPropertyValue('--measure-zero')===tracks[1].style.getPropertyValue('--measure-zero');
   const signed=tracks[0]?.dataset.min==='-1/3'&&tracks[0]?.dataset.max==='5/3';
   const delta=compare.querySelector('tr[data-field="duration.p95"] td[data-side=change]').textContent.includes('−3 ms');
   const clocks=compare.textContent.includes('03:00:00.123 UTC')&&compare.textContent.includes('04:00:00.987 UTC')&&compare.textContent.includes('1970-01-01 00:00:00.000 UTC')&&compare.textContent.includes('1970-01-01 00:00:20.000 UTC');
   const generic=document.createElement('goo-chart');generic.snapshot=window.supplied;generic.display={kind:'table'};root.append(generic);const passiveTable=!!generic.querySelector('table')&&!generic.querySelector('table button')&&![...generic.querySelectorAll('th')].some(th=>th.textContent==='Selection');
-  return {pre,duration,rational,assigned,getter,attrs,common,signed,delta,clocks,passiveTable,overflow:document.documentElement.scrollWidth>innerWidth};
+  return {pre,duration,rational,assigned,getter,attrs,shared,comparisonShared,cachedAttribute,heldComparison,common,signed,delta,clocks,passiveTable,overflow:document.documentElement.scrollWidth>innerWidth};
  });
  for(const [key,value] of Object.entries(result))assert.equal(value,key==='overflow'?false:true,key);
  const exact=page.locator('#summary [data-field="numeric.mean"] .measure-exact');await exact.locator('summary').focus();await page.keyboard.press('Enter');assert(await exact.locator('p').isVisible());assert((await exact.textContent()).includes('-1/3 USD'));
@@ -52,7 +55,9 @@ const comparison={version:'goo.comparison/1',state:'observed',baseline,selection
   const compare=document.querySelector('#compare'),diagnostic=structuredClone(window.comparison);diagnostic.state='diagnostic';for(const change of Object.values(diagnostic.changes)){change.state='unavailable';change.value=null;change.reason='Independent diagnostic only'}compare.comparison=diagnostic;
   const diagnosticOnly=!compare.querySelector('.measure-comparison-track')&&compare.textContent.includes('Unavailable')&&compare.textContent.includes('Independent diagnostic only');
   diagnostic.changes.count={state:'derived',value:'7',unit:'records'};compare.comparison=diagnostic;const invalid=!compare.querySelector('table')&&compare.textContent.toLowerCase().includes('unavailable');
-  summary.snapshot={};const clear=!summary.querySelector('.measure-stats');return {unknown,diagnosticOnly,invalid,clear};
+  summary.snapshot={};const clear=!summary.querySelector('.measure-stats');
+  summary.snapshot=window.supplied;let getterReads=0;const fields=[];Object.defineProperty(fields,'0',{enumerable:true,get(){getterReads++;return 'count'}});summary.display={fields};const optionsClosed=getterReads===0&&!summary.querySelector('.measure-stats');
+  return {unknown,diagnosticOnly,invalid,clear,optionsClosed};
  });
  for(const [key,value] of Object.entries(withdrawal))assert(value,key);
  assert.equal(errors.length,0,errors.join('; '));assert(!requests.some(name=>name.startsWith('/api/')||name==='/app.mjs'));
