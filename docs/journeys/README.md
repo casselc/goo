@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey280](../../journeys/280-composition-reuse-storyboard.md) reuses a whole
+composition while retaining a current page and aggregate, resolving selected-record
+and live-configuration guards explicitly, then saves/reopens the new intent.
+
 [Journey279](../../journeys/279-composition-storyboard.md) composes a record page
 and aggregate, changes their order/visibility locally, pages without replacing
 the aggregate, and saves/reopens the explicit declaration.

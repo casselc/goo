@@ -128,6 +128,39 @@ whole-screen WYSIWYG and generic rich-record plotting datasets remain outside it
 Broader composition should extend these typed profiles and ownership rules rather
 than introduce per-component reads or duplicate query/presentation authorities.
 
-Next, the existing catalog should reuse this whole composition against a compatible
-current population, preserving its query and held inputs. Current aggregate-only
-Apply already updates one child; whole-composition reuse is the next bounded cut.
+## Reuse a whole composition — 280
+
+**Inspect display** in the existing catalog now offers **Apply composition** for a
+saved composition, alongside the separate aggregate-only action. The preview names
+child order, visibility, core columns and qualified fields. Whole Apply copies that
+checked AST only; it preserves the current title, query, environment policy,
+predicates, numeric binding, fixed window, page limit and held source inputs.
+
+Compatibility requires one destination query with the same signal and qualified
+grouping. Numeric aggregate field/type/scale/unit/parser must match; duration
+requires its checked summary. Record columns must be valid for the destination
+signal. Unobserved attributes remain missing/unknown display values, without a
+lookup or implicit read. The original saved revision is unchanged.
+
+Apply retains the currently admitted record page, including its current offset and
+clock, and the held aggregate identity, denominator and clock. Saved queries still
+start at offset zero: reopen stages intent and explicit Run reacquires the first
+page. No source cursor, rows, cache token or completeness witness is imported.
+Missing current data stays unavailable/staged. Complete-only aggregates are checked
+against the current runtime input, not the source view's previous data.
+
+Dirty source/Find/filter drafts, staged facets, unresolved record selections,
+comparisons, configured live tails and pending record pages block whole Apply.
+**Clear selected records** explicitly releases a record/Keep draft. **Clear live
+configuration** stops that controller and removes its configuration without
+rebuilding the record table or dropping a selection. Selection guards also protect
+the aggregate-only action. Stale selection callbacks from retired page/table owners
+cannot change availability or revive a delayed inspection.
+
+Whole Apply revokes the old component mounts and binds the new layout to the
+current held inputs. It does not start Run, a lookup or a subscription. Save creates
+a distinct immutable view with the destination query and imported presentation.
+
+The [280 product/architecture checkpoint](ROADMAP_2026_10_30.md#revised-delivery-after-checkpoint280)
+selects a fixed time overview and interval selection as the next investigation
+capability, using the same explicit query/source ownership.

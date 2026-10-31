@@ -30,6 +30,13 @@ export function setAggregate(value,next,q){return validate({...value,children:va
 export function setRecords(value,next,q){return validate({...value,children:value.children.map(child=>child.records?{...child,records:{...child.records,display:next}}:child)},q)}
 export function setHidden(value,name,hidden,q){if(!['aggregate','records'].includes(name))throw Error('Choose an existing composition role.');return validate({...value,children:value.children.map(child=>role(child)===name?{...child,hidden}:child)},q)}
 export function reverse(value,q){return validate({...value,children:[...value.children].reverse()},q)}
+// Compatibility concerns configuration only; current inputs and paging stay with
+// the host. Browser metadata checks do not replace authoritative Go compilation.
+export function reuse(value,source,destination){
+ const next=validate(value,source);
+ next.children=next.children.map(child=>child.aggregate?{...child,aggregate:Aggregate.reuse(child.aggregate,source,destination)}:{...child,records:recordDisplay(child.records,destination)});
+ return validate(next,destination);
+}
 export function declaration(view,signal){const found=aggregate(view?.composition);return found?.scope.signal===signal?found:view?.displays?.[signal]}
 export function declarations(view){const found=aggregate(view?.composition);return found?{[found.scope.signal]:found}:view?.displays||{}}
 export function view(value){

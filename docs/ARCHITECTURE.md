@@ -1459,3 +1459,12 @@ a canonical aggregate dataset and a separate immutable record-page profile. Loca
 order/visibility do not fetch; paging advances only record ownership while keeping
 aggregate provenance and denominator held. Flat and composed presentation settings
 cannot coexist in one saved configuration.
+
+
+## Whole-composition reuse — 280
+
+[The reuse contract](RECORD_AGGREGATE_COMPOSITION.md#reuse-a-whole-composition--280)
+copies only checked child presentation. Existing query/source owners keep held
+aggregate and current record-page inputs; new mounts get current ownership. An
+optional record selection-state controller/notification guards both catalog Apply
+actions. Clearing live configuration is local and preserves record/Keep drafts.

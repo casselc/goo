@@ -7,6 +7,8 @@ saved display to the current population without replacing its query.
 route template in the same editor, preserving the service widget’s query.
 [Composed record and aggregate views](docs/RECORD_AGGREGATE_COMPOSITION.md) share one
 query owner, with local ordering, visibility and child-specific display settings.
+Apply a compatible whole composition in the current scope without replacing its
+query or reading telemetry.
 
 Start with what is happening now. Narrow logs and spans, inspect a population,
 compare evidence, and preserve an explanation you can revisit or reuse. Goo works

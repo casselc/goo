@@ -1,5 +1,10 @@
 # Known issues and gaps
 
+280 reuses whole fixed compositions in the current single-query scope. Signal,
+group and quantity compatibility remain strict; no unit/field remapping, query
+replacement, cursor import or implicit acquisition is added. Dirty drafts, selected
+records, comparisons, tails and pending pages must be resolved explicitly.
+
 279 adds [two-child fixed compositions](RECORD_AGGREGATE_COMPOSITION.md). Rich
 records use an explicit immutable bounded-page profile, not a generic ranked dataset
 or aggregate completeness. Paging retains the aggregate; the API may still perform

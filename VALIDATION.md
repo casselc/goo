@@ -1,5 +1,53 @@
 # Validation record
 
+## Whole-composition reuse — 280
+
+The existing catalog now applies a checked whole composition alongside its separate
+aggregate-only action. It copies order, visibility, record columns and aggregate
+options while preserving the destination query, title, paging policy and held
+record/aggregate inputs. Old mounts are revoked and new mounts use current inputs;
+source rows, cursors, cache tokens and completeness witnesses never travel with the
+configuration. See [contract](docs/RECORD_AGGREGATE_COMPOSITION.md#reuse-a-whole-composition--280)
+and [storyboard](journeys/280-composition-reuse-storyboard.md).
+
+Validation:
+
+- Full root `go test ./...` and all 853 frontend tests pass. Focused Go/JS tests
+  cover strict signal/group/quantity and typed record-field compatibility, detached
+  nested arrays/options, unchanged queries and immutable saved revisions. No API,
+  schema, source endpoint or evaluator changed.
+- 100 finite reuse property cases pass (50 valid / 50 refused). Eight-step Quint
+  smoke and observed replay pass, rejecting six mutated traces and an unfinished
+  prefix. Observed browser replay takes 5.62 s.
+- Real OTLP journey passes (50.1 s): flat target → record selection/live-configuration
+  guards → explicit clears → whole Apply → pending-page refusal → current offset-one
+  page → whole Apply again → save/reopen/Run. Clearing live configuration preserves
+  the selected record; only explicit Clear selected records releases that guard.
+- Aggregate identity, denominator and clock, current page contents/offset/read clock,
+  destination query/title and original saved revision remain unchanged by Apply.
+  A retired trace button cannot issue a POST. Missing current data stays staged;
+  complete-only behavior remains a current-input check.
+- Source-read ledger `[1,1,1,2,2,2,2,3]` accounts only for initial Run, explicit Next
+  and explicit Run after reopen. Local Apply, selection/clear, configuration edits,
+  save and reopen add zero reads; source errors remain empty. Saved queries retain
+  offset zero while Apply preserves the currently held page.
+- Bombadil passes 30 seconds / 509 snapshots / thirteen phases, including actual
+  Inspect, selected-record guard, Clear live configuration, Clear selected records,
+  whole Apply, visibility, paging and save/reopen. Final state is reopened/staged,
+  two source reads, no selection, no overflow and no uncaught errors.
+- Existing composition journey279 passes (19.4 s); its three frames are refreshed.
+  Three new whole-reuse frames show compatibility, held current page and reopened
+  intent. Final design review reports no material blockers.
+- Product/usability and architecture reviews are reconciled in the
+  [revised roadmap](docs/ROADMAP_2026_10_30.md#revised-delivery-after-checkpoint280):
+  next is an existing-data-model count timeline with interval selection, then
+  preserving composed findings in investigations and concrete scope portability.
+- Local image `fcf1938ba1f1a565b067b61e172c695faa2ae1f5514608729767f99c5d6007f7`
+  is built and deployed; served bytes match all three changed UI modules. Telemetry
+  and XTDB volumes remain intact. Raw successful campaign/capture copies are removed;
+  compact summaries/model ledgers and documentation frames remain.
+
+
 ## Explicit record/aggregate compositions — 279
 
 Single-query fixed views now declare an ordered aggregate and record-table child,

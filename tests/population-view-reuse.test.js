@@ -14,3 +14,12 @@ test('out-of-order configuration replies cannot replace a newer compatible candi
  // Even a response with the same query text loses ownership after a draft edit.
  const sameQuery={...current};current={...current,draftRevision:current.draftRevision+1};assert.equal(reuseRequestCurrent(sameQuery,current),false);
 });
+
+const {compositionReuseReason}=require('../ui/population-workspace.mjs');
+test('whole-composition application waits for one fixed owner, explicit tail removal and page completion',()=>{
+ assert.equal(compositionReuseReason({queryCount:1}), '');
+ for(const queryCount of [0,2])assert.match(compositionReuseReason({queryCount}),/one current query/);
+ assert.match(compositionReuseReason({queryCount:1,tailConfigured:true}),/Clear live configuration/);
+ assert.match(compositionReuseReason({queryCount:1,pagePending:true}),/record page to finish/);
+ const state={queryCount:1,tailConfigured:true,pagePending:true};compositionReuseReason(state);assert.deepEqual(state,{queryCount:1,tailConfigured:true,pagePending:true});
+});

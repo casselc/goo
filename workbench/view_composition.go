@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"slices"
 
 	"github.com/casselc/goo/exploration"
 )
@@ -194,4 +195,36 @@ func (c ViewComposition) Validate(q exploration.Query) error {
 		return errors.New("composition requires both roles and at least one visible child")
 	}
 	return nil
+}
+
+// ReuseViewComposition copies only presentation intent into another checked
+// population. Neither query nor a source page, runtime guarantee or action owner
+// is part of the returned value. The caller retains its destination query.
+func ReuseViewComposition(c ViewComposition, source, destination exploration.Query) (ViewComposition, error) {
+	if err := c.Validate(source); err != nil {
+		return ViewComposition{}, err
+	}
+	out := c
+	out.Children = slices.Clone(c.Children)
+	for i, child := range c.Children {
+		if child.Aggregate != nil {
+			display, err := ReuseViewDeclaration(*child.Aggregate, source, destination)
+			if err != nil {
+				return ViewComposition{}, err
+			}
+			out.Children[i].Aggregate = &display
+		} else {
+			if err := child.Records.Validate(destination); err != nil {
+				return ViewComposition{}, err
+			}
+			display := *child.Records
+			display.Display.Columns = slices.Clone(child.Records.Display.Columns)
+			display.Display.FieldColumns = slices.Clone(child.Records.Display.FieldColumns)
+			out.Children[i].Records = &display
+		}
+	}
+	if err := out.Validate(destination); err != nil {
+		return ViewComposition{}, err
+	}
+	return out, nil
 }
