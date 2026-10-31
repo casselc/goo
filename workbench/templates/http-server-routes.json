@@ -1,0 +1,22 @@
+{
+  "id": "otel.http-server-routes",
+  "version": 1,
+  "title": "HTTP server routes",
+  "family": "http-server",
+  "grain": "server-span-record",
+  "signal": "spans",
+  "group": {"kind": "attribute", "key": "http.route"},
+  "serviceField": {"kind": "column", "key": "service"},
+  "required": [
+    {"field": {"kind": "column", "key": "kind"}, "op": "eq", "value": "Server"},
+    {"field": {"kind": "attribute", "key": "http.request.method"}, "op": "ne"}
+  ],
+  "layout": "charts-records",
+  "columns": ["utc", "service", "summary", "context"],
+  "display": {
+    "version": "goo.view/1",
+    "scope": {"kind": "record-query", "signal": "spans"},
+    "kind": {"name": "bar", "version": 1},
+    "display": {"category": "category", "value": "count", "scale": "population", "order": "value-desc", "title": "HTTP server routes"}
+  }
+}

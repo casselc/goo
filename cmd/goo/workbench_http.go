@@ -33,6 +33,19 @@ func registerWorkbench(mux *http.ServeMux, dir string, connection retentionConne
 	decode := func(w http.ResponseWriter, r *http.Request, v any) error {
 		return httpjson.Decode(w, r, v, workbench.MaxBytes, "expected one JSON object")
 	}
+	mux.HandleFunc("POST /view-templates/expand", func(w http.ResponseWriter, r *http.Request) {
+		var in workbench.ViewTemplateExpansionRequest
+		if e := decode(w, r, &in); e != nil {
+			fail(w, 400, e)
+			return
+		}
+		out, e := workbench.ExpandViewTemplate(in)
+		if e != nil {
+			fail(w, 400, e)
+			return
+		}
+		reply(w, 200, out)
+	})
 	mux.HandleFunc("POST /annotations", func(w http.ResponseWriter, r *http.Request) {
 		var in workbench.MeaningInput
 		if e := decode(w, r, &in); e != nil {

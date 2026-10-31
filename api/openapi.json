@@ -6248,6 +6248,53 @@
         "x-go-body-limit-bytes": 65536,
         "x-schema-coverage": "typed"
       }
+    },
+    "/view-templates/expand": {
+      "post": {
+        "operationId": "post_view_templates_expand",
+        "summary": "POST /view-templates/expand",
+        "tags": [
+          "view-templates"
+        ],
+        "description": "Current owner: cmd/goo/workbench_http.go. Effect: saved-evidence-or-definition-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/workbench_http.go",
+        "x-effects": "saved-evidence-or-definition-read",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewTemplateExpansion"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ViewTemplateExpansionRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 131072,
+        "x-schema-coverage": "typed"
+      }
     }
   },
   "components": {
@@ -7814,6 +7861,19 @@
       },
       "TraceSearchResult": {
         "$ref": "#/components/schemas/exploration.TraceSearchResult"
+      },
+      "ViewTemplateExpansion": {
+        "$ref": "#/components/schemas/workbench.ViewTemplateExpansion"
+      },
+      "ViewTemplateExpansionRequest": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ViewTemplateExpansionRequestInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
       },
       "WorkflowList": {
         "anyOf": [
@@ -11051,6 +11111,107 @@
           "state",
           "grain"
         ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.DashboardWidget"
+      },
+      "exploration.DashboardWidgetInput": {
+        "additionalProperties": false,
+        "properties": {
+          "family": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "grain": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "measurement": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/measurements.QuestionInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "query": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.QueryInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.DashboardWidget"
       },
@@ -42019,6 +42180,89 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ViewKind"
+      },
+      "workbench.ViewTemplateExpansion": {
+        "properties": {
+          "template": {
+            "$ref": "#/components/schemas/workbench.ViewTemplateReference"
+          },
+          "view": {
+            "$ref": "#/components/schemas/workbench.ExplorationView"
+          }
+        },
+        "required": [
+          "template",
+          "view"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewTemplateExpansion"
+      },
+      "workbench.ViewTemplateExpansionRequestInput": {
+        "additionalProperties": false,
+        "properties": {
+          "template": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "otel.http-server-routes"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": 1
+          },
+          "widget": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.DashboardWidgetInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewTemplateExpansionRequest",
+        "required": [
+          "template",
+          "version",
+          "widget"
+        ]
+      },
+      "workbench.ViewTemplateReference": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "const": "otel.http-server-routes"
+          },
+          "title": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "const": 1
+          }
+        },
+        "required": [
+          "id",
+          "version",
+          "title"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewTemplateReference",
+        "additionalProperties": false
       },
       "KeptResource": {
         "oneOf": [

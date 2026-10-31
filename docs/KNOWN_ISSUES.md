@@ -1,5 +1,10 @@
 # Known issues and gaps
 
+278 adds one [HTTP server-route view template](HTTP_SERVICE_VIEW_TEMPLATE.md).
+Other service/native families, arbitrary template upload and whole-screen layout
+are outside this cut. Customize stages query/display intent, not observed data or
+completeness. Existing service-scope limitations remain explicit.
+
 277 reuses compatible saved displays in the current fixed population. Exact signal,
 group and measure/quantity compatibility is required; no field remapping, unit
 conversion, rolling/native authoring or baseline replacement is implied. Tables

@@ -1440,3 +1440,12 @@ keeps the existing catalog and current query owner. Pure Go/JS compatibility
 helpers return detached display intent; the application guards inspection/apply
 against changed owners and drafts, then redraws only supplied admitted data.
 No display component fetches, and no source query, witness or baseline is copied.
+
+
+## HTTP service template handoff — 278
+
+[The template/flow contract](HTTP_SERVICE_VIEW_TEMPLATE.md) expands one checked
+HTTP route widget into an existing exploration-view configuration. The server owns
+template compatibility and detached expansion; the current service owner guards
+the asynchronous response, then the existing trail stages a population. No data
+or source witness crosses the handoff, and Run remains explicit.

@@ -2,6 +2,7 @@
 import * as Exploration from './exploration.mjs';
 import * as UI from './components.mjs';
 import * as Workspace from './workspace.mjs';
+import {stagedView} from './view-template-handoff.mjs';
 const global=globalThis;
 function mount(host,{lazy=false}={}){
   const node=UI.node,bar=node('nav',undefined,'investigation-trail controls'),back=node('button','Back to question'),forward=node('button','Forward'),label=node('span'),body=node('div');bar.setAttribute('aria-label','Investigation trail');label.setAttribute('role','status');bar.append(back,forward,label);host.replaceChildren(bar,body);
@@ -13,7 +14,7 @@ function mount(host,{lazy=false}={}){
   function create(q,fields=[],options={}){const replaceBlank=!!q&&entries[index]?.view.dataset.questionPhase==='initial';leave();if(replaceBlank){entries[index].api.dispose();entries.splice(index,1);index--}for(const entry of entries.splice(index+1))entry.api.dispose();const view=node('div'),entry={view,title:q?q.environment+' · '+q.signal:'New question',scroll:0,id:++serial};body.append(view);entries.push(entry);index=entries.length-1;if(entries.length>8){entries.shift().api.dispose();index--}entry.api=Exploration.mount(view,{managed:true,initialBaseline:options.baseline,active:()=>entries[index]===entry&&view.isConnected});update();if(q)entry.api.openQuestion(q,fields,options);return entry.api}
   back.onclick=()=>select(index-1);forward.onclick=()=>select(index+1);
   const openQuestion=(q,fields=[],options={})=>create(q,fields,options);
-  global.addEventListener('goo:open-population',e=>openQuestion(e.detail.question,[],{baseline:e.detail.baseline,...(e.detail.rest?{stage:true,rest:e.detail.rest}:{})}));
+  global.addEventListener('goo:open-population',e=>{let view;if(e.detail.view!==undefined){try{view=stagedView(e.detail.view,e.detail.question)}catch{return}}openQuestion(e.detail.question,[],{baseline:e.detail.baseline,...(e.detail.rest?{stage:true,rest:e.detail.rest}:{}),...(view?{stage:true,view}:{})})});
   global.addEventListener('goo:open-question',e=>openQuestion(e.detail));
   document.addEventListener('click',event=>{const link=event.target.closest?.('a[href]');if(!link||event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||link.target)return;const url=new URL(link.href,location.href);if(url.origin!==location.origin||url.pathname!==location.pathname||!/^#(?:step|question)=/.test(url.hash))return;try{const value=Workspace.readQuestionLink(url.hash);if(!value)return;event.preventDefault();openQuestion(value.question,[],{stage:true});history.pushState(null,'',url.hash)}catch{}});
   global.addEventListener('goo:question-state',event=>{update();host.dataset.questionPhase=event.detail.phase});

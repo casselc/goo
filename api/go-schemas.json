@@ -1562,6 +1562,19 @@
   "TraceSearchResult": {
     "$ref": "#/components/schemas/exploration.TraceSearchResult"
   },
+  "ViewTemplateExpansion": {
+    "$ref": "#/components/schemas/workbench.ViewTemplateExpansion"
+  },
+  "ViewTemplateExpansionRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/workbench.ViewTemplateExpansionRequestInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
   "WorkflowList": {
     "anyOf": [
       {
@@ -4715,6 +4728,107 @@
       "state",
       "grain"
     ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.DashboardWidget"
+  },
+  "exploration.DashboardWidgetInput": {
+    "additionalProperties": false,
+    "properties": {
+      "family": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "grain": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "key": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "measurement": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.QuestionInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "query": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.QueryInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "reason": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "state": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "title": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.DashboardWidget"
   },
@@ -25909,5 +26023,78 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/workbench.ViewKind"
+  },
+  "workbench.ViewTemplateExpansion": {
+    "properties": {
+      "template": {
+        "$ref": "#/components/schemas/workbench.ViewTemplateReference"
+      },
+      "view": {
+        "$ref": "#/components/schemas/workbench.ExplorationView"
+      }
+    },
+    "required": [
+      "template",
+      "view"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewTemplateExpansion"
+  },
+  "workbench.ViewTemplateExpansionRequestInput": {
+    "additionalProperties": false,
+    "properties": {
+      "template": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "widget": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.DashboardWidgetInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewTemplateExpansionRequest"
+  },
+  "workbench.ViewTemplateReference": {
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "version": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "id",
+      "version",
+      "title"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewTemplateReference"
   }
 }

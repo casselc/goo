@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey278](../../journeys/278-http-template-storyboard.md) customizes an OTel HTTP
+service route widget, preserves its query, and saves/reopens through the existing
+population editor with explicit telemetry reads.
+
 [Journey277](../../journeys/277-display-reuse-storyboard.md) applies a saved display
 to a current scoped population, preserves its query and original saved revision,
 and verifies configuration-only inspection/application.

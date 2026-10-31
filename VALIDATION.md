@@ -1,5 +1,50 @@
 # Validation record
 
+## HTTP service view template — 278
+
+The HTTP-server route widget now expands the shipped `otel.http-server-routes/1`
+template into the existing staged population editor. The configuration-only API
+preserves its full checked query, namespace, service, environment policy, fixed
+window and current-key HTTP predicates. Default count bars/population share and
+local duration controls use the existing declaration/renderer. No source data,
+read clocks or guarantees cross the handoff, and no save happens implicitly.
+See [contract/diagram](docs/HTTP_SERVICE_VIEW_TEMPLATE.md) and
+[storyboard](journeys/278-http-template-storyboard.md).
+
+Checks:
+
+- Full root `go test ./...` and all 837 frontend tests pass. Final neutral
+  staged-configuration footer copy is covered by the refreshed live journey.
+- API generation/checks pass: 595 reflected / 617 OpenAPI schemas, 97 operations,
+  429 response fixtures, 159 admitted requests, 28 mux refusals, negative controls
+  and SSE checks. Dedicated expansion HTTP checks prove zero source calls and no
+  publication, with unsupported version, weakened predicates and malformed payloads refused.
+- 100 finite Hegel cases pass (50 valid Go expansions admitted by the existing JS
+  declaration contract; 50 refusals). Fresh nested query/binding/descriptor values
+  and mandatory-conjunct semantics are checked; there is no second JS template compiler.
+- Seven-step Quint smoke and observed replay pass, rejecting five changed traces
+  and an unfinished prefix. Final observed replay takes 5.56 s.
+- Real OTLP service → Customize → staged editor → Run → measure edit → save/reopen
+  journey passes (51.9 s). Ten fixture spans yield five qualifying Server/current-
+  method records across `/a`, `/custom`, missing and empty route groups. Client,
+  Producer and empty/missing/legacy-only methods do not qualify. The query is
+  preserved exactly; an expansion response released after Back cannot navigate.
+- Main read ledger `[13,13,14,14,14,14,15]` proves zero local reads: Customize and
+  two configuration expansions do not acquire telemetry; initial/final explicit
+  population Runs account for the two additional reads. Source errors remain empty.
+- Final Bombadil campaign exercises discovery, service opening and the new Customize
+  action: 30 seconds / 559 snapshots / ten phases. Loaded-service baseline seven
+  reads, expansion zero, explicit Run one, local edits/save/reopen zero. The actor
+  checks count five and full environment/namespace/service/Server/current-method/
+  route scope. Final state is reopened/staged, eight reads, one expansion, no overflow
+  or uncaught errors. An earlier passing authoring-only campaign was expanded to
+  cover the new entry point. Three real documentation frames are refreshed.
+- Local image `a2d6fa9c502a82953653f4dda88d10b229d1fa2dc10afd307e4722a9b9317d0b`
+  is built and deployed; served bytes match all seven changed/new UI/API files.
+  Telemetry and XTDB volumes remain intact. Raw successful campaigns and disposable
+  capture copies are removed; compact summaries/model ledgers and frames remain.
+
+
 ## Apply saved displays in the current population — 277
 
 The existing catalog now distinguishes opening an original fixed question from

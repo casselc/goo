@@ -3,6 +3,8 @@
 [Reusable saved displays](docs/SAVED_DISPLAY_DECLARATIONS.md) let checked exploration
 queries reopen with count, numeric or duration bar/table displays. Apply a compatible
 saved display to the current population without replacing its query.
+[Customize an HTTP service view](docs/HTTP_SERVICE_VIEW_TEMPLATE.md) stages a shipped
+route template in the same editor, preserving the service widget’s query.
 
 Start with what is happening now. Narrow logs and spans, inspect a population,
 compare evidence, and preserve an explanation you can revisit or reuse. Goo works
