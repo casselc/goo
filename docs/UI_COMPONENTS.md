@@ -1641,3 +1641,11 @@ reads; the retained child requires explicit Run. See [focused views](FOCUSED_VIE
 Native checkboxes under Measures · spans stage query configuration immediately;
 they are not display reducers. Existing query/composition validation owns eligibility,
 and a fresh mount replaces retired controls after retained Back.
+
+## Contextual baseline picker — 295
+
+Compare with captured baseline is a native application disclosure, not a fetching
+chart component. A single editor follows the available aggregate/comparison host;
+configuration-only views retain settings access. Opening remains passive. The same
+passive comparison elements consume the prepared pair. See
+[captured comparisons](CAPTURED_COUNT_COMPARISON.md).

@@ -1,10 +1,10 @@
 # Implementation plan
 
-> Current checkpoint 294: the unseeded Activity-to-comparison, completed trace and
-> reusable-view flow is connected through fixed-population Customize and explicit
-> span-measure staging. Next: contextual captured-baseline selection in the same
-> owner, then a user/team-authored OTel template using existing kinds. See the
-> [roadmap](ROADMAP_2026_10_30.md#connected-responder-authoring--294).
+> Current checkpoint 295: captured-baseline comparison is reachable beside the
+> applied aggregate through one contextual picker, with explicit preparation and
+> settings fallback for configuration-only layouts. Next: one user/team-authored
+> OTel template over existing kinds and composition. See the
+> [roadmap](ROADMAP_2026_10_30.md#contextual-comparison-delivery--295).
 
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),
@@ -1676,3 +1676,12 @@ fixed scope and existing strict count-comparison eligibility. The unseeded journ
 connects Activity, explicit evidence capture, compared groups, completed trace
 inspection and saved-view reopening. Continue with the contextual comparison outcome
 in the roadmap, rather than adding another renderer or testing framework.
+
+## 295 — contextual captured-baseline entry
+
+One native disclosure reuses the current picker and comparison owner. It follows
+the applied aggregate, visible comparison or configuration settings; it never
+mounts duplicate editors or starts acquisition on opening. Unsupported status
+queries reveal existing measure controls without changing them. See
+[captured comparisons](CAPTURED_COUNT_COMPARISON.md). Continue with the reusable
+user/team template contract, not another comparison path or defensive microseries.

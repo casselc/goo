@@ -5,7 +5,8 @@ Real OTLP spans populate a baseline fixed window with two records and a longer
 current window with three. Both questions retain the same service grouping,
 checked environment and exact run predicate; the windows differ deliberately.
 
-1. Open and Run the current composition. Load captured evidence by title in View settings, choose an immutable baseline
+1. Open and Run the current composition. Open **Compare with captured baseline** beside the applied aggregate (295 entry),
+   load captured evidence by title and choose an immutable baseline
    (or enter its exact ID), then explicitly Prepare baseline. Its stored evidence is
    loaded without another telemetry read. The canonical count comparison shows
    baseline2, held current3 and exact change+1. Unequal window durations warn that

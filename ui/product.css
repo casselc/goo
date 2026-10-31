@@ -1515,3 +1515,5 @@ td details {
 .population-workspace .preserve-section>label{display:flex;align-items:center;gap:.4rem;font-size:.8rem;margin:.3rem 0}
 .preserve-status{font-size:.8rem;margin:.3rem 0}
 .preserve-status:empty{display:none}
+
+.population-count-editor fieldset { min-inline-size:0; border:1px solid var(--border); border-radius:8px; padding:.75rem; }

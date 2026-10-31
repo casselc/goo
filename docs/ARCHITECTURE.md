@@ -1590,3 +1590,12 @@ Optional duration/status changes in an ordinary span composition stage through t
 same root-query owner. Validate the changed question and active composition before
 withdrawing comparison state or results. Exact captured-count eligibility remains
 unchanged; users request a compatible query explicitly and acquire new evidence.
+
+## Contextual captured comparison — 295
+
+The population application mounts one native capture picker outside cached display
+hosts: applied aggregate, visible comparison fallback, or staged/settings fallback.
+Its root/generation/held-result/mount owner fences configuration actions and catalog
+publication; Back renews controls. Catalog title/request fencing is independent of
+source-read execution. Existing explicit stored preparation and canonical comparison
+remain unchanged. See [the contract](CAPTURED_COUNT_COMPARISON.md).

@@ -1,5 +1,48 @@
 # Validation record
 
+## Contextual captured-baseline comparison — 295
+
+[Contract](docs/CAPTURED_COUNT_COMPARISON.md) ·
+[storyboard](journeys/295-contextual-comparison-storyboard.md) ·
+[design](docs/reviews/CONTEXTUAL_COMPARISON_DESIGN_295.md) and
+[architecture](docs/reviews/CONTEXTUAL_COMPARISON_ARCHITECTURE_295.md) reviews.
+
+- Full root `go test ./...` and all 910 frontend tests pass. The unseeded generic
+  OTLP journey passes,
+  including native Enter/Space disclosure
+  open/close with no IO, unsupported-profile navigation without query changes,
+  explicit measure staging, metadata Load, reference-only selection and explicit
+  stored preparation. Source query, comparison profile and storage formats remain
+  unchanged.
+- Exactly one picker follows aggregate/comparison/settings visibility. Hidden
+  comparison configuration remains hidden; staged reopen reads nothing. Retained
+  child/Back handles refuse after renewal, and delayed older-title catalog results
+  cannot replace the current search. Four actual frames pass visual review.
+- Final 295 independent Bombadil passes 30 seconds with 549 snapshots across seven
+  phases, one Explore request, two pure comparisons and no writes. Completion
+  requires the actual prepared baseline 2/current 3 values, not only a clicked phase.
+- The main scenario uses two tail subscriptions, seven Explore POSTs, one capture,
+  three pure comparisons and one saved definition, with no page/document POSTs.
+  These are scenario HTTP operations, not physical SQL read counts or a performance
+  comparison with 294. Fixture ingestion/readiness polling is separate.
+- Final 295 targeted run and 294 responder regression pass together (1.1 minutes).
+  Reconfiguring a hidden comparison preserves hidden state and performs no IO;
+  showing it still requires explicit Prepare. One earlier 294 navigation stopped
+  at its 15-second initial load deadline before any product action; navigation now
+  allows 45 seconds while interaction deadlines remain 15 seconds.
+- 290 regression passes with its observed Quint replay and independent 30-second
+  Bombadil campaign (489 snapshots, six phases). 291 observed Quint regression
+  passes. Regenerated whole-composition frames show the inline picker; 291 group
+  frames now also reflect the prior case-preservation fix. Token-only frame churn
+  was restored. No new comparison planner or mirror model was introduced.
+
+- Final architecture and visual reviews have no blockers. Compose configuration
+  and CA-backed image build pass. The local lab runs image
+  `5f4400988784534816c0960af33452abb61b69e0e729fd76f16c997c4f4191c5`;
+  both changed UI assets match served bytes. Existing volumes and the separate
+  XTDB container were retained. Contract/storyboard/review links resolve, and
+  successful raw stores/campaign copies were cleaned while compact results remain.
+
 ## Connected Activity-to-authored-view workflow — 294
 
 [Contract and diagram](docs/FOCUSED_VIEWS.md) ·

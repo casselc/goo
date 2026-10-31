@@ -3357,3 +3357,20 @@ The existing focused-root Hegel property and 286 observed Quint/Bombadil campaig
 remain the semantic/lifecycle checks for the unchanged root derivation. New measure
 controls are checked against real before/after browser requests and refusal outcomes,
 without introducing a duplicate query planner or model.
+
+## Contextual comparison discovery — 295
+
+`GOO_CONTEXTUAL_COMPARISON_BOMBADIL=1 playwright test journeys/295-contextual-comparison.spec.js --workers=1`
+from the root runs the unseeded Activity-to-captured-comparison journey and an
+independent 30-second external-driver campaign. Native disclosure opening/closing,
+explicit measure routing and baseline choice must not acquire evidence. A delayed
+catalog result cannot overwrite a newer title search. The sole picker moves among
+aggregate, comparison and staged/settings contexts without creating a second owner.
+
+Bombadil removes a configured comparison, uses the actual capture picker, then
+explicitly prepares the reference again. Completion requires observing canonical
+counts of 2 and 3, with one Explore request, at most two comparisons, no writes and
+at most one picker. Existing 290/291 observed Quint regressions retain the semantic
+comparison checks; this UI relocation introduces no duplicate query planner/model.
+Retain the compact ledger/campaign summary and four storyboard frames; remove
+successful raw capture-store/campaign copies.

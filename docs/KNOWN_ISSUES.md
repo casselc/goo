@@ -1,11 +1,16 @@
 # Known issues and gaps
 
+295 makes captured-baseline selection contextual through one picker near the
+applied aggregate, with visible-comparison and staged/settings fallbacks. Opening
+still does not fetch evidence, query telemetry or change configuration. The strict
+count profile is unchanged; unsupported status routes to explicit measure controls.
+User/team-authored templates over existing kinds remain the next roadmap outcome.
+
 294 closes the natural Activity-to-comparison/reopen validation gap, including
 settled trace waterfall rows across services. Customize is available for applied
 fixed populations; optional span measures can be staged in ordinary single-query
 compositions. Count comparison remains strict: status/numeric/specialized captures
-are not silently converted. Setup still requires View settings → Composition;
-contextual capture-baseline discovery is the next product task.
+are not silently converted. Contextual capture-baseline discovery is delivered in 295.
 
 293 collapses optional saved-view findings and binds attachment controls to exact
 saved publication identity. The whole-flow review comparison parent was API-seeded;

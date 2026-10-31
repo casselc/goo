@@ -2754,3 +2754,5 @@ held parent return, fresh focus and refusal of retired controls.
 - [293: optional Preserve attachment and retired-control safety](../../journeys/293-preserve-attachment-storyboard.md).
 
 - [294: Activity to compared groups, completed trace and reusable view](../../journeys/294-responder-flow-storyboard.md).
+
+- [295: contextual captured-baseline comparison](../../journeys/295-contextual-comparison-storyboard.md).

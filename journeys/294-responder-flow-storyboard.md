@@ -25,7 +25,8 @@ ingestion readiness and is separate from the browser request ledger.
    [Measure controls](../docs/journeys/screenshots/294-explicit-measures.png).
 5. After later-arriving records enter that same fixed window, Run the current
    population independently. Configure the selected capture through the existing
-   Composition catalog. Baseline has two spans, current has three. Turning status
+   contextual capture catalog (295 entry; originally the Composition catalog).
+   Baseline has two spans, current has three. Turning status
    back on while this comparison is configured refuses without discarding the
    comparison or reading telemetry.
    The computed category text transform must preserve the literal route case.
@@ -70,3 +71,9 @@ restriction was formerly explained only after choosing the capture. A contextual
 **Compare** entry near the held population is the next substantive opportunity;
 it should stage a checked profile explicitly and reuse the same capture picker,
 without adding a second comparison implementation.
+
+Follow-up 295 delivers that contextual entry through the
+[existing comparison owner](../docs/CAPTURED_COUNT_COMPARISON.md); the 294 frames
+remain the original executed journey.
+
+The comparison-discovery friction recorded above was addressed in [295](295-contextual-comparison-storyboard.md). The current executable uses that sole contextual picker; the original 294 run and its recorded request budget remain historical validation.

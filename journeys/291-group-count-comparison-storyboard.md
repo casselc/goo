@@ -8,7 +8,8 @@ unchanged groups so local row paging is exercised. One unchanged category is a
 long Unicode string: its bounded preview has a native keyboard-accessible exact
 value disclosure, without another read.
 
-1. Run a single-query composition, set an exact immutable baseline capture and
+1. Run a single-query composition, open **Compare with captured baseline**,
+   set an exact immutable baseline capture and
    Prepare explicitly. Switch the same prepared comparison from Summary to
    Groups. No telemetry, storage or comparison request accompanies the switch.
    The full common count domain is3. Shared counts2→3, baseline-only1→0 and
