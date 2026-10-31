@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey284](../../journeys/284-record-step-handoff-storyboard.md) carries typed
+Activity scope through fixed analysis, sharing, investigation draft recovery and
+staged question reopen with explicit Run.
+
 [Journey283](../../journeys/283-activity-selector-view-storyboard.md) saves an exact
 typed Activity scope, isolates its catalog, reopens staged and requires explicit
 Start before the legacy-only canary appears again.

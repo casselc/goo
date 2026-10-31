@@ -25945,6 +25945,16 @@
       "environment": {
         "type": "string"
       },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/identity.EnvironmentSelector"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "fromMs": {
         "type": "integer"
       },
@@ -25973,6 +25983,23 @@
         "anyOf": [
           {
             "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           {
             "type": "null"

@@ -20,6 +20,10 @@ func TestSelectorAuthoringBoundaries(t *testing.T) {
 	}
 	step := Step{Version: 1, Kind: "record", Record: &q, Scope: StepScope{FromMS: q.FromMS, ToMS: q.ToMS}, View: "Records"}
 	if step.Validate() == nil {
-		t.Fatal("authored step accepted selector")
+		t.Fatal("authored step accepted missing scope selector")
+	}
+	step.Scope.EnvironmentSelector = &wire
+	if err := step.Validate(); err != nil {
+		t.Fatal("record step rejected matching selector", err)
 	}
 }

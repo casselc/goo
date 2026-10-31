@@ -1,5 +1,42 @@
 # Validation record
 
+## Typed record question handoffs — 284
+
+Fixed record questions retain checked environment scope through question links,
+investigation cards and same-tab recovery. Opening stages the fixed question for
+explicit Run. See [contract](docs/INVESTIGATION_STEPS.md#typed-record-question-handoffs--284)
+and [storyboard](journeys/284-record-step-handoff-storyboard.md).
+
+- Full root `go test ./...` and all 873 frontend tests pass. Focused storage, HTTP
+  and Go/JavaScript tests
+  cover current-only/effective named, empty-label and unreported scopes, checked
+  scope equality, exact bounds, branching, immutable revisions and refused native
+  scope adoption.
+- OpenAPI and observed-wire checks pass: 97 operations, 613 reflected / 635 OpenAPI
+  schemas and 13 source-offline handler responses. Typed record step publication
+  adds no source operation or endpoint; measurement/package gates remain explicit.
+- 100 Hegel Go/JavaScript step/link cases pass. The eleven-step Quint smoke
+  rejects six mutated traces and an unfinished prefix. Cross-layer review finds
+  no material blockers.
+- Final real-OTLP share/pin/recovery journey plus Bombadil passes in 49.3 s;
+  saved Activity journey283 regression passes in 18.7 s. Three new and three
+  regression documentation frames are regenerated.
+- Eleven-step request ledger `[0,1,1,2,2,2,2,2,2,2,3]` covers one explicit Activity
+  connection and two explicit fixed reads. Share, link opening, question pinning,
+  local recovery, document publication and reopen add no source requests or
+  captures. Exact policy, predicates and fixed bounds survive.
+- Bombadil passes 30 seconds / 546 snapshots / seven phases, independently
+  observing the final Run with two fixed requests, one matching row and a saved
+  question card, with no overflow or uncaught errors. Observed Quint replay passes.
+- Local image `48b764b3354b48403f18d9b5798a0a163f9edbb00be76392660917bd4fdab2da`
+  is built and deployed; all five changed UI/API files match served bytes.
+  Telemetry and XTDB volumes remain intact. Disposable browser/campaign storage
+  is cleaned; compact ledgers, summaries and documentation frames remain.
+- Before validation, unused Docker build layers and older local cache entries
+  were removed. Observed free space rose from under 1 GiB to over 15 GiB; current
+  module/compiler cache mounts and application volumes remain available.
+
+
 ## Typed saved Activity scopes — 283
 
 Activity view definitions retain checked environment policy through save, exact-scope

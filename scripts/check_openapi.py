@@ -620,7 +620,23 @@ def check_activity_scope_views(spec):
     assert parameters['environment']['schema']['minLength']==1
 
 
+def check_record_step_selector(spec):
+    selector={'version':'goo/environment-selector/v1','policy':'effective','scope':{'mode':'unreported'}}
+    scope={'environment':'','environmentSelector':selector,'fromMs':1000,'toMs':2000}
+    step={'version':1,'kind':'record','scope':scope,'view':'Records','record':{'signal':'logs','environment':'','environmentSelector':selector,'fromMs':1000,'toMs':2000,'limit':10,'offset':0}}
+    for suffix in ('','Input'):
+        check=validator(spec,{'$ref':'#/components/schemas/workbench.Step'+suffix})
+        check.validate(step)
+        ambiguous=copy.deepcopy(step);ambiguous['scope']['environment']='prod'
+        assert list(check.iter_errors(ambiguous)), 'ambiguous authored environment accepted'
+        invalid=copy.deepcopy(step);invalid['scope']['environmentSelector']['policy']='unknown'
+        assert list(check.iter_errors(invalid)), 'unknown authored policy accepted'
+        native=copy.deepcopy(step);native['kind']='measurement'
+        assert list(check.iter_errors(native)), 'native typed scope implicitly enabled'
+
+
 def check(spec):
+    check_record_step_selector(spec)
     validate_spec(spec)
     check_activity_scope_views(spec)
     check_view_dataset(spec)

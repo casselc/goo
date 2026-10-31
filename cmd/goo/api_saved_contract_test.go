@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/identity"
 	"github.com/casselc/goo/internal/capturehttp"
 	"github.com/casselc/goo/retention"
 	"github.com/casselc/goo/workbench"
@@ -111,7 +112,12 @@ func TestAPISavedEvidenceObservedContracts(t *testing.T) {
 	if err := json.Unmarshal(raw, &pinnedView); err != nil {
 		t.Fatal(err)
 	}
-	doc := workbench.DocumentInput{Title: "API contract investigation", Cards: []workbench.Card{{Kind: "view", Reference: pinnedView.ID, Caption: "Definition only", Text: "Count change is a finding, not a causal claim."}, {Kind: "capture", Reference: frozen.Receipt.ID, Caption: "Preserved observation"}}}
+	typedSelector := identity.EnvironmentSelector{Version: identity.EnvironmentSelectorVersion, Policy: "effective", Scope: identity.EnvironmentScope{Mode: "unreported"}}
+	typedQuestion := query
+	typedQuestion.Environment = ""
+	typedQuestion.EnvironmentSelector = &typedSelector
+	typedStep := workbench.Step{Version: 1, Kind: "record", View: "Records", Scope: workbench.StepScope{EnvironmentSelector: &typedSelector, FromMS: query.FromMS, ToMS: query.ToMS}, Record: &typedQuestion}
+	doc := workbench.DocumentInput{Title: "API contract investigation", Cards: []workbench.Card{{Kind: "question", Step: &typedStep, Caption: "Exact typed fixed scope"}, {Kind: "view", Reference: pinnedView.ID, Caption: "Definition only", Text: "Count change is a finding, not a causal claim."}, {Kind: "capture", Reference: frozen.Receipt.ID, Caption: "Preserved observation"}}}
 	raw = call("POST", "/documents", "/documents", map[string]any{"document": doc}, 201)
 	var saved workbench.Document
 	json.Unmarshal(raw, &saved)

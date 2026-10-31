@@ -1,4 +1,4 @@
-# Record environment propagation — historical audit and updates through 283
+# Record environment propagation — historical audit and updates through 284
 
 > 250 implements the [server record API cut](RECORD_SELECTOR_API.md). Browser
 > handoffs remain gated; the historical table below is not the current support list.
@@ -132,3 +132,16 @@ new rolling read. See [Activity view contract](ACTIVITY_VIEWS.md#typed-environme
 Fixed saved compositions already retain their checked query selectors. The separate
 recent-population entry and reusable question/measurement package codecs remain
 explicit follow-up work; no unsupported bridge is silently enabled by this cut.
+
+
+## Record question update — 284
+
+Typed record question-step envelopes, share links, investigation publication and
+same-tab recovery now retain checked environment scope and exact fixed bounds.
+Scope and record definitions must agree semantically; current-only and effective
+policies cannot match by literal name alone. Evidence-difference checks use the
+same policy comparison. Opening stages configuration for Run. See
+[question handoffs](INVESTIGATION_STEPS.md#typed-record-question-handoffs--284).
+
+Measurement definitions/packages and recent-population entry remain separate
+capability work; the record codec does not silently enable those bridges.

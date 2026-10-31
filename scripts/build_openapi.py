@@ -58,6 +58,15 @@ for wire in ('exploration.Query','exploration.QueryInput','exploration.TailSelec
  if input_wire:shape['required']=[key for key in shape.get('required',[]) if key!='environment']
  shape['oneOf']=[{'required':['environment'],'properties':{'environment':{'type':'string','minLength':1},'environmentSelector':{'type':'null'}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''},'environmentSelector':{'$ref':'#/components/schemas/'+target}}}]
  shape['description']='Choose the historical current-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge record questions do not support the selector yet.'
+# Authored fixed record steps retain the checked environment independently of native definitions.
+for suffix in ('', 'Input'):
+ step_scope=schemas['workbench.StepScope'+suffix]
+ if suffix:step_scope['required']=[key for key in step_scope.get('required',[]) if key!='environment']
+ step_scope['oneOf']=[{'required':['environment'],'properties':{'environment':{'type':'string','minLength':1},'environmentSelector':{'type':'null'}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''},'environmentSelector':ref('identity.EnvironmentSelector'+suffix)}}]
+ step_scope['description']='Fixed authored scope. Record steps preserve checked environment policy and exact bounds; a native measurement step still requires its named environment.'
+ step=schemas['workbench.Step'+suffix]
+ step['allOf']=[{'if':{'properties':{'kind':{'const':'measurement'}},'required':['kind']},'then':{'properties':{'scope':{'properties':{'environmentSelector':{'type':'null'},'environment':{'type':'string','minLength':1}},'required':['environment']}}}}]
+
 summary['description']='Bounded discovery metadata, not a receipt. Legacy environment null means unknown or an explicitly versioned selector. environmentSelector preserves policy/scope; legacy name filters do not match selector captures.'
 summary['properties']['environmentSelector']['description']='Exact versioned policy/scope, separate from legacy current-only environment. Read with version 250 or newer.'
 

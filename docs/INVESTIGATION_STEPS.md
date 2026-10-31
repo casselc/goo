@@ -76,3 +76,50 @@ rejecting mutations. Bombadil explores the saved question cards without running 
 
 Question cards may include optional `key` and ordered `evidence` capture IDs.
 See the linked-history contract for publication, scope differences and recovery.
+
+
+## Typed record question handoffs — 284
+
+Record question links and investigation question cards preserve checked environment
+scope. Current-only named and effective named, empty-label and unreported selectors
+remain distinct. The question and step envelope must agree on checked policy and
+exact fixed bounds; matching name text alone is insufficient.
+
+Use **Share question** or **Add question to investigation** after a typed Activity
+observation becomes a fixed question. In Activity analysis, open **Edit analysis**
+to reveal these controls. Sharing produces a versioned question link.
+Adding stages a card in the existing investigation editor; Save revision publishes
+it. Same-tab draft recovery preserves the step and its selector. Neither operation
+captures records or reads telemetry. Opening a question link or card stages its
+fixed scope for explicit Run.
+
+```json
+{"version":1,"kind":"record","view":"Records",
+ "scope":{"environment":"","environmentSelector":{
+   "version":"goo/environment-selector/v1","policy":"effective",
+   "scope":{"mode":"unreported"}},"fromMs":1000,"toMs":2000},
+ "record":{"signal":"logs","environment":"","environmentSelector":{
+   "version":"goo/environment-selector/v1","policy":"effective",
+   "scope":{"mode":"unreported"}},"fromMs":1000,"toMs":2000}}
+```
+
+Question comparisons use checked environment identity. Current-only named wires
+with equivalent representations can match; effective scope with the same literal
+name cannot. Displayed scope labels expose policy, empty and unreported cases.
+Evidence-difference checks compare scope separately from definition details.
+
+```mermaid
+flowchart LR
+  A[Typed Activity observation] --> F[Fixed record question]
+  F -->|Share intent| L[Versioned question link]
+  F -->|Add question| D[Investigation draft step]
+  D -->|Recovery or saved revision| P[Preserved typed step]
+  L --> S[Staged fixed scope]
+  P -->|Open question| S
+  S -->|Explicit Run| R[New source read]
+  E[Independent capture ID] --> D
+```
+
+The same envelope does not enable typed environments for measurement definitions
+or reusable measurement packages. Those paths continue to refuse unsupported
+scope before execution. Recent-population entry is a separate remaining handoff.

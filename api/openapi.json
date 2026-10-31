@@ -42288,7 +42288,39 @@
           "view"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.Step"
+        "x-go-type": "github.com/casselc/goo/workbench.Step",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "measurement"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "properties": {
+                "scope": {
+                  "properties": {
+                    "environmentSelector": {
+                      "type": "null"
+                    },
+                    "environment": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "environment"
+                  ]
+                }
+              }
+            }
+          }
+        ]
       },
       "workbench.StepInput": {
         "additionalProperties": false,
@@ -42369,12 +42401,54 @@
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.Step"
+        "x-go-type": "github.com/casselc/goo/workbench.Step",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "measurement"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "properties": {
+                "scope": {
+                  "properties": {
+                    "environmentSelector": {
+                      "type": "null"
+                    },
+                    "environment": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "environment"
+                  ]
+                }
+              }
+            }
+          }
+        ]
       },
       "workbench.StepScope": {
         "properties": {
           "environment": {
             "type": "string"
+          },
+          "environmentSelector": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelector"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "fromMs": {
             "type": "integer"
@@ -42395,7 +42469,37 @@
           "toMs"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.StepScope"
+        "x-go-type": "github.com/casselc/goo/workbench.StepScope",
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "properties": {
+              "environment": {
+                "type": "string",
+                "minLength": 1
+              },
+              "environmentSelector": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "properties": {
+              "environment": {
+                "const": ""
+              },
+              "environmentSelector": {
+                "$ref": "#/components/schemas/identity.EnvironmentSelector"
+              }
+            }
+          }
+        ],
+        "description": "Fixed authored scope. Record steps preserve checked environment policy and exact bounds; a native measurement step still requires its named environment."
       },
       "workbench.StepScopeInput": {
         "additionalProperties": false,
@@ -42404,6 +42508,23 @@
             "anyOf": [
               {
                 "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "environmentSelector": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               {
                 "type": "null"
@@ -42452,7 +42573,38 @@
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.StepScope"
+        "x-go-type": "github.com/casselc/goo/workbench.StepScope",
+        "required": [],
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "properties": {
+              "environment": {
+                "type": "string",
+                "minLength": 1
+              },
+              "environmentSelector": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "properties": {
+              "environment": {
+                "const": ""
+              },
+              "environmentSelector": {
+                "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+              }
+            }
+          }
+        ],
+        "description": "Fixed authored scope. Record steps preserve checked environment policy and exact bounds; a native measurement step still requires its named environment."
       },
       "workbench.TimelineViewDeclaration": {
         "properties": {

@@ -1,3 +1,7 @@
+> 284 adds [typed record question handoffs](INVESTIGATION_STEPS.md#typed-record-question-handoffs--284)
+> across share links, investigation cards and recovery. Recent-population entry is
+> the remaining immediate scope handoff before a whole-flow review.
+
 > 283 adds [typed saved Activity scopes](ACTIVITY_VIEWS.md#typed-environment-round-trip--283)
 > across publication, exact-scope discovery and staged reopen. Remaining recent
 > population and reusable-question/share handoffs are next.
@@ -36,7 +40,8 @@
 > under one query owner. 280 reuses a whole composition in the current checked
 > scope, preserving destination queries and held inputs. 281 adds a fixed count
 > timeline and interval selection beside records. 282 preserves composed findings
-> in investigations. Exact scope portability is next, as reconciled in the
+> in investigations. 283–284 extend exact Activity/question scope portability, as
+> reconciled in the
 > [280 checkpoint roadmap](ROADMAP_2026_10_30.md#revised-delivery-after-checkpoint280).
 > Specialized owners remain explicit limits.
 > [Pit-of-success review](MODEL_PIT_OF_SUCCESS_264.md) gates further renderer/editor expansion.

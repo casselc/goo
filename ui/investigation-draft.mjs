@@ -15,7 +15,7 @@ function map(v,count,keyMax,valueMax){requireThat(v&&typeof v==='object'&&!Array
 function namespace(v){object(v,['mode','value']);requireThat(['missing','value'].includes(v.mode));optional(v,'value',x=>text(x,128));requireThat(v.mode!=='missing'||!v.value)}
 function field(v){object(v,['kind','key']);requireThat(['column','attribute','resource'].includes(v.kind));text(v.key,128);requireThat(v.key!=='')}
 function record(q){
-  object(q,['reportedEdge','numeric','numericHistogram','groupTimeSeries','spanStatus','bucketMs','summary','signal','environment','fromMs','toMs','where','groupBy','limit','offset']);
+  object(q,['environmentSelector','reportedEdge','numeric','numericHistogram','groupTimeSeries','spanStatus','bucketMs','summary','signal','environment','fromMs','toMs','where','groupBy','limit','offset']);
   const walk=(p,depth=0,state={n:0})=>{object(p,['all','any','field','numeric','op','value']);requireThat(depth<=4&&++state.n<=32);if(p.all||p.any){requireThat(!(p.all&&p.any)&&!p.field&&!p.numeric&&!p.op&&!p.value);const list=p.all||p.any;requireThat(Array.isArray(list)&&list.length>0);for(const c of list)walk(c,depth+1,state)}else if(p.numeric){const protocol=QuestionProtocol;protocol.validateNumericPredicate(p)}else{field(p.field);requireThat(['eq','ne','contains','exists','missing','gte','lte'].includes(p.op));optional(p,'value',x=>text(x,1024))}};
   optional(q,'where',x=>walk(x));optional(q,'groupBy',a=>{requireThat(Array.isArray(a)&&a.length<=2);a.forEach(field)});
   optional(q,'numericHistogram',v=>{object(v,['binning']);requireThat(!!q.numeric&&v.binning==='powers-of-two')});
@@ -34,8 +34,8 @@ function native(d){
   optional(d,'lifecycle',l=>{object(l,['logicalService','tenants','accepted','terminal','eventID','eventTime','subject','tenant','release','outcome','success','outcomes','deadlineMs','allowanceMs']);for(const key of ['logicalService','accepted','terminal','eventID','eventTime','subject','tenant','release','outcome','success'])text(l[key],128);strings(l.tenants,16,128);strings(l.outcomes,16,128);integer(l.deadlineMs,1,3600000);integer(l.allowanceMs,0,600000)});
  }
 function step(s){
-  object(s,['version','kind','scope','view','record','measurement']);object(s.scope,['environment','fromMs','toMs','fromNS','toNS']);text(s.scope.environment,128);requireThat(s.scope.environment!=='');integer(s.scope.fromMs,0,4102444799999);integer(s.scope.toMs,s.scope.fromMs+1,Math.min(s.scope.fromMs+7200000,4102444799999));
-  if(s.kind==='record'){record(s.record);requireThat(!s.measurement);text(s.record.environment,128)}else if(s.kind==='measurement'){native(s.measurement);requireThat(!s.record)}else throw Error('Unsupported question step');
+  object(s,['version','kind','scope','view','record','measurement']);object(s.scope,['environment','environmentSelector','fromMs','toMs','fromNS','toNS']);integer(s.scope.fromMs,0,4102444799999);integer(s.scope.toMs,s.scope.fromMs+1,Math.min(s.scope.fromMs+7200000,4102444799999));
+  if(s.kind==='record'){record(s.record);requireThat(!s.measurement)}else if(s.kind==='measurement'){text(s.scope.environment,128);requireThat(s.scope.environment!=='');native(s.measurement);requireThat(!s.record)}else throw Error('Unsupported question step');
   const protocol=QuestionProtocol;protocol.validateStep(s);
  }
 function card(c){

@@ -3,16 +3,18 @@ package workbench
 import (
 	"errors"
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/identity"
 	"github.com/casselc/goo/measurements"
 )
 
 // Step is authored intent, never a result, receipt or inferred shared population.
 type StepScope struct {
-	Environment string `json:"environment"`
-	FromMS      int64  `json:"fromMs"`
-	ToMS        int64  `json:"toMs"`
-	FromNS      string `json:"fromNS,omitempty"`
-	ToNS        string `json:"toNS,omitempty"`
+	Environment         string                        `json:"environment"`
+	EnvironmentSelector *identity.EnvironmentSelector `json:"environmentSelector,omitempty"`
+	FromMS              int64                         `json:"fromMs"`
+	ToMS                int64                         `json:"toMs"`
+	FromNS              string                        `json:"fromNS,omitempty"`
+	ToNS                string                        `json:"toNS,omitempty"`
 }
 type Step struct {
 	Version     int                      `json:"version"`
@@ -33,15 +35,13 @@ func (s Step) Validate() error {
 			return errors.New("record step requires one record question and supported view")
 		}
 		q := s.Record
-		if q.EnvironmentSelector != nil {
-			return errors.New("authored steps do not support environmentSelector yet")
-		}
-		if q.Environment != s.Scope.Environment || q.FromMS != s.Scope.FromMS || q.ToMS != s.Scope.ToMS {
+		scope := exploration.Query{Environment: s.Scope.Environment, EnvironmentSelector: s.Scope.EnvironmentSelector}
+		if !q.SameEnvironment(scope) || q.FromMS != s.Scope.FromMS || q.ToMS != s.Scope.ToMS {
 			return errors.New("record question differs from step scope")
 		}
 		return q.Validate()
 	case "measurement":
-		if s.Measurement == nil || s.Record != nil || s.View != "Overview" || s.Measurement.Environment != s.Scope.Environment {
+		if s.Scope.EnvironmentSelector != nil || s.Measurement == nil || s.Record != nil || s.View != "Overview" || s.Measurement.Environment != s.Scope.Environment {
 			return errors.New("measurement step requires one definition matching scope")
 		}
 		return (measurements.Question{Definition: *s.Measurement, FromMS: s.Scope.FromMS, ToMS: s.Scope.ToMS, FromNS: s.Scope.FromNS, ToNS: s.Scope.ToNS}).Validate()

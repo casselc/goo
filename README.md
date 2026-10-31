@@ -588,3 +588,10 @@ Saved Activity views now retain current-only and effective environment scopes, i
 empty and unreported labels. The applied-scope catalog distinguishes policies; reopening
 stages the exact selector for explicit Start. See [Activity
 views](docs/ACTIVITY_VIEWS.md#typed-environment-round-trip--283).
+
+
+### Typed question links and investigation steps — 284
+
+Fixed record questions retain typed environment scope through sharing, investigation
+cards and draft recovery. Reopening stages the exact scope for explicit Run. See
+[question handoffs](docs/INVESTIGATION_STEPS.md#typed-record-question-handoffs--284).

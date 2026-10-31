@@ -1495,3 +1495,13 @@ separate current-only name and JSON selector query forms. Baseline references us
 same environment-policy comparison. UI restore carries exact saved wire fields and
 retires stale catalog work before staging. See [contract and
 flow](ACTIVITY_VIEWS.md#typed-environment-round-trip--283).
+
+
+## Typed record step handoffs — 284
+
+StepScope carries the same optional checked environment selector as its record query. Go
+validates semantic scope equality and exact fixed bounds; measurement steps retain their
+separate named-only contract. The browser question/link validator and recovery path
+share the record selector checks, with display labels using checked policy. Source reads
+and evidence custody remain with existing owners. See [contract and
+flow](INVESTIGATION_STEPS.md#typed-record-question-handoffs--284).

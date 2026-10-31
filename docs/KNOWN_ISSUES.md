@@ -1,9 +1,14 @@
 # Known issues and gaps
 
+284 enables [typed record question handoffs](INVESTIGATION_STEPS.md#typed-record-question-handoffs--284)
+through links, investigation cards and same-tab recovery. Opening stages exact
+fixed scope for Run; capture evidence remains separate. Measurement/package codecs,
+recent-population entry and unsupported native/service bridges retain their limits.
+
 283 enables [typed saved Activity scopes](ACTIVITY_VIEWS.md#typed-environment-round-trip--283)
 through publication, exact-scope discovery and staged reopen. Start remains
-explicit. Recent-population entry, reusable question/package codecs and unsupported
-native/service bridges keep their existing capability limits.
+explicit. 284 adds record question links/cards; measurement/package codecs and
+unsupported native/service bridges keep their existing capability limits.
 
 282 adds [saved view definition references](SAVED_VIEW_FINDINGS.md) to investigation
 revisions. Definitions and authored findings are configuration, not captured chart or
