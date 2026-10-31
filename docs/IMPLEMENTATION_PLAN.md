@@ -1,10 +1,11 @@
 # Implementation plan
 
-> Current checkpoint 297: a passive record-list kind consumes the existing bounded
-> page and survives save/template reuse; selected-measure tables retain all fields
-> with useful initial ordering. Next: extract the shared record action owner for
-> Table/List parity without duplicating selection state or granting component IO.
-> See the [roadmap](ROADMAP_2026_10_30.md#record-list-delivery--297).
+> Current checkpoint 298: Table/List share one application-owned record controller,
+> occurrence-position selection, Keep and structured inspection/context actions.
+> Next: a finite whole-flow review of Activity → scoped
+> records → inspection/comparison → authored reuse, then choose one substantive
+> grammar/adoption gap rather than another control-by-control follow-up.
+> See [shared record interactions](RECORD_INTERACTIONS.md).
 
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),
@@ -1704,3 +1705,24 @@ the selection/source-action mode. Shared timestamp/value formatting and exact-ta
 field ordering keep the component readable without changing data or proof. Next
 extract the existing Table action adapter so alternate presentations can share
 record interactions; do not create a second selection owner or query framework.
+
+
+## 298 — shared record interactions
+
+[Record interactions](RECORD_INTERACTIONS.md) extract Table's selection, publication,
+inspection and field actions into one application owner for both Table and List.
+The passive List offers inert mounting hosts, not source capabilities. Page-local
+position membership preserves duplicate observations; capture/live publication
+retain different index mappings. Back remounts records from held data and retires
+old owners without replacing aggregate state. Pending selection blocks kind/layout
+changes and child navigation instead of silently dropping publication state.
+
+## Next 299 — finite whole-flow checkpoint
+
+Review Activity firehose → scope → Table/List → structured/trace inspection →
+comparison → save/template reuse → reopen with architecture and product/design.
+Reconcile current shipped defaults and authoring flows before proposing a new
+renderer. Select one concrete user outcome from the remaining grammar/adoption
+gaps; do not open an indefinite defensive-polish series. A supplied-span waterfall
+can present the current records page; a cross-service trace inspector expands the
+query in an independent context owner. Never hide that distinction in a kind toggle.

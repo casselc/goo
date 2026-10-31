@@ -10,8 +10,8 @@ separate from browser request accounting.
    a retained disabled control cannot discard that selection.
 2. Choose qualified resource/attribute fields, then switch **Records view → List**.
    Switching is local. The new kind consumes the same bounded supplied page;
-   **Use Table for selection and source actions** makes the first cut's scope clear.
-   **Details** opens lazily and inspects only supplied records; it does not fetch.
+   The original passive-only cut is superseded by 298: the application mounts the shared selection and source-action owner in both presentations; standalone List remains passive.
+   **Inspect** opens the app-owned supplied-record inspector without a read. Standalone serialized/property List consumers retain passive lazy **Details**.
    [Supplied list](../docs/journeys/screenshots/297-supplied-list.png).
 3. Select p95 and Table for the aggregate. Its category and selected measure are
    the first exact columns, with the p95 header and data cell inside the initial
@@ -38,7 +38,7 @@ Generated properties exercise the actual Go declaration/template validator and J
 record declaration/public-page model, including null/rich values, omitted unknown
 continuation and malformed/accessor inputs. The observed Quint lifecycle must
 reject six corrupted ledgers and an unfinished prefix. The independent Bombadil
-campaign observes local Details and kind switching, then one explicit page read
+campaign observes local Inspect and kind switching, then one explicit page read
 with the exact expected rows and held aggregate; click completion alone is insufficient.
 
 Validation passed: both browser fixtures (1.7 minutes), 100 Hegel cases, the

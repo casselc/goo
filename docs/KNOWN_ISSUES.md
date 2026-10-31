@@ -1,10 +1,12 @@
 # Known issues and gaps
 
-297 adds a passive record-list kind with supplied-page Details and shared paging.
-Use Table for record selection and source actions; full action parity requires the
-next shared-controller extraction. Lists do not persist selected row identity or
-carry completeness witnesses. Both kinds retain the same columns, field qualifiers,
-page limits, query and saved/template owner.
+298 shares record selection, Keep, structured Inspect, field actions and explicit
+trace/log context across Table and List. The public List remains passive without
+an application adapter. Selections identify occurrences within one page, not durable
+events. In the population workspace, finish or clear selected/submitted work
+before changing kind/layout, paging, refreshing or opening a child. Back renews current record controls from held
+data. Neither kind carries completeness witnesses or persists selected identities.
+Both retain the same fields, page limits, query and saved/template owner.
 
 296 adds authorable templates and a Database client activity preset through the
 existing view catalog. The first binding supports ordinary count/duration aggregate

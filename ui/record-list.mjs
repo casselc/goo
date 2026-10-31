@@ -42,16 +42,22 @@ export class RecordList extends Base{
  get page(){if(this._page!==undefined)return this._page;try{const text=this.getAttribute('page');if(!text)return this._page=null;if(text.length>Pages.RECORD_PAGE_LIMITS.maxBytes)throw Error('Record page exceeds the supplied-data budget.');return this._page=Pages.adoptPage(JSON.parse(text))}catch(error){this._pageError=error.message;return this._page=null}}
  set display(value){try{this._display=displayOptions(value);this._displayError=''}catch(error){this._display=null;this._displayError=error.message}if(this.isConnected)this.render()}
  get display(){if(this._display!==undefined)return this._display;try{const text=this.getAttribute('display');if(text&&text.length>8192)throw Error('Record display exceeds its options budget.');return this._display=displayOptions(text?JSON.parse(text):defaults)}catch(error){this._displayError=error.message;return this._display=null}}
- connectedCallback(){for(const key of ['page','display'])if(Object.hasOwn(this,key)){const value=this[key];delete this[key];this[key]=value}this.render()}
+ connectedCallback(){for(const key of ['page','display'])if(Object.hasOwn(this,key)){const value=this[key];delete this[key];this[key]=value}if(this.page!==this._renderedPage||this.display!==this._renderedDisplay)this.render()}
  attributeChangedCallback(name){if(name==='page'){this._page=undefined;this._pageError=''}else{this._display=undefined;this._displayError=''}if(this.isConnected)this.render()}
+ // Host adapters may explicitly mount local controls into these inert slots.
+ // Handles identify this rendered page only; they grant no action authority.
+ recordItems(){if(this.page!==this._renderedPage||this.display!==this._renderedDisplay)this.render();return this._recordItems||Object.freeze([])}
  render(){
+  this._recordItems=Object.freeze([]);this._renderedPage=null;this._renderedDisplay=null;
   const n=UI.node,page=this.page,display=this.display;this.replaceChildren();delete this.dataset.signal;this.dataset.state='unavailable';
   if(!page||!display){const status=n('p',this._pageError||this._displayError||'Supply a bounded record page.','record-list-unavailable');status.setAttribute('role','status');this.append(status);return}
   let model;try{model=listModel(page,display)}catch(error){const status=n('p','Record list unavailable · '+error.message,'record-list-unavailable');status.setAttribute('role','status');this.append(status);return}
   this.dataset.signal=page.signal;this.dataset.state=page.quality.state;
   const continuation=page.page.hasMore===null?'Continuation unknown':page.page.hasMore?'More records reported':'No further page reported',facts=n('p',page.page.returned+' supplied records · offset '+page.page.offset+' · '+continuation,'record-list-facts');facts.title='Bounded supplied page; not a population total. Independent source reads; upstream coverage unknown.';
+  this._renderedPage=page;this._renderedDisplay=display;
   this.append(facts);if(page.quality.state==='changed_between_reads')this.append(n('p','Source changed between independent reads; these supplied rows do not establish one coherent population.','record-list-warning'));
   if(!model.rows.length){this.append(n('p','No supplied records on this page.','record-list-empty'));return}
+  const hosts=[];
   const ancestryRows=contextRecords(page.rows);
   const list=n('ol');list.setAttribute('aria-label','Supplied '+page.signal+' records');list.start=page.page.offset+1;this.append(list);
   for(const {index,record,fields}of model.rows){
@@ -62,8 +68,10 @@ export class RecordList extends Base{
    if(display.columns.includes('context')){const context=n('goo-record-context');context.setAttribute('signal',page.signal);context.record=ancestryRows[index];context.records=ancestryRows;item.append(context)}
    const details=n('details',undefined,'record-list-details');details.append(n('summary','Details'));let populated=false;
    details.ontoggle=()=>{if(!details.open||populated||this.page!==page||!this.isConnected||!details.isConnected)return;populated=true;details.append(Records.detail(record,page.signal,{},ancestryRows))};
-   item.append(details);list.append(item);
+   const actionsHost=n('div',undefined,'record-list-actions'),detailHost=n('div',undefined,'record-list-inspector');actionsHost.hidden=true;detailHost.hidden=true;
+   item.append(actionsHost,details,detailHost);list.append(item);hosts.push(Object.freeze({index,element:item,actionsHost,detailHost,details}));
   }
+  this._recordItems=Object.freeze(hosts);
  }
 }
 if(globalThis.customElements&&!globalThis.customElements.get('goo-record-list'))globalThis.customElements.define('goo-record-list',RecordList);

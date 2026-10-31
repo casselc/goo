@@ -3425,3 +3425,25 @@ one page request and zero writes. The selected p95 header and value are checked 
 the initial viewport; all remaining fields and snapshot guarantees remain intact.
 Keep compact results and three generated frames, remove successful raw stores and
 campaign directories. Fixture readiness polling is separate from browser accounting.
+
+## Shared Table/List interactions — 298
+
+The actual selection helper is exercised with 100 Hegel state/swarm cases covering
+page positions (including duplicate occurrences), the 20-observation cap,
+submission/busy locks and revision retirement. Run from the repository root:
+
+```sh
+go test -C verification -run '^(TestHegelRecordInteractionSelectionStateSwarm|TestQuintRecordInteractionsModelSmoke)$' -count=1 -v .
+GOO_RECORD_INTERACTIONS_BOMBADIL=1 playwright test journeys/298-record-interactions.spec.js
+GOO_RECORD_INTERACTIONS_LEDGER="$PWD/artifacts/record-interactions-298/model-trace.json" go test -C verification -run '^TestQuintRecordInteractionsObservedBrowserLedger$' -count=1 -v .
+```
+
+Use the configured Go/Node toolchains and local OTel/ClickHouse lab as in the
+neighboring journey instructions. The native journey uses independently observed
+Keep results and source requests, including a gated real response, retired mounts,
+source-free Back and exact live/capture index mapping. The observed Quint ledger
+rejects corrupted read/page/write/selection/presentation state and unfinished runs.
+The external Bombadil actor must reach selection, Keep, Table/List changes,
+explicit paging and inspection under the bounded read/write budget. Public List
+SSR/detached use remains a separate passive component contract. Keep compact
+results and documentation frames; discard successful raw campaign/store copies.

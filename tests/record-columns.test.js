@@ -29,3 +29,22 @@ test('literal state words and JSON-looking strings stay distinct from typed or m
  for(const value of ['Missing','null','Null','Present empty string','true','false','0','{"count":0}','"Missing"']){assert.equal(p(value).text,JSON.stringify(value));assert.equal(p(value).type,'string');}
  assert.equal(p(null).text,'Null');assert.equal(p(null).type,'null');assert.equal(p(false).text,'false');assert.equal(p(false).type,'boolean');assert.equal(p(0).text,'0');assert.equal(p(0).type,'number');assert.equal(C.presentation({},field).state,'missing');
 });
+
+test('column changes are admitted before mutating layout or projected headers',()=>{
+ const C=require('../ui/record-columns.mjs'),oldDocument=global.document;
+ class Element{
+  constructor(tag){this.tag=tag;this.children=[];this.dataset={};this.listeners=new Map()}
+  append(...nodes){for(const child of nodes){child.remove?.();child.parent=this;this.children.push(child)}}
+  remove(){if(this.parent){this.parent.children=this.parent.children.filter(child=>child!==this);this.parent=null}}
+  addEventListener(name,fn){this.listeners.set(name,fn)}
+  querySelectorAll(){return []}
+ }
+ global.document={createElement:tag=>new Element(tag)};
+ try{
+  const host=new Element('div'),head=new Element('tr'),table=new Element('table');table.tHead={rows:[head]};
+  for(const label of ['UTC','Service','Summary','Context']){const cell=new Element('th');cell.textContent=label;head.append(cell)}
+  let allowed=false,changes=0;const control=C.mount(host,table,{canChange:()=>allowed,onChange:()=>changes++}),picker=host.children[0],before=[...head.children],next={columns:['summary','utc'],fieldColumns:[{kind:'attribute',key:'region'}]};
+  picker.listeners.get('goo:record-columns')({detail:next});assert.deepEqual(control.layout(),{columns:['utc','service','summary','context'],fieldColumns:[]});assert.deepEqual(head.children,before);assert.equal(changes,0);assert.deepEqual(picker.model.layout,control.layout());
+  allowed=true;picker.listeners.get('goo:record-columns')({detail:next});assert.deepEqual(control.layout(),next);assert.equal(changes,1);assert.equal(head.children[0].textContent,'Summary');assert.equal(head.children[1].textContent,'UTC');assert.equal(head.children.at(-1).textContent,'attribute:region');
+ }finally{global.document=oldDocument}
+});

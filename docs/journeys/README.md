@@ -2760,3 +2760,5 @@ held parent return, fresh focus and refusal of retired controls.
 - [296: author and reuse a database view template](../../journeys/296-authored-template-storyboard.md).
 
 - [297: supplied record lists and selected-measure table ordering](../../journeys/297-record-list-storyboard.md).
+
+- [298: shared Table/List record interactions and exact Keep mapping](../../journeys/298-record-interactions-storyboard.md).

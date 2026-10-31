@@ -1,5 +1,10 @@
 # Architecture
 
+[Shared record interactions](RECORD_INTERACTIONS.md) separate application selection,
+publication and inspection from Table/List layout. One page controller binds
+position-based membership to the exact read and private mount owner. Passive List
+hosts have no IO; renewed Back mounts use held data while old handlers stay retired.
+
 [Group-side question staging](GROUP_SIDE_STAGING.md) emits a closed descriptive
 intent through property-only host interaction. The population owner validates
 its private lease, admitted pair and chosen side before using the pure planner
@@ -1617,7 +1622,8 @@ and application query owner handle preview/apply/reopen. See
 The application supplies the same admitted `goo.record-page/1` and keeps paging,
 full-query counts and source actions. Public serialized-page admission validates
 and freezes display data without producing SourceSnapshots authority. List/native
-Details remain passive; Table retains selection and record actions. Current record
-owners fence stale Table nodes even if reattached after a kind change. Context
+Details remain passive. The original 297 cut kept record actions in Table;
+[298](RECORD_INTERACTIONS.md) shares them through one application controller.
+Current record owners fence replaced nodes even if reattached after a kind change. Context
 rendering passes bounded reported-ID projections, avoiding repeated rich-page
 copies. See [the contract](RECORD_LIST.md).

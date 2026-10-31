@@ -201,6 +201,7 @@ Local presentation changes retain pending record selection and the held pair.
 ## Record-list kind — 297
 
 The records child also supports [record-list](RECORD_LIST.md) over the identical
-bounded page and column contract. Table remains the selection/source-action mode;
-List offers compact supplied records and local native Details. Kind selection is
+bounded page and column contract. The original 297 cut kept actions in Table;
+[298](RECORD_INTERACTIONS.md) shares selection, Keep and source actions through
+one application owner. Standalone List retains local native Details. Kind selection is
 saved and template-portable, while query/paging/source ownership stays in the parent.

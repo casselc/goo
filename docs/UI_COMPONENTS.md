@@ -1669,3 +1669,13 @@ kind controls and paging remain outside it; serialized pages do not grant action
 The gallery demonstrates SSR and SPA use. Shared exact tables now order dimensions
 and the selected measure before remaining fields, preserving all supplied values
 and guarantees. See [record-list](RECORD_LIST.md).
+
+
+## Record interaction mounting — 298
+
+The passive List exposes `.recordItems()` with frozen page-local action/inspector
+mounts. Empty slots stay hidden; JSON/SSR data adds no action authority. The app's
+shared record controller mounts the same selection, Keep, Inspect and context
+actions into Table or List. Page/display replacement withdraws old handles; app
+owners retire old controls and bind fresh mounts explicitly. See
+[shared record interactions](RECORD_INTERACTIONS.md).

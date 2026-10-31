@@ -40,3 +40,28 @@ test('compact ancestry inputs contain bounded identifiers only, not repeated ric
  const bad={TraceId:'a'.repeat(100000),SpanId:{large:'x'.repeat(100000)},ParentSpanId:['x'.repeat(100000)]};const compact=contextRecord(bad);assert(JSON.stringify(compact).length<100);assert.deepEqual(R.ancestry(bad,[bad]),R.ancestry(compact,[compact]));
  const duplicates=[root,{...root},child];assert.deepEqual(R.ancestry(child,duplicates),R.ancestry(contextRecord(child),contextRecords(duplicates)));
 });
+
+// Exercise the actual passive render without a browser/custom-element registry.
+// The application owns any listeners later placed into the returned inert slots.
+test('record interaction hosts are inert, page-local and withdrawn on replacement',()=>{
+ const oldDocument=global.document;
+ class Element{
+  constructor(tag){this.tag=tag;this.children=[];this.dataset={};this.attributes=new Map();this.isConnected=true}
+  get childNodes(){return this.children}
+  append(...nodes){this.children.push(...nodes)}
+  replaceChildren(...nodes){this.children=nodes}
+  setAttribute(key,value){this.attributes.set(key,value)}
+ }
+ global.document={createElement:tag=>new Element(tag)};
+ try{
+  const list=new RecordList();list.isConnected=false;list.dataset={};list.getAttribute=()=>null;list.replaceChildren=(...nodes)=>{list.nodes=nodes};list.append=(...nodes)=>list.nodes.push(...nodes);
+  const page=fromExploration(response());list.page=page;list.display={columns:['utc','summary']};list.render();
+  const hosts=list.recordItems();assert.equal(hosts.length,1);assert.equal(hosts[0].index,0);assert.equal(hosts[0].element.dataset.recordIndex,'0');assert(Object.isFrozen(hosts));assert(Object.isFrozen(hosts[0]));
+  for(const host of [hosts[0].actionsHost,hosts[0].detailHost]){assert.equal(host.hidden,true);assert.deepEqual(host.children,[]);assert.equal(host.onclick,undefined)}
+  assert.equal(hosts[0].details.children[0].textContent,'Details');assert.equal(hosts[0].details.open,undefined);
+  hosts[0].actionsHost.append(new Element('button'));list.isConnected=true;list.connectedCallback();assert.equal(list.recordItems(),hosts,'connection retains explicit host mounts from detached app construction');assert.equal(list.recordItems()[0].actionsHost.children.length,1);list.isConnected=false;
+  list.page=fromExploration({...response(),basis:'b'.repeat(64)});assert.notEqual(list.recordItems()[0].element,hosts[0].element,'explicit host access renders detached replacement and retires old handles');
+  const replacement=list.recordItems();list.display={columns:['utc','summary','context']};assert.notEqual(list.recordItems()[0].element,replacement[0].element);
+  list.page={bad:true};list.render();assert.deepEqual(list.recordItems(),[]);assert.equal(list.dataset.state,'unavailable');
+ }finally{global.document=oldDocument}
+});

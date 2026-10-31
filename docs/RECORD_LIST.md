@@ -5,10 +5,11 @@ configured fields, source clock and parent pager remain in use. Changing Table/L
 is local presentation: it reads no telemetry and changes no query or evidence.
 Save and reusable templates retain the selected kind.
 
-List is a compact display with explicit native Details. It does not select a record
-automatically. Use **Table** for selection, Keep, filtering and source actions;
-List does not create a second action or selection owner. Pending selections, drafts
-and reads must finish or be cleared before switching kinds.
+List is a compact display with explicit native Details in standalone use. In the
+application, Table and List share [record interactions](RECORD_INTERACTIONS.md):
+selection, Keep, structured Inspect, trace expansion and field actions. Neither
+presentation selects a record automatically. Pending selections, drafts and reads
+must finish or be cleared before switching kinds.
 
 ```json
 {"records":{"version":"goo.view/1",
@@ -48,7 +49,10 @@ unknown. Read-local row positions are not stable event identities.
 Details opens only on explicit interaction and uses the existing passive attribute
 and reported-context presenters. Opening/collapsing performs no IO. Replacing a
 page withdraws old details instead of attaching their state to a new row index.
-The component does not fetch, navigate, capture or publish.
+The component does not fetch, navigate, capture or publish. Application adapters
+can explicitly mount shared controls using `.recordItems()`; supplied JSON alone
+never grants action authority. The app replaces passive Details with its shared
+Inspect control.
 
 ```mermaid
 flowchart LR

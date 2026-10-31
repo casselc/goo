@@ -13,3 +13,12 @@ goo-record-list .record-list-details{margin:4px 0 0;border:0;padding:0}goo-recor
 goo-record-list .record-list-details .attribute-row{min-width:0}
 
 goo-record-list .record-list-fields dd{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;max-height:2lh;overflow:hidden;max-inline-size:30rem}
+
+/* Empty slots are inert until an application explicitly mounts shared controls. */
+goo-record-list .record-list-actions{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin-top:4px}
+goo-record-list .record-list-actions[hidden],goo-record-list .record-list-inspector[hidden]{display:none}
+goo-record-list .record-list-actions button{font-size:12px;padding:3px 7px}
+goo-record-list .record-list-actions label{display:inline-flex;align-items:center;gap:4px;font-size:12px}
+goo-record-list .record-list-actions input[type=checkbox]{margin:0}
+goo-record-list .record-list-inspector{margin-top:8px;min-width:0}
+goo-record-list .record-list-item:focus-within{box-shadow:inset 2px 0 var(--accent,#76d8c4)}

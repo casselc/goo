@@ -1,5 +1,57 @@
 # Validation record
 
+## Shared Table/List record interactions — 298
+
+[Contract/diagram](docs/RECORD_INTERACTIONS.md) ·
+[storyboard](journeys/298-record-interactions-storyboard.md) ·
+[architecture](docs/reviews/RECORD_INTERACTIONS_ARCHITECTURE_298.md) and
+[design](docs/reviews/RECORD_INTERACTIONS_DESIGN_298.md) reviews.
+
+- Final frontend suite: 933 passed, zero failed/skipped (24.4 seconds). Focused
+  passive-host and Table column-admission tests pass. No backend API/schema change;
+  the root Go suite's preceding 297 result is retained, not relabeled as a new run.
+- 100 Hegel state/swarm cases execute the actual shared selection helper, including
+  duplicate occurrences, maximum 20 selections, submission/busy locks and revision
+  retirement. The observed 16-step Quint lifecycle passes and rejects seven
+  corrupted ledgers plus an unfinished prefix.
+- The real 298 main journey passes in 1.4 minutes, including keyboard/pointer
+  selection, gated real Keep response, source-free Inspect/Back/kind changes,
+  private stale-DOM refusal, hidden-context action availability, offset-100 paging
+  and native Save. Budget: four Explore HTTPs, one page, two Keeps and one save;
+  no browser errors or API-seeded definitions. These are HTTP counts, not SQL reads.
+- A separate real captured consumer pages stored rows without a telemetry read;
+  local position two at offset 100 Keeps absolute capture index 101. The live
+  counterpart Keeps local index one under the newer page token/question/basis.
+- Independent Bombadil passes 30 seconds, 476 snapshots and nine phases: one
+  Explore, one page, one Keep, zero other writes, ending at offset 100 with two
+  rows and one open supplied inspector. No horizontal overflow.
+- All five targeted browser regressions pass (1.8 minutes): 289 paging, 294 full
+  responder/settled trace/reopen, both 297 template/List and standalone log/SSR
+  cases, and the new 298 real-OTLP List log-context case. The latter uses an
+  explicitly seeded test view, not an unseeded authoring claim. Three real logs
+  yield two supplied rows; missing trace actions stay unavailable. Inspect and
+  select/clear read nothing. One initial Explore plus one explicit Surrounding logs
+  read return three context rows with preserved origin/bases and close-focus;
+  zero writes/errors.
+- Successful raw Bombadil copies (21 MB) and duplicate test stores were removed;
+  compact ledgers remain. New/changed contract/storyboard links and diff checks pass.
+  Timestamp/ID-only historical frame churn was restored; the two changed 297 List
+  frames intentionally show the shared actions.
+- Real List keyboard/pointer selection exposed a focus-style layout shift; fixed
+  with an inset highlight. The next-page-after-Back journey exposed a cancelled
+  parent request controller; Back now creates a fresh controller before remounting.
+  These were product bugs, not weakened browser assertions. The model harness was
+  corrected to count both trace spans and automatically linked logs as independent
+  Explore HTTP requests.
+- Three bounded actual frames show supplied Inspect, successful two-observation
+  Keep and the offset-100 page. Design reviewed Inspect/Keep; native keyboard and
+  pointer interactions, Inspect pressed state and focus return pass.
+- CA-backed Compose config/build passes. Local app image
+  `2308e4f96be0743616974dec4f6099f6e82c7db2765235b3ce762b10c48a845c`
+  is running with existing volumes and separate XTDB retained. All seven changed
+  UI assets match served bytes. No product proxy/runtime was added.
+
+
 ## Supplied record lists and selected-measure tables — 297
 
 [Contract/diagram](docs/RECORD_LIST.md) ·
