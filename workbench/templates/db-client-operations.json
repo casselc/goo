@@ -1,0 +1,83 @@
+{
+  "id": "otel.db-client-operations",
+  "version": 1,
+  "title": "Database client activity",
+  "family": "db-client",
+  "grain": "client-span-record",
+  "signal": "spans",
+  "group": {
+    "kind": "attribute",
+    "key": "db.operation.name"
+  },
+  "serviceField": {
+    "kind": "column",
+    "key": "service"
+  },
+  "required": [
+    {
+      "field": {
+        "kind": "column",
+        "key": "kind"
+      },
+      "op": "eq",
+      "value": "Client"
+    },
+    {
+      "field": {
+        "kind": "attribute",
+        "key": "db.system.name"
+      },
+      "op": "ne"
+    }
+  ],
+  "composition": {
+    "version": "goo.composition/1",
+    "kind": {
+      "name": "stack",
+      "version": 1
+    },
+    "children": [
+      {
+        "aggregate": {
+          "version": "goo.view/1",
+          "scope": {
+            "kind": "record-query",
+            "signal": "spans"
+          },
+          "kind": {
+            "name": "bar",
+            "version": 1
+          },
+          "display": {
+            "category": "category",
+            "value": "count",
+            "scale": "population",
+            "order": "value-desc",
+            "title": "Database client activity"
+          }
+        }
+      },
+      {
+        "records": {
+          "version": "goo.view/1",
+          "scope": {
+            "kind": "record-query",
+            "signal": "spans"
+          },
+          "kind": {
+            "name": "record-table",
+            "version": 1
+          },
+          "display": {
+            "columns": [
+              "utc",
+              "service",
+              "summary",
+              "context"
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

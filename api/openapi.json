@@ -42411,6 +42411,17 @@
               }
             ]
           },
+          "template": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.ViewTemplateBinding"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
           "title": {
             "type": "string"
           },
@@ -42464,6 +42475,18 @@
                   ]
                 }
               }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "template"
+              ]
+            },
+            "then": {
+              "required": [
+                "composition"
+              ]
             }
           },
           {
@@ -42697,6 +42720,24 @@
               }
             ]
           },
+          "template": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/workbench.ViewTemplateBindingInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
           "title": {
             "anyOf": [
               {
@@ -42759,6 +42800,18 @@
                   ]
                 }
               }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "template"
+              ]
+            },
+            "then": {
+              "required": [
+                "composition"
+              ]
             }
           },
           {
@@ -45017,6 +45070,83 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ViewKind"
       },
+      "workbench.ViewTemplateBinding": {
+        "properties": {
+          "group": {
+            "type": "string",
+            "const": "destination"
+          },
+          "profile": {
+            "type": "string",
+            "enum": [
+              "ordinary",
+              "otel.db-client",
+              "otel.http-server"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "const": "goo.template/1"
+          }
+        },
+        "required": [
+          "version",
+          "group",
+          "profile"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewTemplateBinding",
+        "additionalProperties": false
+      },
+      "workbench.ViewTemplateBindingInput": {
+        "additionalProperties": false,
+        "properties": {
+          "group": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "destination"
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "enum": [
+              "ordinary",
+              "otel.db-client",
+              "otel.http-server"
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "goo.template/1"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewTemplateBinding",
+        "required": [
+          "version",
+          "group",
+          "profile"
+        ]
+      },
       "workbench.ViewTemplateExpansion": {
         "properties": {
           "template": {
@@ -45036,6 +45166,42 @@
       "workbench.ViewTemplateExpansionRequestInput": {
         "additionalProperties": false,
         "properties": {
+          "query": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.QueryInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/workbench.ExplorationViewInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
           "template": {
             "anyOf": [
               {
@@ -45045,7 +45211,10 @@
                 "type": "null"
               }
             ],
-            "const": "otel.http-server-routes"
+            "enum": [
+              "otel.http-server-routes",
+              "otel.db-client-operations"
+            ]
           },
           "version": {
             "anyOf": [
@@ -45066,22 +45235,77 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "type": "object"
           }
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ViewTemplateExpansionRequest",
-        "required": [
-          "template",
-          "version",
-          "widget"
+        "oneOf": [
+          {
+            "required": [
+              "template",
+              "version",
+              "widget"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "source"
+                  ]
+                },
+                {
+                  "required": [
+                    "query"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "source",
+              "query"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "template"
+                  ]
+                },
+                {
+                  "required": [
+                    "version"
+                  ]
+                },
+                {
+                  "required": [
+                    "widget"
+                  ]
+                }
+              ]
+            }
+          }
         ]
       },
       "workbench.ViewTemplateReference": {
         "properties": {
           "id": {
             "type": "string",
-            "const": "otel.http-server-routes"
+            "anyOf": [
+              {
+                "enum": [
+                  "otel.http-server-routes",
+                  "otel.db-client-operations"
+                ]
+              },
+              {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            ]
           },
           "title": {
             "type": "string"

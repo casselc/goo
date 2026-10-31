@@ -3,8 +3,9 @@ package workbench
 import (
 	"encoding/json"
 	"errors"
-	"github.com/casselc/goo/exploration"
 	"reflect"
+
+	"github.com/casselc/goo/exploration"
 )
 
 type ExplorationTail struct {
@@ -32,6 +33,7 @@ type ExplorationView struct {
 	Breakdowns   map[string]ExplorationBreakdown `json:"breakdowns,omitempty"`
 	Displays     map[string]ViewDeclaration      `json:"displays,omitempty"`
 	Composition  *ViewComposition                `json:"composition,omitempty"`
+	Template     *ViewTemplateBinding            `json:"template,omitempty"`
 }
 
 func (v ExplorationView) Validate() error {
@@ -55,7 +57,16 @@ func (v ExplorationView) Validate() error {
 		if len(v.Queries) != 1 || v.Layout != "" || len(v.Columns) != 0 || len(v.FieldColumns) != 0 || len(v.Displays) != 0 || len(v.Breakdowns) != 0 || v.Tail != nil {
 			return errors.New("composition requires one fixed query and owns all child presentation; omit flat layout, columns, displays, comparisons and tail")
 		}
-		return v.Composition.Validate(first)
+		if err := v.Composition.Validate(first); err != nil {
+			return err
+		}
+		if v.Template != nil {
+			return v.Template.Validate(first, *v.Composition)
+		}
+		return nil
+	}
+	if v.Template != nil {
+		return errors.New("reusable templates require one aggregate-and-records composition")
 	}
 	if v.Layout != "charts-records" && v.Layout != "records" {
 		return errors.New("choose a supported view layout")

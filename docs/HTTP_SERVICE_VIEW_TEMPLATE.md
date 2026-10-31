@@ -1,4 +1,4 @@
-# Customize HTTP service views — 278
+# Customize service record views
 
 The **HTTP server routes** widget offers **Customize view** after a checked record
 aggregate result. It expands a shipped template into the existing fixed-population
@@ -28,7 +28,7 @@ flowchart LR
 
 ## Template and expansion boundary
 
-The shipped descriptor is `otel.http-server-routes`, version `1`. It describes a
+The HTTP descriptor is `otel.http-server-routes`, version `1`. It describes a
 bounded record profile and default `goo.view/1` display, using JSON rather than
 an expression evaluator. It is not arbitrary uploaded code or a general template
 language. The configuration-only API is:
@@ -72,11 +72,15 @@ without implying service health or upstream completeness.
 
 ## Scope and next step
 
-This proves one OTel service record template. Other HTTP widgets, RPC/database/
-messaging/native families, team template upload, WYSIWYG layout and whole-screen
-composition are not added. Existing prepared-table prebuilts remain separate;
+296 adds [authorable view templates](AUTHORABLE_VIEW_TEMPLATES.md) in the existing
+view catalog and a Database client activity preset. The DB preset requires Client
+kind and nonempty current `db.system.name`, grouped by `db.operation.name`. Other
+RPC/messaging/native families, WYSIWYG layout and whole-screen composition remain
+separate work. Existing prepared-table prebuilts remain separate;
 this descriptor does not claim to replace their measurement/policy bindings.
 Saved views materialize the expansion; they do not subscribe to later template revisions.
+Eligible ordinary HTTP/DB expansions can retain the explicit reusable-template
+binding; numeric HTTP expansions preserve their query without that binding.
 
 279 delivers [records-plus-aggregate composition](RECORD_AGGREGATE_COMPOSITION.md)
 under one query/read owner. Extend templates only when the profile's scope, units,

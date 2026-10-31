@@ -1,10 +1,28 @@
 # Known issues and gaps
 
+296 adds authorable templates and a Database client activity preset through the
+existing view catalog. The first binding supports ordinary count/duration aggregate
+and records, with explicit destination grouping and fixed profile choices; it does
+not add arbitrary kinds, expressions, ACLs or WYSIWYG layout. Numeric/native,
+timeline and captured-comparison template children remain outside this profile.
+Ordinary record paging keeps a page-zero configured root; Apply refuses nonzero
+configured roots before they can produce an unsaveable template view.
+
+UI inspection uses saved, Go-canonical template definitions. The pure expansion
+API accepts drafts, but there is no UI preview of unsaved source declarations;
+a future draft-preview flow needs a deliberate declaration codec for equivalent
+omitted presentation defaults. Existing strict presentation checks are retained.
+
+The shared exact table still lists available measure columns and can place selected
+p95 outside the initial viewport. The next record-shape/readability outcome should
+make the selected measure immediately visible. This does not change the values or
+query scope, and is separate from template binding correctness.
+
 295 makes captured-baseline selection contextual through one picker near the
 applied aggregate, with visible-comparison and staged/settings fallbacks. Opening
 still does not fetch evidence, query telemetry or change configuration. The strict
 count profile is unchanged; unsupported status routes to explicit measure controls.
-User/team-authored templates over existing kinds remain the next roadmap outcome.
+User/team-authored templates over existing kinds are delivered in 296.
 
 294 closes the natural Activity-to-comparison/reopen validation gap, including
 settled trace waterfall rows across services. Customize is available for applied

@@ -85,19 +85,29 @@ for suffix in ('', 'Input'):
  card['allOf']=[{'if':{'properties':{'kind':{'const':'view'}},'required':['kind']},
                  'then':{'required':['reference'],'properties':view_properties}}]
 
-# One pinned, shipped configuration-only service view template.
+# Shipped and authored configuration-only template expansion share one endpoint.
 for suffix in ('', 'Input'):
  request=schemas.get('workbench.ViewTemplateExpansionRequest'+suffix)
  if request:
   request['additionalProperties']=False
-  request['properties']['template']['const']='otel.http-server-routes'
+  request['properties']['template']['enum']=['otel.http-server-routes','otel.db-client-operations']
   request['properties']['version']['const']=1
-  request['required']=['template','version','widget']
+  for field in ('source','query','widget'):request['properties'][field]['type']='object'
+  request.pop('required',None)
+  request['oneOf']=[{'required':['template','version','widget'],'not':{'anyOf':[{'required':['source']},{'required':['query']}]}},
+                    {'required':['source','query'],'not':{'anyOf':[{'required':['template']},{'required':['version']},{'required':['widget']}]}}]
  reference=schemas.get('workbench.ViewTemplateReference'+suffix)
  if reference:
-  reference['properties']['id']['const']='otel.http-server-routes'
   reference['properties']['version']['const']=1
+  reference['properties']['id']['anyOf']=[{'enum':['otel.http-server-routes','otel.db-client-operations']},{'type':'string','pattern':'^[a-f0-9]{64}$'}]
   reference['additionalProperties']=False
+ binding=schemas.get('workbench.ViewTemplateBinding'+suffix)
+ if binding:
+  binding['additionalProperties']=False
+  binding['properties']['version']['const']='goo.template/1'
+  binding['properties']['group']['const']='destination'
+  binding['properties']['profile']['enum']=['ordinary','otel.db-client','otel.http-server']
+  binding['required']=['version','group','profile']
 
 # Saved reusable record display declarations contain configuration, never data.
 for suffix in ('', 'Input'):
@@ -175,6 +185,8 @@ for suffix in ('', 'Input'):
  display['properties']['fieldColumns'].update(type='array',maxItems=8,uniqueItems=True)
  view=schemas['workbench.ExplorationView'+suffix]
  view['properties']['composition']['type']='object'
+ view['properties']['template']['type']='object'
+ view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'required':['composition']}})
  flat=['layout','columns','fieldColumns','displays','breakdowns','tail']
  view.setdefault('allOf',[]).append({'if':{'required':['composition']},'then':{'required':['version','title','queries'],'properties':{'version':{'const':1},'queries':{'type':'array','minItems':1,'maxItems':1}},'not':{'anyOf':[{'required':[field]} for field in flat]}},'else':{'required':['layout','columns']}})
 

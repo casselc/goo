@@ -16,6 +16,9 @@ func (v *ExplorationView) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &fields); err != nil {
 		return err
 	}
+	if template, present := fields["template"]; present && bytes.Equal(bytes.TrimSpace(template), []byte("null")) {
+		return errors.New("omit an unused template rather than supplying null")
+	}
 	if composition, present := fields["composition"]; present {
 		if bytes.Equal(bytes.TrimSpace(composition), []byte("null")) {
 			return errors.New("omit an unused composition rather than supplying null")

@@ -1,5 +1,55 @@
 # Validation record
 
+## Authorable templates and database preset — 296
+
+[Contract/diagram](docs/AUTHORABLE_VIEW_TEMPLATES.md) ·
+[storyboard](journeys/296-authored-template-storyboard.md) ·
+[architecture](docs/reviews/AUTHORABLE_TEMPLATE_ARCHITECTURE_296.md) and
+[design](docs/reviews/AUTHORABLE_TEMPLATE_DESIGN_296.md) reviews.
+
+- Full root `go test ./...`, all 917 frontend tests and focused template handler
+  tests pass. OpenAPI
+  remains 98 operations with
+  651 schemas; 429 fixture responses, 159 admitted requests and 28 mux refusals pass.
+  Seven actual template-expansion/save request and response pairs also conform.
+  The existing endpoint gains an exclusive authored arm; no second catalog/store.
+- 100 Hegel cases exercise actual Go expansion and JS request/response admission,
+  including destination field qualifiers, full predicate/scope retention, detached
+  values, incompatible profiles and explicit Go-omitted false/empty wire values.
+  Semantic operator/field/service/Boolean-structure changes still refuse. An
+  initial generator bucket of 2000ms correctly refused and was changed to 10000ms.
+- The observed sixteen-step Quint lifecycle passes and rejects six corrupted
+  ledgers plus an unfinished prefix. The real generic DB journey uses no API-seeded
+  saved definitions: native authoring, two services, a different target grouping,
+  stale-preview refusal, invalid Find/save refusal and repair, Apply and reopen.
+- The main scenario makes six Explore requests (two service overviews and four
+  explicit population Runs), three view saves and four configuration expansions,
+  including one retired preview; no capture/document writes. Counts are HTTP
+  operations, not physical SQL reads. Setup ingestion/polling is excluded.
+- The independent 30-second Bombadil campaign passes with 497 snapshots across six
+  phases, observing a real Bars→Table/p95 application and ledger p95 of 9ms. It
+  records one Explore and one expansion with no publication. A driver method-count
+  initially misclassified a catalog GET as a write; method-aware observation now
+  delegates fetch unchanged. The service-stage validator also now excludes host
+  navigation options from its canonical view specimen.
+- 278 HTTP customization regression and its 514-snapshot/ten-phase Bombadil campaign
+  pass, as do its Hegel 100 and Quint checks. 295 contextual-comparison regression
+  passes. No broader renderer migration or expression engine was required.
+
+- Final 296 journey passes in 36.5 seconds on the corrected codec source. Four
+  actual storyboard frames pass visual review; only an unrelated sticky trail is
+  hidden by screenshot capture styling. Architecture/source reviews have no
+  blockers. The exact table's selected-p95 initial-viewport limitation is recorded
+  in Known issues, not masked as a template or source-scope change. Old regression
+  frames with only timestamps/IDs changed were restored.
+
+- Compose validation and CA-backed Go image build pass. The local lab runs image
+  `996830701f994c96778e1fd8472841d5576de523e3796ead0878f4e0dff30e98`;
+  all four changed UI/schema assets match served bytes. Existing volumes and the
+  separate XTDB container were retained. Changed overview/contract/review/storyboard
+  links resolve; successful raw stores/campaign copies were cleaned, leaving compact
+  local results and the four generated frames.
+
 ## Contextual captured-baseline comparison — 295
 
 [Contract](docs/CAPTURED_COUNT_COMPARISON.md) ·

@@ -1599,3 +1599,14 @@ Its root/generation/held-result/mount owner fences configuration actions and cat
 publication; Back renews controls. Catalog title/request fencing is independent of
 source-read execution. Existing explicit stored preparation and canonical comparison
 remain unchanged. See [the contract](CAPTURED_COUNT_COMPARISON.md).
+
+## Authorable templates over existing views — 296
+
+An optional `goo.template/1` binding on ExplorationView opts a composition into
+using the destination's current grouping. The saved query is a source specimen,
+not target defaults. One pure expansion endpoint checks source content identity,
+profile applicability and destination measure/kind compatibility, then returns
+detached configuration. Shared descriptor data validates HTTP/DB mandatory
+conjuncts; ordinary composition reuse remains exact-field. The same save/catalog
+and application query owner handle preview/apply/reopen. See
+[the template contract](AUTHORABLE_VIEW_TEMPLATES.md).

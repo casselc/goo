@@ -2756,3 +2756,5 @@ held parent return, fresh focus and refusal of retired controls.
 - [294: Activity to compared groups, completed trace and reusable view](../../journeys/294-responder-flow-storyboard.md).
 
 - [295: contextual captured-baseline comparison](../../journeys/295-contextual-comparison-storyboard.md).
+
+- [296: author and reuse a database view template](../../journeys/296-authored-template-storyboard.md).

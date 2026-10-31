@@ -25710,6 +25710,16 @@
           }
         ]
       },
+      "template": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ViewTemplateBinding"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "title": {
         "type": "string"
       },
@@ -25871,6 +25881,23 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/workbench.ExplorationTailInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "template": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.ViewTemplateBindingInput"
               },
               {
                 "type": "null"
@@ -27354,6 +27381,63 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/workbench.ViewKind"
   },
+  "workbench.ViewTemplateBinding": {
+    "properties": {
+      "group": {
+        "type": "string"
+      },
+      "profile": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "group",
+      "profile"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewTemplateBinding"
+  },
+  "workbench.ViewTemplateBindingInput": {
+    "additionalProperties": false,
+    "properties": {
+      "group": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "profile": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewTemplateBinding"
+  },
   "workbench.ViewTemplateExpansion": {
     "properties": {
       "template": {
@@ -27373,6 +27457,40 @@
   "workbench.ViewTemplateExpansionRequestInput": {
     "additionalProperties": false,
     "properties": {
+      "query": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.QueryInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "source": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.ExplorationViewInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "template": {
         "anyOf": [
           {

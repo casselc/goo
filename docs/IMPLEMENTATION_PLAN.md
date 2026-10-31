@@ -1,10 +1,10 @@
 # Implementation plan
 
-> Current checkpoint 295: captured-baseline comparison is reachable beside the
-> applied aggregate through one contextual picker, with explicit preparation and
-> settings fallback for configuration-only layouts. Next: one user/team-authored
-> OTel template over existing kinds and composition. See the
-> [roadmap](ROADMAP_2026_10_30.md#contextual-comparison-delivery--295).
+> Current checkpoint 296: reusable template metadata, native authoring and checked
+> destination-group expansion extend the existing view catalog. HTTP and database
+> presets share profile validation. Next: one useful record detail/list shape through
+> the same supplied-data/kind contract, informed by an authoring review. See the
+> [roadmap](ROADMAP_2026_10_30.md#authorable-template-delivery--296).
 
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),
@@ -1685,3 +1685,13 @@ mounts duplicate editors or starts acquisition on opening. Unsupported status
 queries reveal existing measure controls without changing them. See
 [captured comparisons](CAPTURED_COUNT_COMPARISON.md). Continue with the reusable
 user/team template contract, not another comparison path or defensive microseries.
+
+## 296 — authorable templates
+
+[Authorable view templates](AUTHORABLE_VIEW_TEMPLATES.md) explicitly bind category
+to the destination grouping while preserving its checked query. Native metadata
+controls use the current composition as the canvas, existing catalog for storage
+and existing preview/apply owner. Shared HTTP/DB descriptor validation and the
+Database client activity preset prove a non-demo semantic-convention path. Continue
+with a useful shared record shape rather than another template store or expression
+engine; include selected-measure table readability in the acceptance review.

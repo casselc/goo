@@ -1649,3 +1649,13 @@ chart component. A single editor follows the available aggregate/comparison host
 configuration-only views retain settings access. Opening remains passive. The same
 passive comparison elements consume the prepared pair. See
 [captured comparisons](CAPTURED_COUNT_COMPARISON.md).
+
+## Reusable template authoring — 296
+
+Existing aggregate/record properties form the authoring canvas. Native Reusable
+template and Data profile controls store bounded binding metadata beside the
+existing title/Save. Template preview resolves the destination field, supported
+kinds, measure and columns before explicit local Apply. Application owners fence
+metadata requests and application against current scope/drafts; passive display
+elements gain no fetching or expression runtime. See
+[authorable templates](AUTHORABLE_VIEW_TEMPLATES.md).

@@ -3374,3 +3374,27 @@ at most one picker. Existing 290/291 observed Quint regressions retain the seman
 comparison checks; this UI relocation introduces no duplicate query planner/model.
 Retain the compact ledger/campaign summary and four storyboard frames; remove
 successful raw capture-store/campaign copies.
+
+## Authorable template binding — 296
+
+From the root, run
+`GOO_AUTHORED_TEMPLATE_BOMBADIL=1 playwright test journeys/296-authored-template.spec.js --workers=1`.
+The isolated generic server starts without saved resources; real OTLP database-client
+fixtures drive native authoring, existing-catalog inspection, a different destination
+grouping, stale-preview refusal, configuration-only application and save/reopen.
+The main HTTP budget includes two service-overview Explore requests plus four
+explicit population Runs and three view saves. No telemetry is read by template
+preview or Apply. An unrelated sticky trail is hidden only in the applied-frame
+screenshot capture style.
+
+In this module, run
+`go test -run 'TestHegelAuthoredTemplate|TestQuintAuthoredTemplateModelSmoke' -count=1`
+for 100 generated cases over the actual Go expansion/browser protocol and the
+sixteen-step lifecycle's six corrupt traces plus unfinished-prefix refusal.
+Replay the real browser observations with
+`GOO_AUTHORED_TEMPLATE_LEDGER=../artifacts/template-296/model-trace.json go test -run TestQuintAuthoredTemplateObservedBrowserLedger -count=1`.
+The external-driver campaign observes a real Bars→Table/p95 application over target
+rows. Its fetch wrapper delegates unchanged and counts write methods, avoiding a
+false write count for catalog GETs. Keep compact ledgers/API observations/campaign
+summary and four storyboard frames; discard successful raw capture-store/campaign
+copies. Main fixture setup/polling is excluded from browser accounting.
