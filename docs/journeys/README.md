@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey286](../../journeys/286-focused-authoring-storyboard.md) customizes one
+root signal into a saved composition, checks explicit grouping for the companion,
+and returns to the held parent page without reading.
+
 [Journey285](../../journeys/285-recent-scope-storyboard.md) enters typed recent
 populations, stages a selected two-signal child, and saves/reopens its exact scope
 with explicit source reads.

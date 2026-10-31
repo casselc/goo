@@ -603,3 +603,11 @@ Show recent activity now retains typed environment scope through planning, selec
 links and saved child views. The explicit action reads supported signals independently;
 opening a child or saved definition remains staged. See [recent
 populations](docs/RECENT_ACTIVITY.md#typed-recent-populations--285).
+
+
+### Focus one signal for authoring — 286
+
+Customize logs/spans stages one exact root question from recent activity, with the
+multi-signal parent retained. Grouped questions open an existing composition; missing
+grouping requires an explicit choice. Run remains explicit. See [focused
+authoring](docs/RECENT_ACTIVITY.md#customize-one-signal--286).

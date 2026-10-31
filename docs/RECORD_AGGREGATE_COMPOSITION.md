@@ -165,3 +165,13 @@ a distinct immutable view with the destination query and imported presentation.
 The [280 product/architecture checkpoint](ROADMAP_2026_10_30.md#revised-delivery-after-checkpoint280)
 selects a fixed time overview and interval selection as the next investigation
 capability, using the same explicit query/source ownership.
+
+
+## Entry from recent populations — 286
+
+Choose Customize logs/spans beside the selected records section to stage its
+root question in a retained single-query child. An eligible existing grouping
+opens this composition directly; a missing grouping requires an explicit choice
+before enabling the reusable aggregate. Run reads the child, while Back restores
+the held multi-signal parent without reading. See
+[focused authoring](RECENT_ACTIVITY.md#customize-one-signal--286).

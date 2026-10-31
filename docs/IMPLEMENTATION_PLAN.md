@@ -1,10 +1,9 @@
 # Implementation plan
 
-> Current checkpoint285: typed record scope now reaches recent populations, saved
-> Activity views, fixed question links and investigation recovery. See the
-> [reconciled roadmap](ROADMAP_2026_10_30.md#delivery-and-flow-review-after285).
-> Next: focus a recent signal into single-query authoring, then add supported
-> duration measures to saved timelines. Broader native/package adoption stays separate.
+> Current checkpoint286: focused-signal authoring now connects recent populations
+> to the existing single-query composition and save workflow, retaining exact scope
+> and held parents. Next: supported duration measures in saved timelines, then
+> preservation controls. See the [roadmap](ROADMAP_2026_10_30.md#delivery-and-flow-review-after285).
 
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),

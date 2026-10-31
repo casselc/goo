@@ -1516,3 +1516,14 @@ question codec. Existing generation/abort ownership withdraws obsolete plans bef
 execution. Source reads, staging and independent evidence remain with current owners.
 The [flow reviews](ROADMAP_2026_10_30.md#delivery-and-flow-review-after285) prioritize
 focused-signal authoring before duration timelines.
+
+
+## Focused-signal authoring — 286
+
+The population owner derives one root question with offset zero and reuses its
+retained-child boundary. Eligible grouping seeds the existing checked
+display/composition as presentation only; ungrouped configuration receives bounded
+parent metadata suggestions, never parent datasets or action bindings. Return remounts
+only configuration controls, preserving retired source owners and held parent inputs.
+Detached close/focus controls are checked against the current child and mount. See
+[contract](RECENT_ACTIVITY.md#customize-one-signal--286).

@@ -1,10 +1,15 @@
 # Known issues and gaps
 
+286 adds [focused-signal authoring](RECENT_ACTIVITY.md#customize-one-signal--286)
+from recent activity. Ordinary grouping uses the existing single-query composition;
+missing grouping remains explicit. Specialized histogram/grouped-time questions
+retain their advanced workflow. Multi-query compositions are not introduced.
+
 285 enables [typed recent populations](RECENT_ACTIVITY.md#typed-recent-populations--285)
 with the existing planner and independent signal reads. Selected-time links and
 saved child views retain checked scope. Measurement/package and unsupported
-native/service bridges remain separate. Multi-signal recent views still require
-an explicit single-signal authoring path before they can use a composition.
+native/service bridges remain separate. 286 supplies an explicit single-signal
+authoring path from these multi-signal views.
 
 284 enables [typed record question handoffs](INVESTIGATION_STEPS.md#typed-record-question-handoffs--284)
 through links, investigation cards and same-tab recovery. Opening stages exact

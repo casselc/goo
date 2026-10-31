@@ -1,5 +1,42 @@
 # Validation record
 
+## Focused-signal authoring — 286
+
+Customize logs/spans stages an exact chosen root query with offset zero in the
+existing retained child. Eligible grouping seeds the existing composition locally;
+missing grouping is explicit. Parent inputs remain held without source reads. See
+[contract](docs/RECENT_ACTIVITY.md#customize-one-signal--286) and
+[storyboard](journeys/286-focused-authoring-storyboard.md).
+
+- Full root `go test ./...` and all 879 frontend tests pass. No Go/API/schema or
+  source operation changed. Focus helper checks preserve policy, bounds, predicates
+  and measures across all four typed policies and both record signals.
+- 100 Hegel focus cases and the fifteen-step Quint smoke pass, rejecting six
+  mutated traces and an unfinished prefix.
+- Source review verifies local composition seeding, metadata-only grouping hints,
+  parent/draft/page/Keep/live guards, repeatable configuration mounts and retired
+  source actions. Specialized profiles refuse clearly; detached child exits check
+  the current owner. See [review](docs/reviews/FOCUSED_AUTHORING_REVIEW_286.md).
+- The live paging scenario found a render-order bug missed by pure/source checks.
+  Guards now wait for view reattachment and read data-only baseline state. Successful
+  rendering is outside the fetch/admission catch, so render errors cannot be hidden.
+  The full 879-test frontend suite passes after that fix.
+- Final live journey passes in 27.57 s; recent-population journey285 regression
+  passes in 20.37 s. Both grouped and ungrouped authoring paths, a held offset-100
+  parent page, child offset zero, record Keep refusal, repeat focus and retired
+  focus/close/trace actions are checked. Three viewport frames are refreshed.
+- Fifteen-step request ledger `[0,2,3,3,3,4,4,4,4,4,4,5,5,5,6]` records only
+  explicit reads, plus one separate source-free plan. Customize, grouping intent,
+  Save, parent return and reopen add no source requests; source errors are empty.
+- Bombadil passes 30 seconds / 483 snapshots / eight phases, independently
+  reaching an applied saved composition with four source requests and one plan,
+  no overflow and no uncaught errors. Observed Quint replay passes in 10.02 s.
+- Local image `5eea090580f20983274cb0e691b72975abbf40429cefcd9a6c163a4c3b8ff548`
+  is built and deployed; the changed workspace module matches served bytes.
+  Telemetry and XTDB volumes remain intact. Disposable campaign/capture/browser
+  copies are cleaned; compact ledgers, summaries and documentation frames remain.
+
+
 ## Typed recent populations — 285
 
 The recent entry forwards checked environment scope to the existing planner.

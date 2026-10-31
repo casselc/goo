@@ -165,3 +165,52 @@ flowchart LR
 This closes the recent-population entry gate, not the separate measurement/package,
 native or service identity capability limits. Missing telemetry remains unknown;
 aligned windows and selectors establish neither event identity nor an atomic read.
+
+
+## Customize one signal — 286
+
+Record tabs choose which held signal to display. **Customize logs** or
+**Customize spans**, beside its records heading, instead stages a single-query
+child for authoring. It copies the configured root question with offset zero,
+including checked environment policy, predicates, fixed bounds and measure options.
+The latest inspection page does not become the new query's starting offset.
+
+For an ordinary single-field grouping, the child starts with the existing checked
+records-plus-aggregate composition. It retains a valid authored display or uses the
+count default. This is a local presentation choice over the unchanged question;
+only Run acquires child data. Add count timeline and other existing view settings
+remain available after that read.
+
+An ungrouped or multi-field question stays unchanged until an explicit grouping
+choice. The existing grouping editor opens with bounded field/value suggestions
+from the paused parent, labeled as metadata rather than fresh child evidence.
+Choose the grouping, then use Reusable display and Compose aggregate and records.
+Run remains explicit. Specialized histogram/time-series profiles must be edited
+through their existing advanced workflow before this ordinary authoring path.
+
+Pending filters, facets, record Keep selections, pages, comparisons and live
+configuration must be resolved before customizing. The existing retained-child
+limit still applies. Returning restores the parent's held charts, current record
+page and tabs without a read. Previously retired source actions stay retired;
+Rerun is the explicit way to obtain fresh action inputs. Customize itself remains
+available again because it stages configuration rather than using old source
+action authority. Detached old focus/close controls cannot affect a newer child.
+
+```mermaid
+flowchart LR
+  P[Held recent populations: logs and spans] -->|Customize chosen signal| Q[Clone root query, offset zero]
+  Q --> G{Ordinary single grouping?}
+  G -->|Yes| C[Existing records and aggregate composition]
+  G -->|No: explicit grouping choice| E[Existing grouping and display editors]
+  E --> C
+  C --> S[Staged single-query child]
+  S -->|Explicit Run| R[Independent child data]
+  R -->|Save configuration| V[Immutable saved composition]
+  S -->|Back without reading| P
+  V -->|Reopen staged| S
+```
+
+The parent and child retain independent read clocks. Saved definitions contain no
+parent rows, cursors, aggregate snapshots, completeness claims or action bindings.
+This is ordinary record authoring, not a multi-query composition or native-profile
+migration.
