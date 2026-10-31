@@ -40245,7 +40245,93 @@
           "kind"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.Card"
+        "x-go-type": "github.com/casselc/goo/workbench.Card",
+        "description": "Ordered investigation card. A view card pins an exact immutable exploration-view definition, not captured rows, current execution authority or evidence. Opening it stages configuration; Run is explicit. Capture and retained cards reference separate evidence custody.",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "view"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "required": [
+                "reference"
+              ],
+              "properties": {
+                "reference": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "caption": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 160
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "text": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 4000
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "role": {
+                  "enum": [
+                    "",
+                    null
+                  ]
+                },
+                "key": {
+                  "enum": [
+                    "",
+                    null
+                  ]
+                },
+                "review": {
+                  "enum": [
+                    "",
+                    null
+                  ]
+                },
+                "readBasis": {
+                  "enum": [
+                    "",
+                    null
+                  ]
+                },
+                "step": {
+                  "type": "null"
+                },
+                "evidence": {
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "maxItems": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
       },
       "workbench.CardInput": {
         "additionalProperties": false,
@@ -40369,7 +40455,93 @@
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.Card"
+        "x-go-type": "github.com/casselc/goo/workbench.Card",
+        "description": "Ordered investigation card. A view card pins an exact immutable exploration-view definition, not captured rows, current execution authority or evidence. Opening it stages configuration; Run is explicit. Capture and retained cards reference separate evidence custody.",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "view"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "required": [
+                "reference"
+              ],
+              "properties": {
+                "reference": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "caption": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 160
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "text": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 4000
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "role": {
+                  "enum": [
+                    "",
+                    null
+                  ]
+                },
+                "key": {
+                  "enum": [
+                    "",
+                    null
+                  ]
+                },
+                "review": {
+                  "enum": [
+                    "",
+                    null
+                  ]
+                },
+                "readBasis": {
+                  "enum": [
+                    "",
+                    null
+                  ]
+                },
+                "step": {
+                  "type": "null"
+                },
+                "evidence": {
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "maxItems": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
       },
       "workbench.ComparisonReceipt": {
         "properties": {

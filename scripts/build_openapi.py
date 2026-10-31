@@ -62,6 +62,20 @@ summary['description']='Bounded discovery metadata, not a receipt. Legacy enviro
 summary['properties']['environmentSelector']['description']='Exact versioned policy/scope, separate from legacy current-only environment. Read with version 250 or newer.'
 
 
+# Saved view cards pin immutable configuration separately from captured evidence.
+for suffix in ('', 'Input'):
+ card=schemas['workbench.Card'+suffix]
+ card['description']='Ordered investigation card. A view card pins an exact immutable exploration-view definition, not captured rows, current execution authority or evidence. Opening it stages configuration; Run is explicit. Capture and retained cards reference separate evidence custody.'
+ view_properties={'reference':{'type':'string','pattern':'^[a-f0-9]{64}$'},
+                  'caption':{'anyOf':[{'type':'string','maxLength':160},{'type':'null'}]},
+                  'text':{'anyOf':[{'type':'string','maxLength':4000},{'type':'null'}]}}
+ for field in ('role','key','review','readBasis'):
+  view_properties[field]={'enum':['',None]}
+ view_properties['step']={'type':'null'}
+ view_properties['evidence']={'anyOf':[{'type':'array','maxItems':0},{'type':'null'}]}
+ card['allOf']=[{'if':{'properties':{'kind':{'const':'view'}},'required':['kind']},
+                 'then':{'required':['reference'],'properties':view_properties}}]
+
 # One pinned, shipped configuration-only service view template.
 for suffix in ('', 'Input'):
  request=schemas.get('workbench.ViewTemplateExpansionRequest'+suffix)

@@ -1,5 +1,39 @@
 # Validation record
 
+## Saved view findings — 282
+
+Investigation revisions can pin exact saved-view definitions and authored findings.
+Open restores configuration in a staged state; existing capture cards remain
+independent frozen evidence. See [contract](docs/SAVED_VIEW_FINDINGS.md) and
+[storyboard](journeys/282-saved-view-finding-storyboard.md).
+
+- Full root `go test ./...` and all 865 frontend tests pass. Focused store/API tests
+  cover exact references, missing or wrong-kind references, branching, immutable
+  source definitions,
+  independent captures and integrity failures.
+- API schema checks pass for 97 operations, including 13 observed source-offline
+  handler responses and view-card rejection controls. No endpoint was added.
+- Go/schema and UI reject execution/evidence fields on definition cards. Current
+  saved revision, pending selection, recovery, pending note and destination guards
+  apply before staging; attaching neither saves nor reads telemetry.
+- 100 Hegel Go/JavaScript draft-validation cases pass, as does the eight-step
+  Quint model smoke with six mutated traces and an unfinished prefix rejected.
+- Real OTLP journey plus Bombadil passes in 45.7 s; timeline regression passes
+  in 20.5 s. The observed eight-step Quint replay passes in 6.49 s.
+- Source-read ledger `[1,1,1,1,1,1,1,2]` covers only initial and explicit reopened
+  Run. Save, attach, finding edits, document save/reopen and definition opening
+  add no reads and create no captures. Exact references and both source saved
+  revisions remain unchanged. Pending-note refusal preserves the existing card.
+- Bombadil passes 30 seconds / 657 snapshots / seven phases, independently
+  observing the final Run complete with two reads, one exact definition card,
+  no viewport overflow and no uncaught errors. Three new and three regression
+  documentation frames are regenerated. Final design review finds no blockers.
+- Local image `3617f56676265d4dafc1a783217746c6cd1b4ace8ad4f06c4e5e762e6257dab8`
+  is built and deployed; five changed/new UI and API files match served bytes.
+  Telemetry and XTDB volumes remain intact. Disposable browser/campaign storage
+  is cleaned; compact ledgers, summaries and documentation frames remain.
+
+
 ## Saved count timeline — 281
 
 The optional count timeline shares one checked query with the aggregate and bounded

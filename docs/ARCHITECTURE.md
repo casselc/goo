@@ -1477,3 +1477,11 @@ exploration result. The parent query alone owns bucket width. H1 resolves contig
 known supplied interval keys into exact shared query bounds; the presenter cannot supply
 arbitrary milliseconds or read telemetry. Paging changes only the bounded record-page
 owner. See [contract and flow](SAVED_COUNT_TIMELINE.md).
+
+
+## Investigation definition references — 282
+
+A document view card references an immutable exploration-view ID and optional authored
+finding. Publication verifies the saved definition in the existing store without
+telemetry access. Opening uses the existing staged saved-view route; independent capture
+cards retain their own custody. See [contract and diagram](SAVED_VIEW_FINDINGS.md).

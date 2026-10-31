@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey282](../../journeys/282-saved-view-finding-storyboard.md) pins a saved
+composition and finding in an investigation, keeps evidence separate and reopens
+the definition staged for explicit Run.
+
 [Journey281](../../journeys/281-count-timeline-storyboard.md) adds count intervals
 to a saved composition, holds them during record paging, selects a shared UTC
 window and saves/reopens with explicit Run.

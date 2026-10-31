@@ -1,5 +1,10 @@
 # Known issues and gaps
 
+282 adds [saved view definition references](SAVED_VIEW_FINDINGS.md) to investigation
+revisions. Definitions and authored findings are configuration, not captured chart or
+record data. Capture/retained cards remain independent evidence; no atomic cross-read
+capture is implied.
+
 281 adds an optional [saved count timeline](SAVED_COUNT_TIMELINE.md) to fixed
 compositions. It requires an explicit supported parent bucket width and at most 240
 intervals. Rates, grouped/native time series, arbitrary nesting and live children remain

@@ -1,6 +1,10 @@
+> 282 adds [saved definition findings](SAVED_VIEW_FINDINGS.md) to investigation
+> revisions, separately from captured evidence. Next: exact scope portability at
+> Activity and reusable-view handoffs.
+
 > 281 adds the optional [saved count timeline](SAVED_COUNT_TIMELINE.md), exact
-> interval-range staging and held paging under the existing query owner. Next:
-> preserve composed definitions and separately referenced evidence in investigations.
+> interval-range staging and held paging under the existing query owner.
+> 282 preserves composed definitions and separately referenced evidence in investigations.
 
 # Implementation plan
 
@@ -27,8 +31,8 @@
 > contextual Customize entry. 279 adds [records-plus-aggregate composition](RECORD_AGGREGATE_COMPOSITION.md)
 > under one query owner. 280 reuses a whole composition in the current checked
 > scope, preserving destination queries and held inputs. 281 adds a fixed count
-> timeline and interval selection beside records. Next is preserving composed
-> findings in investigations, as reconciled in the
+> timeline and interval selection beside records. 282 preserves composed findings
+> in investigations. Exact scope portability is next, as reconciled in the
 > [280 checkpoint roadmap](ROADMAP_2026_10_30.md#revised-delivery-after-checkpoint280).
 > Specialized owners remain explicit limits.
 > [Pit-of-success review](MODEL_PIT_OF_SUCCESS_264.md) gates further renderer/editor expansion.

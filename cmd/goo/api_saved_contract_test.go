@@ -97,7 +97,21 @@ func TestAPISavedEvidenceObservedContracts(t *testing.T) {
 	call("GET", "/captures/"+frozen.Receipt.ID, "/captures/{id}", nil, 200)
 	call("GET", "/captures/"+frozen.Receipt.ID+"/receipt", "/captures/{id}/receipt", nil, 200)
 	call("GET", "/captures", "/captures", nil, 200)
-	doc := workbench.DocumentInput{Title: "API contract investigation", Cards: []workbench.Card{{Kind: "capture", Reference: frozen.Receipt.ID, Caption: "Preserved observation"}}}
+	viewQuery := query
+	viewQuery.GroupBy = []exploration.Field{{Kind: "column", Key: "service"}}
+	viewQuery.BucketMS = 10000
+	view := workbench.ExplorationView{Version: 1, Title: "Pinned composed definition", Queries: []exploration.Query{viewQuery}, Composition: &workbench.ViewComposition{
+		Version: "goo.composition/1", Kind: workbench.CompositionKind{Name: "stack", Version: 1}, Children: []workbench.ViewCompositionChild{
+			{Aggregate: &workbench.ViewDeclaration{Version: "goo.view/1", Scope: workbench.ViewDeclarationScope{Kind: "record-query", Signal: "spans"}, Kind: workbench.ViewKind{Name: "bar", Version: 1}, Display: workbench.ViewDisplay{Category: "category", Value: "count"}}},
+			{Records: &workbench.RecordViewDeclaration{Version: "goo.view/1", Scope: workbench.ViewDeclarationScope{Kind: "record-query", Signal: "spans"}, Kind: workbench.RecordViewKind{Name: "record-table", Version: 1}, Display: workbench.RecordViewDisplay{Columns: []string{"utc", "summary"}}}},
+			{Timeline: &workbench.TimelineViewDeclaration{Version: "goo.view/1", Scope: workbench.ViewDeclarationScope{Kind: "record-query", Signal: "spans"}, Kind: workbench.TimelineViewKind{Name: "time-bar", Version: 1}, Display: workbench.TimelineViewDisplay{Value: "count"}}},
+		}}}
+	raw = call("POST", "/exploration-views", "/exploration-views", view, 201)
+	var pinnedView workbench.ExplorationView
+	if err := json.Unmarshal(raw, &pinnedView); err != nil {
+		t.Fatal(err)
+	}
+	doc := workbench.DocumentInput{Title: "API contract investigation", Cards: []workbench.Card{{Kind: "view", Reference: pinnedView.ID, Caption: "Definition only", Text: "Count change is a finding, not a causal claim."}, {Kind: "capture", Reference: frozen.Receipt.ID, Caption: "Preserved observation"}}}
 	raw = call("POST", "/documents", "/documents", map[string]any{"document": doc}, 201)
 	var saved workbench.Document
 	json.Unmarshal(raw, &saved)

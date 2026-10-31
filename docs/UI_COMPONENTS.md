@@ -1557,3 +1557,11 @@ It reuses `goo-time-bars` pointer/keyboard range gestures and the shared table d
 It emits interval-key intents; the application owns validation, query staging and reads.
 Complete-only follows interval coverage, independently of record paging. See
 [contract](SAVED_COUNT_TIMELINE.md).
+
+
+## Saved definition findings — 282
+
+`view-finding.mjs` validates bounded definition-reference cards and current
+saved/destination guards. The existing population owner and investigation editor perform
+staging and publication. Display components receive no source or storage authority. See
+[workflow](SAVED_VIEW_FINDINGS.md).

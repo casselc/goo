@@ -1,0 +1,6 @@
+/* Configuration references only: no query execution or evidence authority. */
+const ID=/^[a-f0-9]{64}$/;
+function text(value,max,multiline=false){if(typeof value!=='string'||new TextEncoder().encode(value).length>max||!value.isWellFormed()||(multiline?/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\x9f]/:/[\x00-\x1f\x7f-\x9f]/).test(value))throw Error('Use bounded valid text for the saved view finding.');}
+export function card(reference,caption='',finding=''){if(!ID.test(reference))throw Error('Save this view before adding its definition.');text(caption,160);text(finding,4000,true);return {kind:'view',reference,...(caption?{caption}:{}),...(finding?{text:finding}:{})};}
+export function savedReason({id,savedRevision,draftRevision,busy=false,pending=false,active=true}){if(!active)return 'Return to the active view before adding its definition.';if(busy)return 'Wait for the current operation to finish.';if(pending)return 'Apply or clear pending selections and query drafts first.';if(!ID.test(id)||savedRevision!==draftRevision)return 'Save the current view before adding its definition.';return '';}
+export function destinationCurrent(expected,actual){return !actual?.busy&&!actual?.pending&&(expected?!!actual&&expected.token===actual.token&&expected.generation===actual.generation:actual===null);}

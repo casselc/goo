@@ -34,8 +34,7 @@ receipt remains available by ID.
 
 ## Storage and API
 
-The Go packages service owns capture/storage. Python forwards bounded JSON
-requests and serves the UI. `POST /investigations` accepts `{question,selection}`;
+The single Go server owns capture/storage, API routes and the embedded UI. `POST /investigations` accepts `{question,selection}`;
 question is `{package,packageRevision,fromMs,toMs}`. `POST` with `{parent: id}`
 refreshes the stored question/selection; changing its question is rejected.
 `GET /investigations/{id}` reopens a verified receipt. Browser routes add `/api`.

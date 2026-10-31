@@ -558,6 +558,18 @@ def check_view_summary_comparison(spec, ranked):
     assert not check_comparison.is_valid(bad_empty), 'Known empty absolute count difference withheld'
 
 
+def check_document_view_card(spec):
+    valid = {'kind':'view','reference':'a'*64,'caption':'Pinned definition','text':'Finding only; evidence separate'}
+    for suffix in ('','Input'):
+        check = validator(spec, {'$ref':'#/components/schemas/workbench.Card'+suffix})
+        check.validate(valid)
+        for field,value in [('reference','latest'),('role','finding'),('evidence',['b'*64]),('key','c'*64),('review','d'*64),('readBasis','basis'),('text','x'*4001),('caption','x'*161),('step',{'kind':'record'})]:
+            bad=copy.deepcopy(valid);bad[field]=value
+            assert list(check.iter_errors(bad)), 'view card accepted execution/evidence or invalid reference'
+        bad=copy.deepcopy(valid);del bad['reference']
+        assert list(check.iter_errors(bad)), 'view card accepted missing definition reference'
+
+
 def check_timeline_composition(spec):
     """Temporal intent is optional, count-only and separate from ranked options."""
     aggregate = {'version':'goo.view/1','scope':{'kind':'record-query','signal':'spans'},
@@ -590,6 +602,7 @@ def check(spec):
     validate_spec(spec)
     check_view_dataset(spec)
     check_timeline_composition(spec)
+    check_document_view_card(spec)
     bank = json.loads((ROOT/'testdata/protocol/environment-selectors.json').read_text())
     for path in ('/explore','/tail'):
         body_schema = spec['paths'][path]['post']['requestBody']['content']['application/json']['schema']

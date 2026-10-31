@@ -46,9 +46,9 @@ func (c Card) Validate() error {
 		if c.Reference != "" || c.Caption != "" || !text(c.Text, 4000, true, true) || (c.Role != "hypothesis" && c.Role != "finding" && c.Role != "conclusion" && c.Role != "next-step") {
 			return errors.New("note requires a supported role and 1..4000 UTF-8 bytes")
 		}
-	case "comparison":
+	case "view", "comparison":
 		if !ID.MatchString(c.Reference) || !text(c.Caption, 160, false, false) || !text(c.Text, 4000, false, true) || c.Role != "" {
-			return errors.New("comparison requires an exact receipt ID and bounded finding")
+			return errors.New("view/comparison requires an exact saved reference ID and bounded finding")
 		}
 	case "retained":
 		if !ID.MatchString(c.Reference) || !ID.MatchString(c.Review) || len(c.ReadBasis) > 16384 || !text(c.Caption, 160, false, false) || c.Role != "" || c.Text != "" {
@@ -59,7 +59,7 @@ func (c Card) Validate() error {
 			return errors.New("reference card requires an exact capture/deployment ID and optional caption")
 		}
 	default:
-		return errors.New("card kind must be question, note, capture, retained, comparison or deployment")
+		return errors.New("card kind must be question, view, note, capture, retained, comparison or deployment")
 	}
 	return nil
 }
@@ -143,6 +143,10 @@ func (s Store) CreateDocument(in DocumentInput, parent string, checkCapture func
 			}
 			if e := checkCapture(c.Reference); e != nil {
 				return nil, errors.New("capture reference unavailable")
+			}
+		case "view":
+			if _, e := s.LoadExplorationView(c.Reference); e != nil {
+				return nil, errors.New("saved view definition unavailable")
 			}
 		case "comparison":
 			if _, e := s.LoadComparison(c.Reference); e != nil {
