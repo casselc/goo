@@ -1,5 +1,8 @@
 # goo — Grammar of Observability
 
+[Captured-count comparisons](docs/CAPTURED_COUNT_COMPARISON.md) add an explicitly
+chosen capture baseline to an authored view, keeping both evidence bases distinct.
+
 [Composed record paging](docs/RECORD_PAGE_PROFILE.md) reads a fresh count and record
 page while keeping aggregate and timeline evidence held.
 

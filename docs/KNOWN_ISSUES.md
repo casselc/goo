@@ -1,5 +1,12 @@
 # Known issues and gaps
 
+290 adds [authored captured-count comparisons](CAPTURED_COUNT_COMPARISON.md) for
+one ordinary grouping and an exact compatible capture baseline. It compares raw
+record counts only; different filters, numeric/native/status profiles, latency
+measures and automatic previous-window baselines remain outside this first slice.
+Unequal window durations are warned, not normalized into rates. The held current
+result is not a durable comparison receipt or a new captured current operand.
+
 289 adds a [count-plus-rows page profile](RECORD_PAGE_PROFILE.md) for composed views.
 Ordinary paging still refreshes full exploration. Offset pages can shift with late
 arrivals; a fresh page count and held chart totals have independent bases. Source

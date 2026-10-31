@@ -1,4 +1,8 @@
-# Authored captured-count comparison — proposed290
+# Authored captured-count comparison — proposal history
+
+> Implemented in290. The [current contract](CAPTURED_COUNT_COMPARISON.md) and
+> [validation](../VALIDATION.md) record delivered behavior. The original proposal
+> and its architectural disposition below are retained as design history.
 
 **Status: proposed, unimplemented.** This is a bounded next-feature contract for
 architecture review, not a delivered grammar or API. It follows the completed

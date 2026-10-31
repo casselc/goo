@@ -24336,6 +24336,176 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/workbench.ActivityViewList"
   },
+  "workbench.CapturedCountViewDeclaration": {
+    "properties": {
+      "baselineCapture": {
+        "type": "string"
+      },
+      "display": {
+        "$ref": "#/components/schemas/workbench.CapturedCountViewDisplay"
+      },
+      "kind": {
+        "$ref": "#/components/schemas/workbench.CapturedCountViewKind"
+      },
+      "scope": {
+        "$ref": "#/components/schemas/workbench.ViewDeclarationScope"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "scope",
+      "kind",
+      "baselineCapture",
+      "display"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.CapturedCountViewDeclaration"
+  },
+  "workbench.CapturedCountViewDeclarationInput": {
+    "additionalProperties": false,
+    "properties": {
+      "baselineCapture": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "display": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.CapturedCountViewDisplayInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "kind": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.CapturedCountViewKindInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "scope": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ViewDeclarationScopeInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.CapturedCountViewDeclaration"
+  },
+  "workbench.CapturedCountViewDisplay": {
+    "properties": {
+      "title": {
+        "type": "string"
+      },
+      "value": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "value"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.CapturedCountViewDisplay"
+  },
+  "workbench.CapturedCountViewDisplayInput": {
+    "additionalProperties": false,
+    "properties": {
+      "title": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "value": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.CapturedCountViewDisplay"
+  },
+  "workbench.CapturedCountViewKind": {
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "version": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "name",
+      "version"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.CapturedCountViewKind"
+  },
+  "workbench.CapturedCountViewKindInput": {
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.CapturedCountViewKind"
+  },
   "workbench.Card": {
     "properties": {
       "caption": {
@@ -26325,6 +26495,16 @@
           }
         ]
       },
+      "comparison": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.CapturedCountViewDeclaration"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "hidden": {
         "type": "boolean"
       },
@@ -26362,6 +26542,23 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/workbench.ViewDeclarationInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "comparison": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.CapturedCountViewDeclarationInput"
               },
               {
                 "type": "null"

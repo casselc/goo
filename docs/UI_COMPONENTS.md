@@ -1595,3 +1595,13 @@ The existing bounded record-page model also consumes the application's explicit
 count-plus-rows response. `source-snapshots.adoptRecordPage` checks exact scope and
 rejects aggregate/dataset slots; no display component acquires source authority.
 The application retains source reads, record custody tokens and stale-owner checks.
+
+
+### Captured-count comparison — 290
+
+The authored composition reuses `goo-measure-comparison` with count-only display
+options. `captured-count-comparison.mjs` contains pure declaration, compatibility
+and detached cohort helpers; it never reads or publishes. The population owner
+loads the explicit stored baseline, calls the existing pure comparison endpoint
+and guards the held pair by generation, baseline ID and parent result identity.
+See [contract](CAPTURED_COUNT_COMPARISON.md).

@@ -1,5 +1,44 @@
 # Validation record
 
+## Authored captured-count comparison — 290
+
+[Contract and diagram](docs/CAPTURED_COUNT_COMPARISON.md) ·
+[executable storyboard](journeys/290-authored-comparison-storyboard.md) ·
+[source/visual review](docs/reviews/AUTHORED_COMPARISON_REVIEW_290.md).
+
+- Full root `go test ./...` and all 895 frontend tests pass. Go/browser closed
+  declarations and reuse retain exact baseline references and checked query
+  definitions; numeric/status/specialized profiles remain excluded.
+- OpenAPI validates 98 operations and 643 schemas, including a four-role
+  composition and five malformed-declaration controls. Five actual exploration/
+  comparison API requests and responses conform. No new endpoint or evidence type.
+- 100 Hegel Go/browser compatibility cases pass across typed environment policies,
+  paging/windows and altered definitions. Real canonical zero-count and diagnostic
+  comparisons pass the browser validator. The twelve-step Quint lifecycle rejects
+  six mutated ledgers and an unfinished prefix.
+- Latest real OTLP journey passes32.7s: catalog selection, explicit baseline
+  preparation2 vs held3/change1, late page4 with pair3 retained, source-free saved
+  reopen, explicit Run4, known-zero baseline0/change4, wrong/missing references,
+  stale preparation and incompatible reused definition refusal. Parent remains
+  usable. Delayed preparation makes records inert and rejects a stale checkbox;
+  existing record selection blocks preparation.
+- Independent Bombadil passes30seconds /563 snapshots /6 phases through prepared
+  pair, page, definition save and staged reopen. It observes one full Run, one
+  page, one baseline storage GET, one pure compare and one metadata save, with no
+  overflow or uncaught errors. Final regressions289 (24.6s) and280 (21.5s) pass.
+- Three actual focused documentation frames show the named baseline, held pair vs
+  fresh page and known zero. The canonical no_data state is retained; a concise
+  status explains that its exact count change is available. Focused captures hide
+  the unrelated sticky investigation trail, without changing data/product state.
+- Review fixes include immediate withdrawal of an old pair on baseline edits,
+  exact receipt-ID admission, conservative reuse, pending-selection protection,
+  stale editor/async guards and a human-readable accessible baseline link.
+- Local image `7d69411cb6cd77442588a1ba250481010327cd4b8bf6594463229ffdf3b66d73`
+  is built and deployed; all four changed/new UI/API assets match served bytes.
+  Existing telemetry/XTDB volumes are retained. Compact campaign/model results,
+  observed API responses and documentation frames remain; raw successful capture
+  and campaign copies are cleaned.
+
 ## Composed record-page acquisition — 289
 
 [Contract](docs/RECORD_PAGE_PROFILE.md) ·

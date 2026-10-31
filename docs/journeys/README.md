@@ -2726,3 +2726,11 @@ The [executable storyboard](../../journeys/289-record-page-profile-storyboard.md
 shows a late arrival, fresh count/page, held aggregate and duration timeline, exact
 selected-record retention, stale response refusal and unchanged ordinary/capture
 paths. [Acquisition contract](../RECORD_PAGE_PROFILE.md).
+
+
+## 290. Compare with a deliberate captured baseline
+
+The [executable storyboard](../../journeys/290-authored-comparison-storyboard.md)
+shows catalog selection, explicit preparation, exact count change, held operands
+through newer record pages, staged save/reopen and known-zero/refusal states.
+[Contract and architecture diagram](../CAPTURED_COUNT_COMPARISON.md).

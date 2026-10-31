@@ -1,5 +1,12 @@
 # Architecture
 
+[Authored captured-count comparison](CAPTURED_COUNT_COMPARISON.md) adds one closed
+composition role referencing an immutable capture ID. The application prepares
+stored evidence, checks both root definitions and invokes existing pure cohort
+comparison; the passive canonical presenter displays count alone. The current
+operand stays bound to the parent held aggregate through paging. No query-bearing
+child, new API/evidence type or implicit telemetry read is introduced.
+
 [Record-page acquisition](RECORD_PAGE_PROFILE.md) returns only a fresh count and
 bounded rows through the existing record HTTP budget and snapshot bank. Composed
 views admit this narrow response without aggregate guarantees; their existing

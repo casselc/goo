@@ -119,27 +119,38 @@ for suffix in ('', 'Input'):
  schemas['workbench.ExplorationView'+suffix]['properties']['displays'].update(maxProperties=2,propertyNames={'enum':['spans','logs']})
  schemas['workbench.ExplorationView'+suffix].setdefault('allOf',[]).extend([{'not':{'required':['displays','breakdowns'],'properties':{'displays':{'required':[signal]},'breakdowns':{'required':[signal]}}}} for signal in ('spans','logs')])
 
-# Bounded composition: required aggregate/records and optional query-supported timeline.
+# Bounded composition: required aggregate/records plus optional timeline and captured-count comparison.
 for suffix in ('', 'Input'):
  composition=schemas['workbench.ViewComposition'+suffix]
  composition['additionalProperties']=False
  composition['required']=['version','kind','children']
  composition['properties']['kind']['type']='object'
  composition['properties']['version']['const']='goo.composition/1'
- composition['description']='One fixed record query supplies one aggregate, one bounded record-page child and an optional count/mean/p95 duration timeline with explicit query bucket width. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees.'
+ composition['description']='One fixed record query supplies one aggregate, one bounded record-page child, optional count/mean/p95 duration timeline and optional immutable capture baseline reference for count comparison. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees.'
  for name,kind_name in [('CompositionKind','stack'),('RecordViewKind','record-table')]:
   kind=schemas['workbench.'+name+suffix];kind['additionalProperties']=False
   kind['required']=['name','version']
   kind['properties']['name']['const']=kind_name;kind['properties']['version']['const']=1
  child=schemas['workbench.ViewCompositionChild'+suffix];child['additionalProperties']=False
  child['properties']['hidden']['type']='boolean'
- child['oneOf']=[{'required':[role],'not':{'anyOf':[{'required':[other]} for other in ('aggregate','records','timeline') if other!=role]}} for role in ('aggregate','records','timeline')]
- for field in ('aggregate','records','timeline'):
+ child['oneOf']=[{'required':[role],'not':{'anyOf':[{'required':[other]} for other in ('aggregate','records','timeline','comparison') if other!=role]}} for role in ('aggregate','records','timeline','comparison')]
+ for field in ('aggregate','records','timeline','comparison'):
   child['properties'][field]['type']='object'
- children=composition['properties']['children'];children.update(type='array',minItems=2,maxItems=3,items={'$ref':'#/components/schemas/workbench.ViewCompositionChild'+suffix,'type':'object'})
+ children=composition['properties']['children'];children.update(type='array',minItems=2,maxItems=4,items={'$ref':'#/components/schemas/workbench.ViewCompositionChild'+suffix,'type':'object'})
  children['allOf']=[{'contains':{'required':[role]},'minContains':1,'maxContains':1} for role in ('aggregate','records')]
- children['allOf'].append({'contains':{'required':['timeline']},'minContains':0,'maxContains':1})
+ children['allOf'].extend([{'contains':{'required':[role]},'minContains':0,'maxContains':1} for role in ('timeline','comparison')])
  children['allOf'].append({'contains':{'properties':{'hidden':{'const':False}}},'minContains':1})
+ comparison=schemas['workbench.CapturedCountViewDeclaration'+suffix];comparison['additionalProperties']=False
+ comparison['required']=['version','scope','kind','baselineCapture','display']
+ comparison['properties']['version']['const']='goo.view/1'
+ comparison['properties']['baselineCapture'].update(type='string',pattern='^[a-f0-9]{64}$')
+ for field in ('scope','kind','display'):comparison['properties'][field]['type']='object'
+ comparison['properties']['scope']['required']=['kind','signal']
+ comparison['description']='Count-only comparison against one exact immutable explore capture. Parent eligibility and baseline compatibility are validated at runtime; declaration contains no evidence or executable child query. Opening stages configuration; explicit preparation reads stored evidence, not telemetry.'
+ kind=schemas['workbench.CapturedCountViewKind'+suffix];kind['additionalProperties']=False;kind['required']=['name','version']
+ kind['properties']['name']['const']='captured-count-comparison';kind['properties']['version']['const']=1
+ display=schemas['workbench.CapturedCountViewDisplay'+suffix];display['additionalProperties']=False;display['required']=['value']
+ display['properties']['value']['const']='count';display['properties']['title']['maxLength']=120
  timeline=schemas['workbench.TimelineViewDeclaration'+suffix];timeline['additionalProperties']=False
  timeline['required']=['version','scope','kind','display']
  timeline['properties']['version']['const']='goo.view/1'

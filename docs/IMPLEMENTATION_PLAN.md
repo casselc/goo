@@ -1,10 +1,10 @@
 # Implementation plan
 
-> Current checkpoint289: composed record paging uses a measured count-plus-rows
-> profile while retaining held aggregate/timeline basis and exact record custody.
-> Whole-flow reviews prioritize a bounded authored comparison with an explicitly
-> chosen held baseline next. Its [proposed count-only contract](AUTHORED_COMPARISON_PROPOSAL.md)
-> is reviewed but unimplemented. See the [roadmap](ROADMAP_2026_10_30.md#whole-flow-review-after288-and-delivery289).
+> Current checkpoint290: an authored comparison uses one immutable captured
+> baseline and the held parent count, with explicit acquisition and canonical
+> zero/disagreement semantics. Next: design a bounded aligned group-count breakdown
+> answering which groups account for the total change, before expanding measures.
+> See the [roadmap](ROADMAP_2026_10_30.md#captured-count-comparison-delivery-and-next-investigation-step--290).
 
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),

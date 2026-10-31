@@ -40366,6 +40366,222 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ActivityViewList"
       },
+      "workbench.CapturedCountViewDeclaration": {
+        "properties": {
+          "baselineCapture": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "display": {
+            "$ref": "#/components/schemas/workbench.CapturedCountViewDisplay",
+            "type": "object"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/workbench.CapturedCountViewKind",
+            "type": "object"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/workbench.ViewDeclarationScope",
+            "type": "object",
+            "required": [
+              "kind",
+              "signal"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "const": "goo.view/1"
+          }
+        },
+        "required": [
+          "version",
+          "scope",
+          "kind",
+          "baselineCapture",
+          "display"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CapturedCountViewDeclaration",
+        "additionalProperties": false,
+        "description": "Count-only comparison against one exact immutable explore capture. Parent eligibility and baseline compatibility are validated at runtime; declaration contains no evidence or executable child query. Opening stages configuration; explicit preparation reads stored evidence, not telemetry."
+      },
+      "workbench.CapturedCountViewDeclarationInput": {
+        "additionalProperties": false,
+        "properties": {
+          "baselineCapture": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "display": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.CapturedCountViewDisplayInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.CapturedCountViewKindInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.ViewDeclarationScopeInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object",
+            "required": [
+              "kind",
+              "signal"
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "goo.view/1"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CapturedCountViewDeclaration",
+        "required": [
+          "version",
+          "scope",
+          "kind",
+          "baselineCapture",
+          "display"
+        ],
+        "description": "Count-only comparison against one exact immutable explore capture. Parent eligibility and baseline compatibility are validated at runtime; declaration contains no evidence or executable child query. Opening stages configuration; explicit preparation reads stored evidence, not telemetry."
+      },
+      "workbench.CapturedCountViewDisplay": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "value": {
+            "type": "string",
+            "const": "count"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CapturedCountViewDisplay",
+        "additionalProperties": false
+      },
+      "workbench.CapturedCountViewDisplayInput": {
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxLength": 120
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "count"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CapturedCountViewDisplay",
+        "required": [
+          "value"
+        ]
+      },
+      "workbench.CapturedCountViewKind": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "const": "captured-count-comparison"
+          },
+          "version": {
+            "type": "integer",
+            "const": 1
+          }
+        },
+        "required": [
+          "name",
+          "version"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CapturedCountViewKind",
+        "additionalProperties": false
+      },
+      "workbench.CapturedCountViewKindInput": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "captured-count-comparison"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": 1
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CapturedCountViewKind",
+        "required": [
+          "name",
+          "version"
+        ]
+      },
       "workbench.Card": {
         "properties": {
           "caption": {
@@ -43012,7 +43228,7 @@
             ],
             "type": "array",
             "minItems": 2,
-            "maxItems": 3,
+            "maxItems": 4,
             "items": {
               "$ref": "#/components/schemas/workbench.ViewCompositionChild",
               "type": "object"
@@ -43047,6 +43263,15 @@
               },
               {
                 "contains": {
+                  "required": [
+                    "comparison"
+                  ]
+                },
+                "minContains": 0,
+                "maxContains": 1
+              },
+              {
+                "contains": {
                   "properties": {
                     "hidden": {
                       "const": false
@@ -43074,7 +43299,7 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ViewComposition",
         "additionalProperties": false,
-        "description": "One fixed record query supplies one aggregate, one bounded record-page child and an optional count/mean/p95 duration timeline with explicit query bucket width. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees."
+        "description": "One fixed record query supplies one aggregate, one bounded record-page child, optional count/mean/p95 duration timeline and optional immutable capture baseline reference for count comparison. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees."
       },
       "workbench.ViewCompositionChild": {
         "properties": {
@@ -43082,6 +43307,17 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/workbench.ViewDeclaration"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "comparison": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.CapturedCountViewDeclaration"
               },
               {
                 "type": "null"
@@ -43135,6 +43371,11 @@
                   "required": [
                     "timeline"
                   ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
                 }
               ]
             }
@@ -43153,6 +43394,11 @@
                 {
                   "required": [
                     "timeline"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
                   ]
                 }
               ]
@@ -43173,6 +43419,35 @@
                   "required": [
                     "records"
                   ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "comparison"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "aggregate"
+                  ]
+                },
+                {
+                  "required": [
+                    "records"
+                  ]
+                },
+                {
+                  "required": [
+                    "timeline"
+                  ]
                 }
               ]
             }
@@ -43188,6 +43463,24 @@
                 "anyOf": [
                   {
                     "$ref": "#/components/schemas/workbench.ViewDeclarationInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "comparison": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/workbench.CapturedCountViewDeclarationInput"
                   },
                   {
                     "type": "null"
@@ -43266,6 +43559,11 @@
                   "required": [
                     "timeline"
                   ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
                 }
               ]
             }
@@ -43285,6 +43583,11 @@
                   "required": [
                     "timeline"
                   ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
                 }
               ]
             }
@@ -43303,6 +43606,35 @@
                 {
                   "required": [
                     "records"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "comparison"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "aggregate"
+                  ]
+                },
+                {
+                  "required": [
+                    "records"
+                  ]
+                },
+                {
+                  "required": [
+                    "timeline"
                   ]
                 }
               ]
@@ -43334,7 +43666,7 @@
             ],
             "type": "array",
             "minItems": 2,
-            "maxItems": 3,
+            "maxItems": 4,
             "items": {
               "$ref": "#/components/schemas/workbench.ViewCompositionChildInput",
               "type": "object"
@@ -43362,6 +43694,15 @@
                 "contains": {
                   "required": [
                     "timeline"
+                  ]
+                },
+                "minContains": 0,
+                "maxContains": 1
+              },
+              {
+                "contains": {
+                  "required": [
+                    "comparison"
                   ]
                 },
                 "minContains": 0,
@@ -43409,7 +43750,7 @@
           "kind",
           "children"
         ],
-        "description": "One fixed record query supplies one aggregate, one bounded record-page child and an optional count/mean/p95 duration timeline with explicit query bucket width. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees."
+        "description": "One fixed record query supplies one aggregate, one bounded record-page child, optional count/mean/p95 duration timeline and optional immutable capture baseline reference for count comparison. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees."
       },
       "workbench.ViewDeclaration": {
         "properties": {

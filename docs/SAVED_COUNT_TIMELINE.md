@@ -61,7 +61,7 @@ The optional third child is a typed `goo.view/1` declaration:
 `signal: "spans"` and the configured duration summary; Go validates support against
 the existing measure fields. `table` is the other kind. An optional title belongs
 in display. Exactly one aggregate and one records child are required, with at most
-one timeline. Order and visibility are local, with at least one visible child.
+one timeline and one [captured-count comparison](CAPTURED_COUNT_COMPARISON.md). Order and visibility are local, with at least one visible child.
 
 The parent query owns `bucketMs`: 1000, 10000, 60000 or 300000, with at most 240
 intervals. Buckets begin at the query start and the final bucket clips to its end.

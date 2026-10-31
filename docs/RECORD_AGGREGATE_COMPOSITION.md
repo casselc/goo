@@ -182,3 +182,13 @@ Paging the records child reads only a fresh count and bounded rows through the
 [page profile](RECORD_PAGE_PROFILE.md). Held aggregate/timeline snapshots retain
 their original denominator, basis and clock. The page's independently fresh count
 is labelled separately. Initial/full Run and capture retain full acquisition.
+
+
+## Captured count comparison — 290
+
+One optional [comparison child](CAPTURED_COUNT_COMPARISON.md) references an exact
+immutable capture. Aggregate and records remain required; timeline and comparison
+are optional unique siblings, at most four children, with local order/visibility.
+The comparison uses the parent held aggregate and an explicitly prepared baseline;
+record paging never replaces either compared count. Saving stores the reference,
+not comparison evidence.
