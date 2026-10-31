@@ -1,6 +1,10 @@
+> 283 adds [typed saved Activity scopes](ACTIVITY_VIEWS.md#typed-environment-round-trip--283)
+> across publication, exact-scope discovery and staged reopen. Remaining recent
+> population and reusable-question/share handoffs are next.
+
 > 282 adds [saved definition findings](SAVED_VIEW_FINDINGS.md) to investigation
-> revisions, separately from captured evidence. Next: exact scope portability at
-> Activity and reusable-view handoffs.
+> revisions, separately from captured evidence. Activity portability follows in 283;
+> remaining reusable-question handoffs retain their explicit gates.
 
 > 281 adds the optional [saved count timeline](SAVED_COUNT_TIMELINE.md), exact
 > interval-range staging and held paging under the existing query owner.

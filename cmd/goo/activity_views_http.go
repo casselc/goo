@@ -1,9 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/identity"
 	"github.com/casselc/goo/internal/httpjson"
 	"github.com/casselc/goo/workbench"
 	"net/http"
@@ -35,7 +37,7 @@ func registerActivityViews(mux *http.ServeMux, dir string) {
 				return
 			}
 			q := c.Question.Explore
-			if c.Question.Kind != "explore" || q == nil || q.EnvironmentSelector != nil || !q.SameEnvironment(in.Selector.Query(60000)) {
+			if c.Question.Kind != "explore" || q == nil || !q.SameEnvironment(in.Selector.Query(60000)) {
 				fail(w, errors.New("baseline capture must use this environment"))
 				return
 			}
@@ -66,12 +68,38 @@ func registerActivityViews(mux *http.ServeMux, dir string) {
 	mux.HandleFunc("GET /activity-views", func(w http.ResponseWriter, r *http.Request) {
 		q := r.URL.Query()
 		for k, v := range q {
-			if len(v) != 1 || (k != "cursor" && k != "environment") {
+			if len(v) != 1 || (k != "cursor" && k != "environment" && k != "environmentSelector") {
 				fail(w, errors.New("unsupported Activity view query"))
 				return
 			}
 		}
-		v, e := store.ActivityViews(q.Get("cursor"), q.Get("environment"))
+		if q.Has("environment") && q.Has("environmentSelector") {
+			fail(w, errors.New("choose environment or environmentSelector, not both"))
+			return
+		}
+		var selection *identity.EnvironmentSelection
+		if q.Has("environmentSelector") {
+			raw := q.Get("environmentSelector")
+			var wire identity.EnvironmentSelector
+			if len(raw) > 1024 || json.Unmarshal([]byte(raw), &wire) != nil {
+				fail(w, errors.New("invalid Activity environmentSelector filter"))
+				return
+			}
+			checked, err := wire.Selection()
+			if err != nil {
+				fail(w, err)
+				return
+			}
+			selection = &checked
+		} else if q.Has("environment") {
+			checked, err := identity.CurrentEnvironment(q.Get("environment"))
+			if err != nil {
+				fail(w, err)
+				return
+			}
+			selection = &checked
+		}
+		v, e := store.ActivityViewsForEnvironment(q.Get("cursor"), selection)
 		if e != nil {
 			fail(w, e)
 			return

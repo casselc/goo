@@ -1,5 +1,10 @@
 # Known issues and gaps
 
+283 enables [typed saved Activity scopes](ACTIVITY_VIEWS.md#typed-environment-round-trip--283)
+through publication, exact-scope discovery and staged reopen. Start remains
+explicit. Recent-population entry, reusable question/package codecs and unsupported
+native/service bridges keep their existing capability limits.
+
 282 adds [saved view definition references](SAVED_VIEW_FINDINGS.md) to investigation
 revisions. Definitions and authored findings are configuration, not captured chart or
 record data. Capture/retained cards remain independent evidence; no atomic cross-read

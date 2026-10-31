@@ -23,7 +23,7 @@ has completed. Later edits mark the view modified. Opening another view while
 scope/title/layout changes are unsaved offers explicit discard or keep-current
 controls; delayed view responses cannot replace a different route's draft.
 
-Activity’s Views menu embeds the same bounded library directly, using the **applied environment**. Opening Views loads configurations only; closing, leaving Activity or changing the applied environment cancels pending catalog publication. Editing a draft environment does not retarget the library. Scope changes clear its search and selected inspector so an old environment’s details cannot remain actionable. A successful save refreshes the open catalog. Both log and span configurations may appear; relevance means exact environment equality, not selector satisfiability.
+Activity’s Views menu embeds the same bounded library directly, using the **applied environment**. Opening Views loads configurations only; closing, leaving Activity or changing the applied environment cancels pending catalog publication. Editing a draft environment does not retarget the library. Scope changes clear its search and selected inspector so an old environment’s details cannot remain actionable. A successful save refreshes the open catalog. Both log and span configurations may appear; relevance means exact checked environment-policy equality, not predicate satisfiability.
 
 Saved exposes a bounded searchable Activity library using the existing revision
 rows and selected inspector. The bar's Browse saved Activity views opens that
@@ -45,10 +45,11 @@ existing shape, IDs, storage and `/exploration-views` contract.
 | --- | --- |
 | `POST /activity-views` | Strict 16 KiB configuration publication, 201. No client execution/custody fields. |
 | `GET /activity-views/{id}` | Exact validated configuration, no query parameters; missing/corrupt refuses. |
-| `GET /activity-views?environment=…&cursor=…` | Up to 20 configurations; exact optional environment filter and content-ID cursor. |
+| `GET /activity-views?environment=…&cursor=…` | Up to 20 configurations; current-only named filter and content-ID cursor. |
+| `GET /activity-views?environmentSelector=…&cursor=…` | JSON-encoded checked environment selector; exact policy/scope filter. |
 
-The Python `/api` proxy forwards these routes with the same 16 KiB publication
-limit. No optional XTDB store is required. The list has explicit next/first paging;
+The single Go server serves these routes under `/api` with the same 16 KiB
+publication limit. No optional XTDB store is required. The list has explicit next/first paging;
 search covers its loaded page and does not claim global search or an atomic
 catalog snapshot. Identical titles remain distinguishable by revision and scope.
 
@@ -74,7 +75,7 @@ flowchart LR
 ## Validation and limits
 
 Journey 146 uses ordinary OTLP logs independently counted in ClickHouse, selects a
-real field value, reorders/adds columns, saves through the actual Go/Python API,
+real field value, reorders/adds columns, saves through the actual API,
 shares via clipboard, reloads/stages and reopens from Saved and Services. Source
 requests remain zero during configuration operations, including mobile and draft
 keep/discard. Explicit Start reads the selected recent population. Observed Quint
@@ -108,3 +109,45 @@ strings. Edits stay staged; invalid input blocks source actions and saving.
 
 ![Activity view menu](journeys/screenshots/159a-activity-view-menu.png)
 ![Mobile Activity view menu](journeys/screenshots/159b-mobile-activity-view-menu.png)
+
+
+## Typed environment round trip — 283
+
+Activity views preserve the existing checked environment selector: current-only
+named, effective named, effective empty label or effective unreported. Current-only
+`prod` and effective `prod` select different populations and never share an
+applied-scope catalog merely because their text matches. The current key wins when
+present; an empty current value does not fall back to a legacy value.
+
+Save the applied scope from Views, then reopen its exact link. The environment
+policy, predicates and columns remain configured; rows and rolling read windows do
+not travel. Start stream remains explicit. Typing a replacement environment name
+is still an explicit change to current-key-only selection.
+
+The embedded library follows the applied checked scope, including empty and
+unreported populations. Draft edits leave that library on its applied scope until
+applied. Scope changes cancel stale catalog/detail work. The unfiltered Saved
+library can list all scopes and labels each policy; service libraries retain their
+current-only named scope.
+
+`GET /activity-views` accepts either `environment` (current-only named filter) or
+`environmentSelector` (a JSON-encoded checked selector), plus the existing cursor.
+Filters compare checked policy identity. Omit both to list all scopes; malformed,
+ambiguous and repeated filter parameters refuse before listing. Saved duration
+baseline references must match the same checked environment policy and retain
+independent captured windows. No new source operation or endpoint is added.
+
+```mermaid
+flowchart LR
+  A[Applied typed scope and predicates] -->|Save configuration| V[Immutable Activity view]
+  A -->|Exact checked scope| L[Configuration catalog]
+  L --> V
+  V -->|Open exact ID| S[Staged scope and columns, empty rows]
+  S -->|Explicit Start| T[New rolling read and connection]
+  T -->|Analyze observation| F[Existing fixed question]
+```
+
+Reusable measurement packages, shared question-step codecs and named-only service
+or native bridges retain their explicit capability limits. This cut enables the
+Activity view round trip; it does not invent rolling semantics for fixed saved
+compositions.

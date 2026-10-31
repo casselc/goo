@@ -73,6 +73,8 @@ func TestActivityViewsHTTPSourceFreeAndStrict(t *testing.T) {
 func TestActivityBaselineHTTPStoredReferenceOnly(t *testing.T) {
 	resultSnapshots := &exploration.ResultSnapshots{}
 	var reads atomic.Int64
+	var resources atomic.Value
+	resources.Store(`{"deployment.environment.name":"prod"}`)
 	source := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		reads.Add(1)
 		raw, _ := io.ReadAll(r.Body)
@@ -84,7 +86,7 @@ func TestActivityBaselineHTTPStoredReferenceOnly(t *testing.T) {
 		case strings.Contains(sql, "count()"):
 			fmt.Fprintln(w, `{"count":"1"}`)
 		default:
-			fmt.Fprintln(w, `{"timestamp_ns":"2000000000","duration_ns":"1"}`)
+			fmt.Fprintf(w, "{\"timestamp_ns\":\"2000000000\",\"duration_ns\":\"1\",\"SpanName\":\"baseline\",\"ResourceAttributes\":%s}\n", resources.Load().(string))
 		}
 	}))
 	defer source.Close()
@@ -97,8 +99,30 @@ func TestActivityBaselineHTTPStoredReferenceOnly(t *testing.T) {
 		mux.ServeHTTP(w, httptest.NewRequest(method, path, strings.NewReader(body)))
 		return w
 	}
-	makeCapture := func(env, field string) string {
+	makeCapture := func(env, field string, selector ...string) string {
+		resource := map[string]string{"deployment.environment.name": env}
+		if len(selector) == 1 {
+			var selection struct {
+				Scope struct {
+					Mode  string `json:"mode"`
+					Value string `json:"value"`
+				} `json:"scope"`
+			}
+			if e := json.Unmarshal([]byte(selector[0]), &selection); e != nil {
+				t.Fatal(e)
+			}
+			if selection.Scope.Mode == "unreported" {
+				resource = map[string]string{}
+			} else {
+				resource["deployment.environment.name"] = selection.Scope.Value
+			}
+		}
+		encoded, _ := json.Marshal(resource)
+		resources.Store(string(encoded))
 		raw := fmt.Sprintf(`{"title":"Duration baseline","question":{"kind":"explore","explore":{"signal":"spans","environment":%q,"fromMs":1000,"toMs":61000,"limit":100,"offset":0,"groupBy":[{"kind":"column","key":%q}]}}}`, env, field)
+		if len(selector) == 1 {
+			raw = strings.Replace(raw, `"environment":`+fmt.Sprintf("%q", env), `"environment":"","environmentSelector":`+selector[0], 1)
+		}
 		w := call("POST", "/captures", raw)
 		if w.Code != 201 {
 			t.Fatal(w.Code, w.Body.String())
@@ -112,10 +136,38 @@ func TestActivityBaselineHTTPStoredReferenceOnly(t *testing.T) {
 	baseline := makeCapture("prod", "duration_bucket")
 	other := makeCapture("other", "duration_bucket")
 	wrong := makeCapture("prod", "service")
+	wires := []string{
+		`{"version":"goo/environment-selector/v1","policy":"current-only","scope":{"mode":"named","value":"prod"}}`,
+		`{"version":"goo/environment-selector/v1","policy":"effective","scope":{"mode":"named","value":"prod"}}`,
+		`{"version":"goo/environment-selector/v1","policy":"effective","scope":{"mode":"empty"}}`,
+		`{"version":"goo/environment-selector/v1","policy":"effective","scope":{"mode":"unreported"}}`,
+	}
+	typedCaptures := make([]string, len(wires))
+	for i, wire := range wires {
+		typedCaptures[i] = makeCapture("", "duration_bucket", wire)
+	}
 	before := reads.Load()
 	source.Close()
-	body := func(id, signal string) string {
-		return fmt.Sprintf(`{"version":1,"title":"With baseline","selector":{"signal":%q,"environment":"prod"},"columns":["utc","summary"],"baselineCapture":%q}`, signal, id)
+	body := func(id, signal string, selector ...string) string {
+		raw := fmt.Sprintf(`{"version":1,"title":"With baseline","selector":{"signal":%q,"environment":"prod"},"columns":["utc","summary"],"baselineCapture":%q}`, signal, id)
+		if len(selector) == 1 {
+			raw = strings.Replace(raw, `"environment":"prod"`, `"environment":"","environmentSelector":`+selector[0], 1)
+		}
+		return raw
+	}
+	for i, wire := range wires {
+		if got := call("POST", "/activity-views", body(typedCaptures[i], "spans", wire)); got.Code != 201 {
+			t.Fatal("matching typed baseline refused", got.Code, got.Body.String())
+		}
+		if got := call("POST", "/activity-views", body(typedCaptures[(i+1)%len(wires)], "spans", wire)); got.Code != 400 {
+			t.Fatal("cross-policy/scope baseline accepted", got.Code, got.Body.String())
+		}
+	}
+	if got := call("POST", "/activity-views", body(baseline, "spans", wires[0])); got.Code != 201 {
+		t.Fatal("semantic current-only equivalence refused", got.Code, got.Body.String())
+	}
+	if got := call("POST", "/activity-views", body(typedCaptures[0], "spans")); got.Code != 201 {
+		t.Fatal("typed current-only baseline refused by legacy current", got.Code, got.Body.String())
 	}
 	w := call("POST", "/activity-views", body(baseline, "spans"))
 	if w.Code != 201 {

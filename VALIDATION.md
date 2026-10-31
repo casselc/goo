@@ -1,5 +1,41 @@
 # Validation record
 
+## Typed saved Activity scopes — 283
+
+Activity view definitions retain checked environment policy through save, exact-scope
+catalog discovery and staged reopen. Start remains explicit; saved configurations
+carry no rolling read window or observation authority. See
+[contract](docs/ACTIVITY_VIEWS.md#typed-environment-round-trip--283) and
+[storyboard](journeys/283-activity-selector-view-storyboard.md).
+
+- Full root `go test ./...` and all 868 frontend tests pass. Focused store and
+  HTTP checks pass for current-only/effective named, empty-label
+  and unreported scopes, exact-policy catalogs, malformed/ambiguous filters and
+  immutable definitions. Typed duration-baseline references accept matching
+  checked policies and reject cross-policy matches without source access.
+- Unsupported question-step, package and native/service bridges remain explicitly
+  gated. No source operation or endpoint is added.
+- OpenAPI checks pass for 97 operations and 635 schemas, with new selector
+  publication/filter controls. Cross-layer review reports no material blockers.
+- 100 Hegel Go/JavaScript Activity-view validation cases pass; the eight-step
+  Quint smoke rejects six mutated traces and an unfinished prefix.
+- Final real-OTLP journey plus Bombadil passes in 46.8 s. The existing late-save
+  race passes in 3.9 s and saved-definition journey282 passes in 23.6 s. Three new
+  and three regression documentation frames are regenerated.
+- The eight-step tail-request ledger `[0,1,1,1,1,1,2,2]` covers only the two
+  explicit Starts. Save, catalog discovery and exact-ID reopen add no tail
+  requests. A real current/legacy/empty/unreported fixture isolates the intended
+  legacy-only canary, and the original saved definition remains unchanged.
+- Bombadil passes 30 seconds / 577 snapshots / eight phases, independently
+  observing two completed tail requests, one matching row and paused state, with
+  no overflow or uncaught errors. Observed Quint replay passes. The corrected
+  driver pauses before reading SSE ResourceTiming completion.
+- Local image `5e88b09a6683d3ea5deb8503d396389d4a68ebab48ca7d617e4b449c1140e3d8`
+  is built and deployed; all three changed UI/API files match served bytes.
+  Telemetry and XTDB volumes remain intact. Successful raw campaign and temporary
+  capture/browser copies are cleaned; compact results and documentation frames remain.
+
+
 ## Saved view findings — 282
 
 Investigation revisions can pin exact saved-view definitions and authored findings.

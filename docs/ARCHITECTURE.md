@@ -1485,3 +1485,13 @@ A document view card references an immutable exploration-view ID and optional au
 finding. Publication verifies the saved definition in the existing store without
 telemetry access. Opening uses the existing staged saved-view route; independent capture
 cards retain their own custody. See [contract and diagram](SAVED_VIEW_FINDINGS.md).
+
+
+## Activity scope portability — 283
+
+Activity view publication validates the existing TailSelector rather than reconstructing
+an environment name. Catalog filters use checked EnvironmentSelection equality, with
+separate current-only name and JSON selector query forms. Baseline references use the
+same environment-policy comparison. UI restore carries exact saved wire fields and
+retires stale catalog work before staging. See [contract and
+flow](ACTIVITY_VIEWS.md#typed-environment-round-trip--283).

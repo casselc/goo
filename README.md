@@ -580,3 +580,11 @@ window, then Run. Paging holds the timeline; saved reuse checks interval width.
 Investigations can pin a [saved view definition and
 finding](docs/SAVED_VIEW_FINDINGS.md). Opening the definition stages its query and
 composition for explicit Run. Frozen captures remain separate evidence.
+
+
+### Typed saved Activity scopes — 283
+
+Saved Activity views now retain current-only and effective environment scopes, including
+empty and unreported labels. The applied-scope catalog distinguishes policies; reopening
+stages the exact selector for explicit Start. See [Activity
+views](docs/ACTIVITY_VIEWS.md#typed-environment-round-trip--283).

@@ -50,3 +50,11 @@ validation passes. No running-container recreation or second restart was done;
 its old Docker healthcheck definition remains until normal container recreation.
 This is a probe-method mismatch, not evidence of unhealthy storage or a reason
 to change application data.
+
+
+## Diagnostic archive cleanup — 283
+
+On 2026-10-31 the two archived debug-log copies listed above were removed from
+`/tmp/goo-clickhouse-debug-archive-209` to recover build space. The small checksum
+manifest and this historical recovery record remain. Active logs, telemetry tables,
+named volumes and stored captures were not part of this cleanup.

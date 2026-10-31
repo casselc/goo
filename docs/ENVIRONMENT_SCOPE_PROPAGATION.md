@@ -1,4 +1,4 @@
-# Record environment propagation — 248 audit, current through 250
+# Record environment propagation — historical audit and updates through 283
 
 > 250 implements the [server record API cut](RECORD_SELECTOR_API.md). Browser
 > handoffs remain gated; the historical table below is not the current support list.
@@ -118,3 +118,17 @@ Activity → explicit Start → fixed investigation → capture/Saved. Preserved
 stale preview guards and unsupported selector XTDB actions are tested. Next: S0,
 keeping exact observations without requiring interpretation. Unsupported families
 remain separate, rather than being implicitly enabled by record adoption.
+
+
+## Saved Activity update — 283
+
+Saved Activity view publication, exact-ID staging and the applied-scope catalog now
+retain checked environment policy and scope. Effective named, empty-label and
+unreported selectors are accepted without conversion to a current-only name.
+Catalog filtering and stored duration-baseline checks compare checked policy, not
+name text. Opening a view restores configuration only; explicit Start creates the
+new rolling read. See [Activity view contract](ACTIVITY_VIEWS.md#typed-environment-round-trip--283).
+
+Fixed saved compositions already retain their checked query selectors. The separate
+recent-population entry and reusable question/measurement package codecs remain
+explicit follow-up work; no unsupported bridge is silently enabled by this cut.

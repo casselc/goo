@@ -598,8 +598,31 @@ def check_timeline_composition(spec):
             assert list(check.iter_errors(bad)), 'invalid timeline composition accepted'
 
 
+def check_activity_scope_views(spec):
+    """Saved rolling configuration retains exact checked policy and scope."""
+    wires = [
+        {'version':'goo/environment-selector/v1','policy':'current-only','scope':{'mode':'named','value':'prod'}},
+        {'version':'goo/environment-selector/v1','policy':'effective','scope':{'mode':'named','value':'prod'}},
+        {'version':'goo/environment-selector/v1','policy':'effective','scope':{'mode':'empty'}},
+        {'version':'goo/environment-selector/v1','policy':'effective','scope':{'mode':'unreported'}},
+    ]
+    for suffix in ('','Input'):
+        check = validator(spec, {'$ref':'#/components/schemas/workbench.ActivityView'+suffix})
+        for wire in wires:
+            view={'version':1,'title':'Exact scope','selector':{'signal':'logs','environment':'','environmentSelector':wire},'columns':['utc','summary']}
+            check.validate(view)
+            bad=copy.deepcopy(view);bad['selector']['environment']='prod'
+            assert list(check.iter_errors(bad)), 'ambiguous Activity environment accepted'
+            bad=copy.deepcopy(view);bad['selector']['environmentSelector']['policy']='wildcard'
+            assert list(check.iter_errors(bad)), 'unknown Activity selection policy accepted'
+    parameters={p['name']:p for p in spec['paths']['/activity-views']['get']['parameters']}
+    assert parameters['environmentSelector']['schema']['maxLength']==1024
+    assert parameters['environment']['schema']['minLength']==1
+
+
 def check(spec):
     validate_spec(spec)
+    check_activity_scope_views(spec)
     check_view_dataset(spec)
     check_timeline_composition(spec)
     check_document_view_card(spec)

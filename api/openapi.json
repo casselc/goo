@@ -39,9 +39,20 @@
             "name": "environment",
             "in": "query",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
             },
-            "description": "Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported."
+            "description": "Historical current-key-only environment filter. Matches equivalent typed current-only selections, never effective selections of the same name. Mutually exclusive with environmentSelector."
+          },
+          {
+            "name": "environmentSelector",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 1024
+            },
+            "description": "One JSON-encoded identity.EnvironmentSelector. Exact checked policy/scope filter; mutually exclusive with environment even when the name is empty. Missing both filters lists all scopes. Does not start telemetry."
           }
         ],
         "responses": {
@@ -40018,7 +40029,7 @@
         "properties": {
           "baselineCapture": {
             "type": "string",
-            "description": "Optional exact immutable raw-span duration capture ID. Publication verifies stored evidence and same environment; opening a view stages configuration without loading evidence or starting telemetry. Omitted/empty preserves legacy identity."
+            "description": "Optional exact immutable raw-span duration capture ID. Publication verifies stored evidence and the same checked environment policy/scope; opening a view stages configuration without loading evidence or starting telemetry. Omitted/empty preserves legacy identity."
           },
           "columns": {
             "anyOf": [
@@ -40080,7 +40091,7 @@
                 "type": "null"
               }
             ],
-            "description": "Optional exact immutable raw-span duration capture ID. Publication verifies stored evidence and same environment; opening a view stages configuration without loading evidence or starting telemetry. Omitted/empty preserves legacy identity."
+            "description": "Optional exact immutable raw-span duration capture ID. Publication verifies stored evidence and the same checked environment policy/scope; opening a view stages configuration without loading evidence or starting telemetry. Omitted/empty preserves legacy identity."
           },
           "columns": {
             "anyOf": [

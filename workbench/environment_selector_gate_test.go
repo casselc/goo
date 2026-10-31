@@ -15,8 +15,8 @@ func TestSelectorAuthoringBoundaries(t *testing.T) {
 		t.Fatal("exploration view rejected typed selector", err)
 	}
 	a := ActivityView{Version: 1, Title: "Scope", Selector: exploration.TailSelector{EnvironmentSelector: &wire}, Columns: []string{"utc", "summary"}}
-	if a.Validate() == nil {
-		t.Fatal("Activity view accepted selector")
+	if err := a.Validate(); err != nil {
+		t.Fatal("Activity view rejected selector", err)
 	}
 	step := Step{Version: 1, Kind: "record", Record: &q, Scope: StepScope{FromMS: q.FromMS, ToMS: q.ToMS}, View: "Records"}
 	if step.Validate() == nil {

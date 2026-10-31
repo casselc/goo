@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/identity"
 )
 
 // ActivityView stores a rolling selector and presentation, without observations,
@@ -19,9 +20,6 @@ type ActivityView struct {
 }
 
 func (v ActivityView) Validate() error {
-	if v.Selector.EnvironmentSelector != nil {
-		return errors.New("saved Activity views do not support environmentSelector yet")
-	}
 	if v.Version != 1 || !text(v.Title, 120, true, false) {
 		return errors.New("require version 1 and bounded Activity view title")
 	}
@@ -84,12 +82,26 @@ type ActivityViewList struct {
 }
 
 func (s Store) ActivityViews(after, environment string) (*ActivityViewList, error) {
+	var selection *identity.EnvironmentSelection
+	if environment != "" {
+		checked, err := identity.CurrentEnvironment(environment)
+		if err != nil {
+			return nil, err
+		}
+		selection = &checked
+	}
+	return s.ActivityViewsForEnvironment(after, selection)
+}
+
+// ActivityViewsForEnvironment filters by checked policy and scope, never by a
+// display name alone. A nil selection is an explicit unfiltered catalog request.
+func (s Store) ActivityViewsForEnvironment(after string, selection *identity.EnvironmentSelection) (*ActivityViewList, error) {
 	if after != "" && !ID.MatchString(after) {
 		return nil, errors.New("invalid Activity view cursor")
 	}
-	if environment != "" {
-		if e := (exploration.TailSelector{Environment: environment}).Query(60000).Validate(); e != nil {
-			return nil, e
+	if selection != nil {
+		if err := selection.Validate(); err != nil {
+			return nil, err
 		}
 	}
 	ids, e := s.ids("activity-views")
@@ -105,8 +117,14 @@ func (s Store) ActivityViews(after, environment string) (*ActivityViewList, erro
 		if e != nil {
 			return nil, e
 		}
-		if environment != "" && v.Selector.Environment != environment {
-			continue
+		if selection != nil {
+			candidate, err := v.Selector.Query(60000).EnvironmentSelection()
+			if err != nil {
+				return nil, err
+			}
+			if !selection.Equal(candidate) {
+				continue
+			}
 		}
 		if len(out.Items) == 20 {
 			out.NextCursor = out.Items[19].ID

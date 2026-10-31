@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey283](../../journeys/283-activity-selector-view-storyboard.md) saves an exact
+typed Activity scope, isolates its catalog, reopens staged and requires explicit
+Start before the legacy-only canary appears again.
+
 [Journey282](../../journeys/282-saved-view-finding-storyboard.md) pins a saved
 composition and finding in an investigation, keeps evidence separate and reopens
 the definition staged for explicit Run.

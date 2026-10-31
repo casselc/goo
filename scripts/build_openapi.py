@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ref = lambda name: {'$ref': '#/components/schemas/' + name}
 schemas = json.loads((ROOT / 'api/go-schemas.json').read_text())
 for name in ('workbench.ActivityView','workbench.ActivityViewInput'):
- schemas[name]['properties']['baselineCapture']['description']='Optional exact immutable raw-span duration capture ID. Publication verifies stored evidence and same environment; opening a view stages configuration without loading evidence or starting telemetry. Omitted/empty preserves legacy identity.'
+ schemas[name]['properties']['baselineCapture']['description']='Optional exact immutable raw-span duration capture ID. Publication verifies stored evidence and the same checked environment policy/scope; opening a view stages configuration without loading evidence or starting telemetry. Omitted/empty preserves legacy identity.'
 
 schemas['annotations.OperationSpan']['properties']['reportedStatus']['description']='Optional exact exporter StatusCode, independent of declared outcome. Omission means not retained in this evidence; empty and future values remain explicit unknown values. Legacy saved bytes are unchanged.'
 
@@ -736,6 +736,14 @@ for (method,path),(file,block) in sorted(route_source.items()):
  # Enumerate explicit query getters; allowlists and cross-field validation stay in Go.
  for p in sorted(set(re.findall(r'(?:q|v|values|r\.URL\.Query\(\))\.(?:Get|Has)\("([^"]+)"',block))):
   op['parameters'].append({'name':p,'in':'query','schema':{'type':'string'},'description':'Single value; route-specific allowlists and cross-field rules apply. Targets are JSON-encoded typed objects where supported.'})
+ if method=='get' and path=='/activity-views':
+  for parameter in op['parameters']:
+   if parameter['name']=='environmentSelector':
+    parameter['schema']={'type':'string','maxLength':1024}
+    parameter['description']='One JSON-encoded identity.EnvironmentSelector. Exact checked policy/scope filter; mutually exclusive with environment even when the name is empty. Missing both filters lists all scopes. Does not start telemetry.'
+   elif parameter['name']=='environment':
+    parameter['schema']={'type':'string','minLength':1,'maxLength':128}
+    parameter['description']='Historical current-key-only environment filter. Matches equivalent typed current-only selections, never effective selections of the same name. Mutually exclusive with environmentSelector.'
  if path=='/kept-observations/search':op['parameters']=[{'name':name,'in':'query','schema':({'type':'string','enum':['','tail-selection','result-page','saved-capture']} if name=='origin' else {'type':'string','enum':['','logs','spans']} if name=='signal' else {'type':'string','maxLength':1024})} for name in ('origin','signal','cursor')]
  for p in {'/captures':['cursor'],'/captures/{id}':['cursor'],'/captures/{id}/followups':['row'],'/captures/{id}/compare':['selection','distribution']}.get(path,[]):
   if method=='get' and not any(v['name']==p and v['in']=='query' for v in op['parameters']):op['parameters'].append({'name':p,'in':'query','schema':{'type':'string'},'description':'Single canonical value; saved evidence is not reread from the telemetry source.'})
