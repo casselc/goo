@@ -2742,3 +2742,11 @@ The [executable storyboard](../../journeys/291-group-count-comparison-storyboard
 shows typed missing/empty categories, exact aligned counts, local controls, held
 pair/fresh page, saved Groups reopening and a known-empty baseline.
 [Contract and diagram](../GROUP_COUNT_COMPARISON.md).
+
+
+## 292. Stage a group from the chosen side
+
+The [executable storyboard](../../journeys/292-group-side-staging-storyboard.md)
+shows source-free baseline/current staging, exact scope, independent child Run,
+held parent return, fresh focus and refusal of retired controls.
+[Contract and diagram](../GROUP_SIDE_STAGING.md).

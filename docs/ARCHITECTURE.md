@@ -1,5 +1,12 @@
 # Architecture
 
+[Group-side question staging](GROUP_SIDE_STAGING.md) emits a closed descriptive
+intent through property-only host interaction. The population owner validates
+its private lease, admitted pair and chosen side before using the pure planner
+and existing retained child. Back remounts fresh action controls without rearming
+old handlers. Generic H1 baseline/summary restrictions and API/storage remain
+unchanged; Run is the existing independent read.
+
 [Aligned group-count comparison](GROUP_COUNT_COMPARISON.md) is an optional closed
 profile on the existing pure comparison response. It shares summary operands,
 validates supplied partition accounting and admits exact aligned rows without

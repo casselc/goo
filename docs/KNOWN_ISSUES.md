@@ -1,9 +1,14 @@
 # Known issues and gaps
 
+292 adds [explicit group-side staging](GROUP_SIDE_STAGING.md) for positive reported
+counts in a coherent comparison. A baseline action stages its question, not stored
+rows; Run is a new independent read. Aligned absent zeros and diagnostic/unknown
+counts remain nonactionable. Generic baseline refinement rules are unchanged.
+
 291 adds [aligned group-count comparison](GROUP_COUNT_COMPARISON.md) to the same
 prepared pair. Supplied accounting is not proof of complete upstream telemetry.
-Diagnostic counts/differences are withheld; group scope gestures remain deferred
-until a side-specific action contract is reviewed. Local Find/pages affect display
+Diagnostic counts/differences are withheld;292 supplies the reviewed narrow
+side-specific question-staging action, without broader source refinement. Local Find/pages affect display
 only. Existing stored comparison receipts omit the extra transient payload to
 preserve their storage budget and algorithm.
 

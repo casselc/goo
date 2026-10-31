@@ -1,5 +1,43 @@
 # Validation record
 
+## Explicit group-side question staging — 292
+
+[Contract/diagram](docs/GROUP_SIDE_STAGING.md) ·
+[storyboard](journeys/292-group-side-staging-storyboard.md) ·
+[design](docs/reviews/GROUP_SIDE_DESIGN_292.md) and
+[architecture review](docs/reviews/GROUP_SIDE_ARCHITECTURE_292.md).
+
+- Full root `go test ./...` and all 909 frontend tests pass. Four new focused
+  tests cover exact side/OR/environment/window/offset derivation, missing vs empty,
+  invalid context/absent/diagnostic refusal, query budget and binding retirement.
+- OpenAPI remains98 operations /649 schemas; six actual API request/response
+  observations conform. No endpoint, declaration or storage type was added.
+- Hegel100 cases pass in both raw canonical and admitted browser frames. Copied
+  cross-frame tuples refuse while same-frame planners derive equivalent queries.
+  The initial test assumed those identities were equal; correcting that assumption
+  preserved the strict guards. Predicate-budget refusal passes. The seventeen-step
+  Quint lifecycle rejects six corrupted ledgers and an unfinished prefix.
+- Final real OTLP journey passes with source-free baseline/current/missing/empty
+  staging and explicit child Run. Late arrivals yield baseline shared3 vs captured2
+  and current shared4 vs held3. Parent fixed counts, Find/order/page and focus
+  survive Back. Old handles refuse permanently; fresh controls work. Hidden/
+  Summary/navigation, record selection and source-draft guards pass. Main budget:
+  five full reads, one page, one baseline storage GET and one pure comparison.
+- Strengthened independent Bombadil passes30seconds /546 snapshots /9 phases,
+  requiring actual baseline child count3 before Back. It completes baseline Run
+  and current staging/Back with two full reads, one baseline GET and comparison,
+  held parent identity and no overflow/errors. Regressions286 (27.9s) and291
+  (33.6s) pass. Two actual frames show outer Baseline/Back/independent-read notice
+  and returned held parent. Native disclosure framing changes only documentation.
+- Review fixes include binding the component's immutable data handle rather than
+  assuming clone identity, fresh Back/hide-show actions and focus, deferred intent
+  validation per click, explicit button type and private callback/epoch guards.
+  No generic H1 baseline/summary action rule was weakened.
+- Local image `025d5ce9dd0830c3fabe27e173a8389e53a59f7e5a86a2969c3b1d2c51c36867`
+  is built/deployed; all four changed/new UI assets match served bytes. Existing
+  telemetry/XTDB volumes remain intact. Successful raw campaign/capture copies
+  are cleaned; compact API/model/campaign results and documentation frames remain.
+
 ## Aligned group-count comparison — 291
 
 [Contract/diagram](docs/GROUP_COUNT_COMPARISON.md) ·

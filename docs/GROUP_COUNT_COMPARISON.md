@@ -66,7 +66,8 @@ held while inspecting another record page, but are not saved query predicates.
 Local display controls update only their comparison subtree, preserving pending
 record selections. Record paging keeps the pair's original counts and clocks.
 Run, a changed baseline or navigation retain the existing pair-retirement guards.
-This slice introduces no group drilldown, scope filter, rate, health threshold,
+292 adds a narrow [side-specific question action](GROUP_SIDE_STAGING.md) for
+positive reported counts. There is no automatic query, rate, health threshold,
 statistical significance or causal attribution.
 
 The framework-neutral `goo-group-count-comparison` element consumes supplied
@@ -100,3 +101,8 @@ See the [proposal history](GROUP_COUNT_COMPARISON_PROPOSAL.md),
 [design review](reviews/GROUP_COUNT_DESIGN_291.md),
 [architecture review](reviews/GROUP_COUNT_ARCHITECTURE_291.md) and
 [actual validation](../VALIDATION.md).
+
+
+In an application-hosted view,292 can opt into native count buttons through an
+explicit property-only interaction binding. Standalone canonical data remains
+static; supplied contexts alone do not grant action authority.

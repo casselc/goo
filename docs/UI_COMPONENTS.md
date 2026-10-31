@@ -1614,3 +1614,13 @@ or JSON attribute, with bounded order/title options. It reuses shared paired-cou
 geometry and `goo-table`; no source reads, navigation or publication. Local search
 and display paging retain a full-union scale. Errors remain unavailable until
 valid replacement input arrives. See [contract](GROUP_COUNT_COMPARISON.md).
+
+
+### Optional group-side intent — 292
+
+The group display remains static unless a host assigns nonserialized `interaction`
+callbacks (`current`, `stage`). Eligible count buttons capture the binding and
+render epoch; redraw/rebind/disconnect retire old handlers. No JSON permission,
+source read, navigation or generic query event is added. The app binds its private
+owner and uses `group-side-staging.mjs`; Go `StageGroupSide` is the equivalent
+semantic planner. See [contract](GROUP_SIDE_STAGING.md), including identity frames.

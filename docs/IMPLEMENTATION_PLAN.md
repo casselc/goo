@@ -1,9 +1,9 @@
 # Implementation plan
 
-> Current checkpoint291: aligned group counts reuse a prepared pair through local
-> display controls, saved presentation and held record paging. Next: design an
-> explicit side-specific group staging contract before adding scope actions.
-> See the [roadmap](ROADMAP_2026_10_30.md#aligned-group-count-delivery-and-next-scope-contract--291).
+> Current checkpoint292: explicit baseline/current group staging preserves exact
+> side scope, retained parents and private action retirement. Next: review the
+> whole responder flow and choose an observed bounded improvement before adding
+> more measures or actions. See the [roadmap](ROADMAP_2026_10_30.md#side-specific-staging-delivery-and-flow-checkpoint--292).
 
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),

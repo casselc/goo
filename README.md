@@ -1,5 +1,8 @@
 # goo — Grammar of Observability
 
+[Explore a compared group](docs/GROUP_SIDE_STAGING.md) from an explicit baseline
+or current count, staging its exact question while retaining the parent comparison.
+
 [Count change by group](docs/GROUP_COUNT_COMPARISON.md) aligns the same prepared
 baseline/current pair on a shared scale, with local search and exact changes.
 
