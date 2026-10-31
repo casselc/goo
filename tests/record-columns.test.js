@@ -10,3 +10,22 @@ test('qualified record columns preserve well-formed Unicode under the Go UTF-8 b
  assert.deepEqual(C.validate({columns:['utc','summary'],fieldColumns:[{kind:'attribute',key:'🚀'.repeat(32)}]}).fieldColumns[0].key,'🚀'.repeat(32));
  for(const key of ['\ud800','x\0y','🚀'.repeat(33)])assert.throws(()=>C.validate({columns:['utc','summary'],fieldColumns:[{kind:'attribute',key}]}));
 });
+
+test('shared qualified-field presentation preserves time units and missing/empty/null distinctions',()=>{
+ const C=require('../ui/record-columns.mjs'),record={timestamp_ns:'1793448000123456789',duration_ns:'9000000',Attributes:{x:'',nil:null,nested:{count:0}},ResourceAttributes:{x:'resource'}};
+ assert.deepEqual(C.value(record,{kind:'column',key:'timestamp_ns'}),{present:true,value:record.timestamp_ns});
+ assert.deepEqual(C.presentation(record,{kind:'column',key:'timestamp_ns'}),{state:'present',type:'string',text:'2026-10-31T12:00:00.123456789Z',title:'1793448000123456789 ns'});
+ assert.equal(C.presentation(record,{kind:'column',key:'duration_ns'}).text,'9.000 ms');
+ assert.equal(C.presentation(record,{kind:'attribute',key:'x'}).state,'empty');assert.equal(C.presentation(record,{kind:'resource',key:'x'}).text,'resource');
+ assert.equal(C.presentation(record,{kind:'attribute',key:'nil'}).state,'null');assert.equal(C.presentation(record,{kind:'resource',key:'nil'}).state,'missing');
+ assert.equal(C.presentation(record,{kind:'attribute',key:'nested'}).text,'{"count":0}');
+ assert.equal(C.presentation({timestamp_ns:'invalid'},{kind:'column',key:'timestamp_ns'}).text,'Timestamp unavailable');assert.equal(C.presentation({timestamp_ns:'9'.repeat(33)},{kind:'column',key:'timestamp_ns'}).text,'Timestamp unavailable');
+ assert.equal(C.presentation({duration_ns:'-1'},{kind:'column',key:'duration_ns'}).text,'Duration unavailable');
+});
+
+
+test('literal state words and JSON-looking strings stay distinct from typed or missing values',()=>{
+ const C=require('../ui/record-columns.mjs'),field={kind:'attribute',key:'v'},p=v=>C.presentation({Attributes:{v}},field);
+ for(const value of ['Missing','null','Null','Present empty string','true','false','0','{"count":0}','"Missing"']){assert.equal(p(value).text,JSON.stringify(value));assert.equal(p(value).type,'string');}
+ assert.equal(p(null).text,'Null');assert.equal(p(null).type,'null');assert.equal(p(false).text,'false');assert.equal(p(false).type,'boolean');assert.equal(p(0).text,'0');assert.equal(p(0).type,'number');assert.equal(C.presentation({},field).state,'missing');
+});

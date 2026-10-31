@@ -1,6 +1,6 @@
 # Records and aggregates in one saved composition — 279
 
-A saved fixed view can declare an ordered record table and aggregate display over
+A saved fixed view can declare an ordered records display and aggregate display over
 one checked query. **Compose aggregate and records** converts an eligible single-query authored
 view locally. The HTTP service template emits this composition directly. Use the
 existing View settings to change order or visibility, and the existing record
@@ -197,3 +197,10 @@ not comparison evidence.
 291 adds [Groups presentation](GROUP_COUNT_COMPARISON.md) within the existing
 comparison child. It creates no additional role, query or preparation action.
 Local presentation changes retain pending record selection and the held pair.
+
+## Record-list kind — 297
+
+The records child also supports [record-list](RECORD_LIST.md) over the identical
+bounded page and column contract. Table remains the selection/source-action mode;
+List offers compact supplied records and local native Details. Kind selection is
+saved and template-portable, while query/paging/source ownership stays in the parent.

@@ -1,10 +1,10 @@
 # Implementation plan
 
-> Current checkpoint 296: reusable template metadata, native authoring and checked
-> destination-group expansion extend the existing view catalog. HTTP and database
-> presets share profile validation. Next: one useful record detail/list shape through
-> the same supplied-data/kind contract, informed by an authoring review. See the
-> [roadmap](ROADMAP_2026_10_30.md#authorable-template-delivery--296).
+> Current checkpoint 297: a passive record-list kind consumes the existing bounded
+> page and survives save/template reuse; selected-measure tables retain all fields
+> with useful initial ordering. Next: extract the shared record action owner for
+> Table/List parity without duplicating selection state or granting component IO.
+> See the [roadmap](ROADMAP_2026_10_30.md#record-list-delivery--297).
 
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),
@@ -1695,3 +1695,12 @@ and existing preview/apply owner. Shared HTTP/DB descriptor validation and the
 Database client activity preset prove a non-demo semantic-convention path. Continue
 with a useful shared record shape rather than another template store or expression
 engine; include selected-measure table readability in the acceptance review.
+
+## 297 — one shared record shape
+
+[Record-list](RECORD_LIST.md) extends the existing records role and supplied page.
+Local kind changes, native Details and field layout perform no IO; Table remains
+the selection/source-action mode. Shared timestamp/value formatting and exact-table
+field ordering keep the component readable without changing data or proof. Next
+extract the existing Table action adapter so alternate presentations can share
+record interactions; do not create a second selection owner or query framework.

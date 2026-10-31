@@ -61,3 +61,22 @@ test('an empty late record page does not borrow held whole-population state or t
  assert.equal(page.page.returned,0);assert.equal(page.quality.extent,'bounded-page');assert.equal(page.quality.state,'no_data');assert.equal(admitted.count,'0');assert.equal(held.count,'500');assert.equal(held.state,'observed');assert.notEqual(page.basis,held.basis);assert(!hasGuarantee(page,'summary'));
  const changed={...late,rows:held.rows,state:'changed_between_reads'};assert.equal(getRecordPage(adoptRecordPage(changed,changed.question)).quality.state,'changed_between_reads');
 });
+
+const {adoptPage}=require('../ui/record-page.mjs');
+test('serialized record-page display admission verifies derived bounds without gaining source authority',()=>{
+ const source=fromExploration(response()),raw=JSON.parse(JSON.stringify(source)),page=adoptPage(raw);
+ assert.deepEqual(page,source);assert.notEqual(page,raw);assert.equal(adoptPage(source),source);assert(Object.isFrozen(page.rows[0].Attributes.nested));
+ assert.equal(getRecordPage(page),null);assert(!isSnapshot(page));assert(!hasGuarantee(page,'groups'));
+ raw.rows[0].Attributes.nested[1].number=77;assert.equal(page.rows[0].Attributes.nested[1].number,1);
+ const unknown=response();delete unknown.hasMore;assert.equal(adoptPage(JSON.parse(JSON.stringify(fromExploration(unknown)))).page.hasMore,null);
+ for(const mutate of [x=>x.page.returned++,x=>x.page.offset++,x=>x.page.limit++,x=>x.page.hasMore=undefined,x=>x.signal='logs',x=>x.quality.extent='complete',x=>x.quality.upstream='complete',x=>x.quality.consistency='atomic',x=>x.count='500',x=>x.completeness={},x=>x.resultToken='token',x=>x.quality.extra=true,x=>x.page.total=500]){const bad=JSON.parse(JSON.stringify(source));mutate(bad);assert.throws(()=>adoptPage(bad));}
+ const getter=JSON.parse(JSON.stringify(source));Object.defineProperty(getter.page,'returned',{enumerable:true,get(){throw Error('getter invoked')}});assert.throws(()=>adoptPage(getter),/data properties/);
+});
+
+
+test('no-data cannot label supplied rows while empty late and changed pages stay honest',()=>{
+ const raw=response();raw.state='no_data';assert.throws(()=>fromExploration(raw),/No-data/);
+ const serialized=JSON.parse(JSON.stringify(fromExploration(response())));serialized.quality.state='no_data';assert.throws(()=>adoptPage(serialized),/No-data/);
+ const empty=response();empty.rows=[];empty.question.offset=100;assert.equal(fromExploration(empty).quality.state,'observed');
+ raw.state='changed_between_reads';assert.equal(fromExploration(raw).rows.length,1);
+});

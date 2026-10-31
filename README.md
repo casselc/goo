@@ -16,7 +16,8 @@ Optional [investigation findings](docs/PRESERVE_ATTACHMENT.md) stay behind Add t
 its fixed scope and paused parent. Build reusable views with [saved displays](docs/SAVED_DISPLAY_DECLARATIONS.md),
 [service defaults](docs/HTTP_SERVICE_VIEW_TEMPLATE.md),
 [authorable templates](docs/AUTHORABLE_VIEW_TEMPLATES.md), and
-[record/aggregate compositions](docs/RECORD_AGGREGATE_COMPOSITION.md).
+[record/aggregate compositions](docs/RECORD_AGGREGATE_COMPOSITION.md), including
+a passive [record list](docs/RECORD_LIST.md) beside the default table.
 [Record paging](docs/RECORD_PAGE_PROFILE.md) retains the held aggregate and timeline.
 
 [Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Reviewed roadmap](docs/ROADMAP_2026_10_30.md) · [Execution backlog](docs/BACKLOG_2026_10_29.md) ·

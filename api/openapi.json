@@ -43283,7 +43283,7 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.RecordViewDeclaration",
         "additionalProperties": false,
-        "description": "Pinned record-table presentation over a supplied bounded page, independent of aggregate completeness and totals. Scope references the one parent query; page size is never a population denominator."
+        "description": "Pinned record-table or record-list presentation over the same supplied bounded page, independent of aggregate completeness and totals. Scope references the one parent query; page size is never a population denominator."
       },
       "workbench.RecordViewDeclarationInput": {
         "additionalProperties": false,
@@ -43345,7 +43345,7 @@
           "kind",
           "display"
         ],
-        "description": "Pinned record-table presentation over a supplied bounded page, independent of aggregate completeness and totals. Scope references the one parent query; page size is never a population denominator."
+        "description": "Pinned record-table or record-list presentation over the same supplied bounded page, independent of aggregate completeness and totals. Scope references the one parent query; page size is never a population denominator."
       },
       "workbench.RecordViewDisplay": {
         "properties": {
@@ -43491,7 +43491,10 @@
         "properties": {
           "name": {
             "type": "string",
-            "const": "record-table"
+            "enum": [
+              "record-table",
+              "record-list"
+            ]
           },
           "version": {
             "type": "integer",
@@ -43518,7 +43521,10 @@
                 "type": "null"
               }
             ],
-            "const": "record-table"
+            "enum": [
+              "record-table",
+              "record-list"
+            ]
           },
           "version": {
             "anyOf": [

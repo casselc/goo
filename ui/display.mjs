@@ -24,3 +24,5 @@ export * as TracePageBreakdown from './trace-page-breakdown.mjs';
 export * as TracePageBreakdownView from './trace-page-breakdown-view.mjs';
 export * as TracePageComparison from './trace-page-comparison.mjs';
 export * as TraceComparisonView from './trace-comparison-view.mjs';
+
+export * as RecordList from './record-list.mjs';

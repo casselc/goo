@@ -1659,3 +1659,13 @@ kinds, measure and columns before explicit local Apply. Application owners fence
 metadata requests and application against current scope/drafts; passive display
 elements gain no fetching or expression runtime. See
 [authorable templates](AUTHORABLE_VIEW_TEMPLATES.md).
+
+## goo-record-list — 297
+
+A passive rich-page consumer with `.page`/`.display` properties and equivalent JSON
+attributes. Detached property updates, lazy native Details and missing/empty/null
+formatting share existing presenters. Its CSS stays component-scoped. Application
+kind controls and paging remain outside it; serialized pages do not grant actions.
+The gallery demonstrates SSR and SPA use. Shared exact tables now order dimensions
+and the selected measure before remaining fields, preserving all supplied values
+and guarantees. See [record-list](RECORD_LIST.md).

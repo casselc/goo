@@ -1,5 +1,11 @@
 # Known issues and gaps
 
+297 adds a passive record-list kind with supplied-page Details and shared paging.
+Use Table for record selection and source actions; full action parity requires the
+next shared-controller extraction. Lists do not persist selected row identity or
+carry completeness witnesses. Both kinds retain the same columns, field qualifiers,
+page limits, query and saved/template owner.
+
 296 adds authorable templates and a Database client activity preset through the
 existing view catalog. The first binding supports ordinary count/duration aggregate
 and records, with explicit destination grouping and fixed profile choices; it does
@@ -13,10 +19,9 @@ API accepts drafts, but there is no UI preview of unsaved source declarations;
 a future draft-preview flow needs a deliberate declaration codec for equivalent
 omitted presentation defaults. Existing strict presentation checks are retained.
 
-The shared exact table still lists available measure columns and can place selected
-p95 outside the initial viewport. The next record-shape/readability outcome should
-make the selected measure immediately visible. This does not change the values or
-query scope, and is separate from template binding correctness.
+297 orders dimensions/bounds and the selected measure before remaining exact-table
+fields, retaining all values and the original snapshot. The selected-p95 viewport
+issue found in 296 is addressed without changing query scope or guarantees.
 
 295 makes captured-baseline selection contextual through one picker near the
 applied aggregate, with visible-comparison and staged/settings fallbacks. Opening

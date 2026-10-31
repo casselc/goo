@@ -1,5 +1,55 @@
 # Validation record
 
+## Supplied record lists and selected-measure tables — 297
+
+[Contract/diagram](docs/RECORD_LIST.md) ·
+[storyboard](journeys/297-record-list-storyboard.md) ·
+[architecture](docs/reviews/RECORD_SHAPE_ARCHITECTURE_297.md) and
+[design](docs/reviews/RECORD_SHAPE_DESIGN_297.md) reviews.
+
+- Full root `go test ./...`, all 931 frontend tests and focused backend tests pass.
+  OpenAPI checks pass: 98 operations, 651 schemas,
+  429 fixture responses, 159 admitted requests and 28 mux refusals. Five real
+  template-expansion/save exchanges conform. No new source endpoint or page shape.
+- 100 Hegel cases exercise actual Go/JS record declarations and public page
+  admission, including qualified fields, rich values, invalid metadata and detached
+  data. The observed 21-step Quint replay rejects six corrupted ledgers and an
+  unfinished prefix. An adapter string-quoting error was corrected before passing.
+- Final 297 native journey passes in 47.2 seconds, starting from real DB telemetry with
+  no API-seeded saved definitions. Table/List changes, local Details and template
+  application read nothing; pending selection blocks kind changes. Retired Table
+  DOM cannot revive source actions when reattached, and old page controls/details
+  cannot mutate a replacement page. Template save/apply/reopen preserves List kind.
+- The held aggregate remains 102 while a later page read reports 103 matching
+  records and three supplied rows at offset 100. The scenario uses six Explore,
+  one page, three pure expansion and two view-save POSTs; no capture, document or
+  Keep writes. These are HTTP operations, not physical SQL counts; setup excluded.
+- Actual OTLP logs, serialized attributes, detached-property updates and invalid
+  replacement clearing pass in a separate display-consumer fixture. This variant
+  seeds display configuration; the main DB/template path is unseeded.
+- Independent 30-second Bombadil passes with 482 snapshots across seven phases, observing
+  offset 100, three rows, opened Details and the held aggregate, with one Explore,
+  one page and no writes/overflow. 296 template and 289 paging regressions pass.
+- The selected p95 header and first value are within the 1280px initial viewport,
+  while all other fields remain. Rendering order retains field references and does
+  not project snapshots or change denominators, quality or action intents.
+- Three actual frames pass UX review. Screenshot-only styling hides an unrelated
+  sticky trail, and p95 captures the bounded table viewport. Meaningful 296 table
+  and 289 record-control frames were refreshed; token-only frames were restored.
+- The passive display export/dependency manifest now includes RecordList and its
+  six pure contract modules; its no-I/O/no-app-owner graph assertion passes.
+- Structural tests prevent repeated rich-page clones through record context:
+  context receives bounded ID-only metadata while full attributes remain in Details.
+  Malformed parent values no longer coerce into a zero reported parent. Shared
+  qualified timestamp/duration and missing/empty/null formatting is covered.
+
+- Compose configuration and CA-backed image build pass. The local lab runs image
+  `63a7c101cb99c50d21566d870908da873ad6d25312c1dcb33d9aa5183e91bd2f`;
+  all twelve changed/new UI/schema assets match served bytes. Existing volumes and
+  the separate XTDB container were retained. Changed contract/review/storyboard
+  links resolve. Successful raw test stores and 22MB campaign copies were cleaned;
+  compact results and actual documentation frames remain.
+
 ## Authorable templates and database preset — 296
 
 [Contract/diagram](docs/AUTHORABLE_VIEW_TEMPLATES.md) ·

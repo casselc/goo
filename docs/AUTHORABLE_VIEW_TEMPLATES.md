@@ -1,7 +1,8 @@
 # Author reusable views
 
 Use the existing view composition as the canvas: choose bars or a table, its
-measure, and record columns. Under Preserve, name the view, enable **Reusable template**, choose
+measure, and record columns. The records child can use Table or
+[List](RECORD_LIST.md) over the same supplied page. Under Preserve, name the view, enable **Reusable template**, choose
 its **Data profile**, and Save. Templates use the same immutable
 saved-view catalog; they do not create another dashboard or package store.
 

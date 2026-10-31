@@ -2758,3 +2758,5 @@ held parent return, fresh focus and refusal of retired controls.
 - [295: contextual captured-baseline comparison](../../journeys/295-contextual-comparison-storyboard.md).
 
 - [296: author and reuse a database view template](../../journeys/296-authored-template-storyboard.md).
+
+- [297: supplied record lists and selected-measure table ordering](../../journeys/297-record-list-storyboard.md).

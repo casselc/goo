@@ -8,7 +8,7 @@ test('display entry imports a closed passive graph without publishing namespaces
   assert.equal(display.UI, await import('../ui/components.mjs'));
   assert.equal(display.ComparisonVisual, await import('../ui/comparison-visual.mjs'));
   assert.equal(display, await import('../ui/display.mjs'));
-  assert.deepEqual(Object.keys(display).sort(), ['AlignedHistogram', 'Attributes', 'BucketHeatmap', 'ChartFrame', 'ComparisonSeries', 'ComparisonVisual', 'EvidenceSummary', 'ExceptionDetail', 'FieldPresentation', 'GroupingControl', 'RecordColumns', 'RecordPresentation', 'ServiceIdentity', 'StateObservations', 'TagList', 'TimeBars', 'TimeRange', 'TraceComparisonView', 'TracePageBreakdown', 'TracePageBreakdownView', 'TracePageComparison', 'UI', 'ValueTimeline', 'Waterfall']);
+  assert.deepEqual(Object.keys(display).sort(), ['AlignedHistogram', 'Attributes', 'BucketHeatmap', 'ChartFrame', 'ComparisonSeries', 'ComparisonVisual', 'EvidenceSummary', 'ExceptionDetail', 'FieldPresentation', 'GroupingControl', 'RecordColumns', 'RecordList', 'RecordPresentation', 'ServiceIdentity', 'StateObservations', 'TagList', 'TimeBars', 'TimeRange', 'TraceComparisonView', 'TracePageBreakdown', 'TracePageBreakdownView', 'TracePageComparison', 'UI', 'ValueTimeline', 'Waterfall']);
   assert.deepEqual(Object.getOwnPropertyNames(globalThis).filter(k => !before.has(k)), []);
 
   // The public graph must remain independent of app owners and their bridge.
@@ -31,7 +31,10 @@ test('display entry imports a closed passive graph without publishing namespaces
   // Native aligned plots add only the shared pure histogram-value formatter.
   // Count bars and canonical temporal charts share the passive key-range gesture helper.
   assert.ok(visited.has(new URL('../ui/interval-range.mjs', import.meta.url).href));
-  assert.equal(visited.size, 41);
+  // Record lists add bounded page and pure declaration validation, never an app owner.
+  for (const name of ['record-list', 'record-page', 'view-composition', 'view-declaration', 'timeline-declaration', 'captured-count-comparison'])
+    assert.ok(visited.has(new URL('../ui/' + name + '.mjs', import.meta.url).href));
+  assert.equal(visited.size, 47);
 });
 
 test('feature imports expose the existing exact-data helpers through ESM', async () => {

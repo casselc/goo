@@ -6,6 +6,7 @@ import {validate as validatePredicate} from './predicate-validation.mjs';
 export const RECORD_PAGE_LIMITS=Object.freeze({maxBytes:16*1024*1024,maxNodes:250000,maxDepth:32});
 const object=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
 const encoder=new TextEncoder();
+const admittedPages=new WeakSet();
 
 // Walk data descriptors, rather than reading properties, so an extension cannot
 // smuggle mutable class instances, accessors or cycles into a passive component.
@@ -52,6 +53,22 @@ export function fromExploration(data){
  if(!['observed','no_data','changed_between_reads'].includes(input.state))throw Error('Unsupported record-page observation state.');
  const {limit,offset}=input.question;
  if(!Number.isInteger(limit)||limit<1||limit>200||!Number.isInteger(offset)||offset<0||offset>1000||!Array.isArray(input.rows)||input.rows.length>limit||input.rows.some(row=>!object(row)))throw Error('Record page differs from its bounded delivery question.');
+ if(input.state==='no_data'&&input.rows.length)throw Error('No-data record pages cannot contain supplied rows.');
  if(input.hasMore!==undefined&&typeof input.hasMore!=='boolean')throw Error('Record-page continuation must be reported or unknown.');
- return Object.freeze({version:'goo.record-page/1',signal:input.question.signal,question:input.question,basis:input.basis,capturedAt:input.capturedAt,rows:input.rows,page:Object.freeze({offset,limit,returned:input.rows.length,hasMore:input.hasMore??null}),quality:Object.freeze({extent:'bounded-page',upstream:'unknown',consistency:'independent-reads',state:input.state})});
+ const page=Object.freeze({version:'goo.record-page/1',signal:input.question.signal,question:input.question,basis:input.basis,capturedAt:input.capturedAt,rows:input.rows,page:Object.freeze({offset,limit,returned:input.rows.length,hasMore:input.hasMore??null}),quality:Object.freeze({extent:'bounded-page',upstream:'unknown',consistency:'independent-reads',state:input.state})});
+ admittedPages.add(page);return page;
+}
+
+
+// Public display admission: a copied serialized page is usable supplied data,
+// never a SourceSnapshots wrapper, completeness witness or action capability.
+export function adoptPage(value){
+ if(value&&typeof value==='object'&&admittedPages.has(value))return value;
+ const input=immutableJSON(value),closed=(object,keys)=>{if(!object||typeof object!=='object'||Array.isArray(object)||Object.keys(object).length!==keys.length||Object.keys(object).some(key=>!keys.includes(key)))throw Error('Invalid supplied record-page fields.');};
+ closed(input,['version','signal','question','basis','capturedAt','rows','page','quality']);
+ closed(input.page,['offset','limit','returned','hasMore']);closed(input.quality,['extent','upstream','consistency','state']);
+ if(input.version!=='goo.record-page/1'||input.signal!==input.question?.signal||input.quality.extent!=='bounded-page'||input.quality.upstream!=='unknown'||input.quality.consistency!=='independent-reads'||![true,false,null].includes(input.page.hasMore))throw Error('Unsupported supplied record-page profile.');
+ const page=fromExploration({question:input.question,basis:input.basis,capturedAt:input.capturedAt,state:input.quality.state,rows:input.rows,...(input.page.hasMore===null?{}:{hasMore:input.page.hasMore})});
+ if(input.page.offset!==page.page.offset||input.page.limit!==page.page.limit||input.page.returned!==page.page.returned)throw Error('Record-page metadata differs from supplied rows and question.');
+ return page;
 }

@@ -8,7 +8,7 @@ const object=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
 function closed(value,keys){if(!object(value)||Object.keys(value).some(key=>!keys.includes(key)))throw Error('Unknown or invalid composition fields.');}
 export function recordDisplay(value,q){
  validateRecordQuestion(q);closed(value,['version','scope','kind','display']);closed(value.scope,['kind','signal']);closed(value.kind,['name','version']);closed(value.display,['columns','fieldColumns']);
- if(value.version!=='goo.view/1'||value.scope.kind!=='record-query'||value.scope.signal!==q.signal||value.kind.name!=='record-table'||value.kind.version!==1)throw Error('Choose a pinned record table for this query.');
+ if(value.version!=='goo.view/1'||value.scope.kind!=='record-query'||value.scope.signal!==q.signal||!['record-table','record-list'].includes(value.kind.name)||value.kind.version!==1)throw Error('Choose a pinned record table or list for this query.');
  const {columns,fieldColumns=[]}=value.display;
  if(!Array.isArray(columns)||columns.length<2||columns.length>4||new Set(columns).size!==columns.length||!columns.includes('utc')||!columns.includes('summary')||columns.some(key=>!['utc','service','summary','context'].includes(key)))throw Error('Keep UTC and summary with two to four unique record columns.');
  if(!Array.isArray(fieldColumns)||fieldColumns.length>8||new Set(fieldColumns.map(f=>JSON.stringify([f?.kind,f?.key]))).size!==fieldColumns.length)throw Error('Choose at most eight unique qualified record fields.');
@@ -33,6 +33,7 @@ export const visible=(value,name)=>!!value.children.find(child=>role(child)===na
 export function create(q,declaration,options={columns:['utc','service','summary','context']}){return validate({version:'goo.composition/1',kind:{name:'stack',version:1},children:[{aggregate:declaration},{records:{version:'goo.view/1',scope:{kind:'record-query',signal:q.signal},kind:{name:'record-table',version:1},display:structuredClone(options)}}]},q)}
 export function setAggregate(value,next,q){return validate({...value,children:value.children.map(child=>child.aggregate?{...child,aggregate:next}:child)},q)}
 export function setRecords(value,next,q){return validate({...value,children:value.children.map(child=>child.records?{...child,records:{...child.records,display:next}}:child)},q)}
+export function setRecordKind(value,name,q){return validate({...value,children:value.children.map(child=>child.records?{...child,records:{...child.records,kind:{name,version:1}}}:child)},q)}
 export function setHidden(value,name,hidden,q){if(!['aggregate','records','timeline','comparison'].includes(name))throw Error('Choose an existing composition role.');return validate({...value,children:value.children.map(child=>role(child)===name?{...child,hidden}:child)},q)}
 export function reverse(value,q){return validate({...value,children:[...value.children].reverse()},q)}
 // Compatibility concerns configuration only; current inputs and paging stay with

@@ -3398,3 +3398,30 @@ rows. Its fetch wrapper delegates unchanged and counts write methods, avoiding a
 false write count for catalog GETs. Keep compact ledgers/API observations/campaign
 summary and four storyboard frames; discard successful raw capture-store/campaign
 copies. Main fixture setup/polling is excluded from browser accounting.
+
+## Supplied record lists — 297
+
+From the root, run
+`GOO_RECORD_LIST_BOMBADIL=1 playwright test journeys/297-record-list.spec.js --workers=1`.
+The main journey authors a List through real discovered DB services and the existing
+view/template catalog, then checks qualified values, native lazy Details, selection
+refusal, old-table DOM retirement, independent paging and save/reopen. A separate
+actual-OTLP log fixture uses a seeded configuration to test serialized attributes,
+detached properties, missing/empty states and withdrawal of forged page metadata.
+It is not presented as a second unseeded authoring journey.
+
+Run `go test -run 'TestHegelRecordListDeclarationsAndSuppliedPages|TestQuintRecordListModelSmoke' -count=1`
+in this module. Hegel exercises 50 valid and 50 refused cases against actual Go
+record declarations/template expansion and JS record display/page admission; no
+parallel record validator is used as an oracle. Replay the actual 21-step browser
+ledger with
+`GOO_RECORD_LIST_LEDGER=../artifacts/record-list-297/model-trace.json go test -run TestQuintRecordListObservedBrowserLedger -count=1`.
+Six corrupted ledgers and an unfinished prefix must fail.
+
+The independent external-driver campaign requires actual List→Details→Table→List,
+then one explicit page read with three rows at offset 100 and one open supplied
+Details pane, while the aggregate identity stays held. Its budget is one Explore,
+one page request and zero writes. The selected p95 header and value are checked in
+the initial viewport; all remaining fields and snapshot guarantees remain intact.
+Keep compact results and three generated frames, remove successful raw stores and
+campaign directories. Fixture readiness polling is separate from browser accounting.

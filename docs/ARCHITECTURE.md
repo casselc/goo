@@ -1610,3 +1610,14 @@ detached configuration. Shared descriptor data validates HTTP/DB mandatory
 conjuncts; ordinary composition reuse remains exact-field. The same save/catalog
 and application query owner handle preview/apply/reopen. See
 [the template contract](AUTHORABLE_VIEW_TEMPLATES.md).
+
+## Bounded record-list presentation — 297
+
+`record-list` is an alternate records kind, not another query role or dataset.
+The application supplies the same admitted `goo.record-page/1` and keeps paging,
+full-query counts and source actions. Public serialized-page admission validates
+and freezes display data without producing SourceSnapshots authority. List/native
+Details remain passive; Table retains selection and record actions. Current record
+owners fence stale Table nodes even if reattached after a kind change. Context
+rendering passes bounded reported-ID projections, avoiding repeated rich-page
+copies. See [the contract](RECORD_LIST.md).

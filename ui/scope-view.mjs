@@ -54,12 +54,20 @@ function cellValue(field,value,knowledge,facts,bounds){
   return cell;
 }
 
+// Rendering order only: all supplied fields and their proof remain unchanged.
+export function tableFields(snapshot,display){
+ const dimensions=snapshot.shape==='time-series'?['fromMs','toMs']:snapshot.shape==='histogram'?['from','to']:snapshot.dimensions?.length?snapshot.dimensions:[display.category];
+ const keys=[...dimensions,display.value],used=new Set(),fields=[];
+ for(const key of keys){const field=snapshot.fields.find(item=>item.key===key);if(field&&!used.has(key)){used.add(key);fields.push(field)}}
+ for(const field of snapshot.fields)if(!used.has(field.key)){used.add(field.key);fields.push(field)}
+ return fields;
+}
 function table(host,snapshot,display,rows=displayRows(snapshot,display)){
   const frame=n('goo-table'),table=n('table'),head=n('thead'),row=n('tr'),body=n('tbody');
   frame.setAttribute('density','compact');
   table.append(n('caption',display.scale==='population'?'Supplied values · shares of '+snapshot.partition.total+' captured records':'Supplied values'));
   const mapped=[display.category,display.value].map(key=>snapshot.fields.find(field=>field.key===key));
-  const fields=display.kind==='table'?snapshot.fields:mapped.every(Boolean)?mapped:snapshot.fields;
+  const fields=display.kind==='table'?tableFields(snapshot,display):mapped.every(Boolean)?mapped:snapshot.fields;
   for(const field of fields){const th=n('th',field.label+(isFraction(field)?' · 0–100%':field.unit&&field.unit!=='ns'?' · '+field.unit:''));th.scope='col';row.append(th)}
   if(display.scale==='population'){const th=n('th','Share');th.scope='col';th.title='Share of the full captured query population';row.append(th)}
   if(snapshot.shape==='time-series'){const th=n('th','Interval state');th.scope='col';row.append(th)}

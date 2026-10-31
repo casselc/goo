@@ -140,7 +140,9 @@ for suffix in ('', 'Input'):
  for name,kind_name in [('CompositionKind','stack'),('RecordViewKind','record-table')]:
   kind=schemas['workbench.'+name+suffix];kind['additionalProperties']=False
   kind['required']=['name','version']
-  kind['properties']['name']['const']=kind_name;kind['properties']['version']['const']=1
+  if name=='RecordViewKind':kind['properties']['name']['enum']=['record-table','record-list']
+  else:kind['properties']['name']['const']=kind_name
+  kind['properties']['version']['const']=1
  child=schemas['workbench.ViewCompositionChild'+suffix];child['additionalProperties']=False
  child['properties']['hidden']['type']='boolean'
  child['oneOf']=[{'required':[role],'not':{'anyOf':[{'required':[other]} for other in ('aggregate','records','timeline','comparison') if other!=role]}} for role in ('aggregate','records','timeline','comparison')]
@@ -178,7 +180,7 @@ for suffix in ('', 'Input'):
  for field in ('scope','kind','display'): record['properties'][field]['type']='object'
  record['properties']['scope']['required']=['kind','signal']
  record['properties']['version']['const']='goo.view/1'
- record['description']='Pinned record-table presentation over a supplied bounded page, independent of aggregate completeness and totals. Scope references the one parent query; page size is never a population denominator.'
+ record['description']='Pinned record-table or record-list presentation over the same supplied bounded page, independent of aggregate completeness and totals. Scope references the one parent query; page size is never a population denominator.'
  display=schemas['workbench.RecordViewDisplay'+suffix];display['additionalProperties']=False
  display['required']=['columns']
  display['properties']['columns'].update(type='array',minItems=2,maxItems=4,uniqueItems=True,items={'enum':['utc','service','summary','context']},allOf=[{'contains':{'const':core}} for core in ('utc','summary')])
