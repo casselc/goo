@@ -9,16 +9,18 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/casselc/goo/measurements"
 	"github.com/casselc/goo/metrics"
 )
 
 // EvidenceComparison compares validated stored results. It never executes a source
 // query or infers aggregates from retained inspection rows.
 type EvidenceSide struct {
-	Receipt CaptureReceipt `json:"receipt"`
-	ReadAt  string         `json:"readAt"`
-	State   string         `json:"state"`
-	Count   string         `json:"count"`
+	NativeHistogramSource *measurements.HistogramWindowSource `json:"nativeHistogramSource,omitempty"`
+	Receipt               CaptureReceipt                      `json:"receipt"`
+	ReadAt                string                              `json:"readAt"`
+	State                 string                              `json:"state"`
+	Count                 string                              `json:"count"`
 }
 type GaugeChange struct {
 	Stream     metrics.Stream       `json:"stream"`
@@ -51,6 +53,7 @@ func evidenceSide(c *SavedCapture) EvidenceSide {
 	}
 	if r := c.Measurement; r != nil {
 		s.ReadAt = r.ReadAt
+		s.NativeHistogramSource = measurements.HistogramSource(r)
 		s.State = r.State
 		s.Count = r.Count
 	}

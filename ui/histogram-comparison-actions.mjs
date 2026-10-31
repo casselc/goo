@@ -16,7 +16,9 @@ const identityKeys=['type','datasetId','revision','scopeId','generation','fromKe
 export function createHistogramComparisonActions(configuration){
  const config=plain(configuration,['comparison','active']);
  if(!config||!isHistogramComparison(config.comparison)||typeof config.active!=='function')throw TypeError('Bind an admitted histogram comparison and a synchronous active callback.');
- const comparison=config.comparison;let retired=false;
+ const comparison=config.comparison;
+ if(comparison.baseline.histogram.kind!=='numeric'||comparison.selection.histogram.kind!=='numeric')throw TypeError('Record range planning requires numeric histogram operands.');
+ let retired=false;
  function resolve(value){
   try{
    if(retired)return refusal('retired','This comparison has been withdrawn.');

@@ -1,5 +1,8 @@
 # Native interval histograms in scoped views — 272
 
+274 adds [whole-window comparisons](SCOPED_NATIVE_HISTOGRAM_COMPARISONS.md) in the
+existing saved-evidence comparison flow.
+
 273 extends this contract to [selected fixed-time buckets](SCOPED_HISTOGRAM_TIME_BUCKETS.md),
 with explicit anchored width/index and derived coverage semantics.
 

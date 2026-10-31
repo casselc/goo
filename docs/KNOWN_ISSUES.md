@@ -1,5 +1,12 @@
 # Known issues and gaps
 
+274 consolidates [native captured-window comparisons](SCOPED_NATIVE_HISTOGRAM_COMPARISONS.md)
+in one shared aligned count/share display. Global withholding, known empty and
+incompatible-layout diagnostics retain existing policy; no rebucketing, fleet
+merge or native record-range actions are added. The
+[finite adoption checkpoint](VIEW_AUTHORING_CHECKPOINT_274.md) leaves specialized
+owners explicit and moves next to the existing saved-view authoring workflow.
+
 273 adopts [selected native fixed-time histogram buckets](SCOPED_HISTOGRAM_TIME_BUCKETS.md).
 Only whole-export covered buckets project; unavailable diagnostics, known empty
 observations and clipped final windows remain distinct. Counts are not rates.

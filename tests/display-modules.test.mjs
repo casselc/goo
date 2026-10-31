@@ -28,7 +28,8 @@ test('display entry imports a closed passive graph without publishing namespaces
   // Canonical comparisons share H0 snapshot/view contracts and pure question
   // validators, including checked measurement-interval scope. The graph still
   // excludes application adapters and all IO.
-  assert.equal(visited.size, 39);
+  // Native aligned plots add only the shared pure histogram-value formatter.
+  assert.equal(visited.size, 40);
 });
 
 test('feature imports expose the existing exact-data helpers through ESM', async () => {

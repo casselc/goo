@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey274](../../journeys/274-native-histogram-comparison-storyboard.md) uses
+the existing capture-comparison flow for native observation counts/shares, held
+Saved reopening and global comparison refusal.
+
 [Journey273](../../journeys/273-native-time-histogram-storyboard.md) covers
 whole-export time buckets, known-zero and unavailable coverage, short final
 windows, local time/export switches and held Saved inspection.

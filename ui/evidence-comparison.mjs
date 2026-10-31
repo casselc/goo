@@ -1,4 +1,3 @@
-import './bucket-heatmap.mjs';
 /* Compare immutable capture IDs; source reads and publication are never implicit. */
 import * as Attributes from './attributes.mjs';
 import * as ComparisonBreakdown from './comparison-breakdown.mjs';
@@ -15,6 +14,7 @@ import * as Histograms from './histograms.mjs';
 import * as LogPatternComparisonView from './log-pattern-comparison-view.mjs';
 import * as LogPatterns from './log-patterns.mjs';
 import * as NativePresentation from './native-presentation.mjs';
+import * as NativeHistogramComparison from './native-histogram-comparison.mjs';
 import * as NumericComparison from './numeric-comparison.mjs';
 import * as NumericDistributionComparison from './numeric-distribution-comparison.mjs';
 import * as UI from './components.mjs';
@@ -56,13 +56,20 @@ function mount(host,ids,options={}){
    if(r.nativeWindows?.length){output.append(n('h5','Complete native windows · exact OTel streams'));
     const range=d=>d?`${d.p95.lower??'−∞'} … ${d.p95.upper??'+∞'} ${d.unit} · ${d.p95.state}`:'Unavailable';
     const streamName=s=>[s.name+' ['+s.unit+']',...Object.entries(s.resource||{}).map(([k,v])=>k+'='+v),...Object.entries(s.attributes||{}).map(([k,v])=>k+'='+v),'scope '+s.scope+' · version '+s.version+' · schema '+s.schemaURL+' · resource schema '+(s.resourceSchemaURL||'omitted')].join(' · ');
-    const bucket=(d,i)=>`(${i?d.bounds[i-1]:'−∞'}, ${i<d.bounds.length?d.bounds[i]:'+∞'}] ${d.unit}`;
-    for(const w of r.nativeWindows){const detail=n('details');detail.className='native-window';detail.open=true;detail.append(n('summary',(w.stream.resource?.['service.name']||'Unknown service')+' / '+(w.stream.resource?.['service.instance.id']||'Unknown instance')+' · '+w.stream.name+' ['+w.stream.unit+'] · '+w.state));output.append(detail);if(Attributes)detail.append(Attributes.streamInspection(w.stream));else detail.append(n('p',streamName(w.stream)));
+    const bucket=(d,i)=>Histograms.bucketLabel(d.bounds,i,d.unit);
+    const histogramWindows=['baseline','selection'].every(side=>r[side].receipt.question.measurement?.definition.kind==='histogram');let nativeWindowIndex=0;
+    for(const w of r.nativeWindows){const detail=n('details');detail.className='native-window';detail.open=!histogramWindows||nativeWindowIndex++===0;detail.append(n('summary',(w.stream.resource?.['service.name']||'Unknown service')+' / '+(w.stream.resource?.['service.instance.id']||'Unknown instance')+' · '+w.stream.name+' ['+w.stream.unit+'] · '+w.state));output.append(detail);const build=()=>{if(Attributes)detail.append(Attributes.streamInspection(w.stream));else detail.append(n('p',streamName(w.stream)));
      const nativeScope=n('details');nativeScope.append(n('summary','Native window coverage and scope'));detail.append(nativeScope);for(const [label,side] of [['Baseline',w.baseline],['Comparison',w.selection]])NativePresentation.renderWindowCoverage(nativeScope,label,side)
      NativePresentation.renderReasons(detail,w.reasons);
      if(w.rateDifference!==undefined)ComparisonVisual.pair(detail,{title:'Exact stream rate',values:[w.baseline.rate,w.selection.rate],unit:w.stream.unit+'/s',delta:w.rateDifference,labels:['Baseline','Comparison']});if(w.baseline?.rate!==undefined||w.selection?.rate!==undefined)table(detail,['Window','Validated increments','Exact rate ('+w.stream.unit+'/s)'],[['Baseline',w.baseline?.delta??'Unavailable',w.baseline?.rate??'Unavailable'],['Comparison',w.selection?.delta??'Unavailable',w.selection?.rate??'Unavailable']]);
      if(w.rateDifference!==undefined)detail.append(n('p','Rate change (comparison − baseline): '+w.rateDifference+' '+w.stream.unit+'/s'));
-     const a=w.baseline?.distribution,b=w.selection?.distribution;if(a||b){if(w.buckets?.length)ComparisonVisual.histogram(detail,{title:'Distribution shape · '+w.stream.unit,rows:w.buckets.map((v,i)=>({label:bucket(a,i),baseline:Distributions.percent(v.baseline,a.count),selection:Distributions.percent(v.selection,b.count)}))});table(detail,['Window','Histogram observations','P95 bucket range'],[['Baseline',a?.count??'Unavailable',range(a)],['Comparison',b?.count??'Unavailable',range(b)]]);if(w.buckets?.length)table(detail,['Bucket','Baseline observations','Comparison observations','Share change (pp)'],w.buckets.map((v,i)=>[bucket(a,i),v.baseline,v.selection,v.differencePP]));else for(const [label,d]of[['Baseline',a],['Comparison',b]])if(d){detail.append(n('p',label+' stored buckets'));table(detail,['Bucket','Observations'],d.bucketCounts.map((v,i)=>[bucket(d,i),v]))}if(w.state==='comparable'&&w.buckets?.length&&w.buckets.length<=64&&a&&b){const disclosure=n('details'),grid=n('goo-bucket-heatmap');disclosure.append(n('summary','Exact bucket populations · shared count scale'),n('p','Raw observations, not normalized shares; window durations and coverage are shown above.'));const ceiling=w.buckets.reduce((max,v)=>[v.baseline,v.selection].reduce((m,x)=>BigInt(x)>BigInt(m)?String(x):m,max),'0');grid.data={title:'Captured window bucket populations',ceiling,rows:w.buckets.map((v,i)=>({key:String(i),label:Histograms.bucketLabel(a.bounds,i,a.unit)})),columns:[['baseline','Baseline','baseline'],['selection','Comparison','selection']].map(([key,label,field])=>({key,label,cells:w.buckets.map(v=>({state:'observed',value:String(v[field])}))}))};disclosure.append(grid);detail.append(disclosure)}if(w.p95Relation)detail.append(n('p','P95 ranges: '+w.p95Relation+' · no scalar percentile difference'))}
+     const a=w.baseline?.distribution,b=w.selection?.distribution;if(a||b){
+      table(detail,['Window','Histogram observations','P95 bucket range'],[['Baseline',a?.count??'Unavailable',range(a)],['Comparison',b?.count??'Unavailable',range(b)]]);
+      const pair=NativeHistogramComparison.comparisonForWindow(r,w),aligned=NativeHistogramComparison.mount(detail,pair);
+      if(!aligned){for(const [label,d]of[['Baseline',a],['Comparison',b]])if(d){detail.append(n('p',label+' stored buckets'));table(detail,['Bucket','Observations'],d.bucketCounts.map((v,i)=>[bucket(d,i),v]))}}
+      if(w.p95Relation)detail.append(n('p','P95 ranges: '+w.p95Relation+' · no scalar percentile difference'));
+     }
+     };if(histogramWindows)NativeHistogramComparison.renderWindow(detail,build);else build();
     }
    }
    if(!saved&&!r.differences.some(x=>['Question definition differs','Environment differs','Unit differs','Signal family differs'].includes(x))&&['counter','histogram'].includes(r.baseline.receipt.question.measurement?.definition.kind)&&r.selection.receipt.question.measurement?.definition.kind===r.baseline.receipt.question.measurement.definition.kind){WindowDiscovery.mount(output,[a,b],{current:()=>g===generation&&host.isConnected,captured:ids=>{for(const [select,id]of[[baseline,ids[0]],[selection,ids[1]]]){select.append(new Option('Selected support · '+id.slice(0,12),id));select.value=id;}button.onclick();}})}

@@ -836,6 +836,9 @@
   "NativeHistogramTimeSelector": {
     "$ref": "#/components/schemas/measurements.HistogramTimeViewSelector"
   },
+  "NativeHistogramWindowSelector": {
+    "$ref": "#/components/schemas/measurements.HistogramWindowViewSelector"
+  },
   "NativePlanRequest": {
     "anyOf": [
       {
@@ -5299,6 +5302,16 @@
       "count": {
         "type": "string"
       },
+      "nativeHistogramSource": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.HistogramWindowSource"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "readAt": {
         "type": "string"
       },
@@ -5325,6 +5338,23 @@
         "anyOf": [
           {
             "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "nativeHistogramSource": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.HistogramWindowSourceInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           {
             "type": "null"
@@ -14906,6 +14936,168 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/measurements.HistogramViewSelector"
+  },
+  "measurements.HistogramWindowSource": {
+    "properties": {
+      "histogramBasis": {
+        "type": "string"
+      },
+      "measurementBasis": {
+        "type": "string"
+      },
+      "streams": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.HistogramWindowStream"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "measurementBasis",
+      "histogramBasis",
+      "streams"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HistogramWindowSource"
+  },
+  "measurements.HistogramWindowSourceInput": {
+    "additionalProperties": false,
+    "properties": {
+      "histogramBasis": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "measurementBasis": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "streams": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/measurements.HistogramWindowStreamInput"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HistogramWindowSource"
+  },
+  "measurements.HistogramWindowStream": {
+    "properties": {
+      "state": {
+        "type": "string"
+      },
+      "stream": {
+        "$ref": "#/components/schemas/metrics.Stream"
+      },
+      "temporality": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "stream",
+      "temporality",
+      "state"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HistogramWindowStream"
+  },
+  "measurements.HistogramWindowStreamInput": {
+    "additionalProperties": false,
+    "properties": {
+      "state": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "stream": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/metrics.StreamInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "temporality": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HistogramWindowStream"
+  },
+  "measurements.HistogramWindowViewSelector": {
+    "properties": {
+      "fromNS": {
+        "type": "string"
+      },
+      "kind": {
+        "type": "string"
+      },
+      "question": {
+        "$ref": "#/components/schemas/measurements.Question"
+      },
+      "stream": {
+        "$ref": "#/components/schemas/metrics.Stream"
+      },
+      "toNS": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "kind",
+      "question",
+      "stream",
+      "fromNS",
+      "toNS"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HistogramWindowViewSelector"
   },
   "measurements.HostDashboardPlan": {
     "properties": {

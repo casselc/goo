@@ -7089,6 +7089,9 @@
       "NativeHistogramTimeSelector": {
         "$ref": "#/components/schemas/measurements.HistogramTimeViewSelector"
       },
+      "NativeHistogramWindowSelector": {
+        "$ref": "#/components/schemas/measurements.HistogramWindowViewSelector"
+      },
       "NativePlanRequest": {
         "anyOf": [
           {
@@ -11640,6 +11643,16 @@
           "count": {
             "type": "string"
           },
+          "nativeHistogramSource": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.HistogramWindowSource"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "readAt": {
             "type": "string"
           },
@@ -11666,6 +11679,23 @@
             "anyOf": [
               {
                 "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "nativeHistogramSource": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/measurements.HistogramWindowSourceInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               {
                 "type": "null"
@@ -19720,13 +19750,6 @@
                   "shape": {
                     "const": "histogram"
                   },
-                  "histogram": {
-                    "properties": {
-                      "kind": {
-                        "const": "numeric"
-                      }
-                    }
-                  },
                   "origin": {
                     "const": "browser-held"
                   },
@@ -19758,13 +19781,6 @@
                 "properties": {
                   "shape": {
                     "const": "histogram"
-                  },
-                  "histogram": {
-                    "properties": {
-                      "kind": {
-                        "const": "numeric"
-                      }
-                    }
                   },
                   "origin": {
                     "const": "browser-held"
@@ -19828,7 +19844,95 @@
             }
           }
         ],
-        "description": "Two independent validated held numeric histogram operands. No merged rows, pooled statistic, source proof or shared capture clock. Count, population-share (per-side support.total) and valid-share (per-side support.valid) are separate display choices. Zero denominators are unavailable; no_data is informational and preserves known zero counts and the other side. Diagnostic withholds cross-population share/delta claims. Runtime validates identical binding, signal, environment, geometry and state."
+        "oneOf": [
+          {
+            "properties": {
+              "baseline": {
+                "properties": {
+                  "histogram": {
+                    "properties": {
+                      "kind": {
+                        "const": "numeric"
+                      }
+                    }
+                  }
+                }
+              },
+              "selection": {
+                "properties": {
+                  "histogram": {
+                    "properties": {
+                      "kind": {
+                        "const": "numeric"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "state": {
+                "enum": [
+                  "observed",
+                  "no_data"
+                ]
+              },
+              "baseline": {
+                "properties": {
+                  "scope": {
+                    "properties": {
+                      "signal": {
+                        "const": "metrics"
+                      },
+                      "selector": {
+                        "properties": {
+                          "kind": {
+                            "const": "measurement-window"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "histogram": {
+                    "properties": {
+                      "kind": {
+                        "const": "otel-explicit"
+                      }
+                    }
+                  }
+                }
+              },
+              "selection": {
+                "properties": {
+                  "scope": {
+                    "properties": {
+                      "signal": {
+                        "const": "metrics"
+                      },
+                      "selector": {
+                        "properties": {
+                          "kind": {
+                            "const": "measurement-window"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "histogram": {
+                    "properties": {
+                      "kind": {
+                        "const": "otel-explicit"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "description": "Two independent validated held histogram operands. Numeric parsing distributions and native whole-window observation distributions are separate families. No merged rows, pooled statistic, source proof or shared capture clock. Numeric count, population-share (per-side support.total) and valid-share (per-side support.valid) are separate display choices. Native count and observation-share use each operand total; no numeric parsing support is invented. Zero denominators are unavailable; no_data is informational and preserves known zero counts and the other side. Diagnostic withholds cross-population share/delta claims. Runtime validates identical binding, signal, environment, geometry and state."
       },
       "exploration.ViewHistogramComparisonInput": {
         "additionalProperties": false,
@@ -23562,6 +23666,206 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.HistogramViewSelector",
+        "additionalProperties": false
+      },
+      "measurements.HistogramWindowSource": {
+        "properties": {
+          "histogramBasis": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "measurementBasis": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "streams": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/measurements.HistogramWindowStream"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxItems": 10000
+          }
+        },
+        "required": [
+          "measurementBasis",
+          "histogramBasis",
+          "streams"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HistogramWindowSource",
+        "additionalProperties": false
+      },
+      "measurements.HistogramWindowSourceInput": {
+        "additionalProperties": false,
+        "properties": {
+          "histogramBasis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "measurementBasis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "streams": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/measurements.HistogramWindowStreamInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HistogramWindowSource"
+      },
+      "measurements.HistogramWindowStream": {
+        "properties": {
+          "state": {
+            "enum": [
+              "ok",
+              "unknown",
+              "no_data"
+            ]
+          },
+          "stream": {
+            "$ref": "#/components/schemas/metrics.Stream"
+          },
+          "temporality": {
+            "enum": [
+              "delta",
+              "cumulative"
+            ]
+          }
+        },
+        "required": [
+          "stream",
+          "temporality",
+          "state"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HistogramWindowStream",
+        "additionalProperties": false
+      },
+      "measurements.HistogramWindowStreamInput": {
+        "additionalProperties": false,
+        "properties": {
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/metrics.StreamInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "temporality": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HistogramWindowStream"
+      },
+      "measurements.HistogramWindowViewSelector": {
+        "properties": {
+          "fromNS": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 19
+          },
+          "kind": {
+            "const": "measurement-window"
+          },
+          "question": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/measurements.Question"
+              },
+              {
+                "properties": {
+                  "definition": {
+                    "properties": {
+                      "kind": {
+                        "const": "histogram"
+                      },
+                      "grain": {
+                        "enum": [
+                          "per-stream",
+                          "consumer-group"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "stream": {
+            "$ref": "#/components/schemas/metrics.Stream"
+          },
+          "toNS": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 19
+          }
+        },
+        "required": [
+          "kind",
+          "question",
+          "stream",
+          "fromNS",
+          "toNS"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HistogramWindowViewSelector",
         "additionalProperties": false
       },
       "measurements.HostDashboardPlan": {
@@ -31985,7 +32289,7 @@
           },
           "scopeId": {
             "type": "string",
-            "pattern": "^[a-f0-9]{64}(:native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*))?$"
+            "pattern": "^[a-f0-9]{64}(:native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*)|:native-window:(0|[1-9][0-9]*))?$"
           }
         },
         "required": [
@@ -32104,7 +32408,7 @@
           },
           "id": {
             "type": "string",
-            "pattern": "^[a-f0-9]{64}:(groups|intervals|summary|bins|native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*):bins)$"
+            "pattern": "^[a-f0-9]{64}:(groups|intervals|summary|bins|native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*):bins|native-window:(0|[1-9][0-9]*):bins)$"
           },
           "interval": {
             "anyOf": [
@@ -34651,6 +34955,9 @@
                       },
                       {
                         "$ref": "#/components/schemas/measurements.HistogramTimeViewSelector"
+                      },
+                      {
+                        "$ref": "#/components/schemas/measurements.HistogramWindowViewSelector"
                       }
                     ]
                   }
@@ -35001,6 +35308,52 @@
                     }
                   }
                 }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "scope": {
+                      "properties": {
+                        "selector": {
+                          "properties": {
+                            "kind": {
+                              "const": "measurement-window"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "origin": {
+                      "const": "browser-held"
+                    },
+                    "quality": {
+                      "properties": {
+                        "extent": {
+                          "const": "unknown"
+                        }
+                      }
+                    },
+                    "scope": {
+                      "properties": {
+                        "id": {
+                          "pattern": "^[a-f0-9]{64}:native-window:(0|[1-9][0-9]*)$"
+                        }
+                      }
+                    },
+                    "id": {
+                      "pattern": "^[a-f0-9]{64}:native-window:(0|[1-9][0-9]*):bins$"
+                    }
+                  },
+                  "not": {
+                    "required": [
+                      "completeness"
+                    ]
+                  }
+                }
               }
             ]
           }
@@ -35081,7 +35434,7 @@
                 "scope": {
                   "properties": {
                     "id": {
-                      "pattern": "^[a-f0-9]{64}:native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*)$"
+                      "pattern": "^[a-f0-9]{64}:(native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*)|native-window:(0|[1-9][0-9]*))$"
                     }
                   }
                 }
@@ -39001,7 +39354,7 @@
           },
           "id": {
             "type": "string",
-            "pattern": "^[a-f0-9]{64}(:native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*))?$"
+            "pattern": "^[a-f0-9]{64}(:native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*)|:native-window:(0|[1-9][0-9]*))?$"
           },
           "selector": {
             "oneOf": [
@@ -39013,6 +39366,9 @@
               },
               {
                 "$ref": "#/components/schemas/measurements.HistogramTimeViewSelector"
+              },
+              {
+                "$ref": "#/components/schemas/measurements.HistogramWindowViewSelector"
               }
             ]
           },

@@ -552,6 +552,7 @@ selected/rest actions. [Native interval histograms](docs/SCOPED_NATIVE_HISTOGRAM
 now project one selected instrument interval into the same display, preserving
 observation counts, right-closed buckets and exact bounds. [Fixed-time histogram
 buckets](docs/SCOPED_HISTOGRAM_TIME_BUCKETS.md) now share those displays with
-anchored windows, whole-export coverage and clipped final buckets. Native
-comparisons and remaining specialized families still need adoption before
-renderer or contributed-view expansion.
+anchored windows, whole-export coverage and clipped final buckets. [Native comparisons](docs/SCOPED_NATIVE_HISTOGRAM_COMPARISONS.md) now use one
+aligned count/share display in the existing capture-comparison flow. This closes
+the current migration slice; [reusable saved-view declarations](docs/VIEW_AUTHORING_CHECKPOINT_274.md)
+are next. Specialized owners remain explicit rather than blocking authoring.

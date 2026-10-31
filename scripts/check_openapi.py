@@ -137,6 +137,47 @@ def check_view_dataset(spec):
         assert not check_view.is_valid(mutant), f'Invalid supplied view dataset accepted: {path}'
 
 
+def check_native_histogram_comparison(spec, pair_path, evidence_path=None):
+    pair = json.loads(Path(pair_path).read_text())
+    check_pair = validator(spec, {'$ref': '#/components/schemas/exploration.ViewHistogramComparison'})
+    check_pair.validate(pair)
+    assert pair['state'] == 'observed'
+    a,b=pair['baseline'],pair['selection']
+    assert a['histogram']['total']=='3' and b['histogram']['total']=='8'
+    assert a['capturedAt']!=b['capturedAt'] and a['scope']['id']!=b['scope']['id']
+    assert a['scope']['selector']['kind']=='measurement-window'
+    assert a['rows'][0]['values']['from']=='-inf' and a['rows'][-1]['values']['to']=='+inf'
+    mutations=[
+        (('baseline','scope','selector','kind'),'measurement-time-bucket'),
+        (('baseline','histogram','closure'),'left-closed-right-open'),
+        (('baseline','histogram','grain'),'records'),
+        (('baseline','histogram','unit'),'records'),
+        (('baseline','origin'),'source-read'),
+        (('baseline','quality','extent'),'complete'),
+        (('baseline','sourceBasis'),'bad'),
+        (('baseline','scope','signal'),'spans'),
+        (('baseline','histogram','support'),{'total':'3','valid':'3','missing':'0','empty':'0','invalid':'0'}),
+        (('reason',),'source-reads-disagree'),
+    ]
+    for path,value in mutations:
+        bad=copy.deepcopy(pair);parent=bad
+        for key in path[:-1]:parent=parent[key]
+        parent[path[-1]]=value
+        assert not check_pair.is_valid(bad), f'Invalid native pair admitted: {path}'
+    bad=copy.deepcopy(pair);bad.update(state='diagnostic',reason='source-reads-disagree')
+    assert not check_pair.is_valid(bad)
+    if evidence_path:
+        evidence=json.loads(Path(evidence_path).read_text())
+        check_evidence=validator(spec, {'$ref':'#/components/schemas/exploration.EvidenceComparison'})
+        check_evidence.validate(evidence)
+        source=evidence['baseline']['nativeHistogramSource']
+        assert len(source['streams'])==1 and not any(key in source for key in ('rows','intervals','buckets'))
+        for key,value in [('measurementBasis','bad'),('histogramBasis','bad'),('rows',[])]:
+            bad=copy.deepcopy(evidence);bad['baseline']['nativeHistogramSource'][key]=value
+            assert not check_evidence.is_valid(bad),f'Invalid compact source admitted: {key}'
+    print('Actual Go native histogram pair and compact source context valid; eleven pair and three metadata negatives rejected')
+
+
 def check_view_status(spec, ranked, intervals):
     """Status cells are exact count quantities and an operand-bound fraction,
     not another numeric-validity support partition or a comparison delta."""
@@ -988,9 +1029,13 @@ if __name__ == '__main__':
     parser.add_argument('--container-discovery-observations')
     parser.add_argument('--native-histogram-view-observations')
     parser.add_argument('--native-histogram-time-view-observations')
+    parser.add_argument('--native-histogram-comparison-observations')
+    parser.add_argument('--native-histogram-evidence-observations')
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    if args.native_histogram_comparison_observations:
+        check_native_histogram_comparison(spec,args.native_histogram_comparison_observations,args.native_histogram_evidence_observations)
     if args.native_histogram_time_view_observations:
         check_native_histogram_time_views(spec,args.native_histogram_time_view_observations)
     if args.native_histogram_view_observations:

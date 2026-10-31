@@ -36,10 +36,20 @@ export function validateHistogramMeasurementQuestion(question){
 }
 export function validateMeasurementIntervalSelector(selector){
  if(selector?.kind==='measurement-time-bucket')return validateMeasurementTimeBucketSelector(selector);
+ if(selector?.kind==='measurement-window')return validateMeasurementWindowSelector(selector);
  if(!keys(selector,['kind','question','stream','fromNS','toNS'])||Object.keys(selector).length!==5||selector.kind!=='measurement-interval')fail('An explicit native measurement interval selector is required');
  const bounds=validateHistogramMeasurementQuestion(selector.question);checkedStream(selector.stream,selector.question.definition);
  const exact=selector.question.definition.source.exactStream;if(exact&&!sameNativeStream(exact,selector.stream))fail('Selected stream differs from the exact measurement binding');
  const from=ns(selector.fromNS),to=ns(selector.toNS);if(to<=from||from<BigInt(bounds.fromNS)||to>BigInt(bounds.toNS)||to-from>BigInt(selector.question.definition.maxGapMs)*1000000n)fail('Selected native interval is outside its measurement question');
+ return selector;
+}
+// A whole-window distribution is already evaluated from contiguous exports.
+// Its duration may exceed the maximum gap allowed for each contributing export.
+export function validateMeasurementWindowSelector(selector){
+ if(!keys(selector,['kind','question','stream','fromNS','toNS'])||Object.keys(selector).length!==5||selector.kind!=='measurement-window')fail('An explicit native measurement window selector is required');
+ const bounds=validateHistogramMeasurementQuestion(selector.question);checkedStream(selector.stream,selector.question.definition);
+ const exact=selector.question.definition.source.exactStream;if(exact&&!sameNativeStream(exact,selector.stream))fail('Selected stream differs from the exact measurement binding');
+ if(selector.fromNS!==bounds.fromNS||selector.toNS!==bounds.toNS)fail('Selected native window must equal its complete measurement question');
  return selector;
 }
 // Fixed-time buckets combine whole evaluated exports, so their width is not

@@ -167,7 +167,7 @@ view=schemas['scopedview.Dataset'];view_props=view['properties']
 view_props['partition']=ref('scopedview.Partition')
 view['description']='Supplied immutable captured-record snapshot: ranked groups, explicit intervals or population summaries with optional exact numeric/duration measures. An optional ranked partition derives its denominator from the same exhaustive group read. Result-aspect completeness never certifies raw-record paging, upstream ingestion/sampling or a transactional count/page pair. Scope/revision equality, partition sums and interval coverage are runtime checked.'
 view_props['version']['const']='goo.dataset/1';view_props['shape']['enum']=['ranked','time-series','summary','histogram']
-view_props['id']['pattern']='^[a-f0-9]{64}:(groups|intervals|summary|bins|native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*):bins)$';view_props['revision']['pattern']='^[a-f0-9]{64}$';view_props['capturedAt']['format']='date-time'
+view_props['id']['pattern']='^[a-f0-9]{64}:(groups|intervals|summary|bins|native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*):bins|native-window:(0|[1-9][0-9]*):bins)$';view_props['revision']['pattern']='^[a-f0-9]{64}$';view_props['capturedAt']['format']='date-time'
 view_props['origin']['enum']=['source-read','browser-held']
 view_props['sourceBasis'].update(minLength=1,maxLength=128,description='Unverified caller-claimed source basis, separate from the content-hashed held revision. Not a signed receipt.')
 view_props['fields']={'type':'array','minItems':2,'maxItems':18,'items':ref('scopedview.Field')}
@@ -175,8 +175,8 @@ view_props['rows']={'type':'array','maxItems':1000,'items':ref('scopedview.Row')
 view_props['dimensions']={'type':'array','minItems':1,'maxItems':2,'uniqueItems':True,'items':{'enum':['category','category1']}}
 view_scope=schemas['scopedview.Scope']['properties']
 for name in ('id','generation'):view_scope[name]['pattern']='^[a-f0-9]{64}$'
-view_scope['id']['pattern']='^[a-f0-9]{64}(:native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*))?$'
-view_scope['signal']['enum']=['logs','spans','metrics'];view_scope['selector']={'oneOf':[ref('exploration.Query'),ref('measurements.HistogramViewSelector'),ref('measurements.HistogramTimeViewSelector')]}
+view_scope['id']['pattern']='^[a-f0-9]{64}(:native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*)|:native-window:(0|[1-9][0-9]*))?$'
+view_scope['signal']['enum']=['logs','spans','metrics'];view_scope['selector']={'oneOf':[ref('exploration.Query'),ref('measurements.HistogramViewSelector'),ref('measurements.HistogramTimeViewSelector'),ref('measurements.HistogramWindowViewSelector')]}
 view_field=schemas['scopedview.Field']['properties'];view_field['key']['enum']=['category','category1','count','fromMs','toMs','from','to']+list(measure_specs);view_field['type']['enum']=['string','number','timestamp','rational','histogram-bound']
 schemas['scopedview.Field']['allOf']=[]
 for key,spec in measure_specs.items():
@@ -189,7 +189,7 @@ view_quality['sampling']['description']='Upstream sampling and collection comple
 view_quality['extent']['description']='Only groups/intervals as named by shape; disagreement or unproved coverage remains unknown.'
 view_complete=schemas['scopedview.Completeness']['properties'];view_complete['basis']['const']='captured-query';view_complete['aspects']={'type':'array','minItems':1,'maxItems':1,'items':{'enum':['groups','intervals','summary','bins']}}
 view_complete['revision']['pattern']='^[a-f0-9]{64}$'
-view_complete['scopeId']['pattern']='^[a-f0-9]{64}(:native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*))?$'
+view_complete['scopeId']['pattern']='^[a-f0-9]{64}(:native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*)|:native-window:(0|[1-9][0-9]*))?$'
 schemas['scopedview.Completeness']['description']='Bound to enclosing revision/scope ID; runtime enforces equality. Intervals require exhaustive contiguous known-state coverage. Never inferred from page length or a separate count.'
 interval_props=schemas['scopedview.Interval']['properties']
 for name in ('fromMs','toMs'):interval_props[name]=copy.deepcopy(epoch_ms)
@@ -296,11 +296,16 @@ native_time_selector['properties']['question']['allOf'][1]['properties']['defini
 for k in ('fromNS','toNS'):native_time_selector['properties'][k]=copy.deepcopy(native_selector['properties'][k])
 native_time_selector['properties']['widthNS']={'type':'string','pattern':'^[1-9][0-9]*$','maxLength':13}
 native_time_selector['properties']['bucketIndex']={'type':'integer','minimum':0,'maximum':199}
-native_selector_union={'oneOf':[ref('measurements.HistogramViewSelector'),ref('measurements.HistogramTimeViewSelector')]}
+native_window_selector=schemas['measurements.HistogramWindowViewSelector'];native_window_selector['additionalProperties']=False
+native_window_selector['properties']['kind']={'const':'measurement-window'}
+native_window_selector['properties']['question']=copy.deepcopy(native_selector['properties']['question'])
+for k in ('fromNS','toNS'):native_window_selector['properties'][k]=copy.deepcopy(native_selector['properties'][k])
+native_selector_union={'oneOf':[ref('measurements.HistogramViewSelector'),ref('measurements.HistogramTimeViewSelector'),ref('measurements.HistogramWindowViewSelector')]}
 native_rows=copy.deepcopy(hist_row)
 for k in ('from','to'):native_rows['properties']['values']['properties'][k]={'anyOf':[rational_value,{'const':'-inf' if k=='from' else '+inf'}]}
 native_shape={'required':['histogram','sourceBasis','capturedAt'],'not':{'anyOf':[{'required':[k]} for k in ['dimensions','interval','partition']]},'properties':{'shape':{'const':'histogram'},'histogram':{'properties':{'kind':{'const':'otel-explicit'}}},'scope':{'properties':{'signal':{'const':'metrics'},'selector':native_selector_union}},'fields':{'minItems':3,'maxItems':3,'prefixItems':[{'allOf':[ref('scopedview.Field'),{'required':['unit'],'properties':{'key':{'const':key},'type':{'const':'number' if key=='count' else 'histogram-bound'},'unit':{'const':'observations'} if key=='count' else {'enum':['s','ms']}},'not':{'anyOf':[{'required':['aggregation']},{'required':['nullable']}]}}]} for key in ['from','to','count']]},'rows':{'minItems':1,'maxItems':257,'items':native_rows},'completeness':{'properties':{'aspects':{'const':['bins']}}}}}
 native_shape['allOf']=[{'if':{'properties':{'scope':{'properties':{'selector':{'properties':{'kind':{'const':kind}}}}}}},'then':{'properties':{'scope':{'properties':{'id':{'pattern':'^[a-f0-9]{64}:'+tag+':(0|[1-9][0-9]*):(0|[1-9][0-9]*)$'}}},'id':{'pattern':'^[a-f0-9]{64}:'+tag+':(0|[1-9][0-9]*):(0|[1-9][0-9]*):bins$'}}}} for kind,tag in [('measurement-interval','native'),('measurement-time-bucket','native-time')]]
+native_shape['allOf'].append({'if':{'properties':{'scope':{'properties':{'selector':{'properties':{'kind':{'const':'measurement-window'}}}}}}},'then':{'properties':{'origin':{'const':'browser-held'},'quality':{'properties':{'extent':{'const':'unknown'}}},'scope':{'properties':{'id':{'pattern':'^[a-f0-9]{64}:native-window:(0|[1-9][0-9]*)$'}}},'id':{'pattern':'^[a-f0-9]{64}:native-window:(0|[1-9][0-9]*):bins$'}},'not':{'required':['completeness']}}})
 native_shape['properties']['sourceBasis']={'type':'string','pattern':'^[a-f0-9]{64}$'}
 native_shape['properties']['rows']['prefixItems']=[{'properties':{'values':{'properties':{'from':{'const':'-inf'}}}}}]
 native_shape['properties']['rows']['allOf']=[{'contains':{'properties':{'values':{'properties':{key:{'const':value}}}}},'minContains':1,'maxContains':1} for key,value in [('from','-inf'),('to','+inf')]]
@@ -308,7 +313,7 @@ view['oneOf']=[ranked_shape,time_shape,summary_shape,hist_shape,duration_shape,n
 
 view['allOf']=[{'if':{'properties':{'quality':{'properties':{'extent':{'const':'complete'}},'required':['extent']}},'required':['quality']},'then':{'required':['completeness'],'properties':{'completeness':{'type':'object'},'rows':{'items':{'properties':{'state':{'enum':['observed','no_data']}}}}}},'else':{'properties':{'completeness':{'type':'null'}}}}]
 
-view['allOf'].append({'if':{'properties':{'scope':{'properties':{'signal':{'const':'metrics'}}}}},'then':{'properties':{'shape':{'const':'histogram'},'histogram':{'properties':{'kind':{'const':'otel-explicit'}}},'scope':{'properties':{'id':{'pattern':'^[a-f0-9]{64}:native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*)$'}}}}},'else':{'properties':{'scope':{'properties':{'id':{'pattern':'^[a-f0-9]{64}$'},'selector':ref('exploration.Query')}}}}})
+view['allOf'].append({'if':{'properties':{'scope':{'properties':{'signal':{'const':'metrics'}}}}},'then':{'properties':{'shape':{'const':'histogram'},'histogram':{'properties':{'kind':{'const':'otel-explicit'}}},'scope':{'properties':{'id':{'pattern':'^[a-f0-9]{64}:(native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*)|native-window:(0|[1-9][0-9]*))$'}}}}},'else':{'properties':{'scope':{'properties':{'id':{'pattern':'^[a-f0-9]{64}$'},'selector':ref('exploration.Query')}}}}})
 
 status_keys=[key for key in measure_specs if key.startswith('status.')]
 status_counts=[key for key in status_keys if key!='status.error_fraction']
@@ -330,9 +335,15 @@ hist_compare['properties']['version']={'const':'goo.histogram-comparison/1'}
 hist_compare['properties']['state']={'enum':['observed','no_data','diagnostic']}
 hist_compare['properties']['reason']={'const':'source-reads-disagree'}
 for side in ('baseline','selection'):
- hist_compare['properties'][side]={'allOf':[ref('scopedview.Dataset'),{'properties':{'shape':{'const':'histogram'},'histogram':{'properties':{'kind':{'const':'numeric'}}},'origin':{'const':'browser-held'},'quality':{'properties':{'extent':{'const':'unknown'}}}},'not':{'required':['completeness']}}]}
+ hist_compare['properties'][side]={'allOf':[ref('scopedview.Dataset'),{'properties':{'shape':{'const':'histogram'},'origin':{'const':'browser-held'},'quality':{'properties':{'extent':{'const':'unknown'}}}},'not':{'required':['completeness']}}]}
 hist_compare['allOf']=[{'if':{'properties':{'state':{'const':'diagnostic'}}},'then':{'required':['reason']},'else':{'not':{'required':['reason']}}}]
-hist_compare['description']='Two independent validated held numeric histogram operands. No merged rows, pooled statistic, source proof or shared capture clock. Count, population-share (per-side support.total) and valid-share (per-side support.valid) are separate display choices. Zero denominators are unavailable; no_data is informational and preserves known zero counts and the other side. Diagnostic withholds cross-population share/delta claims. Runtime validates identical binding, signal, environment, geometry and state.'
+hist_compare['oneOf']=[{'properties':{side:{'properties':{'histogram':{'properties':{'kind':{'const':'numeric'}}}}} for side in ('baseline','selection')}},{'properties':{'state':{'enum':['observed','no_data']},**{side:{'properties':{'scope':{'properties':{'signal':{'const':'metrics'},'selector':{'properties':{'kind':{'const':'measurement-window'}}}}},'histogram':{'properties':{'kind':{'const':'otel-explicit'}}}}} for side in ('baseline','selection')}}}]
+hist_compare['description']='Two independent validated held histogram operands. Numeric parsing distributions and native whole-window observation distributions are separate families. No merged rows, pooled statistic, source proof or shared capture clock. Numeric count, population-share (per-side support.total) and valid-share (per-side support.valid) are separate display choices. Native count and observation-share use each operand total; no numeric parsing support is invented. Zero denominators are unavailable; no_data is informational and preserves known zero counts and the other side. Diagnostic withholds cross-population share/delta claims. Runtime validates identical binding, signal, environment, geometry and state.'
+for name in ('HistogramWindowSource','HistogramWindowStream'):schemas['measurements.'+name]['additionalProperties']=False
+for key in ('measurementBasis','histogramBasis'):schemas['measurements.HistogramWindowSource']['properties'][key]={'type':'string','pattern':'^[a-f0-9]{64}$'}
+schemas['measurements.HistogramWindowSource']['properties']['streams']['maxItems']=10000
+schemas['measurements.HistogramWindowStream']['properties']['temporality']={'enum':['delta','cumulative']}
+schemas['measurements.HistogramWindowStream']['properties']['state']={'enum':['ok','unknown','no_data']}
 for name in ('exploration.Cohort','exploration.CohortInput'):
  if name in schemas and 'capturedAt' in schemas[name]['properties']:
   schemas[name]['properties']['capturedAt']={'type':'string','description':'Optional unverified caller-held capture clock. Omission/empty means unknown; never replaced with current time. Nonempty RFC3339 is runtime checked.'}

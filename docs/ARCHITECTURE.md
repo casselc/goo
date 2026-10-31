@@ -1,5 +1,11 @@
 # Architecture
 
+Native capture comparisons now carry compact source identity once per side,
+without duplicating source rows/intervals or eagerly materializing histogram pairs.
+The app constructs a held pair from the existing evaluated window summaries and
+uses the shared passive aligned display. Existing comparison withholding remains
+authoritative. See [the contract](SCOPED_NATIVE_HISTOGRAM_COMPARISONS.md).
+
 Canonical display DTOs now live in the source-neutral `scopedview` package.
 Record exploration and native measurements both depend on it; measurement
 kernels do not import the record-query application layer. Existing record

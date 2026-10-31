@@ -1,5 +1,65 @@
 # Validation record
 
+## Shared native histogram comparisons and authoring checkpoint — 274
+
+The existing capture-comparison flow now uses one shared aligned histogram for
+native whole-window counts and observation shares, replacing duplicate normal-path
+chart/table/heatmap presenters. Independent questions, read clocks, exact bucket
+bounds and observation totals remain intact. Existing whole-comparison and
+per-stream withholding gates, coverage diagnostics and P95 bucket ranges remain
+authoritative; native bars cannot acquire record-range actions.
+
+Compact provenance is emitted once per comparison side without source rows,
+intervals, eager per-stream canonical pairs or additional capture fetches. Window
+bodies build once on expansion; only the first histogram window opens initially.
+Reopening preserves the same chart/scale, avoiding quadratic eager inventory work.
+See [contract/diagram](docs/SCOPED_NATIVE_HISTOGRAM_COMPARISONS.md) and
+[storyboard](journeys/274-native-histogram-comparison-storyboard.md).
+
+The [finite adoption checkpoint](docs/VIEW_AUTHORING_CHECKPOINT_274.md) advances
+the next task to reusable declarations through the existing saved-view workflow.
+Specialized owners remain explicit; another presenter migration or Plotly spike
+is not an authoring prerequisite.
+
+Validation:
+
+- Full root Go suite and all 822 frontend tests pass. Six focused Go tests cover
+  held full-window construction, compact detached transport, independent operands,
+  actual CompareEvidence output and refusal gates. Ten native pair tests plus
+  existing numeric/single/time regressions pass. Four adapter tests and explicit
+  native-versus-record action isolation pass.
+- Generated 581 Go types and 603 OpenAPI schemas pass 96 operations, 429 response
+  fixtures, 159 admitted requests and 28 mux refusals. Actual native pair and compact
+  EvidenceComparison DTOs validate; eleven pair and three metadata controls fail.
+- Hegel passes 100 actual Go-evaluator cases: 70 Go/pair/actual compact-response→JS
+  parity cases and 30 withheld/malformed cases. A real two-stream unavailable member
+  cannot bypass global comparison withholding. The observed six-step browser Quint
+  trace passes; eight mutants and an unfinished prefix fail.
+- Chromium conformance verifies shared count and fixed 100% share geometry, exact
+  denominators, held SSR/complete-only refusal, zero populations, 257-bin extremes,
+  no native actions and readable 260px labels. The public 40-module display graph is
+  audited free of fetch/application owners/global namespace publication.
+- Actual OTLP captures compare 4 versus 8 observations despite 2 versus 3 export rows
+  and unequal 4s/6s windows. Local count/share/exact switching adds no source reads;
+  Saved 390px reopening is held with no private bins witness. Empty, gap, layout and
+  multi-stream global refusals remain withheld. The 30-second Saved Bombadil run
+  passes 425 snapshots across five phases with zero source reads or violations.
+  Three real compact documentation frames are retained.
+- The lazy-inventory browser check proves one initial pair, a second only after
+  expansion, and cached reopen with the same chart/scale and no I/O. This closes
+  the material eager projection scaling regression without another cache API.
+
+- Existing real native-window journey 54, its observed Quint ledger and 30-second
+  Saved-counter Bombadil campaign pass against the deployed build. This preserves
+  counter comparisons, reset/gap/layout refusals, comparison receipt reopening
+  and unchanged captures alongside the native histogram adoption.
+- Compose configuration and CA-aware single-Go build pass. Deployed image:
+  `sha256:169b9c67223cb01e867874f446ae1d25d55fc15553726d962f36410679131b11`.
+  All eight changed/new embedded UI/API assets match final source bytes. Raw
+  successful campaigns and disposable stores were cleaned after review; compact
+  traces/ledgers/summaries and generated documentation frames remain. Telemetry
+  and XTDB volumes remain intact. Independent final review found no blockers.
+
 ## Selected native fixed-time histogram buckets — 273
 
 Fixed-time native buckets now use the same canonical histogram/table display as

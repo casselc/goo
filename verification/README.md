@@ -3299,3 +3299,29 @@ must fail. `GOO_NATIVE_HISTOGRAM_TIME_BOMBADIL=1` enables the Saved 30-second ca
 covering all six local inspection states with zero POSTs. Explicit captures and
 independent QA requests are separate from the browser measurement-effect ledger.
 Keep only compact ledgers/model trace/campaign summary under `artifacts/scoped-273`.
+
+## Captured native histogram comparisons274
+
+`native_histogram_comparison_contract_test.go` drives actual native evaluation and
+`CompareHistogramWindows`, compares Go and browser held pair constructors, and
+checks the compact metadata emitted by actual `CompareEvidence`. The campaign
+includes independent windows/clocks, delta/cumulative exports, exact binary64
+bounds, large counts and malformed/withheld inputs. A two-stream case confirms
+that existing whole-comparison withholding is not bypassed by a known local row.
+
+Run the focused contracts and model smoke from this module:
+
+```sh
+go test -run 'Test(HegelCanonicalNativeHistogramPair|CanonicalNativeHistogramPairWholeComparisonWithheld|QuintNativeHistogramPairModelSmoke)' -count=1
+```
+
+The real journey is `journeys/274-native-histogram-comparison.spec.js`; set
+`GOO_NATIVE_HISTOGRAM_PAIR_BOMBADIL=1` to run its Saved browser campaign. It uses
+real OTLP→ClickHouse measurements, existing capture/document comparison controls,
+local count/share switches and immutable saved comparison reopening. The observed
+Quint ledger has a separate required-input test with
+`GOO_NATIVE_HISTOGRAM_PAIR_LEDGER=.../model-trace.json`. Mutants and an unfinished
+prefix must fail. These effect claims concern browser source requests after
+capture setup; explicitly saving captures remains a separate source operation.
+Keep compact model/ledger/campaign summaries and documentation frames, then remove
+successful raw campaign artifacts and the disposable isolated capture store.

@@ -1482,3 +1482,14 @@ interval in its context. Known-empty data remains zero observations; unavailable
 data has no histogram fallback. Hosts lazily project the original retained bucket
 when selected; local time/export/kind switches do not fetch. Saved remains held.
 See [contract and diagram](SCOPED_HISTOGRAM_TIME_BUCKETS.md).
+
+## Native histogram comparisons274
+
+`goo-aligned-histogram` accepts independent native `measurement-window` operands
+in the existing comparison envelope. Native display choices are `count` and
+`observation-share`; numeric parse-share options remain numeric-only. The shared
+count ceiling covers both full operands and share axes stay 0–100%. Exact ranges,
+counts and percentage-point changes remain available in one table. Native bars
+are passive: record-range owners refuse them. The application uses existing
+capture comparison metadata and preserves its global withholding gate, coverage
+and percentile-range diagnostics. See [contract](SCOPED_NATIVE_HISTOGRAM_COMPARISONS.md).
