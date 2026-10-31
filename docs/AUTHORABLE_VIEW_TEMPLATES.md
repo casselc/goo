@@ -1,7 +1,8 @@
 # Author reusable views
 
 Use the existing view composition as the canvas: choose bars or a table, its
-measure, and record columns. The records child can use Table or
+measure, record columns and an optional [fixed timeline](TIMELINE_VIEW_TEMPLATES.md).
+The records child can use Table or
 [List](RECORD_LIST.md) over the same supplied page. Under Preserve, name the view, enable **Reusable template**, choose
 its **Data profile**, and Save. Templates use the same immutable
 saved-view catalog; they do not create another dashboard or package store.
@@ -11,7 +12,7 @@ saved-view catalog; they do not create another dashboard or package store.
 ```
 
 This optional declaration belongs to an ordinary single-query aggregate-and-records
-view. The title names the template, and its composition owns presentation. The
+view, optionally retaining its fixed timeline. The title names the template, and its composition owns presentation. The
 saved query is a validation specimen, never a default service, environment, time
 window or predicate for another investigation.
 
@@ -45,9 +46,12 @@ not add filters. Recorded spans do not establish database/HTTP health or complet
 upstream telemetry. Fixed record fields retain their qualified keys; a declaration
 does not prove those attributes were observed.
 
-The first template supports aggregate and records only. Numeric/histogram,
-reported-edge and grouped-time profiles, timelines, capture comparisons, tails and
-nonempty local group Find are refused. Nothing is silently removed. A duration
+The original 296 template supports aggregate and records; 299 adds the existing
+fixed timeline with an explicitly matching destination interval width and supported
+count/duration measure. Preview names both required and current widths; correction
+uses the existing interval controls and explicit Run. Hidden timelines retain the
+same compatibility requirements. Numeric/histogram, reported-edge and grouped-time
+profiles, capture comparisons, tails and nonempty local group Find are refused. Nothing is silently removed. A duration
 display also requires that measure in the destination question. Shared kinds retain
 their own units, support and unknown-data semantics.
 

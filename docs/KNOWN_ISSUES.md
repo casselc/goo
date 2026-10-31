@@ -8,11 +8,13 @@ before changing kind/layout, paging, refreshing or opening a child. Back renews 
 data. Neither kind carries completeness witnesses or persists selected identities.
 Both retain the same fields, page limits, query and saved/template owner.
 
-296 adds authorable templates and a Database client activity preset through the
-existing view catalog. The first binding supports ordinary count/duration aggregate
-and records, with explicit destination grouping and fixed profile choices; it does
-not add arbitrary kinds, expressions, ACLs or WYSIWYG layout. Numeric/native,
-timeline and captured-comparison template children remain outside this profile.
+299 lets ordinary authored templates retain the existing fixed count/duration
+timeline, with an explicit matching destination interval width. Preview identifies
+required/current intervals and reveals the existing configuration controls; staging
+and Run remain explicit. Hidden timelines obey the same width/measure/budget rules.
+Numeric/native, grouped time-series and captured-comparison template children remain
+outside this profile. No arbitrary kinds, expressions, ACLs or WYSIWYG layout are
+added. The 296 HTTP/Database client defaults and catalog remain the same owners.
 Ordinary record paging keeps a page-zero configured root; Apply refuses nonzero
 configured roots before they can produce an unsaveable template view.
 

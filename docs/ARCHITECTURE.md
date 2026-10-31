@@ -1,5 +1,11 @@
 # Architecture
 
+[Time-aware reusable templates](TIMELINE_VIEW_TEMPLATES.md) preserve the existing
+fixed timeline declaration with aggregate and records. Go and browser validation
+compare the source/destination interval widths before substituting the validation
+query. The destination still owns its time bounds, predicates, grouping and source
+reads; configuration carries no supplied observations or completeness witness.
+
 [Shared record interactions](RECORD_INTERACTIONS.md) separate application selection,
 publication and inspection from Table/List layout. One page controller binds
 position-based membership to the exact read and private mount owner. Passive List

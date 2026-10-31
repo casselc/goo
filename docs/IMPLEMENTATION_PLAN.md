@@ -1,11 +1,11 @@
 # Implementation plan
 
-> Current checkpoint 298: Table/List share one application-owned record controller,
-> occurrence-position selection, Keep and structured inspection/context actions.
-> Next: a finite whole-flow review of Activity → scoped
-> records → inspection/comparison → authored reuse, then choose one substantive
-> grammar/adoption gap rather than another control-by-control follow-up.
-> See [shared record interactions](RECORD_INTERACTIONS.md).
+> Current checkpoint 299: the whole-flow review selected reusable fixed timelines.
+> Authored templates retain aggregate, records and an optional count/duration
+> timeline, requiring an explicit compatible destination interval width.
+> Next 300: reusable captured-count comparison presentation with a required explicit
+> destination baseline parameter; never inherit the specimen's capture reference.
+> See [time-aware templates](TIMELINE_VIEW_TEMPLATES.md).
 
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),
@@ -1726,3 +1726,36 @@ renderer. Select one concrete user outcome from the remaining grammar/adoption
 gaps; do not open an indefinite defensive-polish series. A supplied-span waterfall
 can present the current records page; a cross-service trace inspector expands the
 query in an independent context owner. Never hide that distinction in a kind toggle.
+
+
+## 299 — whole-flow checkpoint and reusable timelines
+
+[Architecture](reviews/WHOLE_FLOW_ARCHITECTURE_299.md) and
+[design](reviews/WHOLE_FLOW_DESIGN_299.md) independently reconciled the delivered
+Activity/investigation, HTTP/DB template and shared record-action flows. They
+selected a real gap: composed timing had to be removed to make a view reusable.
+[Time-aware templates](TIMELINE_VIEW_TEMPLATES.md) retain the existing timeline
+and its presentation, including hidden/complete-only settings, through authored
+save, target preview/application and reopen. Missing/different intervals refuse
+without reads; correction focuses existing controls and requires explicit staging
+and Run. No additional renderer, catalog or source owner is introduced.
+
+## Next 300 — explicitly bound comparison templates
+
+Extend reusable ordinary count comparison compositions only through a typed
+destination-baseline input. The source capture reference remains a validation
+specimen; every expansion must supply its destination reference, with no latest or
+source fallback. Reuse the existing baseline picker and preparation owner. Pure
+expansion replaces exactly the declared baseline slot and preserves destination
+query/presentation; it neither fetches evidence nor claims compatibility. The
+baseline remains unverified until explicit Prepare validates its stored question
+and eligible counts against the destination root. Different destination grouping
+is allowed by the template binding, but its chosen baseline must match that target
+grouping and other existing strict comparison requirements.
+
+Keep the first cut count-only, with immutable baseline IDs, typed API/OpenAPI
+admission and exact response validation. Prove cross-service/different-group reuse
+with a target baseline, no source capture fetch, wrong-root refusal on Prepare,
+source-free Apply and late-preview retirement. Do not merely relax the comparison
+child prohibition or silently copy its source capture. General template parameters
+and captured numeric/duration/native comparisons remain separate.

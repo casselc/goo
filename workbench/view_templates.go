@@ -167,12 +167,12 @@ func (b ViewTemplateBinding) Validate(q exploration.Query, c ViewComposition) er
 	if err := c.Validate(q); err != nil {
 		return err
 	}
-	if len(c.Children) != 2 {
-		return errors.New("reusable templates support aggregate and records only; remove timeline or comparison first")
+	if len(c.Children) != 2 && len(c.Children) != 3 {
+		return errors.New("reusable templates require aggregate and records with an optional timeline")
 	}
 	for _, child := range c.Children {
-		if child.Timeline != nil || child.Comparison != nil {
-			return errors.New("templates cannot retain timelines or captured baseline references")
+		if child.Comparison != nil {
+			return errors.New("templates cannot retain captured baseline references")
 		}
 		if child.Aggregate != nil && child.Aggregate.Display.Query != "" {
 			return errors.New("clear local group Find before enabling a reusable template")
@@ -253,6 +253,11 @@ func expandAuthoredTemplate(source ExplorationView, q exploration.Query) (ViewTe
 	q.Offset = 0
 	if q.Signal != source.Queries[0].Signal {
 		return ViewTemplateExpansion{}, errors.New("template and destination must use the same signal")
+	}
+	for _, child := range source.Composition.Children {
+		if child.Timeline != nil && (q.BucketMS <= 0 || q.BucketMS != source.Queries[0].BucketMS) {
+			return ViewTemplateExpansion{}, errors.New("timeline requires the same explicit bucket width; configure the destination interval width and Run explicitly")
+		}
 	}
 	if err = source.Template.Validate(q, *source.Composition); err != nil {
 		return ViewTemplateExpansion{}, err

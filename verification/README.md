@@ -3447,3 +3447,26 @@ The external Bombadil actor must reach selection, Keep, Table/List changes,
 explicit paging and inspection under the bounded read/write budget. Public List
 SSR/detached use remains a separate passive component contract. Keep compact
 results and documentation frames; discard successful raw campaign/store copies.
+
+## Time-aware reusable templates — 299
+
+The generated checks execute actual Go expansion and browser declaration
+validation, including 50 valid bindings and 50 acquisition refusals. Source and
+destination interval widths must match before the specimen query is replaced;
+hidden/complete-only settings do not relax measure or interval-count admission.
+
+```sh
+go test -C verification -run '^(TestHegelTimeTemplateTargetBinding|TestHegelTimeTemplateAcquisitionRefusals|TestQuintTimeTemplateModelSmoke)$' -count=1 -v .
+GOO_TIME_TEMPLATE_BOMBADIL=1 playwright test journeys/299-time-aware-template.spec.js
+GOO_TIME_TEMPLATE_LEDGER="$PWD/artifacts/template-299/model-trace.json" go test -C verification -run '^TestQuintTimeTemplateObservedBrowserLedger$' -count=1 -v .
+```
+
+Use the configured local Go/Node/Quint toolchains and OTel/ClickHouse lab. The real
+native journey authors timing in one discovered DB service, rejects missing and
+mismatched destination intervals without telemetry reads, explicitly configures and
+runs the destination, then applies/paginates/saves/reopens without importing source
+scope. The 22-step observed model rejects seven corrupted ledgers and an unfinished
+prefix. The external actor independently applies the saved template and pages while
+holding the timeline basis, with one Explore, one expansion, one page and no writes.
+Keep compact ledgers and actual documentation frames, not successful raw campaign
+or duplicate store copies. See the [storyboard](../journeys/299-time-aware-template-storyboard.md).

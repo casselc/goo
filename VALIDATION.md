@@ -1,5 +1,51 @@
 # Validation record
 
+## Time-aware reusable templates and whole-flow checkpoint — 299
+
+[Contract/diagram](docs/TIMELINE_VIEW_TEMPLATES.md) ·
+[storyboard](journeys/299-time-aware-template-storyboard.md) ·
+[architecture](docs/reviews/WHOLE_FLOW_ARCHITECTURE_299.md) and
+[design](docs/reviews/WHOLE_FLOW_DESIGN_299.md) reviews.
+
+- Both changed Go packages pass (`workbench`, `cmd/goo`, `-count=1`). Tests cover
+  optional timelines, persistence/detachment, 12 presentation combinations,
+  hidden/visible width refusals, duration support/budget/profile restrictions and
+  source-free HTTP expansion. Initial sandbox loopback restrictions were resolved
+  with the authorized local test run. No new schema field or API endpoint.
+- Final frontend suite: 937 passed, zero failed/skipped (28.9 seconds). Twenty-six
+  focused authored/handoff/timeline tests pass, including ordinary logs, unchanged
+  destination scopes, refusal before metadata requests, forged responses and late
+  epochs. Three existing timeline measure labels now share one pure helper.
+- Hegel executes 50 valid actual Go/JS bindings and 50 acquisition refusals
+  (15.5 seconds). A test-harness cache path was corrected before the passing run.
+  The actual 22-step Quint replay passes and rejects seven corrupted ledgers plus
+  an unfinished prefix; standalone model smoke also passes.
+- Final native 299 journey passes in 1.7 minutes with no API-seeded definitions:
+  discover DB service, explicitly acquire timing, author/save, choose a different
+  service/grouping, refuse missing/mismatched intervals, reveal/focus existing
+  controls, stage and Run, preview/Apply, page held timing, save/reopen and Run.
+  Exact destination query and child order/visibility/p95/complete-only metadata
+  survive. Budget: eight Explore HTTPs, one page, two saves, zero captures/documents
+  and browser errors. These count HTTP requests, not SQL statements.
+- Independent Bombadil: 30 seconds, 510 snapshots, seven phases; one Explore,
+  one configuration expansion, one page and zero writes. It finishes at offset 100
+  with two records, p95/complete-only preserved, held timeline identity and no
+  horizontal overflow. Five actual save/expansion request/response pairs conform
+  to the existing 651 OpenAPI schemas.
+- Design reviewed all three compact real frames: native authoring, interval
+  refusal/recovery, and reopened timing. Three equal positive 9 ms bars render at
+  equal height. All four targeted regressions pass (2.0 minutes): 287 duration
+  timeline, 296 authored-template reuse, and 298 record interaction plus log context.
+- Successful raw campaign/store copies (22 MB) were removed; the compact 299
+  ledger, API, campaign and model results total about 40 KB. Historical frame
+  timestamp/ID churn is restored; the three new 299 frames document this feature.
+  New/changed documentation links and diff checks pass.
+- CA-backed Compose config/build passes. Local image
+  `65ed068626fe25a392cb12f05c6242d4ceb1128f5dda50cd1962755278ccb1e3`
+  is running with existing volumes and separate XTDB retained. All four changed UI
+  assets match the served bytes.
+
+
 ## Shared Table/List record interactions — 298
 
 [Contract/diagram](docs/RECORD_INTERACTIONS.md) ·

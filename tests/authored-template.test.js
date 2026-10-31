@@ -10,3 +10,43 @@ test('response rejects source identity, query, binding and presentation substitu
 test('authored expansion declines late replies and performs no source or publication callbacks',async()=>{const s=source(),q=query('target',other);let active=true,release,calls=0;const gate=new Promise(done=>release=done),pending=T.expandAuthored(s,q,{current:()=>active,post:async input=>{calls++;assert.deepEqual(input.query,q);await gate;return envelope(s,q)}});active=false;release();assert.equal(await pending,null);assert.equal(calls,1);assert.equal(await T.expandAuthored(s,q,{current:()=>false,post:()=>{throw Error('must not call')}}),null);});
 test('database service handoff chooses the shared pinned DB descriptor and retains exact widget scope',async()=>{const q=query(),widget={family:'db-client',key:'dimension',state:'supported',query:q},request=T.request(widget);assert.equal(request.template,'otel.db-client-operations');assert.equal(T.customizeLabel(widget),'database client view');const s=source(),result={template:{id:'otel.db-client-operations',version:1,title:'Database client activity'},view:{...envelope(s,q).view,title:'Database client activity'}};assert.deepEqual(await T.expand(widget,{post:async()=>result}),result.view);assert.deepEqual(widget.query,q);});
 test('question codec accepts Go zero/empty omissions while retaining exact predicates and qualified grouping',()=>{const s=source(),q={...query('target',other),spanStatus:false,groupTimeSeries:false};const wire=envelope(s,q),encode=p=>{if(p.value==='')delete p.value;for(const child of [...(p.all||[]),...(p.any||[])])encode(child)};delete wire.view.queries[0].spanStatus;delete wire.view.queries[0].groupTimeSeries;encode(wire.view.queries[0].where);const before=structuredClone({s,q,wire});assert.deepEqual(T.authoredResponse(wire,s,q).queries,wire.view.queries);assert.deepEqual({s,q,wire},before);for(const change of [p=>p.where.all[3].any[1].op='missing',p=>p.where.all[3].any[1].op='ne',p=>p.groupBy[0].kind='attribute',p=>p.where.all[3].any[1].field.kind='resource',p=>p.where.all[0].value='different-service',p=>p.where.all[3].any.pop()]){const bad=structuredClone(wire);change(bad.view.queries[0]);assert.throws(()=>T.authoredResponse(bad,s,q));}});
+
+test('time-aware templates retain supported timeline presentation and exact destination query',()=>{
+ const Timeline=require('../ui/timeline-declaration.mjs');
+ for(const value of ['count','duration.mean','duration.p95'])for(const kind of ['time-bar','table'])for(const hidden of [false,true]){
+  const s=source();s.queries[0].bucketMs=10000;
+  const timeline={...Timeline.create(s.queries[0]),kind:{name:kind,version:1},display:{value,title:'UTC workload timing',requiresComplete:true}};
+  s.composition.children=[s.composition.children[1],{timeline,hidden},s.composition.children[0]];
+  const q={...query('target',other),environmentSelector:{version:'goo/environment-selector/v1',policy:'effective',scope:{mode:'unreported'}},fromMs:65000,toMs:125001,bucketMs:10000,offset:100};delete q.environment;
+  const before=structuredClone({s,q});assert.deepEqual(T.templateView(s),s);assert.deepEqual(T.authoredRequest(s,q),{source:s,query:q});
+  const result=T.authoredResponse(envelope(s,q),s,q);assert.deepEqual(result.composition,s.composition);assert.deepEqual(result.queries,[{...q,offset:0}]);assert.deepEqual({s,q},before);
+ }
+});
+
+test('timeline reuse refuses missing or different intervals before any metadata request, including hidden timelines',async()=>{
+ const Timeline=require('../ui/timeline-declaration.mjs'),s=source();s.queries[0].bucketMs=10000;s.composition.children.unshift({timeline:Timeline.create(s.queries[0]),hidden:true});
+ for(const bucketMs of [undefined,1000,60000]){
+  const q={...query('target',other),bucketMs},before=structuredClone({s,q});let calls=0;
+  assert.throws(()=>T.authoredRequest(s,q),/requires 10 seconds intervals.*configure.*Run explicitly/);
+  assert.throws(()=>T.authoredResponse(envelope(s,q),s,q),/requires 10 seconds intervals/);
+  await assert.rejects(T.expandAuthored(s,q,{post:async()=>{calls++;throw Error('metadata request must not run')}}),/requires 10 seconds intervals/);
+  assert.equal(calls,0);assert.deepEqual({s,q},before);
+ }
+ const tooWide={...query('target',other),bucketMs:10000,fromMs:0,toMs:2400001};assert.throws(()=>T.authoredRequest(s,tooWide),/at most 240/);
+ const duration=structuredClone(s);C.timeline(duration.composition).display.value='duration.p95';const unsupported={...query('target',other),bucketMs:10000};delete unsupported.summary;assert.throws(()=>T.authoredRequest(duration,unsupported),/query-supported timeline/);
+});
+
+test('time-aware replies cannot change interval or timeline presentation and remain epoch guarded',async()=>{
+ const Timeline=require('../ui/timeline-declaration.mjs'),s=source();s.queries[0].bucketMs=10000;s.composition.children.unshift({timeline:Timeline.create(s.queries[0]),hidden:true});const q={...query('target',other),bucketMs:10000};
+ for(const change of [r=>r.view.queries[0].bucketMs=1000,r=>C.timeline(r.view.composition).display.value='duration.p95',r=>C.timeline(r.view.composition).display.title='Changed',r=>C.timeline(r.view.composition).display.requiresComplete=true,r=>r.view.composition.children[0].hidden=false,r=>r.view.composition.children.reverse()]){
+  const response=envelope(s,q);change(response);assert.throws(()=>T.authoredResponse(response,s,q));
+ }
+ let active=true,release,calls=0;const wait=new Promise(resolve=>release=resolve),pending=T.expandAuthored(s,q,{current:()=>active,post:async()=>{calls++;await wait;return envelope(s,q)}});active=false;release();assert.equal(await pending,null);assert.equal(calls,1);
+ assert.equal(T.intervalLabel(1000),'1 second');assert.equal(T.intervalLabel(10000),'10 seconds');assert.equal(T.intervalLabel(60000),'1 minute');assert.equal(T.intervalLabel(300000),'5 minutes');assert.equal(T.intervalLabel(undefined),'Not configured');
+});
+
+test('ordinary log templates retain count timelines without acquiring span duration semantics',()=>{
+ const Timeline=require('../ui/timeline-declaration.mjs'),q={signal:'logs',environment:'prod',fromMs:1000,toMs:61000,limit:5,offset:0,bucketMs:10000,groupBy:[{kind:'column',key:'service'}]},s={version:1,id:'c'.repeat(64),title:'Log workload',queries:[q],composition:C.create(q,V.create(q)),template:T.templateFor('ordinary')};
+ s.composition=C.setTimeline(s.composition,Timeline.create(q),q);const target={...q,environment:'other',groupBy:[{kind:'attribute',key:'queue'}],fromMs:2000,toMs:62001};assert.deepEqual(T.authoredRequest(s,target),{source:s,query:target});assert.deepEqual(T.authoredResponse(envelope(s,target),s,target).composition,s.composition);
+ C.timeline(s.composition).display.value='duration.mean';assert.throws(()=>T.templateView(s),/query-supported timeline/);
+});

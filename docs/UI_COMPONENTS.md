@@ -1679,3 +1679,14 @@ shared record controller mounts the same selection, Keep, Inspect and context
 actions into Table or List. Page/display replacement withdraws old handles; app
 owners retire old controls and bind fresh mounts explicitly. See
 [shared record interactions](RECORD_INTERACTIONS.md).
+
+
+## Reusable timeline templates — 299
+
+The existing fixed timeline, aggregate and record components can now be retained
+in one authored template. No new component or chart implementation is introduced.
+Preview identifies its timeline kind/measure and required/current interval width;
+recovery reveals the current composition's width controls or its existing Compose
+action. That gesture changes focus/disclosure only. Staging, Run and compatible
+Apply retain their existing application owners and data-quality contracts. See
+[time-aware templates](TIMELINE_VIEW_TEMPLATES.md).

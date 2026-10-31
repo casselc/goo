@@ -111,6 +111,35 @@ func TestAuthoredTemplateExpansionHTTPRejectsMixedArmsAndNeverReads(t *testing.T
 	if json.Unmarshal(w.Body.Bytes(), &out) != nil || out.View.Template == nil || out.View.Queries[0].GroupBy[0] != target.GroupBy[0] {
 		t.Fatal(w.Body.String())
 	}
+	// A time-aware definition expands through the same source-free HTTP arm.
+	source.Queries[0].BucketMS = 10000
+	source.Composition.Children = append(source.Composition.Children, workbench.ViewCompositionChild{Timeline: &workbench.TimelineViewDeclaration{
+		Version: "goo.view/1", Scope: workbench.ViewDeclarationScope{Kind: "record-query", Signal: "spans"},
+		Kind:    workbench.TimelineViewKind{Name: "table", Version: 1},
+		Display: workbench.TimelineViewDisplay{Value: "duration.p95", Title: "Timing", RequiresComplete: true},
+	}, Hidden: true})
+	target.BucketMS = 10000
+	for _, width := range []int64{0, 60000, 10000} {
+		target.BucketMS = width
+		timed, e := json.Marshal(workbench.ViewTemplateExpansionRequest{Source: &source, Query: &target})
+		if e != nil {
+			t.Fatal(e)
+		}
+		got := post(timed)
+		if width != 10000 {
+			if got.Code != 400 {
+				t.Fatal("incompatible temporal acquisition admitted", width, got.Code, got.Body.String())
+			}
+			continue
+		}
+		if got.Code != 200 || json.Unmarshal(got.Body.Bytes(), &out) != nil {
+			t.Fatal(got.Code, got.Body.String())
+		}
+		timeline := out.View.Composition.Children[2]
+		if !timeline.Hidden || timeline.Timeline.Display.Value != "duration.p95" || !timeline.Timeline.Display.RequiresComplete || out.View.Queries[0].BucketMS != target.BucketMS || out.View.Queries[0].Environment != target.Environment {
+			t.Fatal("temporal configuration changed", got.Body.String())
+		}
+	}
 	for _, bad := range []string{string(raw[:len(raw)-1]) + `,"template":"otel.http-server-routes"}`, string(raw[:len(raw)-1]) + `,"rows":[]}`, `{"source":null,"query":{}}`, `{"source":{},"query":{},"widget":null}`} {
 		if got := post([]byte(bad)); got.Code != 400 {
 			t.Fatal("invalid arm admitted", got.Code, got.Body.String())

@@ -1,0 +1,24 @@
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document,window})=>{
+ const pop=document.querySelector<HTMLElement>('.population-workspace:not([hidden])'),timeline=pop?.querySelector('[data-composition-role=timeline]'),records=pop?.querySelector('[data-composition-role=records]'),preview=pop?.querySelector('[aria-label="Saved display compatibility"]'),chart=timeline?.querySelector<any>('goo-chart'),snapshot=chart?.snapshot,identity=snapshot&&JSON.stringify({id:snapshot.id,revision:snapshot.revision,capturedAt:snapshot.capturedAt}),held=document.documentElement.dataset.timeTemplateHeld,obs=(window as any).__gooTimeTemplate299||{reads:0,pages:0,expands:0,writes:0};
+ return {version:'goo.timeTemplate299',phase:document.documentElement.dataset.timeTemplatePhase||'initial',population:pop?.getAttribute('data-phase'),measure:timeline?.querySelector<HTMLSelectElement>('[aria-label="Timeline measure"]')?.value,complete:timeline?.querySelector<HTMLInputElement>('input[type=checkbox]')?.checked,intervals:timeline?.querySelectorAll('.scope-time-interval').length||0,preview:!![...preview?.querySelectorAll<HTMLButtonElement>('button')||[]].find(b=>b.textContent==='Apply template'&&!b.disabled),inspect:!![...pop?.querySelectorAll('button')||[]].find(b=>b.textContent==='Inspect template · '+new URL(window.location.href).searchParams.get('templateTitle')),offset:Number(records?.querySelector<HTMLElement>('.population-record-page-facts')?.dataset.pageOffset||0),rows:records?.querySelectorAll('input[data-record-selection]').length||0,held:!held||held===identity,overflow:document.documentElement.scrollWidth>window.innerWidth,...obs};
+});
+export const completes=eventually(()=>state.current.phase==='complete'&&state.current.measure==='duration.p95'&&state.current.complete&&state.current.offset===100&&state.current.rows===2&&state.current.held).within(27,'seconds');
+export const budget=always(()=>state.current.reads<=1&&state.current.pages<=1&&state.current.expands<=1&&state.current.writes===0);
+export const viewport=always(()=>!state.current.overflow);
+const step=registerCustomAction('goo.timeTemplate',async(document,window,phase:string)=>{
+ const pop=document.querySelector<HTMLElement>('.population-workspace:not([hidden])')!,button=(name:string)=>[...pop.querySelectorAll<HTMLButtonElement>('button')].find(b=>b.textContent===name)!,open=(name:string)=>{const summary=[...pop.querySelectorAll<HTMLElement>('summary')].find(e=>e.textContent===name)!;(summary.parentElement as HTMLDetailsElement).open=true};
+ if(phase==='initial'){
+  const obs={reads:0,pages:0,expands:0,writes:0},original=window.fetch.bind(window);(window as any).__gooTimeTemplate299=obs;window.fetch=((input:any,init:any)=>{const u=new URL(typeof input==='string'?input:input.url||String(input),window.location.href),method=(init?.method||input?.method||'GET').toUpperCase();if(method==='POST'){if(u.pathname==='/api/explore')obs.reads++;if(u.pathname==='/api/explore/page')obs.pages++;if(u.pathname==='/api/view-templates/expand')obs.expands++;if(['/api/exploration-views','/api/captures','/api/documents','/api/kept-observations/records'].includes(u.pathname))obs.writes++;}return original(input,init)}) as any;button('Run population view').click();
+ }else if(phase==='reading'){
+  const select=pop.querySelector<HTMLSelectElement>('[aria-label="Timeline measure"]')!;select.value='count';select.dispatchEvent(new Event('change',{bubbles:true}));open('View settings');open('Saved exploration views');button('Load saved views').click();
+ }else if(phase==='library')button('Inspect template · '+new URL(window.location.href).searchParams.get('templateTitle')).click();
+ else if(phase==='preview')button('Apply template').click();
+ else if(phase==='applied'){
+  const snapshot=pop.querySelector<any>('[data-composition-role=timeline] goo-chart')!.snapshot;document.documentElement.dataset.timeTemplateHeld=JSON.stringify({id:snapshot.id,revision:snapshot.revision,capturedAt:snapshot.capturedAt});button('Next spans page').click();
+ }
+ document.documentElement.dataset.timeTemplatePhase=({initial:'reading',reading:'library',library:'preview',preview:'applied',applied:'paging',paging:'complete'} as any)[phase];
+});
+export const explore=actions(()=>{const s=state.current;return s.phase==='initial'&&s.population==='staged'?[step('initial')]:s.phase==='reading'&&s.population==='applied'&&s.intervals>0?[step('reading')]:s.phase==='library'&&s.inspect&&s.measure==='count'?[step('library')]:s.phase==='preview'&&s.preview?[step('preview')]:s.phase==='applied'&&s.measure==='duration.p95'&&s.complete?[step('applied')]:s.phase==='paging'&&s.offset===100&&s.rows===2&&s.held?[step('paging')]:['Wait']});
