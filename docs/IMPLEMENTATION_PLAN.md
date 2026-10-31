@@ -1,3 +1,7 @@
+> 281 adds the optional [saved count timeline](SAVED_COUNT_TIMELINE.md), exact
+> interval-range staging and held paging under the existing query owner. Next:
+> preserve composed definitions and separately referenced evidence in investigations.
+
 # Implementation plan
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),
@@ -22,8 +26,9 @@
 > 278 adds [one HTTP service record template](HTTP_SERVICE_VIEW_TEMPLATE.md) and
 > contextual Customize entry. 279 adds [records-plus-aggregate composition](RECORD_AGGREGATE_COMPOSITION.md)
 > under one query owner. 280 reuses a whole composition in the current checked
-> scope, preserving destination queries and held inputs. Next281 is a fixed count
-> timeline and interval selection beside records, as reconciled in the
+> scope, preserving destination queries and held inputs. 281 adds a fixed count
+> timeline and interval selection beside records. Next is preserving composed
+> findings in investigations, as reconciled in the
 > [280 checkpoint roadmap](ROADMAP_2026_10_30.md#revised-delivery-after-checkpoint280).
 > Specialized owners remain explicit limits.
 > [Pit-of-success review](MODEL_PIT_OF_SUCCESS_264.md) gates further renderer/editor expansion.

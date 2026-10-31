@@ -1548,3 +1548,12 @@ copies only checked child presentation. Existing query/source owners keep held
 aggregate and current record-page inputs; new mounts get current ownership. An
 optional record selection-state controller/notification guards both catalog Apply
 actions. Clearing live configuration is local and preserves record/Keep drafts.
+
+
+## Count timeline presenter — 281
+
+`count-timeline.mjs` consumes one supplied time dataset and a typed count declaration.
+It reuses `goo-time-bars` pointer/keyboard range gestures and the shared table display.
+It emits interval-key intents; the application owns validation, query staging and reads.
+Complete-only follows interval coverage, independently of record paging. See
+[contract](SAVED_COUNT_TIMELINE.md).

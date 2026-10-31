@@ -9,7 +9,8 @@ changes read telemetry.
 
 This is a small content composition, not a page builder. Application navigation,
 query filters, execution, source admission, paging and actions remain with one
-existing population owner. The two children cannot add a query or subscription.
+existing population owner. The children cannot add a query or subscription. 281 adds an optional third
+[count timeline](SAVED_COUNT_TIMELINE.md) with the same query owner.
 
 ```mermaid
 flowchart LR

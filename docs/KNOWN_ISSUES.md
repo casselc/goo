@@ -1,5 +1,11 @@
 # Known issues and gaps
 
+281 adds an optional [saved count timeline](SAVED_COUNT_TIMELINE.md) to fixed
+compositions. It requires an explicit supported parent bucket width and at most 240
+intervals. Rates, grouped/native time series, arbitrary nesting and live children remain
+outside this profile. Reuse requires equal positive widths; Apply does not rewrite the
+query.
+
 280 reuses whole fixed compositions in the current single-query scope. Signal,
 group and quantity compatibility remain strict; no unit/field remapping, query
 replacement, cursor import or implicit acquisition is added. Dirty drafts, selected

@@ -96,26 +96,38 @@ for suffix in ('', 'Input'):
  schemas['workbench.ExplorationView'+suffix]['properties']['displays'].update(maxProperties=2,propertyNames={'enum':['spans','logs']})
  schemas['workbench.ExplorationView'+suffix].setdefault('allOf',[]).extend([{'not':{'required':['displays','breakdowns'],'properties':{'displays':{'required':[signal]},'breakdowns':{'required':[signal]}}}} for signal in ('spans','logs')])
 
-# Bounded composition: two typed supplied aspects of the same checked query.
+# Bounded composition: required aggregate/records and optional count timeline.
 for suffix in ('', 'Input'):
  composition=schemas['workbench.ViewComposition'+suffix]
  composition['additionalProperties']=False
  composition['required']=['version','kind','children']
  composition['properties']['kind']['type']='object'
  composition['properties']['version']['const']='goo.composition/1'
- composition['description']='One fixed record query supplies one aggregate and one bounded record-page child. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees.'
+ composition['description']='One fixed record query supplies one aggregate, one bounded record-page child and an optional count timeline with explicit query bucket width. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees.'
  for name,kind_name in [('CompositionKind','stack'),('RecordViewKind','record-table')]:
   kind=schemas['workbench.'+name+suffix];kind['additionalProperties']=False
   kind['required']=['name','version']
   kind['properties']['name']['const']=kind_name;kind['properties']['version']['const']=1
  child=schemas['workbench.ViewCompositionChild'+suffix];child['additionalProperties']=False
  child['properties']['hidden']['type']='boolean'
- child['oneOf']=[{'required':['aggregate'],'not':{'required':['records']}},{'required':['records'],'not':{'required':['aggregate']}}]
- for field in ('aggregate','records'):
+ child['oneOf']=[{'required':[role],'not':{'anyOf':[{'required':[other]} for other in ('aggregate','records','timeline') if other!=role]}} for role in ('aggregate','records','timeline')]
+ for field in ('aggregate','records','timeline'):
   child['properties'][field]['type']='object'
- children=composition['properties']['children'];children.update(type='array',minItems=2,maxItems=2,items={'$ref':'#/components/schemas/workbench.ViewCompositionChild'+suffix,'type':'object'})
+ children=composition['properties']['children'];children.update(type='array',minItems=2,maxItems=3,items={'$ref':'#/components/schemas/workbench.ViewCompositionChild'+suffix,'type':'object'})
  children['allOf']=[{'contains':{'required':[role]},'minContains':1,'maxContains':1} for role in ('aggregate','records')]
+ children['allOf'].append({'contains':{'required':['timeline']},'minContains':0,'maxContains':1})
  children['allOf'].append({'contains':{'properties':{'hidden':{'const':False}}},'minContains':1})
+ timeline=schemas['workbench.TimelineViewDeclaration'+suffix];timeline['additionalProperties']=False
+ timeline['required']=['version','scope','kind','display']
+ timeline['properties']['version']['const']='goo.view/1'
+ for field in ('scope','kind','display'):timeline['properties'][field]['type']='object'
+ timeline['properties']['scope']['required']=['kind','signal']
+ timeline['description']='Captured record counts over the parent query explicit positive bucket width. Exact clipped interval bounds and completeness belong to the supplied time dataset, never the declaration. No rate or population-share semantics.'
+ kind=schemas['workbench.TimelineViewKind'+suffix];kind['additionalProperties']=False;kind['required']=['name','version']
+ kind['properties']['name']['enum']=['time-bar','table'];kind['properties']['version']['const']=1
+ display=schemas['workbench.TimelineViewDisplay'+suffix];display['additionalProperties']=False;display['required']=['value']
+ display['properties']['value']['const']='count';display['properties']['title']['maxLength']=120
+ display['properties']['requiresComplete']['type']='boolean'
  record=schemas['workbench.RecordViewDeclaration'+suffix];record['additionalProperties']=False
  record['required']=['version','scope','kind','display']
  for field in ('scope','kind','display'): record['properties'][field]['type']='object'

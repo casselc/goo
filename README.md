@@ -566,3 +566,10 @@ anchored windows, whole-export coverage and clipped final buckets. [Native compa
 aligned count/share display in the existing capture-comparison flow. This closes
 the current migration slice; [reusable saved-view declarations](docs/VIEW_AUTHORING_CHECKPOINT_274.md)
 are next. Specialized owners remain explicit rather than blocking authoring.
+
+
+### Saved count timeline — 281
+
+Fixed saved compositions can add a [count timeline](docs/SAVED_COUNT_TIMELINE.md) beside
+aggregates and records. Drag or keyboard-select supplied UTC intervals, stage the shared
+window, then Run. Paging holds the timeline; saved reuse checks interval width.

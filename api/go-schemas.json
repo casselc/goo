@@ -26023,6 +26023,175 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/workbench.StepScope"
   },
+  "workbench.TimelineViewDeclaration": {
+    "properties": {
+      "display": {
+        "$ref": "#/components/schemas/workbench.TimelineViewDisplay"
+      },
+      "kind": {
+        "$ref": "#/components/schemas/workbench.TimelineViewKind"
+      },
+      "scope": {
+        "$ref": "#/components/schemas/workbench.ViewDeclarationScope"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "scope",
+      "kind",
+      "display"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.TimelineViewDeclaration"
+  },
+  "workbench.TimelineViewDeclarationInput": {
+    "additionalProperties": false,
+    "properties": {
+      "display": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.TimelineViewDisplayInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "kind": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.TimelineViewKindInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "scope": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ViewDeclarationScopeInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.TimelineViewDeclaration"
+  },
+  "workbench.TimelineViewDisplay": {
+    "properties": {
+      "requiresComplete": {
+        "type": "boolean"
+      },
+      "title": {
+        "type": "string"
+      },
+      "value": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "value"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.TimelineViewDisplay"
+  },
+  "workbench.TimelineViewDisplayInput": {
+    "additionalProperties": false,
+    "properties": {
+      "requiresComplete": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "title": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "value": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.TimelineViewDisplay"
+  },
+  "workbench.TimelineViewKind": {
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "version": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "name",
+      "version"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.TimelineViewKind"
+  },
+  "workbench.TimelineViewKindInput": {
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.TimelineViewKind"
+  },
   "workbench.ViewComposition": {
     "properties": {
       "children": {
@@ -26077,6 +26246,16 @@
             "type": "null"
           }
         ]
+      },
+      "timeline": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.TimelineViewDeclaration"
+          },
+          {
+            "type": "null"
+          }
+        ]
       }
     },
     "required": [],
@@ -26119,6 +26298,23 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/workbench.RecordViewDeclarationInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "timeline": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.TimelineViewDeclarationInput"
               },
               {
                 "type": "null"

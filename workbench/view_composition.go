@@ -53,9 +53,10 @@ type CompositionKind struct {
 // A child chooses exactly one typed role. Its role is its stable identity;
 // duplicate roles, arbitrary IDs and recursive layout are deliberately absent.
 type ViewCompositionChild struct {
-	Aggregate *ViewDeclaration       `json:"aggregate,omitempty"`
-	Records   *RecordViewDeclaration `json:"records,omitempty"`
-	Hidden    bool                   `json:"hidden,omitempty"`
+	Aggregate *ViewDeclaration         `json:"aggregate,omitempty"`
+	Records   *RecordViewDeclaration   `json:"records,omitempty"`
+	Timeline  *TimelineViewDeclaration `json:"timeline,omitempty"`
+	Hidden    bool                     `json:"hidden,omitempty"`
 }
 
 func (c *ViewCompositionChild) UnmarshalJSON(data []byte) error {
@@ -65,8 +66,15 @@ func (c *ViewCompositionChild) UnmarshalJSON(data []byte) error {
 	}
 	_, aggregate := fields["aggregate"]
 	_, records := fields["records"]
-	if aggregate == records {
-		return errors.New("composition children require exactly one aggregate or records role")
+	_, timeline := fields["timeline"]
+	roles := 0
+	for _, present := range []bool{aggregate, records, timeline} {
+		if present {
+			roles++
+		}
+	}
+	if roles != 1 {
+		return errors.New("composition children require exactly one aggregate, records or timeline role")
 	}
 	if hidden, present := fields["hidden"]; present && bytes.Equal(bytes.TrimSpace(hidden), []byte("null")) {
 		return errors.New("child visibility requires a boolean")
@@ -164,13 +172,19 @@ func validateRecordColumns(columns []string, fields []exploration.Field, queries
 }
 
 func (c ViewComposition) Validate(q exploration.Query) error {
-	if c.Version != "goo.composition/1" || c.Kind.Name != "stack" || c.Kind.Version != 1 || len(c.Children) != 2 {
-		return errors.New("require a pinned two-child record composition")
+	if c.Version != "goo.composition/1" || c.Kind.Name != "stack" || c.Kind.Version != 1 || (len(c.Children) < 2 || len(c.Children) > 3) {
+		return errors.New("require a pinned record composition with an optional timeline")
 	}
-	aggregate, records, visible := false, false, false
+	aggregate, records, timeline, visible := false, false, false, false
 	for _, child := range c.Children {
-		if (child.Aggregate == nil) == (child.Records == nil) {
-			return errors.New("composition children require exactly one aggregate or records role")
+		roles := 0
+		for _, present := range []bool{child.Aggregate != nil, child.Records != nil, child.Timeline != nil} {
+			if present {
+				roles++
+			}
+		}
+		if roles != 1 {
+			return errors.New("composition children require exactly one aggregate, records or timeline role")
 		}
 		visible = visible || !child.Hidden
 		if child.Aggregate != nil {
@@ -181,12 +195,20 @@ func (c ViewComposition) Validate(q exploration.Query) error {
 			if err := child.Aggregate.Validate(q); err != nil {
 				return err
 			}
-		} else {
+		} else if child.Records != nil {
 			if records {
 				return errors.New("composition requires exactly one records child")
 			}
 			records = true
 			if err := child.Records.Validate(q); err != nil {
+				return err
+			}
+		} else {
+			if timeline {
+				return errors.New("composition allows at most one timeline child")
+			}
+			timeline = true
+			if err := child.Timeline.Validate(q); err != nil {
 				return err
 			}
 		}
@@ -213,7 +235,7 @@ func ReuseViewComposition(c ViewComposition, source, destination exploration.Que
 				return ViewComposition{}, err
 			}
 			out.Children[i].Aggregate = &display
-		} else {
+		} else if child.Records != nil {
 			if err := child.Records.Validate(destination); err != nil {
 				return ViewComposition{}, err
 			}
@@ -221,6 +243,15 @@ func ReuseViewComposition(c ViewComposition, source, destination exploration.Que
 			display.Display.Columns = slices.Clone(child.Records.Display.Columns)
 			display.Display.FieldColumns = slices.Clone(child.Records.Display.FieldColumns)
 			out.Children[i].Records = &display
+		} else {
+			if source.BucketMS != destination.BucketMS {
+				return ViewComposition{}, errors.New("timeline requires the same explicit bucket width")
+			}
+			if err := child.Timeline.Validate(destination); err != nil {
+				return ViewComposition{}, err
+			}
+			display := *child.Timeline
+			out.Children[i].Timeline = &display
 		}
 	}
 	if err := out.Validate(destination); err != nil {

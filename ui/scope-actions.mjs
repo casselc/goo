@@ -129,12 +129,25 @@ export function createActionContext(configuration){
     const predicates=values.map(({field,value})=>({field:structuredClone(groupBy[dimensions.indexOf(field)]),op:op(value),...(value===null?{}:{value})}));
     question.where={all:[...(question.where?.all??(question.where?[question.where]:[])),...predicates]};label='Group filter';
    }else{
-    if(!exactKeys(intent,[...baseKeys,'key','fromMs','toMs'])||intent.type!=='scope-window')return refusal('intent-type','Use a supplied interval selection for this view');
-    const row=snapshot.rows.find(row=>row.key===intent.key);
-    if(!row||!['observed','no_data'].includes(row.state)||intent.fromMs!==row.values.fromMs||intent.toMs!==row.values.toMs)return refusal('invalid-membership','Interval does not match a known supplied row');
-    const from=Number(intent.fromMs),to=Number(intent.toMs);
+    let from,to;
+    if(intent.type==='scope-window-range'){
+     if(!exactKeys(intent,[...baseKeys,'fromKey','toKey']))return refusal('intent-type','Use supplied interval range endpoints');
+     const first=snapshot.rows.findIndex(row=>row.key===intent.fromKey),last=snapshot.rows.findIndex(row=>row.key===intent.toKey);
+     if(first<0||last<first)return refusal('invalid-membership','Choose ordered supplied interval endpoints');
+     const rows=snapshot.rows.slice(first,last+1);
+     for(let i=0;i<rows.length;i++){
+      const row=rows[i],start=Number(row.values.fromMs),end=Number(row.values.toMs);
+      if(!['observed','no_data'].includes(row.state)||!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start>=end||i>0&&start!==Number(rows[i-1].values.toMs))return refusal('invalid-membership','Choose contiguous known supplied intervals');
+     }
+     from=Number(rows[0].values.fromMs);to=Number(rows.at(-1).values.toMs);
+    }else{
+     if(!exactKeys(intent,[...baseKeys,'key','fromMs','toMs'])||intent.type!=='scope-window')return refusal('intent-type','Use a supplied interval selection for this view');
+     const row=snapshot.rows.find(row=>row.key===intent.key);
+     if(!row||!['observed','no_data'].includes(row.state)||intent.fromMs!==row.values.fromMs||intent.toMs!==row.values.toMs)return refusal('invalid-membership','Interval does not match a known supplied row');
+     from=Number(intent.fromMs);to=Number(intent.toMs);
+    }
     if(!Number.isSafeInteger(from)||!Number.isSafeInteger(to)||from<question.fromMs||to>question.toMs||from>=to)return refusal('invalid-window','Selected interval is outside the captured question');
-    question.fromMs=from;question.toMs=to;label='Interval';
+    question.fromMs=from;question.toMs=to;label=intent.type==='scope-window-range'?'Interval range':'Interval';
    }
    question.offset=0;checkedQuestion(question);
    return {ok:true,question:freeze(question),label,role:entry.role,slot:entry.slot,epoch:entry.epoch,sourceId:rootInfo.sourceId,sourceInstance:rootInfo.sourceInstance};

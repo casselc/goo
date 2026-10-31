@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey281](../../journeys/281-count-timeline-storyboard.md) adds count intervals
+to a saved composition, holds them during record paging, selects a shared UTC
+window and saves/reopens with explicit Run.
+
 [Journey280](../../journeys/280-composition-reuse-storyboard.md) reuses a whole
 composition while retaining a current page and aggregate, resolving selected-record
 and live-configuration guards explicitly, then saves/reopens the new intent.

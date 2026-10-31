@@ -558,9 +558,38 @@ def check_view_summary_comparison(spec, ranked):
     assert not check_comparison.is_valid(bad_empty), 'Known empty absolute count difference withheld'
 
 
+def check_timeline_composition(spec):
+    """Temporal intent is optional, count-only and separate from ranked options."""
+    aggregate = {'version':'goo.view/1','scope':{'kind':'record-query','signal':'spans'},
+                 'kind':{'name':'bar','version':1},'display':{'category':'category','value':'count'}}
+    records = {'version':'goo.view/1','scope':aggregate['scope'],
+               'kind':{'name':'record-table','version':1},'display':{'columns':['utc','summary']}}
+    timeline = {'version':'goo.view/1','scope':aggregate['scope'],
+                'kind':{'name':'time-bar','version':1},'display':{'value':'count','requiresComplete':True}}
+    valid = {'version':'goo.composition/1','kind':{'name':'stack','version':1},
+             'children':[{'aggregate':aggregate},{'records':records},{'timeline':timeline}]}
+    for suffix in ('','Input'):
+        check = validator(spec, {'$ref':'#/components/schemas/workbench.ViewComposition'+suffix})
+        check.validate(valid)
+        two = copy.deepcopy(valid); two['children'].pop(); check.validate(two)
+        table = copy.deepcopy(valid); table['children'][2]['timeline']['kind']['name']='table'; check.validate(table)
+        invalid = []
+        for key,value in [('value','rate'),('scale','population'),('start','startMs')]:
+            bad=copy.deepcopy(valid);bad['children'][2]['timeline']['display'][key]=value;invalid.append(bad)
+        bad=copy.deepcopy(valid);bad['children'][2]['timeline']=None;invalid.append(bad)
+        bad=copy.deepcopy(valid);bad['children'][2]['records']=records;invalid.append(bad)
+        bad=copy.deepcopy(valid);bad['children'].append({'timeline':timeline});invalid.append(bad)
+        bad=copy.deepcopy(valid)
+        for child in bad['children']:child['hidden']=True
+        invalid.append(bad)
+        for bad in invalid:
+            assert list(check.iter_errors(bad)), 'invalid timeline composition accepted'
+
+
 def check(spec):
     validate_spec(spec)
     check_view_dataset(spec)
+    check_timeline_composition(spec)
     bank = json.loads((ROOT/'testdata/protocol/environment-selectors.json').read_text())
     for path in ('/explore','/tail'):
         body_schema = spec['paths'][path]['post']['requestBody']['content']['application/json']['schema']

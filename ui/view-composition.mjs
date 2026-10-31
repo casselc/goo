@@ -1,5 +1,6 @@
 /* Bounded, IO-free composition intent. The host owns one query and its supplied aspects. */
 import * as Aggregate from './view-declaration.mjs';
+import * as Timeline from './timeline-declaration.mjs';
 import {validateRecordQuestion} from './question-protocol.mjs';
 import {validate as validatePredicate} from './predicate-validation.mjs';
 const object=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
@@ -15,26 +16,28 @@ export function recordDisplay(value,q){
 }
 export function validate(value,q){
  validateRecordQuestion(q);closed(value,['version','kind','children']);closed(value.kind,['name','version']);
- if(value.version!=='goo.composition/1'||value.kind.name!=='stack'||value.kind.version!==1||!Array.isArray(value.children)||value.children.length!==2)throw Error('Use one pinned stack with aggregate and records children.');
+ if(value.version!=='goo.composition/1'||value.kind.name!=='stack'||value.kind.version!==1||!Array.isArray(value.children)||![2,3].includes(value.children.length))throw Error('Use a pinned stack with aggregate, records and an optional timeline.');
  const roles=new Set();let visible=false;
- for(const child of value.children){closed(child,['aggregate','records','hidden']);const hasAggregate=Object.hasOwn(child,'aggregate'),hasRecords=Object.hasOwn(child,'records');if(hasAggregate===hasRecords||child.hidden!==undefined&&typeof child.hidden!=='boolean')throw Error('Choose exactly one typed role per composition child.');const role=hasAggregate?'aggregate':'records';if(roles.has(role))throw Error('Use one aggregate and one records child.');roles.add(role);visible ||= child.hidden!==true;if(hasAggregate)Aggregate.validate(child.aggregate,q);else recordDisplay(child.records,q)}
+ for(const child of value.children){closed(child,['aggregate','records','timeline','hidden']);const names=['aggregate','records','timeline'].filter(name=>Object.hasOwn(child,name));if(names.length!==1||child.hidden!==undefined&&typeof child.hidden!=='boolean')throw Error('Choose exactly one typed role per composition child.');const name=names[0];if(roles.has(name))throw Error('Use each composition role once.');roles.add(name);visible ||= child.hidden!==true;if(name==='aggregate')Aggregate.validate(child.aggregate,q);else if(name==='timeline')Timeline.validate(child.timeline,q);else recordDisplay(child.records,q)}
+ if(!roles.has('aggregate')||!roles.has('records'))throw Error('Keep aggregate and records children.');
  if(!visible)throw Error('Keep at least one composition child visible.');
  return structuredClone(value);
 }
 export const aggregate=value=>value?.children?.find(child=>child.aggregate)?.aggregate;
 export const records=value=>value?.children?.find(child=>child.records)?.records;
-export const role=child=>child.aggregate?'aggregate':'records';
+export const timeline=value=>value?.children?.find(child=>child.timeline)?.timeline;
+export const role=child=>child.aggregate?'aggregate':child.timeline?'timeline':'records';
 export const visible=(value,name)=>!!value.children.find(child=>role(child)===name&&!child.hidden);
 export function create(q,declaration,options={columns:['utc','service','summary','context']}){return validate({version:'goo.composition/1',kind:{name:'stack',version:1},children:[{aggregate:declaration},{records:{version:'goo.view/1',scope:{kind:'record-query',signal:q.signal},kind:{name:'record-table',version:1},display:structuredClone(options)}}]},q)}
 export function setAggregate(value,next,q){return validate({...value,children:value.children.map(child=>child.aggregate?{...child,aggregate:next}:child)},q)}
 export function setRecords(value,next,q){return validate({...value,children:value.children.map(child=>child.records?{...child,records:{...child.records,display:next}}:child)},q)}
-export function setHidden(value,name,hidden,q){if(!['aggregate','records'].includes(name))throw Error('Choose an existing composition role.');return validate({...value,children:value.children.map(child=>role(child)===name?{...child,hidden}:child)},q)}
+export function setHidden(value,name,hidden,q){if(!['aggregate','records','timeline'].includes(name))throw Error('Choose an existing composition role.');return validate({...value,children:value.children.map(child=>role(child)===name?{...child,hidden}:child)},q)}
 export function reverse(value,q){return validate({...value,children:[...value.children].reverse()},q)}
 // Compatibility concerns configuration only; current inputs and paging stay with
 // the host. Browser metadata checks do not replace authoritative Go compilation.
 export function reuse(value,source,destination){
  const next=validate(value,source);
- next.children=next.children.map(child=>child.aggregate?{...child,aggregate:Aggregate.reuse(child.aggregate,source,destination)}:{...child,records:recordDisplay(child.records,destination)});
+ next.children=next.children.map(child=>child.aggregate?{...child,aggregate:Aggregate.reuse(child.aggregate,source,destination)}:child.timeline?{...child,timeline:Timeline.reuse(child.timeline,source,destination)}:{...child,records:recordDisplay(child.records,destination)});
  return validate(next,destination);
 }
 export function declaration(view,signal){const found=aggregate(view?.composition);return found?.scope.signal===signal?found:view?.displays?.[signal]}
@@ -44,3 +47,5 @@ export function view(value){
  if(!Array.isArray(value.queries)||value.queries.length!==1||['layout','columns','fieldColumns','displays','breakdowns','tail'].some(key=>Object.hasOwn(value,key)))throw Error('Composition owns child presentation and requires one query; omit flat view options.');
  return {...structuredClone(value),composition:validate(value.composition,value.queries[0])};
 }
+
+export function setTimeline(value,next,q){return validate({...value,children:timeline(value)?value.children.map(child=>child.timeline?{...child,timeline:next}:child):[{timeline:next},...value.children]},q)}

@@ -42271,6 +42271,224 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.StepScope"
       },
+      "workbench.TimelineViewDeclaration": {
+        "properties": {
+          "display": {
+            "$ref": "#/components/schemas/workbench.TimelineViewDisplay",
+            "type": "object"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/workbench.TimelineViewKind",
+            "type": "object"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/workbench.ViewDeclarationScope",
+            "type": "object",
+            "required": [
+              "kind",
+              "signal"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "const": "goo.view/1"
+          }
+        },
+        "required": [
+          "version",
+          "scope",
+          "kind",
+          "display"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.TimelineViewDeclaration",
+        "additionalProperties": false,
+        "description": "Captured record counts over the parent query explicit positive bucket width. Exact clipped interval bounds and completeness belong to the supplied time dataset, never the declaration. No rate or population-share semantics."
+      },
+      "workbench.TimelineViewDeclarationInput": {
+        "additionalProperties": false,
+        "properties": {
+          "display": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.TimelineViewDisplayInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.TimelineViewKindInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.ViewDeclarationScopeInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object",
+            "required": [
+              "kind",
+              "signal"
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "goo.view/1"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.TimelineViewDeclaration",
+        "required": [
+          "version",
+          "scope",
+          "kind",
+          "display"
+        ],
+        "description": "Captured record counts over the parent query explicit positive bucket width. Exact clipped interval bounds and completeness belong to the supplied time dataset, never the declaration. No rate or population-share semantics."
+      },
+      "workbench.TimelineViewDisplay": {
+        "properties": {
+          "requiresComplete": {
+            "type": "boolean"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "value": {
+            "type": "string",
+            "const": "count"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.TimelineViewDisplay",
+        "additionalProperties": false
+      },
+      "workbench.TimelineViewDisplayInput": {
+        "additionalProperties": false,
+        "properties": {
+          "requiresComplete": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "boolean"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxLength": 120
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "count"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.TimelineViewDisplay",
+        "required": [
+          "value"
+        ]
+      },
+      "workbench.TimelineViewKind": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "time-bar",
+              "table"
+            ]
+          },
+          "version": {
+            "type": "integer",
+            "const": 1
+          }
+        },
+        "required": [
+          "name",
+          "version"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.TimelineViewKind",
+        "additionalProperties": false
+      },
+      "workbench.TimelineViewKindInput": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "enum": [
+              "time-bar",
+              "table"
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": 1
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.TimelineViewKind",
+        "required": [
+          "name",
+          "version"
+        ]
+      },
       "workbench.ViewComposition": {
         "properties": {
           "children": {
@@ -42287,7 +42505,7 @@
             ],
             "type": "array",
             "minItems": 2,
-            "maxItems": 2,
+            "maxItems": 3,
             "items": {
               "$ref": "#/components/schemas/workbench.ViewCompositionChild",
               "type": "object"
@@ -42309,6 +42527,15 @@
                   ]
                 },
                 "minContains": 1,
+                "maxContains": 1
+              },
+              {
+                "contains": {
+                  "required": [
+                    "timeline"
+                  ]
+                },
+                "minContains": 0,
                 "maxContains": 1
               },
               {
@@ -42340,7 +42567,7 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ViewComposition",
         "additionalProperties": false,
-        "description": "One fixed record query supplies one aggregate and one bounded record-page child. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees."
+        "description": "One fixed record query supplies one aggregate, one bounded record-page child and an optional count timeline with explicit query bucket width. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees."
       },
       "workbench.ViewCompositionChild": {
         "properties": {
@@ -42368,6 +42595,17 @@
               }
             ],
             "type": "object"
+          },
+          "timeline": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.TimelineViewDeclaration"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
           }
         },
         "required": [],
@@ -42380,8 +42618,17 @@
               "aggregate"
             ],
             "not": {
-              "required": [
-                "records"
+              "anyOf": [
+                {
+                  "required": [
+                    "records"
+                  ]
+                },
+                {
+                  "required": [
+                    "timeline"
+                  ]
+                }
               ]
             }
           },
@@ -42390,8 +42637,36 @@
               "records"
             ],
             "not": {
-              "required": [
-                "aggregate"
+              "anyOf": [
+                {
+                  "required": [
+                    "aggregate"
+                  ]
+                },
+                {
+                  "required": [
+                    "timeline"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "timeline"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "aggregate"
+                  ]
+                },
+                {
+                  "required": [
+                    "records"
+                  ]
+                }
               ]
             }
           }
@@ -42446,6 +42721,24 @@
               }
             ],
             "type": "object"
+          },
+          "timeline": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/workbench.TimelineViewDeclarationInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
           }
         },
         "type": "object",
@@ -42456,8 +42749,17 @@
               "aggregate"
             ],
             "not": {
-              "required": [
-                "records"
+              "anyOf": [
+                {
+                  "required": [
+                    "records"
+                  ]
+                },
+                {
+                  "required": [
+                    "timeline"
+                  ]
+                }
               ]
             }
           },
@@ -42466,8 +42768,36 @@
               "records"
             ],
             "not": {
-              "required": [
-                "aggregate"
+              "anyOf": [
+                {
+                  "required": [
+                    "aggregate"
+                  ]
+                },
+                {
+                  "required": [
+                    "timeline"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "timeline"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "aggregate"
+                  ]
+                },
+                {
+                  "required": [
+                    "records"
+                  ]
+                }
               ]
             }
           }
@@ -42497,7 +42827,7 @@
             ],
             "type": "array",
             "minItems": 2,
-            "maxItems": 2,
+            "maxItems": 3,
             "items": {
               "$ref": "#/components/schemas/workbench.ViewCompositionChildInput",
               "type": "object"
@@ -42519,6 +42849,15 @@
                   ]
                 },
                 "minContains": 1,
+                "maxContains": 1
+              },
+              {
+                "contains": {
+                  "required": [
+                    "timeline"
+                  ]
+                },
+                "minContains": 0,
                 "maxContains": 1
               },
               {
@@ -42563,7 +42902,7 @@
           "kind",
           "children"
         ],
-        "description": "One fixed record query supplies one aggregate and one bounded record-page child. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees."
+        "description": "One fixed record query supplies one aggregate, one bounded record-page child and an optional count timeline with explicit query bucket width. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees."
       },
       "workbench.ViewDeclaration": {
         "properties": {

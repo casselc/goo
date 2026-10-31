@@ -12,6 +12,31 @@ const adopt=(raw,producer=source)=>producer.adoptSnapshot(raw,{question:raw.scop
 function host(){let epoch=1,active=true,canStage=true;const context=createActionContext({epoch:()=>epoch,active:()=>active,canStage:()=>canStage});return {context,setEpoch:value=>epoch=value,setActive:value=>active=value,setCanStage:value=>canStage=value,bind:(snapshot,extra={})=>context.bind({role:'current',slot:snapshot.shape==='ranked'?'groups':snapshot.shape==='time-series'?'intervals':'summary',epoch,snapshot,question:snapshot.scope.selector,coherent:true,...extra})}}
 const refuses=(result,code)=>{assert.equal(result.ok,false);if(code)assert.equal(result.code,code);assert.equal(typeof result.reason,'string')};
 const throws=(fn,code)=>assert.throws(fn,error=>error instanceof ScopeActionError&&(!code||error.code===code));
+function rangeIntent(snapshot,fromKey,toKey){const intent={...intervalIntent(snapshot,fromKey),type:'scope-window-range',fromKey,toKey};delete intent.key;delete intent.fromMs;delete intent.toMs;return intent}
+
+test('interval ranges derive exact contiguous captured bounds and preserve the parent query',()=>{
+ const owner=host(),snapshot=adopt(rawIntervals()),binding=owner.bind(snapshot),before=JSON.stringify(snapshot);
+ for(const [first,last,from,to]of [['one','four',1000,4500],['two','three',2000,4000],['four','four',4000,4500]]){
+  const result=owner.context.resolve(binding,rangeIntent(snapshot,first,last));assert.equal(result.ok,true);assert.equal(result.label,'Interval range');assert.deepEqual(result.question,{...snapshot.scope.selector,fromMs:from,toMs:to,offset:0});assert.equal(Object.isFrozen(result.question),true);
+ }
+ assert.equal(JSON.stringify(snapshot),before);
+ refuses(owner.context.resolve(binding,rangeIntent(snapshot,'three','two')),'invalid-membership');
+ refuses(owner.context.resolve(binding,rangeIntent(snapshot,'one','foreign')),'invalid-membership');
+ refuses(owner.context.resolve(binding,{...rangeIntent(snapshot,'one','four'),fromMs:'0'}),'intent-type');
+ refuses(owner.context.resolve(binding,{...rangeIntent(snapshot,'one','four'),revision:'old'}),'identity-mismatch');
+ owner.setCanStage(false);refuses(owner.context.resolve(binding,rangeIntent(snapshot,'one','four')),'not-applied');owner.setCanStage(true);
+ owner.setEpoch(2);refuses(owner.context.resolve(binding,rangeIntent(snapshot,'one','four')),'stale-epoch');
+});
+
+test('interval ranges refuse unknown interior coverage and absent supplied buckets',()=>{
+ for(const missing of [false,true]){
+  const raw=rawIntervals();raw.quality.extent='unknown';delete raw.completeness;
+  if(missing)raw.rows.splice(1,1);else{raw.rows[1].state='unknown';raw.rows[1].values.count=null}
+  const owner=host(),snapshot=adopt(raw),binding=owner.bind(snapshot);
+  refuses(owner.context.resolve(binding,rangeIntent(snapshot,'one','four')),'invalid-membership');
+  assert.equal(owner.context.resolve(binding,rangeIntent(snapshot,'three','four')).ok,true);
+ }
+});
 
 test('group tuples derive from captured question and preserve environment, units, binding and other selectors',()=>{const owner=host(),snapshot=adopt(rawGroups()),question=structuredClone(snapshot.scope.selector),binding=owner.bind(snapshot,{question});question.numeric.unit='changed-global';const result=owner.context.resolve(binding,groupIntent(snapshot,'missing'));assert.equal(result.ok,true);assert.equal(result.label,'Group filter');assert.equal(result.role,'current');assert.equal(result.epoch,1);assert.equal(result.question.offset,0);assert.deepEqual(result.question.environmentSelector,environment);assert.equal(result.question.numeric.unit,'bytes');assert.equal(result.question.numeric.scale,2);assert.equal(result.question.summary,'span-duration');assert.deepEqual(result.question.where.all,[snapshot.scope.selector.where,{field:{kind:'column',key:'service'},op:'eq',value:'api'},{field:{kind:'attribute',key:'http.route'},op:'missing'}]);assert.equal(Object.isFrozen(result.question),true);assert.equal(Object.isFrozen(result.question.where.all),true);assert.equal(result.sourceId,'actions.test')});
 test('facet values and exact tuple values distinguish null, empty, excluded dimensions and fabricated members',()=>{const owner=host(),snapshot=adopt(rawGroups()),binding=owner.bind(snapshot);for(const value of [null,''])assert.equal(owner.context.resolve(binding,scopeIntent(snapshot,'route',value)).ok,true);const intent=scopeIntent(snapshot,'route','');intent.op='missing';refuses(owner.context.resolve(binding,intent),'invalid-membership');const tuple=groupIntent(snapshot,'api');tuple.values[1].value='/other';refuses(owner.context.resolve(binding,tuple),'invalid-membership');const count={...scopeIntent(snapshot,'route',''),field:'count',value:'2'};refuses(owner.context.resolve(binding,count),'invalid-membership');const foreign={...groupIntent(snapshot,'api'),key:'absent'};refuses(owner.context.resolve(binding,foreign),'invalid-membership')});

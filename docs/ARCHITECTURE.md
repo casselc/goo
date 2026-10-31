@@ -1468,3 +1468,12 @@ copies only checked child presentation. Existing query/source owners keep held
 aggregate and current record-page inputs; new mounts get current ownership. An
 optional record selection-state controller/notification guards both catalog Apply
 actions. Clearing live configuration is local and preserves record/Keep drafts.
+
+
+## Saved interval composition — 281
+
+The optional typed timeline child selects the admitted `timeDataset` aspect of the held
+exploration result. The parent query alone owns bucket width. H1 resolves contiguous
+known supplied interval keys into exact shared query bounds; the presenter cannot supply
+arbitrary milliseconds or read telemetry. Paging changes only the bounded record-page
+owner. See [contract and flow](SAVED_COUNT_TIMELINE.md).

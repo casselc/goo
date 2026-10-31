@@ -1,5 +1,40 @@
 # Validation record
 
+## Saved count timeline — 281
+
+The optional count timeline shares one checked query with the aggregate and bounded
+record page. Width changes and exact interval-range selections stage that query;
+only Run reads. Paging holds timeline inputs and Reset stages the starting window.
+See [contract](docs/SAVED_COUNT_TIMELINE.md) and
+[storyboard](journeys/281-count-timeline-storyboard.md).
+
+- Full root `go test ./...` and all 861 frontend tests pass. Go/API schema checks
+  cover the optional typed child, count-only kinds, strict widths and reuse.
+- 100 Hegel width/reuse parity cases pass. Ten-step Quint smoke rejects six mutated
+  traces and an unfinished prefix.
+- Reset validates its restored window before mutation. A finer width that would
+  exceed 240 original-window intervals requires an explicit wider width; no silent
+  query rewrite occurs.
+- H1 and presenter tests reject unknown interior intervals, missing buckets, reversed
+  endpoints, forged boundaries and retired source/epoch authority. Pending record
+  Keep selections guard scope-changing timeline configuration.
+- Final real-OTLP journey and Bombadil pass in 48.9 s; existing whole-composition
+  reuse regression passes in 36.9 s. All six affected documentation frames are
+  regenerated from the running application.
+- Source-read ledger `[1,1,2,3,3,4,4,4,4,5]` accounts for initial Run, width Run,
+  Next page, narrowed Run and reopened Run. Configure, range Stage, Reset, Save and
+  reopen add zero reads. The held timeline survives record paging; source errors
+  and uncaught UI errors remain empty. Observed Quint replay passes.
+- Bombadil passes 30 seconds / 567 snapshots / ten phases, ending reopened and
+  staged with three reads, no pending selection and no viewport overflow.
+- Final cross-layer and design review reports no material blockers. Native metric
+  rates, grouped time series and live children remain explicitly outside this cut.
+- Local image `f4bbc6c987d2bffe44efe7380af04a919f50e09eab8e714bf55b3bd099907b4b`
+  is built and deployed; all six changed/new UI and API files match served bytes.
+  Existing telemetry and XTDB volumes remain intact. Successful raw campaign and
+  disposable capture copies are removed; compact results and documentation frames remain.
+
+
 ## Whole-composition reuse — 280
 
 The existing catalog now applies a checked whole composition alongside its separate
